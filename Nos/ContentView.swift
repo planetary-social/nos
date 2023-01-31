@@ -10,20 +10,29 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    
 
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
+    @FetchRequest(fetchRequest: Event.allPostsRequest(), animation: .default)
+    private var events: FetchedResults<Event>
 
     var body: some View {
         NavigationView {
             List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
+                ForEach(events) { event in
+                    VStack {
+                        HStack {
+                            Image(systemName: "person.crop.circle.fill")
+                                .font(.body)
+                            
+                            Text(event.author?.hex ?? "unknown")
+                                .lineLimit(5)
+                            Spacer()
+                            Text("Kind: \(event.kind)")
+                                .bold()
+                        }
+                        
+                        Text(event.content!)
+                            .padding(.vertical, 1)
                     }
                 }
                 .onDelete(perform: deleteItems)
@@ -31,7 +40,9 @@ struct ContentView: View {
             .toolbar {
 #if os(iOS)
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+                    Button("Relays") {
+                        
+                    }
                 }
 #endif
                 ToolbarItem {
@@ -40,14 +51,18 @@ struct ContentView: View {
                     }
                 }
             }
-            Text("Select an item")
+            .navigationTitle("Posts")
         }
     }
 
     private func addItem() {
         withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+            let newItem = Event(context: viewContext)
+            newItem.createdAt = Date()
+            newItem.content = "Hello, world"
+            newItem.identifier = "984kljsdhf"
+            newItem.kind = 1
+            newItem.signature = "definitely valid"
 
             do {
                 try viewContext.save()
@@ -62,7 +77,7 @@ struct ContentView: View {
 
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
+            offsets.map { events[$0] }.forEach(viewContext.delete)
 
             do {
                 try viewContext.save()
@@ -84,7 +99,10 @@ private let itemFormatter: DateFormatter = {
 }()
 
 struct ContentView_Previews: PreviewProvider {
+    
+    static var previewContext = PersistenceController.preview.container.viewContext
+    
     static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        ContentView().environment(\.managedObjectContext, previewContext)
     }
 }
