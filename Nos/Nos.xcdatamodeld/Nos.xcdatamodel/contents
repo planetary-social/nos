@@ -13,6 +13,9 @@
         <attribute name="hex" attributeType="String"/>
         <relationship name="events" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="author" inverseEntity="Event"/>
     </entity>
+    <entity name="Relay" representedClassName=".Relay" syncable="YES">
+        <attribute name="address" attributeType="String"/>
+    </entity>
     <entity name="Tag" representedClassName=".Tag" syncable="YES">
         <attribute name="identifier" attributeType="String"/>
         <attribute name="metadata" optional="YES" attributeType="Transformable"/>

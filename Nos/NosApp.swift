@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct NosApp: App {
     let persistenceController = PersistenceController.shared
+    let relayService = RelayService(persistenceController: PersistenceController.shared)
 
     var body: some Scene {
         WindowGroup {

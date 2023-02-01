@@ -9,8 +9,8 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
     
+    @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(fetchRequest: Event.allPostsRequest(), animation: .default)
     private var events: FetchedResults<Event>
@@ -40,8 +40,8 @@ struct ContentView: View {
             .toolbar {
 #if os(iOS)
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Relays") {
-                        
+                    NavigationLink("Relays") {
+                        RelayView()
                     }
                 }
 #endif
@@ -53,6 +53,16 @@ struct ContentView: View {
             }
             .navigationTitle("Posts")
         }
+        .task {
+            load()
+        }
+        .refreshable {
+            load()
+        }
+    }
+    
+    private func load() {
+        
     }
 
     private func addItem() {
@@ -101,6 +111,8 @@ private let itemFormatter: DateFormatter = {
 struct ContentView_Previews: PreviewProvider {
     
     static var previewContext = PersistenceController.preview.container.viewContext
+    static var relayService = PersistenceController.preview.container.viewContext
+    
     
     static var previews: some View {
         ContentView().environment(\.managedObjectContext, previewContext)

@@ -32,22 +32,29 @@ struct JSONEvent: Codable {
 @objc(Event)
 public class Event: NSManagedObject {
     
+    class func parse(jsonObject: [String: Any], in persistenceController: PersistenceController) throws -> Event {
+        let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
+        let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
+        return try parse(jsonEvent: jsonEvent, in: persistenceController)
+    }
+    
+    class func parse(jsonEvent: JSONEvent, in persistenceController: PersistenceController) throws -> Event {
+        let parseContext = persistenceController.container.viewContext
+        let event = Event(entity: NSEntityDescription.entity(forEntityName: "Event", in: parseContext)!, insertInto: parseContext)
+        event.createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
+        event.content = jsonEvent.content
+        event.identifier = jsonEvent.id
+        event.kind = jsonEvent.kind
+        event.signature = jsonEvent.sig
+        return event
+    }
+    
     class func parse(jsonData: Data, in persistenceController: PersistenceController) throws -> [Event] {
         let parseContext = persistenceController.container.viewContext
         let jsonEvents = try JSONDecoder().decode([JSONEvent].self, from: jsonData)
         var events = [Event]()
         for jsonEvent in jsonEvents {
-            let event = Event(entity: NSEntityDescription.entity(forEntityName: "Event", in: parseContext)!, insertInto: parseContext)
-            event.createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
-            event.content = jsonEvent.content
-            event.identifier = jsonEvent.id
-            event.kind = jsonEvent.kind
-            event.signature = jsonEvent.sig
-
-//            let pubKey = PubKey(entity: NSEntityDescription.entity(forEntityName: "PubKey", in: parseContext)!, insertInto: parseContext)
-//            pubKey.hex = jsonEvent.pubKey
-//            event.author = pubKey
-
+            let event = try parse(jsonEvent: jsonEvent, in: persistenceController)
             events.append(event)
         }
         
