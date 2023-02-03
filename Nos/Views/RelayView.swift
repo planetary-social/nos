@@ -42,6 +42,7 @@ struct RelayView: View {
 #endif
             }
         }
+        .navigationTitle("Relays")
     }
     
     private func addRelay() {
@@ -66,6 +67,8 @@ struct RelayView_Previews: PreviewProvider {
     static var previewContext = PersistenceController.preview.container.viewContext
     
     static var previews: some View {
-        RelayView().environment(\.managedObjectContext, previewContext)
+        NavigationStack {
+            RelayView()
+        }.environment(\.managedObjectContext, previewContext)
     }
 }

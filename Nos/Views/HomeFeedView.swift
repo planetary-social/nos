@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  HomeFeedView.swift
 //  Nos
 //
 //  Created by Matthew Lorentz on 1/31/23.
@@ -8,7 +8,9 @@
 import SwiftUI
 import CoreData
 
-struct ContentView: View {
+struct HomeFeedView: View {
+    
+    @AppStorage("keyPair") private var keyPair: KeyPair?
     
     @Environment(\.managedObjectContext) private var viewContext
     
@@ -18,41 +20,32 @@ struct ContentView: View {
     private var events: FetchedResults<Event>
 
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(events) { event in
-                    VStack {
-                        HStack {
-                            Image(systemName: "person.crop.circle.fill")
-                                .font(.body)
-                            
-                            Text(event.author?.hex ?? "unknown")
-                                .lineLimit(1)
-                            Spacer()
-                        }
+        List {
+            ForEach(events) { event in
+                VStack {
+                    HStack {
+                        Image(systemName: "person.crop.circle.fill")
+                            .font(.body)
                         
-                        Text(event.content!)
-                            .padding(.vertical, 1)
+                        Text(event.author?.hex ?? "unknown")
+                            .lineLimit(1)
+                        Spacer()
                     }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-#if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink("Relays") {
-                        RelayView()
-                    }
-                }
-#endif
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
+                    
+                    Text(event.content!)
+                        .padding(.vertical, 1)
                 }
             }
-            .navigationTitle("Posts")
+            .onDelete(perform: deleteItems)
         }
+        .toolbar {
+            ToolbarItem {
+                Button(action: addItem) {
+                    Label("Add Item", systemImage: "plus")
+                }
+            }
+        }
+        .navigationTitle("Home Feed")
         .task {
             load()
         }
@@ -66,6 +59,10 @@ struct ContentView: View {
     }
 
     private func addItem() {
+        guard let keyPair else {
+            return
+        }
+        
         withAnimation {
             let event = Event(context: viewContext)
             event.createdAt = Date()
@@ -78,7 +75,7 @@ struct ContentView: View {
             
 
             do {
-                try event.sign(withKey: "69222a82c30ea0ad472745b170a560f017cb3bcc38f927a8b27e3bab3d8f0f19")
+                try event.sign(withKey: keyPair)
                 try relayService.publish(event)
             } catch {
                 // Replace this implementation with code to handle the error appropriately.
@@ -114,11 +111,16 @@ private let itemFormatter: DateFormatter = {
 
 struct ContentView_Previews: PreviewProvider {
     
-    static var previewContext = PersistenceController.preview.container.viewContext
-    static var relayService = PersistenceController.preview.container.viewContext
+    static var persistenceController = PersistenceController.preview
+    static var previewContext = persistenceController.container.viewContext
+    static var relayService = RelayService(persistenceController: persistenceController)
     
     
     static var previews: some View {
-        ContentView().environment(\.managedObjectContext, previewContext)
+        NavigationView {
+            HomeFeedView()
+        }
+        .environment(\.managedObjectContext, previewContext)
+        .environmentObject(relayService)
     }
 }

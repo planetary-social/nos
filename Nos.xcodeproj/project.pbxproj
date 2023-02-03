@@ -14,7 +14,7 @@
 		C9DEBFD2298941000078B43A /* NosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD1298941000078B43A /* NosApp.swift */; };
 		C9DEBFD4298941000078B43A /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD3298941000078B43A /* Persistence.swift */; };
 		C9DEBFD7298941000078B43A /* Nos.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD5298941000078B43A /* Nos.xcdatamodeld */; };
-		C9DEBFD9298941000078B43A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD8298941000078B43A /* ContentView.swift */; };
+		C9DEBFD9298941000078B43A /* HomeFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD8298941000078B43A /* HomeFeedView.swift */; };
 		C9DEBFDB298941020078B43A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9DEBFDA298941020078B43A /* Assets.xcassets */; };
 		C9DEBFDF298941020078B43A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9DEBFDE298941020078B43A /* Preview Assets.xcassets */; };
 		C9DEBFE9298941020078B43A /* NosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFE8298941020078B43A /* NosTests.swift */; };
@@ -50,6 +50,9 @@
 		C9F84C1A298DBB6300C6714D /* Data+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Hex.swift */; };
 		C9F84C1C298DBBF400C6714D /* Data+Sha.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C1B298DBBF400C6714D /* Data+Sha.swift */; };
 		C9F84C1D298DBC6100C6714D /* Data+Sha.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C1B298DBBF400C6714D /* Data+Sha.swift */; };
+		C9F84C21298DC36800C6714D /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C20298DC36800C6714D /* AppView.swift */; };
+		C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C22298DC7B900C6714D /* SettingsView.swift */; };
+		C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C26298DC98800C6714D /* KeyPair.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,7 +79,7 @@
 		C9DEBFD1298941000078B43A /* NosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosApp.swift; sourceTree = "<group>"; };
 		C9DEBFD3298941000078B43A /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		C9DEBFD6298941000078B43A /* Nos.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Nos.xcdatamodel; sourceTree = "<group>"; };
-		C9DEBFD8298941000078B43A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		C9DEBFD8298941000078B43A /* HomeFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedView.swift; sourceTree = "<group>"; };
 		C9DEBFDA298941020078B43A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C9DEBFDC298941020078B43A /* Nos.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Nos.entitlements; sourceTree = "<group>"; };
 		C9DEBFDE298941020078B43A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -98,6 +101,9 @@
 		C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Relay+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C9DEC06D2989668E0078B43A /* Relay+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Relay+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		C9F84C1B298DBBF400C6714D /* Data+Sha.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Sha.swift"; sourceTree = "<group>"; };
+		C9F84C20298DC36800C6714D /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
+		C9F84C22298DC7B900C6714D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		C9F84C26298DC98800C6714D /* KeyPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPair.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,17 +173,13 @@
 		C9DEBFD0298941000078B43A /* Nos */ = {
 			isa = PBXGroup;
 			children = (
-				C97797B7298AA1600046BD25 /* Service */,
-				C9DEC001298944FC0078B43A /* Extensions */,
-				C9DEBFD1298941000078B43A /* NosApp.swift */,
-				C9DEBFD3298941000078B43A /* Persistence.swift */,
-				C9DEBFD8298941000078B43A /* ContentView.swift */,
-				C9DEC069298965540078B43A /* RelayView.swift */,
-				C9DEBFDA298941020078B43A /* Assets.xcassets */,
 				C9DEBFDC298941020078B43A /* Nos.entitlements */,
-				C9DEBFD5298941000078B43A /* Nos.xcdatamodeld */,
+				C9DEBFD1298941000078B43A /* NosApp.swift */,
+				C9DEBFDA298941020078B43A /* Assets.xcassets */,
+				C9DEC001298944FC0078B43A /* Extensions */,
 				C9DEC02C29894BB20078B43A /* Models */,
-				C9DEBFDD298941020078B43A /* Preview Content */,
+				C97797B7298AA1600046BD25 /* Service */,
+				C9F84C24298DC7C100C6714D /* Views */,
 			);
 			path = Nos;
 			sourceTree = "<group>";
@@ -232,14 +234,29 @@
 			children = (
 				C9DEC03F29894BED0078B43A /* Event+CoreDataClass.swift */,
 				C9DEC051298950410078B43A /* Event+CoreDataProperties.swift */,
+				C9DEBFD3298941000078B43A /* Persistence.swift */,
 				C9DEC04329894BED0078B43A /* PubKey+CoreDataClass.swift */,
 				C9DEC053298950410078B43A /* PubKey+CoreDataProperties.swift */,
 				C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */,
 				C9DEC06D2989668E0078B43A /* Relay+CoreDataProperties.swift */,
 				C9DEC04129894BED0078B43A /* Tag+CoreDataClass.swift */,
 				C9DEC052298950410078B43A /* Tag+CoreDataProperties.swift */,
+				C9DEBFD5298941000078B43A /* Nos.xcdatamodeld */,
+				C9F84C26298DC98800C6714D /* KeyPair.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		C9F84C24298DC7C100C6714D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C9DEBFDD298941020078B43A /* Preview Content */,
+				C9DEBFD8298941000078B43A /* HomeFeedView.swift */,
+				C9F84C20298DC36800C6714D /* AppView.swift */,
+				C9F84C22298DC7B900C6714D /* SettingsView.swift */,
+				C9DEC069298965540078B43A /* RelayView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -386,14 +403,17 @@
 			files = (
 				C9DEC058298950410078B43A /* PubKey+CoreDataProperties.swift in Sources */,
 				C9DEC06E2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,
+				C9F84C21298DC36800C6714D /* AppView.swift in Sources */,
 				C9DEC054298950410078B43A /* Event+CoreDataProperties.swift in Sources */,
 				C9DEC06A298965550078B43A /* RelayView.swift in Sources */,
+				C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */,
 				C9DEBFD7298941000078B43A /* Nos.xcdatamodeld in Sources */,
 				C9DEBFD2298941000078B43A /* NosApp.swift in Sources */,
 				C9DEC0702989668E0078B43A /* Relay+CoreDataProperties.swift in Sources */,
+				C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */,
 				C9DEC04929894BED0078B43A /* Tag+CoreDataClass.swift in Sources */,
 				C9671D73298DB94C00EE7E12 /* Data+Hex.swift in Sources */,
-				C9DEBFD9298941000078B43A /* ContentView.swift in Sources */,
+				C9DEBFD9298941000078B43A /* HomeFeedView.swift in Sources */,
 				C9DEC003298945150078B43A /* String+Lorem.swift in Sources */,
 				C9DEC0632989541F0078B43A /* Bundle+Current.swift in Sources */,
 				C9F84C1C298DBBF400C6714D /* Data+Sha.swift in Sources */,
@@ -570,7 +590,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nos/Nos.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Nos/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Nos/Views/Preview Content\"";
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -608,7 +628,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nos/Nos.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Nos/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Nos/Views/Preview Content\"";
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;

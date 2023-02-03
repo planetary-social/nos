@@ -14,7 +14,7 @@ struct NosApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .environmentObject(relayService)
         }

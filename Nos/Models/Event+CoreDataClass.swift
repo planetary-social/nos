@@ -101,21 +101,10 @@ public class Event: NSManagedObject {
         return serializedEventData.sha256
     }
     
-    func sign(withKey privateKeyString: String) throws {
-        let privateKeyBytes = try privateKeyString.bytes
-        let privateKey = try secp256k1.Signing.PrivateKey(rawRepresentation: privateKeyBytes)
-        
-        var randomBytes = [Int8](repeating: 0, count: 64)
-        guard
-            SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes) == errSecSuccess
-        else {
-            fatalError("can't copy secure random data")
-        }
-        
+    func sign(withKey privateKey: KeyPair) throws {
         identifier = try calculateIdentifier()
         var serializedBytes = try identifier!.bytes
-        let rawSignature = try privateKey.schnorr.signature(message: &serializedBytes, auxiliaryRand: &randomBytes)
-        signature = rawSignature.rawRepresentation.hexString
+        signature = try privateKey.sign(bytes: &serializedBytes)
     }
     
     var tagsJSONRepresentation: [[String]] {
