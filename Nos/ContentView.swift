@@ -11,6 +11,8 @@ import CoreData
 struct ContentView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
+    
+    @EnvironmentObject private var relayService: RelayService
 
     @FetchRequest(fetchRequest: Event.allPostsRequest(), animation: .default)
     private var events: FetchedResults<Event>
@@ -25,10 +27,8 @@ struct ContentView: View {
                                 .font(.body)
                             
                             Text(event.author?.hex ?? "unknown")
-                                .lineLimit(5)
+                                .lineLimit(1)
                             Spacer()
-                            Text("Kind: \(event.kind)")
-                                .bold()
                         }
                         
                         Text(event.content!)
@@ -62,20 +62,24 @@ struct ContentView: View {
     }
     
     private func load() {
-        
+        relayService.requestEventsFromAll()
     }
 
     private func addItem() {
         withAnimation {
-            let newItem = Event(context: viewContext)
-            newItem.createdAt = Date()
-            newItem.content = "Hello, world"
-            newItem.identifier = "984kljsdhf"
-            newItem.kind = 1
-            newItem.signature = "definitely valid"
+            let event = Event(context: viewContext)
+            event.createdAt = Date()
+            event.content = "Hello from Nos!"
+            event.kind = 1
+            
+            let author = PubKey(entity: NSEntityDescription.entity(forEntityName: "PubKey", in: viewContext)!, insertInto: viewContext)
+            author.hex = "32730e9dfcab797caf8380d096e548d9ef98f3af3000542f9271a91a9e3b0001"
+            event.author = author
+            
 
             do {
-                try viewContext.save()
+                try event.sign(withKey: "69222a82c30ea0ad472745b170a560f017cb3bcc38f927a8b27e3bab3d8f0f19")
+                try relayService.publish(event)
             } catch {
                 // Replace this implementation with code to handle the error appropriately.
                 // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.

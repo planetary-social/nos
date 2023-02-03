@@ -7,7 +7,7 @@
         <attribute name="kind" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="signature" attributeType="String"/>
         <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PubKey" inverseName="events" inverseEntity="PubKey"/>
-        <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="event" inverseEntity="Tag"/>
+        <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Tag" inverseName="event" inverseEntity="Tag"/>
     </entity>
     <entity name="PubKey" representedClassName=".PubKey" syncable="YES">
         <attribute name="hex" attributeType="String"/>

@@ -11,5 +11,9 @@ import CoreData
 
 @objc(Tag)
 public class Tag: NSManagedObject {
+    
+    var jsonRepresentation: [String] {
+        [[identifier].compactMap { $0 }, (metadata as! Array<String>)].flatMap({ $0 })
+    }
 
 }

@@ -20,8 +20,15 @@ extension Event {
     
     @nonobjc public class func allPostsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(format: "kind = %i", 1)
+        return fetchRequest
+    }
+    
+    @nonobjc public class func event(by identifier: String) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
+        fetchRequest.fetchLimit = 1
         return fetchRequest
     }
 
@@ -31,7 +38,7 @@ extension Event {
     @NSManaged public var createdAt: Date?
     @NSManaged public var signature: String?
     @NSManaged public var author: PubKey?
-    @NSManaged public var tags: NSSet?
+    @NSManaged public var tags: NSOrderedSet?
 
 }
 

@@ -47,7 +47,7 @@ struct RelayView: View {
     private func addRelay() {
         withAnimation {
             let relay = Relay(entity: NSEntityDescription.entity(forEntityName: "Relay", in: viewContext)!, insertInto: viewContext)
-            relay.address = newRelayAddress
+            relay.address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
 
             do {
                 try viewContext.save()

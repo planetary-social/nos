@@ -9,7 +9,7 @@ import Foundation
 import Starscream
 import CoreData
 
-class RelayService: WebSocketDelegate {
+class RelayService: WebSocketDelegate, ObservableObject {
     
     private var sockets = [WebSocket]()
     
@@ -17,6 +17,10 @@ class RelayService: WebSocketDelegate {
     
     init(persistenceController: PersistenceController) {
         self.persistenceController = persistenceController
+        openSocketsForRelays()
+    }
+    
+    func openSocketsForRelays() {
         let objectContext = persistenceController.container.viewContext
         do {
             let relays = try objectContext.fetch(Relay.allRelaysRequest())
@@ -25,6 +29,11 @@ class RelayService: WebSocketDelegate {
                       let relayURL = URL(string: relayAddress) else {
                     continue
                 }
+                            
+                guard !sockets.contains(where: { $0.request.url == relayURL }) else {
+                    continue
+                }
+                
                 var request = URLRequest(url: relayURL)
                 request.timeoutInterval = 10
                 let socket = WebSocket(request: request, compressionHandler: .none)
@@ -82,6 +91,18 @@ class RelayService: WebSocketDelegate {
         } catch {
             print("could not send request \(error.localizedDescription)")
         }
+    }
+    
+    func requestEventsFromAll() {
+        openSocketsForRelays()
+        sockets.forEach { requestEvents(from: $0) }
+    }
+    
+    func publish(_ event: Event) throws {
+        let eventMessageJSON = ["EVENT", event.jsonRepresentation] as [Any]
+        let eventMessageData = try JSONSerialization.data(withJSONObject: eventMessageJSON, options: .withoutEscapingSlashes)
+        let eventMessageString = String(data: eventMessageData, encoding: .utf8)!
+        sockets.forEach { $0.write(string: eventMessageString) }
     }
     
     func handleError(_ error: Error?) {
