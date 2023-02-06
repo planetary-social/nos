@@ -18,29 +18,34 @@ struct RelayView: View {
     private var relays: FetchedResults<Relay>
     
     var body: some View {
-        NavigationView {
-            List {
+        List {
+            Section("Relays") {
                 ForEach(relays) { relay in
                     Text(relay.address!)
                 }
-                
-                Section {
-                    TextField("relay address", text: $newRelayAddress)
-                        .autocorrectionDisabled()
-                        .textInputAutocapitalization(.none)
-                        .keyboardType(.URL)
-                    Button("Add Relay") {
-                        addRelay()
-                    }
+                if relays.isEmpty {
+                    Text("No relays yet! Add one below to get started")
                 }
             }
-            .toolbar {
+            
+            Section("Add relay") {
+                TextField("wss://yourrelay.com", text: $newRelayAddress)
+                    .autocorrectionDisabled()
 #if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
+                    .textInputAutocapitalization(.none)
+                    .keyboardType(.URL)
 #endif
+                Button("Save") {
+                    addRelay()
+                }
             }
+        }
+        .toolbar {
+#if os(iOS)
+            ToolbarItem(placement: .navigationBarTrailing) {
+                EditButton()
+            }
+#endif
         }
         .navigationTitle("Relays")
     }
@@ -66,9 +71,15 @@ struct RelayView_Previews: PreviewProvider {
     
     static var previewContext = PersistenceController.preview.container.viewContext
     
+    static var emptyContext = PersistenceController.empty.container.viewContext
+    
     static var previews: some View {
         NavigationStack {
             RelayView()
         }.environment(\.managedObjectContext, previewContext)
+        
+        NavigationStack {
+            RelayView()
+        }.environment(\.managedObjectContext, emptyContext)
     }
 }

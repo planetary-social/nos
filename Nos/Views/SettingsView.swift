@@ -18,14 +18,17 @@ struct SettingsView: View {
     
     var body: some View {
         Form {
-            TextField("Private Key", text: $privateKeyString)
-            Button("Save") {
-                let keyPair = KeyPair(privateKeyString: privateKeyString)
-                if keyPair.isValid {
-                    self.keyPair = keyPair
-                } else {
-                    self.keyPair = nil
-                    showError = true
+            Section("Keys") {
+                Text("Warning: your private key will be stored unencrypted on disk. ")
+                TextField("Private Key", text: $privateKeyString)
+                Button("Save") {
+                    let keyPair = KeyPair(privateKeyString: privateKeyString)
+                    if keyPair.isValid {
+                        self.keyPair = keyPair
+                    } else {
+                        self.keyPair = nil
+                        showError = true
+                    }
                 }
             }
         }

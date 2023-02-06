@@ -38,6 +38,11 @@ struct HomeFeedView: View {
             }
             .onDelete(perform: deleteItems)
         }
+        .overlay(Group {
+            if events.isEmpty {
+                Text("No Events Yet! Add a relay to get started")
+            }
+        })
         .toolbar {
             ToolbarItem {
                 Button(action: addItem) {
@@ -115,6 +120,9 @@ struct ContentView_Previews: PreviewProvider {
     static var previewContext = persistenceController.container.viewContext
     static var relayService = RelayService(persistenceController: persistenceController)
     
+    static var emptyPersistenceController = PersistenceController.empty
+    static var emptyPreviewContext = emptyPersistenceController.container.viewContext
+    static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
     
     static var previews: some View {
         NavigationView {
@@ -122,5 +130,11 @@ struct ContentView_Previews: PreviewProvider {
         }
         .environment(\.managedObjectContext, previewContext)
         .environmentObject(relayService)
+        
+        NavigationView {
+            HomeFeedView()
+        }
+        .environment(\.managedObjectContext, emptyPreviewContext)
+        .environmentObject(emptyRelayService)
     }
 }
