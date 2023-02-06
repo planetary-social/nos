@@ -20,7 +20,7 @@ struct SettingsView: View {
         Form {
             Section("Keys") {
                 Text("Warning: your private key will be stored unencrypted on disk. ")
-                TextField("Private Key", text: $privateKeyString)
+                TextField("Private Key (in hex format)", text: $privateKeyString)
                 Button("Save") {
                     let keyPair = KeyPair(privateKeyString: privateKeyString)
                     if keyPair.isValid {

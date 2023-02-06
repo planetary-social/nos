@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C94D855C2991479900749478 /* NewPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D855B2991479900749478 /* NewPostView.swift */; };
+		C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = C94D855E29914D2300749478 /* SwiftUINavigation */; };
 		C9671D73298DB94C00EE7E12 /* Data+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Hex.swift */; };
 		C97797B9298AA19A0046BD25 /* RelayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97797B8298AA19A0046BD25 /* RelayService.swift */; };
 		C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C97797BB298AB1890046BD25 /* secp256k1 */; };
@@ -73,6 +75,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C94D855B2991479900749478 /* NewPostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostView.swift; sourceTree = "<group>"; };
 		C9671D72298DB94C00EE7E12 /* Data+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Hex.swift"; sourceTree = "<group>"; };
 		C97797B8298AA19A0046BD25 /* RelayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayService.swift; sourceTree = "<group>"; };
 		C9DEBFCE298941000078B43A /* Nos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nos.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -113,6 +116,7 @@
 			files = (
 				C9DEC068298965270078B43A /* Starscream in Frameworks */,
 				C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */,
+				C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,6 +258,7 @@
 				C9DEBFD8298941000078B43A /* HomeFeedView.swift */,
 				C9F84C20298DC36800C6714D /* AppView.swift */,
 				C9F84C22298DC7B900C6714D /* SettingsView.swift */,
+				C94D855B2991479900749478 /* NewPostView.swift */,
 				C9DEC069298965540078B43A /* RelayView.swift */,
 			);
 			path = Views;
@@ -278,6 +283,7 @@
 			packageProductDependencies = (
 				C9DEC067298965270078B43A /* Starscream */,
 				C97797BB298AB1890046BD25 /* secp256k1 */,
+				C94D855E29914D2300749478 /* SwiftUINavigation */,
 			);
 			productName = Nos;
 			productReference = C9DEBFCE298941000078B43A /* Nos.app */;
@@ -356,6 +362,7 @@
 			packageReferences = (
 				C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */,
 				C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */,
+				C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -406,6 +413,7 @@
 				C9F84C21298DC36800C6714D /* AppView.swift in Sources */,
 				C9DEC054298950410078B43A /* Event+CoreDataProperties.swift in Sources */,
 				C9DEC06A298965550078B43A /* RelayView.swift in Sources */,
+				C94D855C2991479900749478 /* NewPostView.swift in Sources */,
 				C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */,
 				C9DEBFD7298941000078B43A /* Nos.xcdatamodeld in Sources */,
 				C9DEBFD2298941000078B43A /* NosApp.swift in Sources */,
@@ -788,6 +796,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swiftui-navigation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.1;
+			};
+		};
 		C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GigaBitcoin/secp256k1.swift";
@@ -807,6 +823,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C94D855E29914D2300749478 /* SwiftUINavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */;
+			productName = SwiftUINavigation;
+		};
 		C97797BB298AB1890046BD25 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */;

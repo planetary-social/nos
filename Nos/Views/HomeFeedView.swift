@@ -18,6 +18,8 @@ struct HomeFeedView: View {
 
     @FetchRequest(fetchRequest: Event.allPostsRequest(), animation: .default)
     private var events: FetchedResults<Event>
+    
+    @State var isCreatingNewPost = false
 
     var body: some View {
         List {
@@ -36,8 +38,10 @@ struct HomeFeedView: View {
                         .padding(.vertical, 1)
                 }
             }
-            .onDelete(perform: deleteItems)
         }
+        .sheet(isPresented: $isCreatingNewPost, content: {
+            NewPostView(isPresented: $isCreatingNewPost)
+        })
         .overlay(Group {
             if events.isEmpty {
                 Text("No Events Yet! Add a relay to get started")
@@ -45,7 +49,7 @@ struct HomeFeedView: View {
         })
         .toolbar {
             ToolbarItem {
-                Button(action: addItem) {
+                Button(action: { isCreatingNewPost.toggle() }) {
                     Label("Add Item", systemImage: "plus")
                 }
             }
@@ -61,49 +65,6 @@ struct HomeFeedView: View {
     
     private func load() {
         relayService.requestEventsFromAll()
-    }
-
-    private func addItem() {
-        guard let keyPair else {
-            return
-        }
-        
-        withAnimation {
-            let event = Event(context: viewContext)
-            event.createdAt = Date()
-            event.content = "Hello from Nos!"
-            event.kind = 1
-            
-            let author = PubKey(entity: NSEntityDescription.entity(forEntityName: "PubKey", in: viewContext)!, insertInto: viewContext)
-            author.hex = "32730e9dfcab797caf8380d096e548d9ef98f3af3000542f9271a91a9e3b0001"
-            event.author = author
-            
-
-            do {
-                try event.sign(withKey: keyPair)
-                try relayService.publish(event)
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { events[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
     }
 }
 
