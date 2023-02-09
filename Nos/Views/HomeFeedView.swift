@@ -29,7 +29,7 @@ struct HomeFeedView: View {
                         Image(systemName: "person.crop.circle.fill")
                             .font(.body)
                         
-                        Text(event.author?.hex ?? "unknown")
+                        Text(event.author?.npubString ?? "unknown")
                             .lineLimit(1)
                         Spacer()
                     }

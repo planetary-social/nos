@@ -15,7 +15,7 @@ struct PersistenceController {
         let viewContext = result.container.viewContext
         let sampleData = try! Data(contentsOf: Bundle.current.url(forResource: "sample_data", withExtension: "json")!)
         try! _ = Event.parse(jsonData: sampleData, in: result)
-        let relay = Relay(entity: NSEntityDescription.entity(forEntityName: "Relay", in: viewContext)!, insertInto: viewContext)
+        let relay = Relay(context: viewContext)
         relay.address = "wss://nostr.lorentz.is"
         
         do {

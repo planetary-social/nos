@@ -33,7 +33,27 @@ struct JSONEvent: Codable {
 }
 
 @objc(Event)
-public class Event: NSManagedObject {
+public class Event: NosManagedObject {
+    
+    @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: true)]
+        return fetchRequest
+    }
+    
+    @nonobjc public class func allPostsRequest() -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = NSPredicate(format: "kind = %i", 1)
+        return fetchRequest
+    }
+    
+    @nonobjc public class func event(by identifier: String) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
+        fetchRequest.fetchLimit = 1
+        return fetchRequest
+    }
     
     class func parse(jsonObject: [String: Any], in persistenceController: PersistenceController) throws -> Event {
         let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
@@ -48,20 +68,20 @@ public class Event: NSManagedObject {
             return existingEvent
         }
         
-        let event = Event(entity: NSEntityDescription.entity(forEntityName: "Event", in: parseContext)!, insertInto: parseContext)
+        let event = Event(context: parseContext)
         event.createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
         event.content = jsonEvent.content
         event.identifier = jsonEvent.id
         event.kind = jsonEvent.kind
         event.signature = jsonEvent.sig
         
-        let author = PubKey(entity: NSEntityDescription.entity(forEntityName: "PubKey", in: parseContext)!, insertInto: parseContext)
-        author.hex = jsonEvent.pubKey
+        let author = Author(context: parseContext)
+        author.hexadecimalPublicKey = jsonEvent.pubKey
         event.author = author
         
         let tags = NSMutableOrderedSet()
         for jsonTag in jsonEvent.tags {
-            let tag = Tag(entity: NSEntityDescription.entity(forEntityName: "Tag", in: parseContext)!, insertInto: parseContext)
+            let tag = Tag(context: parseContext)
             tag.identifier = jsonTag.first
             tag.metadata = Array(jsonTag[1...]) as NSObject
             tags.add(tag)
@@ -88,7 +108,7 @@ public class Event: NSManagedObject {
     var serializedEventForSigning: [Any?] {
         return [
             0,
-            author?.hex,
+            author?.hexadecimalPublicKey,
             Int64(createdAt!.timeIntervalSince1970),
             kind,
             tagsJSONRepresentation,
@@ -113,7 +133,7 @@ public class Event: NSManagedObject {
     
     var jsonRepresentation: [String: Any]? {
         guard let identifier = identifier,
-              let pubKey = author?.hex,
+              let pubKey = author?.hexadecimalPublicKey,
               let createdAt = createdAt,
               
               let content = content,

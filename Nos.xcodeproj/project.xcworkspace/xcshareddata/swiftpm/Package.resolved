@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "bech32",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/0xdeadp00l/bech32.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "791fcda8a2010d3c6a22f1654eaa6303185925c0"
+      }
+    },
+    {
       "identity" : "secp256k1.swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/GigaBitcoin/secp256k1.swift",

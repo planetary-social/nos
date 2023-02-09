@@ -34,7 +34,7 @@ struct NewPostView: View {
             }
             .navigationTitle("New Post")
             .toolbar(content: {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem() {
                     Button(action: { isPresented = false }) {
                         Text("Cancel")
                     }
@@ -60,9 +60,9 @@ struct NewPostView: View {
             event.content = postText
             event.kind = 1
             
-            let author = PubKey(entity: NSEntityDescription.entity(forEntityName: "PubKey", in: viewContext)!, insertInto: viewContext)
+            let author = Author(context: viewContext)
             // TODO: derive from private key
-            author.hex = "32730e9dfcab797caf8380d096e548d9ef98f3af3000542f9271a91a9e3b0001"
+            author.hexadecimalPublicKey = "32730e9dfcab797caf8380d096e548d9ef98f3af3000542f9271a91a9e3b0001"
             event.author = author
             
 

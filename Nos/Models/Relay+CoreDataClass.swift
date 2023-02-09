@@ -10,6 +10,10 @@ import Foundation
 import CoreData
 
 @objc(Relay)
-public class Relay: NSManagedObject {
-
+public class Relay: NosManagedObject {
+    @nonobjc public class func allRelaysRequest() -> NSFetchRequest<Relay> {
+        let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.address, ascending: true)]
+        return fetchRequest
+    }
 }

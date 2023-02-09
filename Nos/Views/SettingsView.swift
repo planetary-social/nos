@@ -22,8 +22,7 @@ struct SettingsView: View {
                 Text("Warning: your private key will be stored unencrypted on disk. ")
                 TextField("Private Key (in hex format)", text: $privateKeyString)
                 Button("Save") {
-                    let keyPair = KeyPair(privateKeyString: privateKeyString)
-                    if keyPair.isValid {
+                    if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
                         self.keyPair = keyPair
                     } else {
                         self.keyPair = nil
@@ -40,8 +39,8 @@ struct SettingsView: View {
             )
         }
         .task {
-            if let keyPair = self.keyPair, keyPair.isValid {
-                privateKeyString = keyPair.privateKeyString
+            if let keyPair = self.keyPair {
+                privateKeyString = keyPair.privateKeyHex
             }
         }
     }

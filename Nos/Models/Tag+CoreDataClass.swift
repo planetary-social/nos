@@ -10,10 +10,9 @@ import Foundation
 import CoreData
 
 @objc(Tag)
-public class Tag: NSManagedObject {
+public class Tag: NosManagedObject {
     
     var jsonRepresentation: [String] {
         [[identifier].compactMap { $0 }, (metadata as! Array<String>)].flatMap({ $0 })
     }
-
 }
