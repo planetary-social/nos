@@ -33,3 +33,11 @@ jobs:
         with:
           skipLabels: 'Skip-Changelog'
           missingUpdateErrorMessage: 'You have not updated CHANGELOG.md. If an entry is not applicable add the Skip-Changelog label to your PR. See the top of the CHANGELOG.md for more details.'
+  swift_lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: SwiftLint
+        uses: norio-nomura/action-swiftlint@3.2.1
+        with:
+          args: --lenient
