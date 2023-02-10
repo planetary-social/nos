@@ -62,13 +62,7 @@ class RelayService: WebSocketDelegate, ObservableObject {
             print("Received text: \(string)")
         case .binary(let data):
             print("Received data: \(data.count)")
-        case .ping(_):
-            break
-        case .pong(_):
-            break
-        case .viabilityChanged(_):
-            break
-        case .reconnectSuggested(_):
+        case .ping, .pong, .viabilityChanged, .reconnectSuggested:
             break
         case .cancelled:
             if let socket = client as? WebSocket, let index = sockets.firstIndex(where: { $0 === socket }) {
@@ -99,9 +93,18 @@ class RelayService: WebSocketDelegate, ObservableObject {
     }
     
     func publish(_ event: Event) throws {
-        let eventMessageJSON = ["EVENT", event.jsonRepresentation] as [Any]
-        let eventMessageData = try JSONSerialization.data(withJSONObject: eventMessageJSON, options: .withoutEscapingSlashes)
-        let eventMessageString = String(data: eventMessageData, encoding: .utf8)!
+        guard let eventJSON = event.jsonRepresentation else {
+            throw EventError.jsonEncoding
+        }
+        
+        let eventMessageJSON: [Any] = ["EVENT", eventJSON]
+        let eventMessageData = try JSONSerialization.data(
+            withJSONObject: eventMessageJSON,
+            options: .withoutEscapingSlashes
+        )
+        guard let eventMessageString = String(data: eventMessageData, encoding: .utf8) else {
+            throw EventError.utf8Encoding
+        }
         sockets.forEach { $0.write(string: eventMessageString) }
     }
     
@@ -115,9 +118,12 @@ class RelayService: WebSocketDelegate, ObservableObject {
     
     func parseResponse(_ response: String) {
         do {
-            let jsonResponse = try JSONSerialization.jsonObject(with: response.data(using: .utf8)!)
-            guard let responseArray = jsonResponse as? Array<Any>,
-                  let responseType = responseArray.first as? String else {
+            guard let responseData = response.data(using: .utf8) else {
+                throw EventError.utf8Encoding
+            }
+            let jsonResponse = try JSONSerialization.jsonObject(with: responseData)
+            guard let responseArray = jsonResponse as? [Any],
+                let responseType = responseArray.first as? String else {
                 print("got unparseable response: \(response)")
                 return
             }
@@ -145,8 +151,6 @@ class RelayService: WebSocketDelegate, ObservableObject {
             }
         } catch {
             print("error parsing response: \(response)\nerror: \(error.localizedDescription)")
-            
         }
     }
 }
-

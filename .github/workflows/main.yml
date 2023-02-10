@@ -23,11 +23,8 @@ jobs:
       run: set -o pipefail && xcodebuild build-for-testing -skipPackagePluginValidation -project Nos.xcodeproj -scheme NosTests -destination "$SIMULATOR" | xcpretty
     - name: Run Tests
       run: set -o pipefail && xcodebuild test-without-building -project Nos.xcodeproj -scheme NosTests -resultBundlePath TestResults -destination "$SIMULATOR" | xcpretty
-    - uses: tbartelmess/analyze-xcoderesults-action@0.1.0
-        if: always()
-        with:
-          results: TestResults.xcresult
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Check for warnings
+      run: set -o pipefail && xcodebuild build -project Nos.xcodeproj -scheme NosTests -resultBundlePath TestResults -destination "$SIMULATOR" | xcpretty
   changelog:
     name: Check CHANGELOG
     runs-on: ubuntu-latest

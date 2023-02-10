@@ -34,8 +34,11 @@ struct NewPostView: View {
             }
             .navigationTitle("New Post")
             .toolbar(content: {
-                ToolbarItem() {
-                    Button(action: { isPresented = false }) {
+                ToolbarItem {
+                    Button {
+                        isPresented = false
+                    }
+                    label: {
                         Text("Cancel")
                     }
                 }
@@ -65,7 +68,6 @@ struct NewPostView: View {
             author.hexadecimalPublicKey = "32730e9dfcab797caf8380d096e548d9ef98f3af3000542f9271a91a9e3b0001"
             event.author = author
             
-
             do {
                 try event.sign(withKey: keyPair)
                 try relayService.publish(event)
@@ -77,7 +79,8 @@ struct NewPostView: View {
                     TextState(error.localizedDescription)
                 })
                 // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this
+                // function in a shipping application, although it may be useful during development.
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }

@@ -56,4 +56,3 @@ extension String {
         return sample.prefix(words).joined(separator: " ")
     }
 }
-
