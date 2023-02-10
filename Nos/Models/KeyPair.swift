@@ -35,7 +35,7 @@ struct PublicKey {
                 return nil
             }
             
-            let underlyingKey = try secp256k1.Signing.XonlyKey(rawRepresentation: converted, keyParity: 0)
+            let underlyingKey = secp256k1.Signing.XonlyKey(rawRepresentation: converted, keyParity: 0)
             self.init(underlyingKey: underlyingKey)
         } catch {
             print("error creating PublicKey \(error.localizedDescription)")

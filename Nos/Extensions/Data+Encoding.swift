@@ -7,6 +7,8 @@
 
 import Foundation
 
+typealias HexadecimalString = String
+
 extension Data {
     var hexString: String {
         let hexDigits = Array("0123456789abcdef".utf16)
