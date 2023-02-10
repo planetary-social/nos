@@ -20,9 +20,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
     - name: Build Nos
-      run: set -o pipefail && xcodebuild build-for-testing -skipPackagePluginValidation -workspace Nos.xcodeproj -scheme UnitTests -destination "$SIMULATOR" | xcpretty
+      run: set -o pipefail && xcodebuild build-for-testing -skipPackagePluginValidation -project Nos.xcodeproj -scheme NosTests -destination "$SIMULATOR" | xcpretty
     - name: Run Tests
-      run: set -o pipefail && xcodebuild test-without-building -workspace Nos.xcodeproj -scheme UnitTests -destination "$SIMULATOR" | xcpretty
+      run: set -o pipefail && xcodebuild test-without-building -project Nos.xcodeproj -scheme NosTests -destination "$SIMULATOR" | xcpretty
   changelog:
     name: Check CHANGELOG
     runs-on: ubuntu-latest
