@@ -1,0 +1,33 @@
+name: CI
+on:
+  pull_request:
+    # The specific activity types are listed here to include "labeled" and "unlabeled"
+    # (which are not included by default for the "pull_request" trigger).
+    # This is needed to allow skipping enforcement of the changelog in PRs with specific labels,
+    # as defined in the (optional) "skipLabels" property.
+    types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
+  push:
+    branches: main
+env:
+  SIMULATOR: platform=iOS Simulator,name=iPhone 14,OS=16.0
+  DEVELOPER_DIR: /Applications/Xcode_14.0.1.app/Contents/Developer
+    
+jobs:
+  unit_test:
+    name : Unit Tests
+    runs-on: macOS-12
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+    - name: Build Nos
+      run: set -o pipefail && xcodebuild build-for-testing -skipPackagePluginValidation -workspace Nos.xcodeproj -scheme UnitTests -destination "$SIMULATOR" | xcpretty
+    - name: Run Tests
+      run: set -o pipefail && xcodebuild test-without-building -workspace Nos.xcodeproj -scheme UnitTests -destination "$SIMULATOR" | xcpretty
+  changelog:
+    name: Check CHANGELOG
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dangoslen/changelog-enforcer@v3
+        with:
+          skipLabels: 'Skip-Changelog'
+          missingUpdateErrorMessage: 'You have not updated CHANGELOG.md. If an entry is not applicable add the Skip-Changelog label to your PR. See the top of the CHANGELOG.md for more details.'
