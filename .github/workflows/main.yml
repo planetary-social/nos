@@ -22,9 +22,7 @@ jobs:
     - name: Build Nos
       run: set -o pipefail && xcodebuild build-for-testing -skipPackagePluginValidation -project Nos.xcodeproj -scheme NosTests -destination "$SIMULATOR" | xcpretty
     - name: Run Tests
-      run: set -o pipefail && xcodebuild test-without-building -project Nos.xcodeproj -scheme NosTests -resultBundlePath TestResults -destination "$SIMULATOR" | xcpretty
-    - name: Check for warnings
-      run: set -o pipefail && xcodebuild build -project Nos.xcodeproj -scheme NosTests -resultBundlePath TestResults -destination "$SIMULATOR" | xcpretty
+      run: set -o pipefail && xcodebuild test-without-building -project Nos.xcodeproj -scheme NosTests -destination "$SIMULATOR" | xcpretty
   changelog:
     name: Check CHANGELOG
     runs-on: ubuntu-latest
@@ -40,4 +38,4 @@ jobs:
       - name: SwiftLint
         uses: norio-nomura/action-swiftlint@3.2.1
         with:
-          args: --lenient
+          args: --strict
