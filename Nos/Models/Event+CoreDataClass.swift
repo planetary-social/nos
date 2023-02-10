@@ -60,56 +60,6 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    class func parse(jsonObject: [String: Any], in persistenceController: PersistenceController) throws -> Event {
-        let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
-        let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
-        return try parse(jsonEvent: jsonEvent, in: persistenceController)
-    }
-    
-    class func parse(jsonEvent: JSONEvent, in persistenceController: PersistenceController) throws -> Event {
-        let parseContext = persistenceController.container.viewContext
-        
-        if let existingEvent = try parseContext.fetch(Event.event(by: jsonEvent.id)).first {
-            return existingEvent
-        }
-        
-        let event = Event(context: parseContext)
-        event.createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
-        event.content = jsonEvent.content
-        event.identifier = jsonEvent.id
-        event.kind = jsonEvent.kind
-        event.signature = jsonEvent.signature
-        
-        let author = Author(context: parseContext)
-        author.hexadecimalPublicKey = jsonEvent.pubKey
-        event.author = author
-        
-        let tags = NSMutableOrderedSet()
-        for jsonTag in jsonEvent.tags {
-            let tag = Tag(context: parseContext)
-            tag.identifier = jsonTag.first
-            tag.metadata = Array(jsonTag[1...]) as NSObject
-            tags.add(tag)
-        }
-        event.tags = tags
-        
-        return event
-    }
-    
-    class func parse(jsonData: Data, in persistenceController: PersistenceController) throws -> [Event] {
-        let parseContext = persistenceController.container.viewContext
-        let jsonEvents = try JSONDecoder().decode([JSONEvent].self, from: jsonData)
-        var events = [Event]()
-        for jsonEvent in jsonEvents {
-            let event = try parse(jsonEvent: jsonEvent, in: persistenceController)
-            events.append(event)
-        }
-        
-        try parseContext.save()
-        
-        return events
-    }
-    
     var serializedEventForSigning: [Any?] {
         [
             0,
