@@ -10,11 +10,12 @@ import CoreData
 struct PersistenceController {
     static let shared = PersistenceController()
 
+    // swiftlint:disable force_try
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
         let sampleData = try! Data(contentsOf: Bundle.current.url(forResource: "sample_data", withExtension: "json")!)
-        try! _ = Event.parse(jsonData: sampleData, in: result)
+        try! _ = EventProcessor.parse(jsonData: sampleData, in: result)
         let relay = Relay(context: viewContext)
         relay.address = "wss://nostr.lorentz.is"
         
@@ -22,12 +23,14 @@ struct PersistenceController {
             try viewContext.save()
         } catch {
             // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+            // fatalError() causes the application to generate a crash log and terminate. You should not use this
+            // function in a shipping application, although it may be useful during development.
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
         return result
     }()
+    // swiftlint:enable force_try
     
     static var empty: PersistenceController = {
         let result = PersistenceController(inMemory: true)
@@ -43,10 +46,12 @@ struct PersistenceController {
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+        container.loadPersistentStores(completionHandler: { (_, error) in
             if let error = error as NSError? {
+                // swiftlint:disable indentation_width line_length
                 // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this
+                // function in a shipping application, although it may be useful during development.
 
                 /*
                  Typical reasons for an error here include:
@@ -56,6 +61,7 @@ struct PersistenceController {
                  * The store could not be migrated to the current model version.
                  Check the error message to determine what the actual problem was.
                  */
+                // swiftlint:enable indentation_width line_length
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })

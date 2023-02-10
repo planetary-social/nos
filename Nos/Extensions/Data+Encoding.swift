@@ -50,21 +50,21 @@ extension Data {
     var base8FromBase5: Data? {
         let destinationBase = 8
         let startingBase = 5
-        let maxValueMask: UInt32 = ((UInt32(1)) << 8) - 1;
-        var val: UInt32 = 0
+        let maxValueMask: UInt32 = ((UInt32(1)) << 8) - 1
+        var value: UInt32 = 0
         var bits: Int = 0
         var output = Data()
         
         for i in (0..<count) {
-            val = (val << startingBase) | UInt32(self[i])
-            bits += startingBase;
+            value = (value << startingBase) | UInt32(self[i])
+            bits += startingBase
             while bits >= destinationBase {
-                bits -= destinationBase;
-                output.append(UInt8((val >> bits) & maxValueMask))
+                bits -= destinationBase
+                output.append(UInt8((value >> bits) & maxValueMask))
             }
         }
         
-        if 0 != ((val << (destinationBase - bits)) & maxValueMask) || bits >= startingBase {
+        if ((value << (destinationBase - bits)) & maxValueMask) != 0 || bits >= startingBase {
             return nil
         }
         

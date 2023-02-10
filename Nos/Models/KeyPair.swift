@@ -51,7 +51,7 @@ struct PublicKey {
 }
 
 // https://github.com/nostr-protocol/nips/blob/master/19.md
-struct NostrIdentifiers {
+enum NostrIdentifiers {
     static let privateKeyPrefix = "nsec"
     static let publicKeyPrefix = "npub"
 }
@@ -116,7 +116,6 @@ struct KeyPair {
             print("error creating KeyPair \(error.localizedDescription)")
             return nil
         }
-        
     }
     
     func sign(bytes: inout [UInt8]) throws -> String {
@@ -162,8 +161,7 @@ extension KeyPair: RawRepresentable {
     
     public init?(rawValue: String) {
         guard let data = rawValue.data(using: .utf8),
-              let result = try? JSONDecoder().decode(KeyPair.self, from: data)
-        else {
+            let result = try? JSONDecoder().decode(KeyPair.self, from: data) else {
             return nil
         }
         self = result
@@ -171,8 +169,7 @@ extension KeyPair: RawRepresentable {
     
     public var rawValue: String {
         guard let data = try? JSONEncoder().encode(self),
-              let result = String(data: data, encoding: .utf8)
-        else {
+            let result = String(data: data, encoding: .utf8) else {
             return "{}"
         }
         return result

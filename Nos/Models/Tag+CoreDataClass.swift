@@ -13,6 +13,6 @@ import CoreData
 public class Tag: NosManagedObject {
     
     var jsonRepresentation: [String] {
-        [[identifier].compactMap { $0 }, (metadata as! Array<String>)].flatMap({ $0 })
+        [[identifier].compactMap { $0 }, (metadata as! [String])].flatMap({ $0 })
     }
 }

@@ -21,7 +21,7 @@ struct RelayView: View {
         List {
             Section("Relays") {
                 ForEach(relays) { relay in
-                    Text(relay.address!)
+                    Text(relay.address ?? "error")
                 }
                 if relays.isEmpty {
                     Text("No relays yet! Add one below to get started")
@@ -31,21 +31,21 @@ struct RelayView: View {
             Section("Add relay") {
                 TextField("wss://yourrelay.com", text: $newRelayAddress)
                     .autocorrectionDisabled()
-#if os(iOS)
+                    #if os(iOS)
                     .textInputAutocapitalization(.none)
                     .keyboardType(.URL)
-#endif
+                    #endif
                 Button("Save") {
                     addRelay()
                 }
             }
         }
         .toolbar {
-#if os(iOS)
+            #if os(iOS)
             ToolbarItem(placement: .navigationBarTrailing) {
                 EditButton()
             }
-#endif
+            #endif
         }
         .navigationTitle("Relays")
     }
@@ -59,7 +59,8 @@ struct RelayView: View {
                 try viewContext.save()
             } catch {
                 // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                // fatalError() causes the application to generate a crash log and terminate. You should not
+                // use this function in a shipping application, although it may be useful during development.
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }

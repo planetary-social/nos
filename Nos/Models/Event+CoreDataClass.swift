@@ -19,7 +19,7 @@ struct JSONEvent: Codable {
     var kind: Int64
     var tags: [[String]]
     var content: String
-    var sig: String
+    var signature: String
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -28,8 +28,13 @@ struct JSONEvent: Codable {
         case kind
         case tags
         case content
-        case sig
+        case signature = "sig"
     }
+}
+
+enum EventError: Error {
+    case jsonEncoding
+    case utf8Encoding
 }
 
 struct MetadataEventJSON: Codable {
@@ -65,68 +70,8 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    class func parse(jsonObject: [String: Any], in persistenceController: PersistenceController) throws -> Event {
-        let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
-        let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
-        return try parse(jsonEvent: jsonEvent, in: persistenceController)
-    }
-    
-    class func parse(jsonEvent: JSONEvent, in persistenceController: PersistenceController) throws -> Event {
-        let parseContext = persistenceController.container.viewContext
-        
-        if let existingEvent = try parseContext.fetch(Event.event(by: jsonEvent.id)).first {
-            return existingEvent
-        }
-        
-        let event = Event(context: parseContext)
-        event.createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
-        event.content = jsonEvent.content
-        event.identifier = jsonEvent.id
-        event.kind = jsonEvent.kind
-        event.signature = jsonEvent.sig
-        
-        let author = try Author.findOrCreate(by: jsonEvent.pubKey, context: parseContext)
-        event.author = author
-        
-        if event.kind == 0, let contentData = jsonEvent.content.data(using: .utf8) {
-            do {
-                let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
-                author.name = metadata.name
-                author.about = metadata.about
-                author.profilePhotoURL = metadata.profilePhotoURL
-            } catch {
-                print("Failed to decode kind 0 event content with ID \(String(describing: event.identifier))")
-            }
-        }
-        
-        let tags = NSMutableOrderedSet()
-        for jsonTag in jsonEvent.tags {
-            let tag = Tag(context: parseContext)
-            tag.identifier = jsonTag.first
-            tag.metadata = Array(jsonTag[1...]) as NSObject
-            tags.add(tag)
-        }
-        event.tags = tags
-        
-        return event
-    }
-    
-    class func parse(jsonData: Data, in persistenceController: PersistenceController) throws -> [Event] {
-        let parseContext = persistenceController.container.viewContext
-        let jsonEvents = try JSONDecoder().decode([JSONEvent].self, from: jsonData)
-        var events = [Event]()
-        for jsonEvent in jsonEvents {
-            let event = try parse(jsonEvent: jsonEvent, in: persistenceController)
-            events.append(event)
-        }
-        
-        try parseContext.save()
-        
-        return events
-    }
-    
     var serializedEventForSigning: [Any?] {
-        return [
+        [
             0,
             author?.hexadecimalPublicKey,
             Int64(createdAt!.timeIntervalSince1970),
@@ -137,7 +82,10 @@ public class Event: NosManagedObject {
     }
     
     func calculateIdentifier() throws -> String {
-        let serializedEventData = try JSONSerialization.data(withJSONObject: serializedEventForSigning, options: [.withoutEscapingSlashes])
+        let serializedEventData = try JSONSerialization.data(
+            withJSONObject: serializedEventForSigning,
+            options: [.withoutEscapingSlashes]
+        )
         return serializedEventData.sha256
     }
     
@@ -153,11 +101,10 @@ public class Event: NosManagedObject {
     
     var jsonRepresentation: [String: Any]? {
         guard let identifier = identifier,
-              let pubKey = author?.hexadecimalPublicKey,
-              let createdAt = createdAt,
-              
-              let content = content,
-              let sig = signature else {
+            let pubKey = author?.hexadecimalPublicKey,
+            let createdAt = createdAt,
+            let content = content,
+            let signature = signature else {
             return nil
         }
               
@@ -168,7 +115,7 @@ public class Event: NosManagedObject {
             "kind": kind,
             "tags": tagsJSONRepresentation,
             "content": content,
-            "sig": sig
+            "sig": signature
         ]
     }
 }
