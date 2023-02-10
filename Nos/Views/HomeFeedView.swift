@@ -49,7 +49,10 @@ struct HomeFeedView: View {
         })
         .toolbar {
             ToolbarItem {
-                Button(action: { isCreatingNewPost.toggle() }) {
+                Button {
+                    isCreatingNewPost.toggle()
+                }
+                label: {
                     Label("Add Item", systemImage: "plus")
                 }
             }

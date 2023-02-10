@@ -19,7 +19,7 @@ struct JSONEvent: Codable {
     var kind: Int64
     var tags: [[String]]
     var content: String
-    var sig: String
+    var signature: String
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -28,8 +28,13 @@ struct JSONEvent: Codable {
         case kind
         case tags
         case content
-        case sig
+        case signature = "sig"
     }
+}
+
+enum EventError: Error {
+    case jsonEncoding
+    case utf8Encoding
 }
 
 @objc(Event)
@@ -73,7 +78,7 @@ public class Event: NosManagedObject {
         event.content = jsonEvent.content
         event.identifier = jsonEvent.id
         event.kind = jsonEvent.kind
-        event.signature = jsonEvent.sig
+        event.signature = jsonEvent.signature
         
         let author = Author(context: parseContext)
         author.hexadecimalPublicKey = jsonEvent.pubKey
@@ -106,7 +111,7 @@ public class Event: NosManagedObject {
     }
     
     var serializedEventForSigning: [Any?] {
-        return [
+        [
             0,
             author?.hexadecimalPublicKey,
             Int64(createdAt!.timeIntervalSince1970),
@@ -117,7 +122,10 @@ public class Event: NosManagedObject {
     }
     
     func calculateIdentifier() throws -> String {
-        let serializedEventData = try JSONSerialization.data(withJSONObject: serializedEventForSigning, options: [.withoutEscapingSlashes])
+        let serializedEventData = try JSONSerialization.data(
+            withJSONObject: serializedEventForSigning,
+            options: [.withoutEscapingSlashes]
+        )
         return serializedEventData.sha256
     }
     
@@ -133,11 +141,10 @@ public class Event: NosManagedObject {
     
     var jsonRepresentation: [String: Any]? {
         guard let identifier = identifier,
-              let pubKey = author?.hexadecimalPublicKey,
-              let createdAt = createdAt,
-              
-              let content = content,
-              let sig = signature else {
+            let pubKey = author?.hexadecimalPublicKey,
+            let createdAt = createdAt,
+            let content = content,
+            let signature = signature else {
             return nil
         }
               
@@ -148,7 +155,7 @@ public class Event: NosManagedObject {
             "kind": kind,
             "tags": tagsJSONRepresentation,
             "content": content,
-            "sig": sig
+            "sig": signature
         ]
     }
 }

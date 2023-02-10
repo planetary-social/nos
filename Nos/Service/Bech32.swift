@@ -7,6 +7,8 @@
 
 import Foundation
 
+// swiftlint:disable all
+
 /// Bech32 checksum implementation
 /// Modified from https://github.com/0xDEADP00L/Bech32
 public enum Bech32 {

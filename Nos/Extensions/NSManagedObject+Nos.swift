@@ -15,7 +15,6 @@ public class NosManagedObject: NSManagedObject {
     }
     
     class func entityDescription(in context: NSManagedObjectContext) -> NSEntityDescription {
-        return NSEntityDescription.entity(forEntityName: String(describing: Self.self), in: context)!
+        NSEntityDescription.entity(forEntityName: String(describing: Self.self), in: context)!
     }
 }
-
