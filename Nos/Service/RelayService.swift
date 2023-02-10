@@ -26,7 +26,7 @@ class RelayService: WebSocketDelegate, ObservableObject {
             let relays = try objectContext.fetch(Relay.allRelaysRequest())
             for relay in relays {
                 guard let relayAddress = relay.address?.lowercased(),
-                      let relayURL = URL(string: relayAddress) else {
+                    let relayURL = URL(string: relayAddress) else {
                     continue
                 }
                             

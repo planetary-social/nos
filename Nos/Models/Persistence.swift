@@ -48,8 +48,10 @@ struct PersistenceController {
         }
         container.loadPersistentStores(completionHandler: { (_, error) in
             if let error = error as NSError? {
+                // swiftlint:disable indentation_width line_length
                 // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this
+                // function in a shipping application, although it may be useful during development.
 
                 /*
                  Typical reasons for an error here include:
@@ -59,6 +61,7 @@ struct PersistenceController {
                  * The store could not be migrated to the current model version.
                  Check the error message to determine what the actual problem was.
                  */
+                // swiftlint:enable indentation_width line_length
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
