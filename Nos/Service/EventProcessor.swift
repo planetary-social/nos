@@ -30,10 +30,20 @@ enum EventProcessor {
         event.kind = jsonEvent.kind
         event.signature = jsonEvent.signature
         
-        let author = Author(context: parseContext)
-        author.hexadecimalPublicKey = jsonEvent.pubKey
+        let author = try Author.findOrCreate(by: jsonEvent.pubKey, context: parseContext)
         event.author = author
         
+        if event.kind == 0, let contentData = jsonEvent.content.data(using: .utf8) {
+            do {
+                let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
+                author.name = metadata.name
+                author.about = metadata.about
+                author.profilePhotoURL = metadata.profilePhotoURL
+            } catch {
+                print("Failed to decode kind 0 event content with ID \(String(describing: event.identifier))")
+            }
+        }
+
         let tags = NSMutableOrderedSet()
         for jsonTag in jsonEvent.tags {
             let tag = Tag(context: parseContext)
