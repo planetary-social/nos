@@ -38,6 +38,8 @@ The app is fully functional in the iOS simulator. To run the app in the simulato
 
 If you'd like to contribute code to the main branch of Nos, it's best to check with us first. The best way to do this is to open or comment on an [issue](https://github.com/planetary-social/nos/issues) describing your proposed change. Feel free to @-mention some of the maintainers if we don't respond in a reasonable amount of time.
 
+We use SwiftLint to enforce many of our style conventions. When it comes to naming conventions we follow the [Swift API Design Guidelines](https://www.swift.org/documentation/api-design-guidelines/).
+
 ### Opening a Pull Request
 
 For now `main` is the main branch and code improvements are made in topic branches that get merged into it.
