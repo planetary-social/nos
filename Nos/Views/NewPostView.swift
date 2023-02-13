@@ -10,8 +10,18 @@ import CoreData
 import SwiftUINavigation
 
 struct NewPostView: View {
-    
-    @AppStorage("keyPair") private var keyPair: KeyPair?
+    private var keyPair: KeyPair? {
+        get {
+            if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey),
+               let hexString = NSString(data: privateKeyData, encoding: NSUTF8StringEncoding) as? String,
+               let pair = KeyPair(privateKeyHex: hexString) {
+                return pair
+            } else {
+                print("Error loading key pair from keychain")
+                return nil
+            }
+        }
+    }
     
     @Environment(\.managedObjectContext) private var viewContext
     

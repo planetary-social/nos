@@ -9,18 +9,13 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    let keychainPublicKey = "publicKey"
-    let keychainPrivateKey = "privateKey"
+
     
     @State private var keyPair: KeyPair? {
         didSet {
             if let pair = keyPair {
-                let publicKey = Data(pair.publicKeyHex.utf8)
-                let privateStatus = KeyChain.save(key: keychainPublicKey, data: publicKey)
-                print("Private key keychain storage status: \(privateStatus)")
-                
                 let privateKey = Data(pair.privateKeyHex.utf8)
-                let publicStatus = KeyChain.save(key: keychainPrivateKey, data: privateKey)
+                let publicStatus = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKey)
                 print("Public key keychain storage status: \(publicStatus)")
             }
         }
@@ -53,7 +48,7 @@ struct SettingsView: View {
             )
         }
         .task {
-            if let privateKeyData = KeyChain.load(key: keychainPrivateKey),
+            if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey),
                let hexString = NSString(data: privateKeyData, encoding: NSUTF8StringEncoding) as? String {
                 privateKeyString = hexString
             } else {

@@ -11,6 +11,8 @@ import Security
 import UIKit
 
 class KeyChain {
+    static let keychainPrivateKey = "privateKey"
+    
     class func save(key: String, data: Data) -> OSStatus {
         let query = [
             kSecClass as String       : kSecClassGenericPassword as String,
