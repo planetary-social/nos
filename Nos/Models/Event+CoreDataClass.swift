@@ -47,7 +47,7 @@ enum EventError: Error {
 	}
 }
 
-enum EventKind: Int64 {
+public enum EventKind: Int64 {
 	case metaData = 0
 	case text = 1
 	case contactList = 3
@@ -76,10 +76,10 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func allPostsRequest() -> NSFetchRequest<Event> {
+	@nonobjc public class func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(format: "kind = %i", 1)
+		fetchRequest.predicate = NSPredicate(format: "kind = %i", eventKind.rawValue)
         return fetchRequest
     }
     
