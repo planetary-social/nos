@@ -9,9 +9,6 @@ import SwiftUI
 import CoreData
 
 struct HomeFeedView: View {
-    
-    @AppStorage("keyPair") private var keyPair: KeyPair?
-    
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var relayService: RelayService

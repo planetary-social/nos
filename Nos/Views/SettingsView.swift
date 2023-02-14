@@ -8,9 +8,15 @@
 import SwiftUI
 
 struct SettingsView: View {
-    
-    // TODO: store private key in keychain
-    @AppStorage("keyPair") private var keyPair: KeyPair?
+    @State private var keyPair: KeyPair? {
+        didSet {
+            if let pair = keyPair {
+                let privateKey = Data(pair.privateKeyHex.utf8)
+                let publicStatus = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKey)
+                print("Public key keychain storage status: \(publicStatus)")
+            }
+        }
+    }
     
     @State var privateKeyString = ""
     
@@ -39,8 +45,12 @@ struct SettingsView: View {
             )
         }
         .task {
-            if let keyPair = self.keyPair {
-                privateKeyString = keyPair.privateKeyHex
+			if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
+				let hexString = String(decoding: privateKeyData, as: UTF8.self)
+                privateKeyString = hexString
+            } else {
+                print("Could not load private key from keychain")
+                privateKeyString = ""
             }
         }
     }
