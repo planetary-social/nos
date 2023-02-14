@@ -33,8 +33,28 @@ struct JSONEvent: Codable {
 }
 
 enum EventError: Error {
-    case jsonEncoding
-    case utf8Encoding
+	case jsonEncoding
+	case utf8Encoding
+	case unrecognizedKind
+	
+	var description: String? {
+		switch self {
+		case .unrecognizedKind:
+			return "Unrecognized event kind"
+		default:
+			return ""
+		}
+	}
+}
+
+enum EventKind: Int64 {
+	case metaData = 0
+	case text = 1
+	case contactList = 3
+	case directMessage = 4
+	case delete = 5
+	case boost = 6
+	case like = 7
 }
 
 struct MetadataEventJSON: Codable {
@@ -118,4 +138,28 @@ public class Event: NosManagedObject {
             "sig": signature
         ]
     }
+	
+	convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) {
+		self.init(context: context)
+		
+		// Meta data
+		createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
+		content = jsonEvent.content
+		identifier = jsonEvent.id
+		kind = jsonEvent.kind
+		signature = jsonEvent.signature
+		
+		// Author
+		author = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context)
+		
+		// Tags
+		let eventTags = NSMutableOrderedSet()
+		for jsonTag in jsonEvent.tags {
+			let tag = Tag(context: context)
+			tag.identifier = jsonTag.first
+			tag.metadata = Array(jsonTag[1...]) as NSObject
+			eventTags.add(tag)
+		}
+		tags = eventTags
+	}
 }

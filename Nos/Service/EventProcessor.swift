@@ -9,7 +9,6 @@ import Foundation
 
 /// The event processor consumes raw event data from the relays and writes it to Core Data.
 enum EventProcessor {
-    
     static func parse(jsonObject: [String: Any], in persistenceController: PersistenceController) throws -> Event {
         let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
         let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
@@ -23,35 +22,33 @@ enum EventProcessor {
             return existingEvent
         }
         
-        let event = Event(context: parseContext)
-        event.createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
-        event.content = jsonEvent.content
-        event.identifier = jsonEvent.id
-        event.kind = jsonEvent.kind
-        event.signature = jsonEvent.signature
+        let event = Event(context: parseContext, jsonEvent: jsonEvent)
         
-        let author = try Author.findOrCreate(by: jsonEvent.pubKey, context: parseContext)
-        event.author = author
-        
-        if event.kind == 0, let contentData = jsonEvent.content.data(using: .utf8) {
-            do {
-                let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
-                author.name = metadata.name
-                author.about = metadata.about
-                author.profilePhotoURL = metadata.profilePhotoURL
-            } catch {
-                print("Failed to decode kind 0 event content with ID \(String(describing: event.identifier))")
-            }
-        }
-
-        let tags = NSMutableOrderedSet()
-        for jsonTag in jsonEvent.tags {
-            let tag = Tag(context: parseContext)
-            tag.identifier = jsonTag.first
-            tag.metadata = Array(jsonTag[1...]) as NSObject
-            tags.add(tag)
-        }
-        event.tags = tags
+		guard let eventKind = EventKind(rawValue: event.kind) else {
+			print("Error: unrecognized event kind: \(event.kind)")
+			throw EventError.unrecognizedKind
+		}
+		
+		switch eventKind {
+		case .metaData:
+			if let contentData = jsonEvent.content.data(using: .utf8) {
+				do {
+					let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
+					
+					print("!! Author before: \(event.author?.name ?? "not set")")
+					if let author = event.author {
+						author.name = metadata.name
+						author.about = metadata.about
+						author.profilePhotoURL = metadata.profilePhotoURL
+						print("!! Author after: \(author.name ?? "not set")")
+					}
+				} catch {
+					print("Failed to decode kind \(eventKind) event content with ID \(String(describing: event.identifier))")
+				}
+			}
+		default:
+			print("No action for kind: \(eventKind)")
+		}
         
         return event
     }
