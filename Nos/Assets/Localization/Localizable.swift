@@ -25,8 +25,9 @@ extension Localizable {
     // You can modify this to perform localization, or overrides based on server or other config
     var string: String {
         rawValue
-//        let bundle = Bundle.current
-//        return NSLocalizedString(key, tableName: "Generated", bundle: bundle, comment: "")
+        // TODO: switch to NSLocalizedStringKey once we set up Generated.strings
+        // let bundle = Bundle.current
+        // return NSLocalizedString(key, tableName: "Generated", bundle: bundle, comment: "")
     }
 
     // replaces keys in the string with values from the dictionary passed
