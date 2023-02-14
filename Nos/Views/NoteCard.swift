@@ -45,7 +45,7 @@ struct NoteCard: View {
                 .padding(10)
                 Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                 Group {
-//                    CompactPostView(identifier: message.id, post: post)
+//                    CompactNoteView(identifier: message.id, post: post)
                     Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                     HStack {
                         // TODO: Re-enable when we start handling replies

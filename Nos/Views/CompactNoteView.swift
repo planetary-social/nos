@@ -1,5 +1,5 @@
 //
-//  CompactPostView.swift
+//  CompactNoteView.swift
 //  Planetary
 //
 //  Created by Martin Dutra on 28/10/22.
@@ -8,7 +8,9 @@
 
 import SwiftUI
 
-struct CompactPostView: View {
+/// A view that displays the text of a note (kind: 1 Nostr event) and truncates it with a "Read more" button if
+/// it is too long
+struct CompactNoteView: View {
 
     var note: Event
 
@@ -100,7 +102,7 @@ fileprivate struct TruncatedSizePreferenceKey: PreferenceKey {
     static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
 }
 
-struct CompactPostView_Previews: PreviewProvider {
+struct CompactNoteView_Previews: PreviewProvider {
     
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
@@ -120,10 +122,10 @@ struct CompactPostView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             VStack {
-                CompactPostView(note: shortNote)
+                CompactNoteView(note: shortNote)
             }
             VStack {
-                CompactPostView(note: longNote)
+                CompactNoteView(note: longNote)
             }
         }
         .padding()
