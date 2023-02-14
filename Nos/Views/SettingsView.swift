@@ -18,10 +18,10 @@ struct SettingsView: View {
     
     var body: some View {
         Form {
-            Section("Keys") {
-                Text("Warning: your private key will be stored unencrypted on disk. ")
-                TextField("Private Key (in hex format)", text: $privateKeyString)
-                Button("Save") {
+            Section(Localized.keys.string) {
+                Localized.keyEncryptionWarning.view
+                TextField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
+                Button(Localized.save.string) {
                     if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
                         self.keyPair = keyPair
                     } else {
@@ -31,11 +31,11 @@ struct SettingsView: View {
                 }
             }
         }
-        .navigationTitle("Settings")
+        .navigationTitle(Localized.settings.string)
         .alert(isPresented: $showError) {
             Alert(
-                title: Text("Invalid Key"),
-                message: Text("Could not read your private key. Make sure it is in hex format.")
+                title: Localized.invalidKey.view,
+                message: Localized.couldNotReadPrivateKeyMessage.view
             )
         }
         .task {

@@ -52,6 +52,10 @@
 		C9DEC06B298965550078B43A /* RelayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEC069298965540078B43A /* RelayView.swift */; };
 		C9DEC06E2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */; };
 		C9DEC06F2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */; };
+		C9DFA976299C30F0006929C1 /* Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA975299C30F0006929C1 /* Localized.swift */; };
+		C9DFA979299C31A7006929C1 /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA978299C31A7006929C1 /* Localizable.swift */; };
+		C9DFA97A299C31E9006929C1 /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA978299C31A7006929C1 /* Localizable.swift */; };
+		C9DFA97B299C31EE006929C1 /* Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA975299C30F0006929C1 /* Localized.swift */; };
 		C9F84C1A298DBB6300C6714D /* Data+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */; };
 		C9F84C1C298DBBF400C6714D /* Data+Sha.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C1B298DBBF400C6714D /* Data+Sha.swift */; };
 		C9F84C1D298DBC6100C6714D /* Data+Sha.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C1B298DBBF400C6714D /* Data+Sha.swift */; };
@@ -108,6 +112,8 @@
 		C9DEC0622989541F0078B43A /* Bundle+Current.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Current.swift"; sourceTree = "<group>"; };
 		C9DEC069298965540078B43A /* RelayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayView.swift; sourceTree = "<group>"; };
 		C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Relay+CoreDataClass.swift"; sourceTree = "<group>"; };
+		C9DFA975299C30F0006929C1 /* Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localized.swift; sourceTree = "<group>"; };
+		C9DFA978299C31A7006929C1 /* Localizable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
 		C9F84C1B298DBBF400C6714D /* Data+Sha.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Sha.swift"; sourceTree = "<group>"; };
 		C9F84C20298DC36800C6714D /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		C9F84C22298DC7B900C6714D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -186,7 +192,7 @@
 			children = (
 				C9DEBFDC298941020078B43A /* Nos.entitlements */,
 				C9DEBFD1298941000078B43A /* NosApp.swift */,
-				C9DEBFDA298941020078B43A /* Assets.xcassets */,
+				C9DFA974299C30CA006929C1 /* Assets */,
 				C9DEC001298944FC0078B43A /* Extensions */,
 				C9DEC02C29894BB20078B43A /* Models */,
 				C97797B7298AA1600046BD25 /* Service */,
@@ -256,6 +262,24 @@
 				C9F84C26298DC98800C6714D /* KeyPair.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		C9DFA974299C30CA006929C1 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				C9DEBFDA298941020078B43A /* Assets.xcassets */,
+				C9DFA977299C3189006929C1 /* Localization */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		C9DFA977299C3189006929C1 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				C9DFA975299C30F0006929C1 /* Localized.swift */,
+				C9DFA978299C31A7006929C1 /* Localizable.swift */,
+			);
+			path = Localization;
 			sourceTree = "<group>";
 		};
 		C9F84C24298DC7C100C6714D /* Views */ = {
@@ -460,6 +484,8 @@
 				C97797B9298AA19A0046BD25 /* RelayService.swift in Sources */,
 				C9DEC04529894BED0078B43A /* Event+CoreDataClass.swift in Sources */,
 				C9DEBFD4298941000078B43A /* Persistence.swift in Sources */,
+				C9DFA976299C30F0006929C1 /* Localized.swift in Sources */,
+				C9DFA979299C31A7006929C1 /* Localizable.swift in Sources */,
 				C9DEC04D29894BED0078B43A /* Author+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,6 +496,7 @@
 			files = (
 				C9ADB13E29929EEF0075E7F8 /* Bech32.swift in Sources */,
 				C9DEC05A2989509B0078B43A /* Persistence.swift in Sources */,
+				C9DFA97A299C31E9006929C1 /* Localizable.swift in Sources */,
 				C9DEC06B298965550078B43A /* RelayView.swift in Sources */,
 				C9DEC05C298953280078B43A /* Nos.xcdatamodeld in Sources */,
 				C9DEC04629894BED0078B43A /* Event+CoreDataClass.swift in Sources */,
@@ -486,6 +513,7 @@
 				C9DEBFE9298941020078B43A /* EventTests.swift in Sources */,
 				C9ADB14229951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */,
 				C9BAB09C2996FBA10003A84E /* EventProcessor.swift in Sources */,
+				C9DFA97B299C31EE006929C1 /* Localized.swift in Sources */,
 				C9ADB135299288230075E7F8 /* KeyFixture.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

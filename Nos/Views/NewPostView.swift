@@ -29,17 +29,17 @@ struct NewPostView: View {
                 TextEditor(text: $postText)
                     .frame(idealHeight: 180)
                 Button(action: publishPost) {
-                    Text("Publish")
+                    Localized.publish.view
                 }
             }
-            .navigationTitle("New Post")
+            .navigationTitle(Localized.newNote.string)
             .toolbar(content: {
                 ToolbarItem {
                     Button {
                         isPresented = false
                     }
                     label: {
-                        Text("Cancel")
+                        Localized.cancel.view
                     }
                 }
             })
@@ -50,9 +50,9 @@ struct NewPostView: View {
     private func publishPost() {
         guard let keyPair else {
             alert = AlertState(title: {
-                TextState("Error")
+                TextState(Localized.error.string)
             }, message: {
-                TextState("You need to enter a private key in Settings before you can publish posts.")
+                TextState(Localized.youNeedToEnterAPrivateKeyBeforePosting.string)
             })
             return
         }
@@ -74,7 +74,7 @@ struct NewPostView: View {
                 isPresented = false
             } catch {
                 alert = AlertState(title: {
-                    TextState("Error")
+                    TextState(Localized.error.string)
                 }, message: {
                     TextState(error.localizedDescription)
                 })
