@@ -21,6 +21,33 @@ extension Localized {
 // MARK: - Generic
 
 /// Localized is an enumeration of all the strings in our app that can be translated into supported languages.
+///
+///    Use as follows:
+///
+///    enum Text: String, Localizable {
+///        case hello = "Hello!"
+///        case greeting = "Hello {{ name }}!"
+///    }
+///
+///    Text.hello.string
+///        Hello!
+///
+///    Text.greeting.string(["name": "friend"])
+///        Hello friend!
+///
+///    To create a localizable strings file, you can conform your enum to CaseIterable,
+///    and then call the following:
+///
+///    Text.exportForStringsFile()
+///        "Text.hello" = "Hello.";
+///        "Text.greeting" = "Hello {{ name }}.";
+///
+///    Then simply implement localization in the `string` function:
+///
+///        var string: String {
+///            return NSLocalizedString(key, comment: "")
+///        }
+///
 enum Localized: String, Localizable, CaseIterable {
     
     case nos = "Nos"

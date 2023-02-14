@@ -1,7 +1,10 @@
 import Foundation
 import SwiftUI
 
+/// A protocol for strings that are translated into multiple languages. See `Localized` for concrete implementation and
+/// usage docs.
 protocol Localizable: RawRepresentable<String> {
+    
     var template: String { get }
 
     /// optionally override this to provide your own key
@@ -17,32 +20,6 @@ protocol Localizable: RawRepresentable<String> {
     static func exportForStringsFile() -> String
 }
 
-//    Use as follows:
-//
-//    enum Text: String, Localizable {
-//        case hello = "Hello!"
-//        case greeting = "Hello {{ name }}!"
-//    }
-//
-//    Text.hello.text
-//        Hello!
-//
-//    Text.greeting.text(["name": "friend"])
-//        Hello friend!
-//
-//    To create a localizable strings file, you can conform your enum to CaseIterable,
-//    and then call the following:
-//
-//    Text.exportForStringsFile()
-//        "Text.hello" = "Hello.";
-//        "Text.greeting" = "Hello {{ name }}.";
-//
-//    Then simply implement localization in the `text` function:
-//
-//        var text: String {
-//            return NSLocalizedString(key, comment: "")
-//        }
-//
 extension Localizable {
     
     // You can modify this to perform localization, or overrides based on server or other config
