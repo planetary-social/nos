@@ -11,16 +11,14 @@ import SwiftUINavigation
 
 struct NewPostView: View {
     private var keyPair: KeyPair? {
-        get {
-            if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey),
-               let hexString = NSString(data: privateKeyData, encoding: NSUTF8StringEncoding) as? String,
-               let pair = KeyPair(privateKeyHex: hexString) {
-                return pair
-            } else {
-                print("Error loading key pair from keychain")
-                return nil
-            }
+		if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
+			let hexString = String(decoding: privateKeyData, as: UTF8.self)
+			if let pair = KeyPair(privateKeyHex: hexString) {
+				return pair
+			}
         }
+		print("Error loading key pair from keychain")
+		return nil
     }
     
     @Environment(\.managedObjectContext) private var viewContext

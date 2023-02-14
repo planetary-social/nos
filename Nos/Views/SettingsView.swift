@@ -8,9 +8,6 @@
 import SwiftUI
 
 struct SettingsView: View {
-    
-
-    
     @State private var keyPair: KeyPair? {
         didSet {
             if let pair = keyPair {
@@ -48,8 +45,8 @@ struct SettingsView: View {
             )
         }
         .task {
-            if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey),
-               let hexString = NSString(data: privateKeyData, encoding: NSUTF8StringEncoding) as? String {
+			if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
+				let hexString = String(decoding: privateKeyData, as: UTF8.self)
                 privateKeyString = hexString
             } else {
                 print("Could not load private key from keychain")
