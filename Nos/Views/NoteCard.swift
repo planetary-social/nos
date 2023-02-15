@@ -83,7 +83,7 @@ struct NoteCard: View {
         case .golden:
             return EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
         case .compact:
-            return EdgeInsets(top: 15, leading: 15, bottom: 0, trailing: 15)
+            return EdgeInsets(top: 15, leading: 0, bottom: 0, trailing: 0)
         }
     }
 
@@ -163,4 +163,3 @@ struct NoteCard_Previews: PreviewProvider {
             .background(Color.appBg)
         }
 }
-

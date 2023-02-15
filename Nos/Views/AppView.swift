@@ -63,10 +63,12 @@ struct AppView_Previews: PreviewProvider {
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
     static var relayService = RelayService(persistenceController: persistenceController)
+    static var router = Router()
     
     static var previews: some View {
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
+            .environmentObject(router)
     }
 }

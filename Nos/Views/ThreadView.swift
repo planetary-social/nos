@@ -15,8 +15,32 @@ struct ThreadView: View {
     }
 }
 
-//struct ThreadView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ThreadView()
-//    }
-//}
+struct ThreadView_Previews: PreviewProvider {
+    static var persistenceController = PersistenceController.preview
+    static var previewContext = persistenceController.container.viewContext
+    
+    static var shortNote: Event {
+        let note = Event(context: previewContext)
+        note.content = "Hello, world!"
+        return note
+    }
+    
+    static var longNote: Event {
+        let note = Event(context: previewContext)
+        note.content = .loremIpsum(5)
+        return note
+    }
+    
+    static var previews: some View {
+        Group {
+            VStack {
+                ThreadView(note: shortNote)
+            }
+            VStack {
+                ThreadView(note: longNote)
+            }
+        }
+        .padding()
+        .background(Color.cardBackground)
+    }
+}
