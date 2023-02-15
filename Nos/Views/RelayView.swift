@@ -19,23 +19,23 @@ struct RelayView: View {
     
     var body: some View {
         List {
-            Section("Relays") {
+            Section(Localized.relays.string) {
                 ForEach(relays) { relay in
-                    Text(relay.address ?? "error")
+                    Text(relay.address ?? Localized.error.string)
                 }
                 if relays.isEmpty {
-                    Text("No relays yet! Add one below to get started")
+                    Localized.noRelaysMessage.view
                 }
             }
             
-            Section("Add relay") {
+            Section(Localized.addRelay.string) {
                 TextField("wss://yourrelay.com", text: $newRelayAddress)
                     .autocorrectionDisabled()
                     #if os(iOS)
                     .textInputAutocapitalization(.none)
                     .keyboardType(.URL)
                     #endif
-                Button("Save") {
+                Button(Localized.save.string) {
                     addRelay()
                 }
             }
@@ -47,7 +47,7 @@ struct RelayView: View {
             }
             #endif
         }
-        .navigationTitle("Relays")
+        .navigationTitle(Localized.relays.string)
     }
     
     private func addRelay() {
