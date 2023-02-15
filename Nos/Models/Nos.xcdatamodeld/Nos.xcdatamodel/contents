@@ -16,7 +16,7 @@
         <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="events" inverseEntity="Author"/>
         <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Tag" inverseName="event" inverseEntity="Tag"/>
     </entity>
-    <entity name="Follow" representedClassName="Follow" parentEntity="Tag" syncable="YES" codeGenerationType="class">
+    <entity name="Follow" representedClassName=".Follow" parentEntity="Tag" syncable="YES" codeGenerationType="category">
         <attribute name="petName" optional="YES" attributeType="String"/>
         <relationship name="relay" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Relay"/>
     </entity>
