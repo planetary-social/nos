@@ -33,8 +33,29 @@ struct JSONEvent: Codable {
 }
 
 enum EventError: Error {
-    case jsonEncoding
-    case utf8Encoding
+	case jsonEncoding
+	case utf8Encoding
+	case unrecognizedKind
+	
+	var description: String? {
+		switch self {
+		case .unrecognizedKind:
+			return "Unrecognized event kind"
+		default:
+			return ""
+		}
+	}
+}
+
+public enum EventKind: Int64 {
+	case metaData = 0
+	case text = 1
+	case contactList = 3
+	case directMessage = 4
+	case delete = 5
+	case boost = 6
+	case like = 7
+    case parameterizedReplaceableEvent = 30_000
 }
 
 struct MetadataEventJSON: Codable {
@@ -56,10 +77,10 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func allPostsRequest() -> NSFetchRequest<Event> {
+	@nonobjc public class func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(format: "kind = %i", 1)
+		fetchRequest.predicate = NSPredicate(format: "kind = %i", eventKind.rawValue)
         return fetchRequest
     }
     
@@ -118,4 +139,18 @@ public class Event: NosManagedObject {
             "sig": signature
         ]
     }
+	
+	convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) {
+		self.init(context: context)
+		
+		// Meta data
+		createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
+		content = jsonEvent.content
+		identifier = jsonEvent.id
+		kind = jsonEvent.kind
+		signature = jsonEvent.signature
+		
+		// Author
+		author = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context)
+	}
 }

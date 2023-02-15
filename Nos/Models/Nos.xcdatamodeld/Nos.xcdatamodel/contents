@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22C65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G115" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Author" representedClassName=".Author" syncable="YES" codeGenerationType="category">
         <attribute name="about" optional="YES" attributeType="String"/>
         <attribute name="hexadecimalPublicKey" attributeType="String"/>
@@ -15,6 +15,10 @@
         <attribute name="signature" attributeType="String"/>
         <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="events" inverseEntity="Author"/>
         <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Tag" inverseName="event" inverseEntity="Tag"/>
+    </entity>
+    <entity name="Follow" representedClassName=".Follow" parentEntity="Tag" syncable="YES" codeGenerationType="category">
+        <attribute name="petName" optional="YES" attributeType="String"/>
+        <relationship name="relay" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Relay"/>
     </entity>
     <entity name="Relay" representedClassName=".Relay" syncable="YES" codeGenerationType="category">
         <attribute name="address" attributeType="String"/>
