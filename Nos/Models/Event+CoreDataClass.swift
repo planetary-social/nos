@@ -55,6 +55,7 @@ public enum EventKind: Int64 {
 	case delete = 5
 	case boost = 6
 	case like = 7
+    case parameterizedReplaceableEvent = 30_000
 }
 
 struct MetadataEventJSON: Codable {
