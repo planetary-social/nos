@@ -151,15 +151,5 @@ public class Event: NosManagedObject {
 		
 		// Author
 		author = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context)
-		
-		// Tags
-		let eventTags = NSMutableOrderedSet()
-		for jsonTag in jsonEvent.tags {
-			let tag = Tag(context: context)
-			tag.identifier = jsonTag.first
-			tag.metadata = Array(jsonTag[1...]) as NSObject
-			eventTags.add(tag)
-		}
-		tags = eventTags
 	}
 }

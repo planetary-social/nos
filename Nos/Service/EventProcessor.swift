@@ -22,32 +22,60 @@ enum EventProcessor {
             return existingEvent
         }
         
-        let event = Event(context: parseContext, jsonEvent: jsonEvent)
-        
-		guard let eventKind = EventKind(rawValue: event.kind) else {
-			print("Error: unrecognized event kind: \(event.kind)")
+		guard let eventKind = EventKind(rawValue: jsonEvent.kind) else {
+			print("Error: unrecognized event kind: \(jsonEvent.kind)")
 			throw EventError.unrecognizedKind
 		}
+        
+        guard let contentData = jsonEvent.content.data(using: .utf8) else {
+            throw EventError.jsonEncoding
+        }
 		
-		switch eventKind {
-		case .metaData:
-			if let contentData = jsonEvent.content.data(using: .utf8) {
-				do {
-					let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
-					
-					print("!! Author before: \(event.author?.name ?? "not set")")
-					if let author = event.author {
-						author.name = metadata.name
-						author.about = metadata.about
-						author.profilePhotoURL = metadata.profilePhotoURL
-						print("!! Author after: \(author.name ?? "not set")")
-					}
-				} catch {
-					print("Failed to decode kind \(eventKind) event content with ID \(String(describing: event.identifier))")
+		let event = Event(context: parseContext, jsonEvent: jsonEvent)
+		
+        switch eventKind {
+        case .contactList:
+			let eventFollows = NSMutableOrderedSet()
+			for jsonTag in jsonEvent.tags {
+				let followTag = Follow(context: parseContext)
+                followTag.identifier = jsonTag[1]
+
+                if jsonTag.count > 2 {
+                    if let relay = try parseContext.fetch(Relay.relay(by: jsonTag[2])).first {
+                        followTag.relay = relay
+                    } else {
+                        followTag.relay = Relay(context: parseContext)
+                        followTag.relay?.address = jsonTag[2]
+                    }
 				}
+
+                if jsonTag.count > 3 {
+                    followTag.petName = jsonTag[3]
+                }
+                eventFollows.add(followTag)
 			}
-		default:
-			print("No action for kind: \(eventKind)")
+			event.tags = eventFollows
+        case .metaData:
+            do {
+                let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
+                
+                if let author = event.author {
+                    author.name = metadata.name
+                    author.about = metadata.about
+                    author.profilePhotoURL = metadata.profilePhotoURL
+                }
+            } catch {
+                print("Failed to decode kind \(eventKind) event with ID \(String(describing: event.identifier))")
+            }
+        default:
+			let eventTags = NSMutableOrderedSet()
+			for jsonTag in jsonEvent.tags {
+				let tag = Tag(context: parseContext)
+				tag.identifier = jsonTag.first
+				tag.metadata = Array(jsonTag[1...]) as NSObject
+				eventTags.add(tag)
+			}
+			event.tags = eventTags
 		}
         
         return event
