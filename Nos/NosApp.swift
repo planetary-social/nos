@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct NosApp: App {
+    
+    @ObservedObject var router = Router()
     let persistenceController = PersistenceController.shared
     let relayService = RelayService(persistenceController: PersistenceController.shared)
 
@@ -17,6 +19,8 @@ struct NosApp: App {
             AppView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .environmentObject(relayService)
+                .environmentObject(router)
         }
+        
     }
 }

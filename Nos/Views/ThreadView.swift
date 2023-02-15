@@ -11,6 +11,7 @@ struct ThreadView: View {
     var note: Event
     var body: some View {
         Text("Thread view placeholder for note: \(note.identifier ?? "no id")")
+        Text(note.content ?? "")
     }
 }
 

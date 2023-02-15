@@ -7,12 +7,15 @@
 
 import SwiftUI
 
+class Router: ObservableObject {
+    @Published var path = NavigationPath()
+}
 struct AppView: View {
     
-    @State var path = NavigationPath()
+    @EnvironmentObject var router: Router
     
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack(path: $router.path) {
             List {
                 NavigationLink("🏠 Home Feed") {
                     HomeFeedView()
@@ -24,8 +27,15 @@ struct AppView: View {
                     SettingsView()
                 }
             }
+            .navigationDestination(for: Event.self) { note in
+                ThreadView(note: note)
+            }
             .navigationTitle("Nos")
+
+
         }
+        
+
     }
 }
 

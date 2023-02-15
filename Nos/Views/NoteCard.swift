@@ -32,7 +32,7 @@ struct NoteCard: View {
                             Image(systemName: "person.crop.circle.fill")
                                 .font(.body)
                                 .frame(width: 24, height: 24)
-                            Text(note.content ?? "")
+                            Text(note.author?.npubString?.prefix(10).appending("...") ?? "")
                                 .lineLimit(1)
                                 .font(.subheadline)
                                 .foregroundColor(Color.secondaryTxt)
@@ -45,7 +45,7 @@ struct NoteCard: View {
                 .padding(10)
                 Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                 Group {
-//                    CompactNoteView(identifier: message.id, post: post)
+                    CompactNoteView(note: note)
                     Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                     HStack {
                         // TODO: Re-enable when we start handling replies
@@ -55,7 +55,7 @@ struct NoteCard: View {
 //                                .font(.subheadline)
 //                                .foregroundColor(Color.secondaryTxt)
 //                        }
-                        Text("unkown replies")
+                        Text("unknown replies")
                         Spacer()
 //                        Image.buttonReply
                     }
@@ -116,131 +116,51 @@ struct NoteCard: View {
 //    }
 }
 
-//struct MessageCard_Previews: PreviewProvider {
-//    static var messageValue: MessageValue {
-//        MessageValue(
-//            author: "@QW5uYVZlcnNlWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFg=.ed25519",
-//            content: Content(
-//                from: Post(
-//                    blobs: nil,
-//                    branches: nil,
-//                    hashtags: nil,
-//                    mentions: nil,
-//                    root: nil,
-//                    text: .loremIpsum(words: 10)
-//                )
-//            ),
-//            hash: "",
-//            previous: nil,
-//            sequence: 0,
-//            signature: .null,
-//            claimedTimestamp: 0
-//        )
-//    }
-//    static var message: Message {
-//        var message = Message(
-//            key: "@unset",
-//            value: messageValue,
-//            timestamp: 0
-//        )
-//        message.metadata = Message.Metadata(
-//            author: Message.Metadata.Author(about: About(about: .null, name: "Mario")),
-//            replies: Message.Metadata.Replies(count: 0, abouts: Set()),
-//            isPrivate: false
-//        )
-//        return message
-//    }
-//
-//    static var messageWithOneReply: Message {
-//        var message = Message(
-//            key: "@unset",
-//            value: messageValue,
-//            timestamp: 0
-//        )
-//        message.metadata = Message.Metadata(
-//            author: Message.Metadata.Author(about: About(about: .null, name: "Mario")),
-//            replies: Message.Metadata.Replies(
-//                count: 1,
-//                abouts: Set(Array(repeating: About(about: .null, image: .null), count: 1))
-//            ),
-//            isPrivate: false
-//        )
-//        return message
-//    }
-//
-//    static var messageWithReplies: Message {
-//        var message = Message(
-//            key: "@unset",
-//            value: messageValue,
-//            timestamp: 0
-//        )
-//        message.metadata = Message.Metadata(
-//            author: Message.Metadata.Author(about: About(about: .null, name: "Mario")),
-//            replies: Message.Metadata.Replies(
-//                count: 2,
-//                abouts: Set(Array(repeating: About(about: .null, image: .null), count: 2))
-//            ),
-//            isPrivate: false
-//        )
-//        return message
-//    }
-//
-//    static var messageWithLongAuthor: Message {
-//        var message = Message(
-//            key: "@unset",
-//            value: messageValue,
-//            timestamp: 0
-//        )
-//        message.metadata = Message.Metadata(
-//            author: Message.Metadata.Author(about: About(about: .null, name: .loremIpsum(words: 8))),
-//            replies: Message.Metadata.Replies(count: 0, abouts: Set()),
-//            isPrivate: false
-//        )
-//        return message
-//    }
-//
-//    static var messageWithUnknownAuthor: Message {
-//        Message(
-//            key: "@unset",
-//            value: messageValue,
-//            timestamp: 0
-//        )
-//    }
-//
-//    static var previews: some View {
-//        Group {
-//            ScrollView {
-//                VStack {
-//                    MessageCard(message: message)
-//                    MessageCard(message: messageWithOneReply)
-//                    MessageCard(message: messageWithReplies)
-//                    MessageCard(message: messageWithLongAuthor)
-//                    MessageCard(message: messageWithUnknownAuthor)
-//                }
-//            }
-//            ScrollView {
-//                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-//                    MessageCard(message: message, style: .golden)
-//                    MessageCard(message: messageWithOneReply, style: .golden)
-//                    MessageCard(message: messageWithReplies, style: .golden)
-//                    MessageCard(message: messageWithLongAuthor, style: .golden)
-//                    MessageCard(message: messageWithUnknownAuthor, style: .golden)
-//                }
-//            }
-//            ScrollView {
-//                VStack {
-//                    MessageCard(message: message)
-//                    MessageCard(message: messageWithOneReply)
-//                    MessageCard(message: messageWithReplies)
-//                    MessageCard(message: messageWithLongAuthor)
-//                    MessageCard(message: messageWithUnknownAuthor)
-//                }
-//            }
-//            .preferredColorScheme(.dark)
-//        }
-//        .padding()
-//        .background(Color.appBg)
-//        .environmentObject(BotRepository.fake)
-//        .environmentObject(AppController.shared)
-//    }
-//}
+struct NoteCard_Previews: PreviewProvider {
+    
+    static var persistenceController = PersistenceController.preview
+    static var previewContext = persistenceController.container.viewContext
+    
+    static var shortNote: Event {
+        let note = Event(context: previewContext)
+        note.content = "Hello, world!"
+        return note
+    }
+    
+    static var longNote: Event {
+        let note = Event(context: previewContext)
+        note.content = .loremIpsum(5)
+        let author = Author(context: previewContext)
+        // TODO: derive from private key
+        author.hexadecimalPublicKey = "32730e9dfcab797caf8380d096e548d9ef98f3af3000542f9271a91a9e3b0001"
+        note.author = author
+        return note
+    }
+    
+        static var previews: some View {
+            Group {
+                ScrollView {
+                    VStack {
+                        NoteCard(note: shortNote)
+                        NoteCard(note: longNote)
+                    }
+                }
+                ScrollView {
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                        NoteCard(note: shortNote)
+                        NoteCard(note: longNote)
+                    }
+                }
+                ScrollView {
+                    VStack {
+                        NoteCard(note: shortNote)
+                        NoteCard(note: longNote)
+                    }
+                }
+                .preferredColorScheme(.dark)
+            }
+            .padding()
+            .background(Color.appBg)
+        }
+}
+

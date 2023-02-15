@@ -20,22 +20,12 @@ struct HomeFeedView: View {
     private var events: FetchedResults<Event>
     
     @State var isCreatingNewPost = false
-
+    
     var body: some View {
         List {
             ForEach(events) { event in
                 VStack {
-                    HStack {
-                        Image(systemName: "person.crop.circle.fill")
-                            .font(.body)
-                        
-                        Text(event.author?.displayName ?? "error")
-                            .lineLimit(1)
-                        Spacer()
-                    }
-                    
-                    Text(event.content!)
-                        .padding(.vertical, 1)
+                    NoteCard(note: event)
                 }
             }
         }
@@ -87,6 +77,18 @@ struct ContentView_Previews: PreviewProvider {
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
     static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
+    
+    static var shortNote: Event {
+        let note = Event(context: previewContext)
+        note.content = "Hello, world!"
+        return note
+    }
+    
+    static var longNote: Event {
+        let note = Event(context: previewContext)
+        note.content = .loremIpsum(5)
+        return note
+    }
     
     static var previews: some View {
         NavigationView {

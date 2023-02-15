@@ -27,7 +27,7 @@ struct CompactNoteView: View {
         shouldShowReadMore = intrinsicSize != truncatedSize
     }
     
-    @State var debug: String = ""
+    @EnvironmentObject var router: Router
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -67,22 +67,30 @@ struct CompactNoteView: View {
                         }
                 }
             if shouldShowReadMore {
+                
                 ZStack(alignment: .center) {
-                    Button {
-                        // TODO: push thread view
-                        // it should look like this:
-//                        path.append(note)
-                    } label: {
-                        Text("Read more".uppercased())
-                            .font(.caption)
-                            .foregroundColor(.secondaryTxt)
-                            .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
-                            .background(Color.hashtagBg)
-                            .cornerRadius(4)
+
+                        Button {
+                            // TODO: push thread view
+                            // it should look like this:
+                            //                        path.append(note)
+                            // path.append(ThreadView(note: note))
+                            router.path.append(note)
+                            
+                        } label: {
+                            Text("Read more".uppercased())
+                                .font(.caption)
+                                .foregroundColor(.secondaryTxt)
+                                .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
+                                .background(Color.hashtagBg)
+                                .cornerRadius(4)
+                        }
                     }
-                }
+                    
+                
                 .frame(maxWidth: .infinity)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
+
             }
         }
         .navigationDestination(for: Event.self, destination: { note in
