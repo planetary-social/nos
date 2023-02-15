@@ -35,11 +35,33 @@ final class EventTests: XCTestCase {
           "sig": "79862bd81b316411c23467632239750c97f3aa974593c01bd61d2ca85eedbcfd9a18886b0dad1c17b2e8ceb231db37add136fc23120b45aa5403d6fd2d693e9b"
         }
         """
+    
+    let sampleContactListJSONString =
+        """
+        {
+          "kind": 3,
+          "content": "Testing nos #[0]",
+          "tags": [
+            [
+              "p",
+              "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e",
+              "wss://nostr.lorentz.is/",
+              "Test Name"
+            ]
+          ],
+          "created_at": 1675264762,
+          "pubkey": "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e",
+          "id": "931b425e55559541451ddb99bd228bd1e0190af6ed21603b6b98544b42ee3317",
+          "sig": "31c710803d3b77cb2c61697c8e2a980a53ec66e980990ca34cc24f9018bf85bfd2b0669c1404f364de776a9d9ed31a5d6d32f5662ac77f2dc6b89c7762132d63"
+        }
+        """
     // swiftlint:enable indentation_width
     
     let sampleEventSignature = "31c710803d3b77cb2c61697c8e2a980a53ec66e980990ca34cc24f9018bf85bfd2b0669c1404f364de776a9d9ed31a5d6d32f5662ac77f2dc6b89c7762132d63"
     let sampleEventPubKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
     let sampleEventContent = "Spent today on our company retreat talking a lot about Nostr. The team seems very keen to build something in this space. It’s exciting to be opening our minds to so many possibilities after being deep in the Scuttlebutt world for so long."
+    let sampleRelay = "wss://nostr.lorentz.is/"
+    let sampleName = "Test Name"
     
     // swiftlint:enable line_length
 
@@ -106,7 +128,6 @@ final class EventTests: XCTestCase {
     
     func testSigning() throws {
         // Arrange
-        
         let persistenceController = PersistenceController(inMemory: true)
         let testContext = persistenceController.container.viewContext
         let event = try createTestEvent(in: testContext)
@@ -125,6 +146,34 @@ final class EventTests: XCTestCase {
             "79862bd81b316411c23467632239750c97f3aa974593c01bd61d2ca85eedbcfd9a18886b0dad1c17b2e8ceb231db37add136fc23120b45aa5403d6fd2d693e9b"
             // swiftlint:enable line_length
         )
+    }
+    
+    func testParseContactList() throws {
+        // Arrange
+        guard let jsonData = sampleContactListJSONString.data(using: .utf8) else {
+            XCTFail("Sample data cannot be parsed")
+            return
+        }
+
+        let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
+
+        // Act
+        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, in: PersistenceController(inMemory: true))
+         
+        // Assert
+        XCTAssertEqual(parsedEvent.signature, sampleEventSignature)
+        XCTAssertEqual(parsedEvent.kind, 3)
+        XCTAssertEqual(parsedEvent.tags?.count, 1)
+        XCTAssertEqual(parsedEvent.author?.hexadecimalPublicKey, sampleEventPubKey)
+        XCTAssertEqual(parsedEvent.createdAt?.timeIntervalSince1970, 1_675_264_762)
+        
+        guard let follow = parsedEvent.tags?.firstObject as? Follow else {
+            XCTFail("Tag is not of the Follow type")
+            return
+        }
+        
+        XCTAssertEqual(follow.relay?.address, sampleRelay)
+        XCTAssertEqual(follow.petName, sampleName)
     }
 
     // MARK: - Helpers
