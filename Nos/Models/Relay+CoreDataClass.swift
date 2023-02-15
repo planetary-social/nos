@@ -23,4 +23,14 @@ public class Relay: NosManagedObject {
         fetchRequest.fetchLimit = 1
         return fetchRequest
     }
+    
+    class func findOrCreate(by address: HexadecimalString, context: NSManagedObjectContext) -> Relay {
+        if let existingRelay = try? context.fetch(Relay.relay(by: address)).first {
+            return existingRelay
+        } else {
+            let relay = Relay(context: context)
+            relay.address = address
+            return relay
+        }
+    }
 }

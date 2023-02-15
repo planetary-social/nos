@@ -16,12 +16,7 @@ public class Follow: Tag {
         identifier = jsonTag[1]
         
         if jsonTag.count > 2 {
-            if let existingRelay = try? context.fetch(Relay.relay(by: jsonTag[2])).first {
-                relay = existingRelay
-            } else {
-                relay = Relay(context: context)
-                relay?.address = jsonTag[2]
-            }
+            relay = Relay.findOrCreate(by: jsonTag[2], context: context)
         }
         
         if jsonTag.count > 3 {
