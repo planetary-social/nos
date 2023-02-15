@@ -9,9 +9,6 @@ import SwiftUI
 import CoreData
 
 struct HomeFeedView: View {
-    
-    @AppStorage("keyPair") private var keyPair: KeyPair?
-    
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var relayService: RelayService
@@ -29,7 +26,7 @@ struct HomeFeedView: View {
                         Image(systemName: "person.crop.circle.fill")
                             .font(.body)
                         
-                        Text(event.author?.displayName ?? "error")
+                        Text(event.author?.displayName ?? Localized.error.string)
                             .lineLimit(1)
                         Spacer()
                     }
@@ -44,7 +41,7 @@ struct HomeFeedView: View {
         })
         .overlay(Group {
             if events.isEmpty {
-                Text("No Events Yet! Add a relay to get started")
+                Localized.noEvents.view
             }
         })
         .toolbar {
@@ -53,11 +50,11 @@ struct HomeFeedView: View {
                     isCreatingNewPost.toggle()
                 }
                 label: {
-                    Label("Add Item", systemImage: "plus")
+                    Label(Localized.noEvents.string, systemImage: "plus")
                 }
             }
         }
-        .navigationTitle("Home Feed")
+        .navigationTitle(Localized.homeFeed.string)
         .task {
             load()
         }

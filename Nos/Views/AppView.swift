@@ -14,17 +14,17 @@ struct AppView: View {
     var body: some View {
         NavigationStack(path: $path) {
             List {
-                NavigationLink("🏠 Home Feed") {
+                NavigationLink(Localized.homeFeedLinkTitle.string) {
                     HomeFeedView()
                 }
-                NavigationLink("📡 Relays") {
+                NavigationLink(Localized.relaysLinkTitle.string) {
                     RelayView()
                 }
-                NavigationLink("⚙️ Settings") {
+                NavigationLink(Localized.settingsLinkTitle.string) {
                     SettingsView()
                 }
             }
-            .navigationTitle("Nos")
+            .navigationTitle(Localized.nos.string)
         }
     }
 }
