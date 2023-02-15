@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// Used in the NavigationStack and added as an environmentObject so that it can be used for multiple views
 class Router: ObservableObject {
     @Published var path = NavigationPath()
 }
