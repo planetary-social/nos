@@ -10,32 +10,51 @@ import SwiftUI
 class Router: ObservableObject {
     @Published var path = NavigationPath()
 }
+
 struct AppView: View {
+    
+    /// An enumeration of the navigation destinations for AppView.
+    enum Destination: String, Hashable {
+        case home
+        case relays
+        case settings
+        
+        var label: some View {
+            switch self {
+            case .home:
+                return Text("🏠 Home Feed")
+            case .relays:
+                return Text("📡 Relays")
+            case .settings:
+                return Text("⚙️ Settings")
+            }
+        }
+    }
     
     @EnvironmentObject var router: Router
     
     var body: some View {
         NavigationStack(path: $router.path) {
             List {
-                NavigationLink("🏠 Home Feed") {
+                NavigationLink(value: Destination.home) { Destination.home.label }
+                NavigationLink(value: Destination.relays) { Destination.relays.label }
+                NavigationLink(value: Destination.settings) { Destination.settings.label }
+            }
+            .navigationDestination(for: Destination.self, destination: { destination in
+                switch destination {
+                case .home:
                     HomeFeedView()
-                }
-                NavigationLink("📡 Relays") {
+                case .relays:
                     RelayView()
-                }
-                NavigationLink("⚙️ Settings") {
+                case .settings:
                     SettingsView()
                 }
-            }
+            })
             .navigationDestination(for: Event.self) { note in
                 ThreadView(note: note)
             }
             .navigationTitle("Nos")
-
-
         }
-        
-
     }
 }
 
