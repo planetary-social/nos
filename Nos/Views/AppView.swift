@@ -22,11 +22,11 @@ struct AppView: View {
         var label: some View {
             switch self {
             case .home:
-                return Text("🏠 Home Feed")
+                return Text(Localized.homeFeedLinkTitle.string)
             case .relays:
-                return Text("📡 Relays")
+                return Text(Localized.relaysLinkTitle.string)
             case .settings:
-                return Text("⚙️ Settings")
+                return Text(Localized.settingsLinkTitle.string)
             }
         }
     }
@@ -53,7 +53,7 @@ struct AppView: View {
             .navigationDestination(for: Event.self) { note in
                 ThreadView(note: note)
             }
-            .navigationTitle("Nos")
+            .navigationTitle(Localized.nos.string)
         }
     }
 }

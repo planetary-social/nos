@@ -8,9 +8,15 @@
 import SwiftUI
 
 struct SettingsView: View {
-    
-    // TODO: store private key in keychain
-    @AppStorage("keyPair") private var keyPair: KeyPair?
+    @State private var keyPair: KeyPair? {
+        didSet {
+            if let pair = keyPair {
+                let privateKey = Data(pair.privateKeyHex.utf8)
+                let publicStatus = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKey)
+                print("Public key keychain storage status: \(publicStatus)")
+            }
+        }
+    }
     
     @State var privateKeyString = ""
     
@@ -18,10 +24,10 @@ struct SettingsView: View {
     
     var body: some View {
         Form {
-            Section("Keys") {
-                Text("Warning: your private key will be stored unencrypted on disk. ")
-                TextField("Private Key (in hex format)", text: $privateKeyString)
-                Button("Save") {
+            Section(Localized.keys.string) {
+                Localized.keyEncryptionWarning.view
+                TextField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
+                Button(Localized.save.string) {
                     if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
                         self.keyPair = keyPair
                     } else {
@@ -31,16 +37,20 @@ struct SettingsView: View {
                 }
             }
         }
-        .navigationTitle("Settings")
+        .navigationTitle(Localized.settings.string)
         .alert(isPresented: $showError) {
             Alert(
-                title: Text("Invalid Key"),
-                message: Text("Could not read your private key. Make sure it is in hex format.")
+                title: Localized.invalidKey.view,
+                message: Localized.couldNotReadPrivateKeyMessage.view
             )
         }
         .task {
-            if let keyPair = self.keyPair {
-                privateKeyString = keyPair.privateKeyHex
+			if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
+				let hexString = String(decoding: privateKeyData, as: UTF8.self)
+                privateKeyString = hexString
+            } else {
+                print("Could not load private key from keychain")
+                privateKeyString = ""
             }
         }
     }

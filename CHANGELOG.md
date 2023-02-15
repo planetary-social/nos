@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added conversion of hex keys to npub
 - Add a basic New Post screen
+- Save private key to keychain
 
 ## [0.1 Build 1]
 
