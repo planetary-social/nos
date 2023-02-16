@@ -14,6 +14,10 @@ class Router: ObservableObject {
 
 struct AppView: View {
 
+    @StateObject private var appController = AppController()
+    
+    @EnvironmentObject var router: Router
+    
     /// An enumeration of the navigation destinations for AppView.
     enum Destination: String, Hashable {
         case home
@@ -31,8 +35,6 @@ struct AppView: View {
             }
         }
     }
-    @StateObject private var appController = AppController()    
-    @EnvironmentObject var router: Router
     
     var body: some View {
         
@@ -59,10 +61,11 @@ struct AppView: View {
                     .navigationDestination(for: Event.self) { note in
                         ThreadView(note: note)
                     }
+                    .navigationTitle(Localized.nos.string)
                 }
-                .onAppear(perform: appController.configureCurrentState)
             }
         }
+        .onAppear(perform: appController.configureCurrentState)
     }
 }
 
