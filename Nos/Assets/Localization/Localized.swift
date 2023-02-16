@@ -83,3 +83,19 @@ enum Localized: String, Localizable, CaseIterable {
     case bio = "Bio"
     case noEventsOnProfile = "We don't see any notes for this profile, but we'll keep looking!"
 }
+
+// MARK: - Onboarding
+
+extension Localized {
+    
+    enum Onboarding: String, Localizable, CaseIterable {
+        case getStartedTitle = "Welcome to Nos"
+        case getStartedButton = "Let's get started"
+        
+        case privateKeyTitle = "Private Key"
+        case generatePrivateKeyButton = "Generate Private Key"
+        case alreadyHaveAPrivateKey = "Already have a private key?"
+        case addPrivateKeyTitle = "Add Private Key"
+        case privateKeyPrompt = "Private Key:"
+    }
+}

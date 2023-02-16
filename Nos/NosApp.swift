@@ -21,6 +21,5 @@ struct NosApp: App {
                 .environmentObject(relayService)
                 .environmentObject(router)
         }
-        
     }
 }
