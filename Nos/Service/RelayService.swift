@@ -76,9 +76,15 @@ class RelayService: WebSocketDelegate, ObservableObject {
         }
     }
     
-    func requestEvents(from client: WebSocketClient) {
+	func requestEvents(from client: WebSocketClient, kinds: [EventKind] = []) {
         do {
-            let request: [Any] = ["REQ", UUID().uuidString, ["limit": 100]]
+			var filters: [String: Any] = ["limit": 100]
+
+			if !kinds.isEmpty {
+				filters["kinds"] = kinds.map({ $0.rawValue })
+			}
+
+            let request: [Any] = ["REQ", UUID().uuidString, filters]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
             client.write(string: requestString)
@@ -87,9 +93,9 @@ class RelayService: WebSocketDelegate, ObservableObject {
         }
     }
     
-    func requestEventsFromAll() {
+    func requestEventsFromAll(kinds: [EventKind] = []) {
         openSocketsForRelays()
-        sockets.forEach { requestEvents(from: $0) }
+		sockets.forEach { requestEvents(from: $0, kinds: kinds) }
     }
     
     func publish(_ event: Event) throws {

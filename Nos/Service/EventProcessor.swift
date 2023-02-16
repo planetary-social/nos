@@ -9,7 +9,6 @@ import Foundation
 
 /// The event processor consumes raw event data from the relays and writes it to Core Data.
 enum EventProcessor {
-    
     static func parse(jsonObject: [String: Any], in persistenceController: PersistenceController) throws -> Event {
         let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
         let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
@@ -23,35 +22,46 @@ enum EventProcessor {
             return existingEvent
         }
         
-        let event = Event(context: parseContext)
-        event.createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
-        event.content = jsonEvent.content
-        event.identifier = jsonEvent.id
-        event.kind = jsonEvent.kind
-        event.signature = jsonEvent.signature
+		guard let eventKind = EventKind(rawValue: jsonEvent.kind) else {
+			print("Error: unrecognized event kind: \(jsonEvent.kind)")
+			throw EventError.unrecognizedKind
+		}
         
-        let author = try Author.findOrCreate(by: jsonEvent.pubKey, context: parseContext)
-        event.author = author
-        
-        if event.kind == 0, let contentData = jsonEvent.content.data(using: .utf8) {
-            do {
-                let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
-                author.name = metadata.name
-                author.about = metadata.about
-                author.profilePhotoURL = metadata.profilePhotoURL
-            } catch {
-                print("Failed to decode kind 0 event content with ID \(String(describing: event.identifier))")
+		let event = Event(context: parseContext, jsonEvent: jsonEvent)
+		
+        switch eventKind {
+        case .contactList:
+            let eventFollows = NSMutableOrderedSet()
+            for jsonTag in jsonEvent.tags {
+                eventFollows.add(Follow(context: parseContext, jsonTag: jsonTag))
             }
-        }
+            event.tags = eventFollows
 
-        let tags = NSMutableOrderedSet()
-        for jsonTag in jsonEvent.tags {
-            let tag = Tag(context: parseContext)
-            tag.identifier = jsonTag.first
-            tag.metadata = Array(jsonTag[1...]) as NSObject
-            tags.add(tag)
-        }
-        event.tags = tags
+        case .metaData:
+            if let contentData = jsonEvent.content.data(using: .utf8) {
+                do {
+                    let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
+                    
+                    if let author = event.author {
+                        author.name = metadata.name
+                        author.about = metadata.about
+                        author.profilePhotoURL = metadata.profilePhotoURL
+                    }
+                } catch {
+                    print("Failed to decode kind \(eventKind) event with ID \(String(describing: event.identifier))")
+                }
+            }
+
+        default:
+			let eventTags = NSMutableOrderedSet()
+			for jsonTag in jsonEvent.tags {
+				let tag = Tag(context: parseContext)
+				tag.identifier = jsonTag.first
+				tag.metadata = Array(jsonTag[1...]) as NSObject
+				eventTags.add(tag)
+			}
+			event.tags = eventTags
+		}
         
         return event
     }
