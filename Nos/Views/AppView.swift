@@ -9,23 +9,32 @@ import SwiftUI
 
 struct AppView: View {
     
+    @StateObject private var appController = AppController()
+    
     @State var path = NavigationPath()
     
     var body: some View {
-        NavigationStack(path: $path) {
-            List {
-                NavigationLink(Localized.homeFeedLinkTitle.string) {
-                    HomeFeedView()
-                }
-                NavigationLink(Localized.relaysLinkTitle.string) {
-                    RelayView()
-                }
-                NavigationLink(Localized.settingsLinkTitle.string) {
-                    SettingsView()
+        Group {
+            if appController.currentState == .onboarding {
+                OnboardingView(completion: appController.completeOnboarding)
+            } else {
+                NavigationStack(path: $path) {
+                    List {
+                        NavigationLink(Localized.homeFeedLinkTitle.string) {
+                            HomeFeedView()
+                        }
+                        NavigationLink(Localized.relaysLinkTitle.string) {
+                            RelayView()
+                        }
+                        NavigationLink(Localized.settingsLinkTitle.string) {
+                            SettingsView()
+                        }
+                    }
+                    .navigationTitle(Localized.nos.string)
                 }
             }
-            .navigationTitle(Localized.nos.string)
         }
+        .onAppear(perform: appController.configureCurrentState)
     }
 }
 
