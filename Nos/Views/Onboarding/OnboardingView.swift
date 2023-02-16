@@ -36,9 +36,9 @@ struct OnboardingView: View {
         TabView(selection: $selectedTab) {
             VStack {
                 Spacer()
-                Text("Welcome to Nos")
+                Localized.Onboarding.getStartedTitle.view
                 Spacer()
-                Button("Let's get started") {
+                Button(Localized.Onboarding.getStartedButton.string) {
                     selectedTab = .addPrivateKey
                 }
                 .buttonStyle(.bordered)
@@ -49,27 +49,27 @@ struct OnboardingView: View {
             NavigationStack {
                 VStack {
                     Spacer()
-                    Text("Private Key")
+                    Localized.Onboarding.privateKeyTitle.view
                     Spacer()
-                    Button("Generate Private Key") {
+                    Button(Localized.Onboarding.generatePrivateKeyButton.string) {
                         let keyPair = KeyPair()!
                         self.keyPair = keyPair
                         
                         completion()
                     }
                     .buttonStyle(.bordered)
-                    NavigationLink("Already have a private key?") {
+                    NavigationLink(Localized.Onboarding.alreadyHaveAPrivateKey.string) {
                         VStack {
                             Spacer()
-                            Text("Add Private Key")
+                            Localized.Onboarding.addPrivateKeyTitle.view
                             Spacer()
                             HStack {
-                                Text("Private Key:")
-                                TextField("Enter private key", text: $privateKeyString)
+                                Localized.Onboarding.privateKeyPrompt.view
+                                TextField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
                                     .padding()
                             }
                             .padding(50)
-                            Button("Save") {
+                            Button(Localized.save.string) {
                                 if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
                                     self.keyPair = keyPair
                                     completion()
