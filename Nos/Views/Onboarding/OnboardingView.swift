@@ -10,8 +10,7 @@ import SwiftUI
 struct OnboardingView: View {
     enum OnboardingStep {
         case getStarted
-        case generatePrivateKey
-        case enterPrivateKey
+        case addPrivateKey
     }
     
     /// Completion to be called when all onboarding steps are complete
@@ -40,62 +39,61 @@ struct OnboardingView: View {
                 Text("Welcome to Nos")
                 Spacer()
                 Button("Let's get started") {
-                    selectedTab = .generatePrivateKey
+                    selectedTab = .addPrivateKey
                 }
                 .buttonStyle(.bordered)
                 Spacer()
             }
             .tag(OnboardingStep.getStarted)
             
-            VStack {
-                Spacer()
-                Text("Private Key")
-                Spacer()
-                Button("Generate Private Key") {
-                    let keyPair = KeyPair()!
-                    self.keyPair = keyPair
-                    
-                    completion()
-                }
-                .buttonStyle(.bordered)
-                Button("Already have a private key?") {
-                    selectedTab = .enterPrivateKey
-                }
-                .font(.system(size: 10))
-                Spacer()
-            }
-            .tag(OnboardingStep.generatePrivateKey)
-            
-            VStack {
-                Spacer()
-                Text("Add Private Key")
-                Spacer()
-                HStack {
-                    Text("Private Key:")
-                    TextField("Enter private key", text: $privateKeyString)
-                        .padding()
-                }
-                .padding(50)
-                Button("Save") {
-                    if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
+            NavigationStack {
+                VStack {
+                    Spacer()
+                    Text("Private Key")
+                    Spacer()
+                    Button("Generate Private Key") {
+                        let keyPair = KeyPair()!
                         self.keyPair = keyPair
-                    } else {
-                        self.keyPair = nil
-                        self.showError = true
+                        
+                        completion()
                     }
-                    
-                    completion()
+                    .buttonStyle(.bordered)
+                    NavigationLink("Already have a private key?") {
+                        VStack {
+                            Spacer()
+                            Text("Add Private Key")
+                            Spacer()
+                            HStack {
+                                Text("Private Key:")
+                                TextField("Enter private key", text: $privateKeyString)
+                                    .padding()
+                            }
+                            .padding(50)
+                            Button("Save") {
+                                if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
+                                    self.keyPair = keyPair
+                                } else {
+                                    self.keyPair = nil
+                                    self.showError = true
+                                }
+                                
+                                completion()
+                            }
+                            .buttonStyle(.bordered)
+                            Spacer()
+                        }
+                        .alert(isPresented: $showError) {
+                            Alert(
+                                title: Localized.invalidKey.view,
+                                message: Localized.couldNotReadPrivateKeyMessage.view
+                            )
+                        }
+                    }
+                    .font(.system(size: 10))
+                    Spacer()
                 }
-                .buttonStyle(.bordered)
-                Spacer()
             }
-            .tag(OnboardingStep.enterPrivateKey)
-            .alert(isPresented: $showError) {
-                Alert(
-                    title: Localized.invalidKey.view,
-                    message: Localized.couldNotReadPrivateKeyMessage.view
-                )
-            }
+            .tag(OnboardingStep.addPrivateKey)
         }
     }
 }
