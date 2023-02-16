@@ -76,4 +76,10 @@ enum Localized: String, Localizable, CaseIterable {
     case relays = "Relays"
     case noRelaysMessage = "No relays yet! Add one below to get started"
     case addRelay = "Add relay"
+    
+    case profile = "Profile"
+    case follow = "Follow"
+    case readMore = "Read more"
+    case bio = "Bio"
+    case noEventsOnProfile = "We don't see any notes for this profile, but we'll keep looking!"
 }
