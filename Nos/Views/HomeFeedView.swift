@@ -18,42 +18,50 @@ struct HomeFeedView: View {
     
     @State var isCreatingNewPost = false
     
+    @EnvironmentObject var router: Router
+    
     var body: some View {
-        ScrollView(.vertical) {
-            LazyVStack {
-                ForEach(events) { event in
-                    VStack {
-                        NoteButton(note: event)
-                            .padding(.horizontal)
+        NavigationStack(path: $router.path) {
+            ScrollView(.vertical) {
+                LazyVStack {
+                    ForEach(events) { event in
+                        VStack {
+                            NoteButton(note: event)
+                                .padding(.horizontal)
+                        }
                     }
                 }
             }
-        }
-        .background(Color.appBg)
-        .sheet(isPresented: $isCreatingNewPost, content: {
-            NewPostView(isPresented: $isCreatingNewPost)
-        })
-        .overlay(Group {
-            if events.isEmpty {
-                Localized.noEvents.view
+            .navigationDestination(for: Event.self) { note in
+                ThreadView(note: note)
             }
-        })
-        .toolbar {
-            ToolbarItem {
-                Button {
-                    isCreatingNewPost.toggle()
+            .navigationTitle(Localized.nos.string)
+            .background(Color.appBg)
+            .sheet(isPresented: $isCreatingNewPost, content: {
+                NewPostView(isPresented: $isCreatingNewPost)
+            })
+            .overlay(Group {
+                if events.isEmpty {
+                    Localized.noEvents.view
                 }
-                label: {
-                    Label(Localized.noEvents.string, systemImage: "plus")
+            })
+            .toolbar {
+                ToolbarItem {
+                    Button {
+                        isCreatingNewPost.toggle()
+                    }
+                    label: {
+                        Label(Localized.noEvents.string, systemImage: "plus")
+                    }
                 }
             }
-        }
-        .navigationTitle(Localized.homeFeed.string)
-        .task {
-            load()
-        }
-        .refreshable {
-            load()
+            .navigationTitle(Localized.homeFeed.string)
+            .task {
+                load()
+            }
+            .refreshable {
+                load()
+            }
         }
     }
     
