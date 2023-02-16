@@ -14,7 +14,7 @@ struct AppView: View {
     @State var path = NavigationPath()
     
     var body: some View {
-        ZStack {
+        Group {
             if appController.currentState == .onboarding {
                 OnboardingView(completion: appController.completeOnboarding)
             } else {
