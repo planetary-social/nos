@@ -84,9 +84,6 @@ struct CompactNoteView: View {
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
         }
-        .navigationDestination(for: Event.self, destination: { note in
-            ThreadView(note: note)
-        })
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

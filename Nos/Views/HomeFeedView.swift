@@ -19,13 +19,17 @@ struct HomeFeedView: View {
     @State var isCreatingNewPost = false
     
     var body: some View {
-        List {
-            ForEach(events) { event in
-                VStack {
-                    NoteButton(note: event)
+        ScrollView(.vertical) {
+            LazyVStack {
+                ForEach(events) { event in
+                    VStack {
+                        NoteButton(note: event)
+                            .padding(.horizontal)
+                    }
                 }
             }
         }
+        .background(Color.appBg)
         .sheet(isPresented: $isCreatingNewPost, content: {
             NewPostView(isPresented: $isCreatingNewPost)
         })
