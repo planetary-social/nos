@@ -61,8 +61,6 @@ struct IdentityHeaderView: View {
                 endPoint: .bottom
             )
         )
-        .compositingGroup()
-        .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
     }
 }
 

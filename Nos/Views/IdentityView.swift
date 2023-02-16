@@ -23,15 +23,22 @@ struct IdentityView: View {
     }
     
     var body: some View {
-        VStack {
-            IdentityHeaderView(identity: author)
-            List {
-                ForEach(events) { event in
-                    VStack {
-                        NoteCard(note: event)
+        VStack(spacing: 0) {
+            ScrollView(.vertical) {
+                IdentityHeaderView(identity: author)
+                    .compositingGroup()
+                    .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
+                
+                LazyVStack {
+                    ForEach(events) { event in
+                        VStack {
+                            NoteButton(note: event)
+                                .padding(.horizontal)
+                        }
                     }
                 }
             }
+            .background(Color.appBg)
             .overlay(Group {
                 if events.isEmpty {
                     Localized.noEventsOnProfile.view
@@ -39,7 +46,6 @@ struct IdentityView: View {
                 }
             })
         }
-        .background(Color.cardBackground)
         .navigationTitle(Localized.profile.string)
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -56,9 +62,9 @@ struct IdentityView_Previews: PreviewProvider {
             context: previewContext
         )
         // TODO: derive from private key
-//        author.name = "Fred"
-//        author.about = "Reach for the stars. Someday you just might catch one."
-//        try! previewContext.save()
+        author.name = "Fred"
+        author.about = "Reach for the stars. Someday you just might catch one."
+        try! previewContext.save()
         return author
     }()
     
