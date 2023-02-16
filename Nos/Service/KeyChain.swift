@@ -13,6 +13,7 @@ import UIKit
 enum KeyChain {
     static let keychainPrivateKey = "privateKey"
     
+    @discardableResult
     static func save(key: String, data: Data) -> OSStatus {
         let query =
 		[
