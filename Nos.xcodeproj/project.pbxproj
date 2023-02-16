@@ -23,6 +23,9 @@
 		C95D68A9299E709900429F86 /* LinearGradient+Planetary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D68A8299E709800429F86 /* LinearGradient+Planetary.swift */; };
 		C95D68AB299E710F00429F86 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D68AA299E710F00429F86 /* Color+Hex.swift */; };
 		C95D68AD299E721700429F86 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D68AC299E721700429F86 /* ProfileView.swift */; };
+		C95D68B2299ECE0700429F86 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = C95D68AF299ECE0700429F86 /* CHANGELOG.md */; };
+		C95D68B3299ECE0700429F86 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C95D68B0299ECE0700429F86 /* README.md */; };
+		C95D68B4299ECE0700429F86 /* CONTRIBUTING.md in Resources */ = {isa = PBXBuildFile; fileRef = C95D68B1299ECE0700429F86 /* CONTRIBUTING.md */; };
 		C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */; };
 		C97797B9298AA19A0046BD25 /* RelayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97797B8298AA19A0046BD25 /* RelayService.swift */; };
 		C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C97797BB298AB1890046BD25 /* secp256k1 */; };
@@ -115,6 +118,9 @@
 		C95D68A8299E709800429F86 /* LinearGradient+Planetary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LinearGradient+Planetary.swift"; sourceTree = "<group>"; };
 		C95D68AA299E710F00429F86 /* Color+Hex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		C95D68AC299E721700429F86 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		C95D68AF299ECE0700429F86 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		C95D68B0299ECE0700429F86 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		C95D68B1299ECE0700429F86 /* CONTRIBUTING.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Encoding.swift"; sourceTree = "<group>"; };
 		C97797B8298AA19A0046BD25 /* RelayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayService.swift; sourceTree = "<group>"; };
 		C9ADB132299287D60075E7F8 /* KeyPairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPairTests.swift; sourceTree = "<group>"; };
@@ -217,6 +223,9 @@
 		C9DEBFC5298941000078B43A = {
 			isa = PBXGroup;
 			children = (
+				C95D68AF299ECE0700429F86 /* CHANGELOG.md */,
+				C95D68B1299ECE0700429F86 /* CONTRIBUTING.md */,
+				C95D68B0299ECE0700429F86 /* README.md */,
 				C9DEBFD0298941000078B43A /* Nos */,
 				C9DEBFE7298941020078B43A /* NosTests */,
 				C9DEBFF1298941020078B43A /* NosUITests */,
@@ -480,7 +489,10 @@
 			files = (
 				C9DEC065298955200078B43A /* sample_data.json in Resources */,
 				C9DEBFDF298941020078B43A /* Preview Assets.xcassets in Resources */,
+				C95D68B4299ECE0700429F86 /* CONTRIBUTING.md in Resources */,
+				C95D68B3299ECE0700429F86 /* README.md in Resources */,
 				C9DEBFDB298941020078B43A /* Assets.xcassets in Resources */,
+				C95D68B2299ECE0700429F86 /* CHANGELOG.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
