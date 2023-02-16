@@ -72,12 +72,11 @@ struct OnboardingView: View {
                             Button("Save") {
                                 if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
                                     self.keyPair = keyPair
+                                    completion()
                                 } else {
                                     self.keyPair = nil
                                     self.showError = true
                                 }
-                                
-                                completion()
                             }
                             .buttonStyle(.bordered)
                             Spacer()
