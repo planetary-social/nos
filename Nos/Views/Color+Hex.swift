@@ -9,6 +9,7 @@
 import SwiftUI
 
 // https://stackoverflow.com/a/56874327/982195
+// swiftlint:disable identifier_name
 extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)

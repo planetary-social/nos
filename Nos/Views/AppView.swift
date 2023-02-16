@@ -61,11 +61,11 @@ struct AppView: View {
                     .navigationDestination(for: Event.self) { note in
                         ThreadView(note: note)
                     }
+                    .navigationDestination(for: Author.self) { author in
+                        ProfileView(author: author)
+                    }
                     .navigationTitle(Localized.nos.string)
                 }
-            })
-            .navigationDestination(for: Author.self) { author in
-                ProfileView(author: author)
             }
         }
         .onAppear(perform: appController.configureCurrentState)
