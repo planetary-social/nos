@@ -79,7 +79,7 @@ struct AppView: View {
                             NewPostView(isPresented: $isCreatingNewPost)
                         })
                         SideMenu(
-                            width: UIScreen.main.bounds.width / 1.5,
+                            width: UIScreen.main.bounds.width / 1.3,
                             menuOpened: menuOpened,
                             toggleMenu: toggleMenu
                         )
