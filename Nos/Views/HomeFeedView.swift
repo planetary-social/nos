@@ -22,7 +22,7 @@ struct HomeFeedView: View {
         List {
             ForEach(events) { event in
                 VStack {
-                    NoteCard(note: event)
+                    NoteButton(note: event)
                 }
             }
         }

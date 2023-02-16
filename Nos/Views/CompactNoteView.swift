@@ -105,7 +105,7 @@ struct CompactNoteView_Previews: PreviewProvider {
     
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    
+    static var router = Router()
     static var shortNote: Event {
         let note = Event(context: previewContext)
         note.content = "Hello, world!"
@@ -129,5 +129,6 @@ struct CompactNoteView_Previews: PreviewProvider {
         }
         .padding()
         .background(Color.cardBackground)
+        .environmentObject(router)
     }
 }
