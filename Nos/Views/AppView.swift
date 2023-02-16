@@ -13,7 +13,7 @@ class Router: ObservableObject {
 }
 
 struct AppView: View {
-    
+
     /// An enumeration of the navigation destinations for AppView.
     enum Destination: String, Hashable {
         case home
@@ -31,32 +31,38 @@ struct AppView: View {
             }
         }
     }
-    
+    @StateObject private var appController = AppController()    
     @EnvironmentObject var router: Router
     
     var body: some View {
-        NavigationStack(path: $router.path) {
-            List {
-                NavigationLink(value: Destination.home) { Destination.home.label }
-                NavigationLink(value: Destination.relays) { Destination.relays.label }
-                NavigationLink(value: Destination.settings) { Destination.settings.label }
-            }
-            .navigationDestination(for: Destination.self, destination: { destination in
-                switch destination {
-                case .home:
-                    HomeFeedView()
-                case .relays:
-                    RelayView()
-                case .settings:
-                    SettingsView()
+    
+        Group {
+        if appController.currentState == .onboarding {
+            OnboardingView(completion: appController.completeOnboarding)
+        } else {
+            NavigationStack(path: $router.path) {
+                List {
+                    NavigationLink(value: Destination.home) { Destination.home.label }
+                    NavigationLink(value: Destination.relays) { Destination.relays.label }
+                    NavigationLink(value: Destination.settings) { Destination.settings.label }
                 }
-            })
-            .navigationDestination(for: Event.self) { note in
-                ThreadView(note: note)
+                .navigationDestination(for: Destination.self, destination: { destination in
+                    switch destination {
+                    case .home:
+                        HomeFeedView()
+                    case .relays:
+                        RelayView()
+                    case .settings:
+                        SettingsView()
+
+                    }
+                })
+                .navigationDestination(for: Event.self) { note in
+                    ThreadView(note: note)
+                }
             }
-            .navigationTitle(Localized.nos.string)
+            .onAppear(perform: appController.configureCurrentState)
         }
-    }
 }
 
 struct AppView_Previews: PreviewProvider {
