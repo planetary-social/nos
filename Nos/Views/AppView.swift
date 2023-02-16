@@ -15,6 +15,10 @@ class Router: ObservableObject {
 struct AppView: View {
 
     @StateObject private var appController = AppController()
+   
+    @State var isCreatingNewPost = false
+    
+    @State var menuOpened = false
     
     /// An enumeration of the navigation destinations for AppView.
     enum Destination: String, Hashable {
@@ -40,36 +44,89 @@ struct AppView: View {
             if appController.currentState == .onboarding {
                 OnboardingView(completion: appController.completeOnboarding)
             } else {
-//                NavigationStack(path: $router.path) {
-//                    List {
-//                        NavigationLink(value: Destination.home) { Destination.home.label }
-//                        NavigationLink(value: Destination.relays) { Destination.relays.label }
-//                        NavigationLink(value: Destination.settings) { Destination.settings.label }
-//                    }
-//                    .navigationDestination(for: Destination.self, destination: { destination in
-//                        switch destination {
-//                        case .home:
-//                            HomeFeedView()
-//                        case .relays:
-//                            RelayView()
-//                        case .settings:
-//                            SettingsView()
-//                        }
-//                    })
-//                    .navigationDestination(for: Event.self) { note in
-//                        ThreadView(note: note)
-//                    }
-//                    .navigationTitle(Localized.nos.string)
-//                }
-                TabView {
-                    HomeFeedView()
-                        .tabItem { Label("Home Feed", systemImage: "house") }
-                    RelayView()
-                        .tabItem { Label("Relays", systemImage: "satellite") }
+                NavigationView {
+                    ZStack {
+                        TabView {
+                            HomeFeedView()
+                                .tabItem { Label("Home Feed", systemImage: "house") }
+                            RelayView()
+                                .tabItem { Label("Relays", systemImage: "antenna.radiowaves.left.and.right") }
+                        }
+                        .navigationBarTitleDisplayMode(.inline)
+                        .navigationTitle("Home Feed")
+                        .navigationBarItems(
+                            leading:
+                                Button(
+                                    action: {
+                                        toggleMenu()
+                                    },
+                                    label: {
+                                        Image(systemName: "person.crop.circle")
+                                    }
+                                )
+                            ,
+                            trailing:
+                                Button(
+                                    action: {
+                                        isCreatingNewPost.toggle()
+                                    },
+                                    label: {
+                                        Image(systemName: "plus")
+                                    }
+                                )
+                        )
+                        .sheet(isPresented: $isCreatingNewPost, content: {
+                            NewPostView(isPresented: $isCreatingNewPost)
+                        })
+                        SideMenu(
+                            width: UIScreen.main.bounds.width / 1.5,
+                            menuOpened: menuOpened,
+                            toggleMenu: toggleMenu
+                        )
+                    }
                 }
             }
         }
         .onAppear(perform: appController.configureCurrentState)
+    }
+    func toggleMenu() {
+        menuOpened.toggle()
+    }
+}
+struct MenuContent: View {
+    var body: some View {
+        ZStack {
+            Color(UIColor(red: 255 / 255.0, green: 255 / 255.0, blue: 255 / 255.0, alpha: 1))
+            
+            VStack(alignment: .leading, spacing: 0, content: {
+                Text("Placeholder")
+            })
+        }
+    }
+}
+struct SideMenu: View {
+    let width: CGFloat
+    let menuOpened: Bool
+    
+    let toggleMenu: () -> Void
+    var body: some View {
+        ZStack {
+            GeometryReader { _ in
+                EmptyView()
+            }
+            //.background(Color.gray.opacity(0.5))
+            //.animation(Animation.easeIn.delay(0.25))
+            .onTapGesture {
+                self.toggleMenu()
+            }
+        }
+        HStack {
+            MenuContent()
+                .frame(width: width)
+                .offset(x: menuOpened ? 0: -width)
+                .animation(.default)
+            Spacer()
+        }
     }
 }
 

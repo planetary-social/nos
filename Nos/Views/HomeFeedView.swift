@@ -16,7 +16,7 @@ struct HomeFeedView: View {
     @FetchRequest(fetchRequest: Event.allPostsRequest(), animation: .default)
     private var events: FetchedResults<Event>
     
-    @State var isCreatingNewPost = false
+
     
     @EnvironmentObject var router: Router
     
@@ -35,27 +35,16 @@ struct HomeFeedView: View {
             .navigationDestination(for: Event.self) { note in
                 ThreadView(note: note)
             }
-            .navigationTitle(Localized.nos.string)
+            //.navigationTitle(Localized.nos.string)
             .background(Color.appBg)
-            .sheet(isPresented: $isCreatingNewPost, content: {
-                NewPostView(isPresented: $isCreatingNewPost)
-            })
+
             .overlay(Group {
                 if events.isEmpty {
                     Localized.noEvents.view
                 }
             })
-            .toolbar {
-                ToolbarItem {
-                    Button {
-                        isCreatingNewPost.toggle()
-                    }
-                    label: {
-                        Label(Localized.noEvents.string, systemImage: "plus")
-                    }
-                }
-            }
-            .navigationTitle(Localized.homeFeed.string)
+
+            //.navigationTitle(Localized.homeFeed.string)
             .task {
                 load()
             }
