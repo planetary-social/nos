@@ -84,9 +84,6 @@ struct CompactNoteView: View {
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
         }
-        .navigationDestination(for: Event.self, destination: { note in
-            ThreadView(note: note)
-        })
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
@@ -105,7 +102,7 @@ struct CompactNoteView_Previews: PreviewProvider {
     
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    
+    static var router = Router()
     static var shortNote: Event {
         let note = Event(context: previewContext)
         note.content = "Hello, world!"
@@ -129,5 +126,6 @@ struct CompactNoteView_Previews: PreviewProvider {
         }
         .padding()
         .background(Color.cardBackground)
+        .environmentObject(router)
     }
 }
