@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Save private key to keychain
 - Parse and store contact list
 - Add onboarding flow
+- Copied MessageCard and MessageButton SwiftUI view from Planetary renaming Message to Note
 
 ## [0.1 Build 1]
 
