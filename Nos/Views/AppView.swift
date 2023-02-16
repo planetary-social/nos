@@ -55,7 +55,7 @@ struct AppView: View {
                 ThreadView(note: note)
             }
             .navigationDestination(for: Author.self) { author in
-                IdentityView(author: author)
+                ProfileView(author: author)
             }
             .navigationTitle(Localized.nos.string)
         }

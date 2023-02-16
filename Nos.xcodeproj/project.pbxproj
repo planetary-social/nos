@@ -16,11 +16,11 @@
 		C95D68A1299E6D3E00429F86 /* BioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D68A0299E6D3E00429F86 /* BioView.swift */; };
 		C95D68A3299E6D9000429F86 /* SelectableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D68A2299E6D9000429F86 /* SelectableText.swift */; };
 		C95D68A5299E6E1E00429F86 /* PlaceholderModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D68A4299E6E1E00429F86 /* PlaceholderModifier.swift */; };
-		C95D68A6299E6F9E00429F86 /* IdentityHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D689E299E6B4100429F86 /* IdentityHeaderView.swift */; };
+		C95D68A6299E6F9E00429F86 /* ProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D689E299E6B4100429F86 /* ProfileHeader.swift */; };
 		C95D68A7299E6FF000429F86 /* KeyFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB134299288230075E7F8 /* KeyFixture.swift */; };
 		C95D68A9299E709900429F86 /* LinearGradient+Planetary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D68A8299E709800429F86 /* LinearGradient+Planetary.swift */; };
 		C95D68AB299E710F00429F86 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D68AA299E710F00429F86 /* Color+Hex.swift */; };
-		C95D68AD299E721700429F86 /* IdentityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D68AC299E721700429F86 /* IdentityView.swift */; };
+		C95D68AD299E721700429F86 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D68AC299E721700429F86 /* ProfileView.swift */; };
 		C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */; };
 		C97797B9298AA19A0046BD25 /* RelayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97797B8298AA19A0046BD25 /* RelayService.swift */; };
 		C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C97797BB298AB1890046BD25 /* secp256k1 */; };
@@ -104,13 +104,13 @@
 		A3B943CE299AE00100A15A08 /* KeyChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChain.swift; sourceTree = "<group>"; };
 		A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Follow+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C94D855B2991479900749478 /* NewPostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostView.swift; sourceTree = "<group>"; };
-		C95D689E299E6B4100429F86 /* IdentityHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityHeaderView.swift; sourceTree = "<group>"; };
+		C95D689E299E6B4100429F86 /* ProfileHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileHeader.swift; sourceTree = "<group>"; };
 		C95D68A0299E6D3E00429F86 /* BioView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BioView.swift; sourceTree = "<group>"; };
 		C95D68A2299E6D9000429F86 /* SelectableText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectableText.swift; sourceTree = "<group>"; };
 		C95D68A4299E6E1E00429F86 /* PlaceholderModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceholderModifier.swift; sourceTree = "<group>"; };
 		C95D68A8299E709800429F86 /* LinearGradient+Planetary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LinearGradient+Planetary.swift"; sourceTree = "<group>"; };
 		C95D68AA299E710F00429F86 /* Color+Hex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
-		C95D68AC299E721700429F86 /* IdentityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityView.swift; sourceTree = "<group>"; };
+		C95D68AC299E721700429F86 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Encoding.swift"; sourceTree = "<group>"; };
 		C97797B8298AA19A0046BD25 /* RelayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayService.swift; sourceTree = "<group>"; };
 		C9ADB132299287D60075E7F8 /* KeyPairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPairTests.swift; sourceTree = "<group>"; };
@@ -326,14 +326,14 @@
 				C9DEBFDD298941020078B43A /* Preview Content */,
 				C9DEBFD8298941000078B43A /* HomeFeedView.swift */,
 				C9DFA964299BEB96006929C1 /* NoteCard.swift */,
-				C95D68AC299E721700429F86 /* IdentityView.swift */,
+				C95D68AC299E721700429F86 /* ProfileView.swift */,
 				C9DFA96A299BEE2C006929C1 /* CompactNoteView.swift */,
 				C9DFA970299BF8CD006929C1 /* ThreadView.swift */,
 				C9DFA968299BEC33006929C1 /* CardStyle.swift */,
 				C9F84C20298DC36800C6714D /* AppView.swift */,
 				C95D68A0299E6D3E00429F86 /* BioView.swift */,
 				C95D68A4299E6E1E00429F86 /* PlaceholderModifier.swift */,
-				C95D689E299E6B4100429F86 /* IdentityHeaderView.swift */,
+				C95D689E299E6B4100429F86 /* ProfileHeader.swift */,
 				C95D68A2299E6D9000429F86 /* SelectableText.swift */,
 				C9F84C22298DC7B900C6714D /* SettingsView.swift */,
 				C94D855B2991479900749478 /* NewPostView.swift */,
@@ -524,7 +524,7 @@
 				C95D68AB299E710F00429F86 /* Color+Hex.swift in Sources */,
 				C9DFA972299BF9E8006929C1 /* CompactNoteView.swift in Sources */,
 				C9DFA969299BEC33006929C1 /* CardStyle.swift in Sources */,
-				C95D68AD299E721700429F86 /* IdentityView.swift in Sources */,
+				C95D68AD299E721700429F86 /* ProfileView.swift in Sources */,
 				C9ADB13829928CC30075E7F8 /* String+Hex.swift in Sources */,
 				C9DEBFD2298941000078B43A /* NosApp.swift in Sources */,
 				C95D68A3299E6D9000429F86 /* SelectableText.swift in Sources */,
@@ -540,7 +540,7 @@
 				C9DEC003298945150078B43A /* String+Lorem.swift in Sources */,
 				C9DEC0632989541F0078B43A /* Bundle+Current.swift in Sources */,
 				C9F84C1C298DBBF400C6714D /* Data+Sha.swift in Sources */,
-				C95D68A6299E6F9E00429F86 /* IdentityHeaderView.swift in Sources */,
+				C95D68A6299E6F9E00429F86 /* ProfileHeader.swift in Sources */,
 				C9BAB09B2996FBA10003A84E /* EventProcessor.swift in Sources */,
 				C97797B9298AA19A0046BD25 /* RelayService.swift in Sources */,
 				C9DEC04529894BED0078B43A /* Event+CoreDataClass.swift in Sources */,

@@ -1,5 +1,5 @@
 //
-//  IdentityView.swift
+//  ProfileView.swift
 //  Nos
 //
 //  Created by Matthew Lorentz on 2/16/23.
@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreData
 
-struct IdentityView: View {
+struct ProfileView: View {
     
     var author: Author
     
@@ -25,7 +25,7 @@ struct IdentityView: View {
     var body: some View {
         VStack(spacing: 0) {
             ScrollView(.vertical) {
-                IdentityHeaderView(identity: author)
+                ProfileHeader(author: author)
                     .compositingGroup()
                     .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 
@@ -70,7 +70,7 @@ struct IdentityView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationStack {
-            IdentityView(author: author)
+            ProfileView(author: author)
         }
         .environment(\.managedObjectContext, previewContext)
     }

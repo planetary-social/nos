@@ -8,12 +8,12 @@
 
 import SwiftUI
 
-struct IdentityHeaderView: View {
+struct ProfileHeader: View {
 
-    var identity: Author
+    var author: Author
 
     private var shouldShowBio: Bool {
-        if let about = identity.about {
+        if let about = author.about {
             return about.isEmpty == false
         }
         return false
@@ -35,7 +35,7 @@ struct IdentityHeaderView: View {
                     }
                     VStack(alignment: .leading, spacing: 3) {
                         Spacer()
-                        Text(identity.displayName)
+                        Text(author.displayName)
                             .lineLimit(1)
                             .font(.title3.weight(.semibold))
                             .foregroundColor(Color.primaryTxt)
@@ -48,7 +48,7 @@ struct IdentityHeaderView: View {
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .topLeading)
                 if shouldShowBio {
-                    BioView(bio: identity.about)
+                    BioView(bio: author.about)
                 }
             }
             .frame(maxWidth: 500)
@@ -79,7 +79,7 @@ struct IdentityHeaderView_Previews: PreviewProvider {
     
     static var previews: some View {
         Group {
-            IdentityHeaderView(identity: author)
+            ProfileHeader(author: author)
         }
         .padding()
         .background(Color.cardBackground)
