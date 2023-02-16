@@ -49,21 +49,21 @@ struct NoteCard: View {
                     Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                     HStack {
                         // TODO: Re-enable when we start handling replies
-//                        StackedAvatarsView(avatars: replies, size: 20, border: 0)
-//                        if let replies = attributedReplies {
-//                            Text(replies)
-//                                .font(.subheadline)
-//                                .foregroundColor(Color.secondaryTxt)
-//                        }
+                        // StackedAvatarsView(avatars: replies, size: 20, border: 0)
+                        // if let replies = attributedReplies {
+                        //     Text(replies)
+                        //         .font(.subheadline)
+                        //         .foregroundColor(Color.secondaryTxt)
+                        // }
                         Text("unknown replies")
                         Spacer()
-//                        Image.buttonReply
+                        // Image.buttonReply
                     }
                     .padding(15)
                 }
             case .golden:
-                // TODO: add back when we add Discover screen
-//                GoldenPostView(identifier: message.id, post: post, author: author)
+                // TODO: add back when we add Discover screen:
+                // GoldenPostView(identifier: message.id, post: post, author: author)
                 Text("golden style not supported")
             }
         }
