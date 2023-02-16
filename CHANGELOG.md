@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add a basic New Post screen
 - Save private key to keychain
 - Parse and store contact list
+- Add onboarding flow
 
 ## [0.1 Build 1]
 
