@@ -17,7 +17,7 @@ struct PersistenceController {
         let sampleData = try! Data(contentsOf: Bundle.current.url(forResource: "sample_data", withExtension: "json")!)
         try! _ = EventProcessor.parse(jsonData: sampleData, in: result)
         let relay = Relay(context: viewContext)
-        relay.address = "wss://nostr.lorentz.is"
+        relay.address = "wss://dev-relay.nos.social"
         
         do {
             try viewContext.save()
