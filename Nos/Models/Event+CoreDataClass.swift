@@ -55,6 +55,7 @@ public enum EventKind: Int64 {
 	case delete = 5
 	case boost = 6
 	case like = 7
+    case channelMessage = 42
     case parameterizedReplaceableEvent = 30_000
 }
 
@@ -89,6 +90,14 @@ public class Event: NosManagedObject {
         fetchRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
         fetchRequest.fetchLimit = 1
         return fetchRequest
+    }
+    
+    class func findOrCreate(jsonEvent: JSONEvent, context: NSManagedObjectContext) -> Event {
+        if let existingEvent = try? context.fetch(Event.event(by: jsonEvent.id)).first {
+            return existingEvent
+        } else {
+            return Event(context: context, jsonEvent: jsonEvent)
+        }
     }
     
     var serializedEventForSigning: [Any?] {

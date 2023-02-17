@@ -9,6 +9,8 @@ import Foundation
 
 /// The event processor consumes raw event data from the relays and writes it to Core Data.
 enum EventProcessor {
+    static var tempPubKey = ""
+    
     static func parse(jsonObject: [String: Any], in persistenceController: PersistenceController) throws -> Event {
         let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
         let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
@@ -16,19 +18,16 @@ enum EventProcessor {
     }
     
     static func parse(jsonEvent: JSONEvent, in persistenceController: PersistenceController) throws -> Event {
-        let parseContext = persistenceController.container.viewContext
-        
-        if let existingEvent = try parseContext.fetch(Event.event(by: jsonEvent.id)).first {
-            return existingEvent
-        }
-        
 		guard let eventKind = EventKind(rawValue: jsonEvent.kind) else {
 			print("Error: unrecognized event kind: \(jsonEvent.kind)")
 			throw EventError.unrecognizedKind
 		}
         
-		let event = Event(context: parseContext, jsonEvent: jsonEvent)
-		
+        let parseContext = persistenceController.container.viewContext
+
+        // Retain an existing event so we can modify it as needed with new data
+        let event = Event.findOrCreate(jsonEvent: jsonEvent, context: parseContext)
+
         switch eventKind {
         case .contactList:
             let eventFollows = NSMutableOrderedSet()
@@ -41,7 +40,8 @@ enum EventProcessor {
             if let contentData = jsonEvent.content.data(using: .utf8) {
                 do {
                     let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
-                    
+
+                    // Every event has an author created, so it just needs to be populated
                     if let author = event.author {
                         author.name = metadata.name
                         author.about = metadata.about

@@ -24,6 +24,14 @@ public class Author: NosManagedObject {
         name ?? npubString ?? hexadecimalPublicKey ?? "error"
     }
     
+    var isPopulated: Bool {
+        let hasName = (name != nil)
+        let hasAbout = (about != nil)
+        let hasPhoto = (profilePhotoURL != nil)
+        
+        return hasName || hasAbout || hasPhoto
+    }
+    
     class func findOrCreate(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey = %@", pubKey)

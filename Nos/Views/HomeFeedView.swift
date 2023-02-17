@@ -34,6 +34,19 @@ struct HomeFeedView: View {
                     Text(event.content!)
                         .padding(.vertical, 1)
                 }
+                .onAppear {
+                    // Error scenario: we have an event in core data without an author
+                    guard let author = event.author else {
+                        print("Event author is nil")
+                        return
+                    }
+
+                    if !author.isPopulated {
+                        // TODO: The authors could probably all be uniquely collected and batch sent
+                        let filter = Filter(authors: [author], kinds: [.metaData], limit: 1)
+                        relayService.requestEventsFromAll(filter: filter)
+                    }
+                }
             }
         }
         .sheet(isPresented: $isCreatingNewPost, content: {
@@ -64,7 +77,8 @@ struct HomeFeedView: View {
     }
     
     private func load() {
-        relayService.requestEventsFromAll()
+        let filter = Filter(authors: [], kinds: [.text], limit: 10)
+        relayService.requestEventsFromAll(filter: filter)
     }
 }
 
