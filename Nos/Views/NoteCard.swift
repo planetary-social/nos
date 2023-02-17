@@ -15,6 +15,8 @@ struct NoteCard: View {
 
     var note: Event
     var style = CardStyle.compact
+    
+    @EnvironmentObject private var router: Router
 
     private var author: Author? {
         note.author
@@ -26,7 +28,9 @@ struct NoteCard: View {
             case .compact:
                 HStack(alignment: .center) {
                     Button {
-                        // TODO: open profile page
+                        if let author = author {
+                            router.path.append(author)
+                        }
                     } label: {
                         HStack(alignment: .center) {
                             AvatarView(imageUrl: author?.profilePhotoURL, size: 24)
@@ -72,6 +76,7 @@ struct NoteCard: View {
                 endPoint: .bottom
             )
         )
+        .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
         .padding(padding)
     }
