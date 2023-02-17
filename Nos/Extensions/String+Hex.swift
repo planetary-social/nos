@@ -11,6 +11,8 @@ import CryptoKit
 extension String {
     
     var hexDecoded: Data? {
+        guard self.count.isMultiple(of: 2) else { return nil }
+        
         // https://stackoverflow.com/a/62517446/982195
         let stringArray = Array(self)
         var data = Data()
@@ -20,7 +22,7 @@ extension String {
                 let byte = Data([byteNum])
                 data.append(byte)
             } else {
-                fatalError("Could not decode byte to hex \(pair)")
+                return nil
             }
         }
         return data

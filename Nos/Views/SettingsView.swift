@@ -13,7 +13,10 @@ struct SettingsView: View {
             if let pair = keyPair {
                 let privateKey = Data(pair.privateKeyHex.utf8)
                 let publicStatus = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKey)
-                print("Public key keychain storage status: \(publicStatus)")
+                print("Private key keychain storage status: \(publicStatus)")
+            } else {
+                let publicStatus = KeyChain.delete(key: KeyChain.keychainPrivateKey)
+                print("Private key keychain delete operation status: \(publicStatus)")
             }
         }
     }
@@ -28,7 +31,9 @@ struct SettingsView: View {
                 Localized.keyEncryptionWarning.view
                 TextField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
                 Button(Localized.save.string) {
-                    if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
+                    if privateKeyString.isEmpty {
+                        self.keyPair = nil
+                    } else if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
                         self.keyPair = keyPair
                     } else {
                         self.keyPair = nil
