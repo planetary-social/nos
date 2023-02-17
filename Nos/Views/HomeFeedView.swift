@@ -86,7 +86,7 @@ struct HomeFeedView: View {
             load()
         }
         .onReceive(syncTimer.currentTimePublisher) { _ in
-            if authorsToSync.count > 0 {
+            if !authorsToSync.isEmpty {
                 print("Syncing \(authorsToSync.count) authors")
                 let filter = Filter(authors: authorsToSync, kinds: [.metaData], limit: authorsToSync.count)
                 relayService.requestEventsFromAll(filter: filter)
