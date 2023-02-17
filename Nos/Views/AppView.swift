@@ -93,13 +93,66 @@ struct AppView: View {
         menuOpened.toggle()
     }
 }
+
+struct MenuItem: Identifiable {
+    var id = UUID()
+    let text: String
+}
+
 struct MenuContent: View {
     var body: some View {
         ZStack {
             Color(UIColor(red: 255 / 255.0, green: 255 / 255.0, blue: 255 / 255.0, alpha: 1))
             
             VStack(alignment: .leading, spacing: 0, content: {
-                Text("Placeholder")
+                HStack {
+                    Button {
+                    } label: {
+                        HStack(alignment: .center) {
+                            Image(systemName: "person.crop.circle")
+                            Text("Your Profile")
+                        }
+                    }
+                    
+                    Spacer()
+                }
+                .padding()
+                HStack {
+                    Button {
+                    } label: {
+                        HStack(alignment: .center) {
+                            Image(systemName: "gear")
+                            Text("Settings")
+                        }
+                    }
+                    
+                    Spacer()
+                }
+                .padding()
+                HStack {
+                    Button {
+                    } label: {
+                        HStack(alignment: .center) {
+                            Image(systemName: "questionmark.circle")
+                            Text("Help and Support")
+                        }
+                    }
+                    
+                    Spacer()
+                }
+                .padding()
+                HStack {
+                    Button {
+                    } label: {
+                        HStack(alignment: .center) {
+                            Image(systemName: "ant.circle.fill")
+                            Text("Report a Bug")
+                        }
+                    }
+                    
+                    Spacer()
+                }
+                .padding()
             })
         }
     }
@@ -114,16 +167,17 @@ struct SideMenu: View {
             GeometryReader { _ in
                 EmptyView()
             }
-            //.background(Color.gray.opacity(0.5))
-            //.animation(Animation.easeIn.delay(0.25))
+            .background(Color.gray.opacity(0.5))
+            .opacity(self.menuOpened ? 1 : 0)
+            .animation(Animation.easeIn.delay(0.15))
             .onTapGesture {
                 self.toggleMenu()
             }
         }
         HStack {
             MenuContent()
-                .frame(width: width)
-                .offset(x: menuOpened ? 0: -width)
+                .frame(width: width, height: UIScreen.main.bounds.height)
+                .offset(x: menuOpened ? 0 : -width, y: -0.035*UIScreen.main.bounds.height)
                 .animation(.default)
             Spacer()
         }

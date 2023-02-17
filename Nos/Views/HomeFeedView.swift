@@ -16,8 +16,6 @@ struct HomeFeedView: View {
     @FetchRequest(fetchRequest: Event.allPostsRequest(), animation: .default)
     private var events: FetchedResults<Event>
     
-
-    
     @EnvironmentObject var router: Router
     
     var body: some View {
@@ -35,7 +33,6 @@ struct HomeFeedView: View {
             .navigationDestination(for: Event.self) { note in
                 ThreadView(note: note)
             }
-            //.navigationTitle(Localized.nos.string)
             .background(Color.appBg)
 
             .overlay(Group {
@@ -43,8 +40,6 @@ struct HomeFeedView: View {
                     Localized.noEvents.view
                 }
             })
-
-            //.navigationTitle(Localized.homeFeed.string)
             .task {
                 load()
             }
