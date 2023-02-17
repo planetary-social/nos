@@ -13,14 +13,19 @@ import SwiftUI
 /// Use this view inside MessageButton to have nice borders.
 struct NoteCard: View {
 
-    var note: Event
-    var style = CardStyle.compact
+    @ObservedObject var author: Author
     
-    @EnvironmentObject private var router: Router
-
-    private var author: Author? {
-        note.author
+    var note: Event {
+        didSet {
+            if let eventAuthor = note.author {
+                self.author = eventAuthor
+            }
+        }
     }
+
+    var style = CardStyle.compact
+
+    @EnvironmentObject private var router: Router
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -28,13 +33,11 @@ struct NoteCard: View {
             case .compact:
                 HStack(alignment: .center) {
                     Button {
-                        if let author = author {
-                            router.path.append(author)
-                        }
+                        router.path.append(author)
                     } label: {
                         HStack(alignment: .center) {
-                            AvatarView(imageUrl: author?.profilePhotoURL, size: 24)
-                            Text(note.author?.npubString?.prefix(10).appending("...") ?? "")
+                            AvatarView(imageUrl: author.profilePhotoURL, size: 24)
+                            Text(author.displayName)
                                 .lineLimit(1)
                                 .font(.subheadline)
                                 .foregroundColor(Color.secondaryTxt)
@@ -130,6 +133,8 @@ struct NoteCard_Previews: PreviewProvider {
         return note
     }
     
+    static var previewAuthor = Author(context: previewContext)
+    
     static var longNote: Event {
         let note = Event(context: previewContext)
         note.content = .loremIpsum(5)
@@ -145,20 +150,20 @@ struct NoteCard_Previews: PreviewProvider {
             Group {
                 ScrollView {
                     VStack {
-                        NoteCard(note: shortNote)
-                        NoteCard(note: longNote)
+                        NoteCard(author: previewAuthor, note: shortNote)
+                        NoteCard(author: previewAuthor, note: longNote)
                     }
                 }
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                        NoteCard(note: shortNote)
-                        NoteCard(note: longNote)
+                        NoteCard(author: previewAuthor, note: shortNote)
+                        NoteCard(author: previewAuthor, note: longNote)
                     }
                 }
                 ScrollView {
                     VStack {
-                        NoteCard(note: shortNote)
-                        NoteCard(note: longNote)
+                        NoteCard(author: previewAuthor, note: shortNote)
+                        NoteCard(author: previewAuthor, note: longNote)
                     }
                 }
                 .preferredColorScheme(.dark)

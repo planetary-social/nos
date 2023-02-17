@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import Combine
 
 struct HomeFeedView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -18,6 +19,23 @@ struct HomeFeedView: View {
     
     @State var isCreatingNewPost = false
     
+    class SyncTimer {
+        let currentTimePublisher = Timer.TimerPublisher(interval: 1.0, runLoop: .main, mode: .default)
+        let cancellable: AnyCancellable?
+
+        init() {
+            self.cancellable = currentTimePublisher.connect() as? AnyCancellable
+        }
+
+        deinit {
+            self.cancellable?.cancel()
+        }
+    }
+
+    let syncTimer = SyncTimer()
+    
+    @State private var authorsToSync: [Author] = []
+    
     var body: some View {
         ScrollView(.vertical) {
             LazyVStack {
@@ -25,6 +43,18 @@ struct HomeFeedView: View {
                     VStack {
                         NoteButton(note: event)
                             .padding(.horizontal)
+                    }
+                    .onAppear {
+                        // Error scenario: we have an event in core data without an author
+                        guard let author = event.author else {
+                            print("Event author is nil")
+                            return
+                        }
+
+                        if !author.isPopulated {
+                            print("Need to sync author: \(author.hexadecimalPublicKey ?? "")")
+                            authorsToSync.append(author)
+                        }
                     }
                 }
             }
@@ -56,10 +86,19 @@ struct HomeFeedView: View {
         .refreshable {
             load()
         }
+        .onReceive(syncTimer.currentTimePublisher) { _ in
+            if !authorsToSync.isEmpty {
+                print("Syncing \(authorsToSync.count) authors")
+                let filter = Filter(authors: authorsToSync, kinds: [.metaData], limit: authorsToSync.count)
+                relayService.requestEventsFromAll(filter: filter)
+                authorsToSync.removeAll()
+            }
+        }
     }
     
     private func load() {
-        relayService.requestEventsFromAll()
+        let filter = Filter(authors: [], kinds: [.text], limit: 10)
+        relayService.requestEventsFromAll(filter: filter)
     }
 }
 

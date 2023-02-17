@@ -21,7 +21,15 @@ public class Author: NosManagedObject {
     }
     
     var displayName: String {
-        name ?? npubString ?? hexadecimalPublicKey ?? "error"
+        name ?? npubString?.prefix(10).appending("...") ?? hexadecimalPublicKey ?? "error"
+    }
+    
+    var isPopulated: Bool {
+        let hasName = (name != nil)
+        let hasAbout = (about != nil)
+        let hasPhoto = (profilePhotoURL != nil)
+        
+        return hasName || hasAbout || hasPhoto
     }
     
     class func findOrCreate(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author {

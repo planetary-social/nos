@@ -9,7 +9,7 @@ import Foundation
 import Starscream
 import CoreData
 
-class RelayService: WebSocketDelegate, ObservableObject {
+final class RelayService: WebSocketDelegate, ObservableObject {
     
     private var sockets = [WebSocket]()
     
@@ -51,7 +51,8 @@ class RelayService: WebSocketDelegate, ObservableObject {
         switch event {
         case .connected(let headers):
             print("websocket is connected: \(headers)")
-            requestEvents(from: client)
+            let filter = Filter(authors: [], kinds: [.text], limit: 10)
+            requestEvents(from: client, filter: filter)
         case .disconnected(let reason, let code):
             if let socket = client as? WebSocket, let index = sockets.firstIndex(where: { $0 === socket }) {
                 sockets.remove(at: index)
@@ -76,15 +77,9 @@ class RelayService: WebSocketDelegate, ObservableObject {
         }
     }
     
-	func requestEvents(from client: WebSocketClient, kinds: [EventKind] = []) {
+	func requestEvents(from client: WebSocketClient, filter: Filter = Filter()) {
         do {
-			var filters: [String: Any] = ["limit": 100]
-
-			if !kinds.isEmpty {
-				filters["kinds"] = kinds.map({ $0.rawValue })
-			}
-
-            let request: [Any] = ["REQ", UUID().uuidString, filters]
+            let request: [Any] = ["REQ", UUID().uuidString, filter.dictionary]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
             client.write(string: requestString)
@@ -93,9 +88,9 @@ class RelayService: WebSocketDelegate, ObservableObject {
         }
     }
     
-    func requestEventsFromAll(kinds: [EventKind] = []) {
+    func requestEventsFromAll(filter: Filter = Filter()) {
         openSocketsForRelays()
-		sockets.forEach { requestEvents(from: $0, kinds: kinds) }
+		sockets.forEach { requestEvents(from: $0, filter: filter) }
     }
     
     func publish(_ event: Event) throws {
