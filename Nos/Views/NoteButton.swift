@@ -22,7 +22,7 @@ struct NoteButton: View {
         Button {
             router.path.append(note)
         } label: {
-            NoteCard(note: note, style: style)
+            NoteCard(author: note.author!, note: note, style: style)
         }
         .buttonStyle(CardButtonStyle())
     }

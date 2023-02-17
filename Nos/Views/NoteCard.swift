@@ -13,12 +13,16 @@ import SwiftUI
 /// Use this view inside MessageButton to have nice borders.
 struct NoteCard: View {
 
-    var note: Event
-    var style = CardStyle.compact
-
-    private var author: Author? {
-        note.author
+    @ObservedObject var author: Author
+    
+    var note: Event {
+        didSet {
+            if let eventAuthor = note.author {
+                self.author = eventAuthor
+            }
+        }
     }
+    var style = CardStyle.compact
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -127,6 +131,8 @@ struct NoteCard_Previews: PreviewProvider {
         return note
     }
     
+    static var previewAuthor = Author(context: previewContext)
+    
     static var longNote: Event {
         let note = Event(context: previewContext)
         note.content = .loremIpsum(5)
@@ -141,20 +147,20 @@ struct NoteCard_Previews: PreviewProvider {
             Group {
                 ScrollView {
                     VStack {
-                        NoteCard(note: shortNote)
-                        NoteCard(note: longNote)
+                        NoteCard(author: previewAuthor, note: shortNote)
+                        NoteCard(author: previewAuthor, note: longNote)
                     }
                 }
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                        NoteCard(note: shortNote)
-                        NoteCard(note: longNote)
+                        NoteCard(author: previewAuthor, note: shortNote)
+                        NoteCard(author: previewAuthor, note: longNote)
                     }
                 }
                 ScrollView {
                     VStack {
-                        NoteCard(note: shortNote)
-                        NoteCard(note: longNote)
+                        NoteCard(author: previewAuthor, note: shortNote)
+                        NoteCard(author: previewAuthor, note: longNote)
                     }
                 }
                 .preferredColorScheme(.dark)
