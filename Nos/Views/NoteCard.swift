@@ -33,9 +33,7 @@ struct NoteCard: View {
                         }
                     } label: {
                         HStack(alignment: .center) {
-                            Image(systemName: "person.crop.circle.fill")
-                                .font(.body)
-                                .frame(width: 24, height: 24)
+                            AvatarView(imageUrl: author?.profilePhotoURL, size: 24)
                             Text(note.author?.npubString?.prefix(10).appending("...") ?? "")
                                 .lineLimit(1)
                                 .font(.subheadline)
@@ -139,6 +137,7 @@ struct NoteCard_Previews: PreviewProvider {
         // TODO: derive from private key
         author.hexadecimalPublicKey = "32730e9dfcab797caf8380d096e548d9ef98f3af3000542f9271a91a9e3b0001"
         note.author = author
+        note.author?.profilePhotoURL = URL(string: "https://avatars.githubusercontent.com/u/1165004?s=40&v=4")
         return note
     }
     
