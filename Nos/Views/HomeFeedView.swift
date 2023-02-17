@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import Combine
 
 struct HomeFeedView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -17,6 +18,23 @@ struct HomeFeedView: View {
     private var events: FetchedResults<Event>
     
     @State var isCreatingNewPost = false
+    
+    class SyncTimer {
+        let currentTimePublisher = Timer.TimerPublisher(interval: 1.0, runLoop: .main, mode: .default)
+        let cancellable: AnyCancellable?
+
+        init() {
+            self.cancellable = currentTimePublisher.connect() as? AnyCancellable
+        }
+
+        deinit {
+            self.cancellable?.cancel()
+        }
+    }
+
+    let syncTimer = SyncTimer()
+    
+    @State private var authorsToSync: [Author] = []
     
     var body: some View {
         ScrollView(.vertical) {
@@ -34,9 +52,8 @@ struct HomeFeedView: View {
                         }
 
                         if !author.isPopulated {
-                            // TODO: The authors could probably all be uniquely collected and batch sent
-                            let filter = Filter(authors: [author], kinds: [.metaData], limit: 1)
-                            relayService.requestEventsFromAll(filter: filter)
+                            print("Need to sync author: \(author.hexadecimalPublicKey ?? "")")
+                            authorsToSync.append(author)
                         }
                     }
                 }
@@ -67,6 +84,14 @@ struct HomeFeedView: View {
         }
         .refreshable {
             load()
+        }
+        .onReceive(syncTimer.currentTimePublisher) { _ in
+            if authorsToSync.count > 0 {
+                print("Syncing \(authorsToSync.count) authors")
+                let filter = Filter(authors: authorsToSync, kinds: [.metaData], limit: authorsToSync.count)
+                relayService.requestEventsFromAll(filter: filter)
+                authorsToSync.removeAll()
+            }
         }
     }
     
