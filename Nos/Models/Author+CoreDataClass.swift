@@ -21,7 +21,7 @@ public class Author: NosManagedObject {
     }
     
     var displayName: String {
-        name ?? npubString ?? hexadecimalPublicKey ?? "error"
+        name ?? npubString?.prefix(10).appending("...") ?? hexadecimalPublicKey ?? "error"
     }
     
     var isPopulated: Bool {

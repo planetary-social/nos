@@ -26,18 +26,18 @@ struct HomeFeedView: View {
                         NoteButton(note: event)
                             .padding(.horizontal)
                     }
-                }
-                .onAppear {
-                    // Error scenario: we have an event in core data without an author
-                    guard let author = event.author else {
-                        print("Event author is nil")
-                        return
-                    }
+                    .onAppear {
+                        // Error scenario: we have an event in core data without an author
+                        guard let author = event.author else {
+                            print("Event author is nil")
+                            return
+                        }
 
-                    if !author.isPopulated {
-                        // TODO: The authors could probably all be uniquely collected and batch sent
-                        let filter = Filter(authors: [author], kinds: [.metaData], limit: 1)
-                        relayService.requestEventsFromAll(filter: filter)
+                        if !author.isPopulated {
+                            // TODO: The authors could probably all be uniquely collected and batch sent
+                            let filter = Filter(authors: [author], kinds: [.metaData], limit: 1)
+                            relayService.requestEventsFromAll(filter: filter)
+                        }
                     }
                 }
             }

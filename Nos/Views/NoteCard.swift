@@ -32,7 +32,7 @@ struct NoteCard: View {
                             Image(systemName: "person.crop.circle.fill")
                                 .font(.body)
                                 .frame(width: 24, height: 24)
-                            Text(note.author?.npubString?.prefix(10).appending("...") ?? "")
+                            Text(note.author?.displayName ?? "")
                                 .lineLimit(1)
                                 .font(.subheadline)
                                 .foregroundColor(Color.secondaryTxt)
