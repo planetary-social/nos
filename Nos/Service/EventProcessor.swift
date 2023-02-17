@@ -8,9 +8,7 @@
 import Foundation
 
 /// The event processor consumes raw event data from the relays and writes it to Core Data.
-enum EventProcessor {
-    static var tempPubKey = ""
-    
+enum EventProcessor {    
     static func parse(jsonObject: [String: Any], in persistenceController: PersistenceController) throws -> Event {
         let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
         let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
