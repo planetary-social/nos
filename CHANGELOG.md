@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Parse and store contact list
 - Add onboarding flow
 - Copied MessageCard and MessageButton SwiftUI view from Planetary renaming Message to Note
+- Sync authors in HomeFeedView
 
 ## [0.1 Build 1]
 
