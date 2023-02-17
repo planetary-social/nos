@@ -22,7 +22,10 @@ struct NoteCard: View {
             }
         }
     }
+
     var style = CardStyle.compact
+
+    @EnvironmentObject private var router: Router
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -30,7 +33,7 @@ struct NoteCard: View {
             case .compact:
                 HStack(alignment: .center) {
                     Button {
-                        // TODO: open profile page
+                        router.path.append(author)
                     } label: {
                         HStack(alignment: .center) {
                             Image(systemName: "person.crop.circle.fill")
@@ -78,6 +81,7 @@ struct NoteCard: View {
                 endPoint: .bottom
             )
         )
+        .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
         .padding(padding)
     }

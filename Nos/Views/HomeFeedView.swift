@@ -66,6 +66,7 @@ struct HomeFeedView: View {
         .overlay(Group {
             if events.isEmpty {
                 Localized.noEvents.view
+                    .padding()
             }
         })
         .toolbar {
