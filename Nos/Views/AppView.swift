@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-
 // Used in the NavigationStack and added as an environmentObject so that it can be used for multiple views
 class Router: ObservableObject {
     @Published var path = NavigationPath()
@@ -64,12 +63,23 @@ struct AppView: View {
                     ZStack {
                         TabView(selection: $selectedTab) {
                             HomeFeedView()
-                                .tabItem { Label("Home Feed", systemImage: "house") }
+                                .tabItem {
+                                    Label("Home Feed", systemImage: "house")
+                                }
                                 .tag(Destination.home)
+
                             RelayView()
-                                .tabItem { Label("Relays", systemImage: "antenna.radiowaves.left.and.right") }
+                                .tabItem {
+                                    Label("Relays", systemImage: "antenna.radiowaves.left.and.right")
+                                }
                                 .tag(Destination.relays)
                         }
+                        .onChange(of: selectedTab) { _ in
+                            if router.path.count > 0 {
+                                router.path.removeLast(router.path.count)
+                            }
+                        }
+              
                         .navigationBarTitleDisplayMode(.inline)
                         .navigationTitle(router.path.count > 0 ? router.navigationTitle : selectedTab.destinationString)
                         .navigationBarItems(

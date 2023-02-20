@@ -17,37 +17,44 @@ struct RelayView: View {
     @FetchRequest(fetchRequest: Relay.allRelaysRequest(), animation: .default)
     private var relays: FetchedResults<Relay>
     
+    @EnvironmentObject var router: Router
+    
     var body: some View {
-        List {
-            Section(Localized.relays.string) {
-                ForEach(relays) { relay in
-                    Text(relay.address ?? Localized.error.string)
+        NavigationStack(path: $router.path) {
+            List {
+                Section(Localized.relays.string) {
+                    ForEach(relays) { relay in
+                        Text(relay.address ?? Localized.error.string)
+                    }
+                    if relays.isEmpty {
+                        Localized.noRelaysMessage.view
+                    }
                 }
-                if relays.isEmpty {
-                    Localized.noRelaysMessage.view
+                
+                Section(Localized.addRelay.string) {
+                    TextField("wss://yourrelay.com", text: $newRelayAddress)
+                        .autocorrectionDisabled()
+                        #if os(iOS)
+                        .textInputAutocapitalization(.none)
+                        .keyboardType(.URL)
+                        #endif
+                    Button(Localized.save.string) {
+                        addRelay()
+                    }
                 }
             }
-            
-            Section(Localized.addRelay.string) {
-                TextField("wss://yourrelay.com", text: $newRelayAddress)
-                    .autocorrectionDisabled()
-                    #if os(iOS)
-                    .textInputAutocapitalization(.none)
-                    .keyboardType(.URL)
-                    #endif
-                Button(Localized.save.string) {
-                    addRelay()
+            .toolbar {
+                #if os(iOS)
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    EditButton()
                 }
+                #endif
+            }
+            .navigationTitle(Localized.relays.string)
+            .navigationDestination(for: Profile.self) { profile in
+                ProfileView(profile: profile)
             }
         }
-        .toolbar {
-            #if os(iOS)
-            ToolbarItem(placement: .navigationBarTrailing) {
-                EditButton()
-            }
-            #endif
-        }
-        .navigationTitle(Localized.relays.string)
     }
     
     private func addRelay() {
