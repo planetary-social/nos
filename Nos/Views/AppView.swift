@@ -20,7 +20,9 @@ struct AppView: View {
     
     @State var menuOpened = false
     
-    /// An enumeration of the navigation destinations for AppView.
+    @State var selectedTab = Destination.home
+    
+    /// An enumeration of the destinations for AppView.
     enum Destination: String, Hashable {
         case home
         case relays
@@ -36,6 +38,17 @@ struct AppView: View {
                 return Text(Localized.settingsLinkTitle.string)
             }
         }
+        
+        var destinationString: String {
+            switch self {
+            case .home:
+                return Localized.homeFeedLinkTitle.string
+            case .relays:
+                return Localized.relaysLinkTitle.string
+            case .settings:
+                return Localized.settingsLinkTitle.string
+            }
+        }
     }
     
     var body: some View {
@@ -46,14 +59,16 @@ struct AppView: View {
             } else {
                 NavigationView {
                     ZStack {
-                        TabView {
+                        TabView(selection: $selectedTab) {
                             HomeFeedView()
                                 .tabItem { Label("Home Feed", systemImage: "house") }
+                                .tag(Destination.home)
                             RelayView()
                                 .tabItem { Label("Relays", systemImage: "antenna.radiowaves.left.and.right") }
+                                .tag(Destination.relays)
                         }
                         .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle("Home Feed")
+                        .navigationTitle(selectedTab.destinationString)
                         .navigationBarItems(
                             leading:
                                 Button(
