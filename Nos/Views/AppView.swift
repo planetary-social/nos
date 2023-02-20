@@ -9,6 +9,7 @@ import SwiftUI
 
 // Used in the NavigationStack and added as an environmentObject so that it can be used for multiple views
 class Router: ObservableObject {
+    @Published var displayNavigationView = true
     @Published var path = NavigationPath()
 }
 
@@ -21,6 +22,8 @@ struct AppView: View {
     @State var menuOpened = false
     
     @State var selectedTab = Destination.home
+    
+    @EnvironmentObject var router: Router
     
     /// An enumeration of the destinations for AppView.
     enum Destination: String, Hashable {
@@ -67,6 +70,7 @@ struct AppView: View {
                                 .tabItem { Label("Relays", systemImage: "antenna.radiowaves.left.and.right") }
                                 .tag(Destination.relays)
                         }
+                        .navigationBarHidden(router.path.count != 0)
                         .navigationBarTitleDisplayMode(.inline)
                         .navigationTitle(selectedTab.destinationString)
                         .navigationBarItems(
@@ -90,11 +94,13 @@ struct AppView: View {
                                     }
                                 )
                         )
+
                         .sheet(isPresented: $isCreatingNewPost, content: {
                             NewPostView(isPresented: $isCreatingNewPost)
                         })
                     }
                 }
+                
                 SideMenu(
                     width: UIScreen.main.bounds.width / 1.3,
                     menuOpened: menuOpened,
