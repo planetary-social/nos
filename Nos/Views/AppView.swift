@@ -78,13 +78,13 @@ struct AppView: View {
                         .sheet(isPresented: $isCreatingNewPost, content: {
                             NewPostView(isPresented: $isCreatingNewPost)
                         })
-                        SideMenu(
-                            width: UIScreen.main.bounds.width / 1.3,
-                            menuOpened: menuOpened,
-                            toggleMenu: toggleMenu
-                        )
                     }
                 }
+                SideMenu(
+                    width: UIScreen.main.bounds.width / 1.3,
+                    menuOpened: menuOpened,
+                    toggleMenu: toggleMenu
+                )
             }
         }
         .onAppear(perform: appController.configureCurrentState)
@@ -177,7 +177,7 @@ struct SideMenu: View {
         HStack {
             MenuContent()
                 .frame(width: width, height: UIScreen.main.bounds.height)
-                .offset(x: menuOpened ? 0 : -width, y: -0.035*UIScreen.main.bounds.height)
+                .offset(x: menuOpened ? 0 : -width, y: -0.015*UIScreen.main.bounds.height)
                 .animation(.default)
             Spacer()
         }
