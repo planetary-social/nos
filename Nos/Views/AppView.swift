@@ -9,8 +9,8 @@ import SwiftUI
 
 // Used in the NavigationStack and added as an environmentObject so that it can be used for multiple views
 class Router: ObservableObject {
-    @Published var displayNavigationView = true
     @Published var path = NavigationPath()
+    @Published var navigationTitle = ""
 }
 
 struct AppView: View {
@@ -70,29 +70,54 @@ struct AppView: View {
                                 .tabItem { Label("Relays", systemImage: "antenna.radiowaves.left.and.right") }
                                 .tag(Destination.relays)
                         }
-                        .navigationBarHidden(router.path.count != 0)
                         .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle(selectedTab.destinationString)
+                        .navigationTitle(router.path.count > 0 ? router.navigationTitle : selectedTab.destinationString)
                         .navigationBarItems(
                             leading:
-                                Button(
-                                    action: {
-                                        toggleMenu()
-                                    },
-                                    label: {
-                                        Image(systemName: "person.crop.circle")
+                                Group {
+                                    if router.path.count > 0 {
+                                        Button(
+                                            action: {
+                                                router.path.removeLast()
+                                            },
+                                            label: {
+                                                Image(systemName: "chevron.left")
+                                            }
+                                        )
+                                    } else {
+                                        Button(
+                                            action: {
+                                                toggleMenu()
+                                            },
+                                            label: {
+                                                Image(systemName: "person.crop.circle")
+                                            }
+                                        )
                                     }
-                                )
+                                }
                             ,
                             trailing:
-                                Button(
-                                    action: {
-                                        isCreatingNewPost.toggle()
-                                    },
-                                    label: {
-                                        Image(systemName: "plus")
+                                Group {
+                                    if router.path.count > 0 {
+                                        Button(
+                                            action: {
+                                                
+                                            },
+                                            label: {
+                                                Image(systemName: "ellipsis")
+                                            }
+                                        )
+                                    } else {
+                                        Button(
+                                            action: {
+                                                isCreatingNewPost.toggle()
+                                            },
+                                            label: {
+                                                Image(systemName: "plus")
+                                            }
+                                        )
                                     }
-                                )
+                                }
                         )
 
                         .sheet(isPresented: $isCreatingNewPost, content: {
@@ -104,7 +129,8 @@ struct AppView: View {
                 SideMenu(
                     width: UIScreen.main.bounds.width / 1.3,
                     menuOpened: menuOpened,
-                    toggleMenu: toggleMenu
+                    toggleMenu: toggleMenu,
+                    closeMenu: closeMenu
                 )
             }
         }
@@ -112,6 +138,9 @@ struct AppView: View {
     }
     func toggleMenu() {
         menuOpened.toggle()
+    }
+    func closeMenu() {
+        menuOpened = false
     }
 }
 
@@ -121,6 +150,9 @@ struct MenuItem: Identifiable {
 }
 
 struct MenuContent: View {
+    
+    @EnvironmentObject var router: Router
+    let closeMenu: () -> Void
     var body: some View {
         ZStack {
             Color(UIColor(red: 255 / 255.0, green: 255 / 255.0, blue: 255 / 255.0, alpha: 1))
@@ -128,6 +160,9 @@ struct MenuContent: View {
             VStack(alignment: .leading, spacing: 0, content: {
                 HStack {
                     Button {
+                        router.path.append(Profile(name: "Profile Name"))
+                        router.navigationTitle = "Profile"
+                        closeMenu()
                     } label: {
                         HStack(alignment: .center) {
                             Image(systemName: "person.crop.circle")
@@ -183,6 +218,7 @@ struct SideMenu: View {
     let menuOpened: Bool
     
     let toggleMenu: () -> Void
+    let closeMenu: () -> Void
     var body: some View {
         ZStack {
             GeometryReader { _ in
@@ -196,7 +232,7 @@ struct SideMenu: View {
             }
         }
         HStack {
-            MenuContent()
+            MenuContent(closeMenu: closeMenu)
                 .frame(width: width, height: UIScreen.main.bounds.height)
                 .offset(x: menuOpened ? 0 : -width, y: -0.015*UIScreen.main.bounds.height)
                 .animation(.default)

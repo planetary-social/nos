@@ -33,8 +33,10 @@ struct HomeFeedView: View {
             .navigationDestination(for: Event.self) { note in
                 ThreadView(note: note)
             }
+            .navigationDestination(for: Profile.self) { profile in
+                ProfileView(profile: profile)
+            }
             .background(Color.appBg)
-
             .overlay(Group {
                 if events.isEmpty {
                     Localized.noEvents.view

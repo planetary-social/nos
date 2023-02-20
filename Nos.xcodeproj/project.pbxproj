@@ -73,6 +73,8 @@
 		C9F84C21298DC36800C6714D /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C20298DC36800C6714D /* AppView.swift */; };
 		C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C22298DC7B900C6714D /* SettingsView.swift */; };
 		C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C26298DC98800C6714D /* KeyPair.swift */; };
+		CD09A73C29A3E5000063464F /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD09A73B29A3E5000063464F /* ProfileView.swift */; };
+		CD09A73E29A3E88B0063464F /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD09A73D29A3E88B0063464F /* Profile.swift */; };
 		CD2CF38E299E67F900332116 /* CardButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2CF38D299E67F900332116 /* CardButtonStyle.swift */; };
 		CD2CF390299E68BE00332116 /* NoteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2CF38F299E68BE00332116 /* NoteButton.swift */; };
 /* End PBXBuildFile section */
@@ -140,6 +142,8 @@
 		C9F84C20298DC36800C6714D /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		C9F84C22298DC7B900C6714D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		C9F84C26298DC98800C6714D /* KeyPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPair.swift; sourceTree = "<group>"; };
+		CD09A73B29A3E5000063464F /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		CD09A73D29A3E88B0063464F /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		CD2CF38D299E67F900332116 /* CardButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardButtonStyle.swift; sourceTree = "<group>"; };
 		CD2CF38F299E68BE00332116 /* NoteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -296,6 +300,7 @@
 				C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */,
 				C9DEC04129894BED0078B43A /* Tag+CoreDataClass.swift */,
 				C9F84C26298DC98800C6714D /* KeyPair.swift */,
+				CD09A73D29A3E88B0063464F /* Profile.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -334,6 +339,7 @@
 				C9DEC069298965540078B43A /* RelayView.swift */,
 				CD2CF38D299E67F900332116 /* CardButtonStyle.swift */,
 				CD2CF38F299E68BE00332116 /* NoteButton.swift */,
+				CD09A73B29A3E5000063464F /* ProfileView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -528,12 +534,14 @@
 				C9DEBFD9298941000078B43A /* HomeFeedView.swift in Sources */,
 				C9DEC003298945150078B43A /* String+Lorem.swift in Sources */,
 				C9DEC0632989541F0078B43A /* Bundle+Current.swift in Sources */,
+				CD09A73E29A3E88B0063464F /* Profile.swift in Sources */,
 				C9F84C1C298DBBF400C6714D /* Data+Sha.swift in Sources */,
 				C9BAB09B2996FBA10003A84E /* EventProcessor.swift in Sources */,
 				C97797B9298AA19A0046BD25 /* RelayService.swift in Sources */,
 				C9DEC04529894BED0078B43A /* Event+CoreDataClass.swift in Sources */,
 				C9DFA966299BEB96006929C1 /* NoteCard.swift in Sources */,
 				C9DEBFD4298941000078B43A /* Persistence.swift in Sources */,
+				CD09A73C29A3E5000063464F /* ProfileView.swift in Sources */,
 				C9DFA971299BF8CD006929C1 /* ThreadView.swift in Sources */,
 				C9DFA976299C30F0006929C1 /* Localized.swift in Sources */,
 				CD2CF38E299E67F900332116 /* CardButtonStyle.swift in Sources */,
