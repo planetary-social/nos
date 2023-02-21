@@ -8,10 +8,16 @@
 import SwiftUI
 
 struct ThreadView: View {
+    @EnvironmentObject var router: Router
+    
     var note: Event
     var body: some View {
         Text("Thread view placeholder for note: \(note.identifier ?? "no id")")
         Text(note.content ?? "")
+        .navigationBarBackButtonHidden(true)
+        .onAppear {
+            router.navigationTitle = "Thread View"
+        }
     }
 }
 

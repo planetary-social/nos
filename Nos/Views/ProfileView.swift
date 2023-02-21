@@ -46,8 +46,7 @@ struct ProfileView: View {
                 }
             })
         }
-        .navigationTitle(Localized.profile.string)
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
     }
 }
 
