@@ -66,6 +66,7 @@ struct HomeFeedView: View {
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
             }
+
         }
 
         .overlay(Group {
