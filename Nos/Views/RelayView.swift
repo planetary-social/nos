@@ -29,8 +29,7 @@ struct RelayView: View {
                     if relays.isEmpty {
                         Localized.noRelaysMessage.view
                     }
-                }
-                
+                }            
                 Section(Localized.addRelay.string) {
                     TextField("wss://yourrelay.com", text: $newRelayAddress)
                         .autocorrectionDisabled()
@@ -41,6 +40,14 @@ struct RelayView: View {
                     Button(Localized.save.string) {
                         addRelay()
                     }
+                .onDelete { indexes in
+                    for index in indexes {
+                        let relay = relays[index]
+                        viewContext.delete(relay)
+                    }
+                }
+                if relays.isEmpty {
+                    Localized.noRelaysMessage.view
                 }
             }
             .toolbar {
