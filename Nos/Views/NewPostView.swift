@@ -66,17 +66,13 @@ struct NewPostView: View {
         }
         
         withAnimation {
-            let event = Event(context: viewContext)
-            event.createdAt = Date()
-            event.content = postText
-            event.kind = 1
-            
-            let author = Author(context: viewContext)
-            // TODO: derive from private key
-            author.hexadecimalPublicKey = "32730e9dfcab797caf8380d096e548d9ef98f3af3000542f9271a91a9e3b0001"
-            event.author = author
-            
             do {
+                let event = Event(context: viewContext)
+                event.createdAt = Date()
+                event.content = postText
+                event.kind = 1
+                event.author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+            
                 try event.sign(withKey: keyPair)
                 try relayService.publish(event)
                 isPresented = false

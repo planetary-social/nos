@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Added ability to delete relays on the Relays screen.
+- Fix events not being signed correctly with a key generated during onboarding.
 
 ## [0.1 (3)] - 2023-02-20Z
 
