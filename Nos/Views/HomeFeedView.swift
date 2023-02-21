@@ -88,7 +88,8 @@ struct HomeFeedView: View {
         .onReceive(syncTimer.currentTimePublisher) { _ in
             if !authorsToSync.isEmpty {
                 print("Syncing \(authorsToSync.count) authors")
-                let filter = Filter(authors: authorsToSync, kinds: [.metaData], limit: authorsToSync.count)
+                let authorKeys = authorsToSync.map({ $0.hexadecimalPublicKey! })
+                let filter = Filter(publicKeys: authorKeys, kinds: [.metaData], limit: authorsToSync.count)
                 relayService.requestEventsFromAll(filter: filter)
                 authorsToSync.removeAll()
             }
@@ -99,17 +100,11 @@ struct HomeFeedView: View {
         Profile.relayService = relayService
         
         if Profile.author == nil {
-            let author = try! Author.findOrCreate(by: KeyChain.publicKey, context: viewContext)
-            let filter = Filter(authors: [author], kinds: [.metaData], limit: 100)
+            let filter = Filter(publicKeys: [KeyChain.publicKey], kinds: [.metaData], limit: 100)
             relayService.requestEventsFromAll(filter: filter)
         } else {
-            if let follows = Profile.follows {
-                let authors = follows.map { $0.event!.author! }
-                let filter = Filter(authors: authors, kinds: [.text], limit: 100)
-                relayService.requestEventsFromAll(filter: filter)
-            } else {
-                print("No follows found! Syncing contacts...")
-                let filter = Filter(authors: [Profile.author!], kinds: [.contactList], limit: 100)
+            if let authors = Profile.follows?.map({ $0.event!.author!.hexadecimalPublicKey! }), !authors.isEmpty {
+                let filter = Filter(publicKeys: authors, kinds: [.text], limit: 100)
                 relayService.requestEventsFromAll(filter: filter)
             }
         }

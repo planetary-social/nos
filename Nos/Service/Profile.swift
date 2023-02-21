@@ -12,7 +12,7 @@ enum Profile {
         didSet {
             if author != nil {
                 print("👉Got author \(author!.hexadecimalPublicKey!). Getting follows.")
-                let filter = Filter(authors: [author!], kinds: [.contactList], limit: 1)
+                let filter = Filter(publicKeys: [author!.hexadecimalPublicKey!], kinds: [.contactList], limit: 1)
                 Profile.relayService?.requestEventsFromAll(filter: filter)
             } else {
                 print("👉Warning: erased Profile author")
@@ -23,8 +23,8 @@ enum Profile {
         didSet {
             print("👉Profile has \(follows?.count ?? 0) follows. Requesting texts.")
             
-            let authors = follows?.map { $0.event!.author! } ?? []
-            let filter = Filter(authors: authors, kinds: [.text], limit: 100)
+            let authors = follows?.map { $0.identifier! } ?? []
+            let filter = Filter(publicKeys: authors, kinds: [.text], limit: 100)
             Profile.relayService?.requestEventsFromAll(filter: filter)
         }
     }
