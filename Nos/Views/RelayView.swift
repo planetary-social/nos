@@ -26,6 +26,12 @@ struct RelayView: View {
                     ForEach(relays) { relay in
                         Text(relay.address ?? Localized.error.string)
                     }
+                    .onDelete { indexes in
+                        for index in indexes {
+                            let relay = relays[index]
+                            viewContext.delete(relay)
+                        }
+                    }
                     if relays.isEmpty {
                         Localized.noRelaysMessage.view
                     }
@@ -36,14 +42,9 @@ struct RelayView: View {
                         #if os(iOS)
                         .textInputAutocapitalization(.none)
                         .keyboardType(.URL)
-                        #endif
+                    #endif
                     Button(Localized.save.string) {
                         addRelay()
-                    }
-                .onDelete { indexes in
-                    for index in indexes {
-                        let relay = relays[index]
-                        viewContext.delete(relay)
                     }
                 }
                 if relays.isEmpty {
