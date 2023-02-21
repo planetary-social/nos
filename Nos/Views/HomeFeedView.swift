@@ -14,7 +14,7 @@ struct HomeFeedView: View {
     
     @EnvironmentObject private var relayService: RelayService
 
-    @FetchRequest(fetchRequest: Event.followedPostsRequest(), animation: .default)
+    @FetchRequest(fetchRequest: Event.allPostsRequest(), animation: .default)
     private var events: FetchedResults<Event>
     
     @EnvironmentObject var router: Router
