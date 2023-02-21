@@ -11,13 +11,9 @@ import CoreData
 
 @objc(Author)
 public class Author: NosManagedObject {
+    
     var npubString: String? {
-        guard let hex = hexadecimalPublicKey else {
-            return nil
-        }
-        
-        let publicKey = PublicKey(hex: hex)
-        return publicKey?.npub
+        publicKey?.npub
     }
     
     var displayName: String {
@@ -30,6 +26,14 @@ public class Author: NosManagedObject {
         let hasPhoto = (profilePhotoURL != nil)
         
         return hasName || hasAbout || hasPhoto
+    }
+    
+    var publicKey: PublicKey? {
+        guard let hex = hexadecimalPublicKey else {
+            return nil
+        }
+        
+        return PublicKey(hex: hex)
     }
     
     class func findOrCreate(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author {
