@@ -11,14 +11,7 @@ import SwiftUINavigation
 
 struct NewPostView: View {
     private var keyPair: KeyPair? {
-		if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
-			let hexString = String(decoding: privateKeyData, as: UTF8.self)
-			if let pair = KeyPair(privateKeyHex: hexString) {
-				return pair
-			}
-        }
-		print("Error loading key pair from keychain")
-		return nil
+        return KeyPair.loadFromKeychain()
     }
     
     @Environment(\.managedObjectContext) private var viewContext
@@ -66,17 +59,13 @@ struct NewPostView: View {
         }
         
         withAnimation {
-            let event = Event(context: viewContext)
-            event.createdAt = Date()
-            event.content = postText
-            event.kind = 1
-            
-            let author = Author(context: viewContext)
-            // TODO: derive from private key
-            author.hexadecimalPublicKey = "32730e9dfcab797caf8380d096e548d9ef98f3af3000542f9271a91a9e3b0001"
-            event.author = author
-            
             do {
+                let event = Event(context: viewContext)
+                event.createdAt = Date()
+                event.content = postText
+                event.kind = 1
+                event.author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+                
                 try event.sign(withKey: keyPair)
                 try relayService.publish(event)
                 isPresented = false
