@@ -66,7 +66,11 @@ struct HomeFeedView: View {
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
             }
-
+            .navigationDestination(for: AppView.Destination.self) { destination in
+                if destination == AppView.Destination.settings {
+                    SettingsView()
+                }
+            }
         }
 
         .overlay(Group {

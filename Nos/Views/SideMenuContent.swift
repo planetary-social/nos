@@ -40,6 +40,9 @@ struct SideMenuContent: View {
                 .padding()
                 HStack {
                     Button {
+                        router.path.append(AppView.Destination.settings)
+                        router.navigationTitle = Localized.settings.string
+                        closeMenu()
                     } label: {
                         HStack(alignment: .center) {
                             Image(systemName: "gear")

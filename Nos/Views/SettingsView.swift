@@ -42,7 +42,7 @@ struct SettingsView: View {
                 }
             }
         }
-        .navigationTitle(Localized.settings.string)
+        .navigationBarBackButtonHidden(true)
         .alert(isPresented: $showError) {
             Alert(
                 title: Localized.invalidKey.view,
