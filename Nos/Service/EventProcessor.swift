@@ -25,7 +25,7 @@ enum EventProcessor {
 
         // Retain an existing event so we can modify it as needed with new data
         let event = Event.findOrCreate(jsonEvent: jsonEvent, context: parseContext)
-
+        
         switch eventKind {
         case .contactList:
             let eventFollows = NSMutableOrderedSet()
@@ -33,12 +33,17 @@ enum EventProcessor {
                 eventFollows.add(Follow(context: parseContext, jsonTag: jsonTag))
             }
             event.tags = eventFollows
+            
+            if let author = event.author, author.hexadecimalPublicKey == KeyChain.publicKey {
+                Profile.follows = eventFollows.array as? [Follow]
+            }
 
         case .metaData:
+            // TODO: This needs to handle display_name
             if let contentData = jsonEvent.content.data(using: .utf8) {
                 do {
                     let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
-
+                    
                     // Every event has an author created, so it just needs to be populated
                     if let author = event.author {
                         author.name = metadata.name
@@ -48,6 +53,12 @@ enum EventProcessor {
                 } catch {
                     print("Failed to decode kind \(eventKind) event with ID \(String(describing: event.identifier))")
                 }
+            }
+
+            // Every event has an author created, so it just needs to be populated
+            if let author = event.author, author.hexadecimalPublicKey == KeyChain.publicKey {
+                print("Setting author: \(author.hexadecimalPublicKey!)")
+                Profile.author = author
             }
 
         default:

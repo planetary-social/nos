@@ -80,8 +80,17 @@ public class Event: NosManagedObject {
     
 	@nonobjc public class func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: true)]
 		fetchRequest.predicate = NSPredicate(format: "kind = %i", eventKind.rawValue)
+        return fetchRequest
+    }
+    
+    @nonobjc public class func followedPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        let authors = Profile.follows?.map { $0.event?.author?.hexadecimalPublicKey } ?? []
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        let kind = eventKind.rawValue
+        fetchRequest.predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey IN %@", kind, authors)
         return fetchRequest
     }
     

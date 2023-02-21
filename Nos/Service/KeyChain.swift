@@ -13,6 +13,9 @@ import UIKit
 enum KeyChain {
     static let keychainPrivateKey = "privateKey"
     
+    // TODO: Use calculated key
+    static let publicKey = "e62ba4118160be475cf510b711a34a8a1ce0b10b44b7a30b585a239794a38473"
+    
     @discardableResult
     static func save(key: String, data: Data) -> OSStatus {
         let query =

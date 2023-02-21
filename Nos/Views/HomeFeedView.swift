@@ -14,7 +14,7 @@ struct HomeFeedView: View {
     
     @EnvironmentObject private var relayService: RelayService
 
-    @FetchRequest(fetchRequest: Event.allPostsRequest(), animation: .default)
+    @FetchRequest(fetchRequest: Event.followedPostsRequest(), animation: .default)
     private var events: FetchedResults<Event>
     
     @State var isCreatingNewPost = false
@@ -97,8 +97,25 @@ struct HomeFeedView: View {
     }
     
     private func load() {
-        let filter = Filter(authors: [], kinds: [.text], limit: 10)
-        relayService.requestEventsFromAll(filter: filter)
+        Profile.relayService = relayService
+        
+        if Profile.author == nil {
+            let author = try! Author.findOrCreate(by: KeyChain.publicKey, context: viewContext)
+            let filter = Filter(authors: [author], kinds: [.metaData], limit: 100)
+            relayService.requestEventsFromAll(filter: filter)
+        } else {
+            if let follows = Profile.follows {
+                let authors = follows.map { $0.event!.author! }
+                let filter = Filter(authors: authors, kinds: [.text], limit: 100)
+                relayService.requestEventsFromAll(filter: filter)
+            } else {
+                print("No follows found! Syncing contacts...")
+                let filter = Filter(authors: [Profile.author!], kinds: [.contactList], limit: 100)
+                relayService.requestEventsFromAll(filter: filter)
+            }
+        }
+        
+        
     }
 }
 
