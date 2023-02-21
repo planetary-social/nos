@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sync authors in HomeFeedView
 - Added a basic profile screen
 - Added AvatarView for rendering profile pictures on NoteCards
+- Added ability to delete relays on the Relays screen.
 
 ## [0.1 Build 1]
 
