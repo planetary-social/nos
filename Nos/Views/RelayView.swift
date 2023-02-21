@@ -63,8 +63,6 @@ struct RelayView: View {
                 ProfileView(author: author)
             }
         }
-            
-            
         .navigationTitle(Localized.relays.string)
     }
     

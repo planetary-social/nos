@@ -112,7 +112,6 @@ struct AppView: View {
                                     if router.path.count > 0 {
                                         Button(
                                             action: {
-                                                
                                             },
                                             label: {
                                                 Image(systemName: "ellipsis")

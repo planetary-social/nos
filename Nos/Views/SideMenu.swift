@@ -20,7 +20,7 @@ struct SideMenu: View {
             }
             .background(Color.gray.opacity(0.5))
             .opacity(self.menuOpened ? 1 : 0)
-            .animation(Animation.easeIn.delay(0.15))
+            .animation(Animation.easeIn.delay(0.15), value: menuOpened)
             .onTapGesture {
                 self.toggleMenu()
             }
@@ -28,8 +28,8 @@ struct SideMenu: View {
         HStack {
             SideMenuContent(closeMenu: closeMenu)
                 .frame(width: width, height: UIScreen.main.bounds.height)
-                .offset(x: menuOpened ? 0 : -width, y: -0.015*UIScreen.main.bounds.height)
-                .animation(.default)
+                .offset(x: menuOpened ? 0 : -width, y: -0.015 * UIScreen.main.bounds.height)
+                .animation(.default, value: menuOpened)
             Spacer()
         }
     }

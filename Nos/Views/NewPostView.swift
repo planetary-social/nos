@@ -11,7 +11,7 @@ import SwiftUINavigation
 
 struct NewPostView: View {
     private var keyPair: KeyPair? {
-        return KeyPair.loadFromKeychain()
+        KeyPair.loadFromKeychain()
     }
     
     @Environment(\.managedObjectContext) private var viewContext
