@@ -7,18 +7,19 @@
 
 import SwiftUI
 
-// Used in the NavigationStack and added as an environmentObject so that it can be used for multiple views
-class Router: ObservableObject {
-    @Published var path = NavigationPath()
-}
-
 struct AppView: View {
 
     @StateObject private var appController = AppController()
     
+    @State var isCreatingNewPost = false
+
+    @State var sideMenuOpened = false
+
+    @State var selectedTab = Destination.home
+    
     @EnvironmentObject var router: Router
     
-    /// An enumeration of the navigation destinations for AppView.
+    /// An enumeration of the destinations for AppView.
     enum Destination: String, Hashable {
         case home
         case relays
@@ -34,41 +35,115 @@ struct AppView: View {
                 return Text(Localized.settingsLinkTitle.string)
             }
         }
+        var destinationString: String {
+            switch self {
+            case .home:
+                return Localized.homeFeedLinkTitle.string
+            case .relays:
+                return Localized.relaysLinkTitle.string
+            case .settings:
+                return Localized.settingsLinkTitle.string
+            }
+        }
     }
     
     var body: some View {
         
-        Group {
+        ZStack {
             if appController.currentState == .onboarding {
                 OnboardingView(completion: appController.completeOnboarding)
             } else {
-                NavigationStack(path: $router.path) {
-                    List {
-                        NavigationLink(value: Destination.home) { Destination.home.label }
-                        NavigationLink(value: Destination.relays) { Destination.relays.label }
-                        NavigationLink(value: Destination.settings) { Destination.settings.label }
-                    }
-                    .navigationDestination(for: Destination.self, destination: { destination in
-                        switch destination {
-                        case .home:
+                NavigationView {
+                    ZStack {
+                        TabView(selection: $selectedTab) {
                             HomeFeedView()
-                        case .relays:
+                                .tabItem {
+                                    Label("Home Feed", systemImage: "house")
+                                }
+                                .tag(Destination.home)
+
                             RelayView()
-                        case .settings:
-                            SettingsView()
+                                .tabItem {
+                                    Label("Relays", systemImage: "antenna.radiowaves.left.and.right")
+                                }
+                                .tag(Destination.relays)
                         }
-                    })
-                    .navigationDestination(for: Event.self) { note in
-                        ThreadView(note: note)
+                        .onChange(of: selectedTab) { _ in
+                            if router.path.count > 0 {
+                                router.path.removeLast(router.path.count)
+                            }
+                        }
+              
+                        .navigationBarTitleDisplayMode(.inline)
+                        .navigationTitle(router.path.count > 0 ? router.navigationTitle : selectedTab.destinationString)
+                        .navigationBarItems(
+                            leading:
+                                Group {
+                                    if router.path.count > 0 {
+                                        Button(
+                                            action: {
+                                                router.path.removeLast()
+                                            },
+                                            label: {
+                                                Image(systemName: "chevron.left")
+                                            }
+                                        )
+                                    } else {
+                                        Button(
+                                            action: {
+                                                toggleMenu()
+                                            },
+                                            label: {
+                                                Image(systemName: "person.crop.circle")
+                                            }
+                                        )
+                                    }
+                                }
+                            ,
+                            trailing:
+                                Group {
+                                    if router.path.count > 0 {
+                                        Button(
+                                            action: {
+                                            },
+                                            label: {
+                                                Image(systemName: "ellipsis")
+                                            }
+                                        )
+                                    } else {
+                                        Button(
+                                            action: {
+                                                isCreatingNewPost.toggle()
+                                            },
+                                            label: {
+                                                Image(systemName: "plus")
+                                            }
+                                        )
+                                    }
+                                }
+                        )
+
+                        .sheet(isPresented: $isCreatingNewPost, content: {
+                            NewPostView(isPresented: $isCreatingNewPost)
+                        })
                     }
-                    .navigationDestination(for: Author.self) { author in
-                        ProfileView(author: author)
-                    }
-                    .navigationTitle(Localized.nos.string)
                 }
+                
+                SideMenu(
+                    width: UIScreen.main.bounds.width / 1.3,
+                    menuOpened: sideMenuOpened,
+                    toggleMenu: toggleMenu,
+                    closeMenu: closeMenu
+                )
             }
         }
         .onAppear(perform: appController.configureCurrentState)
+    }
+    func toggleMenu() {
+        sideMenuOpened.toggle()
+    }
+    func closeMenu() {
+        sideMenuOpened = false
     }
 }
 

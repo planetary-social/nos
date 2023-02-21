@@ -17,7 +17,7 @@ struct HomeFeedView: View {
     @FetchRequest(fetchRequest: Event.allPostsRequest(), animation: .default)
     private var events: FetchedResults<Event>
     
-    @State var isCreatingNewPost = false
+    @EnvironmentObject var router: Router
     
     class SyncTimer {
         let currentTimePublisher = Timer.TimerPublisher(interval: 1.0, runLoop: .main, mode: .default)
@@ -37,49 +37,48 @@ struct HomeFeedView: View {
     @State private var authorsToSync: [Author] = []
     
     var body: some View {
-        ScrollView(.vertical) {
-            LazyVStack {
-                ForEach(events) { event in
-                    VStack {
-                        NoteButton(note: event)
-                            .padding(.horizontal)
-                    }
-                    .onAppear {
-                        // Error scenario: we have an event in core data without an author
-                        guard let author = event.author else {
-                            print("Event author is nil")
-                            return
+        NavigationStack(path: $router.path) {
+            ScrollView(.vertical) {
+                LazyVStack {
+                    ForEach(events) { event in
+                        VStack {
+                            NoteButton(note: event)
+                                .padding(.horizontal)
                         }
-
-                        if !author.isPopulated {
-                            print("Need to sync author: \(author.hexadecimalPublicKey ?? "")")
-                            authorsToSync.append(author)
+                        .onAppear {
+                            // Error scenario: we have an event in core data without an author
+                            guard let author = event.author else {
+                                print("Event author is nil")
+                                return
+                            }
+                            
+                            if !author.isPopulated {
+                                print("Need to sync author: \(author.hexadecimalPublicKey ?? "")")
+                                authorsToSync.append(author)
+                            }
                         }
                     }
                 }
             }
+            .navigationDestination(for: Event.self) { note in
+                ThreadView(note: note)
+            }
+            .navigationDestination(for: Author.self) { author in
+                ProfileView(author: author)
+            }
+            .navigationDestination(for: AppView.Destination.self) { destination in
+                if destination == AppView.Destination.settings {
+                    SettingsView()
+                }
+            }
         }
-        .background(Color.appBg)
-        .sheet(isPresented: $isCreatingNewPost, content: {
-            NewPostView(isPresented: $isCreatingNewPost)
-        })
+
         .overlay(Group {
             if events.isEmpty {
                 Localized.noEvents.view
                     .padding()
             }
         })
-        .toolbar {
-            ToolbarItem {
-                Button {
-                    isCreatingNewPost.toggle()
-                }
-                label: {
-                    Label(Localized.noEvents.string, systemImage: "plus")
-                }
-            }
-        }
-        .navigationTitle(Localized.homeFeed.string)
         .task {
             load()
         }
