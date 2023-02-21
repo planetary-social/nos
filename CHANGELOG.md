@@ -8,18 +8,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added ability to delete relays on the Relays screen.
+
+## [0.1 (3)] - 2023-02-20Z
+
+- Sync authors in HomeFeedView
+- Added AvatarView for rendering profile pictures on NoteCards
+
+## [0.1 (2)]
+
 - Added conversion of hex keys to npub
 - Add a basic New Post screen
 - Save private key to keychain
 - Parse and store contact list
 - Add onboarding flow
 - Copied MessageCard and MessageButton SwiftUI view from Planetary renaming Message to Note
-- Sync authors in HomeFeedView
 - Added a basic profile screen
-- Added AvatarView for rendering profile pictures on NoteCards
-- Added ability to delete relays on the Relays screen.
 
-## [0.1 Build 1]
+## [0.1 (1)]
 
 - Parse and display Nostr events
 - Read events from relays
