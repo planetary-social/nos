@@ -113,8 +113,6 @@ struct HomeFeedView: View {
                 relayService.requestEventsFromAll(filter: filter)
             }
         }
-        
-        
     }
 }
 

@@ -81,7 +81,7 @@ public class Event: NosManagedObject {
     
 	@nonobjc public class func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
 		fetchRequest.predicate = NSPredicate(format: "kind = %i", eventKind.rawValue)
         return fetchRequest
     }

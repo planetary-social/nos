@@ -47,6 +47,7 @@ enum EventProcessor {
                     // Every event has an author created, so it just needs to be populated
                     if let author = event.author {
                         author.name = metadata.name
+                        author.display_name = metadata.display_name
                         author.about = metadata.about
                         author.profilePhotoURL = metadata.profilePhotoURL
                     }
