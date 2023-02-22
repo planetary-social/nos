@@ -34,12 +34,11 @@ enum EventProcessor {
             }
             event.tags = eventFollows
             
-            if let author = event.author, author.hexadecimalPublicKey == KeyChain.publicKey {
+            if let author = event.author, author.hexadecimalPublicKey == Profile.publicKey {
                 Profile.follows = eventFollows.array as? [Follow]
             }
 
         case .metaData:
-            // TODO: This needs to handle display_name
             if let contentData = jsonEvent.content.data(using: .utf8) {
                 do {
                     let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
@@ -57,7 +56,7 @@ enum EventProcessor {
             }
 
             // Every event has an author created, so it just needs to be populated
-            if let author = event.author, author.hexadecimalPublicKey == KeyChain.publicKey {
+            if let author = event.author, author.hexadecimalPublicKey == Profile.publicKey {
                 print("Setting author: \(author.hexadecimalPublicKey!)")
                 Profile.author = author
             }

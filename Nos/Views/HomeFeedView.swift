@@ -80,6 +80,8 @@ struct HomeFeedView: View {
             }
         })
         .task {
+            Profile.relayService = relayService
+
             load()
         }
         .refreshable {
@@ -97,16 +99,12 @@ struct HomeFeedView: View {
     }
     
     private func load() {
-        Profile.relayService = relayService
-        
-        if Profile.author == nil {
-            let filter = Filter(publicKeys: [KeyChain.publicKey], kinds: [.metaData], limit: 100)
+        // Get events from my follows
+        if let authors = Profile.follows?.map({ $0.event!.author!.hexadecimalPublicKey! }), !authors.isEmpty {
+            let filter = Filter(publicKeys: authors, kinds: [.text], limit: 100)
             relayService.requestEventsFromAll(filter: filter)
         } else {
-            if let authors = Profile.follows?.map({ $0.event!.author!.hexadecimalPublicKey! }), !authors.isEmpty {
-                let filter = Filter(publicKeys: authors, kinds: [.text], limit: 100)
-                relayService.requestEventsFromAll(filter: filter)
-            }
+            print("No follows for profile!")
         }
     }
 }
