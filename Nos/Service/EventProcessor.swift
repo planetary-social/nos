@@ -34,6 +34,7 @@ enum EventProcessor {
             }
             event.tags = eventFollows
             
+            // In the special case that we've requested our own follows, set it on the profile
             if let author = event.author, author.hexadecimalPublicKey == Profile.publicKey {
                 Profile.follows = eventFollows.array as? [Follow]
             }
@@ -55,7 +56,7 @@ enum EventProcessor {
                 }
             }
 
-            // Every event has an author created, so it just needs to be populated
+            // In the special case that we've requested our own metadata, set it on the profile
             if let author = event.author, author.hexadecimalPublicKey == Profile.publicKey {
                 print("Setting author: \(author.hexadecimalPublicKey!)")
                 Profile.author = author

@@ -10,6 +10,7 @@
 		3F170C78299D816200BC8F8B /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F170C77299D816200BC8F8B /* AppController.swift */; };
 		3FB5E651299D28A200386527 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB5E650299D28A200386527 /* OnboardingView.swift */; };
 		3FFB1D89299FF37C002A755D /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D88299FF37C002A755D /* AvatarView.swift */; };
+		A32B6C7129A672BC00653FF5 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34E439829A522F20057AFCB /* Profile.swift */; };
 		A336DD3C299FD78000A0CBA0 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A336DD3B299FD78000A0CBA0 /* Filter.swift */; };
 		A34E439929A522F20057AFCB /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34E439829A522F20057AFCB /* Profile.swift */; };
 		A3B943CF299AE00100A15A08 /* KeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943CE299AE00100A15A08 /* KeyChain.swift */; };
@@ -675,13 +676,13 @@
 				CD09A74A29A521510063464F /* ProfileView.swift in Sources */,
 				CD09A74929A521210063464F /* Router.swift in Sources */,
 				A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */,
-				A34E439A29A522F20057AFCB /* Profile.swift in Sources */,
 				C9ADB13E29929EEF0075E7F8 /* Bech32.swift in Sources */,
 				C9DEC05A2989509B0078B43A /* Persistence.swift in Sources */,
 				C9DFA97A299C31E9006929C1 /* Localizable.swift in Sources */,
 				C9DEC06B298965550078B43A /* RelayView.swift in Sources */,
 				C9DEC05C298953280078B43A /* Nos.xcdatamodeld in Sources */,
 				C9DEC04629894BED0078B43A /* Event+CoreDataClass.swift in Sources */,
+				A32B6C7129A672BC00653FF5 /* Profile.swift in Sources */,
 				C9F84C1A298DBB6300C6714D /* Data+Encoding.swift in Sources */,
 				C9DEC0642989541F0078B43A /* Bundle+Current.swift in Sources */,
 				C9ADB13629928AF00075E7F8 /* KeyPair.swift in Sources */,
