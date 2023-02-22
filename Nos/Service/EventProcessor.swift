@@ -56,12 +56,6 @@ enum EventProcessor {
                 }
             }
 
-            // In the special case that we've requested our own metadata, set it on the profile
-            if let author = event.author, author.hexadecimalPublicKey == Profile.publicKey {
-                print("Setting author: \(author.hexadecimalPublicKey!)")
-                Profile.author = author
-            }
-
         default:
 			let eventTags = NSMutableOrderedSet()
 			for jsonTag in jsonEvent.tags {

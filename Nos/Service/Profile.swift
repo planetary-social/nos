@@ -20,11 +20,11 @@ enum Profile {
         return nil
     }
     
-    /// Step 2: Set relay
+    /// Step 2: Set relay service and get profile data
     static var relayService: RelayService? {
         didSet {
             if let key = Profile.publicKey {
-                let filter = Filter(publicKeys: [key], kinds: [.metaData], limit: 1)
+                let filter = Filter(publicKeys: [key], kinds: [.contactList, .metaData], limit: 2)
                 Profile.relayService?.requestEventsFromAll(filter: filter)
             } else {
                 print("Error: no public key set for profile")
@@ -32,20 +32,7 @@ enum Profile {
         }
     }
     
-    /// Step 3: Set author
-    static var author: Author? {
-        didSet {
-            if author != nil {
-                print("Got author \(author!.hexadecimalPublicKey!). Getting follows.")
-                let filter = Filter(publicKeys: [author!.hexadecimalPublicKey!], kinds: [.contactList], limit: 1)
-                Profile.relayService?.requestEventsFromAll(filter: filter)
-            } else {
-                print("Warning: erased Profile author")
-            }
-        }
-    }
-    
-    /// Step 4: Set follows
+    /// Step 3: Set follows
     static var follows: [Follow]? {
         didSet {
             print("Profile has \(follows?.count ?? 0) follows. Requesting texts.")
