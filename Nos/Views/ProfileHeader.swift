@@ -7,10 +7,27 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct ProfileHeader: View {
 
     var author: Author
+    
+    var followsRequest: FetchRequest<Event>
+    var followsEvent: FetchedResults<Event> { followsRequest.wrappedValue }
+    
+    var follows: [Follow] {
+        if let followEvent = self.followsEvent.first, let tags = followEvent.tags?.array as? [Follow] {
+            return tags
+        }
+        return []
+    }
+
+    init(author: Author) {
+        self.author = author
+        let request = FetchRequest(fetchRequest: Event.contactListRequest(.contactList, author), animation: .default)
+        self.followsRequest = request
+    }
 
     private var shouldShowBio: Bool {
         if let about = author.about {
@@ -41,6 +58,7 @@ struct ProfileHeader: View {
                             .foregroundColor(Color.primaryTxt)
                         // TODO: Put follow button here
                         Spacer()
+                        Text("Follows: \(follows.count)")
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -61,6 +79,16 @@ struct ProfileHeader: View {
                 endPoint: .bottom
             )
         )
+        .task {
+            guard let key = author.hexadecimalPublicKey else {
+                print("Error: no public key for this author")
+                return
+            }
+            // Get follows
+            // TODO: Should we use the CurrentUser relay service here?
+            let filter = Filter(publicKeys: [key], kinds: [.contactList], limit: 1)
+            CurrentUser.relayService?.requestEventsFromAll(filter: filter)
+        }
     }
 }
 

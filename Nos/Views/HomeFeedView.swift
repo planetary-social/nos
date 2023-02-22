@@ -91,7 +91,7 @@ struct HomeFeedView: View {
             if !authorsToSync.isEmpty {
                 print("Syncing \(authorsToSync.count) authors")
                 let authorKeys = authorsToSync.map({ $0.hexadecimalPublicKey! })
-                let filter = Filter(publicKeys: authorKeys, kinds: [.metaData], limit: authorsToSync.count)
+                let filter = Filter(publicKeys: authorKeys, kinds: [.metaData, .contactList], limit: 2*authorsToSync.count)
                 relayService.requestEventsFromAll(filter: filter)
                 authorsToSync.removeAll()
             }

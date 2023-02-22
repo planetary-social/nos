@@ -103,6 +103,14 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func contactListRequest(_ eventKind: EventKind = .contactList, _ author: Author) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        let kind = eventKind.rawValue
+        fetchRequest.predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey = %@", kind, author.hexadecimalPublicKey!)
+        return fetchRequest
+    }
+    
     class func findOrCreate(jsonEvent: JSONEvent, context: NSManagedObjectContext) -> Event {
         if let existingEvent = try? context.fetch(Event.event(by: jsonEvent.id)).first {
             return existingEvent
