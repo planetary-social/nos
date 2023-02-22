@@ -26,6 +26,10 @@ enum EventProcessor {
         // Retain an existing event so we can modify it as needed with new data
         let event = Event.findOrCreate(jsonEvent: jsonEvent, context: parseContext)
         
+        guard let publicKey = event.author?.publicKey else {
+            throw EventError.missingAuthor
+        }
+        
         switch eventKind {
         case .contactList:
             let eventFollows = NSMutableOrderedSet()
@@ -67,6 +71,12 @@ enum EventProcessor {
 			event.tags = eventTags
 		}
         
+        guard try publicKey.verifySignature(on: event) else {
+            parseContext.delete(event)
+            print("Invalid signature on event: \(jsonEvent)")
+            throw EventError.invalidSignature(event)
+        }
+        
         return event
     }
     
@@ -75,8 +85,12 @@ enum EventProcessor {
         let jsonEvents = try JSONDecoder().decode([JSONEvent].self, from: jsonData)
         var events = [Event]()
         for jsonEvent in jsonEvents {
-            let event = try parse(jsonEvent: jsonEvent, in: persistenceController)
-            events.append(event)
+            do {
+                let event = try parse(jsonEvent: jsonEvent, in: persistenceController)
+                events.append(event)
+            } catch {
+                print("Error parsing eventJSON: \(jsonEvent): \(error.localizedDescription)")
+            }
         }
         
         try parseContext.save()

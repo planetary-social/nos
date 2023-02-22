@@ -23,4 +23,13 @@ public class Follow: Tag {
             petName = jsonTag[3]
         }
     }
+    
+    override var jsonRepresentation: [String] {
+        [
+            "p",
+            identifier,
+            relay?.jsonRepresentation,
+            petName
+        ].compactMap { $0 }
+    }
 }

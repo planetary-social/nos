@@ -8,54 +8,8 @@
 import Foundation
 import secp256k1
 
-struct PublicKey {
-    var hex: String
-    let npub: String
-     
-    private let underlyingKey: secp256k1.Signing.XonlyKey
-    
-    init?(hex: String) {
-        do {
-            let underlyingKey = try secp256k1.Signing.XonlyKey(rawRepresentation: hex.bytes, keyParity: 0)
-            self.init(underlyingKey: underlyingKey)
-        } catch {
-            print("error creating PublicKey \(error.localizedDescription)")
-            return nil
-        }
-    }
-    
-    init?(npub: String) {
-        do {
-            let (humanReadablePart, checksum) = try Bech32.decode(npub)
-            guard humanReadablePart == NostrIdentifiers.publicKeyPrefix else {
-                print("error creating PublicKey from npub: invalid human readable part")
-                return nil
-            }
-            guard let converted = checksum.base8FromBase5 else {
-                return nil
-            }
-            
-            let underlyingKey = secp256k1.Signing.XonlyKey(rawRepresentation: converted, keyParity: 0)
-            self.init(underlyingKey: underlyingKey)
-        } catch {
-            print("error creating PublicKey \(error.localizedDescription)")
-            return nil
-        }
-    }
-    
-    init(underlyingKey: secp256k1.Signing.XonlyKey) {
-        self.underlyingKey = underlyingKey
-        self.hex = Data(underlyingKey.bytes).hexString
-        self.npub = Bech32.encode(NostrIdentifiers.publicKeyPrefix, baseEightData: Data(underlyingKey.bytes))
-    }
-}
-
-// https://github.com/nostr-protocol/nips/blob/master/19.md
-enum NostrIdentifiers {
-    static let privateKeyPrefix = "nsec"
-    static let publicKeyPrefix = "npub"
-}
-
+/// A model for Ed25519 public/private key pairs. In Nostr one KeyPair identifies a single author (although one author
+/// may have multiple keys). KeyPair includes private key which can be used for signing new events.
 struct KeyPair {
     
     var privateKeyHex: String {
@@ -67,7 +21,7 @@ struct KeyPair {
     }
     
     var nsec: String {
-        Bech32.encode(NostrIdentifiers.privateKeyPrefix, baseEightData: underlyingKey.rawRepresentation)
+        Bech32.encode(Nostr.privateKeyPrefix, baseEightData: underlyingKey.rawRepresentation)
     }
     
     var npub: String {
@@ -101,7 +55,7 @@ struct KeyPair {
     init?(nsec: String) {
         do {
             let (humanReadablePart, checksum) = try Bech32.decode(nsec)
-            guard humanReadablePart == NostrIdentifiers.privateKeyPrefix else {
+            guard humanReadablePart == Nostr.privateKeyPrefix else {
                 print("error creating KeyPair from nsec: invalid human readable part")
                 return nil
             }

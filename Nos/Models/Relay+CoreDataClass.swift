@@ -33,4 +33,8 @@ public class Relay: NosManagedObject {
             return relay
         }
     }
+    
+    var jsonRepresentation: String? {
+        address
+    }
 }
