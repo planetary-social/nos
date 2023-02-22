@@ -68,8 +68,7 @@ struct MetadataEventJSON: Codable {
     var profilePhotoURL: URL? {
         URL(string: picture ?? "")
     }
-    // swiftlint:enable identifier_name
-    
+
     private enum CodingKeys: String, CodingKey {
         case displayName = "display_name", name, about, picture
     }
