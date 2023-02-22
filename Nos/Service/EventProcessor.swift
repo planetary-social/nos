@@ -37,15 +37,21 @@ enum EventProcessor {
                 eventFollows.add(Follow(context: parseContext, jsonTag: jsonTag))
             }
             event.tags = eventFollows
+            
+            // In the special case that we've requested our own follows, set it on the profile
+            if let author = event.author, author.hexadecimalPublicKey == Profile.publicKey {
+                Profile.follows = eventFollows.array as? [Follow]
+            }
 
         case .metaData:
             if let contentData = jsonEvent.content.data(using: .utf8) {
                 do {
                     let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
-
+                    
                     // Every event has an author created, so it just needs to be populated
                     if let author = event.author {
                         author.name = metadata.name
+                        author.displayName = metadata.displayName
                         author.about = metadata.about
                         author.profilePhotoURL = metadata.profilePhotoURL
                     }

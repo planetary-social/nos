@@ -8,12 +8,12 @@
 import Foundation
 
 final class Filter {
-    var authors: [Author]
+    private var authorPublicKeys: [String]
     var kinds: [EventKind]
     var limit: Int
-    
-    init(authors: [Author] = [], kinds: [EventKind] = [], limit: Int = 100) {
-        self.authors = authors
+
+    init(publicKeys: [String] = [], kinds: [EventKind] = [], limit: Int = 100) {
+        self.authorPublicKeys = publicKeys
         self.kinds = kinds
         self.limit = limit
     }
@@ -21,8 +21,8 @@ final class Filter {
     var dictionary: [String: Any] {
         var filterDict: [String: Any] = ["limit": limit]
 
-        if !authors.isEmpty {
-            filterDict["authors"] = authors.map({ $0.hexadecimalPublicKey })
+        if !authorPublicKeys.isEmpty {
+            filterDict["authors"] = authorPublicKeys
         }
 
         if !kinds.isEmpty {

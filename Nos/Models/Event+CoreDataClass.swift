@@ -66,12 +66,17 @@ public enum EventKind: Int64 {
 }
 
 struct MetadataEventJSON: Codable {
-    var name: String
-    var about: String
-    var picture: String
+    var displayName: String?
+    var name: String?
+    var about: String?
+    var picture: String?
     
     var profilePhotoURL: URL? {
-        URL(string: picture)
+        URL(string: picture ?? "")
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case displayName = "display_name", name, about, picture
     }
 }
 

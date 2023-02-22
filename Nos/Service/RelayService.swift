@@ -51,8 +51,6 @@ final class RelayService: WebSocketDelegate, ObservableObject {
         switch event {
         case .connected(let headers):
             print("websocket is connected: \(headers)")
-            let filter = Filter(authors: [], kinds: [.text], limit: 10)
-            requestEvents(from: client, filter: filter)
         case .disconnected(let reason, let code):
             if let socket = client as? WebSocket, let index = sockets.firstIndex(where: { $0 === socket }) {
                 sockets.remove(at: index)
