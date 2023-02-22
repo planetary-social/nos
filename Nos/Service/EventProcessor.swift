@@ -39,8 +39,8 @@ enum EventProcessor {
             event.tags = eventFollows
             
             // In the special case that we've requested our own follows, set it on the profile
-            if let author = event.author, author.hexadecimalPublicKey == Profile.publicKey {
-                Profile.follows = eventFollows.array as? [Follow]
+            if let author = event.author, author.hexadecimalPublicKey == CurrentUser.publicKey {
+                CurrentUser.follows = eventFollows.array as? [Follow]
             }
 
         case .metaData:

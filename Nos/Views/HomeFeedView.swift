@@ -80,7 +80,7 @@ struct HomeFeedView: View {
             }
         })
         .task {
-            Profile.relayService = relayService
+            CurrentUser.relayService = relayService
 
             load()
         }
@@ -100,7 +100,7 @@ struct HomeFeedView: View {
     
     private func load() {
         // Get events from my follows
-        if let authors = Profile.follows?.map({ $0.identifier! }), !authors.isEmpty {
+        if let authors = CurrentUser.follows?.map({ $0.identifier! }), !authors.isEmpty {
             let filter = Filter(publicKeys: authors, kinds: [.text], limit: 100)
             relayService.requestEventsFromAll(filter: filter)
         } else {

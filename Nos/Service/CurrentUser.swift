@@ -1,5 +1,5 @@
 //
-//  Profile.swift
+//  CurrentUser.swift
 //  Nos
 //
 //  Created by Christopher Jorgensen on 2/21/23.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Profile {
+enum CurrentUser {
     /// Step 1: Get public key
     static var publicKey: String? {
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
@@ -23,9 +23,9 @@ enum Profile {
     /// Step 2: Set relay service and get profile data
     static var relayService: RelayService? {
         didSet {
-            if let key = Profile.publicKey {
+            if let key = CurrentUser.publicKey {
                 let filter = Filter(publicKeys: [key], kinds: [.contactList, .metaData], limit: 2)
-                Profile.relayService?.requestEventsFromAll(filter: filter)
+                CurrentUser.relayService?.requestEventsFromAll(filter: filter)
             } else {
                 print("Error: no public key set for profile")
             }
@@ -39,7 +39,7 @@ enum Profile {
             
             let authors = follows?.map { $0.identifier! } ?? []
             let filter = Filter(publicKeys: authors, kinds: [.text], limit: 100)
-            Profile.relayService?.requestEventsFromAll(filter: filter)
+            CurrentUser.relayService?.requestEventsFromAll(filter: filter)
         }
     }
 }
