@@ -16,13 +16,15 @@ struct ProfileHeader: View {
     var followsRequest: FetchRequest<Event>
     var followsEvent: FetchedResults<Event> { followsRequest.wrappedValue }
     
-    var follows: [Follow] {
+    var follows: Followed {
         if let followEvent = self.followsEvent.first, let tags = followEvent.tags?.array as? [Follow] {
             return tags
         }
         return []
     }
-
+    
+    @EnvironmentObject private var router: Router
+    
     init(author: Author) {
         self.author = author
         let request = FetchRequest(fetchRequest: Event.contactListRequest(.contactList, author), animation: .default)
@@ -58,7 +60,12 @@ struct ProfileHeader: View {
                             .foregroundColor(Color.primaryTxt)
                         // TODO: Put follow button here
                         Spacer()
-                        Text("Follows: \(follows.count)")
+                        Button {
+                            print("Hit follows button")
+                            router.path.append(follows)
+                        } label: {
+                            Text("Follows: \(follows.count)")
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -79,6 +86,9 @@ struct ProfileHeader: View {
                 endPoint: .bottom
             )
         )
+        .navigationDestination(for: Followed.self) { followed in
+            FollowsView(followed: followed)
+        }
         .task {
             guard let key = author.hexadecimalPublicKey else {
                 print("Error: no public key for this author")

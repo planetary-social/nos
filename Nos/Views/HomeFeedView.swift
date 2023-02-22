@@ -19,19 +19,6 @@ struct HomeFeedView: View {
     
     @EnvironmentObject var router: Router
     
-    class SyncTimer {
-        let currentTimePublisher = Timer.TimerPublisher(interval: 1.0, runLoop: .main, mode: .default)
-        let cancellable: AnyCancellable?
-
-        init() {
-            self.cancellable = currentTimePublisher.connect() as? AnyCancellable
-        }
-
-        deinit {
-            self.cancellable?.cancel()
-        }
-    }
-
     let syncTimer = SyncTimer()
     
     @State private var authorsToSync: [Author] = []
@@ -72,7 +59,6 @@ struct HomeFeedView: View {
                 }
             }
         }
-
         .overlay(Group {
             if events.isEmpty {
                 Localized.noEvents.view
