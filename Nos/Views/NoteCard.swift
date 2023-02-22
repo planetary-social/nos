@@ -37,7 +37,7 @@ struct NoteCard: View {
                     } label: {
                         HStack(alignment: .center) {
                             AvatarView(imageUrl: author.profilePhotoURL, size: 24)
-                            Text(author.displayName)
+                            Text(author.safeName)
                                 .lineLimit(1)
                                 .font(.subheadline)
                                 .foregroundColor(Color.secondaryTxt)

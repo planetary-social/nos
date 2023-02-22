@@ -60,8 +60,7 @@ public enum EventKind: Int64 {
 }
 
 struct MetadataEventJSON: Codable {
-    // swiftlint:disable identifier_name
-    var display_name: String?
+    var displayName: String?
     var name: String?
     var about: String?
     var picture: String?
@@ -70,6 +69,10 @@ struct MetadataEventJSON: Codable {
         URL(string: picture ?? "")
     }
     // swiftlint:enable identifier_name
+    
+    private enum CodingKeys: String, CodingKey {
+        case displayName = "display_name", name, about, picture
+    }
 }
 
 @objc(Event)

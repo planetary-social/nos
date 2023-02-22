@@ -35,7 +35,7 @@ struct ProfileHeader: View {
                     }
                     VStack(alignment: .leading, spacing: 3) {
                         Spacer()
-                        Text(author.displayName)
+                        Text(author.safeName)
                             .lineLimit(1)
                             .font(.title3.weight(.semibold))
                             .foregroundColor(Color.primaryTxt)
