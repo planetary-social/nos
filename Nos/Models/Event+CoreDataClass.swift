@@ -36,14 +36,20 @@ enum EventError: Error {
 	case jsonEncoding
 	case utf8Encoding
 	case unrecognizedKind
-	
-	var description: String? {
-		switch self {
-		case .unrecognizedKind:
-			return "Unrecognized event kind"
-		default:
-			return ""
-		}
+    case missingAuthor
+    case invalidSignature(Event)
+    
+    var description: String? {
+        switch self {
+        case .unrecognizedKind:
+            return "Unrecognized event kind"
+        case .missingAuthor:
+            return "Could not parse author on event"
+        case .invalidSignature(let event):
+            return "Invalid signature on event: \(String(describing: event.identifier))"
+        default:
+            return ""
+        }
 	}
 }
 
