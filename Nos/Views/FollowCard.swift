@@ -32,6 +32,11 @@ struct FollowCard: View {
                             .foregroundColor(Color.secondaryTxt)
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                        Button {
+                            print("Follow action here")
+                        } label: {
+                            Text("Follow")
+                        }
                     }
                 }
                 // TODO: Put MessageOptionsButton back here eventually

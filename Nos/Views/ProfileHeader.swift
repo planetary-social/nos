@@ -54,17 +54,23 @@ struct ProfileHeader: View {
                     }
                     VStack(alignment: .leading, spacing: 3) {
                         Spacer()
-                        Text(author.safeName)
-                            .lineLimit(1)
-                            .font(.title3.weight(.semibold))
-                            .foregroundColor(Color.primaryTxt)
-                        // TODO: Put follow button here
+                        HStack {
+                            Text(author.safeName)
+                                .lineLimit(1)
+                                .font(.title3.weight(.semibold))
+                                .foregroundColor(Color.primaryTxt)
+                            Button {
+                                print("Follow action here")
+                            } label: {
+                                Text("Follow")
+                            }
+                        }
                         Spacer()
+
                         Button {
-                            print("Hit follows button")
                             router.path.append(follows)
                         } label: {
-                            Text("Follows: \(follows.count)")
+                            Text("Following: \(follows.count)")
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
