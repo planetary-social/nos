@@ -24,8 +24,18 @@ struct NoteCard: View {
     }
 
     var style = CardStyle.compact
-
+    
+    var repliesRequest: FetchRequest<Event>
+    var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
+    
     @EnvironmentObject private var router: Router
+    
+    init(author: Author, note: Event, style: CardStyle = .compact) {
+        self.author = author
+        self.note = note
+        self.style = style
+        self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note), animation: .default)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -60,7 +70,7 @@ struct NoteCard: View {
                         //         .font(.subheadline)
                         //         .foregroundColor(Color.secondaryTxt)
                         // }
-                        Text("unknown replies")
+                        Text("\(replies.count) replies")
                         Spacer()
                         // Image.buttonReply
                     }

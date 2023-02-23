@@ -96,6 +96,16 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func allReplies(to rootEvent: Event) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "kind = 1 AND SUBQUERY(eTags, $eTag, $eTag.eventId == %@) .@count > 0",
+            rootEvent.identifier!
+        )
+        return fetchRequest
+    }
+    
     @nonobjc public class func event(by identifier: String) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
@@ -137,7 +147,8 @@ public class Event: NosManagedObject {
     }
     
     var tagsJSONRepresentation: [[String]] {
-        (tags?.array as? [Tag])?.map { $0.jsonRepresentation } ?? []
+        ((eTags?.array as? [ETag])?.map { $0.jsonRepresentation } ?? [])
+        + ((tags?.array as? [Tag])?.map { $0.jsonRepresentation } ?? [])
     }
     
     var jsonRepresentation: [String: Any]? {
