@@ -28,6 +28,21 @@ struct NoteCard: View {
     var repliesRequest: FetchRequest<Event>
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
     
+    private var attributedReplies: AttributedString? {
+        let replyCount = replies.count
+        let localized = replyCount == 1 ? Localized.Reply.one : Localized.Reply.many
+        let string = localized.text(["count": "**\(replyCount)**"])
+        do {
+            var attributed = try AttributedString(markdown: string)
+            if let range = attributed.range(of: "\(replyCount)") {
+                attributed[range].foregroundColor = .primaryTxt
+            }
+            return attributed
+        } catch {
+            return nil
+        }
+    }
+    
     @EnvironmentObject private var router: Router
     
     init(author: Author, note: Event, style: CardStyle = .compact) {
@@ -70,9 +85,14 @@ struct NoteCard: View {
                         //         .font(.subheadline)
                         //         .foregroundColor(Color.secondaryTxt)
                         // }
-                        Text("\(replies.count) replies")
+                        StackedAvatarsView(avatarUrls: replies.map { $0.author?.profilePhotoURL }, size: 20, border: 0)
+                        if let replies = attributedReplies {
+                            Text(replies)
+                                .font(.subheadline)
+                                .foregroundColor(Color.secondaryTxt)
+                        }
                         Spacer()
-                        // Image.buttonReply
+                        Image.buttonReply
                     }
                     .padding(15)
                 }

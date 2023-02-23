@@ -99,3 +99,13 @@ extension Localized {
         case privateKeyPrompt = "Private Key:"
     }
 }
+
+// MARK: - Replies
+
+extension Localized {
+    
+    enum Reply: String, Localizable, CaseIterable {
+        case one = "{{ count }} reply"
+        case many = "{{ count }} replies"
+    }
+}
