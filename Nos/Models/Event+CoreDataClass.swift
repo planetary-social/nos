@@ -103,6 +103,14 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func allFollowedPostsRequest(from publicKeys: [String]) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        let kind = EventKind.text.rawValue
+        fetchRequest.predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey IN %@", kind, publicKeys)
+        return fetchRequest
+    }
+    
     @nonobjc public class func contactListRequest(_ author: Author) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
@@ -178,6 +186,13 @@ public class Event: NosManagedObject {
 		identifier = jsonEvent.id
 		kind = jsonEvent.kind
 		signature = jsonEvent.signature
+        
+        // Tags
+        let eventFollows = NSMutableOrderedSet()
+        for jsonTag in jsonEvent.tags {
+            eventFollows.add(Follow(context: context, jsonTag: jsonTag))
+        }
+        tags = eventFollows
 		
 		// Author
 		author = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context)

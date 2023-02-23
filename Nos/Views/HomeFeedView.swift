@@ -76,8 +76,8 @@ struct HomeFeedView: View {
         .onReceive(syncTimer.currentTimePublisher) { _ in
             if !authorsToSync.isEmpty {
                 print("Syncing \(authorsToSync.count) authors")
-                let authorKeys = authorsToSync.map({ $0.hexadecimalPublicKey! })
-                let filter = Filter(publicKeys: authorKeys, kinds: [.metaData, .contactList], limit: 2*authorsToSync.count)
+                let keys = authorsToSync.map({ $0.hexadecimalPublicKey! })
+                let filter = Filter(authorKeys: keys, kinds: [.metaData, .contactList], limit: 2 * authorsToSync.count)
                 relayService.requestEventsFromAll(filter: filter)
                 authorsToSync.removeAll()
             }
@@ -87,10 +87,12 @@ struct HomeFeedView: View {
     private func load() {
         // Get events from my follows
         if let authors = CurrentUser.follows?.map({ $0.identifier! }), !authors.isEmpty {
-            let filter = Filter(publicKeys: authors, kinds: [.text], limit: 100)
+            let filter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
             relayService.requestEventsFromAll(filter: filter)
         } else {
-            print("No follows for profile!")
+            print("No follows for profile! Requesting metadata and contact list.")
+            let filter = Filter(authorKeys: [CurrentUser.publicKey!], kinds: [.metaData, .contactList], limit: 2)
+            relayService.requestEventsFromAll(filter: filter)
         }
     }
 }

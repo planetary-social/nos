@@ -13,6 +13,8 @@ import SwiftUI
 struct FollowCard: View {
 
     @ObservedObject var author: Author
+    
+    @Environment(\.managedObjectContext) private var viewContext
    
     var style = CardStyle.compact
 
@@ -33,7 +35,7 @@ struct FollowCard: View {
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         Button {
-                            print("Follow action here")
+                            CurrentUser.follow(key: author.hexadecimalPublicKey!, context: viewContext)
                         } label: {
                             Text("Follow")
                         }

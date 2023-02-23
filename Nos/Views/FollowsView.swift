@@ -47,7 +47,7 @@ struct FollowsView: View {
             if !authorsToSync.isEmpty {
                 print("Syncing \(authorsToSync.count) authors")
                 let authorKeys = authorsToSync.map({ $0.hexadecimalPublicKey! })
-                let filter = Filter(publicKeys: authorKeys, kinds: [.metaData], limit: authorsToSync.count)
+                let filter = Filter(authorKeys: authorKeys, kinds: [.metaData], limit: authorsToSync.count)
                 relayService.requestEventsFromAll(filter: filter)
                 authorsToSync.removeAll()
             }

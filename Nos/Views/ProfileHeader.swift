@@ -11,8 +11,10 @@ import CoreData
 
 struct ProfileHeader: View {
 
-    var author: Author
+    @ObservedObject var author: Author
     
+    @Environment(\.managedObjectContext) private var viewContext
+
     var followsRequest: FetchRequest<Event>
     var followsResult: FetchedResults<Event> { followsRequest.wrappedValue }
     
@@ -61,7 +63,7 @@ struct ProfileHeader: View {
                                 .foregroundColor(Color.primaryTxt)
                             Spacer()
                             Button {
-                                print("Follow action here")
+                                CurrentUser.follow(key: author.hexadecimalPublicKey!, context: viewContext)
                             } label: {
                                 Text("Follow")
                             }
@@ -103,7 +105,7 @@ struct ProfileHeader: View {
             }
             // Get follows
             // TODO: Should we use the CurrentUser relay service here?
-            let filter = Filter(publicKeys: [key], kinds: [.contactList], limit: 1)
+            let filter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
             CurrentUser.relayService?.requestEventsFromAll(filter: filter)
         }
     }

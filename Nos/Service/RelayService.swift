@@ -86,9 +86,25 @@ final class RelayService: WebSocketDelegate, ObservableObject {
         }
     }
     
+    func postEvent(from client: WebSocketClient, event: Event) {
+        do {
+            let request: [Any] = ["EVENT", event.jsonRepresentation!]
+            let requestData = try JSONSerialization.data(withJSONObject: request)
+            let requestString = String(data: requestData, encoding: .utf8)!
+            client.write(string: requestString)
+        } catch {
+            print("could not send request \(error.localizedDescription)")
+        }
+    }
+    
     func requestEventsFromAll(filter: Filter = Filter()) {
         openSocketsForRelays()
 		sockets.forEach { requestEvents(from: $0, filter: filter) }
+    }
+    
+    func postEventToAll(event: Event) {
+        openSocketsForRelays()
+        sockets.forEach { postEvent(from: $0, event: event) }
     }
     
     func publish(_ event: Event) throws {
