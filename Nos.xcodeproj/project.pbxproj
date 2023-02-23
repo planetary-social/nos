@@ -128,6 +128,7 @@
 		CD09A76129A5220E0063464F /* NosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD1298941000078B43A /* NosApp.swift */; };
 		CD09A76229A5220E0063464F /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F170C77299D816200BC8F8B /* AppController.swift */; };
 		CD09A76329A522190063464F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB5E650299D28A200386527 /* OnboardingView.swift */; };
+		CD27177629A7C8B200AE8888 /* sample_replies.json in Resources */ = {isa = PBXBuildFile; fileRef = CD27177529A7C8B200AE8888 /* sample_replies.json */; };
 		CD2CF38E299E67F900332116 /* CardButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2CF38D299E67F900332116 /* CardButtonStyle.swift */; };
 		CD2CF390299E68BE00332116 /* NoteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2CF38F299E68BE00332116 /* NoteButton.swift */; };
 		CDDA1F7B29A527650047ACD8 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = CDDA1F7A29A527650047ACD8 /* Starscream */; };
@@ -218,6 +219,7 @@
 		CD09A74329A50F1D0063464F /* SideMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenu.swift; sourceTree = "<group>"; };
 		CD09A74529A50F750063464F /* SideMenuContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuContent.swift; sourceTree = "<group>"; };
 		CD09A74729A51EFC0063464F /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		CD27177529A7C8B200AE8888 /* sample_replies.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample_replies.json; sourceTree = "<group>"; };
 		CD2CF38D299E67F900332116 /* CardButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardButtonStyle.swift; sourceTree = "<group>"; };
 		CD2CF38F299E68BE00332116 /* NoteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -367,6 +369,7 @@
 		C9DEC0042989477A0078B43A /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				CD27177529A7C8B200AE8888 /* sample_replies.json */,
 				C9DEC005298947900078B43A /* sample_data.json */,
 				C9ADB134299288230075E7F8 /* KeyFixture.swift */,
 			);
@@ -572,6 +575,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD27177629A7C8B200AE8888 /* sample_replies.json in Resources */,
 				C9DEC006298947900078B43A /* sample_data.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -86,6 +86,25 @@ final class EventTests: XCTestCase {
         XCTAssertEqual(sampleEvent.createdAt?.timeIntervalSince1970, 1_674_624_689)
     }
     
+    func testParseSampleRepliesAndFetchReplies() throws {
+        // Arrange
+        let sampleData = try Data(contentsOf: Bundle.current.url(forResource: "sample_replies", withExtension: "json")!)
+        let sampleEventID = "57b994eb5903d37ee11d507872611eec843098d24eb5d21a1678983dffd92b86"
+        let persistenceController = PersistenceController(inMemory: true)
+        let testContext = persistenceController.container.viewContext
+        
+        // Act
+        let events = try EventProcessor.parse(jsonData: sampleData, in: persistenceController)
+        let sampleEvent = try XCTUnwrap(events.first(where: { $0.identifier == sampleEventID }))
+
+        let fetchRequest: NSFetchRequest<Event> = Event.allReplies(to: sampleEvent)
+        let replies = try? testContext.fetch(fetchRequest) as [Event]
+    
+        // Assert
+        XCTAssertEqual(events.count, 3)
+        XCTAssertEqual(replies?.count, 2)
+    }
+    
     func testTagJSONRepresentation() throws {
         let persistenceController = PersistenceController(inMemory: true)
         let testContext = persistenceController.container.viewContext
