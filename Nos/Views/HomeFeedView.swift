@@ -60,6 +60,7 @@ struct HomeFeedView: View {
                     }
                 }
             }
+            .padding(.top, 1)
             .navigationDestination(for: Event.self) { note in
                 ThreadView(note: note)
             }
@@ -71,6 +72,7 @@ struct HomeFeedView: View {
                     SettingsView()
                 }
             }
+            
         }
 
         .overlay(Group {
