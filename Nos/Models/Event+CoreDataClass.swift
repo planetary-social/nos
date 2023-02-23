@@ -103,11 +103,12 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func contactListRequest(_ eventKind: EventKind = .contactList, _ author: Author) -> NSFetchRequest<Event> {
+    @nonobjc public class func contactListRequest(_ author: Author) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        let kind = eventKind.rawValue
-        fetchRequest.predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey = %@", kind, author.hexadecimalPublicKey!)
+        let kind = EventKind.contactList.rawValue
+        let key = author.hexadecimalPublicKey!
+        fetchRequest.predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey = %@", kind, key)
         return fetchRequest
     }
     

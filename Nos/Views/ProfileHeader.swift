@@ -14,10 +14,10 @@ struct ProfileHeader: View {
     var author: Author
     
     var followsRequest: FetchRequest<Event>
-    var followsEvent: FetchedResults<Event> { followsRequest.wrappedValue }
+    var followsResult: FetchedResults<Event> { followsRequest.wrappedValue }
     
     var follows: Followed {
-        if let followEvent = self.followsEvent.first, let tags = followEvent.tags?.array as? [Follow] {
+        if let followEvent = self.followsResult.first, let tags = followEvent.tags?.array as? [Follow] {
             return tags
         }
         return []
@@ -27,7 +27,7 @@ struct ProfileHeader: View {
     
     init(author: Author) {
         self.author = author
-        let request = FetchRequest(fetchRequest: Event.contactListRequest(.contactList, author), animation: .default)
+        let request = FetchRequest(fetchRequest: Event.contactListRequest(author), animation: .default)
         self.followsRequest = request
     }
 
@@ -59,6 +59,7 @@ struct ProfileHeader: View {
                                 .lineLimit(1)
                                 .font(.title3.weight(.semibold))
                                 .foregroundColor(Color.primaryTxt)
+                            Spacer()
                             Button {
                                 print("Follow action here")
                             } label: {
