@@ -72,7 +72,6 @@ struct HomeFeedView: View {
                     SettingsView()
                 }
             }
-            
         }
 
         .overlay(Group {
