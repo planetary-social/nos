@@ -28,6 +28,16 @@ struct NoteCard: View {
     var repliesRequest: FetchRequest<Event>
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
     
+    var replyAvatarUrls: [URL?] {
+        var uniqueAuthors: [Author] = []
+        var added = Set<Author?>()
+        for author in replies.compactMap({ $0.author }) where !added.contains(author) {
+            uniqueAuthors.append(author)
+            added.insert(author)
+        }
+        return Array(uniqueAuthors.map { $0.profilePhotoURL }.prefix(2))
+    }
+    
     private var attributedReplies: AttributedString? {
         let replyCount = replies.count
         let localized = replyCount == 1 ? Localized.Reply.one : Localized.Reply.many
@@ -78,14 +88,7 @@ struct NoteCard: View {
                     CompactNoteView(note: note)
                     Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                     HStack {
-                        // TODO: Re-enable when we start handling replies
-                        // StackedAvatarsView(avatars: replies, size: 20, border: 0)
-                        // if let replies = attributedReplies {
-                        //     Text(replies)
-                        //         .font(.subheadline)
-                        //         .foregroundColor(Color.secondaryTxt)
-                        // }
-                        StackedAvatarsView(avatarUrls: replies.map { $0.author?.profilePhotoURL }, size: 20, border: 0)
+                        StackedAvatarsView(avatarUrls: replyAvatarUrls, size: 20, border: 0)
                         if let replies = attributedReplies {
                             Text(replies)
                                 .font(.subheadline)
