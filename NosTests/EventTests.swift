@@ -80,7 +80,6 @@ final class EventTests: XCTestCase {
         XCTAssertEqual(events.count, 142)
         XCTAssertEqual(sampleEvent.signature, sampleEventSignature)
         XCTAssertEqual(sampleEvent.kind, 1)
-        XCTAssertEqual(sampleEvent.tags?.count, 0)
         XCTAssertEqual(sampleEvent.author?.hexadecimalPublicKey, sampleEventPubKey)
         XCTAssertEqual(sampleEvent.content, sampleEventContent)
         XCTAssertEqual(sampleEvent.createdAt?.timeIntervalSince1970, 1_674_624_689)
@@ -162,11 +161,11 @@ final class EventTests: XCTestCase {
         // Assert
         XCTAssertEqual(parsedEvent.signature, sampleContactListSignature)
         XCTAssertEqual(parsedEvent.kind, 3)
-        XCTAssertEqual(parsedEvent.tags?.count, 1)
+        XCTAssertEqual(parsedEvent.follows?.count, 1)
         XCTAssertEqual(parsedEvent.author?.hexadecimalPublicKey, KeyFixture.pubKeyHex)
         XCTAssertEqual(parsedEvent.createdAt?.timeIntervalSince1970, 1_675_264_762)
         
-        guard let follow = parsedEvent.tags?.firstObject as? Follow else {
+        guard let follow = parsedEvent.follows?.firstObject as? Follow else {
             XCTFail("Tag is not of the Follow type")
             return
         }
@@ -240,7 +239,7 @@ final class EventTests: XCTestCase {
         let tag = Tag(context: context)
         tag.identifier = "p"
         tag.metadata = ["d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"] as NSObject
-        event.tags = NSOrderedSet(array: [tag])
+        event.allTags = NSOrderedSet(array: [tag])
         return event
     }
 }

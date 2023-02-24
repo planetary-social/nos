@@ -127,7 +127,8 @@ public class Event: NosManagedObject {
             author?.hexadecimalPublicKey,
             Int64(createdAt!.timeIntervalSince1970),
             kind,
-            tagsJSONRepresentation,
+//            tagsJSONRepresentation,
+            allTags,
             content
         ]
     }
@@ -146,17 +147,13 @@ public class Event: NosManagedObject {
         signature = try privateKey.sign(bytes: &serializedBytes)
     }
     
-    var tagsJSONRepresentation: [[String]] {
-        ((eTags?.array as? [ETag])?.map { $0.jsonRepresentation } ?? [])
-        + ((tags?.array as? [Tag])?.map { $0.jsonRepresentation } ?? [])
-    }
-    
     var jsonRepresentation: [String: Any]? {
         guard let identifier = identifier,
             let pubKey = author?.hexadecimalPublicKey,
             let createdAt = createdAt,
             let content = content,
-            let signature = signature else {
+            let signature = signature,
+            let allTags = allTags else {
             return nil
         }
               
@@ -165,7 +162,7 @@ public class Event: NosManagedObject {
             "pubkey": pubKey,
             "created_at": Int64(createdAt.timeIntervalSince1970),
             "kind": kind,
-            "tags": tagsJSONRepresentation,
+            "tags": allTags,
             "content": content,
             "sig": signature
         ]

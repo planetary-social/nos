@@ -30,13 +30,15 @@ enum EventProcessor {
             throw EventError.missingAuthor
         }
         
+        event.allTags = jsonEvent.tags as NSObject
+        
         switch eventKind {
         case .contactList:
             let eventFollows = NSMutableOrderedSet()
             for jsonTag in jsonEvent.tags {
                 eventFollows.add(Follow(context: parseContext, jsonTag: jsonTag))
             }
-            event.tags = eventFollows
+            event.follows = eventFollows
             
             // In the special case that we've requested our own follows, set it on the profile
             if let author = event.author, author.hexadecimalPublicKey == Profile.publicKey {
@@ -77,7 +79,6 @@ enum EventProcessor {
                     eventTags.add(tag)
                 }
             }
-            event.tags = eventTags
             event.eTags = eventETags
         }
         

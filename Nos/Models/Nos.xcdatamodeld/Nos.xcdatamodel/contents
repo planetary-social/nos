@@ -15,6 +15,7 @@
         <relationship name="event" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="eTags" inverseEntity="Event"/>
     </entity>
     <entity name="Event" representedClassName=".Event" syncable="YES" codeGenerationType="category">
+        <attribute name="allTags" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName"/>
         <attribute name="content" attributeType="String"/>
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="identifier" attributeType="String"/>
@@ -22,10 +23,11 @@
         <attribute name="signature" attributeType="String"/>
         <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="events" inverseEntity="Author"/>
         <relationship name="eTags" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="ETag" inverseName="event" inverseEntity="ETag"/>
-        <relationship name="tags" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Tag" inverseName="event" inverseEntity="Tag"/>
+        <relationship name="follows" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Follow" inverseName="event" inverseEntity="Follow"/>
     </entity>
     <entity name="Follow" representedClassName=".Follow" parentEntity="Tag" syncable="YES" codeGenerationType="category">
         <attribute name="petName" optional="YES" attributeType="String"/>
+        <relationship name="event" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="follows" inverseEntity="Event"/>
         <relationship name="relay" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Relay"/>
     </entity>
     <entity name="Relay" representedClassName=".Relay" syncable="YES" codeGenerationType="category">
@@ -34,6 +36,5 @@
     <entity name="Tag" representedClassName=".Tag" syncable="YES" codeGenerationType="category">
         <attribute name="identifier" attributeType="String"/>
         <attribute name="metadata" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName"/>
-        <relationship name="event" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="tags" inverseEntity="Event"/>
     </entity>
 </model>
