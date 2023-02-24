@@ -112,10 +112,16 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func deleteAllEvents() -> NSBatchDeleteRequest {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Event")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        return deleteRequest
+    }
+    
     @nonobjc public class func deleteAllPosts(by author: Author) -> NSBatchDeleteRequest {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Event")
         let kind = EventKind.text.rawValue
-        let key = author.hexadecimalPublicKey!
+        let key = author.hexadecimalPublicKey ?? "notakey"
         fetchRequest.predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey = %@", kind, key)
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         return deleteRequest
@@ -125,7 +131,7 @@ public class Event: NosManagedObject {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let kind = EventKind.contactList.rawValue
-        let key = author.hexadecimalPublicKey!
+        let key = author.hexadecimalPublicKey ?? "notakey"
         fetchRequest.predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey = %@", kind, key)
         return fetchRequest
     }

@@ -27,7 +27,6 @@ struct FollowsView: View {
             LazyVStack {
                 ForEach(followed) { tag in
                     VStack {
-                        // TODO: This needs to be its own view with an author state var
                         FollowCard(author: author(id: tag.identifier!))
                     }
                     .onAppear {

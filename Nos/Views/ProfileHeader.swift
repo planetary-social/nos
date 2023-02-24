@@ -94,16 +94,6 @@ struct ProfileHeader: View {
         .navigationDestination(for: Followed.self) { followed in
             FollowsView(followed: followed)
         }
-        .task {
-            guard let key = author.hexadecimalPublicKey else {
-                print("Error: no public key for this author")
-                return
-            }
-            // Get follows
-            // TODO: Should we use the CurrentUser relay service here?
-            let filter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
-            CurrentUser.relayService?.requestEventsFromAll(filter: filter)
-        }
     }
 }
 
