@@ -12,7 +12,8 @@ import SwiftUI
 struct FollowsView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-
+    @EnvironmentObject var router: Router
+    
     var followed: Followed
     let syncTimer = SyncTimer()
 
@@ -41,6 +42,10 @@ struct FollowsView: View {
                     Spacer()
                 }
             }
+        }
+        .navigationBarBackButtonHidden(true)
+        .onAppear {
+            router.navigationTitle = "Follows"
         }
         .onReceive(syncTimer.currentTimePublisher) { _ in
             if !authorsToSync.isEmpty {
