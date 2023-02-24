@@ -38,6 +38,7 @@ struct ProfileView: View {
                     }
                 }
             }
+            .padding(.top, 1)
             .background(Color.appBg)
             .overlay(Group {
                 if events.isEmpty {
