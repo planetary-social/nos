@@ -11,6 +11,9 @@
 		3FB5E651299D28A200386527 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB5E650299D28A200386527 /* OnboardingView.swift */; };
 		3FFB1D89299FF37C002A755D /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D88299FF37C002A755D /* AvatarView.swift */; };
 		A303AF8329A9153A005DC8FC /* FollowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A303AF8229A9153A005DC8FC /* FollowButton.swift */; };
+		A303AF8429A969F5005DC8FC /* FollowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A303AF8229A9153A005DC8FC /* FollowButton.swift */; };
+		A303AF8529A969F5005DC8FC /* FollowsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32B6C7229A6BE9B00653FF5 /* FollowsView.swift */; };
+		A303AF8629A969FF005DC8FC /* FollowCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32B6C7729A6C99200653FF5 /* FollowCard.swift */; };
 		A32B6C7129A672BC00653FF5 /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34E439829A522F20057AFCB /* CurrentUser.swift */; };
 		A32B6C7329A6BE9B00653FF5 /* FollowsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32B6C7229A6BE9B00653FF5 /* FollowsView.swift */; };
 		A32B6C7529A6C57400653FF5 /* SyncTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32B6C7429A6C57400653FF5 /* SyncTimer.swift */; };
@@ -692,6 +695,8 @@
 				CD09A75329A521D20063464F /* AppView.swift in Sources */,
 				CD09A75429A521D20063464F /* PlaceholderModifier.swift in Sources */,
 				CD09A75529A521D20063464F /* SelectableText.swift in Sources */,
+				A303AF8629A969FF005DC8FC /* FollowCard.swift in Sources */,
+				A303AF8429A969F5005DC8FC /* FollowButton.swift in Sources */,
 				CD09A75629A521D20063464F /* SettingsView.swift in Sources */,
 				CD09A75729A521D20063464F /* NewPostView.swift in Sources */,
 				CD09A75829A521D20063464F /* LinearGradient+Planetary.swift in Sources */,
@@ -705,6 +710,7 @@
 				A32B6C7629A6C57400653FF5 /* SyncTimer.swift in Sources */,
 				CD09A74D29A521A70063464F /* CardStyle.swift in Sources */,
 				CD09A74C29A5217A0063464F /* NoteButton.swift in Sources */,
+				A303AF8529A969F5005DC8FC /* FollowsView.swift in Sources */,
 				CD09A74B29A521730063464F /* ProfileHeader.swift in Sources */,
 				CD09A74A29A521510063464F /* ProfileView.swift in Sources */,
 				CD09A74929A521210063464F /* Router.swift in Sources */,
