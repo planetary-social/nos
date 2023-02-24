@@ -423,6 +423,7 @@
 				C9DFA968299BEC33006929C1 /* CardStyle.swift */,
 				C95D68AA299E710F00429F86 /* Color+Hex.swift */,
 				C9DFA96A299BEE2C006929C1 /* CompactNoteView.swift */,
+				A303AF8229A9153A005DC8FC /* FollowButton.swift */,
 				A32B6C7729A6C99200653FF5 /* FollowCard.swift */,
 				A32B6C7229A6BE9B00653FF5 /* FollowsView.swift */,
 				C9DEBFD8298941000078B43A /* HomeFeedView.swift */,
@@ -439,7 +440,6 @@
 				CD09A74329A50F1D0063464F /* SideMenu.swift */,
 				CD09A74529A50F750063464F /* SideMenuContent.swift */,
 				C9DFA970299BF8CD006929C1 /* ThreadView.swift */,
-				A303AF8229A9153A005DC8FC /* FollowButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

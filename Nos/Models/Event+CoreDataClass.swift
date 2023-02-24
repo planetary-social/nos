@@ -107,8 +107,18 @@ public class Event: NosManagedObject {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let kind = EventKind.text.rawValue
-        fetchRequest.predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey IN %@", kind, publicKeys)
+        let predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey IN %@", kind, publicKeys)
+        fetchRequest.predicate = predicate
         return fetchRequest
+    }
+    
+    @nonobjc public class func deleteAllPosts(by author: Author) -> NSBatchDeleteRequest {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Event")
+        let kind = EventKind.text.rawValue
+        let key = author.hexadecimalPublicKey!
+        fetchRequest.predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey = %@", kind, key)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        return deleteRequest
     }
     
     @nonobjc public class func contactListRequest(_ author: Author) -> NSFetchRequest<Event> {
