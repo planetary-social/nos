@@ -52,6 +52,16 @@ enum CurrentUser {
         }
     }
     
+    static func isFollowing(key: String) -> Bool {
+        guard let follows = CurrentUser.follows else {
+            return false
+        }
+        
+        let followKeys = follows.map({ $0.identifier })
+        return followKeys.contains(key)
+    }
+    
+    /// Follow by public hex key
     static func follow(key: String, context: NSManagedObjectContext) {
         var follows = CurrentUser.follows?.map({ $0.identifier! }) ?? []
         follows.append(key)
@@ -74,6 +84,15 @@ enum CurrentUser {
                 try? event.sign(withKey: pair)
                 CurrentUser.relayService?.postEventToAll(event: event)
             }
+            
+            // TODO: Request texts from this person
         }
+    }
+    
+    /// Unfollow by public hex key
+    static func unfollow(key: String, context: NSManagedObjectContext) {
+        print("Unfollowing \(key)")
+        // TODO: Unfollow CLOSE command
+        // TODO: Delete cached texts from this person
     }
 }

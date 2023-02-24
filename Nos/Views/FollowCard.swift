@@ -34,11 +34,8 @@ struct FollowCard: View {
                             .foregroundColor(Color.secondaryTxt)
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Button {
-                            CurrentUser.follow(key: author.hexadecimalPublicKey!, context: viewContext)
-                        } label: {
-                            Text("Follow")
-                        }
+                        Spacer()
+                        FollowButton(author: author)
                     }
                 }
                 // TODO: Put MessageOptionsButton back here eventually

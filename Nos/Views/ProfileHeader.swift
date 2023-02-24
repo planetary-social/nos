@@ -62,11 +62,7 @@ struct ProfileHeader: View {
                                 .font(.title3.weight(.semibold))
                                 .foregroundColor(Color.primaryTxt)
                             Spacer()
-                            Button {
-                                CurrentUser.follow(key: author.hexadecimalPublicKey!, context: viewContext)
-                            } label: {
-                                Text("Follow")
-                            }
+                            FollowButton(author: author)
                         }
                         Spacer()
 
