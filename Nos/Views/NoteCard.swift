@@ -162,7 +162,6 @@ struct NoteCard_Previews: PreviewProvider {
     
     static var shortNote: Event {
         let note = Event(context: previewContext)
-        note.identifier = "123"
         note.content = "Hello, world!"
         return note
     }
@@ -171,7 +170,6 @@ struct NoteCard_Previews: PreviewProvider {
     
     static var longNote: Event {
         let note = Event(context: previewContext)
-        note.identifier = "123"
         note.content = .loremIpsum(5)
         let author = Author(context: previewContext)
         // TODO: derive from private key

@@ -101,7 +101,7 @@ public class Event: NosManagedObject {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
             format: "kind = 1 AND SUBQUERY(eTags, $eTag, $eTag.eventId == %@) .@count > 0",
-            rootEvent.identifier!
+            rootEvent.identifier ?? ""
         )
         return fetchRequest
     }
