@@ -39,6 +39,9 @@ struct NoteCard: View {
     }
     
     private var attributedReplies: AttributedString? {
+        if replies.isEmpty {
+            return nil
+        }
         let replyCount = replies.count
         let localized = replyCount == 1 ? Localized.Reply.one : Localized.Reply.many
         let string = localized.text(["count": "**\(replyCount)**"])
