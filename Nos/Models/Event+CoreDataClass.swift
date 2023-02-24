@@ -127,7 +127,6 @@ public class Event: NosManagedObject {
             author?.hexadecimalPublicKey,
             Int64(createdAt!.timeIntervalSince1970),
             kind,
-//            tagsJSONRepresentation,
             allTags,
             content
         ]
