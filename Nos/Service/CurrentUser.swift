@@ -60,6 +60,32 @@ enum CurrentUser {
         }
     }
     
+    static func updateFollows(pubKey: String, tags: [[String]], context: NSManagedObjectContext) {
+        guard let relays = CurrentUser.relayService?.allRelayAddresses else {
+            print("Error: No relay service")
+            return
+        }
+        
+        var relayString = ""
+        for relay in relays {
+            relayString += "{\"\(relay)\":{\"write\":true,\"read\":true}"
+        }
+        
+        // swiftlint:disable line_length
+        let time = Int64(Date.now.timeIntervalSince1970)
+        let kind = EventKind.contactList.rawValue
+        let jsonEvent = JSONEvent(id: "0", pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: relayString, signature: "")
+        // swiftlint:enable line_length
+        
+        let event = Event(context: context, jsonEvent: jsonEvent)
+        event.identifier = try? event.calculateIdentifier()
+        
+        if let privateKey = CurrentUser.privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
+            try? event.sign(withKey: pair)
+            CurrentUser.relayService?.sendEventToAll(event: event)
+        }
+    }
+    
     /// Follow by public hex key
     static func follow(key: String, context: NSManagedObjectContext) {
         guard let pubKey = CurrentUser.publicKey else {
@@ -69,25 +95,11 @@ enum CurrentUser {
 
         print("Following \(key)")
 
-        var follows = CurrentUser.follows?.map({ $0.identifier! }) ?? []
+        var follows = CurrentUser.follows?.map { $0.identifier! } ?? []
         follows.append(key)
-        let tags = follows.map({ ["p", $0] })
+        let tags = follows.map { ["p", $0] }
 
-        let jsonEvent = JSONEvent(id: "0",
-                                  pubKey: pubKey,
-                                  createdAt: Int64(Date.now.timeIntervalSince1970),
-                                  kind: EventKind.contactList.rawValue,
-                                  tags: tags,
-                                  content: "{\"wss://nos.lol\":{\"write\":true,\"read\":true},\"wss://relay.damus.io\":{\"write\":true,\"read\":true}}",
-                                  signature: "")
-        
-        let event = Event(context: context, jsonEvent: jsonEvent)
-        event.identifier = try? event.calculateIdentifier()
-        
-        if let privateKey = CurrentUser.privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
-            try? event.sign(withKey: pair)
-            CurrentUser.relayService?.sendEventToAll(event: event)
-        }
+        updateFollows(pubKey: pubKey, tags: tags, context: context)
         
         // Refresh everyone's meta data and contact list
         let filter = Filter(authorKeys: [pubKey, key], kinds: [.contactList, .metaData], limit: 4)
@@ -103,25 +115,11 @@ enum CurrentUser {
 
         print("Unfollowing \(key)")
         
-        let follows = CurrentUser.follows?.filter({ $0.identifier! != key }) ?? []
+        let follows = CurrentUser.follows?.filter { $0.identifier! != key } ?? []
         let followStrings = follows.map { $0.identifier! }
-        let tags = followStrings.map({ ["p", $0] })
+        let tags = followStrings.map { ["p", $0] }
 
-        let jsonEvent = JSONEvent(id: "0",
-                                  pubKey: pubKey,
-                                  createdAt: Int64(Date.now.timeIntervalSince1970),
-                                  kind: EventKind.contactList.rawValue,
-                                  tags: tags,
-                                  content: "{\"wss://nos.lol\":{\"write\":true,\"read\":true},\"wss://relay.damus.io\":{\"write\":true,\"read\":true}}",
-                                  signature: "")
-        
-        let event = Event(context: context, jsonEvent: jsonEvent)
-        event.identifier = try? event.calculateIdentifier()
-        
-        if let privateKey = CurrentUser.privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
-            try? event.sign(withKey: pair)
-            CurrentUser.relayService?.sendEventToAll(event: event)
-        }
+        updateFollows(pubKey: pubKey, tags: tags, context: context)
         
         // Refresh everyone's meta data and contact list
         CurrentUser.follows = []

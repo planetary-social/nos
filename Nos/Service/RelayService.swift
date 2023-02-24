@@ -47,6 +47,14 @@ final class RelayService: WebSocketDelegate, ObservableObject {
         }
     }
     
+    var allRelayAddresses: [String] {
+        let objectContext = persistenceController.container.viewContext
+        let relays = try? objectContext.fetch(Relay.allRelaysRequest())
+        let addresses = relays?.map { $0.address!.lowercased() } ?? []
+
+        return addresses
+    }
+    
     func didReceive(event: WebSocketEvent, client: WebSocketClient) {
         switch event {
         case .connected(let headers):
