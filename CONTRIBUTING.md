@@ -54,3 +54,11 @@ A maintainer will review your code and merge it when it has the required number 
 ### Dependency Management
 
 We prefer to install dependencies using the Swift Package Manager. 
+
+### Releasing
+
+We build and release using [Fastlane](https://docs.fastlane.tools). You can set up fastlane like this:
+
+1. Install command line tools `xcode-select --install`
+2. Install fastlane: `brew install fastlane` or `gem install fastlane`
+3. Get the Apple Developer API Key from another team member and place it in `$HOME/.fastlane`.
