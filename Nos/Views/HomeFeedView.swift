@@ -67,6 +67,12 @@ struct HomeFeedView: View {
         })
         .task {
             CurrentUser.relayService = relayService
+            
+            // TODO: Replace this with something more reliable
+            let seconds = 2.0
+            DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+                CurrentUser.refresh()
+            }
         }
         .refreshable {
             CurrentUser.refresh()
