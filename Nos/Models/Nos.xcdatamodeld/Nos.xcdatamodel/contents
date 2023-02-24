@@ -8,12 +8,6 @@
         <attribute name="profilePhotoURL" optional="YES" attributeType="URI"/>
         <relationship name="events" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="author" inverseEntity="Event"/>
     </entity>
-    <entity name="ETag" representedClassName="ETag" syncable="YES" codeGenerationType="category">
-        <attribute name="eventId" optional="YES" attributeType="String"/>
-        <attribute name="marker" optional="YES" attributeType="String"/>
-        <attribute name="recommendedRelayUrl" optional="YES" attributeType="String"/>
-        <relationship name="event" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="eTags" inverseEntity="Event"/>
-    </entity>
     <entity name="Event" representedClassName=".Event" syncable="YES" codeGenerationType="category">
         <attribute name="allTags" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName"/>
         <attribute name="content" attributeType="String"/>
@@ -22,8 +16,14 @@
         <attribute name="kind" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="signature" attributeType="String"/>
         <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="events" inverseEntity="Author"/>
-        <relationship name="eTags" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="ETag" inverseName="event" inverseEntity="ETag"/>
+        <relationship name="eventReferences" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="EventReference" inverseName="event" inverseEntity="EventReference"/>
         <relationship name="follows" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Follow" inverseName="event" inverseEntity="Follow"/>
+    </entity>
+    <entity name="EventReference" representedClassName="EventReference" syncable="YES" codeGenerationType="category">
+        <attribute name="eventId" optional="YES" attributeType="String"/>
+        <attribute name="marker" optional="YES" attributeType="String"/>
+        <attribute name="recommendedRelayUrl" optional="YES" attributeType="String"/>
+        <relationship name="event" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="eventReferences" inverseEntity="Event"/>
     </entity>
     <entity name="Follow" representedClassName=".Follow" parentEntity="Tag" syncable="YES" codeGenerationType="category">
         <attribute name="petName" optional="YES" attributeType="String"/>

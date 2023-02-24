@@ -63,23 +63,22 @@ enum EventProcessor {
             }
 
         default:
-            let eventTags = NSMutableOrderedSet()
             let eventETags = NSMutableOrderedSet()
             for jsonTag in jsonEvent.tags {
                 if jsonTag.first == "e" {
-                    let eTag = ETag(context: parseContext)
+                    let eTag = EventReference(context: parseContext)
                     eTag.eventId = jsonTag[safe: 1]
                     eTag.recommendedRelayUrl = jsonTag[safe: 2]
                     eTag.marker = jsonTag[safe: 3]
                     eventETags.add(eTag)
                 } else {
-                    let tag = Tag(context: parseContext)
-                    tag.identifier = jsonTag.first
-                    tag.metadata = Array(jsonTag[1...]) as NSObject
-                    eventTags.add(tag)
+                    // TODO: Handle other types of tags
+//                    let tag = Tag(context: parseContext)
+//                    tag.identifier = jsonTag.first
+//                    tag.metadata = Array(jsonTag[1...]) as NSObject
                 }
             }
-            event.eTags = eventETags
+            event.eventReferences = eventETags
         }
         
         guard try publicKey.verifySignature(on: event) else {
