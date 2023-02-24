@@ -15,6 +15,7 @@ enum EventProcessor {
         return try parse(jsonEvent: jsonEvent, in: persistenceController)
     }
     
+    // swiftlint:disable function_body_length
     static func parse(jsonEvent: JSONEvent, in persistenceController: PersistenceController) throws -> Event {
 		guard let eventKind = EventKind(rawValue: jsonEvent.kind) else {
 			print("Error: unrecognized event kind: \(jsonEvent.kind)")
@@ -90,6 +91,7 @@ enum EventProcessor {
         
         return event
     }
+    // swiftlint:enable function_body_length
     
     static func parse(jsonData: Data, in persistenceController: PersistenceController) throws -> [Event] {
         let parseContext = persistenceController.container.viewContext
