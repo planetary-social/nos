@@ -236,10 +236,8 @@ final class EventTests: XCTestCase {
         author.hexadecimalPublicKey = publicKey
         event.author = author
         
-        let tag = Tag(context: context)
-        tag.identifier = "p"
-        tag.metadata = ["d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"] as NSObject
-        event.allTags = NSOrderedSet(array: [tag])
+        let tags = [["p", "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"]]
+        event.allTags = tags as NSObject
         return event
     }
 }

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3F170C78299D816200BC8F8B /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F170C77299D816200BC8F8B /* AppController.swift */; };
+		3F43C47629A9625700E896A0 /* AuthorReference+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */; };
 		3FB5E651299D28A200386527 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB5E650299D28A200386527 /* OnboardingView.swift */; };
 		3FFB1D89299FF37C002A755D /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D88299FF37C002A755D /* AvatarView.swift */; };
 		3FFB1D9329A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */; };
@@ -16,6 +17,7 @@
 		3FFB1D9729A6BBEC002A755D /* Collection+SafeSubscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D9529A6BBEC002A755D /* Collection+SafeSubscript.swift */; };
 		3FFB1D9C29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */; };
 		3FFB1D9D29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */; };
+		3FFF3BD029A9645F00DD0B72 /* AuthorReference+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */; };
 		A32B6C7129A672BC00653FF5 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34E439829A522F20057AFCB /* Profile.swift */; };
 		A336DD3C299FD78000A0CBA0 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A336DD3B299FD78000A0CBA0 /* Filter.swift */; };
 		A34E439929A522F20057AFCB /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34E439829A522F20057AFCB /* Profile.swift */; };
@@ -156,6 +158,7 @@
 
 /* Begin PBXFileReference section */
 		3F170C77299D816200BC8F8B /* AppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppController.swift; sourceTree = "<group>"; };
+		3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthorReference+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3FB5E650299D28A200386527 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		3FFB1D88299FF37C002A755D /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
 		3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "EventReference+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -386,6 +389,7 @@
 				C9DEBFD3298941000078B43A /* Persistence.swift */,
 				C9DEC03F29894BED0078B43A /* Event+CoreDataClass.swift */,
 				3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */,
+				3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */,
 				A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */,
 				C9DEC04329894BED0078B43A /* Author+CoreDataClass.swift */,
 				C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */,
@@ -648,6 +652,7 @@
 				C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */,
 				A3B943D5299D514800A15A08 /* Follow+CoreDataClass.swift in Sources */,
 				C95D68A9299E709900429F86 /* LinearGradient+Planetary.swift in Sources */,
+				3F43C47629A9625700E896A0 /* AuthorReference+CoreDataClass.swift in Sources */,
 				C9ADB13D29929B540075E7F8 /* Bech32.swift in Sources */,
 				C95D68A1299E6D3E00429F86 /* BioView.swift in Sources */,
 				C9DEBFD9298941000078B43A /* HomeFeedView.swift in Sources */,
@@ -722,6 +727,7 @@
 				C9ADB13629928AF00075E7F8 /* KeyPair.swift in Sources */,
 				3FFB1D9729A6BBEC002A755D /* Collection+SafeSubscript.swift in Sources */,
 				C9F0BB6D29A503D9000547FC /* Int+Bool.swift in Sources */,
+				3FFF3BD029A9645F00DD0B72 /* AuthorReference+CoreDataClass.swift in Sources */,
 				C9F0BB6C29A503D6000547FC /* PublicKey.swift in Sources */,
 				C9DEC06F2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,
 				C9ADB13F29929F1F0075E7F8 /* String+Hex.swift in Sources */,
