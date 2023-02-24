@@ -67,11 +67,9 @@ struct HomeFeedView: View {
         })
         .task {
             CurrentUser.relayService = relayService
-
-            load()
         }
         .refreshable {
-            load()
+            reload()
         }
         .onReceive(syncTimer.currentTimePublisher) { _ in
             if !authorsToSync.isEmpty {
@@ -84,15 +82,14 @@ struct HomeFeedView: View {
         }
     }
     
-    private func load() {
+    private func reload() {
         // Get events from my follows
         if let authors = CurrentUser.follows?.map({ $0.identifier! }), !authors.isEmpty {
             let filter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
             relayService.requestEventsFromAll(filter: filter)
         } else {
             print("No follows for profile! Requesting metadata and contact list.")
-            let filter = Filter(authorKeys: [CurrentUser.publicKey!], kinds: [.metaData, .contactList], limit: 2)
-            relayService.requestEventsFromAll(filter: filter)
+            CurrentUser.refresh()
         }
     }
 }

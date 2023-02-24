@@ -18,9 +18,8 @@ enum CurrentUser {
         return nil
     }
     
-    /// Step 1: Get public key
     static var publicKey: String? {
-        if let privateKey = CurrentUser.privateKey {
+        if let privateKey = privateKey {
             if let keyPair = KeyPair.init(privateKeyHex: privateKey) {
                 print("Profile public hex: \(keyPair.publicKey.hex).")
                 return keyPair.publicKey.hex
@@ -29,36 +28,36 @@ enum CurrentUser {
         return nil
     }
     
-    /// Step 2: Set relay service and get profile data
     static var relayService: RelayService? {
         didSet {
-            if let key = CurrentUser.publicKey {
-                let filter = Filter(authorKeys: [key], kinds: [.contactList, .metaData], limit: 2)
-                CurrentUser.relayService?.requestEventsFromAll(filter: filter)
-            } else {
-                print("Error: no public key set for profile")
+            if let pubKey = publicKey {
+                let filter = Filter(authorKeys: [pubKey], kinds: [.metaData, .contactList], limit: 2)
+                relayService?.requestEventsFromAll(filter: filter)
             }
         }
     }
     
-    /// Step 3: Set follows
-    static var follows: [Follow]? {
-        didSet {
-            print("Profile has \(follows?.count ?? 0) follows. Requesting texts.")
-            
-            let authors = follows?.map { $0.identifier! } ?? []
-            let filter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
-            CurrentUser.relayService?.requestEventsFromAll(filter: filter)
-        }
-    }
+    static var follows: [Follow]?
     
     static func isFollowing(key: String) -> Bool {
-        guard let follows = CurrentUser.follows else {
+        guard let following = follows else {
             return false
         }
         
-        let followKeys = follows.map({ $0.identifier })
+        let followKeys = following.map({ $0.identifier })
         return followKeys.contains(key)
+    }
+    
+    static func refresh() {
+        var authors = follows?.map { $0.identifier! } ?? []
+        if let pubKey = publicKey {
+            authors.append(pubKey)
+        }
+
+        if !authors.isEmpty {
+            let filter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
+            relayService?.requestEventsFromAll(filter: filter)
+        }
     }
     
     /// Follow by public hex key
@@ -125,8 +124,9 @@ enum CurrentUser {
         }
         
         // Refresh everyone's meta data and contact list
-        let contactFilter = Filter(authorKeys: [pubKey, key], kinds: [.contactList, .metaData], limit: 4)
-        CurrentUser.relayService?.requestEventsFromAll(filter: contactFilter)
+        CurrentUser.follows = []
+        let filter = Filter(authorKeys: [pubKey, key], kinds: [.contactList, .metaData], limit: 4)
+        CurrentUser.relayService?.requestEventsFromAll(filter: filter)
 
         // Delete cached texts from this person
         if let author = try? Author.find(by: key, context: context) {
@@ -137,9 +137,6 @@ enum CurrentUser {
             } catch let error as NSError {
                 print("Failed to delete texts from \(key). Error: \(error.description)")
             }
-            
-            // HACK: force clear the author's events
-            author.events = NSSet()
         }
     }
 }
