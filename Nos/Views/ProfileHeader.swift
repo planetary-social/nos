@@ -69,7 +69,7 @@ struct ProfileHeader: View {
                         Button {
                             router.path.append(follows)
                         } label: {
-                            Text("Following: \(follows.count)")
+                            Text("\(Localized.following.string): \(follows.count)")
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)

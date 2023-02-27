@@ -12,10 +12,9 @@ struct PersistenceController {
 
     // swiftlint:disable force_try
     static var preview: PersistenceController = {
-        let result = PersistenceController(inMemory: true)
-        let viewContext = result.container.viewContext
-        let sampleData = try! Data(contentsOf: Bundle.current.url(forResource: "sample_data", withExtension: "json")!)
-        try! _ = EventProcessor.parse(jsonData: sampleData, in: result)
+        let controller = PersistenceController(inMemory: true)
+        let viewContext = controller.container.viewContext
+        PersistenceController.loadSampleData()
         let relay = Relay(context: viewContext)
         relay.address = "wss://dev-relay.nos.social"
         
@@ -28,7 +27,7 @@ struct PersistenceController {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
-        return result
+        return controller
     }()
     // swiftlint:enable force_try
     
@@ -66,5 +65,34 @@ struct PersistenceController {
             }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
+    }
+    
+    static func loadSampleData() {
+        guard let sampleFile = Bundle.current.url(forResource: "sample_data", withExtension: "json") else {
+            print("Error: bad sample file location")
+            return
+        }
+    
+        guard let sampleData = try? Data(contentsOf: sampleFile) else {
+            print("Error: Debug data not found")
+            return
+        }
+        
+        let controller = PersistenceController(inMemory: true)
+        
+        guard let events = try? EventProcessor.parse(jsonData: sampleData, in: controller) else {
+            print("Error: Could not parse events")
+            return
+        }
+        
+        print("Successfully preloaded \(events.count) events")
+        
+        // Force follow the user in the sample data, so we see posts on the home feed
+        let controller = PersistenceController(inMemory: true)
+        let viewContext = controller.container.viewContext
+        let sampleKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
+        if let sampleFollow = try? Follow.findOrCreate(by: sampleKey, context: viewContext) {
+            CurrentUser.follows = [sampleFollow]
+        }
     }
 }

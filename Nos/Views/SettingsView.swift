@@ -41,6 +41,13 @@ struct SettingsView: View {
                     }
                 }
             }
+#if DEBUG
+            Section(Localized.debug.string) {
+                Button(Localized.loadSampleData.string) {
+                    PersistenceController.loadSampleData()
+                }
+            }
+#endif
         }
         .navigationBarBackButtonHidden(true)
         .alert(isPresented: $showError) {

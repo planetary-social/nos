@@ -79,9 +79,14 @@ enum Localized: String, Localizable, CaseIterable {
     
     case profile = "Profile"
     case follow = "Follow"
+    case following = "Following"
+    case unfollow = "Unfollow"
     case readMore = "Read more"
     case bio = "Bio"
     case noEventsOnProfile = "We don't see any notes for this profile, but we'll keep looking!"
+    
+    case debug = "Debug"
+    case loadSampleData = "Load Sample Data"
 }
 
 // MARK: - Onboarding

@@ -21,7 +21,7 @@ struct FollowButton: View {
                 CurrentUser.follow(key: author.hexadecimalPublicKey!, context: viewContext)
             }
         } label: {
-            Text(isFollowing ? "Unfollow" : "Follow")
+            Text(isFollowing ? Localized.unfollow.string : Localized.follow.string)
         }
     }
 }

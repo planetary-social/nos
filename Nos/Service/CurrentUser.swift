@@ -21,7 +21,7 @@ enum CurrentUser {
     static var publicKey: String? {
         if let privateKey = privateKey {
             if let keyPair = KeyPair.init(privateKeyHex: privateKey) {
-                print("Profile public hex: \(keyPair.publicKey.hex).")
+                // print("Profile public hex: \(keyPair.publicKey.hex).")
                 return keyPair.publicKey.hex
             }
         }
@@ -37,7 +37,11 @@ enum CurrentUser {
         }
     }
     
-    static var follows: [Follow]?
+    static var follows: [Follow]? {
+        didSet {
+            print("Following: \(follows?.count ?? 0)")
+        }
+    }
     
     static func isFollowing(key: String) -> Bool {
         guard let following = follows else {
@@ -49,7 +53,7 @@ enum CurrentUser {
     }
     
     static func refresh() {
-        var authors = follows?.map { $0.identifier! } ?? []
+        var authors = follows?.compactMap { $0.identifier } ?? []
         if let pubKey = publicKey {
             authors.append(pubKey)
         }
