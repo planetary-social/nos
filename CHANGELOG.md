@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Verify signatures on events.
 - Request only events from user's Follows
 - Follow / unfollow functionality
+- Calculate reply count and display in NoteCard
 
 ## [0.1 (3)] - 2023-02-20Z
 

@@ -1,0 +1,53 @@
+[
+    {
+        "content": "“In order to change the world, you have to get your head together first.” – Jimi Hendrix",
+        "created_at": 1677101949,
+        "id": "57b994eb5903d37ee11d507872611eec843098d24eb5d21a1678983dffd92b86",
+        "kind": 1,
+        "pubkey": "ff2ece6b7698dffab8a867a36dd8bb3e77d82ea2680639ca05d04f8bef8ca232",
+        "sig": "e607f5469661868397b3165aa6523d2b11b2b2aad9105b3237fb7a02e8e78a7a3e78d2a2b5d2ed402fc853c0682b893930748b856875774d8d239620a70ac7bf",
+        "tags": []
+    },
+    {
+      "kind": 1,
+      "content": "\"The best way to predict your future is to create it.\" - Abraham Lincoln",
+      "tags": [
+        [
+          "e",
+          "57b994eb5903d37ee11d507872611eec843098d24eb5d21a1678983dffd92b86",
+          "",
+          "root"
+        ],
+        [
+          "p",
+          "ff2ece6b7698dffab8a867a36dd8bb3e77d82ea2680639ca05d04f8bef8ca232"
+        ]
+      ],
+      "created_at": 1677160552,
+      "pubkey": "7d9be452ed74136e3acdea94d5cef1eb7af2ab62238571616b15e52f49f4a083",
+      "id": "cdd7d3d16652cbf159c567353bc65ab5ac7fb921360b3ed95825c4a318294761",
+      "sig": "08d3883ee26e4d142747874353129c0c904530d15b2821710e992530376e9b145ffd2ee222d9f9b3e996ca348d873c5de510182933e5da69336ec75548537bf9"
+    },
+    {
+      "content": "“I have not failed. I’ve just found 10,000 ways that won’t work.” – Thomas Edison",
+      "created_at": 1677101961,
+      "id": "6cfa965afc350d5fbdc12674ee144e6ec3e8d2e3886d67d0aeab8cdb630bed25",
+      "kind": 1,
+      "pubkey": "ff2ece6b7698dffab8a867a36dd8bb3e77d82ea2680639ca05d04f8bef8ca232",
+      "sig": "7690fa18b85a7cf9eaf2e582d879127c2dfb32177a379a727c9bf1eca12671ca35224e8a0a6b59e9d1692d327fb85b741aa176a2e8965388cc5750d20e56502a",
+      "tags": [
+        [
+          "e",
+          "57b994eb5903d37ee11d507872611eec843098d24eb5d21a1678983dffd92b86",
+          "",
+          "root"
+        ],
+        [
+          "p",
+          "ff2ece6b7698dffab8a867a36dd8bb3e77d82ea2680639ca05d04f8bef8ca232"
+        ]
+      ]
+    }
+    
+]
+

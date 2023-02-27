@@ -15,6 +15,7 @@ enum EventProcessor {
         return try parse(jsonEvent: jsonEvent, in: persistenceController)
     }
     
+    // swiftlint:disable function_body_length
     static func parse(jsonEvent: JSONEvent, in persistenceController: PersistenceController) throws -> Event {
 		guard let eventKind = EventKind(rawValue: jsonEvent.kind) else {
 			print("Error: unrecognized event kind: \(jsonEvent.kind)")
@@ -30,13 +31,15 @@ enum EventProcessor {
             throw EventError.missingAuthor
         }
         
+        event.allTags = jsonEvent.tags as NSObject
+        
         switch eventKind {
         case .contactList:
             let eventFollows = NSMutableOrderedSet()
             for jsonTag in jsonEvent.tags {
                 eventFollows.add(Follow(context: parseContext, jsonTag: jsonTag))
             }
-            event.tags = eventFollows
+            event.follows = eventFollows
             
             // In the special case that we've requested our own follows, set it on the profile
             if let author = event.author, author.hexadecimalPublicKey == CurrentUser.publicKey {
@@ -61,15 +64,24 @@ enum EventProcessor {
             }
 
         default:
-			let eventTags = NSMutableOrderedSet()
-			for jsonTag in jsonEvent.tags {
-				let tag = Tag(context: parseContext)
-				tag.identifier = jsonTag.first
-				tag.metadata = Array(jsonTag[1...]) as NSObject
-				eventTags.add(tag)
-			}
-			event.tags = eventTags
-		}
+            let eventReferences = NSMutableOrderedSet()
+            let authorReferences = NSMutableOrderedSet()
+            for jsonTag in jsonEvent.tags {
+                if jsonTag.first == "e" {
+                    let eTag = EventReference(context: parseContext)
+                    eTag.eventId = jsonTag[safe: 1]
+                    eTag.recommendedRelayUrl = jsonTag[safe: 2]
+                    eTag.marker = jsonTag[safe: 3]
+                    eventReferences.add(eTag)
+                } else {
+                    let authorReference = AuthorReference(context: parseContext)
+                    authorReference.pubkey = jsonTag[safe: 1]
+                    authorReference.recommendedRelayUrl = jsonTag[safe: 2]
+                }
+            }
+            event.eventReferences = eventReferences
+            event.authorReferences = authorReferences
+        }
         
         guard try publicKey.verifySignature(on: event) else {
             parseContext.delete(event)
@@ -79,6 +91,7 @@ enum EventProcessor {
         
         return event
     }
+    // swiftlint:enable function_body_length
     
     static func parse(jsonData: Data, in persistenceController: PersistenceController) throws -> [Event] {
         let parseContext = persistenceController.container.viewContext
