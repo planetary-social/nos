@@ -7,10 +7,31 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct ProfileHeader: View {
 
-    var author: Author
+    @ObservedObject var author: Author
+    
+    @Environment(\.managedObjectContext) private var viewContext
+
+    var followsRequest: FetchRequest<Event>
+    var followsResult: FetchedResults<Event> { followsRequest.wrappedValue }
+    
+    var follows: Followed {
+        if let followEvent = self.followsResult.first, let tags = followEvent.tags?.array as? [Follow] {
+            return tags
+        }
+        return []
+    }
+    
+    @EnvironmentObject private var router: Router
+    
+    init(author: Author) {
+        self.author = author
+        let request = FetchRequest(fetchRequest: Event.contactListRequest(author), animation: .default)
+        self.followsRequest = request
+    }
 
     private var shouldShowBio: Bool {
         if let about = author.about {
@@ -35,12 +56,21 @@ struct ProfileHeader: View {
                     }
                     VStack(alignment: .leading, spacing: 3) {
                         Spacer()
-                        Text(author.safeName)
-                            .lineLimit(1)
-                            .font(.title3.weight(.semibold))
-                            .foregroundColor(Color.primaryTxt)
-                        // TODO: Put follow button here
+                        HStack {
+                            Text(author.safeName)
+                                .lineLimit(1)
+                                .font(.title3.weight(.semibold))
+                                .foregroundColor(Color.primaryTxt)
+                            Spacer()
+                            FollowButton(author: author)
+                        }
                         Spacer()
+
+                        Button {
+                            router.path.append(follows)
+                        } label: {
+                            Text("Following: \(follows.count)")
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -61,6 +91,9 @@ struct ProfileHeader: View {
                 endPoint: .bottom
             )
         )
+        .navigationDestination(for: Followed.self) { followed in
+            FollowsView(followed: followed)
+        }
     }
 }
 

@@ -19,12 +19,14 @@ struct NoteButton: View {
     @EnvironmentObject var router: Router
 
     var body: some View {
-        Button {
-            router.path.append(note)
-        } label: {
-            NoteCard(author: note.author!, note: note, style: style)
+        if let author = note.author {
+            Button {
+                router.path.append(note)
+            } label: {
+                NoteCard(author: author, note: note, style: style)
+            }
+            .buttonStyle(CardButtonStyle())
         }
-        .buttonStyle(CardButtonStyle())
     }
 }
 
