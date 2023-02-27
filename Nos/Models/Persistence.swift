@@ -37,34 +37,41 @@ struct PersistenceController {
         return result
     }()
 
-    let container: NSPersistentContainer
+    var container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
         let modelURL = Bundle.current.url(forResource: "Nos", withExtension: "momd")!
-        container = NSPersistentContainer(name: "Nos", managedObjectModel: NSManagedObjectModel(contentsOf: modelURL)!)
+        container = NSPersistentContainer(
+            name: "Nos",
+            managedObjectModel: NSManagedObjectModel(contentsOf: modelURL)!
+        )
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
-        container.loadPersistentStores(completionHandler: { (_, error) in
+        
+        var needsReload = false
+        container.loadPersistentStores(completionHandler: { [container] (storeDescription, error) in
+            
             if let error = error as NSError? {
-                // swiftlint:disable indentation_width line_length
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this
-                // function in a shipping application, although it may be useful during development.
-
-                /*
-                 Typical reasons for an error here include:
-                 * The parent directory does not exist, cannot be created, or disallows writing.
-                 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-                 * The device is out of space.
-                 * The store could not be migrated to the current model version.
-                 Check the error message to determine what the actual problem was.
-                 */
-                // swiftlint:enable indentation_width line_length
-                fatalError("Unresolved error \(error), \(error.userInfo)")
+                if error.domain == NSCocoaErrorDomain, error.code == 134_110, let storeURL = storeDescription.url {
+                    // The data model changed. Clear core data.
+                    do {
+                        try container.persistentStoreCoordinator.destroyPersistentStore(at: storeURL, type: .sqlite)
+                        needsReload = true
+                    } catch {
+                        fatalError("Could not erase database \(error.localizedDescription)")
+                    }
+                } else {
+                    fatalError("Could not initialize database \(error), \(error.userInfo)")
+                }
             }
         })
+        
         container.viewContext.automaticallyMergesChangesFromParent = true
+        
+        if needsReload {
+            self = PersistenceController(inMemory: inMemory)
+        }
     }
     
     static func loadSampleData(context: NSManagedObjectContext) {
