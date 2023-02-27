@@ -214,13 +214,10 @@ public class Event: NosManagedObject {
         allTags = jsonEvent.tags as NSObject
         
         let eventFollows = NSMutableOrderedSet()
-        for jsonTag in jsonEvent.tags {
-            if jsonTag.first == "p" {
-                eventFollows.add(Follow(context: context, jsonTag: jsonTag))
-            }
+        for jsonTag in jsonEvent.tags where jsonTag.first == "p" {
+            eventFollows.add(Follow(context: context, jsonTag: jsonTag))
         }
         follows = eventFollows
-        
 		
 		// Author
 		author = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context)
