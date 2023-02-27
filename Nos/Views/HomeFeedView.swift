@@ -77,6 +77,10 @@ struct HomeFeedView: View {
         }
         .refreshable {
             CurrentUser.refresh()
+            
+            #if DEBUG
+            print("Events: \(events.count)")
+            #endif
         }
         .onReceive(syncTimer.currentTimePublisher) { _ in
             if !authorsToSync.isEmpty {
