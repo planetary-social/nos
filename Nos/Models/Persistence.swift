@@ -84,9 +84,7 @@ struct PersistenceController {
             print("Error: Debug data not found")
             return
         }
-        
-        let controller = PersistenceController(inMemory: true)
-        
+
         Event.deleteAll(context: context)
         
         guard let events = try? EventProcessor.parse(jsonData: sampleData, in: PersistenceController.shared) else {
@@ -95,12 +93,6 @@ struct PersistenceController {
         }
         
         print("Successfully preloaded \(events.count) events")
-        
-        // Force follow the user in the sample data, so we see posts on the home feed
-        let sampleKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
-        if let sampleFollow = try? Follow.findOrCreate(by: sampleKey, context: context) {
-            CurrentUser.follows = [sampleFollow]
-        }
         
         let verifiedEvents = Event.all(context: context)
         print("Successfully fetched \(verifiedEvents.count) events")
