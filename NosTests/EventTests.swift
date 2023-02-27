@@ -80,10 +80,28 @@ final class EventTests: XCTestCase {
         XCTAssertEqual(events.count, 142)
         XCTAssertEqual(sampleEvent.signature, sampleEventSignature)
         XCTAssertEqual(sampleEvent.kind, 1)
-        XCTAssertEqual(sampleEvent.tags?.count, 0)
         XCTAssertEqual(sampleEvent.author?.hexadecimalPublicKey, sampleEventPubKey)
         XCTAssertEqual(sampleEvent.content, sampleEventContent)
         XCTAssertEqual(sampleEvent.createdAt?.timeIntervalSince1970, 1_674_624_689)
+    }
+    
+    func testParseSampleRepliesAndFetchReplies() throws {
+        // Arrange
+        let sampleData = try Data(contentsOf: Bundle.current.url(forResource: "sample_replies", withExtension: "json")!)
+        let sampleEventID = "57b994eb5903d37ee11d507872611eec843098d24eb5d21a1678983dffd92b86"
+        let persistenceController = PersistenceController(inMemory: true)
+        let testContext = persistenceController.container.viewContext
+        
+        // Act
+        let events = try EventProcessor.parse(jsonData: sampleData, in: persistenceController)
+        let sampleEvent = try XCTUnwrap(events.first(where: { $0.identifier == sampleEventID }))
+
+        let fetchRequest: NSFetchRequest<Event> = Event.allReplies(to: sampleEvent)
+        let replies = try? testContext.fetch(fetchRequest) as [Event]
+    
+        // Assert
+        XCTAssertEqual(events.count, 3)
+        XCTAssertEqual(replies?.count, 2)
     }
     
     func testTagJSONRepresentation() throws {
@@ -143,11 +161,11 @@ final class EventTests: XCTestCase {
         // Assert
         XCTAssertEqual(parsedEvent.signature, sampleContactListSignature)
         XCTAssertEqual(parsedEvent.kind, 3)
-        XCTAssertEqual(parsedEvent.tags?.count, 1)
+        XCTAssertEqual(parsedEvent.follows?.count, 1)
         XCTAssertEqual(parsedEvent.author?.hexadecimalPublicKey, KeyFixture.pubKeyHex)
         XCTAssertEqual(parsedEvent.createdAt?.timeIntervalSince1970, 1_675_264_762)
         
-        guard let follow = parsedEvent.tags?.firstObject as? Follow else {
+        guard let follow = parsedEvent.follows?.firstObject as? Follow else {
             XCTFail("Tag is not of the Follow type")
             return
         }
@@ -218,10 +236,8 @@ final class EventTests: XCTestCase {
         author.hexadecimalPublicKey = publicKey
         event.author = author
         
-        let tag = Tag(context: context)
-        tag.identifier = "p"
-        tag.metadata = ["d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"] as NSObject
-        event.tags = NSOrderedSet(array: [tag])
+        let tags = [["p", "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"]]
+        event.allTags = tags as NSObject
         return event
     }
 }

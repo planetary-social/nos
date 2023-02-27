@@ -96,6 +96,16 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func allReplies(to rootEvent: Event) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.eventId == %@).@count > 0",
+            rootEvent.identifier ?? ""
+        )
+        return fetchRequest
+    }
+    
     @nonobjc public class func event(by identifier: String) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
@@ -150,7 +160,7 @@ public class Event: NosManagedObject {
             author?.hexadecimalPublicKey,
             Int64(createdAt!.timeIntervalSince1970),
             kind,
-            tagsJSONRepresentation,
+            allTags,
             content
         ]
     }
@@ -169,16 +179,13 @@ public class Event: NosManagedObject {
         signature = try privateKey.sign(bytes: &serializedBytes)
     }
     
-    var tagsJSONRepresentation: [[String]] {
-        (tags?.array as? [Tag])?.map { $0.jsonRepresentation } ?? []
-    }
-    
     var jsonRepresentation: [String: Any]? {
         guard let identifier = identifier,
             let pubKey = author?.hexadecimalPublicKey,
             let createdAt = createdAt,
             let content = content,
-            let signature = signature else {
+            let signature = signature,
+            let allTags = allTags else {
             return nil
         }
               
@@ -187,7 +194,7 @@ public class Event: NosManagedObject {
             "pubkey": pubKey,
             "created_at": Int64(createdAt.timeIntervalSince1970),
             "kind": kind,
-            "tags": tagsJSONRepresentation,
+            "tags": allTags,
             "content": content,
             "sig": signature
         ]
@@ -204,11 +211,13 @@ public class Event: NosManagedObject {
 		signature = jsonEvent.signature
         
         // Tags
+        allTags = jsonEvent.tags as NSObject
+        
         let eventFollows = NSMutableOrderedSet()
-        for jsonTag in jsonEvent.tags {
+        for jsonTag in jsonEvent.tags where jsonTag.first == "p" {
             eventFollows.add(Follow(context: context, jsonTag: jsonTag))
         }
-        tags = eventFollows
+        follows = eventFollows
 		
 		// Author
 		author = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context)

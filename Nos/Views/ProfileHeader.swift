@@ -19,7 +19,7 @@ struct ProfileHeader: View {
     var followsResult: FetchedResults<Event> { followsRequest.wrappedValue }
     
     var follows: Followed {
-        if let followEvent = self.followsResult.first, let tags = followEvent.tags?.array as? [Follow] {
+        if let followEvent = self.followsResult.first, let tags = followEvent.follows?.array as? [Follow] {
             return tags
         }
         return []

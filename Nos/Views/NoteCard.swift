@@ -24,8 +24,46 @@ struct NoteCard: View {
     }
 
     var style = CardStyle.compact
-
+    
+    var repliesRequest: FetchRequest<Event>
+    var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
+    
+    var replyAvatarUrls: [URL?] {
+        var uniqueAuthors: [Author] = []
+        var added = Set<Author?>()
+        for author in replies.compactMap({ $0.author }) where !added.contains(author) {
+            uniqueAuthors.append(author)
+            added.insert(author)
+        }
+        return Array(uniqueAuthors.map { $0.profilePhotoURL }.prefix(2))
+    }
+    
+    private var attributedReplies: AttributedString? {
+        if replies.isEmpty {
+            return nil
+        }
+        let replyCount = replies.count
+        let localized = replyCount == 1 ? Localized.Reply.one : Localized.Reply.many
+        let string = localized.text(["count": "**\(replyCount)**"])
+        do {
+            var attributed = try AttributedString(markdown: string)
+            if let range = attributed.range(of: "\(replyCount)") {
+                attributed[range].foregroundColor = .primaryTxt
+            }
+            return attributed
+        } catch {
+            return nil
+        }
+    }
+    
     @EnvironmentObject private var router: Router
+    
+    init(author: Author, note: Event, style: CardStyle = .compact) {
+        self.author = author
+        self.note = note
+        self.style = style
+        self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note), animation: .default)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -53,16 +91,14 @@ struct NoteCard: View {
                     CompactNoteView(note: note)
                     Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                     HStack {
-                        // TODO: Re-enable when we start handling replies
-                        // StackedAvatarsView(avatars: replies, size: 20, border: 0)
-                        // if let replies = attributedReplies {
-                        //     Text(replies)
-                        //         .font(.subheadline)
-                        //         .foregroundColor(Color.secondaryTxt)
-                        // }
-                        Text("unknown replies")
+                        StackedAvatarsView(avatarUrls: replyAvatarUrls, size: 20, border: 0)
+                        if let replies = attributedReplies {
+                            Text(replies)
+                                .font(.subheadline)
+                                .foregroundColor(Color.secondaryTxt)
+                        }
                         Spacer()
-                        // Image.buttonReply
+                        Image.buttonReply
                     }
                     .padding(15)
                 }
