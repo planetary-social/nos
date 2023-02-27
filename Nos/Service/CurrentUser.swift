@@ -48,12 +48,12 @@ enum CurrentUser {
             return false
         }
         
-        let followKeys = following.map({ $0.identifier })
+        let followKeys = following.map({ $0.pubkey })
         return followKeys.contains(key)
     }
     
     static func refresh() {
-        var authors = follows?.compactMap { $0.identifier } ?? []
+        var authors = follows?.map { $0.pubkey ?? "notakey" } ?? []
         if let pubKey = publicKey {
             authors.append(pubKey)
         }
@@ -103,7 +103,7 @@ enum CurrentUser {
 
         print("Following \(key)")
 
-        var followKeys = follows?.map { $0.identifier! } ?? []
+        var followKeys = follows?.map { $0.pubkey! } ?? []
         followKeys.append(key)
         let tags = followKeys.map { ["p", $0] }
         
@@ -122,8 +122,8 @@ enum CurrentUser {
 
         print("Unfollowing \(key)")
         
-        let followKeys = follows?.filter { $0.identifier! != key } ?? []
-        let followStrings = followKeys.map { $0.identifier! }
+        let followKeys = follows?.filter { $0.pubkey! != key } ?? []
+        let followStrings = followKeys.map { $0.pubkey! }
         let tags = followStrings.map { ["p", $0] }
 
         updateFollows(pubKey: pubKey, followKey: key, tags: tags, context: context)

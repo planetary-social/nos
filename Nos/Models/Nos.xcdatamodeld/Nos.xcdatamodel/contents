@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22D68" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G115" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Author" representedClassName=".Author" syncable="YES" codeGenerationType="category">
         <attribute name="about" optional="YES" attributeType="String"/>
         <attribute name="displayName" optional="YES" attributeType="String"/>
@@ -23,7 +23,7 @@
         <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="events" inverseEntity="Author"/>
         <relationship name="authorReferences" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="AuthorReference" inverseName="event" inverseEntity="AuthorReference"/>
         <relationship name="eventReferences" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="EventReference" inverseName="event" inverseEntity="EventReference"/>
-        <relationship name="follows" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Follow" inverseName="event" inverseEntity="Follow"/>
+        <relationship name="follows" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Follow"/>
     </entity>
     <entity name="EventReference" representedClassName="EventReference" syncable="YES" codeGenerationType="category">
         <attribute name="eventId" optional="YES" attributeType="String"/>
@@ -31,9 +31,8 @@
         <attribute name="recommendedRelayUrl" optional="YES" attributeType="String"/>
         <relationship name="event" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="eventReferences" inverseEntity="Event"/>
     </entity>
-    <entity name="Follow" representedClassName=".Follow" parentEntity="Tag" syncable="YES" codeGenerationType="category">
+    <entity name="Follow" representedClassName=".Follow" parentEntity="AuthorReference" syncable="YES" codeGenerationType="category">
         <attribute name="petName" optional="YES" attributeType="String"/>
-        <relationship name="event" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="follows" inverseEntity="Event"/>
         <relationship name="relay" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Relay"/>
     </entity>
     <entity name="Relay" representedClassName=".Relay" syncable="YES" codeGenerationType="category">

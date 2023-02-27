@@ -14,7 +14,7 @@ struct PersistenceController {
     static var preview: PersistenceController = {
         let controller = PersistenceController(inMemory: true)
         let viewContext = controller.container.viewContext
-        PersistenceController.loadSampleData()
+        PersistenceController.loadSampleData(context: viewContext)
         let relay = Relay(context: viewContext)
         relay.address = "wss://dev-relay.nos.social"
         
@@ -67,7 +67,7 @@ struct PersistenceController {
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
     
-    static func loadSampleData() {
+    static func loadSampleData(context: NSManagedObjectContext) {
         guard let sampleFile = Bundle.current.url(forResource: "sample_data", withExtension: "json") else {
             print("Error: bad sample file location")
             return
@@ -88,10 +88,8 @@ struct PersistenceController {
         print("Successfully preloaded \(events.count) events")
         
         // Force follow the user in the sample data, so we see posts on the home feed
-        let controller = PersistenceController(inMemory: true)
-        let viewContext = controller.container.viewContext
         let sampleKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
-        if let sampleFollow = try? Follow.findOrCreate(by: sampleKey, context: viewContext) {
+        if let sampleFollow = try? Follow.findOrCreate(by: sampleKey, context: context) {
             CurrentUser.follows = [sampleFollow]
         }
     }
