@@ -70,7 +70,7 @@ struct PublicKey {
             return false
         }
         
-        var signedBytes = try calculatedIdentifier.bytes
+        let signedBytes = try calculatedIdentifier.bytes
         let schnorrSignature = try secp256k1.Signing.SchnorrSignature(rawRepresentation: try event.signature!.bytes)
         var rawPubKey = secp256k1_xonly_pubkey()
         guard secp256k1_xonly_pubkey_parse(secp256k1.Context.raw, &rawPubKey, underlyingKey.bytes).boolValue else {

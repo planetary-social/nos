@@ -47,6 +47,14 @@ final class RelayService: WebSocketDelegate, ObservableObject {
         }
     }
     
+    var allRelayAddresses: [String] {
+        let objectContext = persistenceController.container.viewContext
+        let relays = try? objectContext.fetch(Relay.allRelaysRequest())
+        let addresses = relays?.map { $0.address!.lowercased() } ?? []
+
+        return addresses
+    }
+    
     func didReceive(event: WebSocketEvent, client: WebSocketClient) {
         switch event {
         case .connected(let headers):
@@ -86,9 +94,41 @@ final class RelayService: WebSocketDelegate, ObservableObject {
         }
     }
     
+    func sendEvent(from client: WebSocketClient, event: Event) {
+        do {
+            let request: [Any] = ["EVENT", event.jsonRepresentation!]
+            let requestData = try JSONSerialization.data(withJSONObject: request)
+            let requestString = String(data: requestData, encoding: .utf8)!
+            client.write(string: requestString)
+        } catch {
+            print("could not send request \(error.localizedDescription)")
+        }
+    }
+    
+    func sendClose(from client: WebSocketClient, subscription: String) {
+        do {
+            let request: [Any] = ["CLOSE", subscription]
+            let requestData = try JSONSerialization.data(withJSONObject: request)
+            let requestString = String(data: requestData, encoding: .utf8)!
+            client.write(string: requestString)
+        } catch {
+            print("could not send request \(error.localizedDescription)")
+        }
+    }
+    
     func requestEventsFromAll(filter: Filter = Filter()) {
         openSocketsForRelays()
 		sockets.forEach { requestEvents(from: $0, filter: filter) }
+    }
+    
+    func sendEventToAll(event: Event) {
+        openSocketsForRelays()
+        sockets.forEach { sendEvent(from: $0, event: event) }
+    }
+    
+    func sendCloseToAll(subscription: String) {
+        openSocketsForRelays()
+        sockets.forEach { sendClose(from: $0, subscription: subscription) }
     }
     
     func publish(_ event: Event) throws {

@@ -19,19 +19,6 @@ struct HomeFeedView: View {
     
     @EnvironmentObject var router: Router
     
-    class SyncTimer {
-        let currentTimePublisher = Timer.TimerPublisher(interval: 1.0, runLoop: .main, mode: .default)
-        let cancellable: AnyCancellable?
-
-        init() {
-            self.cancellable = currentTimePublisher.connect() as? AnyCancellable
-        }
-
-        deinit {
-            self.cancellable?.cancel()
-        }
-    }
-
     let syncTimer = SyncTimer()
     
     @State private var authorsToSync: [Author] = []
@@ -73,7 +60,6 @@ struct HomeFeedView: View {
                 }
             }
         }
-
         .overlay(Group {
             if events.isEmpty {
                 Localized.noEvents.view
@@ -81,31 +67,25 @@ struct HomeFeedView: View {
             }
         })
         .task {
-            Profile.relayService = relayService
-
-            load()
+            CurrentUser.relayService = relayService
+            
+            // TODO: Replace this with something more reliable
+            let seconds = 2.0
+            DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+                CurrentUser.refresh()
+            }
         }
         .refreshable {
-            load()
+            CurrentUser.refresh()
         }
         .onReceive(syncTimer.currentTimePublisher) { _ in
             if !authorsToSync.isEmpty {
                 print("Syncing \(authorsToSync.count) authors")
-                let authorKeys = authorsToSync.map({ $0.hexadecimalPublicKey! })
-                let filter = Filter(publicKeys: authorKeys, kinds: [.metaData], limit: authorsToSync.count)
+                let keys = authorsToSync.map({ $0.hexadecimalPublicKey! })
+                let filter = Filter(authorKeys: keys, kinds: [.metaData, .contactList], limit: 2 * authorsToSync.count)
                 relayService.requestEventsFromAll(filter: filter)
                 authorsToSync.removeAll()
             }
-        }
-    }
-    
-    private func load() {
-        // Get events from my follows
-        if let authors = Profile.follows?.map({ $0.identifier! }), !authors.isEmpty {
-            let filter = Filter(publicKeys: authors, kinds: [.text], limit: 100)
-            relayService.requestEventsFromAll(filter: filter)
-        } else {
-            print("No follows for profile!")
         }
     }
 }

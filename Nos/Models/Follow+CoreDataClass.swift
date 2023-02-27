@@ -8,6 +8,8 @@
 import Foundation
 import CoreData
 
+typealias Followed = [Follow]
+
 @objc(Follow)
 public class Follow: Tag {
     convenience init(context: NSManagedObjectContext, jsonTag: [String]) {
