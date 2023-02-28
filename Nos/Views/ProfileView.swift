@@ -9,6 +9,7 @@ import SwiftUI
 import CoreData
 
 struct ProfileView: View {
+    @EnvironmentObject var router: Router
     
     var author: Author
     
@@ -48,6 +49,9 @@ struct ProfileView: View {
             })
         }
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            router.navigationTitle = Localized.profile.rawValue
+        }
     }
 }
 

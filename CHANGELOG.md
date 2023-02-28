@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a Discover tab that shows all events from all relays.
 - Core Data will now be wiped whenever we change the data model, which is often. This speeds up our development process, but you will have to re-enter your relays when this happens.
+- Shows all the replies to an event in NoteCards below the root note on this screen.
 
 ## [0.1 (4)] - 2023-02-24
 

@@ -9,14 +9,55 @@ import SwiftUI
 
 struct ThreadView: View {
     @EnvironmentObject var router: Router
+
+    @State private var authorsToSync: [Author] = []
+    
+    var repliesRequest: FetchRequest<Event>
+    var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
+    
+    init(note: Event) {
+        self.note = note
+        self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note), animation: .default)
+    }
     
     var note: Event
     var body: some View {
-        Text("Thread view placeholder for note: \(note.identifier ?? "no id")")
-        Text(note.content ?? "")
+        ScrollView(.vertical) {
+            LazyVStack {
+                ForEach([note] + replies.reversed()) { event in
+                    VStack {
+                        ZStack {
+                            if event != self.note {
+                                Path { path in
+                                    path.move(to: CGPoint(x: 35, y: -4))
+                                    path.addLine(to: CGPoint(x: 35, y: 15))
+                                }
+                                .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                                .fill(Color.secondaryTxt)
+                            }
+                            NoteButton(note: event)
+                                .padding(.horizontal)
+                        }
+                        .onAppear {
+                            // Error scenario: we have an event in core data without an author
+                            guard let author = event.author else {
+                                print("Event author is nil")
+                                return
+                            }
+                            
+                            if !author.isPopulated {
+                                print("Need to sync author: \(author.hexadecimalPublicKey ?? "")")
+                                authorsToSync.append(author)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .padding(.top, 1)
         .navigationBarBackButtonHidden(true)
         .onAppear {
-            router.navigationTitle = "Thread View"
+            router.navigationTitle = Localized.threadView.rawValue
         }
     }
 }
