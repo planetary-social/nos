@@ -204,4 +204,26 @@ public class Event: NosManagedObject {
 		// Author
 		author = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context)
 	}
+    
+    class func all(context: NSManagedObjectContext) -> [Event] {
+        let allRequest = Event.allPostsRequest()
+        
+        do {
+            let results = try context.fetch(allRequest)
+            return results
+        } catch let error as NSError {
+            print("Failed to fetch events. Error: \(error.description)")
+            return []
+        }
+    }
+    
+    class func deleteAll(context: NSManagedObjectContext) {
+        let deleteRequest = Event.deleteAllEvents()
+        
+        do {
+            try context.execute(deleteRequest)
+        } catch let error as NSError {
+            print("Failed to delete events. Error: \(error.description)")
+        }
+    }
 }

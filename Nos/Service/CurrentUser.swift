@@ -49,7 +49,15 @@ enum CurrentUser {
         }
     }
     
-    static var follows: Set<Follow>?
+    static var author: Author {
+        try! Author.findOrCreate(by: publicKey!, context: context!)
+    }
+    
+    static var follows: Set<Follow>? {
+        didSet {
+            print("Following: \(follows?.count ?? 0)")
+        }
+    }
     
     static func isFollowing(key: String) -> Bool {
         guard let following = follows else {

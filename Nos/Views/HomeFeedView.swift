@@ -78,7 +78,9 @@ struct HomeFeedView: View {
         })
         .task {
             CurrentUser.context = viewContext
-            CurrentUser.relayService = relayService
+            if CurrentUser.relayService == nil {
+                CurrentUser.relayService = relayService
+            }
             
             // TODO: Replace this with something more reliable
             let seconds = 2.0
@@ -87,6 +89,9 @@ struct HomeFeedView: View {
             }
         }
         .refreshable {
+            #if DEBUG
+            print("Events: \(events.count)")
+            #endif
             CurrentUser.refreshHomeFeed()
         }
         .onReceive(syncTimer.currentTimePublisher) { _ in

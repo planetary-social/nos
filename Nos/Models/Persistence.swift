@@ -12,10 +12,9 @@ struct PersistenceController {
 
     // swiftlint:disable force_try
     static var preview: PersistenceController = {
-        let result = PersistenceController(inMemory: true)
-        let viewContext = result.container.viewContext
-        let sampleData = try! Data(contentsOf: Bundle.current.url(forResource: "sample_data", withExtension: "json")!)
-        try! _ = EventProcessor.parse(jsonData: sampleData, in: result)
+        let controller = PersistenceController(inMemory: true)
+        let viewContext = controller.container.viewContext
+        PersistenceController.loadSampleData(context: viewContext)
         let relay = Relay(context: viewContext)
         relay.address = "wss://dev-relay.nos.social"
         
@@ -28,7 +27,7 @@ struct PersistenceController {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
-        return result
+        return controller
     }()
     // swiftlint:enable force_try
     
@@ -73,5 +72,40 @@ struct PersistenceController {
         if needsReload {
             self = PersistenceController(inMemory: inMemory)
         }
+    }
+    
+    static func loadSampleData(context: NSManagedObjectContext) {
+        guard let sampleFile = Bundle.current.url(forResource: "sample_data", withExtension: "json") else {
+            print("Error: bad sample file location")
+            return
+        }
+    
+        guard let sampleData = try? Data(contentsOf: sampleFile) else {
+            print("Error: Debug data not found")
+            return
+        }
+
+        Event.deleteAll(context: context)
+        context.reset()
+        
+        guard let events = try? EventProcessor.parse(jsonData: sampleData, in: PersistenceController.shared) else {
+            print("Error: Could not parse events")
+            return
+        }
+        
+        print("Successfully preloaded \(events.count) events")
+        
+        let verifiedEvents = Event.all(context: context)
+        print("Successfully fetched \(verifiedEvents.count) events")
+        
+        // Force follow sample data users; This will be wiped if you sync with a relay.
+        let authors = Author.all(context: context)
+        let follows = try! context.fetch(Follow.follows(from: authors))
+        
+        let currentAuthor = try! Author.findOrCreate(by: CurrentUser.publicKey!, context: context)
+        // swiftlint:disable legacy_objc_type
+        currentAuthor.follows = NSSet(array: follows)
+        // swiftlint:enable legacy_objc_type
+        CurrentUser.follows = Set(follows)
     }
 }

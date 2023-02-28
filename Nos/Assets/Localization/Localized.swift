@@ -79,10 +79,16 @@ enum Localized: String, Localizable, CaseIterable {
     
     case profile = "Profile"
     case follow = "Follow"
+    case following = "Following"
+    case unfollow = "Unfollow"
     case readMore = "Read more"
     case threadView = "Thread View"
     case bio = "Bio"
     case noEventsOnProfile = "We don't see any notes for this profile, but we'll keep looking!"
+    
+    case debug = "Debug"
+    case loadSampleData = "Load Sample Data"
+    case sampleDataInstructions = "This will delete all events and load those in sample_data.json"
 }
 
 // MARK: - Onboarding

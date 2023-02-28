@@ -50,10 +50,10 @@ public class Follow: NosManagedObject {
         return follow
     }
     
-    @nonobjc public class func follows(from author: Author) -> NSFetchRequest<Follow> {
+    @nonobjc public class func follows(from authors: [Author]) -> NSFetchRequest<Follow> {
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.petName, ascending: true)]
-        fetchRequest.predicate = NSPredicate(format: "source = %@", author)
+        fetchRequest.predicate = NSPredicate(format: "source IN %@", authors)
         return fetchRequest
     }
     
