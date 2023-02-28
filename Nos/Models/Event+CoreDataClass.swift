@@ -45,6 +45,9 @@ public enum EventKind: Int64 {
 @objc(Event)
 public class Event: NosManagedObject {
     
+    static var replyEventReferences =
+    "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.eventId == %@).@count > 0"
+    
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: true)]
@@ -62,7 +65,7 @@ public class Event: NosManagedObject {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.eventId == %@).@count > 0",
+            format: replyEventReferences,
             rootEvent.identifier ?? ""
         )
         return fetchRequest
