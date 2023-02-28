@@ -57,10 +57,27 @@ public class Author: NosManagedObject {
         }
     }
     
+    @nonobjc public class func allAuthorsRequest() -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        return fetchRequest
+    }
+    
     @nonobjc func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(format: "kind = %i AND author = %@", eventKind.rawValue, self)
         return fetchRequest
+    }
+    
+    class func all(context: NSManagedObjectContext) -> [Author] {
+        let allRequest = Author.allAuthorsRequest()
+        
+        do {
+            let results = try context.fetch(allRequest)
+            return results
+        } catch let error as NSError {
+            print("Failed to fetch authors. Error: \(error.description)")
+            return []
+        }
     }
 }

@@ -209,7 +209,7 @@ public class Event: NosManagedObject {
             let results = try context.fetch(allRequest)
             return results
         } catch let error as NSError {
-            print("Failed to delete events. Error: \(error.description)")
+            print("Failed to fetch events. Error: \(error.description)")
             return []
         }
     }

@@ -50,29 +50,13 @@ public class Follow: NosManagedObject {
         return follow
     }
     
-    class func find(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Follow? {
-        let fetchRequest = NSFetchRequest<Follow>(entityName: String(describing: Follow.self))
-        fetchRequest.predicate = NSPredicate(format: "pubkey = %@", pubKey)
-        fetchRequest.fetchLimit = 1
-        if let tag = try context.fetch(fetchRequest).first {
-            return tag
-        }
-        
-        return nil
-    @nonobjc public class func follows(from author: Author) -> NSFetchRequest<Follow> {
+    @nonobjc public class func follows(from authors: [Author]) -> NSFetchRequest<Follow> {
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.petName, ascending: true)]
-        fetchRequest.predicate = NSPredicate(format: "source = %@", author)
+        fetchRequest.predicate = NSPredicate(format: "source IN %@", authors)
         return fetchRequest
     }
     
-    class func findOrCreate(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Follow {
-        if let follow = try? Follow.find(by: pubKey, context: context) {
-            return follow
-        } else {
-            let follow = Follow(context: context, jsonTag: ["", pubKey])
-            return follow
-        }
     @nonobjc public class func emptyRequest() -> NSFetchRequest<Follow> {
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.petName, ascending: true)]

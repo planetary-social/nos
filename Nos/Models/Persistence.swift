@@ -85,7 +85,7 @@ struct PersistenceController {
             return
         }
 
-        Event.deleteAll(context: context)
+        context.reset()
         
         guard let events = try? EventProcessor.parse(jsonData: sampleData, in: PersistenceController.shared) else {
             print("Error: Could not parse events")
@@ -96,5 +96,10 @@ struct PersistenceController {
         
         let verifiedEvents = Event.all(context: context)
         print("Successfully fetched \(verifiedEvents.count) events")
+        
+        // Force follow sample data users
+        let authors = Author.all(context: context)
+        let follows = try! context.fetch(Follow.follows(from: authors))
+        CurrentUser.follows = Set(follows)
     }
 }

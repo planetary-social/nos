@@ -26,7 +26,7 @@ struct ProfileHeader: View {
     
     init(author: Author) {
         self.author = author
-        self.followsRequest = FetchRequest(fetchRequest: Follow.follows(from: author))
+        self.followsRequest = FetchRequest(fetchRequest: Follow.follows(from: [author]))
     }
 
     private var shouldShowBio: Bool {
