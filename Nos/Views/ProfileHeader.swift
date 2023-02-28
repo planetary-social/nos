@@ -15,22 +15,18 @@ struct ProfileHeader: View {
     
     @Environment(\.managedObjectContext) private var viewContext
 
-    var followsRequest: FetchRequest<Event>
-    var followsResult: FetchedResults<Event> { followsRequest.wrappedValue }
+    var followsRequest: FetchRequest<Follow>
+    var followsResult: FetchedResults<Follow> { followsRequest.wrappedValue }
     
     var follows: Followed {
-        if let followEvent = self.followsResult.first, let tags = followEvent.follows?.array as? [Follow] {
-            return tags
-        }
-        return []
+        followsResult.map { $0 }
     }
     
     @EnvironmentObject private var router: Router
     
     init(author: Author) {
         self.author = author
-        let request = FetchRequest(fetchRequest: Event.contactListRequest(author), animation: .default)
-        self.followsRequest = request
+        self.followsRequest = FetchRequest(fetchRequest: Follow.follows(from: author))
     }
 
     private var shouldShowBio: Bool {
@@ -105,7 +101,6 @@ struct IdentityHeaderView_Previews: PreviewProvider {
     
     static var author: Author {
         let author = Author(context: previewContext)
-        // TODO: derive from private key
         author.hexadecimalPublicKey = KeyFixture.pubKeyHex
         return author
     }

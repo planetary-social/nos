@@ -88,6 +88,7 @@ final class RelayService: WebSocketDelegate, ObservableObject {
             let request: [Any] = ["REQ", UUID().uuidString, filter.dictionary]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
+            print(requestString)
             client.write(string: requestString)
         } catch {
             print("could not send request \(error.localizedDescription)")
