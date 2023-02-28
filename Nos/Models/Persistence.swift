@@ -85,6 +85,7 @@ struct PersistenceController {
             return
         }
 
+        Event.deleteAll(context: context)
         context.reset()
         
         guard let events = try? EventProcessor.parse(jsonData: sampleData, in: PersistenceController.shared) else {
