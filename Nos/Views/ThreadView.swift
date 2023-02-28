@@ -91,4 +91,3 @@ struct ThreadView_Previews: PreviewProvider {
         .background(Color.cardBackground)
     }
 }
-

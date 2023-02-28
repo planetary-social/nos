@@ -41,3 +41,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sign and publish events to relays
 - Add Settings view where you can put in your private key
 - Added tab bar component and side menu with profile
+- Shows all the replies to an event in NoteCards below the root note on this screen.

@@ -22,7 +22,8 @@ struct NoteButton: View {
         if let author = note.author {
             Button {
                 // If we are on the home feed or this is not the root note, allow clicks on replies
-                if router.path.count == 0 || note.eventReferences?.count ?? 0 > 0 || router.navigationTitle == Localized.profile.rawValue {
+                if router.path.count == 0 || note.eventReferences?.count ?? 0 > 0
+                    || router.navigationTitle == Localized.profile.rawValue {
                     router.path.append(note)
                 }
             } label: {
