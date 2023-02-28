@@ -8,29 +8,6 @@
 
 import Foundation
 import CoreData
-import secp256k1
-import CryptoKit
-import CommonCrypto
-
-struct JSONEvent: Codable {
-    var id: String
-    var pubKey: String
-    var createdAt: Int64
-    var kind: Int64
-    var tags: [[String]]
-    var content: String
-    var signature: String
-    
-    enum CodingKeys: String, CodingKey {
-        case id
-        case pubKey = "pubkey"
-        case createdAt = "created_at"
-        case kind
-        case tags
-        case content
-        case signature = "sig"
-    }
-}
 
 enum EventError: Error {
 	case jsonEncoding
@@ -65,21 +42,6 @@ public enum EventKind: Int64 {
     case parameterizedReplaceableEvent = 30_000
 }
 
-struct MetadataEventJSON: Codable {
-    var displayName: String?
-    var name: String?
-    var about: String?
-    var picture: String?
-    
-    var profilePhotoURL: URL? {
-        URL(string: picture ?? "")
-    }
-
-    private enum CodingKeys: String, CodingKey {
-        case displayName = "display_name", name, about, picture
-    }
-}
-
 @objc(Event)
 public class Event: NosManagedObject {
     
@@ -110,6 +72,15 @@ public class Event: NosManagedObject {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
         fetchRequest.fetchLimit = 1
+        return fetchRequest
+    }
+    
+    @nonobjc public class func homeFeed(for user: Author) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        let kind = EventKind.text.rawValue
+        let predicate = NSPredicate(format: "kind = %i AND ANY author.followers.source = %@", kind, user)
+        fetchRequest.predicate = predicate
         return fetchRequest
     }
     
@@ -180,24 +151,38 @@ public class Event: NosManagedObject {
     }
     
     var jsonRepresentation: [String: Any]? {
+        if let jsonEvent = codable {
+            do {
+                let data = try JSONEncoder().encode(jsonEvent)
+                return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            } catch {
+                print("Error encoding event as JSON: \(error.localizedDescription)\n\(self)")
+            }
+        }
+        
+        return nil
+    }
+    
+    var codable: JSONEvent? {
         guard let identifier = identifier,
             let pubKey = author?.hexadecimalPublicKey,
             let createdAt = createdAt,
             let content = content,
-            let signature = signature,
-            let allTags = allTags else {
+            let signature = signature else {
             return nil
         }
-              
-        return [
-            "id": identifier,
-            "pubkey": pubKey,
-            "created_at": Int64(createdAt.timeIntervalSince1970),
-            "kind": kind,
-            "tags": allTags,
-            "content": content,
-            "sig": signature
-        ]
+                           
+        let allTags = (allTags as? [[String]]) ?? []
+            
+        return JSONEvent(
+            id: identifier,
+            pubKey: pubKey,
+            createdAt: Int64(createdAt.timeIntervalSince1970),
+            kind: kind,
+            tags: allTags,
+            content: content,
+            signature: signature
+        )
     }
 	
 	convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) {
@@ -213,12 +198,6 @@ public class Event: NosManagedObject {
         // Tags
         allTags = jsonEvent.tags as NSObject
         
-        let eventFollows = NSMutableOrderedSet()
-        for jsonTag in jsonEvent.tags where jsonTag.first == "p" {
-            eventFollows.add(Follow(context: context, jsonTag: jsonTag))
-        }
-        follows = eventFollows
-		
 		// Author
 		author = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context)
 	}

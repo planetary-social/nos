@@ -103,9 +103,7 @@ struct NoteCard: View {
                     .padding(15)
                 }
             case .golden:
-                // TODO: add back when we add Discover screen:
-                // GoldenPostView(identifier: message.id, post: post, author: author)
-                Text("golden style not supported")
+                GoldenPostView(author: author, note: note)
             }
         }
         .background(
@@ -182,29 +180,29 @@ struct NoteCard_Previews: PreviewProvider {
         return note
     }
     
-        static var previews: some View {
-            Group {
-                ScrollView {
-                    VStack {
-                        NoteCard(author: previewAuthor, note: shortNote)
-                        NoteCard(author: previewAuthor, note: longNote)
-                    }
+    static var previews: some View {
+        Group {
+            ScrollView {
+                VStack {
+                    NoteCard(author: previewAuthor, note: shortNote)
+                    NoteCard(author: previewAuthor, note: longNote)
                 }
-                ScrollView {
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                        NoteCard(author: previewAuthor, note: shortNote)
-                        NoteCard(author: previewAuthor, note: longNote)
-                    }
-                }
-                ScrollView {
-                    VStack {
-                        NoteCard(author: previewAuthor, note: shortNote)
-                        NoteCard(author: previewAuthor, note: longNote)
-                    }
-                }
-                .preferredColorScheme(.dark)
             }
-            .padding()
-            .background(Color.appBg)
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                    NoteCard(author: previewAuthor, note: shortNote)
+                    NoteCard(author: previewAuthor, note: longNote)
+                }
+            }
+            ScrollView {
+                VStack {
+                    NoteCard(author: previewAuthor, note: shortNote)
+                    NoteCard(author: previewAuthor, note: longNote)
+                }
+            }
+            .preferredColorScheme(.dark)
         }
+        .padding()
+        .background(Color.appBg)
+    }
 }

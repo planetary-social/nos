@@ -35,15 +35,20 @@ enum EventProcessor {
         
         switch eventKind {
         case .contactList:
-            let eventFollows = NSMutableOrderedSet()
+            var eventFollows = Set<Follow>()
             for jsonTag in jsonEvent.tags {
-                eventFollows.add(Follow(context: parseContext, jsonTag: jsonTag))
+                do {
+                    eventFollows.insert(try Follow.upsert(by: event.author!, jsonTag: jsonTag, context: parseContext))
+                } catch {
+                    print("could not parse Follow from: \(jsonEvent)")
+                }
             }
-            event.follows = eventFollows
+            
+            // TODO: we need to delete Follows for keys that were removed from the follow list here
             
             // In the special case that we've requested our own follows, set it on the profile
             if let author = event.author, author.hexadecimalPublicKey == CurrentUser.publicKey {
-                CurrentUser.follows = eventFollows.array as? [Follow]
+                CurrentUser.follows = eventFollows
             }
 
         case .metaData:
@@ -89,12 +94,13 @@ enum EventProcessor {
             throw EventError.invalidSignature(event)
         }
         
+        try parseContext.save()
+        
         return event
     }
     // swiftlint:enable function_body_length
     
     static func parse(jsonData: Data, in persistenceController: PersistenceController) throws -> [Event] {
-        let parseContext = persistenceController.container.viewContext
         let jsonEvents = try JSONDecoder().decode([JSONEvent].self, from: jsonData)
         var events = [Event]()
         for jsonEvent in jsonEvents {
@@ -105,8 +111,6 @@ enum EventProcessor {
                 print("Error parsing eventJSON: \(jsonEvent): \(error.localizedDescription)")
             }
         }
-        
-        try parseContext.save()
         
         return events
     }

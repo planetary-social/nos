@@ -10,18 +10,28 @@ import CoreData
 import Combine
 
 struct HomeFeedView: View {
+    
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var relayService: RelayService
 
-    @FetchRequest(fetchRequest: Event.allPostsRequest(), animation: .default)
-    private var events: FetchedResults<Event>
-    
     @EnvironmentObject var router: Router
     
     let syncTimer = SyncTimer()
     
     @State private var authorsToSync: [Author] = []
+    
+    private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.fetchRequest())
+    private var events: FetchedResults<Event> { eventRequest.wrappedValue }
+    
+    private var user: Author?
+    
+    init(user: Author?) {
+        self.user = user
+        if let user {
+            eventRequest = FetchRequest(fetchRequest: Event.homeFeed(for: user))
+        }
+    }
     
     var body: some View {
         NavigationStack(path: $router.path) {
@@ -67,16 +77,17 @@ struct HomeFeedView: View {
             }
         })
         .task {
+            CurrentUser.context = viewContext
             CurrentUser.relayService = relayService
             
             // TODO: Replace this with something more reliable
             let seconds = 2.0
             DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
-                CurrentUser.refresh()
+                CurrentUser.refreshHomeFeed()
             }
         }
         .refreshable {
-            CurrentUser.refresh()
+            CurrentUser.refreshHomeFeed()
         }
         .onReceive(syncTimer.currentTimePublisher) { _ in
             if !authorsToSync.isEmpty {
@@ -110,24 +121,32 @@ struct ContentView_Previews: PreviewProvider {
     static var shortNote: Event {
         let note = Event(context: previewContext)
         note.content = "Hello, world!"
+        note.author = user
         return note
     }
     
     static var longNote: Event {
         let note = Event(context: previewContext)
         note.content = .loremIpsum(5)
+        note.author = user
         return note
+    }
+    
+    static var user: Author {
+        let author = Author(context: previewContext)
+        author.hexadecimalPublicKey = KeyFixture.pubKeyHex
+        return author
     }
     
     static var previews: some View {
         NavigationView {
-            HomeFeedView()
+            HomeFeedView(user: user)
         }
         .environment(\.managedObjectContext, previewContext)
         .environmentObject(relayService)
         
         NavigationView {
-            HomeFeedView()
+            HomeFeedView(user: user)
         }
         .environment(\.managedObjectContext, emptyPreviewContext)
         .environmentObject(emptyRelayService)
