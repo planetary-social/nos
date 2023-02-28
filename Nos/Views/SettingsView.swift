@@ -45,6 +45,7 @@ struct SettingsView: View {
             }
             #if DEBUG
             Section(Localized.debug.string) {
+                Text(Localized.sampleDataInstructions.string)
                 Button(Localized.loadSampleData.string) {
                     PersistenceController.loadSampleData(context: viewContext)
                 }
