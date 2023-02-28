@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22D68" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22C65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Author" representedClassName=".Author" syncable="YES" codeGenerationType="category">
         <attribute name="about" optional="YES" attributeType="String"/>
         <attribute name="displayName" optional="YES" attributeType="String"/>
@@ -7,6 +7,8 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="profilePhotoURL" optional="YES" attributeType="URI"/>
         <relationship name="events" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="author" inverseEntity="Event"/>
+        <relationship name="followers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Follow" inverseName="destination" inverseEntity="Follow"/>
+        <relationship name="follows" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Follow" inverseName="source" inverseEntity="Follow"/>
     </entity>
     <entity name="AuthorReference" representedClassName="AuthorReference" syncable="YES" codeGenerationType="category">
         <attribute name="pubkey" optional="YES" attributeType="String"/>
@@ -23,7 +25,6 @@
         <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="events" inverseEntity="Author"/>
         <relationship name="authorReferences" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="AuthorReference" inverseName="event" inverseEntity="AuthorReference"/>
         <relationship name="eventReferences" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="EventReference" inverseName="event" inverseEntity="EventReference"/>
-        <relationship name="follows" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Follow" inverseName="event" inverseEntity="Follow"/>
     </entity>
     <entity name="EventReference" representedClassName="EventReference" syncable="YES" codeGenerationType="category">
         <attribute name="eventId" optional="YES" attributeType="String"/>
@@ -31,16 +32,13 @@
         <attribute name="recommendedRelayUrl" optional="YES" attributeType="String"/>
         <relationship name="event" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="eventReferences" inverseEntity="Event"/>
     </entity>
-    <entity name="Follow" representedClassName=".Follow" parentEntity="Tag" syncable="YES" codeGenerationType="category">
+    <entity name="Follow" representedClassName=".Follow" syncable="YES" codeGenerationType="category">
         <attribute name="petName" optional="YES" attributeType="String"/>
-        <relationship name="event" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="follows" inverseEntity="Event"/>
+        <relationship name="destination" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="followers" inverseEntity="Author"/>
         <relationship name="relay" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Relay"/>
+        <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="follows" inverseEntity="Author"/>
     </entity>
     <entity name="Relay" representedClassName=".Relay" syncable="YES" codeGenerationType="category">
         <attribute name="address" attributeType="String"/>
-    </entity>
-    <entity name="Tag" representedClassName=".Tag" syncable="YES" codeGenerationType="category">
-        <attribute name="identifier" attributeType="String"/>
-        <attribute name="metadata" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName"/>
     </entity>
 </model>

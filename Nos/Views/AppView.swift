@@ -19,9 +19,12 @@ struct AppView: View {
     
     @EnvironmentObject var router: Router
     
+    @Environment(\.managedObjectContext) private var viewContext
+    
     /// An enumeration of the destinations for AppView.
     enum Destination: String, Hashable {
         case home
+        case discover
         case relays
         case settings
         
@@ -29,6 +32,8 @@ struct AppView: View {
             switch self {
             case .home:
                 return Text(Localized.homeFeedLinkTitle.string)
+            case .discover:
+                return Text("Discover")
             case .relays:
                 return Text(Localized.relaysLinkTitle.string)
             case .settings:
@@ -39,6 +44,8 @@ struct AppView: View {
             switch self {
             case .home:
                 return Localized.homeFeedLinkTitle.string
+            case .discover:
+                return "Discover"
             case .relays:
                 return Localized.relaysLinkTitle.string
             case .settings:
@@ -56,11 +63,17 @@ struct AppView: View {
                 NavigationView {
                     ZStack {
                         TabView(selection: $selectedTab) {
-                            HomeFeedView()
+                            HomeFeedView(user: CurrentUser.author(in: viewContext))
                                 .tabItem {
                                     Label("Home Feed", systemImage: "house")
                                 }
                                 .tag(Destination.home)
+                            
+                            DiscoverView()
+                                .tabItem {
+                                    Label("Discover", systemImage: "magnifyingglass")
+                                }
+                                .tag(Destination.discover)
 
                             RelayView()
                                 .tabItem {
