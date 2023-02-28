@@ -66,58 +66,56 @@ struct NoteCard: View {
     }
 
     var body: some View {
-        ZStack {
-            VStack(alignment: .leading, spacing: 0) {
-                switch style {
-                case .compact:
-                    HStack(alignment: .center) {
-                        Button {
-                            router.path.append(author)
-                        } label: {
-                            HStack(alignment: .center) {
-                                AvatarView(imageUrl: author.profilePhotoURL, size: 24)
-                                Text(author.safeName)
-                                    .lineLimit(1)
-                                    .font(.subheadline)
-                                    .foregroundColor(Color.secondaryTxt)
-                                    .multilineTextAlignment(.leading)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
+        VStack(alignment: .leading, spacing: 0) {
+            switch style {
+            case .compact:
+                HStack(alignment: .center) {
+                    Button {
+                        router.path.append(author)
+                    } label: {
+                        HStack(alignment: .center) {
+                            AvatarView(imageUrl: author.profilePhotoURL, size: 24)
+                            Text(author.safeName)
+                                .lineLimit(1)
+                                .font(.subheadline)
+                                .foregroundColor(Color.secondaryTxt)
+                                .multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        // TODO: Put MessageOptionsButton back here eventually
                     }
-                    .padding(10)
-                    Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
-                    Group {
-                        CompactNoteView(note: note)
-                        Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
-                        HStack {
-                            StackedAvatarsView(avatarUrls: replyAvatarUrls, size: 20, border: 0)
-                            if let replies = attributedReplies {
-                                Text(replies)
-                                    .font(.subheadline)
-                                    .foregroundColor(Color.secondaryTxt)
-                            }
-                            Spacer()
-                            Image.buttonReply
-                        }
-                        .padding(15)
-                    }
-                case .golden:
-                    GoldenPostView(author: author, note: note)
+                    // TODO: Put MessageOptionsButton back here eventually
                 }
+                .padding(10)
+                Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
+                Group {
+                    CompactNoteView(note: note)
+                    Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
+                    HStack {
+                        StackedAvatarsView(avatarUrls: replyAvatarUrls, size: 20, border: 0)
+                        if let replies = attributedReplies {
+                            Text(replies)
+                                .font(.subheadline)
+                                .foregroundColor(Color.secondaryTxt)
+                        }
+                        Spacer()
+                        Image.buttonReply
+                    }
+                    .padding(15)
+                }
+            case .golden:
+                GoldenPostView(author: author, note: note)
             }
-            .background(
-                LinearGradient(
-                    colors: [Color.cardBgTop, Color.cardBgBottom],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            )
-            .listRowInsets(EdgeInsets())
-            .cornerRadius(cornerRadius)
-            .padding(padding)
         }
+        .background(
+            LinearGradient(
+                colors: [Color.cardBgTop, Color.cardBgBottom],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+        .listRowInsets(EdgeInsets())
+        .cornerRadius(cornerRadius)
+        .padding(padding)
     }
 
     var padding: EdgeInsets {
