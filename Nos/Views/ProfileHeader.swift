@@ -26,7 +26,7 @@ struct ProfileHeader: View {
     
     init(author: Author) {
         self.author = author
-        self.followsRequest = FetchRequest(fetchRequest: Follow.follows(from: author))
+        self.followsRequest = FetchRequest(fetchRequest: Follow.follows(from: [author]))
     }
 
     private var shouldShowBio: Bool {
@@ -65,7 +65,7 @@ struct ProfileHeader: View {
                         Button {
                             router.path.append(follows)
                         } label: {
-                            Text("Following: \(follows.count)")
+                            Text("\(Localized.following.string): \(follows.count)")
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)

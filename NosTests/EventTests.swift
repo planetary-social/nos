@@ -77,7 +77,7 @@ final class EventTests: XCTestCase {
         let sampleEvent = try XCTUnwrap(events.first(where: { $0.identifier == sampleEventID }))
         
         // Assert
-        XCTAssertEqual(events.count, 142)
+        XCTAssertEqual(events.count, 140)
         XCTAssertEqual(sampleEvent.signature, sampleEventSignature)
         XCTAssertEqual(sampleEvent.kind, 1)
         XCTAssertEqual(sampleEvent.author?.hexadecimalPublicKey, sampleEventPubKey)

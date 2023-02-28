@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @Environment(\.managedObjectContext) private var viewContext
+
     @State private var keyPair: KeyPair? {
         didSet {
             if let pair = keyPair {
@@ -41,6 +43,14 @@ struct SettingsView: View {
                     }
                 }
             }
+            #if DEBUG
+            Section(Localized.debug.string) {
+                Text(Localized.sampleDataInstructions.string)
+                Button(Localized.loadSampleData.string) {
+                    PersistenceController.loadSampleData(context: viewContext)
+                }
+            }
+            #endif
         }
         .navigationBarBackButtonHidden(true)
         .alert(isPresented: $showError) {

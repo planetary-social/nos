@@ -87,6 +87,9 @@ struct HomeFeedView: View {
             }
         }
         .refreshable {
+            #if DEBUG
+            print("Events: \(events.count)")
+            #endif
             CurrentUser.refreshHomeFeed()
         }
         .onReceive(syncTimer.currentTimePublisher) { _ in
