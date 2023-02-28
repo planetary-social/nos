@@ -79,8 +79,19 @@ public class Event: NosManagedObject {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let kind = EventKind.text.rawValue
-        let predicate = NSPredicate(format: "kind = %i AND ANY author.followers.source = %@", kind, user)
-        fetchRequest.predicate = predicate
+        let followersPredicate = NSPredicate(format: "kind = %i AND ANY author.followers.source = %@", kind, user)
+        if let publicKey = user.publicKey?.hex {
+            let ownUserPredicate = NSPredicate(
+                format: "kind = %i AND author.hexadecimalPublicKey = %@", kind, publicKey
+            )
+            let compoundPredicate = NSCompoundPredicate(
+                orPredicateWithSubpredicates:
+                    [followersPredicate, ownUserPredicate]
+            )
+            fetchRequest.predicate = compoundPredicate
+        } else {
+            fetchRequest.predicate = followersPredicate
+        }
         return fetchRequest
     }
     
