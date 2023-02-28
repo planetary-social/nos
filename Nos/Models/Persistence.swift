@@ -97,9 +97,14 @@ struct PersistenceController {
         let verifiedEvents = Event.all(context: context)
         print("Successfully fetched \(verifiedEvents.count) events")
         
-        // Force follow sample data users
+        // Force follow sample data users; This will be wiped if you sync with a relay.
         let authors = Author.all(context: context)
         let follows = try! context.fetch(Follow.follows(from: authors))
+        
+        let currentAuthor = try! Author.findOrCreate(by: CurrentUser.publicKey!, context: context)
+        // swiftlint:disable legacy_objc_type
+        currentAuthor.follows = NSSet(array: follows)
+        // swiftlint:enable legacy_objc_type
         CurrentUser.follows = Set(follows)
     }
 }
