@@ -26,14 +26,13 @@ struct FollowsView: View {
     var body: some View {
         ScrollView(.vertical) {
             LazyVStack {
-                ForEach(followed) { tag in
+                ForEach(followed) { follow in
                     VStack {
-                        FollowCard(author: author(id: tag.pubkey!))
+                        FollowCard(author: follow.destination!)
                     }
                     .onAppear {
                         // Error scenario: we have an event in core data without an author
-                        let author = author(id: tag.pubkey!)
-                        
+                        let author = follow.destination!
                         if !author.isPopulated {
                             print("Need to sync author: \(author.hexadecimalPublicKey ?? "")")
                             authorsToSync.append(author)

@@ -22,7 +22,9 @@ final class Filter {
     var dictionary: [String: Any] {
         var filterDict: [String: Any] = ["limit": limit]
 
-        filterDict["authors"] = authorKeys
+        if !authorKeys.isEmpty {
+            filterDict["authors"] = authorKeys
+        }
 
         if !kinds.isEmpty {
             filterDict["kinds"] = kinds.map({ $0.rawValue })

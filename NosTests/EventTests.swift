@@ -104,16 +104,6 @@ final class EventTests: XCTestCase {
         XCTAssertEqual(replies?.count, 2)
     }
     
-    func testTagJSONRepresentation() throws {
-        let persistenceController = PersistenceController(inMemory: true)
-        let testContext = persistenceController.container.viewContext
-        let tag = Tag(context: testContext)
-        tag.identifier = "x"
-        tag.metadata = ["blah", "blah", "foo"] as NSObject
-        
-        XCTAssertEqual(tag.jsonRepresentation, ["x", "blah", "blah", "foo"])
-    }
-    
     func testSerializedEventForSigning() throws {
         // Arrange
         let persistenceController = PersistenceController(inMemory: true)
@@ -161,11 +151,11 @@ final class EventTests: XCTestCase {
         // Assert
         XCTAssertEqual(parsedEvent.signature, sampleContactListSignature)
         XCTAssertEqual(parsedEvent.kind, 3)
-        XCTAssertEqual(parsedEvent.follows?.count, 1)
+        XCTAssertEqual(parsedEvent.author?.follows?.count, 1)
         XCTAssertEqual(parsedEvent.author?.hexadecimalPublicKey, KeyFixture.pubKeyHex)
         XCTAssertEqual(parsedEvent.createdAt?.timeIntervalSince1970, 1_675_264_762)
         
-        guard let follow = parsedEvent.follows?.firstObject as? Follow else {
+        guard let follow = parsedEvent.author?.follows?.allObjects.first as? Follow else {
             XCTFail("Tag is not of the Follow type")
             return
         }

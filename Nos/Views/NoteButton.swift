@@ -16,7 +16,7 @@ struct NoteButton: View {
     var note: Event
     var style = CardStyle.compact
 
-    @EnvironmentObject var router: Router
+    @EnvironmentObject private var router: Router
 
     var body: some View {
         if let author = note.author {
