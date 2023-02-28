@@ -67,17 +67,6 @@ struct NoteCard: View {
 
     var body: some View {
         ZStack {
-            // If we aren't on the HomeFeed, and on the Thread View, and we aren't the root post, display the vertical line above
-            if router.navigationTitle != Localized.homeFeed.rawValue &&
-                note.eventReferences?.count ?? 0 > 0 &&
-                router.navigationTitle == Localized.threadView.rawValue {
-                Path { path in
-                    path.move(to: CGPoint(x: 35, y: -4))
-                    path.addLine(to: CGPoint(x: 35, y: 15))
-                }
-                .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                .fill(Color.secondaryTxt)
-            }
             VStack(alignment: .leading, spacing: 0) {
                 switch style {
                 case .compact:

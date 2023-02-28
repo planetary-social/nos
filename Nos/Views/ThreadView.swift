@@ -17,28 +17,38 @@ struct ThreadView: View {
     
     init(note: Event) {
         self.note = note
-        self.repliesRequest = FetchRequest(fetchRequest: Event.allRepliesAndRoot(to: note), animation: .default)
+        self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note), animation: .default)
     }
     
     var note: Event
     var body: some View {
         ScrollView(.vertical) {
             LazyVStack {
-                ForEach(replies.reversed()) { event in
+                ForEach([note] + replies.reversed()) { event in
                     VStack {
-                        NoteButton(note: event)
-                            .padding(.horizontal)
-                    }
-                    .onAppear {
-                        // Error scenario: we have an event in core data without an author
-                        guard let author = event.author else {
-                            print("Event author is nil")
-                            return
+                        ZStack {
+                            if event != self.note {
+                                Path { path in
+                                    path.move(to: CGPoint(x: 35, y: -4))
+                                    path.addLine(to: CGPoint(x: 35, y: 15))
+                                }
+                                .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                                .fill(Color.secondaryTxt)
+                            }
+                            NoteButton(note: event)
+                                .padding(.horizontal)
                         }
-                        
-                        if !author.isPopulated {
-                            print("Need to sync author: \(author.hexadecimalPublicKey ?? "")")
-                            authorsToSync.append(author)
+                        .onAppear {
+                            // Error scenario: we have an event in core data without an author
+                            guard let author = event.author else {
+                                print("Event author is nil")
+                                return
+                            }
+                            
+                            if !author.isPopulated {
+                                print("Need to sync author: \(author.hexadecimalPublicKey ?? "")")
+                                authorsToSync.append(author)
+                            }
                         }
                     }
                 }

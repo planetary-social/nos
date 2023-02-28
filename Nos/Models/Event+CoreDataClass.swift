@@ -109,26 +109,6 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func allRepliesAndRoot(to rootEvent: Event) -> NSFetchRequest<Event> {
-        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-
-        let repliesPredicate = NSPredicate(
-            format: replyEventReferences,
-            rootEvent.identifier ?? ""
-        )
-        let identifierPredicate = NSPredicate(
-            format: "identifier == %@",
-            rootEvent.identifier!
-        )
-        let compoundPredicate = NSCompoundPredicate(
-            orPredicateWithSubpredicates:
-            [repliesPredicate, identifierPredicate]
-        )
-        fetchRequest.predicate = compoundPredicate
-        return fetchRequest
-    }
-    
     @nonobjc public class func event(by identifier: String) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
