@@ -81,12 +81,12 @@ public class Event: NosManagedObject {
         let kind = EventKind.text.rawValue
         let followersPredicate = NSPredicate(format: "kind = %i AND ANY author.followers.source = %@", kind, user)
         if let publicKey = user.publicKey?.hex {
-            let ownUserPredicate = NSPredicate(
+            let currentUserPredicate = NSPredicate(
                 format: "kind = %i AND author.hexadecimalPublicKey = %@", kind, publicKey
             )
             let compoundPredicate = NSCompoundPredicate(
                 orPredicateWithSubpredicates:
-                    [followersPredicate, ownUserPredicate]
+                    [followersPredicate, currentUserPredicate]
             )
             fetchRequest.predicate = compoundPredicate
         } else {
