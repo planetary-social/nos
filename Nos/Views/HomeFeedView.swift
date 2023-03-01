@@ -17,10 +17,6 @@ struct HomeFeedView: View {
 
     @EnvironmentObject var router: Router
     
-    let syncTimer = SyncTimer()
-    
-    @State private var authorsToSync: [Author] = []
-    
     private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.fetchRequest())
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
     
@@ -43,15 +39,10 @@ struct HomeFeedView: View {
                                 .padding(.horizontal)
                         }
                         .onAppear {
-                            // Error scenario: we have an event in core data without an author
-                            guard let author = event.author else {
-                                print("Event author is nil")
-                                return
-                            }
-                            
-                            if !author.isPopulated {
-                                print("Need to sync author: \(author.hexadecimalPublicKey ?? "")")
-                                authorsToSync.append(author)
+                            if let author = event.author, !author.isPopulated, let key = author.hexadecimalPublicKey {
+                                print("📡Need to sync author: \(key)")
+                                let filter = Filter(authorKeys: [key], kinds: [.metaData, .contactList], limit: 100)
+                                relayService.requestEventsFromAll(filter: filter)
                             }
                         }
                     }
@@ -78,6 +69,8 @@ struct HomeFeedView: View {
         })
         .task {
             CurrentUser.context = viewContext
+            
+            // TODO: This wipes follows in a didSet, which breaks sample data preload
             CurrentUser.relayService = relayService
             
             // TODO: Replace this with something more reliable
@@ -91,15 +84,6 @@ struct HomeFeedView: View {
             print("Events: \(events.count)")
             #endif
             CurrentUser.refreshHomeFeed()
-        }
-        .onReceive(syncTimer.currentTimePublisher) { _ in
-            if !authorsToSync.isEmpty {
-                print("Syncing \(authorsToSync.count) authors")
-                let keys = authorsToSync.map({ $0.hexadecimalPublicKey! })
-                let filter = Filter(authorKeys: keys, kinds: [.metaData, .contactList], limit: 2 * authorsToSync.count)
-                relayService.requestEventsFromAll(filter: filter)
-                authorsToSync.removeAll()
-            }
         }
     }
 }

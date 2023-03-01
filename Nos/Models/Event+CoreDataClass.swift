@@ -30,7 +30,7 @@ enum EventError: Error {
 	}
 }
 
-public enum EventKind: Int64 {
+public enum EventKind: Int64, CaseIterable {
 	case metaData = 0
 	case text = 1
 	case contactList = 3
@@ -199,6 +199,7 @@ public class Event: NosManagedObject {
         )
     }
 	
+    // swiftlint:disable function_body_length
 	convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) {
 		self.init(context: context)
 		
@@ -213,8 +214,71 @@ public class Event: NosManagedObject {
         allTags = jsonEvent.tags as NSObject
         
 		// Author
-		author = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context)
+        guard let newAuthor = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context) else {
+            print("Error: Couldn't make new author")
+            return
+        }
+        
+        author = newAuthor
+        
+        guard let eventKind = EventKind(rawValue: kind) else {
+            print("Error: Unknown kind")
+            return
+        }
+
+        switch eventKind {
+        case .contactList:
+            var eventFollows = Set<Follow>()
+            for jsonTag in jsonEvent.tags {
+                do {
+                    eventFollows.insert(try Follow.upsert(by: newAuthor, jsonTag: jsonTag, context: context))
+                } catch {
+                    print("Error: could not parse Follow from: \(jsonEvent)")
+                }
+            }
+
+            // In the special case that we've requested our own follows, set it on the profile
+            if newAuthor.hexadecimalPublicKey == CurrentUser.publicKey {
+                CurrentUser.follows = eventFollows
+            }
+
+        case .metaData:
+            if let contentData = jsonEvent.content.data(using: .utf8) {
+                do {
+                    let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
+                    
+                    // Every event has an author created, so it just needs to be populated
+                    newAuthor.name = metadata.name
+                    newAuthor.displayName = metadata.displayName
+                    newAuthor.about = metadata.about
+                    newAuthor.profilePhotoURL = metadata.profilePhotoURL
+                } catch {
+                    print("Failed to decode kind \(eventKind) event with ID \(String(describing: identifier))")
+                }
+            }
+
+        default:
+            let newEventReferences = NSMutableOrderedSet()
+            let newAuthorReferences = NSMutableOrderedSet()
+            for jsonTag in jsonEvent.tags {
+                if jsonTag.first == "e" {
+                    let eTag = EventReference(context: context)
+                    eTag.eventId = jsonTag[safe: 1]
+                    eTag.recommendedRelayUrl = jsonTag[safe: 2]
+                    eTag.marker = jsonTag[safe: 3]
+                    newEventReferences.add(eTag)
+                } else {
+                    let authorReference = AuthorReference(context: context)
+                    authorReference.pubkey = jsonTag[safe: 1]
+                    authorReference.recommendedRelayUrl = jsonTag[safe: 2]
+                    newAuthorReferences.add(authorReference)
+                }
+            }
+            eventReferences = newEventReferences
+            authorReferences = newAuthorReferences
+        }
 	}
+    // swiftlint:enable function_body_length
     
     class func all(context: NSManagedObjectContext) -> [Event] {
         let allRequest = Event.allPostsRequest()

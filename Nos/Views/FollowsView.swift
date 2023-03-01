@@ -15,9 +15,6 @@ struct FollowsView: View {
     @EnvironmentObject var router: Router
     
     var followed: Followed
-    let syncTimer = SyncTimer()
-
-    @State private var authorsToSync: [Author] = []
 
     func author(id: String) -> Author {
         try! Author.findOrCreate(by: id, context: viewContext)
@@ -31,11 +28,10 @@ struct FollowsView: View {
                         FollowCard(author: follow.destination!)
                     }
                     .onAppear {
-                        // Error scenario: we have an event in core data without an author
-                        let author = follow.destination!
-                        if !author.isPopulated {
-                            print("Need to sync author: \(author.hexadecimalPublicKey ?? "")")
-                            authorsToSync.append(author)
+                        if let author = follow.destination, !author.isPopulated, let key = author.hexadecimalPublicKey {
+                            print("📡Need to sync author: \(key)")
+                            let filter = Filter(authorKeys: [key], kinds: [.metaData, .contactList], limit: 103)
+                            relayService.requestEventsFromAll(filter: filter)
                         }
                     }
                     Spacer()
@@ -45,15 +41,6 @@ struct FollowsView: View {
         .navigationBarBackButtonHidden(true)
         .onAppear {
             router.navigationTitle = "Follows"
-        }
-        .onReceive(syncTimer.currentTimePublisher) { _ in
-            if !authorsToSync.isEmpty {
-                print("Syncing \(authorsToSync.count) authors")
-                let authorKeys = authorsToSync.map({ $0.hexadecimalPublicKey! })
-                let filter = Filter(authorKeys: authorKeys, kinds: [.metaData], limit: authorsToSync.count)
-                relayService.requestEventsFromAll(filter: filter)
-                authorsToSync.removeAll()
-            }
         }
     }
 }

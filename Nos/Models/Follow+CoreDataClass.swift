@@ -63,4 +63,21 @@ public class Follow: NosManagedObject {
         fetchRequest.fetchLimit = 0
         return fetchRequest
     }
+    
+    @nonobjc public class func deleteFollowsRequest(in follows: Set<Follow>) -> NSBatchDeleteRequest {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Follow")
+        fetchRequest.predicate = NSPredicate(format: "SELF IN %@", follows)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        return deleteRequest
+    }
+    
+    class func deleteFollows(in follows: Set<Follow>, context: NSManagedObjectContext) {
+        let deleteRequest = Follow.deleteFollowsRequest(in: follows)
+        
+        do {
+            try context.execute(deleteRequest)
+        } catch let error as NSError {
+            print("Failed to delete follows. Error: \(error.description)")
+        }
+    }
 }

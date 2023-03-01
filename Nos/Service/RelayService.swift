@@ -10,6 +10,7 @@ import Starscream
 import CoreData
 
 final class RelayService: WebSocketDelegate, ObservableObject {
+    private var requestQueue = Set<Filter>()
     
     private var sockets = [WebSocket]()
     
@@ -85,13 +86,56 @@ final class RelayService: WebSocketDelegate, ObservableObject {
     
 	func requestEvents(from client: WebSocketClient, filter: Filter = Filter()) {
         do {
-            let request: [Any] = ["REQ", UUID().uuidString, filter.dictionary]
+            // Track this so we can close requests if needed
+            filter.uuid = UUID().uuidString
+            let request: [Any] = ["REQ", filter.uuid, filter.dictionary]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
             print(requestString)
             client.write(string: requestString)
         } catch {
-            print("could not send request \(error.localizedDescription)")
+            print("Error: Could not send request \(error.localizedDescription)")
+        }
+    }
+    
+    func requestEventsFromAll(filter: Filter = Filter()) {
+        // Ignore redundant requests
+        guard !requestQueue.contains(filter) else {
+            print("📡Request already open. Ignoring. \(requestQueue.count) outstanding requests")
+            return
+        }
+
+        openSocketsForRelays()
+
+        // Merge requests that are of the same kind
+        let metaFilters: [Filter] = requestQueue.filter {
+            let kinds = $0.dictionary["kinds"] as! [Int64]
+            return kinds.contains(EventKind.metaData.rawValue)
+        }
+        
+        if metaFilters.count > 1 {
+            print("📡Merging \(metaFilters.count) metaData filters")
+            // Close all requests of this kind
+            var authorPubKeys: [String] = []
+            for filter in metaFilters {
+                let keys = filter.dictionary["authors"] as! [String]
+                for key in keys {
+                    authorPubKeys.append(key)
+                }
+                sockets.forEach { sendClose(from: $0, subscription: filter.uuid) }
+                requestQueue.remove(filter)
+            }
+            
+            // Now modify this filter to have all authors
+            filter.authorKeys = authorPubKeys
+        }
+        
+        requestQueue.insert(filter)
+        print("📡\(requestQueue.count) outstanding requests")
+        sockets.forEach { requestEvents(from: $0, filter: filter) }
+
+        for request in requestQueue {
+            print("📡: \(request.dictionary)")
         }
     }
     
@@ -100,9 +144,10 @@ final class RelayService: WebSocketDelegate, ObservableObject {
             let request: [Any] = ["EVENT", event.jsonRepresentation!]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
+            print(requestString)
             client.write(string: requestString)
         } catch {
-            print("could not send request \(error.localizedDescription)")
+            print("Error: Could not send request \(error.localizedDescription)")
         }
     }
     
@@ -113,15 +158,10 @@ final class RelayService: WebSocketDelegate, ObservableObject {
             let requestString = String(data: requestData, encoding: .utf8)!
             client.write(string: requestString)
         } catch {
-            print("could not send request \(error.localizedDescription)")
+            print("Error: Could not send close \(error.localizedDescription)")
         }
     }
-    
-    func requestEventsFromAll(filter: Filter = Filter()) {
-        openSocketsForRelays()
-		sockets.forEach { requestEvents(from: $0, filter: filter) }
-    }
-    
+
     func sendEventToAll(event: Event) {
         openSocketsForRelays()
         sockets.forEach { sendEvent(from: $0, event: event) }

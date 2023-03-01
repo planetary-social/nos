@@ -41,10 +41,8 @@ enum CurrentUser {
                 }
                 
                 // Refresh contact list and metadata from the relays
-                let metadataFilter = Filter(authorKeys: [pubKey], kinds: [.metaData], limit: 1)
+                let metadataFilter = Filter(authorKeys: [pubKey], kinds: [.metaData, .contactList], limit: 99)
                 relayService?.requestEventsFromAll(filter: metadataFilter)
-                let contactListFilter = Filter(authorKeys: [pubKey], kinds: [.contactList], limit: 1)
-                relayService?.requestEventsFromAll(filter: contactListFilter)
             }
         }
     }
@@ -106,9 +104,9 @@ enum CurrentUser {
         }
         
         // Refresh contact list and meta data
-        let metadataFilter = Filter(authorKeys: [pubKey], kinds: [.metaData], limit: 1)
+        let metadataFilter = Filter(authorKeys: [pubKey], kinds: [.metaData], limit: 101)
         relayService?.requestEventsFromAll(filter: metadataFilter)
-        let contactListFilter = Filter(authorKeys: [followKey], kinds: [.contactList], limit: 1)
+        let contactListFilter = Filter(authorKeys: [followKey], kinds: [.contactList], limit: 102)
         relayService?.requestEventsFromAll(filter: contactListFilter)
     }
     
