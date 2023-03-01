@@ -98,10 +98,16 @@ struct ThreadView: View {
                 })
                 return
             }
-            
             var tags: [[String]] = [["p", note.author!.publicKey!.hex], ["e", note.identifier!]]
-            
-            var jsonEvent = JSONEvent(id: "", pubKey: keyPair.publicKeyHex, createdAt: Int64(Date().timeIntervalSince1970), kind: 1, tags: tags, content: replyText, signature: "")
+            var jsonEvent = JSONEvent(
+                id: "",
+                pubKey: keyPair.publicKeyHex,
+                createdAt: Int64(Date().timeIntervalSince1970),
+                kind: 1,
+                tags: tags,
+                content: replyText,
+                signature: ""
+            )
             print("jsonEvent: \(jsonEvent)")
             let event = Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext)
             print("event: \(event)")
@@ -129,22 +135,20 @@ struct RoundedTextField: View {
     var action: () -> Void
     
     var body: some View {
-        ZStack {
-            HStack {
-                ZStack {
-                    Color.gray
-                        .opacity(0.1)
-                        .cornerRadius(15)
-                    
-                    TextField(placeholder, text: $reply)
-                        .padding(.horizontal, 16)
-                }
-                Button(action: action) {
-                    Image(systemName: "paperplane.fill")
-                        .font(.headline)
-                }
-                .padding(.trailing, 8)
+        HStack {
+            ZStack {
+                Color.gray
+                    .opacity(0.1)
+                    .cornerRadius(15)
+                
+                TextField(placeholder, text: $reply)
+                    .padding(.horizontal, 16)
             }
+            Button(action: action) {
+                Image(systemName: "paperplane.fill")
+                    .font(.headline)
+            }
+            .padding(.trailing, 8)
         }
         .frame(height: 44)
         .opacity(1.0)
