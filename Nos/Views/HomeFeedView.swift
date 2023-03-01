@@ -69,13 +69,13 @@ struct HomeFeedView: View {
                     SettingsView()
                 }
             }
+            .overlay(Group {
+                if events.isEmpty {
+                    Localized.noEvents.view
+                        .padding()
+                }
+            })
         }
-        .overlay(Group {
-            if events.isEmpty {
-                Localized.noEvents.view
-                    .padding()
-            }
-        })
         .task {
             CurrentUser.context = viewContext
             CurrentUser.relayService = relayService
