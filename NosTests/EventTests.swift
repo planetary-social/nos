@@ -135,6 +135,18 @@ final class EventTests: XCTestCase {
             "931b425e55559541451ddb99bd228bd1e0190af6ed21603b6b98544b42ee3317"
         )
     }
+    
+    func testIdentifierCalcuationWithNoTags() throws {
+        // Arrange
+        let persistenceController = PersistenceController(inMemory: true)
+        let testContext = persistenceController.container.viewContext
+        let event = try createTestEventWithNoTags(in: testContext)
+        // Act
+        XCTAssertEqual(
+            try event.calculateIdentifier(),
+            "9b906de1db4ae84bda4b61b94724f8dfddd6fd9e6acddfe7ed79accb50052570"
+        )
+    }
 
     func testParseContactList() throws {
         // Arrange
@@ -228,6 +240,22 @@ final class EventTests: XCTestCase {
         
         let tags = [["p", "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"]]
         event.allTags = tags as NSObject
+        return event
+    }
+    
+    private func createTestEventWithNoTags(
+        in context: NSManagedObjectContext,
+        publicKey: HexadecimalString = KeyFixture.pubKeyHex
+    ) throws -> Event {
+        let event = Event(context: context)
+        event.createdAt = Date(timeIntervalSince1970: TimeInterval(1_675_264_762))
+        event.content = "Testing nos #[0]"
+        event.kind = 1
+        
+        let author = Author(context: context)
+        author.hexadecimalPublicKey = publicKey
+        event.author = author
+        
         return event
     }
 }

@@ -104,10 +104,12 @@ struct PersistenceController {
         let authors = Author.all(context: context)
         let follows = try! context.fetch(Follow.followsRequest(sources: authors))
         
-        let currentAuthor = try! Author.findOrCreate(by: CurrentUser.publicKey!, context: context)
-        // swiftlint:disable legacy_objc_type
-        currentAuthor.follows = NSSet(array: follows)
-        // swiftlint:enable legacy_objc_type
-        CurrentUser.follows = Set(follows)
+        if let publicKey = CurrentUser.publicKey {
+            let currentAuthor = try! Author.findOrCreate(by: publicKey, context: context)
+            // swiftlint:disable legacy_objc_type
+            currentAuthor.follows = NSSet(array: follows)
+            // swiftlint:enable legacy_objc_type
+            CurrentUser.follows = Set(follows)
+        }
     }
 }

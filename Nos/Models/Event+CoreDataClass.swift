@@ -107,6 +107,13 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func emptyRequest() -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "FALSEPREDICATE")
+        return fetchRequest
+    }
+    
     @nonobjc public class func deleteAllEvents() -> NSBatchDeleteRequest {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Event")
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
@@ -159,6 +166,9 @@ public class Event: NosManagedObject {
     }
     
     func sign(withKey privateKey: KeyPair) throws {
+        if allTags == nil {
+            allTags = [] as NSObject
+        }
         identifier = try calculateIdentifier()
         var serializedBytes = try identifier!.bytes
         signature = try privateKey.sign(bytes: &serializedBytes)

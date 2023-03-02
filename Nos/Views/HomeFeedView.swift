@@ -18,6 +18,7 @@ struct HomeFeedView: View {
     @EnvironmentObject var router: Router
     
     private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.fetchRequest())
+
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
     
     private var user: Author?
@@ -53,13 +54,13 @@ struct HomeFeedView: View {
                     SettingsView()
                 }
             }
+            .overlay(Group {
+                if events.isEmpty {
+                    Localized.noEvents.view
+                        .padding()
+                }
+            })
         }
-        .overlay(Group {
-            if events.isEmpty {
-                Localized.noEvents.view
-                    .padding()
-            }
-        })
         .task {
             CurrentUser.context = viewContext
             
