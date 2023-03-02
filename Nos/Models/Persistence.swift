@@ -68,6 +68,8 @@ struct PersistenceController {
         })
         
         container.viewContext.automaticallyMergesChangesFromParent = true
+        let mergeType = NSMergePolicyType.mergeByPropertyObjectTrumpMergePolicyType
+        container.viewContext.mergePolicy = NSMergePolicy(merge: mergeType)
         
         if needsReload {
             self = PersistenceController(inMemory: inMemory)
@@ -100,7 +102,7 @@ struct PersistenceController {
         
         // Force follow sample data users; This will be wiped if you sync with a relay.
         let authors = Author.all(context: context)
-        let follows = try! context.fetch(Follow.follows(from: authors))
+        let follows = try! context.fetch(Follow.followsRequest(sources: authors))
         
         let currentAuthor = try! Author.findOrCreate(by: CurrentUser.publicKey!, context: context)
         // swiftlint:disable legacy_objc_type

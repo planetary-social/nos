@@ -10,7 +10,6 @@ import SwiftUI
 import CoreData
 
 struct ProfileHeader: View {
-
     @ObservedObject var author: Author
     
     @Environment(\.managedObjectContext) private var viewContext
@@ -26,7 +25,7 @@ struct ProfileHeader: View {
     
     init(author: Author) {
         self.author = author
-        self.followsRequest = FetchRequest(fetchRequest: Follow.follows(from: [author]))
+        self.followsRequest = FetchRequest(fetchRequest: Follow.followsRequest(sources: [author]))
     }
 
     private var shouldShowBio: Bool {
@@ -58,7 +57,7 @@ struct ProfileHeader: View {
                                 .font(.title3.weight(.semibold))
                                 .foregroundColor(Color.primaryTxt)
                             Spacer()
-                            FollowButton(author: author)
+                            FollowButton(currentUserAuthor: CurrentUser.author, author: author)
                         }
                         Spacer()
 

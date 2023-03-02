@@ -16,23 +16,12 @@ struct FollowsView: View {
     
     var followed: Followed
 
-    func author(id: String) -> Author {
-        try! Author.findOrCreate(by: id, context: viewContext)
-    }
-    
     var body: some View {
         ScrollView(.vertical) {
             LazyVStack {
                 ForEach(followed) { follow in
                     VStack {
                         FollowCard(author: follow.destination!)
-                    }
-                    .onAppear {
-                        if let author = follow.destination, !author.isPopulated, let key = author.hexadecimalPublicKey {
-                            print("📡Need to sync author: \(key)")
-                            let filter = Filter(authorKeys: [key], kinds: [.metaData, .contactList], limit: 103)
-                            relayService.requestEventsFromAll(filter: filter)
-                        }
                     }
                     Spacer()
                 }

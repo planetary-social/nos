@@ -34,10 +34,12 @@ public class Follow: NosManagedObject {
         }
         
         follow.source = author
+        follow.lastUpdated = Date.now
         
         let followedKey = jsonTag[1]
         let followedAuthor = try Author.findOrCreate(by: followedKey, context: context)
         follow.destination = followedAuthor
+        followedAuthor.lastUpdated = Date.now
         
         if jsonTag.count > 2 {
             follow.relay = Relay.findOrCreate(by: jsonTag[2], context: context)
@@ -50,10 +52,17 @@ public class Follow: NosManagedObject {
         return follow
     }
     
-    @nonobjc public class func follows(from authors: [Author]) -> NSFetchRequest<Follow> {
+    @nonobjc public class func followsRequest(sources authors: [Author]) -> NSFetchRequest<Follow> {
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.petName, ascending: true)]
         fetchRequest.predicate = NSPredicate(format: "source IN %@", authors)
+        return fetchRequest
+    }
+    
+    @nonobjc public class func followsRequest(source: Author, destination: Author) -> NSFetchRequest<Follow> {
+        let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.petName, ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "source = %@ AND destination = %@", source, destination)
         return fetchRequest
     }
     
@@ -71,6 +80,18 @@ public class Follow: NosManagedObject {
         return deleteRequest
     }
     
+    class func follows(source: Author, destination: Author, context: NSManagedObjectContext) -> [Follow] {
+        let fetchRequest = Follow.followsRequest(source: source, destination: destination)
+        
+        do {
+            return try context.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Failed to fetch follows. Error: \(error.description)")
+        }
+        
+        return []
+    }
+    
     class func deleteFollows(in follows: Set<Follow>, context: NSManagedObjectContext) {
         let deleteRequest = Follow.deleteFollowsRequest(in: follows)
         
@@ -78,6 +99,27 @@ public class Follow: NosManagedObject {
             try context.execute(deleteRequest)
         } catch let error as NSError {
             print("Failed to delete follows. Error: \(error.description)")
+        }
+    }
+    
+    class func find(source: Author, destination: Author, context: NSManagedObjectContext) throws -> Follow? {
+        let fetchRequest = Follow.followsRequest(source: source, destination: destination)
+        fetchRequest.fetchLimit = 1
+        if let follow = try context.fetch(fetchRequest).first {
+            return follow
+        }
+        
+        return nil
+    }
+    
+    class func findOrCreate(source: Author, destination: Author, context: NSManagedObjectContext) throws -> Follow {
+        if let follow = try? Follow.find(source: source, destination: destination, context: context) {
+            return follow
+        } else {
+            let follow = Follow(context: context)
+            follow.source = source
+            follow.destination = destination
+            return follow
         }
     }
 }

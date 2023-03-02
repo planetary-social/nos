@@ -220,7 +220,10 @@ public class Event: NosManagedObject {
         }
         
         author = newAuthor
-        
+        newAuthor.lastUpdated = Date.now
+
+        print("\(author!.hexadecimalPublicKey!) last updated \(author!.lastUpdated!)")
+
         guard let eventKind = EventKind(rawValue: kind) else {
             print("Error: Unknown kind")
             return

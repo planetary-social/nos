@@ -38,13 +38,6 @@ struct HomeFeedView: View {
                             NoteButton(note: event)
                                 .padding(.horizontal)
                         }
-                        .onAppear {
-                            if let author = event.author, !author.isPopulated, let key = author.hexadecimalPublicKey {
-                                print("📡Need to sync author: \(key)")
-                                let filter = Filter(authorKeys: [key], kinds: [.metaData, .contactList], limit: 100)
-                                relayService.requestEventsFromAll(filter: filter)
-                            }
-                        }
                     }
                 }
             }

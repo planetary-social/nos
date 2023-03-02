@@ -13,6 +13,7 @@ struct ProfileView: View {
     
     var author: Author
     
+    @EnvironmentObject private var relayService: RelayService
     @Environment(\.managedObjectContext) private var viewContext
     
     @FetchRequest

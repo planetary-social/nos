@@ -21,8 +21,8 @@ final class Filter: Hashable {
     var uuid: String = ""
 
     init(authorKeys: [String] = [], kinds: [EventKind] = [], pTags: [String] = [], limit: Int = 100) {
-        self.authorKeys = authorKeys
-        self.kinds = kinds
+        self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
+        self.kinds = kinds.sorted(by: { $0.rawValue > $1.rawValue })
         self.limit = limit
     }
     

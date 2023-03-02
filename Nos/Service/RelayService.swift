@@ -99,27 +99,23 @@ final class RelayService: WebSocketDelegate, ObservableObject {
     }
     
     func requestEventsFromAll(filter: Filter = Filter()) {
+        // Keep this open
+        openSocketsForRelays()
+
         // Ignore redundant requests
         guard !requestQueue.contains(filter) else {
             print("📡Request already open. Ignoring. \(requestQueue.count) outstanding requests")
             return
         }
-
-        openSocketsForRelays()
-
-        // Merge requests that are of the same kind
-        let metaFilters: [Filter] = requestQueue.filter {
-            let kinds = $0.dictionary["kinds"] as! [Int64]
-            return kinds.contains(EventKind.metaData.rawValue)
-        }
         
-        if metaFilters.count > 1 {
-            print("📡Merging \(metaFilters.count) metaData filters")
+        // TODO: This only works because all requests are of kinds [.text, .metaData, .contactList] together
+        if requestQueue.count > 1 {
+            print("📡Merging \(requestQueue.count) metaData filters")
             // Close all requests of this kind
             var authorPubKeys: [String] = []
-            for filter in metaFilters {
+            for filter in requestQueue {
                 let keys = filter.dictionary["authors"] as! [String]
-                for key in keys {
+                for key in keys where !authorPubKeys.contains(key) {
                     authorPubKeys.append(key)
                 }
                 sockets.forEach { sendClose(from: $0, subscription: filter.uuid) }
