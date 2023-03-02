@@ -180,7 +180,7 @@ final class RelayService: WebSocketDelegate, ObservableObject {
                 }
                 
                 do {
-                    _ = try EventProcessor.parse(jsonObject: eventJSON, in: persistenceController)
+                    _ = try EventProcessor.parse(jsonObject: eventJSON, in: persistenceController.container.viewContext)
                 } catch {
                     print("error parsing event from relay: \(response)")
                 }
