@@ -21,7 +21,7 @@ struct HomeFeedView: View {
     
     @State private var authorsToSync: [Author] = []
     
-    private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.fetchRequest())
+    private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
     
     private var user: Author?
