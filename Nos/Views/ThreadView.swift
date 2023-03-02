@@ -15,6 +15,10 @@ struct ThreadView: View {
     var repliesRequest: FetchRequest<Event>
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
     
+    var directReplies: [Event] {
+        replies.filter { ($0.eventReferences?.lastObject as? EventReference)?.eventId == note.identifier }
+    }
+    
     init(note: Event) {
         self.note = note
         self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note), animation: .default)
@@ -24,7 +28,7 @@ struct ThreadView: View {
     var body: some View {
         ScrollView(.vertical) {
             LazyVStack {
-                ForEach([note] + replies.reversed()) { event in
+                ForEach([note] + directReplies.reversed()) { event in
                     VStack {
                         ZStack {
                             if event != self.note {
