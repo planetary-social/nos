@@ -108,7 +108,7 @@ struct ThreadView: View {
                 signature: ""
             )
             let event = Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext)
-            //print("event: \(event)")
+            // print("event: \(event)")
 
             try event.sign(withKey: keyPair)
             try relayService.publish(event)
