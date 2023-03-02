@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Preload sample_data into core data for DEBUG builds
 - Shows all the replies to an event in NoteCards below the root note on this screen.
 - Fixed empty home feed message so it doesn't overlay other views
+- Added ability to post a reply in thread view.
 
 ## [0.1 (4)] - 2023-02-24
 
