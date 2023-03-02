@@ -63,7 +63,7 @@ enum CurrentUser {
             return false
         }
         
-        let followKeys = following.compactMap{ $0.destination?.hexadecimalPublicKey }
+        let followKeys = following.compactMap { $0.destination?.hexadecimalPublicKey }
         return followKeys.contains(key)
     }
     
