@@ -35,7 +35,8 @@ struct SettingsView: View {
                 Button(Localized.save.string) {
                     if privateKeyString.isEmpty {
                         self.keyPair = nil
-                    } else if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
+                        //                    } else if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
+                    } else if let keyPair = KeyPair(nsec: privateKeyString) {
                         self.keyPair = keyPair
                     } else {
                         self.keyPair = nil
@@ -60,9 +61,9 @@ struct SettingsView: View {
             )
         }
         .task {
-			if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
-				let hexString = String(decoding: privateKeyData, as: UTF8.self)
-                privateKeyString = hexString
+			if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey),
+                let keyPair = KeyPair(privateKeyHex: String(decoding: privateKeyData, as: UTF8.self)) {
+                privateKeyString = keyPair.nsec
             } else {
                 print("Could not load private key from keychain")
                 privateKeyString = ""
