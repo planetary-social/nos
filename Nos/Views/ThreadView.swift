@@ -76,7 +76,7 @@ struct ThreadView: View {
             VStack {
                 Spacer()
                 VStack {
-                    RoundedTextField( placeholder: "Post a reply", reply: $reply) {
+                    ExpandingTextFieldAndSubmitButton( placeholder: "Post a reply", reply: $reply) {
                         postReply(reply)
                     }
                     .padding(.horizontal)
@@ -98,8 +98,8 @@ struct ThreadView: View {
                 })
                 return
             }
-            var tags: [[String]] = [["p", note.author!.publicKey!.hex], ["e", note.identifier!]]
-            var jsonEvent = JSONEvent(
+            let tags: [[String]] = [["p", note.author!.publicKey!.hex], ["e", note.identifier!]]
+            let jsonEvent = JSONEvent(
                 id: "",
                 pubKey: keyPair.publicKeyHex,
                 createdAt: Int64(Date().timeIntervalSince1970),
@@ -129,28 +129,29 @@ struct ThreadView: View {
     }
 }
 
-struct RoundedTextField: View {
+struct ExpandingTextFieldAndSubmitButton: View {
     var placeholder: String
     @Binding var reply: String
     var action: () -> Void
     
     var body: some View {
-        HStack {
-            ZStack {
-                Color.gray
-                    .opacity(0.1)
-                    .cornerRadius(15)
-                
-                TextField(placeholder, text: $reply)
-                    .padding(.horizontal, 16)
-            }
-            Button(action: action) {
-                Image(systemName: "paperplane.fill")
-                    .font(.headline)
-            }
-            .padding(.trailing, 8)
+        ZStack(alignment: .trailing) {
+            TextField(placeholder, text: $reply, axis: .vertical)
+                .lineLimit(5)
+                .textFieldStyle(.roundedBorder)
+                .padding(.trailing, 30)
+            Button(
+                action: {
+                    self.action()
+                    reply = ""
+                },
+                label: {
+                    Image(systemName: "paperplane.fill")
+                        .font(.headline)
+                }
+            )
         }
-        .frame(height: 44)
+        .padding(.trailing, 8)
         .opacity(1.0)
     }
 }
