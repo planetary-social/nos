@@ -68,15 +68,15 @@ enum CurrentUser {
     }
     
     static func refreshHomeFeed() {
-//        var authors = follows?.compactMap { $0.destination?.hexadecimalPublicKey } ?? []
-//        if let pubKey = publicKey {
-//            authors.append(pubKey)
-//        }
-//
-//        if !authors.isEmpty {
-//            let filter = Filter(authorKeys: authors, kinds: [.text, .metaData, .contactList], limit: 100)
-//            relayService?.requestEventsFromAll(filter: filter)
-//        }
+        var authors = follows?.compactMap { $0.destination?.hexadecimalPublicKey } ?? []
+        if let pubKey = publicKey {
+            authors.append(pubKey)
+        }
+
+        if !authors.isEmpty {
+            let filter = Filter(authorKeys: authors, kinds: [.text, .metaData, .contactList], limit: 100)
+            relayService?.requestEventsFromAll(filter: filter)
+        }
     }
     
     static func updateFollows(pubKey: String, followKey: String, tags: [[String]], context: NSManagedObjectContext) {
