@@ -16,6 +16,9 @@ struct CompactNoteView: View {
 
     @State
     private var shouldShowReadMore = false
+    
+    @State
+    private var showFullMessage = false
 
     @State
     private var intrinsicSize = CGSize.zero
@@ -31,46 +34,57 @@ struct CompactNoteView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(note.content ?? "")
-                .lineLimit(5)
-                .font(.body)
-                .foregroundColor(.primaryTxt)
-                .accentColor(.accent)
-                .padding(15)
-                .background {
-                    GeometryReader { geometryProxy in
-                        Color.clear.preference(key: TruncatedSizePreferenceKey.self, value: geometryProxy.size)
-                    }
-                }
-                .onPreferenceChange(TruncatedSizePreferenceKey.self) { newSize in
-                    if newSize.height > truncatedSize.height {
-                        truncatedSize = newSize
-                        updateShouldShowReadMore()
-                    }
-                }
-                .background {
-                    Text(note.content ?? "")
-                        .font(.body)
-                        .padding(15)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .hidden()
-                        .background {
-                            GeometryReader { geometryProxy in
-                                Color.clear.preference(key: IntrinsicSizePreferenceKey.self, value: geometryProxy.size)
-                            }
+            if showFullMessage {
+                Text(note.content ?? "")
+                    .font(.body)
+                    .foregroundColor(.primaryTxt)
+                    .accentColor(.accent)
+                    .padding(15)
+            } else {
+                Text(note.content ?? "")
+                    .lineLimit(5)
+                    .font(.body)
+                    .foregroundColor(.primaryTxt)
+                    .accentColor(.accent)
+                    .padding(15)
+                    .background {
+                        GeometryReader { geometryProxy in
+                            Color.clear.preference(key: TruncatedSizePreferenceKey.self, value: geometryProxy.size)
                         }
-                        .onPreferenceChange(IntrinsicSizePreferenceKey.self) { newSize in
-                            if newSize.height > intrinsicSize.height {
-                                intrinsicSize = newSize
-                                updateShouldShowReadMore()
-                            }
+                    }
+                    .onPreferenceChange(TruncatedSizePreferenceKey.self) { newSize in
+                        if newSize.height > truncatedSize.height {
+                            truncatedSize = newSize
+                            updateShouldShowReadMore()
                         }
-                }
-            if shouldShowReadMore {
+                    }
+                    .background {
+                        Text(note.content ?? "")
+                            .font(.body)
+                            .padding(15)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .hidden()
+                            .background {
+                                GeometryReader { geometryProxy in
+                                    Color.clear.preference(
+                                        key: IntrinsicSizePreferenceKey.self,
+                                        value: geometryProxy.size
+                                    )
+                                }
+                            }
+                            .onPreferenceChange(IntrinsicSizePreferenceKey.self) { newSize in
+                                if newSize.height > intrinsicSize.height {
+                                    intrinsicSize = newSize
+                                    updateShouldShowReadMore()
+                                }
+                            }
+                    }
+            }
+            if shouldShowReadMore && !showFullMessage {
                 
                 ZStack(alignment: .center) {
                     Button {
-                        router.path.append(note)
+                        showFullMessage = true
                     } label: {
                         Text("Read more".uppercased())
                             .font(.caption)
