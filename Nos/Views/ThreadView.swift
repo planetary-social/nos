@@ -88,7 +88,6 @@ struct ThreadView: View {
     }
     
     func postReply(_ replyText: String) {
-        print("Post reply: \(replyText)")
         do {
             guard let keyPair else {
                 alert = AlertState(title: {
@@ -108,9 +107,8 @@ struct ThreadView: View {
                 content: replyText,
                 signature: ""
             )
-            print("jsonEvent: \(jsonEvent)")
             let event = Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext)
-            print("event: \(event)")
+            //print("event: \(event)")
 
             try event.sign(withKey: keyPair)
             try relayService.publish(event)
