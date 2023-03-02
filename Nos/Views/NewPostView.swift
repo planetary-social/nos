@@ -60,7 +60,6 @@ struct NewPostView: View {
         
         withAnimation {
             do {
-
                 let event = Event(context: viewContext)
                 event.createdAt = Date()
                 event.content = postText
