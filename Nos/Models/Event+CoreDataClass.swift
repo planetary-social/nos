@@ -231,12 +231,25 @@ public class Event: NosManagedObject {
 
         switch eventKind {
         case .contactList:
+            
+            // Make a copy of what was followed before
+            let originalFollows = newAuthor.follows?.copy() as? Set<Follow>
+            
             var eventFollows = Set<Follow>()
             for jsonTag in jsonEvent.tags {
                 do {
                     eventFollows.insert(try Follow.upsert(by: newAuthor, jsonTag: jsonTag, context: context))
                 } catch {
                     print("Error: could not parse Follow from: \(jsonEvent)")
+                }
+            }
+            
+            // Did we unfollow someone? If so, remove them from core data
+            if let follows = originalFollows, follows.count > eventFollows.count {
+                let removedFollows = follows.subtracting(eventFollows)
+                if !removedFollows.isEmpty {
+                    print("Removing \(removedFollows.count) follows")
+                    Follow.deleteFollows(in: removedFollows, context: context)
                 }
             }
 

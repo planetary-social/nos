@@ -21,7 +21,9 @@ struct FollowsView: View {
             LazyVStack {
                 ForEach(followed) { follow in
                     VStack {
-                        FollowCard(author: follow.destination!)
+                        if let author = follow.destination {
+                            FollowCard(author: author)
+                        }
                     }
                     Spacer()
                 }

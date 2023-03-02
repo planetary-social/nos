@@ -73,13 +73,6 @@ public class Follow: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func deleteFollowsRequest(in follows: Set<Follow>) -> NSBatchDeleteRequest {
-        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Follow")
-        fetchRequest.predicate = NSPredicate(format: "SELF IN %@", follows)
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-        return deleteRequest
-    }
-    
     class func follows(source: Author, destination: Author, context: NSManagedObjectContext) -> [Follow] {
         let fetchRequest = Follow.followsRequest(source: source, destination: destination)
         
@@ -93,12 +86,8 @@ public class Follow: NosManagedObject {
     }
     
     class func deleteFollows(in follows: Set<Follow>, context: NSManagedObjectContext) {
-        let deleteRequest = Follow.deleteFollowsRequest(in: follows)
-        
-        do {
-            try context.execute(deleteRequest)
-        } catch let error as NSError {
-            print("Failed to delete follows. Error: \(error.description)")
+        for follow in follows {
+            context.delete(follow)
         }
     }
     

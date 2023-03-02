@@ -21,7 +21,6 @@ enum CurrentUser {
     static var publicKey: String? {
         if let privateKey = privateKey {
             if let keyPair = KeyPair.init(privateKeyHex: privateKey) {
-                print("Profile public hex: \(keyPair.publicKey.hex).")
                 return keyPair.publicKey.hex
             }
         }
