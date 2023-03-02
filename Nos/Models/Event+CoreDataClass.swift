@@ -166,6 +166,9 @@ public class Event: NosManagedObject {
     }
     
     func sign(withKey privateKey: KeyPair) throws {
+        if allTags == nil {
+            allTags = [] as NSObject
+        }
         identifier = try calculateIdentifier()
         var serializedBytes = try identifier!.bytes
         signature = try privateKey.sign(bytes: &serializedBytes)
