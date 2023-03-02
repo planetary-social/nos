@@ -97,7 +97,22 @@ struct ThreadView: View {
                 })
                 return
             }
-            let tags: [[String]] = [["p", note.author!.publicKey!.hex], ["e", note.identifier!]]
+            
+            var tags: [[String]] = [["p", note.author!.publicKey!.hex]]
+            if note.eventReferences?.count ?? 0 > 0 {
+                if let referenceArray = note.eventReferences?.array as? [EventReference],
+                    let firstReference = referenceArray.first {
+                    if let rootReference = referenceArray.first(where: { $0.marker == "root" }) {
+                        tags.append(["e", rootReference.eventId ?? "", "", "root"])
+                        tags.append(["e", note.identifier!, "", "reply"])
+                    } else {
+                        tags.append(["e", firstReference.eventId ?? "", "", "reply"])
+                    }
+                }
+            } else {
+                tags.append(["e", note.identifier!, "", "root"])
+            }
+            // print("tags: \(tags)")
             let jsonEvent = JSONEvent(
                 id: "",
                 pubKey: keyPair.publicKeyHex,
