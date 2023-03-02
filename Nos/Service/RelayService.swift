@@ -110,16 +110,17 @@ final class RelayService: WebSocketDelegate, ObservableObject {
         
         // TODO: This only works because all requests are of kinds [.text, .metaData, .contactList] together
         if requestQueue.count > 1 {
-            print("📡Merging \(requestQueue.count) metaData filters")
+            print("📡Merging \(requestQueue.count) filters")
             // Close all requests of this kind
             var authorPubKeys: [String] = []
             for filter in requestQueue {
-                let keys = filter.dictionary["authors"] as! [String]
-                for key in keys where !authorPubKeys.contains(key) {
-                    authorPubKeys.append(key)
+                if let keys = filter.dictionary["authors"] as? [String] {
+                    for key in keys where !authorPubKeys.contains(key) {
+                        authorPubKeys.append(key)
+                    }
+                    sockets.forEach { sendClose(from: $0, subscription: filter.uuid) }
+                    requestQueue.remove(filter)
                 }
-                sockets.forEach { sendClose(from: $0, subscription: filter.uuid) }
-                requestQueue.remove(filter)
             }
             
             // Now modify this filter to have all authors

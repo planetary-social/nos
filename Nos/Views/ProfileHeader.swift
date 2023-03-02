@@ -11,7 +11,6 @@ import CoreData
 
 struct ProfileHeader: View {
     @ObservedObject var author: Author
-    
     @Environment(\.managedObjectContext) private var viewContext
 
     var followsRequest: FetchRequest<Follow>
@@ -26,6 +25,13 @@ struct ProfileHeader: View {
     init(author: Author) {
         self.author = author
         self.followsRequest = FetchRequest(fetchRequest: Follow.followsRequest(sources: [author]))
+        
+        // Request info from the follows
+        if let follows = author.follows?.allObjects as? [Follow] {
+            let keys = follows.compactMap { $0.destination?.hexadecimalPublicKey }
+            let filter = Filter(authorKeys: keys, kinds: [.text, .metaData, .contactList], limit: 100)
+            CurrentUser.relayService?.requestEventsFromAll(filter: filter)
+        }
     }
 
     private var shouldShowBio: Bool {
