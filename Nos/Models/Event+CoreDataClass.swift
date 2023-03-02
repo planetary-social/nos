@@ -241,7 +241,6 @@ public class Event: NosManagedObject {
 
         switch eventKind {
         case .contactList:
-            
             // Make a copy of what was followed before
             let originalFollows = newAuthor.follows?.copy() as? Set<Follow>
             
