@@ -62,7 +62,7 @@ enum Localized: String, Localizable, CaseIterable {
     
     case keys = "Keys"
     case keyEncryptionWarning = "Warning: your private key will be stored unencrypted on disk."
-    case privateKeyPlaceholder = "Private Key (in hex format)"
+    case privateKeyPlaceholder = "nsec..."
     case save = "Save"
     case settings = "Settings"
     case invalidKey = "Invalid Key"
