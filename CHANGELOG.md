@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shows all the replies to an event in NoteCards below the root note on this screen.
 - Fixed empty home feed message so it doesn't overlay other views
 - Change settings and onboarding to accept nsec-format private key
+- Fixed app crash when no user is passed to HomeFeedView initializer
 
 ## [0.1 (4)] - 2023-02-24
 
