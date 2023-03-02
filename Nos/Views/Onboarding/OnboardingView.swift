@@ -70,7 +70,7 @@ struct OnboardingView: View {
                             }
                             .padding(50)
                             Button(Localized.save.string) {
-                                if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
+                                if let keyPair = KeyPair(nsec: privateKeyString) {
                                     self.keyPair = keyPair
                                     completion()
                                 } else {
