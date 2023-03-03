@@ -84,7 +84,9 @@ struct CompactNoteView: View {
                 
                 ZStack(alignment: .center) {
                     Button {
-                        showFullMessage = true
+                        withAnimation {
+                            showFullMessage = true
+                        }
                     } label: {
                         Text("Read more".uppercased())
                             .font(.caption)
