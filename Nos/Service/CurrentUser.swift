@@ -29,6 +29,8 @@ enum CurrentUser {
     
     static var context: NSManagedObjectContext?
     
+    static var subscriptions: [String] = []
+    
     static var relayService: RelayService? {
         didSet {
             // Load contact list into memory from Core Data
@@ -37,6 +39,7 @@ enum CurrentUser {
                 let follows = author.follows as? Set<Follow> {
                     CurrentUser.follows = follows
             }
+            subscribe()
         }
     }
     
@@ -47,6 +50,27 @@ enum CurrentUser {
     static var follows: Set<Follow>? {
         didSet {
             print("Following: \(follows?.count ?? 0)")
+        }
+    }
+    
+    static func subscribe() {
+        // Always listen to my changes
+        if let key = publicKey {
+            // Close out stale requests
+            if !subscriptions.isEmpty {
+                relayService?.sendCloseToAll(subscriptions: subscriptions)
+                subscriptions.removeAll()
+            }
+
+            let textFilter = Filter(authorKeys: [key], kinds: [.text], limit: 100)
+            if let textSub = relayService?.requestEventsFromAll(filter: textFilter) {
+                subscriptions.append(textSub)
+            }
+
+            let metaFilter = Filter(authorKeys: [key], kinds: [.metaData, .contactList], limit: 100)
+            if let metaSub = relayService?.requestEventsFromAll(filter: metaFilter) {
+                subscriptions.append(metaSub)
+            }
         }
     }
     

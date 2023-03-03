@@ -33,21 +33,24 @@ struct HomeFeedView: View {
     }
 
     func refreshHomeFeed() {
-        var authors = CurrentUser.follows?.compactMap { $0.destination?.hexadecimalPublicKey } ?? []
-        
-        // Follow myself too
-        if let pubKey = CurrentUser.publicKey {
-            authors.append(pubKey)
+        // Close out stale requests
+        if !subscriptionIds.isEmpty {
+            relayService.sendCloseToAll(subscriptions: subscriptionIds)
+            subscriptionIds.removeAll()
         }
 
-        if !authors.isEmpty {
-            let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
-            let textSub = relayService.requestEventsFromAll(filter: textFilter)
-            subscriptionIds.append(textSub)
+        if let follows = CurrentUser.author.follows as? Set<Follow> {
+            let authors = follows.compactMap({ $0.destination?.hexadecimalPublicKey! })
             
-            let metaFilter = Filter(authorKeys: authors, kinds: [.metaData, .contactList], limit: 100)
-            let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
-            subscriptionIds.append(metaSub)
+            if !authors.isEmpty {
+                let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
+                let textSub = relayService.requestEventsFromAll(filter: textFilter)
+                subscriptionIds.append(textSub)
+                
+                let metaFilter = Filter(authorKeys: authors, kinds: [.metaData, .contactList], limit: 100)
+                let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
+                subscriptionIds.append(metaSub)
+            }
         }
     }
     
