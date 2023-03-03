@@ -9,7 +9,7 @@ import Foundation
 
 /// For REQ
 final class Filter: Hashable {
-    var authorKeys: [String] {
+    private var authorKeys: [String] {
         didSet {
             print("Override author keys to: \(authorKeys)")
         }
