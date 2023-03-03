@@ -28,7 +28,14 @@ struct RepliesView: View {
     
     init(note: Event) {
         self.note = note
-        self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note), animation: .default)
+        
+        if let rootReference = (note.eventReferences?.array as? [EventReference])?
+            .first(where: { $0.marker == "root" }),
+            let rootId = rootReference.eventId {
+            self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(toEventWith: rootId))
+        } else {
+            self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note))
+        }
     }
     
     private var keyPair: KeyPair? {
