@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change settings and onboarding to accept nsec-format private key
 - Fixed app crash when no user is passed to HomeFeedView initializer
 - Added ability to post a reply in thread view.
+- Fixed READ MORE Button
 
 ## [0.1 (4)] - 2023-02-24
 
