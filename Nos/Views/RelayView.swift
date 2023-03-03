@@ -31,6 +31,7 @@ struct RelayView: View {
                             let relay = relays[index]
                             viewContext.delete(relay)
                         }
+                        try! viewContext.save()
                     }
                     if relays.isEmpty {
                         Localized.noRelaysMessage.view

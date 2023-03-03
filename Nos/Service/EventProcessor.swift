@@ -17,9 +17,7 @@ enum EventProcessor {
     }
     
     static func parse(jsonEvent: JSONEvent, in parseContext: NSManagedObjectContext) throws -> Event {
-        guard let event = Event.findOrCreate(jsonEvent: jsonEvent, context: parseContext) else {
-            throw EventError.jsonEncoding
-        }
+        let event = try Event.findOrCreate(jsonEvent: jsonEvent, context: parseContext)
         
         guard let publicKey = event.author?.publicKey else {
             throw EventError.missingAuthor

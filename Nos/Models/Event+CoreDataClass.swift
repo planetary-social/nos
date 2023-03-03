@@ -14,6 +14,7 @@ enum EventError: Error {
 	case utf8Encoding
 	case unrecognizedKind
     case missingAuthor
+    case invalidETag([String])
     case invalidSignature(Event)
     
     var description: String? {
@@ -22,6 +23,8 @@ enum EventError: Error {
             return "Unrecognized event kind"
         case .missingAuthor:
             return "Could not parse author on event"
+        case .invalidETag(let strings):
+            return "Invalid e tag \(strings.joined(separator: ","))"
         case .invalidSignature(let event):
             return "Invalid signature on event: \(String(describing: event.identifier))"
         default:
@@ -46,7 +49,7 @@ public enum EventKind: Int64, CaseIterable {
 public class Event: NosManagedObject {
     
     static var replyEventReferences =
-    "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.eventId == %@).@count > 0"
+    "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.referencedEvent.identifier == %@).@count > 0"
     
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -54,10 +57,40 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-	@nonobjc public class func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
+    @nonobjc public class func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-		fetchRequest.predicate = NSPredicate(format: "kind = %i", eventKind.rawValue)
+        fetchRequest.predicate = NSPredicate(format: "kind = %i", eventKind.rawValue)
+        return fetchRequest
+    }
+    
+    @nonobjc public class func allMentionsPredicate(for user: Author) -> NSPredicate {
+        guard let publicKey = user.hexadecimalPublicKey, !publicKey.isEmpty else {
+            return NSPredicate(format: "FALSEPREDICATE")
+        }
+        
+        return NSPredicate(
+            format: "kind = %i AND ANY authorReferences.pubkey = %@",
+            EventKind.text.rawValue,
+            publicKey
+        )
+    }
+    
+    @nonobjc public class func allRepliesPredicate(for user: Author) -> NSPredicate {
+        NSPredicate(format: "kind = 1 AND ANY eventReferences.referencedEvent.author = %@", user)
+    }
+    
+    @nonobjc public class func allNotifications(for user: Author) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        
+        let mentionsPredicate = allMentionsPredicate(for: user)
+        let repliesPredicate = allRepliesPredicate(for: user)
+        let allNotificationsPredicate = NSCompoundPredicate(
+            orPredicateWithSubpredicates: [mentionsPredicate, repliesPredicate]
+        )
+        fetchRequest.predicate = allNotificationsPredicate
+        
         return fetchRequest
     }
     
@@ -138,11 +171,22 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    class func findOrCreate(jsonEvent: JSONEvent, context: NSManagedObjectContext) -> Event? {
-        if let existingEvent = try? context.fetch(Event.event(by: jsonEvent.id)).first {
+    class func findOrCreate(jsonEvent: JSONEvent, context: NSManagedObjectContext) throws -> Event {
+        if let existingEvent = try context.fetch(Event.event(by: jsonEvent.id)).first,
+           !existingEvent.isStub {
             return existingEvent
         } else {
-            return try? Event(context: context, jsonEvent: jsonEvent)
+            return try Event(context: context, jsonEvent: jsonEvent)
+        }
+    }
+    
+    class func findOrCreateBy(id: String, context: NSManagedObjectContext) throws -> Event {
+        if let existingEvent = try context.fetch(Event.event(by: id)).first {
+            return existingEvent
+        } else {
+            let event = Event(context: context)
+            event.identifier = id
+            return event
         }
     }
     
@@ -155,6 +199,10 @@ public class Event: NosManagedObject {
             allTags,
             content
         ]
+    }
+    
+    var isStub: Bool {
+        author == nil || createdAt == nil || content == nil
     }
     
     func calculateIdentifier() throws -> String {
@@ -189,15 +237,15 @@ public class Event: NosManagedObject {
     
     var codable: JSONEvent? {
         guard let identifier = identifier,
-            let pubKey = author?.hexadecimalPublicKey,
-            let createdAt = createdAt,
-            let content = content,
-            let signature = signature else {
+              let pubKey = author?.hexadecimalPublicKey,
+              let createdAt = createdAt,
+              let content = content,
+              let signature = signature else {
             return nil
         }
-                           
+        
         let allTags = (allTags as? [[String]]) ?? []
-            
+        
         return JSONEvent(
             id: identifier,
             pubKey: pubKey,
@@ -208,35 +256,35 @@ public class Event: NosManagedObject {
             signature: signature
         )
     }
-	
+    
     // swiftlint:disable function_body_length
-	convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) throws {
-		self.init(context: context)
-		
-		// Meta data
-		createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
-		content = jsonEvent.content
-		identifier = jsonEvent.id
-		kind = jsonEvent.kind
-		signature = jsonEvent.signature
+    convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) throws {
+        self.init(context: context)
+        
+        // Meta data
+        createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
+        content = jsonEvent.content
+        identifier = jsonEvent.id
+        kind = jsonEvent.kind
+        signature = jsonEvent.signature
         
         // Tags
         allTags = jsonEvent.tags as NSObject
         
-		// Author
+        // Author
         guard let newAuthor = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context) else {
             throw EventError.missingAuthor
         }
         
         author = newAuthor
         newAuthor.lastUpdated = Date.now
-
+        
         print("\(author!.hexadecimalPublicKey!) last updated \(author!.lastUpdated!)")
-
+        
         guard let eventKind = EventKind(rawValue: kind) else {
             throw EventError.unrecognizedKind
         }
-
+        
         switch eventKind {
         case .contactList:
             // Make a copy of what was followed before
@@ -259,12 +307,12 @@ public class Event: NosManagedObject {
                     Follow.deleteFollows(in: removedFollows, context: context)
                 }
             }
-
+            
             // In the special case that we've requested our own follows, set it on the profile
             if newAuthor.hexadecimalPublicKey == CurrentUser.publicKey {
                 CurrentUser.follows = eventFollows
             }
-
+            
         case .metaData:
             if let contentData = jsonEvent.content.data(using: .utf8) {
                 do {
@@ -279,17 +327,18 @@ public class Event: NosManagedObject {
                     print("Failed to decode kind \(eventKind) event with ID \(String(describing: identifier))")
                 }
             }
-
+            
         default:
             let newEventReferences = NSMutableOrderedSet()
             let newAuthorReferences = NSMutableOrderedSet()
             for jsonTag in jsonEvent.tags {
                 if jsonTag.first == "e" {
-                    let eTag = EventReference(context: context)
-                    eTag.eventId = jsonTag[safe: 1]
-                    eTag.recommendedRelayUrl = jsonTag[safe: 2]
-                    eTag.marker = jsonTag[safe: 3]
-                    newEventReferences.add(eTag)
+                    do {
+                        let eTag = try EventReference(jsonTag: jsonTag, context: context)
+                        newEventReferences.add(eTag)
+                    } catch {
+                        print("error parsing e tag: \(error.localizedDescription)")
+                    }
                 } else {
                     let authorReference = AuthorReference(context: context)
                     authorReference.pubkey = jsonTag[safe: 1]
@@ -300,7 +349,7 @@ public class Event: NosManagedObject {
             eventReferences = newEventReferences
             authorReferences = newAuthorReferences
         }
-	}
+    }
     // swiftlint:enable function_body_length
     
     class func all(context: NSManagedObjectContext) -> [Event] {
@@ -323,5 +372,30 @@ public class Event: NosManagedObject {
         } catch let error as NSError {
             print("Failed to delete events. Error: \(error.description)")
         }
+    }
+    
+    func references(author: Author) -> Bool {
+        guard let authorReferences = authorReferences else {
+            return false
+        }
+        
+        return authorReferences.contains(where: { element in
+            (element as? AuthorReference)?.pubkey == author.hexadecimalPublicKey
+        })
+    }
+    
+    func isReply(to author: Author) -> Bool {
+        guard let eventReferences else {
+            return false
+        }
+        
+        return eventReferences.contains(where: { element in
+            let rootEvent = (element as? EventReference)?.referencedEvent
+            return rootEvent?.author?.hexadecimalPublicKey == author.hexadecimalPublicKey
+        })
+    }
+    
+    func rootNote() -> Event {
+        (eventReferences?.firstObject as? EventReference)?.referencedEvent ?? self
     }
 }
