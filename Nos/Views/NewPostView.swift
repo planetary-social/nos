@@ -67,7 +67,7 @@ struct NewPostView: View {
                 event.author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
 
                 try event.sign(withKey: keyPair)
-                try relayService.publish(event)
+                relayService.publishToAll(event: event)
                 isPresented = false
             } catch {
                 alert = AlertState(title: {

@@ -102,7 +102,7 @@ enum CurrentUser {
             do {
                 try jsonEvent.sign(withKey: pair)
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
-                relayService?.sendEventToAll(event: event)
+                relayService?.publishToAll(event: event)
             } catch {
                 print("failed to update Follows \(error.localizedDescription)")
             }
