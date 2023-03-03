@@ -15,8 +15,6 @@ struct PersistenceController {
         let controller = PersistenceController(inMemory: true)
         let viewContext = controller.container.viewContext
         PersistenceController.loadSampleData(context: viewContext)
-        let relay = Relay(context: viewContext)
-        relay.address = "wss://dev-relay.nos.social"
         
         do {
             try viewContext.save()
@@ -90,7 +88,7 @@ struct PersistenceController {
         Event.deleteAll(context: context)
         context.reset()
         
-        guard let events = try? EventProcessor.parse(jsonData: sampleData, in: PersistenceController.shared) else {
+        guard let events = try? EventProcessor.parse(jsonData: sampleData, in: context) else {
             print("Error: Could not parse events")
             return
         }

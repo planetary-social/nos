@@ -114,8 +114,11 @@ struct ContentView_Previews: PreviewProvider {
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
     static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
     
+    static var router = Router()
+    
     static var shortNote: Event {
         let note = Event(context: previewContext)
+        note.kind = 1
         note.content = "Hello, world!"
         note.author = user
         return note
@@ -123,6 +126,7 @@ struct ContentView_Previews: PreviewProvider {
     
     static var longNote: Event {
         let note = Event(context: previewContext)
+        note.kind = 1
         note.content = .loremIpsum(5)
         note.author = user
         return note
@@ -130,7 +134,7 @@ struct ContentView_Previews: PreviewProvider {
     
     static var user: Author {
         let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.pubKeyHex
+        author.hexadecimalPublicKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
         return author
     }
     
@@ -140,11 +144,13 @@ struct ContentView_Previews: PreviewProvider {
         }
         .environment(\.managedObjectContext, previewContext)
         .environmentObject(relayService)
+        .environmentObject(router)
         
         NavigationView {
             HomeFeedView(user: user)
         }
         .environment(\.managedObjectContext, emptyPreviewContext)
         .environmentObject(emptyRelayService)
+        .environmentObject(router)
     }
 }

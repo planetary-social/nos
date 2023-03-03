@@ -77,7 +77,7 @@ enum CurrentUser {
         if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: PersistenceController.shared)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
                 relayService?.sendEventToAll(event: event)
             } catch {
                 print("failed to update Follows \(error.localizedDescription)")
