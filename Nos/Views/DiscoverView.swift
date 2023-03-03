@@ -53,7 +53,7 @@ struct DiscoverView: View {
                 load()
             }
             .navigationDestination(for: Event.self) { note in
-                ThreadView(note: note)
+                RepliesView(note: note)
             }
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)

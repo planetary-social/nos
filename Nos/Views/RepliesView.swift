@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftUINavigation
 
-struct ThreadView: View {
+struct RepliesView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject var router: Router
@@ -38,21 +38,22 @@ struct ThreadView: View {
     }
     
     var note: Event
+    
     var body: some View {
         ZStack {
             ScrollView(.vertical) {
                 LazyVStack {
-                    ForEach([note] + directReplies.reversed()) { event in
+                    NoteButton(note: note)
+                        .padding(.horizontal)
+                    ForEach(directReplies.reversed()) { event in
                         VStack {
                             ZStack {
-                                if event != self.note {
-                                    Path { path in
-                                        path.move(to: CGPoint(x: 35, y: -4))
-                                        path.addLine(to: CGPoint(x: 35, y: 15))
-                                    }
-                                    .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                                    .fill(Color.secondaryTxt)
+                                Path { path in
+                                    path.move(to: CGPoint(x: 35, y: -4))
+                                    path.addLine(to: CGPoint(x: 35, y: 15))
                                 }
+                                .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                                .fill(Color.secondaryTxt)
                                 NoteButton(note: event)
                                     .padding(.horizontal)
                             }
@@ -164,10 +165,10 @@ struct ThreadView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             VStack {
-                ThreadView(note: shortNote)
+                RepliesView(note: shortNote)
             }
             VStack {
-                ThreadView(note: longNote)
+                RepliesView(note: longNote)
             }
         }
         .padding()
