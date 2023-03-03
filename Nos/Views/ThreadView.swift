@@ -10,16 +10,11 @@ import SwiftUINavigation
 
 struct ThreadView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    
+    @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject var router: Router
-
-    @State private var authorsToSync: [Author] = []
     
     @State private var reply = ""
-    
     @State private var alert: AlertState<Never>?
-    
-    @EnvironmentObject private var relayService: RelayService
     
     var repliesRequest: FetchRequest<Event>
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
@@ -51,18 +46,6 @@ struct ThreadView: View {
                                 }
                                 NoteButton(note: event)
                                     .padding(.horizontal)
-                            }
-                            .onAppear {
-                                // Error scenario: we have an event in core data without an author
-                                guard let author = event.author else {
-                                    print("Event author is nil")
-                                    return
-                                }
-                                
-                                if !author.isPopulated {
-                                    print("Need to sync author: \(author.hexadecimalPublicKey ?? "")")
-                                    authorsToSync.append(author)
-                                }
                             }
                         }
                     }
@@ -122,11 +105,12 @@ struct ThreadView: View {
                 content: replyText,
                 signature: ""
             )
-            let event = Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext)
-            // print("event: \(event)")
-
-            try event.sign(withKey: keyPair)
-            try relayService.publish(event)
+            if let event = Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext) {
+                // print("event: \(event)")
+                
+                try event.sign(withKey: keyPair)
+                try relayService.publish(event)
+            }
         } catch {
             alert = AlertState(title: {
                 TextState(Localized.error.string)

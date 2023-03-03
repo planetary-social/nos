@@ -20,14 +20,6 @@ public class Author: NosManagedObject {
         displayName ?? name ?? npubString?.prefix(10).appending("...") ?? hexadecimalPublicKey ?? "error"
     }
     
-    var isPopulated: Bool {
-        let hasName = (name != nil)
-        let hasAbout = (about != nil)
-        let hasPhoto = (profilePhotoURL != nil)
-        
-        return hasName || hasAbout || hasPhoto
-    }
-    
     var publicKey: PublicKey? {
         guard let hex = hexadecimalPublicKey else {
             return nil
