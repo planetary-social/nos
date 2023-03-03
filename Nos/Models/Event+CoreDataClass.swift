@@ -260,11 +260,6 @@ public class Event: NosManagedObject {
                 }
             }
 
-            // In the special case that we've requested our own follows, set it on the profile
-            if newAuthor.hexadecimalPublicKey == CurrentUser.publicKey {
-                CurrentUser.follows = eventFollows
-            }
-
         case .metaData:
             if let contentData = jsonEvent.content.data(using: .utf8) {
                 do {

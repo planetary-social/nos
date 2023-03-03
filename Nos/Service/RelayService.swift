@@ -256,5 +256,3 @@ extension RelayService: WebSocketDelegate {
         }
     }
 }
-
-
