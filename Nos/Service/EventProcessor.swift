@@ -16,14 +16,7 @@ enum EventProcessor {
         return try parse(jsonEvent: jsonEvent, in: context)
     }
     
-    // swiftlint:disable function_body_length
     static func parse(jsonEvent: JSONEvent, in parseContext: NSManagedObjectContext) throws -> Event {
-		guard let eventKind = EventKind(rawValue: jsonEvent.kind) else {
-			print("Error: unrecognized event kind: \(jsonEvent.kind)")
-			throw EventError.unrecognizedKind
-		}
-
-        // Retain an existing event so we can modify it as needed with new data
         guard let event = Event.findOrCreate(jsonEvent: jsonEvent, context: parseContext) else {
             throw EventError.jsonEncoding
         }
@@ -42,7 +35,6 @@ enum EventProcessor {
         
         return event
     }
-    // swiftlint:enable function_body_length
     
     static func parse(jsonData: Data, in context: NSManagedObjectContext) throws -> [Event] {
         let jsonEvents = try JSONDecoder().decode([JSONEvent].self, from: jsonData)
