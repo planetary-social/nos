@@ -11,13 +11,12 @@ import SwiftUINavigation
 struct RepliesView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
+    @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject var router: Router
 
     @State private var reply = ""
     
     @State private var alert: AlertState<Never>?
-    
-    @EnvironmentObject private var relayService: RelayService
     
     var repliesRequest: FetchRequest<Event>
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
@@ -109,11 +108,11 @@ struct RepliesView: View {
                 content: replyText,
                 signature: ""
             )
-            let event = Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext)
-            // print("event: \(event)")
-
-            try event.sign(withKey: keyPair)
-            try relayService.publish(event)
+            if let event = Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext) {
+                
+                try event.sign(withKey: keyPair)
+                try relayService.publish(event)
+            }
         } catch {
             alert = AlertState(title: {
                 TextState(Localized.error.string)

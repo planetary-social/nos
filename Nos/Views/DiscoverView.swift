@@ -20,7 +20,14 @@ struct DiscoverView: View {
     
     @State var columns: Int = 2
     
-    @Namespace var animation
+    @Namespace private var animation
+    
+    @State private var subscriptionId: String = ""
+    
+    func refreshDiscover() {
+        let filter = Filter(kinds: [.text], limit: 100)
+        subscriptionId = relayService.requestEventsFromAll(filter: filter)
+    }
     
     var body: some View {
         NavigationStack(path: $router.path) {
@@ -47,10 +54,14 @@ struct DiscoverView: View {
             }
             .animation(.easeInOut, value: columns)
             .refreshable {
-                load()
+                refreshDiscover()
             }
             .task {
-                load()
+                refreshDiscover()
+            }
+            .onDisappear {
+                relayService.sendCloseToAll(subscriptions: [subscriptionId])
+                subscriptionId = ""
             }
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
@@ -64,11 +75,6 @@ struct DiscoverView: View {
                 }
             }
         }
-    }
-    
-    func load() {
-        let filter = Filter(kinds: [.text], limit: 100)
-        relayService.requestEventsFromAll(filter: filter)
     }
 }
 
@@ -131,9 +137,12 @@ struct DiscoverView_Previews: PreviewProvider {
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
     static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
     
+    static var router = Router()
+    
     static var shortNote: Event {
         let note = Event(context: previewContext)
         note.content = "Hello, world!"
+        try! previewContext.save()
         return note
     }
     
@@ -147,5 +156,6 @@ struct DiscoverView_Previews: PreviewProvider {
         DiscoverView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
+            .environmentObject(router)
     }
 }

@@ -10,6 +10,7 @@ import Starscream
 import CoreData
 
 final class RelayService: WebSocketDelegate, ObservableObject {
+    private var requestFilterSet = Set<Filter>()
     
     private var sockets = [WebSocket]()
     
@@ -83,16 +84,41 @@ final class RelayService: WebSocketDelegate, ObservableObject {
         }
     }
     
-	func requestEvents(from client: WebSocketClient, filter: Filter = Filter()) {
+    func requestEvents(from client: WebSocketClient, subId: String, filter: Filter = Filter()) {
         do {
-            let request: [Any] = ["REQ", UUID().uuidString, filter.dictionary]
+            // Track this so we can close requests if needed
+            filter.subscriptionId = subId
+            let request: [Any] = ["REQ", filter.subscriptionId, filter.dictionary]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
             print(requestString)
             client.write(string: requestString)
         } catch {
-            print("could not send request \(error.localizedDescription)")
+            print("Error: Could not send request \(error.localizedDescription)")
         }
+    }
+    
+    func requestEventsFromAll(filter: Filter = Filter()) -> String {
+        // Keep this open
+        openSocketsForRelays()
+
+        // Ignore redundant requests
+        guard !requestFilterSet.contains(filter) else {
+            print("📡Request already open. Ignoring. \(requestFilterSet.count) outstanding requests")
+            let foundFilter = requestFilterSet.first(where: { $0 == filter })
+            return foundFilter!.subscriptionId
+        }
+
+        requestFilterSet.insert(filter)
+        print("📡\(requestFilterSet.count) outstanding requests")
+        for request in requestFilterSet {
+            print("📡: \(request.dictionary)")
+        }
+
+        let subId = UUID().uuidString
+        sockets.forEach { requestEvents(from: $0, subId: subId, filter: filter) }
+        
+        return subId
     }
     
     func sendEvent(from client: WebSocketClient, event: Event) {
@@ -100,9 +126,10 @@ final class RelayService: WebSocketDelegate, ObservableObject {
             let request: [Any] = ["EVENT", event.jsonRepresentation!]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
+            print(requestString)
             client.write(string: requestString)
         } catch {
-            print("could not send request \(error.localizedDescription)")
+            print("Error: Could not send request \(error.localizedDescription)")
         }
     }
     
@@ -111,25 +138,29 @@ final class RelayService: WebSocketDelegate, ObservableObject {
             let request: [Any] = ["CLOSE", subscription]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
+            print(requestString)
             client.write(string: requestString)
         } catch {
-            print("could not send request \(error.localizedDescription)")
+            print("Error: Could not send close \(error.localizedDescription)")
         }
     }
-    
-    func requestEventsFromAll(filter: Filter = Filter()) {
-        openSocketsForRelays()
-		sockets.forEach { requestEvents(from: $0, filter: filter) }
-    }
-    
+
     func sendEventToAll(event: Event) {
         openSocketsForRelays()
         sockets.forEach { sendEvent(from: $0, event: event) }
     }
     
-    func sendCloseToAll(subscription: String) {
+    func sendCloseToAll(subscriptions: [String]) {
         openSocketsForRelays()
-        sockets.forEach { sendClose(from: $0, subscription: subscription) }
+        
+        for subscription in subscriptions {
+            // Remove this filter from the queue
+            if let foundFilter = requestFilterSet.first(where: { $0.subscriptionId == subscription }) {
+                requestFilterSet.remove(foundFilter)
+            }
+
+            sockets.forEach { sendClose(from: $0, subscription: subscription) }
+        }
     }
     
     func publish(_ event: Event) throws {
@@ -180,7 +211,7 @@ final class RelayService: WebSocketDelegate, ObservableObject {
                 }
                 
                 do {
-                    _ = try EventProcessor.parse(jsonObject: eventJSON, in: persistenceController)
+                    _ = try EventProcessor.parse(jsonObject: eventJSON, in: persistenceController.container.viewContext)
                 } catch {
                     print("error parsing event from relay: \(response)")
                 }

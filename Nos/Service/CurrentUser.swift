@@ -21,7 +21,6 @@ enum CurrentUser {
     static var publicKey: String? {
         if let privateKey = privateKey {
             if let keyPair = KeyPair.init(privateKeyHex: privateKey) {
-                print("Profile public hex: \(keyPair.publicKey.hex).")
                 return keyPair.publicKey.hex
             }
         }
@@ -30,22 +29,17 @@ enum CurrentUser {
     
     static var context: NSManagedObjectContext?
     
+    static var subscriptions: [String] = []
+    
     static var relayService: RelayService? {
         didSet {
-            if let pubKey = publicKey {
-                // Load contact list into memory from Core Data
-                if let context = context,
-                    let author = author(in: context),
-                    let follows = author.follows as? Set<Follow> {
+            // Load contact list into memory from Core Data
+            if let context = context,
+                let author = author(in: context),
+                let follows = author.follows as? Set<Follow> {
                     CurrentUser.follows = follows
-                }
-                
-                // Refresh contact list and metadata from the relays
-                let metadataFilter = Filter(authorKeys: [pubKey], kinds: [.metaData], limit: 1)
-                relayService?.requestEventsFromAll(filter: metadataFilter)
-                let contactListFilter = Filter(authorKeys: [pubKey], kinds: [.contactList], limit: 1)
-                relayService?.requestEventsFromAll(filter: contactListFilter)
             }
+            subscribe()
         }
     }
     
@@ -59,25 +53,34 @@ enum CurrentUser {
         }
     }
     
-    static func isFollowing(key: String) -> Bool {
-        guard let following = follows else {
+    static func subscribe() {
+        // Always listen to my changes
+        if let key = publicKey {
+            // Close out stale requests
+            if !subscriptions.isEmpty {
+                relayService?.sendCloseToAll(subscriptions: subscriptions)
+                subscriptions.removeAll()
+            }
+
+            let textFilter = Filter(authorKeys: [key], kinds: [.text], limit: 100)
+            if let textSub = relayService?.requestEventsFromAll(filter: textFilter) {
+                subscriptions.append(textSub)
+            }
+
+            let metaFilter = Filter(authorKeys: [key], kinds: [.metaData, .contactList], limit: 100)
+            if let metaSub = relayService?.requestEventsFromAll(filter: metaFilter) {
+                subscriptions.append(metaSub)
+            }
+        }
+    }
+    
+    static func isFollowing(author: Author) -> Bool {
+        guard let following = follows, let key = author.hexadecimalPublicKey else {
             return false
         }
         
-        let followKeys = following.compactMap({ $0.destination?.hexadecimalPublicKey })
+        let followKeys = following.compactMap { $0.destination?.hexadecimalPublicKey }
         return followKeys.contains(key)
-    }
-    
-    static func refreshHomeFeed() {
-        var authors = follows?.compactMap { $0.destination?.hexadecimalPublicKey } ?? []
-        if let pubKey = publicKey {
-            authors.append(pubKey)
-        }
-
-        if !authors.isEmpty {
-            let filter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
-            relayService?.requestEventsFromAll(filter: filter)
-        }
     }
     
     static func updateFollows(pubKey: String, followKey: String, tags: [[String]], context: NSManagedObjectContext) {
@@ -85,7 +88,7 @@ enum CurrentUser {
             print("Error: No relay service")
             return
         }
-        
+
         var relayString = ""
         for relay in relays {
             relayString += "{\"\(relay)\":{\"write\":true,\"read\":true}"
@@ -98,42 +101,49 @@ enum CurrentUser {
         if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: PersistenceController.shared)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
                 relayService?.sendEventToAll(event: event)
             } catch {
                 print("failed to update Follows \(error.localizedDescription)")
             }
         }
-        
-        // Refresh contact list and meta data
-        let metadataFilter = Filter(authorKeys: [pubKey], kinds: [.metaData], limit: 1)
-        relayService?.requestEventsFromAll(filter: metadataFilter)
-        let contactListFilter = Filter(authorKeys: [followKey], kinds: [.contactList], limit: 1)
-        relayService?.requestEventsFromAll(filter: contactListFilter)
     }
     
     /// Follow by public hex key
-    static func follow(key: String, context: NSManagedObjectContext) {
-        guard let pubKey = publicKey else {
+    static func follow(author toFollow: Author, context: NSManagedObjectContext) {
+        guard let pubKey = publicKey, let followKey = toFollow.hexadecimalPublicKey else {
             print("Error: No pubkey for current user")
             return
         }
 
-        print("Following \(key)")
+        print("Following \(followKey)")
 
         var followKeys = follows?.compactMap { $0.destination?.hexadecimalPublicKey } ?? []
-        followKeys.append(key)
+        followKeys.append(followKey)
         let tags = followKeys.map { ["p", $0] }
         
-        updateFollows(pubKey: pubKey, followKey: key, tags: tags, context: context)
+        // Update author to add the new follow
+        if let followedAuthor = try? Author.find(by: followKey, context: context) {
+            // Add to the current user's follows
+            let follow = try! Follow.findOrCreate(source: author, destination: followedAuthor, context: context)
+            if let currentFollows = author.follows?.mutableCopy() as? NSMutableSet {
+                currentFollows.add(follow)
+                author.follows = currentFollows
+            }
+
+            // Add from the current user to the author's followers
+            if let followedAuthorFollowers = followedAuthor.followers?.mutableCopy() as? NSMutableSet {
+                followedAuthorFollowers.add(follow)
+                followedAuthor.followers = followedAuthorFollowers
+            }
+        }
         
-        // Refresh everyone's meta data and contact list
-        refreshHomeFeed()
+        updateFollows(pubKey: pubKey, followKey: followKey, tags: tags, context: context)
     }
     
     /// Unfollow by public hex key
-    static func unfollow(key unfollowedKey: String, context: NSManagedObjectContext) {
-        guard let pubKey = publicKey else {
+    static func unfollow(author toUnfollow: Author, context: NSManagedObjectContext) {
+        guard let pubKey = publicKey, let unfollowedKey = toUnfollow.hexadecimalPublicKey else {
             print("Error: No pubkey for current user")
             return
         }
@@ -144,7 +154,23 @@ enum CurrentUser {
             .compactMap { $0.destination?.hexadecimalPublicKey }
             .filter { $0 != unfollowedKey }
         let tags = stillFollowingKeys.map { ["p", $0] }
-
+        
+        // Update author to only follow those still following
+        if let unfollowedAuthor = try? Author.find(by: unfollowedKey, context: context) {
+            // Remove from the current user's follows
+            let unfollows = Follow.follows(source: author, destination: unfollowedAuthor, context: context)
+            if let currentFollows = author.follows?.mutableCopy() as? NSMutableSet {
+                currentFollows.remove(unfollows)
+                author.follows = currentFollows
+            }
+            
+            // Remove from the unfollowed author's followers
+            if let unfollowedAuthorFollowers = unfollowedAuthor.followers?.mutableCopy() as? NSMutableSet {
+                unfollowedAuthorFollowers.remove(unfollows)
+                unfollowedAuthor.followers = unfollowedAuthorFollowers
+            }
+        }
+        
         updateFollows(pubKey: pubKey, followKey: unfollowedKey, tags: tags, context: context)
 
         // Delete cached texts from this person

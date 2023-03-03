@@ -17,19 +17,40 @@ struct HomeFeedView: View {
 
     @EnvironmentObject var router: Router
     
-    let syncTimer = SyncTimer()
-    
-    @State private var authorsToSync: [Author] = []
-    
-    private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
+    private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.fetchRequest())
+
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
     
     private var user: Author?
+    
+    @State private var subscriptionIds: [String] = []
     
     init(user: Author?) {
         self.user = user
         if let user {
             eventRequest = FetchRequest(fetchRequest: Event.homeFeed(for: user))
+        }
+    }
+
+    func refreshHomeFeed() {
+        // Close out stale requests
+        if !subscriptionIds.isEmpty {
+            relayService.sendCloseToAll(subscriptions: subscriptionIds)
+            subscriptionIds.removeAll()
+        }
+
+        if let follows = CurrentUser.author.follows as? Set<Follow> {
+            let authors = follows.compactMap({ $0.destination?.hexadecimalPublicKey! })
+            
+            if !authors.isEmpty {
+                let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
+                let textSub = relayService.requestEventsFromAll(filter: textFilter)
+                subscriptionIds.append(textSub)
+                
+                let metaFilter = Filter(authorKeys: authors, kinds: [.metaData, .contactList], limit: 100)
+                let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
+                subscriptionIds.append(metaSub)
+            }
         }
     }
     
@@ -41,18 +62,6 @@ struct HomeFeedView: View {
                         VStack {
                             NoteButton(note: event)
                                 .padding(.horizontal)
-                        }
-                        .onAppear {
-                            // Error scenario: we have an event in core data without an author
-                            guard let author = event.author else {
-                                print("Event author is nil")
-                                return
-                            }
-                            
-                            if !author.isPopulated {
-                                print("Need to sync author: \(author.hexadecimalPublicKey ?? "")")
-                                authorsToSync.append(author)
-                            }
                         }
                     }
                 }
@@ -79,27 +88,14 @@ struct HomeFeedView: View {
         .task {
             CurrentUser.context = viewContext
             CurrentUser.relayService = relayService
-            
-            // TODO: Replace this with something more reliable
-            let seconds = 2.0
-            DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
-                CurrentUser.refreshHomeFeed()
-            }
+            refreshHomeFeed()
         }
         .refreshable {
-            #if DEBUG
-            print("Events: \(events.count)")
-            #endif
-            CurrentUser.refreshHomeFeed()
+            refreshHomeFeed()
         }
-        .onReceive(syncTimer.currentTimePublisher) { _ in
-            if !authorsToSync.isEmpty {
-                print("Syncing \(authorsToSync.count) authors")
-                let keys = authorsToSync.map({ $0.hexadecimalPublicKey! })
-                let filter = Filter(authorKeys: keys, kinds: [.metaData, .contactList], limit: 2 * authorsToSync.count)
-                relayService.requestEventsFromAll(filter: filter)
-                authorsToSync.removeAll()
-            }
+        .onDisappear {
+            relayService.sendCloseToAll(subscriptions: subscriptionIds)
+            subscriptionIds.removeAll()
         }
     }
 }
@@ -121,8 +117,11 @@ struct ContentView_Previews: PreviewProvider {
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
     static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
     
+    static var router = Router()
+    
     static var shortNote: Event {
         let note = Event(context: previewContext)
+        note.kind = 1
         note.content = "Hello, world!"
         note.author = user
         return note
@@ -130,6 +129,7 @@ struct ContentView_Previews: PreviewProvider {
     
     static var longNote: Event {
         let note = Event(context: previewContext)
+        note.kind = 1
         note.content = .loremIpsum(5)
         note.author = user
         return note
@@ -137,7 +137,7 @@ struct ContentView_Previews: PreviewProvider {
     
     static var user: Author {
         let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.pubKeyHex
+        author.hexadecimalPublicKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
         return author
     }
     
@@ -147,11 +147,13 @@ struct ContentView_Previews: PreviewProvider {
         }
         .environment(\.managedObjectContext, previewContext)
         .environmentObject(relayService)
+        .environmentObject(router)
         
         NavigationView {
             HomeFeedView(user: user)
         }
         .environment(\.managedObjectContext, emptyPreviewContext)
         .environmentObject(emptyRelayService)
+        .environmentObject(router)
     }
 }

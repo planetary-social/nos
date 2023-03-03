@@ -8,20 +8,19 @@
 import SwiftUI
 
 struct FollowButton: View {
+    @ObservedObject var currentUserAuthor: Author
     @ObservedObject var author: Author
     @Environment(\.managedObjectContext) private var viewContext
     
     var body: some View {
-        let isFollowing = CurrentUser.isFollowing(key: author.hexadecimalPublicKey!)
-        
         Button {
-            if isFollowing {
-                CurrentUser.unfollow(key: author.hexadecimalPublicKey!, context: viewContext)
+            if CurrentUser.isFollowing(author: author) {
+                CurrentUser.unfollow(author: author, context: viewContext)
             } else {
-                CurrentUser.follow(key: author.hexadecimalPublicKey!, context: viewContext)
+                CurrentUser.follow(author: author, context: viewContext)
             }
         } label: {
-            Text(isFollowing ? Localized.unfollow.string : Localized.follow.string)
+            Text(CurrentUser.isFollowing(author: author) ? Localized.unfollow.string : Localized.follow.string)
         }
     }
 }

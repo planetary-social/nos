@@ -15,8 +15,6 @@ struct PersistenceController {
         let controller = PersistenceController(inMemory: true)
         let viewContext = controller.container.viewContext
         PersistenceController.loadSampleData(context: viewContext)
-        let relay = Relay(context: viewContext)
-        relay.address = "wss://dev-relay.nos.social"
         
         do {
             try viewContext.save()
@@ -68,6 +66,8 @@ struct PersistenceController {
         })
         
         container.viewContext.automaticallyMergesChangesFromParent = true
+        let mergeType = NSMergePolicyType.mergeByPropertyObjectTrumpMergePolicyType
+        container.viewContext.mergePolicy = NSMergePolicy(merge: mergeType)
         
         if needsReload {
             self = PersistenceController(inMemory: inMemory)
@@ -88,7 +88,7 @@ struct PersistenceController {
         Event.deleteAll(context: context)
         context.reset()
         
-        guard let events = try? EventProcessor.parse(jsonData: sampleData, in: PersistenceController.shared) else {
+        guard let events = try? EventProcessor.parse(jsonData: sampleData, in: context) else {
             print("Error: Could not parse events")
             return
         }
@@ -100,7 +100,7 @@ struct PersistenceController {
         
         // Force follow sample data users; This will be wiped if you sync with a relay.
         let authors = Author.all(context: context)
-        let follows = try! context.fetch(Follow.follows(from: authors))
+        let follows = try! context.fetch(Follow.followsRequest(sources: authors))
         
         if let publicKey = CurrentUser.publicKey {
             let currentAuthor = try! Author.findOrCreate(by: publicKey, context: context)

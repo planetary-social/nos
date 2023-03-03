@@ -10,10 +10,11 @@ import SwiftUI
 import CoreData
 
 struct ProfileHeader: View {
-
     @ObservedObject var author: Author
-    
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var relayService: RelayService
+
+    @State private var subscriptionId: String = ""
 
     var followsRequest: FetchRequest<Follow>
     var followsResult: FetchedResults<Follow> { followsRequest.wrappedValue }
@@ -26,7 +27,15 @@ struct ProfileHeader: View {
     
     init(author: Author) {
         self.author = author
-        self.followsRequest = FetchRequest(fetchRequest: Follow.follows(from: [author]))
+        self.followsRequest = FetchRequest(fetchRequest: Follow.followsRequest(sources: [author]))
+    }
+    
+    func refreshFollows() {
+        if let follows = author.follows?.allObjects as? [Follow] {
+            let keys = follows.compactMap { $0.destination?.hexadecimalPublicKey }
+            let filter = Filter(authorKeys: keys, kinds: [.metaData, .contactList], limit: 100)
+            subscriptionId = relayService.requestEventsFromAll(filter: filter)
+        }
     }
 
     private var shouldShowBio: Bool {
@@ -58,14 +67,14 @@ struct ProfileHeader: View {
                                 .font(.title3.weight(.semibold))
                                 .foregroundColor(Color.primaryTxt)
                             Spacer()
-                            FollowButton(author: author)
+                            FollowButton(currentUserAuthor: CurrentUser.author, author: author)
                         }
                         Spacer()
 
                         Button {
                             router.path.append(follows)
                         } label: {
-                            Text("\(Localized.following.string): \(follows.count)")
+                            Text("\(Localized.following.string): \(author.follows?.count ?? 0)")
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -89,6 +98,13 @@ struct ProfileHeader: View {
         )
         .navigationDestination(for: Followed.self) { followed in
             FollowsView(followed: followed)
+        }
+        .task {
+            refreshFollows()
+        }
+        .onDisappear {
+            relayService.sendCloseToAll(subscriptions: [subscriptionId])
+            subscriptionId = ""
         }
     }
 }

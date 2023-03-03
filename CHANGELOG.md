@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Fixed follow / unfollow sync
+- Reduced number of REQ sent to relays
+- Added support for threads in reply views
 
 ## [0.1 (5)] 2023-03-02 
 
@@ -19,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change settings and onboarding to accept nsec-format private key
 - Fixed app crash when no user is passed to HomeFeedView initializer
 - Added ability to post a reply in thread view.
-- Only show direct replies in ThreadView
+- Fixed READ MORE Button
 
 ## [0.1 (4)] - 2023-02-24
 
