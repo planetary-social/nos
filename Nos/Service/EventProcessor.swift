@@ -6,23 +6,22 @@
 //
 
 import Foundation
+import CoreData
 
 /// The event processor consumes raw event data from the relays and writes it to Core Data.
 enum EventProcessor {    
-    static func parse(jsonObject: [String: Any], in persistenceController: PersistenceController) throws -> Event {
+    static func parse(jsonObject: [String: Any], in context: NSManagedObjectContext) throws -> Event {
         let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
         let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
-        return try parse(jsonEvent: jsonEvent, in: persistenceController)
+        return try parse(jsonEvent: jsonEvent, in: context)
     }
     
     // swiftlint:disable function_body_length
-    static func parse(jsonEvent: JSONEvent, in persistenceController: PersistenceController) throws -> Event {
+    static func parse(jsonEvent: JSONEvent, in parseContext: NSManagedObjectContext) throws -> Event {
 		guard let eventKind = EventKind(rawValue: jsonEvent.kind) else {
 			print("Error: unrecognized event kind: \(jsonEvent.kind)")
 			throw EventError.unrecognizedKind
 		}
-        
-        let parseContext = persistenceController.container.viewContext
 
         // Retain an existing event so we can modify it as needed with new data
         let event = Event.findOrCreate(jsonEvent: jsonEvent, context: parseContext)
@@ -100,12 +99,12 @@ enum EventProcessor {
     }
     // swiftlint:enable function_body_length
     
-    static func parse(jsonData: Data, in persistenceController: PersistenceController) throws -> [Event] {
+    static func parse(jsonData: Data, in context: NSManagedObjectContext) throws -> [Event] {
         let jsonEvents = try JSONDecoder().decode([JSONEvent].self, from: jsonData)
         var events = [Event]()
         for jsonEvent in jsonEvents {
             do {
-                let event = try parse(jsonEvent: jsonEvent, in: persistenceController)
+                let event = try parse(jsonEvent: jsonEvent, in: context)
                 events.append(event)
             } catch {
                 print("Error parsing eventJSON: \(jsonEvent): \(error.localizedDescription)")
@@ -113,5 +112,10 @@ enum EventProcessor {
         }
         
         return events
+    }
+    
+    static func parse(jsonData: Data, in persistenceController: PersistenceController) throws -> [Event] {
+        let parseContext = persistenceController.container.viewContext
+        return try parse(jsonData: jsonData, in: parseContext)
     }
 }
