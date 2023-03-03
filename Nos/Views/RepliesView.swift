@@ -13,8 +13,6 @@ struct RepliesView: View {
     
     @EnvironmentObject var router: Router
 
-    @State private var authorsToSync: [Author] = []
-    
     @State private var reply = ""
     
     @State private var alert: AlertState<Never>?
@@ -46,30 +44,7 @@ struct RepliesView: View {
                     NoteButton(note: note)
                         .padding(.horizontal)
                     ForEach(directReplies.reversed()) { event in
-                        VStack {
-                            ZStack {
-                                Path { path in
-                                    path.move(to: CGPoint(x: 35, y: -4))
-                                    path.addLine(to: CGPoint(x: 35, y: 15))
-                                }
-                                .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                                .fill(Color.secondaryTxt)
-                                NoteButton(note: event)
-                                    .padding(.horizontal)
-                            }
-                            .onAppear {
-                                // Error scenario: we have an event in core data without an author
-                                guard let author = event.author else {
-                                    print("Event author is nil")
-                                    return
-                                }
-                                
-                                if !author.isPopulated {
-                                    print("Need to sync author: \(author.hexadecimalPublicKey ?? "")")
-                                    authorsToSync.append(author)
-                                }
-                            }
-                        }
+                        ThreadView(root: event, allReplies: replies.reversed())
                     }
                 }
             }
@@ -146,7 +121,7 @@ struct RepliesView: View {
         }
     }
 }
-struct ThreadView_Previews: PreviewProvider {
+struct RepliesView_Previews: PreviewProvider {
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
     
