@@ -17,6 +17,7 @@ struct NoteButton: View {
     var style = CardStyle.compact
 
     @EnvironmentObject private var router: Router
+    @EnvironmentObject private var relayService: RelayService
 
     var body: some View {
         if let author = note.author {

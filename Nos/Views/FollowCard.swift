@@ -35,7 +35,7 @@ struct FollowCard: View {
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         Spacer()
-                        FollowButton(author: author)
+                        FollowButton(currentUserAuthor: CurrentUser.author, author: author)
                     }
                 }
                 // TODO: Put MessageOptionsButton back here eventually

@@ -22,6 +22,13 @@ struct DiscoverView: View {
     
     @Namespace private var animation
     
+    @State private var subscriptionId: String = ""
+    
+    func refreshDiscover() {
+        let filter = Filter(kinds: [.text], limit: 100)
+        subscriptionId = relayService.requestEventsFromAll(filter: filter)
+    }
+    
     var body: some View {
         NavigationStack(path: $router.path) {
             StaggeredGrid(list: events, columns: columns) { note in
@@ -47,10 +54,14 @@ struct DiscoverView: View {
             }
             .animation(.easeInOut, value: columns)
             .refreshable {
-                load()
+                refreshDiscover()
             }
             .task {
-                load()
+                refreshDiscover()
+            }
+            .onDisappear {
+                relayService.sendCloseToAll(subscriptions: [subscriptionId])
+                subscriptionId = ""
             }
             .navigationDestination(for: Event.self) { note in
                 ThreadView(note: note)
@@ -64,11 +75,6 @@ struct DiscoverView: View {
                 }
             }
         }
-    }
-    
-    func load() {
-        let filter = Filter(kinds: [.text], limit: 100)
-        relayService.requestEventsFromAll(filter: filter)
     }
 }
 
