@@ -15,7 +15,15 @@ struct FollowsView: View {
     @EnvironmentObject var router: Router
     
     var followed: Followed
-
+    
+    @State private var subscriptionId: String = ""
+    
+    func refreshFollows() {
+        let keys = followed.compactMap { $0.destination?.hexadecimalPublicKey }
+        let filter = Filter(authorKeys: keys, kinds: [.metaData, .contactList], limit: 100)
+        subscriptionId = relayService.requestEventsFromAll(filter: filter)
+    }
+    
     var body: some View {
         ScrollView(.vertical) {
             LazyVStack {
@@ -32,6 +40,13 @@ struct FollowsView: View {
         .navigationBarBackButtonHidden(true)
         .onAppear {
             router.navigationTitle = "Follows"
+        }
+        .task {
+            refreshFollows()
+        }
+        .onDisappear {
+            relayService.sendCloseToAll(subscriptions: [subscriptionId])
+            subscriptionId = ""
         }
     }
 }

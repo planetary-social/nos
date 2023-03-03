@@ -23,10 +23,31 @@ struct HomeFeedView: View {
     
     private var user: Author?
     
+    @State private var subscriptionIds: [String] = []
+    
     init(user: Author?) {
         self.user = user
         if let user {
             eventRequest = FetchRequest(fetchRequest: Event.homeFeed(for: user))
+        }
+    }
+
+    func refreshHomeFeed() {
+        var authors = CurrentUser.follows?.compactMap { $0.destination?.hexadecimalPublicKey } ?? []
+        
+        // Follow myself too
+        if let pubKey = CurrentUser.publicKey {
+            authors.append(pubKey)
+        }
+
+        if !authors.isEmpty {
+            let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
+            let textSub = relayService.requestEventsFromAll(filter: textFilter)
+            subscriptionIds.append(textSub)
+            
+            let metaFilter = Filter(authorKeys: authors, kinds: [.metaData, .contactList], limit: 100)
+            let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
+            subscriptionIds.append(metaSub)
         }
     }
     
@@ -63,21 +84,15 @@ struct HomeFeedView: View {
         }
         .task {
             CurrentUser.context = viewContext
-            
-            // TODO: This wipes follows in a didSet, which breaks sample data preload
             CurrentUser.relayService = relayService
-            
-            // TODO: Replace this with something more reliable
-            let seconds = 2.0
-            DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
-                CurrentUser.refreshHomeFeed()
-            }
+            refreshHomeFeed()
         }
         .refreshable {
-            #if DEBUG
-            print("Events: \(events.count)")
-            #endif
-            CurrentUser.refreshHomeFeed()
+            refreshHomeFeed()
+        }
+        .onDisappear {
+            relayService.sendCloseToAll(subscriptions: subscriptionIds)
+            subscriptionIds.removeAll()
         }
     }
 }

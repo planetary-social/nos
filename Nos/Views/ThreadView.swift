@@ -10,8 +10,6 @@ import SwiftUI
 struct ThreadView: View {
     @EnvironmentObject var router: Router
 
-    @State private var authorsToSync: [Author] = []
-    
     var repliesRequest: FetchRequest<Event>
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
     
@@ -37,18 +35,6 @@ struct ThreadView: View {
                             }
                             NoteButton(note: event)
                                 .padding(.horizontal)
-                        }
-                        .onAppear {
-                            // Error scenario: we have an event in core data without an author
-                            guard let author = event.author else {
-                                print("Event author is nil")
-                                return
-                            }
-                            
-                            if !author.isPopulated {
-                                print("Need to sync author: \(author.hexadecimalPublicKey ?? "")")
-                                authorsToSync.append(author)
-                            }
                         }
                     }
                 }

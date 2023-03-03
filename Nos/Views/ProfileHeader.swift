@@ -12,6 +12,9 @@ import CoreData
 struct ProfileHeader: View {
     @ObservedObject var author: Author
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var relayService: RelayService
+
+    @State private var subscriptionId: String = ""
 
     var followsRequest: FetchRequest<Follow>
     var followsResult: FetchedResults<Follow> { followsRequest.wrappedValue }
@@ -25,12 +28,13 @@ struct ProfileHeader: View {
     init(author: Author) {
         self.author = author
         self.followsRequest = FetchRequest(fetchRequest: Follow.followsRequest(sources: [author]))
-        
-        // Request info from the follows
+    }
+    
+    func refreshFollows() {
         if let follows = author.follows?.allObjects as? [Follow] {
             let keys = follows.compactMap { $0.destination?.hexadecimalPublicKey }
-            let filter = Filter(authorKeys: keys, kinds: [.text, .metaData, .contactList], limit: 100)
-            CurrentUser.relayService?.requestEventsFromAll(filter: filter)
+            let filter = Filter(authorKeys: keys, kinds: [.metaData, .contactList], limit: 100)
+            subscriptionId = relayService.requestEventsFromAll(filter: filter)
         }
     }
 
@@ -94,6 +98,13 @@ struct ProfileHeader: View {
         )
         .navigationDestination(for: Followed.self) { followed in
             FollowsView(followed: followed)
+        }
+        .task {
+            refreshFollows()
+        }
+        .onDisappear {
+            relayService.sendCloseToAll(subscriptions: [subscriptionId])
+            subscriptionId = ""
         }
     }
 }

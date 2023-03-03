@@ -47,14 +47,6 @@ enum CurrentUser {
     static var follows: Set<Follow>? {
         didSet {
             print("Following: \(follows?.count ?? 0)")
-            
-            if let newFollows = follows?.map({ $0.destination!.hexadecimalPublicKey! }) {
-                // Follow me too
-                var allFollows = newFollows
-                allFollows.append(publicKey!)
-                let metadataFilter = Filter(authorKeys: allFollows, kinds: [.text, .metaData, .contactList], limit: 100)
-                relayService?.requestEventsFromAll(filter: metadataFilter)
-            }
         }
     }
     
@@ -65,18 +57,6 @@ enum CurrentUser {
         
         let followKeys = following.compactMap { $0.destination?.hexadecimalPublicKey }
         return followKeys.contains(key)
-    }
-    
-    static func refreshHomeFeed() {
-        var authors = follows?.compactMap { $0.destination?.hexadecimalPublicKey } ?? []
-        if let pubKey = publicKey {
-            authors.append(pubKey)
-        }
-
-        if !authors.isEmpty {
-            let filter = Filter(authorKeys: authors, kinds: [.text, .metaData, .contactList], limit: 100)
-            relayService?.requestEventsFromAll(filter: filter)
-        }
     }
     
     static func updateFollows(pubKey: String, followKey: String, tags: [[String]], context: NSManagedObjectContext) {
@@ -135,9 +115,6 @@ enum CurrentUser {
         }
         
         updateFollows(pubKey: pubKey, followKey: followKey, tags: tags, context: context)
-        
-        // Refresh everyone's meta data and contact list
-        refreshHomeFeed()
     }
     
     /// Unfollow by public hex key

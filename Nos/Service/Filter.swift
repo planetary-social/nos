@@ -16,9 +16,9 @@ final class Filter: Hashable {
     }
     private var kinds: [EventKind]
     private var limit: Int
-    
-    // For closing redundant requests; not part of hash
-    var uuid: String = ""
+
+    // For closing requests; not part of hash
+    var subscriptionId: String = ""
 
     init(authorKeys: [String] = [], kinds: [EventKind] = [], pTags: [String] = [], limit: Int = 100) {
         self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
