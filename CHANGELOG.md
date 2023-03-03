@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed empty home feed message so it doesn't overlay other views
 - Change settings and onboarding to accept nsec-format private key
 - Fixed app crash when no user is passed to HomeFeedView initializer
+- Added ability to post a reply in thread view.
 
 ## [0.1 (4)] - 2023-02-24
 
