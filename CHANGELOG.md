@@ -6,16 +6,19 @@ We define "Noteworthy changes" as 1) user-facing features or bugfixes 2) signifi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] 
+## [Unreleased]
+
+## [0.1 (5)] 2023-03-02 
 
 - Added a Discover tab that shows all events from all relays.
 - Core Data will now be wiped whenever we change the data model, which is often. This speeds up our development process, but you will have to re-enter your relays when this happens.
 - Change the home feed so that it shows the CurrentUser's notes always.
 - Preload sample_data into core data for DEBUG builds
-- Shows all the replies to an event in NoteCards below the root note on this screen.
+- Added a screen to show all the replies to a note.
 - Fixed empty home feed message so it doesn't overlay other views
 - Change settings and onboarding to accept nsec-format private key
 - Fixed app crash when no user is passed to HomeFeedView initializer
+- Added ability to post a reply in thread view.
 
 ## [0.1 (4)] - 2023-02-24
 
