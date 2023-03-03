@@ -8,14 +8,21 @@
 import Foundation
 
 /// For REQ
-final class Filter {
-    private var authorKeys: [String]
+final class Filter: Hashable {
+    private var authorKeys: [String] {
+        didSet {
+            print("Override author keys to: \(authorKeys)")
+        }
+    }
     private var kinds: [EventKind]
     private var limit: Int
 
+    // For closing requests; not part of hash
+    var subscriptionId: String = ""
+
     init(authorKeys: [String] = [], kinds: [EventKind] = [], pTags: [String] = [], limit: Int = 100) {
-        self.authorKeys = authorKeys
-        self.kinds = kinds
+        self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
+        self.kinds = kinds.sorted(by: { $0.rawValue > $1.rawValue })
         self.limit = limit
     }
     
@@ -29,7 +36,17 @@ final class Filter {
         if !kinds.isEmpty {
             filterDict["kinds"] = kinds.map({ $0.rawValue })
         }
-        
+
         return filterDict
+    }
+
+    static func == (lhs: Filter, rhs: Filter) -> Bool {
+        lhs.authorKeys == rhs.authorKeys && lhs.kinds == rhs.kinds && lhs.limit == rhs.limit
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(authorKeys)
+        hasher.combine(kinds)
+        hasher.combine(limit)
     }
 }
