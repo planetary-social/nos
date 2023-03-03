@@ -45,6 +45,7 @@ struct RelayView: View {
                     #endif
                     Button(Localized.save.string) {
                         addRelay()
+                        CurrentUser.subscribe()
                     }
                 }
                 if relays.isEmpty {

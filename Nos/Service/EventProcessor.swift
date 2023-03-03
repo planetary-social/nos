@@ -32,63 +32,6 @@ enum EventProcessor {
             throw EventError.missingAuthor
         }
         
-        event.allTags = jsonEvent.tags as NSObject
-        
-        switch eventKind {
-        case .contactList:
-            var eventFollows = Set<Follow>()
-            for jsonTag in jsonEvent.tags {
-                do {
-                    eventFollows.insert(try Follow.upsert(by: event.author!, jsonTag: jsonTag, context: parseContext))
-                } catch {
-                    print("could not parse Follow from: \(jsonEvent)")
-                }
-            }
-            
-            // TODO: we need to delete Follows for keys that were removed from the follow list here
-            
-            // In the special case that we've requested our own follows, set it on the profile
-            if let author = event.author, author.hexadecimalPublicKey == CurrentUser.publicKey {
-                CurrentUser.follows = eventFollows
-            }
-
-        case .metaData:
-            if let contentData = jsonEvent.content.data(using: .utf8) {
-                do {
-                    let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
-                    
-                    // Every event has an author created, so it just needs to be populated
-                    if let author = event.author {
-                        author.name = metadata.name
-                        author.displayName = metadata.displayName
-                        author.about = metadata.about
-                        author.profilePhotoURL = metadata.profilePhotoURL
-                    }
-                } catch {
-                    print("Failed to decode kind \(eventKind) event with ID \(String(describing: event.identifier))")
-                }
-            }
-
-        default:
-            let eventReferences = NSMutableOrderedSet()
-            let authorReferences = NSMutableOrderedSet()
-            for jsonTag in jsonEvent.tags {
-                if jsonTag.first == "e" {
-                    let eTag = EventReference(context: parseContext)
-                    eTag.eventId = jsonTag[safe: 1]
-                    eTag.recommendedRelayUrl = jsonTag[safe: 2]
-                    eTag.marker = jsonTag[safe: 3]
-                    eventReferences.add(eTag)
-                } else {
-                    let authorReference = AuthorReference(context: parseContext)
-                    authorReference.pubkey = jsonTag[safe: 1]
-                    authorReference.recommendedRelayUrl = jsonTag[safe: 2]
-                }
-            }
-            event.eventReferences = eventReferences
-            event.authorReferences = authorReferences
-        }
-        
         guard try publicKey.verifySignature(on: event) else {
             parseContext.delete(event)
             print("Invalid signature on event: \(jsonEvent)")
