@@ -156,9 +156,10 @@ final class EventTests: XCTestCase {
         }
 
         let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
+        let context = PersistenceController(inMemory: true).container.viewContext
 
         // Act
-        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, in: PersistenceController(inMemory: true))
+        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
          
         // Assert
         XCTAssertEqual(parsedEvent.signature, sampleContactListSignature)
