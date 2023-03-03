@@ -154,11 +154,7 @@ final class RelayService: WebSocketDelegate, ObservableObject {
         openSocketsForRelays()
         
         for subscription in subscriptions {
-            // Remove this filter from the queue
-            if let foundFilter = requestFilterSet.first(where: { $0.subscriptionId == subscription }) {
-                requestFilterSet.remove(foundFilter)
-            }
-
+            removeFilter(for: subscription)
             sockets.forEach { sendClose(from: $0, subscription: subscription) }
         }
     }
@@ -187,6 +183,52 @@ final class RelayService: WebSocketDelegate, ObservableObject {
         }
     }
     
+    func removeFilter(for subscription: String) {
+        // Remove this filter from the queue
+        if let foundFilter = requestFilterSet.first(where: { $0.subscriptionId == subscription }) {
+            requestFilterSet.remove(foundFilter)
+        }
+    }
+    
+    func parseEOSE(_ responseArray: [Any]) {
+        guard responseArray.count > 1 else {
+            return
+        }
+        
+        if let subId = responseArray[1] as? String {
+            print("\(subId) has finished responding")
+        }
+    }
+    
+    func parseEvent(_ responseArray: [Any]) {
+        guard responseArray.count >= 3 else {
+            print("got invalid EVENT response: \(responseArray)")
+            return
+        }
+        
+        guard let eventJSON = responseArray[2] as? [String: Any] else {
+            print("got invalid EVENT JSON: \(responseArray)")
+            return
+        }
+        
+        do {
+            _ = try EventProcessor.parse(jsonObject: eventJSON, in: persistenceController.container.viewContext)
+        } catch {
+            print("error parsing event from relay: \(responseArray)")
+        }
+    }
+    
+    func parseOK(_ responseArray: [Any]) {
+        guard responseArray.count > 2 else {
+            return
+        }
+        
+        if let result = responseArray[2] as? Bool, let subId = responseArray[1] as? String {
+            let resultString = result ? "sent succesfully" : "failed"
+            print("\(subId) has \(resultString)")
+        }
+    }
+    
     func parseResponse(_ response: String) {
         do {
             guard let responseData = response.data(using: .utf8) else {
@@ -200,23 +242,13 @@ final class RelayService: WebSocketDelegate, ObservableObject {
             }
             switch responseType {
             case "EVENT":
-                guard responseArray.count >= 3 else {
-                    print("got invalid EVENT response: \(response)")
-                    return
-                }
-                
-                guard let eventJSON = responseArray[2] as? [String: Any] else {
-                    print("got invalid EVENT JSON: \(response)")
-                    return
-                }
-                
-                do {
-                    _ = try EventProcessor.parse(jsonObject: eventJSON, in: persistenceController.container.viewContext)
-                } catch {
-                    print("error parsing event from relay: \(response)")
-                }
+                parseEvent(responseArray)
             case "NOTICE":
                 print(response)
+            case "EOSE":
+                parseEOSE(responseArray)
+            case "OK":
+                parseOK(responseArray)
             default:
                 print("got unknown response type: \(response)")
             }
