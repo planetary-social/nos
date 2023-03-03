@@ -129,11 +129,11 @@ final class RelayService: WebSocketDelegate, ObservableObject {
         
         requestQueue.insert(filter)
         print("📡\(requestQueue.count) outstanding requests")
-        sockets.forEach { requestEvents(from: $0, filter: filter) }
-
         for request in requestQueue {
             print("📡: \(request.dictionary)")
         }
+
+        sockets.forEach { requestEvents(from: $0, filter: filter) }
     }
     
     func sendEvent(from client: WebSocketClient, event: Event) {

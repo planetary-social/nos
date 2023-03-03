@@ -138,11 +138,11 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    class func findOrCreate(jsonEvent: JSONEvent, context: NSManagedObjectContext) -> Event {
+    class func findOrCreate(jsonEvent: JSONEvent, context: NSManagedObjectContext) -> Event? {
         if let existingEvent = try? context.fetch(Event.event(by: jsonEvent.id)).first {
             return existingEvent
         } else {
-            return Event(context: context, jsonEvent: jsonEvent)
+            return try? Event(context: context, jsonEvent: jsonEvent)
         }
     }
     
@@ -210,7 +210,7 @@ public class Event: NosManagedObject {
     }
 	
     // swiftlint:disable function_body_length
-	convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) {
+	convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) throws {
 		self.init(context: context)
 		
 		// Meta data
@@ -225,8 +225,7 @@ public class Event: NosManagedObject {
         
 		// Author
         guard let newAuthor = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context) else {
-            print("Error: Couldn't make new author")
-            return
+            throw EventError.missingAuthor
         }
         
         author = newAuthor
@@ -235,8 +234,7 @@ public class Event: NosManagedObject {
         print("\(author!.hexadecimalPublicKey!) last updated \(author!.lastUpdated!)")
 
         guard let eventKind = EventKind(rawValue: kind) else {
-            print("Error: Unknown kind")
-            return
+            throw EventError.unrecognizedKind
         }
 
         switch eventKind {

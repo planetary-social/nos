@@ -19,7 +19,9 @@ enum EventProcessor {
         let parseContext = persistenceController.container.viewContext
 
         // Retain an existing event so we can modify it as needed with new data
-        let event = Event.findOrCreate(jsonEvent: jsonEvent, context: parseContext)
+        guard let event = Event.findOrCreate(jsonEvent: jsonEvent, context: parseContext) else {
+            throw EventError.jsonEncoding
+        }
 
         // Verify
         guard let publicKey = event.author?.publicKey else {
