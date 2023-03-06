@@ -22,8 +22,8 @@
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="identifier" attributeType="String"/>
         <attribute name="kind" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="sendAttempts" optional="YES" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="signature" attributeType="String"/>
-        <attribute name="userCreated" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="events" inverseEntity="Author"/>
         <relationship name="authorReferences" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="AuthorReference" inverseName="event" inverseEntity="AuthorReference"/>
         <relationship name="eventReferences" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="EventReference" inverseName="event" inverseEntity="EventReference"/>

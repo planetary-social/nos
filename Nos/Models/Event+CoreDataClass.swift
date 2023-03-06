@@ -91,7 +91,8 @@ public class Event: NosManagedObject {
     @nonobjc public class func allUserPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(format: "kind = %i AND userCreated = true", eventKind.rawValue)
+        let kind = eventKind.rawValue
+        fetchRequest.predicate = NSPredicate(format: "kind = %i AND sendAttempts > 0 AND sendAttempts < 5", kind)
         return fetchRequest
     }
     
@@ -265,7 +266,7 @@ public class Event: NosManagedObject {
 		identifier = jsonEvent.id
 		kind = jsonEvent.kind
 		signature = jsonEvent.signature
-        userCreated = false
+        sendAttempts = 0
         
         // Tags
         allTags = jsonEvent.tags as NSObject

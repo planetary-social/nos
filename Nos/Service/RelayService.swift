@@ -231,8 +231,8 @@ extension RelayService {
 extension RelayService {
     func publish(from client: WebSocketClient, event: Event) {
         do {
-            // Keep track of this so if it fails we can retry
-            event.userCreated = true
+            // Keep track of this so if it fails we can retry N times
+            event.sendAttempts += 1
             let request: [Any] = ["EVENT", event.jsonRepresentation!]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
