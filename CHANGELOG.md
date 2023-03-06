@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added ability to post a reply in thread view.
 - Fixed READ MORE Button
 - Filter the Home Feed down to root posts
+- In the Discover tab, display a feed of interesting people
 
 ## [0.1 (4)] - 2023-02-24
 
