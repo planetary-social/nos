@@ -15,12 +15,31 @@ struct ProfileView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     
+    @EnvironmentObject private var relayService: RelayService
+    
+    @State private var subscriptionIds: [String] = []
+    
     @FetchRequest
     private var events: FetchedResults<Event>
     
     init(author: Author) {
         self.author = author
         _events = FetchRequest(fetchRequest: author.allPostsRequest())
+    }
+    
+    func refreshProfileFeed() {
+        // Close out stale requests
+        if !subscriptionIds.isEmpty {
+            relayService.sendCloseToAll(subscriptions: subscriptionIds)
+            subscriptionIds.removeAll()
+        }
+
+        if let currentUserPublicKey = CurrentUser.author.hexadecimalPublicKey {
+            let authors = [currentUserPublicKey]
+            let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
+            let textSub = relayService.requestEventsFromAll(filter: textFilter)
+            subscriptionIds.append(textSub)
+        }
     }
     
     var body: some View {
@@ -51,6 +70,16 @@ struct ProfileView: View {
         .navigationBarBackButtonHidden(true)
         .onAppear {
             router.navigationTitle = Localized.profile.rawValue
+        }
+        .task {
+            refreshProfileFeed()
+        }
+        .refreshable {
+            refreshProfileFeed()
+        }
+        .onDisappear {
+            relayService.sendCloseToAll(subscriptions: subscriptionIds)
+            subscriptionIds.removeAll()
         }
     }
 }
