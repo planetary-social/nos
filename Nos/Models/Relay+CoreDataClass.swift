@@ -24,17 +24,30 @@ public class Relay: NosManagedObject {
         return fetchRequest
     }
     
-    class func findOrCreate(by address: HexadecimalString, context: NSManagedObjectContext) -> Relay {
+    class func findOrCreate(by address: String, context: NSManagedObjectContext) -> Relay {
         if let existingRelay = try? context.fetch(Relay.relay(by: address)).first {
             return existingRelay
         } else {
             let relay = Relay(context: context)
             relay.address = address
+            relay.createdAt = Date.now
             return relay
         }
     }
     
     var jsonRepresentation: String? {
         address
+    }
+    
+    class func all(context: NSManagedObjectContext) -> [Relay] {
+        let allRequest = Relay.allRelaysRequest()
+        
+        do {
+            let results = try context.fetch(allRequest)
+            return results
+        } catch let error as NSError {
+            print("Failed to fetch relays. Error: \(error.description)")
+            return []
+        }
     }
 }

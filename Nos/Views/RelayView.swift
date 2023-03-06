@@ -78,6 +78,7 @@ struct RelayView: View {
             
             let relay = Relay(context: viewContext)
             relay.address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+            relay.createdAt = Date.now
             newRelayAddress = ""
 
             do {

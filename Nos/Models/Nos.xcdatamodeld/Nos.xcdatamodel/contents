@@ -22,10 +22,12 @@
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="identifier" attributeType="String"/>
         <attribute name="kind" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="sendAttempts" optional="YES" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="signature" attributeType="String"/>
         <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="events" inverseEntity="Author"/>
         <relationship name="authorReferences" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="AuthorReference" inverseName="event" inverseEntity="AuthorReference"/>
         <relationship name="eventReferences" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="EventReference" inverseName="event" inverseEntity="EventReference"/>
+        <relationship name="publishedTo" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay"/>
     </entity>
     <entity name="EventReference" representedClassName="EventReference" syncable="YES" codeGenerationType="category">
         <attribute name="eventId" optional="YES" attributeType="String"/>
@@ -42,5 +44,6 @@
     </entity>
     <entity name="Relay" representedClassName=".Relay" syncable="YES" codeGenerationType="category">
         <attribute name="address" attributeType="String"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
 </model>
