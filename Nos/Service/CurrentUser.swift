@@ -33,12 +33,6 @@ enum CurrentUser {
     
     static var relayService: RelayService? {
         didSet {
-            // Load contact list into memory from Core Data
-            if let context = context,
-                let author = author(in: context),
-                let follows = author.follows as? Set<Follow> {
-                    CurrentUser.follows = follows
-            }
             subscribe()
         }
     }
@@ -48,9 +42,7 @@ enum CurrentUser {
     }
     
     static var follows: Set<Follow>? {
-        didSet {
-            print("Following: \(follows?.count ?? 0)")
-        }
+        author.follows as? Set<Follow>
     }
     
     static func subscribe() {
@@ -102,7 +94,7 @@ enum CurrentUser {
             do {
                 try jsonEvent.sign(withKey: pair)
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
-                relayService?.sendEventToAll(event: event)
+                relayService?.publishToAll(event: event)
             } catch {
                 print("failed to update Follows \(error.localizedDescription)")
             }
