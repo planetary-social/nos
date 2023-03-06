@@ -46,7 +46,7 @@ struct NotificationsView: View {
             }
             .padding(.top, 1)
             .navigationDestination(for: Event.self) { note in
-                ThreadView(note: note)
+                RepliesView(note: note)
             }
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
