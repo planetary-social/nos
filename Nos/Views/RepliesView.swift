@@ -114,7 +114,6 @@ struct RepliesView: View {
                 
             try event.sign(withKey: keyPair)
             relayService.publishToAll(event: event)
-            }
         } catch {
             alert = AlertState(title: {
                 TextState(Localized.error.string)
