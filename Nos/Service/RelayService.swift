@@ -177,7 +177,7 @@ extension RelayService {
             
             if let event = Event.find(by: eventId, context: objectContext) {
                 if success {
-                    print("\(eventId) has sent successfully")
+                    print("\(eventId) has sent successfully to \(socketUrl)")
                     let relay = Relay.findOrCreate(by: socketUrl, context: objectContext)
                     if let pubRelays = event.publishedTo?.mutableCopy() as? NSMutableSet {
                         pubRelays.add(relay)
@@ -264,7 +264,7 @@ extension RelayService {
                 guard let missedAddress = missedRelay.address else { continue }
                 if let index = sockets.firstIndex(where: { $0.request.url!.absoluteString == missedAddress }) {
                     // Publish again to this socket
-                    print("Republishing \(event.identifier!)")
+                    print("Republishing \(event.identifier!) on \(missedAddress)")
                     publish(from: sockets[index], event: event)
                 }
             }
