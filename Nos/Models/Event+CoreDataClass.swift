@@ -204,7 +204,7 @@ public class Event: NosManagedObject {
     
     class func findOrCreate(jsonEvent: JSONEvent, context: NSManagedObjectContext) throws -> Event {
         if let existingEvent = try context.fetch(Event.event(by: jsonEvent.id)).first,
-           !existingEvent.isStub {
+            !existingEvent.isStub {
             return existingEvent
         } else {
             return try Event(context: context, jsonEvent: jsonEvent)
@@ -268,10 +268,10 @@ public class Event: NosManagedObject {
     
     var codable: JSONEvent? {
         guard let identifier = identifier,
-              let pubKey = author?.hexadecimalPublicKey,
-              let createdAt = createdAt,
-              let content = content,
-              let signature = signature else {
+            let pubKey = author?.hexadecimalPublicKey,
+            let createdAt = createdAt,
+            let content = content,
+            let signature = signature else {
             return nil
         }
         

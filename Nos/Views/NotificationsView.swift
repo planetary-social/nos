@@ -63,7 +63,8 @@ struct NotificationCard: View {
     
     private let note: Event
     private let user: Author
-    private let headerText: String?
+    private let actionText: String?
+    private let authorName: String
     
     @EnvironmentObject private var router: Router
     
@@ -71,14 +72,14 @@ struct NotificationCard: View {
         self.note = note
         self.user = user
         
-        let authorName = note.author?.safeName ?? "someone"
+        authorName = note.author?.safeName ?? "someone"
         
         if note.isReply(to: user) {
-            headerText = "\(authorName) replied to your note:"
+            actionText = "replied to your note:"
         } else if note.references(author: user) {
-            headerText = "\(authorName) mentioned you:"
+            actionText = "mentioned you:"
         } else {
-            headerText = nil
+            actionText = nil
         }
     }
     
@@ -91,12 +92,15 @@ struct NotificationCard: View {
                     AvatarView(imageUrl: author.profilePhotoURL, size: 40)
                     
                     VStack {
-                        if let headerText {
-                            HStack {
-                                Text(headerText)
+                        if let actionText {
+                            HStack(spacing: 4) {
+                                Text(authorName)
+                                    .font(.body)
+                                    .bold()
+                                    .foregroundColor(.primaryTxt)
+                                Text(actionText)
                                     .font(.body)
                                     .foregroundColor(.primaryTxt)
-                                    .accentColor(.accent)
                                 Spacer()
                             }
                         }
@@ -105,7 +109,12 @@ struct NotificationCard: View {
                                 .lineLimit(1)
                                 .font(.body)
                                 .foregroundColor(.primaryTxt)
-                                .accentColor(.accent)
+                            if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
+                                Text("8h")
+                                    .lineLimit(1)
+                                    .font(.body)
+                                    .foregroundColor(.secondaryTxt)
+                            }
                             Spacer()
                         }
                     }
@@ -180,7 +189,7 @@ struct NotificationsView_Previews: PreviewProvider {
         try! bobNote.sign(withKey: KeyFixture.bob)
         
         let replyNote = Event(context: context)
-        replyNote.content = "Top of the morning to you, bob!"
+        replyNote.content = "Top of the morning to you, bob! This text should be truncated."
         replyNote.kind = 1
         replyNote.createdAt = .now
         replyNote.author = alice

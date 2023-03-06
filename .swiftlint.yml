@@ -138,6 +138,8 @@ identifier_name:
     - rgb
     - tag
     - hex
+    - to
+    - day
 number_separator:
   minimum_length: 5
 cyclomatic_complexity:
