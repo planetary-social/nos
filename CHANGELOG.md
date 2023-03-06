@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reduced number of REQ sent to relays
 - Request profile metadata for users displayed on the Discover tab
 - Cleanup RelayService
+- Render user avatar on Profile screen
+- Added support for threads in reply views
 - Retry failed Event sends every 2 minutes (max 5 retries)
 
 ## [0.1 (5)] 2023-03-02 

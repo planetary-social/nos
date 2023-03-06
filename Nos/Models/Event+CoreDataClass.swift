@@ -106,6 +106,16 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func allReplies(toEventWith id: String) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: replyEventReferences,
+            id
+        )
+        return fetchRequest
+    }
+    
     @nonobjc public class func event(by identifier: String) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
