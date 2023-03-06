@@ -40,9 +40,13 @@ struct ProfileView: View {
             let textSub = relayService.requestEventsFromAll(filter: textFilter)
             subscriptionIds.append(textSub)
             
-            let metaFilter = Filter(authorKeys: authors, kinds: [.metaData, .contactList], limit: 10)
+            let metaFilter = Filter(authorKeys: authors, kinds: [.metaData], limit: 1)
             let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
             subscriptionIds.append(metaSub)
+            
+            let contactFilter = Filter(authorKeys: authors, kinds: [.contactList], limit: 1)
+            let contactSub = relayService.requestEventsFromAll(filter: contactFilter)
+            subscriptionIds.append(contactSub)
         }
     }
     
