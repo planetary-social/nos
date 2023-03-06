@@ -88,6 +88,13 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func allUserPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = NSPredicate(format: "kind = %i AND userCreated = true", eventKind.rawValue)
+        return fetchRequest
+    }
+    
     @nonobjc public class func allReplies(to rootEvent: Event) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
@@ -258,6 +265,7 @@ public class Event: NosManagedObject {
 		identifier = jsonEvent.id
 		kind = jsonEvent.kind
 		signature = jsonEvent.signature
+        userCreated = false
         
         // Tags
         allTags = jsonEvent.tags as NSObject
@@ -339,6 +347,18 @@ public class Event: NosManagedObject {
     
     class func all(context: NSManagedObjectContext) -> [Event] {
         let allRequest = Event.allPostsRequest()
+        
+        do {
+            let results = try context.fetch(allRequest)
+            return results
+        } catch let error as NSError {
+            print("Failed to fetch events. Error: \(error.description)")
+            return []
+        }
+    }
+    
+    class func allByUser(context: NSManagedObjectContext) -> [Event] {
+        let allRequest = Event.allUserPostsRequest()
         
         do {
             let results = try context.fetch(allRequest)
