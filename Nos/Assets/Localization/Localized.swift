@@ -89,6 +89,10 @@ enum Localized: String, Localizable, CaseIterable {
     case debug = "Debug"
     case loadSampleData = "Load Sample Data"
     case sampleDataInstructions = "This will delete all events and load those in sample_data.json"
+    
+    case copyNoteIdentifier = "Copy Note Identifier"
+    case share = "Share"
+    case reportPost = "Report this post"
 }
 
 // MARK: - Onboarding

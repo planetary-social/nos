@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed READ MORE Button
 - Filter the Home Feed down to root posts
 - In the Discover tab, display a feed of interesting people
+- Add the ellipsis button to NoteCard and allow the user to copy the NIP-19 note ID of a note.
 
 ## [0.1 (4)] - 2023-02-24
 

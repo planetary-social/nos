@@ -86,7 +86,7 @@ struct NoteCard: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
-                    // TODO: Put MessageOptionsButton back here eventually
+                    NoteOptionsButton(note: note)
                 }
                 .onAppear {
                     if author.needsMetadata, let subscriptionID = author.requestMetadata(using: relayService) {
