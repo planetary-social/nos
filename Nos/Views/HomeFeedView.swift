@@ -48,7 +48,7 @@ struct HomeFeedView: View {
                 let textSub = relayService.requestEventsFromAll(filter: textFilter)
                 subscriptionIds.append(textSub)
                 
-                let metaFilter = Filter(authorKeys: authors, kinds: [.metaData, .contactList], limit: 100)
+                let metaFilter = Filter(authorKeys: authors, kinds: [.contactList], limit: 100)
                 let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
                 subscriptionIds.append(metaSub)
             }

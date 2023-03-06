@@ -57,10 +57,37 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    /// The userId mapped to an array of strings witn information of the user
+    static let discoverTabUserIdToInfo: [String: [String]] = [
+        "npub1sg6plzptd64u62a878hep2kev88swjh3tw00gjsfl8f237lmu63q0uf63m": ["Jack Dorsey"],
+        "npub1g53mukxnjkcmr94fhryzkqutdz2ukq4ks0gvy5af25rgmwsl4ngq43drvk": ["Martti Malmi/sirius"],
+        "npub19mun7qwdyjf7qs3456u8kyxncjn5u2n7klpu4utgy68k4aenzj6synjnft": ["Unclebobmartin"],
+        "npub1qlkwmzmrhzpuak7c2g9akvcrh7wzkd7zc7fpefw9najwpau662nqealf5y": ["Katie"],
+        "npub176ar97pxz4t0t5twdv8psw0xa45d207elwauu5p93an0rfs709js4600cg": ["arjwright"],
+        "npub1nstrcu63lzpjkz94djajuz2evrgu2psd66cwgc0gz0c0qazezx0q9urg5l": ["nostrica"]
+    ]
+    
     @nonobjc public class func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(format: "kind = %i", eventKind.rawValue)
+        return fetchRequest
+    }
+    
+    @nonobjc public class func discoverFeedRequest() -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        let kind = EventKind.text.rawValue
+        let followersPredicate = NSPredicate(
+            format: "kind = %i AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@",
+            kind,
+            Array(Event.discoverTabUserIdToInfo.keys).compactMap {
+                PublicKey(npub: $0)?.hex
+            }
+        )
+
+            fetchRequest.predicate = followersPredicate
+        
         return fetchRequest
     }
     
@@ -115,10 +142,14 @@ public class Event: NosManagedObject {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let kind = EventKind.text.rawValue
-        let followersPredicate = NSPredicate(format: "kind = %i AND ANY author.followers.source = %@", kind, user)
+        let followersPredicate = NSPredicate(
+            format: "kind = %i AND eventReferences.@count = 0 AND ANY author.followers.source = %@",
+            kind,
+            user
+        )
         if let publicKey = user.publicKey?.hex {
             let currentUserPredicate = NSPredicate(
-                format: "kind = %i AND author.hexadecimalPublicKey = %@", kind, publicKey
+                format: "kind = %i AND eventReferences.@count = 0 AND author.hexadecimalPublicKey = %@", kind, publicKey
             )
             let compoundPredicate = NSCompoundPredicate(
                 orPredicateWithSubpredicates:
@@ -306,11 +337,6 @@ public class Event: NosManagedObject {
                     print("Removing \(removedFollows.count) follows")
                     Follow.deleteFollows(in: removedFollows, context: context)
                 }
-            }
-            
-            // In the special case that we've requested our own follows, set it on the profile
-            if newAuthor.hexadecimalPublicKey == CurrentUser.publicKey {
-                CurrentUser.follows = eventFollows
             }
             
         case .metaData:

@@ -43,7 +43,7 @@ struct RelayView: View {
                         #if os(iOS)
                         .textInputAutocapitalization(.none)
                         .keyboardType(.URL)
-                    #endif
+                        #endif
                     Button(Localized.save.string) {
                         addRelay()
                         CurrentUser.subscribe()
@@ -75,8 +75,11 @@ struct RelayView: View {
     
     private func addRelay() {
         withAnimation {
+            guard !newRelayAddress.isEmpty else { return }
+            
             let relay = Relay(context: viewContext)
             relay.address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+            newRelayAddress = ""
 
             do {
                 try viewContext.save()

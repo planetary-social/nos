@@ -50,9 +50,8 @@ struct ProfileHeader: View {
             VStack(alignment: .leading) {
                 HStack(alignment: .top, spacing: 18) {
                     ZStack(alignment: .bottomTrailing) {
-                        Image(systemName: "person.crop.circle.fill")
+                        AvatarView(imageUrl: author.profilePhotoURL, size: 87)
                             .font(.body)
-                            .frame(width: 87, height: 87)
                             .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 99)
