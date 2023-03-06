@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Request profile metadata for users displayed on the Discover tab
 - Cleanup RelayService
 - Render user avatar on Profile screen
+- Add basic notifications tab
 
 ## [0.1 (5)] 2023-03-02 
 
