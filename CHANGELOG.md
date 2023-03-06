@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed READ MORE Button
 - Filter the Home Feed down to root posts
 - In the Discover tab, display a feed of interesting people
+- The profile view requests the latest events and metadata for the given user from the relays
 
 ## [0.1 (4)] - 2023-02-24
 
