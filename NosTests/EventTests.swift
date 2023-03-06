@@ -123,7 +123,7 @@ final class EventTests: XCTestCase {
         XCTAssertEqual(actualString, expectedString)
     }
     
-    func testIdentifierCalcuation() throws {
+    func testIdentifierCalculation() throws {
         // Arrange
         let persistenceController = PersistenceController(inMemory: true)
         let testContext = persistenceController.container.viewContext
@@ -136,7 +136,7 @@ final class EventTests: XCTestCase {
         )
     }
     
-    func testIdentifierCalcuationWithNoTags() throws {
+    func testIdentifierCalculationWithNoTags() throws {
         // Arrange
         let persistenceController = PersistenceController(inMemory: true)
         let testContext = persistenceController.container.viewContext
@@ -175,6 +175,56 @@ final class EventTests: XCTestCase {
         
         XCTAssertEqual(follow.relay?.address, sampleRelay)
         XCTAssertEqual(follow.petName, sampleName)
+    }
+    
+    /// Verifies that when we see an event we already have in Core Data as a stub it is updated correctly.
+    func testParsingEventStub() throws {
+        let persistenceController = PersistenceController(inMemory: true)
+        let testContext = persistenceController.container.viewContext
+        let referencingJSONEvent = JSONEvent(
+            id: "1",
+            pubKey: KeyFixture.alice.publicKeyHex,
+            createdAt: 1,
+            kind: 1,
+            tags: [["e", "2"]],
+            content: "Hello, bob",
+            signature: "sig1"
+        )
+        
+        let referencingEvent = try EventProcessor.parse(
+            jsonEvent: referencingJSONEvent,
+            in: testContext,
+            skipVerification: true
+        )
+        try testContext.save()
+        
+        var allEvents = try testContext.fetch(Event.allEventsRequest())
+        XCTAssertEqual(allEvents.count, 2)
+        XCTAssertEqual(referencingEvent.eventReferences?.count, 1)
+        var eventReference = referencingEvent.eventReferences?.firstObject as! EventReference
+        XCTAssertEqual(eventReference.referencedEvent?.isStub, true)
+        
+        let referencedJSONEvent = JSONEvent(
+            id: "2",
+            pubKey: KeyFixture.bob.publicKeyHex,
+            createdAt: 2,
+            kind: 1,
+            tags: [],
+            content: "hello, world",
+            signature: "sig2"
+        )
+        let referencedEvent = try EventProcessor.parse(
+            jsonEvent: referencedJSONEvent,
+            in: testContext,
+            skipVerification: true
+        )
+        try testContext.save()
+        
+        allEvents = try testContext.fetch(Event.allEventsRequest())
+        XCTAssertEqual(allEvents.count, 2)
+        XCTAssertEqual(referencedEvent.referencingEvents?.count, 1)
+        eventReference = referencedEvent.referencingEvents!.allObjects.first as! EventReference
+        XCTAssertEqual(eventReference.referencingEvent, referencingEvent)
     }
     
     // MARK: - Signatures and Verification

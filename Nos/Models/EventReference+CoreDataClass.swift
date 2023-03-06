@@ -21,7 +21,7 @@ public class EventReference: NosManagedObject {
             throw EventError.invalidETag(jsonTag)
         }
         self.init(context: context)
-        referencedEvent = try Event.findOrCreateBy(id: eventID, context: context)
+        referencedEvent = try Event.findOrCreateStubBy(id: eventID, context: context)
         recommendedRelayUrl = jsonTag[safe: 2]
         marker = jsonTag[safe: 3]
     }

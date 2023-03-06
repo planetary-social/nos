@@ -214,15 +214,17 @@ public class Event: NosManagedObject {
     }
     
     class func findOrCreate(jsonEvent: JSONEvent, context: NSManagedObjectContext) throws -> Event {
-        if let existingEvent = try context.fetch(Event.event(by: jsonEvent.id)).first,
-            !existingEvent.isStub {
+        if let existingEvent = try context.fetch(Event.event(by: jsonEvent.id)).first {
+            if existingEvent.isStub {
+                try existingEvent.hydrate(from: jsonEvent, in: context)
+            }
             return existingEvent
-        } else {
-            return try Event(context: context, jsonEvent: jsonEvent)
         }
+        
+        return try Event(context: context, jsonEvent: jsonEvent)
     }
     
-    class func findOrCreateBy(id: String, context: NSManagedObjectContext) throws -> Event {
+    class func findOrCreateStubBy(id: String, context: NSManagedObjectContext) throws -> Event {
         if let existingEvent = try context.fetch(Event.event(by: id)).first {
             return existingEvent
         } else {
@@ -300,15 +302,23 @@ public class Event: NosManagedObject {
             signature: signature
         )
     }
-    
+
     // swiftlint:disable function_body_length
     convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) throws {
         self.init(context: context)
+        identifier = jsonEvent.id
+        try hydrate(from: jsonEvent, in: context)
+    }
+        
+    /// Populates an event stub (with only its ID set) using the data in the given JSON.
+    func hydrate(from jsonEvent: JSONEvent, in context: NSManagedObjectContext) throws {
+        guard isStub else {
+            fatalError("Tried to hydrate an event that isn't a stub. This is a programming error")
+        }
         
         // Meta data
         createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
         content = jsonEvent.content
-        identifier = jsonEvent.id
         kind = jsonEvent.kind
         signature = jsonEvent.signature
         
