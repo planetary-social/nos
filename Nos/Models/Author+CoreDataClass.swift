@@ -29,6 +29,7 @@ public class Author: NosManagedObject {
     }
     
     var needsMetadata: Bool {
+        // TODO: consider checking lastUpdated time as an optimization.
         about == nil && name == nil && displayName == nil && profilePhotoURL == nil
     }
     
