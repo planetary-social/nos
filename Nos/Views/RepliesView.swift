@@ -111,8 +111,10 @@ struct RepliesView: View {
                 signature: ""
             )
             let event = try Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext)
+                
             try event.sign(withKey: keyPair)
             relayService.publishToAll(event: event)
+            }
         } catch {
             alert = AlertState(title: {
                 TextState(Localized.error.string)
