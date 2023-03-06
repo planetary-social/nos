@@ -109,7 +109,7 @@ struct ThreadView: View {
                 // print("event: \(event)")
                 
                 try event.sign(withKey: keyPair)
-                try relayService.publish(event)
+                relayService.publishToAll(event: event)
             }
         } catch {
             alert = AlertState(title: {
