@@ -19,8 +19,8 @@ final class RelayService: ObservableObject {
         self.persistenceController = persistenceController
         openSocketsForRelays()
         
-        let pubSelector = #selector(publishFailedEvents)
-        timer = Timer.scheduledTimer(timeInterval: 120, target: self, selector: pubSelector, userInfo: nil, repeats: true)
+        let pubSel = #selector(publishFailedEvents)
+        timer = Timer.scheduledTimer(timeInterval: 120, target: self, selector: pubSel, userInfo: nil, repeats: true)
     }
     
     var allRelayAddresses: [String] {
