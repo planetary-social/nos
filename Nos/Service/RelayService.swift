@@ -176,9 +176,10 @@ extension RelayService {
             let objectContext = persistenceController.container.viewContext
             
             if let event = Event.find(by: eventId, context: objectContext) {
+                let relay = Relay.findOrCreate(by: socketUrl, context: objectContext)
+
                 if success {
                     print("\(eventId) has sent successfully to \(socketUrl)")
-                    let relay = Relay.findOrCreate(by: socketUrl, context: objectContext)
                     if let pubRelays = event.publishedTo?.mutableCopy() as? NSMutableSet {
                         pubRelays.add(relay)
                         event.publishedTo = pubRelays
@@ -187,7 +188,16 @@ extension RelayService {
                 } else {
                     // This will be picked up later in publishFailedEvents
                     if responseArray.count > 2, let message = responseArray[3] as? String {
-                        print("\(eventId) has been rejected. Given reason: \(message)")
+                        // Mark duplicates or replaces as done on our end
+                        if message.contains("replaced:") || message.contains("duplicate:") {
+                            if let pubRelays = event.publishedTo?.mutableCopy() as? NSMutableSet {
+                                pubRelays.add(relay)
+                                event.publishedTo = pubRelays
+                                print("Tracked publish to relay: \(socketUrl)")
+                            }
+                        } else {
+                            print("\(eventId) has been rejected. Given reason: \(message)")
+                        }
                     } else {
                         print("\(eventId) has been rejected. No given reason.")
                     }
@@ -260,6 +270,7 @@ extension RelayService {
             let publishedRelays: [Relay] = event.publishedTo?.allObjects as? [Relay] ?? []
             let missedRelays: [Relay] = availableRelays.filter { !publishedRelays.contains($0) }
             
+            print("\(missedRelays.count) missing a published event.")
             for missedRelay in missedRelays {
                 guard let missedAddress = missedRelay.address else { continue }
                 if let index = sockets.firstIndex(where: { $0.request.url!.absoluteString == missedAddress }) {
@@ -289,7 +300,7 @@ extension RelayService: WebSocketDelegate {
             print("websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
             parseResponse(string, socket)
-            print("Received text: \(string)")
+            print("Received text (\(socket.request.url?.absoluteString ?? "unknown")): \(string)")
         case .binary(let data):
             print("Received data: \(data.count)")
         case .ping, .pong, .viabilityChanged, .reconnectSuggested:

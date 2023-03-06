@@ -88,11 +88,10 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func allUserPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
+    @nonobjc public class func allUserPostsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        let kind = eventKind.rawValue
-        fetchRequest.predicate = NSPredicate(format: "kind = %i AND sendAttempts > 0 AND sendAttempts < 5", kind)
+        fetchRequest.predicate = NSPredicate(format: "sendAttempts > 0 AND sendAttempts < 5")
         return fetchRequest
     }
     
