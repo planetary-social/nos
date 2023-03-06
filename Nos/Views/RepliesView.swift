@@ -44,7 +44,7 @@ struct RepliesView: View {
     var note: Event
     
     var body: some View {
-        ZStack {
+        VStack {
             ScrollView(.vertical) {
                 LazyVStack {
                     NoteButton(note: note)
@@ -53,6 +53,7 @@ struct RepliesView: View {
                         ThreadView(root: event, allReplies: replies.reversed())
                     }
                 }
+                .padding(.bottom)
             }
             .padding(.top, 1)
             .navigationBarBackButtonHidden(true)
@@ -70,6 +71,7 @@ struct RepliesView: View {
                 }
                 .background(Color.white)
             }
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
     
