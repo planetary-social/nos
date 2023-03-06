@@ -113,7 +113,7 @@ struct RepliesView: View {
             if let event = Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext) {
                 
                 try event.sign(withKey: keyPair)
-                try relayService.publish(event)
+                relayService.publishToAll(event: event)
             }
         } catch {
             alert = AlertState(title: {

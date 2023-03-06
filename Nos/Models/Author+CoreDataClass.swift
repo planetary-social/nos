@@ -28,6 +28,11 @@ public class Author: NosManagedObject {
         return PublicKey(hex: hex)
     }
     
+    var needsMetadata: Bool {
+        // TODO: consider checking lastUpdated time as an optimization.
+        about == nil && name == nil && displayName == nil && profilePhotoURL == nil
+    }
+    
     class func find(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author? {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey = %@", pubKey)
@@ -71,5 +76,17 @@ public class Author: NosManagedObject {
             print("Failed to fetch authors. Error: \(error.description)")
             return []
         }
+    }
+    
+    func requestMetadata(using relayService: RelayService) -> String? {
+        guard let hexadecimalPublicKey else {
+            return nil
+        }
+        
+        // TODO: make sure this subscription gets closed if there is no new metadata, or no metadata at all for this
+        // user.
+        let metaFilter = Filter(authorKeys: [hexadecimalPublicKey], kinds: [.metaData], limit: 1)
+        let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
+        return metaSub
     }
 }

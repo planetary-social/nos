@@ -13,7 +13,7 @@ struct DiscoverView: View {
     
     @EnvironmentObject private var relayService: RelayService
 
-    @FetchRequest(fetchRequest: Event.allPostsRequest(), animation: .default)
+    @FetchRequest(fetchRequest: Event.discoverFeedRequest(), animation: .default)
     private var events: FetchedResults<Event>
     
     @EnvironmentObject var router: Router
@@ -25,7 +25,13 @@ struct DiscoverView: View {
     @State private var subscriptionId: String = ""
     
     func refreshDiscover() {
-        let filter = Filter(kinds: [.text], limit: 100)
+        let filter = Filter(
+            authorKeys: Array(Event.discoverTabUserIdToInfo.keys).compactMap {
+                PublicKey(npub: $0)?.hex
+            },
+            kinds: [.text],
+            limit: 100
+            )
         subscriptionId = relayService.requestEventsFromAll(filter: filter)
     }
     
