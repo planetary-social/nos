@@ -45,6 +45,7 @@ public enum EventKind: Int64, CaseIterable {
     case parameterizedReplaceableEvent = 30_000
 }
 
+// swiftlint:disable type_body_length
 @objc(Event)
 public class Event: NosManagedObject {
     
@@ -232,6 +233,8 @@ public class Event: NosManagedObject {
         ]
     }
     
+    /// Returns true if this event doesn't have content. Usually this means we saw it referenced by another event
+    /// but we haven't actually downloaded it yet.
     var isStub: Bool {
         author == nil || createdAt == nil || content == nil
     }
@@ -400,6 +403,7 @@ public class Event: NosManagedObject {
         }
     }
     
+    /// Returns true if this event tagged the given author.
     func references(author: Author) -> Bool {
         guard let authorReferences = authorReferences else {
             return false
@@ -410,6 +414,7 @@ public class Event: NosManagedObject {
         })
     }
     
+    /// Returns true if this event is a reply to an event by the given author.
     func isReply(to author: Author) -> Bool {
         guard let eventReferences else {
             return false
@@ -421,7 +426,9 @@ public class Event: NosManagedObject {
         })
     }
     
+    /// Returns true if this note does not tag any other events.
     func rootNote() -> Event {
         (eventReferences?.firstObject as? EventReference)?.referencedEvent ?? self
     }
 }
+// swiftlint:enable type_body_length

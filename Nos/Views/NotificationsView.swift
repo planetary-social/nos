@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreData
 
+/// Displays a list of cells that let the user know when other users interact with their notes.
 struct NotificationsView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
@@ -110,7 +111,7 @@ struct NotificationCard: View {
                                 .font(.body)
                                 .foregroundColor(.primaryTxt)
                             if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
-                                Text("8h")
+                                Text(elapsedTime)
                                     .lineLimit(1)
                                     .font(.body)
                                     .foregroundColor(.secondaryTxt)

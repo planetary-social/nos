@@ -106,10 +106,10 @@ struct ThreadView: View {
                 signature: ""
             )
             let event = try Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext)
-                // print("event: \(event)")
+            // print("event: \(event)")
                 
-                try event.sign(withKey: keyPair)
-                relayService.publishToAll(event: event)
+            try event.sign(withKey: keyPair)
+            relayService.publishToAll(event: event)
         } catch {
             alert = AlertState(title: {
                 TextState(Localized.error.string)
