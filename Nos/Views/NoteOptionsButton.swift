@@ -27,6 +27,9 @@ struct NoteOptionsButton: View {
             Button {
                 showingOptions = true
             } label: {
+                Image.iconOptions
+                    // This hack fixes a weird issue where the confirmationDialog wouldn't be shown sometimes. ¯\_(ツ)_/¯
+                    .background(showingOptions == true ? .clear : .clear)
                 Image(systemName: "ellipsis")
             }
             .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
