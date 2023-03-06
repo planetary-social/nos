@@ -259,6 +259,8 @@ extension RelayService {
     }
     
     @objc func publishFailedEvents() {
+        openSocketsForRelays()
+
         let objectContext = persistenceController.container.viewContext
         let userSentEvents = Event.allByUser(context: objectContext)
         let relays = Relay.all(context: objectContext)
