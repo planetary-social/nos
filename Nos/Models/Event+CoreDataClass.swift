@@ -169,8 +169,16 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    class func find(by identifier: String, context: NSManagedObjectContext) -> Event? {
+        if let existingEvent = try? context.fetch(Event.event(by: identifier)).first {
+            return existingEvent
+        }
+
+        return nil
+    }
+    
     class func findOrCreate(jsonEvent: JSONEvent, context: NSManagedObjectContext) -> Event? {
-        if let existingEvent = try? context.fetch(Event.event(by: jsonEvent.id)).first {
+        if let existingEvent = find(by: jsonEvent.id, context: context) {
             return existingEvent
         } else {
             return try? Event(context: context, jsonEvent: jsonEvent)

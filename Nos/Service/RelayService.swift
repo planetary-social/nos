@@ -118,13 +118,13 @@ extension RelayService {
 
         // Ignore redundant requests
         guard !requestFilterSet.contains(filter) else {
-            print("📡Request already open. Ignoring. \(requestFilterSet.count) outstanding requests")
+            print("📡Request with identical filter already open. Ignoring. \(requestFilterSet.count) filters in use.")
             let foundFilter = requestFilterSet.first(where: { $0 == filter })
             return foundFilter!.subscriptionId
         }
 
         requestFilterSet.insert(filter)
-        print("📡\(requestFilterSet.count) outstanding requests")
+        print("📡\(requestFilterSet.count) filters in use.")
         for request in requestFilterSet {
             print("📡: \(request.dictionary)")
         }
@@ -150,34 +150,46 @@ extension RelayService {
     
     func parseEvent(_ responseArray: [Any]) {
         guard responseArray.count >= 3 else {
-            print("got invalid EVENT response: \(responseArray)")
+            print("Error: invalid EVENT response: \(responseArray)")
             return
         }
         
         guard let eventJSON = responseArray[2] as? [String: Any] else {
-            print("got invalid EVENT JSON: \(responseArray)")
+            print("Error: invalid EVENT JSON: \(responseArray)")
             return
         }
         
         do {
             _ = try EventProcessor.parse(jsonObject: eventJSON, in: persistenceController.container.viewContext)
         } catch {
-            print("error parsing event from relay: \(responseArray)")
+            print("Error: parsing event from relay: \(responseArray)")
         }
     }
     
-    func parseOK(_ responseArray: [Any]) {
+    func parseOK(_ responseArray: [Any], _ socketUrl: String) {
         guard responseArray.count > 2 else {
             return
         }
         
-        if let result = responseArray[2] as? Bool, let subId = responseArray[1] as? String {
-            let resultString = result ? "sent succesfully" : "failed"
-            print("\(subId) has \(resultString)")
+        if let success = responseArray[2] as? Bool, let subId = responseArray[1] as? String {
+            let resultString = success ? "sent succesfully" : "failed"
+            print("📡\(subId) has \(resultString)")
+            	
+            if success {
+                let objectContext = persistenceController.container.viewContext
+                if let event = Event.find(by: subId, context: objectContext) {
+                    let relay = Relay.findOrCreate(by: socketUrl, context: objectContext)
+                    if let pubRelays = event.publishedTo?.mutableCopy() as? NSMutableSet {
+                        pubRelays.add(relay)
+                        event.publishedTo = pubRelays
+                        print("📡Tracked publish to relay: \(socketUrl)")
+                    }
+                }
+            }
         }
     }
     
-    func parseResponse(_ response: String) {
+    func parseResponse(_ response: String, _ socketUrl: String) {
         do {
             guard let responseData = response.data(using: .utf8) else {
                 throw EventError.utf8Encoding
@@ -196,7 +208,7 @@ extension RelayService {
             case "EOSE":
                 parseEOSE(responseArray)
             case "OK":
-                parseOK(responseArray)
+                parseOK(responseArray, socketUrl)
             default:
                 print("got unknown response type: \(response)")
             }
@@ -229,27 +241,35 @@ extension RelayService {
 // MARK: WebSocketDelegate
 extension RelayService: WebSocketDelegate {
     func didReceive(event: WebSocketEvent, client: WebSocketClient) {
+        guard let socket = client as? WebSocket else {
+            return
+        }
+        
         switch event {
         case .connected(let headers):
             print("websocket is connected: \(headers)")
         case .disconnected(let reason, let code):
-            if let socket = client as? WebSocket, let index = sockets.firstIndex(where: { $0 === socket }) {
+            if let index = sockets.firstIndex(where: { $0 === socket }) {
                 sockets.remove(at: index)
             }
             print("websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-            parseResponse(string)
+            if let urlString = socket.request.url?.absoluteString {
+                parseResponse(string, urlString)
+            } else {
+                print("Error: Cannot parse socket url")
+            }
             print("Received text: \(string)")
         case .binary(let data):
             print("Received data: \(data.count)")
         case .ping, .pong, .viabilityChanged, .reconnectSuggested:
             break
         case .cancelled:
-            if let socket = client as? WebSocket, let index = sockets.firstIndex(where: { $0 === socket }) {
+            if let index = sockets.firstIndex(where: { $0 === socket }) {
                 sockets.remove(at: index)
             }
         case .error(let error):
-            if let socket = client as? WebSocket, let index = sockets.firstIndex(where: { $0 === socket }) {
+            if let index = sockets.firstIndex(where: { $0 === socket }) {
                 sockets.remove(at: index)
             }
             handleError(error)
