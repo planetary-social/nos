@@ -14,9 +14,11 @@ final class RelayService: ObservableObject {
     private var requestFilterSet = Set<Filter>()
     private var sockets = [WebSocket]()
     private var timer: Timer?
+    private var backgroundContext: NSManagedObjectContext
     
     init(persistenceController: PersistenceController) {
         self.persistenceController = persistenceController
+        self.backgroundContext = persistenceController.newBackgroundContext()
         openSocketsForRelays()
         
         let pubSel = #selector(publishFailedEvents)
@@ -158,10 +160,14 @@ extension RelayService {
             return
         }
         
-        do {
-            _ = try EventProcessor.parse(jsonObject: eventJSON, in: persistenceController.container.viewContext)
-        } catch {
-            print("Error: parsing event from relay: \(responseArray)")
+        Task.detached(priority: .userInitiated) {
+            do {
+                try await self.backgroundContext.perform {
+                    _ = try EventProcessor.parse(jsonObject: eventJSON, in: self.backgroundContext)
+                }
+            } catch {
+                print("Error: parsing event from relay: \(responseArray)")
+            }
         }
     }
     

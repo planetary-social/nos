@@ -34,6 +34,14 @@ struct PersistenceController {
         let viewContext = result.container.viewContext
         return result
     }()
+    
+    var viewContext: NSManagedObjectContext {
+        return container.viewContext
+    }
+    
+    func newBackgroundContext() -> NSManagedObjectContext {
+        return container.newBackgroundContext()
+    }
 
     var container: NSPersistentContainer
 
