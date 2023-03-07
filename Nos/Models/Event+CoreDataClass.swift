@@ -50,7 +50,7 @@ public enum EventKind: Int64, CaseIterable {
 public class Event: NosManagedObject {
     
     static var replyEventReferences =
-    "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.referencedEvent.identifier == %@).@count > 0"
+    "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@"
     
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
