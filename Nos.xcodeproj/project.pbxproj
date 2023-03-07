@@ -56,6 +56,12 @@
 		C95D68B4299ECE0700429F86 /* CONTRIBUTING.md in Resources */ = {isa = PBXBuildFile; fileRef = C95D68B1299ECE0700429F86 /* CONTRIBUTING.md */; };
 		C9646E9A29B79E04007239A4 /* Logger in Frameworks */ = {isa = PBXBuildFile; productRef = C9646E9929B79E04007239A4 /* Logger */; };
 		C9646E9C29B79E4D007239A4 /* Logger in Frameworks */ = {isa = PBXBuildFile; productRef = C9646E9B29B79E4D007239A4 /* Logger */; };
+		C9646EA129B7A22C007239A4 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9646EA029B7A22C007239A4 /* Analytics.swift */; };
+		C9646EA429B7A24A007239A4 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = C9646EA329B7A24A007239A4 /* PostHog */; };
+		C9646EA729B7A3DD007239A4 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = C9646EA629B7A3DD007239A4 /* Dependencies */; };
+		C9646EA929B7A4F2007239A4 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = C9646EA829B7A4F2007239A4 /* PostHog */; };
+		C9646EAA29B7A506007239A4 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9646EA029B7A22C007239A4 /* Analytics.swift */; };
+		C9646EAC29B7A520007239A4 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = C9646EAB29B7A520007239A4 /* Dependencies */; };
 		C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */; };
 		C97797B9298AA19A0046BD25 /* RelayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97797B8298AA19A0046BD25 /* RelayService.swift */; };
 		C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C97797BB298AB1890046BD25 /* secp256k1 */; };
@@ -208,6 +214,7 @@
 		C95D68AF299ECE0700429F86 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		C95D68B0299ECE0700429F86 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C95D68B1299ECE0700429F86 /* CONTRIBUTING.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
+		C9646EA029B7A22C007239A4 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Encoding.swift"; sourceTree = "<group>"; };
 		C97797B8298AA19A0046BD25 /* RelayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayService.swift; sourceTree = "<group>"; };
 		C9ADB132299287D60075E7F8 /* KeyPairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPairTests.swift; sourceTree = "<group>"; };
@@ -270,6 +277,8 @@
 				C9DEC068298965270078B43A /* Starscream in Frameworks */,
 				C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */,
 				C9646E9A29B79E04007239A4 /* Logger in Frameworks */,
+				C9646EA729B7A3DD007239A4 /* Dependencies in Frameworks */,
+				C9646EA429B7A24A007239A4 /* PostHog in Frameworks */,
 				C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -280,6 +289,8 @@
 			files = (
 				C97797BF298ABE060046BD25 /* secp256k1 in Frameworks */,
 				CDDA1F7B29A527650047ACD8 /* Starscream in Frameworks */,
+				C9646EA929B7A4F2007239A4 /* PostHog in Frameworks */,
+				C9646EAC29B7A520007239A4 /* Dependencies in Frameworks */,
 				C9646E9C29B79E4D007239A4 /* Logger in Frameworks */,
 				CDDA1F7D29A527650047ACD8 /* SwiftUINavigation in Frameworks */,
 			);
@@ -312,6 +323,7 @@
 				A336DD3B299FD78000A0CBA0 /* Filter.swift */,
 				A3B943CE299AE00100A15A08 /* KeyChain.swift */,
 				C97797B8298AA19A0046BD25 /* RelayService.swift */,
+				C9646EA029B7A22C007239A4 /* Analytics.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -516,6 +528,8 @@
 				C97797BB298AB1890046BD25 /* secp256k1 */,
 				C94D855E29914D2300749478 /* SwiftUINavigation */,
 				C9646E9929B79E04007239A4 /* Logger */,
+				C9646EA329B7A24A007239A4 /* PostHog */,
+				C9646EA629B7A3DD007239A4 /* Dependencies */,
 			);
 			productName = Nos;
 			productReference = C9DEBFCE298941000078B43A /* Nos.app */;
@@ -540,6 +554,8 @@
 				CDDA1F7A29A527650047ACD8 /* Starscream */,
 				CDDA1F7C29A527650047ACD8 /* SwiftUINavigation */,
 				C9646E9B29B79E4D007239A4 /* Logger */,
+				C9646EA829B7A4F2007239A4 /* PostHog */,
+				C9646EAB29B7A520007239A4 /* Dependencies */,
 			);
 			productName = NosTests;
 			productReference = C9DEBFE4298941020078B43A /* NosTests.xctest */;
@@ -600,6 +616,8 @@
 				C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */,
 				C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32" */,
 				C9646E9829B79E04007239A4 /* XCRemoteSwiftPackageReference "logger-ios" */,
+				C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */,
+				C9646EA529B7A3DD007239A4 /* XCRemoteSwiftPackageReference "swift-dependencies" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -700,6 +718,7 @@
 				3FB5E651299D28A200386527 /* OnboardingView.swift in Sources */,
 				A3B943CF299AE00100A15A08 /* KeyChain.swift in Sources */,
 				C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */,
+				C9646EA129B7A22C007239A4 /* Analytics.swift in Sources */,
 				A3B943D5299D514800A15A08 /* Follow+CoreDataClass.swift in Sources */,
 				3F60F42929B27D3E000D62C4 /* ThreadView.swift in Sources */,
 				C95D68A9299E709900429F86 /* LinearGradient+Planetary.swift in Sources */,
@@ -803,6 +822,7 @@
 				3FFB1D9D29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */,
 				C9F0BB7029A50437000547FC /* NostrConstants.swift in Sources */,
 				A3B943D8299D758F00A15A08 /* KeyChain.swift in Sources */,
+				C9646EAA29B7A506007239A4 /* Analytics.swift in Sources */,
 				C9ADB133299287D60075E7F8 /* KeyPairTests.swift in Sources */,
 				C9DEC04E29894BED0078B43A /* Author+CoreDataClass.swift in Sources */,
 				C9DEBFE9298941020078B43A /* EventTests.swift in Sources */,
@@ -1175,6 +1195,22 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/PostHog/posthog-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		C9646EA529B7A3DD007239A4 /* XCRemoteSwiftPackageReference "swift-dependencies" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-dependencies";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.4;
+			};
+		};
 		C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GigaBitcoin/secp256k1.swift";
@@ -1216,6 +1252,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C9646E9829B79E04007239A4 /* XCRemoteSwiftPackageReference "logger-ios" */;
 			productName = Logger;
+		};
+		C9646EA329B7A24A007239A4 /* PostHog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */;
+			productName = PostHog;
+		};
+		C9646EA629B7A3DD007239A4 /* Dependencies */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9646EA529B7A3DD007239A4 /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = Dependencies;
+		};
+		C9646EA829B7A4F2007239A4 /* PostHog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */;
+			productName = PostHog;
+		};
+		C9646EAB29B7A520007239A4 /* Dependencies */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9646EA529B7A3DD007239A4 /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = Dependencies;
 		};
 		C97797BB298AB1890046BD25 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;

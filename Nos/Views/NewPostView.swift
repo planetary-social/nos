@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreData
 import SwiftUINavigation
+import Dependencies
 
 struct NewPostView: View {
     private var keyPair: KeyPair? {
@@ -17,6 +18,8 @@ struct NewPostView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var relayService: RelayService
+    
+    @Dependency(\.analytics) private var analytics
     
     @State private var postText: String = ""
     
@@ -69,6 +72,7 @@ struct NewPostView: View {
                 try event.sign(withKey: keyPair)
                 relayService.publishToAll(event: event)
                 isPresented = false
+                analytics.published(note: event)
             } catch {
                 alert = AlertState(title: {
                     TextState(Localized.error.string)
