@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cleanup RelayService
 - Render user avatar on Profile screen
 - Added support for threads in reply views
+- Render user mentions in NoteCard
 
 ## [0.1 (5)] 2023-03-02 
 
