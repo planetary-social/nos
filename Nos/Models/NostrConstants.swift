@@ -12,4 +12,5 @@ enum Nostr {
     // https://github.com/nostr-protocol/nips/blob/master/19.md
     static let privateKeyPrefix = "nsec"
     static let publicKeyPrefix = "npub"
+    static let notePrefix = "note"
 }

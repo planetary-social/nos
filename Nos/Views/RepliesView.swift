@@ -22,7 +22,9 @@ struct RepliesView: View {
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
     
     var directReplies: [Event] {
-        replies.filter { ($0.eventReferences?.lastObject as? EventReference)?.eventId == note.identifier }
+        replies.filter {
+            ($0.eventReferences?.lastObject as? EventReference)?.referencedEvent?.identifier == note.identifier
+        }
     }
     
     init(note: Event) {
@@ -110,11 +112,10 @@ struct RepliesView: View {
                 content: replyText,
                 signature: ""
             )
-            if let event = Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext) {
+            let event = try Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext)
                 
-                try event.sign(withKey: keyPair)
-                relayService.publishToAll(event: event)
-            }
+            try event.sign(withKey: keyPair)
+            relayService.publishToAll(event: event)
         } catch {
             alert = AlertState(title: {
                 TextState(Localized.error.string)

@@ -15,6 +15,7 @@ enum EventError: Error {
 	case utf8Encoding
 	case unrecognizedKind
     case missingAuthor
+    case invalidETag([String])
     case invalidSignature(Event)
     
     var description: String? {
@@ -23,6 +24,8 @@ enum EventError: Error {
             return "Unrecognized event kind"
         case .missingAuthor:
             return "Could not parse author on event"
+        case .invalidETag(let strings):
+            return "Invalid e tag \(strings.joined(separator: ","))"
         case .invalidSignature(let event):
             return "Invalid signature on event: \(String(describing: event.identifier))"
         default:
@@ -43,11 +46,12 @@ public enum EventKind: Int64, CaseIterable {
     case parameterizedReplaceableEvent = 30_000
 }
 
+// swiftlint:disable type_body_length
 @objc(Event)
 public class Event: NosManagedObject {
     
     static var replyEventReferences =
-    "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.eventId == %@).@count > 0"
+    "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@"
     
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -64,6 +68,13 @@ public class Event: NosManagedObject {
         "npub176ar97pxz4t0t5twdv8psw0xa45d207elwauu5p93an0rfs709js4600cg": ["arjwright"],
         "npub1nstrcu63lzpjkz94djajuz2evrgu2psd66cwgc0gz0c0qazezx0q9urg5l": ["nostrica"]
     ]
+    
+    @nonobjc public class func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = NSPredicate(format: "kind = %i", eventKind.rawValue)
+        return fetchRequest
+    }
     
     @nonobjc public class func discoverFeedRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -82,10 +93,40 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-	@nonobjc public class func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
+    @nonobjc public class func allMentionsPredicate(for user: Author) -> NSPredicate {
+        guard let publicKey = user.hexadecimalPublicKey, !publicKey.isEmpty else {
+            return NSPredicate(format: "FALSEPREDICATE")
+        }
+        
+        return NSPredicate(
+            format: "kind = %i AND ANY authorReferences.pubkey = %@",
+            EventKind.text.rawValue,
+            publicKey
+        )
+    }
+
+    @nonobjc public class func allUserPostsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-		fetchRequest.predicate = NSPredicate(format: "kind = %i", eventKind.rawValue)
+        fetchRequest.predicate = NSPredicate(format: "sendAttempts > 0 AND sendAttempts < 5")
+        return fetchRequest
+    }
+    
+    @nonobjc public class func allRepliesPredicate(for user: Author) -> NSPredicate {
+        NSPredicate(format: "kind = 1 AND ANY eventReferences.referencedEvent.author = %@", user)
+    }
+    
+    @nonobjc public class func allNotifications(for user: Author) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        
+        let mentionsPredicate = allMentionsPredicate(for: user)
+        let repliesPredicate = allRepliesPredicate(for: user)
+        let allNotificationsPredicate = NSCompoundPredicate(
+            orPredicateWithSubpredicates: [mentionsPredicate, repliesPredicate]
+        )
+        fetchRequest.predicate = allNotificationsPredicate
+        
         return fetchRequest
     }
     
@@ -179,12 +220,33 @@ public class Event: NosManagedObject {
         fetchRequest.predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey = %@", kind, key)
         return fetchRequest
     }
+
+    class func find(by identifier: String, context: NSManagedObjectContext) -> Event? {
+        if let existingEvent = try? context.fetch(Event.event(by: identifier)).first {
+            return existingEvent
+        }
+
+        return nil
+    }
     
-    class func findOrCreate(jsonEvent: JSONEvent, context: NSManagedObjectContext) -> Event? {
-        if let existingEvent = try? context.fetch(Event.event(by: jsonEvent.id)).first {
+    class func findOrCreate(jsonEvent: JSONEvent, context: NSManagedObjectContext) throws -> Event {
+        if let existingEvent = try context.fetch(Event.event(by: jsonEvent.id)).first {
+            if existingEvent.isStub {
+                try existingEvent.hydrate(from: jsonEvent, in: context)
+            }
+            return existingEvent
+        }
+        
+        return try Event(context: context, jsonEvent: jsonEvent)
+    }
+    
+    class func findOrCreateStubBy(id: String, context: NSManagedObjectContext) throws -> Event {
+        if let existingEvent = try context.fetch(Event.event(by: id)).first {
             return existingEvent
         } else {
-            return try? Event(context: context, jsonEvent: jsonEvent)
+            let event = Event(context: context)
+            event.identifier = id
+            return event
         }
     }
     
@@ -197,6 +259,12 @@ public class Event: NosManagedObject {
             allTags,
             content
         ]
+    }
+    
+    /// Returns true if this event doesn't have content. Usually this means we saw it referenced by another event
+    /// but we haven't actually downloaded it yet.
+    var isStub: Bool {
+        author == nil || createdAt == nil || content == nil
     }
     
     func calculateIdentifier() throws -> String {
@@ -237,9 +305,9 @@ public class Event: NosManagedObject {
             let signature = signature else {
             return nil
         }
-                           
+        
         let allTags = (allTags as? [[String]]) ?? []
-            
+        
         return JSONEvent(
             id: identifier,
             pubKey: pubKey,
@@ -280,33 +348,42 @@ public class Event: NosManagedObject {
     }
 	
     // swiftlint:disable function_body_length
-	convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) throws {
-		self.init(context: context)
-		
-		// Meta data
-		createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
-		content = jsonEvent.content
-		identifier = jsonEvent.id
-		kind = jsonEvent.kind
-		signature = jsonEvent.signature
+    convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) throws {
+        self.init(context: context)
+        identifier = jsonEvent.id
+        try hydrate(from: jsonEvent, in: context)
+    }
+        
+    /// Populates an event stub (with only its ID set) using the data in the given JSON.
+    func hydrate(from jsonEvent: JSONEvent, in context: NSManagedObjectContext) throws {
+        guard isStub else {
+            fatalError("Tried to hydrate an event that isn't a stub. This is a programming error")
+        }
+        
+        // Meta data
+        createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
+        content = jsonEvent.content
+        kind = jsonEvent.kind
+        signature = jsonEvent.signature
+        sendAttempts = 0
         
         // Tags
         allTags = jsonEvent.tags as NSObject
         
-		// Author
+        // Author
         guard let newAuthor = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context) else {
             throw EventError.missingAuthor
         }
         
         author = newAuthor
         newAuthor.lastUpdated = Date.now
-
+        
         print("\(author!.hexadecimalPublicKey!) last updated \(author!.lastUpdated!)")
-
+        
         guard let eventKind = EventKind(rawValue: kind) else {
             throw EventError.unrecognizedKind
         }
-
+        
         switch eventKind {
         case .contactList:
             // Make a copy of what was followed before
@@ -329,7 +406,7 @@ public class Event: NosManagedObject {
                     Follow.deleteFollows(in: removedFollows, context: context)
                 }
             }
-
+            
         case .metaData:
             if let contentData = jsonEvent.content.data(using: .utf8) {
                 do {
@@ -344,17 +421,18 @@ public class Event: NosManagedObject {
                     print("Failed to decode kind \(eventKind) event with ID \(String(describing: identifier))")
                 }
             }
-
+            
         default:
             let newEventReferences = NSMutableOrderedSet()
             let newAuthorReferences = NSMutableOrderedSet()
             for jsonTag in jsonEvent.tags {
                 if jsonTag.first == "e" {
-                    let eTag = EventReference(context: context)
-                    eTag.eventId = jsonTag[safe: 1]
-                    eTag.recommendedRelayUrl = jsonTag[safe: 2]
-                    eTag.marker = jsonTag[safe: 3]
-                    newEventReferences.add(eTag)
+                    do {
+                        let eTag = try EventReference(jsonTag: jsonTag, context: context)
+                        newEventReferences.add(eTag)
+                    } catch {
+                        print("error parsing e tag: \(error.localizedDescription)")
+                    }
                 } else {
                     let authorReference = AuthorReference(context: context)
                     authorReference.pubkey = jsonTag[safe: 1]
@@ -365,11 +443,23 @@ public class Event: NosManagedObject {
             eventReferences = newEventReferences
             authorReferences = newAuthorReferences
         }
-	}
+    }
     // swiftlint:enable function_body_length
     
     class func all(context: NSManagedObjectContext) -> [Event] {
         let allRequest = Event.allPostsRequest()
+        
+        do {
+            let results = try context.fetch(allRequest)
+            return results
+        } catch let error as NSError {
+            print("Failed to fetch events. Error: \(error.description)")
+            return []
+        }
+    }
+    
+    class func allByUser(context: NSManagedObjectContext) -> [Event] {
+        let allRequest = Event.allUserPostsRequest()
         
         do {
             let results = try context.fetch(allRequest)
@@ -389,4 +479,33 @@ public class Event: NosManagedObject {
             print("Failed to delete events. Error: \(error.description)")
         }
     }
+    
+    /// Returns true if this event tagged the given author.
+    func references(author: Author) -> Bool {
+        guard let authorReferences = authorReferences else {
+            return false
+        }
+        
+        return authorReferences.contains(where: { element in
+            (element as? AuthorReference)?.pubkey == author.hexadecimalPublicKey
+        })
+    }
+    
+    /// Returns true if this event is a reply to an event by the given author.
+    func isReply(to author: Author) -> Bool {
+        guard let eventReferences else {
+            return false
+        }
+        
+        return eventReferences.contains(where: { element in
+            let rootEvent = (element as? EventReference)?.referencedEvent
+            return rootEvent?.author?.hexadecimalPublicKey == author.hexadecimalPublicKey
+        })
+    }
+    
+    /// Returns true if this note does not tag any other events.
+    func rootNote() -> Event {
+        (eventReferences?.firstObject as? EventReference)?.referencedEvent ?? self
+    }
 }
+// swiftlint:enable type_body_length

@@ -21,23 +21,29 @@ struct AppView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     
+    @State
+    private var showingOptions = false
+    
     /// An enumeration of the destinations for AppView.
     enum Destination: String, Hashable {
         case home
         case discover
         case relays
         case settings
+        case notifications
         
         var label: some View {
             switch self {
             case .home:
                 return Text(Localized.homeFeedLinkTitle.string)
             case .discover:
-                return Text("Discover")
+                return Localized.discover.view
             case .relays:
                 return Text(Localized.relaysLinkTitle.string)
             case .settings:
                 return Text(Localized.settingsLinkTitle.string)
+            case .notifications:
+                return Localized.notifications.view
             }
         }
         var destinationString: String {
@@ -45,11 +51,13 @@ struct AppView: View {
             case .home:
                 return Localized.homeFeedLinkTitle.string
             case .discover:
-                return "Discover"
+                return Localized.discover.string
             case .relays:
                 return Localized.relaysLinkTitle.string
             case .settings:
                 return Localized.settingsLinkTitle.string
+            case .notifications:
+                return Localized.notifications.string
             }
         }
     }
@@ -64,20 +72,20 @@ struct AppView: View {
                     ZStack {
                         TabView(selection: $selectedTab) {
                             HomeFeedView(user: CurrentUser.author(in: viewContext))
-                                .tabItem {
-                                    Label("Home Feed", systemImage: "house")
-                                }
+                                .tabItem { Label(Localized.homeFeed.string, systemImage: "house") }
                                 .tag(Destination.home)
                             
                             DiscoverView()
-                                .tabItem {
-                                    Label("Discover", systemImage: "magnifyingglass")
-                                }
+                                .tabItem { Label(Localized.discover.string, systemImage: "magnifyingglass") }
                                 .tag(Destination.discover)
+                            
+                            NotificationsView(user: CurrentUser.author(in: viewContext))
+                                .tabItem { Label(Localized.notifications.string, systemImage: "bell") }
+                                .tag(Destination.notifications)
 
                             RelayView()
                                 .tabItem {
-                                    Label("Relays", systemImage: "antenna.radiowaves.left.and.right")
+                                    Label(Localized.relays.string, systemImage: "antenna.radiowaves.left.and.right")
                                 }
                                 .tag(Destination.relays)
                         }
@@ -118,11 +126,17 @@ struct AppView: View {
                                     if router.path.count > 0 {
                                         Button(
                                             action: {
+                                                showingOptions = true
                                             },
                                             label: {
                                                 Image(systemName: "ellipsis")
                                             }
                                         )
+                                        .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
+                                            Button(Localized.copyUserIdentifier.string) {
+                                                UIPasteboard.general.string = router.userNpubPublicKey
+                                            }
+                                        }
                                     } else {
                                         Button(
                                             action: {
@@ -135,12 +149,12 @@ struct AppView: View {
                                     }
                                 }
                         )
-
                         .sheet(isPresented: $isCreatingNewPost, content: {
                             NewPostView(isPresented: $isCreatingNewPost)
                         })
                     }
                 }
+                .navigationViewStyle(.stack)
                 
                 SideMenu(
                     width: UIScreen.main.bounds.width / 1.3,
