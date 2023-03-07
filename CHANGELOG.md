@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add the ellipsis button to NoteCard and allow the user to copy the NIP-19 note ID of a note.
 - Enabled button to copy user ID on Profile View
 - Fixed UI freezes when using many relays by moving event processing to a background thread.
+- On relay remove, send CLOSE to all subs then disconnect and delete socket
 
 ## [0.1 (5)] 2023-03-02 
 
