@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import RegexBuilder
 
 enum EventError: Error {
 	case jsonEncoding
@@ -248,6 +249,42 @@ public class Event: NosManagedObject {
             content: content,
             signature: signature
         )
+    }
+    
+    func attributedContent(with context: NSManagedObjectContext) -> AttributedString? {
+        guard let content = self.content else {
+            return nil
+        }
+        
+        let regex = Regex {
+            "#["
+            TryCapture {
+                OneOrMore(.digit)
+            } transform: {
+                Int($0)
+            }
+            "]"
+        }
+        
+        var mentions = [String]()
+        let result = content.replacing(regex) { match in
+            let pubkey = ((self.authorReferences?.array as? [AuthorReference])?[match.1])!.pubkey!
+            let author = try! Author.find(by: pubkey, context: context)
+            
+            let mentionString = "@\(author!.safeName)"
+            mentions.append(mentionString)
+
+            return mentionString
+        }
+        
+        var attributed = try! AttributedString(markdown: result)
+        for mention in mentions {
+            if let range = attributed.range(of: mention) {
+                attributed[range].foregroundColor = .linkColor
+            }
+        }
+        
+        return attributed
     }
 	
     // swiftlint:disable function_body_length
