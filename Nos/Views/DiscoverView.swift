@@ -43,18 +43,23 @@ struct DiscoverView: View {
             }
             .padding(.horizontal)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        columns += 1
-                    } label: {
-                        Image(systemName: "plus")
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        columns = max(columns - 1, 1)
-                    } label: {
-                        Image(systemName: "minus")
+                ToolbarItem(placement: ToolbarItemPlacement.principal) {
+                    HStack {
+                        Button {
+                            columns = max(columns - 1, 1)
+                        } label: {
+                            Image(systemName: "minus")
+                        }
+                        DiscoverSearchBar(placeholder: "Find a user by ID", onSubmitSearch: { text in
+                            let publicKey = PublicKey(npub: text)
+                            let author = try! Author.findOrCreate(by: publicKey!.hex, context: viewContext)
+                            router.path.append(author)
+                        })
+                        Button {
+                            columns += 1
+                        } label: {
+                            Image(systemName: "plus")
+                        }
                     }
                 }
             }
