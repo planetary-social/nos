@@ -34,7 +34,11 @@ struct PersistenceController {
         let viewContext = result.container.viewContext
         return result
     }()
-
+    
+    var viewContext: NSManagedObjectContext {
+        container.viewContext
+    }
+    
     var container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
@@ -108,5 +112,9 @@ struct PersistenceController {
             currentAuthor.follows = NSSet(array: follows)
             // swiftlint:enable legacy_objc_type
         }
+    }
+    
+    func newBackgroundContext() -> NSManagedObjectContext {
+        container.newBackgroundContext()
     }
 }
