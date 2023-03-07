@@ -30,7 +30,7 @@ struct RelayView: View {
                         for index in indexes {
                             let relay = relays[index]
 
-                            guard let address = relay.address else { break }
+                            guard let address = relay.address else { continue }
 
                             if let socket = relayService.socket(for: address) {
                                 for subId in relayService.activeSubscriptions {
