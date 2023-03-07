@@ -6,6 +6,7 @@
 //
 //
 
+// swiftlint:disable file_length
 import Foundation
 import CoreData
 import RegexBuilder
@@ -509,3 +510,4 @@ public class Event: NosManagedObject {
     }
 }
 // swiftlint:enable type_body_length
+// swiftlint:enable file_length
