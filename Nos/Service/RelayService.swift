@@ -26,7 +26,7 @@ final class RelayService: ObservableObject {
     }
     
     var activeSubscriptions: [String] {
-        requestFilterSet.map{ $0.subscriptionId }
+        requestFilterSet.map { $0.subscriptionId }
     }
 
     var allRelayAddresses: [String] {
