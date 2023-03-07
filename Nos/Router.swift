@@ -12,4 +12,6 @@ class Router: ObservableObject {
     @Published var path = NavigationPath()
     /// Sets the title when navigating to a view
     @Published var navigationTitle = ""
+    
+    @Published var userNpubPublicKey = ""
 }

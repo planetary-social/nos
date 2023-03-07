@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for threads in reply views
 - Retry failed Event sends every 2 minutes (max 5 retries)
 - Add basic notifications tab
+- Filter the Home Feed down to root posts
+- The profile view requests the latest events and metadata for the given user from the relays
+- Add the ellipsis button to NoteCard and allow the user to copy the NIP-19 note ID of a note.
+- Enabled button to copy user ID on Profile View
 - Fixed UI freezes when using many relays by moving event processing to a background thread.
 
 ## [0.1 (5)] 2023-03-02 
@@ -29,10 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed app crash when no user is passed to HomeFeedView initializer
 - Added ability to post a reply in thread view.
 - Fixed READ MORE Button
-- Filter the Home Feed down to root posts
 - In the Discover tab, display a feed of interesting people
-- The profile view requests the latest events and metadata for the given user from the relays
-- Add the ellipsis button to NoteCard and allow the user to copy the NIP-19 note ID of a note.
 
 ## [0.1 (4)] - 2023-02-24
 

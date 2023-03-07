@@ -78,6 +78,7 @@ struct ProfileView: View {
         .navigationBarBackButtonHidden(true)
         .onAppear {
             router.navigationTitle = Localized.profile.rawValue
+            router.userNpubPublicKey = author.publicKey?.npub ?? ""
         }
         .task {
             refreshProfileFeed()
