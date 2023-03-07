@@ -6,6 +6,7 @@
 //
 
 import CoreData
+import Logger
 
 struct PersistenceController {
     static let shared = PersistenceController()
@@ -76,7 +77,7 @@ struct PersistenceController {
     
     static func loadSampleData(context: NSManagedObjectContext) {
         guard let sampleFile = Bundle.current.url(forResource: "sample_data", withExtension: "json") else {
-            print("Error: bad sample file location")
+            Log.error("Error: bad sample file location")
             return
         }
     

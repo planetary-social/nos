@@ -54,6 +54,8 @@
 		C95D68B2299ECE0700429F86 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = C95D68AF299ECE0700429F86 /* CHANGELOG.md */; };
 		C95D68B3299ECE0700429F86 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C95D68B0299ECE0700429F86 /* README.md */; };
 		C95D68B4299ECE0700429F86 /* CONTRIBUTING.md in Resources */ = {isa = PBXBuildFile; fileRef = C95D68B1299ECE0700429F86 /* CONTRIBUTING.md */; };
+		C9646E9A29B79E04007239A4 /* Logger in Frameworks */ = {isa = PBXBuildFile; productRef = C9646E9929B79E04007239A4 /* Logger */; };
+		C9646E9C29B79E4D007239A4 /* Logger in Frameworks */ = {isa = PBXBuildFile; productRef = C9646E9B29B79E4D007239A4 /* Logger */; };
 		C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */; };
 		C97797B9298AA19A0046BD25 /* RelayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97797B8298AA19A0046BD25 /* RelayService.swift */; };
 		C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C97797BB298AB1890046BD25 /* secp256k1 */; };
@@ -267,6 +269,7 @@
 			files = (
 				C9DEC068298965270078B43A /* Starscream in Frameworks */,
 				C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */,
+				C9646E9A29B79E04007239A4 /* Logger in Frameworks */,
 				C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -277,6 +280,7 @@
 			files = (
 				C97797BF298ABE060046BD25 /* secp256k1 in Frameworks */,
 				CDDA1F7B29A527650047ACD8 /* Starscream in Frameworks */,
+				C9646E9C29B79E4D007239A4 /* Logger in Frameworks */,
 				CDDA1F7D29A527650047ACD8 /* SwiftUINavigation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -511,6 +515,7 @@
 				C9DEC067298965270078B43A /* Starscream */,
 				C97797BB298AB1890046BD25 /* secp256k1 */,
 				C94D855E29914D2300749478 /* SwiftUINavigation */,
+				C9646E9929B79E04007239A4 /* Logger */,
 			);
 			productName = Nos;
 			productReference = C9DEBFCE298941000078B43A /* Nos.app */;
@@ -534,6 +539,7 @@
 				C97797BE298ABE060046BD25 /* secp256k1 */,
 				CDDA1F7A29A527650047ACD8 /* Starscream */,
 				CDDA1F7C29A527650047ACD8 /* SwiftUINavigation */,
+				C9646E9B29B79E4D007239A4 /* Logger */,
 			);
 			productName = NosTests;
 			productReference = C9DEBFE4298941020078B43A /* NosTests.xctest */;
@@ -593,6 +599,7 @@
 				C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */,
 				C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */,
 				C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32" */,
+				C9646E9829B79E04007239A4 /* XCRemoteSwiftPackageReference "logger-ios" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -1160,6 +1167,14 @@
 				minimumVersion = 0.6.1;
 			};
 		};
+		C9646E9829B79E04007239A4 /* XCRemoteSwiftPackageReference "logger-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/planetary-social/logger-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GigaBitcoin/secp256k1.swift";
@@ -1191,6 +1206,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */;
 			productName = SwiftUINavigation;
+		};
+		C9646E9929B79E04007239A4 /* Logger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9646E9829B79E04007239A4 /* XCRemoteSwiftPackageReference "logger-ios" */;
+			productName = Logger;
+		};
+		C9646E9B29B79E4D007239A4 /* Logger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9646E9829B79E04007239A4 /* XCRemoteSwiftPackageReference "logger-ios" */;
+			productName = Logger;
 		};
 		C97797BB298AB1890046BD25 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
