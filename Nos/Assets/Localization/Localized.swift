@@ -53,7 +53,7 @@ enum Localized: String, Localizable, CaseIterable {
     case nos = "Nos"
     
     case error = "Error"
-    case noEvents = "No Events Yet! Add a relay to get started"
+    case noEvents = "No notes to show! Add a relay to get started."
     case addItem = "Add Item"
     case homeFeed = "Home Feed"
     case homeFeedLinkTitle = "🏠 Home Feed"
@@ -90,6 +90,9 @@ enum Localized: String, Localizable, CaseIterable {
     case loadSampleData = "Load Sample Data"
     case sampleDataInstructions = "This will delete all events and load those in sample_data.json"
     
+    case discover = "Discover"
+    case notifications = "Notifications"
+    case noNotifications = "No notifications (yet)!"
     case copyNoteIdentifier = "Copy Note Identifier"
     case share = "Share"
     case reportPost = "Report this post"

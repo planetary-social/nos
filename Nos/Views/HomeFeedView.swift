@@ -21,6 +21,7 @@ struct HomeFeedView: View {
 
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
     
+    // Probably the logged in user should be in the @Environment eventually
     private var user: Author?
     
     @State private var subscriptionIds: [String] = []
