@@ -266,25 +266,17 @@ public class Event: NosManagedObject {
             "]"
         }
         
-        var mentions = [String]()
         let result = content.replacing(regex) { match in
-            let pubkey = ((self.authorReferences?.array as? [AuthorReference])?[match.1])!.pubkey!
-            let author = try! Author.find(by: pubkey, context: context)
-            
-            let mentionString = "@\(author!.safeName)"
-            mentions.append(mentionString)
-
-            return mentionString
-        }
-        
-        var attributed = try! AttributedString(markdown: result)
-        for mention in mentions {
-            if let range = attributed.range(of: mention) {
-                attributed[range].foregroundColor = .linkColor
+            if let authorReferences = self.authorReferences?.array as? [AuthorReference],
+                let pubkey = authorReferences[safe: match.1]?.pubkey,
+                let author = try? Author.find(by: pubkey, context: context) {
+                let mentionString = "[@\(author.safeName)](@\(author.hexadecimalPublicKey!))"
+                return mentionString
             }
+            return ""
         }
         
-        return attributed
+        return try? AttributedString(markdown: result)
     }
 	
     // swiftlint:disable function_body_length

@@ -30,6 +30,10 @@ struct GoldenPostView: View {
         Text(note.attributedContent(with: viewContext) ?? "")
             .foregroundColor(.primaryTxt)
             .accentColor(.accent)
+            .environment(\.openURL, OpenURLAction { url in
+                router.open(url: url, with: viewContext)
+                return .handled
+            })
     }
 
     var footer: some View {

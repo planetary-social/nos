@@ -42,6 +42,10 @@ struct CompactNoteView: View {
                     .foregroundColor(.primaryTxt)
                     .accentColor(.accent)
                     .padding(15)
+                    .environment(\.openURL, OpenURLAction { url in
+                        router.open(url: url, with: viewContext)
+                        return .handled
+                    })
             } else {
                 Text(note.attributedContent(with: viewContext) ?? "")
                     .lineLimit(5)
@@ -49,6 +53,10 @@ struct CompactNoteView: View {
                     .foregroundColor(.primaryTxt)
                     .accentColor(.accent)
                     .padding(15)
+                    .environment(\.openURL, OpenURLAction { url in
+                        router.open(url: url, with: viewContext)
+                        return .handled
+                    })
                     .background {
                         GeometryReader { geometryProxy in
                             Color.clear.preference(key: TruncatedSizePreferenceKey.self, value: geometryProxy.size)
