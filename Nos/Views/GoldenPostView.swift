@@ -22,12 +22,18 @@ struct GoldenPostView: View {
 
     private let goldenRatio: CGFloat = 0.618
     
+    @Environment(\.managedObjectContext) private var viewContext
+    
     @EnvironmentObject private var router: Router
 
     var text: some View {
-        Text(note.content ?? "")
+        Text(note.attributedContent(with: viewContext) ?? "")
             .foregroundColor(.primaryTxt)
             .accentColor(.accent)
+            .environment(\.openURL, OpenURLAction { url in
+                router.open(url: url, with: viewContext)
+                return .handled
+            })
     }
 
     var footer: some View {

@@ -6,8 +6,10 @@
 //
 //
 
+// swiftlint:disable file_length
 import Foundation
 import CoreData
+import RegexBuilder
 
 enum EventError: Error {
 	case jsonEncoding
@@ -317,7 +319,35 @@ public class Event: NosManagedObject {
             signature: signature
         )
     }
-
+    
+    func attributedContent(with context: NSManagedObjectContext) -> AttributedString? {
+        guard let content = self.content else {
+            return nil
+        }
+        
+        let regex = Regex {
+            "#["
+            TryCapture {
+                OneOrMore(.digit)
+            } transform: {
+                Int($0)
+            }
+            "]"
+        }
+        
+        let result = content.replacing(regex) { match in
+            if let authorReferences = self.authorReferences?.array as? [AuthorReference],
+                let pubkey = authorReferences[safe: match.1]?.pubkey,
+                let author = try? Author.find(by: pubkey, context: context) {
+                let mentionString = "[@\(author.safeName)](@\(author.hexadecimalPublicKey!))"
+                return mentionString
+            }
+            return ""
+        }
+        
+        return try? AttributedString(markdown: result)
+    }
+	
     // swiftlint:disable function_body_length
     convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) throws {
         self.init(context: context)
@@ -480,3 +510,4 @@ public class Event: NosManagedObject {
     }
 }
 // swiftlint:enable type_body_length
+// swiftlint:enable file_length
