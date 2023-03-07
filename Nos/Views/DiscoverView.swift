@@ -51,9 +51,10 @@ struct DiscoverView: View {
                             Image(systemName: "minus")
                         }
                         DiscoverSearchBar(placeholder: "Find a user by ID", onSubmitSearch: { text in
-                            let publicKey = PublicKey(npub: text)
-                            let author = try! Author.findOrCreate(by: publicKey!.hex, context: viewContext)
-                            router.path.append(author)
+                            if let publicKey = PublicKey(npub: text) {
+                                let author = try! Author.findOrCreate(by: publicKey.hex, context: viewContext)
+                                router.path.append(author)
+                            }
                         })
                         Button {
                             columns += 1
