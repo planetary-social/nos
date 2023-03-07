@@ -103,6 +103,13 @@ public class Event: NosManagedObject {
             publicKey
         )
     }
+
+    @nonobjc public class func allUserPostsRequest() -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = NSPredicate(format: "sendAttempts > 0 AND sendAttempts < 5")
+        return fetchRequest
+    }
     
     @nonobjc public class func allRepliesPredicate(for user: Author) -> NSPredicate {
         NSPredicate(format: "kind = 1 AND ANY eventReferences.referencedEvent.author = %@", user)
@@ -211,6 +218,14 @@ public class Event: NosManagedObject {
         let key = author.hexadecimalPublicKey ?? "notakey"
         fetchRequest.predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey = %@", kind, key)
         return fetchRequest
+    }
+
+    class func find(by identifier: String, context: NSManagedObjectContext) -> Event? {
+        if let existingEvent = try? context.fetch(Event.event(by: identifier)).first {
+            return existingEvent
+        }
+
+        return nil
     }
     
     class func findOrCreate(jsonEvent: JSONEvent, context: NSManagedObjectContext) throws -> Event {
@@ -321,6 +336,7 @@ public class Event: NosManagedObject {
         content = jsonEvent.content
         kind = jsonEvent.kind
         signature = jsonEvent.signature
+        sendAttempts = 0
         
         // Tags
         allTags = jsonEvent.tags as NSObject
@@ -403,6 +419,18 @@ public class Event: NosManagedObject {
     
     class func all(context: NSManagedObjectContext) -> [Event] {
         let allRequest = Event.allPostsRequest()
+        
+        do {
+            let results = try context.fetch(allRequest)
+            return results
+        } catch let error as NSError {
+            print("Failed to fetch events. Error: \(error.description)")
+            return []
+        }
+    }
+    
+    class func allByUser(context: NSManagedObjectContext) -> [Event] {
+        let allRequest = Event.allUserPostsRequest()
         
         do {
             let results = try context.fetch(allRequest)

@@ -22,7 +22,9 @@ struct RepliesView: View {
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
     
     var directReplies: [Event] {
-        replies.filter { ($0.eventReferences?.lastObject as? EventReference)?.referencedEvent?.identifier == note.identifier }
+        replies.filter {
+            ($0.eventReferences?.lastObject as? EventReference)?.referencedEvent?.identifier == note.identifier
+        }
     }
     
     init(note: Event) {
