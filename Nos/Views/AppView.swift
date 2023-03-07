@@ -21,6 +21,9 @@ struct AppView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     
+    @State
+    private var showingOptions = false
+    
     /// An enumeration of the destinations for AppView.
     enum Destination: String, Hashable {
         case home
@@ -123,11 +126,17 @@ struct AppView: View {
                                     if router.path.count > 0 {
                                         Button(
                                             action: {
+                                                showingOptions = true
                                             },
                                             label: {
                                                 Image(systemName: "ellipsis")
                                             }
                                         )
+                                        .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
+                                            Button(Localized.copyUserIdentifier.string) {
+                                                UIPasteboard.general.string = router.userNpubPublicKey
+                                            }
+                                        }
                                     } else {
                                         Button(
                                             action: {
@@ -140,7 +149,6 @@ struct AppView: View {
                                     }
                                 }
                         )
-
                         .sheet(isPresented: $isCreatingNewPost, content: {
                             NewPostView(isPresented: $isCreatingNewPost)
                         })
