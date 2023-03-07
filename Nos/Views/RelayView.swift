@@ -9,8 +9,8 @@ import SwiftUI
 import CoreData
 
 struct RelayView: View {
-    
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var relayService: RelayService
     
     @State var newRelayAddress: String = ""
     
@@ -29,6 +29,15 @@ struct RelayView: View {
                     .onDelete { indexes in
                         for index in indexes {
                             let relay = relays[index]
+
+                            if let socket = relayService.socket(for: relay.address!) {
+                                for subId in relayService.activeSubscriptions {
+                                    relayService.sendClose(from: socket, subscription: subId)
+                                }
+
+                                relayService.close(socket: socket)
+                            }
+                            
                             viewContext.delete(relay)
                         }
                         try! viewContext.save()
