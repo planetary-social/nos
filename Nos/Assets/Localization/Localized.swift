@@ -61,7 +61,7 @@ enum Localized: String, Localizable, CaseIterable {
     case settingsLinkTitle = "⚙️ Settings"
     
     case keys = "Keys"
-    case keyEncryptionWarning = "Warning: your private key will be stored unencrypted on disk."
+    case keyEncryptionWarning = "Warning: Never share your private key with anyone."
     case privateKeyPlaceholder = "nsec..."
     case save = "Save"
     case settings = "Settings"

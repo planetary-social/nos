@@ -1,5 +1,5 @@
 //
-//  NewPostView.swift
+//  NewNoteView.swift
 //  Nos
 //
 //  Created by Matthew Lorentz on 2/6/23.
@@ -8,8 +8,9 @@
 import SwiftUI
 import CoreData
 import SwiftUINavigation
+import Dependencies
 
-struct NewPostView: View {
+struct NewNoteView: View {
     private var keyPair: KeyPair? {
         KeyPair.loadFromKeychain()
     }
@@ -17,6 +18,8 @@ struct NewPostView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var relayService: RelayService
+    
+    @Dependency(\.analytics) private var analytics
     
     @State private var postText: String = ""
     
@@ -69,6 +72,7 @@ struct NewPostView: View {
                 try event.sign(withKey: keyPair)
                 relayService.publishToAll(event: event)
                 isPresented = false
+                analytics.published(note: event)
             } catch {
                 alert = AlertState(title: {
                     TextState(Localized.error.string)
@@ -92,7 +96,7 @@ struct NewPostView_Previews: PreviewProvider {
     static var relayService = RelayService(persistenceController: persistenceController)
     
     static var previews: some View {
-        NewPostView(isPresented: .constant(true))
+        NewNoteView(isPresented: .constant(true))
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
     }
