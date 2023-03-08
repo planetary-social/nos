@@ -169,13 +169,7 @@ enum CurrentUser {
 
         // Delete cached texts from this person
         if let author = try? Author.find(by: unfollowedKey, context: context) {
-            let deleteRequest = Event.deleteAllPosts(by: author)
-            
-            do {
-                try context.execute(deleteRequest)
-            } catch let error as NSError {
-                print("Failed to delete texts from \(unfollowedKey). Error: \(error.description)")
-            }
+            author.deleteAllPosts(context: context)
         }
     }
     
