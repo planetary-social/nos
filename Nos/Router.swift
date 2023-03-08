@@ -29,8 +29,7 @@ extension Router {
                 self.path.append(author)
             }
         } else if link.hasPrefix("%") {
-            if let eventId = try? Bech32.decode(identifier),
-                let event = Event.find(by: eventId.hrp, context: context) {
+            if let event = Event.find(by: identifier, context: context) {
                 self.path.append(event)
             }
         }
