@@ -15,6 +15,8 @@ class Router: ObservableObject {
     @Published var navigationTitle = ""
     
     @Published var userNpubPublicKey = ""
+    
+    @Published var selectedTab = Destination.home
 }
 
 extension Router {

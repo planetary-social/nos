@@ -15,8 +15,6 @@ struct AppView: View {
 
     @State var sideMenuOpened = false
 
-    @State var selectedTab = Destination.home
-    
     @EnvironmentObject var router: Router
     
     @Environment(\.managedObjectContext) private var viewContext
@@ -25,42 +23,6 @@ struct AppView: View {
     private var showingOptions = false
     
     /// An enumeration of the destinations for AppView.
-    enum Destination: String, Hashable {
-        case home
-        case discover
-        case relays
-        case settings
-        case notifications
-        
-        var label: some View {
-            switch self {
-            case .home:
-                return Text(Localized.homeFeedLinkTitle.string)
-            case .discover:
-                return Localized.discover.view
-            case .relays:
-                return Text(Localized.relaysLinkTitle.string)
-            case .settings:
-                return Text(Localized.settingsLinkTitle.string)
-            case .notifications:
-                return Localized.notifications.view
-            }
-        }
-        var destinationString: String {
-            switch self {
-            case .home:
-                return Localized.homeFeedLinkTitle.string
-            case .discover:
-                return Localized.discover.string
-            case .relays:
-                return Localized.relaysLinkTitle.string
-            case .settings:
-                return Localized.settingsLinkTitle.string
-            case .notifications:
-                return Localized.notifications.string
-            }
-        }
-    }
     
     var body: some View {
         
@@ -70,7 +32,7 @@ struct AppView: View {
             } else {
                 NavigationView {
                     ZStack {
-                        TabView(selection: $selectedTab) {
+                        TabView(selection: $router.selectedTab) {
                             HomeFeedView(user: CurrentUser.author(in: viewContext))
                                 .tabItem { Label(Localized.homeFeed.string, systemImage: "house") }
                                 .tag(Destination.home)
@@ -89,14 +51,16 @@ struct AppView: View {
                                 }
                                 .tag(Destination.relays)
                         }
-                        .onChange(of: selectedTab) { _ in
+                        .onChange(of: router.selectedTab) { _ in
                             if router.path.count > 0 {
                                 router.path.removeLast(router.path.count)
                             }
                         }
               
                         .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle(router.path.count > 0 ? router.navigationTitle : selectedTab.destinationString)
+                        .navigationTitle(
+                            router.path.count > 0 ? router.navigationTitle : router.selectedTab.destinationString
+                        )
                         .navigationBarItems(
                             leading:
                                 Group {

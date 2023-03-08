@@ -51,8 +51,8 @@ struct NotificationsView: View {
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
             }
-            .navigationDestination(for: AppView.Destination.self) { destination in
-                if destination == AppView.Destination.settings {
+            .navigationDestination(for: Destination.self) { destination in
+                if destination == Destination.settings {
                     SettingsView()
                 }
             }

@@ -17,16 +17,22 @@ struct SideMenuContent: View {
             VStack(alignment: .leading, spacing: 0, content: {
                 HStack {
                     Button {
-                        do {
-                            guard let keyPair = KeyPair.loadFromKeychain() else { return }
-                            let author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
-                            router.path.append(author)
-                            router.navigationTitle = Localized.profile.string
-                            closeMenu()
-                        } catch {
-                            // Replace this implementation with code to handle the error appropriately.
-                            let nsError = error as NSError
-                            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                        // A hack to prevent the relays tab from crashing the app after going to the profile page
+                        router.selectedTab = Destination.relays
+                        closeMenu()
+                        Task {
+                            do {
+                                // Sleep for a half second after going to the relays tab
+                                try! await Task.sleep(nanoseconds: 500_000_000)
+                                guard let keyPair = KeyPair.loadFromKeychain() else { return }
+                                let author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+                                router.path.append(author)
+                                router.navigationTitle = Localized.profile.string
+                            } catch {
+                                // Replace this implementation with code to handle the error appropriately.
+                                let nsError = error as NSError
+                                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                            }
                         }
                     } label: {
                         HStack(alignment: .center) {
@@ -34,13 +40,12 @@ struct SideMenuContent: View {
                             Text("Your Profile")
                         }
                     }
-                    
                     Spacer()
                 }
                 .padding()
                 HStack {
                     Button {
-                        router.path.append(AppView.Destination.settings)
+                        router.path.append(Destination.settings)
                         router.navigationTitle = Localized.settings.string
                         closeMenu()
                     } label: {
