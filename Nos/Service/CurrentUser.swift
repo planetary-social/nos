@@ -38,7 +38,9 @@ enum CurrentUser {
     }
     
     static var author: Author {
-        try! Author.findOrCreate(by: publicKey!, context: context!)
+        let persistenceController = PersistenceController.shared
+        context = persistenceController.container.viewContext
+        return try! Author.findOrCreate(by: publicKey ?? "", context: context!)
     }
     
     static var follows: Set<Follow>? {
@@ -76,7 +78,7 @@ enum CurrentUser {
     }
     
     static func updateFollows(pubKey: String, followKey: String, tags: [[String]], context: NSManagedObjectContext) {
-        guard let relays = relayService?.allRelayAddresses else {
+        guard let relays = author.relays?.allObjects as? [Relay] else {
             print("Error: No relay service")
             return
         }

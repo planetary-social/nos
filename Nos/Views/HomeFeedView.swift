@@ -87,7 +87,6 @@ struct HomeFeedView: View {
             })
         }
         .task {
-            CurrentUser.context = viewContext
             CurrentUser.relayService = relayService
             refreshHomeFeed()
         }
