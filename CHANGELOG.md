@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add a search bar to the discover tab that users can use to look up other users.
 - On relay remove, send CLOSE to all subs then disconnect and delete socket
 - Render user mentions in NoteCard
+- Replace the warning message to tell the user never to share their private key with anyone.
 
 ## [0.1 (5)] 2023-03-02 
 
