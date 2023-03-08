@@ -78,7 +78,7 @@ enum CurrentUser {
     }
     
     static func updateFollows(pubKey: String, followKey: String, tags: [[String]], context: NSManagedObjectContext) {
-        guard let relays = relayService?.allRelayAddresses else {
+        guard let relays = author.relays?.allObjects as? [Relay] else {
             print("Error: No relay service")
             return
         }
