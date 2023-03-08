@@ -11,7 +11,7 @@ import CoreData
 struct ProfileView: View {
     @EnvironmentObject var router: Router
     
-    var author: Author
+    @ObservedObject var author: Author
     
     @Environment(\.managedObjectContext) private var viewContext
     
@@ -58,7 +58,7 @@ struct ProfileView: View {
                     .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 
                 LazyVStack {
-                    ForEach(events) { event in
+                    ForEach(events.filter { !$0.author!.muted }) { event in
                         VStack {
                             NoteButton(note: event)
                                 .padding(.horizontal)
@@ -69,7 +69,7 @@ struct ProfileView: View {
             .padding(.top, 1)
             .background(Color.appBg)
             .overlay(Group {
-                if events.isEmpty {
+                if !events.contains(where: { !$0.author!.muted }) {
                     Localized.noEventsOnProfile.view
                         .padding()
                 }

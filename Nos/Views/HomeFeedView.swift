@@ -59,7 +59,7 @@ struct HomeFeedView: View {
         NavigationStack(path: $router.path) {
             ScrollView(.vertical) {
                 LazyVStack {
-                    ForEach(events) { event in
+                    ForEach(events.filter { !$0.author!.muted }) { event in
                         VStack {
                             NoteButton(note: event)
                                 .padding(.horizontal)
@@ -80,7 +80,7 @@ struct HomeFeedView: View {
                 }
             }
             .overlay(Group {
-                if events.isEmpty {
+                if !events.contains(where: { !$0.author!.muted }) {
                     Localized.noEvents.view
                         .padding()
                 }
