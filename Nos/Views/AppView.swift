@@ -68,7 +68,6 @@ struct AppView: View {
             if appController.currentState == .onboarding {
                 OnboardingView(completion: appController.completeOnboarding)
             } else {
-                NavigationView {
                     ZStack {
                         TabView(selection: $selectedTab) {
                             HomeFeedView(user: CurrentUser.author(in: viewContext))
@@ -153,8 +152,6 @@ struct AppView: View {
                             NewPostView(isPresented: $isCreatingNewPost)
                         })
                     }
-                }
-                .navigationViewStyle(.stack)
                 
                 SideMenu(
                     width: UIScreen.main.bounds.width / 1.3,

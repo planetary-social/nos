@@ -66,7 +66,9 @@ struct ProfileHeader: View {
                                 .font(.title3.weight(.semibold))
                                 .foregroundColor(Color.primaryTxt)
                             Spacer()
-                            FollowButton(currentUserAuthor: CurrentUser.author, author: author)
+                            if let currentUser = CurrentUser.author {
+                                FollowButton(currentUserAuthor: currentUser, author: author)
+                            }
                         }
                         Spacer()
 

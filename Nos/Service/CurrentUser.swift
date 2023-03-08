@@ -37,12 +37,15 @@ enum CurrentUser {
         }
     }
     
-    static var author: Author {
-        try! Author.findOrCreate(by: publicKey!, context: context!)
+    static var author: Author? {
+        if let publicKey, let context {
+            return try? Author.findOrCreate(by: publicKey, context: context)
+        }
+        return nil
     }
     
     static var follows: Set<Follow>? {
-        author.follows as? Set<Follow>
+        author?.follows as? Set<Follow>
     }
     
     static func subscribe() {
@@ -115,12 +118,12 @@ enum CurrentUser {
         let tags = followKeys.map { ["p", $0] }
         
         // Update author to add the new follow
-        if let followedAuthor = try? Author.find(by: followKey, context: context) {
+        if let followedAuthor = try? Author.find(by: followKey, context: context), let currentUser = author {
             // Add to the current user's follows
-            let follow = try! Follow.findOrCreate(source: author, destination: followedAuthor, context: context)
-            if let currentFollows = author.follows?.mutableCopy() as? NSMutableSet {
+            let follow = try! Follow.findOrCreate(source: currentUser, destination: followedAuthor, context: context)
+            if let currentFollows = currentUser.follows?.mutableCopy() as? NSMutableSet {
                 currentFollows.add(follow)
-                author.follows = currentFollows
+                currentUser.follows = currentFollows
             }
 
             // Add from the current user to the author's followers
@@ -148,12 +151,12 @@ enum CurrentUser {
         let tags = stillFollowingKeys.map { ["p", $0] }
         
         // Update author to only follow those still following
-        if let unfollowedAuthor = try? Author.find(by: unfollowedKey, context: context) {
+        if let unfollowedAuthor = try? Author.find(by: unfollowedKey, context: context), let currentUser = author {
             // Remove from the current user's follows
-            let unfollows = Follow.follows(source: author, destination: unfollowedAuthor, context: context)
-            if let currentFollows = author.follows?.mutableCopy() as? NSMutableSet {
+            let unfollows = Follow.follows(source: currentUser, destination: unfollowedAuthor, context: context)
+            if let currentFollows = currentUser.follows?.mutableCopy() as? NSMutableSet {
                 currentFollows.remove(unfollows)
-                author.follows = currentFollows
+                currentUser.follows = currentFollows
             }
             
             // Remove from the unfollowed author's followers

@@ -35,7 +35,9 @@ struct FollowCard: View {
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         Spacer()
-                        FollowButton(currentUserAuthor: CurrentUser.author, author: author)
+                        if let currentUser = CurrentUser.author {
+                            FollowButton(currentUserAuthor: currentUser, author: author)
+                        }
                     }
                 }
                 // TODO: Put MessageOptionsButton back here eventually

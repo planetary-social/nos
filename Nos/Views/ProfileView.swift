@@ -34,7 +34,7 @@ struct ProfileView: View {
             subscriptionIds.removeAll()
         }
 
-        if let currentUserPublicKey = CurrentUser.author.hexadecimalPublicKey {
+        if let currentUserPublicKey = CurrentUser.author?.hexadecimalPublicKey {
             let authors = [currentUserPublicKey]
             let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
             let textSub = relayService.requestEventsFromAll(filter: textFilter)

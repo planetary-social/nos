@@ -17,7 +17,7 @@ struct HomeFeedView: View {
 
     @EnvironmentObject var router: Router
     
-    private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.fetchRequest())
+    private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
 
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
     
@@ -40,7 +40,7 @@ struct HomeFeedView: View {
             subscriptionIds.removeAll()
         }
 
-        if let follows = CurrentUser.author.follows as? Set<Follow> {
+        if let follows = CurrentUser.author?.follows as? Set<Follow> {
             let authors = follows.compactMap({ $0.destination?.hexadecimalPublicKey! })
             
             if !authors.isEmpty {
