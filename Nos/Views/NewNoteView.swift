@@ -1,5 +1,5 @@
 //
-//  NewPostView.swift
+//  NewNoteView.swift
 //  Nos
 //
 //  Created by Matthew Lorentz on 2/6/23.
@@ -10,7 +10,7 @@ import CoreData
 import SwiftUINavigation
 import Dependencies
 
-struct NewPostView: View {
+struct NewNoteView: View {
     private var keyPair: KeyPair? {
         KeyPair.loadFromKeychain()
     }
@@ -96,7 +96,7 @@ struct NewPostView_Previews: PreviewProvider {
     static var relayService = RelayService(persistenceController: persistenceController)
     
     static var previews: some View {
-        NewPostView(isPresented: .constant(true))
+        NewNoteView(isPresented: .constant(true))
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
     }

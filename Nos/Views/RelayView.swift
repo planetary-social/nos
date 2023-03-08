@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import Dependencies
 
 struct RelayView: View {
     
@@ -19,6 +20,8 @@ struct RelayView: View {
     
     @EnvironmentObject var router: Router
     
+    @Dependency(\.analytics) private var analytics
+    
     var body: some View {
         NavigationStack(path: $router.path) {
             List {
@@ -29,6 +32,7 @@ struct RelayView: View {
                     .onDelete { indexes in
                         for index in indexes {
                             let relay = relays[index]
+                            analytics.removed(relay)
                             viewContext.delete(relay)
                         }
                         try! viewContext.save()
@@ -84,6 +88,7 @@ struct RelayView: View {
 
             do {
                 try viewContext.save()
+                analytics.added(relay)
             } catch {
                 // Replace this implementation with code to handle the error appropriately.
                 // fatalError() causes the application to generate a crash log and terminate. You should not

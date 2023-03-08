@@ -6,6 +6,28 @@
 //
 
 import SwiftUI
+import Dependencies
+
+struct ViewDidLoadModifier: ViewModifier {
+    @State private var viewDidLoad = false
+    let action: (() -> Void)?
+    
+    func body(content: Content) -> some View {
+        content
+            .onAppear {
+                if viewDidLoad == false {
+                    viewDidLoad = true
+                    action?()
+                }
+            }
+    }
+}
+
+extension View {
+    func onViewDidLoad(perform action: (() -> Void)? = nil) -> some View {
+        self.modifier(ViewDidLoadModifier(action: action))
+    }
+}
 
 struct OnboardingView: View {
     enum OnboardingStep {
@@ -32,6 +54,8 @@ struct OnboardingView: View {
     
     @State var showError = false
     
+    @Dependency(\.analytics) private var analytics
+    
     var body: some View {
         TabView(selection: $selectedTab) {
             VStack {
@@ -45,6 +69,9 @@ struct OnboardingView: View {
                 Spacer()
             }
             .tag(OnboardingStep.getStarted)
+            .onViewDidLoad {
+                analytics.startedOnboarding()
+            }
             
             NavigationStack {
                 VStack {
@@ -54,6 +81,8 @@ struct OnboardingView: View {
                     Button(Localized.Onboarding.generatePrivateKeyButton.string) {
                         let keyPair = KeyPair()!
                         self.keyPair = keyPair
+                        analytics.identify(with: keyPair)
+                        analytics.generatedKey()
                         
                         completion()
                     }
@@ -72,6 +101,8 @@ struct OnboardingView: View {
                             Button(Localized.save.string) {
                                 if let keyPair = KeyPair(nsec: privateKeyString) {
                                     self.keyPair = keyPair
+                                    analytics.identify(with: keyPair)
+                                    analytics.importedKey()
                                     completion()
                                 } else {
                                     self.keyPair = nil

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Dependencies
 
 class AppController: ObservableObject {
     enum CurrentState {
@@ -15,11 +16,14 @@ class AppController: ObservableObject {
     
     @Published private(set) var currentState: CurrentState?
     
+    @Dependency(\.analytics) private var analytics
+    
     func configureCurrentState() {
         currentState = KeyChain.load(key: KeyChain.keychainPrivateKey) == nil ? .onboarding : .loggedIn
     }
     
     func completeOnboarding() {
         currentState = .loggedIn
+        analytics.completedOnboarding()
     }
 }
