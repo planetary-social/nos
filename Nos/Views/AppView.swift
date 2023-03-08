@@ -150,7 +150,7 @@ struct AppView: View {
                                 }
                         )
                         .sheet(isPresented: $isCreatingNewPost, content: {
-                            NewPostView(isPresented: $isCreatingNewPost)
+                            NewNoteView(isPresented: $isCreatingNewPost)
                         })
                     }
                 }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import Dependencies
 
 struct RelayView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -18,6 +19,8 @@ struct RelayView: View {
     private var relays: FetchedResults<Relay>
     
     @EnvironmentObject var router: Router
+    
+    @Dependency(\.analytics) private var analytics
     
     var body: some View {
         NavigationStack(path: $router.path) {
@@ -41,6 +44,7 @@ struct RelayView: View {
                             }
                             
                             viewContext.delete(relay)
+                            analytics.removed(relay)
                         }
                         try! viewContext.save()
                     }
@@ -95,6 +99,7 @@ struct RelayView: View {
 
             do {
                 try viewContext.save()
+                analytics.added(relay)
             } catch {
                 // Replace this implementation with code to handle the error appropriately.
                 // fatalError() causes the application to generate a crash log and terminate. You should not
