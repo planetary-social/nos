@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add PostHog analytics
 - Open an email compose view controller for support@planetary.social 
+- Fix duplicate note on a new post
 
 ## [0.1 (6)] - 2023-03-08Z
 
