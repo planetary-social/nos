@@ -161,6 +161,7 @@
 		CD27177629A7C8B200AE8888 /* sample_replies.json in Resources */ = {isa = PBXBuildFile; fileRef = CD27177529A7C8B200AE8888 /* sample_replies.json */; };
 		CD2CF38E299E67F900332116 /* CardButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2CF38D299E67F900332116 /* CardButtonStyle.swift */; };
 		CD2CF390299E68BE00332116 /* NoteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2CF38F299E68BE00332116 /* NoteButton.swift */; };
+		CD4908D429B92941007443DB /* ReportABugMailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4908D329B92941007443DB /* ReportABugMailView.swift */; };
 		CD76864C29B12F7E00085358 /* ExpandingTextFieldAndSubmitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76864B29B12F7E00085358 /* ExpandingTextFieldAndSubmitButton.swift */; };
 		CD76864D29B133E600085358 /* ExpandingTextFieldAndSubmitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76864B29B12F7E00085358 /* ExpandingTextFieldAndSubmitButton.swift */; };
 		CD76865029B6503500085358 /* NoteOptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76864F29B6503500085358 /* NoteOptionsButton.swift */; };
@@ -270,6 +271,7 @@
 		CD27177529A7C8B200AE8888 /* sample_replies.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample_replies.json; sourceTree = "<group>"; };
 		CD2CF38D299E67F900332116 /* CardButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardButtonStyle.swift; sourceTree = "<group>"; };
 		CD2CF38F299E68BE00332116 /* NoteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteButton.swift; sourceTree = "<group>"; };
+		CD4908D329B92941007443DB /* ReportABugMailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportABugMailView.swift; sourceTree = "<group>"; };
 		CD76864B29B12F7E00085358 /* ExpandingTextFieldAndSubmitButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandingTextFieldAndSubmitButton.swift; sourceTree = "<group>"; };
 		CD76864F29B6503500085358 /* NoteOptionsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteOptionsButton.swift; sourceTree = "<group>"; };
 		CD76865229B793F400085358 /* DiscoverSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverSearchBar.swift; sourceTree = "<group>"; };
@@ -510,6 +512,7 @@
 				3F60F42829B27D3E000D62C4 /* ThreadView.swift */,
 				C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */,
 				CD76865229B793F400085358 /* DiscoverSearchBar.swift */,
+				CD4908D329B92941007443DB /* ReportABugMailView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -703,6 +706,7 @@
 				C9CDBBA129A8F14C00C555C7 /* DiscoverView.swift in Sources */,
 				C9ADB14129951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */,
 				C9F84C21298DC36800C6714D /* AppView.swift in Sources */,
+				CD4908D429B92941007443DB /* ReportABugMailView.swift in Sources */,
 				3FFB1D9629A6BBEC002A755D /* Collection+SafeSubscript.swift in Sources */,
 				A34E439929A522F20057AFCB /* CurrentUser.swift in Sources */,
 				C9DEC06A298965550078B43A /* RelayView.swift in Sources */,
