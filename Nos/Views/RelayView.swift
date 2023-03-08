@@ -10,8 +10,8 @@ import CoreData
 import Dependencies
 
 struct RelayView: View {
-    
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var relayService: RelayService
     
     @State var newRelayAddress: String = ""
     
@@ -32,7 +32,18 @@ struct RelayView: View {
                     .onDelete { indexes in
                         for index in indexes {
                             let relay = relays[index]
+
+                            guard let address = relay.address else { continue }
                             analytics.removed(relay)
+
+                            if let socket = relayService.socket(for: address) {
+                                for subId in relayService.activeSubscriptions {
+                                    relayService.sendClose(from: socket, subscription: subId)
+                                }
+
+                                relayService.close(socket: socket)
+                            }
+                            
                             viewContext.delete(relay)
                         }
                         try! viewContext.save()

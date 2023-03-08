@@ -14,15 +14,21 @@ final class RelayService: ObservableObject {
     private var requestFilterSet = Set<Filter>()
     private var sockets = [WebSocket]()
     private var timer: Timer?
+    private var backgroundContext: NSManagedObjectContext
     
     init(persistenceController: PersistenceController) {
         self.persistenceController = persistenceController
+        self.backgroundContext = persistenceController.newBackgroundContext()
         openSocketsForRelays()
         
         let pubSel = #selector(publishFailedEvents)
         timer = Timer.scheduledTimer(timeInterval: 120, target: self, selector: pubSel, userInfo: nil, repeats: true)
     }
     
+    var activeSubscriptions: [String] {
+        requestFilterSet.map { $0.subscriptionId }
+    }
+
     var allRelayAddresses: [String] {
         let objectContext = persistenceController.container.viewContext
         let relays = try? objectContext.fetch(Relay.allRelaysRequest())
@@ -30,38 +36,11 @@ final class RelayService: ObservableObject {
 
         return addresses
     }
-    
+        
     func removeFilter(for subscription: String) {
         // Remove this filter from the queue
         if let foundFilter = requestFilterSet.first(where: { $0.subscriptionId == subscription }) {
             requestFilterSet.remove(foundFilter)
-        }
-    }
-    
-    func openSocketsForRelays() {
-        let objectContext = persistenceController.container.viewContext
-        do {
-            let relays = try objectContext.fetch(Relay.allRelaysRequest())
-            for relay in relays {
-                guard let relayAddress = relay.address?.lowercased(),
-                    let relayURL = URL(string: relayAddress) else {
-                    continue
-                }
-                            
-                guard !sockets.contains(where: { $0.request.url == relayURL }) else {
-                    continue
-                }
-                
-                var request = URLRequest(url: relayURL)
-                request.timeoutInterval = 10
-                let socket = WebSocket(request: request, compressionHandler: .none)
-                socket.delegate = self
-                sockets.append(socket)
-                socket.connect()
-            }
-        } catch {
-            print(error)
-            // TODO:
         }
     }
         
@@ -158,10 +137,14 @@ extension RelayService {
             return
         }
         
-        do {
-            _ = try EventProcessor.parse(jsonObject: eventJSON, in: persistenceController.container.viewContext)
-        } catch {
-            print("Error: parsing event from relay: \(responseArray)")
+        Task.detached(priority: .userInitiated) {
+            do {
+                try await self.backgroundContext.perform {
+                    _ = try EventProcessor.parse(jsonObject: eventJSON, in: self.backgroundContext)
+                }
+            } catch {
+                print("Error: parsing event from relay: \(responseArray)")
+            }
         }
     }
     
@@ -275,13 +258,57 @@ extension RelayService {
             print("\(missedRelays.count) missing a published event.")
             for missedRelay in missedRelays {
                 guard let missedAddress = missedRelay.address else { continue }
-                if let index = sockets.firstIndex(where: { $0.request.url!.absoluteString == missedAddress }) {
+                if let socket = socket(for: missedAddress) {
                     // Publish again to this socket
                     print("Republishing \(event.identifier!) on \(missedAddress)")
-                    publish(from: sockets[index], event: event)
+                    publish(from: socket, event: event)
                 }
             }
         }
+    }
+}
+
+// MARK: Sockets
+extension RelayService {
+    func close(socket: WebSocket) {
+        socket.disconnect()
+        if let index = sockets.firstIndex(where: { $0 === socket }) {
+            sockets.remove(at: index)
+        }
+    }
+    
+    func openSocketsForRelays() {
+        let objectContext = persistenceController.container.viewContext
+        do {
+            let relays = try objectContext.fetch(Relay.allRelaysRequest())
+            for relay in relays {
+                guard let relayAddress = relay.address?.lowercased(),
+                    let relayURL = URL(string: relayAddress) else {
+                    continue
+                }
+                            
+                guard !sockets.contains(where: { $0.request.url == relayURL }) else {
+                    continue
+                }
+                
+                var request = URLRequest(url: relayURL)
+                request.timeoutInterval = 10
+                let socket = WebSocket(request: request, compressionHandler: .none)
+                socket.delegate = self
+                sockets.append(socket)
+                socket.connect()
+            }
+        } catch {
+            print(error)
+            // TODO:
+        }
+    }
+    
+    func socket(for address: String) -> WebSocket? {
+        if let index = sockets.firstIndex(where: { $0.request.url!.absoluteString == address }) {
+            return sockets[index]
+        }
+        return nil
     }
 }
 

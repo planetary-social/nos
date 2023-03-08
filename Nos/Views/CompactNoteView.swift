@@ -11,6 +11,8 @@ import SwiftUI
 /// A view that displays the text of a note (kind: 1 Nostr event) and truncates it with a "Read more" button if
 /// it is too long
 struct CompactNoteView: View {
+    
+    @Environment(\.managedObjectContext) private var viewContext
 
     var note: Event
 
@@ -35,18 +37,26 @@ struct CompactNoteView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             if showFullMessage {
-                Text(note.content ?? "")
+                Text(note.attributedContent(with: viewContext) ?? "")
                     .font(.body)
                     .foregroundColor(.primaryTxt)
                     .accentColor(.accent)
                     .padding(15)
+                    .environment(\.openURL, OpenURLAction { url in
+                        router.open(url: url, with: viewContext)
+                        return .handled
+                    })
             } else {
-                Text(note.content ?? "")
+                Text(note.attributedContent(with: viewContext) ?? "")
                     .lineLimit(5)
                     .font(.body)
                     .foregroundColor(.primaryTxt)
                     .accentColor(.accent)
                     .padding(15)
+                    .environment(\.openURL, OpenURLAction { url in
+                        router.open(url: url, with: viewContext)
+                        return .handled
+                    })
                     .background {
                         GeometryReader { geometryProxy in
                             Color.clear.preference(key: TruncatedSizePreferenceKey.self, value: geometryProxy.size)
@@ -59,7 +69,7 @@ struct CompactNoteView: View {
                         }
                     }
                     .background {
-                        Text(note.content ?? "")
+                        Text(note.attributedContent(with: viewContext) ?? "")
                             .font(.body)
                             .padding(15)
                             .fixedSize(horizontal: false, vertical: true)
