@@ -20,7 +20,7 @@ struct NoteButton: View {
     @EnvironmentObject private var relayService: RelayService
 
     var body: some View {
-        if let author = note.author{
+        if let author = note.author {
             Button {
                 // If we are on the home feed or this is not the root note, allow clicks on replies
                 if router.path.count == 0 || note.eventReferences?.count ?? 0 > 0
