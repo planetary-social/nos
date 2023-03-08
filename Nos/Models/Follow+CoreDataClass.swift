@@ -41,12 +41,9 @@ public class Follow: NosManagedObject {
         follow.destination = followedAuthor
         followedAuthor.lastUpdated = Date.now
         
-        if jsonTag.count > 2 {
+        if jsonTag.count > 2, !jsonTag[2].isEmpty {
             let relay = Relay.findOrCreate(by: jsonTag[2], context: context)
-            if let currentRelays = author.relays?.mutableCopy() as? NSMutableSet {
-                currentRelays.add(relay)
-                author.relays = currentRelays
-            }
+            author.add(relay: relay)
         }
         
         if jsonTag.count > 3 {

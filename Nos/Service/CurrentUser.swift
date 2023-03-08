@@ -38,7 +38,9 @@ enum CurrentUser {
     }
     
     static var author: Author {
-        try! Author.findOrCreate(by: publicKey!, context: context!)
+        let persistenceController = PersistenceController.shared
+        context = persistenceController.container.viewContext
+        return try! Author.findOrCreate(by: publicKey!, context: context!)
     }
     
     static var follows: Set<Follow>? {
