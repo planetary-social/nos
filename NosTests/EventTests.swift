@@ -173,7 +173,9 @@ final class EventTests: XCTestCase {
             return
         }
         
-        XCTAssertEqual(follow.relay?.address, sampleRelay)
+        XCTAssertEqual(parsedEvent.author?.relays?.count, 1)
+        let relay = parsedEvent.author?.relays?.allObjects[0] as! Relay
+        XCTAssertEqual(relay.address, sampleRelay)
         XCTAssertEqual(follow.petName, sampleName)
     }
     
