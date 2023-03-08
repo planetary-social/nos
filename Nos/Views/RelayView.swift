@@ -34,7 +34,6 @@ struct RelayView: View {
                             let relay = relays[index]
 
                             guard let address = relay.address else { continue }
-                            analytics.removed(relay)
 
                             if let socket = relayService.socket(for: address) {
                                 for subId in relayService.activeSubscriptions {
@@ -45,6 +44,7 @@ struct RelayView: View {
                             }
                             
                             viewContext.delete(relay)
+                            analytics.removed(relay)
                         }
                         try! viewContext.save()
                     }
