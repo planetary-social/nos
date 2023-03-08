@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import Dependencies
 
 struct RelayView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -16,6 +17,8 @@ struct RelayView: View {
     @State var newRelayAddress: String = ""
     
     @EnvironmentObject var router: Router
+    
+    @Dependency(\.analytics) private var analytics
     
     var body: some View {
         NavigationStack(path: $router.path) {
@@ -39,11 +42,14 @@ struct RelayView: View {
                                     relayService.close(socket: socket)
                                 }
                                 
+                                analytics.removed(relay)
                                 author.remove(relay: relay)
                                 viewContext.delete(relay)
                             }
+
                             try! viewContext.save()
                         }
+
                         if author.relays?.count == 0 {
                             Localized.noRelaysMessage.view
                         }
@@ -98,6 +104,7 @@ struct RelayView: View {
             
             do {
                 try viewContext.save()
+                analytics.added(relay)
             } catch {
                 // Replace this implementation with code to handle the error appropriately.
                 // fatalError() causes the application to generate a crash log and terminate. You should not
