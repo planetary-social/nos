@@ -8,7 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add PostHog analytics
+
 ## [0.1 (6)] - 2023-03-08Z
+
 - Fixed follow / unfollow sync
 - Reduced number of REQ sent to relays
 - Request profile metadata for users displayed on the Discover tab
@@ -26,7 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - On relay remove, send CLOSE to all subs then disconnect and delete socket
 - Render user mentions in NoteCard
 - Replace the warning message to tell the user never to share their private key with anyone.
-- Add PostHog analytics
 
 ## [0.1 (5)] 2023-03-02 
 
