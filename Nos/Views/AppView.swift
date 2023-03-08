@@ -83,7 +83,7 @@ struct AppView: View {
                                 .tabItem { Label(Localized.notifications.string, systemImage: "bell") }
                                 .tag(Destination.notifications)
 
-                            RelayView()
+                            RelayView(author: CurrentUser.author)
                                 .tabItem {
                                     Label(Localized.relays.string, systemImage: "antenna.radiowaves.left.and.right")
                                 }
@@ -150,7 +150,7 @@ struct AppView: View {
                                 }
                         )
                         .sheet(isPresented: $isCreatingNewPost, content: {
-                            NewPostView(isPresented: $isCreatingNewPost)
+                            NewNoteView(isPresented: $isCreatingNewPost)
                         })
                     }
                 }

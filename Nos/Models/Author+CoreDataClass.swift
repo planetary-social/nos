@@ -78,6 +78,24 @@ public class Author: NosManagedObject {
         }
     }
     
+    func add(relay: Relay) {
+        if let currentRelays = relays?.mutableCopy() as? NSMutableSet {
+            currentRelays.add(relay)
+            relays = currentRelays
+            
+            print("Adding \(relay.address ?? "") to \(hexadecimalPublicKey ?? "")")
+        }
+    }
+    
+    func remove(relay: Relay) {
+        if let currentRelays = relays?.mutableCopy() as? NSMutableSet {
+            currentRelays.remove(relay)
+            relays = currentRelays
+            
+            print("Removed \(relay.address ?? "") from \(hexadecimalPublicKey ?? "")")
+        }
+    }
+    
     func requestMetadata(using relayService: RelayService) -> String? {
         guard let hexadecimalPublicKey else {
             return nil
