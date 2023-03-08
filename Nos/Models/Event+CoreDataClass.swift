@@ -163,13 +163,17 @@ public class Event: NosManagedObject {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let kind = EventKind.text.rawValue
         let followersPredicate = NSPredicate(
-            format: "kind = %i AND eventReferences.@count = 0 AND ANY author.followers.source = %@",
+            // swiftlint:disable line_length
+            format: "kind = %i AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply').@count = 0 AND ANY author.followers.source = %@",
+            // swiftlint:enable line_length
             kind,
             user
         )
         if let publicKey = user.publicKey?.hex {
             let currentUserPredicate = NSPredicate(
-                format: "kind = %i AND eventReferences.@count = 0 AND author.hexadecimalPublicKey = %@", kind, publicKey
+                // swiftlint:disable line_length
+                format: "kind = %i AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply').@count = 0 AND author.hexadecimalPublicKey = %@", kind, publicKey
+                // swiftlint:enable line_length
             )
             let compoundPredicate = NSCompoundPredicate(
                 orPredicateWithSubpredicates:
