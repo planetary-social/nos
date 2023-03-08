@@ -5,11 +5,19 @@
 //  Created by Jason Cheatham on 2/21/23.
 //
 import SwiftUI
+import MessageUI
+
 struct SideMenuContent: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject var router: Router
+    
+    @State private var isShowingReportABugMailView = false
+    
+    @State var result: Result<MFMailComposeResult, Error>?
+    
     let closeMenu: () -> Void
+    
     var body: some View {
         ZStack {
             Color(UIColor(red: 255 / 255.0, green: 255 / 255.0, blue: 255 / 255.0, alpha: 1))
@@ -67,11 +75,16 @@ struct SideMenuContent: View {
                 .padding()
                 HStack {
                     Button {
+                        isShowingReportABugMailView = true
                     } label: {
                         HStack(alignment: .center) {
                             Image(systemName: "ant.circle.fill")
                             Text("Report a Bug")
                         }
+                    }
+                    .disabled(!MFMailComposeViewController.canSendMail())
+                    .sheet(isPresented: $isShowingReportABugMailView) {
+                        ReportABugMailView(result: self.$result)
                     }
                     
                     Spacer()
@@ -79,5 +92,59 @@ struct SideMenuContent: View {
                 .padding()
             })
         }
+    }
+}
+
+struct ReportABugMailView: UIViewControllerRepresentable {
+    
+    @Environment(\.presentationMode) var presentation
+    @Binding var result: Result<MFMailComposeResult, Error>?
+    
+    typealias UIViewControllerType = MFMailComposeViewController
+    
+    class Coordinator: NSObject, MFMailComposeViewControllerDelegate {
+        @Binding var presentation: PresentationMode
+        @Binding var result: Result<MFMailComposeResult, Error>?
+        
+        init(
+            presentation: Binding<PresentationMode>,
+            result: Binding<Result<MFMailComposeResult, Error>?>
+        ) {
+            _presentation = presentation
+            _result = result
+        }
+        func mailComposeController(
+            _ controller: MFMailComposeViewController,
+            didFinishWith result: MFMailComposeResult,
+            error: Error?
+        ) {
+            defer {
+                $presentation.wrappedValue.dismiss()
+            }
+            guard error == nil else {
+                self.result = .failure(error!)
+                return
+            }
+            self.result = .success(result)
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(presentation: presentation, result: $result)
+    }
+    
+    func makeUIViewController(context: Context) -> MFMailComposeViewController {
+        let mailViewController = MFMailComposeViewController()
+        mailViewController.mailComposeDelegate = context.coordinator
+        mailViewController.setToRecipients(["support@planetary.social"])
+        mailViewController.setSubject("Reporting a bug in Nos")
+        mailViewController.setMessageBody(
+            "Hello, \n\n I have found a bug in Nos and would like to provide feedback",
+            isHTML: false
+        )
+        return mailViewController
+    }
+    
+    func updateUIViewController(_ uiViewController: MFMailComposeViewController, context: Context) {
     }
 }
