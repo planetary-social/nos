@@ -21,12 +21,16 @@ extension Router {
     
     func open(url: URL, with context: NSManagedObjectContext) {
         let link = url.absoluteString
+        let identifier = String(link[link.index(after: link.startIndex)...])
         // handle mentions. mention link will be prefixed with "@" followed by
         // the hex format pubkey of the mentioned author
         if link.hasPrefix("@") {
-            let authorPubkey = String(link[link.index(after: link.startIndex)...])
-            if let author = try? Author.find(by: authorPubkey, context: context) {
+            if let author = try? Author.find(by: identifier, context: context) {
                 self.path.append(author)
+            }
+        } else if link.hasPrefix("%") {
+            if let event = Event.find(by: identifier, context: context) {
+                self.path.append(event)
             }
         }
     }
