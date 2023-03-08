@@ -61,11 +61,8 @@ struct HomeFeedView: View {
                 LazyVStack {
                     ForEach(events) { event in
                         VStack {
-                            // TODO: A mute will delete posts but not refresh this feed. So it's hidden instead.
-                            if let author = event.author, !author.muted {
-                                NoteButton(note: event)
-                                    .padding(.horizontal)
-                            }
+                            NoteButton(note: event)
+                                .padding(.horizontal)
                         }
                     }
                 }

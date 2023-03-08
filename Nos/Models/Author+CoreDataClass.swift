@@ -96,6 +96,8 @@ public class Author: NosManagedObject {
         } catch let error as NSError {
             print("Failed to delete texts from \(hexadecimalPublicKey ?? ""). Error: \(error.description)")
         }
+        
+        try? context.save()
     }
     
     func mute(context: NSManagedObjectContext) {
