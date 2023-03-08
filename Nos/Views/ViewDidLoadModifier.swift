@@ -29,4 +29,3 @@ extension View {
         self.modifier(ViewDidLoadModifier(action: action))
     }
 }
-
