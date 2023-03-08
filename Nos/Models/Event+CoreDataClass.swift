@@ -320,6 +320,14 @@ public class Event: NosManagedObject {
         )
     }
     
+    var bech32NoteID: String? {
+        guard let identifier = self.identifier,
+            let identifierBytes = try? identifier.bytes else {
+            return nil
+        }
+        return Bech32.encode(Nostr.notePrefix, baseEightData: Data(identifierBytes))
+    }
+    
     func attributedContent(with context: NSManagedObjectContext) -> AttributedString? {
         guard let content = self.content else {
             return nil
@@ -335,12 +343,24 @@ public class Event: NosManagedObject {
             "]"
         }
         
+        guard let tags = self.allTags as? [[String]] else {
+            return AttributedString(content)
+        }
+        
         let result = content.replacing(regex) { match in
-            if let authorReferences = self.authorReferences?.array as? [AuthorReference],
-                let pubkey = authorReferences[safe: match.1]?.pubkey,
-                let author = try? Author.find(by: pubkey, context: context) {
-                let mentionString = "[@\(author.safeName)](@\(author.hexadecimalPublicKey!))"
-                return mentionString
+            if let tag = tags[safe: match.1],
+                let type = tag[safe: 0],
+                let id = tag[safe: 1] {
+                if type == "p",
+                    let author = try? Author.find(by: id, context: context),
+                    let pubkey = author.hexadecimalPublicKey {
+                    return "[@\(author.safeName)](@\(pubkey))"
+                }
+                if type == "e",
+                    let event = Event.find(by: id, context: context),
+                    let bech32NoteID = event.bech32NoteID {
+                    return "[@\(bech32NoteID)](%\(id))"
+                }
             }
             return ""
         }
