@@ -11,6 +11,14 @@ import CoreData
 
 @objc(Relay)
 public class Relay: NosManagedObject {
+    static var defaults: [String] {
+        [
+        "wss://relay.nostr.band",
+        "wss://relay.damus.io",
+        "wss://e.nos.lol"
+        ]
+    }
+    
     @nonobjc public class func allRelaysRequest() -> NSFetchRequest<Relay> {
         let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.address, ascending: true)]
@@ -28,9 +36,7 @@ public class Relay: NosManagedObject {
         if let existingRelay = try? context.fetch(Relay.relay(by: address)).first {
             return existingRelay
         } else {
-            let relay = Relay(context: context)
-            relay.address = address
-            relay.createdAt = Date.now
+            let relay = Relay(context: context, address: address)
             return relay
         }
     }
@@ -49,5 +55,12 @@ public class Relay: NosManagedObject {
             print("Failed to fetch relays. Error: \(error.description)")
             return []
         }
+    }
+    
+    @discardableResult convenience init(context: NSManagedObjectContext, address: String, author: Author? = nil) {
+        self.init(context: context)
+        self.address = address
+        self.createdAt = Date.now
+        author?.add(relay: self)
     }
 }

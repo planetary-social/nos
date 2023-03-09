@@ -64,6 +64,24 @@ struct RelayView: View {
                     startPoint: .top,
                     endPoint: .bottom
                 ))
+  
+                let authorRelayUrls = (author.relays as? Set<Relay>)?.compactMap { $0.address } ?? []
+                let recommendedRelays = Relay.defaults.filter { !authorRelayUrls.contains($0) }
+
+                if !recommendedRelays.isEmpty {
+                    Section(Localized.recommendedRelays.string) {
+                        ForEach(recommendedRelays, id: \.self) { address in
+                            Button {
+                                newRelayAddress = address
+                                addRelay()
+                                CurrentUser.subscribe()
+                                publishChanges()
+                            } label: {
+                                Label(address, systemImage: "plus.circle")
+                            }
+                        }
+                    }
+                }
             }
             
             Section {
@@ -119,13 +137,10 @@ struct RelayView: View {
         withAnimation {
             guard !newRelayAddress.isEmpty else { return }
             
-            let relay = Relay(context: viewContext)
-            relay.address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-            relay.createdAt = Date.now
+            let address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+            let relay = Relay(context: viewContext, address: address, author: CurrentUser.author)
             newRelayAddress = ""
 
-            CurrentUser.author?.add(relay: relay)
-            
             do {
                 try viewContext.save()
                 analytics.added(relay)

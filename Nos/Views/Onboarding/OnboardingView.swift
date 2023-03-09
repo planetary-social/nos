@@ -9,6 +9,8 @@ import SwiftUI
 import Dependencies
 
 struct OnboardingView: View {
+    @Environment(\.managedObjectContext) private var viewContext
+
     enum OnboardingStep {
         case getStarted
         case addPrivateKey
@@ -62,6 +64,13 @@ struct OnboardingView: View {
                         self.keyPair = keyPair
                         analytics.identify(with: keyPair)
                         analytics.generatedKey()
+                        
+                        // Default Relays for new user
+                        for address in Relay.defaults {
+                            Relay(context: viewContext, address: address, author: CurrentUser.author)
+                        }
+
+                        CurrentUser.publishContactList(tags: [], context: viewContext)
                         
                         completion()
                     }
