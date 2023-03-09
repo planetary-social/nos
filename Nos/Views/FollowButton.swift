@@ -15,8 +15,9 @@ struct FollowButton: View {
     @Dependency(\.analytics) private var analytics
     
     var body: some View {
+        let following = CurrentUser.isFollowing(author: author)
         Button {
-            if CurrentUser.isFollowing(author: author) {
+            if following {
                 CurrentUser.unfollow(author: author, context: viewContext)
                 analytics.unfollowed(author)
             } else {
@@ -24,7 +25,7 @@ struct FollowButton: View {
                 analytics.followed(author)
             }
         } label: {
-            Text(CurrentUser.isFollowing(author: author) ? Localized.unfollow.string : Localized.follow.string)
+            Text(following ? Localized.unfollow.string : Localized.follow.string)
         }
     }
 }

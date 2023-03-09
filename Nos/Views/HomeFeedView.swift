@@ -41,7 +41,7 @@ struct HomeFeedView: View {
         }
 
         if let follows = CurrentUser.follows {
-            let authors = follows.compactMap({ $0.destination?.hexadecimalPublicKey! })
+            let authors = follows.keys
             
             if !authors.isEmpty {
                 let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
