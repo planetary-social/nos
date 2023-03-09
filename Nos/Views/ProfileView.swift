@@ -17,6 +17,8 @@ struct ProfileView: View {
     
     @EnvironmentObject private var relayService: RelayService
     
+    @State private var showingOptions = false
+    
     @State private var subscriptionIds: [String] = []
     
     @FetchRequest
@@ -76,6 +78,28 @@ struct ProfileView: View {
             })
         }
         .navigationBarTitle(Localized.profile.rawValue, displayMode: .inline)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+        .navigationBarItems(
+            trailing:
+                Group {
+                    Button(
+                        action: {
+                            showingOptions = true
+                        },
+                        label: {
+                            Image(systemName: "ellipsis")
+                        }
+                    )
+                    .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
+                        Button(Localized.copyUserIdentifier.string) {
+                            if let npub = author.publicKey?.npub {
+                                UIPasteboard.general.string = npub
+                            }
+                        }
+                    }
+                }
+        )
         .task {
             refreshProfileFeed()
         }
