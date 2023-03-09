@@ -14,7 +14,7 @@ class Router: ObservableObject {
     @Published var homeFeedPath = NavigationPath()
     @Published var discoverPath = NavigationPath()
     @Published var notificationsPath = NavigationPath()
-    @Published var relayPath = NavigationPath()
+    @Published var profilePath = NavigationPath()
     @Published var sideMenuPath = NavigationPath()
     @Published var selectedTab = AppView.Destination.home
     
@@ -32,8 +32,8 @@ class Router: ObservableObject {
             return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
         case .notifications:
             return Binding(get: { self.notificationsPath }, set: { self.notificationsPath = $0 })
-        case .relays:
-            return Binding(get: { self.relayPath }, set: { self.relayPath = $0 })
+        case .profile:
+            return Binding(get: { self.profilePath }, set: { self.profilePath = $0 })
         }
     }
     

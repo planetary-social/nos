@@ -9,13 +9,15 @@ import SwiftUI
 import CoreData
 
 struct ProfileView: View {
-    @EnvironmentObject var router: Router
+    @EnvironmentObject private var router: Router
     
     @ObservedObject var author: Author
     
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var relayService: RelayService
+    
+    @State private var showingOptions = false
     
     @State private var subscriptionIds: [String] = []
     
@@ -76,6 +78,43 @@ struct ProfileView: View {
             })
         }
         .navigationBarTitle(Localized.profile.rawValue, displayMode: .inline)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+        .navigationDestination(for: Event.self) { note in
+            RepliesView(note: note)
+        }
+        .navigationDestination(for: Author.self) { author in
+            ProfileView(author: author)
+        }
+        .navigationBarItems(
+            trailing:
+                Group {
+                    Button(
+                        action: {
+                            showingOptions = true
+                        },
+                        label: {
+                            Image(systemName: "ellipsis")
+                        }
+                    )
+                    .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
+                        Button(Localized.copyUserIdentifier.string) {
+                            UIPasteboard.general.string = router.viewedAuthor?.publicKey?.npub ?? ""
+                        }
+                        if let author = router.viewedAuthor {
+                            if author.muted {
+                                Button(Localized.unmuteUser.string) {
+                                    router.viewedAuthor?.unmute()
+                                }
+                            } else {
+                                Button(Localized.muteUser.string) {
+                                    router.viewedAuthor?.mute(context: viewContext)
+                                }
+                            }
+                        }
+                    }
+                }
+        )
         .onAppear {
             router.viewedAuthor = author
         }
