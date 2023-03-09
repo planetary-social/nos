@@ -7,30 +7,44 @@
 
 import Foundation
 import SwiftUI
+
 struct SideMenu: View {
-    let width: CGFloat
+    
+    enum Destination {
+        case settings
+    }
+    
+    let menuWidth: CGFloat
     let menuOpened: Bool
     
     let toggleMenu: () -> Void
     let closeMenu: () -> Void
+    
+    @EnvironmentObject private var router: Router
+    
     var body: some View {
-        ZStack {
-            GeometryReader { _ in
-                EmptyView()
+        if menuOpened {
+            ZStack {
+                GeometryReader { _ in
+                    EmptyView()
+                }
+                .background(Color.black.opacity(0.5))
+                .onTapGesture {
+                    self.toggleMenu()
+                }
             }
-            .background(Color.gray.opacity(0.5))
-            .opacity(self.menuOpened ? 1 : 0)
-            .animation(Animation.easeIn.delay(0.15), value: menuOpened)
-            .onTapGesture {
-                self.toggleMenu()
+            HStack {
+                SideMenuContent(closeMenu: closeMenu)
+                    .frame(
+                        maxWidth: router.sideMenuPath.count == 0 ? menuWidth : .infinity,
+                        maxHeight: UIScreen.main.bounds.height
+                    )
+                Spacer()
             }
-        }
-        HStack {
-            SideMenuContent(closeMenu: closeMenu)
-                .frame(width: width, height: UIScreen.main.bounds.height)
-                .offset(x: menuOpened ? 0 : -width, y: -0.015 * UIScreen.main.bounds.height)
-                .animation(.default, value: menuOpened)
-            Spacer()
+            .transition(.move(edge: .leading))
+            // weirdly fixes dismissal animation
+            // https://sarunw.com/posts/how-to-fix-zstack-transition-animation-in-swiftui/#solution
+            .zIndex(1)
         }
     }
 }

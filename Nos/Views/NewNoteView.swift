@@ -19,6 +19,7 @@ struct NewNoteView: View {
     
     @EnvironmentObject private var relayService: RelayService
     
+    @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
     
     @State private var postText: String = ""
@@ -63,16 +64,24 @@ struct NewNoteView: View {
         
         withAnimation {
             do {
-                let event = Event(context: viewContext)
-                event.createdAt = Date()
-                event.content = postText
-                event.kind = 1
+                let jsonEvent = JSONEvent(
+                    id: "",
+                    pubKey: keyPair.publicKeyHex,
+                    createdAt: Int64(Date().timeIntervalSince1970),
+                    kind: 1,
+                    tags: [],
+                    content: postText,
+                    signature: ""
+                )
+                let event = try Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext)
                 event.author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
 
                 try event.sign(withKey: keyPair)
                 relayService.publishToAll(event: event)
                 isPresented = false
                 analytics.published(note: event)
+                postText = ""
+                router.selectedTab = .home
             } catch {
                 alert = AlertState(title: {
                     TextState(Localized.error.string)

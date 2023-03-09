@@ -21,7 +21,7 @@ struct RelayView: View {
     @Dependency(\.analytics) private var analytics
     
     var body: some View {
-        NavigationStack(path: $router.path) {
+        NavigationStack(path: $router.relayPath) {
             List {
                 if let relays = author.relays?.allObjects as? [Relay] {
                     Section(Localized.relays.string) {
@@ -85,11 +85,6 @@ struct RelayView: View {
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
             }
-            .navigationDestination(for: AppView.Destination.self) { destination in
-                if destination == AppView.Destination.settings {
-                    SettingsView()
-                }
-            }
         }
         .navigationTitle(Localized.relays.string)
     }
@@ -108,7 +103,7 @@ struct RelayView: View {
             relay.createdAt = Date.now
             newRelayAddress = ""
 
-            CurrentUser.author.add(relay: relay)
+            CurrentUser.author?.add(relay: relay)
             
             do {
                 try viewContext.save()
@@ -129,14 +124,20 @@ struct RelayView_Previews: PreviewProvider {
     static var previewContext = PersistenceController.preview.container.viewContext
     
     static var emptyContext = PersistenceController.empty.container.viewContext
+
+    static var user: Author {
+        let author = Author(context: previewContext)
+        author.hexadecimalPublicKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
+        return author
+    }
     
     static var previews: some View {
         NavigationStack {
-            RelayView(author: CurrentUser.author)
+            RelayView(author: user)
         }.environment(\.managedObjectContext, previewContext)
         
         NavigationStack {
-            RelayView(author: CurrentUser.author)
+            RelayView(author: user)
         }.environment(\.managedObjectContext, emptyContext)
     }
 }

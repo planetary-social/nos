@@ -61,10 +61,13 @@ struct NoteCard: View {
     
     @State private var subscriptionIDs = [String]()
     
-    init(author: Author, note: Event, style: CardStyle = .compact) {
+    private var showFullMessage: Bool
+    
+    init(author: Author, note: Event, style: CardStyle = .compact, showFullMessage: Bool = false) {
         self.author = author
         self.note = note
         self.style = style
+        self.showFullMessage = showFullMessage
         self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note), animation: .default)
     }
 
@@ -74,7 +77,7 @@ struct NoteCard: View {
             case .compact:
                 HStack(alignment: .center) {
                     Button {
-                        router.path.append(author)
+                        router.currentPath.wrappedValue.append(author)
                     } label: {
                         HStack(alignment: .center) {
                             AvatarView(imageUrl: author.profilePhotoURL, size: 24)
@@ -100,7 +103,7 @@ struct NoteCard: View {
                 .padding(10)
                 Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                 Group {
-                    CompactNoteView(note: note)
+                    CompactNoteView(note: note, showFullMessage: showFullMessage)
                     Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                     HStack {
                         StackedAvatarsView(avatarUrls: replyAvatarUrls, size: 20, border: 0)

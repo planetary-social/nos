@@ -12,7 +12,7 @@ struct RepliesView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject var router: Router
+    @EnvironmentObject private var router: Router
 
     @State private var reply = ""
     
@@ -49,7 +49,7 @@ struct RepliesView: View {
         VStack {
             ScrollView(.vertical) {
                 LazyVStack {
-                    NoteButton(note: note)
+                    NoteButton(note: note, showFullMessage: true)
                         .padding(.horizontal)
                     ForEach(directReplies.reversed()) { event in
                         ThreadView(root: event, allReplies: replies.reversed())
@@ -58,10 +58,7 @@ struct RepliesView: View {
                 .padding(.bottom)
             }
             .padding(.top, 1)
-            .navigationBarBackButtonHidden(true)
-            .onAppear {
-                router.navigationTitle = Localized.threadView.rawValue
-            }
+            .navigationBarTitle(Localized.threadView.string, displayMode: .inline)
             VStack {
                 Spacer()
                 VStack {
@@ -75,6 +72,7 @@ struct RepliesView: View {
             }
             .fixedSize(horizontal: false, vertical: true)
         }
+        .background(Color.appBg)
     }
     
     func postReply(_ replyText: String) {

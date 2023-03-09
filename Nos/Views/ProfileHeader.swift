@@ -66,8 +66,8 @@ struct ProfileHeader: View {
                                 .font(.title3.weight(.semibold))
                                 .foregroundColor(Color.primaryTxt)
                             Spacer()
-                            VStack {
-                                FollowButton(currentUserAuthor: CurrentUser.author, author: author)
+                            if let currentUser = CurrentUser.author {
+                                FollowButton(currentUserAuthor: currentUser, author: author)
                                 if author.muted {
                                     Text(Localized.mutedUser.string)
                                         .font(.subheadline)
@@ -78,7 +78,7 @@ struct ProfileHeader: View {
                         Spacer()
 
                         Button {
-                            router.path.append(follows)
+                            router.currentPath.wrappedValue.append(follows)
                         } label: {
                             Text("\(Localized.following.string): \(author.follows?.count ?? 0)")
                         }
