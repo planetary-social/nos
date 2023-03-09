@@ -9,9 +9,9 @@ import SwiftUI
 import CoreData
 
 struct ProfileView: View {
-    @EnvironmentObject var router: Router
+    @EnvironmentObject private var router: Router
     
-    var author: Author
+    @ObservedObject var author: Author
     
     @Environment(\.managedObjectContext) private var viewContext
     
@@ -80,6 +80,12 @@ struct ProfileView: View {
         .navigationBarTitle(Localized.profile.rawValue, displayMode: .inline)
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+        .navigationDestination(for: Event.self) { note in
+            RepliesView(note: note)
+        }
+        .navigationDestination(for: Author.self) { author in
+            ProfileView(author: author)
+        }
         .navigationBarItems(
             trailing:
                 Group {

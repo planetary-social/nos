@@ -81,7 +81,7 @@ struct ActionButtonStyle: ButtonStyle {
                 .cornerRadius(cornerRadius)
                 .offset(y: configuration.isPressed ? 2 : 0)
         }
-        .fixedSize(horizontal: true, vertical: false)
+        .fixedSize(horizontal: true, vertical: true)
     }
 }
 
@@ -89,11 +89,9 @@ struct ActionButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
             ActionButton(title: Localized.done, action: {})
-                .frame(height: 32)
             
             ActionButton(title: Localized.done, action: {})
                 .disabled(true)
-                .frame(height: 32)
         }
     }
 }

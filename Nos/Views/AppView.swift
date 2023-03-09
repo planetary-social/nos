@@ -21,15 +21,14 @@ struct AppView: View {
     
     @State private var showingOptions = false
     @State private var lastSelectedTab = Destination.home
-
     
     /// An enumeration of the destinations for AppView.
     enum Destination: String, Hashable, Equatable {
         case home
         case discover
-        case relays
         case notifications
         case newNote
+        case profile
         
         var label: some View {
             switch self {
@@ -37,12 +36,12 @@ struct AppView: View {
                 return Text(Localized.homeFeed.string)
             case .discover:
                 return Localized.discover.view
-            case .relays:
-                return Text(Localized.relays.string)
             case .notifications:
                 return Localized.notifications.view
             case .newNote:
                 return Localized.newNote.view
+            case .profile:
+                return Localized.profile.view
             }
         }
         
@@ -52,12 +51,12 @@ struct AppView: View {
                 return Localized.homeFeed.string
             case .discover:
                 return Localized.discover.string
-            case .relays:
-                return Localized.relays.string
             case .notifications:
                 return Localized.notifications.string
             case .newNote:
                 return Localized.newNote.string
+            case .profile:
+                return Localized.profile.string
             }
         }
     }
@@ -72,12 +71,14 @@ struct AppView: View {
                     HomeFeedView(user: CurrentUser.author(in: viewContext))
                         .tabItem {
                             VStack {
+                                let text = Localized.homeFeed.view
                                 if $router.selectedTab.wrappedValue == .home {
                                     Image.tabIconHomeSelected
+                                    text
                                 } else {
                                     Image.tabIconHome
+                                    text.foregroundColor(.secondaryTxt)
                                 }
-                                Localized.homeFeed.view
                             }
                         }
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
@@ -86,17 +87,18 @@ struct AppView: View {
                     DiscoverView()
                         .tabItem {
                             VStack {
+                                let text = Localized.discover.view
                                 if $router.selectedTab.wrappedValue == .discover {
                                     Image.tabIconEveryoneSelected
+                                    text.foregroundColor(.textColor)
                                 } else {
                                     Image.tabIconEveryone
+                                    text.foregroundColor(.secondaryTxt)
                                 }
-                                Localized.discover.view
                             }
                         }
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.discover)
-                    
                     
                     VStack {}
                         .tabItem {
@@ -110,23 +112,33 @@ struct AppView: View {
                     NotificationsView(user: CurrentUser.author(in: viewContext))
                         .tabItem {
                             VStack {
+                                let text = Localized.notifications.view
                                 if $router.selectedTab.wrappedValue == .notifications {
                                     Image.tabIconNotificationsSelected
+                                    text.foregroundColor(.textColor)
                                 } else {
                                     Image.tabIconNotifications
+                                    text.foregroundColor(.secondaryTxt)
                                 }
-                                Localized.notifications.view
                             }
                         }
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.notifications)
                     
-                    RelayView(author: CurrentUser.author(in: viewContext)!)
+                    ProfileTab(author: CurrentUser.author(in: viewContext)!, path: $router.profilePath)
                         .tabItem {
-                            Label(Localized.relays.string, systemImage: "antenna.radiowaves.left.and.right")
+                            VStack {
+                                // AvatarView(imageUrl: CurrentUser.author(in: viewContext)?.profilePhotoURL, size: 300)
+                                let text = Localized.profile.view
+                                if $router.selectedTab.wrappedValue == .profile {
+                                    text.foregroundColor(.textColor)
+                                } else {
+                                    text.foregroundColor(.secondaryTxt)
+                                }
+                            }
                         }
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                        .tag(Destination.relays)
+                        .tag(Destination.profile)
                 }
                 .onChange(of: router.selectedTab) { newTab in
                     if newTab == Destination.newNote {
@@ -156,7 +168,11 @@ struct AppView: View {
             UINavigationBar.appearance().standardAppearance = nosAppearance
             UINavigationBar.appearance().compactAppearance = nosAppearance
             UINavigationBar.appearance().scrollEdgeAppearance = nosAppearance
+            
+            UITabBar.appearance().unselectedItemTintColor = .secondaryText
+            UITabBar.appearance().tintColor = .primaryTxt
         }
+        .accentColor(.primaryTxt)
     }
 }
 

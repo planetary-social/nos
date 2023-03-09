@@ -28,16 +28,18 @@ struct FollowsView: View {
         ScrollView(.vertical) {
             LazyVStack {
                 ForEach(followed) { follow in
-                    VStack {
-                        if let author = follow.destination {
-                            FollowCard(author: author)
-                        }
+                    if let author = follow.destination {
+                        FollowCard(author: author)
+                            .padding(.horizontal)
                     }
-                    Spacer()
                 }
             }
+            .padding(.top)
         }
+        .background(Color.appBg)
         .navigationBarTitle(Localized.follows.string, displayMode: .inline)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
         .task {
             refreshFollows()
         }

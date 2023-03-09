@@ -156,12 +156,7 @@ struct NotificationCard: View {
 
 struct NotificationsView_Previews: PreviewProvider {
     
-    static var persistenceController = {
-        let controller = PersistenceController.preview
-        let context = controller.container.viewContext
-        
-        return controller
-    }()
+    static var persistenceController = PersistenceController.preview
     
     static var previewContext = persistenceController.container.viewContext
     static var relayService = RelayService(persistenceController: persistenceController)

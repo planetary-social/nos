@@ -26,6 +26,7 @@ struct AvatarView: View {
             } else {
                 Image.emptyAvatar
                     .resizable()
+                    .renderingMode(.original)
             }
         }
         .frame(width: size, height: size)

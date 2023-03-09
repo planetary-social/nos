@@ -31,12 +31,13 @@ struct FollowCard: View {
                         Text(author.safeName)
                             .lineLimit(1)
                             .font(.subheadline)
-                            .foregroundColor(Color.secondaryTxt)
+                            .foregroundColor(Color.primaryTxt)
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         Spacer()
                         if let currentUser = CurrentUser.author {
                             FollowButton(currentUserAuthor: currentUser, author: author)
+                                .padding(10)
                         }
                     }
                 }
@@ -54,16 +55,6 @@ struct FollowCard: View {
         )
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
-        .padding(padding)
-    }
-
-    var padding: EdgeInsets {
-        switch style {
-        case .golden:
-            return EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-        case .compact:
-            return EdgeInsets(top: 15, leading: 0, bottom: 0, trailing: 0)
-        }
     }
 
     var cornerRadius: CGFloat {
@@ -71,7 +62,7 @@ struct FollowCard: View {
         case .golden:
             return 15
         case .compact:
-            return 20
+            return 15
         }
     }
 }
