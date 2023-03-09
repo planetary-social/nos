@@ -45,7 +45,14 @@ enum CurrentUser {
     }
     
     static var follows: Set<Follow>? {
-        author?.follows as? Set<Follow>
+        let followSet = author?.follows as? Set<Follow>
+        let umutedSet = followSet?.filter({
+            if let author = $0.destination {
+                return author.muted == false
+            }
+            return false
+        })
+        return umutedSet
     }
     
     static func subscribe() {
@@ -69,25 +76,30 @@ enum CurrentUser {
         }
     }
     
-    static func isFollowing(author: Author) -> Bool {
-        guard let following = follows, let key = author.hexadecimalPublicKey else {
+    static func isFollowing(author profile: Author) -> Bool {
+        guard let following = author?.follows as? Set<Follow>, let key = profile.hexadecimalPublicKey else {
             return false
         }
         
-        let followKeys = following.compactMap { $0.destination?.hexadecimalPublicKey }
+        let followKeys = following.keys
         return followKeys.contains(key)
     }
     
-    static func updateFollows(pubKey: String, followKey: String, tags: [[String]], context: NSManagedObjectContext) {
-        guard let relays = author?.relays?.allObjects as? [Relay] else {
+    static func publishContactList(tags: [[String]], context: NSManagedObjectContext) {
+        guard let relays = author?.relays?.allObjects as? [Relay],
+            let pubKey = publicKey else {
             print("Error: No relay service")
             return
         }
 
-        var relayString = ""
+        var relayString = "{"
         for relay in relays {
-            relayString += "{\"\(relay)\":{\"write\":true,\"read\":true}"
+            if let address = relay.address {
+                relayString += "\"\(address)\":{\"write\":true,\"read\":true},"
+            }
         }
+        relayString.removeLast()
+        relayString += "}"
         
         let time = Int64(Date.now.timeIntervalSince1970)
         let kind = EventKind.contactList.rawValue
@@ -106,16 +118,15 @@ enum CurrentUser {
     
     /// Follow by public hex key
     static func follow(author toFollow: Author, context: NSManagedObjectContext) {
-        guard let pubKey = publicKey, let followKey = toFollow.hexadecimalPublicKey else {
-            print("Error: No pubkey for current user")
+        guard let followKey = toFollow.hexadecimalPublicKey else {
+            print("Error: followKey is nil")
             return
         }
 
         print("Following \(followKey)")
 
-        var followKeys = follows?.compactMap { $0.destination?.hexadecimalPublicKey } ?? []
+        var followKeys = follows?.keys ?? []
         followKeys.append(followKey)
-        let tags = followKeys.map { ["p", $0] }
         
         // Update author to add the new follow
         if let followedAuthor = try? Author.find(by: followKey, context: context), let currentUser = author {
@@ -133,22 +144,21 @@ enum CurrentUser {
             }
         }
         
-        updateFollows(pubKey: pubKey, followKey: followKey, tags: tags, context: context)
+        publishContactList(tags: followKeys.tags, context: context)
     }
     
     /// Unfollow by public hex key
     static func unfollow(author toUnfollow: Author, context: NSManagedObjectContext) {
-        guard let pubKey = publicKey, let unfollowedKey = toUnfollow.hexadecimalPublicKey else {
-            print("Error: No pubkey for current user")
+        guard let unfollowedKey = toUnfollow.hexadecimalPublicKey else {
+            print("Error: unfollowedKey is nil")
             return
         }
 
         print("Unfollowing \(unfollowedKey)")
         
         let stillFollowingKeys = (follows ?? [])
-            .compactMap { $0.destination?.hexadecimalPublicKey }
+            .keys
             .filter { $0 != unfollowedKey }
-        let tags = stillFollowingKeys.map { ["p", $0] }
         
         // Update author to only follow those still following
         if let unfollowedAuthor = try? Author.find(by: unfollowedKey, context: context), let currentUser = author {
@@ -165,18 +175,12 @@ enum CurrentUser {
                 unfollowedAuthor.followers = unfollowedAuthorFollowers
             }
         }
-        
-        updateFollows(pubKey: pubKey, followKey: unfollowedKey, tags: tags, context: context)
+
+        publishContactList(tags: stillFollowingKeys.tags, context: context)
 
         // Delete cached texts from this person
         if let author = try? Author.find(by: unfollowedKey, context: context) {
-            let deleteRequest = Event.deleteAllPosts(by: author)
-            
-            do {
-                try context.execute(deleteRequest)
-            } catch let error as NSError {
-                print("Failed to delete texts from \(unfollowedKey). Error: \(error.description)")
-            }
+            author.deleteAllPosts(context: context)
         }
     }
     

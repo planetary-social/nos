@@ -45,9 +45,10 @@ struct RelayView: View {
                             analytics.removed(relay)
                             author.remove(relay: relay)
                             viewContext.delete(relay)
-                        }
-                        
+                        }               
+         
                         try! viewContext.save()
+                        publishChanges()
                     }
                     
                     if author.relays?.count == 0 {
@@ -76,6 +77,7 @@ struct RelayView: View {
                 Button(Localized.save.string) {
                     addRelay()
                     CurrentUser.subscribe()
+                    publishChanges()
                 }
             } header: {
                 Localized.addRelay.view
@@ -108,6 +110,11 @@ struct RelayView: View {
         .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
     }
     
+    func publishChanges() {
+        let followKeys = CurrentUser.follows?.keys ?? []
+        CurrentUser.publishContactList(tags: followKeys.tags, context: viewContext)
+    }
+
     private func addRelay() {
         withAnimation {
             guard !newRelayAddress.isEmpty else { return }

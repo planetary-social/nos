@@ -60,7 +60,7 @@ struct ProfileView: View {
                     .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 
                 LazyVStack {
-                    ForEach(events) { event in
+                    ForEach(events.unmuted) { event in
                         VStack {
                             NoteButton(note: event)
                                 .padding(.horizontal)
@@ -71,7 +71,7 @@ struct ProfileView: View {
             .padding(.top, 1)
             .background(Color.appBg)
             .overlay(Group {
-                if events.isEmpty {
+                if !events.contains(where: { !$0.author!.muted }) {
                     Localized.noEventsOnProfile.view
                         .padding()
                 }
@@ -99,13 +99,25 @@ struct ProfileView: View {
                     )
                     .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
                         Button(Localized.copyUserIdentifier.string) {
-                            if let npub = author.publicKey?.npub {
-                                UIPasteboard.general.string = npub
+                            UIPasteboard.general.string = router.viewedAuthor?.publicKey?.npub ?? ""
+                        }
+                        if let author = router.viewedAuthor {
+                            if author.muted {
+                                Button(Localized.unmuteUser.string) {
+                                    router.viewedAuthor?.unmute()
+                                }
+                            } else {
+                                Button(Localized.muteUser.string) {
+                                    router.viewedAuthor?.mute(context: viewContext)
+                                }
                             }
                         }
                     }
                 }
         )
+        .onAppear {
+            router.viewedAuthor = author
+        }
         .task {
             refreshProfileFeed()
         }

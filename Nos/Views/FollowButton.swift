@@ -16,8 +16,9 @@ struct FollowButton: View {
     @Dependency(\.analytics) private var analytics
     
     var body: some View {
-        ActionButton(title: CurrentUser.isFollowing(author: author) ? .unfollow : .follow) {
-            if CurrentUser.isFollowing(author: author) {
+        let following = CurrentUser.isFollowing(author: author)
+        ActionButton(title: following ? .unfollow : .follow) {
+            if following {
                 CurrentUser.unfollow(author: author, context: viewContext)
                 analytics.unfollowed(author)
             } else {

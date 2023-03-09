@@ -10,6 +10,7 @@
 import Foundation
 import CoreData
 import RegexBuilder
+import SwiftUI
 
 enum EventError: Error {
 	case jsonEncoding
@@ -45,6 +46,17 @@ public enum EventKind: Int64, CaseIterable {
 	case like = 7
     case channelMessage = 42
     case parameterizedReplaceableEvent = 30_000
+}
+
+extension FetchedResults where Element == Event {
+    var unmuted: [Event] {
+        filter {
+            if let author = $0.author {
+                return !author.muted
+            }
+            return false
+        }
+    }
 }
 
 // swiftlint:disable type_body_length
