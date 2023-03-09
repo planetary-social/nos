@@ -232,6 +232,8 @@ extension Image {
        static let unsupportedBlobPlaceholder = Image("unsupported-blob-placeholder", bundle: Bundle.current)
        static let warning = Image("warning", bundle: Bundle.current)
        static let navigationMenu = Image("navigationMenu", bundle: Bundle.current)
+       static let emptyAvatar = Image("emptyAvatar", bundle: Bundle.current)
+       static let newPostButton = Image("newPostButton", bundle: Bundle.current)
 }
 
 extension UIImage {
@@ -302,4 +304,6 @@ extension UIImage {
        static let unsupportedBlobPlaceholder = UIImage(named: "unsupported-blob-placeholder", in: Bundle.current, with: nil)!
        static let warning = UIImage(named: "warning", in: Bundle.current, with: nil)!
        static let navigationMenu = UIImage(named: "navigationMenu", in: Bundle.current, with: nil)!
+       static let emptyAvatar = UIImage(named: "emptyAvatar", in: Bundle.current, with: nil)!
+       static let newPostButton = UIImage(named: "newPostButton", in: Bundle.current, with: nil)!
 }

@@ -92,10 +92,14 @@ enum CurrentUser {
             return
         }
 
-        var relayString = ""
+        var relayString = "{"
         for relay in relays {
-            relayString += "{\"\(relay)\":{\"write\":true,\"read\":true}"
+            if let address = relay.address {
+                relayString += "\"\(address)\":{\"write\":true,\"read\":true},"
+            }
         }
+        relayString.removeLast()
+        relayString += "}"
         
         let time = Int64(Date.now.timeIntervalSince1970)
         let kind = EventKind.contactList.rawValue

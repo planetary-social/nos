@@ -9,28 +9,52 @@ import Foundation
 import SwiftUI
 
 struct ExpandingTextFieldAndSubmitButton: View {
+    
     var placeholder: String
     @Binding var reply: String
     var action: () -> Void
     
+    @FocusState private var textEditorInFocus
+    @State private var showPostButton = false
+    
     var body: some View {
-        ZStack(alignment: .trailing) {
-            TextField(placeholder, text: $reply, axis: .vertical)
-                .lineLimit(5)
-                .textFieldStyle(.roundedBorder)
-                .padding(.trailing, 30)
-            Button(
-                action: {
-                    self.action()
-                    reply = ""
-                },
-                label: {
-                    Image(systemName: "paperplane.fill")
-                        .font(.headline)
-                }
-            )
+        HStack {
+            TextEditor(text: $reply)
+                .placeholder(when: reply.isEmpty, placeholder: {
+                    VStack {
+                        Text(placeholder)
+                            .foregroundColor(.secondaryTxt)
+                            .padding(.top, 7.5)
+                            .padding(.leading, 7.5)
+                        Spacer()
+                    }
+                })
+                .scrollContentBackground(.hidden)
+                .padding(.leading, 6)
+                .background(Color.appBg)
+                .cornerRadius(17.5)
+                .frame(maxHeight: 270)
+                .focused($textEditorInFocus)
+            
+            if showPostButton {
+                Button(
+                    action: {
+                        self.action()
+                        reply = ""
+                    },
+                    label: {
+                        Localized.post.view
+                    }
+                )
+                .transition(.move(edge: .trailing))
+            }
         }
-        .padding(.trailing, 8)
-        .opacity(1.0)
+        .onChange(of: textEditorInFocus) { bool in
+            withAnimation(.spring(response: 0.2)) {
+                showPostButton = bool
+            }
+        }
+        
+        .padding(8)
     }
 }

@@ -59,8 +59,6 @@ struct NoteCard: View {
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
     
-    @State private var subscriptionIDs = [String]()
-    
     private var showFullMessage: Bool
     
     init(author: Author, note: Event, style: CardStyle = .compact, showFullMessage: Bool = false) {
@@ -91,14 +89,10 @@ struct NoteCard: View {
                     }
                     NoteOptionsButton(note: note)
                 }
-                .onAppear {
-                    if author.needsMetadata, let subscriptionID = author.requestMetadata(using: relayService) {
-                        subscriptionIDs.append(subscriptionID)
+                .task {
+                    if author.needsMetadata {
+                        _ = author.requestMetadata(using: relayService)
                     }
-                }
-                .onDisappear {
-                    relayService.sendCloseToAll(subscriptions: subscriptionIDs)
-                    subscriptionIDs.removeAll()
                 }
                 .padding(10)
                 Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)

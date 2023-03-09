@@ -59,16 +59,22 @@ struct RepliesView: View {
             }
             .padding(.top, 1)
             .navigationBarTitle(Localized.threadView.string, displayMode: .inline)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
             VStack {
                 Spacer()
                 VStack {
-                    ExpandingTextFieldAndSubmitButton( placeholder: "Post a reply", reply: $reply) {
-                        postReply(reply)
+                    HStack(spacing: 10) {
+                        if let author = CurrentUser.author(in: viewContext) {
+                            AvatarView(imageUrl: author.profilePhotoURL, size: 35)
+                        }
+                        ExpandingTextFieldAndSubmitButton( placeholder: "Post a reply", reply: $reply) {
+                            postReply(reply)
+                        }
                     }
                     .padding(.horizontal)
-                    .padding(.vertical, 10)
                 }
-                .background(Color.white)
+                .background(Color.cardBgBottom)
             }
             .fixedSize(horizontal: false, vertical: true)
         }
@@ -129,7 +135,13 @@ struct RepliesView: View {
     }
 }
 struct RepliesView_Previews: PreviewProvider {
-    static var persistenceController = PersistenceController.preview
+    
+    static var persistenceController = {
+        let persistenceController = PersistenceController.preview
+        KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.alice.privateKeyHex.utf8))
+        return persistenceController
+    }()
+    
     static var previewContext = persistenceController.container.viewContext
     
     static var shortNote: Event {

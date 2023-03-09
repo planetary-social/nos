@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix duplicate note on a new post
 - Add mute functionality
 - Publish relay changes
+- Recommended / default relays
 
 ## [0.1 (6)] - 2023-03-08Z
 
