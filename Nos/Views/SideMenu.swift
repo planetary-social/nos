@@ -12,6 +12,8 @@ struct SideMenu: View {
     
     enum Destination {
         case settings
+        case relays
+        case profile
     }
     
     let menuWidth: CGFloat

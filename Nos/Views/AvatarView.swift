@@ -24,8 +24,9 @@ struct AvatarView: View {
                     }
                 )
             } else {
-                Image(systemName: "person.crop.circle.fill")
+                Image.emptyAvatar
                     .resizable()
+                    .renderingMode(.original)
             }
         }
         .frame(width: size, height: size)

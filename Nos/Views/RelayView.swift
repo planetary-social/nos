@@ -21,56 +21,50 @@ struct RelayView: View {
     @Dependency(\.analytics) private var analytics
     
     var body: some View {
-        NavigationStack(path: $router.relayPath) {
-            List {
-                if let relays = author.relays?.allObjects as? [Relay] {
-                    Section(Localized.relays.string) {
-                        ForEach(relays) { relay in
-                            Text(relay.address ?? Localized.error.string)
-                        }
-                        .onDelete { indexes in
-                            for index in indexes {
-                                let relay = relays[index]
-                                
-                                guard let address = relay.address else { continue }
-                                
-                                if let socket = relayService.socket(for: address) {
-                                    for subId in relayService.activeSubscriptions {
-                                        relayService.sendClose(from: socket, subscription: subId)
-                                    }
-                                    
-                                    relayService.close(socket: socket)
+        List {
+            if let relays = author.relays?.allObjects as? [Relay] {
+                Section {
+                    ForEach(relays) { relay in
+                        Text(relay.address ?? Localized.error.string)
+                            .foregroundColor(.textColor)
+                    }
+                    .onDelete { indexes in
+                        for index in indexes {
+                            let relay = relays[index]
+                            
+                            guard let address = relay.address else { continue }
+                            
+                            if let socket = relayService.socket(for: address) {
+                                for subId in relayService.activeSubscriptions {
+                                    relayService.sendClose(from: socket, subscription: subId)
                                 }
                                 
-                                analytics.removed(relay)
-                                author.remove(relay: relay)
-                                viewContext.delete(relay)
+                                relayService.close(socket: socket)
                             }
-
-                            try! viewContext.save()
                             
-                            publishChanges()
-                        }
-
-                        if author.relays?.count == 0 {
-                            Localized.noRelaysMessage.view
-                        }
-                    }
-                }
-                Section(Localized.addRelay.string) {
-                    TextField("wss://yourrelay.com", text: $newRelayAddress)
-                        .autocorrectionDisabled()
-                        #if os(iOS)
-                        .textInputAutocapitalization(.none)
-                        .keyboardType(.URL)
-                        #endif
-                    Button(Localized.save.string) {
-                        addRelay()
-                        CurrentUser.subscribe()
+                            analytics.removed(relay)
+                            author.remove(relay: relay)
+                            viewContext.delete(relay)
+                        }               
+         
+                        try! viewContext.save()
                         publishChanges()
                     }
+                    
+                    if author.relays?.count == 0 {
+                        Localized.noRelaysMessage.view
+                    }
+                } header: {
+                    Localized.relays.view
+                        .foregroundColor(.textColor)
+                        .fontWeight(.heavy)
                 }
-                
+                .listRowBackground(LinearGradient(
+                    colors: [Color.cardBgTop, Color.cardBgBottom],
+                    startPoint: .top,
+                    endPoint: .bottom
+                ))
+  
                 let authorRelayUrls = (author.relays as? Set<Relay>)?.compactMap { $0.address } ?? []
                 let recommendedRelays = Relay.defaults.filter { !authorRelayUrls.contains($0) }
 
@@ -89,26 +83,56 @@ struct RelayView: View {
                     }
                 }
             }
-            .toolbar {
-                #if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+            
+            Section {
+                TextField("wss://yourrelay.com", text: $newRelayAddress)
+                    .foregroundColor(.textColor)
+                    .autocorrectionDisabled()
+                    #if os(iOS)
+                    .textInputAutocapitalization(.none)
+                    .keyboardType(.URL)
+                    #endif
+                Button(Localized.save.string) {
+                    addRelay()
+                    CurrentUser.subscribe()
+                    publishChanges()
                 }
-                #endif
+            } header: {
+                Localized.addRelay.view
+                    .foregroundColor(.textColor)
+                    .fontWeight(.heavy)
+                    .bold()
             }
-            .navigationTitle(Localized.relays.string)
-            .navigationDestination(for: Author.self) { author in
-                ProfileView(author: author)
+            .listRowBackground(LinearGradient(
+                colors: [Color.cardBgTop, Color.cardBgBottom],
+                startPoint: .top,
+                endPoint: .bottom
+            ))
+            
+            if author.relays?.count == 0 {
+                Localized.noRelaysMessage.view
+                    .foregroundColor(.textColor)
             }
         }
-        .navigationTitle(Localized.relays.string)
+        .scrollContentBackground(.hidden)
+        .background(Color.appBg)
+        .toolbar {
+            #if os(iOS)
+            ToolbarItem(placement: .navigationBarTrailing) {
+                EditButton()
+            }
+            #endif
+        }
+        .navigationBarTitle(Localized.relays.string, displayMode: .inline)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
     }
     
     func publishChanges() {
         let followKeys = CurrentUser.follows?.keys ?? []
         CurrentUser.publishContactList(tags: followKeys.tags, context: viewContext)
     }
-    
+
     private func addRelay() {
         withAnimation {
             guard !newRelayAddress.isEmpty else { return }
@@ -120,6 +144,7 @@ struct RelayView: View {
             do {
                 try viewContext.save()
                 analytics.added(relay)
+                newRelayAddress = ""
             } catch {
                 // Replace this implementation with code to handle the error appropriately.
                 // fatalError() causes the application to generate a crash log and terminate. You should not

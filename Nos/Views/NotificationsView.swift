@@ -44,7 +44,22 @@ struct NotificationsView: View {
                     Localized.noNotifications.view
                 }
             }
+            .background(Color.appBg)
             .padding(.top, 1)
+            .navigationBarTitle(Localized.notifications.string, displayMode: .inline)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+            .navigationBarItems(
+                leading: Button(
+                    action: {
+                        router.toggleSideMenu()
+                    },
+                    label: {
+                        Image(systemName: "line.3.horizontal")
+                            .foregroundColor(.nosSecondary)
+                    }
+                )
+            )
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
@@ -57,12 +72,13 @@ struct NotificationsView: View {
 
 struct NotificationCard: View {
     
-    private let note: Event
+    @ObservedObject private var note: Event
     private let user: Author
     private let actionText: String?
     private let authorName: String
     
     @EnvironmentObject private var router: Router
+    @EnvironmentObject private var relayService: RelayService
     
     init(note: Event, user: Author) {
         self.note = note
@@ -129,18 +145,18 @@ struct NotificationCard: View {
                 .padding(.top, 15)
             }
             .buttonStyle(CardButtonStyle())
+            .task {
+                if author.needsMetadata {
+                    _ = author.requestMetadata(using: relayService)
+                }
+            }
         }
     }
 }
 
 struct NotificationsView_Previews: PreviewProvider {
     
-    static var persistenceController = {
-        let controller = PersistenceController.preview
-        let context = controller.container.viewContext
-        
-        return controller
-    }()
+    static var persistenceController = PersistenceController.preview
     
     static var previewContext = persistenceController.container.viewContext
     static var relayService = RelayService(persistenceController: persistenceController)

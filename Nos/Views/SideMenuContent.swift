@@ -27,7 +27,7 @@ struct SideMenuContent: View {
                         do {
                             guard let keyPair = KeyPair.loadFromKeychain() else { return }
                             let author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
-                            router.sideMenuPath.append(author)
+                            router.sideMenuPath.append(SideMenu.Destination.profile)
                         } catch {
                             // Replace this implementation with code to handle the error appropriately.
                             let nsError = error as NSError
@@ -51,6 +51,20 @@ struct SideMenuContent: View {
                         HStack(alignment: .center) {
                             Image(systemName: "gear")
                             Text("Settings")
+                                .foregroundColor(.primaryTxt)
+                        }
+                    }
+                    
+                    Spacer()
+                }
+                .padding()
+                HStack {
+                    Button {
+                        router.sideMenuPath.append(SideMenu.Destination.relays)
+                    } label: {
+                        HStack(alignment: .center) {
+                            Image(systemName: "antenna.radiowaves.left.and.right")
+                            Localized.relays.view
                                 .foregroundColor(.primaryTxt)
                         }
                     }
@@ -92,11 +106,15 @@ struct SideMenuContent: View {
                 Spacer(minLength: 0)
             }
             .background(Color.appBg)
-            .navigationDestination(for: Author.self) { author in
-                ProfileView(author: author)
-            }
-            .navigationDestination(for: SideMenu.Destination.self) { _ in
-                SettingsView()
+            .navigationDestination(for: SideMenu.Destination.self) { destination in
+                switch destination {
+                case .settings:
+                    SettingsView()
+                case .relays:
+                    RelayView(author: CurrentUser.author(in: viewContext)!)
+                case .profile:
+                    ProfileView(author: CurrentUser.author(in: viewContext)!)
+                }
             }
         }
     }
