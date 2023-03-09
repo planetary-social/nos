@@ -16,6 +16,12 @@ extension Set where Element == Follow {
     }
 }
 
+extension Array where Element == String {
+    var tags: [[String]] {
+        map { ["p", $0] }
+    }
+}
+
 @objc(Follow)
 public class Follow: NosManagedObject {
     

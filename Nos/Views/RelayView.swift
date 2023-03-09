@@ -94,11 +94,9 @@ struct RelayView: View {
         .navigationTitle(Localized.relays.string)
     }
     
-    public func publishChanges() {
-        var followKeys = CurrentUser.follows?.keys ?? []
-        let tags = followKeys.map { ["p", $0] }
-        
-        CurrentUser.updateFollows(tags: tags, context: viewContext)
+    func publishChanges() {
+        let followKeys = CurrentUser.follows?.keys ?? []
+        CurrentUser.updateFollows(tags: followKeys.tags, context: viewContext)
     }
     
     private func addRelay() {

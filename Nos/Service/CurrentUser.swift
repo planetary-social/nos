@@ -122,7 +122,6 @@ enum CurrentUser {
 
         var followKeys = follows?.keys ?? []
         followKeys.append(followKey)
-        let tags = followKeys.map { ["p", $0] }
         
         // Update author to add the new follow
         if let followedAuthor = try? Author.find(by: followKey, context: context) {
@@ -140,7 +139,7 @@ enum CurrentUser {
             }
         }
         
-        updateFollows(tags: tags, context: context)
+        updateFollows(tags: followKeys.tags, context: context)
     }
     
     /// Unfollow by public hex key
@@ -155,7 +154,6 @@ enum CurrentUser {
         let stillFollowingKeys = (follows ?? [])
             .keys
             .filter { $0 != unfollowedKey }
-        let tags = stillFollowingKeys.map { ["p", $0] }
         
         // Update author to only follow those still following
         if let unfollowedAuthor = try? Author.find(by: unfollowedKey, context: context) {
@@ -172,8 +170,8 @@ enum CurrentUser {
                 unfollowedAuthor.followers = unfollowedAuthorFollowers
             }
         }
-        
-        updateFollows(tags: tags, context: context)
+
+        updateFollows(tags: stillFollowingKeys.tags, context: context)
 
         // Delete cached texts from this person
         if let author = try? Author.find(by: unfollowedKey, context: context) {
