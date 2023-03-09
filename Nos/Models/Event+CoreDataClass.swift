@@ -175,13 +175,17 @@ public class Event: NosManagedObject {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let kind = EventKind.text.rawValue
         let followersPredicate = NSPredicate(
-            format: "kind = %i AND eventReferences.@count = 0 AND ANY author.followers.source = %@",
+            // swiftlint:disable line_length
+            format: "kind = %i AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply').@count = 0 AND ANY author.followers.source = %@",
+            // swiftlint:enable line_length
             kind,
             user
         )
         if let publicKey = user.publicKey?.hex {
             let currentUserPredicate = NSPredicate(
-                format: "kind = %i AND eventReferences.@count = 0 AND author.hexadecimalPublicKey = %@", kind, publicKey
+                // swiftlint:disable line_length
+                format: "kind = %i AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply').@count = 0 AND author.hexadecimalPublicKey = %@", kind, publicKey
+                // swiftlint:enable line_length
             )
             let compoundPredicate = NSCompoundPredicate(
                 orPredicateWithSubpredicates:
@@ -332,6 +336,14 @@ public class Event: NosManagedObject {
         )
     }
     
+    var bech32NoteID: String? {
+        guard let identifier = self.identifier,
+            let identifierBytes = try? identifier.bytes else {
+            return nil
+        }
+        return Bech32.encode(Nostr.notePrefix, baseEightData: Data(identifierBytes))
+    }
+    
     func attributedContent(with context: NSManagedObjectContext) -> AttributedString? {
         guard let content = self.content else {
             return nil
@@ -347,12 +359,24 @@ public class Event: NosManagedObject {
             "]"
         }
         
+        guard let tags = self.allTags as? [[String]] else {
+            return AttributedString(content)
+        }
+        
         let result = content.replacing(regex) { match in
-            if let authorReferences = self.authorReferences?.array as? [AuthorReference],
-                let pubkey = authorReferences[safe: match.1]?.pubkey,
-                let author = try? Author.find(by: pubkey, context: context) {
-                let mentionString = "[@\(author.safeName)](@\(author.hexadecimalPublicKey!))"
-                return mentionString
+            if let tag = tags[safe: match.1],
+                let type = tag[safe: 0],
+                let id = tag[safe: 1] {
+                if type == "p",
+                    let author = try? Author.find(by: id, context: context),
+                    let pubkey = author.hexadecimalPublicKey {
+                    return "[@\(author.safeName)](@\(pubkey))"
+                }
+                if type == "e",
+                    let event = Event.find(by: id, context: context),
+                    let bech32NoteID = event.bech32NoteID {
+                    return "[@\(bech32NoteID)](%\(id))"
+                }
             }
             return ""
         }
