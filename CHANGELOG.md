@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Use only relays added in RelayView for sending and receiving events
-
 - Add PostHog analytics
+- Add mute functionality
 
 ## [0.1 (6)] - 2023-03-08Z
 

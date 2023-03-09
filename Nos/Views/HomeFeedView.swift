@@ -40,7 +40,7 @@ struct HomeFeedView: View {
             subscriptionIds.removeAll()
         }
 
-        if let follows = CurrentUser.author.follows as? Set<Follow> {
+        if let follows = CurrentUser.follows {
             let authors = follows.compactMap({ $0.destination?.hexadecimalPublicKey! })
             
             if !authors.isEmpty {

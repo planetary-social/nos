@@ -44,7 +44,14 @@ enum CurrentUser {
     }
     
     static var follows: Set<Follow>? {
-        author.follows as? Set<Follow>
+        let followSet = author.follows as? Set<Follow>
+        let umutedSet = followSet!.filter({
+            if let author = $0.destination {
+                return author.muted == false
+            }
+            return false
+        })
+        return umutedSet
     }
     
     static func subscribe() {
