@@ -10,6 +10,12 @@ import CoreData
 
 typealias Followed = [Follow]
 
+extension Set where Element == Follow {
+    var keys: [String] {
+        compactMap { $0.destination?.hexadecimalPublicKey }
+    }
+}
+
 @objc(Follow)
 public class Follow: NosManagedObject {
     

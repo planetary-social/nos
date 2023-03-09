@@ -73,12 +73,13 @@ enum CurrentUser {
             return false
         }
         
-        let followKeys = following.compactMap { $0.destination?.hexadecimalPublicKey }
+        let followKeys = following.keys
         return followKeys.contains(key)
     }
     
-    static func updateFollows(pubKey: String, followKey: String, tags: [[String]], context: NSManagedObjectContext) {
-        guard let relays = author.relays?.allObjects as? [Relay] else {
+    static func updateFollows(tags: [[String]], context: NSManagedObjectContext) {
+        guard let relays = author.relays?.allObjects as? [Relay],
+            let pubKey = publicKey else {
             print("Error: No relay service")
             return
         }
@@ -105,14 +106,14 @@ enum CurrentUser {
     
     /// Follow by public hex key
     static func follow(author toFollow: Author, context: NSManagedObjectContext) {
-        guard let pubKey = publicKey, let followKey = toFollow.hexadecimalPublicKey else {
-            print("Error: No pubkey for current user")
+        guard let followKey = toFollow.hexadecimalPublicKey else {
+            print("Error: followKey is nil")
             return
         }
 
         print("Following \(followKey)")
 
-        var followKeys = follows?.compactMap { $0.destination?.hexadecimalPublicKey } ?? []
+        var followKeys = follows?.keys ?? []
         followKeys.append(followKey)
         let tags = followKeys.map { ["p", $0] }
         
@@ -132,20 +133,20 @@ enum CurrentUser {
             }
         }
         
-        updateFollows(pubKey: pubKey, followKey: followKey, tags: tags, context: context)
+        updateFollows(tags: tags, context: context)
     }
     
     /// Unfollow by public hex key
     static func unfollow(author toUnfollow: Author, context: NSManagedObjectContext) {
-        guard let pubKey = publicKey, let unfollowedKey = toUnfollow.hexadecimalPublicKey else {
-            print("Error: No pubkey for current user")
+        guard let unfollowedKey = toUnfollow.hexadecimalPublicKey else {
+            print("Error: unfollowedKey is nil")
             return
         }
 
         print("Unfollowing \(unfollowedKey)")
         
         let stillFollowingKeys = (follows ?? [])
-            .compactMap { $0.destination?.hexadecimalPublicKey }
+            .keys
             .filter { $0 != unfollowedKey }
         let tags = stillFollowingKeys.map { ["p", $0] }
         
@@ -165,7 +166,7 @@ enum CurrentUser {
             }
         }
         
-        updateFollows(pubKey: pubKey, followKey: unfollowedKey, tags: tags, context: context)
+        updateFollows(tags: tags, context: context)
 
         // Delete cached texts from this person
         if let author = try? Author.find(by: unfollowedKey, context: context) {

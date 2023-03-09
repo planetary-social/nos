@@ -48,6 +48,8 @@ struct RelayView: View {
                             }
 
                             try! viewContext.save()
+                            
+                            publishChanges()
                         }
 
                         if author.relays?.count == 0 {
@@ -65,6 +67,7 @@ struct RelayView: View {
                     Button(Localized.save.string) {
                         addRelay()
                         CurrentUser.subscribe()
+                        publishChanges()
                     }
                 }
                 if author.relays?.count == 0 {
@@ -89,6 +92,13 @@ struct RelayView: View {
             }
         }
         .navigationTitle(Localized.relays.string)
+    }
+    
+    public func publishChanges() {
+        var followKeys = CurrentUser.follows?.keys ?? []
+        let tags = followKeys.map { ["p", $0] }
+        
+        CurrentUser.updateFollows(tags: tags, context: viewContext)
     }
     
     private func addRelay() {
