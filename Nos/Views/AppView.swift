@@ -76,7 +76,7 @@ struct AppView: View {
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.discover)
                     
-                    NewPostView(isPresented: .constant(true))
+                    NewNoteView(isPresented: .constant(true))
                         .tabItem {
                             Label(Localized.newNote.string, systemImage: "plus.circle")
                         }
@@ -88,7 +88,7 @@ struct AppView: View {
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.notifications)
                     
-                    RelayView()
+                    RelayView(author: CurrentUser.author(in: viewContext)!)
                         .tabItem {
                             Label(Localized.relays.string, systemImage: "antenna.radiowaves.left.and.right")
                         }

@@ -88,6 +88,7 @@ struct DiscoverView: View {
                     }
                 }
             }
+            .background(Color.appBg)
             .animation(.easeInOut, value: columns)
             .refreshable {
                 refreshDiscover()

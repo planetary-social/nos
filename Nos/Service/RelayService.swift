@@ -28,14 +28,6 @@ final class RelayService: ObservableObject {
     var activeSubscriptions: [String] {
         requestFilterSet.map { $0.subscriptionId }
     }
-
-    var allRelayAddresses: [String] {
-        let objectContext = persistenceController.container.viewContext
-        let relays = try? objectContext.fetch(Relay.allRelaysRequest())
-        let addresses = relays?.map { $0.address!.lowercased() } ?? []
-
-        return addresses
-    }
         
     func removeFilter(for subscription: String) {
         // Remove this filter from the queue
@@ -278,29 +270,27 @@ extension RelayService {
     }
     
     func openSocketsForRelays() {
-        let objectContext = persistenceController.container.viewContext
-        do {
-            let relays = try objectContext.fetch(Relay.allRelaysRequest())
-            for relay in relays {
-                guard let relayAddress = relay.address?.lowercased(),
-                    let relayURL = URL(string: relayAddress) else {
-                    continue
-                }
-                            
-                guard !sockets.contains(where: { $0.request.url == relayURL }) else {
-                    continue
-                }
-                
-                var request = URLRequest(url: relayURL)
-                request.timeoutInterval = 10
-                let socket = WebSocket(request: request, compressionHandler: .none)
-                socket.delegate = self
-                sockets.append(socket)
-                socket.connect()
+        guard let relays = CurrentUser.author?.relays?.allObjects as? [Relay] else {
+            print("No relays associated with author!")
+            return
+        }
+
+        for relay in relays {
+            guard let relayAddress = relay.address?.lowercased(),
+                let relayURL = URL(string: relayAddress) else {
+                continue
             }
-        } catch {
-            print(error)
-            // TODO:
+                        
+            guard !sockets.contains(where: { $0.request.url == relayURL }) else {
+                continue
+            }
+            
+            var request = URLRequest(url: relayURL)
+            request.timeoutInterval = 10
+            let socket = WebSocket(request: request, compressionHandler: .none)
+            socket.delegate = self
+            sockets.append(socket)
+            socket.connect()
         }
     }
     

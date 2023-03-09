@@ -52,6 +52,7 @@ struct StaggeredGrid<Content: View, T: Identifiable, L: RandomAccessCollection<T
                     }
                 }
             }
+            .padding(.top, 10)
         }
     }
 }

@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import Dependencies
 
 struct SettingsView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Dependency(\.analytics) private var analytics
 
     @State private var keyPair: KeyPair? {
         didSet {
@@ -35,9 +37,11 @@ struct SettingsView: View {
                 Button(Localized.save.string) {
                     if privateKeyString.isEmpty {
                         self.keyPair = nil
-                        //                    } else if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
+                        analytics.logout()
                     } else if let keyPair = KeyPair(nsec: privateKeyString) {
                         self.keyPair = keyPair
+                        analytics.identify(with: keyPair)
+                        analytics.changedKey()
                     } else {
                         self.keyPair = nil
                         showError = true

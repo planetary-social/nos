@@ -41,8 +41,9 @@ public class Follow: NosManagedObject {
         follow.destination = followedAuthor
         followedAuthor.lastUpdated = Date.now
         
-        if jsonTag.count > 2 {
-            follow.relay = Relay.findOrCreate(by: jsonTag[2], context: context)
+        if jsonTag.count > 2, !jsonTag[2].isEmpty {
+            let relay = Relay.findOrCreate(by: jsonTag[2], context: context)
+            author.add(relay: relay)
         }
         
         if jsonTag.count > 3 {

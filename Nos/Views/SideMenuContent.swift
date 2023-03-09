@@ -5,11 +5,19 @@
 //  Created by Jason Cheatham on 2/21/23.
 //
 import SwiftUI
+import MessageUI
+
 struct SideMenuContent: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject var router: Router
+    
+    @State private var isShowingReportABugMailView = false
+    
+    @State var result: Result<MFMailComposeResult, Error>?
+    
     let closeMenu: () -> Void
+    
     var body: some View {
         NavigationStack(path: $router.sideMenuPath) {
             VStack(alignment: .leading, spacing: 0) {
@@ -65,12 +73,17 @@ struct SideMenuContent: View {
                 .padding()
                 HStack {
                     Button {
+                        isShowingReportABugMailView = true
                     } label: {
                         HStack(alignment: .center) {
                             Image(systemName: "ant.circle.fill")
                             Text("Report a Bug")
                                 .foregroundColor(.primaryTxt)
                         }
+                    }
+                    .disabled(!MFMailComposeViewController.canSendMail())
+                    .sheet(isPresented: $isShowingReportABugMailView) {
+                        ReportABugMailView(result: self.$result)
                     }
                     
                     Spacer()

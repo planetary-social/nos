@@ -59,8 +59,7 @@ struct NoteOptionsButton: View {
     }
 
     func copyMessageIdentifier() {
-        let bech32NoteID = Bech32.encode(Nostr.notePrefix, baseEightData: Data(try! note.identifier!.bytes))
-        UIPasteboard.general.string = bech32NoteID
+        UIPasteboard.general.string = note.bech32NoteID
     }
 
     func reportPost() {
