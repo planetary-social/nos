@@ -57,7 +57,7 @@ public class Relay: NosManagedObject {
         }
     }
     
-    convenience init(context: NSManagedObjectContext, address: String, author: Author? = nil) {
+    @discardableResult convenience init(context: NSManagedObjectContext, address: String, author: Author? = nil) {
         self.init(context: context)
         self.address = address
         self.createdAt = Date.now

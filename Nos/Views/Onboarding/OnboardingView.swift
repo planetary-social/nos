@@ -67,7 +67,7 @@ struct OnboardingView: View {
                         
                         // Default Relays for new user
                         for address in Relay.defaults {
-                            let _ = Relay(context: viewContext, address: address, author: CurrentUser.author)
+                            Relay(context: viewContext, address: address, author: CurrentUser.author)
                         }
 
                         completion()
