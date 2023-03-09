@@ -125,20 +125,22 @@ struct AppView: View {
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.notifications)
                     
-                    ProfileTab(author: CurrentUser.author(in: viewContext)!, path: $router.profilePath)
-                        .tabItem {
-                            VStack {
-                                // AvatarView(imageUrl: CurrentUser.author(in: viewContext)?.profilePhotoURL, size: 300)
-                                let text = Localized.profile.view
-                                if $router.selectedTab.wrappedValue == .profile {
-                                    text.foregroundColor(.textColor)
-                                } else {
-                                    text.foregroundColor(.secondaryTxt)
+                    if let author = CurrentUser.author(in: viewContext) {
+                        ProfileTab(author: author, path: $router.profilePath)
+                            .tabItem {
+                                VStack {
+                                    // AvatarView(imageUrl: CurrentUser.author(in: viewContext)?.profilePhotoURL, size: 300)
+                                    let text = Localized.profile.view
+                                    if $router.selectedTab.wrappedValue == .profile {
+                                        text.foregroundColor(.textColor)
+                                    } else {
+                                        text.foregroundColor(.secondaryTxt)
+                                    }
                                 }
                             }
-                        }
-                        .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                        .tag(Destination.profile)
+                            .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                            .tag(Destination.profile)
+                    }
                 }
                 .onChange(of: router.selectedTab) { newTab in
                     if newTab == Destination.newNote {
