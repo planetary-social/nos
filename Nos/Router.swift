@@ -8,13 +8,58 @@
 import SwiftUI
 import CoreData
 
-// Used in the NavigationStack and added as an environmentObject so that it can be used for multiple views
+// Manages the app's navigation state.
 class Router: ObservableObject {
-    @Published var path = NavigationPath()
-    /// Sets the title when navigating to a view
-    @Published var navigationTitle = ""
+    
+    @Published var homeFeedPath = NavigationPath()
+    @Published var discoverPath = NavigationPath()
+    @Published var notificationsPath = NavigationPath()
+    @Published var relayPath = NavigationPath()
+    @Published var sideMenuPath = NavigationPath()
+    @Published var selectedTab = AppView.Destination.home
+    
+    var currentPath: Binding<NavigationPath> {
+        if sideMenuOpened {
+            return Binding(get: { self.sideMenuPath }, set: { self.sideMenuPath = $0 })
+        }
+        
+        switch selectedTab {
+        case .home:
+            return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
+        case .discover:
+            return Binding(get: { self.discoverPath }, set: { self.discoverPath = $0 })
+        case .newNote:
+            return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
+        case .notifications:
+            return Binding(get: { self.notificationsPath }, set: { self.notificationsPath = $0 })
+        case .relays:
+            return Binding(get: { self.relayPath }, set: { self.relayPath = $0 })
+        }
+    }
+    
+    @Published var userNpubPublicKey = ""
+    
+    @Published private(set) var sideMenuOpened = false
+
     /// Set when a profile is viewed
     @Published var viewedAuthor: Author?
+
+    func toggleSideMenu() {
+        withAnimation(.easeIn(duration: 0.2)) {
+            sideMenuOpened.toggle()
+        }
+    }
+    
+    func closeSideMenu() {
+        withAnimation(.easeIn(duration: 0.2)) {
+            sideMenuOpened = false
+        }
+    }
+    
+    /// Pushes the given destination item onto the current NavigationPath.
+    func push<D: Hashable>(_ destination: D) {
+        currentPath.wrappedValue.append(destination)
+    }
 }
 
 extension Router {
@@ -26,11 +71,11 @@ extension Router {
         // the hex format pubkey of the mentioned author
         if link.hasPrefix("@") {
             if let author = try? Author.find(by: identifier, context: context) {
-                self.path.append(author)
+                push(author)
             }
         } else if link.hasPrefix("%") {
             if let event = Event.find(by: identifier, context: context) {
-                self.path.append(event)
+                push(event)
             }
         }
     }

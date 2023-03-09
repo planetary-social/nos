@@ -19,6 +19,7 @@ struct NewNoteView: View {
     
     @EnvironmentObject private var relayService: RelayService
     
+    @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
     
     @State private var postText: String = ""
@@ -73,6 +74,8 @@ struct NewNoteView: View {
                 relayService.publishToAll(event: event)
                 isPresented = false
                 analytics.published(note: event)
+                postText = ""
+                router.selectedTab = .home
             } catch {
                 alert = AlertState(title: {
                     TextState(Localized.error.string)

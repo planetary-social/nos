@@ -15,6 +15,7 @@ import SwiftUI
 struct NoteButton: View {
     var note: Event
     var style = CardStyle.compact
+    var showFullMessage = false
 
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
@@ -22,13 +23,9 @@ struct NoteButton: View {
     var body: some View {
         if let author = note.author {
             Button {
-                // If we are on the home feed or this is not the root note, allow clicks on replies
-                if router.path.count == 0 || note.eventReferences?.count ?? 0 > 0
-                    || router.navigationTitle == Localized.profile.rawValue {
-                    router.path.append(note)
-                }
+                router.currentPath.wrappedValue.append(note)
             } label: {
-                NoteCard(author: author, note: note, style: style)
+                NoteCard(author: author, note: note, style: style, showFullMessage: showFullMessage)
             }
             .buttonStyle(CardButtonStyle())
         }

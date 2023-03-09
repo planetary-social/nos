@@ -24,7 +24,7 @@ struct FollowCard: View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .center) {
                 Button {
-                    router.path.append(author)
+                    router.currentPath.wrappedValue.append(author)
                 } label: {
                     HStack(alignment: .center) {
                         AvatarView(imageUrl: author.profilePhotoURL, size: 24)
@@ -40,7 +40,9 @@ struct FollowCard: View {
                                 .foregroundColor(Color.secondaryTxt)
                         }
                         Spacer()
-                        FollowButton(currentUserAuthor: CurrentUser.author, author: author)
+                        if let currentUser = CurrentUser.author {
+                            FollowButton(currentUserAuthor: currentUser, author: author)
+                        }
                     }
                 }
                 // TODO: Put MessageOptionsButton back here eventually

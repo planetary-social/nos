@@ -89,14 +89,14 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func discoverFeedRequest() -> NSFetchRequest<Event> {
+    @nonobjc public class func discoverFeedRequest(authors: [String]) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let kind = EventKind.text.rawValue
         let followersPredicate = NSPredicate(
             format: "kind = %i AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@",
             kind,
-            Array(Event.discoverTabUserIdToInfo.keys).compactMap {
+            authors.compactMap {
                 PublicKey(npub: $0)?.hex
             }
         )

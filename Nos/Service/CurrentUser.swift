@@ -37,15 +37,16 @@ enum CurrentUser {
         }
     }
     
-    static var author: Author {
-        let persistenceController = PersistenceController.shared
-        context = persistenceController.container.viewContext
-        return try! Author.findOrCreate(by: publicKey ?? "", context: context!)
+    static var author: Author? {
+        if let publicKey, let context {
+            return try? Author.findOrCreate(by: publicKey, context: context)
+        }
+        return nil
     }
     
     static var follows: Set<Follow>? {
-        let followSet = author.follows as? Set<Follow>
-        let umutedSet = followSet!.filter({
+        let followSet = author?.follows as? Set<Follow>
+        let umutedSet = followSet?.filter({
             if let author = $0.destination {
                 return author.muted == false
             }
@@ -76,7 +77,7 @@ enum CurrentUser {
     }
     
     static func isFollowing(author profile: Author) -> Bool {
-        guard let following = author.follows as? Set<Follow>, let key = profile.hexadecimalPublicKey else {
+        guard let following = author?.follows as? Set<Follow>, let key = profile.hexadecimalPublicKey else {
             return false
         }
         
@@ -85,7 +86,7 @@ enum CurrentUser {
     }
     
     static func publishContactList(tags: [[String]], context: NSManagedObjectContext) {
-        guard let relays = author.relays?.allObjects as? [Relay],
+        guard let relays = author?.relays?.allObjects as? [Relay],
             let pubKey = publicKey else {
             print("Error: No relay service")
             return
@@ -124,12 +125,12 @@ enum CurrentUser {
         followKeys.append(followKey)
         
         // Update author to add the new follow
-        if let followedAuthor = try? Author.find(by: followKey, context: context) {
+        if let followedAuthor = try? Author.find(by: followKey, context: context), let currentUser = author {
             // Add to the current user's follows
-            let follow = try! Follow.findOrCreate(source: author, destination: followedAuthor, context: context)
-            if let currentFollows = author.follows?.mutableCopy() as? NSMutableSet {
+            let follow = try! Follow.findOrCreate(source: currentUser, destination: followedAuthor, context: context)
+            if let currentFollows = currentUser.follows?.mutableCopy() as? NSMutableSet {
                 currentFollows.add(follow)
-                author.follows = currentFollows
+                currentUser.follows = currentFollows
             }
 
             // Add from the current user to the author's followers
@@ -156,12 +157,12 @@ enum CurrentUser {
             .filter { $0 != unfollowedKey }
         
         // Update author to only follow those still following
-        if let unfollowedAuthor = try? Author.find(by: unfollowedKey, context: context) {
+        if let unfollowedAuthor = try? Author.find(by: unfollowedKey, context: context), let currentUser = author {
             // Remove from the current user's follows
-            let unfollows = Follow.follows(source: author, destination: unfollowedAuthor, context: context)
-            if let currentFollows = author.follows?.mutableCopy() as? NSMutableSet {
+            let unfollows = Follow.follows(source: currentUser, destination: unfollowedAuthor, context: context)
+            if let currentFollows = currentUser.follows?.mutableCopy() as? NSMutableSet {
                 currentFollows.remove(unfollows)
-                author.follows = currentFollows
+                currentUser.follows = currentFollows
             }
             
             // Remove from the unfollowed author's followers
