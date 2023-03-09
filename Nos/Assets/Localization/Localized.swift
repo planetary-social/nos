@@ -93,8 +93,11 @@ enum Localized: String, Localizable, CaseIterable {
     case noNotifications = "No notifications (yet)!"
     case copyNoteIdentifier = "Copy Note Identifier"
     case copyUserIdentifier = "Copy User ID"
+    case muteUser = "Mute"
+    case mutedUser = "Muted"
     case share = "Share"
     case reportPost = "Report this post"
+    case unmuteUser = "Un-Mute"
 }
 
 // MARK: - Onboarding

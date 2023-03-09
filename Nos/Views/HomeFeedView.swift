@@ -40,8 +40,8 @@ struct HomeFeedView: View {
             subscriptionIds.removeAll()
         }
 
-        if let follows = CurrentUser.author?.follows as? Set<Follow> {
-            let authors = follows.compactMap({ $0.destination?.hexadecimalPublicKey! })
+        if let follows = CurrentUser.follows {
+            let authors = follows.keys
             
             if !authors.isEmpty {
                 let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
@@ -59,7 +59,7 @@ struct HomeFeedView: View {
         NavigationStack(path: $router.homeFeedPath) {
             ScrollView(.vertical) {
                 LazyVStack {
-                    ForEach(events) { event in
+                    ForEach(events.unmuted) { event in
                         VStack {
                             NoteButton(note: event)
                                 .padding(.horizontal)
@@ -76,7 +76,7 @@ struct HomeFeedView: View {
                 ProfileView(author: author)
             }
             .overlay(Group {
-                if events.isEmpty {
+                if !events.contains(where: { !$0.author!.muted }) {
                     Localized.noEvents.view
                         .padding()
                 }

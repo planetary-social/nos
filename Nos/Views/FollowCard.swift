@@ -34,6 +34,11 @@ struct FollowCard: View {
                             .foregroundColor(Color.secondaryTxt)
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                        if author.muted {
+                            Text(Localized.mutedUser.string)
+                                .font(.subheadline)
+                                .foregroundColor(Color.secondaryTxt)
+                        }
                         Spacer()
                         if let currentUser = CurrentUser.author {
                             FollowButton(currentUserAuthor: currentUser, author: author)

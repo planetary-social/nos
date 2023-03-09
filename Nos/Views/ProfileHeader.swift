@@ -68,6 +68,11 @@ struct ProfileHeader: View {
                             Spacer()
                             if let currentUser = CurrentUser.author {
                                 FollowButton(currentUserAuthor: currentUser, author: author)
+                                if author.muted {
+                                    Text(Localized.mutedUser.string)
+                                        .font(.subheadline)
+                                        .foregroundColor(Color.secondaryTxt)
+                                }
                             }
                         }
                         Spacer()
