@@ -34,6 +34,7 @@ class AppController: ObservableObject {
         currentState = .loggedIn
         router.sideMenuPath = NavigationPath()
         router.closeSideMenu()
+        router.selectedTab = .discover
         analytics.completedOnboarding()
     }
 }
