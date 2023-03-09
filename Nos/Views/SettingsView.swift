@@ -11,6 +11,7 @@ import Dependencies
 struct SettingsView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) private var analytics
+    @EnvironmentObject private var appController: AppController
 
     @State private var keyPair: KeyPair? {
         didSet {
@@ -38,6 +39,7 @@ struct SettingsView: View {
                     if privateKeyString.isEmpty {
                         self.keyPair = nil
                         analytics.logout()
+                        appController.configureCurrentState()
                     } else if let keyPair = KeyPair(nsec: privateKeyString) {
                         self.keyPair = keyPair
                         analytics.identify(with: keyPair)
