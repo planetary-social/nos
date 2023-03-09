@@ -84,7 +84,7 @@ enum CurrentUser {
         return followKeys.contains(key)
     }
     
-    static func updateFollows(tags: [[String]], context: NSManagedObjectContext) {
+    static func publishContactList(tags: [[String]], context: NSManagedObjectContext) {
         guard let relays = author.relays?.allObjects as? [Relay],
             let pubKey = publicKey else {
             print("Error: No relay service")
@@ -139,7 +139,7 @@ enum CurrentUser {
             }
         }
         
-        updateFollows(tags: followKeys.tags, context: context)
+        publishContactList(tags: followKeys.tags, context: context)
     }
     
     /// Unfollow by public hex key
@@ -171,7 +171,7 @@ enum CurrentUser {
             }
         }
 
-        updateFollows(tags: stillFollowingKeys.tags, context: context)
+        publishContactList(tags: stillFollowingKeys.tags, context: context)
 
         // Delete cached texts from this person
         if let author = try? Author.find(by: unfollowedKey, context: context) {
