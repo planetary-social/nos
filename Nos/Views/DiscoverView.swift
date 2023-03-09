@@ -192,12 +192,5 @@ struct DiscoverView_Previews: PreviewProvider {
             .environmentObject(router)
             .onAppear { createTestData(in: previewContext) }
             .previewDevice("iPad Air (5th generation)")
-        
-        DiscoverView(authors: [user.publicKey!.npub])
-            .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
-            .environmentObject(router)
-            .onAppear { createTestData(in: previewContext) }
-            .previewDevice("iPhone SE (3rd generation)")
     }
 }

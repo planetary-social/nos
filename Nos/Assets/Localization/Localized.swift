@@ -65,7 +65,7 @@ enum Localized: String, Localizable, CaseIterable {
     case invalidKey = "Invalid Key"
     case couldNotReadPrivateKeyMessage = "Could not read your private key. Make sure it is in hex format."
     
-    case publish = "Publish"
+    case post = "Post" // (verb form)
     case newNote = "New Note"
     case cancel = "Cancel"
     case youNeedToEnterAPrivateKeyBeforePosting = "You need to enter a private key in Settings before you can publish posts."

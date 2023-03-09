@@ -32,22 +32,35 @@ struct NewNoteView: View {
         NavigationStack {
             Form {
                 TextEditor(text: $postText)
+                    .placeholder(when: postText.isEmpty, placeholder: {
+                        VStack {
+                            Text("Type your post here...")
+                                .foregroundColor(.secondaryTxt)
+                                .padding(7.5)
+                            Spacer()
+                        }
+                    })
                     .frame(idealHeight: 180)
-                Button(action: publishPost) {
-                    Localized.publish.view
-                }
+                    .listRowBackground(Color.appBg)
             }
-            .navigationTitle(Localized.newNote.string)
-            .toolbar(content: {
-                ToolbarItem {
-                    Button {
-                        isPresented = false
-                    }
-                    label: {
-                        Localized.cancel.view
-                    }
+            .scrollContentBackground(.hidden)
+            .background(Color.appBg)
+            .navigationBarTitle(Localized.newNote.string, displayMode: .inline)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+            .navigationBarItems(
+                leading: Button {
+                    isPresented = false
+                    UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.endEditing(true)
                 }
-            })
+                label: {
+                    Localized.cancel.view
+                        .foregroundColor(.textColor)
+                },
+                trailing: Button(action: publishPost) {
+                    Localized.post.view
+                }
+            )
         }
         .alert(unwrapping: $alert)
     }

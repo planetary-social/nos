@@ -78,7 +78,7 @@ struct AppView: View {
                     
                     NewNoteView(isPresented: .constant(true))
                         .tabItem {
-                            Label(Localized.newNote.string, systemImage: "plus.circle")
+                            Label(Localized.post.string, systemImage: "plus.circle")
                         }
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.newNote)
@@ -105,7 +105,7 @@ struct AppView: View {
             }
         }
         .onAppear(perform: appController.configureCurrentState)
-        .onAppear {
+        .task {
             let nosAppearance = UINavigationBarAppearance()
             nosAppearance.titleTextAttributes = [.foregroundColor: UIColor.primaryTxt]
             nosAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.primaryTxt]

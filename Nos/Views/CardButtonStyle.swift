@@ -15,7 +15,7 @@ struct CardButtonStyle: ButtonStyle {
             .shadow(color: .cardBorderBottom, radius: 0, x: 0, y: 4)
             .shadow(
                 color: .cardShadowBottom,
-                radius: configuration.isPressed ? 5 : 10,
+                radius: configuration.isPressed ? 2 : 5,
                 x: 0,
                 y: configuration.isPressed ? 1 : 4
             )

@@ -24,9 +24,10 @@ struct RelayView: View {
         NavigationStack(path: $router.relayPath) {
             List {
                 if let relays = author.relays?.allObjects as? [Relay] {
-                    Section(Localized.relays.string) {
+                    Section {
                         ForEach(relays) { relay in
                             Text(relay.address ?? Localized.error.string)
+                                .foregroundColor(.textColor)
                         }
                         .onDelete { indexes in
                             for index in indexes {
@@ -53,10 +54,21 @@ struct RelayView: View {
                         if author.relays?.count == 0 {
                             Localized.noRelaysMessage.view
                         }
+                    } header: {
+                        Localized.relays.view
+                            .foregroundColor(.textColor)
+                            .fontWeight(.heavy)
                     }
+                    .listRowBackground(LinearGradient(
+                        colors: [Color.cardBgTop, Color.cardBgBottom],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
                 }
-                Section(Localized.addRelay.string) {
+
+                Section {
                     TextField("wss://yourrelay.com", text: $newRelayAddress)
+                        .foregroundColor(.textColor)
                         .autocorrectionDisabled()
                         #if os(iOS)
                         .textInputAutocapitalization(.none)
@@ -66,11 +78,25 @@ struct RelayView: View {
                         addRelay()
                         CurrentUser.subscribe()
                     }
+                } header: {
+                    Localized.addRelay.view
+                        .foregroundColor(.textColor)
+                        .fontWeight(.heavy)
+                        .bold()
                 }
+                .listRowBackground(LinearGradient(
+                    colors: [Color.cardBgTop, Color.cardBgBottom],
+                    startPoint: .top,
+                    endPoint: .bottom
+                ))
+
                 if author.relays?.count == 0 {
                     Localized.noRelaysMessage.view
+                        .foregroundColor(.textColor)
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(Color.appBg)
             .toolbar {
                 #if os(iOS)
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -78,7 +104,20 @@ struct RelayView: View {
                 }
                 #endif
             }
-            .navigationTitle(Localized.relays.string)
+            .navigationBarTitle(Localized.relays.string, displayMode: .inline)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+            .navigationBarItems(
+                leading: Button(
+                    action: {
+                        router.toggleSideMenu()
+                    },
+                    label: {
+                        Image(systemName: "line.3.horizontal")
+                            .foregroundColor(.nosSecondary)
+                    }
+                )
+            )
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
             }
@@ -100,6 +139,7 @@ struct RelayView: View {
             do {
                 try viewContext.save()
                 analytics.added(relay)
+                newRelayAddress = ""
             } catch {
                 // Replace this implementation with code to handle the error appropriately.
                 // fatalError() causes the application to generate a crash log and terminate. You should not
