@@ -20,7 +20,16 @@ struct DiscoverView: View {
     
     @EnvironmentObject var router: Router
     
-    @State var columns: Int = 2
+    @State var columns: Int = 0
+    
+    @State private var gridSize: CGSize = .zero {
+        didSet {
+            // Initialize columns based on width of the grid
+            if columns == 0, gridSize.width > 0 {
+                columns = Int(floor(gridSize.width / 172))
+            }
+        }
+    }
     
     @Namespace private var animation
     
@@ -57,9 +66,15 @@ struct DiscoverView: View {
     
     var body: some View {
         NavigationStack(path: $router.discoverPath) {
-            StaggeredGrid(list: events, columns: columns) { note in
-                NoteButton(note: note, style: .golden)
-                    .matchedGeometryEffect(id: note.identifier, in: animation)
+            GeometryReader { geometry in
+                StaggeredGrid(list: events, columns: columns) { note in
+                    NoteButton(note: note, style: .golden)
+                        .matchedGeometryEffect(id: note.identifier, in: animation)
+                }
+                .preference(key: SizePreferenceKey.self, value: geometry.size)
+            }
+            .onPreferenceChange(SizePreferenceKey.self) { preference in
+                gridSize = preference
             }
             .searchable(text: $searchText, placement: .toolbar, prompt: Text("Find a user by ID"))
             .onSubmit(of: .search) {
@@ -72,6 +87,7 @@ struct DiscoverView: View {
                 }
             }
             .padding(.horizontal)
+            .background(Color.appBg)
             .toolbar {
                 ToolbarItem {
                     HStack {
@@ -88,7 +104,6 @@ struct DiscoverView: View {
                     }
                 }
             }
-            .background(Color.appBg)
             .animation(.easeInOut, value: columns)
             .refreshable {
                 refreshDiscover()
@@ -121,6 +136,14 @@ struct DiscoverView: View {
                 )
             )
         }
+    }
+}
+
+struct SizePreferenceKey: PreferenceKey {
+    static var defaultValue: CGSize = .zero
+
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+        value = nextValue()
     }
 }
 
@@ -162,5 +185,19 @@ struct DiscoverView_Previews: PreviewProvider {
             .environmentObject(relayService)
             .environmentObject(router)
             .onAppear { createTestData(in: previewContext) }
+        
+        DiscoverView(authors: [user.publicKey!.npub])
+            .environment(\.managedObjectContext, previewContext)
+            .environmentObject(relayService)
+            .environmentObject(router)
+            .onAppear { createTestData(in: previewContext) }
+            .previewDevice("iPad Air (5th generation)")
+        
+        DiscoverView(authors: [user.publicKey!.npub])
+            .environment(\.managedObjectContext, previewContext)
+            .environmentObject(relayService)
+            .environmentObject(router)
+            .onAppear { createTestData(in: previewContext) }
+            .previewDevice("iPhone SE (3rd generation)")
     }
 }

@@ -26,6 +26,10 @@ struct StaggeredGrid<Content: View, T: Identifiable, L: RandomAccessCollection<T
     func setUpList() -> [[T]] {
         var gridArray: [[T]] = Array(repeating: [], count: columns)
         
+        guard columns > 0 else {
+            return gridArray
+        }
+        
         var currentIndex = 0
         
         for object in list {
