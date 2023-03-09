@@ -58,7 +58,7 @@ struct ProfileView: View {
                     .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 
                 LazyVStack {
-                    ForEach(events.filter { !$0.author!.muted }) { event in
+                    ForEach(events.unmuted) { event in
                         VStack {
                             NoteButton(note: event)
                                 .padding(.horizontal)

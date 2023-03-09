@@ -59,7 +59,7 @@ struct HomeFeedView: View {
         NavigationStack(path: $router.path) {
             ScrollView(.vertical) {
                 LazyVStack {
-                    ForEach(events.filter { !$0.author!.muted }) { event in
+                    ForEach(events.unmuted) { event in
                         VStack {
                             NoteButton(note: event)
                                 .padding(.horizontal)
