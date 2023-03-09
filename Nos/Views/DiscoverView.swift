@@ -37,7 +37,7 @@ struct DiscoverView: View {
     
     var body: some View {
         NavigationStack(path: $router.path) {
-            StaggeredGrid(list: events, columns: columns) { note in
+            StaggeredGrid(list: events.unmuted, columns: columns) { note in
                 NoteButton(note: note, style: .golden)
                     .matchedGeometryEffect(id: note.identifier, in: animation)
             }

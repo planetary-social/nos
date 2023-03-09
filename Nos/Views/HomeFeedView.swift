@@ -40,7 +40,7 @@ struct HomeFeedView: View {
             subscriptionIds.removeAll()
         }
 
-        if let follows = CurrentUser.author.follows as? Set<Follow> {
+        if let follows = CurrentUser.follows {
             let authors = follows.compactMap({ $0.destination?.hexadecimalPublicKey! })
             
             if !authors.isEmpty {
@@ -59,7 +59,7 @@ struct HomeFeedView: View {
         NavigationStack(path: $router.path) {
             ScrollView(.vertical) {
                 LazyVStack {
-                    ForEach(events) { event in
+                    ForEach(events.unmuted) { event in
                         VStack {
                             NoteButton(note: event)
                                 .padding(.horizontal)
@@ -80,7 +80,7 @@ struct HomeFeedView: View {
                 }
             }
             .overlay(Group {
-                if events.isEmpty {
+                if !events.contains(where: { !$0.author!.muted }) {
                     Localized.noEvents.view
                         .padding()
                 }

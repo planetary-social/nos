@@ -66,7 +66,14 @@ struct ProfileHeader: View {
                                 .font(.title3.weight(.semibold))
                                 .foregroundColor(Color.primaryTxt)
                             Spacer()
-                            FollowButton(currentUserAuthor: CurrentUser.author, author: author)
+                            VStack {
+                                FollowButton(currentUserAuthor: CurrentUser.author, author: author)
+                                if author.muted {
+                                    Text(Localized.mutedUser.string)
+                                        .font(.subheadline)
+                                        .foregroundColor(Color.secondaryTxt)
+                                }
+                            }
                         }
                         Spacer()
 

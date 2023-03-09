@@ -50,6 +50,7 @@ public class Author: NosManagedObject {
         } else {
             let author = Author(context: context)
             author.hexadecimalPublicKey = pubKey
+            author.muted = false
             return author
         }
     }
@@ -87,6 +88,24 @@ public class Author: NosManagedObject {
         }
     }
     
+    func deleteAllPosts(context: NSManagedObjectContext) {
+        let deleteRequest = Event.deleteAllPosts(by: self)
+        
+        do {
+            try context.execute(deleteRequest)
+        } catch let error as NSError {
+            print("Failed to delete texts from \(hexadecimalPublicKey ?? ""). Error: \(error.description)")
+        }
+        
+        try? context.save()
+    }
+    
+    func mute(context: NSManagedObjectContext) {
+        print("Muting \(hexadecimalPublicKey ?? "")")
+        muted = true
+        deleteAllPosts(context: context)
+    }
+    
     func remove(relay: Relay) {
         if let currentRelays = relays?.mutableCopy() as? NSMutableSet {
             currentRelays.remove(relay)
@@ -106,5 +125,10 @@ public class Author: NosManagedObject {
         let metaFilter = Filter(authorKeys: [hexadecimalPublicKey], kinds: [.metaData], limit: 1)
         let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
         return metaSub
+    }
+    
+    func unmute() {
+        print("Un-muting \(hexadecimalPublicKey ?? "")")
+        muted = false
     }
 }
