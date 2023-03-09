@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add PostHog analytics
 - Open an email compose view controller for support@planetary.social 
 - Add mute functionality
+- Publish relay changes
 
 ## [0.1 (6)] - 2023-03-08Z
 
