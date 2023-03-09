@@ -129,7 +129,6 @@ struct AppView: View {
                         ProfileTab(author: author, path: $router.profilePath)
                             .tabItem {
                                 VStack {
-                                    // AvatarView(imageUrl: CurrentUser.author(in: viewContext)?.profilePhotoURL, size: 300)
                                     let text = Localized.profile.view
                                     if $router.selectedTab.wrappedValue == .profile {
                                         text.foregroundColor(.textColor)
