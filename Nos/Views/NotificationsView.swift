@@ -34,7 +34,7 @@ struct NotificationsView: View {
         NavigationStack(path: $router.path) {
             ScrollView(.vertical) {
                 LazyVStack {
-                    ForEach(events) { event in
+                    ForEach(events.unmuted) { event in
                         if let user {
                             NotificationCard(note: event, user: user)
                         }

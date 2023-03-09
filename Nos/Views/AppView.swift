@@ -134,7 +134,18 @@ struct AppView: View {
                                         )
                                         .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
                                             Button(Localized.copyUserIdentifier.string) {
-                                                UIPasteboard.general.string = router.userNpubPublicKey
+                                                UIPasteboard.general.string = router.viewedAuthor?.publicKey?.npub ?? ""
+                                            }
+                                            if let author = router.viewedAuthor {
+                                                if author.muted {
+                                                    Button(Localized.unmuteUser.string) {
+                                                        router.viewedAuthor?.unmute()
+                                                    }
+                                                } else {
+                                                    Button(Localized.muteUser.string) {
+                                                        router.viewedAuthor?.mute(context: viewContext)
+                                                    }
+                                                }
                                             }
                                         }
                                     } else {

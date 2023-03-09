@@ -44,7 +44,14 @@ enum CurrentUser {
     }
     
     static var follows: Set<Follow>? {
-        author.follows as? Set<Follow>
+        let followSet = author.follows as? Set<Follow>
+        let umutedSet = followSet!.filter({
+            if let author = $0.destination {
+                return author.muted == false
+            }
+            return false
+        })
+        return umutedSet
     }
     
     static func subscribe() {
@@ -68,8 +75,8 @@ enum CurrentUser {
         }
     }
     
-    static func isFollowing(author: Author) -> Bool {
-        guard let following = follows, let key = author.hexadecimalPublicKey else {
+    static func isFollowing(author profile: Author) -> Bool {
+        guard let following = author.follows as? Set<Follow>, let key = profile.hexadecimalPublicKey else {
             return false
         }
         
@@ -170,13 +177,7 @@ enum CurrentUser {
 
         // Delete cached texts from this person
         if let author = try? Author.find(by: unfollowedKey, context: context) {
-            let deleteRequest = Event.deleteAllPosts(by: author)
-            
-            do {
-                try context.execute(deleteRequest)
-            } catch let error as NSError {
-                print("Failed to delete texts from \(unfollowedKey). Error: \(error.description)")
-            }
+            author.deleteAllPosts(context: context)
         }
     }
     

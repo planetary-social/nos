@@ -13,8 +13,8 @@ class Router: ObservableObject {
     @Published var path = NavigationPath()
     /// Sets the title when navigating to a view
     @Published var navigationTitle = ""
-    
-    @Published var userNpubPublicKey = ""
+    /// Set when a profile is viewed
+    @Published var viewedAuthor: Author?
 }
 
 extension Router {

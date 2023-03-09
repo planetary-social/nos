@@ -5,6 +5,7 @@
         <attribute name="displayName" optional="YES" attributeType="String"/>
         <attribute name="hexadecimalPublicKey" attributeType="String"/>
         <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="muted" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="profilePhotoURL" optional="YES" attributeType="URI"/>
         <relationship name="events" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="author" inverseEntity="Event"/>
