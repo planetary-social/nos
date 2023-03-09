@@ -75,8 +75,8 @@ enum CurrentUser {
         }
     }
     
-    static func isFollowing(author: Author) -> Bool {
-        guard let following = follows, let key = author.hexadecimalPublicKey else {
+    static func isFollowing(author profile: Author) -> Bool {
+        guard let following = author.follows as? Set<Follow>, let key = profile.hexadecimalPublicKey else {
             return false
         }
         
