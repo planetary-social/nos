@@ -55,10 +55,7 @@ enum Localized: String, Localizable, CaseIterable {
     case error = "Error"
     case noEvents = "No notes to show! Add a relay to get started."
     case addItem = "Add Item"
-    case homeFeed = "Home Feed"
-    case homeFeedLinkTitle = "🏠 Home Feed"
-    case relaysLinkTitle = "📡 Relays"
-    case settingsLinkTitle = "⚙️ Settings"
+    case homeFeed = "Feed"
     
     case keys = "Keys"
     case keyEncryptionWarning = "Warning: Never share your private key with anyone."
@@ -80,6 +77,7 @@ enum Localized: String, Localizable, CaseIterable {
     
     case profile = "Profile"
     case follow = "Follow"
+    case follows = "Follows"
     case following = "Following"
     case unfollow = "Unfollow"
     case readMore = "Read more"

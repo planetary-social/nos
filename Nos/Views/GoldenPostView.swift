@@ -39,7 +39,7 @@ struct GoldenPostView: View {
     var footer: some View {
         HStack(alignment: .center) {
             Button {
-                router.path.append(author)
+                router.push(author)
             } label: {
                 HStack(alignment: .center) {
                     AvatarView(imageUrl: author.profilePhotoURL, size: 20)

@@ -31,7 +31,7 @@ struct NotificationsView: View {
     }
     
     var body: some View {
-        NavigationStack(path: $router.path) {
+        NavigationStack(path: $router.notificationsPath) {
             ScrollView(.vertical) {
                 LazyVStack {
                     ForEach(events.unmuted) { event in
@@ -50,11 +50,6 @@ struct NotificationsView: View {
             }
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
-            }
-            .navigationDestination(for: AppView.Destination.self) { destination in
-                if destination == AppView.Destination.settings {
-                    SettingsView()
-                }
             }
         }
     }
@@ -87,7 +82,7 @@ struct NotificationCard: View {
     var body: some View {
         if let author = note.author {
             Button {
-                router.path.append(note.rootNote())
+                router.notificationsPath.append(note.rootNote())
             } label: {
                 HStack {
                     AvatarView(imageUrl: author.profilePhotoURL, size: 40)

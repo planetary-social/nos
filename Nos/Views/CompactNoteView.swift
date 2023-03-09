@@ -19,8 +19,7 @@ struct CompactNoteView: View {
     @State
     private var shouldShowReadMore = false
     
-    @State
-    private var showFullMessage = false
+    @State var showFullMessage = false
 
     @State
     private var intrinsicSize = CGSize.zero

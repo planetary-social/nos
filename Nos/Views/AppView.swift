@@ -9,14 +9,10 @@ import SwiftUI
 
 struct AppView: View {
 
-    @StateObject private var appController = AppController()
+    @EnvironmentObject private var appController: AppController
     
     @State var isCreatingNewPost = false
 
-    @State var sideMenuOpened = false
-
-    @State var selectedTab = Destination.home
-    
     @EnvironmentObject var router: Router
     
     @Environment(\.managedObjectContext) private var viewContext
@@ -29,35 +25,36 @@ struct AppView: View {
         case home
         case discover
         case relays
-        case settings
         case notifications
+        case newNote
         
         var label: some View {
             switch self {
             case .home:
-                return Text(Localized.homeFeedLinkTitle.string)
+                return Text(Localized.homeFeed.string)
             case .discover:
                 return Localized.discover.view
             case .relays:
-                return Text(Localized.relaysLinkTitle.string)
-            case .settings:
-                return Text(Localized.settingsLinkTitle.string)
+                return Text(Localized.relays.string)
             case .notifications:
                 return Localized.notifications.view
+            case .newNote:
+                return Localized.newNote.view
             }
         }
+        
         var destinationString: String {
             switch self {
             case .home:
-                return Localized.homeFeedLinkTitle.string
+                return Localized.homeFeed.string
             case .discover:
                 return Localized.discover.string
             case .relays:
-                return Localized.relaysLinkTitle.string
-            case .settings:
-                return Localized.settingsLinkTitle.string
+                return Localized.relays.string
             case .notifications:
                 return Localized.notifications.string
+            case .newNote:
+                return Localized.newNote.string
             }
         }
     }
@@ -68,120 +65,54 @@ struct AppView: View {
             if appController.currentState == .onboarding {
                 OnboardingView(completion: appController.completeOnboarding)
             } else {
-                NavigationView {
-                    ZStack {
-                        TabView(selection: $selectedTab) {
-                            HomeFeedView(user: CurrentUser.author(in: viewContext))
-                                .tabItem { Label(Localized.homeFeed.string, systemImage: "house") }
-                                .tag(Destination.home)
-                            
-                            DiscoverView()
-                                .tabItem { Label(Localized.discover.string, systemImage: "magnifyingglass") }
-                                .tag(Destination.discover)
-                            
-                            NotificationsView(user: CurrentUser.author(in: viewContext))
-                                .tabItem { Label(Localized.notifications.string, systemImage: "bell") }
-                                .tag(Destination.notifications)
-
-                            RelayView(author: CurrentUser.author)
-                                .tabItem {
-                                    Label(Localized.relays.string, systemImage: "antenna.radiowaves.left.and.right")
-                                }
-                                .tag(Destination.relays)
+                TabView(selection: $router.selectedTab) {
+                    HomeFeedView(user: CurrentUser.author(in: viewContext))
+                        .tabItem { Label(Localized.homeFeed.string, systemImage: "house") }
+                        .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                        .tag(Destination.home)
+                    
+                    DiscoverView()
+                        .tabItem { Label(Localized.discover.string, systemImage: "magnifyingglass") }
+                        .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                        .tag(Destination.discover)
+                    
+                    NewNoteView(isPresented: .constant(true))
+                        .tabItem {
+                            Label(Localized.newNote.string, systemImage: "plus.circle")
                         }
-                        .onChange(of: selectedTab) { _ in
-                            if router.path.count > 0 {
-                                router.path.removeLast(router.path.count)
-                            }
+                        .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                        .tag(Destination.newNote)
+                    
+                    NotificationsView(user: CurrentUser.author(in: viewContext))
+                        .tabItem { Label(Localized.notifications.string, systemImage: "bell") }
+                        .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                        .tag(Destination.notifications)
+                    
+                    RelayView(author: CurrentUser.author(in: viewContext)!)
+                        .tabItem {
+                            Label(Localized.relays.string, systemImage: "antenna.radiowaves.left.and.right")
                         }
-              
-                        .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle(router.path.count > 0 ? router.navigationTitle : selectedTab.destinationString)
-                        .navigationBarItems(
-                            leading:
-                                Group {
-                                    if router.path.count > 0 {
-                                        Button(
-                                            action: {
-                                                router.path.removeLast()
-                                            },
-                                            label: {
-                                                Image(systemName: "chevron.left")
-                                            }
-                                        )
-                                    } else {
-                                        Button(
-                                            action: {
-                                                toggleMenu()
-                                            },
-                                            label: {
-                                                Image(systemName: "person.crop.circle")
-                                            }
-                                        )
-                                    }
-                                }
-                            ,
-                            trailing:
-                                Group {
-                                    if router.path.count > 0 {
-                                        Button(
-                                            action: {
-                                                showingOptions = true
-                                            },
-                                            label: {
-                                                Image(systemName: "ellipsis")
-                                            }
-                                        )
-                                        .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
-                                            Button(Localized.copyUserIdentifier.string) {
-                                                UIPasteboard.general.string = router.viewedAuthor?.publicKey?.npub ?? ""
-                                            }
-                                            if let author = router.viewedAuthor {
-                                                if author.muted {
-                                                    Button(Localized.unmuteUser.string) {
-                                                        router.viewedAuthor?.unmute()
-                                                    }
-                                                } else {
-                                                    Button(Localized.muteUser.string) {
-                                                        router.viewedAuthor?.mute(context: viewContext)
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        Button(
-                                            action: {
-                                                isCreatingNewPost.toggle()
-                                            },
-                                            label: {
-                                                Image(systemName: "plus")
-                                            }
-                                        )
-                                    }
-                                }
-                        )
-                        .sheet(isPresented: $isCreatingNewPost, content: {
-                            NewNoteView(isPresented: $isCreatingNewPost)
-                        })
-                    }
+                        .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                        .tag(Destination.relays)
                 }
-                .navigationViewStyle(.stack)
                 
                 SideMenu(
-                    width: UIScreen.main.bounds.width / 1.3,
-                    menuOpened: sideMenuOpened,
-                    toggleMenu: toggleMenu,
-                    closeMenu: closeMenu
+                    menuWidth: UIScreen.main.bounds.width / 1.3,
+                    menuOpened: router.sideMenuOpened,
+                    toggleMenu: router.toggleSideMenu,
+                    closeMenu: router.closeSideMenu
                 )
             }
         }
         .onAppear(perform: appController.configureCurrentState)
-    }
-    func toggleMenu() {
-        sideMenuOpened.toggle()
-    }
-    func closeMenu() {
-        sideMenuOpened = false
+        .onAppear {
+            let nosAppearance = UINavigationBarAppearance()
+            nosAppearance.titleTextAttributes = [.foregroundColor: UIColor.primaryTxt]
+            nosAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.primaryTxt]
+            UINavigationBar.appearance().standardAppearance = nosAppearance
+            UINavigationBar.appearance().compactAppearance = nosAppearance
+            UINavigationBar.appearance().scrollEdgeAppearance = nosAppearance
+        }
     }
 }
 
@@ -191,11 +122,36 @@ struct AppView_Previews: PreviewProvider {
     static var previewContext = persistenceController.container.viewContext
     static var relayService = RelayService(persistenceController: persistenceController)
     static var router = Router()
+    static var loggedInAppController: AppController = {
+        let appController = AppController()
+        KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.alice.privateKeyHex.utf8))
+        appController.completeOnboarding()
+        return appController
+    }()
+    
+    static var routerWithSideMenuOpened: Router = {
+        let router = Router()
+        router.toggleSideMenu()
+        return router
+    }()
     
     static var previews: some View {
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
+            .environmentObject(loggedInAppController)
+        
+        AppView()
+            .environment(\.managedObjectContext, previewContext)
+            .environmentObject(relayService)
+            .environmentObject(router)
+            .environmentObject(AppController())
+        
+        AppView()
+            .environment(\.managedObjectContext, previewContext)
+            .environmentObject(relayService)
+            .environmentObject(routerWithSideMenuOpened)
+            .environmentObject(AppController())
     }
 }

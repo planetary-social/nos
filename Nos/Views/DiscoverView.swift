@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct DiscoverView: View {
     
@@ -13,8 +14,9 @@ struct DiscoverView: View {
     
     @EnvironmentObject private var relayService: RelayService
 
-    @FetchRequest(fetchRequest: Event.discoverFeedRequest(), animation: .default)
-    private var events: FetchedResults<Event>
+    private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
+
+    private var events: FetchedResults<Event> { eventRequest.wrappedValue }
     
     @EnvironmentObject var router: Router
     
@@ -23,10 +25,28 @@ struct DiscoverView: View {
     @Namespace private var animation
     
     @State private var subscriptionId: String = ""
+    private var authors: [String]
+    
+    @State var searchText = "" {
+        didSet {
+            if let publicKey = PublicKey(npub: searchText) {
+                let author = try! Author.findOrCreate(by: publicKey.hex, context: viewContext)
+                router.push(author)
+            } else if let publicKey = PublicKey(hex: searchText) {
+                let author = try! Author.findOrCreate(by: publicKey.hex, context: viewContext)
+                router.push(author)
+            }
+        }
+    }
+    
+    init(authors: [String] = Array(Event.discoverTabUserIdToInfo.keys)) {
+        self.authors = authors
+        eventRequest = FetchRequest(fetchRequest: Event.discoverFeedRequest(authors: authors))
+    }
     
     func refreshDiscover() {
         let filter = Filter(
-            authorKeys: Array(Event.discoverTabUserIdToInfo.keys).compactMap {
+            authorKeys: authors.compactMap {
                 PublicKey(npub: $0)?.hex
             },
             kinds: [.text],
@@ -36,26 +56,30 @@ struct DiscoverView: View {
     }
     
     var body: some View {
-        NavigationStack(path: $router.path) {
+        NavigationStack(path: $router.discoverPath) {
             StaggeredGrid(list: events.unmuted, columns: columns) { note in
                 NoteButton(note: note, style: .golden)
                     .matchedGeometryEffect(id: note.identifier, in: animation)
             }
+            .searchable(text: $searchText, placement: .toolbar, prompt: Text("Find a user by ID"))
+            .onSubmit(of: .search) {
+                if let publicKey = PublicKey(npub: searchText) {
+                    let author = try! Author.findOrCreate(by: publicKey.hex, context: viewContext)
+                    router.push(author)
+                } else if let publicKey = PublicKey(hex: searchText) {
+                    let author = try! Author.findOrCreate(by: publicKey.hex, context: viewContext)
+                    router.push(author)
+                }
+            }
             .padding(.horizontal)
             .toolbar {
-                ToolbarItem(placement: ToolbarItemPlacement.principal) {
+                ToolbarItem {
                     HStack {
                         Button {
                             columns = max(columns - 1, 1)
                         } label: {
                             Image(systemName: "minus")
                         }
-                        DiscoverSearchBar(placeholder: "Find a user by ID", onSubmitSearch: { text in
-                            if let publicKey = PublicKey(npub: text) {
-                                let author = try! Author.findOrCreate(by: publicKey.hex, context: viewContext)
-                                router.path.append(author)
-                            }
-                        })
                         Button {
                             columns += 1
                         } label: {
@@ -64,6 +88,7 @@ struct DiscoverView: View {
                     }
                 }
             }
+            .background(Color.appBg)
             .animation(.easeInOut, value: columns)
             .refreshable {
                 refreshDiscover()
@@ -81,60 +106,20 @@ struct DiscoverView: View {
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
             }
-            .navigationDestination(for: AppView.Destination.self) { destination in
-                if destination == AppView.Destination.settings {
-                    SettingsView()
-                }
-            }
-        }
-    }
-}
-
-struct StaggeredGrid<Content: View, T: Identifiable, L: RandomAccessCollection<T>>: View where T: Hashable {
-    
-    var content: (T) -> Content
-    
-    var list: L
-    
-    var columns: Int
-    var spacing: CGFloat
-    
-    init(list: L, columns: Int, spacing: CGFloat = 10, @ViewBuilder content: @escaping (T) -> Content) {
-        self.content = content
-        self.list = list
-        self.spacing = spacing
-        self.columns = columns
-    }
-    
-    func setUpList() -> [[T]] {
-        var gridArray: [[T]] = Array(repeating: [], count: columns)
-        
-        var currentIndex = 0
-        
-        for object in list {
-            gridArray[currentIndex].append(object)
-            
-            if currentIndex == columns - 1 {
-                currentIndex = 0
-            } else {
-                currentIndex += 1
-            }
-        }
-        
-        return gridArray
-    }
-    
-    var body: some View {
-        ScrollView(.vertical) {
-            HStack(alignment: .top) {
-                ForEach(setUpList(), id: \.self) { columnsData in
-                    LazyVStack(spacing: spacing) {
-                        ForEach(columnsData) { model in
-                            content(model)
-                        }
+            .navigationBarTitle(Localized.discover.string, displayMode: .inline)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+            .navigationBarItems(
+                leading: Button(
+                    action: {
+                        router.toggleSideMenu()
+                    },
+                    label: {
+                        Image(systemName: "line.3.horizontal")
+                            .foregroundColor(.nosSecondary)
                     }
-                }
-            }
+                )
+            )
         }
     }
 }
@@ -151,23 +136,31 @@ struct DiscoverView_Previews: PreviewProvider {
     
     static var router = Router()
     
-    static var shortNote: Event {
-        let note = Event(context: previewContext)
-        note.content = "Hello, world!"
-        try! previewContext.save()
-        return note
+    static var user: Author {
+        let author = Author(context: previewContext)
+        author.hexadecimalPublicKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
+        return author
     }
     
-    static var longNote: Event {
-        let note = Event(context: previewContext)
-        note.content = .loremIpsum(5)
-        return note
+    static func createTestData(in context: NSManagedObjectContext) {
+        let shortNote = Event(context: previewContext)
+        shortNote.identifier = "1"
+        shortNote.author = user
+        shortNote.content = "Hello, world!"
+        
+        let longNote = Event(context: previewContext)
+        longNote.identifier = "2"
+        longNote.author = user
+        longNote.content = .loremIpsum(5)
+        
+        try! previewContext.save()
     }
     
     static var previews: some View {
-        DiscoverView()
+        DiscoverView(authors: [user.publicKey!.npub])
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
+            .onAppear { createTestData(in: previewContext) }
     }
 }

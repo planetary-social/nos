@@ -270,7 +270,7 @@ extension RelayService {
     }
     
     func openSocketsForRelays() {
-        guard let relays = CurrentUser.author.relays?.allObjects as? [Relay] else {
+        guard let relays = CurrentUser.author?.relays?.allObjects as? [Relay] else {
             print("No relays associated with author!")
             return
         }
