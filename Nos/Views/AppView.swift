@@ -12,16 +12,19 @@ struct AppView: View {
     @EnvironmentObject private var appController: AppController
     
     @State var isCreatingNewPost = false
+    
+    @State var showNewPost = false
 
     @EnvironmentObject var router: Router
     
     @Environment(\.managedObjectContext) private var viewContext
     
-    @State
-    private var showingOptions = false
+    @State private var showingOptions = false
+    @State private var lastSelectedTab = Destination.home
+
     
     /// An enumeration of the destinations for AppView.
-    enum Destination: String, Hashable {
+    enum Destination: String, Hashable, Equatable {
         case home
         case discover
         case relays
@@ -67,24 +70,54 @@ struct AppView: View {
             } else {
                 TabView(selection: $router.selectedTab) {
                     HomeFeedView(user: CurrentUser.author(in: viewContext))
-                        .tabItem { Label(Localized.homeFeed.string, systemImage: "house") }
+                        .tabItem {
+                            VStack {
+                                if $router.selectedTab.wrappedValue == .home {
+                                    Image.tabIconHomeSelected
+                                } else {
+                                    Image.tabIconHome
+                                }
+                                Localized.homeFeed.view
+                            }
+                        }
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.home)
                     
                     DiscoverView()
-                        .tabItem { Label(Localized.discover.string, systemImage: "magnifyingglass") }
+                        .tabItem {
+                            VStack {
+                                if $router.selectedTab.wrappedValue == .discover {
+                                    Image.tabIconEveryoneSelected
+                                } else {
+                                    Image.tabIconEveryone
+                                }
+                                Localized.discover.view
+                            }
+                        }
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.discover)
                     
-                    NewNoteView(isPresented: .constant(true))
+                    
+                    VStack {}
                         .tabItem {
-                            Label(Localized.post.string, systemImage: "plus.circle")
+                            VStack {
+                                Image.newPostButton
+                                Localized.post.view
+                            }
                         }
-                        .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                        .tag(Destination.newNote)
+                    .tag(Destination.newNote)
                     
                     NotificationsView(user: CurrentUser.author(in: viewContext))
-                        .tabItem { Label(Localized.notifications.string, systemImage: "bell") }
+                        .tabItem {
+                            VStack {
+                                if $router.selectedTab.wrappedValue == .notifications {
+                                    Image.tabIconNotificationsSelected
+                                } else {
+                                    Image.tabIconNotifications
+                                }
+                                Localized.notifications.view
+                            }
+                        }
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.notifications)
                     
@@ -95,6 +128,17 @@ struct AppView: View {
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.relays)
                 }
+                .onChange(of: router.selectedTab) { newTab in
+                    if newTab == Destination.newNote {
+                        showNewPost = true
+                        router.selectedTab = lastSelectedTab
+                    } else if !showNewPost {
+                        lastSelectedTab = newTab
+                    }
+                }
+                .sheet(isPresented: $showNewPost, content: {
+                    NewNoteView(isPresented: $showNewPost)
+                })
                 
                 SideMenu(
                     menuWidth: UIScreen.main.bounds.width / 1.3,
