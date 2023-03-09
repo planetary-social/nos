@@ -17,7 +17,7 @@ struct HomeFeedView: View {
 
     @EnvironmentObject var router: Router
     
-    private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.fetchRequest())
+    private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
 
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
     
@@ -40,8 +40,8 @@ struct HomeFeedView: View {
             subscriptionIds.removeAll()
         }
 
-        if let follows = CurrentUser.author.follows as? Set<Follow> {
-            let authors = follows.compactMap({ $0.destination?.hexadecimalPublicKey! })
+        if let follows = CurrentUser.follows {
+            let authors = follows.keys
             
             if !authors.isEmpty {
                 let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
@@ -56,10 +56,10 @@ struct HomeFeedView: View {
     }
     
     var body: some View {
-        NavigationStack(path: $router.path) {
+        NavigationStack(path: $router.homeFeedPath) {
             ScrollView(.vertical) {
                 LazyVStack {
-                    ForEach(events) { event in
+                    ForEach(events.unmuted) { event in
                         VStack {
                             NoteButton(note: event)
                                 .padding(.horizontal)
@@ -67,6 +67,7 @@ struct HomeFeedView: View {
                     }
                 }
             }
+            .background(Color.appBg)
             .padding(.top, 1)
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
@@ -74,20 +75,30 @@ struct HomeFeedView: View {
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
             }
-            .navigationDestination(for: AppView.Destination.self) { destination in
-                if destination == AppView.Destination.settings {
-                    SettingsView()
-                }
-            }
             .overlay(Group {
-                if events.isEmpty {
+                if !events.contains(where: { !$0.author!.muted }) {
                     Localized.noEvents.view
                         .padding()
                 }
             })
+            .navigationBarTitle(Localized.homeFeed.string, displayMode: .inline)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+            .navigationBarItems(
+                leading: Button(
+                    action: {
+                        router.toggleSideMenu()
+                    },
+                    label: {
+                        Image(systemName: "line.3.horizontal")
+                            .foregroundColor(.nosSecondary)
+                    }
+                )
+            )
         }
         .task {
             CurrentUser.relayService = relayService
+            CurrentUser.context = viewContext
             refreshHomeFeed()
         }
         .refreshable {
@@ -155,5 +166,15 @@ struct ContentView_Previews: PreviewProvider {
         .environment(\.managedObjectContext, emptyPreviewContext)
         .environmentObject(emptyRelayService)
         .environmentObject(router)
+        
+        NavigationStack {
+            List(0..<100) {
+                Text("Row \($0)")
+            }
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(.yellow, for: .navigationBar)
+            .navigationTitle("100 Rows")
+            .navigationBarTitleDisplayMode(.inline)
+        }
     }
 }

@@ -72,6 +72,7 @@ extension Color {
        static let postareplyShadowBottom = Color("postareply-shadow-bottom", bundle: Bundle.current)
        static let postareplyShadowTop = Color("postareply-shadow-top", bundle: Bundle.current)
        static let primaryTxt = Color("primary-txt", bundle: Bundle.current)
+       static let nosSecondary = Color("secondary", bundle: Bundle.current)
        static let profileBgBottom = Color("profile-bg-bottom", bundle: Bundle.current)
        static let profileBgTop = Color("profile-bg-top", bundle: Bundle.current)
        static let profileShadow = Color("profile-shadow", bundle: Bundle.current)
@@ -150,6 +151,7 @@ extension UIColor {
        static let postareplyShadowBottom = UIColor(named: "postareply-shadow-bottom", in: Bundle.current, compatibleWith: nil)!
        static let postareplyShadowTop = UIColor(named: "postareply-shadow-top", in: Bundle.current, compatibleWith: nil)!
        static let primaryTxt = UIColor(named: "primary-txt", in: Bundle.current, compatibleWith: nil)!
+       static let nosSecondary = UIColor(named: "secondary", in: Bundle.current, compatibleWith: nil)!
        static let profileBgBottom = UIColor(named: "profile-bg-bottom", in: Bundle.current, compatibleWith: nil)!
        static let profileBgTop = UIColor(named: "profile-bg-top", in: Bundle.current, compatibleWith: nil)!
        static let profileShadow = UIColor(named: "profile-shadow", in: Bundle.current, compatibleWith: nil)!
@@ -229,6 +231,7 @@ extension Image {
        static let title = Image("title", bundle: Bundle.current)
        static let unsupportedBlobPlaceholder = Image("unsupported-blob-placeholder", bundle: Bundle.current)
        static let warning = Image("warning", bundle: Bundle.current)
+       static let navigationMenu = Image("navigationMenu", bundle: Bundle.current)
 }
 
 extension UIImage {
@@ -298,4 +301,5 @@ extension UIImage {
        static let title = UIImage(named: "title", in: Bundle.current, with: nil)!
        static let unsupportedBlobPlaceholder = UIImage(named: "unsupported-blob-placeholder", in: Bundle.current, with: nil)!
        static let warning = UIImage(named: "warning", in: Bundle.current, with: nil)!
+       static let navigationMenu = UIImage(named: "navigationMenu", in: Bundle.current, with: nil)!
 }

@@ -10,6 +10,7 @@
 import Foundation
 import CoreData
 import RegexBuilder
+import SwiftUI
 
 enum EventError: Error {
 	case jsonEncoding
@@ -47,6 +48,17 @@ public enum EventKind: Int64, CaseIterable {
     case parameterizedReplaceableEvent = 30_000
 }
 
+extension FetchedResults where Element == Event {
+    var unmuted: [Event] {
+        filter {
+            if let author = $0.author {
+                return !author.muted
+            }
+            return false
+        }
+    }
+}
+
 // swiftlint:disable type_body_length
 @objc(Event)
 public class Event: NosManagedObject {
@@ -77,14 +89,14 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func discoverFeedRequest() -> NSFetchRequest<Event> {
+    @nonobjc public class func discoverFeedRequest(authors: [String]) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let kind = EventKind.text.rawValue
         let followersPredicate = NSPredicate(
             format: "kind = %i AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@",
             kind,
-            Array(Event.discoverTabUserIdToInfo.keys).compactMap {
+            authors.compactMap {
                 PublicKey(npub: $0)?.hex
             }
         )

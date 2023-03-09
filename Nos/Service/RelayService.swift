@@ -118,7 +118,7 @@ extension RelayService {
         }
     }
     
-    func parseEvent(_ responseArray: [Any]) {
+    func parseEvent(_ responseArray: [Any], _ socket: WebSocket) {
         guard responseArray.count >= 3 else {
             print("Error: invalid EVENT response: \(responseArray)")
             return
@@ -135,7 +135,7 @@ extension RelayService {
                     _ = try EventProcessor.parse(jsonObject: eventJSON, in: self.backgroundContext)
                 }
             } catch {
-                print("Error: parsing event from relay: \(responseArray)")
+                print("Error: parsing event from relay (\(socket.request.url?.absoluteString ?? "")): \(responseArray)")
             }
         }
     }
@@ -196,7 +196,7 @@ extension RelayService {
             }
             switch responseType {
             case "EVENT":
-                parseEvent(responseArray)
+                parseEvent(responseArray, socket)
             case "NOTICE":
                 print(response)
             case "EOSE":
@@ -270,7 +270,7 @@ extension RelayService {
     }
     
     func openSocketsForRelays() {
-        guard let relays = CurrentUser.author.relays?.allObjects as? [Relay] else {
+        guard let relays = CurrentUser.author?.relays?.allObjects as? [Relay] else {
             print("No relays associated with author!")
             return
         }

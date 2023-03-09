@@ -8,11 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Use only relays added in RelayView for sending and receiving events
+- Add PostHog analytics
 - Render note mentions in NoteCard
-
 - Add PostHog analytics
 - Open an email compose view controller for support@planetary.social 
 - Fix duplicate note on a new post
+- Add mute functionality
+- Publish relay changes
 
 ## [0.1 (6)] - 2023-03-08Z
 
