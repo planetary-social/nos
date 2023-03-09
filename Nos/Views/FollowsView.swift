@@ -37,10 +37,7 @@ struct FollowsView: View {
                 }
             }
         }
-        .navigationBarBackButtonHidden(true)
-        .onAppear {
-            router.navigationTitle = "Follows"
-        }
+        .navigationBarTitle(Localized.follows.string, displayMode: .inline)
         .task {
             refreshFollows()
         }

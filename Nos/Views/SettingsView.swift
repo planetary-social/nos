@@ -53,7 +53,7 @@ struct SettingsView: View {
             }
             #endif
         }
-        .navigationBarBackButtonHidden(true)
+        .navigationBarTitle(Localized.settings.string, displayMode: .inline)
         .alert(isPresented: $showError) {
             Alert(
                 title: Localized.invalidKey.view,

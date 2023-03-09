@@ -31,6 +31,7 @@ struct NoteOptionsButton: View {
                     // This hack fixes a weird issue where the confirmationDialog wouldn't be shown sometimes. ¯\_(ツ)_/¯
                     .background(showingOptions == true ? .clear : .clear)
                 Image(systemName: "ellipsis")
+                    .foregroundColor(.nosSecondary)
             }
             .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
                 Button(Localized.copyNoteIdentifier.string) {

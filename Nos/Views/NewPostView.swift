@@ -17,6 +17,7 @@ struct NewPostView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var relayService: RelayService
+    @EnvironmentObject private var router: Router
     
     @State private var postText: String = ""
     
@@ -69,6 +70,8 @@ struct NewPostView: View {
                 try event.sign(withKey: keyPair)
                 relayService.publishToAll(event: event)
                 isPresented = false
+                postText = ""
+                router.selectedTab = .home
             } catch {
                 alert = AlertState(title: {
                     TextState(Localized.error.string)

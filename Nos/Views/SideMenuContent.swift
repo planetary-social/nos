@@ -11,18 +11,15 @@ struct SideMenuContent: View {
     @EnvironmentObject var router: Router
     let closeMenu: () -> Void
     var body: some View {
-        ZStack {
-            Color(UIColor(red: 255 / 255.0, green: 255 / 255.0, blue: 255 / 255.0, alpha: 1))
-            
-            VStack(alignment: .leading, spacing: 0, content: {
+        NavigationStack(path: $router.sideMenuPath) {
+            VStack(alignment: .leading, spacing: 0) {
+                Spacer()
                 HStack {
                     Button {
                         do {
                             guard let keyPair = KeyPair.loadFromKeychain() else { return }
                             let author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
-                            router.path.append(author)
-                            router.navigationTitle = Localized.profile.string
-                            closeMenu()
+                            router.sideMenuPath.append(author)
                         } catch {
                             // Replace this implementation with code to handle the error appropriately.
                             let nsError = error as NSError
@@ -32,6 +29,7 @@ struct SideMenuContent: View {
                         HStack(alignment: .center) {
                             Image(systemName: "person.crop.circle")
                             Text("Your Profile")
+                                .foregroundColor(.primaryTxt)
                         }
                     }
                     
@@ -40,13 +38,12 @@ struct SideMenuContent: View {
                 .padding()
                 HStack {
                     Button {
-                        router.path.append(AppView.Destination.settings)
-                        router.navigationTitle = Localized.settings.string
-                        closeMenu()
+                        router.sideMenuPath.append(SideMenu.Destination.settings)
                     } label: {
                         HStack(alignment: .center) {
                             Image(systemName: "gear")
                             Text("Settings")
+                                .foregroundColor(.primaryTxt)
                         }
                     }
                     
@@ -59,6 +56,7 @@ struct SideMenuContent: View {
                         HStack(alignment: .center) {
                             Image(systemName: "questionmark.circle")
                             Text("Help and Support")
+                                .foregroundColor(.primaryTxt)
                         }
                     }
                     
@@ -71,13 +69,22 @@ struct SideMenuContent: View {
                         HStack(alignment: .center) {
                             Image(systemName: "ant.circle.fill")
                             Text("Report a Bug")
+                                .foregroundColor(.primaryTxt)
                         }
                     }
                     
                     Spacer()
                 }
                 .padding()
-            })
+                Spacer(minLength: 0)
+            }
+            .background(Color.appBg)
+            .navigationDestination(for: Author.self) { author in
+                ProfileView(author: author)
+            }
+            .navigationDestination(for: SideMenu.Destination.self) { _ in
+                SettingsView()
+            }
         }
     }
 }

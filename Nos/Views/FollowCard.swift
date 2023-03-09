@@ -24,7 +24,7 @@ struct FollowCard: View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .center) {
                 Button {
-                    router.path.append(author)
+                    router.currentPath.wrappedValue.append(author)
                 } label: {
                     HStack(alignment: .center) {
                         AvatarView(imageUrl: author.profilePhotoURL, size: 24)

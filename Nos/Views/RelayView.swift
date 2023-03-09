@@ -20,7 +20,7 @@ struct RelayView: View {
     @EnvironmentObject var router: Router
     
     var body: some View {
-        NavigationStack(path: $router.path) {
+        NavigationStack(path: $router.relayPath) {
             List {
                 Section(Localized.relays.string) {
                     ForEach(relays) { relay in
@@ -74,11 +74,6 @@ struct RelayView: View {
             .navigationTitle(Localized.relays.string)
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
-            }
-            .navigationDestination(for: AppView.Destination.self) { destination in
-                if destination == AppView.Destination.settings {
-                    SettingsView()
-                }
             }
         }
         .navigationTitle(Localized.relays.string)

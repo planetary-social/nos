@@ -73,7 +73,7 @@ struct ProfileHeader: View {
                         Spacer()
 
                         Button {
-                            router.path.append(follows)
+                            router.currentPath.wrappedValue.append(follows)
                         } label: {
                             Text("\(Localized.following.string): \(author.follows?.count ?? 0)")
                         }

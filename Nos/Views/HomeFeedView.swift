@@ -56,7 +56,7 @@ struct HomeFeedView: View {
     }
     
     var body: some View {
-        NavigationStack(path: $router.path) {
+        NavigationStack(path: $router.homeFeedPath) {
             ScrollView(.vertical) {
                 LazyVStack {
                     ForEach(events) { event in
@@ -67,6 +67,7 @@ struct HomeFeedView: View {
                     }
                 }
             }
+            .background(Color.appBg)
             .padding(.top, 1)
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
@@ -74,17 +75,26 @@ struct HomeFeedView: View {
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
             }
-            .navigationDestination(for: AppView.Destination.self) { destination in
-                if destination == AppView.Destination.settings {
-                    SettingsView()
-                }
-            }
             .overlay(Group {
                 if events.isEmpty {
                     Localized.noEvents.view
                         .padding()
                 }
             })
+            .navigationBarTitle(Localized.homeFeed.string, displayMode: .inline)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+            .navigationBarItems(
+                leading: Button(
+                    action: {
+                        router.toggleSideMenu()
+                    },
+                    label: {
+                        Image(systemName: "line.3.horizontal")
+                            .foregroundColor(.nosSecondary)
+                    }
+                )
+            )
         }
         .task {
             CurrentUser.context = viewContext
@@ -156,5 +166,15 @@ struct ContentView_Previews: PreviewProvider {
         .environment(\.managedObjectContext, emptyPreviewContext)
         .environmentObject(emptyRelayService)
         .environmentObject(router)
+        
+        NavigationStack {
+            List(0..<100) {
+                Text("Row \($0)")
+            }
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(.yellow, for: .navigationBar)
+            .navigationTitle("100 Rows")
+            .navigationBarTitleDisplayMode(.inline)
+        }
     }
 }
