@@ -57,9 +57,9 @@ struct NewNoteView: View {
                     Localized.cancel.view
                         .foregroundColor(.textColor)
                 },
-                trailing: Button(action: publishPost) {
-                    Localized.post.view
-                }
+                trailing: ActionButton(title: Localized.post, action: publishPost)
+                    .frame(height: 22)
+                    .disabled(postText.isEmpty)
             )
         }
         .alert(unwrapping: $alert)
