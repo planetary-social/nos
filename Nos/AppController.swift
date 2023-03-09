@@ -7,8 +7,10 @@
 
 import Foundation
 import Dependencies
+import SwiftUI
 
 class AppController: ObservableObject {
+    
     enum CurrentState {
         case onboarding
         case loggedIn
@@ -18,12 +20,20 @@ class AppController: ObservableObject {
     
     @Dependency(\.analytics) private var analytics
     
+    var router: Router
+    
+    init(router: Router) {
+        self.router = router
+    }
+    
     func configureCurrentState() {
         currentState = KeyChain.load(key: KeyChain.keychainPrivateKey) == nil ? .onboarding : .loggedIn
     }
     
     func completeOnboarding() {
         currentState = .loggedIn
+        router.sideMenuPath = NavigationPath()
+        router.closeSideMenu()
         analytics.completedOnboarding()
     }
 }

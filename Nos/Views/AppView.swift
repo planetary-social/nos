@@ -185,7 +185,7 @@ struct AppView_Previews: PreviewProvider {
     static var relayService = RelayService(persistenceController: persistenceController)
     static var router = Router()
     static var loggedInAppController: AppController = {
-        let appController = AppController()
+        let appController = AppController(router: router)
         KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.alice.privateKeyHex.utf8))
         appController.completeOnboarding()
         return appController
@@ -208,12 +208,12 @@ struct AppView_Previews: PreviewProvider {
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
-            .environmentObject(AppController())
+            .environmentObject(AppController(router: router))
         
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(routerWithSideMenuOpened)
-            .environmentObject(AppController())
+            .environmentObject(AppController(router: routerWithSideMenuOpened))
     }
 }

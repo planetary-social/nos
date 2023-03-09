@@ -12,6 +12,7 @@ struct SettingsView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) private var analytics
     @EnvironmentObject private var appController: AppController
+    @EnvironmentObject private var router: Router
 
     @State private var keyPair: KeyPair? {
         didSet {
@@ -32,34 +33,66 @@ struct SettingsView: View {
     
     var body: some View {
         Form {
-            Section(Localized.keys.string) {
+            Section {
                 Localized.keyEncryptionWarning.view
-                TextField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
-                Button(Localized.save.string) {
-                    if privateKeyString.isEmpty {
-                        self.keyPair = nil
-                        analytics.logout()
-                        appController.configureCurrentState()
-                    } else if let keyPair = KeyPair(nsec: privateKeyString) {
-                        self.keyPair = keyPair
-                        analytics.identify(with: keyPair)
-                        analytics.changedKey()
-                    } else {
-                        self.keyPair = nil
-                        showError = true
+                    .foregroundColor(.primaryTxt)
+                HStack {
+                    TextField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
+                        .foregroundColor(.primaryTxt)
+                    ActionButton(title: Localized.save) {
+                        if privateKeyString.isEmpty {
+                            self.keyPair = nil
+                            analytics.logout()
+                            appController.configureCurrentState()
+                        } else if let keyPair = KeyPair(nsec: privateKeyString) {
+                            self.keyPair = keyPair
+                            analytics.identify(with: keyPair)
+                            analytics.changedKey()
+                        } else {
+                            self.keyPair = nil
+                            showError = true
+                        }
                     }
+                    .padding(.vertical, 5)
                 }
+            } header: {
+                Localized.keys.view
+                    .foregroundColor(.textColor)
+                    .fontWeight(.heavy)
+                    .bold()
             }
+            .listRowBackground(LinearGradient(
+                colors: [Color.cardBgTop, Color.cardBgBottom],
+                startPoint: .top,
+                endPoint: .bottom
+            ))
+            
             #if DEBUG
-            Section(Localized.debug.string) {
+            Section {
                 Text(Localized.sampleDataInstructions.string)
+                    .foregroundColor(.primaryTxt)
+                
                 Button(Localized.loadSampleData.string) {
                     PersistenceController.loadSampleData(context: viewContext)
                 }
+            } header: {
+                Localized.debug.view
+                    .foregroundColor(.textColor)
+                    .fontWeight(.heavy)
+                    .bold()
             }
+            .listRowBackground(LinearGradient(
+                colors: [Color.cardBgTop, Color.cardBgBottom],
+                startPoint: .top,
+                endPoint: .bottom
+            ))
             #endif
         }
+        .scrollContentBackground(.hidden)
+        .background(Color.appBg)
         .navigationBarTitle(Localized.settings.string, displayMode: .inline)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
         .alert(isPresented: $showError) {
             Alert(
                 title: Localized.invalidKey.view,
