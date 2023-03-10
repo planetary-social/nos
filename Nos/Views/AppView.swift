@@ -154,7 +154,7 @@ struct AppView: View {
                 })
                 
                 SideMenu(
-                    menuWidth: UIScreen.main.bounds.width / 1.3,
+                    menuWidth: 300,
                     menuOpened: router.sideMenuOpened,
                     toggleMenu: router.toggleSideMenu,
                     closeMenu: router.closeSideMenu

@@ -39,7 +39,7 @@ struct SideMenu: View {
                 SideMenuContent(closeMenu: closeMenu)
                     .frame(
                         maxWidth: router.sideMenuPath.count == 0 ? menuWidth : .infinity,
-                        maxHeight: UIScreen.main.bounds.height
+                        maxHeight: .infinity
                     )
                 Spacer()
             }
