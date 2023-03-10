@@ -29,14 +29,6 @@ struct ProfileHeader: View {
         self.author = author
         self.followsRequest = FetchRequest(fetchRequest: Follow.followsRequest(sources: [author]))
     }
-    
-    func refreshFollows() {
-        if let follows = author.follows?.allObjects as? [Follow] {
-            let keys = follows.compactMap { $0.destination?.hexadecimalPublicKey }
-            let filter = Filter(authorKeys: keys, kinds: [.metaData, .contactList], limit: 100)
-            subscriptionId = relayService.requestEventsFromAll(filter: filter)
-        }
-    }
 
     private var shouldShowBio: Bool {
         if let about = author.about {
@@ -104,9 +96,6 @@ struct ProfileHeader: View {
         )
         .navigationDestination(for: Followed.self) { followed in
             FollowsView(followed: followed)
-        }
-        .task {
-            refreshFollows()
         }
         .onDisappear {
             relayService.sendCloseToAll(subscriptions: [subscriptionId])

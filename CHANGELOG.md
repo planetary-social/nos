@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced moved relays tab to side menu, added New Post and Profile tabs
 - Make links on notes tappable
 - Fix newlines not rendering on notes
+- Added timestamp to notes
+- Update Discover feed algorithm to include people 2 hops from you.
 - Fix infinite spinners on some avatars
 - Edit profile
 

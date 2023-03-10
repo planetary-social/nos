@@ -85,6 +85,12 @@ struct NoteCard: View {
                                 .foregroundColor(Color.secondaryTxt)
                                 .multilineTextAlignment(.leading)
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                            if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
+                                Text(elapsedTime)
+                                    .lineLimit(1)
+                                    .font(.body)
+                                    .foregroundColor(.secondaryTxt)
+                            }
                         }
                     }
                     NoteOptionsButton(note: note)

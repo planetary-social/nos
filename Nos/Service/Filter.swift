@@ -15,10 +15,11 @@ final class Filter: Hashable {
         }
     }
     private var kinds: [EventKind]
-    private var limit: Int
+    let limit: Int
 
     // For closing requests; not part of hash
     var subscriptionId: String = ""
+    var subscriptionStartDate: Date?
 
     init(authorKeys: [String] = [], kinds: [EventKind] = [], pTags: [String] = [], limit: Int = 100) {
         self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
@@ -48,5 +49,20 @@ final class Filter: Hashable {
         hasher.combine(authorKeys)
         hasher.combine(kinds)
         hasher.combine(limit)
+    }
+    
+    func isFulfilled(by event: Event) -> Bool {
+        guard limit == 1 else {
+            return false
+        }
+        
+        if kinds.count == 1,
+            event.kind == kinds.first?.rawValue,
+            !authorKeys.isEmpty,
+            let authorKey = event.author?.hexadecimalPublicKey {
+            return authorKeys.contains(authorKey)
+        }
+        
+        return false
     }
 }

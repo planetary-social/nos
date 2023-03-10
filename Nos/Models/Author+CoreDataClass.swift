@@ -120,8 +120,6 @@ public class Author: NosManagedObject {
             return nil
         }
         
-        // TODO: make sure this subscription gets closed if there is no new metadata, or no metadata at all for this
-        // user.
         let metaFilter = Filter(authorKeys: [hexadecimalPublicKey], kinds: [.metaData], limit: 1)
         let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
         return metaSub
