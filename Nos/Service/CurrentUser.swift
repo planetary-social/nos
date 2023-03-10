@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import Logger
 
 enum CurrentUser {
     static var privateKey: String? {
@@ -91,20 +92,32 @@ enum CurrentUser {
     
     static func publishMetaData() {        
         guard let pubKey = publicKey else {
-            print("Error: no pubKey")
+            Log.debug("Error: no pubKey")
             return
         }
 
-        let metaEvent = MetadataEventJSON(
+        var metaEvent = MetadataEventJSON(
             displayName: author!.displayName,
             name: author!.name,
             about: author!.about,
             picture: author!.profilePhotoURL?.absoluteString
         ).dictionary
+        
+        // Tack on any unsupported fields back onto the dictionary before publish
+        if let rawData = author!.rawMetadata,
+            let rawJson = try? JSONSerialization.jsonObject(with: rawData),
+            let rawDictionary = rawJson as? [String: AnyObject] {
+            for key in rawDictionary.keys {
+                if metaEvent[key] == nil, let rawValue = rawDictionary[key] as? String {
+                    metaEvent[key] = rawValue
+                    Log.debug("Added \(key) : \(rawValue)")
+                }
+            }
+        }
 
         guard let metaData = try? JSONSerialization.data(withJSONObject: metaEvent),
             let metaString = String(data: metaData, encoding: .utf8) else {
-            print("Error: Invalid meta data")
+            Log.debug("Error: Invalid meta data")
             return
         }
 
@@ -118,19 +131,19 @@ enum CurrentUser {
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
                 relayService?.publishToAll(event: event)
             } catch {
-                print("failed to update Follows \(error.localizedDescription)")
+                Log.debug("failed to update Follows \(error.localizedDescription)")
             }
         }
     }
     
     static func publishContactList(tags: [[String]]) {
         guard let pubKey = publicKey else {
-            print("Error: no pubKey")
+            Log.debug("Error: no pubKey")
             return
         }
         
         guard let relays = author?.relays?.allObjects as? [Relay] else {
-            print("Error: No relay service")
+            Log.debug("Error: No relay service")
             return
         }
 
@@ -153,7 +166,7 @@ enum CurrentUser {
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
                 relayService?.publishToAll(event: event)
             } catch {
-                print("failed to update Follows \(error.localizedDescription)")
+                Log.debug("failed to update Follows \(error.localizedDescription)")
             }
         }
     }
@@ -161,11 +174,11 @@ enum CurrentUser {
     /// Follow by public hex key
     static func follow(author toFollow: Author) {
         guard let followKey = toFollow.hexadecimalPublicKey else {
-            print("Error: followKey is nil")
+            Log.debug("Error: followKey is nil")
             return
         }
 
-        print("Following \(followKey)")
+        Log.debug("Following \(followKey)")
 
         var followKeys = follows?.keys ?? []
         followKeys.append(followKey)
@@ -192,11 +205,11 @@ enum CurrentUser {
     /// Unfollow by public hex key
     static func unfollow(author toUnfollow: Author) {
         guard let unfollowedKey = toUnfollow.hexadecimalPublicKey else {
-            print("Error: unfollowedKey is nil")
+            Log.debug("Error: unfollowedKey is nil")
             return
         }
 
-        print("Unfollowing \(unfollowedKey)")
+        Log.debug("Unfollowing \(unfollowedKey)")
         
         let stillFollowingKeys = (follows ?? [])
             .keys
