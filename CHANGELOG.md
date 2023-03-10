@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add mute functionality
 - Publish relay changes
 - Recommended / default relays
+- Edit profile
 
 ## [0.1 (6)] - 2023-03-08Z
 
