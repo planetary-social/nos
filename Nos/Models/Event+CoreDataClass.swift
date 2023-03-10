@@ -79,7 +79,18 @@ public class Event: NosManagedObject {
         "npub19mun7qwdyjf7qs3456u8kyxncjn5u2n7klpu4utgy68k4aenzj6synjnft": ["Unclebobmartin"],
         "npub1qlkwmzmrhzpuak7c2g9akvcrh7wzkd7zc7fpefw9najwpau662nqealf5y": ["Katie"],
         "npub176ar97pxz4t0t5twdv8psw0xa45d207elwauu5p93an0rfs709js4600cg": ["arjwright"],
-        "npub1nstrcu63lzpjkz94djajuz2evrgu2psd66cwgc0gz0c0qazezx0q9urg5l": ["nostrica"]
+        "npub1nstrcu63lzpjkz94djajuz2evrgu2psd66cwgc0gz0c0qazezx0q9urg5l": ["nostrica"],
+        "npub1pez4lttr28mhfdzx3047wt4j7qzgkh2asjuxa6626rzdrkk39ggqe0xdvg": ["Daniel Onren Latorre"],
+        "npub14ps5krdd2wezq4kytmzv3t5rt6p4hl5tx6ecqfdxt5y0kchm5rtsva57gc": ["Martin"],
+        "npub1uaajg6r8hfgh9c3vpzm2m5w8mcgynh5e0tf0um4q5dfpx8u6p6dqmj87z6": ["Chardot"],
+        "npub1uucu5snurqze6enrdh06am432qftctdnehf8h8jv4hjs27nwstkshxatty": ["boreq"],
+        "npub1wmr34t36fy03m8hvgl96zl3znndyzyaqhwmwdtshwmtkg03fetaqhjg240": ["rabble"],
+        "npub16zsllwrkrwt5emz2805vhjewj6nsjrw0ge0latyrn2jv5gxf5k0q5l92l7": ["Matt Lorentz"],
+        "npub1lur3ft9rk43fmjd2skwefz0jxlhfj0nyz3zjfkxwe3y8xlf5r6nquat0xg": ["Shaina Dane"],
+        "npub1xdtducdnjerex88gkg2qk2atsdlqsyxqaag4h05jmcpyspqt30wscmntxy": ["brugeman"],
+        "npub1sn0wdenkukak0d9dfczzeacvhkrgz92ak56egt7vdgzn8pv2wfqqhrjdv9": ["Edward Snowden"],
+        "npub12ye6p9r6h6qpg3wrfch4v9gas6g0g7y6knrkxf6mzstxuax9sv8sdxrdku": ["Heather Everdeen"],
+        "npub1pvgcusxk7006hvtlyx555erhq8c5pk9svw57snlxujpkgnkup89sekdx8c": ["Pam"],
     ]
     
     @nonobjc public class func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
