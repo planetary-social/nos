@@ -23,9 +23,15 @@ struct ProfileEditView: View {
         Form {
             Section(Localized.basicInfo.string) {
                 TextField(Localized.displayName.string, text: $displayNameText)
+                    .textInputAutocapitalization(.none)
                 TextField(Localized.name.string, text: $nameText)
+                    .textInputAutocapitalization(.none)
                 TextField(Localized.bio.string, text: $bioText)
                 TextField(Localized.picUrl.string, text: $avatarText)
+                    .textInputAutocapitalization(.none)
+                    #if os(iOS)
+                    .keyboardType(.URL)
+                    #endif
             }
         }
         .navigationBarItems(
