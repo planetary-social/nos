@@ -15,19 +15,22 @@ struct AvatarView: View {
     
     var body: some View {
         Group {
-            if let imageUrl = imageUrl {
-                CachedAsyncImage(
-                    url: imageUrl,
-                    content: { image in
-                        image.resizable()
-                    }, placeholder: {
+            let emptyAvatar = Image.emptyAvatar
+                .resizable()
+                .renderingMode(.original)
+            
+            if let imageURL = imageUrl {
+                CachedAsyncImage(url: imageURL) { phase in
+                    if let image = phase.image {
+                        image
+                    } else if phase.error != nil {
+                        emptyAvatar
+                    } else {
                         ProgressView()
                     }
-                )
+                }
             } else {
-                Image.emptyAvatar
-                    .resizable()
-                    .renderingMode(.original)
+                emptyAvatar
             }
         }
         .frame(width: size, height: size)
