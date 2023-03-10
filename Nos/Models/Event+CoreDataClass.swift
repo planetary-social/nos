@@ -104,15 +104,28 @@ public class Event: NosManagedObject {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let kind = EventKind.text.rawValue
-        let followersPredicate = NSPredicate(
-            format: "kind = %i AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@",
+        let featuredPredicate = NSPredicate(
+            format: "kind = %i AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@ " +
+                "AND NOT author IN %@.follows.destination",
             kind,
             authors.compactMap {
                 PublicKey(npub: $0)?.hex
-            }
+            },
+            CurrentUser.author(in: PersistenceController.shared.viewContext)!
+        )
+            
+        let twoHopsPredicate = NSPredicate(
+            format: "kind = %i AND eventReferences.@count = 0 " +
+                "AND ANY author.followers.source IN %@.follows.destination AND NOT author IN %@.follows.destination",
+            kind,
+            CurrentUser.author(in: PersistenceController.shared.viewContext)!,
+            CurrentUser.author(in: PersistenceController.shared.viewContext)!
         )
 
-            fetchRequest.predicate = followersPredicate
+        fetchRequest.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
+            featuredPredicate,
+            twoHopsPredicate
+        ])
         
         return fetchRequest
     }

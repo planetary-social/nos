@@ -33,7 +33,7 @@ struct DiscoverView: View {
     
     @Namespace private var animation
     
-    @State private var subscriptionId: String = ""
+    @State private var subscriptionIds = [String]()
     private var authors: [String]
     
     @State var searchText = "" {
@@ -54,14 +54,23 @@ struct DiscoverView: View {
     }
     
     func refreshDiscover() {
-        let filter = Filter(
+        let featuredFilter = Filter(
             authorKeys: authors.compactMap {
                 PublicKey(npub: $0)?.hex
             },
             kinds: [.text],
-            limit: 100
-            )
-        subscriptionId = relayService.requestEventsFromAll(filter: filter)
+            limit: 200
+        )
+        let twoHopsFilter = Filter(
+            kinds: [.text],
+            limit: 300
+        )
+
+        subscriptionIds.append(relayService.requestEventsFromAll(filter: featuredFilter))
+        subscriptionIds.append(relayService.requestEventsFromAll(filter: twoHopsFilter))
+        
+        // TODO: update fetch request because follow graph might have changed
+        // eventRequest = FetchRequest(fetchRequest: Event.discoverFeedRequest(authors: authors))
     }
     
     var body: some View {
@@ -112,8 +121,8 @@ struct DiscoverView: View {
                 refreshDiscover()
             }
             .onDisappear {
-                relayService.sendCloseToAll(subscriptions: [subscriptionId])
-                subscriptionId = ""
+                relayService.sendCloseToAll(subscriptions: subscriptionIds)
+                subscriptionIds.removeAll()
             }
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)

@@ -69,9 +69,14 @@ enum CurrentUser {
                 subscriptions.append(textSub)
             }
 
-            let metaFilter = Filter(authorKeys: [key], kinds: [.metaData, .contactList], limit: 100)
+            let metaFilter = Filter(authorKeys: [key], kinds: [.metaData], limit: 1)
             if let metaSub = relayService?.requestEventsFromAll(filter: metaFilter) {
                 subscriptions.append(metaSub)
+            }
+            
+            let contactFilter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
+            if let contactSub = relayService?.requestEventsFromAll(filter: contactFilter) {
+                subscriptions.append(contactSub)
             }
         }
     }

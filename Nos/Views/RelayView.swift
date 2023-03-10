@@ -31,17 +31,7 @@ struct RelayView: View {
                     .onDelete { indexes in
                         for index in indexes {
                             let relay = relays[index]
-                            
-                            guard let address = relay.address else { continue }
-                            
-                            if let socket = relayService.socket(for: address) {
-                                for subId in relayService.activeSubscriptions {
-                                    relayService.sendClose(from: socket, subscription: subId)
-                                }
-                                
-                                relayService.close(socket: socket)
-                            }
-                            
+                            relayService.closeConnection(to: relay)
                             analytics.removed(relay)
                             author.remove(relay: relay)
                             viewContext.delete(relay)
