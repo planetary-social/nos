@@ -101,6 +101,9 @@ public class Event: NosManagedObject {
     }
     
     @nonobjc public class func discoverFeedRequest(authors: [String]) -> NSFetchRequest<Event> {
+        guard let currentUser = CurrentUser.author(in: PersistenceController.shared.viewContext) else {
+            return emptyRequest()
+        }
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let kind = EventKind.text.rawValue
@@ -111,15 +114,15 @@ public class Event: NosManagedObject {
             authors.compactMap {
                 PublicKey(npub: $0)?.hex
             },
-            CurrentUser.author(in: PersistenceController.shared.viewContext)!
+            currentUser
         )
             
         let twoHopsPredicate = NSPredicate(
             format: "kind = %i AND eventReferences.@count = 0 " +
                 "AND ANY author.followers.source IN %@.follows.destination AND NOT author IN %@.follows.destination",
             kind,
-            CurrentUser.author(in: PersistenceController.shared.viewContext)!,
-            CurrentUser.author(in: PersistenceController.shared.viewContext)!
+            currentUser,
+            currentUser
         )
 
         fetchRequest.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
