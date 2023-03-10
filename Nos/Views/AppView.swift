@@ -164,9 +164,10 @@ struct AppView: View {
         }
         .onAppear(perform: appController.configureCurrentState)
         .task {
+            // This navigation bar stuff doesn't seem to be working. I can't figure out why.
             let nosAppearance = UINavigationBarAppearance()
-            nosAppearance.titleTextAttributes = [.foregroundColor: UIColor.primaryTxt]
-            nosAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.primaryTxt]
+            nosAppearance.titleTextAttributes = [.foregroundColor: UIColor.systemPink]
+            nosAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.systemPink]
             UINavigationBar.appearance().standardAppearance = nosAppearance
             UINavigationBar.appearance().compactAppearance = nosAppearance
             UINavigationBar.appearance().scrollEdgeAppearance = nosAppearance

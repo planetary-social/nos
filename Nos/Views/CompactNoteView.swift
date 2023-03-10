@@ -97,7 +97,7 @@ struct CompactNoteView: View {
                             showFullMessage = true
                         }
                     } label: {
-                        Text("Read more".uppercased())
+                        PlainText("Read more".uppercased())
                             .font(.caption)
                             .foregroundColor(.secondaryTxt)
                             .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))

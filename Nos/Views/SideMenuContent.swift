@@ -38,6 +38,7 @@ struct SideMenuContent: View {
                             Image(systemName: "person.crop.circle")
                             Text("Your Profile")
                                 .foregroundColor(.primaryTxt)
+                                .bold()
                         }
                     }
                     
@@ -52,6 +53,7 @@ struct SideMenuContent: View {
                             Image(systemName: "gear")
                             Text("Settings")
                                 .foregroundColor(.primaryTxt)
+                                .bold()
                         }
                     }
                     
@@ -64,8 +66,9 @@ struct SideMenuContent: View {
                     } label: {
                         HStack(alignment: .center) {
                             Image(systemName: "antenna.radiowaves.left.and.right")
-                            Localized.relays.view
+                            Text(Localized.relays.string)
                                 .foregroundColor(.primaryTxt)
+                                .bold()
                         }
                     }
                     
@@ -79,6 +82,7 @@ struct SideMenuContent: View {
                             Image(systemName: "questionmark.circle")
                             Text("Help and Support")
                                 .foregroundColor(.primaryTxt)
+                                .bold()
                         }
                     }
                     
@@ -93,6 +97,7 @@ struct SideMenuContent: View {
                             Image(systemName: "ant.circle.fill")
                             Text("Report a Bug")
                                 .foregroundColor(.primaryTxt)
+                                .bold()
                         }
                     }
                     .disabled(!MFMailComposeViewController.canSendMail())

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>ClarityCity-Black.otf</string>
+		<string>ClarityCity-BlackItalic.otf</string>
+		<string>ClarityCity-Bold.otf</string>
+		<string>ClarityCity-BoldItalic.otf</string>
+		<string>ClarityCity-ExtraBold.otf</string>
+		<string>ClarityCity-ExtraBoldItalic.otf</string>
+		<string>ClarityCity-ExtraLight.otf</string>
+		<string>ClarityCity-ExtraLightItalic.otf</string>
+		<string>ClarityCity-Light.otf</string>
+		<string>ClarityCity-LightItalic.otf</string>
+		<string>ClarityCity-Medium.otf</string>
+		<string>ClarityCity-MediumItalic.otf</string>
+		<string>ClarityCity-Regular.otf</string>
+		<string>ClarityCity-RegularItalic.otf</string>
+		<string>ClarityCity-SemiBold.otf</string>
+		<string>ClarityCity-SemiBoldItalic.otf</string>
+		<string>ClarityCity-Thin.otf</string>
+		<string>ClarityCity-ThinItalic.otf</string>
+	</array>
+</dict>
+</plist>
