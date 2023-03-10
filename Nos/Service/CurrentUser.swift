@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import Logger
 
 enum CurrentUser {
     static var privateKey: String? {
@@ -27,9 +28,13 @@ enum CurrentUser {
         return nil
     }
     
-    static var context: NSManagedObjectContext?
+    // swiftlint:disable implicitly_unwrapped_optional
+    static var context: NSManagedObjectContext!
+    // swiftlint:enable implicitly_unwrapped_optional
     
     static var subscriptions: [String] = []
+
+    static var editing = false
     
     static var relayService: RelayService? {
         didSet {
@@ -38,7 +43,7 @@ enum CurrentUser {
     }
     
     static var author: Author? {
-        if let publicKey, let context {
+        if let publicKey {
             return try? Author.findOrCreate(by: publicKey, context: context)
         }
         return nil
@@ -90,10 +95,60 @@ enum CurrentUser {
         return followKeys.contains(key)
     }
     
-    static func publishContactList(tags: [[String]], context: NSManagedObjectContext) {
-        guard let relays = author?.relays?.allObjects as? [Relay],
-            let pubKey = publicKey else {
-            print("Error: No relay service")
+    static func publishMetaData() {        
+        guard let pubKey = publicKey else {
+            Log.debug("Error: no pubKey")
+            return
+        }
+
+        var metaEvent = MetadataEventJSON(
+            displayName: author!.displayName,
+            name: author!.name,
+            about: author!.about,
+            picture: author!.profilePhotoURL?.absoluteString
+        ).dictionary
+        
+        // Tack on any unsupported fields back onto the dictionary before publish
+        if let rawData = author!.rawMetadata,
+            let rawJson = try? JSONSerialization.jsonObject(with: rawData),
+            let rawDictionary = rawJson as? [String: AnyObject] {
+            for key in rawDictionary.keys {
+                if metaEvent[key] == nil, let rawValue = rawDictionary[key] as? String {
+                    metaEvent[key] = rawValue
+                    Log.debug("Added \(key) : \(rawValue)")
+                }
+            }
+        }
+
+        guard let metaData = try? JSONSerialization.data(withJSONObject: metaEvent),
+            let metaString = String(data: metaData, encoding: .utf8) else {
+            Log.debug("Error: Invalid meta data")
+            return
+        }
+
+        let time = Int64(Date.now.timeIntervalSince1970)
+        let kind = EventKind.metaData.rawValue
+        var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: [], content: metaString)
+                
+        if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
+            do {
+                try jsonEvent.sign(withKey: pair)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
+                relayService?.publishToAll(event: event)
+            } catch {
+                Log.debug("failed to update Follows \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    static func publishContactList(tags: [[String]]) {
+        guard let pubKey = publicKey else {
+            Log.debug("Error: no pubKey")
+            return
+        }
+        
+        guard let relays = author?.relays?.allObjects as? [Relay] else {
+            Log.debug("Error: No relay service")
             return
         }
 
@@ -116,19 +171,19 @@ enum CurrentUser {
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
                 relayService?.publishToAll(event: event)
             } catch {
-                print("failed to update Follows \(error.localizedDescription)")
+                Log.debug("failed to update Follows \(error.localizedDescription)")
             }
         }
     }
     
     /// Follow by public hex key
-    static func follow(author toFollow: Author, context: NSManagedObjectContext) {
+    static func follow(author toFollow: Author) {
         guard let followKey = toFollow.hexadecimalPublicKey else {
-            print("Error: followKey is nil")
+            Log.debug("Error: followKey is nil")
             return
         }
 
-        print("Following \(followKey)")
+        Log.debug("Following \(followKey)")
 
         var followKeys = follows?.keys ?? []
         followKeys.append(followKey)
@@ -149,17 +204,17 @@ enum CurrentUser {
             }
         }
         
-        publishContactList(tags: followKeys.tags, context: context)
+        publishContactList(tags: followKeys.tags)
     }
     
     /// Unfollow by public hex key
-    static func unfollow(author toUnfollow: Author, context: NSManagedObjectContext) {
+    static func unfollow(author toUnfollow: Author) {
         guard let unfollowedKey = toUnfollow.hexadecimalPublicKey else {
-            print("Error: unfollowedKey is nil")
+            Log.debug("Error: unfollowedKey is nil")
             return
         }
 
-        print("Unfollowing \(unfollowedKey)")
+        Log.debug("Unfollowing \(unfollowedKey)")
         
         let stillFollowingKeys = (follows ?? [])
             .keys
@@ -181,23 +236,11 @@ enum CurrentUser {
             }
         }
 
-        publishContactList(tags: stillFollowingKeys.tags, context: context)
+        publishContactList(tags: stillFollowingKeys.tags)
 
         // Delete cached texts from this person
         if let author = try? Author.find(by: unfollowedKey, context: context) {
             author.deleteAllPosts(context: context)
-        }
-    }
-    
-    static func author(in context: NSManagedObjectContext) -> Author? {
-        if let publicKey = Self.publicKey {
-            let author = try? Author.findOrCreate(by: publicKey, context: context)
-            if context.hasChanges {
-                try? context.save()
-            }
-            return author
-        } else {
-            return nil
         }
     }
 }

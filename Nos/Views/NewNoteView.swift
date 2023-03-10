@@ -90,6 +90,7 @@ struct NewNoteView: View {
                 event.author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
 
                 try event.sign(withKey: keyPair)
+                try viewContext.save()
                 relayService.publishToAll(event: event)
                 isPresented = false
                 analytics.published(note: event)

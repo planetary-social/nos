@@ -478,6 +478,9 @@ public class Event: NosManagedObject {
             
         case .metaData:
             if let contentData = jsonEvent.content.data(using: .utf8) {
+                // There may be unsupported metadata. Store it to send back later in metadata publishes.
+                newAuthor.rawMetadata = contentData
+
                 do {
                     let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
                     
