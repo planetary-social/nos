@@ -23,6 +23,7 @@ struct AvatarView: View {
                 CachedAsyncImage(url: imageURL) { phase in
                     if let image = phase.image {
                         image
+                            .resizable()
                     } else if phase.error != nil {
                         emptyAvatar
                     } else {
