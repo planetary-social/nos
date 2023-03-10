@@ -69,8 +69,8 @@ struct BioView: View {
                     Button {
                         showingBio = true
                     } label: {
-                        Text(Localized.readMore.string.uppercased())
-                            .font(.caption)
+                        PlainText(Localized.readMore.string.uppercased())
+                            .font(.clarityCaption)
                             .foregroundColor(.secondaryTxt)
                             .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
                             .background(Color.hashtagBg)
