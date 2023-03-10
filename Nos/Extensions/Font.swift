@@ -53,11 +53,18 @@ extension Font {
             )!
         ]
 
-        UITabBarItem.appearance().setTitleTextAttributes([.font: UIFont(name: "ClarityCity-Regular", size: caption1)!], for: .normal)
-        UITabBarItem.appearance().setTitleTextAttributes([.font: UIFont(name: "ClarityCity-Regular", size: caption1)!], for: .selected)
+        UITabBarItem.appearance().setTitleTextAttributes(
+            [.font: UIFont(name: "ClarityCity-Regular", size: caption1)!],
+            for: .normal
+        )
+        UITabBarItem.appearance().setTitleTextAttributes(
+            [.font: UIFont(name: "ClarityCity-Regular", size: caption1)!],
+            for: .selected
+        )
     }
 }
 
+// swiftlint:disable identifier_name
 func PlainText(_ content: any StringProtocol) -> SwiftUI.Text {
     SwiftUI.Text(content)
 }
@@ -69,4 +76,4 @@ func Text(_ content: any StringProtocol) -> SwiftUI.Text {
 func TextField(_ titleKey: LocalizedStringKey, text: Binding<String>, axis: Axis = .horizontal) -> some View {
     SwiftUI.TextField(titleKey, text: text, axis: axis).font(.brand)
 }
-
+// swiftlint:enableidentifier_name
