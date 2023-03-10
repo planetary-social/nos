@@ -101,7 +101,7 @@ public class Event: NosManagedObject {
     }
     
     @nonobjc public class func discoverFeedRequest(authors: [String]) -> NSFetchRequest<Event> {
-        guard let currentUser = CurrentUser.author(in: PersistenceController.shared.viewContext) else {
+        guard let currentUser = CurrentUser.author else {
             return emptyRequest()
         }
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
