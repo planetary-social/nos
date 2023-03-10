@@ -203,7 +203,7 @@ public class Event: NosManagedObject {
         let kind = EventKind.text.rawValue
         let followersPredicate = NSPredicate(
             // swiftlint:disable line_length
-            format: "kind = %i AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply').@count = 0 AND ANY author.followers.source = %@",
+            format: "kind = %i AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND ANY author.followers.source = %@",
             // swiftlint:enable line_length
             kind,
             user
@@ -211,7 +211,7 @@ public class Event: NosManagedObject {
         if let publicKey = user.publicKey?.hex {
             let currentUserPredicate = NSPredicate(
                 // swiftlint:disable line_length
-                format: "kind = %i AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply').@count = 0 AND author.hexadecimalPublicKey = %@", kind, publicKey
+                format: "kind = %i AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND author.hexadecimalPublicKey = %@", kind, publicKey
                 // swiftlint:enable line_length
             )
             let compoundPredicate = NSCompoundPredicate(
