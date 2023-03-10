@@ -68,21 +68,23 @@ struct AppView: View {
                 OnboardingView(completion: appController.completeOnboarding)
             } else {
                 TabView(selection: $router.selectedTab) {
-                    HomeFeedView(user: CurrentUser.author(in: viewContext))
-                        .tabItem {
-                            VStack {
-                                let text = Localized.homeFeed.view
-                                if $router.selectedTab.wrappedValue == .home {
-                                    Image.tabIconHomeSelected
-                                    text
-                                } else {
-                                    Image.tabIconHome
-                                    text.foregroundColor(.secondaryTxt)
+                    if let author = CurrentUser.author {
+                        HomeFeedView(user: author)
+                            .tabItem {
+                                VStack {
+                                    let text = Localized.homeFeed.view
+                                    if $router.selectedTab.wrappedValue == .home {
+                                        Image.tabIconHomeSelected
+                                        text
+                                    } else {
+                                        Image.tabIconHome
+                                        text.foregroundColor(.secondaryTxt)
+                                    }
                                 }
                             }
-                        }
-                        .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                        .tag(Destination.home)
+                            .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                            .tag(Destination.home)
+                    }
                     
                     DiscoverView()
                         .tabItem {
@@ -109,7 +111,7 @@ struct AppView: View {
                         }
                     .tag(Destination.newNote)
                     
-                    NotificationsView(user: CurrentUser.author(in: viewContext))
+                    NotificationsView(user: CurrentUser.author)
                         .tabItem {
                             VStack {
                                 let text = Localized.notifications.view
@@ -125,14 +127,16 @@ struct AppView: View {
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.notifications)
                     
-                    if let author = CurrentUser.author(in: viewContext) {
+                    if let author = CurrentUser.author {
                         ProfileTab(author: author, path: $router.profilePath)
                             .tabItem {
                                 VStack {
                                     let text = Localized.profile.view
                                     if $router.selectedTab.wrappedValue == .profile {
+                                        Image.tabProfileSelected
                                         text.foregroundColor(.textColor)
                                     } else {
+                                        Image.tabProfile
                                         text.foregroundColor(.secondaryTxt)
                                     }
                                 }

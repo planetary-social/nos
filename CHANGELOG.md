@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Make links on notes tappable
 - Fix newlines not rendering on notes
 - Fix infinite spinners on some avatars
+- Edit profile
 
 ## [0.1 (6)] - 2023-03-08Z
 
