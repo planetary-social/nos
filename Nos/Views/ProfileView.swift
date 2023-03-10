@@ -84,31 +84,46 @@ struct ProfileView: View {
             RepliesView(note: note)
         }
         .navigationDestination(for: Author.self) { author in
-            ProfileView(author: author)
+            if author == CurrentUser.author {
+                ProfileEditView(author: author)
+            } else {
+                ProfileView(author: author)
+            }
         }
         .navigationBarItems(
             trailing:
                 Group {
-                    Button(
-                        action: {
-                            showingOptions = true
-                        },
-                        label: {
-                            Image(systemName: "ellipsis")
-                        }
-                    )
-                    .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
-                        Button(Localized.copyUserIdentifier.string) {
-                            UIPasteboard.general.string = router.viewedAuthor?.publicKey?.npub ?? ""
-                        }
-                        if let author = router.viewedAuthor {
-                            if author.muted {
-                                Button(Localized.unmuteUser.string) {
-                                    router.viewedAuthor?.unmute()
-                                }
-                            } else {
-                                Button(Localized.muteUser.string) {
-                                    router.viewedAuthor?.mute(context: viewContext)
+                    if author == CurrentUser.author {
+                        Button(
+                            action: {
+                                router.currentPath.wrappedValue.append(author)
+                            },
+                            label: {
+                                Text("Edit")
+                            }
+                        )
+                    } else {
+                        Button(
+                            action: {
+                                showingOptions = true
+                            },
+                            label: {
+                                Image(systemName: "ellipsis")
+                            }
+                        )
+                        .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
+                            Button(Localized.copyUserIdentifier.string) {
+                                UIPasteboard.general.string = router.viewedAuthor?.publicKey?.npub ?? ""
+                            }
+                            if let author = router.viewedAuthor {
+                                if author.muted {
+                                    Button(Localized.unmuteUser.string) {
+                                        router.viewedAuthor?.unmute()
+                                    }
+                                } else {
+                                    Button(Localized.muteUser.string) {
+                                        router.viewedAuthor?.mute(context: viewContext)
+                                    }
                                 }
                             }
                         }

@@ -68,7 +68,7 @@ struct AppView: View {
                 OnboardingView(completion: appController.completeOnboarding)
             } else {
                 TabView(selection: $router.selectedTab) {
-                    HomeFeedView(user: CurrentUser.author(in: viewContext))
+                    HomeFeedView(user: CurrentUser.author)
                         .tabItem {
                             VStack {
                                 let text = Localized.homeFeed.view
@@ -109,7 +109,7 @@ struct AppView: View {
                         }
                     .tag(Destination.newNote)
                     
-                    NotificationsView(user: CurrentUser.author(in: viewContext))
+                    NotificationsView(user: CurrentUser.author)
                         .tabItem {
                             VStack {
                                 let text = Localized.notifications.view
@@ -125,7 +125,7 @@ struct AppView: View {
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.notifications)
                     
-                    if let author = CurrentUser.author(in: viewContext) {
+                    if let author = CurrentUser.author {
                         ProfileTab(author: author, path: $router.profilePath)
                             .tabItem {
                                 VStack {
@@ -163,6 +163,8 @@ struct AppView: View {
         }
         .onAppear(perform: appController.configureCurrentState)
         .task {
+            CurrentUser.context = viewContext
+            
             let nosAppearance = UINavigationBarAppearance()
             nosAppearance.titleTextAttributes = [.foregroundColor: UIColor.primaryTxt]
             nosAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.primaryTxt]

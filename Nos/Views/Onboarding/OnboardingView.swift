@@ -70,7 +70,7 @@ struct OnboardingView: View {
                             Relay(context: viewContext, address: address, author: CurrentUser.author)
                         }
 
-                        CurrentUser.publishContactList(tags: [], context: viewContext)
+                        CurrentUser.publishContactList(tags: [])
                         
                         completion()
                     }

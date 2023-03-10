@@ -111,9 +111,9 @@ struct SideMenuContent: View {
                 case .settings:
                     SettingsView()
                 case .relays:
-                    RelayView(author: CurrentUser.author(in: viewContext)!)
+                    RelayView(author: CurrentUser.author!)
                 case .profile:
-                    ProfileView(author: CurrentUser.author(in: viewContext)!)
+                    ProfileView(author: CurrentUser.author!)
                 }
             }
         }

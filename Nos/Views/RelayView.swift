@@ -130,7 +130,7 @@ struct RelayView: View {
     
     func publishChanges() {
         let followKeys = CurrentUser.follows?.keys ?? []
-        CurrentUser.publishContactList(tags: followKeys.tags, context: viewContext)
+        CurrentUser.publishContactList(tags: followKeys.tags)
     }
 
     private func addRelay() {

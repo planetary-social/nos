@@ -85,7 +85,19 @@ enum CurrentUser {
         return followKeys.contains(key)
     }
     
-    static func publishContactList(tags: [[String]], context: NSManagedObjectContext) {
+    static func publishMetaData() {
+        guard context != nil else {
+            print("Error: Can't publish without context")
+            return
+        }
+    }
+    
+    static func publishContactList(tags: [[String]]) {
+        guard context != nil else {
+            print("Error: Can't publish without context")
+            return
+        }
+        
         guard let relays = author?.relays?.allObjects as? [Relay],
             let pubKey = publicKey else {
             print("Error: No relay service")
@@ -108,7 +120,7 @@ enum CurrentUser {
         if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context!)
                 relayService?.publishToAll(event: event)
             } catch {
                 print("failed to update Follows \(error.localizedDescription)")
@@ -117,7 +129,12 @@ enum CurrentUser {
     }
     
     /// Follow by public hex key
-    static func follow(author toFollow: Author, context: NSManagedObjectContext) {
+    static func follow(author toFollow: Author) {
+        guard context != nil else {
+            print("Error: Can't publish without context")
+            return
+        }
+
         guard let followKey = toFollow.hexadecimalPublicKey else {
             print("Error: followKey is nil")
             return
@@ -129,9 +146,9 @@ enum CurrentUser {
         followKeys.append(followKey)
         
         // Update author to add the new follow
-        if let followedAuthor = try? Author.find(by: followKey, context: context), let currentUser = author {
+        if let followedAuthor = try? Author.find(by: followKey, context: context!), let currentUser = author {
             // Add to the current user's follows
-            let follow = try! Follow.findOrCreate(source: currentUser, destination: followedAuthor, context: context)
+            let follow = try! Follow.findOrCreate(source: currentUser, destination: followedAuthor, context: context!)
             if let currentFollows = currentUser.follows?.mutableCopy() as? NSMutableSet {
                 currentFollows.add(follow)
                 currentUser.follows = currentFollows
@@ -144,11 +161,16 @@ enum CurrentUser {
             }
         }
         
-        publishContactList(tags: followKeys.tags, context: context)
+        publishContactList(tags: followKeys.tags)
     }
     
     /// Unfollow by public hex key
-    static func unfollow(author toUnfollow: Author, context: NSManagedObjectContext) {
+    static func unfollow(author toUnfollow: Author) {
+        guard context != nil else {
+            print("Error: Can't publish without context")
+            return
+        }
+        
         guard let unfollowedKey = toUnfollow.hexadecimalPublicKey else {
             print("Error: unfollowedKey is nil")
             return
@@ -161,9 +183,9 @@ enum CurrentUser {
             .filter { $0 != unfollowedKey }
         
         // Update author to only follow those still following
-        if let unfollowedAuthor = try? Author.find(by: unfollowedKey, context: context), let currentUser = author {
+        if let unfollowedAuthor = try? Author.find(by: unfollowedKey, context: context!), let currentUser = author {
             // Remove from the current user's follows
-            let unfollows = Follow.follows(source: currentUser, destination: unfollowedAuthor, context: context)
+            let unfollows = Follow.follows(source: currentUser, destination: unfollowedAuthor, context: context!)
             if let currentFollows = currentUser.follows?.mutableCopy() as? NSMutableSet {
                 currentFollows.remove(unfollows)
                 currentUser.follows = currentFollows
@@ -176,23 +198,11 @@ enum CurrentUser {
             }
         }
 
-        publishContactList(tags: stillFollowingKeys.tags, context: context)
+        publishContactList(tags: stillFollowingKeys.tags)
 
         // Delete cached texts from this person
-        if let author = try? Author.find(by: unfollowedKey, context: context) {
-            author.deleteAllPosts(context: context)
-        }
-    }
-    
-    static func author(in context: NSManagedObjectContext) -> Author? {
-        if let publicKey = Self.publicKey {
-            let author = try? Author.findOrCreate(by: publicKey, context: context)
-            if context.hasChanges {
-                try? context.save()
-            }
-            return author
-        } else {
-            return nil
+        if let author = try? Author.find(by: unfollowedKey, context: context!) {
+            author.deleteAllPosts(context: context!)
         }
     }
 }

@@ -60,6 +60,10 @@ class Router: ObservableObject {
     func push<D: Hashable>(_ destination: D) {
         currentPath.wrappedValue.append(destination)
     }
+    
+    func pop() {
+        currentPath.wrappedValue.removeLast()
+    }
 }
 
 extension Router {
