@@ -83,9 +83,6 @@ struct ProfileView: View {
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
         }
-        .navigationDestination(for: Author.self) { author in
-            ProfileView(author: author)
-        }
         .navigationBarItems(
             trailing:
                 Group {
@@ -102,13 +99,25 @@ struct ProfileView: View {
                             UIPasteboard.general.string = router.viewedAuthor?.publicKey?.npub ?? ""
                         }
                         if let author = router.viewedAuthor {
-                            if author.muted {
-                                Button(Localized.unmuteUser.string) {
-                                    router.viewedAuthor?.unmute()
-                                }
+                            if author == CurrentUser.author {
+                                Button(
+                                    action: {
+                                        CurrentUser.editing = true
+                                        router.push(author)
+                                    },
+                                    label: {
+                                        Text(Localized.editProfile.string)
+                                    }
+                                )
                             } else {
-                                Button(Localized.muteUser.string) {
-                                    router.viewedAuthor?.mute(context: viewContext)
+                                if author.muted {
+                                    Button(Localized.unmuteUser.string) {
+                                        router.viewedAuthor?.unmute()
+                                    }
+                                } else {
+                                    Button(Localized.muteUser.string) {
+                                        router.viewedAuthor?.mute(context: viewContext)
+                                    }
                                 }
                             }
                         }

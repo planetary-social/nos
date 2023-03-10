@@ -65,7 +65,7 @@ struct RepliesView: View {
                 Spacer()
                 VStack {
                     HStack(spacing: 10) {
-                        if let author = CurrentUser.author(in: viewContext) {
+                        if let author = CurrentUser.author {
                             AvatarView(imageUrl: author.profilePhotoURL, size: 35)
                         }
                         ExpandingTextFieldAndSubmitButton( placeholder: "Post a reply", reply: $reply) {

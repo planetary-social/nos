@@ -22,15 +22,13 @@ struct HomeFeedView: View {
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
     
     // Probably the logged in user should be in the @Environment eventually
-    private var user: Author?
+    @ObservedObject var user: Author
     
     @State private var subscriptionIds: [String] = []
     
-    init(user: Author?) {
+    init(user: Author) {
         self.user = user
-        if let user {
-            eventRequest = FetchRequest(fetchRequest: Event.homeFeed(for: user))
-        }
+        eventRequest = FetchRequest(fetchRequest: Event.homeFeed(for: user))
     }
 
     func refreshHomeFeed() {
@@ -73,7 +71,15 @@ struct HomeFeedView: View {
                 RepliesView(note: note)
             }
             .navigationDestination(for: Author.self) { author in
-                ProfileView(author: author)
+                if router.currentPath.wrappedValue.count == 1 {
+                    ProfileView(author: author)
+                } else {
+                    if author == CurrentUser.author, CurrentUser.editing {
+                        ProfileEditView(author: author)
+                    } else {
+                        ProfileView(author: author)
+                    }
+                }
             }
             .overlay(Group {
                 if !events.contains(where: { !$0.author!.muted }) {
@@ -98,7 +104,6 @@ struct HomeFeedView: View {
         }
         .task {
             CurrentUser.relayService = relayService
-            CurrentUser.context = viewContext
             refreshHomeFeed()
         }
         .refreshable {
