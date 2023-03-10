@@ -94,6 +94,8 @@ enum Localized: String, Localizable, CaseIterable {
     Planetary Support • 19 September 2019
     """
     
+    case loginToYourAccount = "Login to your account"
+    
     case yes = "Yes"
     case no = "No"
     

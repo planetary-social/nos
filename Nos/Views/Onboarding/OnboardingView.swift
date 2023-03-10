@@ -48,7 +48,21 @@ struct OnboardingView: View {
                         .resizable()
                         .frame(width: 235.45, height: 67.1)
                         .padding(.top, 155)
-                    Localized.onboardingTitle.view
+                        .padding(.bottom, 10)
+                    PlainText(Localized.onboardingTitle.string)
+                        .font(.custom("ClarityCity-Bold", size: 25.21))
+                        .fontWeight(.heavy)
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [
+                                    Color(hex: "#F08508"),
+                                    Color(hex: "#F43F75")
+                                ],
+                                startPoint: .bottomLeading,
+                                endPoint: .topTrailing
+                            )
+                            .blendMode(.normal)
+                        )
                     Spacer()
                     BigActionButton(title: .createAccount) {
 //                        let keyPair = KeyPair()!
@@ -106,9 +120,26 @@ struct OnboardingView: View {
             
             // Age verification
             VStack {
-                Text(Localized.ageVerificationTitle.string)
+                PlainText(Localized.ageVerificationTitle.string)
+                    .multilineTextAlignment(.center)
                     .padding(.top, 92)
+                    .padding(.bottom, 20)
+                    .padding(.horizontal, 77.5)
+                    .font(.custom("ClarityCity-Bold", size: 34, relativeTo: .largeTitle))
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [
+                                Color(hex: "#F08508"),
+                                Color(hex: "#F43F75")
+                            ],
+                            startPoint: .bottomLeading,
+                            endPoint: .topTrailing
+                        )
+                        .blendMode(.normal)
+                    )
                 Text(Localized.ageVerificationSubtitle.string)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 44.5)
                 Spacer()
                 HStack {
                     BigActionButton(title: .no) {
@@ -118,26 +149,57 @@ struct OnboardingView: View {
                         selectedTab = .termsOfService
                     }
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 24)
             }
             .tag(OnboardingStep.ageVerification)
             
             // Not old enough
             VStack {
-                Text(Localized.notOldEnoughTitle.string)
+                PlainText(Localized.notOldEnoughTitle.string)
+                    .font(.custom("ClarityCity-Bold", size: 34, relativeTo: .largeTitle))
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [
+                                Color(hex: "#F08508"),
+                                Color(hex: "#F43F75")
+                            ],
+                            startPoint: .bottomLeading,
+                            endPoint: .topTrailing
+                        )
+                        .blendMode(.normal)
+                    )
+                    .multilineTextAlignment(.center)
                     .padding(.top, 92)
+                    .padding(.bottom, 20)
+                    .padding(.horizontal, 45)
                 Text(Localized.notOldEnoughSubtitle.string)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 45)
                 Spacer()
                 BigActionButton(title: .notOldEnoughButton) {
                     selectedTab = .onboardingStart
                 }
+                .padding(.horizontal, 24)
             }
             .tag(OnboardingStep.notOldEnough)
             
             // Terms of Service
             VStack {
-                Text(Localized.termsOfServiceTitle.string)
+                PlainText(Localized.termsOfServiceTitle.string)
+                    .font(.custom("ClarityCity-Bold", size: 34, relativeTo: .largeTitle))
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [
+                                Color(hex: "#F08508"),
+                                Color(hex: "#F43F75")
+                            ],
+                            startPoint: .bottomLeading,
+                            endPoint: .topTrailing
+                        )
+                        .blendMode(.normal)
+                    )
                     .padding(.top, 92)
+                    .padding(.bottom, 60)
                 ScrollView {
                     Text(Localized.termsOfService.string)
                 }
@@ -150,7 +212,7 @@ struct OnboardingView: View {
                         // TODO: create account
                     }
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 24)
             }
             .tag(OnboardingStep.termsOfService)
         }
