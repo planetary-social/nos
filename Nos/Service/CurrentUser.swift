@@ -90,6 +90,38 @@ enum CurrentUser {
             print("Error: Can't publish without context")
             return
         }
+        
+        guard let pubKey = publicKey else {
+            print("Error: no pubKey")
+            return
+        }
+
+        let metaEvent = MetadataEventJSON(
+            displayName: author!.displayName,
+            name: author!.name,
+            about: author!.about,
+            picture: author!.profilePhotoURL?.absoluteString
+        ).dictionary
+
+        guard let metaData = try? JSONSerialization.data(withJSONObject: metaEvent),
+            let metaString = String(data: metaData, encoding: .utf8) else {
+            print("Error: Invalid meta data")
+            return
+        }
+
+        let time = Int64(Date.now.timeIntervalSince1970)
+        let kind = EventKind.metaData.rawValue
+        var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: [], content: metaString)
+                
+        if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
+            do {
+                try jsonEvent.sign(withKey: pair)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context!)
+                relayService?.publishToAll(event: event)
+            } catch {
+                print("failed to update Follows \(error.localizedDescription)")
+            }
+        }
     }
     
     static func publishContactList(tags: [[String]]) {
@@ -97,9 +129,13 @@ enum CurrentUser {
             print("Error: Can't publish without context")
             return
         }
+
+        guard let pubKey = publicKey else {
+            print("Error: no pubKey")
+            return
+        }
         
-        guard let relays = author?.relays?.allObjects as? [Relay],
-            let pubKey = publicKey else {
+        guard let relays = author?.relays?.allObjects as? [Relay] else {
             print("Error: No relay service")
             return
         }
