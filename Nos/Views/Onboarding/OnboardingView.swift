@@ -138,6 +138,7 @@ struct OnboardingView: View {
                         .blendMode(.normal)
                     )
                 Text(Localized.ageVerificationSubtitle.string)
+                    .foregroundColor(.secondaryTxt)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 44.5)
                 Spacer()
@@ -174,6 +175,7 @@ struct OnboardingView: View {
                     .padding(.bottom, 20)
                     .padding(.horizontal, 45)
                 Text(Localized.notOldEnoughSubtitle.string)
+                    .foregroundColor(.secondaryTxt)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 45)
                 Spacer()
@@ -204,6 +206,7 @@ struct OnboardingView: View {
                     .padding(.bottom, 60)
                 ScrollView {
                     Text(Localized.termsOfService.string)
+                        .foregroundColor(.secondaryTxt)
                 }
                 .padding(.horizontal, 44.5)
                 HStack {
