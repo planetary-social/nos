@@ -21,18 +21,34 @@ struct ProfileEditView: View {
     
     var body: some View {
         Form {
-            Section(Localized.basicInfo.string) {
+            Section {
                 TextField(Localized.displayName.string, text: $displayNameText)
                     .textInputAutocapitalization(.none)
+                    .foregroundColor(.textColor)
+                    .autocorrectionDisabled()
                 TextField(Localized.name.string, text: $nameText)
                     .textInputAutocapitalization(.none)
+                    .foregroundColor(.textColor)
+                    .autocorrectionDisabled()
                 TextField(Localized.bio.string, text: $bioText)
+                    .foregroundColor(.textColor)
                 TextField(Localized.picUrl.string, text: $avatarText)
+                    .foregroundColor(.textColor)
+                    .autocorrectionDisabled()
                     .textInputAutocapitalization(.none)
                     #if os(iOS)
                     .keyboardType(.URL)
                     #endif
+            } header: {
+                Localized.basicInfo.view
+                    .foregroundColor(.textColor)
+                    .fontWeight(.heavy)
             }
+            .listRowBackground(LinearGradient(
+                colors: [Color.cardBgTop, Color.cardBgBottom],
+                startPoint: .top,
+                endPoint: .bottom
+            ))
         }
         .navigationBarItems(
             trailing:
