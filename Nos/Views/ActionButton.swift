@@ -16,7 +16,8 @@ struct ActionButton: View {
     
     var body: some View {
         Button(action: action, label: {
-            title.view
+            PlainText(title.string)
+                .font(.clarityBold)
                 .transition(.opacity)
                 .font(.headline)
         })
@@ -30,7 +31,7 @@ struct ActionButtonStyle: ButtonStyle {
     
     @SwiftUI.Environment(\.isEnabled) private var isEnabled
     
-    let cornerRadius: CGFloat = 15
+    let cornerRadius: CGFloat = 17
     
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
@@ -44,8 +45,8 @@ struct ActionButtonStyle: ButtonStyle {
             configuration.label
                 .foregroundColor(.white)
                 .font(.body)
-                .padding(.vertical, 5)
-                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 13)
                 .shadow(
                     color: Color(white: 0, opacity: 0.15),
                     radius: 2,

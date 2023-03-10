@@ -16,7 +16,7 @@ struct RelayView: View {
     
     @State var newRelayAddress: String = ""
     
-    @EnvironmentObject var router: Router
+    @EnvironmentObject private var router: Router
     
     @Dependency(\.analytics) private var analytics
     
@@ -117,11 +117,6 @@ struct RelayView: View {
                 startPoint: .top,
                 endPoint: .bottom
             ))
-            
-            if author.relays?.count == 0 {
-                Localized.noRelaysMessage.view
-                    .foregroundColor(.textColor)
-            }
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CachedAsyncImage
 
 struct AvatarView: View {
     
@@ -15,7 +16,7 @@ struct AvatarView: View {
     var body: some View {
         Group {
             if let imageUrl = imageUrl {
-                AsyncImage(
+                CachedAsyncImage(
                     url: imageUrl,
                     content: { image in
                         image.resizable()

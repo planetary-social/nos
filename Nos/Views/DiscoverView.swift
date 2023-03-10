@@ -76,7 +76,7 @@ struct DiscoverView: View {
             .onPreferenceChange(SizePreferenceKey.self) { preference in
                 gridSize = preference
             }
-            .searchable(text: $searchText, placement: .toolbar, prompt: Text("Find a user by ID"))
+            .searchable(text: $searchText, placement: .toolbar, prompt: PlainText("Find a user by ID"))
             .onSubmit(of: .search) {
                 if let publicKey = PublicKey(npub: searchText) {
                     let author = try! Author.findOrCreate(by: publicKey.hex, context: viewContext)

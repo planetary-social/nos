@@ -81,6 +81,8 @@ extension Router {
             if let event = Event.find(by: identifier, context: context) {
                 push(event)
             }
+        } else {
+            UIApplication.shared.open(url)
         }
     }
 }

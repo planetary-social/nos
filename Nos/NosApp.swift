@@ -20,7 +20,7 @@ struct NosApp: App {
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .environmentObject(relayService)
                 .environmentObject(router)
-                .environmentObject(AppController())
+                .environmentObject(AppController(router: router))
                 .task {
                     relayService.publishFailedEvents()
                 }

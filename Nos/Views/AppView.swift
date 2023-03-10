@@ -156,7 +156,7 @@ struct AppView: View {
                 })
                 
                 SideMenu(
-                    menuWidth: UIScreen.main.bounds.width / 1.3,
+                    menuWidth: 300,
                     menuOpened: router.sideMenuOpened,
                     toggleMenu: router.toggleSideMenu,
                     closeMenu: router.closeSideMenu
@@ -165,9 +165,10 @@ struct AppView: View {
         }
         .onAppear(perform: appController.configureCurrentState)
         .task {
+            // This navigation bar stuff doesn't seem to be working. I can't figure out why.
             let nosAppearance = UINavigationBarAppearance()
-            nosAppearance.titleTextAttributes = [.foregroundColor: UIColor.primaryTxt]
-            nosAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.primaryTxt]
+            nosAppearance.titleTextAttributes = [.foregroundColor: UIColor.systemPink]
+            nosAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.systemPink]
             UINavigationBar.appearance().standardAppearance = nosAppearance
             UINavigationBar.appearance().compactAppearance = nosAppearance
             UINavigationBar.appearance().scrollEdgeAppearance = nosAppearance
@@ -186,7 +187,7 @@ struct AppView_Previews: PreviewProvider {
     static var relayService = RelayService(persistenceController: persistenceController)
     static var router = Router()
     static var loggedInAppController: AppController = {
-        let appController = AppController()
+        let appController = AppController(router: router)
         KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.alice.privateKeyHex.utf8))
         appController.completeOnboarding()
         return appController
@@ -209,12 +210,12 @@ struct AppView_Previews: PreviewProvider {
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
-            .environmentObject(AppController())
+            .environmentObject(AppController(router: router))
         
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(routerWithSideMenuOpened)
-            .environmentObject(AppController())
+            .environmentObject(AppController(router: routerWithSideMenuOpened))
     }
 }

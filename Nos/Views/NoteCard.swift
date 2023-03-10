@@ -15,7 +15,7 @@ struct NoteCard: View {
 
     @ObservedObject var author: Author
     
-    var note: Event {
+    @ObservedObject var note: Event {
         didSet {
             if let eventAuthor = note.author {
                 self.author = eventAuthor
@@ -89,11 +89,6 @@ struct NoteCard: View {
                     }
                     NoteOptionsButton(note: note)
                 }
-                .task {
-                    if author.needsMetadata {
-                        _ = author.requestMetadata(using: relayService)
-                    }
-                }
                 .padding(10)
                 Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                 Group {
@@ -113,6 +108,11 @@ struct NoteCard: View {
                 }
             case .golden:
                 GoldenPostView(author: author, note: note)
+            }
+        }
+        .task {
+            if author.needsMetadata {
+                _ = author.requestMetadata(using: relayService)
             }
         }
         .background(
