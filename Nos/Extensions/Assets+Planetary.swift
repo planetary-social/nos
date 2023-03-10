@@ -234,6 +234,7 @@ extension Image {
        static let navigationMenu = Image("navigationMenu", bundle: Bundle.current)
        static let emptyAvatar = Image("emptyAvatar", bundle: Bundle.current)
        static let newPostButton = Image("newPostButton", bundle: Bundle.current)
+       static let nosLogo = Image("nosLogo", bundle: Bundle.current)
 }
 
 extension UIImage {

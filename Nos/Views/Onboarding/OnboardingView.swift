@@ -12,14 +12,17 @@ struct OnboardingView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     enum OnboardingStep {
-        case getStarted
+        case onboardingStart
         case addPrivateKey
+        case ageVerification
+        case notOldEnough
+        case termsOfService
     }
     
     /// Completion to be called when all onboarding steps are complete
     let completion: () -> Void
     
-    @State private var selectedTab: OnboardingStep = .getStarted
+    @State private var selectedTab: OnboardingStep = .onboardingStart
     
     @State private var keyPair: KeyPair? {
         didSet {
@@ -39,43 +42,32 @@ struct OnboardingView: View {
     
     var body: some View {
         TabView(selection: $selectedTab) {
-            VStack {
-                Spacer()
-                Localized.Onboarding.getStartedTitle.view
-                Spacer()
-                Button(Localized.Onboarding.getStartedButton.string) {
-                    selectedTab = .addPrivateKey
-                }
-                .buttonStyle(.bordered)
-                Spacer()
-            }
-            .tag(OnboardingStep.getStarted)
-            .onViewDidLoad {
-                analytics.startedOnboarding()
-            }
-            
             NavigationStack {
                 VStack {
+                    Image.nosLogo
+                        .resizable()
+                        .frame(width: 235.45, height: 67.1)
+                        .padding(.top, 155)
+                    Localized.onboardingTitle.view
                     Spacer()
-                    Localized.Onboarding.privateKeyTitle.view
-                    Spacer()
-                    Button(Localized.Onboarding.generatePrivateKeyButton.string) {
-                        let keyPair = KeyPair()!
-                        self.keyPair = keyPair
-                        analytics.identify(with: keyPair)
-                        analytics.generatedKey()
-                        
-                        // Default Relays for new user
-                        for address in Relay.defaults {
-                            Relay(context: viewContext, address: address, author: CurrentUser.author)
-                        }
-
-                        CurrentUser.publishContactList(tags: [], context: viewContext)
-                        
-                        completion()
+                    BigActionButton(title: .createAccount) {
+//                        let keyPair = KeyPair()!
+//                        self.keyPair = keyPair
+//                        analytics.identify(with: keyPair)
+//                        analytics.generatedKey()
+//
+//                        // Default Relays for new user
+//                        for address in Relay.defaults {
+//                            Relay(context: viewContext, address: address, author: CurrentUser.author)
+//                        }
+//
+//                        CurrentUser.publishContactList(tags: [], context: viewContext)
+//
+//                        completion()
+                        selectedTab = .ageVerification
                     }
-                    .buttonStyle(.bordered)
-                    NavigationLink(Localized.Onboarding.alreadyHaveAPrivateKey.string) {
+                    .padding()
+                    NavigationLink(Localized.logInWithYourKeys.string) {
                         VStack {
                             Spacer()
                             Localized.Onboarding.addPrivateKeyTitle.view
@@ -107,11 +99,60 @@ struct OnboardingView: View {
                             )
                         }
                     }
-                    .font(.system(size: 10))
-                    Spacer()
+                    .padding()
                 }
             }
-            .tag(OnboardingStep.addPrivateKey)
+            .tag(OnboardingStep.onboardingStart)
+            
+            // Age verification
+            VStack {
+                Text(Localized.ageVerificationTitle.string)
+                    .padding(.top, 92)
+                Text(Localized.ageVerificationSubtitle.string)
+                Spacer()
+                HStack {
+                    BigActionButton(title: .no) {
+                        selectedTab = .notOldEnough
+                    }
+                    BigActionButton(title: .yes) {
+                        selectedTab = .termsOfService
+                    }
+                }
+                .padding(.horizontal)
+            }
+            .tag(OnboardingStep.ageVerification)
+            
+            // Not old enough
+            VStack {
+                Text(Localized.notOldEnoughTitle.string)
+                    .padding(.top, 92)
+                Text(Localized.notOldEnoughSubtitle.string)
+                Spacer()
+                BigActionButton(title: .notOldEnoughButton) {
+                    selectedTab = .onboardingStart
+                }
+            }
+            .tag(OnboardingStep.notOldEnough)
+            
+            // Terms of Service
+            VStack {
+                Text(Localized.termsOfServiceTitle.string)
+                    .padding(.top, 92)
+                ScrollView {
+                    Text(Localized.termsOfService.string)
+                }
+                .padding(.horizontal, 44.5)
+                HStack {
+                    BigActionButton(title: Localized.reject) {
+                        selectedTab = .onboardingStart
+                    }
+                    BigActionButton(title: Localized.accept) {
+                        // TODO: create account
+                    }
+                }
+                .padding(.horizontal)
+            }
+            .tag(OnboardingStep.termsOfService)
         }
     }
 }
