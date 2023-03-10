@@ -62,6 +62,9 @@ struct ProfileEditView: View {
             bioText = author.about ?? ""
             avatarText = author.profilePhotoURL?.absoluteString ?? ""
         }
+        .onDisappear {
+            CurrentUser.editing = false
+        }
     }
 }
 

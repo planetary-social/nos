@@ -32,6 +32,8 @@ enum CurrentUser {
     // swiftlint:enable implicitly_unwrapped_optional
     
     static var subscriptions: [String] = []
+
+    static var editing = false
     
     static var relayService: RelayService? {
         didSet {

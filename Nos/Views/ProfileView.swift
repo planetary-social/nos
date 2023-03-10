@@ -83,39 +83,40 @@ struct ProfileView: View {
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
         }
-        .navigationDestination(for: Author.self) { author in
-            if author == CurrentUser.author {
-                ProfileEditView(author: author)
+        .navigationDestination(for: Author.self) { profile in
+            if profile == CurrentUser.author, CurrentUser.editing {
+                ProfileEditView(author: profile)
             } else {
-                ProfileView(author: author)
+                ProfileView(author: profile)
             }
         }
         .navigationBarItems(
             trailing:
                 Group {
-                    if author == CurrentUser.author {
-                        Button(
-                            action: {
-                                router.currentPath.wrappedValue.append(author)
-                            },
-                            label: {
-                                Text("Edit")
-                            }
-                        )
-                    } else {
-                        Button(
-                            action: {
-                                showingOptions = true
-                            },
-                            label: {
-                                Image(systemName: "ellipsis")
-                            }
-                        )
-                        .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
-                            Button(Localized.copyUserIdentifier.string) {
-                                UIPasteboard.general.string = router.viewedAuthor?.publicKey?.npub ?? ""
-                            }
-                            if let author = router.viewedAuthor {
+                    Button(
+                        action: {
+                            showingOptions = true
+                        },
+                        label: {
+                            Image(systemName: "ellipsis")
+                        }
+                    )
+                    .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
+                        Button(Localized.copyUserIdentifier.string) {
+                            UIPasteboard.general.string = router.viewedAuthor?.publicKey?.npub ?? ""
+                        }
+                        if let author = router.viewedAuthor {
+                            if author == CurrentUser.author {
+                                Button(
+                                    action: {
+                                        CurrentUser.editing = true
+                                        router.push(author)
+                                    },
+                                    label: {
+                                        Text(Localized.editProfile.string)
+                                    }
+                                )
+                            } else {
                                 if author.muted {
                                     Button(Localized.unmuteUser.string) {
                                         router.viewedAuthor?.unmute()

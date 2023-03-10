@@ -71,7 +71,15 @@ struct HomeFeedView: View {
                 RepliesView(note: note)
             }
             .navigationDestination(for: Author.self) { author in
-                ProfileView(author: author)
+                if router.currentPath.wrappedValue.count == 1 {
+                    ProfileView(author: author)
+                } else {
+                    if author == CurrentUser.author, CurrentUser.editing {
+                        ProfileEditView(author: author)
+                    } else {
+                        ProfileView(author: author)
+                    }
+                }
             }
             .overlay(Group {
                 if !events.contains(where: { !$0.author!.muted }) {
