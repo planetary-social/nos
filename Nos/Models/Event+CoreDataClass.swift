@@ -381,7 +381,9 @@ public class Event: NosManagedObject {
             return ""
         }
         
-        return try? AttributedString(markdown: result)
+        let linkedString = (try? result.findUnformattedLinks(in: result)) ?? result
+        
+        return try? AttributedString(markdown: linkedString)
     }
 	
     // swiftlint:disable function_body_length
