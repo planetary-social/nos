@@ -12,7 +12,7 @@ import CoreData
 public class EventReference: NosManagedObject {
     
     var jsonRepresentation: [String] {
-        ["e", eventId ?? "", recommendedRelayUrl ?? "", marker ?? ""]
+        ["e", referencedEvent?.identifier ?? "", recommendedRelayUrl ?? "", marker ?? ""]
     }
     
     convenience init(jsonTag: [String], context: NSManagedObjectContext) throws {

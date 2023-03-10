@@ -64,7 +64,10 @@ extension FetchedResults where Element == Event {
 public class Event: NosManagedObject {
     
     static var replyEventReferences =
-    "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@"
+    "kind = 1 AND SUBQUERY(eventReferences, $eventReference, $eventReference.marker == 'reply' AND $eventReference.referencedEvent.identifier == %@).@count = 0 AND (ANY author.followers.source IN %@.follows.destination OR author IN %@.follows.destination OR author = %@)"
+    
+    static var replyToRootEventReferences =
+    "kind = 1 AND SUBQUERY(eventReferences, $eventReference, $eventReference.marker == 'root' AND $eventReference.referencedEvent.identifier == %@).@count = 0 AND (ANY author.followers.source IN %@.follows.destination OR author IN %@.follows.destination OR author = %@)"
     
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -171,21 +174,33 @@ public class Event: NosManagedObject {
     }
     
     @nonobjc public class func allReplies(to rootEvent: Event) -> NSFetchRequest<Event> {
+        guard let currentUser = CurrentUser.author(in: PersistenceController.shared.viewContext) else {
+            return emptyRequest()
+        }
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: replyEventReferences,
-            rootEvent.identifier ?? ""
+            format: replyToRootEventReferences,
+            rootEvent.identifier ?? "",
+            currentUser,
+            currentUser,
+            currentUser
         )
         return fetchRequest
     }
     
     @nonobjc public class func allReplies(toEventWith id: String) -> NSFetchRequest<Event> {
+        guard let currentUser = CurrentUser.author(in: PersistenceController.shared.viewContext) else {
+            return emptyRequest()
+        }
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
             format: replyEventReferences,
-            id
+            id,
+            currentUser,
+            currentUser,
+            currentUser
         )
         return fetchRequest
     }

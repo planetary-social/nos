@@ -60,13 +60,19 @@ struct NoteCard: View {
     @EnvironmentObject private var relayService: RelayService
     
     private var showFullMessage: Bool
+    private let showReplyCount: Bool
     
-    init(author: Author, note: Event, style: CardStyle = .compact, showFullMessage: Bool = false) {
+    init(author: Author, note: Event, style: CardStyle = .compact, showFullMessage: Bool = false, showReplyCount: Bool = true) {
         self.author = author
         self.note = note
         self.style = style
         self.showFullMessage = showFullMessage
-        self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note), animation: .default)
+        self.showReplyCount = showReplyCount
+        if showReplyCount {
+            self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note), animation: .default)
+        } else {
+            self.repliesRequest = FetchRequest(fetchRequest: Event.emptyRequest())
+        }
     }
 
     var body: some View {
@@ -101,11 +107,13 @@ struct NoteCard: View {
                     CompactNoteView(note: note, showFullMessage: showFullMessage)
                     Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                     HStack {
-                        StackedAvatarsView(avatarUrls: replyAvatarUrls, size: 20, border: 0)
-                        if let replies = attributedReplies {
-                            Text(replies)
-                                .font(.subheadline)
-                                .foregroundColor(Color.secondaryTxt)
+                        if showReplyCount {
+                            StackedAvatarsView(avatarUrls: replyAvatarUrls, size: 20, border: 0)
+                            if let replies = attributedReplies {
+                                Text(replies)
+                                    .font(.subheadline)
+                                    .foregroundColor(Color.secondaryTxt)
+                            }
                         }
                         Spacer()
                         Image.buttonReply
@@ -150,31 +158,16 @@ struct NoteCard: View {
             return 20
         }
     }
-
-//    private var replies: [ImageMetadata] {
-//        Array(message.metadata.replies.abouts.compactMap { $0.image }.prefix(2))
-//    }
-
-//    private var attributedReplies: AttributedString? {
-//        let replyCount = message.metadata.replies.count
-//        let localized = replyCount == 1 ? Localized.Reply.one : Localized.Reply.many
-//        let string = localized.text(["count": "**\(replyCount)**"])
-//        do {
-//            var attributed = try AttributedString(markdown: string)
-//            if let range = attributed.range(of: "\(replyCount)") {
-//                attributed[range].foregroundColor = .primaryTxt
-//            }
-//            return attributed
-//        } catch {
-//            return nil
-//        }
-//    }
 }
 
 struct NoteCard_Previews: PreviewProvider {
     
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
+    static var router = Router()
+    static var emptyPersistenceController = PersistenceController.empty
+    static var emptyPreviewContext = emptyPersistenceController.container.viewContext
+    static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
     
     static var shortNote: Event {
         let note = Event(context: previewContext)
@@ -217,6 +210,9 @@ struct NoteCard_Previews: PreviewProvider {
             }
             .preferredColorScheme(.dark)
         }
+        .environment(\.managedObjectContext, emptyPreviewContext)
+        .environmentObject(emptyRelayService)
+        .environmentObject(router)
         .padding()
         .background(Color.appBg)
     }

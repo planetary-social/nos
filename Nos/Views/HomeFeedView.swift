@@ -162,15 +162,5 @@ struct ContentView_Previews: PreviewProvider {
         .environment(\.managedObjectContext, emptyPreviewContext)
         .environmentObject(emptyRelayService)
         .environmentObject(router)
-        
-        NavigationStack {
-            List(0..<100) {
-                Text("Row \($0)")
-            }
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(.yellow, for: .navigationBar)
-            .navigationTitle("100 Rows")
-            .navigationBarTitleDisplayMode(.inline)
-        }
     }
 }

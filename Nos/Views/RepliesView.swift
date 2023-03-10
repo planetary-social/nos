@@ -1,5 +1,5 @@
 //
-//  ThreadView.swift
+//  RepliesView.swift
 //  Nos
 //
 //  Created by Matthew Lorentz on 2/14/23.
@@ -32,7 +32,7 @@ struct RepliesView: View {
         
         if let rootReference = (note.eventReferences?.array as? [EventReference])?
             .first(where: { $0.marker == "root" }),
-            let rootId = rootReference.eventId {
+            let rootId = rootReference.referencedEvent?.identifier {
             self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(toEventWith: rootId))
         } else {
             self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note))
@@ -49,7 +49,7 @@ struct RepliesView: View {
         VStack {
             ScrollView(.vertical) {
                 LazyVStack {
-                    NoteButton(note: note, showFullMessage: true)
+                    NoteButton(note: note, showFullMessage: true, allowsPush: false, showReplyCount: false)
                         .padding(.horizontal)
                     ForEach(directReplies.reversed()) { event in
                         ThreadView(root: event, allReplies: replies.reversed())
@@ -58,16 +58,16 @@ struct RepliesView: View {
                 .padding(.bottom)
             }
             .padding(.top, 1)
-            .navigationBarTitle(Localized.threadView.string, displayMode: .inline)
+            .navigationBarTitle(Localized.thread.string, displayMode: .inline)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
             VStack {
                 Spacer()
                 VStack {
                     HStack(spacing: 10) {
-                        if let author = CurrentUser.author(in: viewContext) {
-                            AvatarView(imageUrl: author.profilePhotoURL, size: 35)
-                        }
+//                        if let author = CurrentUser.author(in: viewContext) {
+//                            AvatarView(imageUrl: author.profilePhotoURL, size: 35)
+//                        }
                         ExpandingTextFieldAndSubmitButton( placeholder: "Post a reply", reply: $reply) {
                             postReply(reply)
                         }
@@ -97,10 +97,10 @@ struct RepliesView: View {
                 if let referenceArray = note.eventReferences?.array as? [EventReference],
                     let firstReference = referenceArray.first {
                     if let rootReference = referenceArray.first(where: { $0.marker == "root" }) {
-                        tags.append(["e", rootReference.eventId ?? "", "", "root"])
+                        tags.append(["e", rootReference.referencedEvent?.identifier ?? "", "", "root"])
                         tags.append(["e", note.identifier!, "", "reply"])
                     } else {
-                        tags.append(["e", firstReference.eventId ?? "", "", "reply"])
+                        tags.append(["e", firstReference.referencedEvent?.identifier ?? "", "", "reply"])
                     }
                 }
             } else {
@@ -141,19 +141,32 @@ struct RepliesView_Previews: PreviewProvider {
         KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.alice.privateKeyHex.utf8))
         return persistenceController
     }()
-    
     static var previewContext = persistenceController.container.viewContext
+    static var emptyPersistenceController = PersistenceController.empty
+    static var emptyPreviewContext = emptyPersistenceController.container.viewContext
+    static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
+    static var router = Router()
     
     static var shortNote: Event {
         let note = Event(context: previewContext)
+        note.kind = 1
         note.content = "Hello, world!"
+        note.author = user
         return note
     }
     
     static var longNote: Event {
         let note = Event(context: previewContext)
+        note.kind = 1
         note.content = .loremIpsum(5)
+        note.author = user
         return note
+    }
+    
+    static var user: Author {
+        let author = Author(context: previewContext)
+        author.hexadecimalPublicKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
+        return author
     }
     
     static var previews: some View {
@@ -165,6 +178,9 @@ struct RepliesView_Previews: PreviewProvider {
                 RepliesView(note: longNote)
             }
         }
+        .environment(\.managedObjectContext, previewContext)
+        .environmentObject(emptyRelayService)
+        .environmentObject(router)
         .padding()
         .background(Color.cardBackground)
     }
