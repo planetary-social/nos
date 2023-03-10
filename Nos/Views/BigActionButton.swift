@@ -16,7 +16,8 @@ struct BigActionButton: View {
     
     var body: some View {
         Button(action: action, label: {
-            title.view
+            PlainText(title.string)
+                .font(.clarityBold)
                 .transition(.opacity)
                 .font(.headline)
         })

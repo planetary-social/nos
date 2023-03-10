@@ -101,7 +101,7 @@ enum Localized: String, Localizable, CaseIterable {
     case reject = "Reject"
     
     case error = "Error"
-    case noEvents = "No notes to show! Add a relay to get started."
+    case noEvents = "No notes (yet)! Browse the Discover tab and follow some people to get started."
     case addItem = "Add Item"
     case homeFeed = "Feed"
     

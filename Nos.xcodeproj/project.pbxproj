@@ -76,6 +76,48 @@
 		C987F81B29BA4D0E00B44E7A /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F81929BA4D0E00B44E7A /* ActionButton.swift */; };
 		C987F81D29BA6D9A00B44E7A /* ProfileTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F81C29BA6D9A00B44E7A /* ProfileTab.swift */; };
 		C987F81E29BA6D9A00B44E7A /* ProfileTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F81C29BA6D9A00B44E7A /* ProfileTab.swift */; };
+		C987F83229BA951E00B44E7A /* ClarityCity-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82029BA951D00B44E7A /* ClarityCity-ExtraLight.otf */; };
+		C987F83329BA951E00B44E7A /* ClarityCity-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82029BA951D00B44E7A /* ClarityCity-ExtraLight.otf */; };
+		C987F83429BA951E00B44E7A /* ClarityCity-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82129BA951D00B44E7A /* ClarityCity-LightItalic.otf */; };
+		C987F83529BA951E00B44E7A /* ClarityCity-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82129BA951D00B44E7A /* ClarityCity-LightItalic.otf */; };
+		C987F83629BA951E00B44E7A /* ClarityCity-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82229BA951D00B44E7A /* ClarityCity-ExtraBold.otf */; };
+		C987F83729BA951E00B44E7A /* ClarityCity-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82229BA951D00B44E7A /* ClarityCity-ExtraBold.otf */; };
+		C987F83829BA951E00B44E7A /* ClarityCity-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82329BA951D00B44E7A /* ClarityCity-MediumItalic.otf */; };
+		C987F83929BA951E00B44E7A /* ClarityCity-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82329BA951D00B44E7A /* ClarityCity-MediumItalic.otf */; };
+		C987F83A29BA951E00B44E7A /* ClarityCity-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82429BA951D00B44E7A /* ClarityCity-BoldItalic.otf */; };
+		C987F83B29BA951E00B44E7A /* ClarityCity-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82429BA951D00B44E7A /* ClarityCity-BoldItalic.otf */; };
+		C987F83C29BA951E00B44E7A /* ClarityCity-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82529BA951D00B44E7A /* ClarityCity-Bold.otf */; };
+		C987F83D29BA951E00B44E7A /* ClarityCity-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82529BA951D00B44E7A /* ClarityCity-Bold.otf */; };
+		C987F83E29BA951E00B44E7A /* ClarityCity-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82629BA951D00B44E7A /* ClarityCity-SemiBold.otf */; };
+		C987F83F29BA951E00B44E7A /* ClarityCity-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82629BA951D00B44E7A /* ClarityCity-SemiBold.otf */; };
+		C987F84029BA951E00B44E7A /* ClarityCity-SemiBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82729BA951D00B44E7A /* ClarityCity-SemiBoldItalic.otf */; };
+		C987F84129BA951E00B44E7A /* ClarityCity-SemiBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82729BA951D00B44E7A /* ClarityCity-SemiBoldItalic.otf */; };
+		C987F84229BA951E00B44E7A /* ClarityCity-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82829BA951E00B44E7A /* ClarityCity-Black.otf */; };
+		C987F84329BA951E00B44E7A /* ClarityCity-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82829BA951E00B44E7A /* ClarityCity-Black.otf */; };
+		C987F84429BA951E00B44E7A /* ClarityCity-ExtraBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82929BA951E00B44E7A /* ClarityCity-ExtraBoldItalic.otf */; };
+		C987F84529BA951E00B44E7A /* ClarityCity-ExtraBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82929BA951E00B44E7A /* ClarityCity-ExtraBoldItalic.otf */; };
+		C987F84629BA951E00B44E7A /* ClarityCity-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82A29BA951E00B44E7A /* ClarityCity-Light.otf */; };
+		C987F84729BA951E00B44E7A /* ClarityCity-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82A29BA951E00B44E7A /* ClarityCity-Light.otf */; };
+		C987F84829BA951E00B44E7A /* ClarityCity-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82B29BA951E00B44E7A /* ClarityCity-BlackItalic.otf */; };
+		C987F84929BA951E00B44E7A /* ClarityCity-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82B29BA951E00B44E7A /* ClarityCity-BlackItalic.otf */; };
+		C987F84A29BA951E00B44E7A /* ClarityCity-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82C29BA951E00B44E7A /* ClarityCity-Medium.otf */; };
+		C987F84B29BA951E00B44E7A /* ClarityCity-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82C29BA951E00B44E7A /* ClarityCity-Medium.otf */; };
+		C987F84C29BA951E00B44E7A /* ClarityCity-ThinItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82D29BA951E00B44E7A /* ClarityCity-ThinItalic.otf */; };
+		C987F84D29BA951E00B44E7A /* ClarityCity-ThinItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82D29BA951E00B44E7A /* ClarityCity-ThinItalic.otf */; };
+		C987F84E29BA951E00B44E7A /* ClarityCity-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82E29BA951E00B44E7A /* ClarityCity-RegularItalic.otf */; };
+		C987F84F29BA951E00B44E7A /* ClarityCity-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82E29BA951E00B44E7A /* ClarityCity-RegularItalic.otf */; };
+		C987F85029BA951E00B44E7A /* ClarityCity-ExtraLightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82F29BA951E00B44E7A /* ClarityCity-ExtraLightItalic.otf */; };
+		C987F85129BA951E00B44E7A /* ClarityCity-ExtraLightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F82F29BA951E00B44E7A /* ClarityCity-ExtraLightItalic.otf */; };
+		C987F85229BA951E00B44E7A /* ClarityCity-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F83029BA951E00B44E7A /* ClarityCity-Regular.otf */; };
+		C987F85329BA951E00B44E7A /* ClarityCity-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F83029BA951E00B44E7A /* ClarityCity-Regular.otf */; };
+		C987F85429BA951E00B44E7A /* ClarityCity-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F83129BA951E00B44E7A /* ClarityCity-Thin.otf */; };
+		C987F85529BA951E00B44E7A /* ClarityCity-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F83129BA951E00B44E7A /* ClarityCity-Thin.otf */; };
+		C987F85A29BA9ED800B44E7A /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F85729BA981800B44E7A /* Font.swift */; };
+		C987F85B29BA9ED800B44E7A /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F85729BA981800B44E7A /* Font.swift */; };
+		C987F85F29BAB66900B44E7A /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = C987F85E29BAB66900B44E7A /* CachedAsyncImage */; };
+		C987F86129BABAF800B44E7A /* String+Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F86029BABAF800B44E7A /* String+Markdown.swift */; };
+		C987F86229BABAF800B44E7A /* String+Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F86029BABAF800B44E7A /* String+Markdown.swift */; };
+		C987F86429BAC3C500B44E7A /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = C987F86329BAC3C500B44E7A /* CachedAsyncImage */; };
 		C9ADB133299287D60075E7F8 /* KeyPairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB132299287D60075E7F8 /* KeyPairTests.swift */; };
 		C9ADB135299288230075E7F8 /* KeyFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB134299288230075E7F8 /* KeyFixture.swift */; };
 		C9ADB13629928AF00075E7F8 /* KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C26298DC98800C6714D /* KeyPair.swift */; };
@@ -236,6 +278,27 @@
 		C987F81629BA4C6900B44E7A /* BigActionButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BigActionButton.swift; sourceTree = "<group>"; };
 		C987F81929BA4D0E00B44E7A /* ActionButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		C987F81C29BA6D9A00B44E7A /* ProfileTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTab.swift; sourceTree = "<group>"; };
+		C987F82029BA951D00B44E7A /* ClarityCity-ExtraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-ExtraLight.otf"; sourceTree = "<group>"; };
+		C987F82129BA951D00B44E7A /* ClarityCity-LightItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-LightItalic.otf"; sourceTree = "<group>"; };
+		C987F82229BA951D00B44E7A /* ClarityCity-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-ExtraBold.otf"; sourceTree = "<group>"; };
+		C987F82329BA951D00B44E7A /* ClarityCity-MediumItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-MediumItalic.otf"; sourceTree = "<group>"; };
+		C987F82429BA951D00B44E7A /* ClarityCity-BoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-BoldItalic.otf"; sourceTree = "<group>"; };
+		C987F82529BA951D00B44E7A /* ClarityCity-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-Bold.otf"; sourceTree = "<group>"; };
+		C987F82629BA951D00B44E7A /* ClarityCity-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-SemiBold.otf"; sourceTree = "<group>"; };
+		C987F82729BA951D00B44E7A /* ClarityCity-SemiBoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-SemiBoldItalic.otf"; sourceTree = "<group>"; };
+		C987F82829BA951E00B44E7A /* ClarityCity-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-Black.otf"; sourceTree = "<group>"; };
+		C987F82929BA951E00B44E7A /* ClarityCity-ExtraBoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-ExtraBoldItalic.otf"; sourceTree = "<group>"; };
+		C987F82A29BA951E00B44E7A /* ClarityCity-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-Light.otf"; sourceTree = "<group>"; };
+		C987F82B29BA951E00B44E7A /* ClarityCity-BlackItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-BlackItalic.otf"; sourceTree = "<group>"; };
+		C987F82C29BA951E00B44E7A /* ClarityCity-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-Medium.otf"; sourceTree = "<group>"; };
+		C987F82D29BA951E00B44E7A /* ClarityCity-ThinItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-ThinItalic.otf"; sourceTree = "<group>"; };
+		C987F82E29BA951E00B44E7A /* ClarityCity-RegularItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-RegularItalic.otf"; sourceTree = "<group>"; };
+		C987F82F29BA951E00B44E7A /* ClarityCity-ExtraLightItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-ExtraLightItalic.otf"; sourceTree = "<group>"; };
+		C987F83029BA951E00B44E7A /* ClarityCity-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-Regular.otf"; sourceTree = "<group>"; };
+		C987F83129BA951E00B44E7A /* ClarityCity-Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-Thin.otf"; sourceTree = "<group>"; };
+		C987F85629BA96B700B44E7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		C987F85729BA981800B44E7A /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
+		C987F86029BABAF800B44E7A /* String+Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Markdown.swift"; sourceTree = "<group>"; };
 		C9ADB132299287D60075E7F8 /* KeyPairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPairTests.swift; sourceTree = "<group>"; };
 		C9ADB134299288230075E7F8 /* KeyFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyFixture.swift; sourceTree = "<group>"; };
 		C9ADB13729928CC30075E7F8 /* String+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hex.swift"; sourceTree = "<group>"; };
@@ -299,6 +362,7 @@
 				C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */,
 				C9646E9A29B79E04007239A4 /* Logger in Frameworks */,
 				C9646EA729B7A3DD007239A4 /* Dependencies in Frameworks */,
+				C987F85F29BAB66900B44E7A /* CachedAsyncImage in Frameworks */,
 				C9646EA429B7A24A007239A4 /* PostHog in Frameworks */,
 				C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */,
 			);
@@ -312,6 +376,7 @@
 				CDDA1F7B29A527650047ACD8 /* Starscream in Frameworks */,
 				C9646EA929B7A4F2007239A4 /* PostHog in Frameworks */,
 				C9646EAC29B7A520007239A4 /* Dependencies in Frameworks */,
+				C987F86429BAC3C500B44E7A /* CachedAsyncImage in Frameworks */,
 				C9646E9C29B79E4D007239A4 /* Logger in Frameworks */,
 				CDDA1F7D29A527650047ACD8 /* SwiftUINavigation in Frameworks */,
 			);
@@ -356,6 +421,31 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		C987F81F29BA94D400B44E7A /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				C987F82829BA951E00B44E7A /* ClarityCity-Black.otf */,
+				C987F82B29BA951E00B44E7A /* ClarityCity-BlackItalic.otf */,
+				C987F82529BA951D00B44E7A /* ClarityCity-Bold.otf */,
+				C987F82429BA951D00B44E7A /* ClarityCity-BoldItalic.otf */,
+				C987F82229BA951D00B44E7A /* ClarityCity-ExtraBold.otf */,
+				C987F82929BA951E00B44E7A /* ClarityCity-ExtraBoldItalic.otf */,
+				C987F82029BA951D00B44E7A /* ClarityCity-ExtraLight.otf */,
+				C987F82F29BA951E00B44E7A /* ClarityCity-ExtraLightItalic.otf */,
+				C987F82A29BA951E00B44E7A /* ClarityCity-Light.otf */,
+				C987F82129BA951D00B44E7A /* ClarityCity-LightItalic.otf */,
+				C987F82C29BA951E00B44E7A /* ClarityCity-Medium.otf */,
+				C987F82329BA951D00B44E7A /* ClarityCity-MediumItalic.otf */,
+				C987F83029BA951E00B44E7A /* ClarityCity-Regular.otf */,
+				C987F82E29BA951E00B44E7A /* ClarityCity-RegularItalic.otf */,
+				C987F82629BA951D00B44E7A /* ClarityCity-SemiBold.otf */,
+				C987F82729BA951D00B44E7A /* ClarityCity-SemiBoldItalic.otf */,
+				C987F83129BA951E00B44E7A /* ClarityCity-Thin.otf */,
+				C987F82D29BA951E00B44E7A /* ClarityCity-ThinItalic.otf */,
+			);
+			path = Font;
+			sourceTree = "<group>";
+		};
 		C9DEBFC5298941000078B43A = {
 			isa = PBXGroup;
 			children = (
@@ -383,6 +473,7 @@
 		C9DEBFD0298941000078B43A /* Nos */ = {
 			isa = PBXGroup;
 			children = (
+				C987F85629BA96B700B44E7A /* Info.plist */,
 				C9DEBFDC298941020078B43A /* Nos.entitlements */,
 				C9DEBFD1298941000078B43A /* NosApp.swift */,
 				3F170C77299D816200BC8F8B /* AppController.swift */,
@@ -436,6 +527,8 @@
 				C9ADB14029951CB10075E7F8 /* NSManagedObject+Nos.swift */,
 				C9DFA96E299BF043006929C1 /* Assets+Planetary.swift */,
 				C9F0BB6829A5039D000547FC /* Int+Bool.swift */,
+				C987F85729BA981800B44E7A /* Font.swift */,
+				C987F86029BABAF800B44E7A /* String+Markdown.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -474,6 +567,7 @@
 			children = (
 				C9DEBFDA298941020078B43A /* Assets.xcassets */,
 				C9DFA977299C3189006929C1 /* Localization */,
+				C987F81F29BA94D400B44E7A /* Font */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -558,6 +652,7 @@
 				C9646E9929B79E04007239A4 /* Logger */,
 				C9646EA329B7A24A007239A4 /* PostHog */,
 				C9646EA629B7A3DD007239A4 /* Dependencies */,
+				C987F85E29BAB66900B44E7A /* CachedAsyncImage */,
 			);
 			productName = Nos;
 			productReference = C9DEBFCE298941000078B43A /* Nos.app */;
@@ -584,6 +679,7 @@
 				C9646E9B29B79E4D007239A4 /* Logger */,
 				C9646EA829B7A4F2007239A4 /* PostHog */,
 				C9646EAB29B7A520007239A4 /* Dependencies */,
+				C987F86329BAC3C500B44E7A /* CachedAsyncImage */,
 			);
 			productName = NosTests;
 			productReference = C9DEBFE4298941020078B43A /* NosTests.xctest */;
@@ -646,6 +742,7 @@
 				C9646E9829B79E04007239A4 /* XCRemoteSwiftPackageReference "logger-ios" */,
 				C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */,
 				C9646EA529B7A3DD007239A4 /* XCRemoteSwiftPackageReference "swift-dependencies" */,
+				C987F85D29BAB66900B44E7A /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -663,12 +760,30 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C987F83629BA951E00B44E7A /* ClarityCity-ExtraBold.otf in Resources */,
 				C9DEC065298955200078B43A /* sample_data.json in Resources */,
+				C987F83A29BA951E00B44E7A /* ClarityCity-BoldItalic.otf in Resources */,
+				C987F84A29BA951E00B44E7A /* ClarityCity-Medium.otf in Resources */,
 				C9DEBFDF298941020078B43A /* Preview Assets.xcassets in Resources */,
+				C987F84E29BA951E00B44E7A /* ClarityCity-RegularItalic.otf in Resources */,
 				C95D68B4299ECE0700429F86 /* CONTRIBUTING.md in Resources */,
+				C987F83E29BA951E00B44E7A /* ClarityCity-SemiBold.otf in Resources */,
+				C987F84629BA951E00B44E7A /* ClarityCity-Light.otf in Resources */,
 				C95D68B3299ECE0700429F86 /* README.md in Resources */,
+				C987F83C29BA951E00B44E7A /* ClarityCity-Bold.otf in Resources */,
+				C987F83229BA951E00B44E7A /* ClarityCity-ExtraLight.otf in Resources */,
 				C9DEBFDB298941020078B43A /* Assets.xcassets in Resources */,
+				C987F84C29BA951E00B44E7A /* ClarityCity-ThinItalic.otf in Resources */,
+				C987F85229BA951E00B44E7A /* ClarityCity-Regular.otf in Resources */,
+				C987F83429BA951E00B44E7A /* ClarityCity-LightItalic.otf in Resources */,
+				C987F83829BA951E00B44E7A /* ClarityCity-MediumItalic.otf in Resources */,
+				C987F84229BA951E00B44E7A /* ClarityCity-Black.otf in Resources */,
+				C987F84029BA951E00B44E7A /* ClarityCity-SemiBoldItalic.otf in Resources */,
 				C95D68B2299ECE0700429F86 /* CHANGELOG.md in Resources */,
+				C987F85429BA951E00B44E7A /* ClarityCity-Thin.otf in Resources */,
+				C987F84429BA951E00B44E7A /* ClarityCity-ExtraBoldItalic.otf in Resources */,
+				C987F85029BA951E00B44E7A /* ClarityCity-ExtraLightItalic.otf in Resources */,
+				C987F84829BA951E00B44E7A /* ClarityCity-BlackItalic.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -676,8 +791,26 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C987F84B29BA951E00B44E7A /* ClarityCity-Medium.otf in Resources */,
+				C987F83729BA951E00B44E7A /* ClarityCity-ExtraBold.otf in Resources */,
+				C987F83329BA951E00B44E7A /* ClarityCity-ExtraLight.otf in Resources */,
+				C987F83D29BA951E00B44E7A /* ClarityCity-Bold.otf in Resources */,
+				C987F84529BA951E00B44E7A /* ClarityCity-ExtraBoldItalic.otf in Resources */,
+				C987F84329BA951E00B44E7A /* ClarityCity-Black.otf in Resources */,
+				C987F85329BA951E00B44E7A /* ClarityCity-Regular.otf in Resources */,
+				C987F84729BA951E00B44E7A /* ClarityCity-Light.otf in Resources */,
+				C987F83929BA951E00B44E7A /* ClarityCity-MediumItalic.otf in Resources */,
+				C987F85129BA951E00B44E7A /* ClarityCity-ExtraLightItalic.otf in Resources */,
+				C987F84D29BA951E00B44E7A /* ClarityCity-ThinItalic.otf in Resources */,
+				C987F84F29BA951E00B44E7A /* ClarityCity-RegularItalic.otf in Resources */,
 				CD27177629A7C8B200AE8888 /* sample_replies.json in Resources */,
+				C987F83B29BA951E00B44E7A /* ClarityCity-BoldItalic.otf in Resources */,
+				C987F84129BA951E00B44E7A /* ClarityCity-SemiBoldItalic.otf in Resources */,
+				C987F83529BA951E00B44E7A /* ClarityCity-LightItalic.otf in Resources */,
+				C987F85529BA951E00B44E7A /* ClarityCity-Thin.otf in Resources */,
+				C987F83F29BA951E00B44E7A /* ClarityCity-SemiBold.otf in Resources */,
 				C9DEC006298947900078B43A /* sample_data.json in Resources */,
+				C987F84929BA951E00B44E7A /* ClarityCity-BlackItalic.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -722,6 +855,7 @@
 				3FFB1D9C29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */,
 				C9CDBBA129A8F14C00C555C7 /* DiscoverView.swift in Sources */,
 				C987F81729BA4C6A00B44E7A /* BigActionButton.swift in Sources */,
+				C987F86129BABAF800B44E7A /* String+Markdown.swift in Sources */,
 				C987F81D29BA6D9A00B44E7A /* ProfileTab.swift in Sources */,
 				C9ADB14129951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */,
 				C9F84C21298DC36800C6714D /* AppView.swift in Sources */,
@@ -749,6 +883,7 @@
 				C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */,
 				C9F0BB6F29A50437000547FC /* NostrConstants.swift in Sources */,
 				CD76865329B793F400085358 /* DiscoverSearchBar.swift in Sources */,
+				C987F85B29BA9ED800B44E7A /* Font.swift in Sources */,
 				3FB5E651299D28A200386527 /* OnboardingView.swift in Sources */,
 				A3B943CF299AE00100A15A08 /* KeyChain.swift in Sources */,
 				C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */,
@@ -821,6 +956,7 @@
 				CD09A75729A521D20063464F /* NewNoteView.swift in Sources */,
 				CD09A75829A521D20063464F /* LinearGradient+Planetary.swift in Sources */,
 				CD09A75929A521D20063464F /* Color+Hex.swift in Sources */,
+				C987F85A29BA9ED800B44E7A /* Font.swift in Sources */,
 				CD09A75A29A521D20063464F /* CardButtonStyle.swift in Sources */,
 				CD09A75B29A521D20063464F /* AvatarView.swift in Sources */,
 				CD09A75C29A521D20063464F /* SideMenu.swift in Sources */,
@@ -830,6 +966,7 @@
 				CD09A74D29A521A70063464F /* CardStyle.swift in Sources */,
 				CD09A74C29A5217A0063464F /* NoteButton.swift in Sources */,
 				A303AF8529A969F5005DC8FC /* FollowsView.swift in Sources */,
+				C987F86229BABAF800B44E7A /* String+Markdown.swift in Sources */,
 				CD09A74B29A521730063464F /* ProfileHeader.swift in Sources */,
 				CD09A74A29A521510063464F /* ProfileView.swift in Sources */,
 				CD09A74929A521210063464F /* Router.swift in Sources */,
@@ -1024,6 +1161,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Nos/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -1044,7 +1182,7 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1064,6 +1202,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Nos/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -1084,7 +1223,7 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1261,6 +1400,14 @@
 				minimumVersion = 0.9.2;
 			};
 		};
+		C987F85D29BAB66900B44E7A /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lorenzofiamingo/swiftui-cached-async-image";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/0xdeadp00l/bech32.git";
@@ -1324,6 +1471,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */;
 			productName = secp256k1;
+		};
+		C987F85E29BAB66900B44E7A /* CachedAsyncImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C987F85D29BAB66900B44E7A /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
+			productName = CachedAsyncImage;
+		};
+		C987F86329BAC3C500B44E7A /* CachedAsyncImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C987F85D29BAB66900B44E7A /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
+			productName = CachedAsyncImage;
 		};
 		C9DEC067298965270078B43A /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;

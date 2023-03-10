@@ -40,10 +40,12 @@ struct NotificationsView: View {
                         }
                     }
                 }
+            }
+            .overlay(Group {
                 if events.isEmpty {
                     Localized.noNotifications.view
                 }
-            }
+            })
             .background(Color.appBg)
             .padding(.top, 1)
             .navigationBarTitle(Localized.notifications.string, displayMode: .inline)
