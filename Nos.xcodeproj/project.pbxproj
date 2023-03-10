@@ -30,6 +30,7 @@
 		A336DD3C299FD78000A0CBA0 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A336DD3B299FD78000A0CBA0 /* Filter.swift */; };
 		A34E439929A522F20057AFCB /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34E439829A522F20057AFCB /* CurrentUser.swift */; };
 		A351E1A229BA92240009B7F6 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A351E1A129BA92240009B7F6 /* ProfileEditView.swift */; };
+		A351E1A329BBAA790009B7F6 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A351E1A129BA92240009B7F6 /* ProfileEditView.swift */; };
 		A3B943CF299AE00100A15A08 /* KeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943CE299AE00100A15A08 /* KeyChain.swift */; };
 		A3B943D5299D514800A15A08 /* Follow+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */; };
 		A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */; };
@@ -874,6 +875,7 @@
 				C9BAB09C2996FBA10003A84E /* EventProcessor.swift in Sources */,
 				C931517E29B915AF00934506 /* StaggeredGrid.swift in Sources */,
 				C987F81E29BA6D9A00B44E7A /* ProfileTab.swift in Sources */,
+				A351E1A329BBAA790009B7F6 /* ProfileEditView.swift in Sources */,
 				C9DFA97B299C31EE006929C1 /* Localized.swift in Sources */,
 				C9ADB135299288230075E7F8 /* KeyFixture.swift in Sources */,
 				3FFB1D9429A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,

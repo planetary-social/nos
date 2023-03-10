@@ -19,6 +19,7 @@ final class RelayService: ObservableObject {
     init(persistenceController: PersistenceController) {
         self.persistenceController = persistenceController
         self.backgroundContext = persistenceController.newBackgroundContext()
+        CurrentUser.context = persistenceController.container.viewContext
         openSocketsForRelays()
         
         let pubSel = #selector(publishFailedEvents)

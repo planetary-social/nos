@@ -66,7 +66,6 @@ struct FollowButton_Previews: PreviewProvider {
         // swiftlint:disable legacy_objc_type
         user.follows = NSSet(array: [follow])
         try! previewContext.save()
-        CurrentUser.context = previewContext
         KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.privateKeyHex.utf8))
     }
     

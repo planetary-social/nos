@@ -68,21 +68,23 @@ struct AppView: View {
                 OnboardingView(completion: appController.completeOnboarding)
             } else {
                 TabView(selection: $router.selectedTab) {
-                    HomeFeedView(user: CurrentUser.author)
-                        .tabItem {
-                            VStack {
-                                let text = Localized.homeFeed.view
-                                if $router.selectedTab.wrappedValue == .home {
-                                    Image.tabIconHomeSelected
-                                    text
-                                } else {
-                                    Image.tabIconHome
-                                    text.foregroundColor(.secondaryTxt)
+                    if let author = CurrentUser.author {
+                        HomeFeedView(user: author)
+                            .tabItem {
+                                VStack {
+                                    let text = Localized.homeFeed.view
+                                    if $router.selectedTab.wrappedValue == .home {
+                                        Image.tabIconHomeSelected
+                                        text
+                                    } else {
+                                        Image.tabIconHome
+                                        text.foregroundColor(.secondaryTxt)
+                                    }
                                 }
                             }
-                        }
-                        .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                        .tag(Destination.home)
+                            .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                            .tag(Destination.home)
+                    }
                     
                     DiscoverView()
                         .tabItem {
@@ -163,8 +165,6 @@ struct AppView: View {
         }
         .onAppear(perform: appController.configureCurrentState)
         .task {
-            CurrentUser.context = viewContext
-            
             let nosAppearance = UINavigationBarAppearance()
             nosAppearance.titleTextAttributes = [.foregroundColor: UIColor.primaryTxt]
             nosAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.primaryTxt]
