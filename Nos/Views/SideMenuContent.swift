@@ -121,6 +121,13 @@ struct SideMenuContent: View {
                     ProfileView(author: CurrentUser.author!)
                 }
             }
+            .navigationDestination(for: Author.self) { profile in
+                if profile == CurrentUser.author, CurrentUser.editing {
+                    ProfileEditView(author: profile)
+                } else {
+                    ProfileView(author: profile)
+                }
+            }
         }
     }
 }

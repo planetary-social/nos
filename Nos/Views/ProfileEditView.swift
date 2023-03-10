@@ -50,6 +50,8 @@ struct ProfileEditView: View {
                 endPoint: .bottom
             ))
         }
+        .scrollContentBackground(.hidden)
+        .background(Color.appBg)
         .navigationBarItems(
             trailing:
                 Group {
