@@ -21,11 +21,11 @@ struct ProfileEditView: View {
     
     var body: some View {
         Form {
-            Section("Basic Information") {
-                TextField("Display name", text: $displayNameText)
-                TextField("Name", text: $nameText)
-                TextField("Bio", text: $bioText)
-                TextField("Profile pic url", text: $avatarText)
+            Section(Localized.basicInfo.string) {
+                TextField(Localized.displayName.string, text: $displayNameText)
+                TextField(Localized.name.string, text: $nameText)
+                TextField(Localized.bio.string, text: $bioText)
+                TextField(Localized.picUrl.string, text: $avatarText)
             }
         }
         .navigationBarItems(
@@ -45,7 +45,7 @@ struct ProfileEditView: View {
                             router.pop()
                         },
                         label: {
-                            Text("Done")
+                            Text(Localized.done.string)
                         }
                     )
                 }
