@@ -114,6 +114,7 @@ struct OnboardingView: View {
                     }
                     .padding()
                 }
+                .background(Color.appBg)
             }
             .tag(OnboardingStep.onboardingStart)
             
@@ -150,6 +151,7 @@ struct OnboardingView: View {
                 }
                 .padding(.horizontal, 24)
             }
+            .background(Color.appBg)
             .tag(OnboardingStep.ageVerification)
             
             // Not old enough
@@ -180,6 +182,7 @@ struct OnboardingView: View {
                 }
                 .padding(.horizontal, 24)
             }
+            .background(Color.appBg)
             .tag(OnboardingStep.notOldEnough)
             
             // Terms of Service
@@ -213,6 +216,7 @@ struct OnboardingView: View {
                 }
                 .padding(.horizontal, 24)
             }
+            .background(Color.appBg)
             .tag(OnboardingStep.termsOfService)
         }
     }
