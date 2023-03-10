@@ -45,8 +45,8 @@ struct RelayView: View {
                             analytics.removed(relay)
                             author.remove(relay: relay)
                             viewContext.delete(relay)
-                        }               
-         
+                        }
+                        
                         try! viewContext.save()
                         publishChanges()
                     }
@@ -64,12 +64,12 @@ struct RelayView: View {
                     startPoint: .top,
                     endPoint: .bottom
                 ))
-  
+                
                 let authorRelayUrls = (author.relays as? Set<Relay>)?.compactMap { $0.address } ?? []
                 let recommendedRelays = Relay.defaults.filter { !authorRelayUrls.contains($0) }
-
+                
                 if !recommendedRelays.isEmpty {
-                    Section(Localized.recommendedRelays.string) {
+                    Section {
                         ForEach(recommendedRelays, id: \.self) { address in
                             Button {
                                 newRelayAddress = address
@@ -80,7 +80,16 @@ struct RelayView: View {
                                 Label(address, systemImage: "plus.circle")
                             }
                         }
+                    } header: {
+                        Localized.recommendedRelays.view
+                            .foregroundColor(.textColor)
+                            .fontWeight(.heavy)
                     }
+                    .listRowBackground(LinearGradient(
+                        colors: [Color.cardBgTop, Color.cardBgBottom],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
                 }
             }
             
@@ -125,7 +134,7 @@ struct RelayView: View {
     
     func publishChanges() {
         let followKeys = CurrentUser.follows?.keys ?? []
-        CurrentUser.publishContactList(tags: followKeys.tags, context: viewContext)
+        CurrentUser.publishContactList(tags: followKeys.tags)
     }
 
     private func addRelay() {

@@ -8,6 +8,7 @@
         <attribute name="muted" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="profilePhotoURL" optional="YES" attributeType="URI"/>
+        <attribute name="rawMetadata" optional="YES" attributeType="Binary"/>
         <relationship name="events" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="author" inverseEntity="Event"/>
         <relationship name="followers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Follow" inverseName="destination" inverseEntity="Follow"/>
         <relationship name="follows" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Follow" inverseName="source" inverseEntity="Follow"/>

@@ -122,6 +122,7 @@ enum Localized: String, Localizable, CaseIterable {
     case newNote = "New Note"
     case cancel = "Cancel"
     case done = "Done"
+    case editProfile = "Edit Profile"
     case youNeedToEnterAPrivateKeyBeforePosting = "You need to enter a private key in Settings before you can publish posts."
     
     case relays = "Relays"
@@ -137,7 +138,11 @@ enum Localized: String, Localizable, CaseIterable {
     case readMore = "Read more"
     case threadView = "Thread View"
     case bio = "Bio"
+    case displayName = "Display name"
+    case name = "Name"
+    case picUrl = "Profile pic url"
     case noEventsOnProfile = "We don't see any notes for this profile, but we'll keep looking!"
+    case basicInfo = "Basic Information"
     
     case debug = "Debug"
     case loadSampleData = "Load Sample Data"

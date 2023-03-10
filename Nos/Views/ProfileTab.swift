@@ -31,6 +31,13 @@ struct ProfileTab: View {
                             }
                         )
                 )
+                .navigationDestination(for: Author.self) { profile in
+                    if profile == CurrentUser.author, CurrentUser.editing {
+                        ProfileEditView(author: profile)
+                    } else {
+                        ProfileView(author: profile)
+                    }
+                }
         }
     }
 }
