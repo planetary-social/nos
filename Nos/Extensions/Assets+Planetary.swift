@@ -234,6 +234,8 @@ extension Image {
        static let navigationMenu = Image("navigationMenu", bundle: Bundle.current)
        static let emptyAvatar = Image("emptyAvatar", bundle: Bundle.current)
        static let newPostButton = Image("newPostButton", bundle: Bundle.current)
+       static let tabProfileSelected = Image("tab-profile-selected", bundle: Bundle.current)
+       static let tabProfile = Image("tab-profile", bundle: Bundle.current)
 }
 
 extension UIImage {
