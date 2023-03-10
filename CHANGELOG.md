@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add mute functionality
 - Publish relay changes
 - Recommended / default relays
+- Added colors and Clarity City font throughout the app
+- Show Discover tab after onboarding
+- Fix crash on Mac
+- Improved profile photo loading and added a cache
+- Added code to compute a sensible default number of columns on the Discover tab
+- Replaced moved relays tab to side menu, added New Post and Profile tabs
 
 ## [0.1 (6)] - 2023-03-08Z
 
