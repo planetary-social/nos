@@ -95,6 +95,8 @@ enum Localized: String, Localizable, CaseIterable {
     """
     
     case loginToYourAccount = "Login to your account"
+    case pasteYourSecretKey = "Paste your secret key"
+    case login = "Login"
     
     case yes = "Yes"
     case no = "No"

@@ -83,29 +83,28 @@ struct OnboardingView: View {
                     .padding()
                     NavigationLink(Localized.logInWithYourKeys.string) {
                         VStack {
-                            Spacer()
-                            Localized.Onboarding.addPrivateKeyTitle.view
-                            Spacer()
-                            HStack {
-                                Localized.Onboarding.privateKeyPrompt.view
-                                TextField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
-                                    .padding()
-                            }
-                            .padding(50)
-                            Button(Localized.save.string) {
-                                if let keyPair = KeyPair(nsec: privateKeyString) {
-                                    self.keyPair = keyPair
-                                    analytics.identify(with: keyPair)
-                                    analytics.importedKey()
-                                    completion()
-                                } else {
-                                    self.keyPair = nil
-                                    self.showError = true
+                            Form {
+                                Section {
+                                    TextField("NSec1", text: $privateKeyString)
+                                } header: {
+                                    Localized.pasteYourSecretKey.view
                                 }
                             }
-                            .buttonStyle(.bordered)
-                            Spacer()
+                            if !privateKeyString.isEmpty {
+                                BigActionButton(title: .login) {
+                                    if let keyPair = KeyPair(nsec: privateKeyString) {
+                                        self.keyPair = keyPair
+                                        analytics.identify(with: keyPair)
+                                        analytics.importedKey()
+                                        completion()
+                                    } else {
+                                        self.keyPair = nil
+                                        self.showError = true
+                                    }
+                                }
+                            }
                         }
+                        .navigationTitle(Localized.loginToYourAccount.string)
                         .alert(isPresented: $showError) {
                             Alert(
                                 title: Localized.invalidKey.view,
