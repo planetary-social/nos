@@ -77,6 +77,9 @@ struct RepliesView: View {
                 .background(Color.cardBgBottom)
             }
             .fixedSize(horizontal: false, vertical: true)
+            .onAppear {
+                print("npub: \(keyPair?.npub ?? "null")")
+            }
         }
         .background(Color.appBg)
     }
@@ -119,6 +122,7 @@ struct RepliesView: View {
             let event = try Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext)
                 
             try event.sign(withKey: keyPair)
+            try viewContext.save()
             relayService.publishToAll(event: event)
         } catch {
             alert = AlertState(title: {
