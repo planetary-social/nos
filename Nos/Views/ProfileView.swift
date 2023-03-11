@@ -124,8 +124,6 @@ struct ProfileView: View {
         )
         .onAppear {
             router.viewedAuthor = author
-        }
-        .task {
             refreshProfileFeed()
         }
         .refreshable {

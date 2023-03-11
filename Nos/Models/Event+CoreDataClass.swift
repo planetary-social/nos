@@ -416,13 +416,13 @@ public class Event: NosManagedObject {
         )
     }
 	
-    // swiftlint:disable function_body_length
     convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) throws {
         self.init(context: context)
         identifier = jsonEvent.id
         try hydrate(from: jsonEvent, in: context)
     }
         
+    // swiftlint:disable function_body_length cyclomatic_complexity
     /// Populates an event stub (with only its ID set) using the data in the given JSON.
     func hydrate(from jsonEvent: JSONEvent, in context: NSManagedObjectContext) throws {
         guard isStub else {
@@ -445,9 +445,6 @@ public class Event: NosManagedObject {
         }
         
         author = newAuthor
-        newAuthor.lastUpdated = Date.now
-        
-        print("\(author!.hexadecimalPublicKey!) last updated \(author!.lastUpdated!)")
         
         guard let eventKind = EventKind(rawValue: kind) else {
             throw EventError.unrecognizedKind
@@ -455,6 +452,12 @@ public class Event: NosManagedObject {
         
         switch eventKind {
         case .contactList:
+            guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
+                // This is old data
+                break
+            }
+            
+            newAuthor.lastUpdatedContactList = .now
             // Make a copy of what was followed before
             let originalFollows = newAuthor.follows?.copy() as? Set<Follow>
             
@@ -477,7 +480,13 @@ public class Event: NosManagedObject {
             }
             
         case .metaData:
+            guard createdAt! > newAuthor.lastUpdatedMetadata ?? Date.distantPast else {
+                // This is old data
+                break
+            }
+            
             if let contentData = jsonEvent.content.data(using: .utf8) {
+                newAuthor.lastUpdatedMetadata = .now
                 // There may be unsupported metadata. Store it to send back later in metadata publishes.
                 newAuthor.rawMetadata = contentData
 
@@ -516,7 +525,7 @@ public class Event: NosManagedObject {
             authorReferences = newAuthorReferences
         }
     }
-    // swiftlint:enable function_body_length
+    // swiftlint:enable function_body_length cyclomatic_complexity
     
     class func all(context: NSManagedObjectContext) -> [Event] {
         let allRequest = Event.allPostsRequest()
