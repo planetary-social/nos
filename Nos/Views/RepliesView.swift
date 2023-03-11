@@ -18,6 +18,8 @@ struct RepliesView: View {
     
     @State private var alert: AlertState<Never>?
     
+    @State private var subscriptionIDs = [String]()
+    
     var repliesRequest: FetchRequest<Event>
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
     
@@ -45,6 +47,19 @@ struct RepliesView: View {
     
     var note: Event
     
+    func subscribeToReplies() {
+        // Close out stale requests
+        if !subscriptionIDs.isEmpty {
+            relayService.sendCloseToAll(subscriptions: subscriptionIDs)
+            subscriptionIDs.removeAll()
+        }
+        
+        let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
+        let filter = Filter(kinds: [.text], eTags: eTags)
+        let subID = relayService.requestEventsFromAll(filter: filter)
+        subscriptionIDs.append(subID)
+    }
+    
     var body: some View {
         VStack {
             ScrollView(.vertical) {
@@ -61,6 +76,16 @@ struct RepliesView: View {
             .navigationBarTitle(Localized.threadView.string, displayMode: .inline)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+            .onAppear() {
+                subscribeToReplies()
+            }
+            .refreshable {
+                subscribeToReplies()
+            }
+            .onDisappear {
+                relayService.sendCloseToAll(subscriptions: subscriptionIDs)
+                subscriptionIDs.removeAll()
+            }
             VStack {
                 Spacer()
                 VStack {
