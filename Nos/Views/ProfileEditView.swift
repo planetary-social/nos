@@ -37,7 +37,11 @@ struct ProfileEditView: View {
                         .textInputAutocapitalization(.none)
                         .foregroundColor(.textColor)
                         .autocorrectionDisabled()
-                    TextField(Localized.bio.string, text: $bioText)
+                    TextEditor(text: $bioText)
+                        .placeholder(when: bioText.isEmpty, placeholder: {
+                            Text(Localized.bio.string)
+                                .foregroundColor(.secondaryTxt)
+                        })
                         .foregroundColor(.textColor)
                     TextField(Localized.picUrl.string, text: $avatarText)
                         .foregroundColor(.textColor)
