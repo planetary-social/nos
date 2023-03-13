@@ -94,4 +94,20 @@ struct MetadataEventJSON: Codable {
     private enum CodingKeys: String, CodingKey {
         case displayName = "display_name", name, about, picture
     }
+    
+    var dictionary: [String: String] {
+        [
+            "display_name": displayName ?? "",
+            "name": name ?? "",
+            "about": about ?? "",
+            "picture": picture ?? "",
+        ]
+    }
+    
+    init (displayName: String?, name: String?, about: String?, picture: String?) {
+        self.displayName = displayName
+        self.name = name
+        self.about = about
+        self.picture = picture
+    }
 }

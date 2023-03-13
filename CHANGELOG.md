@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.1 (7)] - 2023-03-10Z
 - Use only relays added in RelayView for sending and receiving events
 - Add PostHog analytics
 - Render note mentions in NoteCard
@@ -26,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix newlines not rendering on notes
 - Added timestamp to notes
 - Update Discover feed algorithm to include people 2 hops from you.
+- Fix infinite spinners on some avatars
+- Edit profile
 
 ## [0.1 (6)] - 2023-03-08Z
 

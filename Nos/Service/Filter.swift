@@ -20,10 +20,18 @@ final class Filter: Hashable {
     // For closing requests; not part of hash
     var subscriptionId: String = ""
     var subscriptionStartDate: Date?
+    
+    private var eTags: [String]
 
-    init(authorKeys: [String] = [], kinds: [EventKind] = [], pTags: [String] = [], limit: Int = 100) {
+    init(
+        authorKeys: [String] = [],
+        kinds: [EventKind] = [],
+        eTags: [String] = [],
+        limit: Int = 100
+    ) {
         self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
         self.kinds = kinds.sorted(by: { $0.rawValue > $1.rawValue })
+        self.eTags = eTags
         self.limit = limit
     }
     
@@ -36,6 +44,10 @@ final class Filter: Hashable {
 
         if !kinds.isEmpty {
             filterDict["kinds"] = kinds.map({ $0.rawValue })
+        }
+        
+        if !eTags.isEmpty {
+            filterDict["#e"] = eTags
         }
 
         return filterDict

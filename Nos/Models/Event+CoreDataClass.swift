@@ -104,7 +104,7 @@ public class Event: NosManagedObject {
     }
     
     @nonobjc public class func discoverFeedRequest(authors: [String]) -> NSFetchRequest<Event> {
-        guard let currentUser = CurrentUser.author(in: PersistenceController.shared.viewContext) else {
+        guard let currentUser = CurrentUser.author else {
             return emptyRequest()
         }
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -218,7 +218,7 @@ public class Event: NosManagedObject {
         let kind = EventKind.text.rawValue
         let followersPredicate = NSPredicate(
             // swiftlint:disable line_length
-            format: "kind = %i AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply').@count = 0 AND ANY author.followers.source = %@",
+            format: "kind = %i AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND ANY author.followers.source = %@",
             // swiftlint:enable line_length
             kind,
             user
@@ -226,7 +226,7 @@ public class Event: NosManagedObject {
         if let publicKey = user.publicKey?.hex {
             let currentUserPredicate = NSPredicate(
                 // swiftlint:disable line_length
-                format: "kind = %i AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply').@count = 0 AND author.hexadecimalPublicKey = %@", kind, publicKey
+                format: "kind = %i AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND author.hexadecimalPublicKey = %@", kind, publicKey
                 // swiftlint:enable line_length
             )
             let compoundPredicate = NSCompoundPredicate(
@@ -431,13 +431,13 @@ public class Event: NosManagedObject {
         )
     }
 	
-    // swiftlint:disable function_body_length
     convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) throws {
         self.init(context: context)
         identifier = jsonEvent.id
         try hydrate(from: jsonEvent, in: context)
     }
         
+    // swiftlint:disable function_body_length cyclomatic_complexity
     /// Populates an event stub (with only its ID set) using the data in the given JSON.
     func hydrate(from jsonEvent: JSONEvent, in context: NSManagedObjectContext) throws {
         guard isStub else {
@@ -460,9 +460,6 @@ public class Event: NosManagedObject {
         }
         
         author = newAuthor
-        newAuthor.lastUpdated = Date.now
-        
-        print("\(author!.hexadecimalPublicKey!) last updated \(author!.lastUpdated!)")
         
         guard let eventKind = EventKind(rawValue: kind) else {
             throw EventError.unrecognizedKind
@@ -470,6 +467,12 @@ public class Event: NosManagedObject {
         
         switch eventKind {
         case .contactList:
+            guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
+                // This is old data
+                break
+            }
+            
+            newAuthor.lastUpdatedContactList = .now
             // Make a copy of what was followed before
             let originalFollows = newAuthor.follows?.copy() as? Set<Follow>
             
@@ -492,7 +495,16 @@ public class Event: NosManagedObject {
             }
             
         case .metaData:
+            guard createdAt! > newAuthor.lastUpdatedMetadata ?? Date.distantPast else {
+                // This is old data
+                break
+            }
+            
             if let contentData = jsonEvent.content.data(using: .utf8) {
+                newAuthor.lastUpdatedMetadata = .now
+                // There may be unsupported metadata. Store it to send back later in metadata publishes.
+                newAuthor.rawMetadata = contentData
+
                 do {
                     let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
                     
@@ -528,7 +540,7 @@ public class Event: NosManagedObject {
             authorReferences = newAuthorReferences
         }
     }
-    // swiftlint:enable function_body_length
+    // swiftlint:enable function_body_length cyclomatic_complexity
     
     class func all(context: NSManagedObjectContext) -> [Event] {
         let allRequest = Event.allPostsRequest()

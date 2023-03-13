@@ -22,6 +22,7 @@ public class EventReference: NosManagedObject {
         }
         self.init(context: context)
         referencedEvent = try Event.findOrCreateStubBy(id: eventID, context: context)
+        eventId = eventID
         recommendedRelayUrl = jsonTag[safe: 2]
         marker = jsonTag[safe: 3]
     }
