@@ -74,11 +74,11 @@ struct OnboardingView: View {
                         analytics.identify(with: keyPair)
                         analytics.importedKey()
 
-                                    // Use these to sync
-                                    for address in Relay.allKnown {
-                                        let relay = Relay(context: viewContext, address: address, author: nil)
-                                        CurrentUser.shared.onboardingRelays.append(relay)
-                                    }
+                        // Use these to sync
+                        for address in Relay.allKnown {
+                            let relay = Relay(context: viewContext, address: address, author: nil)
+                            CurrentUser.shared.onboardingRelays.append(relay)
+                        }
 
                         completion()
                     } else {
@@ -251,10 +251,11 @@ struct OnboardingView: View {
                                 analytics.identify(with: keyPair)
                                 analytics.generatedKey()
                                 
-                        // Recommended Relays for new user
-                        for address in Relay.recommended {
-                            Relay(context: viewContext, address: address, author: CurrentUser.shared.author)
-                        }
+                                // Recommended Relays for new user
+                                for address in Relay.recommended {
+                                    Relay(context: viewContext, address: address, author: CurrentUser.shared.author)
+                                    try? CurrentUser.shared.context.save()
+                                }
                                 
                                 CurrentUser.shared.publishContactList(tags: [])
                             }
