@@ -63,14 +63,7 @@ extension FetchedResults where Element == Event {
 @objc(Event)
 public class Event: NosManagedObject {
     
-    static var replyNoteReferences = """
-    kind = 1 AND
-    SUBQUERY(
-        eventReferences,
-        $eventReference,
-        $eventReference.eventId == %@
-    ).@count > 0
-    """
+    static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@"
     
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
