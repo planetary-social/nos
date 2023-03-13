@@ -116,13 +116,13 @@ struct SideMenuContent: View {
                 case .settings:
                     SettingsView()
                 case .relays:
-                    RelayView(author: CurrentUser.author!)
+                    RelayView(author: CurrentUser.shared.author!)
                 case .profile:
-                    ProfileView(author: CurrentUser.author!)
+                    ProfileView(author: CurrentUser.shared.author!)
                 }
             }
             .navigationDestination(for: Author.self) { profile in
-                if profile == CurrentUser.author, CurrentUser.editing {
+                if profile == CurrentUser.shared.author, CurrentUser.shared.editing {
                     ProfileEditView(author: profile)
                 } else {
                     ProfileView(author: profile)

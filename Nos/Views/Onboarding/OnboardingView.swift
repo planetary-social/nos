@@ -246,10 +246,10 @@ struct OnboardingView: View {
                                 
                                 // Default Relays for new user
                                 for address in Relay.defaults {
-                                    Relay(context: viewContext, address: address, author: CurrentUser.author)
+                                    Relay(context: viewContext, address: address, author: CurrentUser.shared.author)
                                 }
                                 
-                                CurrentUser.publishContactList(tags: [])
+                                CurrentUser.shared.publishContactList(tags: [])
                             }
                             path.append(flow)
                         }
@@ -260,7 +260,7 @@ struct OnboardingView: View {
                     if flow == .loginToExistingAccount {
                         loginView
                     } else {
-                        ProfileEditView(author: CurrentUser.author!, createAccountCompletion: completion)
+                        ProfileEditView(author: CurrentUser.shared.author!, createAccountCompletion: completion)
                     }
                 }
                 .background(Color.appBg)

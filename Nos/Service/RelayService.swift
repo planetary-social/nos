@@ -23,7 +23,7 @@ final class RelayService: ObservableObject {
     init(persistenceController: PersistenceController) {
         self.persistenceController = persistenceController
         self.backgroundContext = persistenceController.newBackgroundContext()
-        CurrentUser.context = persistenceController.container.viewContext
+        CurrentUser.shared.context = persistenceController.container.viewContext
         openSocketsForRelays()
         
         let pubSel = #selector(publishFailedEvents)
@@ -346,7 +346,7 @@ extension RelayService {
     }
     
     private func openSocketsForRelays() {
-        guard let relays = CurrentUser.author?.relays?.allObjects as? [Relay] else {
+        guard let relays = CurrentUser.shared.author?.relays?.allObjects as? [Relay] else {
             print("No relays associated with author!")
             return
         }

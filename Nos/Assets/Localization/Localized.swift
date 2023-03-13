@@ -136,13 +136,15 @@ enum Localized: String, Localizable, CaseIterable {
     case following = "Following"
     case unfollow = "Unfollow"
     case readMore = "Read more"
-    case threadView = "Thread View"
+    case thread = "Thread"
+    case show = "Show" // verb form
     case bio = "Bio"
     case displayName = "Display name"
     case name = "Name"
     case picUrl = "Profile pic url"
     case noEventsOnProfile = "We don't see any notes for this profile, but we'll keep looking!"
     case basicInfo = "Basic Information"
+    case edit = "Edit" // verb form
     
     case debug = "Debug"
     case loadSampleData = "Load Sample Data"

@@ -32,7 +32,7 @@ struct ProfileTab: View {
                         )
                 )
                 .navigationDestination(for: Author.self) { profile in
-                    if profile == CurrentUser.author, CurrentUser.editing {
+                    if profile == CurrentUser.shared.author, CurrentUser.shared.editing {
                         ProfileEditView(author: profile)
                     } else {
                         ProfileView(author: profile)

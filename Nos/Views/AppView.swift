@@ -68,7 +68,7 @@ struct AppView: View {
                 OnboardingView(completion: appController.completeOnboarding)
             } else {
                 TabView(selection: $router.selectedTab) {
-                    if let author = CurrentUser.author {
+                    if let author = CurrentUser.shared.author {
                         HomeFeedView(user: author)
                             .tabItem {
                                 VStack {
@@ -111,7 +111,7 @@ struct AppView: View {
                         }
                     .tag(Destination.newNote)
                     
-                    NotificationsView(user: CurrentUser.author)
+                    NotificationsView(user: CurrentUser.shared.author)
                         .tabItem {
                             VStack {
                                 let text = Localized.notifications.view
@@ -127,7 +127,7 @@ struct AppView: View {
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.notifications)
                     
-                    if let author = CurrentUser.author {
+                    if let author = CurrentUser.shared.author {
                         ProfileTab(author: author, path: $router.profilePath)
                             .tabItem {
                                 VStack {

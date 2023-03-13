@@ -29,6 +29,7 @@ struct HomeFeedView: View {
     init(user: Author) {
         self.user = user
         eventRequest = FetchRequest(fetchRequest: Event.homeFeed(for: user))
+        CurrentUser.shared.updateInNetworkAuthors()
     }
 
     func refreshHomeFeed() {
@@ -38,7 +39,7 @@ struct HomeFeedView: View {
             subscriptionIds.removeAll()
         }
 
-        if let follows = CurrentUser.follows {
+        if let follows = CurrentUser.shared.follows {
             let authors = follows.keys
             
             if !authors.isEmpty {
@@ -63,6 +64,7 @@ struct HomeFeedView: View {
             }
             .background(Color.appBg)
             .padding(.top, 1)
+            .padding(.bottom, 1)
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
@@ -70,7 +72,7 @@ struct HomeFeedView: View {
                 if router.currentPath.wrappedValue.count == 1 {
                     ProfileView(author: author)
                 } else {
-                    if author == CurrentUser.author, CurrentUser.editing {
+                    if author == CurrentUser.shared.author, CurrentUser.shared.editing {
                         ProfileEditView(author: author)
                     } else {
                         ProfileView(author: author)
@@ -99,7 +101,7 @@ struct HomeFeedView: View {
             )
         }
         .task {
-            CurrentUser.relayService = relayService
+            CurrentUser.shared.relayService = relayService
             refreshHomeFeed()
         }
         .refreshable {
@@ -167,15 +169,5 @@ struct ContentView_Previews: PreviewProvider {
         .environment(\.managedObjectContext, emptyPreviewContext)
         .environmentObject(emptyRelayService)
         .environmentObject(router)
-        
-        NavigationStack {
-            List(0..<100) {
-                Text("Row \($0)")
-            }
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(.yellow, for: .navigationBar)
-            .navigationTitle("100 Rows")
-            .navigationBarTitleDisplayMode(.inline)
-        }
     }
 }

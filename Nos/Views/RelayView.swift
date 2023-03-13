@@ -64,7 +64,7 @@ struct RelayView: View {
                             Button {
                                 newRelayAddress = address
                                 addRelay()
-                                CurrentUser.subscribe()
+                                CurrentUser.shared.subscribe()
                                 publishChanges()
                             } label: {
                                 Label(address, systemImage: "plus.circle")
@@ -93,7 +93,7 @@ struct RelayView: View {
                     #endif
                 Button(Localized.save.string) {
                     addRelay()
-                    CurrentUser.subscribe()
+                    CurrentUser.shared.subscribe()
                     publishChanges()
                 }
             } header: {
@@ -123,8 +123,8 @@ struct RelayView: View {
     }
     
     func publishChanges() {
-        let followKeys = CurrentUser.follows?.keys ?? []
-        CurrentUser.publishContactList(tags: followKeys.tags)
+        let followKeys = CurrentUser.shared.follows?.keys ?? []
+        CurrentUser.shared.publishContactList(tags: followKeys.tags)
     }
 
     private func addRelay() {
@@ -132,7 +132,7 @@ struct RelayView: View {
             guard !newRelayAddress.isEmpty else { return }
             
             let address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-            let relay = Relay(context: viewContext, address: address, author: CurrentUser.author)
+            let relay = Relay(context: viewContext, address: address, author: CurrentUser.shared.author)
             newRelayAddress = ""
 
             do {

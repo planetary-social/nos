@@ -48,6 +48,7 @@ struct NotificationsView: View {
             })
             .background(Color.appBg)
             .padding(.top, 1)
+            .padding(.bottom, 1)
             .navigationBarTitle(Localized.notifications.string, displayMode: .inline)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
@@ -100,7 +101,7 @@ struct NotificationCard: View {
     var body: some View {
         if let author = note.author {
             Button {
-                router.notificationsPath.append(note.rootNote())
+                router.notificationsPath.append(note.rootNote() ?? note)
             } label: {
                 HStack {
                     AvatarView(imageUrl: author.profilePhotoURL, size: 40)
