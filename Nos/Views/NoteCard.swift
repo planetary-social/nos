@@ -28,6 +28,14 @@ struct NoteCard: View {
     var repliesRequest: FetchRequest<Event>
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
     
+    @FetchRequest(fetchRequest: Author.inNetworkRequest()) var inNetworkAuthors: FetchedResults<Author>
+    
+    @State private var userTappedShowOutOfNetwork = false
+    
+    var showContents: Bool {
+        showFullMessage || userTappedShowOutOfNetwork || inNetworkAuthors.contains(note.author!) //|| Event.discoverTabUserIdToInfo.keys.contains(note.author!.hexadecimalPublicKey!)
+    }
+    
     var replyAvatarUrls: [URL?] {
         var uniqueAuthors: [Author] = []
         var added = Set<Author?>()
@@ -79,47 +87,67 @@ struct NoteCard: View {
         VStack(alignment: .leading, spacing: 0) {
             switch style {
             case .compact:
-                HStack(alignment: .center) {
-                    Button {
-                        router.currentPath.wrappedValue.append(author)
-                    } label: {
-                        HStack(alignment: .center) {
-                            AvatarView(imageUrl: author.profilePhotoURL, size: 24)
-                            Text(author.safeName)
-                                .lineLimit(1)
-                                .font(.subheadline)
-                                .foregroundColor(Color.secondaryTxt)
-                                .multilineTextAlignment(.leading)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
-                                Text(elapsedTime)
-                                    .lineLimit(1)
+                    HStack(alignment: .center) {
+                        if showContents {
+                            Button {
+                                router.currentPath.wrappedValue.append(author)
+                            } label: {
+                                HStack(alignment: .center) {
+                                    AvatarView(imageUrl: author.profilePhotoURL, size: 24)
+                                    Text(author.safeName)
+                                        .lineLimit(1)
+                                        .font(.subheadline)
+                                        .foregroundColor(Color.secondaryTxt)
+                                        .multilineTextAlignment(.leading)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
+                                        Text(elapsedTime)
+                                            .lineLimit(1)
+                                            .font(.body)
+                                            .foregroundColor(.secondaryTxt)
+                                    }
+                                }
+                            }
+                            NoteOptionsButton(note: note)
+                        } else {
+                            Spacer()
+                        }
+                    }
+                    .padding(10)
+                    Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
+                    Group {
+                        if showContents {
+                            CompactNoteView(note: note, showFullMessage: showFullMessage)
+                        } else {
+                            VStack {
+                                Text("This user is outside your network.")
                                     .font(.body)
                                     .foregroundColor(.secondaryTxt)
+                                    .padding(15)
+                                SecondaryActionButton(title: Localized.show) {
+                                    withAnimation {
+                                        userTappedShowOutOfNetwork = true
+                                    }
+                                }
+                                .padding(.bottom, 15)
                             }
+                            .frame(maxWidth: .infinity)
                         }
-                    }
-                    NoteOptionsButton(note: note)
-                }
-                .padding(10)
-                Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
-                Group {
-                    CompactNoteView(note: note, showFullMessage: showFullMessage)
-                    Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
-                    HStack {
-                        if showReplyCount {
-                            StackedAvatarsView(avatarUrls: replyAvatarUrls, size: 20, border: 0)
-                            if let replies = attributedReplies {
-                                Text(replies)
-                                    .font(.subheadline)
-                                    .foregroundColor(Color.secondaryTxt)
+                        Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
+                        HStack {
+                            if showReplyCount {
+                                StackedAvatarsView(avatarUrls: replyAvatarUrls, size: 20, border: 0)
+                                if let replies = attributedReplies {
+                                    Text(replies)
+                                        .font(.subheadline)
+                                        .foregroundColor(Color.secondaryTxt)
+                                }
                             }
+                            Spacer()
+                            Image.buttonReply
                         }
-                        Spacer()
-                        Image.buttonReply
+                        .padding(15)
                     }
-                    .padding(15)
-                }
             case .golden:
                 GoldenPostView(author: author, note: note)
             }

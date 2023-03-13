@@ -68,10 +68,8 @@ public class Event: NosManagedObject {
     SUBQUERY(
         eventReferences,
         $eventReference,
-        $eventReference.eventId == %@ AND
-            ($eventReference.marker == 'reply' OR $eventReference.marker == 'root')
-    ).@count > 0 AND
-    (ANY author.followers.source IN %@.follows.destination OR author IN %@.follows.destination OR author = %@)
+        $eventReference.eventId == %@
+    ).@count > 0
     """
     
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
