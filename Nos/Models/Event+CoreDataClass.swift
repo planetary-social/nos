@@ -500,6 +500,13 @@ public class Event: NosManagedObject {
                     let relay = Relay.findOrCreate(by: address, context: context)
                     newAuthor.add(relay: relay)
                 }
+                
+                // Close sockets for anything not in the above
+                if newAuthor == CurrentUser.shared.author {
+                    if let keptRelays = newAuthor.relays as? Set<Relay> {
+                        CurrentUser.shared.relayService.closeAllConnections(excluding: keptRelays)
+                    }
+                }
             }
 
         case .metaData:

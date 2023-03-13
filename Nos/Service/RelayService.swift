@@ -358,6 +358,25 @@ extension RelayService {
         }
     }
     
+    func closeAllConnections(excluding relays: Set<Relay>?) {
+        let relayAddresses = relays?.map { $0.address } ?? []
+
+        let openUnusedSockets = sockets.filter({
+            guard let address = $0.request.url?.absoluteString else {
+                return true
+            }
+            return !relayAddresses.contains(address)
+        })
+        
+        if !openUnusedSockets.isEmpty {
+            Log.debug("Closing \(openUnusedSockets.count) unused sockets")
+        }
+
+        for socket in openUnusedSockets {
+            close(socket: socket)
+        }
+    }
+    
     private func openSockets(for overrideRelays: [Relay]? = nil) {
         // Use override relays; fall back to user relays
         let activeRelays = overrideRelays ?? CurrentUser.shared.author?.relays?.allObjects
