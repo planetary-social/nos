@@ -32,8 +32,8 @@ class CurrentUser: ObservableObject {
     }
     
     // swiftlint:disable implicitly_unwrapped_optional
-    static var context: NSManagedObjectContext!
-    static var relayService: RelayService! {
+    var context: NSManagedObjectContext!
+    var relayService: RelayService! {
         didSet {
             subscribe()
             updateInNetworkAuthors()
@@ -45,7 +45,7 @@ class CurrentUser: ObservableObject {
 
     var editing = false
 
-    static var onboardingRelays: [Relay] = []
+    var onboardingRelays: [Relay] = []
 
     var author: Author? {
         if let publicKey {
@@ -69,7 +69,7 @@ class CurrentUser: ObservableObject {
 
     // Pass in relays if you want to request from something other
     // than the Current User's relays (ie onboarding)
-    static func subscribe(relays: [Relay]? = nil) {
+    func subscribe(relays: [Relay]? = nil) {
         // Always listen to my changes
         if let key = publicKey {
             // Close out stale requests
