@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update Discover feed algorithm to include people 2 hops from you.
 - Fix infinite spinners on some avatars
 - Edit profile
+- Styled onboarding views
 
 ## [0.1 (6)] - 2023-03-08Z
 
