@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show placeholder cards for messages outside 2 hops and allow the user to reveal them
 - Support deprecated reply #e tag format
 - Fixed an issue where older contact list and metadata events could overwrite new ones
+- Styled onboarding views
 
 ## [0.1 (6)] - 2023-03-08Z
 
