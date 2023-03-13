@@ -64,13 +64,13 @@ struct OnboardingView: View {
                         self.keyPair = keyPair
                         analytics.identify(with: keyPair)
                         analytics.generatedKey()
-                        
+
                         // Recommended Relays for new user
                         for address in Relay.recommended {
-                            Relay(context: viewContext, address: address, author: CurrentUser.author)
+                            Relay(context: viewContext, address: address, author: CurrentUser.shared.author)
                         }
 
-                        CurrentUser.publishContactList(tags: [])
+                        CurrentUser.shared.publishContactList(tags: [])
                         
                         completion()
                     }
@@ -95,7 +95,7 @@ struct OnboardingView: View {
                                     // Use these to sync
                                     for address in Relay.allKnown {
                                         let relay = Relay(context: viewContext, address: address, author: nil)
-                                        CurrentUser.onboardingRelays.append(relay)
+                                        CurrentUser.shared.onboardingRelays.append(relay)
                                     }
 
                                     completion()

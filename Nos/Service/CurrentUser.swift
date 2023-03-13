@@ -1,5 +1,5 @@
 //
-//  CurrentUser.swift
+//  CurrentUser.shared.swift
 //  Nos
 //
 //  Created by Christopher Jorgensen on 2/21/23.
@@ -9,8 +9,11 @@ import Foundation
 import CoreData
 import Logger
 
-enum CurrentUser {
-    static var privateKey: String? {
+class CurrentUser: ObservableObject {
+    
+    static let shared = CurrentUser()
+    
+    var privateKey: String? {
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
             return hexString
@@ -19,7 +22,7 @@ enum CurrentUser {
         return nil
     }
     
-    static var publicKey: String? {
+    var publicKey: String? {
         if let privateKey = privateKey {
             if let keyPair = KeyPair.init(privateKeyHex: privateKey) {
                 return keyPair.publicKey.hex
@@ -33,24 +36,25 @@ enum CurrentUser {
     static var relayService: RelayService! {
         didSet {
             subscribe()
+            updateInNetworkAuthors()
         }
     }
     // swiftlint:enable implicitly_unwrapped_optional
     
-    static var subscriptions: [String] = []
+    var subscriptions: [String] = []
 
-    static var editing = false
-    
+    var editing = false
+
     static var onboardingRelays: [Relay] = []
-    
-    static var author: Author? {
+
+    var author: Author? {
         if let publicKey {
             return try? Author.findOrCreate(by: publicKey, context: context)
         }
         return nil
     }
     
-    static var follows: Set<Follow>? {
+    var follows: Set<Follow>? {
         let followSet = author?.follows as? Set<Follow>
         let umutedSet = followSet?.filter({
             if let author = $0.destination {
@@ -61,6 +65,8 @@ enum CurrentUser {
         return umutedSet
     }
     
+    @Published var inNetworkAuthors = [Author]()
+
     // Pass in relays if you want to request from something other
     // than the Current User's relays (ie onboarding)
     static func subscribe(relays: [Relay]? = nil) {
@@ -86,7 +92,7 @@ enum CurrentUser {
         }
     }
     
-    static func isFollowing(author profile: Author) -> Bool {
+    func isFollowing(author profile: Author) -> Bool {
         guard let following = author?.follows as? Set<Follow>, let key = profile.hexadecimalPublicKey else {
             return false
         }
@@ -95,7 +101,7 @@ enum CurrentUser {
         return followKeys.contains(key)
     }
     
-    static func publishMetaData() {        
+    func publishMetaData() {
         guard let pubKey = publicKey else {
             Log.debug("Error: no pubKey")
             return
@@ -141,7 +147,7 @@ enum CurrentUser {
         }
     }
     
-    static func publishContactList(tags: [[String]]) {
+    func publishContactList(tags: [[String]]) {
         guard let pubKey = publicKey else {
             Log.debug("Error: no pubKey")
             return
@@ -174,10 +180,12 @@ enum CurrentUser {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }
         }
+        
+        updateInNetworkAuthors()
     }
     
     /// Follow by public hex key
-    static func follow(author toFollow: Author) {
+    func follow(author toFollow: Author) {
         guard let followKey = toFollow.hexadecimalPublicKey else {
             Log.debug("Error: followKey is nil")
             return
@@ -204,11 +212,12 @@ enum CurrentUser {
             }
         }
         
+        try! context.save()
         publishContactList(tags: followKeys.tags)
     }
     
     /// Unfollow by public hex key
-    static func unfollow(author toUnfollow: Author) {
+    func unfollow(author toUnfollow: Author) {
         guard let unfollowedKey = toUnfollow.hexadecimalPublicKey else {
             Log.debug("Error: unfollowedKey is nil")
             return
@@ -241,6 +250,17 @@ enum CurrentUser {
         // Delete cached texts from this person
         if let author = try? Author.find(by: unfollowedKey, context: context) {
             author.deleteAllPosts(context: context)
+        }
+    }
+    
+    func updateInNetworkAuthors() {
+        do {
+            let inNetworkAuthors = try context.fetch(Author.inNetworkRequest())
+            DispatchQueue.main.async {
+                self.inNetworkAuthors = inNetworkAuthors
+            }
+        } catch {
+            Log.error("Error updating in network authors: \(error.localizedDescription)")
         }
     }
 }

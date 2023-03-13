@@ -67,6 +67,31 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc class func inNetworkRequest() -> NSFetchRequest<Author> {
+        guard let currentUser = CurrentUser.shared.author else {
+            return emptyRequest()
+        }
+        
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "ANY followers.source IN %@.follows.destination " +
+                "OR hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey OR " +
+                "hexadecimalPublicKey = %@.hexadecimalPublicKey",
+            currentUser,
+            currentUser,
+            currentUser
+        )
+        return fetchRequest
+    }
+    
+    @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "FALSEPREDICATE")
+        return fetchRequest
+    }
+    
     class func all(context: NSManagedObjectContext) -> [Author] {
         let allRequest = Author.allAuthorsRequest()
         

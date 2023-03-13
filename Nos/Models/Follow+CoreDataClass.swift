@@ -51,7 +51,6 @@ public class Follow: NosManagedObject {
         let followedKey = jsonTag[1]
         let followedAuthor = try Author.findOrCreate(by: followedKey, context: context)
         follow.destination = followedAuthor
-        followedAuthor.lastUpdated = Date.now
         
         if jsonTag.count > 2, !jsonTag[2].isEmpty {
             let relay = Relay.findOrCreate(by: jsonTag[2], context: context)

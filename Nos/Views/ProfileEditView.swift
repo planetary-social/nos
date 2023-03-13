@@ -63,7 +63,7 @@ struct ProfileEditView: View {
                             author.profilePhotoURL = URL(string: avatarText)
 
                             // Post event
-                            CurrentUser.publishMetaData()
+                            CurrentUser.shared.publishMetaData()
 
                             // Go back to profile page
                             router.pop()
@@ -81,7 +81,7 @@ struct ProfileEditView: View {
             avatarText = author.profilePhotoURL?.absoluteString ?? ""
         }
         .onDisappear {
-            CurrentUser.editing = false
+            CurrentUser.shared.editing = false
         }
     }
 }
