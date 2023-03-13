@@ -507,6 +507,7 @@ public class Event: NosManagedObject {
                     
                     // Every event has an author created, so it just needs to be populated
                     newAuthor.name = metadata.name
+                    newAuthor.nip05 = metadata.nip05
                     newAuthor.displayName = metadata.displayName
                     newAuthor.about = metadata.about
                     newAuthor.profilePhotoURL = metadata.profilePhotoURL

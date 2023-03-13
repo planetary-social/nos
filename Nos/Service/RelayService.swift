@@ -414,3 +414,28 @@ extension RelayService: WebSocketDelegate {
         }
     }
 }
+
+// MARK: NIP-05 Support
+extension RelayService {
+    func verifyInternetIdentifier(identifier: String, userPublicKey: String) async -> Bool {
+        // Construct the URL
+        let localPart = identifier.components(separatedBy: "@")[0]
+        let domain = identifier.components(separatedBy: "@")[1]
+        let urlString = "https://\(domain)/.well-known/nostr.json?name=\(localPart)"
+        guard let url = URL(string: urlString) else {
+            Log.info("Invalid URL: \(urlString)")
+            return false
+        }
+        // Send the request and handle the response
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            if let names = json?["names"] as? [String: String], let pubkey = names[localPart] {
+                return pubkey == userPublicKey
+            }
+        } catch {
+            Log.info("Error verifying username: \(error.localizedDescription)")
+        }
+        return false
+    }
+}

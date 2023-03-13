@@ -15,7 +15,9 @@ struct ProfileHeader: View {
     @EnvironmentObject private var relayService: RelayService
 
     @State private var subscriptionId: String = ""
-
+    
+    @State private var verifiedNip05Identifier: String = ""
+    
     var followsRequest: FetchRequest<Follow>
     var followsResult: FetchedResults<Follow> { followsRequest.wrappedValue }
     
@@ -74,6 +76,11 @@ struct ProfileHeader: View {
                         } label: {
                             Text("\(Localized.following.string): \(author.follows?.count ?? 0)")
                         }
+                        
+                        Spacer()
+                        Text("\(Localized.uns.string): \(verifiedNip05Identifier)")
+                            .font(.title3.weight(.semibold))
+                            .foregroundColor(Color.primaryTxt)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -96,6 +103,19 @@ struct ProfileHeader: View {
         )
         .navigationDestination(for: Followed.self) { followed in
             FollowsView(followed: followed)
+        }
+        .onAppear {
+            Task {
+                if let nip05Identifier = author.nip05, let publicKey = author.publicKey?.hex {
+                    let identifierVerified = await relayService.verifyInternetIdentifier(
+                    identifier: nip05Identifier,
+                    userPublicKey: publicKey
+                    )
+                    if identifierVerified {
+                        verifiedNip05Identifier = nip05Identifier
+                    }
+                }
+            }
         }
         .onDisappear {
             relayService.sendCloseToAll(subscriptions: [subscriptionId])
