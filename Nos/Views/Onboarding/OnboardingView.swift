@@ -219,7 +219,19 @@ struct OnboardingView: View {
                     ScrollView {
                         Text(Localized.termsOfService.string)
                             .foregroundColor(.secondaryTxt)
+                        Rectangle().fill(Color.clear)
+                            .frame(height: 100)
                     }
+                    .mask(
+                        VStack(spacing: 0) {
+                            Rectangle().fill(Color.black)
+                            LinearGradient(
+                                colors: [Color.black, Color.black.opacity(0)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        }
+                    )
                     .padding(.horizontal, 44.5)
                     HStack {
                         BigActionButton(title: Localized.reject) {
