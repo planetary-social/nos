@@ -204,6 +204,7 @@ enum CurrentUser {
             }
         }
         
+        try! context.save()
         publishContactList(tags: followKeys.tags)
     }
     
