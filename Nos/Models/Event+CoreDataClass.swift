@@ -63,11 +63,16 @@ extension FetchedResults where Element == Event {
 @objc(Event)
 public class Event: NosManagedObject {
     
-    static var replyEventReferences =
-    "kind = 1 AND SUBQUERY(eventReferences, $eventReference, $eventReference.marker == 'reply' AND $eventReference.referencedEvent.identifier == %@).@count = 0 AND (ANY author.followers.source IN %@.follows.destination OR author IN %@.follows.destination OR author = %@)"
-    
-    static var replyToRootEventReferences =
-    "kind = 1 AND SUBQUERY(eventReferences, $eventReference, $eventReference.marker == 'root' AND $eventReference.referencedEvent.identifier == %@).@count = 0 AND (ANY author.followers.source IN %@.follows.destination OR author IN %@.follows.destination OR author = %@)"
+    static var replyNoteReferences = """
+    kind = 1 AND
+    SUBQUERY(
+        eventReferences,
+        $eventReference,
+        $eventReference.eventId == %@ AND
+            ($eventReference.marker == 'reply' OR $eventReference.marker == 'root')
+    ).@count > 0 AND
+    (ANY author.followers.source IN %@.follows.destination OR author IN %@.follows.destination OR author = %@)
+    """
     
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -174,14 +179,21 @@ public class Event: NosManagedObject {
     }
     
     @nonobjc public class func allReplies(to rootEvent: Event) -> NSFetchRequest<Event> {
-        guard let currentUser = CurrentUser.author(in: PersistenceController.shared.viewContext) else {
+        allReplies(toNoteWith: rootEvent.identifier)
+    }
+        
+    @nonobjc public class func allReplies(toNoteWith noteID: String?) -> NSFetchRequest<Event> {
+        guard let currentUser = CurrentUser.author, let noteID else {
             return emptyRequest()
         }
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: replyToRootEventReferences,
-            rootEvent.identifier ?? "",
+            format: replyNoteReferences,
+            noteID,
+            currentUser,
+            currentUser,
+            currentUser,
             currentUser,
             currentUser,
             currentUser
@@ -190,13 +202,13 @@ public class Event: NosManagedObject {
     }
     
     @nonobjc public class func allReplies(toEventWith id: String) -> NSFetchRequest<Event> {
-        guard let currentUser = CurrentUser.author(in: PersistenceController.shared.viewContext) else {
+        guard let currentUser = CurrentUser.author else {
             return emptyRequest()
         }
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: replyEventReferences,
+            format: replyNoteReferences,
             id,
             currentUser,
             currentUser,
@@ -599,9 +611,13 @@ public class Event: NosManagedObject {
         })
     }
     
-    /// Returns true if this note does not tag any other events.
-    func rootNote() -> Event {
-        (eventReferences?.firstObject as? EventReference)?.referencedEvent ?? self
+    /// Returns the root event that this note is replying to, or nil if there isn't one.
+    func rootNote() -> Event? {
+        if let rootReference = eventReferences?.first(where: { ($0 as? EventReference)?.marker ?? "" == "root" }) as? EventReference,
+            let rootNote = rootReference.referencedEvent {
+            return rootNote
+        }
+        return nil
     }
 }
 // swiftlint:enable type_body_length

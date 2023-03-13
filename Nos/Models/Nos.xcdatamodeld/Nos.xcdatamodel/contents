@@ -35,6 +35,7 @@
         <relationship name="referencingEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EventReference" inverseName="referencedEvent" inverseEntity="EventReference"/>
     </entity>
     <entity name="EventReference" representedClassName="EventReference" syncable="YES" codeGenerationType="category">
+        <attribute name="eventId" optional="YES" attributeType="String"/>
         <attribute name="marker" optional="YES" attributeType="String"/>
         <attribute name="recommendedRelayUrl" optional="YES" attributeType="String"/>
         <relationship name="referencedEvent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="referencingEvents" inverseEntity="Event"/>

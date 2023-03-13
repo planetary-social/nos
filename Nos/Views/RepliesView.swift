@@ -21,24 +21,34 @@ struct RepliesView: View {
     @State private var subscriptionIDs = [String]()
     
     var repliesRequest: FetchRequest<Event>
+    /// All replies
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
     
     var directReplies: [Event] {
-        replies.filter {
-            ($0.eventReferences?.lastObject as? EventReference)?.referencedEvent?.identifier == note.identifier
+        replies.filter { (reply: Event) in
+            guard let eventReferences = reply.eventReferences?.array as? [EventReference] else {
+                return false
+            }
+            
+            let referencesNoteAsRoot = eventReferences.contains(where: { (eventReference: EventReference) in
+                eventReference.eventId == note.identifier && eventReference.marker == "root"
+            })
+            
+            let containsReplyMarker = eventReferences.contains(where: { (eventReference: EventReference) in
+                eventReference.marker == "reply"
+            })
+            
+            let referencesNoteAsReply = eventReferences.contains(where: { (eventReference: EventReference) in
+                eventReference.eventId == note.identifier && eventReference.marker == "reply"
+            })
+            
+            return (referencesNoteAsRoot && !containsReplyMarker) || referencesNoteAsReply
         }
     }
     
     init(note: Event) {
         self.note = note
-        
-        if let rootReference = (note.eventReferences?.array as? [EventReference])?
-            .first(where: { $0.marker == "root" }),
-            let rootId = rootReference.referencedEvent?.identifier {
-            self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(toEventWith: rootId))
-        } else {
-            self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note))
-        }
+        self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note))
     }
     
     private var keyPair: KeyPair? {
@@ -121,19 +131,14 @@ struct RepliesView: View {
             }
             
             var tags: [[String]] = [["p", note.author!.publicKey!.hex]]
-            if note.eventReferences?.count ?? 0 > 0 {
-                if let referenceArray = note.eventReferences?.array as? [EventReference],
-                    let firstReference = referenceArray.first {
-                    if let rootReference = referenceArray.first(where: { $0.marker == "root" }) {
-                        tags.append(["e", rootReference.referencedEvent?.identifier ?? "", "", "root"])
-                        tags.append(["e", note.identifier!, "", "reply"])
-                    } else {
-                        tags.append(["e", firstReference.referencedEvent?.identifier ?? "", "", "reply"])
-                    }
-                }
+            // If `note` is a reply to another root, tag that root
+            if let rootNoteIdentifier = note.rootNote()?.identifier, rootNoteIdentifier != note.identifier {
+                tags.append(["e", rootNoteIdentifier, "", "root"])
+                tags.append(["e", note.identifier!, "", "reply"])
             } else {
                 tags.append(["e", note.identifier!, "", "root"])
             }
+            
             // print("tags: \(tags)")
             let jsonEvent = JSONEvent(
                 id: "",
