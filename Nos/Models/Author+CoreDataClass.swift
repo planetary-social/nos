@@ -44,6 +44,7 @@ public class Author: NosManagedObject {
         return nil
     }
     
+    @discardableResult
     class func findOrCreate(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author {
         if let author = try? Author.find(by: pubKey, context: context) {
             return author
