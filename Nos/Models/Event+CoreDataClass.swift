@@ -416,13 +416,13 @@ public class Event: NosManagedObject {
         )
     }
 	
-    // swiftlint:disable function_body_length
     convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) throws {
         self.init(context: context)
         identifier = jsonEvent.id
         try hydrate(from: jsonEvent, in: context)
     }
         
+    // swiftlint:disable function_body_length cyclomatic_complexity
     /// Populates an event stub (with only its ID set) using the data in the given JSON.
     func hydrate(from jsonEvent: JSONEvent, in context: NSManagedObjectContext) throws {
         guard isStub else {
@@ -527,7 +527,7 @@ public class Event: NosManagedObject {
             authorReferences = newAuthorReferences
         }
     }
-    // swiftlint:enable function_body_length
+    // swiftlint:enable function_body_length cyclomatic_complexity
     
     class func all(context: NSManagedObjectContext) -> [Event] {
         let allRequest = Event.allPostsRequest()
