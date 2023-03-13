@@ -33,19 +33,19 @@ class CurrentUser: ObservableObject {
     
     // swiftlint:disable implicitly_unwrapped_optional
     var context: NSManagedObjectContext!
+    var relayService: RelayService! {
+        didSet {
+            subscribe()
+        }
+    }
     // swiftlint:enable implicitly_unwrapped_optional
     
     var subscriptions: [String] = []
 
     var editing = false
-    
-    var relayService: RelayService? {
-        didSet {
-            subscribe()
-            updateInNetworkAuthors()
-        }
-    }
-    
+
+    var onboardingRelays: [Relay] = []
+
     var author: Author? {
         if let publicKey {
             return try? Author.findOrCreate(by: publicKey, context: context)
@@ -65,30 +65,42 @@ class CurrentUser: ObservableObject {
     }
     
     @Published var inNetworkAuthors = [Author]()
-    
-    func subscribe() {
+
+    // Pass in relays if you want to request from something other
+    // than the Current User's relays (ie onboarding)
+    func subscribe(relays: [Relay]? = nil) {
+        
+        var relays = relays
+        if relays == nil || relays?.isEmpty == true {
+            // Fetch relays from Core Data
+            relays = CurrentUser.shared.author?.relays?.allObjects as? [Relay] ?? []
+            if relays?.isEmpty == true {
+                // If we're still empty connect to all known relays hoping to get some metadata
+                relays = Relay.allKnown.map {
+                    Relay.findOrCreate(by: $0, context: context)
+                }
+            }
+        }
+        
         // Always listen to my changes
         if let key = publicKey {
             // Close out stale requests
             if !subscriptions.isEmpty {
-                relayService?.sendCloseToAll(subscriptions: subscriptions)
+                relayService.sendCloseToAll(subscriptions: subscriptions)
                 subscriptions.removeAll()
             }
 
             let textFilter = Filter(authorKeys: [key], kinds: [.text], limit: 100)
-            if let textSub = relayService?.requestEventsFromAll(filter: textFilter) {
-                subscriptions.append(textSub)
-            }
+            let textSub = relayService.requestEventsFromAll(filter: textFilter, relays: relays)
+            subscriptions.append(textSub)
 
             let metaFilter = Filter(authorKeys: [key], kinds: [.metaData], limit: 1)
-            if let metaSub = relayService?.requestEventsFromAll(filter: metaFilter) {
-                subscriptions.append(metaSub)
-            }
+            let metaSub = relayService.requestEventsFromAll(filter: metaFilter, relays: relays)
+            subscriptions.append(metaSub)
             
             let contactFilter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
-            if let contactSub = relayService?.requestEventsFromAll(filter: contactFilter) {
-                subscriptions.append(contactSub)
-            }
+            let contactSub = relayService.requestEventsFromAll(filter: contactFilter, relays: relays)
+            subscriptions.append(contactSub)
         }
     }
     
@@ -140,7 +152,7 @@ class CurrentUser: ObservableObject {
             do {
                 try jsonEvent.sign(withKey: pair)
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
-                relayService?.publishToAll(event: event)
+                relayService.publishToAll(event: event)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }
@@ -175,7 +187,7 @@ class CurrentUser: ObservableObject {
             do {
                 try jsonEvent.sign(withKey: pair)
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
-                relayService?.publishToAll(event: event)
+                relayService.publishToAll(event: event)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }

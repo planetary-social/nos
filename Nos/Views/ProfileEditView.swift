@@ -77,17 +77,19 @@ struct ProfileEditView: View {
         .navigationBarItems(
             trailing:
                 Group {
-                    Button(
-                        action: {
-                            save()
-
-                            // Go back to profile page
-                            router.pop()
-                        },
-                        label: {
-                            Text(Localized.done.string)
-                        }
-                    )
+                    if createAccountCompletion == nil {
+                        Button(
+                            action: {
+                                save()
+                                
+                                // Go back to profile page
+                                router.pop()
+                            },
+                            label: {
+                                Text(Localized.done.string)
+                            }
+                        )
+                    }
                 }
         )
         .task {

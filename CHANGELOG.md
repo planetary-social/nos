@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Fix translucent tab bar in the simulator.
+- Onboarding sync existing user with many relays
 
 ## [0.1 (7)] - 2023-03-10Z
 - Use only relays added in RelayView for sending and receiving events

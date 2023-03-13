@@ -56,7 +56,7 @@ struct RelayView: View {
                 ))
                 
                 let authorRelayUrls = (author.relays as? Set<Relay>)?.compactMap { $0.address } ?? []
-                let recommendedRelays = Relay.defaults.filter { !authorRelayUrls.contains($0) }
+                let recommendedRelays = Relay.recommended.filter { !authorRelayUrls.contains($0) }
                 
                 if !recommendedRelays.isEmpty {
                     Section {

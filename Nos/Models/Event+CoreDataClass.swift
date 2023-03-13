@@ -491,6 +491,24 @@ public class Event: NosManagedObject {
                 }
             }
             
+            // Get the user's active relays out of the content property
+            if let data = jsonEvent.content.data(using: .utf8, allowLossyConversion: false),
+                let relayEntries = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
+                let relays = (relayEntries as? [String: Any])?.keys {
+
+                for address in relays {
+                    let relay = Relay.findOrCreate(by: address, context: context)
+                    newAuthor.add(relay: relay)
+                }
+                
+                // Close sockets for anything not in the above
+                if newAuthor == CurrentUser.shared.author {
+                    if let keptRelays = newAuthor.relays as? Set<Relay> {
+                        CurrentUser.shared.relayService.closeAllConnections(excluding: keptRelays)
+                    }
+                }
+            }
+
         case .metaData:
             guard createdAt! > newAuthor.lastUpdatedMetadata ?? Date.distantPast else {
                 // This is old data
