@@ -20,6 +20,11 @@ struct OnboardingView: View {
         case createAccount
     }
     
+    enum OnboardingFlow {
+        case createAccount
+        case loginToExistingAccount
+    }
+    
     /// Completion to be called when all onboarding steps are complete
     let completion: () -> Void
     
@@ -39,73 +44,78 @@ struct OnboardingView: View {
     
     @State var showError = false
     
-    @State var createAccountView: ProfileEditView = ProfileEditView(author: Author())
+    @State var flow: OnboardingFlow = .createAccount
+    
+    @State var path = NavigationPath()
     
     @Dependency(\.analytics) private var analytics
     
+    var loginView: some View {
+        VStack {
+            Form {
+                Section {
+                    TextField("NSec1", text: $privateKeyString)
+                } header: {
+                    Localized.pasteYourSecretKey.view
+                }
+            }
+            if !privateKeyString.isEmpty {
+                BigActionButton(title: .login) {
+                    if let keyPair = KeyPair(nsec: privateKeyString) {
+                        self.keyPair = keyPair
+                        analytics.identify(with: keyPair)
+                        analytics.importedKey()
+                        completion()
+                    } else {
+                        self.keyPair = nil
+                        self.showError = true
+                    }
+                }
+            }
+        }
+        .navigationTitle(Localized.loginToYourAccount.string)
+        .alert(isPresented: $showError) {
+            Alert(
+                title: Localized.invalidKey.view,
+                message: Localized.couldNotReadPrivateKeyMessage.view
+            )
+        }
+    }
+    
     var body: some View {
         TabView(selection: $selectedTab) {
-            NavigationStack {
-                VStack {
-                    Image.nosLogo
-                        .resizable()
-                        .frame(width: 235.45, height: 67.1)
-                        .padding(.top, 155)
-                        .padding(.bottom, 10)
-                    PlainText(Localized.onboardingTitle.string)
-                        .font(.custom("ClarityCity-Bold", size: 25.21))
-                        .fontWeight(.heavy)
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [
-                                    Color(hex: "#F08508"),
-                                    Color(hex: "#F43F75")
-                                ],
-                                startPoint: .bottomLeading,
-                                endPoint: .topTrailing
-                            )
-                            .blendMode(.normal)
+            VStack {
+                Image.nosLogo
+                    .resizable()
+                    .frame(width: 235.45, height: 67.1)
+                    .padding(.top, 155)
+                    .padding(.bottom, 10)
+                PlainText(Localized.onboardingTitle.string)
+                    .font(.custom("ClarityCity-Bold", size: 25.21))
+                    .fontWeight(.heavy)
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [
+                                Color(hex: "#F08508"),
+                                Color(hex: "#F43F75")
+                            ],
+                            startPoint: .bottomLeading,
+                            endPoint: .topTrailing
                         )
-                    Spacer()
-                    BigActionButton(title: .createAccount) {
-                        selectedTab = .ageVerification
-                    }
-                    .padding()
-                    NavigationLink(Localized.logInWithYourKeys.string) {
-                        VStack {
-                            Form {
-                                Section {
-                                    TextField("NSec1", text: $privateKeyString)
-                                } header: {
-                                    Localized.pasteYourSecretKey.view
-                                }
-                            }
-                            if !privateKeyString.isEmpty {
-                                BigActionButton(title: .login) {
-                                    if let keyPair = KeyPair(nsec: privateKeyString) {
-                                        self.keyPair = keyPair
-                                        analytics.identify(with: keyPair)
-                                        analytics.importedKey()
-                                        completion()
-                                    } else {
-                                        self.keyPair = nil
-                                        self.showError = true
-                                    }
-                                }
-                            }
-                        }
-                        .navigationTitle(Localized.loginToYourAccount.string)
-                        .alert(isPresented: $showError) {
-                            Alert(
-                                title: Localized.invalidKey.view,
-                                message: Localized.couldNotReadPrivateKeyMessage.view
-                            )
-                        }
-                    }
-                    .padding()
+                        .blendMode(.normal)
+                    )
+                Spacer()
+                BigActionButton(title: .createAccount) {
+                    flow = .createAccount
+                    selectedTab = .ageVerification
                 }
-                .background(Color.appBg)
+                .padding()
+                Button(Localized.loginToYourAccount.string) {
+                    flow = .loginToExistingAccount
+                    selectedTab = .ageVerification
+                }
             }
+            .background(Color.appBg)
             .tag(OnboardingStep.onboardingStart)
             
             // Age verification
@@ -178,62 +188,65 @@ struct OnboardingView: View {
             .tag(OnboardingStep.notOldEnough)
             
             // Terms of Service
-            VStack {
-                PlainText(Localized.termsOfServiceTitle.string)
-                    .font(.custom("ClarityCity-Bold", size: 34, relativeTo: .largeTitle))
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [
-                                Color(hex: "#F08508"),
-                                Color(hex: "#F43F75")
-                            ],
-                            startPoint: .bottomLeading,
-                            endPoint: .topTrailing
+            NavigationStack(path: $path) {
+                VStack {
+                    PlainText(Localized.termsOfServiceTitle.string)
+                        .font(.custom("ClarityCity-Bold", size: 34, relativeTo: .largeTitle))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [
+                                    Color(hex: "#F08508"),
+                                    Color(hex: "#F43F75")
+                                ],
+                                startPoint: .bottomLeading,
+                                endPoint: .topTrailing
+                            )
+                            .blendMode(.normal)
                         )
-                        .blendMode(.normal)
-                    )
-                    .padding(.top, 92)
-                    .padding(.bottom, 60)
-                ScrollView {
-                    Text(Localized.termsOfService.string)
-                        .foregroundColor(.secondaryTxt)
-                }
-                .padding(.horizontal, 44.5)
-                HStack {
-                    BigActionButton(title: Localized.reject) {
-                        selectedTab = .onboardingStart
+                        .padding(.top, 92)
+                        .padding(.bottom, 60)
+                    ScrollView {
+                        Text(Localized.termsOfService.string)
+                            .foregroundColor(.secondaryTxt)
                     }
-                    BigActionButton(title: Localized.accept) {
-                        let keyPair = KeyPair()!
-                        self.keyPair = keyPair
-                        analytics.identify(with: keyPair)
-                        analytics.generatedKey()
-                        
-                        // Default Relays for new user
-                        for address in Relay.defaults {
-                            Relay(context: viewContext, address: address, author: CurrentUser.author)
+                    .padding(.horizontal, 44.5)
+                    HStack {
+                        BigActionButton(title: Localized.reject) {
+                            selectedTab = .onboardingStart
                         }
-                        
-                        CurrentUser.publishContactList(tags: [])
-                        
-                        if let author = CurrentUser.author {
-                            createAccountView.author = author
+                        BigActionButton(title: Localized.accept) {
+                            if flow == .createAccount {
+                                let keyPair = KeyPair()!
+                                self.keyPair = keyPair
+                                analytics.identify(with: keyPair)
+                                analytics.generatedKey()
+                                
+                                // Default Relays for new user
+                                for address in Relay.defaults {
+                                    Relay(context: viewContext, address: address, author: CurrentUser.author)
+                                }
+                                
+                                CurrentUser.publishContactList(tags: [])
+                            }
+                            path.append(flow)
                         }
-                        createAccountView.createAccountCompletion = completion
-                        
-                        selectedTab = .createAccount
+                    }
+                    .padding(.horizontal, 24)
+                }
+                .navigationDestination(for: OnboardingFlow.self) { flow in
+                    if flow == .loginToExistingAccount {
+                        loginView
+                    } else {
+                        ProfileEditView(author: CurrentUser.author!, createAccountCompletion: completion)
                     }
                 }
-                .padding(.horizontal, 24)
+                .background(Color.appBg)
             }
-            .background(Color.appBg)
             .tag(OnboardingStep.termsOfService)
-            
-            // Create Account
-            createAccountView
-                .tag(OnboardingStep.createAccount)
         }
     }
+    
+    @State var finishOnboardingAction: Int? = 0
 }
 
 struct OnboardingView_Previews: PreviewProvider {

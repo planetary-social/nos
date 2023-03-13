@@ -21,8 +21,9 @@ struct ProfileEditView: View {
     
     var createAccountCompletion: (() -> Void)?
     
-    init(author: Author) {
+    init(author: Author, createAccountCompletion: (() -> Void)? = nil) {
         self.author = author
+        self.createAccountCompletion = createAccountCompletion
     }
     
     var body: some View {
@@ -47,9 +48,9 @@ struct ProfileEditView: View {
                         .foregroundColor(.textColor)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.none)
-#if os(iOS)
+                        #if os(iOS)
                         .keyboardType(.URL)
-#endif
+                        #endif
                 } header: {
                     createAccountCompletion != nil ? Localized.createAccount.view : Localized.basicInfo.view
                         .foregroundColor(.textColor)
