@@ -35,7 +35,6 @@ struct ThreadView: View {
     var body: some View {
         LazyVStack {
             NoteButton(note: root, showFullMessage: true)
-                .disabled(true)
                 .padding(.horizontal)
             ForEach(thread) { event in
                 VStack {

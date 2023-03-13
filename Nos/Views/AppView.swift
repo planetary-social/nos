@@ -133,8 +133,10 @@ struct AppView: View {
                                 VStack {
                                     let text = Localized.profile.view
                                     if $router.selectedTab.wrappedValue == .profile {
+                                        Image.tabProfileSelected
                                         text.foregroundColor(.textColor)
                                     } else {
+                                        Image.tabProfile
                                         text.foregroundColor(.secondaryTxt)
                                     }
                                 }
