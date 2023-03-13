@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Display a user's NIP-05 identifier on th profile page after making a web request to verify that it is correct 
 - Fix translucent tab bar in the simulator.
 
 ## [0.1 (7)] - 2023-03-10Z
