@@ -30,6 +30,10 @@ struct RepliesView: View {
                 return false
             }
             
+            let containsRootMarker = eventReferences.contains(where: { (eventReference: EventReference) in
+                eventReference.marker == "root"
+            })
+            
             let referencesNoteAsRoot = eventReferences.contains(where: { (eventReference: EventReference) in
                 eventReference.eventId == note.identifier && eventReference.marker == "root"
             })
