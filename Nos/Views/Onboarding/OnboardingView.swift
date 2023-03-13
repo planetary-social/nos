@@ -55,9 +55,17 @@ struct OnboardingView: View {
             Form {
                 Section {
                     TextField("NSec1", text: $privateKeyString)
+                        .foregroundColor(.textColor)
                 } header: {
                     Localized.pasteYourSecretKey.view
+                        .foregroundColor(.textColor)
+                        .fontWeight(.heavy)
                 }
+                .listRowBackground(LinearGradient(
+                    colors: [Color.cardBgTop, Color.cardBgBottom],
+                    startPoint: .top,
+                    endPoint: .bottom
+                ))
             }
             if !privateKeyString.isEmpty {
                 BigActionButton(title: .login) {
@@ -71,8 +79,11 @@ struct OnboardingView: View {
                         self.showError = true
                     }
                 }
+                .padding(.horizontal, 24)
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Color.appBg)
         .navigationTitle(Localized.loginToYourAccount.string)
         .alert(isPresented: $showError) {
             Alert(
