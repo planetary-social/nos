@@ -476,6 +476,17 @@ public class Event: NosManagedObject {
                 }
             }
             
+            // Get the user's active relays out of the content property
+            if let data = jsonEvent.content.data(using: .utf8, allowLossyConversion: false),
+                let relayEntries = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
+                let relays = (relayEntries as? [String: Any])?.keys {
+
+                for address in relays {
+                    let relay = Relay.findOrCreate(by: address, context: context)
+                    newAuthor.add(relay: relay)
+                }
+            }
+
         case .metaData:
             if let contentData = jsonEvent.content.data(using: .utf8) {
                 // There may be unsupported metadata. Store it to send back later in metadata publishes.

@@ -99,7 +99,6 @@ struct HomeFeedView: View {
             )
         }
         .task {
-            CurrentUser.relayService = relayService
             refreshHomeFeed()
         }
         .refreshable {

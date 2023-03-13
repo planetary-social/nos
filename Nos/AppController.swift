@@ -32,9 +32,12 @@ class AppController: ObservableObject {
     
     func completeOnboarding() {
         currentState = .loggedIn
+        CurrentUser.subscribe(relays: CurrentUser.onboardingRelays)
+
         router.sideMenuPath = NavigationPath()
         router.closeSideMenu()
         router.selectedTab = .discover
+
         analytics.completedOnboarding()
     }
 }

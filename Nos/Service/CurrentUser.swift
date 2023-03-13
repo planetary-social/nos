@@ -30,17 +30,18 @@ enum CurrentUser {
     
     // swiftlint:disable implicitly_unwrapped_optional
     static var context: NSManagedObjectContext!
+    static var relayService: RelayService! {
+        didSet {
+            subscribe()
+        }
+    }
     // swiftlint:enable implicitly_unwrapped_optional
     
     static var subscriptions: [String] = []
 
     static var editing = false
     
-    static var relayService: RelayService? {
-        didSet {
-            subscribe()
-        }
-    }
+    static var onboardingRelays: [Relay] = []
     
     static var author: Author? {
         if let publicKey {
@@ -60,29 +61,28 @@ enum CurrentUser {
         return umutedSet
     }
     
-    static func subscribe() {
+    // Pass in relays if you want to request from something other
+    // than the Current User's relays (ie onboarding)
+    static func subscribe(relays: [Relay]? = nil) {
         // Always listen to my changes
         if let key = publicKey {
             // Close out stale requests
             if !subscriptions.isEmpty {
-                relayService?.sendCloseToAll(subscriptions: subscriptions)
+                relayService.sendCloseToAll(subscriptions: subscriptions)
                 subscriptions.removeAll()
             }
 
             let textFilter = Filter(authorKeys: [key], kinds: [.text], limit: 100)
-            if let textSub = relayService?.requestEventsFromAll(filter: textFilter) {
-                subscriptions.append(textSub)
-            }
+            let textSub = relayService.requestEventsFromAll(filter: textFilter, relays: relays)
+            subscriptions.append(textSub)
 
             let metaFilter = Filter(authorKeys: [key], kinds: [.metaData], limit: 1)
-            if let metaSub = relayService?.requestEventsFromAll(filter: metaFilter) {
-                subscriptions.append(metaSub)
-            }
+            let metaSub = relayService.requestEventsFromAll(filter: metaFilter, relays: relays)
+            subscriptions.append(metaSub)
             
             let contactFilter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
-            if let contactSub = relayService?.requestEventsFromAll(filter: contactFilter) {
-                subscriptions.append(contactSub)
-            }
+            let contactSub = relayService.requestEventsFromAll(filter: contactFilter, relays: relays)
+            subscriptions.append(contactSub)
         }
     }
     
@@ -134,7 +134,7 @@ enum CurrentUser {
             do {
                 try jsonEvent.sign(withKey: pair)
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
-                relayService?.publishToAll(event: event)
+                relayService.publishToAll(event: event)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }
@@ -169,7 +169,7 @@ enum CurrentUser {
             do {
                 try jsonEvent.sign(withKey: pair)
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
-                relayService?.publishToAll(event: event)
+                relayService.publishToAll(event: event)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }

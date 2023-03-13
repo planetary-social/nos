@@ -22,6 +22,7 @@ struct NosApp: App {
                 .environmentObject(router)
                 .environmentObject(AppController(router: router))
                 .task {
+                    CurrentUser.relayService = relayService
                     relayService.publishFailedEvents()
                 }
         }
