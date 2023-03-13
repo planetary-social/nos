@@ -47,7 +47,7 @@ struct ProfileEditView: View {
                         .keyboardType(.URL)
 #endif
                 } header: {
-                    Localized.basicInfo.view
+                    createAccountCompletion != nil ? Localized.createAccount.view : Localized.basicInfo.view
                         .foregroundColor(.textColor)
                         .fontWeight(.heavy)
                 }
@@ -64,7 +64,6 @@ struct ProfileEditView: View {
                     createAccountCompletion()
                 }
                 .background(Color.appBg)
-                .padding(.bottom, 52)
                 .padding(.horizontal, 24)
             }
         }
