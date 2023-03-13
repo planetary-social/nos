@@ -42,7 +42,13 @@ struct RepliesView: View {
                 eventReference.eventId == note.identifier && eventReference.marker == "reply"
             })
             
-            return (referencesNoteAsRoot && !containsReplyMarker) || referencesNoteAsReply
+            // This is sloppy, but I'm writing it anyway in a rush.
+            // TODO: make sure there isn't a #[0] event reference this is referring to
+            let referencesNoteTheDeprecatedWay = eventReferences.last?.eventId == note.identifier
+            
+            return (referencesNoteAsRoot && !containsReplyMarker) ||
+                referencesNoteAsReply ||
+                (!containsRootMarker && !containsReplyMarker && referencesNoteTheDeprecatedWay)
         }
     }
     
