@@ -17,6 +17,7 @@ struct OnboardingView: View {
         case ageVerification
         case notOldEnough
         case termsOfService
+        case createAccount
     }
     
     /// Completion to be called when all onboarding steps are complete
@@ -37,6 +38,8 @@ struct OnboardingView: View {
     @State var privateKeyString = ""
     
     @State var showError = false
+    
+    @State var createAccountView: ProfileEditView = ProfileEditView(author: Author())
     
     @Dependency(\.analytics) private var analytics
     
@@ -65,19 +68,6 @@ struct OnboardingView: View {
                         )
                     Spacer()
                     BigActionButton(title: .createAccount) {
-//                        let keyPair = KeyPair()!
-//                        self.keyPair = keyPair
-//                        analytics.identify(with: keyPair)
-//                        analytics.generatedKey()
-//
-//                        // Default Relays for new user
-//                        for address in Relay.defaults {
-//                            Relay(context: viewContext, address: address, author: CurrentUser.author)
-//                        }
-//
-//                        CurrentUser.publishContactList(tags: [])
-//
-//                        completion()
                         selectedTab = .ageVerification
                     }
                     .padding()
@@ -214,13 +204,34 @@ struct OnboardingView: View {
                         selectedTab = .onboardingStart
                     }
                     BigActionButton(title: Localized.accept) {
-                        // TODO: create account
+                        let keyPair = KeyPair()!
+                        self.keyPair = keyPair
+                        analytics.identify(with: keyPair)
+                        analytics.generatedKey()
+                        
+                        // Default Relays for new user
+                        for address in Relay.defaults {
+                            Relay(context: viewContext, address: address, author: CurrentUser.author)
+                        }
+                        
+                        CurrentUser.publishContactList(tags: [])
+                        
+                        if let author = CurrentUser.author {
+                            createAccountView.author = author
+                        }
+                        createAccountView.createAccountCompletion = completion
+                        
+                        selectedTab = .createAccount
                     }
                 }
                 .padding(.horizontal, 24)
             }
             .background(Color.appBg)
             .tag(OnboardingStep.termsOfService)
+            
+            // Create Account
+            createAccountView
+                .tag(OnboardingStep.createAccount)
         }
     }
 }

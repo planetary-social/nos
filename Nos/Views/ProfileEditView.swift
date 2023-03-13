@@ -19,36 +19,54 @@ struct ProfileEditView: View {
     @State private var bioText: String = ""
     @State private var avatarText: String = ""
     
+    var createAccountCompletion: (() -> Void)?
+    
+    init(author: Author) {
+        self.author = author
+    }
+    
     var body: some View {
-        Form {
-            Section {
-                TextField(Localized.displayName.string, text: $displayNameText)
-                    .textInputAutocapitalization(.none)
-                    .foregroundColor(.textColor)
-                    .autocorrectionDisabled()
-                TextField(Localized.name.string, text: $nameText)
-                    .textInputAutocapitalization(.none)
-                    .foregroundColor(.textColor)
-                    .autocorrectionDisabled()
-                TextField(Localized.bio.string, text: $bioText)
-                    .foregroundColor(.textColor)
-                TextField(Localized.picUrl.string, text: $avatarText)
-                    .foregroundColor(.textColor)
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.none)
-                    #if os(iOS)
-                    .keyboardType(.URL)
-                    #endif
-            } header: {
-                Localized.basicInfo.view
-                    .foregroundColor(.textColor)
-                    .fontWeight(.heavy)
+        VStack {
+            Form {
+                Section {
+                    TextField(Localized.displayName.string, text: $displayNameText)
+                        .textInputAutocapitalization(.none)
+                        .foregroundColor(.textColor)
+                        .autocorrectionDisabled()
+                    TextField(Localized.name.string, text: $nameText)
+                        .textInputAutocapitalization(.none)
+                        .foregroundColor(.textColor)
+                        .autocorrectionDisabled()
+                    TextField(Localized.bio.string, text: $bioText)
+                        .foregroundColor(.textColor)
+                    TextField(Localized.picUrl.string, text: $avatarText)
+                        .foregroundColor(.textColor)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.none)
+#if os(iOS)
+                        .keyboardType(.URL)
+#endif
+                } header: {
+                    Localized.basicInfo.view
+                        .foregroundColor(.textColor)
+                        .fontWeight(.heavy)
+                }
+                .listRowBackground(LinearGradient(
+                    colors: [Color.cardBgTop, Color.cardBgBottom],
+                    startPoint: .top,
+                    endPoint: .bottom
+                ))
             }
-            .listRowBackground(LinearGradient(
-                colors: [Color.cardBgTop, Color.cardBgBottom],
-                startPoint: .top,
-                endPoint: .bottom
-            ))
+            if let createAccountCompletion {
+                Spacer()
+                BigActionButton(title: .createAccount) {
+                    save()
+                    createAccountCompletion()
+                }
+                .background(Color.appBg)
+                .padding(.bottom, 52)
+                .padding(.horizontal, 24)
+            }
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
@@ -57,13 +75,7 @@ struct ProfileEditView: View {
                 Group {
                     Button(
                         action: {
-                            author.displayName = displayNameText
-                            author.name = nameText
-                            author.about = bioText
-                            author.profilePhotoURL = URL(string: avatarText)
-
-                            // Post event
-                            CurrentUser.publishMetaData()
+                            save()
 
                             // Go back to profile page
                             router.pop()
@@ -83,6 +95,16 @@ struct ProfileEditView: View {
         .onDisappear {
             CurrentUser.editing = false
         }
+    }
+    
+    func save() {
+        author.displayName = displayNameText
+        author.name = nameText
+        author.about = bioText
+        author.profilePhotoURL = URL(string: avatarText)
+
+        // Post event
+        CurrentUser.publishMetaData()
     }
 }
 
