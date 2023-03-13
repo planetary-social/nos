@@ -96,7 +96,7 @@ struct RepliesView: View {
             .navigationBarTitle(Localized.thread.string, displayMode: .inline)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
-            .onAppear() {
+            .onAppear {
                 subscribeToReplies()
             }
             .refreshable {

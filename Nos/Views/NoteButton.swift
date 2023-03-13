@@ -29,7 +29,13 @@ struct NoteButton: View {
                     router.currentPath.wrappedValue.append(note)
                 }
             } label: {
-                NoteCard(author: author, note: note, style: style, showFullMessage: showFullMessage, showReplyCount: showReplyCount)
+                NoteCard(
+                    author: author,
+                    note: note,
+                    style: style,
+                    showFullMessage: showFullMessage,
+                    showReplyCount: showReplyCount
+                )
             }
             .buttonStyle(CardButtonStyle())
         }

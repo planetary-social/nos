@@ -70,7 +70,13 @@ struct NoteCard: View {
     private var showFullMessage: Bool
     private let showReplyCount: Bool
     
-    init(author: Author, note: Event, style: CardStyle = .compact, showFullMessage: Bool = false, showReplyCount: Bool = true) {
+    init(
+        author: Author,
+        note: Event,
+        style: CardStyle = .compact,
+        showFullMessage: Bool = false,
+        showReplyCount: Bool = true
+    ) {
         self.author = author
         self.note = note
         self.style = style
@@ -87,67 +93,67 @@ struct NoteCard: View {
         VStack(alignment: .leading, spacing: 0) {
             switch style {
             case .compact:
-                    HStack(alignment: .center) {
-                        if showContents {
-                            Button {
-                                router.currentPath.wrappedValue.append(author)
-                            } label: {
-                                HStack(alignment: .center) {
-                                    AvatarView(imageUrl: author.profilePhotoURL, size: 24)
-                                    Text(author.safeName)
+                HStack(alignment: .center) {
+                    if showContents {
+                        Button {
+                            router.currentPath.wrappedValue.append(author)
+                        } label: {
+                            HStack(alignment: .center) {
+                                AvatarView(imageUrl: author.profilePhotoURL, size: 24)
+                                Text(author.safeName)
+                                    .lineLimit(1)
+                                    .font(.subheadline)
+                                    .foregroundColor(Color.secondaryTxt)
+                                    .multilineTextAlignment(.leading)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
+                                    Text(elapsedTime)
                                         .lineLimit(1)
-                                        .font(.subheadline)
-                                        .foregroundColor(Color.secondaryTxt)
-                                        .multilineTextAlignment(.leading)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                    if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
-                                        Text(elapsedTime)
-                                            .lineLimit(1)
-                                            .font(.body)
-                                            .foregroundColor(.secondaryTxt)
-                                    }
+                                        .font(.body)
+                                        .foregroundColor(.secondaryTxt)
                                 }
                             }
-                            NoteOptionsButton(note: note)
-                        } else {
-                            Spacer()
                         }
+                        NoteOptionsButton(note: note)
+                    } else {
+                        Spacer()
                     }
-                    .padding(10)
+                }
+                .padding(10)
+                Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
+                Group {
+                    if showContents {
+                        CompactNoteView(note: note, showFullMessage: showFullMessage)
+                    } else {
+                        VStack {
+                            Text("This user is outside your network.")
+                                .font(.body)
+                                .foregroundColor(.secondaryTxt)
+                                .padding(15)
+                            SecondaryActionButton(title: Localized.show) {
+                                withAnimation {
+                                    userTappedShowOutOfNetwork = true
+                                }
+                            }
+                            .padding(.bottom, 15)
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
                     Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
-                    Group {
-                        if showContents {
-                            CompactNoteView(note: note, showFullMessage: showFullMessage)
-                        } else {
-                            VStack {
-                                Text("This user is outside your network.")
-                                    .font(.body)
-                                    .foregroundColor(.secondaryTxt)
-                                    .padding(15)
-                                SecondaryActionButton(title: Localized.show) {
-                                    withAnimation {
-                                        userTappedShowOutOfNetwork = true
-                                    }
-                                }
-                                .padding(.bottom, 15)
+                    HStack {
+                        if showReplyCount {
+                            StackedAvatarsView(avatarUrls: replyAvatarUrls, size: 20, border: 0)
+                            if let replies = attributedReplies {
+                                Text(replies)
+                                    .font(.subheadline)
+                                    .foregroundColor(Color.secondaryTxt)
                             }
-                            .frame(maxWidth: .infinity)
                         }
-                        Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
-                        HStack {
-                            if showReplyCount {
-                                StackedAvatarsView(avatarUrls: replyAvatarUrls, size: 20, border: 0)
-                                if let replies = attributedReplies {
-                                    Text(replies)
-                                        .font(.subheadline)
-                                        .foregroundColor(Color.secondaryTxt)
-                                }
-                            }
-                            Spacer()
-                            Image.buttonReply
-                        }
-                        .padding(15)
+                        Spacer()
+                        Image.buttonReply
                     }
+                    .padding(15)
+                }
             case .golden:
                 GoldenPostView(author: author, note: note)
             }

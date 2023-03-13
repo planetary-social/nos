@@ -22,7 +22,7 @@ struct ThreadView: View {
         while true {
             if let nextEvent = allReplies
                 .first(where: {
-                    ($0.eventReferences?.lastObject as? EventReference)?.referencedEvent?.identifier == currentEvent.identifier
+                    ($0.eventReferences?.lastObject as? EventReference)?.eventId == currentEvent.identifier
                 }) {
                 thread.append(nextEvent)
                 currentEvent = nextEvent

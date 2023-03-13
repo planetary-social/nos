@@ -181,20 +181,14 @@ public class Event: NosManagedObject {
     }
         
     @nonobjc public class func allReplies(toNoteWith noteID: String?) -> NSFetchRequest<Event> {
-        guard let currentUser = CurrentUser.shared.author, let noteID else {
+        guard let noteID else {
             return emptyRequest()
         }
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
             format: replyNoteReferences,
-            noteID,
-            currentUser,
-            currentUser,
-            currentUser,
-            currentUser,
-            currentUser,
-            currentUser
+            noteID
         )
         return fetchRequest
     }
@@ -504,9 +498,6 @@ public class Event: NosManagedObject {
                 }
             }
             
-            // TODO: just set up an NSFetchedResultsController in CurrentUser to do this
-            CurrentUser.shared.updateInNetworkAuthors()
-            
         case .metaData:
             guard createdAt! > newAuthor.lastUpdatedMetadata ?? Date.distantPast else {
                 // This is old data
@@ -614,8 +605,11 @@ public class Event: NosManagedObject {
     
     /// Returns the root event that this note is replying to, or nil if there isn't one.
     func rootNote() -> Event? {
-        if let rootReference = eventReferences?.first(where: { ($0 as? EventReference)?.marker ?? "" == "root" }) as? EventReference,
-            let rootNote = rootReference.referencedEvent {
+        let rootReference = eventReferences?.first(where: {
+            ($0 as? EventReference)?.marker ?? "" == "root"
+        }) as? EventReference
+        
+        if let rootReference, let rootNote = rootReference.referencedEvent {
             return rootNote
         }
         return nil

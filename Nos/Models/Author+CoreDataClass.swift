@@ -75,7 +75,9 @@ public class Author: NosManagedObject {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: "ANY followers.source IN %@.follows.destination OR hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey OR hexadecimalPublicKey = %@.hexadecimalPublicKey",
+            format: "ANY followers.source IN %@.follows.destination " +
+                "OR hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey OR " +
+                "hexadecimalPublicKey = %@.hexadecimalPublicKey",
             currentUser,
             currentUser,
             currentUser

@@ -29,6 +29,7 @@ struct HomeFeedView: View {
     init(user: Author) {
         self.user = user
         eventRequest = FetchRequest(fetchRequest: Event.homeFeed(for: user))
+        CurrentUser.shared.updateInNetworkAuthors()
     }
 
     func refreshHomeFeed() {
