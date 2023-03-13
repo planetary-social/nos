@@ -77,7 +77,7 @@ extension RelayService {
         }
     }
     
-    func sendClose(to relays: [Relay], subscriptions: [String]) {
+    func sendClose(subscriptions: [String]) {
         processingQueue.async {
             
             for subscription in subscriptions {

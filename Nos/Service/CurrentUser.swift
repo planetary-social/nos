@@ -36,7 +36,6 @@ class CurrentUser: ObservableObject {
     var relayService: RelayService! {
         didSet {
             subscribe()
-            updateInNetworkAuthors()
         }
     }
     // swiftlint:enable implicitly_unwrapped_optional
@@ -70,6 +69,19 @@ class CurrentUser: ObservableObject {
     // Pass in relays if you want to request from something other
     // than the Current User's relays (ie onboarding)
     func subscribe(relays: [Relay]? = nil) {
+        
+        var relays = relays
+        if relays == nil || relays?.isEmpty == true {
+            // Fetch relays from Core Data
+            relays = CurrentUser.shared.author?.relays?.allObjects as? [Relay] ?? []
+            if relays?.isEmpty == true {
+                // If we're still empty connect to all known relays hoping to get some metadata
+                relays = Relay.allKnown.map {
+                    Relay.findOrCreate(by: $0, context: context)
+                }
+            }
+        }
+        
         // Always listen to my changes
         if let key = publicKey {
             // Close out stale requests
