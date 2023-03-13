@@ -34,9 +34,10 @@ class Analytics {
         if mock {
             configuration = PHGPostHogConfiguration(apiKey: "none", host: "/dev/null")
         } else {
-            configuration = PHGPostHogConfiguration(apiKey: "<ph_project_api_key>", host: "<ph_instance_address>")
+            let apiKey = Bundle.main.infoDictionary?["POSTHOG_API_KEY"] as? String ?? ""
+            configuration = PHGPostHogConfiguration(apiKey: apiKey, host: "https://posthog.planetary.tools")
         }
-
+        
         configuration.captureApplicationLifecycleEvents = true
         configuration.recordScreenViews = true
         // TODO: write screen views to log
@@ -98,5 +99,6 @@ class Analytics {
     private func track(_ eventName: String, properties: [String: Any] = [:]) {
         Log.info("Analytics: \(eventName)")
         postHog.capture(eventName, properties: properties)
+        postHog.flush()
     }
 }
