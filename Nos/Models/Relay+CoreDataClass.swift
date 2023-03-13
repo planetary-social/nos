@@ -19,7 +19,7 @@ public class Relay: NosManagedObject {
         ]
     }
     
-    static var sync: [String] {
+    static var allKnown: [String] {
         [
         "wss://eden.nostr.land",
         "wss://nostr.fmt.wiz.biz",

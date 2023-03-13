@@ -93,7 +93,7 @@ struct OnboardingView: View {
                                     analytics.importedKey()
                                     
                                     // Use these to sync
-                                    for address in Relay.sync {
+                                    for address in Relay.allKnown {
                                         let relay = Relay(context: viewContext, address: address, author: nil)
                                         CurrentUser.onboardingRelays.append(relay)
                                     }
