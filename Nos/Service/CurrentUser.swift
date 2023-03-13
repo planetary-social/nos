@@ -110,6 +110,7 @@ class CurrentUser: ObservableObject {
         var metaEvent = MetadataEventJSON(
             displayName: author!.displayName,
             name: author!.name,
+            nip05: author!.nip05,
             about: author!.about,
             picture: author!.profilePhotoURL?.absoluteString
         ).dictionary
