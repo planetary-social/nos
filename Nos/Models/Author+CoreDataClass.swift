@@ -68,7 +68,7 @@ public class Author: NosManagedObject {
     }
     
     @nonobjc class func inNetworkRequest() -> NSFetchRequest<Author> {
-        guard let currentUser = CurrentUser.author else {
+        guard let currentUser = CurrentUser.shared.author else {
             return emptyRequest()
         }
         

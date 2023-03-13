@@ -28,12 +28,12 @@ struct NoteCard: View {
     var repliesRequest: FetchRequest<Event>
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
     
-    @FetchRequest(fetchRequest: Author.inNetworkRequest()) var inNetworkAuthors: FetchedResults<Author>
+    @ObservedObject private var currentUser: CurrentUser = .shared
     
     @State private var userTappedShowOutOfNetwork = false
     
     var showContents: Bool {
-        showFullMessage || userTappedShowOutOfNetwork || inNetworkAuthors.contains(note.author!) //|| Event.discoverTabUserIdToInfo.keys.contains(note.author!.hexadecimalPublicKey!)
+        showFullMessage || userTappedShowOutOfNetwork || currentUser.inNetworkAuthors.contains(note.author!)
     }
     
     var replyAvatarUrls: [URL?] {

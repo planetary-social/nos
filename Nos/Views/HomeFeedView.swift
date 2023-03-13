@@ -38,7 +38,7 @@ struct HomeFeedView: View {
             subscriptionIds.removeAll()
         }
 
-        if let follows = CurrentUser.follows {
+        if let follows = CurrentUser.shared.follows {
             let authors = follows.keys
             
             if !authors.isEmpty {
@@ -70,7 +70,7 @@ struct HomeFeedView: View {
                 if router.currentPath.wrappedValue.count == 1 {
                     ProfileView(author: author)
                 } else {
-                    if author == CurrentUser.author, CurrentUser.editing {
+                    if author == CurrentUser.shared.author, CurrentUser.shared.editing {
                         ProfileEditView(author: author)
                     } else {
                         ProfileView(author: author)
@@ -99,7 +99,7 @@ struct HomeFeedView: View {
             )
         }
         .task {
-            CurrentUser.relayService = relayService
+            CurrentUser.shared.relayService = relayService
             refreshHomeFeed()
         }
         .refreshable {

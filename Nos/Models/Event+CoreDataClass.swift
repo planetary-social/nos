@@ -107,7 +107,7 @@ public class Event: NosManagedObject {
     }
     
     @nonobjc public class func discoverFeedRequest(authors: [String]) -> NSFetchRequest<Event> {
-        guard let currentUser = CurrentUser.author else {
+        guard let currentUser = CurrentUser.shared.author else {
             return emptyRequest()
         }
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -181,7 +181,7 @@ public class Event: NosManagedObject {
     }
         
     @nonobjc public class func allReplies(toNoteWith noteID: String?) -> NSFetchRequest<Event> {
-        guard let currentUser = CurrentUser.author, let noteID else {
+        guard let currentUser = CurrentUser.shared.author, let noteID else {
             return emptyRequest()
         }
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -200,7 +200,7 @@ public class Event: NosManagedObject {
     }
     
     @nonobjc public class func allReplies(toEventWith id: String) -> NSFetchRequest<Event> {
-        guard let currentUser = CurrentUser.author else {
+        guard let currentUser = CurrentUser.shared.author else {
             return emptyRequest()
         }
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -503,6 +503,9 @@ public class Event: NosManagedObject {
                     Follow.deleteFollows(in: removedFollows, context: context)
                 }
             }
+            
+            // TODO: just set up an NSFetchedResultsController in CurrentUser to do this
+            CurrentUser.shared.updateInNetworkAuthors()
             
         case .metaData:
             guard createdAt! > newAuthor.lastUpdatedMetadata ?? Date.distantPast else {
