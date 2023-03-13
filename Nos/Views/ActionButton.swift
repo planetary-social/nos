@@ -13,6 +13,15 @@ struct ActionButton: View {
     
     var title: Localized
     var action: () -> Void
+    var depthEffectColor = Color(hex: "#A04651")
+    var backgroundGradient = LinearGradient(
+        colors: [
+            Color(hex: "#F08508"),
+            Color(hex: "#F43F75")
+        ],
+        startPoint: .bottomLeading,
+        endPoint: .topTrailing
+    )
     
     var body: some View {
         Button(action: action, label: {
@@ -23,7 +32,28 @@ struct ActionButton: View {
         })
         .lineLimit(nil)
         .foregroundColor(.black)
-        .buttonStyle(ActionButtonStyle())
+        .buttonStyle(ActionButtonStyle(depthEffectColor: depthEffectColor, backgroundGradient: backgroundGradient))
+    }
+}
+
+struct SecondaryActionButton: View {
+    var title: Localized
+    var action: () -> Void
+    
+    var body: some View {
+        ActionButton(
+            title: title,
+            action: action,
+            depthEffectColor: Color(hex: "#514964"),
+            backgroundGradient: LinearGradient(
+                colors: [
+                    Color(hex: "#736595"),
+                    Color(hex: "#736595")
+                ],
+                startPoint: .bottomLeading,
+                endPoint: .topTrailing
+            )
+        )
     }
 }
 
@@ -32,11 +62,13 @@ struct ActionButtonStyle: ButtonStyle {
     @SwiftUI.Environment(\.isEnabled) private var isEnabled
     
     let cornerRadius: CGFloat = 17
+    let depthEffectColor: Color
+    let backgroundGradient: LinearGradient
     
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             ZStack {
-                Color(hex: "#A04651")
+                depthEffectColor
             }
             .cornerRadius(16)
             .offset(y: 1)
@@ -67,15 +99,7 @@ struct ActionButtonStyle: ButtonStyle {
                             )
                             .blendMode(.softLight)
                             
-                            LinearGradient(
-                                colors: [
-                                    Color(hex: "#F08508"),
-                                    Color(hex: "#F43F75")
-                                ],
-                                startPoint: .bottomLeading,
-                                endPoint: .topTrailing
-                            )
-                            .blendMode(.normal)
+                            backgroundGradient.blendMode(.normal)
                         }
                     }
                 )
@@ -93,6 +117,8 @@ struct ActionButton_Previews: PreviewProvider {
             
             ActionButton(title: Localized.done, action: {})
                 .disabled(true)
+            
+            SecondaryActionButton(title: Localized.edit, action: {})
         }
     }
 }

@@ -16,6 +16,8 @@ struct NoteButton: View {
     var note: Event
     var style = CardStyle.compact
     var showFullMessage = false
+    var allowsPush = true
+    var showReplyCount = true
 
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
@@ -23,9 +25,17 @@ struct NoteButton: View {
     var body: some View {
         if let author = note.author {
             Button {
-                router.currentPath.wrappedValue.append(note)
+                if allowsPush {
+                    router.currentPath.wrappedValue.append(note)
+                }
             } label: {
-                NoteCard(author: author, note: note, style: style, showFullMessage: showFullMessage)
+                NoteCard(
+                    author: author,
+                    note: note,
+                    style: style,
+                    showFullMessage: showFullMessage,
+                    showReplyCount: showReplyCount
+                )
             }
             .buttonStyle(CardButtonStyle())
         }

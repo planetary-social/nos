@@ -98,10 +98,10 @@ struct ProfileView: View {
                             UIPasteboard.general.string = router.viewedAuthor?.publicKey?.npub ?? ""
                         }
                         if let author = router.viewedAuthor {
-                            if author == CurrentUser.author {
+                            if author == CurrentUser.shared.author {
                                 Button(
                                     action: {
-                                        CurrentUser.editing = true
+                                        CurrentUser.shared.editing = true
                                         router.push(author)
                                     },
                                     label: {
@@ -125,8 +125,6 @@ struct ProfileView: View {
         )
         .onAppear {
             router.viewedAuthor = author
-        }
-        .task {
             refreshProfileFeed()
         }
         .refreshable {
