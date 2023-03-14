@@ -7,15 +7,15 @@
 
 import SwiftUI
 import CoreData
+import Dependencies
 
 /// Displays a list of cells that let the user know when other users interact with their notes.
 struct NotificationsView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
-    
     @EnvironmentObject private var relayService: RelayService
-    
     @EnvironmentObject private var router: Router
+    @Dependency(\.analytics) private var analytics
 
     private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
@@ -69,6 +69,9 @@ struct NotificationsView: View {
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
             }
+            .onAppear {
+                analytics.showedNotifications()
+            }
         }
     }
 }
@@ -79,6 +82,8 @@ struct NotificationCard: View {
     private let user: Author
     private let actionText: String?
     private let authorName: String
+    
+    @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
@@ -120,7 +125,7 @@ struct NotificationCard: View {
                             }
                         }
                         HStack {
-                            Text("\"\(note.content ?? "null")\"")
+                            Text("\"" + (note.attributedContent(with: viewContext) ?? "null") + "\"")
                                 .lineLimit(1)
                                 .font(.body)
                                 .foregroundColor(.primaryTxt)

@@ -24,6 +24,7 @@ class AppController: ObservableObject {
     
     init(router: Router) {
         self.router = router
+        print("Initializing analytics. This is hack to get the dependency initialzed by printing it: \(analytics)")
     }
     
     func configureCurrentState() {

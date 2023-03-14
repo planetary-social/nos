@@ -7,18 +7,19 @@
 
 import SwiftUI
 import CoreData
+import Dependencies
 
 struct DiscoverView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var relayService: RelayService
+    @EnvironmentObject var router: Router
+    @Dependency(\.analytics) private var analytics
 
     private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
 
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
-    
-    @EnvironmentObject var router: Router
     
     @State var columns: Int = 0
     
@@ -119,6 +120,9 @@ struct DiscoverView: View {
             }
             .task {
                 refreshDiscover()
+            }
+            .onAppear {
+                analytics.showedDiscover()
             }
             .onDisappear {
                 relayService.sendCloseToAll(subscriptions: subscriptionIds)

@@ -120,6 +120,9 @@ struct RelayView: View {
         .navigationBarTitle(Localized.relays.string, displayMode: .inline)
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+        .onAppear {
+            analytics.showedRelays()
+        }
     }
     
     func publishChanges() {

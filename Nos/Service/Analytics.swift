@@ -26,28 +26,29 @@ extension DependencyValues {
 /// dependency using the Dependencies library.
 class Analytics {
 
-    private let postHog: PHGPostHog
+    private let postHog: PHGPostHog?
 
     required init(mock: Bool = false) {
-        // `host` is optional if you use PostHog Cloud (app.posthog.com)
-        var configuration: PHGPostHogConfiguration
-        if mock {
-            configuration = PHGPostHogConfiguration(apiKey: "none", host: "/dev/null")
+        let apiKey = Bundle.main.infoDictionary?["POSTHOG_API_KEY"] as? String ?? ""
+        if !mock && !apiKey.isEmpty {
+            let configuration = PHGPostHogConfiguration(apiKey: apiKey, host: "https://posthog.planetary.tools")
+            
+            configuration.captureApplicationLifecycleEvents = true
+            configuration.recordScreenViews = true
+            // TODO: write screen views to log
+
+            PHGPostHog.setup(with: configuration)
+            postHog = PHGPostHog.shared()!
         } else {
-            configuration = PHGPostHogConfiguration(apiKey: "<ph_project_api_key>", host: "<ph_instance_address>")
+            postHog = nil
         }
-
-        configuration.captureApplicationLifecycleEvents = true
-        configuration.recordScreenViews = true
-        // TODO: write screen views to log
-
-        PHGPostHog.setup(with: configuration)
-        postHog = PHGPostHog.shared()!
     }
 
     func published(note: Event) {
         track("Published Note", properties: ["length": note.content?.count ?? 0])
     }
+    
+    // MARK: - Screens
     
     func startedOnboarding() {
         track("Started Onboarding")
@@ -56,6 +57,48 @@ class Analytics {
     func completedOnboarding() {
         track("Completed Onboarding")
     }
+    
+    func showedHome() {
+        track("Home Tab Tapped")
+    }
+    
+    func showedDiscover() {
+        track("Discover Tab Tapped")
+    }
+    
+    func showedNewNote() {
+        track("New Note Tapped")
+    }
+    
+    func showedNotifications() {
+        track("Notifications Tab Tapped")
+    }
+    
+    func showedProfile() {
+        track("Profile View Opened")
+    }
+    
+    func showedThread() {
+        track("Thread View Opened")
+    }
+    
+    func showedSideMenu() {
+        track("Contact Support Tapped")
+    }
+    
+    func showedRelays() {
+        track("Relay View Opened")
+    }
+    
+    func showedSettings() {
+        track("Settings View Opened")
+    }
+    
+    func showedSupport() {
+        track("Contact Support Tapped")
+    }
+    
+    // MARK: - Actions
     
     func generatedKey() {
         track("Generated Private Key")
@@ -87,16 +130,16 @@ class Analytics {
     
     func identify(with keyPair: KeyPair) {
         Log.info("Analytics: Identified \(keyPair.npub)")
-        postHog.identify(keyPair.npub)
+        postHog?.identify(keyPair.npub)
     }
     
     func logout() {
         Log.info("Analytics: User logged out")
-        postHog.reset()
+        postHog?.reset()
     }
     
     private func track(_ eventName: String, properties: [String: Any] = [:]) {
         Log.info("Analytics: \(eventName)")
-        postHog.capture(eventName, properties: properties)
+        postHog?.capture(eventName, properties: properties)
     }
 }
