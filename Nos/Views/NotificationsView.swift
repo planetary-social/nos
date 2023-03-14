@@ -83,6 +83,8 @@ struct NotificationCard: View {
     private let actionText: String?
     private let authorName: String
     
+    @Environment(\.managedObjectContext) private var viewContext
+    
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
     
@@ -123,7 +125,7 @@ struct NotificationCard: View {
                             }
                         }
                         HStack {
-                            Text("\"\(note.content ?? "null")\"")
+                            Text("\"" + (note.attributedContent(with: viewContext) ?? "null") + "\"")
                                 .lineLimit(1)
                                 .font(.body)
                                 .foregroundColor(.primaryTxt)
