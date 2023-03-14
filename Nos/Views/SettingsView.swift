@@ -108,6 +108,9 @@ struct SettingsView: View {
                 privateKeyString = ""
             }
         }
+        .onAppear {
+            analytics.showedSettings()
+        }
     }
 }
 

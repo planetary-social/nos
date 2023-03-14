@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Display a user's NIP-05 identifier on the profile page after making a web request to verify that it is correct 
+- Add self-hosted PostHog analytics
 - Render mentions on notifications tab
 
 ## [0.1 (8)] - 2023-03-13Z
@@ -23,7 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use only relays added in RelayView for sending and receiving events
 - Add PostHog analytics
 - Render note mentions in NoteCard
-- Add PostHog analytics
 - Open an email compose view controller for support@planetary.social 
 - Fix duplicate note on a new post
 - Add mute functionality

@@ -13,6 +13,12 @@ class CurrentUser: ObservableObject {
     
     static let shared = CurrentUser()
     
+    var keyPair: KeyPair? {
+        if let privateKey = privateKey, let keyPair = KeyPair.init(privateKeyHex: privateKey) {
+            return keyPair
+        }
+        return nil
+    }
     var privateKey: String? {
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
@@ -23,12 +29,7 @@ class CurrentUser: ObservableObject {
     }
     
     var publicKey: String? {
-        if let privateKey = privateKey {
-            if let keyPair = KeyPair.init(privateKeyHex: privateKey) {
-                return keyPair.publicKey.hex
-            }
-        }
-        return nil
+        keyPair?.publicKey.hex
     }
     
     // swiftlint:disable implicitly_unwrapped_optional
