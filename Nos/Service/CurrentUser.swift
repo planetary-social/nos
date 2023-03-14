@@ -267,9 +267,10 @@ class CurrentUser: ObservableObject {
     
     func updateInNetworkAuthors() {
         do {
-            let inNetworkAuthors = try context.fetch(Author.inNetworkRequest())
-            DispatchQueue.main.async {
-                self.inNetworkAuthors = inNetworkAuthors
+            if let inNetworkAuthors = try context?.fetch(Author.inNetworkRequest()) {
+                DispatchQueue.main.async {
+                    self.inNetworkAuthors = inNetworkAuthors
+                }
             }
         } catch {
             Log.error("Error updating in network authors: \(error.localizedDescription)")

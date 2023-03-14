@@ -279,7 +279,9 @@ extension RelayService {
             }
             switch responseType {
             case "EVENT":
+                #if DEBUG
                 Log.info(response)
+                #endif
                 parseEvent(responseArray, socket)
             case "NOTICE":
                 print(response)
