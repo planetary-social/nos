@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Display a user's NIP-05 identifier on the profile page after making a web request to verify that it is correct 
+- Fix blank home feed during first launch
 
 ## [0.1 (9)] - 2023-03-14Z
 - Fixed a crash on launch when relay model was outdated.
