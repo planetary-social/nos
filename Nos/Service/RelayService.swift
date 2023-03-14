@@ -219,7 +219,7 @@ extension RelayService {
                 }
             } catch {
                 print("Error: parsing event from relay (\(socket.request.url?.absoluteString ?? "")): " +
-                      "\(responseArray)\nerror: \(error.localizedDescription)")
+                    "\(responseArray)\nerror: \(error.localizedDescription)")
             }
         }
     }
