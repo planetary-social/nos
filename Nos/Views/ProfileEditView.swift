@@ -54,9 +54,9 @@ struct ProfileEditView: View {
                     .foregroundColor(.textColor)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.none)
-#if os(iOS)
+                    #if os(iOS)
                     .keyboardType(.URL)
-#endif
+                    #endif
                 } header: {
                     createAccountCompletion != nil ? Localized.createAccount.view : Localized.basicInfo.view
                         .foregroundColor(.textColor)
