@@ -78,6 +78,8 @@ struct ProfileHeader: View {
                         }
                         
                         Spacer()
+                            .frame(height: 17)
+                        
                         Text("\(Localized.nip05.string): \(verifiedNip05Identifier)")
                             .font(.title3.weight(.semibold))
                             .foregroundColor(Color.primaryTxt)
