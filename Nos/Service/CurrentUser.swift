@@ -13,6 +13,12 @@ class CurrentUser: ObservableObject {
     
     static let shared = CurrentUser()
     
+    var keyPair: KeyPair? {
+        if let privateKey = privateKey, let keyPair = KeyPair.init(privateKeyHex: privateKey) {
+            return keyPair
+        }
+        return nil
+    }
     var privateKey: String? {
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
@@ -23,12 +29,7 @@ class CurrentUser: ObservableObject {
     }
     
     var publicKey: String? {
-        if let privateKey = privateKey {
-            if let keyPair = KeyPair.init(privateKeyHex: privateKey) {
-                return keyPair.publicKey.hex
-            }
-        }
-        return nil
+        keyPair?.publicKey.hex
     }
     
     // swiftlint:disable implicitly_unwrapped_optional
@@ -122,6 +123,7 @@ class CurrentUser: ObservableObject {
         var metaEvent = MetadataEventJSON(
             displayName: author!.displayName,
             name: author!.name,
+            nip05: author!.nip05,
             about: author!.about,
             picture: author!.profilePhotoURL?.absoluteString
         ).dictionary
@@ -192,8 +194,6 @@ class CurrentUser: ObservableObject {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }
         }
-        
-        updateInNetworkAuthors()
     }
     
     /// Follow by public hex key
@@ -257,19 +257,16 @@ class CurrentUser: ObservableObject {
             }
         }
 
+        try! context.save()
         publishContactList(tags: stillFollowingKeys.tags)
-
-        // Delete cached texts from this person
-        if let author = try? Author.find(by: unfollowedKey, context: context) {
-            author.deleteAllPosts(context: context)
-        }
     }
     
     func updateInNetworkAuthors() {
         do {
-            let inNetworkAuthors = try context.fetch(Author.inNetworkRequest())
-            DispatchQueue.main.async {
-                self.inNetworkAuthors = inNetworkAuthors
+            if let inNetworkAuthors = try context?.fetch(Author.inNetworkRequest()) {
+                DispatchQueue.main.async {
+                    self.inNetworkAuthors = inNetworkAuthors
+                }
             }
         } catch {
             Log.error("Error updating in network authors: \(error.localizedDescription)")

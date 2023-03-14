@@ -8,19 +8,18 @@
 import SwiftUI
 import CoreData
 import Combine
+import Dependencies
 
 struct HomeFeedView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
-    
     @EnvironmentObject private var relayService: RelayService
-
     @EnvironmentObject var router: Router
+    @Dependency(\.analytics) private var analytics
     
-    private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
+    @FetchRequest var events: FetchedResults<Event>
+    @FetchRequest var followedAuthors: FetchedResults<Author>
 
-    private var events: FetchedResults<Event> { eventRequest.wrappedValue }
-    
     // Probably the logged in user should be in the @Environment eventually
     @ObservedObject var user: Author
     
@@ -28,8 +27,8 @@ struct HomeFeedView: View {
     
     init(user: Author) {
         self.user = user
-        eventRequest = FetchRequest(fetchRequest: Event.homeFeed(for: user))
-        CurrentUser.shared.updateInNetworkAuthors()
+        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user))
+        self._followedAuthors = FetchRequest(fetchRequest: user.followsRequest())
     }
 
     func refreshHomeFeed() {
@@ -38,6 +37,11 @@ struct HomeFeedView: View {
             relayService.sendCloseToAll(subscriptions: subscriptionIds)
             subscriptionIds.removeAll()
         }
+        
+        // I can't figure out why but the home feed doesn't update when you follow someone without this.
+        // swiftlint:disable line_length
+        events.nsPredicate = NSPredicate(format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND ANY author.followers.source.hexadecimalPublicKey = %@", CurrentUser.shared.author!.hexadecimalPublicKey!)
+        // swiftlint:enable line_length
 
         if let follows = CurrentUser.shared.follows {
             let authors = follows.keys
@@ -56,7 +60,7 @@ struct HomeFeedView: View {
                 LazyVStack {
                     ForEach(events.unmuted) { event in
                         VStack {
-                            NoteButton(note: event)
+                            NoteButton(note: event, hideOutOfNetwork: false)
                                 .padding(.horizontal)
                         }
                     }
@@ -64,7 +68,6 @@ struct HomeFeedView: View {
             }
             .background(Color.appBg)
             .padding(.top, 1)
-            .padding(.bottom, 1)
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
@@ -100,10 +103,13 @@ struct HomeFeedView: View {
                 )
             )
         }
-        .task {
+        .refreshable {
             refreshHomeFeed()
         }
-        .refreshable {
+        .onAppear {
+            analytics.showedHome()
+        }
+        .task {
             refreshHomeFeed()
         }
         .onDisappear {

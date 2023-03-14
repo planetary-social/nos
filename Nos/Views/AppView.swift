@@ -6,18 +6,19 @@
 //
 
 import SwiftUI
+import Dependencies
 
 struct AppView: View {
 
-    @EnvironmentObject private var appController: AppController
-    
     @State var isCreatingNewPost = false
     
     @State var showNewPost = false
 
+    @EnvironmentObject private var appController: AppController
     @EnvironmentObject var router: Router
-    
     @Environment(\.managedObjectContext) private var viewContext
+    @Dependency(\.analytics) private var analytics
+    @EnvironmentObject var currentUser: CurrentUser
     
     @State private var showingOptions = false
     @State private var lastSelectedTab = Destination.home
@@ -68,7 +69,7 @@ struct AppView: View {
                 OnboardingView(completion: appController.completeOnboarding)
             } else {
                 TabView(selection: $router.selectedTab) {
-                    if let author = CurrentUser.shared.author {
+                    if let author = currentUser.author {
                         HomeFeedView(user: author)
                             .tabItem {
                                 VStack {
@@ -84,6 +85,13 @@ struct AppView: View {
                             }
                             .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                             .tag(Destination.home)
+                            .onAppear {
+                                // TODO: Move this somewhere better like CurrentUser when it becomes the source of truth
+                                // for who is logged in
+                                if let keyPair = CurrentUser.shared.keyPair {
+                                    analytics.identify(with: keyPair)
+                                }
+                            }
                     }
                     
                     DiscoverView()

@@ -185,6 +185,8 @@ enum Localized: String, Localizable, CaseIterable {
     case follows = "Follows"
     case following = "Following"
     case unfollow = "Unfollow"
+    case uns = "UNS"
+    case nip05 = "NIP-05"
     case readMore = "Read more"
     case thread = "Thread"
     case show = "Show" // verb form
@@ -204,6 +206,7 @@ enum Localized: String, Localizable, CaseIterable {
     case notifications = "Notifications"
     case noNotifications = "No notifications (yet)!"
     case copyNoteIdentifier = "Copy Note Identifier"
+    case copyNoteText = "Copy Note Text"
     case copyUserIdentifier = "Copy User ID"
     case muteUser = "Mute"
     case mutedUser = "Muted"

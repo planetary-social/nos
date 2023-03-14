@@ -206,7 +206,7 @@ extension RelayService {
             return
         }
         
-        Task.detached(priority: .userInitiated) {
+        Task.detached(priority: .utility) {
             do {
                 try await self.backgroundContext.perform {
                     let event = try EventProcessor.parse(jsonObject: eventJSON, in: self.backgroundContext)
@@ -218,7 +218,8 @@ extension RelayService {
                     }
                 }
             } catch {
-                print("Error: parsing event from relay (\(socket.request.url?.absoluteString ?? "")): \(responseArray)")
+                print("Error: parsing event from relay (\(socket.request.url?.absoluteString ?? "")): " +
+                    "\(responseArray)\nerror: \(error.localizedDescription)")
             }
         }
     }
@@ -279,7 +280,9 @@ extension RelayService {
             }
             switch responseType {
             case "EVENT":
+                #if DEBUG
                 Log.info(response)
+                #endif
                 parseEvent(responseArray, socket)
             case "NOTICE":
                 print(response)
@@ -447,5 +450,39 @@ extension RelayService: WebSocketDelegate {
             }
             handleError(error)
         }
+    }
+}
+
+// MARK: NIP-05 Support
+extension RelayService {
+    func verifyInternetIdentifier(identifier: String, userPublicKey: String) async -> Bool {
+        let localPart = identifier.components(separatedBy: "@")[safe: 0] ?? ""
+        let domain = identifier.components(separatedBy: "@")[safe: 1] ?? ""
+        let urlString = "https://\(domain)/.well-known/nostr.json?name=\(localPart)"
+        guard let url = URL(string: urlString) else {
+            Log.info("Invalid URL: \(urlString)")
+            return false
+        }
+        
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            if let names = json?["names"] as? [String: String], let pubkey = names[localPart] {
+                return pubkey == userPublicKey
+            }
+        } catch {
+            Log.info("Error verifying username: \(error.localizedDescription)")
+        }
+        return false
+    }
+
+    func identifierToShow(_ identifier: String) -> String {
+        let localPart = identifier.components(separatedBy: "@")[safe: 0]
+        let domain = identifier.components(separatedBy: "@")[safe: 1]
+        if localPart == "_" {
+            // The identifier _@domain is the "root" identifier, and is displayed as: <domain>
+            return domain ?? ""
+        }
+        return identifier
     }
 }

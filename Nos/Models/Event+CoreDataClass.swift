@@ -209,31 +209,21 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func homeFeedPredicate(for user: Author) -> NSPredicate {
+        NSPredicate(
+            // swiftlint:disable line_length
+            format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (ANY author.followers.source = %@ OR author = %@)",
+            // swiftlint:enable line_length
+            user,
+            user
+        )
+    }
+    
     @nonobjc public class func homeFeed(for user: Author) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        let kind = EventKind.text.rawValue
-        let followersPredicate = NSPredicate(
-            // swiftlint:disable line_length
-            format: "kind = %i AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND ANY author.followers.source = %@",
-            // swiftlint:enable line_length
-            kind,
-            user
-        )
-        if let publicKey = user.publicKey?.hex {
-            let currentUserPredicate = NSPredicate(
-                // swiftlint:disable line_length
-                format: "kind = %i AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND author.hexadecimalPublicKey = %@", kind, publicKey
-                // swiftlint:enable line_length
-            )
-            let compoundPredicate = NSCompoundPredicate(
-                orPredicateWithSubpredicates:
-                    [followersPredicate, currentUserPredicate]
-            )
-            fetchRequest.predicate = compoundPredicate
-        } else {
-            fetchRequest.predicate = followersPredicate
-        }
+        let homeFeedPredicate = homeFeedPredicate(for: user)
+        fetchRequest.predicate = homeFeedPredicate
         return fetchRequest
     }
     
@@ -506,9 +496,10 @@ public class Event: NosManagedObject {
                     if let keptRelays = newAuthor.relays as? Set<Relay> {
                         CurrentUser.shared.relayService.closeAllConnections(excluding: keptRelays)
                     }
+                    CurrentUser.shared.updateInNetworkAuthors()
                 }
             }
-
+            
         case .metaData:
             guard createdAt! > newAuthor.lastUpdatedMetadata ?? Date.distantPast else {
                 // This is old data
@@ -525,6 +516,7 @@ public class Event: NosManagedObject {
                     
                     // Every event has an author created, so it just needs to be populated
                     newAuthor.name = metadata.name
+                    newAuthor.nip05 = metadata.nip05
                     newAuthor.displayName = metadata.displayName
                     newAuthor.about = metadata.about
                     newAuthor.profilePhotoURL = metadata.profilePhotoURL
