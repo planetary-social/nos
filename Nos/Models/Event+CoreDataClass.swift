@@ -63,8 +63,7 @@ extension FetchedResults where Element == Event {
 @objc(Event)
 public class Event: NosManagedObject {
     
-    static var replyEventReferences =
-    "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@"
+    static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@"
     
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -101,7 +100,7 @@ public class Event: NosManagedObject {
     }
     
     @nonobjc public class func discoverFeedRequest(authors: [String]) -> NSFetchRequest<Event> {
-        guard let currentUser = CurrentUser.author else {
+        guard let currentUser = CurrentUser.shared.author else {
             return emptyRequest()
         }
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -171,21 +170,34 @@ public class Event: NosManagedObject {
     }
     
     @nonobjc public class func allReplies(to rootEvent: Event) -> NSFetchRequest<Event> {
+        allReplies(toNoteWith: rootEvent.identifier)
+    }
+        
+    @nonobjc public class func allReplies(toNoteWith noteID: String?) -> NSFetchRequest<Event> {
+        guard let noteID else {
+            return emptyRequest()
+        }
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: replyEventReferences,
-            rootEvent.identifier ?? ""
+            format: replyNoteReferences,
+            noteID
         )
         return fetchRequest
     }
     
     @nonobjc public class func allReplies(toEventWith id: String) -> NSFetchRequest<Event> {
+        guard let currentUser = CurrentUser.shared.author else {
+            return emptyRequest()
+        }
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: replyEventReferences,
-            id
+            format: replyNoteReferences,
+            id,
+            currentUser,
+            currentUser,
+            currentUser
         )
         return fetchRequest
     }
@@ -416,13 +428,13 @@ public class Event: NosManagedObject {
         )
     }
 	
-    // swiftlint:disable function_body_length
     convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) throws {
         self.init(context: context)
         identifier = jsonEvent.id
         try hydrate(from: jsonEvent, in: context)
     }
         
+    // swiftlint:disable function_body_length cyclomatic_complexity
     /// Populates an event stub (with only its ID set) using the data in the given JSON.
     func hydrate(from jsonEvent: JSONEvent, in context: NSManagedObjectContext) throws {
         guard isStub else {
@@ -445,9 +457,6 @@ public class Event: NosManagedObject {
         }
         
         author = newAuthor
-        newAuthor.lastUpdated = Date.now
-        
-        print("\(author!.hexadecimalPublicKey!) last updated \(author!.lastUpdated!)")
         
         guard let eventKind = EventKind(rawValue: kind) else {
             throw EventError.unrecognizedKind
@@ -455,6 +464,12 @@ public class Event: NosManagedObject {
         
         switch eventKind {
         case .contactList:
+            guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
+                // This is old data
+                break
+            }
+            
+            newAuthor.lastUpdatedContactList = .now
             // Make a copy of what was followed before
             let originalFollows = newAuthor.follows?.copy() as? Set<Follow>
             
@@ -476,8 +491,32 @@ public class Event: NosManagedObject {
                 }
             }
             
+            // Get the user's active relays out of the content property
+            if let data = jsonEvent.content.data(using: .utf8, allowLossyConversion: false),
+                let relayEntries = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
+                let relays = (relayEntries as? [String: Any])?.keys {
+
+                for address in relays {
+                    let relay = Relay.findOrCreate(by: address, context: context)
+                    newAuthor.add(relay: relay)
+                }
+                
+                // Close sockets for anything not in the above
+                if newAuthor == CurrentUser.shared.author {
+                    if let keptRelays = newAuthor.relays as? Set<Relay> {
+                        CurrentUser.shared.relayService.closeAllConnections(excluding: keptRelays)
+                    }
+                }
+            }
+
         case .metaData:
+            guard createdAt! > newAuthor.lastUpdatedMetadata ?? Date.distantPast else {
+                // This is old data
+                break
+            }
+            
             if let contentData = jsonEvent.content.data(using: .utf8) {
+                newAuthor.lastUpdatedMetadata = .now
                 // There may be unsupported metadata. Store it to send back later in metadata publishes.
                 newAuthor.rawMetadata = contentData
 
@@ -516,7 +555,7 @@ public class Event: NosManagedObject {
             authorReferences = newAuthorReferences
         }
     }
-    // swiftlint:enable function_body_length
+    // swiftlint:enable function_body_length cyclomatic_complexity
     
     class func all(context: NSManagedObjectContext) -> [Event] {
         let allRequest = Event.allPostsRequest()
@@ -575,9 +614,16 @@ public class Event: NosManagedObject {
         })
     }
     
-    /// Returns true if this note does not tag any other events.
-    func rootNote() -> Event {
-        (eventReferences?.firstObject as? EventReference)?.referencedEvent ?? self
+    /// Returns the root event that this note is replying to, or nil if there isn't one.
+    func rootNote() -> Event? {
+        let rootReference = eventReferences?.first(where: {
+            ($0 as? EventReference)?.marker ?? "" == "root"
+        }) as? EventReference
+        
+        if let rootReference, let rootNote = rootReference.referencedEvent {
+            return rootNote
+        }
+        return nil
     }
 }
 // swiftlint:enable type_body_length

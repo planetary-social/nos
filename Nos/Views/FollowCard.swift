@@ -40,7 +40,7 @@ struct FollowCard: View {
                                 .foregroundColor(Color.secondaryTxt)
                         }
                         Spacer()
-                        if let currentUser = CurrentUser.author {
+                        if let currentUser = CurrentUser.shared.author {
                             FollowButton(currentUserAuthor: currentUser, author: author)
                                 .padding(10)
                         }

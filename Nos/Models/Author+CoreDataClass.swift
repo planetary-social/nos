@@ -44,6 +44,7 @@ public class Author: NosManagedObject {
         return nil
     }
     
+    @discardableResult
     class func findOrCreate(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author {
         if let author = try? Author.find(by: pubKey, context: context) {
             return author
@@ -64,6 +65,31 @@ public class Author: NosManagedObject {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(format: "kind = %i AND author = %@", eventKind.rawValue, self)
+        return fetchRequest
+    }
+    
+    @nonobjc class func inNetworkRequest() -> NSFetchRequest<Author> {
+        guard let currentUser = CurrentUser.shared.author else {
+            return emptyRequest()
+        }
+        
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "ANY followers.source IN %@.follows.destination " +
+                "OR hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey OR " +
+                "hexadecimalPublicKey = %@.hexadecimalPublicKey",
+            currentUser,
+            currentUser,
+            currentUser
+        )
+        return fetchRequest
+    }
+    
+    @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "FALSEPREDICATE")
         return fetchRequest
     }
     

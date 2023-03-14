@@ -68,7 +68,7 @@ struct AppView: View {
                 OnboardingView(completion: appController.completeOnboarding)
             } else {
                 TabView(selection: $router.selectedTab) {
-                    if let author = CurrentUser.author {
+                    if let author = CurrentUser.shared.author {
                         HomeFeedView(user: author)
                             .tabItem {
                                 VStack {
@@ -87,7 +87,7 @@ struct AppView: View {
                             .onAppear {
                                 // TODO: Move this somewhere better like CurrentUser when it becomes the source of truth
                                 // for who is logged in
-                                analytics.identify(with: CurrentUser.keyPair!)
+                                analytics.identify(with: CurrentUser.shared.keyPair!)
                             }
                     }
                     
@@ -116,7 +116,7 @@ struct AppView: View {
                         }
                     .tag(Destination.newNote)
                     
-                    NotificationsView(user: CurrentUser.author)
+                    NotificationsView(user: CurrentUser.shared.author)
                         .tabItem {
                             VStack {
                                 let text = Localized.notifications.view
@@ -132,7 +132,7 @@ struct AppView: View {
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.notifications)
                     
-                    if let author = CurrentUser.author {
+                    if let author = CurrentUser.shared.author {
                         ProfileTab(author: author, path: $router.profilePath)
                             .tabItem {
                                 VStack {
@@ -172,14 +172,6 @@ struct AppView: View {
         }
         .onAppear(perform: appController.configureCurrentState)
         .task {
-            // This navigation bar stuff doesn't seem to be working. I can't figure out why.
-            let nosAppearance = UINavigationBarAppearance()
-            nosAppearance.titleTextAttributes = [.foregroundColor: UIColor.systemPink]
-            nosAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.systemPink]
-            UINavigationBar.appearance().standardAppearance = nosAppearance
-            UINavigationBar.appearance().compactAppearance = nosAppearance
-            UINavigationBar.appearance().scrollEdgeAppearance = nosAppearance
-            
             UITabBar.appearance().unselectedItemTintColor = .secondaryText
             UITabBar.appearance().tintColor = .primaryTxt
         }

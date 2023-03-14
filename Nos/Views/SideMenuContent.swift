@@ -29,7 +29,7 @@ struct SideMenuContent: View {
                     Button {
                         do {
                             guard let keyPair = KeyPair.loadFromKeychain() else { return }
-                            let author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+                            try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
                             router.sideMenuPath.append(SideMenu.Destination.profile)
                         } catch {
                             // Replace this implementation with code to handle the error appropriately.
@@ -122,13 +122,13 @@ struct SideMenuContent: View {
                 case .settings:
                     SettingsView()
                 case .relays:
-                    RelayView(author: CurrentUser.author!)
+                    RelayView(author: CurrentUser.shared.author!)
                 case .profile:
-                    ProfileView(author: CurrentUser.author!)
+                    ProfileView(author: CurrentUser.shared.author!)
                 }
             }
             .navigationDestination(for: Author.self) { profile in
-                if profile == CurrentUser.author, CurrentUser.editing {
+                if profile == CurrentUser.shared.author, CurrentUser.shared.editing {
                     ProfileEditView(author: profile)
                 } else {
                     ProfileView(author: profile)

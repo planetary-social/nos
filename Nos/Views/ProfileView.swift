@@ -68,6 +68,7 @@ struct ProfileView: View {
                 }
             }
             .padding(.top, 1)
+            .padding(.bottom, 1)
             .background(Color.appBg)
             .overlay(Group {
                 if !events.contains(where: { !$0.author!.muted }) {
@@ -98,10 +99,10 @@ struct ProfileView: View {
                             UIPasteboard.general.string = router.viewedAuthor?.publicKey?.npub ?? ""
                         }
                         if let author = router.viewedAuthor {
-                            if author == CurrentUser.author {
+                            if author == CurrentUser.shared.author {
                                 Button(
                                     action: {
-                                        CurrentUser.editing = true
+                                        CurrentUser.shared.editing = true
                                         router.push(author)
                                     },
                                     label: {
@@ -126,8 +127,6 @@ struct ProfileView: View {
         .onAppear {
             router.viewedAuthor = author
             analytics.showedProfile()
-        }
-        .task {
             refreshProfileFeed()
         }
         .refreshable {
