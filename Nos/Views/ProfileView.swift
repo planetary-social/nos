@@ -123,10 +123,12 @@ struct ProfileView: View {
                     }
                 }
         )
+        .task {
+            refreshProfileFeed()
+        }
         .onAppear {
             router.viewedAuthor = author
             analytics.showedProfile()
-            refreshProfileFeed()
         }
         .refreshable {
             refreshProfileFeed()

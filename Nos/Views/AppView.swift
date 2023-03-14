@@ -62,14 +62,6 @@ struct AppView: View {
         }
     }
     
-    var predicateBinding: Binding<String> {
-        Binding {
-            let key = CurrentUser.shared.author!.hexadecimalPublicKey!
-            return "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND ANY author.followers.source.hexadecimalPublicKey = \(key)"
-        } set: { _ in
-        }
-    }
-    
     var body: some View {
         
         ZStack {

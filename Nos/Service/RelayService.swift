@@ -206,7 +206,7 @@ extension RelayService {
             return
         }
         
-        Task.detached(priority: .userInitiated) {
+        Task.detached(priority: .utility) {
             do {
                 try await self.backgroundContext.perform {
                     let event = try EventProcessor.parse(jsonObject: eventJSON, in: self.backgroundContext)

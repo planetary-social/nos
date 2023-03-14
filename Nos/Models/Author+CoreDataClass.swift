@@ -95,17 +95,7 @@ public class Author: NosManagedObject {
         )
         return fetchRequest
     }
-    
-    @nonobjc func homeFeedPredicate() -> NSPredicate {
-        NSPredicate(
-            // swiftlint:disable line_length
-            format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (ANY author.followers.source = %@ OR author = %@)",
-            // swiftlint:enable line_length
-            self,
-            self
-        )
-    }
-    
+
     @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: true)]
