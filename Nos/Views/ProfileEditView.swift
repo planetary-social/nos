@@ -30,27 +30,33 @@ struct ProfileEditView: View {
         VStack {
             Form {
                 Section {
-                    TextField(Localized.displayName.string, text: $displayNameText)
-                        .textInputAutocapitalization(.none)
-                        .foregroundColor(.textColor)
-                        .autocorrectionDisabled()
-                    TextField(Localized.name.string, text: $nameText)
-                        .textInputAutocapitalization(.none)
-                        .foregroundColor(.textColor)
-                        .autocorrectionDisabled()
+                    TextField(text: $displayNameText) {
+                        Localized.displayName.view.foregroundColor(.secondaryTxt)
+                    }
+                    .textInputAutocapitalization(.none)
+                    .foregroundColor(.textColor)
+                    .autocorrectionDisabled()
+                    TextField(text: $nameText) {
+                        Localized.name.view.foregroundColor(.secondaryTxt)
+                    }
+                    .textInputAutocapitalization(.none)
+                    .foregroundColor(.textColor)
+                    .autocorrectionDisabled()
                     TextEditor(text: $bioText)
                         .placeholder(when: bioText.isEmpty, placeholder: {
                             Text(Localized.bio.string)
                                 .foregroundColor(.secondaryTxt)
                         })
                         .foregroundColor(.textColor)
-                    TextField(Localized.picUrl.string, text: $avatarText)
-                        .foregroundColor(.textColor)
-                        .autocorrectionDisabled()
-                        .textInputAutocapitalization(.none)
-                        #if os(iOS)
-                        .keyboardType(.URL)
-                        #endif
+                    TextField(text: $avatarText) {
+                        Localized.picUrl.view.foregroundColor(.secondaryTxt)
+                    }
+                    .foregroundColor(.textColor)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.none)
+#if os(iOS)
+                    .keyboardType(.URL)
+#endif
                 } header: {
                     createAccountCompletion != nil ? Localized.createAccount.view : Localized.basicInfo.view
                         .foregroundColor(.textColor)

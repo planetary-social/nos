@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Render mentions on notifications tab
+- Made placeholder text color same for all fields in profile edit view
 
 ## [0.1 (8)] - 2023-03-13Z
 - Fix translucent tab bar in the simulator.
