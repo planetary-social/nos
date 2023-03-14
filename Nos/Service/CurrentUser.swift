@@ -29,7 +29,7 @@ class CurrentUser: ObservableObject {
     }
     
     var publicKey: String? {
-        return keyPair?.publicKey.hex
+        keyPair?.publicKey.hex
     }
     
     // swiftlint:disable implicitly_unwrapped_optional
