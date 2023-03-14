@@ -68,7 +68,6 @@ struct ProfileView: View {
                 }
             }
             .padding(.top, 1)
-            .padding(.bottom, 1)
             .background(Color.appBg)
             .overlay(Group {
                 if !events.contains(where: { !$0.author!.muted }) {

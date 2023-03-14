@@ -64,7 +64,6 @@ struct HomeFeedView: View {
             }
             .background(Color.appBg)
             .padding(.top, 1)
-            .padding(.bottom, 1)
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
