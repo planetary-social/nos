@@ -78,11 +78,14 @@ struct ProfileHeader: View {
                         }
                         
                         Spacer()
-                            .frame(height: 17)
-                        
-                        Text("\(Localized.nip05.string): \(relayService.identifierToShow(verifiedNip05Identifier))")
-                            .font(.title3.weight(.semibold))
-                            .foregroundColor(Color.primaryTxt)
+                        Button {
+                            let domain = relayService.domain(from: verifiedNip05Identifier)
+                            let urlString = "https://\(domain)"
+                            guard let url = URL(string: urlString) else { return }
+                            UIApplication.shared.open(url)
+                        } label: {
+                            Text("\(Localized.nip05.string): \(relayService.identifierToShow(verifiedNip05Identifier))")
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }

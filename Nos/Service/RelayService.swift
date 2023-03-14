@@ -490,4 +490,8 @@ extension RelayService {
         }
         return identifier
     }
+    
+    func domain(from identifier: String) -> String {
+        return identifier.components(separatedBy: "@")[safe: 1] ?? ""
+    }
 }

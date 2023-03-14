@@ -167,7 +167,6 @@ struct DiscoverView: View {
         }
         return author
     }
-    
 }
 
 struct SizePreferenceKey: PreferenceKey {
