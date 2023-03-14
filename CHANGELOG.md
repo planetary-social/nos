@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix your own posts showing as outside your network on a fresh install. 
 - Add self-hosted PostHog analytics
 - Render mentions on notifications tab
+- Copy note text
 
 Known issues:
 - You may have to force quit the app and restart it to see everyone you follow on the Home Feed.
