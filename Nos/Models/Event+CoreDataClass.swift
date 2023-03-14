@@ -433,8 +433,7 @@ public class Event: NosManagedObject {
         identifier = jsonEvent.id
         try hydrate(from: jsonEvent, in: context)
     }
-        
-    // swiftlint:disable function_body_length cyclomatic_complexity
+
     /// Populates an event stub (with only its ID set) using the data in the given JSON.
     func hydrate(from jsonEvent: JSONEvent, in context: NSManagedObjectContext) throws {
         guard isStub else {
@@ -464,98 +463,109 @@ public class Event: NosManagedObject {
         
         switch eventKind {
         case .contactList:
-            guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
-                // This is old data
-                break
-            }
-            
-            newAuthor.lastUpdatedContactList = .now
-            // Make a copy of what was followed before
-            let originalFollows = newAuthor.follows?.copy() as? Set<Follow>
-            
-            var eventFollows = Set<Follow>()
-            for jsonTag in jsonEvent.tags {
-                do {
-                    eventFollows.insert(try Follow.upsert(by: newAuthor, jsonTag: jsonTag, context: context))
-                } catch {
-                    print("Error: could not parse Follow from: \(jsonEvent)")
-                }
-            }
-            
-            // Did we unfollow someone? If so, remove them from core data
-            if let follows = originalFollows, follows.count > eventFollows.count {
-                let removedFollows = follows.subtracting(eventFollows)
-                if !removedFollows.isEmpty {
-                    print("Removing \(removedFollows.count) follows")
-                    Follow.deleteFollows(in: removedFollows, context: context)
-                }
-            }
-            
-            // Get the user's active relays out of the content property
-            if let data = jsonEvent.content.data(using: .utf8, allowLossyConversion: false),
-                let relayEntries = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
-                let relays = (relayEntries as? [String: Any])?.keys {
-
-                for address in relays {
-                    let relay = Relay.findOrCreate(by: address, context: context)
-                    newAuthor.add(relay: relay)
-                }
-                
-                // Close sockets for anything not in the above
-                if newAuthor == CurrentUser.shared.author {
-                    if let keptRelays = newAuthor.relays as? Set<Relay> {
-                        CurrentUser.shared.relayService.closeAllConnections(excluding: keptRelays)
-                    }
-                }
-            }
+            hydrateContactList(from: jsonEvent, author: newAuthor, context: context)
 
         case .metaData:
-            guard createdAt! > newAuthor.lastUpdatedMetadata ?? Date.distantPast else {
-                // This is old data
-                break
-            }
-            
-            if let contentData = jsonEvent.content.data(using: .utf8) {
-                newAuthor.lastUpdatedMetadata = .now
-                // There may be unsupported metadata. Store it to send back later in metadata publishes.
-                newAuthor.rawMetadata = contentData
-
-                do {
-                    let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
-                    
-                    // Every event has an author created, so it just needs to be populated
-                    newAuthor.name = metadata.name
-                    newAuthor.displayName = metadata.displayName
-                    newAuthor.about = metadata.about
-                    newAuthor.profilePhotoURL = metadata.profilePhotoURL
-                } catch {
-                    print("Failed to decode kind \(eventKind) event with ID \(String(describing: identifier))")
-                }
-            }
+            hydrateMetaData(from: jsonEvent, author: newAuthor, context: context)
             
         default:
-            let newEventReferences = NSMutableOrderedSet()
-            let newAuthorReferences = NSMutableOrderedSet()
-            for jsonTag in jsonEvent.tags {
-                if jsonTag.first == "e" {
-                    do {
-                        let eTag = try EventReference(jsonTag: jsonTag, context: context)
-                        newEventReferences.add(eTag)
-                    } catch {
-                        print("error parsing e tag: \(error.localizedDescription)")
-                    }
-                } else {
-                    let authorReference = AuthorReference(context: context)
-                    authorReference.pubkey = jsonTag[safe: 1]
-                    authorReference.recommendedRelayUrl = jsonTag[safe: 2]
-                    newAuthorReferences.add(authorReference)
-                }
-            }
-            eventReferences = newEventReferences
-            authorReferences = newAuthorReferences
+            hydrateDefault(from: jsonEvent, context: context)
         }
     }
-    // swiftlint:enable function_body_length cyclomatic_complexity
+    
+    func hydrateContactList(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
+        guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
+            return
+        }
+        
+        newAuthor.lastUpdatedContactList = .now
+
+        // Make a copy of what was followed before
+        let originalFollows = newAuthor.follows?.copy() as? Set<Follow>
+        
+        var eventFollows = Set<Follow>()
+        for jsonTag in jsonEvent.tags {
+            do {
+                eventFollows.insert(try Follow.upsert(by: newAuthor, jsonTag: jsonTag, context: context))
+            } catch {
+                print("Error: could not parse Follow from: \(jsonEvent)")
+            }
+        }
+        
+        // Did we unfollow someone? If so, remove them from core data
+        if let follows = originalFollows, follows.count > eventFollows.count {
+            let removedFollows = follows.subtracting(eventFollows)
+            if !removedFollows.isEmpty {
+                print("Removing \(removedFollows.count) follows")
+                Follow.deleteFollows(in: removedFollows, context: context)
+            }
+        }
+        
+        // Get the user's active relays out of the content property
+        if let data = jsonEvent.content.data(using: .utf8, allowLossyConversion: false),
+            let relayEntries = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
+            let relays = (relayEntries as? [String: Any])?.keys {
+
+            for address in relays {
+                let relay = Relay.findOrCreate(by: address, context: context)
+                newAuthor.add(relay: relay)
+            }
+            
+            // Close sockets for anything not in the above
+            if newAuthor == CurrentUser.shared.author {
+                if let keptRelays = newAuthor.relays as? Set<Relay> {
+                    CurrentUser.shared.relayService.closeAllConnections(excluding: keptRelays)
+                }
+            }
+        }
+    }
+    
+    func hydrateDefault(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
+        let newEventReferences = NSMutableOrderedSet()
+        let newAuthorReferences = NSMutableOrderedSet()
+        for jsonTag in jsonEvent.tags {
+            if jsonTag.first == "e" {
+                do {
+                    let eTag = try EventReference(jsonTag: jsonTag, context: context)
+                    newEventReferences.add(eTag)
+                } catch {
+                    print("error parsing e tag: \(error.localizedDescription)")
+                }
+            } else {
+                let authorReference = AuthorReference(context: context)
+                authorReference.pubkey = jsonTag[safe: 1]
+                authorReference.recommendedRelayUrl = jsonTag[safe: 2]
+                newAuthorReferences.add(authorReference)
+            }
+        }
+        eventReferences = newEventReferences
+        authorReferences = newAuthorReferences
+    }
+    
+    func hydrateMetaData(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
+        guard createdAt! > newAuthor.lastUpdatedMetadata ?? Date.distantPast else {
+            // This is old data
+            return
+        }
+        
+        if let contentData = jsonEvent.content.data(using: .utf8) {
+            newAuthor.lastUpdatedMetadata = .now
+            // There may be unsupported metadata. Store it to send back later in metadata publishes.
+            newAuthor.rawMetadata = contentData
+
+            do {
+                let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
+                
+                // Every event has an author created, so it just needs to be populated
+                newAuthor.name = metadata.name
+                newAuthor.displayName = metadata.displayName
+                newAuthor.about = metadata.about
+                newAuthor.profilePhotoURL = metadata.profilePhotoURL
+            } catch {
+                print("Failed to decode metaData event with ID \(String(describing: identifier))")
+            }
+        }
+    }
     
     class func all(context: NSManagedObjectContext) -> [Event] {
         let allRequest = Event.allPostsRequest()
