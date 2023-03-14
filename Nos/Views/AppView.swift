@@ -6,18 +6,18 @@
 //
 
 import SwiftUI
+import Dependencies
 
 struct AppView: View {
 
-    @EnvironmentObject private var appController: AppController
-    
     @State var isCreatingNewPost = false
     
     @State var showNewPost = false
 
+    @EnvironmentObject private var appController: AppController
     @EnvironmentObject var router: Router
-    
     @Environment(\.managedObjectContext) private var viewContext
+    @Dependency(\.analytics) private var analytics
     
     @State private var showingOptions = false
     @State private var lastSelectedTab = Destination.home
@@ -84,6 +84,11 @@ struct AppView: View {
                             }
                             .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                             .tag(Destination.home)
+                            .onAppear {
+                                // TODO: Move this somewhere better like CurrentUser when it becomes the source of truth
+                                // for who is logged in
+                                analytics.identify(with: CurrentUser.shared.keyPair!)
+                            }
                     }
                     
                     DiscoverView()
