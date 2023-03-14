@@ -16,6 +16,7 @@ final class Filter: Hashable {
     }
     private var kinds: [EventKind]
     let limit: Int
+    let since: Date?
 
     // For closing requests; not part of hash
     var subscriptionId: String = ""
@@ -27,12 +28,14 @@ final class Filter: Hashable {
         authorKeys: [String] = [],
         kinds: [EventKind] = [],
         eTags: [String] = [],
-        limit: Int = 100
+        limit: Int = 100,
+        since: Date? = nil
     ) {
         self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
         self.kinds = kinds.sorted(by: { $0.rawValue > $1.rawValue })
         self.eTags = eTags
         self.limit = limit
+        self.since = since
     }
     
     var dictionary: [String: Any] {
@@ -48,6 +51,10 @@ final class Filter: Hashable {
         
         if !eTags.isEmpty {
             filterDict["#e"] = eTags
+        }
+        
+        if let since {
+            filterDict["since"] = since.timeIntervalSince1970
         }
 
         return filterDict

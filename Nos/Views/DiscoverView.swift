@@ -15,6 +15,7 @@ struct DiscoverView: View {
     
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject var router: Router
+    @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
 
     private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
@@ -55,20 +56,33 @@ struct DiscoverView: View {
     }
     
     func refreshDiscover() {
+        relayService.sendCloseToAll(subscriptions: subscriptionIds)
+        subscriptionIds.removeAll()
+        
+        let latestEvent = events.first?.createdAt
+        
         let featuredFilter = Filter(
             authorKeys: authors.compactMap {
                 PublicKey(npub: $0)?.hex
             },
             kinds: [.text],
-            limit: 200
+            limit: 100,
+            since: latestEvent
         )
-        let twoHopsFilter = Filter(
-            kinds: [.text],
-            limit: 300
-        )
-
+        
         subscriptionIds.append(relayService.requestEventsFromAll(filter: featuredFilter))
-        subscriptionIds.append(relayService.requestEventsFromAll(filter: twoHopsFilter))
+        
+        if !currentUser.inNetworkAuthors.isEmpty {
+            let twoHopsFilter = Filter(
+                authorKeys: currentUser.inNetworkAuthors.compactMap { $0.hexadecimalPublicKey },
+                kinds: [.text],
+                limit: 100,
+                since: latestEvent
+            )
+            
+            subscriptionIds.append(relayService.requestEventsFromAll(filter: twoHopsFilter))
+        }
+
         
         // TODO: update fetch request because follow graph might have changed
         // eventRequest = FetchRequest(fetchRequest: Event.discoverFeedRequest(authors: authors))

@@ -37,6 +37,7 @@ class CurrentUser: ObservableObject {
     var relayService: RelayService! {
         didSet {
             subscribe()
+            refreshFriendMetadata()
         }
     }
     // swiftlint:enable implicitly_unwrapped_optional
@@ -91,16 +92,35 @@ class CurrentUser: ObservableObject {
                 subscriptions.removeAll()
             }
 
-            let textFilter = Filter(authorKeys: [key], kinds: [.text], limit: 100)
-            let textSub = relayService.requestEventsFromAll(filter: textFilter, relays: relays)
-            subscriptions.append(textSub)
-
             let metaFilter = Filter(authorKeys: [key], kinds: [.metaData], limit: 1)
             let metaSub = relayService.requestEventsFromAll(filter: metaFilter, relays: relays)
             subscriptions.append(metaSub)
             
             let contactFilter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
             let contactSub = relayService.requestEventsFromAll(filter: contactFilter, relays: relays)
+            subscriptions.append(contactSub)
+        }
+    }
+    
+    func refreshFriendMetadata() {
+        updateInNetworkAuthors()
+        
+        guard let follows else {
+            Log.info("Skipping refreshFriendMetadata because we have no follows.")
+            return
+        }
+        
+        for follow in follows {
+            guard let key = follow.destination?.hexadecimalPublicKey else {
+                continue
+            }
+            
+            let metaFilter = Filter(authorKeys: [key], kinds: [.metaData], limit: 1)
+            let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
+            subscriptions.append(metaSub)
+            
+            let contactFilter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
+            let contactSub = relayService.requestEventsFromAll(filter: contactFilter)
             subscriptions.append(contactSub)
         }
     }
