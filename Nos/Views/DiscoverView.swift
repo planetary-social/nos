@@ -88,12 +88,19 @@ struct DiscoverView: View {
             }
             .searchable(text: $searchText, placement: .toolbar, prompt: PlainText("Find a user by ID"))
             .onSubmit(of: .search) {
-                if let publicKey = PublicKey(npub: searchText) {
-                    let author = try! Author.findOrCreate(by: publicKey.hex, context: viewContext)
+                
+                if let author = author(from: searchText) {
                     router.push(author)
-                } else if let publicKey = PublicKey(hex: searchText) {
-                    let author = try! Author.findOrCreate(by: publicKey.hex, context: viewContext)
-                    router.push(author)
+                } else {
+                    if searchText.contains("@") {
+                        Task {
+                            if let publicKeyHex =
+                                await relayService.retrieveInternetIdentifierPublicKeyHex(searchText.lowercased()),
+                            let author = author(from: publicKeyHex) {
+                                router.push(author)
+                            }
+                        }
+                    }
                 }
             }
             .padding(.horizontal)
@@ -150,6 +157,17 @@ struct DiscoverView: View {
             )
         }
     }
+    
+    func author(from publicKeyString: String) -> Author? {
+        guard let publicKey = PublicKey(npub: publicKeyString) ?? PublicKey(hex: publicKeyString) else {
+            return nil
+        }
+        guard let author = try? Author.findOrCreate(by: publicKey.hex, context: viewContext) else {
+            return nil
+        }
+        return author
+    }
+    
 }
 
 struct SizePreferenceKey: PreferenceKey {
