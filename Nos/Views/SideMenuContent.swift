@@ -26,7 +26,7 @@ struct SideMenuContent: View {
                     Button {
                         do {
                             guard let keyPair = KeyPair.loadFromKeychain() else { return }
-                            let author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+                            try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
                             router.sideMenuPath.append(SideMenu.Destination.profile)
                         } catch {
                             // Replace this implementation with code to handle the error appropriately.

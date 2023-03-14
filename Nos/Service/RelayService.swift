@@ -23,8 +23,9 @@ final class RelayService: ObservableObject {
     init(persistenceController: PersistenceController) {
         self.persistenceController = persistenceController
         self.backgroundContext = persistenceController.newBackgroundContext()
+
         CurrentUser.shared.context = persistenceController.container.viewContext
-        openSocketsForRelays()
+        openSockets()
         
         let pubSel = #selector(publishFailedEvents)
         timer = Timer.scheduledTimer(timeInterval: 120, target: self, selector: pubSel, userInfo: nil, repeats: true)
@@ -76,6 +77,18 @@ extension RelayService {
         }
     }
     
+    func sendClose(subscriptions: [String]) {
+        processingQueue.async {
+            
+            for subscription in subscriptions {
+                self.removeFilter(for: subscription)
+                self.sockets.forEach { self.sendClose(from: $0, subscription: subscription) }
+            }
+            
+            print("\(self.requestFilterSet.count) filters in use.")
+        }
+    }
+    
     func closeConnection(to relay: Relay) {
         processingQueue.async {
             guard let address = relay.address else { return }
@@ -105,12 +118,12 @@ extension RelayService {
         }
     }
     
-    func requestEventsFromAll(filter: Filter = Filter()) -> String {
+    func requestEventsFromAll(filter: Filter = Filter(), relays: [Relay]? = nil) -> String {
         var subscriptionID: String?
   
         processingQueue.sync {
             // Keep this open
-            openSocketsForRelays()
+            openSockets(for: relays)
 
             // Ignore redundant requests
             guard !requestFilterSet.contains(filter) else {
@@ -301,7 +314,7 @@ extension RelayService {
     
     func publishToAll(event: Event) {
         processingQueue.async {
-            self.openSocketsForRelays()
+            self.openSockets()
             self.sockets.forEach { self.publish(from: $0, event: event) }
         }
     }
@@ -309,7 +322,7 @@ extension RelayService {
     @objc func publishFailedEvents() {
         processingQueue.async {
             
-            self.openSocketsForRelays()
+            self.openSockets()
             
             let objectContext = self.persistenceController.container.viewContext
             let userSentEvents = Event.allByUser(context: objectContext)
@@ -345,9 +358,31 @@ extension RelayService {
         }
     }
     
-    private func openSocketsForRelays() {
-        guard let relays = CurrentUser.shared.author?.relays?.allObjects as? [Relay] else {
-            print("No relays associated with author!")
+    func closeAllConnections(excluding relays: Set<Relay>?) {
+        let relayAddresses = relays?.map { $0.address } ?? []
+
+        let openUnusedSockets = sockets.filter({
+            guard let address = $0.request.url?.absoluteString else {
+                return true
+            }
+            return !relayAddresses.contains(address)
+        })
+        
+        if !openUnusedSockets.isEmpty {
+            Log.debug("Closing \(openUnusedSockets.count) unused sockets")
+        }
+
+        for socket in openUnusedSockets {
+            close(socket: socket)
+        }
+    }
+    
+    private func openSockets(for overrideRelays: [Relay]? = nil) {
+        // Use override relays; fall back to user relays
+        let activeRelays = overrideRelays ?? CurrentUser.shared.author?.relays?.allObjects
+        
+        guard let relays = activeRelays as? [Relay] else {
+            print("No relays provided or associated with author!")
             return
         }
 
