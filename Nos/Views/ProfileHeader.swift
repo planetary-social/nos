@@ -107,14 +107,16 @@ struct ProfileHeader: View {
             FollowsView(followed: followed)
         }
         .onAppear {
-            Task {
-                if let nip05Identifier = author.nip05, let publicKey = author.publicKey?.hex {
+            Task.detached(priority: .userInitiated) {
+                if let nip05Identifier = await author.nip05, let publicKey = await author.publicKey?.hex {
                     let identifierVerified = await relayService.verifyInternetIdentifier(
                     identifier: nip05Identifier,
                     userPublicKey: publicKey
                     )
                     if identifierVerified {
-                        verifiedNip05Identifier = nip05Identifier
+                        await MainActor.run {
+                            verifiedNip05Identifier = nip05Identifier
+                        }
                     }
                 }
             }

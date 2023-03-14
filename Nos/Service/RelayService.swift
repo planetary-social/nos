@@ -206,7 +206,7 @@ extension RelayService {
             return
         }
         
-        Task.detached(priority: .userInitiated) {
+        Task.detached(priority: .utility) {
             do {
                 try await self.backgroundContext.perform {
                     let event = try EventProcessor.parse(jsonObject: eventJSON, in: self.backgroundContext)
@@ -218,7 +218,8 @@ extension RelayService {
                     }
                 }
             } catch {
-                print("Error: parsing event from relay (\(socket.request.url?.absoluteString ?? "")): \(responseArray)")
+                print("Error: parsing event from relay (\(socket.request.url?.absoluteString ?? "")): " +
+                    "\(responseArray)\nerror: \(error.localizedDescription)")
             }
         }
     }
