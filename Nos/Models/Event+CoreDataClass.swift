@@ -209,7 +209,6 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    
     @nonobjc public class func homeFeedPredicate(for user: Author) -> NSPredicate {
         NSPredicate(
             // swiftlint:disable line_length
@@ -501,7 +500,6 @@ public class Event: NosManagedObject {
                 }
             }
             
-
         case .metaData:
             guard createdAt! > newAuthor.lastUpdatedMetadata ?? Date.distantPast else {
                 // This is old data
