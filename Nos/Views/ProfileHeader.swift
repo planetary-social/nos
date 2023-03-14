@@ -78,7 +78,7 @@ struct ProfileHeader: View {
                         }
                         
                         Spacer()
-                        Text("\(Localized.uns.string): \(verifiedNip05Identifier)")
+                        Text("\(Localized.nip05.string): \(verifiedNip05Identifier)")
                             .font(.title3.weight(.semibold))
                             .foregroundColor(Color.primaryTxt)
                     }
