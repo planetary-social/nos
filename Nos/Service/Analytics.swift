@@ -26,24 +26,22 @@ extension DependencyValues {
 /// dependency using the Dependencies library.
 class Analytics {
 
-    private let postHog: PHGPostHog
+    private let postHog: PHGPostHog?
 
     required init(mock: Bool = false) {
-        // `host` is optional if you use PostHog Cloud (app.posthog.com)
-        var configuration: PHGPostHogConfiguration
-        if mock {
-            configuration = PHGPostHogConfiguration(apiKey: "none", host: "/dev/null")
-        } else {
-            let apiKey = Bundle.main.infoDictionary?["POSTHOG_API_KEY"] as? String ?? ""
-            configuration = PHGPostHogConfiguration(apiKey: apiKey, host: "https://posthog.planetary.tools")
-        }
-        
-        configuration.captureApplicationLifecycleEvents = true
-        configuration.recordScreenViews = true
-        // TODO: write screen views to log
+        let apiKey = Bundle.main.infoDictionary?["POSTHOG_API_KEY"] as? String ?? ""
+        if !mock && !apiKey.isEmpty {
+            let configuration = PHGPostHogConfiguration(apiKey: apiKey, host: "https://posthog.planetary.tools")
+            
+            configuration.captureApplicationLifecycleEvents = true
+            configuration.recordScreenViews = true
+            // TODO: write screen views to log
 
-        PHGPostHog.setup(with: configuration)
-        postHog = PHGPostHog.shared()!
+            PHGPostHog.setup(with: configuration)
+            postHog = PHGPostHog.shared()!
+        } else {
+            postHog = nil
+        }
     }
 
     func published(note: Event) {
@@ -132,16 +130,16 @@ class Analytics {
     
     func identify(with keyPair: KeyPair) {
         Log.info("Analytics: Identified \(keyPair.npub)")
-        postHog.identify(keyPair.npub)
+        postHog?.identify(keyPair.npub)
     }
     
     func logout() {
         Log.info("Analytics: User logged out")
-        postHog.reset()
+        postHog?.reset()
     }
     
     private func track(_ eventName: String, properties: [String: Any] = [:]) {
         Log.info("Analytics: \(eventName)")
-        postHog.capture(eventName, properties: properties)
+        postHog?.capture(eventName, properties: properties)
     }
 }
