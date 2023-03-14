@@ -7,10 +7,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.1 (9)] - 2023-03-14Z
 - Fixed a crash on launch when relay model was outdated.
 - Fix your own posts showing as outside your network on a fresh install. 
 - Add self-hosted PostHog analytics
 - Render mentions on notifications tab
+
+Known issues:
+- You may have to force quit the app and restart it to see everyone you follow on the Home Feed.
 
 ## [0.1 (8)] - 2023-03-13Z
 - Fix translucent tab bar in the simulator.
