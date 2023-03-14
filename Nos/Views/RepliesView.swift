@@ -7,12 +7,14 @@
 
 import SwiftUI
 import SwiftUINavigation
+import Dependencies
 
 struct RepliesView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
+    @Dependency(\.analytics) private var analytics
 
     @State private var reply = ""
     
@@ -78,7 +80,7 @@ struct RepliesView: View {
             }
             .fixedSize(horizontal: false, vertical: true)
             .onAppear {
-                print("npub: \(keyPair?.npub ?? "null")")
+                analytics.showedThread()
             }
         }
         .background(Color.appBg)

@@ -10,6 +10,13 @@ import CoreData
 import Logger
 
 enum CurrentUser {
+    
+    static var keyPair: KeyPair? {
+        if let privateKey = privateKey, let keyPair = KeyPair.init(privateKeyHex: privateKey) {
+            return keyPair
+        }
+        return nil
+    }
     static var privateKey: String? {
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
@@ -20,12 +27,7 @@ enum CurrentUser {
     }
     
     static var publicKey: String? {
-        if let privateKey = privateKey {
-            if let keyPair = KeyPair.init(privateKeyHex: privateKey) {
-                return keyPair.publicKey.hex
-            }
-        }
-        return nil
+        return keyPair?.publicKey.hex
     }
     
     // swiftlint:disable implicitly_unwrapped_optional

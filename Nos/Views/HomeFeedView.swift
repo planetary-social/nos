@@ -8,14 +8,14 @@
 import SwiftUI
 import CoreData
 import Combine
+import Dependencies
 
 struct HomeFeedView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
-    
     @EnvironmentObject private var relayService: RelayService
-
     @EnvironmentObject var router: Router
+    @Dependency(\.analytics) private var analytics
     
     private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
 
@@ -104,6 +104,9 @@ struct HomeFeedView: View {
         }
         .refreshable {
             refreshHomeFeed()
+        }
+        .onAppear {
+            analytics.showedHome()
         }
         .onDisappear {
             relayService.sendCloseToAll(subscriptions: subscriptionIds)

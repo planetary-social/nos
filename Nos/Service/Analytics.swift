@@ -50,6 +50,8 @@ class Analytics {
         track("Published Note", properties: ["length": note.content?.count ?? 0])
     }
     
+    // MARK: - Screens
+    
     func startedOnboarding() {
         track("Started Onboarding")
     }
@@ -57,6 +59,48 @@ class Analytics {
     func completedOnboarding() {
         track("Completed Onboarding")
     }
+    
+    func showedHome() {
+        track("Home Tab Tapped")
+    }
+    
+    func showedDiscover() {
+        track("Discover Tab Tapped")
+    }
+    
+    func showedNewNote() {
+        track("New Note Tapped")
+    }
+    
+    func showedNotifications() {
+        track("Notifications Tab Tapped")
+    }
+    
+    func showedProfile() {
+        track("Profile View Opened")
+    }
+    
+    func showedThread() {
+        track("Thread View Opened")
+    }
+    
+    func showedSideMenu() {
+        track("Contact Support Tapped")
+    }
+    
+    func showedRelays() {
+        track("Relay View Opened")
+    }
+    
+    func showedSettings() {
+        track("Settings View Opened")
+    }
+    
+    func showedSupport() {
+        track("Contact Support Tapped")
+    }
+    
+    // MARK: - Actions
     
     func generatedKey() {
         track("Generated Private Key")
@@ -99,6 +143,5 @@ class Analytics {
     private func track(_ eventName: String, properties: [String: Any] = [:]) {
         Log.info("Analytics: \(eventName)")
         postHog.capture(eventName, properties: properties)
-        postHog.flush()
     }
 }

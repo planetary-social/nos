@@ -7,15 +7,16 @@
 
 import SwiftUI
 import CoreData
+import Dependencies
 
 struct ProfileView: View {
-    @EnvironmentObject private var router: Router
     
     @ObservedObject var author: Author
     
     @Environment(\.managedObjectContext) private var viewContext
-    
     @EnvironmentObject private var relayService: RelayService
+    @EnvironmentObject private var router: Router
+    @Dependency(\.analytics) private var analytics
     
     @State private var showingOptions = false
     
@@ -124,6 +125,7 @@ struct ProfileView: View {
         )
         .onAppear {
             router.viewedAuthor = author
+            analytics.showedProfile()
         }
         .task {
             refreshProfileFeed()

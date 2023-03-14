@@ -4,13 +4,16 @@
 //
 //  Created by Jason Cheatham on 2/21/23.
 //
+
 import SwiftUI
 import MessageUI
+import Dependencies
 
 struct SideMenuContent: View {
-    @Environment(\.managedObjectContext) private var viewContext
     
+    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var router: Router
+    @Dependency(\.analytics) private var analytics
     
     @State private var isShowingReportABugMailView = false
     
@@ -103,6 +106,9 @@ struct SideMenuContent: View {
                     .disabled(!MFMailComposeViewController.canSendMail())
                     .sheet(isPresented: $isShowingReportABugMailView) {
                         ReportABugMailView(result: self.$result)
+                            .onAppear {
+                                analytics.showedSupport()
+                            }
                     }
                     
                     Spacer()
