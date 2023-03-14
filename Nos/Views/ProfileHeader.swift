@@ -80,7 +80,7 @@ struct ProfileHeader: View {
                         Spacer()
                             .frame(height: 17)
                         
-                        Text("\(Localized.nip05.string): \(verifiedNip05Identifier)")
+                        Text("\(Localized.nip05.string): \(relayService.identifierToShow(verifiedNip05Identifier))")
                             .font(.title3.weight(.semibold))
                             .foregroundColor(Color.primaryTxt)
                     }

@@ -453,8 +453,8 @@ extension RelayService: WebSocketDelegate {
 // MARK: NIP-05 Support
 extension RelayService {
     func verifyInternetIdentifier(identifier: String, userPublicKey: String) async -> Bool {
-        let localPart = identifier.components(separatedBy: "@")[0]
-        let domain = identifier.components(separatedBy: "@")[1]
+        let localPart = identifier.components(separatedBy: "@")[safe: 0] ?? ""
+        let domain = identifier.components(separatedBy: "@")[safe: 1] ?? ""
         let urlString = "https://\(domain)/.well-known/nostr.json?name=\(localPart)"
         guard let url = URL(string: urlString) else {
             Log.info("Invalid URL: \(urlString)")
@@ -471,5 +471,15 @@ extension RelayService {
             Log.info("Error verifying username: \(error.localizedDescription)")
         }
         return false
+    }
+
+    func identifierToShow(_ identifier: String) -> String {
+        let localPart = identifier.components(separatedBy: "@")[safe: 0]
+        let domain = identifier.components(separatedBy: "@")[safe: 1]
+        if localPart == "_" {
+            // The identifier _@domain is the "root" identifier, and is displayed as: <domain>
+            return domain ?? ""
+        }
+        return identifier
     }
 }
