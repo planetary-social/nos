@@ -106,12 +106,8 @@ public class Author: NosManagedObject {
     }
     
     func add(relay: Relay) {
-        if let currentRelays = relays?.mutableCopy() as? NSMutableSet {
-            currentRelays.add(relay)
-            relays = currentRelays
-            
-            print("Adding \(relay.address ?? "") to \(hexadecimalPublicKey ?? "")")
-        }
+        relays = (relays ?? NSSet()).adding(relay)
+        print("Adding \(relay.address ?? "") to \(hexadecimalPublicKey ?? "")")
     }
     
     func deleteAllPosts(context: NSManagedObjectContext) {
@@ -133,12 +129,8 @@ public class Author: NosManagedObject {
     }
     
     func remove(relay: Relay) {
-        if let currentRelays = relays?.mutableCopy() as? NSMutableSet {
-            currentRelays.remove(relay)
-            relays = currentRelays
-            
-            print("Removed \(relay.address ?? "") from \(hexadecimalPublicKey ?? "")")
-        }
+        relays = relays?.removing(relay)
+        print("Removed \(relay.address ?? "") from \(hexadecimalPublicKey ?? "")")
     }
     
     func requestMetadata(using relayService: RelayService) -> String? {

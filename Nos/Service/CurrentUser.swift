@@ -233,18 +233,13 @@ class CurrentUser: ObservableObject {
         
         // Update author to add the new follow
         if let followedAuthor = try? Author.find(by: followKey, context: context), let currentUser = author {
-            // Add to the current user's follows
             let follow = try! Follow.findOrCreate(source: currentUser, destination: followedAuthor, context: context)
-            if let currentFollows = currentUser.follows?.mutableCopy() as? NSMutableSet {
-                currentFollows.add(follow)
-                currentUser.follows = currentFollows
-            }
+
+            // Add to the current user's follows
+            currentUser.follows = (currentUser.follows ?? NSSet()).adding(follow)
 
             // Add from the current user to the author's followers
-            if let followedAuthorFollowers = followedAuthor.followers?.mutableCopy() as? NSMutableSet {
-                followedAuthorFollowers.add(follow)
-                followedAuthor.followers = followedAuthorFollowers
-            }
+            followedAuthor.followers = (followedAuthor.followers ?? NSSet()).adding(follow)
         }
         
         try! context.save()
@@ -268,15 +263,13 @@ class CurrentUser: ObservableObject {
         if let unfollowedAuthor = try? Author.find(by: unfollowedKey, context: context), let currentUser = author {
             // Remove from the current user's follows
             let unfollows = Follow.follows(source: currentUser, destination: unfollowedAuthor, context: context)
-            if let currentFollows = currentUser.follows?.mutableCopy() as? NSMutableSet {
-                currentFollows.remove(unfollows)
-                currentUser.follows = currentFollows
-            }
-            
-            // Remove from the unfollowed author's followers
-            if let unfollowedAuthorFollowers = unfollowedAuthor.followers?.mutableCopy() as? NSMutableSet {
-                unfollowedAuthorFollowers.remove(unfollows)
-                unfollowedAuthor.followers = unfollowedAuthorFollowers
+
+            for unfollow in unfollows {
+                // Remove current user's follows
+                currentUser.follows = currentUser.follows?.removing(unfollow)
+                
+                // Remove from the unfollowed author's followers
+                unfollowedAuthor.followers = unfollowedAuthor.followers?.removing(unfollow)
             }
         }
 

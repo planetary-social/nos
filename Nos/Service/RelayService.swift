@@ -238,21 +238,13 @@ extension RelayService {
 
                 if success {
                     print("\(eventId) has sent successfully to \(socketUrl)")
-                    if let pubRelays = event.publishedTo?.mutableCopy() as? NSMutableSet {
-                        pubRelays.add(relay)
-                        event.publishedTo = pubRelays
-                        print("Tracked publish to relay: \(socketUrl)")
-                    }
+                    event.publishedTo = (event.publishedTo ?? NSSet()).adding(relay)
                 } else {
                     // This will be picked up later in publishFailedEvents
                     if responseArray.count > 2, let message = responseArray[3] as? String {
                         // Mark duplicates or replaces as done on our end
                         if message.contains("replaced:") || message.contains("duplicate:") {
-                            if let pubRelays = event.publishedTo?.mutableCopy() as? NSMutableSet {
-                                pubRelays.add(relay)
-                                event.publishedTo = pubRelays
-                                print("Tracked publish to relay: \(socketUrl)")
-                            }
+                            event.publishedTo = (event.publishedTo ?? NSSet()).adding(relay)
                         } else {
                             print("\(eventId) has been rejected. Given reason: \(message)")
                         }
