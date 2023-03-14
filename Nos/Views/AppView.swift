@@ -18,6 +18,7 @@ struct AppView: View {
     @EnvironmentObject var router: Router
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) private var analytics
+    @EnvironmentObject var currentUser: CurrentUser
     
     @State private var showingOptions = false
     @State private var lastSelectedTab = Destination.home
@@ -61,6 +62,14 @@ struct AppView: View {
         }
     }
     
+    var predicateBinding: Binding<String> {
+        Binding {
+            let key = CurrentUser.shared.author!.hexadecimalPublicKey!
+            return "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND ANY author.followers.source.hexadecimalPublicKey = \(key)"
+        } set: { _ in
+        }
+    }
+    
     var body: some View {
         
         ZStack {
@@ -68,7 +77,7 @@ struct AppView: View {
                 OnboardingView(completion: appController.completeOnboarding)
             } else {
                 TabView(selection: $router.selectedTab) {
-                    if let author = CurrentUser.shared.author {
+                    if let author = currentUser.author {
                         HomeFeedView(user: author)
                             .tabItem {
                                 VStack {
