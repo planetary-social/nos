@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Dependencies
 
 struct SideMenu: View {
     
@@ -23,6 +24,7 @@ struct SideMenu: View {
     let closeMenu: () -> Void
     
     @EnvironmentObject private var router: Router
+    @Dependency(\.analytics) private var analytics
     
     var body: some View {
         if menuOpened {
@@ -47,6 +49,9 @@ struct SideMenu: View {
             // weirdly fixes dismissal animation
             // https://sarunw.com/posts/how-to-fix-zstack-transition-animation-in-swiftui/#solution
             .zIndex(1)
+            .onAppear {
+                analytics.showedSideMenu()
+            }
         }
     }
 }

@@ -61,6 +61,9 @@ struct NewNoteView: View {
                     .frame(height: 22)
                     .disabled(postText.isEmpty)
             )
+            .onAppear {
+                analytics.showedNewNote()
+            }
         }
         .alert(unwrapping: $alert)
     }
