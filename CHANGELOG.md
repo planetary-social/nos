@@ -8,7 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Display a user's NIP-05 identifier on th profile page after making a web request to verify that it is correct 
+
+## [0.1 (8)] - 2023-03-13Z
 - Fix translucent tab bar in the simulator.
+- Connect to more relays to get user relay list after importing a key during onboarding
+- Fix some bugs in thread views
+- Show placeholder cards for messages outside 2 hops and allow the user to reveal them
+- Support deprecated reply #e tag format
+- Fixed an issue where older contact list and metadata events could overwrite new ones
+- Styled onboarding views
 
 ## [0.1 (7)] - 2023-03-10Z
 - Use only relays added in RelayView for sending and receiving events
@@ -32,10 +40,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update Discover feed algorithm to include people 2 hops from you.
 - Fix infinite spinners on some avatars
 - Edit profile
-- Fix some bugs in thread views
-- Show placeholder cards for messages outside 2 hops and allow the user to reveal them
-- Support deprecated reply #e tag format
-- Fixed an issue where older contact list and metadata events could overwrite new ones
 
 ## [0.1 (6)] - 2023-03-08Z
 

@@ -33,7 +33,10 @@ struct NoteCard: View {
     @State private var userTappedShowOutOfNetwork = false
     
     var showContents: Bool {
-        showFullMessage || userTappedShowOutOfNetwork || currentUser.inNetworkAuthors.contains(note.author!)
+        showFullMessage ||
+        userTappedShowOutOfNetwork ||
+        currentUser.inNetworkAuthors.contains(note.author!) ||
+        Event.discoverTabUserIdToInfo.keys.contains(note.author?.hexadecimalPublicKey ?? "")
     }
     
     var replyAvatarUrls: [URL?] {

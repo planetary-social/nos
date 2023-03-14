@@ -11,10 +11,27 @@ import CoreData
 
 @objc(Relay)
 public class Relay: NosManagedObject {
-    static var defaults: [String] {
+    static var recommended: [String] {
         [
         "wss://relay.nostr.band",
         "wss://relay.damus.io",
+        "wss://e.nos.lol"
+        ]
+    }
+    
+    static var allKnown: [String] {
+        [
+        "wss://eden.nostr.land",
+        "wss://nostr.fmt.wiz.biz",
+        "wss://relay.damus.io",
+        "wss://nostr-pub.wellorder.net",
+        "wss://relay.nostr.info",
+        "wss://offchain.pub",
+        "wss://nos.lol",
+        "wss://brb.io",
+        "wss://relay.snort.social",
+        "wss://relay.current.fyi",
+        "wss://nostr.relayer.se",
         "wss://e.nos.lol"
         ]
     }
