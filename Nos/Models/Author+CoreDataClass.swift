@@ -17,7 +17,15 @@ public class Author: NosManagedObject {
     }
     
     var safeName: String {
-        displayName ?? name ?? npubString?.prefix(10).appending("...") ?? hexadecimalPublicKey ?? "error"
+        if let displayName, !displayName.isEmpty {
+            return displayName
+        }
+        
+        if let name, !name.isEmpty {
+            return name
+        }
+        
+        return npubString?.prefix(10).appending("...") ?? hexadecimalPublicKey ?? "error"
     }
     
     var publicKey: PublicKey? {
