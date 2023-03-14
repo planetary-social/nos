@@ -268,6 +268,13 @@ public class Event: NosManagedObject {
         return deleteRequest
     }
     
+    @nonobjc public class func deletePostsRequest(for identifiers: [String]) -> NSBatchDeleteRequest {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Event")
+        fetchRequest.predicate = NSPredicate(format: "identifier IN %@", identifiers)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        return deleteRequest
+    }
+    
     @nonobjc public class func contactListRequest(_ author: Author) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
@@ -434,6 +441,19 @@ public class Event: NosManagedObject {
         try hydrate(from: jsonEvent, in: context)
     }
 
+    func deleteEvents(identifiers: [String], context: NSManagedObjectContext) {
+        print("Deleting: \(identifiers)")
+        let deleteRequest = Event.deletePostsRequest(for: identifiers)
+
+        do {
+            try context.execute(deleteRequest)
+        } catch let error as NSError {
+            print("Failed to delete posts in \(identifiers). Error: \(error.description)")
+        }
+        
+        try? context.save()
+    }
+    
     /// Populates an event stub (with only its ID set) using the data in the given JSON.
     func hydrate(from jsonEvent: JSONEvent, in context: NSManagedObjectContext) throws {
         guard isStub else {
@@ -465,6 +485,9 @@ public class Event: NosManagedObject {
         case .contactList:
             hydrateContactList(from: jsonEvent, author: newAuthor, context: context)
 
+        case .delete:
+            deleteEvents(identifiers: jsonEvent.tags.map { $0[1] }, context: context)
+            
         case .metaData:
             hydrateMetaData(from: jsonEvent, author: newAuthor, context: context)
             
