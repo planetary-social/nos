@@ -132,7 +132,8 @@ struct RelayView: View {
             guard !newRelayAddress.isEmpty else { return }
             
             let address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-            let relay = Relay(context: viewContext, address: address, author: CurrentUser.shared.author)
+            let relay = Relay.findOrCreate(by: address, context: viewContext)
+            CurrentUser.shared.author?.add(relay: relay)
             newRelayAddress = ""
 
             do {
