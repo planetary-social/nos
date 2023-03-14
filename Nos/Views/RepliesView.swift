@@ -86,8 +86,15 @@ struct RepliesView: View {
         VStack {
             ScrollView(.vertical) {
                 LazyVStack {
-                    NoteButton(note: note, showFullMessage: true, allowsPush: false, showReplyCount: false)
-                        .padding(.horizontal)
+                    NoteButton(
+                        note: note,
+                        showFullMessage: true,
+                        hideOutOfNetwork: false,
+                        allowsPush: false,
+                        showReplyCount: false
+                    )
+                    .padding(.horizontal)
+                    
                     ForEach(directReplies.reversed()) { event in
                         ThreadView(root: event, allReplies: replies.reversed())
                     }
