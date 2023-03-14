@@ -88,7 +88,9 @@ struct AppView: View {
                             .onAppear {
                                 // TODO: Move this somewhere better like CurrentUser when it becomes the source of truth
                                 // for who is logged in
-                                analytics.identify(with: CurrentUser.shared.keyPair!)
+                                if let keyPair = CurrentUser.shared.keyPair {
+                                    analytics.identify(with: keyPair)
+                                }
                             }
                     }
                     
