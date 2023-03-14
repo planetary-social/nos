@@ -50,6 +50,13 @@ struct NoteOptionsButton: View {
                 // Analytics.shared.trackDidSelectAction(actionName: "report_post")
                     reportPost()
                 }
+                
+                if note.author == CurrentUser.shared.author {
+                    Button(Localized.deleteNote.string) {
+                        // Analytics.shared.trackDidSelectAction(actionName: "delete_message")
+                        deletePost()
+                    }
+                }
             }
             .sheet(isPresented: $showingSource) {
             }
@@ -60,6 +67,12 @@ struct NoteOptionsButton: View {
 
     func copyMessageIdentifier() {
         UIPasteboard.general.string = note.bech32NoteID
+    }
+    
+    func deletePost() {
+        if let identifier = note.identifier {
+            CurrentUser.shared.publishDelete(for: [identifier])
+        }
     }
 
     func reportPost() {

@@ -160,6 +160,28 @@ class CurrentUser: ObservableObject {
         }
     }
     
+    func publishDelete(for identifiers: [String], reason: String = "") {
+        guard let pubKey = publicKey else {
+            Log.debug("Error: no pubKey")
+            return
+        }
+        
+        let tags = identifiers.eTags
+        let time = Int64(Date.now.timeIntervalSince1970)
+        let kind = EventKind.delete.rawValue
+        var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: reason)
+        
+        if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
+            do {
+                try jsonEvent.sign(withKey: pair)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
+                relayService.publishToAll(event: event)
+            } catch {
+                Log.debug("Failed to delete events \(error.localizedDescription)")
+            }
+        }
+    }
+    
     func publishContactList(tags: [[String]]) {
         guard let pubKey = publicKey else {
             Log.debug("Error: no pubKey")
@@ -226,7 +248,7 @@ class CurrentUser: ObservableObject {
         }
         
         try! context.save()
-        publishContactList(tags: followKeys.tags)
+        publishContactList(tags: followKeys.pTags)
     }
     
     /// Unfollow by public hex key
@@ -258,7 +280,7 @@ class CurrentUser: ObservableObject {
             }
         }
 
-        publishContactList(tags: stillFollowingKeys.tags)
+        publishContactList(tags: stillFollowingKeys.pTags)
 
         // Delete cached texts from this person
         if let author = try? Author.find(by: unfollowedKey, context: context) {
