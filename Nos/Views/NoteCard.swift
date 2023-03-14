@@ -33,7 +33,7 @@ struct NoteCard: View {
     @State private var userTappedShowOutOfNetwork = false
     
     var showContents: Bool {
-        showFullMessage ||
+        !hideOutOfNetwork ||
         userTappedShowOutOfNetwork ||
         currentUser.inNetworkAuthors.contains(note.author!) ||
         Event.discoverTabUserIdToInfo.keys.contains(note.author?.hexadecimalPublicKey ?? "")
@@ -72,18 +72,21 @@ struct NoteCard: View {
     
     private var showFullMessage: Bool
     private let showReplyCount: Bool
+    private var hideOutOfNetwork: Bool
     
     init(
         author: Author,
         note: Event,
         style: CardStyle = .compact,
         showFullMessage: Bool = false,
+        hideOutOfNetwork: Bool = true,
         showReplyCount: Bool = true
     ) {
         self.author = author
         self.note = note
         self.style = style
         self.showFullMessage = showFullMessage
+        self.hideOutOfNetwork = hideOutOfNetwork
         self.showReplyCount = showReplyCount
         if showReplyCount {
             self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note), animation: .default)

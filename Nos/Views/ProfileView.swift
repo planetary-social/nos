@@ -61,7 +61,7 @@ struct ProfileView: View {
                 LazyVStack {
                     ForEach(events.unmuted) { event in
                         VStack {
-                            NoteButton(note: event)
+                            NoteButton(note: event, hideOutOfNetwork: false)
                                 .padding(.horizontal)
                         }
                     }

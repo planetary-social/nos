@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Display a user's NIP-05 identifier on the profile page after making a web request to verify that it is correct 
+- Fixed a crash on launch when relay model was outdated.
+- Fix your own posts showing as outside your network on a fresh install. 
 - Add self-hosted PostHog analytics
 - Render mentions on notifications tab
 

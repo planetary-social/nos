@@ -508,6 +508,8 @@ public class Event: NosManagedObject {
                     }
                 }
             }
+            
+            CurrentUser.shared.updateInNetworkAuthors()
 
         case .metaData:
             guard createdAt! > newAuthor.lastUpdatedMetadata ?? Date.distantPast else {
