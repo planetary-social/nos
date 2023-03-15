@@ -145,7 +145,6 @@ struct GoldenPostView_Previews: PreviewProvider {
         return note
     }
     
- 
     static var previews: some View {
         Group {
             LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible())], spacing: 10) {
