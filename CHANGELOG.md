@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Add self-hosted PostHog analytics
 - Render mentions on notifications tab
+- Delete notes
 
 ## [0.1 (8)] - 2023-03-13Z
 - Fix translucent tab bar in the simulator.
