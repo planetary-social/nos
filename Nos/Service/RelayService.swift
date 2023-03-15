@@ -14,11 +14,13 @@ final class RelayService: ObservableObject {
     private var persistenceController: PersistenceController
     // TODO: use a swift Actor to synchronize access to this
     /// Important: Only access this from the `processingQueue`
-    private var requestFilterSet = Set<Filter>()
+    private var requestFilterQueue = [Filter]()
     private var sockets = [WebSocket]()
     private var timer: Timer?
     private var backgroundContext: NSManagedObjectContext
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .userInitiated)
+    private let subscriptionLimit = 10
+    private let minimimumOneTimeFilters = 1
     
     init(persistenceController: PersistenceController) {
         self.persistenceController = persistenceController
@@ -32,13 +34,15 @@ final class RelayService: ObservableObject {
     }
     
     var activeSubscriptions: [String] {
-        requestFilterSet.map { $0.subscriptionId }
+        requestFilterQueue
+            .filter { $0.subscriptionStartDate != nil }
+            .map { $0.subscriptionId }
     }
         
     private func removeFilter(for subscription: String) {
         // Remove this filter from the queue
-        if let foundFilter = requestFilterSet.first(where: { $0.subscriptionId == subscription }) {
-            requestFilterSet.remove(foundFilter)
+        if let foundFilterIndex = requestFilterQueue.firstIndex(where: { $0.subscriptionId == subscription }) {
+            requestFilterQueue.remove(at: foundFilterIndex)
         }
     }
         
@@ -73,7 +77,7 @@ extension RelayService {
                 self.sockets.forEach { self.sendClose(from: $0, subscription: subscription) }
             }
             
-            print("\(self.requestFilterSet.count) filters in use.")
+            self.processFilterQueue()
         }
     }
     
@@ -85,7 +89,7 @@ extension RelayService {
                 self.sockets.forEach { self.sendClose(from: $0, subscription: subscription) }
             }
             
-            print("\(self.requestFilterSet.count) filters in use.")
+            print("\(self.requestFilterQueue.count) filters in use.")
         }
     }
     
@@ -121,14 +125,13 @@ extension RelayService {
     func requestEventsFromAll(filter: Filter = Filter(), relays: [Relay]? = nil) -> String {
         var subscriptionID: String?
   
-        processingQueue.sync {
-            // Keep this open
-            openSockets(for: relays)
+        processingQueue.async {
 
+            // TODO: be smarter about redundnat requests particularly now that we are using the since date.
             // Ignore redundant requests
-            guard !requestFilterSet.contains(filter) else {
-                print("Request with identical filter already open. Ignoring. \(requestFilterSet.count) filters in use.")
-                let foundFilter = requestFilterSet.first(where: { $0 == filter })
+            guard !self.requestFilterQueue.contains(filter) else {
+                print("Request with identical filter already open. Ignoring. \(self.requestFilterQueue.count) filters in use.")
+                let foundFilter = self.requestFilterQueue.first(where: { $0 == filter })
                 subscriptionID = foundFilter!.subscriptionId
                 return
             }
@@ -144,20 +147,44 @@ extension RelayService {
         
         // Fire of REQs in the background
         processingQueue.async {
-            filter.subscriptionStartDate = .now
-            self.requestFilterSet.insert(filter)
-            print("\(self.requestFilterSet.count) filters in use.")
-            
-            self.sockets.forEach { self.requestEvents(from: $0, subId: subscriptionID!, filter: filter) }
-            
-            self.clearStaleSubscriptions()
+            self.processFilterQueue(adding: filter, relays: relays)
         }
         
         return subscriptionID!
     }
     
+    private func processFilterQueue(adding filter: Filter? = nil, relays: [Relay]? = nil) {
+        openSockets(for: relays)
+        clearStaleSubscriptions()
+        
+        if let filter {
+            requestFilterQueue.append(filter)
+        }
+        
+        var i = 0
+        while i < requestFilterQueue.count && activeSubscriptions.count < subscriptionLimit {
+            let filter = requestFilterQueue[i]
+            i += 1
+            if filter.subscriptionStartDate != nil {
+                continue
+            }
+            
+            // turn filters into REQs
+            if filter.limit != 1 && activeSubscriptions.count == subscriptionLimit - minimimumOneTimeFilters {
+                // we need to keep a slot open for one time filters
+                continue
+            }
+            
+            filter.subscriptionStartDate = .now
+            sockets.forEach { requestEvents(from: $0, subId: filter.subscriptionId, filter: filter) }
+        }
+        
+        Log.info("\(activeSubscriptions.count) active subscriptions. " +
+            "\(requestFilterQueue.count - activeSubscriptions.count) subscriptions waiting in queue.")
+    }
+    
     private func clearStaleSubscriptions() {
-        let staleFilters = requestFilterSet.filter {
+        let staleFilters = requestFilterQueue.filter {
             if $0.limit == 1, let filterStartedAt = $0.subscriptionStartDate {
                 return filterStartedAt.distance(to: .now) > 5
             }
@@ -182,7 +209,7 @@ extension RelayService {
         }
         
         if let subId = responseArray[1] as? String {
-            if let filter = requestFilterSet.first(where: { $0.subscriptionId == subId }),
+            if let filter = requestFilterQueue.first(where: { $0.subscriptionId == subId }),
                 filter.limit == 1 {
                 print("\(subId) has finished responding. Closing.")
                 // This is a one-off request. Close it.
@@ -210,8 +237,7 @@ extension RelayService {
             do {
                 try await self.backgroundContext.perform {
                     let event = try EventProcessor.parse(jsonObject: eventJSON, in: self.backgroundContext)
-                    // TODO: synchronize access to requestFilterSet
-                    let fulfilledFilters = self.requestFilterSet.filter { $0.isFulfilled(by: event) }
+                    let fulfilledFilters = self.requestFilterQueue.filter { $0.isFulfilled(by: event) }
                     if !fulfilledFilters.isEmpty {
                         Log.info("found \(fulfilledFilters.count) fulfilled filter. Closing.")
                         fulfilledFilters.forEach { self.sendCloseToAll(subscriptions: [$0.subscriptionId]) }
@@ -427,7 +453,9 @@ extension RelayService: WebSocketDelegate {
         switch event {
         case .connected(let headers):
             print("websocket is connected: \(headers)")
-            requestFilterSet.forEach { self.requestEvents(from: client, subId: $0.subscriptionId, filter: $0) }
+            requestFilterQueue
+                .filter { $0.subscriptionStartDate != nil }
+                .forEach { self.requestEvents(from: client, subId: $0.subscriptionId, filter: $0) }
         case .disconnected(let reason, let code):
             if let index = sockets.firstIndex(where: { $0 === socket }) {
                 sockets.remove(at: index)
