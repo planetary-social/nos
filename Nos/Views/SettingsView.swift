@@ -43,7 +43,9 @@ struct SettingsView: View {
                         if privateKeyString.isEmpty {
                             self.keyPair = nil
                             analytics.logout()
-                            appController.configureCurrentState()
+                            // just crash for now until we can fix the crash that happens when you log back in.
+                            fatalError("Logged out")
+                            // appController.configureCurrentState()
                         } else if let keyPair = KeyPair(nsec: privateKeyString) {
                             self.keyPair = keyPair
                             analytics.identify(with: keyPair)

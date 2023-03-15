@@ -37,6 +37,8 @@ class CurrentUser: ObservableObject {
     var relayService: RelayService! {
         didSet {
             subscribe()
+            updateInNetworkAuthors(from: context)
+            refreshFriendMetadata()
         }
     }
     // swiftlint:enable implicitly_unwrapped_optional
@@ -91,10 +93,6 @@ class CurrentUser: ObservableObject {
                 subscriptions.removeAll()
             }
 
-            let textFilter = Filter(authorKeys: [key], kinds: [.text], limit: 100)
-            let textSub = relayService.requestEventsFromAll(filter: textFilter, relays: relays)
-            subscriptions.append(textSub)
-
             let metaFilter = Filter(authorKeys: [key], kinds: [.metaData], limit: 1)
             let metaSub = relayService.requestEventsFromAll(filter: metaFilter, relays: relays)
             subscriptions.append(metaSub)
@@ -102,6 +100,42 @@ class CurrentUser: ObservableObject {
             let contactFilter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
             let contactSub = relayService.requestEventsFromAll(filter: contactFilter, relays: relays)
             subscriptions.append(contactSub)
+        }
+    }
+    
+    func refreshFriendMetadata() {
+        guard let follows else {
+            Log.info("Skipping refreshFriendMetadata because we have no follows.")
+            return
+        }
+        
+        Task.detached(priority: .utility) { [follows] in
+            
+            for follow in follows {
+                guard let key = follow.destination?.hexadecimalPublicKey else {
+                    continue
+                }
+                
+                let metaFilter = Filter(
+                    authorKeys: [key],
+                    kinds: [.metaData],
+                    limit: 1,
+                    since: follow.destination?.lastUpdatedMetadata
+                )
+                _ = self.relayService.requestEventsFromAll(filter: metaFilter)
+                
+                let contactFilter = Filter(
+                    authorKeys: [key],
+                    kinds: [.contactList],
+                    limit: 1,
+                    since: follow.destination?.lastUpdatedContactList
+                )
+                _ = self.relayService.requestEventsFromAll(filter: contactFilter)
+                
+                // TODO: check cancellation
+                // Do this slowly so we don't get rate limited
+                try await Task.sleep(for: .seconds(1))
+            }
         }
     }
     
@@ -275,20 +309,15 @@ class CurrentUser: ObservableObject {
 
         try! context.save()
         publishContactList(tags: stillFollowingKeys.pTags)
-
-        // Delete cached texts from this person
-        if let author = try? Author.find(by: unfollowedKey, context: context) {
-            author.deleteAllPosts(context: context)
-        }
     }
     // swiftlint:enable legacy_objc_type
     
-    func updateInNetworkAuthors() {
+    func updateInNetworkAuthors(from context: NSManagedObjectContext) {
         do {
-            if let inNetworkAuthors = try context?.fetch(Author.inNetworkRequest()) {
-                DispatchQueue.main.async {
-                    self.inNetworkAuthors = inNetworkAuthors
-                }
+            let inNetworkAuthors = try context.fetch(Author.inNetworkRequest())
+            
+            DispatchQueue.main.async {
+                self.inNetworkAuthors = inNetworkAuthors
             }
         } catch {
             Log.error("Error updating in network authors: \(error.localizedDescription)")
