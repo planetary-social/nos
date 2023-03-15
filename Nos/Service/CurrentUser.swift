@@ -219,6 +219,7 @@ class CurrentUser: ObservableObject {
         updateInNetworkAuthors()
     }
     
+    // swiftlint:disable legacy_objc_type
     /// Follow by public hex key
     func follow(author toFollow: Author) {
         guard let followKey = toFollow.hexadecimalPublicKey else {
@@ -280,6 +281,7 @@ class CurrentUser: ObservableObject {
             author.deleteAllPosts(context: context)
         }
     }
+    // swiftlint:enable legacy_objc_type
     
     func updateInNetworkAuthors() {
         do {

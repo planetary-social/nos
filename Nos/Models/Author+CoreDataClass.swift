@@ -106,7 +106,9 @@ public class Author: NosManagedObject {
     }
     
     func add(relay: Relay) {
+        // swiftlint:disable legacy_objc_type
         relays = (relays ?? NSSet()).adding(relay)
+        // swiftlint:enable legacy_objc_type
         print("Adding \(relay.address ?? "") to \(hexadecimalPublicKey ?? "")")
     }
     

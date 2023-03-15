@@ -52,7 +52,8 @@ extension FetchedResults where Element == Event {
     var unmuted: [Event] {
         filter {
             if let author = $0.author {
-                return !author.muted
+                let notDeleted = ($0.deletedOn?.count ?? 0) == 0
+                return !author.muted && notDeleted
             }
             return false
         }
@@ -484,9 +485,6 @@ public class Event: NosManagedObject {
         switch eventKind {
         case .contactList:
             hydrateContactList(from: jsonEvent, author: newAuthor, context: context)
-
-        case .delete:
-            deleteEvents(identifiers: jsonEvent.tags.map { $0[1] }, context: context)
             
         case .metaData:
             hydrateMetaData(from: jsonEvent, author: newAuthor, context: context)
@@ -658,6 +656,20 @@ public class Event: NosManagedObject {
         }
         return nil
     }
+    
+    // swiftlint:disable legacy_objc_type
+    /// This tracks which relays this event is deleted on. Hide posts with deletedOn.count > 0
+    func trackDelete(on relay: Relay, context: NSManagedObjectContext) {
+        if EventKind(rawValue: kind) == .delete, let eTags = allTags as? [[String]] {
+            for deletedEventId in eTags.map({ $0[1] }) {
+                if let deletedEvent = Event.find(by: deletedEventId, context: context) {
+                    print("\(deletedEvent.identifier ?? "n/a") was deleted on \(relay.address ?? "unknown")")
+                    deletedEvent.deletedOn = (deletedEvent.deletedOn ?? NSSet()).adding(relay)
+                }
+            }
+        }
+    }
+    // swiftlint:enable legacy_objc_type
 }
 // swiftlint:enable type_body_length
 // swiftlint:enable file_length
