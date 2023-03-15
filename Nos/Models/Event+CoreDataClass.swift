@@ -572,6 +572,7 @@ public class Event: NosManagedObject {
                 newAuthor.displayName = metadata.displayName
                 newAuthor.about = metadata.about
                 newAuthor.profilePhotoURL = metadata.profilePhotoURL
+                newAuthor.nip05 = metadata.nip05
             } catch {
                 print("Failed to decode metaData event with ID \(String(describing: identifier))")
             }

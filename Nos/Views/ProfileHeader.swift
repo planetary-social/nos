@@ -76,13 +76,24 @@ struct ProfileHeader: View {
                         } label: {
                             Text("\(Localized.following.string): \(author.follows?.count ?? 0)")
                         }
-                        
-                        Spacer()
-                            .frame(height: 17)
-                        
-                        Text("\(Localized.nip05.string): \(relayService.identifierToShow(verifiedNip05Identifier))")
-                            .font(.title3.weight(.semibold))
-                            .foregroundColor(Color.primaryTxt)
+                        if !verifiedNip05Identifier.isEmpty || !(author.nip05 ?? "").isEmpty {
+                            Spacer()
+                            Button {
+                                if !verifiedNip05Identifier.isEmpty {
+                                    let domain = relayService.domain(from: verifiedNip05Identifier)
+                                    let urlString = "https://\(domain)"
+                                    guard let url = URL(string: urlString) else { return }
+                                    UIApplication.shared.open(url)
+                                }
+                            } label: {
+                                if !verifiedNip05Identifier.isEmpty {
+                                    Text("\(relayService.identifierToShow(verifiedNip05Identifier))")
+                                } else {
+                                    Text("\(author.nip05 ?? "")")
+                                        .strikethrough()
+                                }
+                            }
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
