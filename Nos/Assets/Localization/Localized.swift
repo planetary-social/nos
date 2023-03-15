@@ -208,6 +208,7 @@ enum Localized: String, Localizable, CaseIterable {
     case copyNoteIdentifier = "Copy Note Identifier"
     case copyNoteText = "Copy Note Text"
     case copyUserIdentifier = "Copy User ID"
+    case deleteNote = "Delete"
     case muteUser = "Mute"
     case mutedUser = "Muted"
     case share = "Share"
