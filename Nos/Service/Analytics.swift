@@ -8,6 +8,7 @@
 import PostHog
 import Dependencies
 import Logger
+import Starscream
 
 private enum AnalyticsKey: DependencyKey {
     static let liveValue = Analytics()
@@ -141,5 +142,11 @@ class Analytics {
     private func track(_ eventName: String, properties: [String: Any] = [:]) {
         Log.info("Analytics: \(eventName)")
         postHog?.capture(eventName, properties: properties)
+    }
+    
+    // MARK: - Relays
+    
+    func rateLimited(by socket: WebSocket) {
+        track("Rate Limited", properties: ["relay": socket.request.url?.absoluteString ?? "null"])
     }
 }

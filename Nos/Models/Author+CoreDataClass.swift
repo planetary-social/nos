@@ -17,7 +17,15 @@ public class Author: NosManagedObject {
     }
     
     var safeName: String {
-        displayName ?? name ?? npubString?.prefix(10).appending("...") ?? hexadecimalPublicKey ?? "error"
+        if let displayName, !displayName.isEmpty {
+            return displayName
+        }
+        
+        if let name, !name.isEmpty {
+            return name
+        }
+        
+        return npubString?.prefix(10).appending("...") ?? hexadecimalPublicKey ?? "error"
     }
     
     var publicKey: PublicKey? {
@@ -154,7 +162,12 @@ public class Author: NosManagedObject {
             return nil
         }
         
-        let metaFilter = Filter(authorKeys: [hexadecimalPublicKey], kinds: [.metaData], limit: 1)
+        let metaFilter = Filter(
+            authorKeys: [hexadecimalPublicKey],
+            kinds: [.metaData],
+            limit: 1,
+            since: lastUpdatedMetadata
+        )
         let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
         return metaSub
     }
