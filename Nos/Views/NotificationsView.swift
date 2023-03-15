@@ -48,7 +48,6 @@ struct NotificationsView: View {
             })
             .background(Color.appBg)
             .padding(.top, 1)
-            .padding(.bottom, 1)
             .navigationBarTitle(Localized.notifications.string, displayMode: .inline)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)

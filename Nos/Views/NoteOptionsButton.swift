@@ -10,7 +10,8 @@ import SwiftUI
 import secp256k1
 
 struct NoteOptionsButton: View {
-
+    @Environment(\.managedObjectContext) private var viewContext
+    
     var note: Event
 
     @State
@@ -37,6 +38,10 @@ struct NoteOptionsButton: View {
                 Button(Localized.copyNoteIdentifier.string) {
                     // Analytics.shared.trackDidSelectAction(actionName: "copy_message_identifier")
                     copyMessageIdentifier()
+                }
+                Button(Localized.copyNoteText.string) {
+                    // Analytics.shared.trackDidSelectAction(actionName: "copy_message_text")
+                    copyMessage()
                 }
                 // Button(Localized.shareThisMessage.text) {
                 // Analytics.shared.trackDidSelectAction(actionName: "share_message")
@@ -67,6 +72,12 @@ struct NoteOptionsButton: View {
 
     func copyMessageIdentifier() {
         UIPasteboard.general.string = note.bech32NoteID
+    }
+    
+    func copyMessage() {
+        if let attrString = note.attributedContent(with: viewContext) {
+            UIPasteboard.general.string = String(attrString.characters)
+        }
     }
     
     func deletePost() {

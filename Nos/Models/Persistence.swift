@@ -10,6 +10,10 @@ import Logger
 
 struct PersistenceController {
     static let shared = PersistenceController()
+    
+    /// Increment this to delete core data on update
+    static let version = 1
+    static let versionKey = "NosPersistenceControllerVersion"
 
     // swiftlint:disable force_try
     static var preview: PersistenceController = {
@@ -55,15 +59,21 @@ struct PersistenceController {
         var needsReload = false
         container.loadPersistentStores(completionHandler: { [container] (storeDescription, error) in
             
+            if Self.loadVersionFromDisk() < Self.version {
+                guard let storeURL = storeDescription.url else {
+                    Log.error("need to delete core data due to version change but could not get store URL")
+                    return
+                }
+                Self.clearCoreData(store: storeURL, in: container)
+                needsReload = true
+                Self.saveVersionToDisk(Self.version)
+            }
+            
             if let error = error as NSError? {
                 if error.domain == NSCocoaErrorDomain, error.code == 134_110, let storeURL = storeDescription.url {
+                    Self.clearCoreData(store: storeURL, in: container)
+                    needsReload = true
                     // The data model changed. Clear core data.
-                    do {
-                        try container.persistentStoreCoordinator.destroyPersistentStore(at: storeURL, type: .sqlite)
-                        needsReload = true
-                    } catch {
-                        fatalError("Could not erase database \(error.localizedDescription)")
-                    }
                 } else {
                     fatalError("Could not initialize database \(error), \(error.userInfo)")
                 }
@@ -76,6 +86,15 @@ struct PersistenceController {
         
         if needsReload {
             self = PersistenceController(inMemory: inMemory)
+        }
+    }
+    
+    static func clearCoreData(store storeURL: URL, in container: NSPersistentContainer) {
+        Log.info("Dropping Core Data...")
+        do {
+            try container.persistentStoreCoordinator.destroyPersistentStore(at: storeURL, type: .sqlite)
+        } catch {
+            fatalError("Could not erase database \(error.localizedDescription)")
         }
     }
     
@@ -116,6 +135,18 @@ struct PersistenceController {
     }
     
     func newBackgroundContext() -> NSManagedObjectContext {
-        container.newBackgroundContext()
+        let context = container.newBackgroundContext()
+        context.automaticallyMergesChangesFromParent = true
+        let mergeType = NSMergePolicyType.mergeByPropertyObjectTrumpMergePolicyType
+        context.mergePolicy = NSMergePolicy(merge: mergeType)
+        return context
+    }
+    
+    static func loadVersionFromDisk() -> Int {
+        UserDefaults.standard.integer(forKey: Self.versionKey)
+    }
+    
+    static func saveVersionToDisk(_ newVersion: Int) {
+        UserDefaults.standard.set(newVersion, forKey: Self.versionKey)
     }
 }

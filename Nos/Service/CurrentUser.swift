@@ -123,6 +123,7 @@ class CurrentUser: ObservableObject {
         var metaEvent = MetadataEventJSON(
             displayName: author!.displayName,
             name: author!.name,
+            nip05: author!.nip05,
             about: author!.about,
             picture: author!.profilePhotoURL?.absoluteString
         ).dictionary
@@ -215,8 +216,6 @@ class CurrentUser: ObservableObject {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }
         }
-        
-        updateInNetworkAuthors()
     }
     
     // swiftlint:disable legacy_objc_type
@@ -274,6 +273,7 @@ class CurrentUser: ObservableObject {
             }
         }
 
+        try! context.save()
         publishContactList(tags: stillFollowingKeys.pTags)
 
         // Delete cached texts from this person
@@ -285,9 +285,10 @@ class CurrentUser: ObservableObject {
     
     func updateInNetworkAuthors() {
         do {
-            let inNetworkAuthors = try context.fetch(Author.inNetworkRequest())
-            DispatchQueue.main.async {
-                self.inNetworkAuthors = inNetworkAuthors
+            if let inNetworkAuthors = try context?.fetch(Author.inNetworkRequest()) {
+                DispatchQueue.main.async {
+                    self.inNetworkAuthors = inNetworkAuthors
+                }
             }
         } catch {
             Log.error("Error updating in network authors: \(error.localizedDescription)")

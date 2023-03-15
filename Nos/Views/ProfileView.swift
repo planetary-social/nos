@@ -61,14 +61,13 @@ struct ProfileView: View {
                 LazyVStack {
                     ForEach(events.unmuted) { event in
                         VStack {
-                            NoteButton(note: event)
+                            NoteButton(note: event, hideOutOfNetwork: false)
                                 .padding(.horizontal)
                         }
                     }
                 }
             }
             .padding(.top, 1)
-            .padding(.bottom, 1)
             .background(Color.appBg)
             .overlay(Group {
                 if !events.contains(where: { !$0.author!.muted }) {
@@ -124,10 +123,12 @@ struct ProfileView: View {
                     }
                 }
         )
+        .task {
+            refreshProfileFeed()
+        }
         .onAppear {
             router.viewedAuthor = author
             analytics.showedProfile()
-            refreshProfileFeed()
         }
         .refreshable {
             refreshProfileFeed()

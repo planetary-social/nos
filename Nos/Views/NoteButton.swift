@@ -16,6 +16,7 @@ struct NoteButton: View {
     var note: Event
     var style = CardStyle.compact
     var showFullMessage = false
+    var hideOutOfNetwork = true
     var allowsPush = true
     var showReplyCount = true
 
@@ -34,6 +35,7 @@ struct NoteButton: View {
                     note: note,
                     style: style,
                     showFullMessage: showFullMessage,
+                    hideOutOfNetwork: hideOutOfNetwork,
                     showReplyCount: showReplyCount
                 )
             }

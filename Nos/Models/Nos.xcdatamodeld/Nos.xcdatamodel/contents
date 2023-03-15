@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G115" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22D68" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Author" representedClassName=".Author" syncable="YES" codeGenerationType="category">
         <attribute name="about" optional="YES" attributeType="String"/>
         <attribute name="displayName" optional="YES" attributeType="String"/>
@@ -8,6 +8,7 @@
         <attribute name="lastUpdatedMetadata" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="muted" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="nip05" optional="YES" attributeType="String"/>
         <attribute name="profilePhotoURL" optional="YES" attributeType="URI"/>
         <attribute name="rawMetadata" optional="YES" attributeType="Binary"/>
         <relationship name="events" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="author" inverseEntity="Event"/>
