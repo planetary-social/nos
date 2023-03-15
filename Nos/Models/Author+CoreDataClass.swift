@@ -86,6 +86,16 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc func followsRequest() -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "ANY followers = %@",
+            self
+        )
+        return fetchRequest
+    }
+
     @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: true)]

@@ -135,7 +135,11 @@ struct PersistenceController {
     }
     
     func newBackgroundContext() -> NSManagedObjectContext {
-        container.newBackgroundContext()
+        let context = container.newBackgroundContext()
+        context.automaticallyMergesChangesFromParent = true
+        let mergeType = NSMergePolicyType.mergeByPropertyObjectTrumpMergePolicyType
+        context.mergePolicy = NSMergePolicy(merge: mergeType)
+        return context
     }
     
     static func loadVersionFromDisk() -> Int {

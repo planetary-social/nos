@@ -194,8 +194,6 @@ class CurrentUser: ObservableObject {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }
         }
-        
-        updateInNetworkAuthors()
     }
     
     /// Follow by public hex key
@@ -259,12 +257,8 @@ class CurrentUser: ObservableObject {
             }
         }
 
+        try! context.save()
         publishContactList(tags: stillFollowingKeys.tags)
-
-        // Delete cached texts from this person
-        if let author = try? Author.find(by: unfollowedKey, context: context) {
-            author.deleteAllPosts(context: context)
-        }
     }
     
     func updateInNetworkAuthors() {

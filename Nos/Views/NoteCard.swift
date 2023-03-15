@@ -164,7 +164,7 @@ struct NoteCard: View {
                 GoldenPostView(author: author, note: note)
             }
         }
-        .task {
+        .task(priority: .userInitiated) {
             if author.needsMetadata {
                 _ = author.requestMetadata(using: relayService)
             }
