@@ -70,13 +70,11 @@ struct PersistenceController {
             }
             
             if let error = error as NSError? {
-                if error.domain == NSCocoaErrorDomain, error.code == 134_110, let storeURL = storeDescription.url {
-                    Self.clearCoreData(store: storeURL, in: container)
-                    needsReload = true
-                    // The data model changed. Clear core data.
-                } else {
-                    fatalError("Could not initialize database \(error), \(error.userInfo)")
+                if error.domain == NSCocoaErrorDomain, error.code == 134_110 {
+                    Log.error("Could not migrate data model. Did you change the xcdatamodel and forget to make a " +
+                        "new version?")
                 }
+                fatalError("Could not initialize database \(error), \(error.userInfo)")
             }
         })
         
