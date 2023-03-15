@@ -9,7 +9,9 @@ import Foundation
 import Starscream
 import CoreData
 import Logger
+import Dependencies
 
+// swiftlint:disable file_length
 final class RelayService: ObservableObject {
     private var persistenceController: PersistenceController
     // TODO: use a swift Actor to synchronize access to this
@@ -21,6 +23,7 @@ final class RelayService: ObservableObject {
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .userInitiated)
     private let subscriptionLimit = 10
     private let minimimumOneTimeFilters = 1
+    @Dependency(\.analytics) private var analytics
     
     init(persistenceController: PersistenceController) {
         self.persistenceController = persistenceController
@@ -125,13 +128,14 @@ extension RelayService {
     func requestEventsFromAll(filter: Filter = Filter(), relays: [Relay]? = nil) -> String {
         var subscriptionID: String?
   
-        processingQueue.async {
+        processingQueue.sync {
 
             // TODO: be smarter about redundnat requests particularly now that we are using the since date.
             // Ignore redundant requests
-            guard !self.requestFilterQueue.contains(filter) else {
-                print("Request with identical filter already open. Ignoring. \(self.requestFilterQueue.count) filters in use.")
-                let foundFilter = self.requestFilterQueue.first(where: { $0 == filter })
+            guard !self.requestFilterQueue.contains(where: { $0.matches(filter) }) else {
+                print("Request with identical filter already open. Ignoring. " +
+                    "\(self.requestFilterQueue.count) filters in use.")
+                let foundFilter = self.requestFilterQueue.first(where: { $0.matches(filter) })
                 subscriptionID = foundFilter!.subscriptionId
                 return
             }
@@ -311,7 +315,10 @@ extension RelayService {
                 #endif
                 parseEvent(responseArray, socket)
             case "NOTICE":
-                print(response)
+                Log.info(response)
+                if responseArray[safe: 1] as? String == "rate limited" {
+                    analytics.rateLimited(by: socket)
+                }
             case "EOSE":
                 parseEOSE(from: socket, responseArray: responseArray)
             case "OK":

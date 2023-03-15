@@ -68,6 +68,12 @@ final class Filter: Hashable {
         hasher.combine(authorKeys)
         hasher.combine(kinds)
         hasher.combine(limit)
+        hasher.combine(eTags)
+        hasher.combine(since)
+    }
+    
+    func matches(_ other: Filter) -> Bool {
+        authorKeys == other.authorKeys && kinds == other.kinds && eTags == other.eTags && since == other.since
     }
     
     func isFulfilled(by event: Event) -> Bool {
