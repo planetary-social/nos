@@ -57,6 +57,7 @@ struct DiscoverView: View {
     }
     
     func refreshDiscover() {
+        // TODO: Look into why subscriptions aren't being closed when we leave the discover tab
         relayService.sendCloseToAll(subscriptions: subscriptionIds)
         subscriptionIds.removeAll()
         
@@ -151,6 +152,7 @@ struct DiscoverView: View {
                 analytics.showedDiscover()
             }
             .onDisappear {
+                // TODO: Look into why subscriptions aren't being closed when we leave the discover tab
                 relayService.sendCloseToAll(subscriptions: subscriptionIds)
                 subscriptionIds.removeAll()
             }
