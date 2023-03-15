@@ -485,6 +485,7 @@ public class Event: NosManagedObject {
         }
     }
     
+    // swiftlint:disable function_body_length
     func hydrateContactList(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
         guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
             return
@@ -514,25 +515,25 @@ public class Event: NosManagedObject {
         }
         
         if author?.hexadecimalPublicKey == CurrentUser.shared.author?.hexadecimalPublicKey {
-             do {
-                 try context.save()
-             } catch {
-                 Log.error(error.localizedDescription)
-             }
-             CurrentUser.shared.updateInNetworkAuthors(from: context)
-             CurrentUser.shared.refreshFriendMetadata()
-         }
-
-         if CurrentUser.shared.author?.follows?.contains(where: {
-             ($0 as? Follow)?.destination?.hexadecimalPublicKey == author?.hexadecimalPublicKey
-         }) == true {
-             do {
-                 try context.save()
-             } catch {
-                 Log.error(error.localizedDescription)
-             }
-             CurrentUser.shared.updateInNetworkAuthors(from: context)
-         }
+            do {
+                try context.save()
+            } catch {
+                Log.error(error.localizedDescription)
+            }
+            CurrentUser.shared.updateInNetworkAuthors(from: context)
+            CurrentUser.shared.refreshFriendMetadata()
+        }
+        
+        if CurrentUser.shared.author?.follows?.contains(where: {
+            ($0 as? Follow)?.destination?.hexadecimalPublicKey == author?.hexadecimalPublicKey
+        }) == true {
+            do {
+                try context.save()
+            } catch {
+                Log.error(error.localizedDescription)
+            }
+            CurrentUser.shared.updateInNetworkAuthors(from: context)
+        }
         
         // Get the user's active relays out of the content property
         if let data = jsonEvent.content.data(using: .utf8, allowLossyConversion: false),
@@ -552,6 +553,7 @@ public class Event: NosManagedObject {
             }
         }
     }
+    // swiftlint:enable function_body_length
     
     func hydrateDefault(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
         let newEventReferences = NSMutableOrderedSet()
