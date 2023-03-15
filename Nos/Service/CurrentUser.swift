@@ -102,6 +102,10 @@ class CurrentUser: ObservableObject {
             let contactFilter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
             let contactSub = relayService.requestEventsFromAll(filter: contactFilter, relays: relays)
             subscriptions.append(contactSub)
+            
+            let muteListFilter = Filter(authorKeys: [key], kinds: [.mute], limit: 1)
+            let muteSub = relayService.requestEventsFromAll(filter: muteListFilter, relays: relays)
+            subscriptions.append(muteSub)
         }
     }
     
