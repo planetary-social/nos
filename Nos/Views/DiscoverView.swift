@@ -86,7 +86,8 @@ struct DiscoverView: View {
             .onPreferenceChange(SizePreferenceKey.self) { preference in
                 gridSize = preference
             }
-            .searchable(text: $searchText, placement: .toolbar, prompt: PlainText("Find a user by ID"))
+            .searchable(text: $searchText, placement: .toolbar, prompt: PlainText("Find a user by ID or NIP-05"))
+            .autocorrectionDisabled()
             .onSubmit(of: .search) {
                 
                 if let author = author(from: searchText) {
