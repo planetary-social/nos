@@ -210,6 +210,13 @@ extension RelayService {
             do {
                 try await self.backgroundContext.perform {
                     let event = try EventProcessor.parse(jsonObject: eventJSON, in: self.backgroundContext)
+                    
+                    // Receiving delete events from other relays
+                    if let socketUrl = socket.request.url?.absoluteString {
+                        let relay = Relay.findOrCreate(by: socketUrl, context: self.backgroundContext)
+                        event.trackDelete(on: relay, context: self.backgroundContext)
+                    }
+
                     // TODO: synchronize access to requestFilterSet
                     let fulfilledFilters = self.requestFilterSet.filter { $0.isFulfilled(by: event) }
                     if !fulfilledFilters.isEmpty {
@@ -223,7 +230,8 @@ extension RelayService {
             }
         }
     }
-    
+
+    // swiftlint:disable legacy_objc_type
     private func parseOK(_ responseArray: [Any], _ socket: WebSocket) {
         guard responseArray.count > 2 else {
             return
@@ -239,21 +247,16 @@ extension RelayService {
 
                 if success {
                     print("\(eventId) has sent successfully to \(socketUrl)")
-                    if let pubRelays = event.publishedTo?.mutableCopy() as? NSMutableSet {
-                        pubRelays.add(relay)
-                        event.publishedTo = pubRelays
-                        print("Tracked publish to relay: \(socketUrl)")
-                    }
+                    event.publishedTo = (event.publishedTo ?? NSSet()).adding(relay)
+                    
+                    // Receiving a confirmation of my own deletion event
+                    event.trackDelete(on: relay, context: objectContext)
                 } else {
                     // This will be picked up later in publishFailedEvents
                     if responseArray.count > 2, let message = responseArray[3] as? String {
                         // Mark duplicates or replaces as done on our end
                         if message.contains("replaced:") || message.contains("duplicate:") {
-                            if let pubRelays = event.publishedTo?.mutableCopy() as? NSMutableSet {
-                                pubRelays.add(relay)
-                                event.publishedTo = pubRelays
-                                print("Tracked publish to relay: \(socketUrl)")
-                            }
+                            event.publishedTo = (event.publishedTo ?? NSSet()).adding(relay)
                         } else {
                             print("\(eventId) has been rejected. Given reason: \(message)")
                         }
@@ -266,6 +269,7 @@ extension RelayService {
             }
         }
     }
+    // swiftlint:enable legacy_objc_type
     
     private func parseResponse(_ response: String, _ socket: WebSocket) {
         do {
