@@ -15,6 +15,7 @@ struct HomeFeedView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject var router: Router
+    @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
     
     @FetchRequest var events: FetchedResults<Event>
@@ -39,9 +40,11 @@ struct HomeFeedView: View {
         }
         
         // I can't figure out why but the home feed doesn't update when you follow someone without this.
-        // swiftlint:disable line_length
-        events.nsPredicate = NSPredicate(format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND ANY author.followers.source.hexadecimalPublicKey = %@", CurrentUser.shared.author!.hexadecimalPublicKey!)
-        // swiftlint:enable line_length
+        if let currentUserKey = currentUser.author?.hexadecimalPublicKey {
+            // swiftlint:disable line_length
+            events.nsPredicate = NSPredicate(format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND ANY author.followers.source.hexadecimalPublicKey = %@", currentUserKey)
+            // swiftlint:enable line_length
+        }
 
         if let follows = CurrentUser.shared.follows {
             let authors = follows.keys
