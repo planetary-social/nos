@@ -7,7 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Display a user's NIP-05 identifier on the profile page after making a web request to verify that it is correct 
+- Display a user's NIP-05 identifier on the profile page after making a web request to verify that it is correct
+- Added NIP-05 field to Edit Profile page, lookup users using NIP-05 names in discover tab, tapping the NIP-05 name opens the domain in a new window.
 - Fixed a crash on launch when relay model was outdated.
 - Fix your own posts showing as outside your network on a fresh install. 
 - Add self-hosted PostHog analytics

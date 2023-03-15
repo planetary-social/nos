@@ -462,7 +462,7 @@ extension RelayService {
     
     func retrieveInternetIdentifierPublicKeyHex(_ identifier: String) async -> String? {
         let localPart = identifier.components(separatedBy: "@")[safe: 0] ?? ""
-        let domain = identifier.components(separatedBy: "@")[safe: 1] ?? ""
+        let domain = domain(from: identifier)
         let urlString = "https://\(domain)/.well-known/nostr.json?name=\(localPart)"
         guard let url = URL(string: urlString) else {
             Log.info("Invalid URL: \(urlString)")
@@ -492,6 +492,6 @@ extension RelayService {
     }
     
     func domain(from identifier: String) -> String {
-        return identifier.components(separatedBy: "@")[safe: 1] ?? ""
+        identifier.components(separatedBy: "@")[safe: 1] ?? ""
     }
 }

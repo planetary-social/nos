@@ -79,10 +79,12 @@ struct ProfileHeader: View {
                         
                         Spacer()
                         Button {
-                            let domain = relayService.domain(from: verifiedNip05Identifier)
-                            let urlString = "https://\(domain)"
-                            guard let url = URL(string: urlString) else { return }
-                            UIApplication.shared.open(url)
+                            if !verifiedNip05Identifier.isEmpty {
+                                let domain = relayService.domain(from: verifiedNip05Identifier)
+                                let urlString = "https://\(domain)"
+                                guard let url = URL(string: urlString) else { return }
+                                UIApplication.shared.open(url)
+                            }
                         } label: {
                             Text("\(Localized.nip05.string): \(relayService.identifierToShow(verifiedNip05Identifier))")
                         }
