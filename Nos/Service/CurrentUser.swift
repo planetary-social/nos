@@ -109,28 +109,33 @@ class CurrentUser: ObservableObject {
             return
         }
         
-        for follow in follows {
-            guard let key = follow.destination?.hexadecimalPublicKey else {
-                continue
+        Task.detached(priority: .utility) { [follows] in
+            
+            for follow in follows {
+                guard let key = follow.destination?.hexadecimalPublicKey else {
+                    continue
+                }
+                
+                let metaFilter = Filter(
+                    authorKeys: [key],
+                    kinds: [.metaData],
+                    limit: 1,
+                    since: follow.destination?.lastUpdatedMetadata
+                )
+                _ = self.relayService.requestEventsFromAll(filter: metaFilter)
+                
+                let contactFilter = Filter(
+                    authorKeys: [key],
+                    kinds: [.contactList],
+                    limit: 1,
+                    since: follow.destination?.lastUpdatedContactList
+                )
+                _ = self.relayService.requestEventsFromAll(filter: contactFilter)
+                
+                // TODO: check cancellation
+                // Do this slowly so we don't get rate limited
+                try await Task.sleep(for: .seconds(1))
             }
-            
-            let metaFilter = Filter(
-                authorKeys: [key],
-                kinds: [.metaData],
-                limit: 1,
-                since: follow.destination?.lastUpdatedMetadata
-            )
-            let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
-            subscriptions.append(metaSub)
-            
-            let contactFilter = Filter(
-                authorKeys: [key],
-                kinds: [.contactList],
-                limit: 1,
-                since: follow.destination?.lastUpdatedContactList
-            )
-            let contactSub = relayService.requestEventsFromAll(filter: contactFilter)
-            subscriptions.append(contactSub)
         }
     }
     
