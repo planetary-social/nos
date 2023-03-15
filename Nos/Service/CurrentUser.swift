@@ -37,6 +37,7 @@ class CurrentUser: ObservableObject {
     var relayService: RelayService! {
         didSet {
             subscribe()
+            updateInNetworkAuthors(from: context)
             refreshFriendMetadata()
         }
     }
@@ -103,8 +104,6 @@ class CurrentUser: ObservableObject {
     }
     
     func refreshFriendMetadata() {
-        updateInNetworkAuthors()
-        
         guard let follows else {
             Log.info("Skipping refreshFriendMetadata because we have no follows.")
             return
@@ -291,12 +290,12 @@ class CurrentUser: ObservableObject {
         publishContactList(tags: stillFollowingKeys.tags)
     }
     
-    func updateInNetworkAuthors() {
+    func updateInNetworkAuthors(from context: NSManagedObjectContext) {
         do {
-            if let inNetworkAuthors = try context?.fetch(Author.inNetworkRequest()) {
-                DispatchQueue.main.async {
-                    self.inNetworkAuthors = inNetworkAuthors
-                }
+            let inNetworkAuthors = try context.fetch(Author.inNetworkRequest())
+            
+            DispatchQueue.main.async {
+                self.inNetworkAuthors = inNetworkAuthors
             }
         } catch {
             Log.error("Error updating in network authors: \(error.localizedDescription)")

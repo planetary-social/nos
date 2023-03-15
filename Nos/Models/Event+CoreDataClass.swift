@@ -11,6 +11,7 @@ import Foundation
 import CoreData
 import RegexBuilder
 import SwiftUI
+import Logger
 
 enum EventError: Error {
 	case jsonEncoding
@@ -481,6 +482,27 @@ public class Event: NosManagedObject {
                 }
             }
             
+            if author?.hexadecimalPublicKey == CurrentUser.shared.author?.hexadecimalPublicKey {
+                do {
+                    try context.save()
+                } catch {
+                    Log.error(error.localizedDescription)
+                }
+                CurrentUser.shared.updateInNetworkAuthors(from: context)
+                CurrentUser.shared.refreshFriendMetadata()
+            }
+        
+            if CurrentUser.shared.author?.follows?.contains(where: {
+                ($0 as? Follow)?.destination?.hexadecimalPublicKey == author?.hexadecimalPublicKey
+            }) == true {
+                do {
+                    try context.save()
+                } catch {
+                    Log.error(error.localizedDescription)
+                }
+                CurrentUser.shared.updateInNetworkAuthors(from: context)
+            }
+            
             // Get the user's active relays out of the content property
             if let data = jsonEvent.content.data(using: .utf8, allowLossyConversion: false),
                 let relayEntries = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
@@ -491,12 +513,11 @@ public class Event: NosManagedObject {
                     newAuthor.add(relay: relay)
                 }
                 
-                // Close sockets for anything not in the above
-                if newAuthor == CurrentUser.shared.author {
+                if author?.hexadecimalPublicKey == CurrentUser.shared.author?.hexadecimalPublicKey {
+                    // Close sockets for anything not in the above
                     if let keptRelays = newAuthor.relays as? Set<Relay> {
                         CurrentUser.shared.relayService.closeAllConnections(excluding: keptRelays)
                     }
-                    CurrentUser.shared.updateInNetworkAuthors()
                 }
             }
             
