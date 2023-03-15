@@ -17,7 +17,11 @@ extension Set where Element == Follow {
 }
 
 extension Array where Element == String {
-    var tags: [[String]] {
+    var eTags: [[String]] {
+        map { ["e", $0] }
+    }
+
+    var pTags: [[String]] {
         map { ["p", $0] }
     }
 }
