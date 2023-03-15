@@ -108,6 +108,12 @@ struct CompactNoteView: View {
                 .frame(maxWidth: .infinity)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
+            if let url = try? note
+                .content?
+                .findUnformattedLinks()
+                .first(where: { $0.isImage }) {
+                SquareImage(url: url)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -130,7 +136,7 @@ struct CompactNoteView_Previews: PreviewProvider {
     static var router = Router()
     static var shortNote: Event {
         let note = Event(context: previewContext)
-        note.content = "Hello, world!"
+        note.content = "Hello, world!https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg"
         return note
     }
     

@@ -30,6 +30,7 @@ struct GoldenPostView: View {
         Text(note.attributedContent(with: viewContext) ?? "")
             .foregroundColor(.primaryTxt)
             .accentColor(.accent)
+            .multilineTextAlignment(.leading)
             .environment(\.openURL, OpenURLAction { url in
                 router.open(url: url, with: viewContext)
                 return .handled
@@ -57,36 +58,42 @@ struct GoldenPostView: View {
         }
         .padding(10)
     }
+    
+    var isTextOnly: Bool {
+        (try? note.content?.findUnformattedLinks().count ?? 0) == 0
+    }
+    
+    var imageView: some View {
+        Group {
+            if let url = try? note
+                .content?
+                .findUnformattedLinks()
+                .first(where: { $0.isImage }) {
+                SquareImage(url: url)
+            }
+        }
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // swiftlint:disable indentation_width
-//            if post.isBlobOnly {
-//                ZStack(alignment: .bottom) {
-//                    BlobGalleryView(blobs: blobs, aspectRatio: goldenRatio)
-//                        .allowsHitTesting(false)
-//                    footer
-//                }
-//            } else {
-//                if !blobs.isEmpty {
-//                    BlobGalleryView(blobs: blobs)
-//                        .allowsHitTesting(false)
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .layoutPriority(1)
-//                }
-
-//                if post.isTextOnly {
-                    text
-                        .padding(EdgeInsets(top: 15, leading: 10, bottom: 15, trailing: 10))
-//                } else {
-//                    text
-//                        .padding(EdgeInsets(top: 8, leading: 10, bottom: 0, trailing: 10))
-//                }
-//                Spacer(minLength: 0)
+            imageView
+            
+            Spacer(minLength: 0)
+            VStack {
+                HStack {
+                    if isTextOnly {
+                        text
+                            .padding(EdgeInsets(top: 15, leading: 10, bottom: 15, trailing: 10))
+                    } else {
+                        text
+                            .padding(EdgeInsets(top: 8, leading: 10, bottom: 0, trailing: 10))
+                    }
+                    Spacer()
+                }
+                Spacer(minLength: 0)
                 footer
-//            }
+            }
         }
-        // swiftlint:enable indentation_width
         .frame(maxWidth: .infinity, alignment: .leading)
         .aspectRatio(goldenRatio, contentMode: ContentMode.fill)
     }
@@ -115,12 +122,39 @@ struct GoldenPostView_Previews: PreviewProvider {
         note.author?.profilePhotoURL = URL(string: "https://avatars.githubusercontent.com/u/1165004?s=40&v=4")
         return note
     }
+    
+    static var imageNote: Event {
+        let note = Event(context: previewContext)
+        note.content = "Hello, world!https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg"
+        return note
+    }
+    
+    static var verticalImageNote: Event {
+        let note = Event(context: previewContext)
+        // swiftlint:disable line_length
+        note.content = "Hello, world!https://nostr.build/i/nostr.build_1b958a2af7a2c3fcb2758dd5743912e697ba34d3a6199bfb1300fa6be1dc62ee.jpeg"
+        // swiftlint:enable line_length
+        return note
+    }
+    
+    static var veryWideImageNote: Event {
+        let note = Event(context: previewContext)
+        // swiftlint:disable line_length
+        note.content = "Hello, world! https://nostr.build/i/nostr.build_db8287dde9aedbc65df59972386fde14edf9e1afc210e80c764706e61cd1cdfa.png"
+        // swiftlint:enable line_length
+        return note
+    }
+    
  
     static var previews: some View {
         Group {
             LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible())], spacing: 10) {
                 Group {
+                    GoldenPostView(author: previewAuthor, note: imageNote)
                     GoldenPostView(author: previewAuthor, note: shortNote)
+                    GoldenPostView(author: previewAuthor, note: longNote)
+                    GoldenPostView(author: previewAuthor, note: verticalImageNote)
+                    GoldenPostView(author: previewAuthor, note: veryWideImageNote)
                     GoldenPostView(author: previewAuthor, note: longNote)
                 }
                 .background(Color.cardBackground)

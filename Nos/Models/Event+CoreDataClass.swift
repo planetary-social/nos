@@ -418,7 +418,7 @@ public class Event: NosManagedObject {
             return ""
         }
         
-        let linkedString = (try? result.findUnformattedLinks(in: result)) ?? result
+        let linkedString = (try? result.findAndReplaceUnformattedLinks(in: result)) ?? result
         
         return try? AttributedString(
             markdown: linkedString,
