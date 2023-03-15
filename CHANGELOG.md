@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Delete notes
+- More performance improvements centered around our relay communication
+
+Known Issues:
+- Deleting your key in Settings causes the app to crash. But you are correctly taken into onboarding after relaunch.
 
 ## [0.1 (11)] - 2023-03-14Z
 - Fixed thread view saying every reply is out of network
