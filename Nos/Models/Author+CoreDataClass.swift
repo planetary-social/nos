@@ -135,8 +135,12 @@ public class Author: NosManagedObject {
     }
     
     func mute(context: NSManagedObjectContext) {
-        print("Muting \(hexadecimalPublicKey ?? "")")
+        guard let mutedAuthorKey = hexadecimalPublicKey else {
+            return
+        }
+        print("Muting \(mutedAuthorKey)")
         muted = true
+        CurrentUser.shared.publishMuteList(keys: [mutedAuthorKey])
         deleteAllPosts(context: context)
     }
     
@@ -155,8 +159,26 @@ public class Author: NosManagedObject {
         return metaSub
     }
     
-    func unmute() {
-        print("Un-muting \(hexadecimalPublicKey ?? "")")
+    func unmute(context: NSManagedObjectContext) {
+        guard let unmutedAuthorKey = hexadecimalPublicKey else {
+            return
+        }
+        
+        print("Un-muting \(unmutedAuthorKey)")
         muted = false
+        
+        let request = Event.allPostsRequest(.mute)
+        
+        if let results = try? context.fetch(request),
+            let mostRecentMuteList = results.first,
+            let pTags = mostRecentMuteList.allTags as? [[String]] {
+
+            // Get the current list of muted keys
+            var mutedList = pTags.map { $0[1] }
+            mutedList.removeAll(where: { $0 == unmutedAuthorKey })
+
+            // Publish that modified list
+            CurrentUser.shared.publishMuteList(keys: mutedList)
+        }
     }
 }

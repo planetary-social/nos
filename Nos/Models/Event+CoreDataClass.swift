@@ -45,6 +45,7 @@ public enum EventKind: Int64, CaseIterable {
 	case boost = 6
 	case like = 7
     case channelMessage = 42
+    case mute = 10_000
     case parameterizedReplaceableEvent = 30_000
 }
 

@@ -111,7 +111,7 @@ struct ProfileView: View {
                             } else {
                                 if author.muted {
                                     Button(Localized.unmuteUser.string) {
-                                        router.viewedAuthor?.unmute()
+                                        router.viewedAuthor?.unmute(context: viewContext)
                                     }
                                 } else {
                                     Button(Localized.muteUser.string) {
