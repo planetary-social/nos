@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Added NIP-05 field to Edit Profile page, lookup users using NIP-05 names in discover tab, tapping the NIP-05 name opens the domain in a new window.
 - Delete notes
 
 ## [0.1 (10)] - 2023-03-14Z

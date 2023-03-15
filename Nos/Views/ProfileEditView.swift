@@ -18,6 +18,7 @@ struct ProfileEditView: View {
     @State private var nameText: String = ""
     @State private var bioText: String = ""
     @State private var avatarText: String = ""
+    @State private var nip05Text: String = ""
     
     var createAccountCompletion: (() -> Void)?
     
@@ -51,6 +52,10 @@ struct ProfileEditView: View {
                         #if os(iOS)
                         .keyboardType(.URL)
                         #endif
+                    TextField(Localized.nip05.string, text: $nip05Text)
+                        .textInputAutocapitalization(.none)
+                        .foregroundColor(.textColor)
+                        .autocorrectionDisabled()
                 } header: {
                     createAccountCompletion != nil ? Localized.createAccount.view : Localized.basicInfo.view
                         .foregroundColor(.textColor)
@@ -97,6 +102,7 @@ struct ProfileEditView: View {
             nameText = author.name ?? ""
             bioText = author.about ?? ""
             avatarText = author.profilePhotoURL?.absoluteString ?? ""
+            nip05Text = author.nip05 ?? ""
         }
         .onDisappear {
             CurrentUser.shared.editing = false
@@ -108,7 +114,7 @@ struct ProfileEditView: View {
         author.name = nameText
         author.about = bioText
         author.profilePhotoURL = URL(string: avatarText)
-
+        author.nip05 = nip05Text
         // Post event
         CurrentUser.shared.publishMetaData()
     }
