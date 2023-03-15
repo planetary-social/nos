@@ -51,10 +51,10 @@ struct NoteOptionsButton: View {
                 // Analytics.shared.trackDidSelectAction(actionName: "view_message_source")
                 // showingSource = true
                 // }
-                //Button(Localized.reportPost.string, role: .destructive) {
+                // Button(Localized.reportPost.string, role: .destructive) {
                 // Analytics.shared.trackDidSelectAction(actionName: "report_post")
                 //    reportPost()
-                //}
+                // }
                 
                 if note.author == CurrentUser.shared.author {
                     Button(Localized.deleteNote.string) {
