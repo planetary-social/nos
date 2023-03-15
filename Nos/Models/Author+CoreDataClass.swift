@@ -69,6 +69,12 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func allAuthorsRequest(muted: Bool) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.predicate = NSPredicate(format: "muted == %i", muted)
+        return fetchRequest
+    }
+    
     @nonobjc func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
