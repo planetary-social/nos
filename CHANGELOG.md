@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Delete notes
 
 ## [0.1 (11)] - 2023-03-14Z
 - Fixed thread view saying every reply is out of network
