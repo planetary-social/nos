@@ -54,7 +54,7 @@ final class Filter: Hashable {
         }
         
         if let since {
-            filterDict["since"] = since.timeIntervalSince1970
+            filterDict["since"] = Int(since.timeIntervalSince1970)
         }
 
         return filterDict

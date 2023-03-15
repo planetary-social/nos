@@ -115,11 +115,21 @@ class CurrentUser: ObservableObject {
                 continue
             }
             
-            let metaFilter = Filter(authorKeys: [key], kinds: [.metaData], limit: 1)
+            let metaFilter = Filter(
+                authorKeys: [key],
+                kinds: [.metaData],
+                limit: 1,
+                since: follow.destination?.lastUpdatedMetadata
+            )
             let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
             subscriptions.append(metaSub)
             
-            let contactFilter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
+            let contactFilter = Filter(
+                authorKeys: [key],
+                kinds: [.contactList],
+                limit: 1,
+                since: follow.destination?.lastUpdatedContactList
+            )
             let contactSub = relayService.requestEventsFromAll(filter: contactFilter)
             subscriptions.append(contactSub)
         }

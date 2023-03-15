@@ -17,6 +17,7 @@ struct DiscoverView: View {
     @EnvironmentObject var router: Router
     @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
+    @AppStorage("lastDiscoverRequestDate") var lastRequestDateUnix: TimeInterval?
 
     private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
 
@@ -59,7 +60,18 @@ struct DiscoverView: View {
         relayService.sendCloseToAll(subscriptions: subscriptionIds)
         subscriptionIds.removeAll()
         
-        let latestEvent = events.first?.createdAt
+        var fetchSinceDate: Date?
+        /// Make sure the lastRequestDate was more than a minute ago
+        /// to make sure we got all the events from it.
+        if let lastRequestDateUnix {
+            let lastRequestDate = Date(timeIntervalSince1970: lastRequestDateUnix)
+            if lastRequestDate.distance(to: .now) > 60 {
+                fetchSinceDate = lastRequestDate
+                self.lastRequestDateUnix = Date.now.timeIntervalSince1970
+            }
+        } else {
+            self.lastRequestDateUnix = Date.now.timeIntervalSince1970
+        }
         
         let featuredFilter = Filter(
             authorKeys: authors.compactMap {
@@ -67,22 +79,21 @@ struct DiscoverView: View {
             },
             kinds: [.text],
             limit: 100,
-            since: latestEvent
+            since: fetchSinceDate
         )
         
         subscriptionIds.append(relayService.requestEventsFromAll(filter: featuredFilter))
         
         if !currentUser.inNetworkAuthors.isEmpty {
+            // this filter just requests everything for now, because I think requesting all the authors within two hops is too large of a request and causes the websocket to close.
             let twoHopsFilter = Filter(
-                authorKeys: currentUser.inNetworkAuthors.compactMap { $0.hexadecimalPublicKey },
                 kinds: [.text],
-                limit: 100,
-                since: latestEvent
+                limit: 200,
+                since: fetchSinceDate
             )
             
             subscriptionIds.append(relayService.requestEventsFromAll(filter: twoHopsFilter))
         }
-
         
         // TODO: update fetch request because follow graph might have changed
         // eventRequest = FetchRequest(fetchRequest: Event.discoverFeedRequest(authors: authors))

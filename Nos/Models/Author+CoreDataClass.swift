@@ -164,7 +164,12 @@ public class Author: NosManagedObject {
             return nil
         }
         
-        let metaFilter = Filter(authorKeys: [hexadecimalPublicKey], kinds: [.metaData], limit: 1)
+        let metaFilter = Filter(
+            authorKeys: [hexadecimalPublicKey],
+            kinds: [.metaData],
+            limit: 1,
+            since: lastUpdatedMetadata
+        )
         let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
         return metaSub
     }
