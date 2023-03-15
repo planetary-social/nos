@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Added NIP-05 field to Edit Profile page, lookup users using NIP-05 names in discover tab, tapping the NIP-05 name opens the domain in a new window.
 - Delete notes
+- Fix invisible tab bar
 
 ## [0.1 (10)] - 2023-03-14Z
 - Display a user's NIP-05 identifier on the profile page after making a web request to verify that it is correct 

@@ -83,6 +83,7 @@ struct AppView: View {
                                     }
                                 }
                             }
+                            .toolbarBackground(.visible, for: .tabBar)
                             .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                             .tag(Destination.home)
                             .onAppear {
@@ -107,6 +108,7 @@ struct AppView: View {
                                 }
                             }
                         }
+                        .toolbarBackground(.visible, for: .tabBar)
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.discover)
                     
@@ -132,6 +134,7 @@ struct AppView: View {
                                 }
                             }
                         }
+                        .toolbarBackground(.visible, for: .tabBar)
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.notifications)
                     
@@ -149,6 +152,7 @@ struct AppView: View {
                                     }
                                 }
                             }
+                            .toolbarBackground(.visible, for: .tabBar)
                             .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                             .tag(Destination.profile)
                     }
