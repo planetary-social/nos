@@ -484,7 +484,6 @@ public class Event: NosManagedObject {
         }
     }
     
-    // swiftlint:disable function_body_length
     func hydrateContactList(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
         guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
             return
@@ -531,7 +530,6 @@ public class Event: NosManagedObject {
             }
         }
     }
-    // swiftlint:enable function_body_length
     
     func hydrateDefault(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
         let newEventReferences = NSMutableOrderedSet()

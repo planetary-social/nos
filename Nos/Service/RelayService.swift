@@ -4,7 +4,7 @@
 //
 //  Created by Matthew Lorentz on 2/1/23.
 //
-
+// swiftlint:disable file_length
 import Foundation
 import Starscream
 import CoreData
@@ -500,3 +500,4 @@ extension RelayService {
         identifier.components(separatedBy: "@")[safe: 1] ?? ""
     }
 }
+// swiftlint:enable file_length
