@@ -652,7 +652,8 @@ public class Event: NosManagedObject {
     func trackDelete(on relay: Relay, context: NSManagedObjectContext) {
         if EventKind(rawValue: kind) == .delete, let eTags = allTags as? [[String]] {
             for deletedEventId in eTags.map({ $0[1] }) {
-                if let deletedEvent = Event.find(by: deletedEventId, context: context) {
+                if let deletedEvent = Event.find(by: deletedEventId, context: context),
+                    deletedEvent.author?.hexadecimalPublicKey == author?.hexadecimalPublicKey {
                     print("\(deletedEvent.identifier ?? "n/a") was deleted on \(relay.address ?? "unknown")")
                     deletedEvent.deletedOn = (deletedEvent.deletedOn ?? NSSet()).adding(relay)
                 }
