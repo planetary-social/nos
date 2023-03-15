@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - More performance improvements centered around our relay communication
 - Fix invisible tab bar
 - Made placeholder text color same for all fields in profile edit view
+- Add basic image rendering in Note cards
 
 Known Issues:
 - Deleting your key in Settings causes the app to crash. But you are correctly taken into onboarding after relaunch.
