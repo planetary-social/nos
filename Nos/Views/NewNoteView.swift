@@ -68,7 +68,11 @@ struct NewNoteView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
             .toolbar {
-                RelayPickerToolbarButton(selectedRelay: $selectedRelay, isPresenting: $showRelayPicker) {
+                RelayPickerToolbarButton(
+                    selectedRelay: $selectedRelay,
+                    isPresenting: $showRelayPicker,
+                    defaultSelection: Localized.allMyRelays
+                ) {
                     withAnimation {
                         showRelayPicker.toggle()
                     }

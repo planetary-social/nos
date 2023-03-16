@@ -114,7 +114,7 @@ struct DiscoverView: View {
                 if showRelayPicker, let author = currentUser.author {
                     RelayPicker(
                         selectedRelay: $relayFilter,
-                        defaultSelection: Localized.allMyRelays.string,
+                        defaultSelection: Localized.extendedNetwork.string,
                         author: author,
                         isPresented: $showRelayPicker
                     )
@@ -146,7 +146,11 @@ struct DiscoverView: View {
             }
             .background(Color.appBg)
             .toolbar {
-                RelayPickerToolbarButton(selectedRelay: $relayFilter, isPresenting: $showRelayPicker) {
+                RelayPickerToolbarButton(
+                    selectedRelay: $relayFilter,
+                    isPresenting: $showRelayPicker,
+                    defaultSelection: Localized.extendedNetwork
+                ) {
                     withAnimation {
                         showRelayPicker.toggle()
                     }
@@ -293,13 +297,14 @@ struct RelayPickerToolbarButton: ToolbarContent {
     
     @Binding var selectedRelay: Relay?
     @Binding var isPresenting: Bool
+    var defaultSelection: Localized
     var action: () -> Void
     
     var title: String {
         if let selectedRelay {
             return selectedRelay.host ?? Localized.error.string
         } else {
-            return Localized.extendedNetwork.string
+            return defaultSelection.string
         }
     }
     
@@ -324,15 +329,15 @@ struct RelayPickerToolbarButton: ToolbarContent {
                     Image(systemName: imageName)
                         .font(.system(size: 10))
                         .bold()
-                        .foregroundColor(.defaultTint)
+                        .foregroundColor(.secondary)
                 }
             }
-            .frame(maxHeight: 35)
+            .frame(height: 35)
             .background(
                 Color.appBg
                     .cornerRadius(20)
             )
-            .offset(y: -2)
+            .padding(.bottom, 3)
         }
     }
 }

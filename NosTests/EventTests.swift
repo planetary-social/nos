@@ -195,6 +195,7 @@ final class EventTests: XCTestCase {
         
         let referencingEvent = try EventProcessor.parse(
             jsonEvent: referencingJSONEvent,
+            from: nil,
             in: testContext,
             skipVerification: true
         )
@@ -217,6 +218,7 @@ final class EventTests: XCTestCase {
         )
         let referencedEvent = try EventProcessor.parse(
             jsonEvent: referencedJSONEvent,
+            from: nil,
             in: testContext,
             skipVerification: true
         )

@@ -36,25 +36,27 @@ struct RelayPicker: View {
                 }
             }
             VStack {
-                VStack(spacing: 0) {
-                    // TODO: scrolling
-                    RelayPickerRow(string: defaultSelection, selection: $selectedRelay)
-                    ForEach(relays) { relay in
-                        Color.separatorDefault
-                            .frame(height: 1)
-                            .shadow(color: Color(hex: "#3A2859"), radius: 0, y: 1)
-                        RelayPickerRow(relay: relay, selection: $selectedRelay)
-                            .fixedSize(horizontal: false, vertical: true)
+                ScrollView {
+                    VStack(spacing: 0) {
+                        // TODO: scrolling
+                        RelayPickerRow(string: defaultSelection, selection: $selectedRelay)
+                        ForEach(relays) { relay in
+                            Color.cardTextInputBorder
+                                .frame(height: 1)
+                                .shadow(color: Color(hex: "#3A2859"), radius: 0, y: 1)
+                            RelayPickerRow(relay: relay, selection: $selectedRelay)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
                     }
+                    .cornerRadius(15, corners: [.bottomLeft, .bottomRight])
                 }
-                .cornerRadius(15, corners: [.bottomLeft, .bottomRight])
                 Spacer()
             }
             VStack {
                 Color.white
                     .frame(height: 100)
                     .offset(y: -100)
-                    .shadow(radius: 10, y: 0)
+                    .shadow(radius: 2, y: 0)
                 Spacer()
             }
             .clipped()
@@ -108,12 +110,15 @@ struct RelayPickerRow: View {
                     .padding(.vertical, 19)
                 Spacer()
                 if isSelected {
-                    Image.checkmark
-                        .offset(y: 4)
+                    Image(systemName: "checkmark")
+                        .bold()
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(LinearGradient.diagonalAccent)
+                        .padding(.trailing, 20)
                 }
             }
-            .background(Color.cardBgBottom)
         }
+        .background(Color.cardBgBottom)
     }
 }
 
@@ -149,5 +154,6 @@ struct RelayPicker_Previews: PreviewProvider {
             isPresented: .constant(true)
         )
         .environment(\.managedObjectContext, previewContext)
+        .background(Color.appBg)
     }
 }
