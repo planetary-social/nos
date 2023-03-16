@@ -313,9 +313,9 @@ class CurrentUser: ObservableObject {
     }
     // swiftlint:enable legacy_objc_type
     
-    func updateInNetworkAuthors(from context: NSManagedObjectContext) {
+    func updateInNetworkAuthors(for user: Author? = nil, from context: NSManagedObjectContext) {
         do {
-            let inNetworkAuthors = try context.fetch(Author.inNetworkRequest())
+            let inNetworkAuthors = try context.fetch(Author.inNetworkRequest(for: user))
             
             DispatchQueue.main.async {
                 self.inNetworkAuthors = inNetworkAuthors
