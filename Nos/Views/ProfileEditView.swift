@@ -30,6 +30,7 @@ struct ProfileEditView: View {
     
     var body: some View {
         VStack {
+            
             Form {
                 Section {
                     TextField(text: $displayNameText) {
@@ -59,14 +60,11 @@ struct ProfileEditView: View {
                     #if os(iOS)
                     .keyboardType(.URL)
                     #endif
-                    let unsBinding = Binding<String>(
-                        get: { self.unsText },
-                        set: { self.unsText = $0.lowercased() }
+                    let nip05Binding = Binding<String>(
+                        get: { self.nip05Text },
+                        set: { self.nip05Text = $0.lowercased() }
                     )
-                    TextField(text: unsBinding) {
-                        Localized.uns.view.foregroundColor(.secondaryTxt)
-                    }
-                    TextField(text: $nip05Text) {
+                    TextField(text: nip05Binding) {
                         Localized.nip05.view.foregroundColor(.secondaryTxt)
                     }
                     .textInputAutocapitalization(.none)
@@ -76,6 +74,24 @@ struct ProfileEditView: View {
                     createAccountCompletion != nil ? Localized.createAccount.view : Localized.basicInfo.view
                         .foregroundColor(.textColor)
                         .fontWeight(.heavy)
+                }
+                .listRowBackground(LinearGradient(
+                    colors: [Color.cardBgTop, Color.cardBgBottom],
+                    startPoint: .top,
+                    endPoint: .bottom
+                ))
+    
+                Section {
+                    let unsBinding = Binding<String>(
+                        get: { self.unsText },
+                        set: { self.unsText = $0.lowercased() }
+                    )
+                    TextField(text: unsBinding) {
+                        Localized.uns.view.foregroundColor(.secondaryTxt)
+                    }
+                    
+                    let unsText = try! AttributedString(markdown: "about the Universal Name System (UNS).")
+                    Text(self.learnMoreLink + unsText)
                 }
                 .listRowBackground(LinearGradient(
                     colors: [Color.cardBgTop, Color.cardBgBottom],
@@ -124,6 +140,12 @@ struct ProfileEditView: View {
         .onDisappear {
             CurrentUser.shared.editing = false
         }
+    }
+   
+    var learnMoreLink: AttributedString {
+        var result = try! AttributedString(markdown: "[Learn more ](https://www.universalname.space)")
+        result.foregroundColor = .accent
+        return result
     }
     
     func save() {
