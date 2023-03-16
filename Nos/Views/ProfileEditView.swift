@@ -59,7 +59,11 @@ struct ProfileEditView: View {
                     #if os(iOS)
                     .keyboardType(.URL)
                     #endif
-                    TextField(text: $unsText) {
+                    let unsBinding = Binding<String>(
+                        get: { self.unsText },
+                        set: { self.unsText = $0.lowercased() }
+                    )
+                    TextField(text: unsBinding) {
                         Localized.uns.view.foregroundColor(.secondaryTxt)
                     }
                     TextField(text: $nip05Text) {
