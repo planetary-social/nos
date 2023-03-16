@@ -516,7 +516,7 @@ extension RelayService: WebSocketDelegate {
     }
 }
 
-// MARK: NIP-05 Support
+// MARK: NIP-05 and UNS Support
 extension RelayService {
     
     func verifyInternetIdentifier(identifier: String, userPublicKey: String) async -> Bool {
@@ -574,6 +574,12 @@ extension RelayService {
     
     func socket(from relay: Relay) -> WebSocket? {
         sockets.first(where: { $0.request.url?.absoluteString == relay.addressURL?.absoluteString })
+    }
+
+    func unsURL(from unsIdentifier: String) -> URL? {
+        let urlString = "https://explorer.universalname.space/uns/\(unsIdentifier)"
+        guard let url = URL(string: urlString) else { return nil }
+        return url
     }
 }
 // swiftlint:enable file_length
