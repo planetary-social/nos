@@ -216,11 +216,7 @@ extension RelayService {
                 filter.limit == 1 {
                 print("\(subId) has finished responding. Closing.")
                 // This is a one-off request. Close it.
-                
-                // Let's try closing them all. We can't guarantee we got the latest event if not all relays are up
-                // to date, but it'll cut down on our number of open filters dramatically.
-                // sendClose(from: socket, subscription: subId)
-                sendCloseToAll(subscriptions: [subId])
+                sendClose(from: socket, subscription: subId)
             }
         }
     }
@@ -392,13 +388,13 @@ extension RelayService {
                 
                 let objectContext = self.backgroundContext
                 let userSentEvents = Event.allByUser(context: objectContext)
-                let relays = Relay.all(context: objectContext)
                 
                 // Only attempt to resend a user-created Event to Relays that were available at the time of publication
                 // This stops an Event from being sent to Relays that were added after the Event was sent
                 for event in userSentEvents {
-                    let shouldBePublishedToRelays: NSMutableSet = (event.shouldBePublishedTo ?? NSSet()).mutableCopy() as! NSMutableSet
-                    let publishedRelays = Set(arrayLiteral: event.publishedTo)
+                    let shouldBePublishedToRelays: NSMutableSet = (event.shouldBePublishedTo ?? NSSet())
+                        .mutableCopy() as! NSMutableSet
+                    let publishedRelays = (event.publishedTo ?? NSSet()) as Set
                     shouldBePublishedToRelays.minus(publishedRelays)
                     let missedRelays: [Relay] = Array(Set(_immutableCocoaSet: shouldBePublishedToRelays))
                     

@@ -23,9 +23,16 @@ struct RelayView: View {
     
     @Dependency(\.analytics) private var analytics
     
+    @FetchRequest var relays: FetchedResults<Relay>
+    
+    init(author: Author) {
+        self.author = author
+        _relays = FetchRequest(fetchRequest: Relay.relays(for: author))
+    }
+    
     var body: some View {
         List {
-            if let relays = author.relays?.allObjects as? [Relay] {
+            if let relays {
                 Section {
                     ForEach(relays) { relay in
                         Text(relay.address ?? Localized.error.string)

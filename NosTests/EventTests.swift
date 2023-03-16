@@ -73,7 +73,7 @@ final class EventTests: XCTestCase {
         let sampleEventID = "afc8a1cf67bddd12595c801bdc8c73ec1e8dfe94920f6c5ae5575c433722840e"
         
         // Act
-        let events = try EventProcessor.parse(jsonData: sampleData, in: PersistenceController(inMemory: true))
+        let events = try EventProcessor.parse(jsonData: sampleData, from: nil, in: PersistenceController(inMemory: true))
         let sampleEvent = try XCTUnwrap(events.first(where: { $0.identifier == sampleEventID }))
         
         // Assert
@@ -93,7 +93,7 @@ final class EventTests: XCTestCase {
         let testContext = persistenceController.container.viewContext
         
         // Act
-        let events = try EventProcessor.parse(jsonData: sampleData, in: persistenceController)
+        let events = try EventProcessor.parse(jsonData: sampleData, from: nil, in: persistenceController)
         let sampleEvent = try XCTUnwrap(events.first(where: { $0.identifier == sampleEventID }))
 
         let fetchRequest: NSFetchRequest<Event> = Event.allReplies(to: sampleEvent)
@@ -159,7 +159,7 @@ final class EventTests: XCTestCase {
         let context = PersistenceController(inMemory: true).container.viewContext
 
         // Act
-        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
+        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
          
         // Assert
         XCTAssertEqual(parsedEvent.signature, sampleContactListSignature)

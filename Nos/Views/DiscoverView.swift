@@ -112,7 +112,12 @@ struct DiscoverView: View {
                     .padding(.horizontal)
 
                 if showRelayPicker, let author = currentUser.author {
-                    RelayPicker(selectedRelay: $relayFilter, defaultSelection: Localized.allMyRelays.string, author: author, isPresented: $showRelayPicker)
+                    RelayPicker(
+                        selectedRelay: $relayFilter,
+                        defaultSelection: Localized.allMyRelays.string,
+                        author: author,
+                        isPresented: $showRelayPicker
+                    )
                 }
             }
             .onChange(of: relayFilter) { _ in

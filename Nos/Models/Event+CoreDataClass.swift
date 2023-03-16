@@ -497,7 +497,7 @@ public class Event: NosManagedObject {
         }
     }
     
-    // swiftlint:disable function_body_length
+    // swiftlint:disable function_body_length cyclomatic_complexity
     func hydrateContactList(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
         guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
             return
@@ -551,6 +551,7 @@ public class Event: NosManagedObject {
         if let data = jsonEvent.content.data(using: .utf8, allowLossyConversion: false),
             let relayEntries = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
             let relays = (relayEntries as? [String: Any])?.keys {
+            newAuthor.relays = NSMutableSet()
 
             for address in relays {
                 if let relay = try? Relay.findOrCreate(by: address, context: context) {
@@ -566,7 +567,7 @@ public class Event: NosManagedObject {
             }
         }
     }
-    // swiftlint:enable function_body_length
+    // swiftlint:enable function_body_length cyclomatic_complexity
     
     func hydrateDefault(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
         let newEventReferences = NSMutableOrderedSet()

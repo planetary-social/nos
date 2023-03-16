@@ -50,12 +50,17 @@ struct NewNoteView: View {
                 .scrollContentBackground(.hidden)
                 
                 if showRelayPicker, let author = currentUser.author {
-                    RelayPicker(selectedRelay: $selectedRelay, defaultSelection: Localized.extendedNetwork.string, author: author, isPresented: $showRelayPicker)
-                        .onChange(of: selectedRelay) { _ in
-                            withAnimation {
-                                showRelayPicker = false
-                            }
+                    RelayPicker(
+                        selectedRelay: $selectedRelay,
+                        defaultSelection: Localized.extendedNetwork.string,
+                        author: author,
+                        isPresented: $showRelayPicker
+                    )
+                    .onChange(of: selectedRelay) { _ in
+                        withAnimation {
+                            showRelayPicker = false
                         }
+                    }
                 }
             }
             .background(Color.appBg)

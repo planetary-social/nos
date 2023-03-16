@@ -67,6 +67,7 @@ public class Relay: NosManagedObject {
         return fetchRequest
     }
     
+    @discardableResult
     class func findOrCreate(by address: String, context: NSManagedObjectContext) throws -> Relay {
         if let existingRelay = try context.fetch(Relay.relay(by: address)).first {
             return existingRelay

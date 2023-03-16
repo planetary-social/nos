@@ -37,6 +37,7 @@ struct RelayPicker: View {
             }
             VStack {
                 VStack(spacing: 0) {
+                    // TODO: scrolling
                     RelayPickerRow(string: defaultSelection, selection: $selectedRelay)
                     ForEach(relays) { relay in
                         Color.separatorDefault
@@ -132,7 +133,7 @@ struct RelayPicker_Previews: PreviewProvider {
     static func createTestData(in context: NSManagedObjectContext, user: Author) {
         let addresses = ["wss://nostr.com", "wss://nos.social", "wss://alongdomainnametoseewhathappens.com"]
         addresses.forEach {
-            try! Relay(context: previewContext, address: $0, author: user)
+            _ = try! Relay(context: previewContext, address: $0, author: user)
         }
         
         try! previewContext.save()
@@ -141,7 +142,12 @@ struct RelayPicker_Previews: PreviewProvider {
     @State static var selectedRelay: Relay?
     
     static var previews: some View {
-        RelayPicker(selectedRelay: $selectedRelay, defaultSelection: Localized.extendedNetwork.string, author: user, isPresented: .constant(true))
-            .environment(\.managedObjectContext, previewContext)
+        RelayPicker(
+            selectedRelay: $selectedRelay,
+            defaultSelection: Localized.extendedNetwork.string,
+            author: user,
+            isPresented: .constant(true)
+        )
+        .environment(\.managedObjectContext, previewContext)
     }
 }
