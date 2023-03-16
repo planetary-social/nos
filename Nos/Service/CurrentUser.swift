@@ -214,7 +214,7 @@ class CurrentUser: ObservableObject {
         if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
                 relayService.publishToAll(event: event)
             } catch {
                 Log.debug("Failed to update mute list \(error.localizedDescription)")
