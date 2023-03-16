@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		3F170C78299D816200BC8F8B /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F170C77299D816200BC8F8B /* AppController.swift */; };
+		3F30020529C1FDD9003D4F8B /* OnboardingStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F30020429C1FDD9003D4F8B /* OnboardingStartView.swift */; };
+		3F30020729C237AB003D4F8B /* OnboardingAgeVerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F30020629C237AB003D4F8B /* OnboardingAgeVerificationView.swift */; };
+		3F30020929C23895003D4F8B /* OnboardingNotOldEnoughView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F30020829C23895003D4F8B /* OnboardingNotOldEnoughView.swift */; };
+		3F30020B29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F30020A29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift */; };
+		3F30020D29C382EB003D4F8B /* OnboardingLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F30020C29C382EB003D4F8B /* OnboardingLoginView.swift */; };
 		3F43C47629A9625700E896A0 /* AuthorReference+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */; };
 		3F60F42929B27D3E000D62C4 /* ThreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F60F42829B27D3E000D62C4 /* ThreadView.swift */; };
 		3FB5E651299D28A200386527 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB5E650299D28A200386527 /* OnboardingView.swift */; };
@@ -246,6 +251,11 @@
 
 /* Begin PBXFileReference section */
 		3F170C77299D816200BC8F8B /* AppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppController.swift; sourceTree = "<group>"; };
+		3F30020429C1FDD9003D4F8B /* OnboardingStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStartView.swift; sourceTree = "<group>"; };
+		3F30020629C237AB003D4F8B /* OnboardingAgeVerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingAgeVerificationView.swift; sourceTree = "<group>"; };
+		3F30020829C23895003D4F8B /* OnboardingNotOldEnoughView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNotOldEnoughView.swift; sourceTree = "<group>"; };
+		3F30020A29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTermsOfServiceView.swift; sourceTree = "<group>"; };
+		3F30020C29C382EB003D4F8B /* OnboardingLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingLoginView.swift; sourceTree = "<group>"; };
 		3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthorReference+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3F60F42829B27D3E000D62C4 /* ThreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadView.swift; sourceTree = "<group>"; };
 		3FB5E650299D28A200386527 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -403,6 +413,11 @@
 			isa = PBXGroup;
 			children = (
 				3FB5E650299D28A200386527 /* OnboardingView.swift */,
+				3F30020429C1FDD9003D4F8B /* OnboardingStartView.swift */,
+				3F30020629C237AB003D4F8B /* OnboardingAgeVerificationView.swift */,
+				3F30020829C23895003D4F8B /* OnboardingNotOldEnoughView.swift */,
+				3F30020A29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift */,
+				3F30020C29C382EB003D4F8B /* OnboardingLoginView.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -866,13 +881,16 @@
 				C9CDBBA129A8F14C00C555C7 /* DiscoverView.swift in Sources */,
 				C987F81729BA4C6A00B44E7A /* BigActionButton.swift in Sources */,
 				C987F86129BABAF800B44E7A /* String+Markdown.swift in Sources */,
+				3F30020B29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift in Sources */,
 				C987F81D29BA6D9A00B44E7A /* ProfileTab.swift in Sources */,
 				C9ADB14129951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */,
 				C9F84C21298DC36800C6714D /* AppView.swift in Sources */,
 				CD4908D429B92941007443DB /* ReportABugMailView.swift in Sources */,
 				3FFB1D9629A6BBEC002A755D /* Collection+SafeSubscript.swift in Sources */,
 				A34E439929A522F20057AFCB /* CurrentUser.swift in Sources */,
+				3F30020529C1FDD9003D4F8B /* OnboardingStartView.swift in Sources */,
 				C987F81A29BA4D0E00B44E7A /* ActionButton.swift in Sources */,
+				3F30020929C23895003D4F8B /* OnboardingNotOldEnoughView.swift in Sources */,
 				C9DEC06A298965550078B43A /* RelayView.swift in Sources */,
 				C94D855C2991479900749478 /* NewNoteView.swift in Sources */,
 				C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */,
@@ -882,6 +900,7 @@
 				C9F0BB6B29A503D6000547FC /* PublicKey.swift in Sources */,
 				A303AF8329A9153A005DC8FC /* FollowButton.swift in Sources */,
 				A32B6C7329A6BE9B00653FF5 /* FollowsView.swift in Sources */,
+				3F30020D29C382EB003D4F8B /* OnboardingLoginView.swift in Sources */,
 				C9DFA972299BF9E8006929C1 /* CompactNoteView.swift in Sources */,
 				A351E1A229BA92240009B7F6 /* ProfileEditView.swift in Sources */,
 				C9DFA969299BEC33006929C1 /* CardStyle.swift in Sources */,
@@ -908,6 +927,7 @@
 				C95D68A1299E6D3E00429F86 /* BioView.swift in Sources */,
 				A32B6C7829A6C99200653FF5 /* FollowCard.swift in Sources */,
 				C9DEBFD9298941000078B43A /* HomeFeedView.swift in Sources */,
+				3F30020729C237AB003D4F8B /* OnboardingAgeVerificationView.swift in Sources */,
 				C931517D29B915AF00934506 /* StaggeredGrid.swift in Sources */,
 				C9F0BB6929A5039D000547FC /* Int+Bool.swift in Sources */,
 				C9CDBBA429A8FA2900C555C7 /* GoldenPostView.swift in Sources */,
