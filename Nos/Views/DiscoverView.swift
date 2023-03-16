@@ -18,24 +18,11 @@ struct DiscoverView: View {
     @Dependency(\.analytics) private var analytics
     @AppStorage("lastDiscoverRequestDate") var lastRequestDateUnix: TimeInterval?
 
-    @FetchRequest private var events: FetchedResults<Event>
-    
-    @State var columns: Int = 0
-    
     @State var showRelayPicker = false
     
     @State var relayFilter: Relay?
     
-    @State private var gridSize: CGSize = .zero {
-        didSet {
-            // Initialize columns based on width of the grid
-            if columns == 0, gridSize.width > 0 {
-                columns = Int(floor(gridSize.width / 172))
-            }
-        }
-    }
-    
-    @Namespace private var animation
+    @State var columns: Int = 0
     
     @State private var subscriptionIds = [String]()
     private var featuredAuthors: [String]
@@ -52,13 +39,19 @@ struct DiscoverView: View {
         }
     }
     
+    var predicate: NSPredicate {
+        if let relayFilter {
+            return Event.seen(on: relayFilter)
+        } else {
+            return Event.extendedNetworkPredicate(featuredAuthors: featuredAuthors)
+        }
+    }
+
     init(featuredAuthors: [String] = Array(Event.discoverTabUserIdToInfo.keys)) {
         self.featuredAuthors = featuredAuthors
-        _events = FetchRequest(fetchRequest: Event.discoverFeedRequest(featuredAuthors: featuredAuthors))
     }
     
     func refreshDiscover() {
-        // TODO: Look into why subscriptions aren't being closed when we leave the discover tab
         relayService.sendCloseToAll(subscriptions: subscriptionIds)
         subscriptionIds.removeAll()
         
@@ -69,9 +62,9 @@ struct DiscoverView: View {
                 limit: 200
             )
             
-            subscriptionIds.append(relayService.requestEventsFromAll(filter: singleRelayFilter, relays: [relayFilter]))
-            
-            events.nsPredicate = Event.seen(on: relayFilter)
+            subscriptionIds.append(
+                relayService.requestEventsFromAll(filter: singleRelayFilter, relays: [relayFilter])
+            )
         } else {
             
             var fetchSinceDate: Date?
@@ -99,8 +92,8 @@ struct DiscoverView: View {
             subscriptionIds.append(relayService.requestEventsFromAll(filter: featuredFilter))
             
             if !currentUser.inNetworkAuthors.isEmpty {
-                // this filter just requests everything for now, because I think requesting all the authors within two
-                // hops is too large of a request and causes the websocket to close.
+                // this filter just requests everything for now, because I think requesting all the authors within
+                // two hops is too large of a request and causes the websocket to close.
                 let twoHopsFilter = Filter(
                     kinds: [.text],
                     limit: 200,
@@ -109,32 +102,24 @@ struct DiscoverView: View {
                 
                 subscriptionIds.append(relayService.requestEventsFromAll(filter: twoHopsFilter))
             }
-            
-            events.nsPredicate = Event.extendedNetworkPredicate(featuredAuthors: featuredAuthors)
         }
     }
     
     var body: some View {
         NavigationStack(path: $router.discoverPath) {
             ZStack {
-                GeometryReader { geometry in
-                    StaggeredGrid(list: events, columns: columns) { note in
-                        NoteButton(note: note, style: .golden)
-                            .matchedGeometryEffect(id: note.identifier, in: animation)
-                    }
-                    .preference(key: SizePreferenceKey.self, value: geometry.size)
-                }
-                .onPreferenceChange(SizePreferenceKey.self) { preference in
-                    gridSize = preference
-                }
+                DiscoverGrid(predicate: predicate, columns: $columns)
+                    .padding(.horizontal)
 
                 if showRelayPicker, let author = currentUser.author {
-                    RelayPicker(selectedRelay: $relayFilter, author: author)
-                        .onChange(of: relayFilter) { _ in
-                            showRelayPicker = false
-                            refreshDiscover()
-                        }
+                    RelayPicker(selectedRelay: $relayFilter, author: author, isPresented: $showRelayPicker)
                 }
+            }
+            .onChange(of: relayFilter) { _ in
+                withAnimation {
+                    showRelayPicker = false
+                }
+                refreshDiscover()
             }
             .searchable(text: $searchText, placement: .sidebar, prompt: PlainText("Find a user by ID or NIP-05"))
             .autocorrectionDisabled()
@@ -154,11 +139,12 @@ struct DiscoverView: View {
                     }
                 }
             }
-            .padding(.horizontal)
             .background(Color.appBg)
             .toolbar {
-                RelayPickerToolbarButton(selectedRelay: $relayFilter) {
-                    showRelayPicker.toggle()
+                RelayPickerToolbarButton(selectedRelay: $relayFilter, isPresenting: $showRelayPicker) {
+                    withAnimation {
+                        showRelayPicker.toggle()
+                    }
                 }
                 ToolbarItem {
                     HStack {
@@ -179,14 +165,13 @@ struct DiscoverView: View {
             .refreshable {
                 refreshDiscover()
             }
-            .task {
-                refreshDiscover()
-            }
             .onAppear {
-                analytics.showedDiscover()
+                if router.selectedTab == .discover {
+                    analytics.showedDiscover()
+                    refreshDiscover()
+                }
             }
             .onDisappear {
-                // TODO: Look into why subscriptions aren't being closed when we leave the discover tab
                 relayService.sendCloseToAll(subscriptions: subscriptionIds)
                 subscriptionIds.removeAll()
             }
@@ -273,11 +258,13 @@ struct DiscoverView_Previews: PreviewProvider {
     static func createRelayData(in context: NSManagedObjectContext, user: Author) {
         let addresses = ["wss://nostr.band", "wss://nos.social", "wss://a.long.domain.name.to.see.what.happens"]
         addresses.forEach {
-            try! Relay(context: previewContext, address: $0, author: user)
+            _ = try! Relay(context: previewContext, address: $0, author: user)
         }
         
         try! previewContext.save()
     }
+    
+    @State static var relayFilter: Relay?
     
     static var previews: some View {
         DiscoverView(featuredAuthors: [user.publicKey!.npub])
@@ -300,6 +287,7 @@ struct DiscoverView_Previews: PreviewProvider {
 struct RelayPickerToolbarButton: ToolbarContent {
     
     @Binding var selectedRelay: Relay?
+    @Binding var isPresenting: Bool
     var action: () -> Void
     
     var title: String {
@@ -307,6 +295,14 @@ struct RelayPickerToolbarButton: ToolbarContent {
             return selectedRelay.host ?? Localized.error.string
         } else {
             return Localized.extendedNetwork.string
+        }
+    }
+    
+    var imageName: String {
+        if isPresenting {
+            return "chevron.up"
+        } else {
+            return "chevron.down"
         }
     }
     
@@ -320,7 +316,7 @@ struct RelayPickerToolbarButton: ToolbarContent {
                         .foregroundColor(.primaryTxt)
                         .bold()
                         .padding(.leading, 14)
-                    Image(systemName: "chevron.down")
+                    Image(systemName: imageName)
                         .font(.system(size: 10))
                         .bold()
                         .foregroundColor(.secondary)

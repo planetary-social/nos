@@ -53,6 +53,10 @@
 		C93EC2F529C34C860012EE2A /* NSPredicate+Bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2F329C34C860012EE2A /* NSPredicate+Bool.swift */; };
 		C93EC2F729C351470012EE2A /* Optional+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2F629C351470012EE2A /* Optional+Unwrap.swift */; };
 		C93EC2F829C351470012EE2A /* Optional+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2F629C351470012EE2A /* Optional+Unwrap.swift */; };
+		C93EC2FA29C370DE0012EE2A /* DiscoverGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */; };
+		C93EC2FB29C370DE0012EE2A /* DiscoverGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */; };
+		C93EC2FD29C3785C0012EE2A /* View+RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */; };
+		C93EC2FE29C3785C0012EE2A /* View+RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */; };
 		C942566929B66A2800C4202C /* Date+Elapsed.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942566829B66A2800C4202C /* Date+Elapsed.swift */; };
 		C942566A29B66A2800C4202C /* Date+Elapsed.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942566829B66A2800C4202C /* Date+Elapsed.swift */; };
 		C942566B29B66B2F00C4202C /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94437E529B0DB83004D8C86 /* NotificationsView.swift */; };
@@ -282,6 +286,8 @@
 		C93EC2F029C337EB0012EE2A /* RelayPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayPicker.swift; sourceTree = "<group>"; };
 		C93EC2F329C34C860012EE2A /* NSPredicate+Bool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPredicate+Bool.swift"; sourceTree = "<group>"; };
 		C93EC2F629C351470012EE2A /* Optional+Unwrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Unwrap.swift"; sourceTree = "<group>"; };
+		C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverGrid.swift; sourceTree = "<group>"; };
+		C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+RoundedCorner.swift"; sourceTree = "<group>"; };
 		C942566829B66A2800C4202C /* Date+Elapsed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Elapsed.swift"; sourceTree = "<group>"; };
 		C94437E529B0DB83004D8C86 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		C94D855B2991479900749478 /* NewNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNoteView.swift; sourceTree = "<group>"; };
@@ -644,6 +650,7 @@
 				3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */,
 				C9DFA970299BF8CD006929C1 /* RepliesView.swift */,
 				C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */,
+				C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */,
 				CD76864B29B12F7E00085358 /* ExpandingTextFieldAndSubmitButton.swift */,
 				C94437E529B0DB83004D8C86 /* NotificationsView.swift */,
 				CD76864F29B6503500085358 /* NoteOptionsButton.swift */,
@@ -656,6 +663,7 @@
 				C987F81929BA4D0E00B44E7A /* ActionButton.swift */,
 				C92DF80729C25FA900400561 /* SquareImage.swift */,
 				C93EC2F029C337EB0012EE2A /* RelayPicker.swift */,
+				C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -956,6 +964,8 @@
 				C9DFA976299C30F0006929C1 /* Localized.swift in Sources */,
 				C95D68A5299E6E1E00429F86 /* PlaceholderModifier.swift in Sources */,
 				3FFB1D9329A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,
+				C93EC2FA29C370DE0012EE2A /* DiscoverGrid.swift in Sources */,
+				C93EC2FD29C3785C0012EE2A /* View+RoundedCorner.swift in Sources */,
 				CD09A74829A51EFC0063464F /* Router.swift in Sources */,
 				CD2CF38E299E67F900332116 /* CardButtonStyle.swift in Sources */,
 				C9DFA979299C31A7006929C1 /* Localizable.swift in Sources */,
@@ -1036,6 +1046,7 @@
 				C9ADB13F29929F1F0075E7F8 /* String+Hex.swift in Sources */,
 				A362584329C10AD500D07C9A /* NSSet+Add.swift in Sources */,
 				C93EC2F529C34C860012EE2A /* NSPredicate+Bool.swift in Sources */,
+				C93EC2FB29C370DE0012EE2A /* DiscoverGrid.swift in Sources */,
 				C9DEC05B298950A90078B43A /* String+Lorem.swift in Sources */,
 				C9F84C1D298DBC6100C6714D /* Data+Sha.swift in Sources */,
 				3FFB1D9D29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */,
@@ -1049,6 +1060,7 @@
 				C92DF80629C25DE900400561 /* URL+MimeTypes.swift in Sources */,
 				C93CA0C029AD59D700921183 /* GoldenPostView.swift in Sources */,
 				C9646EAF29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */,
+				C93EC2FE29C3785C0012EE2A /* View+RoundedCorner.swift in Sources */,
 				C9BAB09C2996FBA10003A84E /* EventProcessor.swift in Sources */,
 				C931517E29B915AF00934506 /* StaggeredGrid.swift in Sources */,
 				C987F81E29BA6D9A00B44E7A /* ProfileTab.swift in Sources */,

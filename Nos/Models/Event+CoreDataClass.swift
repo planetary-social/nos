@@ -101,10 +101,10 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func discoverFeedRequest(featuredAuthors: [String]) -> NSFetchRequest<Event> {
+    @nonobjc public class func emptyDiscoverRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = extendedNetworkPredicate(featuredAuthors: featuredAuthors)
+        fetchRequest.predicate = NSPredicate.false
         return fetchRequest
     }
     

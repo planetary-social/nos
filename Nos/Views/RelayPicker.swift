@@ -11,24 +11,51 @@ import CoreData
 struct RelayPicker: View {
     
     @Binding var selectedRelay: Relay?
+    @Binding var isPresented: Bool
     
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest var relays: FetchedResults<Relay>
     
-    init(selectedRelay: Binding<Relay?>, author: Author) {
+    init(selectedRelay: Binding<Relay?>, author: Author, isPresented: Binding<Bool>) {
         self._selectedRelay = selectedRelay
         _relays = FetchRequest(fetchRequest: Relay.relays(for: author))
+        _isPresented = isPresented
     }
     
     var body: some View {
-        Form {
-            RelayPickerRow(relay: nil, selection: $selectedRelay)
-            ForEach(relays) { relay in
-                RelayPickerRow(relay: relay, selection: $selectedRelay)
+        ZStack {
+            VStack {
+                Color.clear
+            }.onTapGesture {
+                // TODO: this doesn't work when color is clear
+                withAnimation {
+                    isPresented = false
+                }
             }
+            VStack {
+                VStack(spacing: 0) {
+                    RelayPickerRow(relay: nil, selection: $selectedRelay)
+                    ForEach(relays) { relay in
+                        Color.separatorDefault
+                            .frame(height: 1)
+                            .shadow(color: Color(hex: "#3A2859"), radius: 0, y: 1)
+                        RelayPickerRow(relay: relay, selection: $selectedRelay)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+                .cornerRadius(15, corners: [.bottomLeft, .bottomRight])
+                Spacer()
+            }
+            VStack {
+                Color.white
+                    .frame(height: 100)
+                    .offset(y: -100)
+                    .shadow(radius: 10, y: 0)
+                Spacer()
+            }
+            .clipped()
         }
-        .scrollContentBackground(.hidden)
-        .background(Color.appBg)
+        .transition(.move(edge: .top))
     }
 }
 
@@ -59,20 +86,19 @@ struct RelayPickerRow: View {
         } label: {
             HStack {
                 Text(title)
-                    .foregroundColor(.textColor)
+                    .foregroundColor(.primaryTxt)
+                    .bold()
                     .lineLimit(1)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 19)
                 Spacer()
                 if isSelected {
                     Image.checkmark
                         .offset(y: 4)
                 }
             }
+            .background(Color.cardBgBottom)
         }
-        .listRowBackground(LinearGradient(
-            colors: [Color.cardBgTop, Color.cardBgBottom],
-            startPoint: .top,
-            endPoint: .bottom
-        ))
     }
 }
 
@@ -90,7 +116,7 @@ struct RelayPicker_Previews: PreviewProvider {
     }
     
     static func createTestData(in context: NSManagedObjectContext, user: Author) {
-        let addresses = ["wss://nostr.band", "wss://nos.social", "wss://a.long.domain.name.to.see.what.happens"]
+        let addresses = ["wss://nostr.com", "wss://nos.social", "wss://alongdomainnametoseewhathappens.com"]
         addresses.forEach {
             try! Relay(context: previewContext, address: $0, author: user)
         }
@@ -101,7 +127,7 @@ struct RelayPicker_Previews: PreviewProvider {
     @State static var selectedRelay: Relay?
     
     static var previews: some View {
-        RelayPicker(selectedRelay: $selectedRelay, author: user)
+        RelayPicker(selectedRelay: $selectedRelay, author: user, isPresented: .constant(true))
             .environment(\.managedObjectContext, previewContext)
     }
 }

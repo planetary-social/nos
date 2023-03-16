@@ -94,7 +94,7 @@ public class Relay: NosManagedObject {
     
     convenience init(context: NSManagedObjectContext, address: String, author: Author? = nil) throws {
         guard let addressURL = URL(string: address),
-            addressURL.scheme == "wss://" else {
+            addressURL.scheme == "wss" else {
             throw RelayError.invalidAddress
         }
         
