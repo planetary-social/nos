@@ -76,6 +76,18 @@ struct ProfileHeader: View {
                         } label: {
                             Text("\(Localized.following.string): \(author.follows?.count ?? 0)")
                         }
+                        
+                        if !(author.uns ?? "").isEmpty {
+                            Spacer()
+                            Button {
+                                if let url = relayService.unsURL(from: author.uns ?? "") {
+                                    UIApplication.shared.open(url)
+                                }
+                            } label: {
+                                Text("\(author.uns ?? "")@universalname.space")
+                            }
+                        }
+                        
                         if !verifiedNip05Identifier.isEmpty || !(author.nip05 ?? "").isEmpty {
                             Spacer()
                             Button {

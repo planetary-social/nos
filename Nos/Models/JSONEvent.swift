@@ -80,11 +80,12 @@ struct JSONEvent: Codable {
         return serializedEventData.sha256
     }
 }
-
+// swiftlint:disable identifier_name
 struct MetadataEventJSON: Codable {
     var displayName: String?
     var name: String?
     var nip05: String?
+    var uns: String?
     var about: String?
     var picture: String?
     
@@ -93,7 +94,7 @@ struct MetadataEventJSON: Codable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case displayName = "display_name", name, nip05, about, picture
+        case displayName = "display_name", name, nip05, uns, about, picture
     }
     
     var dictionary: [String: String] {
@@ -101,16 +102,19 @@ struct MetadataEventJSON: Codable {
             "display_name": displayName ?? "",
             "name": name ?? "",
             "nip05": nip05 ?? "",
+            "uns": uns ?? "",
             "about": about ?? "",
             "picture": picture ?? "",
         ]
     }
     
-    init (displayName: String?, name: String?, nip05: String?, about: String?, picture: String?) {
+    init (displayName: String?, name: String?, nip05: String?, uns: String?, about: String?, picture: String?) {
         self.displayName = displayName
         self.name = name
         self.nip05 = nip05
+        self.uns = uns
         self.about = about
         self.picture = picture
     }
 }
+// swiftlint:enable identifier_name

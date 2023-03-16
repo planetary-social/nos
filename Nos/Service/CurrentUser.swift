@@ -158,6 +158,7 @@ class CurrentUser: ObservableObject {
             displayName: author!.displayName,
             name: author!.name,
             nip05: author!.nip05,
+            uns: author!.uns,
             about: author!.about,
             picture: author!.profilePhotoURL?.absoluteString
         ).dictionary

@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix invisible tab bar
 - Made placeholder text color same for all fields in profile edit view
 - Add basic image rendering in Note cards
+- UNS Support on Profile page
 
 Known Issues:
 - Deleting your key in Settings causes the app to crash. But you are correctly taken into onboarding after relaunch.
