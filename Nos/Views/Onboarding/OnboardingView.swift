@@ -78,7 +78,9 @@ struct OnboardingView: View {
                         case .createAccount:
                             // hack to allow us to do business logic here... we won't need this once
                             // we have a dedicated CreateAccountView that handles setting up the current user
+                            // swiftlint: disable redundant_discardable_let
                             let _ = {
+                            // swiftlint: enable redundant_discardable_let
                                 let keyPair = KeyPair()!
                                 self.keyPair = keyPair
                                 analytics.identify(with: keyPair)
