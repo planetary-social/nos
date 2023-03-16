@@ -15,7 +15,9 @@ struct DiscoverView: View {
     
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject var router: Router
+    @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
+    @AppStorage("lastDiscoverRequestDate") var lastRequestDateUnix: TimeInterval?
 
     private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
 
@@ -55,20 +57,45 @@ struct DiscoverView: View {
     }
     
     func refreshDiscover() {
+        // TODO: Look into why subscriptions aren't being closed when we leave the discover tab
+        relayService.sendCloseToAll(subscriptions: subscriptionIds)
+        subscriptionIds.removeAll()
+        
+        var fetchSinceDate: Date?
+        /// Make sure the lastRequestDate was more than a minute ago
+        /// to make sure we got all the events from it.
+        if let lastRequestDateUnix {
+            let lastRequestDate = Date(timeIntervalSince1970: lastRequestDateUnix)
+            if lastRequestDate.distance(to: .now) > 60 {
+                fetchSinceDate = lastRequestDate
+                self.lastRequestDateUnix = Date.now.timeIntervalSince1970
+            }
+        } else {
+            self.lastRequestDateUnix = Date.now.timeIntervalSince1970
+        }
+        
         let featuredFilter = Filter(
             authorKeys: authors.compactMap {
                 PublicKey(npub: $0)?.hex
             },
             kinds: [.text],
-            limit: 200
+            limit: 100,
+            since: fetchSinceDate
         )
-        let twoHopsFilter = Filter(
-            kinds: [.text],
-            limit: 300
-        )
-
+        
         subscriptionIds.append(relayService.requestEventsFromAll(filter: featuredFilter))
-        subscriptionIds.append(relayService.requestEventsFromAll(filter: twoHopsFilter))
+        
+        if !currentUser.inNetworkAuthors.isEmpty {
+            // this filter just requests everything for now, because I think requesting all the authors within two
+            // hops is too large of a request and causes the websocket to close.
+            let twoHopsFilter = Filter(
+                kinds: [.text],
+                limit: 200,
+                since: fetchSinceDate
+            )
+            
+            subscriptionIds.append(relayService.requestEventsFromAll(filter: twoHopsFilter))
+        }
         
         // TODO: update fetch request because follow graph might have changed
         // eventRequest = FetchRequest(fetchRequest: Event.discoverFeedRequest(authors: authors))
@@ -133,6 +160,7 @@ struct DiscoverView: View {
                 analytics.showedDiscover()
             }
             .onDisappear {
+                // TODO: Look into why subscriptions aren't being closed when we leave the discover tab
                 relayService.sendCloseToAll(subscriptions: subscriptionIds)
                 subscriptionIds.removeAll()
             }

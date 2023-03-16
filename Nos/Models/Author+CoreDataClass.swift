@@ -17,7 +17,15 @@ public class Author: NosManagedObject {
     }
     
     var safeName: String {
-        displayName ?? name ?? npubString?.prefix(10).appending("...") ?? hexadecimalPublicKey ?? "error"
+        if let displayName, !displayName.isEmpty {
+            return displayName
+        }
+        
+        if let name, !name.isEmpty {
+            return name
+        }
+        
+        return npubString?.prefix(10).appending("...") ?? hexadecimalPublicKey ?? "error"
     }
     
     var publicKey: PublicKey? {
@@ -68,9 +76,13 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc class func inNetworkRequest() -> NSFetchRequest<Author> {
-        guard let currentUser = CurrentUser.shared.author else {
-            return emptyRequest()
+    @nonobjc class func inNetworkRequest(for author: Author? = nil) -> NSFetchRequest<Author> {
+        var author = author
+        if author == nil {
+            guard let currentUser = CurrentUser.shared.author else {
+                return emptyRequest()
+            }
+            author = currentUser
         }
         
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
@@ -79,9 +91,9 @@ public class Author: NosManagedObject {
             format: "ANY followers.source IN %@.follows.destination " +
                 "OR hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey OR " +
                 "hexadecimalPublicKey = %@.hexadecimalPublicKey",
-            currentUser,
-            currentUser,
-            currentUser
+            author!,
+            author!,
+            author!
         )
         return fetchRequest
     }
@@ -150,7 +162,12 @@ public class Author: NosManagedObject {
             return nil
         }
         
-        let metaFilter = Filter(authorKeys: [hexadecimalPublicKey], kinds: [.metaData], limit: 1)
+        let metaFilter = Filter(
+            authorKeys: [hexadecimalPublicKey],
+            kinds: [.metaData],
+            limit: 1,
+            since: lastUpdatedMetadata
+        )
         let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
         return metaSub
     }

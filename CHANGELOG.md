@@ -7,10 +7,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.1 (13)] - 2023-03-15Z
+- Fix all thread replies showing as out of network on first launch after installation.
+
+## [0.1 (12)] - 2023-03-15Z
 - Added NIP-05 field to Edit Profile page, lookup users using NIP-05 names in discover tab, tapping the NIP-05 name opens the domain in a new window.
 - Delete notes
+- More performance improvements centered around our relay communication
 - Fix invisible tab bar
+- Made placeholder text color same for all fields in profile edit view
+- Add basic image rendering in Note cards
 - Fix onboarding taps at bottom of screen causing screen to switch
+
+Known Issues:
+- Deleting your key in Settings causes the app to crash. But you are correctly taken into onboarding after relaunch.
+
+## [0.1 (11)] - 2023-03-14Z
+- Fixed thread view saying every reply is out of network
+- reduced the number of requests we send to relays
+- improved app performance
+- fixed showing empty displayNames when name is set
 
 ## [0.1 (10)] - 2023-03-14Z
 - Display a user's NIP-05 identifier on the profile page after making a web request to verify that it is correct 

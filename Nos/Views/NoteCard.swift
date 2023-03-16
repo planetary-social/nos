@@ -35,7 +35,9 @@ struct NoteCard: View {
     var showContents: Bool {
         !hideOutOfNetwork ||
         userTappedShowOutOfNetwork ||
-        currentUser.inNetworkAuthors.contains(note.author!) ||
+        currentUser.inNetworkAuthors.contains(where: {
+            $0.hexadecimalPublicKey == note.author!.hexadecimalPublicKey
+        }) ||
         Event.discoverTabUserIdToInfo.keys.contains(note.author?.hexadecimalPublicKey ?? "")
     }
     
@@ -212,6 +214,32 @@ struct NoteCard_Previews: PreviewProvider {
     static var shortNote: Event {
         let note = Event(context: previewContext)
         note.content = "Hello, world!"
+        note.author = previewAuthor
+        return note
+    }
+    
+    static var imageNote: Event {
+        let note = Event(context: previewContext)
+        note.content = "Hello, world!https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg"
+        note.author = previewAuthor
+        return note
+    }
+    
+    static var verticalImageNote: Event {
+        let note = Event(context: previewContext)
+        // swiftlint:disable line_length
+        note.content = "Hello, world!https://nostr.build/i/nostr.build_1b958a2af7a2c3fcb2758dd5743912e697ba34d3a6199bfb1300fa6be1dc62ee.jpeg"
+        // swiftlint:enable line_length
+        note.author = previewAuthor
+        return note
+    }
+    
+    static var veryWideImageNote: Event {
+        let note = Event(context: previewContext)
+        // swiftlint:disable line_length
+        note.content = "Hello, world! https://nostr.build/i/nostr.build_db8287dde9aedbc65df59972386fde14edf9e1afc210e80c764706e61cd1cdfa.png"
+        // swiftlint:enable line_length
+        note.author = previewAuthor
         return note
     }
     
@@ -232,23 +260,14 @@ struct NoteCard_Previews: PreviewProvider {
         Group {
             ScrollView {
                 VStack {
-                    NoteCard(author: previewAuthor, note: shortNote)
-                    NoteCard(author: previewAuthor, note: longNote)
+                    NoteCard(author: previewAuthor, note: shortNote, hideOutOfNetwork: false)
+                    NoteCard(author: previewAuthor, note: longNote, hideOutOfNetwork: false)
+                    NoteCard(author: previewAuthor, note: imageNote, hideOutOfNetwork: false)
+                    NoteCard(author: previewAuthor, note: verticalImageNote, hideOutOfNetwork: false)
+                    NoteCard(author: previewAuthor, note: veryWideImageNote, hideOutOfNetwork: false)
+                    NoteCard(author: previewAuthor, note: imageNote, style: .golden, hideOutOfNetwork: false)
                 }
             }
-            ScrollView {
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                    NoteCard(author: previewAuthor, note: shortNote)
-                    NoteCard(author: previewAuthor, note: longNote)
-                }
-            }
-            ScrollView {
-                VStack {
-                    NoteCard(author: previewAuthor, note: shortNote)
-                    NoteCard(author: previewAuthor, note: longNote)
-                }
-            }
-            .preferredColorScheme(.dark)
         }
         .environment(\.managedObjectContext, emptyPreviewContext)
         .environmentObject(emptyRelayService)
