@@ -149,9 +149,11 @@ public class Author: NosManagedObject {
     }
     
     func mute(context: NSManagedObjectContext) {
-        guard let mutedAuthorKey = hexadecimalPublicKey else {
+        guard let mutedAuthorKey = hexadecimalPublicKey,
+            mutedAuthorKey != CurrentUser.shared.publicKey else {
             return
         }
+        
         print("Muting \(mutedAuthorKey)")
         muted = true
         CurrentUser.shared.publishMuteList(keys: [mutedAuthorKey])
@@ -179,7 +181,8 @@ public class Author: NosManagedObject {
     }
     
     func unmute(context: NSManagedObjectContext) {
-        guard let unmutedAuthorKey = hexadecimalPublicKey else {
+        guard let unmutedAuthorKey = hexadecimalPublicKey,
+            unmutedAuthorKey != CurrentUser.shared.publicKey else {
             return
         }
         

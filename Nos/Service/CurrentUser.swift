@@ -217,7 +217,7 @@ class CurrentUser: ObservableObject {
             } catch {
                 Log.debug("Failed to update mute list \(error.localizedDescription)")
             }
-        }
+    }
     }
     
     func publishDelete(for identifiers: [String], reason: String = "") {
