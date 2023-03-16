@@ -100,6 +100,10 @@ class CurrentUser: ObservableObject {
             let contactFilter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
             let contactSub = relayService.requestEventsFromAll(filter: contactFilter, relays: relays)
             subscriptions.append(contactSub)
+            
+            let muteListFilter = Filter(authorKeys: [key], kinds: [.mute], limit: 1)
+            let muteSub = relayService.requestEventsFromAll(filter: muteListFilter, relays: relays)
+            subscriptions.append(muteSub)
         }
     }
     
@@ -158,6 +162,7 @@ class CurrentUser: ObservableObject {
             displayName: author!.displayName,
             name: author!.name,
             nip05: author!.nip05,
+            uns: author!.uns,
             about: author!.about,
             picture: author!.profilePhotoURL?.absoluteString
         ).dictionary
@@ -193,6 +198,27 @@ class CurrentUser: ObservableObject {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }
         }
+    }
+    
+    func publishMuteList(keys: [String]) {
+        guard let pubKey = publicKey else {
+            Log.debug("Error: no pubKey")
+            return
+        }
+        
+        let time = Int64(Date.now.timeIntervalSince1970)
+        let kind = EventKind.mute.rawValue
+        var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: keys.pTags, content: "")
+        
+        if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
+            do {
+                try jsonEvent.sign(withKey: pair)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
+                relayService.publishToAll(event: event)
+            } catch {
+                Log.debug("Failed to update mute list \(error.localizedDescription)")
+            }
+    }
     }
     
     func publishDelete(for identifiers: [String], reason: String = "") {

@@ -46,6 +46,7 @@ public enum EventKind: Int64, CaseIterable {
 	case boost = 6
 	case like = 7
     case channelMessage = 42
+    case mute = 10_000
     case parameterizedReplaceableEvent = 30_000
 }
 
@@ -480,6 +481,9 @@ public class Event: NosManagedObject {
         case .metaData:
             hydrateMetaData(from: jsonEvent, author: newAuthor, context: context)
             
+        case .mute:
+            hydrateMuteList(from: jsonEvent, context: context)
+            
         default:
             hydrateDefault(from: jsonEvent, context: context)
         }
@@ -597,10 +601,36 @@ public class Event: NosManagedObject {
                 newAuthor.about = metadata.about
                 newAuthor.profilePhotoURL = metadata.profilePhotoURL
                 newAuthor.nip05 = metadata.nip05
+                newAuthor.uns = metadata.uns
             } catch {
                 print("Failed to decode metaData event with ID \(String(describing: identifier))")
             }
         }
+    }
+    
+    func hydrateMuteList(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
+        let mutedKeys = jsonEvent.tags.map { $0[1] }
+        
+        let request = Author.allAuthorsRequest(muted: true)
+        
+        // Un-Mute anyone (locally only) who is muted but not in the mutedKeys
+        if let authors = try? context.fetch(request) {
+            for author in authors where !mutedKeys.contains(author.hexadecimalPublicKey!) {
+                author.muted = false
+                print("Parse-Un-Muted \(author.hexadecimalPublicKey ?? "")")
+            }
+        }
+        
+        // Mute anyone (locally only) in the mutedKeys
+        for key in mutedKeys {
+            if let author = try? Author.find(by: key, context: context) {
+                author.muted = true
+                print("Parse-Muted \(author.hexadecimalPublicKey ?? "")")
+            }
+        }
+        
+        // Force ensure user never was muted
+        CurrentUser.shared.author?.muted = false
     }
     
     class func all(context: NSManagedObjectContext) -> [Event] {
