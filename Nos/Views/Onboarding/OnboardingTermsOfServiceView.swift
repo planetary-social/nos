@@ -48,11 +48,13 @@ struct OnboardingTermsOfServiceView: View {
                 BigActionButton(title: Localized.reject) {
                     state.step = .onboardingStart
                 }
+                Spacer(minLength: 15)
                 BigActionButton(title: Localized.accept) {
                     state.step = .finishOnboarding
                 }
             }
             .padding(.horizontal, 24)
+            .padding(.bottom, 50)
         }
         .background(Color.appBg)
         .navigationBarHidden(true)

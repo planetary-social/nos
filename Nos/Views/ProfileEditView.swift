@@ -75,6 +75,7 @@ struct ProfileEditView: View {
                 }
                 .background(Color.appBg)
                 .padding(.horizontal, 24)
+                .padding(.bottom, 50)
             }
         }
         .scrollContentBackground(.hidden)

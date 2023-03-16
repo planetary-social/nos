@@ -38,11 +38,13 @@ struct OnboardingAgeVerificationView: View {
                 BigActionButton(title: .no) {
                     state.step = .notOldEnough
                 }
+                Spacer(minLength: 15)
                 BigActionButton(title: .yes) {
                     state.step = .termsOfService
                 }
             }
             .padding(.horizontal, 24)
+            .padding(.bottom, 50)
         }
         .background(Color.appBg)
         .navigationBarHidden(true)

@@ -38,7 +38,9 @@ struct OnboardingNotOldEnoughView: View {
                 state.step = .onboardingStart
             }
             .padding(.horizontal, 24)
+            .padding(.bottom, 50)
         }
         .background(Color.appBg)
+        .navigationBarHidden(true)
     }
 }
