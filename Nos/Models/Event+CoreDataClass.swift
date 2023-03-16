@@ -627,6 +627,9 @@ public class Event: NosManagedObject {
                 print("Parse-Muted \(author.hexadecimalPublicKey ?? "")")
             }
         }
+        
+        // Force ensure user never was muted
+        CurrentUser.shared.author?.muted = false
     }
     
     class func all(context: NSManagedObjectContext) -> [Event] {
