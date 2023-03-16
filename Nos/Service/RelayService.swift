@@ -239,13 +239,14 @@ extension RelayService {
         Task.detached(priority: .utility) {
             do {
                 try await self.backgroundContext.perform {
-                    let event = try EventProcessor.parse(jsonObject: eventJSON, in: self.backgroundContext)
+                    let relay = self.relay(from: socket, in: self.backgroundContext)
+                    let event = try EventProcessor.parse(
+                        jsonObject: eventJSON,
+                        from: relay,
+                        in: self.backgroundContext
+                    )
                     
-                    // Receiving delete events from other relays
-                    if let socketUrl = socket.request.url?.absoluteString {
-                        let relay = Relay.findOrCreate(by: socketUrl, context: self.backgroundContext)
-                        event.trackDelete(on: relay, context: self.backgroundContext)
-                    }
+                    relay.unwrap { event.trackDelete(on: $0, context: self.backgroundContext) }
 
                     let fulfilledFilters = self.requestFilterQueue.filter { $0.isFulfilled(by: event) }
                     if !fulfilledFilters.isEmpty {
@@ -271,8 +272,8 @@ extension RelayService {
             let socketUrl = socket.request.url?.absoluteString {
             let objectContext = persistenceController.container.viewContext
             
-            if let event = Event.find(by: eventId, context: objectContext) {
-                let relay = Relay.findOrCreate(by: socketUrl, context: objectContext)
+            if let event = Event.find(by: eventId, context: objectContext),
+                let relay = self.relay(from: socket, in: objectContext) {
 
                 if success {
                     print("\(eventId) has sent successfully to \(socketUrl)")
@@ -532,6 +533,19 @@ extension RelayService {
     
     func domain(from identifier: String) -> String {
         identifier.components(separatedBy: "@")[safe: 1] ?? ""
+    }
+    
+    func relay(from socket: WebSocket, in context: NSManagedObjectContext) -> Relay? {
+        guard let socketURL = socket.request.url else {
+            Log.error("Got socket with no URL: \(socket.request)")
+            return nil
+        }
+        do {
+            return try Relay.findOrCreate(by: socketURL.absoluteString, context: context)
+        } catch {
+            Log.error(error.localizedDescription)
+            return nil
+        }
     }
 }
 // swiftlint:enable file_length

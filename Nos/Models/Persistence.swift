@@ -110,7 +110,7 @@ struct PersistenceController {
         Event.deleteAll(context: context)
         context.reset()
         
-        guard let events = try? EventProcessor.parse(jsonData: sampleData, in: context) else {
+        guard let events = try? EventProcessor.parse(jsonData: sampleData, from: nil, in: context) else {
             print("Error: Could not parse events")
             return
         }

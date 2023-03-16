@@ -237,6 +237,7 @@ extension Image {
        static let nosLogo = Image("nosLogo", bundle: Bundle.current)
        static let tabProfileSelected = Image("tab-profile-selected", bundle: Bundle.current)
        static let tabProfile = Image("tab-profile", bundle: Bundle.current)
+       static let checkmark = Image("checkmark", bundle: Bundle.current)
 }
 
 extension UIImage {

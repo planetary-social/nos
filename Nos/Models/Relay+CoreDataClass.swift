@@ -9,6 +9,10 @@
 import Foundation
 import CoreData
 
+enum RelayError: Error {
+    case invalidAddress
+}
+
 @objc(Relay)
 public class Relay: NosManagedObject {
     static var recommended: [String] {
@@ -49,11 +53,25 @@ public class Relay: NosManagedObject {
         return fetchRequest
     }
     
-    class func findOrCreate(by address: String, context: NSManagedObjectContext) -> Relay {
-        if let existingRelay = try? context.fetch(Relay.relay(by: address)).first {
+    @nonobjc public class func relays(for user: Author) -> NSFetchRequest<Relay> {
+        let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
+        fetchRequest.predicate = NSPredicate(format: "ANY authors = %@", user)
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.address, ascending: true)]
+        return fetchRequest
+    }
+    
+    @nonobjc public class func emptyRequest() -> NSFetchRequest<Relay> {
+        let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.createdAt, ascending: true)]
+        fetchRequest.predicate = NSPredicate.false
+        return fetchRequest
+    }
+    
+    class func findOrCreate(by address: String, context: NSManagedObjectContext) throws -> Relay {
+        if let existingRelay = try context.fetch(Relay.relay(by: address)).first {
             return existingRelay
         } else {
-            let relay = Relay(context: context, address: address)
+            let relay = try Relay(context: context, address: address)
             return relay
         }
     }
@@ -74,10 +92,31 @@ public class Relay: NosManagedObject {
         }
     }
     
-    @discardableResult convenience init(context: NSManagedObjectContext, address: String, author: Author? = nil) {
+    convenience init(context: NSManagedObjectContext, address: String, author: Author? = nil) throws {
+        guard let addressURL = URL(string: address),
+            addressURL.scheme == "wss://" else {
+            throw RelayError.invalidAddress
+        }
+        
         self.init(context: context)
-        self.address = address
+        self.address = addressURL.absoluteString
         self.createdAt = Date.now
-        author?.add(relay: self)
+        if let author {
+            // swiftlint:disable legacy_objc_type
+            authors = (authors ?? NSSet()).adding(author)
+            // swiftlint:enable legacy_objc_type
+            author.add(relay: self)
+        }
+    }
+    
+    var addressURL: URL? {
+        if let address {
+            return URL(string: address)
+        }
+        return nil
+    }
+    
+    var host: String? {
+        addressURL?.host
     }
 }

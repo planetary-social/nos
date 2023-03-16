@@ -12,18 +12,19 @@ import Dependencies
 struct DiscoverView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
-    
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject var router: Router
     @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
     @AppStorage("lastDiscoverRequestDate") var lastRequestDateUnix: TimeInterval?
 
-    private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
-
-    private var events: FetchedResults<Event> { eventRequest.wrappedValue }
+    @FetchRequest private var events: FetchedResults<Event>
     
     @State var columns: Int = 0
+    
+    @State var showRelayPicker = false
+    
+    @State var relayFilter: Relay?
     
     @State private var gridSize: CGSize = .zero {
         didSet {
@@ -37,7 +38,7 @@ struct DiscoverView: View {
     @Namespace private var animation
     
     @State private var subscriptionIds = [String]()
-    private var authors: [String]
+    private var featuredAuthors: [String]
     
     @State var searchText = "" {
         didSet {
@@ -51,9 +52,9 @@ struct DiscoverView: View {
         }
     }
     
-    init(authors: [String] = Array(Event.discoverTabUserIdToInfo.keys)) {
-        self.authors = authors
-        eventRequest = FetchRequest(fetchRequest: Event.discoverFeedRequest(authors: authors))
+    init(featuredAuthors: [String] = Array(Event.discoverTabUserIdToInfo.keys)) {
+        self.featuredAuthors = featuredAuthors
+        _events = FetchRequest(fetchRequest: Event.discoverFeedRequest(featuredAuthors: featuredAuthors))
     }
     
     func refreshDiscover() {
@@ -61,59 +62,81 @@ struct DiscoverView: View {
         relayService.sendCloseToAll(subscriptions: subscriptionIds)
         subscriptionIds.removeAll()
         
-        var fetchSinceDate: Date?
-        /// Make sure the lastRequestDate was more than a minute ago
-        /// to make sure we got all the events from it.
-        if let lastRequestDateUnix {
-            let lastRequestDate = Date(timeIntervalSince1970: lastRequestDateUnix)
-            if lastRequestDate.distance(to: .now) > 60 {
-                fetchSinceDate = lastRequestDate
+        if let relayFilter {
+            // TODO: Use a since filter
+            let singleRelayFilter = Filter(
+                kinds: [.text],
+                limit: 200
+            )
+            
+            subscriptionIds.append(relayService.requestEventsFromAll(filter: singleRelayFilter, relays: [relayFilter]))
+            
+            events.nsPredicate = Event.seen(on: relayFilter)
+        } else {
+            
+            var fetchSinceDate: Date?
+            /// Make sure the lastRequestDate was more than a minute ago
+            /// to make sure we got all the events from it.
+            if let lastRequestDateUnix {
+                let lastRequestDate = Date(timeIntervalSince1970: lastRequestDateUnix)
+                if lastRequestDate.distance(to: .now) > 60 {
+                    fetchSinceDate = lastRequestDate
+                    self.lastRequestDateUnix = Date.now.timeIntervalSince1970
+                }
+            } else {
                 self.lastRequestDateUnix = Date.now.timeIntervalSince1970
             }
-        } else {
-            self.lastRequestDateUnix = Date.now.timeIntervalSince1970
-        }
-        
-        let featuredFilter = Filter(
-            authorKeys: authors.compactMap {
-                PublicKey(npub: $0)?.hex
-            },
-            kinds: [.text],
-            limit: 100,
-            since: fetchSinceDate
-        )
-        
-        subscriptionIds.append(relayService.requestEventsFromAll(filter: featuredFilter))
-        
-        if !currentUser.inNetworkAuthors.isEmpty {
-            // this filter just requests everything for now, because I think requesting all the authors within two
-            // hops is too large of a request and causes the websocket to close.
-            let twoHopsFilter = Filter(
+            
+            let featuredFilter = Filter(
+                authorKeys: featuredAuthors.compactMap {
+                    PublicKey(npub: $0)?.hex
+                },
                 kinds: [.text],
-                limit: 200,
+                limit: 100,
                 since: fetchSinceDate
             )
             
-            subscriptionIds.append(relayService.requestEventsFromAll(filter: twoHopsFilter))
+            subscriptionIds.append(relayService.requestEventsFromAll(filter: featuredFilter))
+            
+            if !currentUser.inNetworkAuthors.isEmpty {
+                // this filter just requests everything for now, because I think requesting all the authors within two
+                // hops is too large of a request and causes the websocket to close.
+                let twoHopsFilter = Filter(
+                    kinds: [.text],
+                    limit: 200,
+                    since: fetchSinceDate
+                )
+                
+                subscriptionIds.append(relayService.requestEventsFromAll(filter: twoHopsFilter))
+            }
+            
+            events.nsPredicate = Event.extendedNetworkPredicate(featuredAuthors: featuredAuthors)
         }
-        
-        // TODO: update fetch request because follow graph might have changed
-        // eventRequest = FetchRequest(fetchRequest: Event.discoverFeedRequest(authors: authors))
     }
     
     var body: some View {
         NavigationStack(path: $router.discoverPath) {
-            GeometryReader { geometry in
-                StaggeredGrid(list: events, columns: columns) { note in
-                    NoteButton(note: note, style: .golden)
-                        .matchedGeometryEffect(id: note.identifier, in: animation)
+            ZStack {
+                GeometryReader { geometry in
+                    StaggeredGrid(list: events, columns: columns) { note in
+                        NoteButton(note: note, style: .golden)
+                            .matchedGeometryEffect(id: note.identifier, in: animation)
+                    }
+                    .preference(key: SizePreferenceKey.self, value: geometry.size)
                 }
-                .preference(key: SizePreferenceKey.self, value: geometry.size)
+                .onPreferenceChange(SizePreferenceKey.self) { preference in
+                    gridSize = preference
+                }
+
+                if showRelayPicker, let author = currentUser.author {
+                    RelayPicker(selectedRelay: $relayFilter, author: author)
+                        .onChange(of: relayFilter) { _ in
+                            showRelayPicker = false
+                            refreshDiscover()
+                        }
+                }
             }
-            .onPreferenceChange(SizePreferenceKey.self) { preference in
-                gridSize = preference
-            }
-            .searchable(text: $searchText, placement: .toolbar, prompt: PlainText("Find a user by ID or NIP-05"))
+            .searchable(text: $searchText, placement: .sidebar, prompt: PlainText("Find a user by ID or NIP-05"))
             .autocorrectionDisabled()
             .onSubmit(of: .search) {
                 
@@ -134,6 +157,9 @@ struct DiscoverView: View {
             .padding(.horizontal)
             .background(Color.appBg)
             .toolbar {
+                RelayPickerToolbarButton(selectedRelay: $relayFilter) {
+                    showRelayPicker.toggle()
+                }
                 ToolbarItem {
                     HStack {
                         Button {
@@ -215,12 +241,18 @@ struct DiscoverView_Previews: PreviewProvider {
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
     static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
+    static var currentUser: CurrentUser = {
+        KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.alice.privateKeyHex.utf8))
+        currentUser.context = previewContext
+        currentUser.relayService = relayService
+        return currentUser
+    }()
     
     static var router = Router()
     
     static var user: Author {
         let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
+        author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
         return author
     }
     
@@ -238,18 +270,67 @@ struct DiscoverView_Previews: PreviewProvider {
         try! previewContext.save()
     }
     
+    static func createRelayData(in context: NSManagedObjectContext, user: Author) {
+        let addresses = ["wss://nostr.band", "wss://nos.social", "wss://a.long.domain.name.to.see.what.happens"]
+        addresses.forEach {
+            try! Relay(context: previewContext, address: $0, author: user)
+        }
+        
+        try! previewContext.save()
+    }
+    
     static var previews: some View {
-        DiscoverView(authors: [user.publicKey!.npub])
+        DiscoverView(featuredAuthors: [user.publicKey!.npub])
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
+            .environmentObject(currentUser)
             .onAppear { createTestData(in: previewContext) }
         
-        DiscoverView(authors: [user.publicKey!.npub])
+        DiscoverView(featuredAuthors: [user.publicKey!.npub])
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
+            .environmentObject(currentUser)
             .onAppear { createTestData(in: previewContext) }
             .previewDevice("iPad Air (5th generation)")
+    }
+}
+
+struct RelayPickerToolbarButton: ToolbarContent {
+    
+    @Binding var selectedRelay: Relay?
+    var action: () -> Void
+    
+    var title: String {
+        if let selectedRelay {
+            return selectedRelay.host ?? Localized.error.string
+        } else {
+            return Localized.extendedNetwork.string
+        }
+    }
+    
+    var body: some ToolbarContent {
+        ToolbarItem(placement: .principal) {
+            Button {
+                action()
+            } label: {
+                HStack {
+                    Text(title)
+                        .foregroundColor(.primaryTxt)
+                        .bold()
+                        .padding(.leading, 14)
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 10))
+                        .bold()
+                        .foregroundColor(.secondary)
+                }
+            }
+            .frame(maxHeight: 35)
+            .background(
+                Color.appBg
+                    .cornerRadius(20)
+            )
+        }
     }
 }

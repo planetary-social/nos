@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Dependencies
+import Logger
 
 struct OnboardingView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -76,9 +77,18 @@ struct OnboardingView: View {
 
                         // Use these to sync
                         for address in Relay.allKnown {
-                            let relay = Relay(context: viewContext, address: address, author: nil)
-                            CurrentUser.shared.onboardingRelays.append(relay)
+                            do {
+                                let relay = try Relay(
+                                    context: viewContext,
+                                    address: address,
+                                    author: CurrentUser.shared.author
+                                )
+                                CurrentUser.shared.onboardingRelays.append(relay)
+                            } catch {
+                                Log.error(error.localizedDescription)
+                            }
                         }
+                        try? CurrentUser.shared.context.save()
 
                         completion()
                     } else {
@@ -253,9 +263,13 @@ struct OnboardingView: View {
                                 
                                 // Recommended Relays for new user
                                 for address in Relay.recommended {
-                                    Relay(context: viewContext, address: address, author: CurrentUser.shared.author)
-                                    try? CurrentUser.shared.context.save()
+                                    _ = try? Relay(
+                                        context: viewContext,
+                                        address: address,
+                                        author: CurrentUser.shared.author
+                                    )
                                 }
+                                try? CurrentUser.shared.context.save()
                                 
                                 CurrentUser.shared.publishContactList(tags: [])
                             }

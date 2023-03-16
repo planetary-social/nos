@@ -89,7 +89,7 @@ struct NewNoteView: View {
                     content: postText,
                     signature: ""
                 )
-                let event = try Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext)
+                let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
                 event.author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
 
                 try event.sign(withKey: keyPair)
