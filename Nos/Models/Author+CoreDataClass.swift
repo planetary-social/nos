@@ -82,9 +82,13 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc class func inNetworkRequest() -> NSFetchRequest<Author> {
-        guard let currentUser = CurrentUser.shared.author else {
-            return emptyRequest()
+    @nonobjc class func inNetworkRequest(for author: Author? = nil) -> NSFetchRequest<Author> {
+        var author = author
+        if author == nil {
+            guard let currentUser = CurrentUser.shared.author else {
+                return emptyRequest()
+            }
+            author = currentUser
         }
         
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
@@ -93,9 +97,9 @@ public class Author: NosManagedObject {
             format: "ANY followers.source IN %@.follows.destination " +
                 "OR hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey OR " +
                 "hexadecimalPublicKey = %@.hexadecimalPublicKey",
-            currentUser,
-            currentUser,
-            currentUser
+            author!,
+            author!,
+            author!
         )
         return fetchRequest
     }

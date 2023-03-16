@@ -162,6 +162,7 @@ class CurrentUser: ObservableObject {
             displayName: author!.displayName,
             name: author!.name,
             nip05: author!.nip05,
+            uns: author!.uns,
             about: author!.about,
             picture: author!.profilePhotoURL?.absoluteString
         ).dictionary
@@ -337,9 +338,9 @@ class CurrentUser: ObservableObject {
     }
     // swiftlint:enable legacy_objc_type
     
-    func updateInNetworkAuthors(from context: NSManagedObjectContext) {
+    func updateInNetworkAuthors(for user: Author? = nil, from context: NSManagedObjectContext) {
         do {
-            let inNetworkAuthors = try context.fetch(Author.inNetworkRequest())
+            let inNetworkAuthors = try context.fetch(Author.inNetworkRequest(for: user))
             
             DispatchQueue.main.async {
                 self.inNetworkAuthors = inNetworkAuthors
