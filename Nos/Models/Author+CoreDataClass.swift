@@ -69,6 +69,12 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func allAuthorsRequest(muted: Bool) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.predicate = NSPredicate(format: "muted == %i", muted)
+        return fetchRequest
+    }
+    
     @nonobjc func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
@@ -147,8 +153,14 @@ public class Author: NosManagedObject {
     }
     
     func mute(context: NSManagedObjectContext) {
-        print("Muting \(hexadecimalPublicKey ?? "")")
+        guard let mutedAuthorKey = hexadecimalPublicKey,
+            mutedAuthorKey != CurrentUser.shared.publicKey else {
+            return
+        }
+        
+        print("Muting \(mutedAuthorKey)")
         muted = true
+        CurrentUser.shared.publishMuteList(keys: [mutedAuthorKey])
         deleteAllPosts(context: context)
     }
     
@@ -172,8 +184,27 @@ public class Author: NosManagedObject {
         return metaSub
     }
     
-    func unmute() {
-        print("Un-muting \(hexadecimalPublicKey ?? "")")
+    func unmute(context: NSManagedObjectContext) {
+        guard let unmutedAuthorKey = hexadecimalPublicKey,
+            unmutedAuthorKey != CurrentUser.shared.publicKey else {
+            return
+        }
+        
+        print("Un-muting \(unmutedAuthorKey)")
         muted = false
+        
+        let request = Event.allPostsRequest(.mute)
+        
+        if let results = try? context.fetch(request),
+            let mostRecentMuteList = results.first,
+            let pTags = mostRecentMuteList.allTags as? [[String]] {
+
+            // Get the current list of muted keys
+            var mutedList = pTags.map { $0[1] }
+            mutedList.removeAll(where: { $0 == unmutedAuthorKey })
+
+            // Publish that modified list
+            CurrentUser.shared.publishMuteList(keys: mutedList)
+        }
     }
 }
