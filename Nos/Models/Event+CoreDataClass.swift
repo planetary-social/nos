@@ -616,6 +616,7 @@ public class Event: NosManagedObject {
         if let authors = try? context.fetch(request) {
             for author in authors where !mutedKeys.contains(author.hexadecimalPublicKey!) {
                 author.muted = false
+                print("Parse-Un-Muted \(author.hexadecimalPublicKey ?? "")")
             }
         }
         
@@ -623,6 +624,7 @@ public class Event: NosManagedObject {
         for key in mutedKeys {
             if let author = try? Author.find(by: key, context: context) {
                 author.muted = true
+                print("Parse-Muted \(author.hexadecimalPublicKey ?? "")")
             }
         }
     }
