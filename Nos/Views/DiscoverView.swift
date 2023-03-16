@@ -112,7 +112,7 @@ struct DiscoverView: View {
                     .padding(.horizontal)
 
                 if showRelayPicker, let author = currentUser.author {
-                    RelayPicker(selectedRelay: $relayFilter, author: author, isPresented: $showRelayPicker)
+                    RelayPicker(selectedRelay: $relayFilter, defaultSelection: Localized.allMyRelays.string, author: author, isPresented: $showRelayPicker)
                 }
             }
             .onChange(of: relayFilter) { _ in
@@ -319,7 +319,7 @@ struct RelayPickerToolbarButton: ToolbarContent {
                     Image(systemName: imageName)
                         .font(.system(size: 10))
                         .bold()
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.defaultTint)
                 }
             }
             .frame(maxHeight: 35)
@@ -327,6 +327,7 @@ struct RelayPickerToolbarButton: ToolbarContent {
                 Color.appBg
                     .cornerRadius(20)
             )
+            .offset(y: -2)
         }
     }
 }

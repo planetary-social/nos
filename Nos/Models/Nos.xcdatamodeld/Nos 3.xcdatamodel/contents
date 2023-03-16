@@ -36,6 +36,7 @@
         <relationship name="publishedTo" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="publishedEvents" inverseEntity="Relay"/>
         <relationship name="referencingEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EventReference" inverseName="referencedEvent" inverseEntity="EventReference"/>
         <relationship name="seenOnRelays" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="events" inverseEntity="Relay"/>
+        <relationship name="shouldBePublishedTo" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="shouldBePublishedEvents" inverseEntity="Relay"/>
     </entity>
     <entity name="EventReference" representedClassName="EventReference" syncable="YES" codeGenerationType="category">
         <attribute name="eventId" optional="YES" attributeType="String"/>
@@ -57,5 +58,6 @@
         <relationship name="deletedEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="deletedOn" inverseEntity="Event"/>
         <relationship name="events" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="seenOnRelays" inverseEntity="Event"/>
         <relationship name="publishedEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="publishedTo" inverseEntity="Event"/>
+        <relationship name="shouldBePublishedEvents" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="shouldBePublishedTo" inverseEntity="Event"/>
     </entity>
 </model>

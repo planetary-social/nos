@@ -218,6 +218,7 @@ enum Localized: String, Localizable, CaseIterable {
     case reportPost = "Report this post"
     case unmuteUser = "Un-Mute"
     case extendedNetwork = "Extended Network"
+    case allMyRelays = "All My Relays"
 }
 
 // MARK: - Replies

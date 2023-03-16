@@ -13,11 +13,14 @@ struct RelayPicker: View {
     @Binding var selectedRelay: Relay?
     @Binding var isPresented: Bool
     
+    var defaultSelection: String
+    
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest var relays: FetchedResults<Relay>
     
-    init(selectedRelay: Binding<Relay?>, author: Author, isPresented: Binding<Bool>) {
+    init(selectedRelay: Binding<Relay?>, defaultSelection: String, author: Author, isPresented: Binding<Bool>) {
         self._selectedRelay = selectedRelay
+        self.defaultSelection = defaultSelection
         _relays = FetchRequest(fetchRequest: Relay.relays(for: author))
         _isPresented = isPresented
     }
@@ -34,7 +37,7 @@ struct RelayPicker: View {
             }
             VStack {
                 VStack(spacing: 0) {
-                    RelayPickerRow(relay: nil, selection: $selectedRelay)
+                    RelayPickerRow(string: defaultSelection, selection: $selectedRelay)
                     ForEach(relays) { relay in
                         Color.separatorDefault
                             .frame(height: 1)
@@ -62,13 +65,24 @@ struct RelayPicker: View {
 struct RelayPickerRow: View {
     
     var relay: Relay?
+    var defaultSelection: String?
     @Binding var selection: Relay?
+    
+    internal init(relay: Relay? = nil, selection: Binding<Relay?>) {
+        self.relay = relay
+        self._selection = selection
+    }
+    
+    internal init(string: String, selection: Binding<Relay?>) {
+        self.defaultSelection = string
+        self._selection = selection
+    }
     
     var title: String {
         if let relay {
             return relay.host ?? Localized.error.string
         } else {
-            return Localized.extendedNetwork.string
+            return defaultSelection ?? Localized.error.string
         }
     }
     
@@ -127,7 +141,7 @@ struct RelayPicker_Previews: PreviewProvider {
     @State static var selectedRelay: Relay?
     
     static var previews: some View {
-        RelayPicker(selectedRelay: $selectedRelay, author: user, isPresented: .constant(true))
+        RelayPicker(selectedRelay: $selectedRelay, defaultSelection: Localized.extendedNetwork.string, author: user, isPresented: .constant(true))
             .environment(\.managedObjectContext, previewContext)
     }
 }
