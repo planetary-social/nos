@@ -520,7 +520,7 @@ public class Event: NosManagedObject {
             } catch {
                 Log.error(error.localizedDescription)
             }
-            CurrentUser.shared.updateInNetworkAuthors(from: context)
+            CurrentUser.shared.updateInNetworkAuthors(for: author, from: context)
             CurrentUser.shared.refreshFriendMetadata()
         }
         
