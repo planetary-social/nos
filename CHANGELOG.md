@@ -7,10 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Publish mute list
 - Fixed cards on the Discover tab all being the same size.
 - Added the ability to browse all notes from a single relay on the Discover tab.
 - Added the ability to post a note to a single relay from the New Note screen.
+
+## [0.1 (14)] - 2023-03-16Z
+- Nos now reads and writes your mutes the mute list shared with other Nostr apps.
 
 ## [0.1 (13)] - 2023-03-15Z
 - Fix all thread replies showing as out of network on first launch after installation.
@@ -23,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Made placeholder text color same for all fields in profile edit view
 - Add basic image rendering in Note cards
 - UNS Support on Profile page
+- Fix onboarding taps at bottom of screen causing screen to switch
 
 Known Issues:
 - Deleting your key in Settings causes the app to crash. But you are correctly taken into onboarding after relaunch.
