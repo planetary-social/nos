@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Dependencies
+import Logger
 
 struct OnboardingLoginView: View {
     var completion: () -> Void
@@ -44,11 +45,19 @@ struct OnboardingLoginView: View {
                         analytics.identify(with: keyPair)
                         analytics.importedKey()
 
-                        // Use these to sync
                         for address in Relay.allKnown {
-                            let relay = Relay(context: viewContext, address: address, author: nil)
-                            CurrentUser.shared.onboardingRelays.append(relay)
+                            do {
+                                let relay = try Relay(
+                                    context: viewContext,
+                                    address: address,
+                                    author: CurrentUser.shared.author
+                                )
+                                CurrentUser.shared.onboardingRelays.append(relay)
+                            } catch {
+                                Log.error(error.localizedDescription)
+                            }
                         }
+                        try? CurrentUser.shared.context.save()
 
                         completion()
                     } else {
