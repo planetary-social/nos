@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Logger
 
 /// This view displays the information we have for an message suitable for being used in a list or grid.
 ///
@@ -22,11 +23,16 @@ struct NoteCard: View {
             }
         }
     }
+    
+    @Environment(\.managedObjectContext) private var viewContext
 
     var style = CardStyle.compact
     
     var repliesRequest: FetchRequest<Event>
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
+    
+    var noteLikedByUserRequest: FetchRequest<Event>
+    var noteLikedByUser: FetchedResults<Event> { noteLikedByUserRequest.wrappedValue }
     
     @ObservedObject private var currentUser: CurrentUser = .shared
     
@@ -95,6 +101,10 @@ struct NoteCard: View {
         } else {
             self.repliesRequest = FetchRequest(fetchRequest: Event.emptyRequest())
         }
+        let currentUserPubKey = CurrentUser.shared.author?.publicKey?.hex ?? ""
+        self.noteLikedByUserRequest = FetchRequest(
+        fetchRequest: Event.noteIsLikedByUser(for: currentUserPubKey, noteId: note.identifier ?? "")
+        )
     }
     
     var attributedAuthor: AttributedString {
@@ -168,6 +178,15 @@ struct NoteCard: View {
                         }
                         Spacer()
                         Image.buttonReply
+                        if noteLikedByUser.isEmpty {
+                            Button {
+                                likeNote()
+                            } label: {
+                                Image.buttonLikeDefault
+                            }
+                        } else {
+                            Image.buttonLikeActive
+                        }
                     }
                     .padding(15)
                 }
@@ -190,6 +209,57 @@ struct NoteCard: View {
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
         .padding(padding)
+    }
+    
+    private var keyPair: KeyPair? {
+        KeyPair.loadFromKeychain()
+    }
+    
+    func likeNote() {
+        
+        guard let keyPair else {
+            return
+        }
+        guard let eventReferences = note.eventReferences?.array as? [EventReference] else {
+            return
+        }
+        // compactMap returns an array of the non-nil results.
+        var tags: [[String]] = eventReferences.compactMap { event in
+            guard let eventId = event.eventId else { return nil }
+            return ["e", eventId]
+        }
+
+        guard let authorReferences = note.authorReferences?.array as? [EventReference] else {
+            return
+        }
+        tags += authorReferences.compactMap { author in
+            guard let eventId = author.eventId else { return nil }
+            return ["p", eventId]
+        }
+        if let id = note.identifier {
+            tags.append(["e", id])
+        }
+        if let pubKey = note.author?.publicKey?.hex {
+            tags.append(["p", pubKey])
+        }
+        
+        let jsonEvent = JSONEvent(
+            id: "",
+            pubKey: keyPair.publicKeyHex,
+            createdAt: Int64(Date().timeIntervalSince1970),
+            kind: 7,
+            tags: tags,
+            content: "+",
+            signature: ""
+        )
+        do {
+            let event = try Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext)
+            try event.sign(withKey: keyPair)
+            try viewContext.save()
+            relayService.publishToAll(event: event)
+        } catch {
+            Log.info("Error creating event for like")
+        }
     }
 
     var padding: EdgeInsets {

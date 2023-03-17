@@ -54,6 +54,16 @@ struct HomeFeedView: View {
                 let textSub = relayService.requestEventsFromAll(filter: textFilter)
                 subscriptionIds.append(textSub)
             }
+            if let currentUser = CurrentUser.shared.author {
+                let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
+                let userLikesFilter = Filter(
+                    authorKeys: currentUserAuthorKeys,
+                    kinds: [.like],
+                    limit: 100
+                )
+                let userLikesSub = relayService.requestEventsFromAll(filter: userLikesFilter)
+                subscriptionIds.append(userLikesSub)
+            }
         }
     }
     
