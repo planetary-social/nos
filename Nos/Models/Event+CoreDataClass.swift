@@ -660,6 +660,10 @@ public class Event: NosManagedObject {
         })
     }
     
+    var isReply: Bool {
+        rootNote() != nil
+    }
+    
     /// Returns the root event that this note is replying to, or nil if there isn't one.
     func rootNote() -> Event? {
         let rootReference = eventReferences?.first(where: {
