@@ -56,7 +56,6 @@ struct HomeFeedView: View {
             }
             if let currentUser = CurrentUser.shared.author {
                 let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
-                //let currentUserAuthorKeys = ["7d9be452ed74136e3acdea94d5cef1eb7af2ab62238571616b15e52f49f4a083"]
                 let userLikesFilter = Filter(
                     authorKeys: currentUserAuthorKeys,
                     kinds: [.like],
