@@ -39,8 +39,8 @@ struct DiscoverView: View {
     @State private var subscriptionIds = [String]()
     private var authors: [String]
     
+    @Environment(\.isSearching) private var isSearching: Bool
     @State private var searchAuthors = [Author]()
-    
     @State var searchText = ""
     
     init(authors: [String] = Array(Event.discoverTabUserIdToInfo.keys)) {
@@ -113,6 +113,13 @@ struct DiscoverView: View {
             .autocorrectionDisabled()
             .onSubmit(of: .search) {
                 submitSearch()
+            }
+            .onChange(of: searchText) { _ in
+                if searchText.isEmpty && !isSearching {
+                    searchAuthors = []
+                } else {
+                    submitSearch()
+                }
             }
             .padding(.horizontal)
             .background(Color.appBg)
