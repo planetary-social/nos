@@ -107,7 +107,29 @@ struct DiscoverView: View {
             }
             .searchable(text: $searchText, placement: .toolbar, prompt: PlainText(Localized.searchBar.string)) {
                 ForEach(searchAuthors, id: \.self) { author in
-                    Text(author.safeName).searchCompletion(author.safeName)
+                    Button {
+                        router.push(author)
+                    } label: {
+                        HStack(alignment: .center) {
+                            AvatarView(imageUrl: author.profilePhotoURL, size: 24)
+                            Text(author.safeName)
+                                .lineLimit(1)
+                                .font(.subheadline)
+                                .foregroundColor(Color.primaryTxt)
+                                .multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            if author.muted {
+                                Text(Localized.mutedUser.string)
+                                    .font(.subheadline)
+                                    .foregroundColor(Color.secondaryTxt)
+                            }
+                            Spacer()
+                            if let currentUser = CurrentUser.shared.author {
+                                FollowButton(currentUserAuthor: currentUser, author: author)
+                                    .padding(10)
+                            }
+                        }.searchCompletion(author.safeName)
+                    }
                 }
             }
             .autocorrectionDisabled()
@@ -200,24 +222,21 @@ struct DiscoverView: View {
     }
     
     func submitSearch() {
-        if let author = author(from: searchText) {
-            searchAuthors = [author]
-            router.push(author)
-        } else {
-            if searchText.contains("@") {
-                Task {
-                    if let publicKeyHex =
-                        await relayService.retrieveInternetIdentifierPublicKeyHex(searchText.lowercased()),
+        if searchText.contains("@") {
+            Task {
+                if let publicKeyHex =
+                    await relayService.retrieveInternetIdentifierPublicKeyHex(searchText.lowercased()),
                     let author = author(from: publicKeyHex) {
-                        searchAuthors = [author]
-                        router.push(author)
-                    }
+                    searchAuthors = [author]
+                    router.push(author)
                 }
+            }
+        } else {
+            if let author = author(from: searchText) {
+                searchAuthors = [author]
+                router.push(author)
             } else {
                 searchAuthors = authors(named: searchText)
-                if searchAuthors.count == 1 {
-                    router.push(searchAuthors[0])
-                }
             }
         }
     }
