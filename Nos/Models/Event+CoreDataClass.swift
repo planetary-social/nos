@@ -667,7 +667,7 @@ public class Event: NosManagedObject {
     /// Returns the event this note is directly replying to, or nil if there isn't one.
     func referencedNote() -> Event? {
         if let lastReference = eventReferences?.lastObject as? EventReference,
-           let referencedNote = lastReference.referencedEvent {
+            let referencedNote = lastReference.referencedEvent {
             return referencedNote
         }
         return nil
