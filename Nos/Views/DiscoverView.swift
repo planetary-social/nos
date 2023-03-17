@@ -39,17 +39,9 @@ struct DiscoverView: View {
     @State private var subscriptionIds = [String]()
     private var authors: [String]
     
-    @State var searchText = "" {
-        didSet {
-            if let publicKey = PublicKey(npub: searchText) {
-                let author = try! Author.findOrCreate(by: publicKey.hex, context: viewContext)
-                router.push(author)
-            } else if let publicKey = PublicKey(hex: searchText) {
-                let author = try! Author.findOrCreate(by: publicKey.hex, context: viewContext)
-                router.push(author)
-            }
-        }
-    }
+    @State private var searchAuthors = [Author]()
+    
+    @State var searchText = ""
     
     init(authors: [String] = Array(Event.discoverTabUserIdToInfo.keys)) {
         self.authors = authors
@@ -113,27 +105,14 @@ struct DiscoverView: View {
             .onPreferenceChange(SizePreferenceKey.self) { preference in
                 gridSize = preference
             }
-            .searchable(text: $searchText, placement: .toolbar, prompt: PlainText("Find a user by ID or NIP-05"))
+            .searchable(text: $searchText, placement: .toolbar, prompt: PlainText(Localized.searchBar.string)) {
+                ForEach(searchAuthors, id: \.self) { author in
+                    Text(author.safeName).searchCompletion(author.safeName)
+                }
+            }
             .autocorrectionDisabled()
             .onSubmit(of: .search) {
-                
-                if let author = author(from: searchText) {
-                    router.push(author)
-                } else {
-                    if searchText.contains("@") {
-                        Task {
-                            if let publicKeyHex =
-                                await relayService.retrieveInternetIdentifierPublicKeyHex(searchText.lowercased()),
-                            let author = author(from: publicKeyHex) {
-                                router.push(author)
-                            }
-                        }
-                    } else {
-                        if let namedAthor = author(named: searchText) {
-                            router.push(namedAthor)
-                        }
-                    }
-                }
+                submitSearch()
             }
             .padding(.horizontal)
             .background(Color.appBg)
@@ -161,9 +140,13 @@ struct DiscoverView: View {
                 refreshDiscover()
             }
             .onAppear {
+                searchText = ""
+                searchAuthors = []
                 analytics.showedDiscover()
             }
             .onDisappear {
+                searchAuthors = []
+                
                 // TODO: Look into why subscriptions aren't being closed when we leave the discover tab
                 relayService.sendCloseToAll(subscriptions: subscriptionIds)
                 subscriptionIds.removeAll()
@@ -201,12 +184,35 @@ struct DiscoverView: View {
         return author
     }
     
-    func author(named name: String) -> Author? {
-        guard let author = try? Author.find(named: name, context: viewContext) else {
-            return nil
+    func authors(named name: String) -> [Author] {
+        guard let authors = try? Author.find(named: name, context: viewContext) else {
+            return []
         }
 
-        return author
+        return authors
+    }
+    
+    func submitSearch() {
+        if let author = author(from: searchText) {
+            searchAuthors = [author]
+            router.push(author)
+        } else {
+            if searchText.contains("@") {
+                Task {
+                    if let publicKeyHex =
+                        await relayService.retrieveInternetIdentifierPublicKeyHex(searchText.lowercased()),
+                    let author = author(from: publicKeyHex) {
+                        searchAuthors = [author]
+                        router.push(author)
+                    }
+                }
+            } else {
+                searchAuthors = authors(named: searchText)
+                if searchAuthors.count == 1 {
+                    router.push(searchAuthors[0])
+                }
+            }
+        }
     }
 }
 

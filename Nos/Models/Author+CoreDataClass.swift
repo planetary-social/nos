@@ -52,15 +52,11 @@ public class Author: NosManagedObject {
         return nil
     }
     
-    class func find(named name: String, context: NSManagedObjectContext) throws -> Author? {
+    class func find(named name: String, context: NSManagedObjectContext) throws -> [Author] {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@ OR displayName CONTAINS[cd] %@", name, name)
-        fetchRequest.fetchLimit = 1
-        if let author = try context.fetch(fetchRequest).first {
-            return author
-        }
-        
-        return nil
+        let authors = try context.fetch(fetchRequest)
+        return authors
     }
     
     @discardableResult
