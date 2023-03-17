@@ -105,7 +105,7 @@ struct NotificationCard: View {
     var body: some View {
         if let author = note.author {
             Button {
-                router.notificationsPath.append(note.rootNote() ?? note)
+                router.notificationsPath.append(note.referencedNote() ?? note)
             } label: {
                 HStack {
                     AvatarView(imageUrl: author.profilePhotoURL, size: 40)

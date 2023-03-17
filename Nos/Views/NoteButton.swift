@@ -19,6 +19,7 @@ struct NoteButton: View {
     var hideOutOfNetwork = true
     var allowsPush = true
     var showReplyCount = true
+    var isInThreadView = false
 
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
@@ -27,7 +28,11 @@ struct NoteButton: View {
         if let author = note.author {
             Button {
                 if allowsPush {
-                    router.currentPath.wrappedValue.append(note)
+                    if !isInThreadView, let referencedNote = note.referencedNote() {
+                        router.push(referencedNote)
+                    } else {
+                        router.push(note)
+                    }
                 }
             } label: {
                 NoteCard(
