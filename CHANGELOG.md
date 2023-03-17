@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Support likes as described in NIP-25
+- Support likes as described in NIP-25, make sure reply likes are correct
 - Show "posted" and "replied" headers on NoteCards
 - Navigate to replied to note when tapping on reply from outside thread view
 - Search by name on Discover view
