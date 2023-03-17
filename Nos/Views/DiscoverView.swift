@@ -128,6 +128,10 @@ struct DiscoverView: View {
                                 router.push(author)
                             }
                         }
+                    } else {
+                        if let namedAthor = author(named: searchText) {
+                            router.push(namedAthor)
+                        }
                     }
                 }
             }
@@ -194,6 +198,14 @@ struct DiscoverView: View {
         guard let author = try? Author.findOrCreate(by: publicKey.hex, context: viewContext) else {
             return nil
         }
+        return author
+    }
+    
+    func author(named name: String) -> Author? {
+        guard let author = try? Author.find(named: name, context: viewContext) else {
+            return nil
+        }
+
         return author
     }
 }
