@@ -214,7 +214,7 @@ struct NoteCard: View {
         guard let eventReferences = note.eventReferences?.array as? [EventReference] else {
             return
         }
-        // compactMap applies a transformation to each element of a sequence, and returns an array of the non-nil results.
+        // compactMap returns an array of the non-nil results.
         var tags: [[String]] = eventReferences.compactMap { event in
             guard let eventId = event.eventId else { return nil }
             return ["e", eventId]
@@ -223,7 +223,6 @@ struct NoteCard: View {
         guard let authorReferences = note.authorReferences?.array as? [EventReference] else {
             return
         }
-        
         tags += authorReferences.compactMap { author in
             guard let eventId = author.eventId else { return nil }
             return ["p", eventId]
