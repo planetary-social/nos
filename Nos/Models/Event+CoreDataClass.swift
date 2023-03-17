@@ -230,6 +230,20 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func noteIsLikedByUser(for userPubKey: String, noteId: String) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        let noteIsLikedByUserPredicate = NSPredicate(
+            // swiftlint:disable line_length
+            format: "kind = \(String(EventKind.like.rawValue)) AND author.hexadecimalPublicKey = %@ AND SUBQUERY(eventReferences, $reference, $reference.eventId = %@).@count > 0",
+            // swiftlint:enable line_length
+            userPubKey,
+            noteId
+        )
+        fetchRequest.predicate = noteIsLikedByUserPredicate
+        return fetchRequest
+    }
+    
     @nonobjc public class func allFollowedPostsRequest(from publicKeys: [String]) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]

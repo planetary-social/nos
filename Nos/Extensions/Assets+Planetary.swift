@@ -183,6 +183,8 @@ extension Image {
        static let buttonPencil = Image("button-pencil", bundle: Bundle.current)
        static let buttonReply = Image("button-reply", bundle: Bundle.current)
        static let buttonShare = Image("button-share", bundle: Bundle.current)
+       static let buttonLikeActive = Image("button-like-active", bundle: Bundle.current)
+       static let buttonLikeDefault = Image("button-like-default", bundle: Bundle.current)
        static let cameraLarge = Image("camera-large", bundle: Bundle.current)
        static let cellChevron = Image("cell-chevron", bundle: Bundle.current)
        static let fakebotIcon = Image("fakebot-icon", bundle: Bundle.current)

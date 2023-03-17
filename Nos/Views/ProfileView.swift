@@ -50,6 +50,17 @@ struct ProfileView: View {
         )
         let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
         subscriptionIds.append(metaSub)
+       
+        if let currentUser = CurrentUser.shared.author {
+            let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
+            let userLikesFilter = Filter(
+                authorKeys: currentUserAuthorKeys,
+                kinds: [.like],
+                limit: 100
+            )
+            let userLikesSub = relayService.requestEventsFromAll(filter: userLikesFilter)
+            subscriptionIds.append(userLikesSub)
+        }
         
         let contactFilter = Filter(
             authorKeys: authors,

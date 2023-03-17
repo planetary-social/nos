@@ -96,6 +96,16 @@ struct DiscoverView: View {
             
             subscriptionIds.append(relayService.requestEventsFromAll(filter: twoHopsFilter))
         }
+        if let currentUser = CurrentUser.shared.author {
+            let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
+            let userLikesFilter = Filter(
+                authorKeys: currentUserAuthorKeys,
+                kinds: [.like],
+                limit: 100
+            )
+            let userLikesSub = relayService.requestEventsFromAll(filter: userLikesFilter)
+            subscriptionIds.append(userLikesSub)
+        }
         
         // TODO: update fetch request because follow graph might have changed
         // eventRequest = FetchRequest(fetchRequest: Event.discoverFeedRequest(authors: authors))
