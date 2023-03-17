@@ -106,6 +106,16 @@ struct NoteCard: View {
         fetchRequest: Event.noteIsLikedByUser(for: currentUserPubKey, noteId: note.identifier ?? "")
         )
     }
+    
+    var attributedAuthor: AttributedString {
+        var authorName = AttributedString(author.safeName)
+        authorName.foregroundColor = .primaryTxt
+        var postedOrReplied = AttributedString(note.isReply ? " replied" : " posted")
+        postedOrReplied.foregroundColor = .secondaryTxt
+        
+        authorName.append(postedOrReplied)
+        return authorName
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -118,10 +128,9 @@ struct NoteCard: View {
                         } label: {
                             HStack(alignment: .center) {
                                 AvatarView(imageUrl: author.profilePhotoURL, size: 24)
-                                Text(author.safeName)
+                                Text(attributedAuthor)
                                     .lineLimit(1)
-                                    .font(.subheadline)
-                                    .foregroundColor(Color.secondaryTxt)
+                                    .font(.brand)
                                     .multilineTextAlignment(.leading)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {

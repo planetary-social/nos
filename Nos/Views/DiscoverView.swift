@@ -39,17 +39,9 @@ struct DiscoverView: View {
     @State private var subscriptionIds = [String]()
     private var authors: [String]
     
-    @State var searchText = "" {
-        didSet {
-            if let publicKey = PublicKey(npub: searchText) {
-                let author = try! Author.findOrCreate(by: publicKey.hex, context: viewContext)
-                router.push(author)
-            } else if let publicKey = PublicKey(hex: searchText) {
-                let author = try! Author.findOrCreate(by: publicKey.hex, context: viewContext)
-                router.push(author)
-            }
-        }
-    }
+    @Environment(\.isSearching) private var isSearching: Bool
+    @State private var searchAuthors = [Author]()
+    @State var searchText = ""
     
     init(authors: [String] = Array(Event.discoverTabUserIdToInfo.keys)) {
         self.authors = authors
@@ -123,22 +115,42 @@ struct DiscoverView: View {
             .onPreferenceChange(SizePreferenceKey.self) { preference in
                 gridSize = preference
             }
-            .searchable(text: $searchText, placement: .toolbar, prompt: PlainText("Find a user by ID or NIP-05"))
+            .searchable(text: $searchText, placement: .toolbar, prompt: PlainText(Localized.searchBar.string)) {
+                ForEach(searchAuthors, id: \.self) { author in
+                    Button {
+                        router.push(author)
+                    } label: {
+                        HStack(alignment: .center) {
+                            AvatarView(imageUrl: author.profilePhotoURL, size: 24)
+                            Text(author.safeName)
+                                .lineLimit(1)
+                                .font(.subheadline)
+                                .foregroundColor(Color.primaryTxt)
+                                .multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            if author.muted {
+                                Text(Localized.mutedUser.string)
+                                    .font(.subheadline)
+                                    .foregroundColor(Color.secondaryTxt)
+                            }
+                            Spacer()
+                            if let currentUser = CurrentUser.shared.author {
+                                FollowButton(currentUserAuthor: currentUser, author: author)
+                                    .padding(10)
+                            }
+                        }.searchCompletion(author.safeName)
+                    }
+                }
+            }
             .autocorrectionDisabled()
             .onSubmit(of: .search) {
-                
-                if let author = author(from: searchText) {
-                    router.push(author)
+                submitSearch()
+            }
+            .onChange(of: searchText) { _ in
+                if searchText.isEmpty && !isSearching {
+                    searchAuthors = []
                 } else {
-                    if searchText.contains("@") {
-                        Task {
-                            if let publicKeyHex =
-                                await relayService.retrieveInternetIdentifierPublicKeyHex(searchText.lowercased()),
-                            let author = author(from: publicKeyHex) {
-                                router.push(author)
-                            }
-                        }
-                    }
+                    submitSearch()
                 }
             }
             .padding(.horizontal)
@@ -167,9 +179,13 @@ struct DiscoverView: View {
                 refreshDiscover()
             }
             .onAppear {
+                searchText = ""
+                searchAuthors = []
                 analytics.showedDiscover()
             }
             .onDisappear {
+                searchAuthors = []
+                
                 // TODO: Look into why subscriptions aren't being closed when we leave the discover tab
                 relayService.sendCloseToAll(subscriptions: subscriptionIds)
                 subscriptionIds.removeAll()
@@ -205,6 +221,34 @@ struct DiscoverView: View {
             return nil
         }
         return author
+    }
+    
+    func authors(named name: String) -> [Author] {
+        guard let authors = try? Author.find(named: name, context: viewContext) else {
+            return []
+        }
+
+        return authors
+    }
+    
+    func submitSearch() {
+        if searchText.contains("@") {
+            Task {
+                if let publicKeyHex =
+                    await relayService.retrieveInternetIdentifierPublicKeyHex(searchText.lowercased()),
+                    let author = author(from: publicKeyHex) {
+                    searchAuthors = [author]
+                    router.push(author)
+                }
+            }
+        } else {
+            if let author = author(from: searchText) {
+                searchAuthors = [author]
+                router.push(author)
+            } else {
+                searchAuthors = authors(named: searchText)
+            }
+        }
     }
 }
 
