@@ -220,22 +220,23 @@ struct NoteCard: View {
         guard let keyPair else {
             return
         }
-        guard let eventReferences = note.eventReferences?.array as? [EventReference] else {
-            return
-        }
-        // compactMap returns an array of the non-nil results.
-        var tags: [[String]] = eventReferences.compactMap { event in
-            guard let eventId = event.eventId else { return nil }
-            return ["e", eventId]
+        
+        var tags: [[String]] = []
+        if let eventReferences = note.eventReferences?.array as? [EventReference] {
+            // compactMap returns an array of the non-nil results.
+            tags += eventReferences.compactMap { event in
+                guard let eventId = event.eventId else { return nil }
+                return ["e", eventId]
+            }
         }
 
-        guard let authorReferences = note.authorReferences?.array as? [EventReference] else {
-            return
+        if let authorReferences = note.authorReferences?.array as? [EventReference] {
+            tags += authorReferences.compactMap { author in
+                guard let eventId = author.eventId else { return nil }
+                return ["p", eventId]
+            }
         }
-        tags += authorReferences.compactMap { author in
-            guard let eventId = author.eventId else { return nil }
-            return ["p", eventId]
-        }
+
         if let id = note.identifier {
             tags.append(["e", id])
         }
