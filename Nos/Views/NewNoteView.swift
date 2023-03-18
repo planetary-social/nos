@@ -18,7 +18,7 @@ struct NewNoteView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var relayService: RelayService
-    
+    @EnvironmentObject var currentUser: CurrentUser
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
     
@@ -26,28 +26,58 @@ struct NewNoteView: View {
     
     @State private var alert: AlertState<Never>?
     
+    @State private var showRelayPicker = false
+    @State private var selectedRelay: Relay?
+
     @Binding var isPresented: Bool
     
     var body: some View {
         NavigationStack {
-            Form {
-                TextEditor(text: $postText)
-                    .placeholder(when: postText.isEmpty, placeholder: {
-                        VStack {
-                            Text("Type your post here...")
-                                .foregroundColor(.secondaryTxt)
-                                .padding(7.5)
-                            Spacer()
+            ZStack {
+                Form {
+                    TextEditor(text: $postText)
+                        .placeholder(when: postText.isEmpty, placeholder: {
+                            VStack {
+                                Text("Type your post here...")
+                                    .foregroundColor(.secondaryTxt)
+                                    .padding(7.5)
+                                Spacer()
+                            }
+                        })
+                        .frame(idealHeight: 180)
+                        .listRowBackground(Color.appBg)
+                }
+                .scrollContentBackground(.hidden)
+                
+                if showRelayPicker, let author = currentUser.author {
+                    RelayPicker(
+                        selectedRelay: $selectedRelay,
+                        defaultSelection: Localized.extendedNetwork.string,
+                        author: author,
+                        isPresented: $showRelayPicker
+                    )
+                    .onChange(of: selectedRelay) { _ in
+                        withAnimation {
+                            showRelayPicker = false
                         }
-                    })
-                    .frame(idealHeight: 180)
-                    .listRowBackground(Color.appBg)
+                    }
+                }
             }
-            .scrollContentBackground(.hidden)
             .background(Color.appBg)
             .navigationBarTitle(Localized.newNote.string, displayMode: .inline)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+            .toolbar {
+                RelayPickerToolbarButton(
+                    selectedRelay: $selectedRelay,
+                    isPresenting: $showRelayPicker,
+                    defaultSelection: Localized.allMyRelays
+                ) {
+                    withAnimation {
+                        showRelayPicker.toggle()
+                    }
+                }
+            }
             .navigationBarItems(
                 leading: Button {
                     isPresented = false
@@ -89,12 +119,16 @@ struct NewNoteView: View {
                     content: postText,
                     signature: ""
                 )
-                let event = try Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext)
+                let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
                 event.author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
 
                 try event.sign(withKey: keyPair)
                 try viewContext.save()
-                relayService.publishToAll(event: event)
+                if let selectedRelay {
+                    relayService.publish(to: selectedRelay, event: event)
+                } else {
+                    relayService.publishToAll(event: event)
+                }
                 isPresented = false
                 analytics.published(note: event)
                 postText = ""

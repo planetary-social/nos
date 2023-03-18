@@ -216,11 +216,7 @@ extension RelayService {
                 filter.limit == 1 {
                 print("\(subId) has finished responding. Closing.")
                 // This is a one-off request. Close it.
-                
-                // Let's try closing them all. We can't guarantee we got the latest event if not all relays are up
-                // to date, but it'll cut down on our number of open filters dramatically.
-                // sendClose(from: socket, subscription: subId)
-                sendCloseToAll(subscriptions: [subId])
+                sendClose(from: socket, subscription: subId)
             }
         }
     }
@@ -239,13 +235,14 @@ extension RelayService {
         Task.detached(priority: .utility) {
             do {
                 try await self.backgroundContext.perform {
-                    let event = try EventProcessor.parse(jsonObject: eventJSON, in: self.backgroundContext)
+                    let relay = self.relay(from: socket, in: self.backgroundContext)
+                    let event = try EventProcessor.parse(
+                        jsonObject: eventJSON,
+                        from: relay,
+                        in: self.backgroundContext
+                    )
                     
-                    // Receiving delete events from other relays
-                    if let socketUrl = socket.request.url?.absoluteString {
-                        let relay = Relay.findOrCreate(by: socketUrl, context: self.backgroundContext)
-                        event.trackDelete(on: relay, context: self.backgroundContext)
-                    }
+                    relay.unwrap { event.trackDelete(on: $0, context: self.backgroundContext) }
 
                     let fulfilledFilters = self.requestFilterQueue.filter { $0.isFulfilled(by: event) }
                     if !fulfilledFilters.isEmpty {
@@ -271,8 +268,8 @@ extension RelayService {
             let socketUrl = socket.request.url?.absoluteString {
             let objectContext = persistenceController.container.viewContext
             
-            if let event = Event.find(by: eventId, context: objectContext) {
-                let relay = Relay.findOrCreate(by: socketUrl, context: objectContext)
+            if let event = Event.find(by: eventId, context: objectContext),
+                let relay = self.relay(from: socket, in: objectContext) {
 
                 if success {
                     print("\(eventId) has sent successfully to \(socketUrl)")
@@ -352,9 +349,33 @@ extension RelayService {
     }
     
     func publishToAll(event: Event) {
+        do {
+            let relays = try persistenceController.viewContext.fetch(Relay.relays(for: event.author!))
+            event.shouldBePublishedTo = NSSet(array: relays)
+            try persistenceController.viewContext.save()
+        } catch {
+            fatalError("Could not queue event for publishing")
+        }
         processingQueue.async {
             self.openSockets()
             self.sockets.forEach { self.publish(from: $0, event: event) }
+        }
+    }
+    
+    func publish(to relay: Relay, event: Event) {
+        do {
+            event.shouldBePublishedTo = NSSet(array: [relay])
+            try persistenceController.viewContext.save()
+        } catch {
+            fatalError("Could not queue event for publishing")
+        }
+        processingQueue.async {
+            self.openSockets()
+            if let socket = self.socket(from: relay) {
+                self.publish(from: socket, event: event)
+            } else {
+                Log.error("Could not find socket to publish message")
+            }
         }
     }
     
@@ -363,24 +384,28 @@ extension RelayService {
             
             self.openSockets()
             
-            let objectContext = self.persistenceController.container.viewContext
-            let userSentEvents = Event.allByUser(context: objectContext)
-            let relays = Relay.all(context: objectContext)
-            
-            // Only attempt to resend a user-created Event to Relays that were available at the time of publication
-            // This stops an Event from being sent to Relays that were added after the Event was sent
-            for event in userSentEvents {
-                let availableRelays = relays.filter { $0.createdAt! < event.createdAt! }
-                let publishedRelays: [Relay] = event.publishedTo?.allObjects as? [Relay] ?? []
-                let missedRelays: [Relay] = availableRelays.filter { !publishedRelays.contains($0) }
+            self.backgroundContext.perform {
                 
-                print("\(missedRelays.count) missing a published event.")
-                for missedRelay in missedRelays {
-                    guard let missedAddress = missedRelay.address else { continue }
-                    if let socket = self.socket(for: missedAddress) {
-                        // Publish again to this socket
-                        print("Republishing \(event.identifier!) on \(missedAddress)")
-                        self.publish(from: socket, event: event)
+                let objectContext = self.backgroundContext
+                let userSentEvents = Event.allByUser(context: objectContext)
+                
+                // Only attempt to resend a user-created Event to Relays that were available at the time of publication
+                // This stops an Event from being sent to Relays that were added after the Event was sent
+                for event in userSentEvents {
+                    let shouldBePublishedToRelays: NSMutableSet = (event.shouldBePublishedTo ?? NSSet())
+                        .mutableCopy() as! NSMutableSet
+                    let publishedRelays = (event.publishedTo ?? NSSet()) as Set
+                    shouldBePublishedToRelays.minus(publishedRelays)
+                    let missedRelays: [Relay] = Array(Set(_immutableCocoaSet: shouldBePublishedToRelays))
+                    
+                    print("\(missedRelays.count) missing a published event.")
+                    for missedRelay in missedRelays {
+                        guard let missedAddress = missedRelay.address else { continue }
+                        if let socket = self.socket(for: missedAddress) {
+                            // Publish again to this socket
+                            print("Republishing \(event.identifier!) on \(missedAddress)")
+                            self.publish(from: socket, event: event)
+                        }
                     }
                 }
             }
@@ -534,6 +559,23 @@ extension RelayService {
         identifier.components(separatedBy: "@")[safe: 1] ?? ""
     }
     
+    func relay(from socket: WebSocket, in context: NSManagedObjectContext) -> Relay? {
+        guard let socketURL = socket.request.url else {
+            Log.error("Got socket with no URL: \(socket.request)")
+            return nil
+        }
+        do {
+            return try Relay.findOrCreate(by: socketURL.absoluteString, context: context)
+        } catch {
+            Log.error(error.localizedDescription)
+            return nil
+        }
+    }
+    
+    func socket(from relay: Relay) -> WebSocket? {
+        sockets.first(where: { $0.request.url?.absoluteString == relay.addressURL?.absoluteString })
+    }
+
     func unsURL(from unsIdentifier: String) -> URL? {
         let urlString = "https://explorer.universalname.space/uns/\(unsIdentifier)"
         guard let url = URL(string: urlString) else { return nil }

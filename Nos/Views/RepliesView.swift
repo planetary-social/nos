@@ -168,7 +168,7 @@ struct RepliesView: View {
                 content: replyText,
                 signature: ""
             )
-            let event = try Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext)
+            let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
                 
             try event.sign(withKey: keyPair)
             try viewContext.save()

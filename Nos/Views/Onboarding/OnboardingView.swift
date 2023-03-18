@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Dependencies
+import Logger
 
 class OnboardingState: ObservableObject {
     @Published var flow: OnboardingFlow = .createAccount
@@ -88,9 +89,13 @@ struct OnboardingView: View {
                                 
                                 // Recommended Relays for new user
                                 for address in Relay.recommended {
-                                    Relay(context: viewContext, address: address, author: CurrentUser.shared.author)
-                                    try? CurrentUser.shared.context.save()
+                                    _ = try? Relay(
+                                        context: viewContext,
+                                        address: address,
+                                        author: CurrentUser.shared.author
+                                    )
                                 }
+                                try? CurrentUser.shared.context.save()
                                 
                                 CurrentUser.shared.publishContactList(tags: [])
                             }()

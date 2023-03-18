@@ -13,6 +13,7 @@ class CurrentUser: ObservableObject {
     
     static let shared = CurrentUser()
     
+    // TODO: it's time to cache this
     var keyPair: KeyPair? {
         if let privateKey = privateKey, let keyPair = KeyPair.init(privateKeyHex: privateKey) {
             return keyPair
@@ -79,9 +80,10 @@ class CurrentUser: ObservableObject {
             relays = CurrentUser.shared.author?.relays?.allObjects as? [Relay] ?? []
             if relays?.isEmpty == true {
                 // If we're still empty connect to all known relays hoping to get some metadata
-                relays = Relay.allKnown.map {
-                    Relay.findOrCreate(by: $0, context: context)
+                relays = Relay.allKnown.compactMap {
+                    try? Relay.findOrCreate(by: $0, context: context)
                 }
+                try? context.save()
             }
         }
         
@@ -192,7 +194,7 @@ class CurrentUser: ObservableObject {
         if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
                 relayService.publishToAll(event: event)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
@@ -213,7 +215,7 @@ class CurrentUser: ObservableObject {
         if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
                 relayService.publishToAll(event: event)
             } catch {
                 Log.debug("Failed to update mute list \(error.localizedDescription)")
@@ -235,7 +237,7 @@ class CurrentUser: ObservableObject {
         if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
                 relayService.publishToAll(event: event)
             } catch {
                 Log.debug("Failed to delete events \(error.localizedDescription)")
@@ -270,7 +272,7 @@ class CurrentUser: ObservableObject {
         if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, in: context)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
                 relayService.publishToAll(event: event)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")

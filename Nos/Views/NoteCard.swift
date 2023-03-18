@@ -195,9 +195,11 @@ struct NoteCard: View {
                 GoldenPostView(author: author, note: note)
             }
         }
-        .task(priority: .userInitiated) {
-            if author.needsMetadata {
-                _ = author.requestMetadata(using: relayService)
+        .onAppear {
+            Task.detached(priority: .userInitiated) { [author, relayService] in
+                if author.needsMetadata {
+                    _ = author.requestMetadata(using: relayService)
+                }
             }
         }
         .background(
@@ -272,7 +274,7 @@ struct NoteCard: View {
             signature: ""
         )
         do {
-            let event = try Event.findOrCreate(jsonEvent: jsonEvent, context: viewContext)
+            let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
             try event.sign(withKey: keyPair)
             try viewContext.save()
             relayService.publishToAll(event: event)

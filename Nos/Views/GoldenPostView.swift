@@ -78,7 +78,6 @@ struct GoldenPostView: View {
         VStack(alignment: .leading, spacing: 0) {
             imageView
             
-            Spacer(minLength: 0)
             VStack {
                 HStack {
                     if isTextOnly {
@@ -90,7 +89,6 @@ struct GoldenPostView: View {
                     }
                     Spacer()
                 }
-                Spacer(minLength: 0)
                 footer
             }
         }

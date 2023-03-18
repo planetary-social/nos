@@ -179,6 +179,9 @@ enum Localized: String, Localizable, CaseIterable {
     case noRelaysMessage = "No relays yet! Add one below to get started"
     case addRelay = "Add relay"
     case recommendedRelays = "Recommended Relays"
+    case invalidURLError = "Please enter a valid websocket URL."
+    case saveRelayError = "Could not save relay."
+    case ok = "Ok"
     
     case profile = "Profile"
     case follow = "Follow"
@@ -215,6 +218,8 @@ enum Localized: String, Localizable, CaseIterable {
     case share = "Share"
     case reportPost = "Report this post"
     case unmuteUser = "Un-Mute"
+    case extendedNetwork = "Extended Network"
+    case allMyRelays = "All My Relays"
 }
 
 // MARK: - Replies

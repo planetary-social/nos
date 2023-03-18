@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreData
 import Dependencies
+import SwiftUINavigation
 
 struct RelayView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -18,11 +19,20 @@ struct RelayView: View {
     
     @EnvironmentObject private var router: Router
     
+    @State private var alert: AlertState<Never>?
+    
     @Dependency(\.analytics) private var analytics
+    
+    @FetchRequest var relays: FetchedResults<Relay>
+    
+    init(author: Author) {
+        self.author = author
+        _relays = FetchRequest(fetchRequest: Relay.relays(for: author))
+    }
     
     var body: some View {
         List {
-            if let relays = author.relays?.allObjects as? [Relay] {
+            if let relays {
                 Section {
                     ForEach(relays) { relay in
                         Text(relay.address ?? Localized.error.string)
@@ -108,6 +118,7 @@ struct RelayView: View {
                 endPoint: .bottom
             ))
         }
+        .alert(unwrapping: $alert)
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
         .toolbar {
@@ -134,21 +145,25 @@ struct RelayView: View {
         withAnimation {
             guard !newRelayAddress.isEmpty else { return }
             
-            let address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-            let relay = Relay.findOrCreate(by: address, context: viewContext)
-            CurrentUser.shared.author?.add(relay: relay)
-            newRelayAddress = ""
-
             do {
+                let address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+                let relay = try Relay.findOrCreate(by: address, context: viewContext)
+                CurrentUser.shared.author?.add(relay: relay)
                 try viewContext.save()
                 analytics.added(relay)
                 newRelayAddress = ""
             } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not
-                // use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                var errorMessage: String
+                if error as? RelayError == RelayError.invalidAddress {
+                    errorMessage = Localized.invalidURLError.string
+                } else {
+                    errorMessage = Localized.saveRelayError.string
+                }
+                alert = AlertState(title: {
+                    TextState(Localized.error.string)
+                }, message: {
+                    TextState(errorMessage)
+                })
             }
         }
     }

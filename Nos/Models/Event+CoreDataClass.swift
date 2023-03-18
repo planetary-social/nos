@@ -102,18 +102,24 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func discoverFeedRequest(authors: [String]) -> NSFetchRequest<Event> {
-        guard let currentUser = CurrentUser.shared.author else {
-            return emptyRequest()
-        }
+    @nonobjc public class func emptyDiscoverRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.fetchLimit = 200
+        fetchRequest.predicate = NSPredicate.false
+        return fetchRequest
+    }
+    
+    @nonobjc public class func extendedNetworkPredicate(featuredAuthors: [String]) -> NSPredicate {
+        guard let currentUser = CurrentUser.shared.author else {
+            return NSPredicate.false
+        }
         let kind = EventKind.text.rawValue
         let featuredPredicate = NSPredicate(
             format: "kind = %i AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@ " +
                 "AND NOT author IN %@.follows.destination",
             kind,
-            authors.compactMap {
+            featuredAuthors.compactMap {
                 PublicKey(npub: $0)?.hex
             },
             currentUser
@@ -127,17 +133,20 @@ public class Event: NosManagedObject {
             currentUser
         )
 
-        fetchRequest.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
+        return NSCompoundPredicate(orPredicateWithSubpredicates: [
             featuredPredicate,
             twoHopsPredicate
         ])
-        
-        return fetchRequest
+    }
+    
+    @nonobjc public class func seen(on relay: Relay) -> NSPredicate {
+        let kind = EventKind.text.rawValue
+        return NSPredicate(format: "kind = %i AND eventReferences.@count = 0 AND %@ IN seenOnRelays", kind, relay)
     }
     
     @nonobjc public class func allMentionsPredicate(for user: Author) -> NSPredicate {
         guard let publicKey = user.hexadecimalPublicKey, !publicKey.isEmpty else {
-            return NSPredicate(format: "FALSEPREDICATE")
+            return NSPredicate.false
         }
         
         return NSPredicate(
@@ -256,7 +265,7 @@ public class Event: NosManagedObject {
     @nonobjc public class func emptyRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: true)]
-        fetchRequest.predicate = NSPredicate(format: "FALSEPREDICATE")
+        fetchRequest.predicate = NSPredicate.false
         return fetchRequest
     }
     
@@ -299,15 +308,16 @@ public class Event: NosManagedObject {
         return nil
     }
     
-    class func findOrCreate(jsonEvent: JSONEvent, context: NSManagedObjectContext) throws -> Event {
+    class func findOrCreate(jsonEvent: JSONEvent, relay: Relay?, context: NSManagedObjectContext) throws -> Event {
         if let existingEvent = try context.fetch(Event.event(by: jsonEvent.id)).first {
+            relay.unwrap { existingEvent.markSeen(on: $0) }
             if existingEvent.isStub {
-                try existingEvent.hydrate(from: jsonEvent, in: context)
+                try existingEvent.hydrate(from: jsonEvent, relay: relay, in: context)
             }
             return existingEvent
         }
         
-        return try Event(context: context, jsonEvent: jsonEvent)
+        return try Event(context: context, jsonEvent: jsonEvent, relay: relay)
     }
     
     class func findOrCreateStubBy(id: String, context: NSManagedObjectContext) throws -> Event {
@@ -442,10 +452,10 @@ public class Event: NosManagedObject {
         )
     }
 	
-    convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent) throws {
+    convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent, relay: Relay?) throws {
         self.init(context: context)
         identifier = jsonEvent.id
-        try hydrate(from: jsonEvent, in: context)
+        try hydrate(from: jsonEvent, relay: relay, in: context)
     }
 
     func deleteEvents(identifiers: [String], context: NSManagedObjectContext) {
@@ -462,7 +472,7 @@ public class Event: NosManagedObject {
     }
     
     /// Populates an event stub (with only its ID set) using the data in the given JSON.
-    func hydrate(from jsonEvent: JSONEvent, in context: NSManagedObjectContext) throws {
+    func hydrate(from jsonEvent: JSONEvent, relay: Relay?, in context: NSManagedObjectContext) throws {
         guard isStub else {
             fatalError("Tried to hydrate an event that isn't a stub. This is a programming error")
         }
@@ -484,6 +494,9 @@ public class Event: NosManagedObject {
         
         author = newAuthor
         
+        // Relay
+        relay.unwrap { markSeen(on: $0) }
+        
         guard let eventKind = EventKind(rawValue: kind) else {
             throw EventError.unrecognizedKind
         }
@@ -503,7 +516,7 @@ public class Event: NosManagedObject {
         }
     }
     
-    // swiftlint:disable function_body_length
+    // swiftlint:disable function_body_length cyclomatic_complexity
     func hydrateContactList(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
         guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
             return
@@ -557,10 +570,12 @@ public class Event: NosManagedObject {
         if let data = jsonEvent.content.data(using: .utf8, allowLossyConversion: false),
             let relayEntries = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
             let relays = (relayEntries as? [String: Any])?.keys {
+            newAuthor.relays = NSMutableSet()
 
             for address in relays {
-                let relay = Relay.findOrCreate(by: address, context: context)
-                newAuthor.add(relay: relay)
+                if let relay = try? Relay.findOrCreate(by: address, context: context) {
+                    newAuthor.add(relay: relay)
+                }
             }
             
             if author?.hexadecimalPublicKey == CurrentUser.shared.author?.hexadecimalPublicKey {
@@ -571,7 +586,7 @@ public class Event: NosManagedObject {
             }
         }
     }
-    // swiftlint:enable function_body_length
+    // swiftlint:enable function_body_length cyclomatic_complexity
     
     func hydrateDefault(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
         let newEventReferences = NSMutableOrderedSet()
@@ -620,6 +635,12 @@ public class Event: NosManagedObject {
                 print("Failed to decode metaData event with ID \(String(describing: identifier))")
             }
         }
+    }
+
+    func markSeen(on relay: Relay) {
+        // swiftlint:disable legacy_objc_type
+        seenOnRelays = (seenOnRelays ?? NSSet()).adding(relay)
+        // swiftlint:enable legacy_objc_type
     }
     
     func hydrateMuteList(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
