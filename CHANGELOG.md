@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Added the ability to browse all notes from a single relay on the Discover tab.
 - Added the ability to post a note to a single relay from the New Note screen.
-- Support likes as described in NIP-25, make sure reply likes are correct
+- Support likes as described in NIP-25, make sure reply and parent likes are correct
 - Show "posted" and "replied" headers on NoteCards
 - Navigate to replied to note when tapping on reply from outside thread view
 - Search by name on Discover view

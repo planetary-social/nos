@@ -230,9 +230,12 @@ struct NoteCard: View {
                     }
                 }
                 lastETagId = eTagIds.last ?? ""
+                if lastETagId == note.identifier {
+                    return true
+                }
             }
         }
-        return lastETagId == note.identifier
+        return false
     }
     
     func likeNote() {
