@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.1 (15)] - 2023-03-18Z
 - Added the ability to browse all notes from a single relay on the Discover tab.
 - Added the ability to post a note to a single relay from the New Note screen.
 - Support likes as described in NIP-25, make sure reply and parent likes are correct
@@ -14,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Navigate to replied to note when tapping on reply from outside thread view
 - Search by name on Discover view
 - Fixed cards on the Discover tab all being the same size.
+- Fixed a crash when deleting your key in Settings
 
 ## [0.1 (14)] - 2023-03-16Z
 - Nos now reads and writes your mutes the mute list shared with other Nostr apps.
