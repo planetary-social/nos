@@ -33,7 +33,6 @@ enum OnboardingStep {
 }
 
 struct OnboardingView: View {
-    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var currentUser: CurrentUser
 
     @ObservedObject var state = OnboardingState()
@@ -44,8 +43,6 @@ struct OnboardingView: View {
     @State private var selectedTab: OnboardingStep = .onboardingStart
     
     @State var flow: OnboardingFlow = .createAccount
-    
-    @Dependency(\.analytics) private var analytics
     
     var body: some View {
         NavigationStack(path: $state.path) {
@@ -68,28 +65,7 @@ struct OnboardingView: View {
                     case .finishOnboarding:
                         switch state.flow {
                         case .createAccount:
-                            // hack to allow us to do business logic here... we won't need this once
-                            // we have a dedicated CreateAccountView that handles setting up the current user
-                            // swiftlint: disable redundant_discardable_let
-                            let _ = {
-                            // swiftlint: enable redundant_discardable_let
-                                let keyPair = KeyPair()!
-                                currentUser.keyPair = keyPair
-                                analytics.generatedKey()
-                                
-                                // Recommended Relays for new user
-                                for address in Relay.recommended {
-                                    _ = try? Relay(
-                                        context: viewContext,
-                                        address: address,
-                                        author: CurrentUser.shared.author
-                                    )
-                                }
-                                try? CurrentUser.shared.context.save()
-                                
-                                CurrentUser.shared.publishContactList(tags: [])
-                            }()
-                            ProfileEditView(author: CurrentUser.shared.author!, createAccountCompletion: completion)
+                            CreateProfileView(user: currentUser, createAccountCompletion: completion)
                         case .loginToExistingAccount:
                             OnboardingLoginView(completion: completion)
                         }

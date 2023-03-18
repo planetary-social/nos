@@ -196,7 +196,7 @@ struct NoteCard: View {
             }
         }
         .onAppear {
-            Task.detached(priority: .userInitiated) { [author, relayService] in
+            Task(priority: .userInitiated) { [author, relayService] in
                 if author.needsMetadata {
                     _ = author.requestMetadata(using: relayService)
                 }
@@ -273,7 +273,7 @@ struct NoteCard: View {
             let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
             try event.sign(withKey: keyPair)
             try viewContext.save()
-            relayService.publishToAll(event: event)
+            relayService.publishToAll(event: event, context: viewContext)
         } catch {
             Log.info("Error creating event for like")
         }

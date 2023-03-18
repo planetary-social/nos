@@ -35,20 +35,22 @@ class CurrentUser: ObservableObject {
         get {
             _privateKeyHex
         } set {
-            guard let privateKey = newValue else {
+            guard let privateKeyHex = newValue else {
                 let publicStatus = KeyChain.delete(key: KeyChain.keychainPrivateKey)
+                _privateKeyHex = nil
                 print("Deleted private key from keychain with status: \(publicStatus)")
                 return
             }
             
-            guard let keyPair = KeyPair(privateKeyHex: privateKey) else {
+            guard let keyPair = KeyPair(privateKeyHex: privateKeyHex) else {
                 Log.error("CurrentUser could not initialize KeyPair from privateKeyHex.")
                 return
             }
             
-            let privateKeyData = Data(privateKey.utf8)
+            let privateKeyData = Data(privateKeyHex.utf8)
             let publicStatus = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKeyData)
             Log.info("Saved private key to keychain for user: \(keyPair.publicKeyHex) / \(keyPair.npub). Keychain storage status: \(publicStatus)")
+            _privateKeyHex = privateKeyHex
             analytics.identify(with: keyPair)
             
             // TODO: this is fragile
@@ -243,7 +245,7 @@ class CurrentUser: ObservableObject {
             do {
                 try jsonEvent.sign(withKey: pair)
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
-                relayService.publishToAll(event: event)
+                relayService.publishToAll(event: event, context: context)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }
@@ -264,7 +266,7 @@ class CurrentUser: ObservableObject {
             do {
                 try jsonEvent.sign(withKey: pair)
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
-                relayService.publishToAll(event: event)
+                relayService.publishToAll(event: event, context: context)
             } catch {
                 Log.debug("Failed to update mute list \(error.localizedDescription)")
             }
@@ -282,11 +284,11 @@ class CurrentUser: ObservableObject {
         let kind = EventKind.delete.rawValue
         var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: reason)
         
-        if let let pair = keyPair {
+        if let pair = keyPair {
             do {
                 try jsonEvent.sign(withKey: pair)
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
-                relayService.publishToAll(event: event)
+                relayService.publishToAll(event: event, context: context)
             } catch {
                 Log.debug("Failed to delete events \(error.localizedDescription)")
             }
@@ -321,7 +323,7 @@ class CurrentUser: ObservableObject {
             do {
                 try jsonEvent.sign(withKey: pair)
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
-                relayService.publishToAll(event: event)
+                relayService.publishToAll(event: event, context: context)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }

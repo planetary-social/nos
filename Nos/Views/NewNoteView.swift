@@ -121,9 +121,9 @@ struct NewNoteView: View {
                 try event.sign(withKey: keyPair)
                 try viewContext.save()
                 if let selectedRelay {
-                    relayService.publish(to: selectedRelay, event: event)
+                    relayService.publish(to: selectedRelay, event: event, context: viewContext)
                 } else {
-                    relayService.publishToAll(event: event)
+                    relayService.publishToAll(event: event, context: viewContext)
                 }
                 isPresented = false
                 analytics.published(note: event)

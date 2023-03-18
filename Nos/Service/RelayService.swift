@@ -266,32 +266,35 @@ extension RelayService {
         if let success = responseArray[2] as? Bool,
             let eventId = responseArray[1] as? String,
             let socketUrl = socket.request.url?.absoluteString {
-            let objectContext = persistenceController.container.viewContext
             
-            if let event = Event.find(by: eventId, context: objectContext),
-                let relay = self.relay(from: socket, in: objectContext) {
-
-                if success {
-                    print("\(eventId) has sent successfully to \(socketUrl)")
-                    event.publishedTo = (event.publishedTo ?? NSSet()).adding(relay)
+            backgroundContext.perform {
+                
+                if let event = Event.find(by: eventId, context: self.backgroundContext),
+                   let relay = self.relay(from: socket, in: self.backgroundContext) {
                     
-                    // Receiving a confirmation of my own deletion event
-                    event.trackDelete(on: relay, context: objectContext)
-                } else {
-                    // This will be picked up later in publishFailedEvents
-                    if responseArray.count > 2, let message = responseArray[3] as? String {
-                        // Mark duplicates or replaces as done on our end
-                        if message.contains("replaced:") || message.contains("duplicate:") {
-                            event.publishedTo = (event.publishedTo ?? NSSet()).adding(relay)
-                        } else {
-                            print("\(eventId) has been rejected. Given reason: \(message)")
-                        }
+                    if success {
+                        print("\(eventId) has sent successfully to \(socketUrl)")
+                        event.publishedTo = (event.publishedTo ?? NSSet()).adding(relay)
+                        
+                        // Receiving a confirmation of my own deletion event
+                        event.trackDelete(on: relay, context: self.backgroundContext)
+                        try! self.backgroundContext.save()
                     } else {
-                        print("\(eventId) has been rejected. No given reason.")
+                        // This will be picked up later in publishFailedEvents
+                        if responseArray.count > 2, let message = responseArray[3] as? String {
+                            // Mark duplicates or replaces as done on our end
+                            if message.contains("replaced:") || message.contains("duplicate:") {
+                                event.publishedTo = (event.publishedTo ?? NSSet()).adding(relay)
+                            } else {
+                                print("\(eventId) has been rejected. Given reason: \(message)")
+                            }
+                        } else {
+                            print("\(eventId) has been rejected. No given reason.")
+                        }
                     }
+                } else {
+                    print("Error: got OK for missing Event: \(eventId)")
                 }
-            } else {
-                print("Error: got OK for missing Event: \(eventId)")
             }
         }
     }
@@ -348,11 +351,11 @@ extension RelayService {
         }
     }
     
-    func publishToAll(event: Event) {
+    func publishToAll(event: Event, context: NSManagedObjectContext) {
         do {
             let relays = try persistenceController.viewContext.fetch(Relay.relays(for: event.author!))
             event.shouldBePublishedTo = NSSet(array: relays)
-            try persistenceController.viewContext.save()
+            try context.save()
         } catch {
             fatalError("Could not queue event for publishing")
         }
@@ -362,10 +365,10 @@ extension RelayService {
         }
     }
     
-    func publish(to relay: Relay, event: Event) {
+    func publish(to relay: Relay, event: Event, context: NSManagedObjectContext) {
         do {
             event.shouldBePublishedTo = NSSet(array: [relay])
-            try persistenceController.viewContext.save()
+            try context.save()
         } catch {
             fatalError("Could not queue event for publishing")
         }
@@ -387,10 +390,8 @@ extension RelayService {
             self.backgroundContext.perform {
                 
                 let objectContext = self.backgroundContext
-                let userSentEvents = Event.allByUser(context: objectContext)
+                let userSentEvents = Event.unpublishedEvents(context: objectContext)
                 
-                // Only attempt to resend a user-created Event to Relays that were available at the time of publication
-                // This stops an Event from being sent to Relays that were added after the Event was sent
                 for event in userSentEvents {
                     let shouldBePublishedToRelays: NSMutableSet = (event.shouldBePublishedTo ?? NSSet())
                         .mutableCopy() as! NSMutableSet
@@ -488,6 +489,13 @@ extension RelayService: WebSocketDelegate {
         switch event {
         case .connected(let headers):
             print("websocket is connected: \(headers)")
+            publishFailedEvents()
+            requestFilterQueue
+                .filter { $0.subscriptionStartDate != nil }
+                .forEach { self.requestEvents(from: client, subId: $0.subscriptionId, filter: $0) }
+        case .viabilityChanged(let isViable) where isViable:
+            print("websocket is connected")
+            publishFailedEvents()
             requestFilterQueue
                 .filter { $0.subscriptionStartDate != nil }
                 .forEach { self.requestEvents(from: client, subId: $0.subscriptionId, filter: $0) }

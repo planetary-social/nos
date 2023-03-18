@@ -169,7 +169,7 @@ struct RepliesView: View {
                 
             try event.sign(withKey: keyPair)
             try viewContext.save()
-            relayService.publishToAll(event: event)
+            relayService.publishToAll(event: event, context: viewContext)
         } catch {
             alert = AlertState(title: {
                 TextState(Localized.error.string)

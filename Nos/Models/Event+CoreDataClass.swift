@@ -156,10 +156,10 @@ public class Event: NosManagedObject {
         )
     }
 
-    @nonobjc public class func allUserPostsRequest() -> NSFetchRequest<Event> {
+    @nonobjc public class func unpublishedEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(format: "sendAttempts > 0 AND sendAttempts < 5")
+        fetchRequest.predicate = NSPredicate(format: "author.hexadecimalPublicKey = %@ AND SUBQUERY(shouldBePublishedTo, $relay, TRUEPREDICATE).@count != SUBQUERY(seenOnRelays, $relay, TRUEPREDICATE).@count")
         return fetchRequest
     }
     
@@ -522,7 +522,7 @@ public class Event: NosManagedObject {
             return
         }
         
-        newAuthor.lastUpdatedContactList = .now
+        newAuthor.lastUpdatedContactList = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
 
         // Make a copy of what was followed before
         let originalFollows = newAuthor.follows?.copy() as? Set<Follow>
@@ -617,7 +617,7 @@ public class Event: NosManagedObject {
         }
         
         if let contentData = jsonEvent.content.data(using: .utf8) {
-            newAuthor.lastUpdatedMetadata = .now
+            newAuthor.lastUpdatedMetadata = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
             // There may be unsupported metadata. Store it to send back later in metadata publishes.
             newAuthor.rawMetadata = contentData
 
@@ -680,8 +680,8 @@ public class Event: NosManagedObject {
         }
     }
     
-    class func allByUser(context: NSManagedObjectContext) -> [Event] {
-        let allRequest = Event.allUserPostsRequest()
+    class func unpublishedEvents(context: NSManagedObjectContext) -> [Event] {
+        let allRequest = Event.unpublishedEventsRequest()
         
         do {
             let results = try context.fetch(allRequest)

@@ -35,7 +35,6 @@ class AppController: ObservableObject {
     
     func completeOnboarding() {
         currentState = .loggedIn
-        CurrentUser.shared.subscribe(relays: CurrentUser.shared.onboardingRelays)
 
         router.sideMenuPath = NavigationPath()
         router.closeSideMenu()
