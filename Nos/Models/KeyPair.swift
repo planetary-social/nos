@@ -86,17 +86,6 @@ struct KeyPair {
         let rawSignature = try privateKey.schnorr.signature(message: &bytes, auxiliaryRand: &randomBytes)
         return rawSignature.rawRepresentation.hexString
     }
-    
-    static func loadFromKeychain() -> KeyPair? {
-        if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
-            let hexString = String(decoding: privateKeyData, as: UTF8.self)
-            if let pair = KeyPair(privateKeyHex: hexString) {
-                return pair
-            }
-        }
-        print("Error loading key pair from keychain")
-        return nil
-    }
 }
 
 extension KeyPair: Codable {

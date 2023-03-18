@@ -291,7 +291,8 @@ struct DiscoverView_Previews: PreviewProvider {
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
     static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
     static var currentUser: CurrentUser = {
-        KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.alice.privateKeyHex.utf8))
+        let currentUser = CurrentUser()
+        currentUser.privateKeyHex = KeyFixture.alice.privateKeyHex
         currentUser.context = previewContext
         currentUser.relayService = relayService
         return currentUser

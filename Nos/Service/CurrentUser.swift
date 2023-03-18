@@ -8,25 +8,59 @@
 import Foundation
 import CoreData
 import Logger
+import Dependencies
 
 class CurrentUser: ObservableObject {
     
     static let shared = CurrentUser()
     
+    @Dependency(\.analytics) private var analytics
+    
     // TODO: it's time to cache this
     var keyPair: KeyPair? {
-        if let privateKey = privateKey, let keyPair = KeyPair.init(privateKeyHex: privateKey) {
-            return keyPair
+        get {
+            if let privateKey = privateKeyHex, let keyPair = KeyPair.init(privateKeyHex: privateKey) {
+                return keyPair
+            }
+            return nil
         }
-        return nil
+        set {
+            privateKeyHex = newValue?.privateKeyHex
+        }
     }
-    var privateKey: String? {
-        if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
-            let hexString = String(decoding: privateKeyData, as: UTF8.self)
-            return hexString
+    
+    private var _privateKeyHex: String?
+    
+    var privateKeyHex: String? {
+        get {
+            _privateKeyHex
+        } set {
+            guard let privateKey = newValue else {
+                let publicStatus = KeyChain.delete(key: KeyChain.keychainPrivateKey)
+                print("Deleted private key from keychain with status: \(publicStatus)")
+                return
+            }
+            
+            guard let keyPair = KeyPair(privateKeyHex: privateKey) else {
+                Log.error("CurrentUser could not initialize KeyPair from privateKeyHex.")
+                return
+            }
+            
+            let privateKeyData = Data(privateKey.utf8)
+            let publicStatus = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKeyData)
+            Log.info("Saved private key to keychain for user: \(keyPair.publicKeyHex) / \(keyPair.npub). Keychain storage status: \(publicStatus)")
+            analytics.identify(with: keyPair)
+            
+            // TODO: this is fragile
+            // Reset CurrentUser state
+            onboardingRelays = []
+            relayService?.sendClose(subscriptions: subscriptions)
+            subscriptions = []
+            inNetworkAuthors = []
+            subscribe()
+            updateInNetworkAuthors(from: context)
+            refreshFriendMetadata()
         }
-        
-        return nil
     }
     
     var publicKey: String? {
@@ -69,6 +103,20 @@ class CurrentUser: ObservableObject {
     }
     
     @Published var inNetworkAuthors = [Author]()
+                                             
+    init() {
+        if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
+            Log.info("CurrentUser loaded a private key from keychain")
+            let hexString = String(decoding: privateKeyData, as: UTF8.self)
+            _privateKeyHex = hexString
+            if let keyPair {
+                Log.info("CurrentUser logged in \(keyPair.publicKeyHex) / \(keyPair.npub)")
+                analytics.identify(with: keyPair)
+            } else {
+                Log.error("CurrentUser found bad data in the keychain")
+            }
+        }
+    }
 
     // Pass in relays if you want to request from something other
     // than the Current User's relays (ie onboarding)
@@ -191,7 +239,7 @@ class CurrentUser: ObservableObject {
         let kind = EventKind.metaData.rawValue
         var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: [], content: metaString)
                 
-        if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
+        if let pair = keyPair {
             do {
                 try jsonEvent.sign(withKey: pair)
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
@@ -212,7 +260,7 @@ class CurrentUser: ObservableObject {
         let kind = EventKind.mute.rawValue
         var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: keys.pTags, content: "")
         
-        if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
+        if let pair = keyPair {
             do {
                 try jsonEvent.sign(withKey: pair)
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
@@ -234,7 +282,7 @@ class CurrentUser: ObservableObject {
         let kind = EventKind.delete.rawValue
         var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: reason)
         
-        if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
+        if let let pair = keyPair {
             do {
                 try jsonEvent.sign(withKey: pair)
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
@@ -269,7 +317,7 @@ class CurrentUser: ObservableObject {
         let kind = EventKind.contactList.rawValue
         var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: relayString)
         
-        if let privateKey = privateKey, let pair = KeyPair(privateKeyHex: privateKey) {
+        if let pair = keyPair {
             do {
                 try jsonEvent.sign(withKey: pair)
                 let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)

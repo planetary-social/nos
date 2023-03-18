@@ -192,9 +192,14 @@ struct AppView_Previews: PreviewProvider {
     static var previewContext = persistenceController.container.viewContext
     static var relayService = RelayService(persistenceController: persistenceController)
     static var router = Router()
+    static var currentUser = {
+        let currentUser = CurrentUser()
+        currentUser.privateKeyHex = KeyFixture.alice.privateKeyHex
+        return currentUser
+    }()
+    
     static var loggedInAppController: AppController = {
-        let appController = AppController(router: router)
-        KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.alice.privateKeyHex.utf8))
+        let appController = AppController(currentUser: currentUser, router: router)
         appController.completeOnboarding()
         return appController
     }()
@@ -216,12 +221,12 @@ struct AppView_Previews: PreviewProvider {
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
-            .environmentObject(AppController(router: router))
+            .environmentObject(AppController(currentUser: currentUser, router: router))
         
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(routerWithSideMenuOpened)
-            .environmentObject(AppController(router: routerWithSideMenuOpened))
+            .environmentObject(AppController(currentUser: currentUser, router: routerWithSideMenuOpened))
     }
 }

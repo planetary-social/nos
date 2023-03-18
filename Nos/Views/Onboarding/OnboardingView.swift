@@ -34,6 +34,7 @@ enum OnboardingStep {
 
 struct OnboardingView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var currentUser: CurrentUser
 
     @ObservedObject var state = OnboardingState()
     
@@ -41,16 +42,6 @@ struct OnboardingView: View {
     let completion: () -> Void
     
     @State private var selectedTab: OnboardingStep = .onboardingStart
-    
-    @State private var keyPair: KeyPair? {
-        didSet {
-            if let pair = keyPair {
-                let privateKey = Data(pair.privateKeyHex.utf8)
-                let publicStatus = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKey)
-                print("Public key keychain storage status: \(publicStatus)")
-            }
-        }
-    }
     
     @State var flow: OnboardingFlow = .createAccount
     
@@ -83,8 +74,7 @@ struct OnboardingView: View {
                             let _ = {
                             // swiftlint: enable redundant_discardable_let
                                 let keyPair = KeyPair()!
-                                self.keyPair = keyPair
-                                analytics.identify(with: keyPair)
+                                currentUser.keyPair = keyPair
                                 analytics.generatedKey()
                                 
                                 // Recommended Relays for new user

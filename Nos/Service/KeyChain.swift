@@ -10,6 +10,7 @@
 import Security
 import UIKit
 
+/// Don't use this outside CurrentUser
 enum KeyChain {
     static let keychainPrivateKey = "privateKey"
         

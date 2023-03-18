@@ -14,6 +14,7 @@ struct RepliesView: View {
     
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
+    @EnvironmentObject private var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
 
     @State private var reply = ""
@@ -61,10 +62,6 @@ struct RepliesView: View {
     init(note: Event) {
         self.note = note
         self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note))
-    }
-    
-    private var keyPair: KeyPair? {
-        KeyPair.loadFromKeychain()
     }
     
     var note: Event
@@ -119,7 +116,7 @@ struct RepliesView: View {
                 Spacer()
                 VStack {
                     HStack(spacing: 10) {
-                        if let author = CurrentUser.shared.author {
+                        if let author = currentUser.author {
                             AvatarView(imageUrl: author.profilePhotoURL, size: 35)
                         }
                         ExpandingTextFieldAndSubmitButton( placeholder: "Post a reply", reply: $reply) {
@@ -140,7 +137,7 @@ struct RepliesView: View {
     
     func postReply(_ replyText: String) {
         do {
-            guard let keyPair else {
+            guard let keyPair = currentUser.keyPair else {
                 alert = AlertState(title: {
                     TextState(Localized.error.string)
                 }, message: {

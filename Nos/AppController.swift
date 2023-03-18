@@ -21,14 +21,16 @@ class AppController: ObservableObject {
     @Dependency(\.analytics) private var analytics
     
     var router: Router
+    var currentUser: CurrentUser
     
-    init(router: Router) {
+    init(currentUser: CurrentUser, router: Router) {
         self.router = router
+        self.currentUser = currentUser
         print("Initializing analytics. This is hack to get the dependency initialzed by printing it: \(analytics)")
     }
     
     func configureCurrentState() {
-        currentState = KeyChain.load(key: KeyChain.keychainPrivateKey) == nil ? .onboarding : .loggedIn
+        currentState = currentUser.keyPair == nil ? .onboarding : .loggedIn
     }
     
     func completeOnboarding() {

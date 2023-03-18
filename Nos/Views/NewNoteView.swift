@@ -11,12 +11,8 @@ import SwiftUINavigation
 import Dependencies
 
 struct NewNoteView: View {
-    private var keyPair: KeyPair? {
-        KeyPair.loadFromKeychain()
-    }
     
     @Environment(\.managedObjectContext) private var viewContext
-    
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject var currentUser: CurrentUser
     @EnvironmentObject private var router: Router
@@ -99,7 +95,7 @@ struct NewNoteView: View {
     }
     
     private func publishPost() {
-        guard let keyPair else {
+        guard let keyPair = currentUser.keyPair else {
             alert = AlertState(title: {
                 TextState(Localized.error.string)
             }, message: {

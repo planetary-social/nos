@@ -13,6 +13,7 @@ struct OnboardingLoginView: View {
     var completion: () -> Void
     
     @Dependency(\.analytics) private var analytics
+    @EnvironmentObject var currentUser: CurrentUser
     
     @Environment(\.managedObjectContext) private var viewContext
     
@@ -39,10 +40,7 @@ struct OnboardingLoginView: View {
             if !privateKeyString.isEmpty {
                 BigActionButton(title: .login) {
                     if let keyPair = KeyPair(nsec: privateKeyString) {
-                        let privateKey = Data(keyPair.privateKeyHex.utf8)
-                        let publicStatus = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKey)
-                        print("Public key keychain storage status: \(publicStatus)")
-                        analytics.identify(with: keyPair)
+                        currentUser.keyPair = keyPair
                         analytics.importedKey()
 
                         for address in Relay.allKnown {

@@ -13,6 +13,7 @@ struct SideMenuContent: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var router: Router
+    @EnvironmentObject private var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
     
     @State private var isShowingReportABugMailView = false
@@ -28,7 +29,7 @@ struct SideMenuContent: View {
                 HStack {
                     Button {
                         do {
-                            guard let keyPair = KeyPair.loadFromKeychain() else { return }
+                            guard let keyPair = currentUser.keyPair else { return }
                             try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
                             router.sideMenuPath.append(SideMenu.Destination.profile)
                         } catch {

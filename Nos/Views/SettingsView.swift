@@ -13,20 +13,8 @@ struct SettingsView: View {
     @Dependency(\.analytics) private var analytics
     @EnvironmentObject private var appController: AppController
     @EnvironmentObject private var router: Router
+    @EnvironmentObject private var currentUser: CurrentUser
 
-    @State private var keyPair: KeyPair? {
-        didSet {
-            if let pair = keyPair {
-                let privateKey = Data(pair.privateKeyHex.utf8)
-                let publicStatus = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKey)
-                print("Private key keychain storage status: \(publicStatus)")
-            } else {
-                let publicStatus = KeyChain.delete(key: KeyChain.keychainPrivateKey)
-                print("Private key keychain delete operation status: \(publicStatus)")
-            }
-        }
-    }
-    
     @State var privateKeyString = ""
     
     @State var showError = false
@@ -41,17 +29,15 @@ struct SettingsView: View {
                         .foregroundColor(.primaryTxt)
                     ActionButton(title: Localized.save) {
                         if privateKeyString.isEmpty {
-                            self.keyPair = nil
+                            currentUser.keyPair = nil
                             analytics.logout()
-                            // just crash for now until we can fix the crash that happens when you log back in.
-                            fatalError("Logged out")
-                            // appController.configureCurrentState()
+                            appController.configureCurrentState()
                         } else if let keyPair = KeyPair(nsec: privateKeyString) {
-                            self.keyPair = keyPair
+                            currentUser.keyPair = keyPair
                             analytics.identify(with: keyPair)
                             analytics.changedKey()
                         } else {
-                            self.keyPair = nil
+                            currentUser.keyPair = nil
                             showError = true
                         }
                     }
@@ -101,22 +87,15 @@ struct SettingsView: View {
                 message: Localized.couldNotReadPrivateKeyMessage.view
             )
         }
-        .task {
-			if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey),
-                let keyPair = KeyPair(privateKeyHex: String(decoding: privateKeyData, as: UTF8.self)) {
-                privateKeyString = keyPair.nsec
-            } else {
-                print("Could not load private key from keychain")
-                privateKeyString = ""
-            }
-        }
         .onAppear {
+            privateKeyString = currentUser.keyPair?.nsec ?? ""
             analytics.showedSettings()
         }
     }
 }
 
 struct SettingsView_Previews: PreviewProvider {
+    
     static var previews: some View {
         NavigationStack {
             SettingsView()

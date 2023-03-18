@@ -13,6 +13,7 @@ struct NosApp: App {
     @ObservedObject var router = Router()
     let persistenceController = PersistenceController.shared
     let relayService = RelayService(persistenceController: PersistenceController.shared)
+    let currentUser = CurrentUser.shared
 
     var body: some Scene {
         WindowGroup {
@@ -20,8 +21,8 @@ struct NosApp: App {
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .environmentObject(relayService)
                 .environmentObject(router)
-                .environmentObject(AppController(router: router))
-                .environmentObject(CurrentUser.shared)
+                .environmentObject(AppController(currentUser: currentUser, router: router))
+                .environmentObject(currentUser)
                 .task {
                     CurrentUser.shared.relayService = relayService
                     relayService.publishFailedEvents()

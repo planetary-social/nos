@@ -101,7 +101,7 @@ struct NoteCard: View {
         } else {
             self.repliesRequest = FetchRequest(fetchRequest: Event.emptyRequest())
         }
-        let currentUserPubKey = CurrentUser.shared.author?.publicKey?.hex ?? ""
+        let currentUserPubKey = author.publicKey?.hex ?? ""
         self.noteLikedByUserRequest = FetchRequest(
         fetchRequest: Event.noteIsLikedByUser(for: currentUserPubKey, noteId: note.identifier ?? "")
         )
@@ -214,10 +214,6 @@ struct NoteCard: View {
         .padding(padding)
     }
     
-    private var keyPair: KeyPair? {
-        KeyPair.loadFromKeychain()
-    }
-    
     func currentNoteIdMatchesLastETag(_ eventList: [Event]) -> Bool {
         var lastETagId = ""
         for event in eventList {
@@ -237,7 +233,7 @@ struct NoteCard: View {
     
     func likeNote() {
         
-        guard let keyPair else {
+        guard let keyPair = currentUser.keyPair else {
             return
         }
         
@@ -260,7 +256,7 @@ struct NoteCard: View {
         if let id = note.identifier {
             tags.append(["e", id])
         }
-        if let pubKey = note.author?.publicKey?.hex {
+        if let pubKey = author.publicKey?.hex {
             tags.append(["p", pubKey])
         }
         
