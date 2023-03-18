@@ -178,14 +178,15 @@ struct NoteCard: View {
                         }
                         Spacer()
                         Image.buttonReply
-                        if noteLikedByUser.isEmpty {
+                        if !noteLikedByUser.isEmpty &&
+                        currentNoteIdMatchesLastETag(noteLikedByUser.compactMap({ $0 })) {
+                            Image.buttonLikeActive
+                        } else {
                             Button {
                                 likeNote()
                             } label: {
                                 Image.buttonLikeDefault
                             }
-                        } else {
-                            Image.buttonLikeActive
                         }
                     }
                     .padding(15)
@@ -213,6 +214,23 @@ struct NoteCard: View {
     
     private var keyPair: KeyPair? {
         KeyPair.loadFromKeychain()
+    }
+    
+    func currentNoteIdMatchesLastETag(_ eventList: [Event]) -> Bool {
+        var lastETagId = ""
+        for event in eventList {
+            if let tags = event.allTags as? [[String]] {
+                let eTagIds = tags.compactMap { tag in
+                    if tag.count > 1 && tag[safe: 0] == "e" {
+                        return tag[safe: 1]
+                    } else {
+                        return nil
+                    }
+                }
+                lastETagId = eTagIds.last ?? ""
+            }
+        }
+        return lastETagId == note.identifier
     }
     
     func likeNote() {
