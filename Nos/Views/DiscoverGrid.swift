@@ -10,7 +10,7 @@ import SwiftUI
 struct DiscoverGrid: View {
     
     @Environment(\.managedObjectContext) private var viewContext
-    @FetchRequest(sortDescriptors: [SortDescriptor(\.createdAt)]) var events: FetchedResults<Event>
+    @FetchRequest(fetchRequest: Event.emptyDiscoverRequest()) var events: FetchedResults<Event>
     
     @Binding var columns: Int
     @State private var gridSize: CGSize = .zero {

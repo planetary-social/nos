@@ -206,6 +206,7 @@ enum Localized: String, Localizable, CaseIterable {
     case sampleDataInstructions = "This will delete all events and load those in sample_data.json"
     
     case discover = "Discover"
+    case searchBar = "Find a user by ID, name, or NIP-05"
     case notifications = "Notifications"
     case noNotifications = "No notifications (yet)!"
     case copyNoteIdentifier = "Copy Note Identifier"

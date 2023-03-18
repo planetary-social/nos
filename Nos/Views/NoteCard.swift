@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Logger
 
 /// This view displays the information we have for an message suitable for being used in a list or grid.
 ///
@@ -22,11 +23,16 @@ struct NoteCard: View {
             }
         }
     }
+    
+    @Environment(\.managedObjectContext) private var viewContext
 
     var style = CardStyle.compact
     
     var repliesRequest: FetchRequest<Event>
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
+    
+    var noteLikedByUserRequest: FetchRequest<Event>
+    var noteLikedByUser: FetchedResults<Event> { noteLikedByUserRequest.wrappedValue }
     
     @ObservedObject private var currentUser: CurrentUser = .shared
     
@@ -95,6 +101,20 @@ struct NoteCard: View {
         } else {
             self.repliesRequest = FetchRequest(fetchRequest: Event.emptyRequest())
         }
+        let currentUserPubKey = CurrentUser.shared.author?.publicKey?.hex ?? ""
+        self.noteLikedByUserRequest = FetchRequest(
+        fetchRequest: Event.noteIsLikedByUser(for: currentUserPubKey, noteId: note.identifier ?? "")
+        )
+    }
+    
+    var attributedAuthor: AttributedString {
+        var authorName = AttributedString(author.safeName)
+        authorName.foregroundColor = .primaryTxt
+        var postedOrReplied = AttributedString(note.isReply ? " replied" : " posted")
+        postedOrReplied.foregroundColor = .secondaryTxt
+        
+        authorName.append(postedOrReplied)
+        return authorName
     }
 
     var body: some View {
@@ -108,10 +128,9 @@ struct NoteCard: View {
                         } label: {
                             HStack(alignment: .center) {
                                 AvatarView(imageUrl: author.profilePhotoURL, size: 24)
-                                Text(author.safeName)
+                                Text(attributedAuthor)
                                     .lineLimit(1)
-                                    .font(.subheadline)
-                                    .foregroundColor(Color.secondaryTxt)
+                                    .font(.brand)
                                     .multilineTextAlignment(.leading)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
@@ -159,6 +178,16 @@ struct NoteCard: View {
                         }
                         Spacer()
                         Image.buttonReply
+                        if !noteLikedByUser.isEmpty &&
+                        currentNoteIdMatchesLastETag(noteLikedByUser.compactMap({ $0 })) {
+                            Image.buttonLikeActive
+                        } else {
+                            Button {
+                                likeNote()
+                            } label: {
+                                Image.buttonLikeDefault
+                            }
+                        }
                     }
                     .padding(15)
                 }
@@ -183,6 +212,75 @@ struct NoteCard: View {
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
         .padding(padding)
+    }
+    
+    private var keyPair: KeyPair? {
+        KeyPair.loadFromKeychain()
+    }
+    
+    func currentNoteIdMatchesLastETag(_ eventList: [Event]) -> Bool {
+        var lastETagId = ""
+        for event in eventList {
+            if let tags = event.allTags as? [[String]] {
+                let eTagIds = tags.compactMap { tag in
+                    if tag.count > 1 && tag[safe: 0] == "e" {
+                        return tag[safe: 1]
+                    } else {
+                        return nil
+                    }
+                }
+                lastETagId = eTagIds.last ?? ""
+            }
+        }
+        return lastETagId == note.identifier
+    }
+    
+    func likeNote() {
+        
+        guard let keyPair else {
+            return
+        }
+        
+        var tags: [[String]] = []
+        if let eventReferences = note.eventReferences?.array as? [EventReference] {
+            // compactMap returns an array of the non-nil results.
+            tags += eventReferences.compactMap { event in
+                guard let eventId = event.eventId else { return nil }
+                return ["e", eventId]
+            }
+        }
+
+        if let authorReferences = note.authorReferences?.array as? [EventReference] {
+            tags += authorReferences.compactMap { author in
+                guard let eventId = author.eventId else { return nil }
+                return ["p", eventId]
+            }
+        }
+
+        if let id = note.identifier {
+            tags.append(["e", id])
+        }
+        if let pubKey = note.author?.publicKey?.hex {
+            tags.append(["p", pubKey])
+        }
+        
+        let jsonEvent = JSONEvent(
+            id: "",
+            pubKey: keyPair.publicKeyHex,
+            createdAt: Int64(Date().timeIntervalSince1970),
+            kind: 7,
+            tags: tags,
+            content: "+",
+            signature: ""
+        )
+        do {
+            let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
+            try event.sign(withKey: keyPair)
+            try viewContext.save()
+            relayService.publishToAll(event: event)
+        } catch {
+            Log.info("Error creating event for like")
+        }
     }
 
     var padding: EdgeInsets {

@@ -43,7 +43,14 @@ extension Date {
         case 1..<7:
             return "\(day)d"
 
-        // July 29
+        // more than a week, less than a year
+        case 7..<365:
+            let formatter = DateFormatter()
+            formatter.timeStyle = .none
+            formatter.dateFormat = "MMMM dd"
+            return formatter.string(from: self)
+            
+        // at least 1 year ago
         default:
             let formatter = DateFormatter()
             formatter.timeStyle = .none

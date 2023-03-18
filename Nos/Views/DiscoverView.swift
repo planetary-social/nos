@@ -27,17 +27,9 @@ struct DiscoverView: View {
     @State private var subscriptionIds = [String]()
     private var featuredAuthors: [String]
     
-    @State var searchText = "" {
-        didSet {
-            if let publicKey = PublicKey(npub: searchText) {
-                let author = try! Author.findOrCreate(by: publicKey.hex, context: viewContext)
-                router.push(author)
-            } else if let publicKey = PublicKey(hex: searchText) {
-                let author = try! Author.findOrCreate(by: publicKey.hex, context: viewContext)
-                router.push(author)
-            }
-        }
-    }
+    @Environment(\.isSearching) private var isSearching: Bool
+    @State private var searchAuthors = [Author]()
+    @State var searchText = ""
     
     var predicate: NSPredicate {
         if let relayFilter {
@@ -103,6 +95,17 @@ struct DiscoverView: View {
                 subscriptionIds.append(relayService.requestEventsFromAll(filter: twoHopsFilter))
             }
         }
+
+        if let currentUser = CurrentUser.shared.author {
+            let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
+            let userLikesFilter = Filter(
+                authorKeys: currentUserAuthorKeys,
+                kinds: [.like],
+                limit: 100
+            )
+            let userLikesSub = relayService.requestEventsFromAll(filter: userLikesFilter)
+            subscriptionIds.append(userLikesSub)
+        }
     }
     
     var body: some View {
@@ -126,22 +129,42 @@ struct DiscoverView: View {
                 }
                 refreshDiscover()
             }
-            .searchable(text: $searchText, placement: .sidebar, prompt: PlainText("Find a user by ID or NIP-05"))
+            .searchable(text: $searchText, placement: .toolbar, prompt: PlainText(Localized.searchBar.string)) {
+                ForEach(searchAuthors, id: \.self) { author in
+                    Button {
+                        router.push(author)
+                    } label: {
+                        HStack(alignment: .center) {
+                            AvatarView(imageUrl: author.profilePhotoURL, size: 24)
+                            Text(author.safeName)
+                                .lineLimit(1)
+                                .font(.subheadline)
+                                .foregroundColor(Color.primaryTxt)
+                                .multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            if author.muted {
+                                Text(Localized.mutedUser.string)
+                                    .font(.subheadline)
+                                    .foregroundColor(Color.secondaryTxt)
+                            }
+                            Spacer()
+                            if let currentUser = CurrentUser.shared.author {
+                                FollowButton(currentUserAuthor: currentUser, author: author)
+                                    .padding(10)
+                            }
+                        }.searchCompletion(author.safeName)
+                    }
+                }
+            }
             .autocorrectionDisabled()
             .onSubmit(of: .search) {
-                
-                if let author = author(from: searchText) {
-                    router.push(author)
+                submitSearch()
+            }
+            .onChange(of: searchText) { _ in
+                if searchText.isEmpty && !isSearching {
+                    searchAuthors = []
                 } else {
-                    if searchText.contains("@") {
-                        Task {
-                            if let publicKeyHex =
-                                await relayService.retrieveInternetIdentifierPublicKeyHex(searchText.lowercased()),
-                            let author = author(from: publicKeyHex) {
-                                router.push(author)
-                            }
-                        }
-                    }
+                    submitSearch()
                 }
             }
             .background(Color.appBg)
@@ -176,11 +199,15 @@ struct DiscoverView: View {
             }
             .onAppear {
                 if router.selectedTab == .discover {
+                    searchText = ""
+                    searchAuthors = []
                     analytics.showedDiscover()
                     refreshDiscover()
                 }
             }
             .onDisappear {
+                searchAuthors = []
+                
                 relayService.sendCloseToAll(subscriptions: subscriptionIds)
                 subscriptionIds.removeAll()
             }
@@ -215,6 +242,34 @@ struct DiscoverView: View {
             return nil
         }
         return author
+    }
+    
+    func authors(named name: String) -> [Author] {
+        guard let authors = try? Author.find(named: name, context: viewContext) else {
+            return []
+        }
+
+        return authors
+    }
+    
+    func submitSearch() {
+        if searchText.contains("@") {
+            Task {
+                if let publicKeyHex =
+                    await relayService.retrieveInternetIdentifierPublicKeyHex(searchText.lowercased()),
+                    let author = author(from: publicKeyHex) {
+                    searchAuthors = [author]
+                    router.push(author)
+                }
+            }
+        } else {
+            if let author = author(from: searchText) {
+                searchAuthors = [author]
+                router.push(author)
+            } else {
+                searchAuthors = authors(named: searchText)
+            }
+        }
     }
 }
 

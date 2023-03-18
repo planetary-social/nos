@@ -105,6 +105,7 @@ public class Event: NosManagedObject {
     @nonobjc public class func emptyDiscoverRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.fetchLimit = 200
         fetchRequest.predicate = NSPredicate.false
         return fetchRequest
     }
@@ -235,6 +236,20 @@ public class Event: NosManagedObject {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let homeFeedPredicate = homeFeedPredicate(for: user)
         fetchRequest.predicate = homeFeedPredicate
+        return fetchRequest
+    }
+    
+    @nonobjc public class func noteIsLikedByUser(for userPubKey: String, noteId: String) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        let noteIsLikedByUserPredicate = NSPredicate(
+            // swiftlint:disable line_length
+            format: "kind = \(String(EventKind.like.rawValue)) AND author.hexadecimalPublicKey = %@ AND SUBQUERY(eventReferences, $reference, $reference.eventId = %@).@count > 0",
+            // swiftlint:enable line_length
+            userPubKey,
+            noteId
+        )
+        fetchRequest.predicate = noteIsLikedByUserPredicate
         return fetchRequest
     }
     
@@ -710,7 +725,20 @@ public class Event: NosManagedObject {
         })
     }
     
-    /// Returns the root event that this note is replying to, or nil if there isn't one.
+    var isReply: Bool {
+        rootNote() != nil
+    }
+    
+    /// Returns the event this note is directly replying to, or nil if there isn't one.
+    func referencedNote() -> Event? {
+        if let lastReference = eventReferences?.lastObject as? EventReference,
+            let referencedNote = lastReference.referencedEvent {
+            return referencedNote
+        }
+        return nil
+    }
+    
+    /// Returns the root event of the thread that this note is replying to, or nil if there isn't one.
     func rootNote() -> Event? {
         let rootReference = eventReferences?.first(where: {
             ($0 as? EventReference)?.marker ?? "" == "root"

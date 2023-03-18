@@ -13,6 +13,7 @@ class CurrentUser: ObservableObject {
     
     static let shared = CurrentUser()
     
+    // TODO: it's time to cache this
     var keyPair: KeyPair? {
         if let privateKey = privateKey, let keyPair = KeyPair.init(privateKeyHex: privateKey) {
             return keyPair
