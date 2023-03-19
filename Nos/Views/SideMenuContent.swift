@@ -17,6 +17,7 @@ struct SideMenuContent: View {
     @Dependency(\.analytics) private var analytics
     
     @State private var isShowingReportABugMailView = false
+    @State private var shareNosPressed = false
     
     @State var result: Result<MFMailComposeResult, Error>?
     
@@ -39,7 +40,7 @@ struct SideMenuContent: View {
                     destination: .relays
                 )
                 SideMenuRow(title: .about, image: Image(systemName: "questionmark.circle"), destination: .about)
-                SideMenuRow(title: .contactUs, image: Image(systemName: "envelope")) {
+                SideMenuRow(title: .contactUs, image: Image(systemName: "envelope.circle")) {
                     isShowingReportABugMailView = true
                 }
                 .disabled(!MFMailComposeViewController.canSendMail())
@@ -48,6 +49,13 @@ struct SideMenuContent: View {
                         .onAppear {
                             analytics.showedSupport()
                         }
+                }
+                SideMenuRow(title: .shareNos, image: Image(systemName: "person.2.circle")) {
+                    shareNosPressed = true
+                }
+                .sheet(isPresented: $shareNosPressed) {
+                    let url = URL(string: "https://nos.social")!
+                    ActivityViewController(activityItems: [url])
                 }
                 Spacer()
             }

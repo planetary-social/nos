@@ -157,6 +157,8 @@
 		C9A0DAE529C69F0C00466635 /* HighlightedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE329C69F0C00466635 /* HighlightedText.swift */; };
 		C9A0DAE729C69FA000466635 /* Text+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE629C69FA000466635 /* Text+Gradient.swift */; };
 		C9A0DAE829C69FA000466635 /* Text+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE629C69FA000466635 /* Text+Gradient.swift */; };
+		C9A0DAEA29C6A34200466635 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE929C6A34200466635 /* ActivityView.swift */; };
+		C9A0DAEB29C6A34200466635 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE929C6A34200466635 /* ActivityView.swift */; };
 		C9ADB133299287D60075E7F8 /* KeyPairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB132299287D60075E7F8 /* KeyPairTests.swift */; };
 		C9ADB135299288230075E7F8 /* KeyFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB134299288230075E7F8 /* KeyFixture.swift */; };
 		C9ADB13629928AF00075E7F8 /* KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C26298DC98800C6714D /* KeyPair.swift */; };
@@ -360,6 +362,7 @@
 		C9A0DADF29C697A100466635 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		C9A0DAE329C69F0C00466635 /* HighlightedText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighlightedText.swift; sourceTree = "<group>"; };
 		C9A0DAE629C69FA000466635 /* Text+Gradient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Text+Gradient.swift"; sourceTree = "<group>"; };
+		C9A0DAE929C6A34200466635 /* ActivityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		C9ADB132299287D60075E7F8 /* KeyPairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPairTests.swift; sourceTree = "<group>"; };
 		C9ADB134299288230075E7F8 /* KeyFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyFixture.swift; sourceTree = "<group>"; };
 		C9ADB13729928CC30075E7F8 /* String+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hex.swift"; sourceTree = "<group>"; };
@@ -707,6 +710,7 @@
 				C9A0DADF29C697A100466635 /* AboutView.swift */,
 				C9A0DAE329C69F0C00466635 /* HighlightedText.swift */,
 				C9A0DAE629C69FA000466635 /* Text+Gradient.swift */,
+				C9A0DAE929C6A34200466635 /* ActivityView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1024,6 +1028,7 @@
 				CD2CF38E299E67F900332116 /* CardButtonStyle.swift in Sources */,
 				C9DFA979299C31A7006929C1 /* Localizable.swift in Sources */,
 				A336DD3C299FD78000A0CBA0 /* Filter.swift in Sources */,
+				C9A0DAEA29C6A34200466635 /* ActivityView.swift in Sources */,
 				CD2CF390299E68BE00332116 /* NoteButton.swift in Sources */,
 				C9DEC04D29894BED0078B43A /* Author+CoreDataClass.swift in Sources */,
 				C9DFA96F299BF043006929C1 /* Assets+Planetary.swift in Sources */,
@@ -1061,6 +1066,7 @@
 				C9A0DAE529C69F0C00466635 /* HighlightedText.swift in Sources */,
 				CD09A75729A521D20063464F /* NewNoteView.swift in Sources */,
 				CD09A75829A521D20063464F /* LinearGradient+Planetary.swift in Sources */,
+				C9A0DAEB29C6A34200466635 /* ActivityView.swift in Sources */,
 				CD09A75929A521D20063464F /* Color+Hex.swift in Sources */,
 				C987F85A29BA9ED800B44E7A /* Font.swift in Sources */,
 				CD09A75A29A521D20063464F /* CardButtonStyle.swift in Sources */,
