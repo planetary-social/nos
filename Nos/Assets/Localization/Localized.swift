@@ -163,6 +163,7 @@ enum Localized: String, Localizable, CaseIterable {
     case keyEncryptionWarning = "Warning: Never share your private key with anyone."
     case privateKeyPlaceholder = "nsec..."
     case save = "Save"
+    case copy = "Copy"
     case settings = "Settings"
     case invalidKey = "Invalid Key"
     case couldNotReadPrivateKeyMessage = "Could not read your private key. Make sure it is in hex format."

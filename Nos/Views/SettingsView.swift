@@ -19,27 +19,39 @@ struct SettingsView: View {
     
     @State var showError = false
     
+    func importKey(_ keyPair: KeyPair) {
+        currentUser.keyPair = keyPair
+        analytics.identify(with: keyPair)
+        analytics.changedKey()
+    }
+    
     var body: some View {
         Form {
             Section {
                 Localized.keyEncryptionWarning.view
                     .foregroundColor(.primaryTxt)
                 HStack {
-                    TextField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
+                    SecureField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
                         .foregroundColor(.primaryTxt)
+                    
                     ActionButton(title: Localized.save) {
                         if privateKeyString.isEmpty {
                             currentUser.keyPair = nil
                             analytics.logout()
                             appController.configureCurrentState()
                         } else if let keyPair = KeyPair(nsec: privateKeyString) {
-                            currentUser.keyPair = keyPair
-                            analytics.identify(with: keyPair)
-                            analytics.changedKey()
+                            importKey(keyPair)
+                        } else if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
+                            importKey(keyPair)
                         } else {
                             currentUser.keyPair = nil
                             showError = true
                         }
+                    }
+                    .padding(.vertical, 5)
+                    
+                    ActionButton(title: Localized.copy) {
+                        UIPasteboard.general.string = privateKeyString
                     }
                     .padding(.vertical, 5)
                 }

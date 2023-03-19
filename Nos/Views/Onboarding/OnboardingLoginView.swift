@@ -20,11 +20,32 @@ struct OnboardingLoginView: View {
     @State var privateKeyString = ""
     @State var showError = false
     
+    func importKey(_ keyPair: KeyPair) {
+        currentUser.keyPair = keyPair
+        analytics.importedKey()
+
+        for address in Relay.allKnown {
+            do {
+                let relay = try Relay(
+                    context: viewContext,
+                    address: address,
+                    author: CurrentUser.shared.author
+                )
+                CurrentUser.shared.onboardingRelays.append(relay)
+            } catch {
+                Log.error(error.localizedDescription)
+            }
+        }
+        try? CurrentUser.shared.context.save()
+
+        completion()
+    }
+    
     var body: some View {
         VStack {
             Form {
                 Section {
-                    TextField("NSec1", text: $privateKeyString)
+                    SecureField("NSec1", text: $privateKeyString)
                         .foregroundColor(.textColor)
                 } header: {
                     Localized.pasteYourSecretKey.view
@@ -40,24 +61,9 @@ struct OnboardingLoginView: View {
             if !privateKeyString.isEmpty {
                 BigActionButton(title: .login) {
                     if let keyPair = KeyPair(nsec: privateKeyString) {
-                        currentUser.keyPair = keyPair
-                        analytics.importedKey()
-
-                        for address in Relay.allKnown {
-                            do {
-                                let relay = try Relay(
-                                    context: viewContext,
-                                    address: address,
-                                    author: CurrentUser.shared.author
-                                )
-                                CurrentUser.shared.onboardingRelays.append(relay)
-                            } catch {
-                                Log.error(error.localizedDescription)
-                            }
-                        }
-                        try? CurrentUser.shared.context.save()
-
-                        completion()
+                        importKey(keyPair)
+                    } else if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
+                        importKey(keyPair)
                     } else {
                         self.showError = true
                     }
