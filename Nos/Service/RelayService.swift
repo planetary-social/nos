@@ -273,7 +273,7 @@ extension RelayService {
                    let relay = self.relay(from: socket, in: self.backgroundContext) {
                     
                     if success {
-                        print("\(eventId) has sent successfully to \(socketUrl)")
+                        print("\(eventId) has published successfully to \(socketUrl)")
                         event.publishedTo = (event.publishedTo ?? NSSet()).adding(relay)
                         
                         // Receiving a confirmation of my own deletion event

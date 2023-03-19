@@ -66,7 +66,7 @@ extension FetchedResults where Element == Event {
 @objc(Event)
 public class Event: NosManagedObject {
     
-    static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@"
+    static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ AND author.muted == false"
     
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -173,10 +173,13 @@ public class Event: NosManagedObject {
         
         let mentionsPredicate = allMentionsPredicate(for: user)
         let repliesPredicate = allRepliesPredicate(for: user)
+        let notSelfPredicate = NSPredicate(format: "author != %@", user)
         let allNotificationsPredicate = NSCompoundPredicate(
             orPredicateWithSubpredicates: [mentionsPredicate, repliesPredicate]
         )
-        fetchRequest.predicate = allNotificationsPredicate
+        fetchRequest.predicate = NSCompoundPredicate(
+            andPredicateWithSubpredicates: [allNotificationsPredicate, notSelfPredicate]
+        )
         
         return fetchRequest
     }

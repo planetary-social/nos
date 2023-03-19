@@ -165,7 +165,7 @@ class CurrentUser: ObservableObject {
             return
         }
         
-        Task.detached(priority: .utility) { [follows] in
+        Task.detached(priority: .background) { [follows] in
             
             for follow in follows {
                 guard let key = follow.destination?.hexadecimalPublicKey else {
