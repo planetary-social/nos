@@ -101,7 +101,7 @@ struct NoteCard: View {
         } else {
             self.repliesRequest = FetchRequest(fetchRequest: Event.emptyRequest())
         }
-        let currentUserPubKey = author.publicKey?.hex ?? ""
+        let currentUserPubKey = CurrentUser.shared.publicKey ?? ""
         self.noteLikedByUserRequest = FetchRequest(
         fetchRequest: Event.noteIsLikedByUser(for: currentUserPubKey, noteId: note.identifier ?? "")
         )
