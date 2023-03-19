@@ -26,10 +26,27 @@ struct SideMenuContent: View {
     var body: some View {
         NavigationStack(path: $router.sideMenuPath) {
             VStack(alignment: .leading, spacing: 0) {
-                HStack {
-                    Spacer()
-                    AvatarView(imageUrl: currentUser.author?.profilePhotoURL, size: 120)
-                    Spacer()
+                Button {
+                    router.sideMenuPath.append(SideMenu.Destination.profile)
+                } label: {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Circle()
+                                .foregroundColor(.accent)
+                                .frame(width: 129, height: 129)
+                                .overlay {
+                                    AvatarView(imageUrl: currentUser.author?.profilePhotoURL, size: 120)
+                                }
+                            Spacer()
+                        }
+                        if let name = currentUser.author?.safeName {
+                            PlainText(name)
+                                .foregroundColor(.primaryTxt)
+                                .font(.clarityTitle2)
+                                .padding(.top, 15)
+                        }
+                    }
                 }
                 .padding(.vertical, 80)
                 SideMenuRow(title: .yourProfile, image: Image(systemName: "person.crop.circle"), destination: .profile)
