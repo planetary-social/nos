@@ -120,10 +120,13 @@ struct NotificationCard: View {
                                 .font(.body)
                                 .foregroundColor(.primaryTxt)
                             if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
-                                Text(elapsedTime)
-                                    .lineLimit(1)
-                                    .font(.body)
-                                    .foregroundColor(.secondaryTxt)
+                                VStack {
+                                    Text(elapsedTime)
+                                        .lineLimit(1)
+                                        .font(.body)
+                                        .foregroundColor(.secondaryTxt)
+                                    Spacer()
+                                }
                             }
                             Spacer()
                         }
