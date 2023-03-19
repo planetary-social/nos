@@ -61,7 +61,7 @@ struct SideMenuContent: View {
                 case .profile:
                     ProfileView(author: currentUser.author!)
                 case .about:
-                    Text("placeholder")
+                    AboutView()
                 }
             }
             .navigationDestination(for: Author.self) { profile in

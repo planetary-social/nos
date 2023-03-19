@@ -151,6 +151,12 @@
 		C9A0DADB29C685E500466635 /* SideMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAD929C685E500466635 /* SideMenuButton.swift */; };
 		C9A0DADD29C689C900466635 /* NosNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DADC29C689C900466635 /* NosNavigationBar.swift */; };
 		C9A0DADE29C689C900466635 /* NosNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DADC29C689C900466635 /* NosNavigationBar.swift */; };
+		C9A0DAE029C697A100466635 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DADF29C697A100466635 /* AboutView.swift */; };
+		C9A0DAE129C697A100466635 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DADF29C697A100466635 /* AboutView.swift */; };
+		C9A0DAE429C69F0C00466635 /* HighlightedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE329C69F0C00466635 /* HighlightedText.swift */; };
+		C9A0DAE529C69F0C00466635 /* HighlightedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE329C69F0C00466635 /* HighlightedText.swift */; };
+		C9A0DAE729C69FA000466635 /* Text+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE629C69FA000466635 /* Text+Gradient.swift */; };
+		C9A0DAE829C69FA000466635 /* Text+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE629C69FA000466635 /* Text+Gradient.swift */; };
 		C9ADB133299287D60075E7F8 /* KeyPairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB132299287D60075E7F8 /* KeyPairTests.swift */; };
 		C9ADB135299288230075E7F8 /* KeyFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB134299288230075E7F8 /* KeyFixture.swift */; };
 		C9ADB13629928AF00075E7F8 /* KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C26298DC98800C6714D /* KeyPair.swift */; };
@@ -351,6 +357,9 @@
 		C9A0DAD729C6467600466635 /* CreateProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProfileView.swift; sourceTree = "<group>"; };
 		C9A0DAD929C685E500466635 /* SideMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuButton.swift; sourceTree = "<group>"; };
 		C9A0DADC29C689C900466635 /* NosNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosNavigationBar.swift; sourceTree = "<group>"; };
+		C9A0DADF29C697A100466635 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		C9A0DAE329C69F0C00466635 /* HighlightedText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighlightedText.swift; sourceTree = "<group>"; };
+		C9A0DAE629C69FA000466635 /* Text+Gradient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Text+Gradient.swift"; sourceTree = "<group>"; };
 		C9ADB132299287D60075E7F8 /* KeyPairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPairTests.swift; sourceTree = "<group>"; };
 		C9ADB134299288230075E7F8 /* KeyFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyFixture.swift; sourceTree = "<group>"; };
 		C9ADB13729928CC30075E7F8 /* String+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hex.swift"; sourceTree = "<group>"; };
@@ -695,6 +704,9 @@
 				C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */,
 				C9A0DAD929C685E500466635 /* SideMenuButton.swift */,
 				C9A0DADC29C689C900466635 /* NosNavigationBar.swift */,
+				C9A0DADF29C697A100466635 /* AboutView.swift */,
+				C9A0DAE329C69F0C00466635 /* HighlightedText.swift */,
+				C9A0DAE629C69FA000466635 /* Text+Gradient.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -939,6 +951,7 @@
 				C987F81A29BA4D0E00B44E7A /* ActionButton.swift in Sources */,
 				3F30020929C23895003D4F8B /* OnboardingNotOldEnoughView.swift in Sources */,
 				C9DEC06A298965550078B43A /* RelayView.swift in Sources */,
+				C9A0DAE429C69F0C00466635 /* HighlightedText.swift in Sources */,
 				C94D855C2991479900749478 /* NewNoteView.swift in Sources */,
 				C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */,
 				3F170C78299D816200BC8F8B /* AppController.swift in Sources */,
@@ -949,6 +962,7 @@
 				A32B6C7329A6BE9B00653FF5 /* FollowsView.swift in Sources */,
 				3F30020D29C382EB003D4F8B /* OnboardingLoginView.swift in Sources */,
 				C9DFA972299BF9E8006929C1 /* CompactNoteView.swift in Sources */,
+				C9A0DAE029C697A100466635 /* AboutView.swift in Sources */,
 				A351E1A229BA92240009B7F6 /* ProfileEditView.swift in Sources */,
 				C9DFA969299BEC33006929C1 /* CardStyle.swift in Sources */,
 				A362584229C10AD500D07C9A /* NSSet+Add.swift in Sources */,
@@ -963,6 +977,7 @@
 				C9F0BB6F29A50437000547FC /* NostrConstants.swift in Sources */,
 				CD76865329B793F400085358 /* DiscoverSearchBar.swift in Sources */,
 				C987F85B29BA9ED800B44E7A /* Font.swift in Sources */,
+				C9A0DAE729C69FA000466635 /* Text+Gradient.swift in Sources */,
 				3FB5E651299D28A200386527 /* OnboardingView.swift in Sources */,
 				A3B943CF299AE00100A15A08 /* KeyChain.swift in Sources */,
 				C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */,
@@ -1043,6 +1058,7 @@
 				CD09A75629A521D20063464F /* SettingsView.swift in Sources */,
 				3F30021729C3BFEB003D4F8B /* OnboardingLoginView.swift in Sources */,
 				3FBCDE6D29B648FE00A6C2D4 /* ThreadView.swift in Sources */,
+				C9A0DAE529C69F0C00466635 /* HighlightedText.swift in Sources */,
 				CD09A75729A521D20063464F /* NewNoteView.swift in Sources */,
 				CD09A75829A521D20063464F /* LinearGradient+Planetary.swift in Sources */,
 				CD09A75929A521D20063464F /* Color+Hex.swift in Sources */,
@@ -1072,9 +1088,11 @@
 				C9DEC06B298965550078B43A /* RelayView.swift in Sources */,
 				C9DEC05C298953280078B43A /* Nos.xcdatamodeld in Sources */,
 				C942566A29B66A2800C4202C /* Date+Elapsed.swift in Sources */,
+				C9A0DAE829C69FA000466635 /* Text+Gradient.swift in Sources */,
 				C93CA0C429AE3A1E00921183 /* JSONEvent.swift in Sources */,
 				C9DEC04629894BED0078B43A /* Event+CoreDataClass.swift in Sources */,
 				A32B6C7129A672BC00653FF5 /* CurrentUser.swift in Sources */,
+				C9A0DAE129C697A100466635 /* AboutView.swift in Sources */,
 				C9F84C1A298DBB6300C6714D /* Data+Encoding.swift in Sources */,
 				3F30021629C3BFE8003D4F8B /* OnboardingTermsOfServiceView.swift in Sources */,
 				C9DEC0642989541F0078B43A /* Bundle+Current.swift in Sources */,

@@ -224,6 +224,13 @@ enum Localized: String, Localizable, CaseIterable {
     case contactUs = "Contact Us"
     case shareNos = "Share Nos"
     case yourProfile = "Your Profile"
+    
+    case aboutNos = "Nos is a new social media app built on the Nostr protocol from the team that brought you Planetary. Designed for humans, not algorithms. Learn more at Nos.social."
+    case aboutNosHighlight = "Learn more at Nos.social."
+    case aboutNostr = "Nostr is an open social media ecosystem that puts you in control of your online relationships. Nos is just one of many apps that speak the Nostr language, and you can pick your servers too. Learn more about why Nostr is great."
+    case aboutNostrHighlight = "Learn more about why Nostr is great."
+    case nosIsOpenSource = "Nos is open source! You can read the code, contribute new features, or even fork it and build your own Nostr client. No opaque algorithms or secret rules. Read the code."
+    case nosIsOpenSourceHighlight = "See the code."
 }
 
 // MARK: - Replies
