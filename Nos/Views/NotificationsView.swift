@@ -105,15 +105,18 @@ struct NotificationCard: View {
                                     .font(.body)
                                     .bold()
                                     .foregroundColor(.primaryTxt)
+                                    .lineLimit(1)
                                 Text(actionText)
                                     .font(.body)
                                     .foregroundColor(.primaryTxt)
+                                    .lineLimit(1)
+                                    .fixedSize(horizontal: true, vertical: false)
                                 Spacer()
                             }
                         }
                         HStack {
                             Text("\"" + (note.attributedContent(with: viewContext) ?? "null") + "\"")
-                                .lineLimit(1)
+                                .lineLimit(3)
                                 .font(.body)
                                 .foregroundColor(.primaryTxt)
                             if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
