@@ -66,7 +66,8 @@ extension FetchedResults where Element == Event {
 @objc(Event)
 public class Event: NosManagedObject {
     
-    static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ AND author.muted == false"
+    static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
+        "AND author.muted == false"
     
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -159,7 +160,10 @@ public class Event: NosManagedObject {
     @nonobjc public class func unpublishedEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(format: "author.hexadecimalPublicKey = %@ AND SUBQUERY(shouldBePublishedTo, $relay, TRUEPREDICATE).@count != SUBQUERY(seenOnRelays, $relay, TRUEPREDICATE).@count")
+        fetchRequest.predicate = NSPredicate(format: "author.hexadecimalPublicKey = %@ AND " +
+            "SUBQUERY(shouldBePublishedTo, $relay, TRUEPREDICATE).@count != " +
+            "SUBQUERY(seenOnRelays, $relay, TRUEPREDICATE).@count"
+        )
         return fetchRequest
     }
     

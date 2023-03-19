@@ -270,7 +270,7 @@ extension RelayService {
             backgroundContext.perform {
                 
                 if let event = Event.find(by: eventId, context: self.backgroundContext),
-                   let relay = self.relay(from: socket, in: self.backgroundContext) {
+                    let relay = self.relay(from: socket, in: self.backgroundContext) {
                     
                     if success {
                         print("\(eventId) has published successfully to \(socketUrl)")

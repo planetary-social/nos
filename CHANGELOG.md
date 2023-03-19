@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (16)] - 2023-03-19Z
+- Hide the text in private key text fields
+- Hide replies from muted users
+- Fixed an issue where your own replies would be shown on the notificaitons tab
+- Added a launch screen
+- Various styling updates
+- Added an About screen to the side menu
+- Added a Share Nos button to the side menu 
+
 ## [0.1 (15)] - 2023-03-18Z
 - Added the ability to browse all notes from a single relay on the Discover tab.
 - Added the ability to post a note to a single relay from the New Note screen.

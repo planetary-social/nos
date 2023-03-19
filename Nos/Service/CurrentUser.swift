@@ -10,6 +10,7 @@ import CoreData
 import Logger
 import Dependencies
 
+// swiftlint:disable type_body_length
 class CurrentUser: ObservableObject {
     
     static let shared = CurrentUser()
@@ -49,7 +50,8 @@ class CurrentUser: ObservableObject {
             
             let privateKeyData = Data(privateKeyHex.utf8)
             let publicStatus = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKeyData)
-            Log.info("Saved private key to keychain for user: \(keyPair.publicKeyHex) / \(keyPair.npub). Keychain storage status: \(publicStatus)")
+            Log.info("Saved private key to keychain for user: " +
+                "\(keyPair.publicKeyHex) / \(keyPair.npub). Keychain storage status: \(publicStatus)")
             _privateKeyHex = privateKeyHex
             analytics.identify(with: keyPair)
             

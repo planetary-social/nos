@@ -155,11 +155,12 @@
 		C9A0DAE129C697A100466635 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DADF29C697A100466635 /* AboutView.swift */; };
 		C9A0DAE429C69F0C00466635 /* HighlightedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE329C69F0C00466635 /* HighlightedText.swift */; };
 		C9A0DAE529C69F0C00466635 /* HighlightedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE329C69F0C00466635 /* HighlightedText.swift */; };
-		C9A0DAE729C69FA000466635 /* Text+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE629C69FA000466635 /* Text+Gradient.swift */; };
-		C9A0DAE829C69FA000466635 /* Text+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE629C69FA000466635 /* Text+Gradient.swift */; };
 		C9A0DAEA29C6A34200466635 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE929C6A34200466635 /* ActivityView.swift */; };
 		C9A0DAEB29C6A34200466635 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE929C6A34200466635 /* ActivityView.swift */; };
 		C9A0DAED29C6A66C00466635 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9A0DAEC29C6A66C00466635 /* Launch Screen.storyboard */; };
+		C9A0DAEE29C7392F00466635 /* Text+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE629C69FA000466635 /* Text+Gradient.swift */; };
+		C9A0DAF029C7394D00466635 /* CreateProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAD729C6467600466635 /* CreateProfileView.swift */; };
+		C9A0DAF229C73A4A00466635 /* Text+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE629C69FA000466635 /* Text+Gradient.swift */; };
 		C9ADB133299287D60075E7F8 /* KeyPairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB132299287D60075E7F8 /* KeyPairTests.swift */; };
 		C9ADB135299288230075E7F8 /* KeyFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB134299288230075E7F8 /* KeyFixture.swift */; };
 		C9ADB13629928AF00075E7F8 /* KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C26298DC98800C6714D /* KeyPair.swift */; };
@@ -985,7 +986,6 @@
 				C9F0BB6F29A50437000547FC /* NostrConstants.swift in Sources */,
 				CD76865329B793F400085358 /* DiscoverSearchBar.swift in Sources */,
 				C987F85B29BA9ED800B44E7A /* Font.swift in Sources */,
-				C9A0DAE729C69FA000466635 /* Text+Gradient.swift in Sources */,
 				3FB5E651299D28A200386527 /* OnboardingView.swift in Sources */,
 				A3B943CF299AE00100A15A08 /* KeyChain.swift in Sources */,
 				C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */,
@@ -994,6 +994,7 @@
 				A3B943D5299D514800A15A08 /* Follow+CoreDataClass.swift in Sources */,
 				C92DF80529C25DE900400561 /* URL+MimeTypes.swift in Sources */,
 				3F60F42929B27D3E000D62C4 /* ThreadView.swift in Sources */,
+				C9A0DAEE29C7392F00466635 /* Text+Gradient.swift in Sources */,
 				C95D68A9299E709900429F86 /* LinearGradient+Planetary.swift in Sources */,
 				3F43C47629A9625700E896A0 /* AuthorReference+CoreDataClass.swift in Sources */,
 				C9ADB13D29929B540075E7F8 /* Bech32.swift in Sources */,
@@ -1068,6 +1069,7 @@
 				3F30021729C3BFEB003D4F8B /* OnboardingLoginView.swift in Sources */,
 				3FBCDE6D29B648FE00A6C2D4 /* ThreadView.swift in Sources */,
 				C9A0DAE529C69F0C00466635 /* HighlightedText.swift in Sources */,
+				C9A0DAF229C73A4A00466635 /* Text+Gradient.swift in Sources */,
 				CD09A75729A521D20063464F /* NewNoteView.swift in Sources */,
 				CD09A75829A521D20063464F /* LinearGradient+Planetary.swift in Sources */,
 				C9A0DAEB29C6A34200466635 /* ActivityView.swift in Sources */,
@@ -1098,7 +1100,6 @@
 				C9DEC06B298965550078B43A /* RelayView.swift in Sources */,
 				C9DEC05C298953280078B43A /* Nos.xcdatamodeld in Sources */,
 				C942566A29B66A2800C4202C /* Date+Elapsed.swift in Sources */,
-				C9A0DAE829C69FA000466635 /* Text+Gradient.swift in Sources */,
 				C93CA0C429AE3A1E00921183 /* JSONEvent.swift in Sources */,
 				C9DEC04629894BED0078B43A /* Event+CoreDataClass.swift in Sources */,
 				A32B6C7129A672BC00653FF5 /* CurrentUser.swift in Sources */,
@@ -1112,6 +1113,7 @@
 				C9F0BB6D29A503D9000547FC /* Int+Bool.swift in Sources */,
 				C942566B29B66B2F00C4202C /* NotificationsView.swift in Sources */,
 				C9A0DADE29C689C900466635 /* NosNavigationBar.swift in Sources */,
+				C9A0DAF029C7394D00466635 /* CreateProfileView.swift in Sources */,
 				3FFF3BD029A9645F00DD0B72 /* AuthorReference+CoreDataClass.swift in Sources */,
 				C9F0BB6C29A503D6000547FC /* PublicKey.swift in Sources */,
 				C9DEC06F2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,
@@ -1287,7 +1289,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Nos/Nos.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_ASSET_PATHS = "\"Nos/Views/Preview Content\"";
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1330,7 +1332,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Nos/Nos.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_ASSET_PATHS = "\"Nos/Views/Preview Content\"";
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1370,7 +1372,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "";
@@ -1392,7 +1394,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "";
@@ -1414,7 +1416,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
@@ -1436,7 +1438,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;

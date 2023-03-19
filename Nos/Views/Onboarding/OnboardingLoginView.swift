@@ -74,7 +74,7 @@ struct OnboardingLoginView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
-        .navigationTitle(Localized.loginToYourAccount.string)
+        .nosNavigationBar(title: Localized.login)
         .alert(isPresented: $showError) {
             Alert(
                 title: Localized.invalidKey.view,
