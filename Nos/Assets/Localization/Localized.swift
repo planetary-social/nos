@@ -229,7 +229,7 @@ enum Localized: String, Localizable, CaseIterable {
     case aboutNosHighlight = "Learn more at Nos.social."
     case aboutNostr = "Nostr is an open social media ecosystem that puts you in control of your online relationships. Nos is just one of many apps that speak the Nostr language, and you can pick your servers too. Learn more about why Nostr is great."
     case aboutNostrHighlight = "Learn more about why Nostr is great."
-    case nosIsOpenSource = "Nos is open source! You can read the code, contribute new features, or even fork it and build your own Nostr client. No opaque algorithms or secret rules. Read the code."
+    case nosIsOpenSource = "Nos is open source! You can read the code, contribute new features, or even fork it and build your own Nostr client. No opaque algorithms or secret rules. See the code."
     case nosIsOpenSourceHighlight = "See the code."
 }
 
