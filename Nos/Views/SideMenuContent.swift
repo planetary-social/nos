@@ -25,97 +25,31 @@ struct SideMenuContent: View {
     var body: some View {
         NavigationStack(path: $router.sideMenuPath) {
             VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    Spacer()
+                    AvatarView(imageUrl: currentUser.author?.profilePhotoURL, size: 120)
+                    Spacer()
+                }
+                .padding(.vertical, 80)
+                SideMenuRow(title: .yourProfile, image: Image(systemName: "person.crop.circle"), destination: .profile)
+                SideMenuRow(title: .settings, image: Image(systemName: "gear"), destination: .settings)
+                SideMenuRow(
+                    title: .relays,
+                    image: Image(systemName: "antenna.radiowaves.left.and.right"),
+                    destination: .relays
+                )
+                SideMenuRow(title: .about, image: Image(systemName: "questionmark.circle"), destination: .about)
+                SideMenuRow(title: .contactUs, image: Image(systemName: "envelope")) {
+                    isShowingReportABugMailView = true
+                }
+                .disabled(!MFMailComposeViewController.canSendMail())
+                .sheet(isPresented: $isShowingReportABugMailView) {
+                    ReportABugMailView(result: self.$result)
+                        .onAppear {
+                            analytics.showedSupport()
+                        }
+                }
                 Spacer()
-                HStack {
-                    Button {
-                        do {
-                            guard let keyPair = currentUser.keyPair else { return }
-                            try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
-                            router.sideMenuPath.append(SideMenu.Destination.profile)
-                        } catch {
-                            // Replace this implementation with code to handle the error appropriately.
-                            let nsError = error as NSError
-                            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-                        }
-                    } label: {
-                        HStack(alignment: .center) {
-                            Image(systemName: "person.crop.circle")
-                            Text("Your Profile")
-                                .foregroundColor(.primaryTxt)
-                                .bold()
-                        }
-                    }
-                    
-                    Spacer()
-                }
-                .padding()
-                HStack {
-                    Button {
-                        router.sideMenuPath.append(SideMenu.Destination.settings)
-                    } label: {
-                        HStack(alignment: .center) {
-                            Image(systemName: "gear")
-                            Text("Settings")
-                                .foregroundColor(.primaryTxt)
-                                .bold()
-                        }
-                    }
-                    
-                    Spacer()
-                }
-                .padding()
-                HStack {
-                    Button {
-                        router.sideMenuPath.append(SideMenu.Destination.relays)
-                    } label: {
-                        HStack(alignment: .center) {
-                            Image(systemName: "antenna.radiowaves.left.and.right")
-                            Text(Localized.relays.string)
-                                .foregroundColor(.primaryTxt)
-                                .bold()
-                        }
-                    }
-                    
-                    Spacer()
-                }
-                .padding()
-                HStack {
-                    Button {
-                    } label: {
-                        HStack(alignment: .center) {
-                            Image(systemName: "questionmark.circle")
-                            Text("Help and Support")
-                                .foregroundColor(.primaryTxt)
-                                .bold()
-                        }
-                    }
-                    
-                    Spacer()
-                }
-                .padding()
-                HStack {
-                    Button {
-                        isShowingReportABugMailView = true
-                    } label: {
-                        HStack(alignment: .center) {
-                            Image(systemName: "ant.circle.fill")
-                            Text("Report a Bug")
-                                .foregroundColor(.primaryTxt)
-                                .bold()
-                        }
-                    }
-                    .disabled(!MFMailComposeViewController.canSendMail())
-                    .sheet(isPresented: $isShowingReportABugMailView) {
-                        ReportABugMailView(result: self.$result)
-                            .onAppear {
-                                analytics.showedSupport()
-                            }
-                    }
-                    
-                    Spacer()
-                }
-                .padding()
-                Spacer(minLength: 0)
             }
             .background(Color.appBg)
             .navigationDestination(for: SideMenu.Destination.self) { destination in
@@ -123,9 +57,11 @@ struct SideMenuContent: View {
                 case .settings:
                     SettingsView()
                 case .relays:
-                    RelayView(author: CurrentUser.shared.author!)
+                    RelayView(author: currentUser.author!)
                 case .profile:
-                    ProfileView(author: CurrentUser.shared.author!)
+                    ProfileView(author: currentUser.author!)
+                case .about:
+                    Text("placeholder")
                 }
             }
             .navigationDestination(for: Author.self) { profile in
@@ -136,5 +72,36 @@ struct SideMenuContent: View {
                 }
             }
         }
+    }
+}
+
+struct SideMenuRow: View {
+    
+    var title: Localized
+    var image: Image
+    var destination: SideMenu.Destination? = nil
+    var action: (() -> Void)? = nil
+    
+    @EnvironmentObject private var router: Router
+    
+    var body: some View {
+        Button {
+            if let destination {
+                router.sideMenuPath.append(destination)
+            }
+            if let action {
+                action()
+            }
+        } label: {
+            HStack(alignment: .center) {
+                image
+                    .font(.clarityTitle2)
+                PlainText(title.string)
+                    .font(.clarityTitle2)
+                    .foregroundColor(.primaryTxt)
+                Spacer()
+            }
+        }
+        .padding()
     }
 }

@@ -15,6 +15,7 @@ struct SideMenu: View {
         case settings
         case relays
         case profile
+        case about
     }
     
     let menuWidth: CGFloat
