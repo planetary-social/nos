@@ -37,9 +37,7 @@ struct FollowsView: View {
             .padding(.top)
         }
         .background(Color.appBg)
-        .navigationBarTitle(Localized.follows.string, displayMode: .inline)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+        .nosNavigationBar(title: .follows)
         .task {
             refreshFollows()
         }

@@ -128,9 +128,7 @@ struct RelayView: View {
             }
             #endif
         }
-        .navigationBarTitle(Localized.relays.string, displayMode: .inline)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+        .nosNavigationBar(title: .relays)
         .onAppear {
             analytics.showedRelays()
         }

@@ -78,9 +78,7 @@ struct SettingsView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
-        .navigationBarTitle(Localized.settings.string, displayMode: .inline)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+        .nosNavigationBar(title: .settings)
         .alert(isPresented: $showError) {
             Alert(
                 title: Localized.invalidKey.view,

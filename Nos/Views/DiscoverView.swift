@@ -220,17 +220,7 @@ struct DiscoverView: View {
             .navigationBarTitle(Localized.discover.string, displayMode: .inline)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
-            .navigationBarItems(
-                leading: Button(
-                    action: {
-                        router.toggleSideMenu()
-                    },
-                    label: {
-                        Image(systemName: "line.3.horizontal")
-                            .foregroundColor(.nosSecondary)
-                    }
-                )
-            )
+            .navigationBarItems(leading: SideMenuButton())
         }
     }
     
@@ -378,7 +368,8 @@ struct RelayPickerToolbarButton: ToolbarContent {
                 action()
             } label: {
                 HStack {
-                    Text(title)
+                    PlainText(title)
+                        .font(.clarityTitle3)
                         .foregroundColor(.primaryTxt)
                         .bold()
                         .padding(.leading, 14)

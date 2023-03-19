@@ -97,9 +97,7 @@ struct ProfileView: View {
                 }
             })
         }
-        .navigationBarTitle(Localized.profile.rawValue, displayMode: .inline)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+        .nosNavigationBar(title: .profile)
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
         }

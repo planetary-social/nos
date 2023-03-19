@@ -19,6 +19,21 @@ extension Font {
             forTextStyle: .body
         ).pointSize)
     
+    static var clarityTitle = Font
+        .custom("ClarityCity-Bold", size: UIFont.preferredFont(
+            forTextStyle: .title1
+        ).pointSize)
+    
+    static var clarityTitle2 = Font
+        .custom("ClarityCity-Bold", size: UIFont.preferredFont(
+            forTextStyle: .title2
+        ).pointSize)
+    
+    static var clarityTitle3 = Font
+        .custom("ClarityCity-Bold", size: UIFont.preferredFont(
+            forTextStyle: .title3
+        ).pointSize)
+    
     static var clarityCaption = Font
         .custom("ClarityCity-Regular", size: UIFont.preferredFont(
             forTextStyle: .caption1
@@ -62,6 +77,14 @@ extension Font {
             for: .selected
         )
     }
+}
+
+extension UIFont {
+    
+    static var clarity = UIFont(
+        name: "ClarityCity-Regular",
+        size: UIFont.preferredFont(forTextStyle: .body).pointSize
+    )
 }
 
 // swiftlint:disable identifier_name

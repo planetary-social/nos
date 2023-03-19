@@ -19,18 +19,7 @@ struct ProfileTab: View {
     var body: some View {
         NavigationStack(path: $path) {
             ProfileView(author: author)
-                .navigationBarItems(
-                    leading:
-                        Button(
-                            action: {
-                                router.toggleSideMenu()
-                            },
-                            label: {
-                                Image(systemName: "line.3.horizontal")
-                                    .foregroundColor(.nosSecondary)
-                            }
-                        )
-                )
+                .navigationBarItems(leading: SideMenuButton())
                 .navigationDestination(for: Author.self) { profile in
                     if profile == CurrentUser.shared.author, CurrentUser.shared.editing {
                         ProfileEditView(author: profile)

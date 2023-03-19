@@ -48,20 +48,8 @@ struct NotificationsView: View {
             })
             .background(Color.appBg)
             .padding(.top, 1)
-            .navigationBarTitle(Localized.notifications.string, displayMode: .inline)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
-            .navigationBarItems(
-                leading: Button(
-                    action: {
-                        router.toggleSideMenu()
-                    },
-                    label: {
-                        Image(systemName: "line.3.horizontal")
-                            .foregroundColor(.nosSecondary)
-                    }
-                )
-            )
+            .nosNavigationBar(title: .notifications)
+            .navigationBarItems(leading: SideMenuButton())
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }

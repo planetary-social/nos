@@ -99,9 +99,7 @@ struct RepliesView: View {
                 .padding(.bottom)
             }
             .padding(.top, 1)
-            .navigationBarTitle(Localized.thread.string, displayMode: .inline)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+            .nosNavigationBar(title: .thread)
             .onAppear {
                 subscribeToReplies()
             }

@@ -112,6 +112,7 @@ struct ProfileEditView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
+        .nosNavigationBar(title: .editProfile)
         .navigationBarItems(
             trailing:
                 Group {

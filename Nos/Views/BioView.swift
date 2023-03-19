@@ -90,10 +90,10 @@ struct BioView: View {
         .sheet(isPresented: $showingBio) {
             NavigationView {
                 SelectableText(bio ?? "")
+                    .foregroundColor(.primaryTxt)
+                    .nosNavigationBar(title: .bio)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.cardBackground)
-                    .navigationTitle(Localized.bio.string)
-                    .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {

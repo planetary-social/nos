@@ -25,6 +25,10 @@ struct SelectableText: UIViewRepresentable {
     
     init(_ string: String) {
         self.attributedText = AttributedString(string)
+        attributedText.setAttributes(AttributeContainer([
+            .font: UIFont.clarity,
+            .foregroundColor: UIColor.primaryTxt,
+        ]))
     }
 
     private var font = UIFont.preferredFont(forTextStyle: .body)

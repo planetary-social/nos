@@ -101,20 +101,8 @@ struct HomeFeedView: View {
                         .padding()
                 }
             })
-            .navigationBarTitle(Localized.homeFeed.string, displayMode: .inline)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
-            .navigationBarItems(
-                leading: Button(
-                    action: {
-                        router.toggleSideMenu()
-                    },
-                    label: {
-                        Image(systemName: "line.3.horizontal")
-                            .foregroundColor(.nosSecondary)
-                    }
-                )
-            )
+            .navigationBarItems(leading: SideMenuButton())
+            .nosNavigationBar(title: .homeFeed)
         }
         .refreshable {
             refreshHomeFeed()
@@ -151,6 +139,14 @@ struct ContentView_Previews: PreviewProvider {
     
     static var router = Router()
     
+    static var currentUser: CurrentUser = {
+        let currentUser = CurrentUser()
+        currentUser.context = previewContext
+        currentUser.relayService = relayService
+        currentUser.keyPair = KeyFixture.keyPair
+        return currentUser
+    }()
+    
     static var shortNote: Event {
         let note = Event(context: previewContext)
         note.kind = 1
@@ -174,18 +170,15 @@ struct ContentView_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        NavigationView {
-            HomeFeedView(user: user)
-        }
-        .environment(\.managedObjectContext, previewContext)
-        .environmentObject(relayService)
-        .environmentObject(router)
+        HomeFeedView(user: user)
+            .environment(\.managedObjectContext, previewContext)
+            .environmentObject(relayService)
+            .environmentObject(router)
+            .environmentObject(currentUser)
         
-        NavigationView {
-            HomeFeedView(user: user)
-        }
-        .environment(\.managedObjectContext, emptyPreviewContext)
-        .environmentObject(emptyRelayService)
-        .environmentObject(router)
+        HomeFeedView(user: user)
+            .environment(\.managedObjectContext, emptyPreviewContext)
+            .environmentObject(emptyRelayService)
+            .environmentObject(router)
     }
 }
