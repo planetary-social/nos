@@ -47,7 +47,7 @@ struct CompactNoteView: View {
                     })
             } else {
                 Text(note.attributedContent(with: viewContext) ?? "")
-                    .lineLimit(5)
+                    .lineLimit(8)
                     .font(.body)
                     .foregroundColor(.primaryTxt)
                     .accentColor(.accent)

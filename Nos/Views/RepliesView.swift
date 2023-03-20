@@ -74,7 +74,7 @@ struct RepliesView: View {
         }
         
         let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
-        let filter = Filter(kinds: [.text], eTags: eTags)
+        let filter = Filter(kinds: [.text, .like], eTags: eTags)
         let subID = relayService.requestEventsFromAll(filter: filter)
         subscriptionIDs.append(subID)
     }

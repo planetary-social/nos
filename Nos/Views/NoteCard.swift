@@ -31,8 +31,7 @@ struct NoteCard: View {
     var repliesRequest: FetchRequest<Event>
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
     
-    var noteLikedByUserRequest: FetchRequest<Event>
-    var noteLikedByUser: FetchedResults<Event> { noteLikedByUserRequest.wrappedValue }
+    @FetchRequest private var likes: FetchedResults<Event>
     
     @ObservedObject private var currentUser: CurrentUser = .shared
     
@@ -82,6 +81,22 @@ struct NoteCard: View {
     private let showReplyCount: Bool
     private var hideOutOfNetwork: Bool
     
+    var currentUserLikesNote: Bool {
+        likes
+            .filter {
+                $0.author?.hexadecimalPublicKey == currentUser.author?.hexadecimalPublicKey
+            }
+            .compactMap { $0.eventReferences?.lastObject as? EventReference }
+            .contains(where: { $0.eventId == note.identifier })
+    }
+    
+    var likeCount: Int {
+        likes
+            .compactMap { $0.eventReferences?.lastObject as? EventReference }
+            .map { $0.eventId }
+            .count
+    }
+    
     init(
         author: Author,
         note: Event,
@@ -102,9 +117,7 @@ struct NoteCard: View {
             self.repliesRequest = FetchRequest(fetchRequest: Event.emptyRequest())
         }
         let currentUserPubKey = CurrentUser.shared.publicKey ?? ""
-        self.noteLikedByUserRequest = FetchRequest(
-        fetchRequest: Event.noteIsLikedByUser(for: currentUserPubKey, noteId: note.identifier ?? "")
-        )
+        _likes = FetchRequest(fetchRequest: Event.likes(noteId: note.identifier!))
     }
     
     var attributedAuthor: AttributedString {
@@ -178,8 +191,7 @@ struct NoteCard: View {
                         }
                         Spacer()
                         Image.buttonReply
-                        if !noteLikedByUser.isEmpty &&
-                        currentNoteIdMatchesLastETag(noteLikedByUser.compactMap({ $0 })) {
+                        if currentUserLikesNote {
                             Image.buttonLikeActive
                         } else {
                             Button {
@@ -187,6 +199,11 @@ struct NoteCard: View {
                             } label: {
                                 Image.buttonLikeDefault
                             }
+                        }
+                        if likeCount > 0 {
+                            Text(likeCount.description)
+                                .font(.body)
+                                .foregroundColor(.secondaryTxt)
                         }
                     }
                     .padding(15)
@@ -220,26 +237,6 @@ struct NoteCard: View {
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
         .padding(padding)
-    }
-    
-    func currentNoteIdMatchesLastETag(_ eventList: [Event]) -> Bool {
-        var lastETagId = ""
-        for event in eventList {
-            if let tags = event.allTags as? [[String]] {
-                let eTagIds = tags.compactMap { tag in
-                    if tag.count > 1 && tag[safe: 0] == "e" {
-                        return tag[safe: 1]
-                    } else {
-                        return nil
-                    }
-                }
-                lastETagId = eTagIds.last ?? ""
-                if lastETagId == note.identifier {
-                    return true
-                }
-            }
-        }
-        return false
     }
     
     func likeNote() {
