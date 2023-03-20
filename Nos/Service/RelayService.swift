@@ -319,6 +319,9 @@ extension RelayService {
     // swiftlint:enable legacy_objc_type
     
     private func parseResponse(_ response: String, _ socket: WebSocket) {
+        let relayHost = socket.request.url?.host ?? "unknown relay"
+        Log.info("from \(relayHost): \(response)")
+        
         do {
             guard let responseData = response.data(using: .utf8) else {
                 throw EventError.utf8Encoding
@@ -329,14 +332,13 @@ extension RelayService {
                 print("Error: got unparseable response: \(response)")
                 return
             }
+            
             switch responseType {
             case "EVENT":
                 #if DEBUG
-                Log.info(response)
                 #endif
                 parseEvent(responseArray, socket)
             case "NOTICE":
-                Log.info(response)
                 if responseArray[safe: 1] as? String == "rate limited" {
                     analytics.rateLimited(by: socket)
                 }

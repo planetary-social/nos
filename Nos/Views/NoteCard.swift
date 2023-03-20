@@ -195,10 +195,18 @@ struct NoteCard: View {
                 GoldenPostView(author: author, note: note)
             }
         }
-        .onAppear {
-            Task(priority: .userInitiated) { [author, relayService] in
-                if author.needsMetadata {
-                    _ = author.requestMetadata(using: relayService)
+        .task {
+            if author.needsMetadata {
+                _ = author.requestMetadata(using: relayService)
+            }
+            
+            if note.isVerified == false, let publicKey = author.publicKey {
+                let verified = try? publicKey.verifySignature(on: note)
+                if verified != true {
+                    Log.error("Found an unverified event: \(note.identifier!)")
+                    viewContext.delete(note)
+                } else {
+                    note.isVerified = true
                 }
             }
         }

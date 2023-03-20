@@ -88,23 +88,12 @@ struct DiscoverView: View {
                 // two hops is too large of a request and causes the websocket to close.
                 let twoHopsFilter = Filter(
                     kinds: [.text],
-                    limit: 200,
+                    limit: 50,
                     since: fetchSinceDate
                 )
                 
                 subscriptionIds.append(relayService.requestEventsFromAll(filter: twoHopsFilter))
             }
-        }
-
-        if let currentUser = CurrentUser.shared.author {
-            let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
-            let userLikesFilter = Filter(
-                authorKeys: currentUserAuthorKeys,
-                kinds: [.like],
-                limit: 100
-            )
-            let userLikesSub = relayService.requestEventsFromAll(filter: userLikesFilter)
-            subscriptionIds.append(userLikesSub)
         }
     }
     
@@ -112,7 +101,6 @@ struct DiscoverView: View {
         NavigationStack(path: $router.discoverPath) {
             ZStack {
                 DiscoverGrid(predicate: predicate, columns: $columns)
-                    .padding(.horizontal)
 
                 if showRelayPicker, let author = currentUser.author {
                     RelayPicker(

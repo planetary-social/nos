@@ -1646,7 +1646,7 @@
 				C92DF80229C22E4F00400561 /* Nos 2.xcdatamodel */,
 				C9DEBFD6298941000078B43A /* Nos.xcdatamodel */,
 			);
-			currentVersion = CD4D210D29C350C9000F8188 /* Nos 3.xcdatamodel */;
+			currentVersion = C9A0DAF329C870D500466635 /* Nos 4.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

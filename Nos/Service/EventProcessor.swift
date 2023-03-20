@@ -23,21 +23,12 @@ enum EventProcessor {
     static func parse(
         jsonEvent: JSONEvent,
         from relay: Relay?,
-        in parseContext: NSManagedObjectContext,
-        skipVerification: Bool = false
+        in parseContext: NSManagedObjectContext
     ) throws -> Event {
         let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: relay, context: parseContext)
         
-        guard let publicKey = event.author?.publicKey else {
+        guard event.author?.publicKey != nil else {
             throw EventError.missingAuthor
-        }
-        
-        if skipVerification == false {
-            guard try publicKey.verifySignature(on: event) else {
-                parseContext.delete(event)
-                print("Invalid signature on event: \(jsonEvent)")
-                throw EventError.invalidSignature(event)
-            }
         }
         
         try parseContext.save()

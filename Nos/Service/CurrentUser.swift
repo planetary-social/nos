@@ -192,7 +192,7 @@ class CurrentUser: ObservableObject {
                 
                 // TODO: check cancellation
                 // Do this slowly so we don't get rate limited
-                try await Task.sleep(for: .seconds(1))
+                try await Task.sleep(for: .seconds(2))
             }
         }
     }
