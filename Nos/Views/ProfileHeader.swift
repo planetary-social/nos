@@ -16,7 +16,8 @@ struct ProfileHeader: View {
 
     @State private var subscriptionId: String = ""
     
-    @State private var verifiedNip05Identifier: String = ""
+    @State private var nip05Identifier: String = ""
+    @State private var verifiedNip05Identifier: Bool?
     
     var followsRequest: FetchRequest<Follow>
     var followsResult: FetchedResults<Follow> { followsRequest.wrappedValue }
@@ -88,20 +89,22 @@ struct ProfileHeader: View {
                             }
                         }
                         
-                        if !verifiedNip05Identifier.isEmpty || !(author.nip05 ?? "").isEmpty {
+                        if let verifiedNip05Identifier,
+                            let nip05Identifier = author.nip05,
+                            !nip05Identifier.isEmpty {
                             Spacer()
                             Button {
-                                if !verifiedNip05Identifier.isEmpty {
-                                    let domain = relayService.domain(from: verifiedNip05Identifier)
+                                if verifiedNip05Identifier {
+                                    let domain = relayService.domain(from: nip05Identifier)
                                     let urlString = "https://\(domain)"
                                     guard let url = URL(string: urlString) else { return }
                                     UIApplication.shared.open(url)
                                 }
                             } label: {
-                                if !verifiedNip05Identifier.isEmpty {
-                                    Text("\(relayService.identifierToShow(verifiedNip05Identifier))")
+                                if verifiedNip05Identifier {
+                                    Text("\(relayService.identifierToShow(nip05Identifier))")
                                 } else {
-                                    Text("\(author.nip05 ?? "")")
+                                    Text(nip05Identifier)
                                         .strikethrough()
                                 }
                             }
@@ -131,14 +134,15 @@ struct ProfileHeader: View {
         }
         .onAppear {
             Task.detached(priority: .userInitiated) {
-                if let nip05Identifier = await author.nip05, let publicKey = await author.publicKey?.hex {
-                    let identifierVerified = await relayService.verifyInternetIdentifier(
-                    identifier: nip05Identifier,
-                    userPublicKey: publicKey
+                if let nip05Identifier = await author.nip05,
+                    let publicKey = await author.publicKey?.hex {
+                    let verifiedNip05Identifier = await relayService.verifyInternetIdentifier(
+                        identifier: nip05Identifier,
+                        userPublicKey: publicKey
                     )
-                    if identifierVerified {
-                        await MainActor.run {
-                            verifiedNip05Identifier = nip05Identifier
+                    await MainActor.run {
+                        withAnimation {
+                            self.verifiedNip05Identifier = verifiedNip05Identifier
                         }
                     }
                 }
