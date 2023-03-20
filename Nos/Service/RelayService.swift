@@ -14,8 +14,9 @@ import Dependencies
 final class RelayService: ObservableObject {
     private var persistenceController: PersistenceController
     // TODO: use a swift Actor to synchronize access to this
-    /// Important: Only access this from the `processingQueue`
+    /// Important: lock requestQueueLock before using
     private var requestFilterQueue = [Filter]()
+    private var requestQueueLock = NSLock()
     private var sockets = [WebSocket]()
     private var timer: Timer?
     private var backgroundContext: NSManagedObjectContext
@@ -35,6 +36,7 @@ final class RelayService: ObservableObject {
         timer = Timer.scheduledTimer(timeInterval: 120, target: self, selector: pubSel, userInfo: nil, repeats: true)
     }
     
+    // TODO: lock requestQueueLock before calling this
     var activeSubscriptions: [String] {
         requestFilterQueue
             .filter { $0.subscriptionStartDate != nil }
@@ -42,9 +44,10 @@ final class RelayService: ObservableObject {
     }
         
     private func removeFilter(for subscription: String) {
-        // Remove this filter from the queue
-        if let foundFilterIndex = requestFilterQueue.firstIndex(where: { $0.subscriptionId == subscription }) {
-            requestFilterQueue.remove(at: foundFilterIndex)
+        requestQueueLock.withLock {
+            if let foundFilterIndex = requestFilterQueue.firstIndex(where: { $0.subscriptionId == subscription }) {
+                requestFilterQueue.remove(at: foundFilterIndex)
+            }
         }
     }
         
@@ -99,8 +102,10 @@ extension RelayService {
         processingQueue.async {
             guard let address = relay.address else { return }
             if let socket = self.socket(for: address) {
-                for subId in self.activeSubscriptions {
-                    self.sendClose(from: socket, subscription: subId)
+                self.requestQueueLock.withLock {
+                    for subId in self.activeSubscriptions {
+                        self.sendClose(from: socket, subscription: subId)
+                    }
                 }
                 
                 self.close(socket: socket)
@@ -127,7 +132,7 @@ extension RelayService {
     func requestEventsFromAll(filter: Filter = Filter(), relays: [Relay]? = nil) -> String {
         var subscriptionID: String?
   
-        processingQueue.sync {
+        requestQueueLock.withLock {
 
             // TODO: be smarter about redundnat requests particularly now that we are using the since date.
             // Ignore redundant requests
@@ -160,6 +165,9 @@ extension RelayService {
         openSockets(for: relays)
         clearStaleSubscriptions()
         
+        requestQueueLock.lock()
+        defer { requestQueueLock.unlock() }
+        
         if let filter {
             requestFilterQueue.append(filter)
         }
@@ -179,7 +187,9 @@ extension RelayService {
             }
             
             filter.subscriptionStartDate = .now
+            requestQueueLock.unlock()
             sockets.forEach { requestEvents(from: $0, subId: filter.subscriptionId, filter: filter) }
+            requestQueueLock.lock()
         }
         
         Log.info("\(activeSubscriptions.count) active subscriptions. " +
@@ -187,11 +197,14 @@ extension RelayService {
     }
     
     private func clearStaleSubscriptions() {
-        let staleFilters = requestFilterQueue.filter {
-            if $0.limit == 1, let filterStartedAt = $0.subscriptionStartDate {
-                return filterStartedAt.distance(to: .now) > 5
+        var staleFilters = [Filter]()
+        requestQueueLock.withLock {
+            staleFilters = requestFilterQueue.filter {
+                if $0.limit == 1, let filterStartedAt = $0.subscriptionStartDate {
+                    return filterStartedAt.distance(to: .now) > 5
+                }
+                return false
             }
-            return false
         }
         
         if !staleFilters.isEmpty {
@@ -211,12 +224,14 @@ extension RelayService {
             return
         }
         
-        if let subId = responseArray[1] as? String {
-            if let filter = requestFilterQueue.first(where: { $0.subscriptionId == subId }),
-                filter.limit == 1 {
-                print("\(subId) has finished responding. Closing.")
-                // This is a one-off request. Close it.
-                sendClose(from: socket, subscription: subId)
+        requestQueueLock.withLock {
+            if let subId = responseArray[1] as? String {
+                if let filter = requestFilterQueue.first(where: { $0.subscriptionId == subId }),
+                    filter.limit == 1 {
+                    print("\(subId) has finished responding. Closing.")
+                    // This is a one-off request. Close it.
+                    sendClose(from: socket, subscription: subId)
+                }
             }
         }
     }
@@ -244,7 +259,10 @@ extension RelayService {
                     
                     relay.unwrap { event.trackDelete(on: $0, context: self.backgroundContext) }
 
-                    let fulfilledFilters = self.requestFilterQueue.filter { $0.isFulfilled(by: event) }
+                    var fulfilledFilters = [Filter]()
+                    self.requestQueueLock.withLock {
+                        fulfilledFilters = self.requestFilterQueue.filter { $0.isFulfilled(by: event) }
+                    }
                     if !fulfilledFilters.isEmpty {
                         Log.info("found \(fulfilledFilters.count) fulfilled filter. Closing.")
                         fulfilledFilters.forEach { self.sendCloseToAll(subscriptions: [$0.subscriptionId]) }
@@ -477,6 +495,22 @@ extension RelayService {
         }
         return nil
     }
+    
+    private func handleConnection(from client: WebSocketClient) {
+        if let socket = client as? WebSocket {
+            Log.info("websocket is connected: \(String(describing: socket.request.url?.host))")
+        } else {
+            Log.info("websocket connected with unknown host")
+        }
+        
+        publishFailedEvents()
+        requestQueueLock.withLock {
+            requestFilterQueue
+                .filter { $0.subscriptionStartDate != nil }
+                .forEach { self.requestEvents(from: client, subId: $0.subscriptionId, filter: $0) }
+        }
+        
+    }
 }
 
 // MARK: WebSocketDelegate
@@ -487,18 +521,10 @@ extension RelayService: WebSocketDelegate {
         }
         
         switch event {
-        case .connected(let headers):
-            print("websocket is connected: \(headers)")
-            publishFailedEvents()
-            requestFilterQueue
-                .filter { $0.subscriptionStartDate != nil }
-                .forEach { self.requestEvents(from: client, subId: $0.subscriptionId, filter: $0) }
+        case .connected:
+            handleConnection(from: client)
         case .viabilityChanged(let isViable) where isViable:
-            print("websocket is connected")
-            publishFailedEvents()
-            requestFilterQueue
-                .filter { $0.subscriptionStartDate != nil }
-                .forEach { self.requestEvents(from: client, subId: $0.subscriptionId, filter: $0) }
+            handleConnection(from: client)
         case .disconnected(let reason, let code):
             if let index = sockets.firstIndex(where: { $0 === socket }) {
                 sockets.remove(at: index)
