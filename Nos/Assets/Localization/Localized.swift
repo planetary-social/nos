@@ -175,6 +175,7 @@ enum Localized: String, Localizable, CaseIterable {
     case done = "Done"
     case editProfile = "Edit Profile"
     case youNeedToEnterAPrivateKeyBeforePosting = "You need to enter a private key in Settings before you can publish posts."
+    case nostrBuildHelp = "Use nostr.build to post image links."
     
     case relays = "Relays"
     case noRelaysMessage = "No relays yet! Add one below to get started"

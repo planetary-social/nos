@@ -21,6 +21,8 @@ struct HighlightedText: View {
     /// The gradient that will be used to highlight the word.
     let highlightGradient: LinearGradient
     
+    let foregroundColor: Color
+    
     /// A link that the highlighted word will open if tapped. Optional.
     let link: URL?
     
@@ -41,10 +43,11 @@ struct HighlightedText: View {
     ///   - highlightedWord: The word that should be highlighted, if any. Must be a substring of `text`.
     ///   - highlight: The gradient that will be used to highlight the word.
     ///   - link: A link that the highlighted word will open if tapped. Optional.
-    init(_ text: String, highlightedWord: String?, highlight: LinearGradient, link: URL?) {
+    init(_ text: String, highlightedWord: String?, highlight: LinearGradient, textColor: Color = .primaryTxt, link: URL?) {
         self.text = text
         self.highlightedWord = highlightedWord
         self.highlightGradient = highlight
+        self.foregroundColor = textColor
         self.link = link
         
         // If we have a highlighted word we break it up into segments.
@@ -86,7 +89,7 @@ struct HighlightedText: View {
                 textView(markdown: string).foregroundColor(.clear)
             },
             bodyBuilder: { string in
-                textView(markdown: string).foregroundColor(.primaryTxt)
+                textView(markdown: string).foregroundColor(foregroundColor)
             }
         )
     }

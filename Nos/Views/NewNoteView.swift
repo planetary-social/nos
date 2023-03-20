@@ -27,21 +27,46 @@ struct NewNoteView: View {
 
     @Binding var isPresented: Bool
     
+    enum FocusedField {
+        case textEditor
+    }
+    
+    @FocusState private var focusedField: FocusedField?
+
     var body: some View {
         NavigationStack {
             ZStack {
-                Form {
-                    TextEditor(text: $postText)
-                        .placeholder(when: postText.isEmpty, placeholder: {
-                            VStack {
-                                Text("Type your post here...")
-                                    .foregroundColor(.secondaryTxt)
-                                    .padding(7.5)
-                                Spacer()
-                            }
-                        })
-                        .frame(idealHeight: 180)
+                VStack {
+                    Form {
+                        TextEditor(text: $postText)
+                            .frame(maxHeight: .infinity)
+                            .placeholder(when: postText.isEmpty, placeholder: {
+                                VStack {
+                                    Text("Type your post here...")
+                                        .foregroundColor(.secondaryTxt)
+                                        .padding(.horizontal, 8.5)
+                                        .padding(.vertical, 10)
+                                    Spacer()
+                                }
+                            })
+                            .listRowBackground(Color.appBg)
+                            .focused($focusedField, equals: .textEditor)
+                    }
+                    Spacer()
+                    HStack {
+                        HighlightedText(
+                            Localized.nostrBuildHelp.string,
+                            highlightedWord: "nostr.build",
+                            highlight: .diagonalAccent,
+                            textColor: .secondaryTxt,
+                            link: URL(string: "https://nostr.build")!
+                        )
                         .listRowBackground(Color.appBg)
+                        .listRowSeparator(.hidden)
+                        .padding(.leading, 17)
+                        .padding(10)
+                        Spacer()
+                    }
                 }
                 .scrollContentBackground(.hidden)
                 
@@ -86,8 +111,10 @@ struct NewNoteView: View {
                 trailing: ActionButton(title: Localized.post, action: publishPost)
                     .frame(height: 22)
                     .disabled(postText.isEmpty)
+                    .padding(.bottom, 3)
             )
             .onAppear {
+                focusedField = .textEditor
                 analytics.showedNewNote()
             }
         }
