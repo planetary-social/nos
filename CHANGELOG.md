@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (17)] - 2023-03-20Z
+- Minor performance improvements
+
 ## [0.1 (16)] - 2023-03-19Z
 - Hide the text in private key text fields
 - Hide replies from muted users
