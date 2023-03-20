@@ -19,7 +19,8 @@ public class Relay: NosManagedObject {
         [
         "wss://relay.nostr.band/",
         "wss://relay.damus.io/",
-        "wss://e.nos.lol/"
+        "wss://e.nos.lol/",
+        "wss://relay.universalname.space",
         ]
     }
     
@@ -36,7 +37,8 @@ public class Relay: NosManagedObject {
         "wss://relay.snort.social/",
         "wss://relay.current.fyi/",
         "wss://nostr.relayer.se/",
-        "wss://e.nos.lol/"
+        "wss://e.nos.lol/",
+        "wss://relay.universalname.space",
         ]
     }
     
