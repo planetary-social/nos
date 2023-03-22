@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.1 (19)] - 2023-03-22Z
 - Added a link to nostr.build on the New Note screen
 - Added a demo flow for setting up a Universal Name on the Edit Profile screen.
 

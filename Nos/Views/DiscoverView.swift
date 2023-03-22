@@ -8,6 +8,39 @@
 import SwiftUI
 import CoreData
 import Dependencies
+import Combine
+
+class SearchModel: ObservableObject {
+    @Published var query: String = ""
+    @Published var namedAuthors = [Author]()
+    @Published var authorSuggestions = [Author]()
+    
+    private var cancellables = [AnyCancellable]()
+    private var context: NSManagedObjectContext
+    
+    init(context: NSManagedObjectContext = PersistenceController.shared.viewContext) {
+        self.context = context
+        $query
+            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .filter { !$0.isEmpty }
+            .map { self.authors(named: $0) }
+            .sink(receiveValue: { self.authorSuggestions = $0 })
+            .store(in: &cancellables)
+    }
+    
+    func authors(named name: String) -> [Author] {
+        guard let authors = try? Author.find(named: name, context: context) else {
+            return []
+        }
+
+        return authors
+    }
+    
+    func clear() {
+        query = ""
+        authorSuggestions = []
+    }
+}
 
 struct DiscoverView: View {
     
@@ -27,9 +60,7 @@ struct DiscoverView: View {
     @State private var subscriptionIds = [String]()
     private var featuredAuthors: [String]
     
-    @Environment(\.isSearching) private var isSearching: Bool
-    @State private var searchAuthors = [Author]()
-    @State var searchText = ""
+    @StateObject private var searchModel = SearchModel()
     
     var predicate: NSPredicate {
         if let relayFilter {
@@ -117,8 +148,8 @@ struct DiscoverView: View {
                 }
                 refreshDiscover()
             }
-            .searchable(text: $searchText, placement: .toolbar, prompt: PlainText(Localized.searchBar.string)) {
-                ForEach(searchAuthors, id: \.self) { author in
+            .searchable(text: $searchModel.query, placement: .toolbar, prompt: PlainText(Localized.searchBar.string)) {
+                ForEach(searchModel.authorSuggestions, id: \.self) { author in
                     Button {
                         router.push(author)
                     } label: {
@@ -140,20 +171,18 @@ struct DiscoverView: View {
                                 FollowButton(currentUserAuthor: currentUser, author: author)
                                     .padding(10)
                             }
-                        }.searchCompletion(author.safeName)
+                        }
+                        .listRowInsets(.none)
+                        .searchCompletion(author.safeName)
                     }
+                    .listRowBackground(Color.appBg)
                 }
+                .scrollContentBackground(.hidden)
+                .background(Color.appBg)
             }
             .autocorrectionDisabled()
             .onSubmit(of: .search) {
                 submitSearch()
-            }
-            .onChange(of: searchText) { _ in
-                if searchText.isEmpty && !isSearching {
-                    searchAuthors = []
-                } else {
-                    submitSearch()
-                }
             }
             .background(Color.appBg)
             .toolbar {
@@ -187,15 +216,13 @@ struct DiscoverView: View {
             }
             .onAppear {
                 if router.selectedTab == .discover {
-                    searchText = ""
-                    searchAuthors = []
+                    searchModel.clear()
                     analytics.showedDiscover()
                     refreshDiscover()
                 }
             }
             .onDisappear {
-                searchAuthors = []
-                
+                searchModel.clear()
                 relayService.sendCloseToAll(subscriptions: subscriptionIds)
                 subscriptionIds.removeAll()
             }
@@ -212,7 +239,7 @@ struct DiscoverView: View {
         }
     }
     
-    func author(from publicKeyString: String) -> Author? {
+    func author(fromPublicKey publicKeyString: String) -> Author? {
         guard let publicKey = PublicKey(npub: publicKeyString) ?? PublicKey(hex: publicKeyString) else {
             return nil
         }
@@ -222,30 +249,18 @@ struct DiscoverView: View {
         return author
     }
     
-    func authors(named name: String) -> [Author] {
-        guard let authors = try? Author.find(named: name, context: viewContext) else {
-            return []
-        }
-
-        return authors
-    }
-    
     func submitSearch() {
-        if searchText.contains("@") {
+        if searchModel.query.contains("@") {
             Task {
                 if let publicKeyHex =
-                    await relayService.retrieveInternetIdentifierPublicKeyHex(searchText.lowercased()),
-                    let author = author(from: publicKeyHex) {
-                    searchAuthors = [author]
+                    await relayService.retrieveInternetIdentifierPublicKeyHex(searchModel.query.lowercased()),
+                    let author = author(fromPublicKey: publicKeyHex) {
                     router.push(author)
                 }
             }
         } else {
-            if let author = author(from: searchText) {
-                searchAuthors = [author]
+            if let author = author(fromPublicKey: searchModel.query) {
                 router.push(author)
-            } else {
-                searchAuthors = authors(named: searchText)
             }
         }
     }
