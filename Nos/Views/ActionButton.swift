@@ -12,7 +12,7 @@ import SwiftUI
 struct ActionButton: View {
     
     var title: Localized
-    var action: () -> Void
+    var textColor = Color.white
     var depthEffectColor = Color(hex: "#A04651")
     var backgroundGradient = LinearGradient(
         colors: [
@@ -22,6 +22,8 @@ struct ActionButton: View {
         startPoint: .bottomLeading,
         endPoint: .topTrailing
     )
+    var textShadow: Bool = true
+    var action: () -> Void
     
     var body: some View {
         Button(action: action, label: {
@@ -29,10 +31,11 @@ struct ActionButton: View {
                 .font(.clarityBold)
                 .transition(.opacity)
                 .font(.headline)
+                .foregroundColor(textColor)
         })
         .lineLimit(nil)
         .foregroundColor(.black)
-        .buttonStyle(ActionButtonStyle(depthEffectColor: depthEffectColor, backgroundGradient: backgroundGradient))
+        .buttonStyle(ActionButtonStyle(depthEffectColor: depthEffectColor, backgroundGradient: backgroundGradient, textShadow: textShadow))
     }
 }
 
@@ -43,7 +46,6 @@ struct SecondaryActionButton: View {
     var body: some View {
         ActionButton(
             title: title,
-            action: action,
             depthEffectColor: Color(hex: "#514964"),
             backgroundGradient: LinearGradient(
                 colors: [
@@ -52,7 +54,8 @@ struct SecondaryActionButton: View {
                 ],
                 startPoint: .bottomLeading,
                 endPoint: .topTrailing
-            )
+            ),
+            action: action
         )
     }
 }
@@ -64,6 +67,7 @@ struct ActionButtonStyle: ButtonStyle {
     let cornerRadius: CGFloat = 17
     let depthEffectColor: Color
     let backgroundGradient: LinearGradient
+    var textShadow: Bool
     
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
@@ -80,7 +84,7 @@ struct ActionButtonStyle: ButtonStyle {
                 .padding(.vertical, 8)
                 .padding(.horizontal, 13)
                 .shadow(
-                    color: Color(white: 0, opacity: 0.15),
+                    color: textShadow ? Color(white: 0, opacity: 0.15) : .clear,
                     radius: 2,
                     x: 0,
                     y: 2

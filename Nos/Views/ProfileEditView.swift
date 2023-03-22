@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ProfileEditView: View {
+    
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @Environment(\.managedObjectContext) private var viewContext
@@ -20,6 +21,7 @@ struct ProfileEditView: View {
     @State private var avatarText: String = ""
     @State private var unsText: String = ""
     @State private var nip05Text: String = ""
+    @State private var showUniversalNameWizard = false
     
     var createAccountCompletion: (() -> Void)?
     
@@ -30,7 +32,6 @@ struct ProfileEditView: View {
     
     var body: some View {
         VStack {
-            
             Form {
                 Section {
                     TextField(text: $displayNameText) {
@@ -81,23 +82,51 @@ struct ProfileEditView: View {
                     endPoint: .bottom
                 ))
     
-                Section {
-                    let unsBinding = Binding<String>(
-                        get: { self.unsText },
-                        set: { self.unsText = $0.lowercased() }
-                    )
-                    TextField(text: unsBinding) {
-                        Localized.uns.view.foregroundColor(.secondaryTxt)
+                    // TODO: allow remove UNS
+                    VStack {
+                        Text("Universal Name Space brings identity verification you can trust.")
+//                            .padding(.horizontal, 10)
+                            .padding(.top, 24)
+                            .padding(.bottom, 12)
+                            .foregroundColor(.white)
+                            .bold()
+                            .shadow(radius: 2)
+                        HStack {
+                            ActionButton(
+                                title: .setUpUniversalName,
+                                textColor: Color(hex: "#f26141"),
+                                depthEffectColor: Color(hex: "#f8d4b6"),
+                                backgroundGradient: LinearGradient(
+                                    colors: [Color(hex: "#FFF8F7"), Color(hex: "#FDF6F5")],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                ),
+                                textShadow: false
+                            ) {
+                                showUniversalNameWizard = true
+                            }
+                            .frame(minHeight: 32)
+                            Spacer()
+                        }
+                        .padding(.top, 12)
+                        .padding(.bottom, 24)
                     }
-                    
-                    let unsText = try! AttributedString(markdown: "about the Universal Name System (UNS).")
-                    Text(self.learnMoreLink + unsText)
-                }
-                .listRowBackground(LinearGradient(
-                    colors: [Color.cardBgTop, Color.cardBgBottom],
-                    startPoint: .top,
-                    endPoint: .bottom
-                ))
+                    .background(
+                        HStack {
+                            Spacer()
+                            Image(systemName: "checkmark.seal.fill")
+                                .resizable()
+                                .aspectRatio(1, contentMode: .fit)
+                                .foregroundColor(Color(hex: "#F95795"))
+                        }
+                    )
+                    .listRowBackground(
+                        LinearGradient(
+                            colors: [Color(hex: "#F08508"), Color(hex: "#F43F75")],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
             }
             if let createAccountCompletion {
                 Spacer()
@@ -110,6 +139,9 @@ struct ProfileEditView: View {
                 .padding(.bottom, 50)
             }
         }
+        .sheet(isPresented: $showUniversalNameWizard, content: {
+            UniversalNameWizard(isPresented: $showUniversalNameWizard)
+        })
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
         .nosNavigationBar(title: .editProfile)

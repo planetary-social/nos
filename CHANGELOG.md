@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Added a link to nostr.build on the New Note screen
+- Added a demo flow for setting up a Universal Name on the Edit Profile screen.
 
 ## [0.1 (18)] - 2023-03-20Z
 - Show the number of likes on notes

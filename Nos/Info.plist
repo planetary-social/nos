@@ -4,6 +4,20 @@
 <dict>
 	<key>POSTHOG_API_KEY</key>
 	<string>$(POSTHOG_API_KEY)</string>
+    <key>POSTHOG_API_KEY</key>
+    <string>$(POSTHOG_API_KEY)</string>
+    <key>UNS_AUTH_CONNECTION_URL</key>
+    <string>$(UNS_AUTH_CONNECTION_URL)</string>
+    <key>UNS_CONNECTION_URL</key>
+    <string>$(UNS_CONNECTION_URL)</string>
+    <key>UNS_CLIENT_ID</key>
+    <string>$(UNS_CLIENT_ID)</string>
+    <key>UNS_CLIENT_SECRET</key>
+    <string>$(UNS_CLIENT_SECRET)</string>
+    <key>UNS_ORG_CODE</key>
+    <string>$(UNS_ORG_CODE)</string>
+    <key>UNS_API_KEY</key>
+    <key>$(UNS_API_KEY)</key>
 	<key>UIAppFonts</key>
 	<array>
 		<string>ClarityCity-Black.otf</string>
