@@ -84,7 +84,7 @@ struct NoteCard: View {
     var currentUserLikesNote: Bool {
         likes
             .filter {
-                $0.author?.hexadecimalPublicKey == currentUser.author?.hexadecimalPublicKey
+                $0.author?.hexadecimalPublicKey == author.hexadecimalPublicKey
             }
             .compactMap { $0.eventReferences?.lastObject as? EventReference }
             .contains(where: { $0.eventId == note.identifier })
@@ -116,7 +116,6 @@ struct NoteCard: View {
         } else {
             self.repliesRequest = FetchRequest(fetchRequest: Event.emptyRequest())
         }
-        let currentUserPubKey = CurrentUser.shared.publicKey ?? ""
         _likes = FetchRequest(fetchRequest: Event.likes(noteId: note.identifier!))
     }
     

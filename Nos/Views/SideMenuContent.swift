@@ -120,9 +120,9 @@ struct SideMenuRow: View {
         } label: {
             HStack(alignment: .center) {
                 image
-                    .font(.clarityTitle2)
+                    .font(.clarityTitle3)
                 PlainText(title.string)
-                    .font(.clarityTitle2)
+                    .font(.clarityTitle3)
                     .foregroundColor(.primaryTxt)
                 Spacer()
             }

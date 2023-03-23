@@ -89,23 +89,25 @@ struct ProfileHeader: View {
                             }
                         }
                         
-                        if let verifiedNip05Identifier,
-                            let nip05Identifier = author.nip05,
-                            !nip05Identifier.isEmpty {
+                        if let nip05Identifier = author.nip05, !nip05Identifier.isEmpty {
                             Spacer()
                             Button {
-                                if verifiedNip05Identifier {
-                                    let domain = relayService.domain(from: nip05Identifier)
-                                    let urlString = "https://\(domain)"
-                                    guard let url = URL(string: urlString) else { return }
-                                    UIApplication.shared.open(url)
-                                }
+                                let domain = relayService.domain(from: nip05Identifier)
+                                let urlString = "https://\(domain)"
+                                guard let url = URL(string: urlString) else { return }
+                                UIApplication.shared.open(url)
                             } label: {
-                                if verifiedNip05Identifier {
+                                if verifiedNip05Identifier == true {
                                     Text("\(relayService.identifierToShow(nip05Identifier))")
-                                } else {
+                                        .foregroundColor(.primaryTxt)
+                                } else if verifiedNip05Identifier == false {
                                     Text(nip05Identifier)
                                         .strikethrough()
+                                        .foregroundColor(.secondaryTxt)
+                                } else {
+                                    Text("\(relayService.identifierToShow(nip05Identifier))")
+                                        .foregroundColor(.secondaryTxt)
+                                    
                                 }
                             }
                         }

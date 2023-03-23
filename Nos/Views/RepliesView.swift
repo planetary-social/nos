@@ -117,7 +117,7 @@ struct RepliesView: View {
                         if let author = currentUser.author {
                             AvatarView(imageUrl: author.profilePhotoURL, size: 35)
                         }
-                        ExpandingTextFieldAndSubmitButton( placeholder: "Post a reply", reply: $reply) {
+                        ExpandingTextFieldAndSubmitButton(placeholder: "Post a reply", reply: $reply) {
                             postReply(reply)
                         }
                     }

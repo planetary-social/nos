@@ -83,7 +83,7 @@ struct ProfileEditView: View {
                 ))
                 
                 // TODO: allow remove UNS
-                if createAccountCompletion == nil {
+                if author.nip05?.hasSuffix("universalname.space") != true {
                     VStack {
                         Text("Universal Name Space brings identity verification you can trust.")
                         //                            .padding(.horizontal, 10)

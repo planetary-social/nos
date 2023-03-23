@@ -11,7 +11,6 @@ import SwiftUI
 struct ProfileTab: View {
     
     @EnvironmentObject var currentUser: CurrentUser
-    @State var author: Author
     
     @Binding var path: NavigationPath
     
@@ -19,18 +18,17 @@ struct ProfileTab: View {
 
     var body: some View {
         NavigationStack(path: $path) {
-            ProfileView(author: author)
-                .navigationBarItems(leading: SideMenuButton())
-                .navigationDestination(for: Author.self) { profile in
-                    if profile == CurrentUser.shared.author, CurrentUser.shared.editing {
-                        ProfileEditView(author: profile)
-                    } else {
-                        ProfileView(author: profile)
+            if let author = currentUser.author {
+                ProfileView(author: author)
+                    .navigationBarItems(leading: SideMenuButton())
+                    .navigationDestination(for: Author.self) { profile in
+                        if currentUser.editing {
+                            ProfileEditView(author: author)
+                        } else {
+                            ProfileView(author: author)
+                        }
                     }
-                }
-                .onAppear {
-                    self.author = currentUser.author!
-                }
+            }
         }
     }
 }

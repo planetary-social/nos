@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (21)] - 2023-03-23Z
+- Fixed a bug where the user's profile name was not set after onboarding.
+- Added a demo of the Universal Namespace when setting up your profile. 
+
 ## [0.1 (20)] - 2023-03-22Z
 - Fixed some bugs in Universal Name login flow (onboarding flow fixes forthcoming)
 

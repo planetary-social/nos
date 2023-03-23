@@ -24,7 +24,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
                     VStack {
                         Text(placeholder)
                             .foregroundColor(.secondaryTxt)
-                            .padding(.top, 7.5)
+                            .padding(.top, 9.5)
                             .padding(.leading, 7.5)
                         Spacer()
                     }

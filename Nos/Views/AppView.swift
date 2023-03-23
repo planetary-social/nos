@@ -138,24 +138,22 @@ struct AppView: View {
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.notifications)
                     
-                    if let author = CurrentUser.shared.author {
-                        ProfileTab(author: author, path: $router.profilePath)
-                            .tabItem {
-                                VStack {
-                                    let text = Localized.profile.view
-                                    if $router.selectedTab.wrappedValue == .profile {
-                                        Image.tabProfileSelected
-                                        text.foregroundColor(.textColor)
-                                    } else {
-                                        Image.tabProfile
-                                        text.foregroundColor(.secondaryTxt)
-                                    }
+                    ProfileTab(path: $router.profilePath)
+                        .tabItem {
+                            VStack {
+                                let text = Localized.profile.view
+                                if $router.selectedTab.wrappedValue == .profile {
+                                    Image.tabProfileSelected
+                                    text.foregroundColor(.textColor)
+                                } else {
+                                    Image.tabProfile
+                                    text.foregroundColor(.secondaryTxt)
                                 }
                             }
-                            .toolbarBackground(.visible, for: .tabBar)
-                            .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                            .tag(Destination.profile)
-                    }
+                        }
+                        .toolbarBackground(.visible, for: .tabBar)
+                        .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                        .tag(Destination.profile)
                 }
                 .onChange(of: router.selectedTab) { newTab in
                     if newTab == Destination.newNote {
