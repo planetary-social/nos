@@ -10,7 +10,8 @@ import SwiftUI
 /// A version of the ProfileView that is displayed in the main tab bar
 struct ProfileTab: View {
     
-    @ObservedObject var author: Author
+    @EnvironmentObject var currentUser: CurrentUser
+    @State var author: Author
     
     @Binding var path: NavigationPath
     
@@ -26,6 +27,9 @@ struct ProfileTab: View {
                     } else {
                         ProfileView(author: profile)
                     }
+                }
+                .onAppear {
+                    self.author = currentUser.author!
                 }
         }
     }

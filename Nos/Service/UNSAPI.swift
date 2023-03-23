@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Logger
 
 class UNSAPI {
     
@@ -59,10 +60,12 @@ class UNSAPI {
         let jsonBody = try JSONSerialization.data(withJSONObject: body)
         request.httpBody = jsonBody
         request.httpMethod = "POST"
+        Log.info(request.description)
         let response = try await URLSession.shared.data(for: request)
         
         guard let httpResponse = response.1 as? HTTPURLResponse,
             httpResponse.statusCode == 204 else {
+            logError(response: response)
             throw UNSError.generic
         }
     }
@@ -81,14 +84,16 @@ class UNSAPI {
         let jsonBody = try JSONSerialization.data(withJSONObject: body)
         request.httpBody = jsonBody
         request.httpMethod = "POST"
-        let data = try await URLSession.shared.data(for: request).0
+        let response = try await URLSession.shared.data(for: request)
+        let data = response.0
         
-        guard let responseDict = try JSONSerialization.jsonObject(with: data) as? [String : Any],
+        guard let responseDict = try JSONSerialization.jsonObject(with: data) as? [String: Any],
             let dataDict = responseDict["data"] as? [String: Any],
             let accessTokenDict = dataDict["access_token"] as? [String: Any],
             let personaDict = dataDict["persona"] as? [String: Any],
             let personaID = personaDict["persona_id"] as? String,
             let accessToken = accessTokenDict["access_token"] as? String else {
+            logError(response: response)
             throw UNSError.generic
         }
         
@@ -102,10 +107,14 @@ class UNSAPI {
         request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
         request.setValue("Bearer \(accessToken!)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
-        let data = try await URLSession.shared.data(for: request).0
+        let response = try await URLSession.shared.data(for: request)
+        let data = response.0
         
         let responseDict = try JSONSerialization.jsonObject(with: data) as! [String: Any]
-        let dataDict = responseDict["data"] as! [[String: Any]]
+        guard let dataDict = responseDict["data"] as? [[String: Any]] else {
+            logError(response: response)
+            throw UNSError.generic
+        }
         var names = [String]()
         for nameDict in dataDict {
             if let name = nameDict["name"] as? String {
@@ -131,8 +140,13 @@ class UNSAPI {
         request.httpBody = jsonBody
         request.httpMethod = "POST"
         let response = try await URLSession.shared.data(for: request)
-        let httpResponse  = response.1 as! HTTPURLResponse
-        return httpResponse.statusCode == 201
+        guard let httpResponse = response.1 as? HTTPURLResponse,
+            httpResponse.statusCode == 201 else {
+            logError(response: response)
+            return false
+        }
+        
+        return true
     }
     
     func hasExistingNostrVerification(npub: String) async throws -> Bool {
@@ -152,12 +166,13 @@ class UNSAPI {
             "arguments": [
                 "nostr_pub_key": npub
             ]
-        ] as [String : Any]
+        ] as [String: Any]
         let jsonBody = try! JSONSerialization.data(withJSONObject: body)
         request.httpBody = jsonBody
         request.httpMethod = "POST"
         
-        let responseData = try await URLSession.shared.data(for: request).0
+        let response = try await URLSession.shared.data(for: request)
+        let responseData = response.0
         let responseString = String(data: responseData, encoding: .utf8)
         if responseString?.ranges(of: "DUPLICATED_SOCIAL_CONNECTION").isEmpty == false {
             return nil
@@ -167,8 +182,10 @@ class UNSAPI {
             let dataDict = responseDict["data"] as? [String: Any],
             let verificationID = dataDict["verification_id"] as? String,
             let message = dataDict["message"] as? String else {
+            logError(response: response)
             throw UNSError.generic
         }
+        self.verificationID = verificationID
         return message
     }
     
@@ -188,14 +205,47 @@ class UNSAPI {
         request.httpBody = jsonBody
         request.httpMethod = "POST"
 
-        let responseData = try await URLSession.shared.data(for: request).0
+        let response = try await URLSession.shared.data(for: request)
+        let responseData = response.0
         guard let responseDict = try JSONSerialization.jsonObject(with: responseData) as? [String: Any],
             let dataDict = responseDict["data"] as? [String: Any],
             let verificationDict = dataDict["verification"] as? [String: Any],
-            let externalID = dataDict["external_id"] as? String else {
+            let externalID = verificationDict["external_id"] as? String else {
+            logError(response: response)
             throw UNSError.generic
         }
         return externalID
+    }
+    
+    func getNIP05() async throws -> String {
+        var url = connectionURL.appending(path: "/v1/resolver/admin")
+        url = url.appending(queryItems: [
+            URLQueryItem(name: "name_id", value: nameID!),
+            URLQueryItem(name: "page", value: "1"),
+            URLQueryItem(name: "page_size", value: "1"),
+            URLQueryItem(name: "key", value: "NOSTR"),
+        ])
+        var request = URLRequest(url: url)
+        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
+        request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
+        request.setValue("Bearer \(accessToken!)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "GET"
+        let response = try await URLSession.shared.data(for: request)
+        let data = response.0
+        
+        let responseDict = try JSONSerialization.jsonObject(with: data) as! [String: Any]
+        guard let dataDict = responseDict["data"] as? [[String: Any]],
+            let nostrConnection = dataDict.first,
+            let nip05 = nostrConnection["value"] as? String else {
+            logError(response: response)
+            throw UNSError.generic
+        }
+        return nip05
+    }
+    
+    func logError(from functionName: String = #function, response: (Data, URLResponse)) {
+        Log.error("\(functionName) failed with \(String(data: response.0, encoding: .utf8) ?? "null")")
     }
     
     class func getEnvironmentVariable(named name: String) -> String? {

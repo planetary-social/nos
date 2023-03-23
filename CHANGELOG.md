@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (20)] - 2023-03-22Z
+- Fixed some bugs in Universal Name login flow (onboarding flow fixes forthcoming)
+
 ## [0.1 (19)] - 2023-03-22Z
 - Added a link to nostr.build on the New Note screen
 - Added a demo flow for setting up a Universal Name on the Edit Profile screen.

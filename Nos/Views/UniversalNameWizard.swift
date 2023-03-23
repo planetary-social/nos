@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct UniversalNameWizard: View {
-    
-    @Binding var isPresented: Bool
+        
+    var author: Author
+
+    var dismiss: (() -> Void)?
     
     enum Flow {
         case signUp
@@ -54,13 +56,19 @@ struct UniversalNameWizard: View {
                                 Text("+1-234-567-8910")
                                     .foregroundColor(.secondaryTxt)
                             }
-                            .foregroundColor(.textColor)
+                            .foregroundColor(.primaryTxt)
                             .keyboardType(.phonePad)
                             .autocorrectionDisabled()
                             .focused($focusedField, equals: .textEditor)
+                            HighlightedText(
+                                "The Universal Namespace gives you one name you can use everywhere. You can verify your identity and get your universal name here in Nos. This screen is for demo purposes only, all names will be reset in the future. Learn more.",
+                                highlightedWord: "Learn more.",
+                                highlight: .diagonalAccent,
+                                link: URL(string: "https://universalname.space")
+                            )
                         } header: {
                             Text("Verify your identity")
-                                .foregroundColor(.textColor)
+                                .foregroundColor(.primaryTxt)
                                 .fontWeight(.heavy)
                         }
                         .listRowBackground(LinearGradient(
@@ -82,10 +90,10 @@ struct UniversalNameWizard: View {
                             number = "+\(number)"
                             phoneNumber = number
                             
+                            textField = ""
                             do {
                                 flowState = .loading
                                 try await api.requestOTPCode(phoneNumber: number)
-                                textField = ""
                                 flowState = .enterOTP
                             } catch {
                                 flowState = .error
@@ -101,15 +109,20 @@ struct UniversalNameWizard: View {
                                 Text("123456")
                                     .foregroundColor(.secondaryTxt)
                             }
-                            .foregroundColor(.textColor)
+                            .foregroundColor(.primaryTxt)
                             .keyboardType(.phonePad)
                             .autocorrectionDisabled()
                             .focused($focusedField, equals: .textEditor)
                         } header: {
                             Text("Enter Code")
-                                .foregroundColor(.textColor)
+                                .foregroundColor(.primaryTxt)
                                 .fontWeight(.heavy)
                         }
+                        .listRowBackground(LinearGradient(
+                            colors: [Color.cardBgTop, Color.cardBgBottom],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ))
                     }
                     .scrollContentBackground(.hidden)
                     
@@ -123,17 +136,22 @@ struct UniversalNameWizard: View {
                                 let names = try await api.getNames()
                                 if let name = names.first {
                                     self.name = name
+                                    var nip05: String
                                     if let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub) {
-                                        let nip05 = try await api.submitNostrVerification(message: message, keyPair: currentUser.keyPair!)
-                                        currentUser.author?.nip05 = nip05
+                                        nip05 = try await api.submitNostrVerification(message: message, keyPair: currentUser.keyPair!)
+                                    } else {
+                                        nip05 = try await api.getNIP05()
                                     }
-                                    currentUser.author?.name = name
-                                    currentUser.publishMetaData()
+                                    author.name = name
+                                    author.nip05 = nip05
+                                    CurrentUser.shared.publishMetaData()
+                                    try viewContext.save()
                                     flowState = .success
                                 } else {
                                     flowState = .chooseName
                                 }
                             } catch {
+                                textField = ""
                                 flowState = .error
                             }
                         }
@@ -159,15 +177,20 @@ struct UniversalNameWizard: View {
                                     .foregroundColor(.secondaryTxt)
                             }
                             .textInputAutocapitalization(.none)
-                            .foregroundColor(.textColor)
+                            .foregroundColor(.primaryTxt)
                             .autocorrectionDisabled()
                             .autocapitalization(.none)
                             .focused($focusedField, equals: .textEditor)
                         } header: {
                             Text("Choose Your Name")
-                                .foregroundColor(.textColor)
+                                .foregroundColor(.primaryTxt)
                                 .fontWeight(.heavy)
                         }
+                        .listRowBackground(LinearGradient(
+                            colors: [Color.cardBgTop, Color.cardBgBottom],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ))
                     }
                     .scrollContentBackground(.hidden)
                     Spacer()
@@ -180,11 +203,11 @@ struct UniversalNameWizard: View {
                             }
                             let names = try await api.getNames()
                             name = names.first!
-                            let message = try await api.requestNostrVerification(npub: currentUser.publicKey!)!
+                            let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub)!
                             let nip05 = try await api.submitNostrVerification(message: message, keyPair: currentUser.keyPair!)
-                            currentUser.author?.name = name
-                            currentUser.author?.nip05 = nip05
-                            currentUser.publishMetaData()
+                            author.name = name
+                            author.nip05 = nip05
+                            CurrentUser.shared.publishMetaData()
                             flowState = .success
                         }
                     }
@@ -211,13 +234,18 @@ struct UniversalNameWizard: View {
                         PlainText("Success!")
                             .font(.title)
                             .padding(.top, 50)
-                            .foregroundColor(.textColor)
-                        Text("\(String(describing: name)) is your new Nostr username.\n\nThis demo of the Universal Name Space is for testing purposes only. All names will be reset in teh future.")
+                            .foregroundColor(.primaryTxt)
+                        Text("\(name ?? "") is your new Nostr username.\n\nThis demo of the Universal Namespace is for testing purposes only. All names will be reset in the future.")
                             .padding()
                             .multilineTextAlignment(.center)
                             .frame(maxWidth: 500)
-                            .foregroundColor(.textColor)
+                            .foregroundColor(.primaryTxt)
                         Spacer()
+                        BigActionButton(title: .dismiss) {
+                            dismiss?()
+                        }
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 50)
                     }
                     .frame(maxWidth: .infinity)
                 case .error:
@@ -225,11 +253,11 @@ struct UniversalNameWizard: View {
                     PlainText("Oops!")
                         .font(.title2)
                         .padding()
-                        .foregroundColor(.textColor)
+                        .foregroundColor(.primaryTxt)
                     PlainText("An error occured.")
                         .font(.body)
                         .padding()
-                        .foregroundColor(.textColor)
+                        .foregroundColor(.primaryTxt)
                     Spacer()
                     BigActionButton(title: .startOver) {
                         flowState = .enterPhone
@@ -248,34 +276,44 @@ struct UniversalNameWizard: View {
 }
 
 struct UniversalNameWizard_Previews: PreviewProvider {
+    
+    static var persistenceController = PersistenceController.preview
+    static var previewContext = persistenceController.container.viewContext
+
+    static var author: Author {
+        let author = Author(context: previewContext)
+        author.hexadecimalPublicKey = KeyFixture.pubKeyHex
+        return author
+    }
+    
     static var previews: some View {
         VStack {}
             .sheet(isPresented: .constant(true)) {
-                UniversalNameWizard(isPresented: .constant(true), flowState: .enterPhone)
+                UniversalNameWizard(author: author, flowState: .enterPhone)
             }
         VStack {}
             .sheet(isPresented: .constant(true)) {
-                UniversalNameWizard(isPresented: .constant(true), flowState: .enterOTP)
+                UniversalNameWizard(author: author, flowState: .enterOTP)
             }
                         VStack {}
             .sheet(isPresented: .constant(true)) {
-                UniversalNameWizard(isPresented: .constant(true), flowState: .loading)
+                UniversalNameWizard(author: author, flowState: .loading)
             }
                         VStack {}
             .sheet(isPresented: .constant(true)) {
-                UniversalNameWizard(isPresented: .constant(true), flowState: .chooseName)
+                UniversalNameWizard(author: author, flowState: .chooseName)
             }
                         VStack {}
             .sheet(isPresented: .constant(true)) {
-                UniversalNameWizard(isPresented: .constant(true), flowState: .success)
+                UniversalNameWizard(author: author, flowState: .success)
             }
                         VStack {}
             .sheet(isPresented: .constant(true)) {
-                UniversalNameWizard(isPresented: .constant(true), flowState: .error)
+                UniversalNameWizard(author: author, flowState: .error)
             }
                         VStack {}
             .sheet(isPresented: .constant(true)) {
-                UniversalNameWizard(isPresented: .constant(true), flowState: .nameTaken)
+                UniversalNameWizard(author: author, flowState: .nameTaken)
             }
     }
 }

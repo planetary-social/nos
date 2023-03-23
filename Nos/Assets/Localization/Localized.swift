@@ -178,10 +178,11 @@ enum Localized: String, Localizable, CaseIterable {
     case nostrBuildHelp = "Use nostr.build to post image links."
     case sendCode = "Send code"
     case submit = "Submit"
-    case setUpUNS = "Universal Name Space"
+    case setUpUNS = "Reserve Your Name"
     case goBack = "Go back"
     case startOver = "Start over"
     case setUpUniversalName = "Set up your Universal Name"
+    case dismiss = "Dismiss"
     
     case relays = "Relays"
     case noRelaysMessage = "No relays yet! Add one below to get started"

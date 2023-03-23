@@ -45,6 +45,7 @@ public class Author: NosManagedObject {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey = %@", pubKey)
         fetchRequest.fetchLimit = 1
+        // *** Terminating app due to uncaught exception 'NSGenericException', reason: '*** Collection <__NSCFSet: 0x6000010aa130> was mutated while being enumerated.'
         if let author = try context.fetch(fetchRequest).first {
             return author
         }

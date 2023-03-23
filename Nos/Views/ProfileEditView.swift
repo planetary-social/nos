@@ -13,7 +13,7 @@ struct ProfileEditView: View {
     @EnvironmentObject private var router: Router
     @Environment(\.managedObjectContext) private var viewContext
 
-    var author: Author
+    @ObservedObject var author: Author
     
     @State private var displayNameText: String = ""
     @State private var nameText: String = ""
@@ -58,9 +58,9 @@ struct ProfileEditView: View {
                     .foregroundColor(.textColor)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.none)
-                    #if os(iOS)
+#if os(iOS)
                     .keyboardType(.URL)
-                    #endif
+#endif
                     let nip05Binding = Binding<String>(
                         get: { self.nip05Text },
                         set: { self.nip05Text = $0.lowercased() }
@@ -81,16 +81,18 @@ struct ProfileEditView: View {
                     startPoint: .top,
                     endPoint: .bottom
                 ))
-    
-                    // TODO: allow remove UNS
+                
+                // TODO: allow remove UNS
+                if createAccountCompletion == nil {
                     VStack {
                         Text("Universal Name Space brings identity verification you can trust.")
-//                            .padding(.horizontal, 10)
+                        //                            .padding(.horizontal, 10)
                             .padding(.top, 24)
                             .padding(.bottom, 12)
                             .foregroundColor(.white)
                             .bold()
                             .shadow(radius: 2)
+                        
                         HStack {
                             ActionButton(
                                 title: .setUpUniversalName,
@@ -108,9 +110,9 @@ struct ProfileEditView: View {
                             .frame(minHeight: 32)
                             Spacer()
                         }
-                        .padding(.top, 12)
-                        .padding(.bottom, 24)
                     }
+                    .padding(.top, 12)
+                    .padding(.bottom, 24)
                     .background(
                         HStack {
                             Spacer()
@@ -127,6 +129,7 @@ struct ProfileEditView: View {
                             endPoint: .trailing
                         )
                     )
+                }
             }
             if let createAccountCompletion {
                 Spacer()
@@ -140,7 +143,10 @@ struct ProfileEditView: View {
             }
         }
         .sheet(isPresented: $showUniversalNameWizard, content: {
-            UniversalNameWizard(isPresented: $showUniversalNameWizard)
+            UniversalNameWizard(author: author) {
+                populateTextFields()
+                self.showUniversalNameWizard = false
+            }
         })
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
@@ -164,12 +170,7 @@ struct ProfileEditView: View {
                 }
         )
         .task {
-            displayNameText = author.displayName ?? ""
-            nameText = author.name ?? ""
-            bioText = author.about ?? ""
-            avatarText = author.profilePhotoURL?.absoluteString ?? ""
-            nip05Text = author.nip05 ?? ""
-            unsText = author.uns ?? ""
+            populateTextFields()
         }
         .onDisappear {
             CurrentUser.shared.editing = false
@@ -180,6 +181,15 @@ struct ProfileEditView: View {
         var result = try! AttributedString(markdown: "[Learn more ](https://www.universalname.space)")
         result.foregroundColor = .accent
         return result
+    }
+    
+    func populateTextFields() {
+        displayNameText = author.displayName ?? ""
+        nameText = author.name ?? ""
+        bioText = author.about ?? ""
+        avatarText = author.profilePhotoURL?.absoluteString ?? ""
+        nip05Text = author.nip05 ?? ""
+        unsText = author.uns ?? ""
     }
     
     func save() {
