@@ -121,6 +121,26 @@ class CurrentUser: ObservableObject {
             }
         }
     }
+    
+    func createAccount() {
+        let keyPair = KeyPair()!
+        let author = try! Author.findOrCreate(by: keyPair.publicKeyHex, context: context)
+        try! context.save()
+        privateKeyHex = keyPair.privateKeyHex
+        analytics.generatedKey()
+        
+        // Recommended Relays for new user
+        for address in Relay.recommended {
+            _ = try? Relay(
+                context: context,
+                address: address,
+                author: author
+            )
+        }
+        try! context.save()
+        
+        publishContactList(tags: [])
+    }
 
     // Pass in relays if you want to request from something other
     // than the Current User's relays (ie onboarding)
@@ -129,7 +149,7 @@ class CurrentUser: ObservableObject {
         var relays = relays
         if relays == nil || relays?.isEmpty == true {
             // Fetch relays from Core Data
-            relays = CurrentUser.shared.author?.relays?.allObjects as? [Relay] ?? []
+            relays = author?.relays?.allObjects as? [Relay] ?? []
             if relays?.isEmpty == true {
                 // If we're still empty connect to all known relays hoping to get some metadata
                 relays = Relay.allKnown.compactMap {

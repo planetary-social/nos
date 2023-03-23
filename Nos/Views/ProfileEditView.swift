@@ -199,6 +199,7 @@ struct ProfileEditView: View {
         author.profilePhotoURL = URL(string: avatarText)
         author.nip05 = nip05Text
         author.uns = unsText
+        try! viewContext.save()
         // Post event
         CurrentUser.shared.publishMetaData()
     }

@@ -34,12 +34,10 @@ class AppController: ObservableObject {
     }
     
     func completeOnboarding() {
-        currentState = .loggedIn
-
         router.sideMenuPath = NavigationPath()
         router.closeSideMenu()
         router.selectedTab = .discover
-
+        currentState = .loggedIn
         analytics.completedOnboarding()
     }
 }

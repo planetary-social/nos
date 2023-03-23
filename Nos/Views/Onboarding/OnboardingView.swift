@@ -35,7 +35,7 @@ enum OnboardingStep {
 struct OnboardingView: View {
     @EnvironmentObject private var currentUser: CurrentUser
 
-    @ObservedObject var state = OnboardingState()
+    @StateObject var state = OnboardingState()
     
     /// Completion to be called when all onboarding steps are complete
     let completion: () -> Void

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct OnboardingTermsOfServiceView: View {
     @EnvironmentObject var state: OnboardingState
+    @EnvironmentObject var currentUser: CurrentUser
     
     var body: some View {
         VStack {
@@ -50,6 +51,7 @@ struct OnboardingTermsOfServiceView: View {
                 }
                 Spacer(minLength: 15)
                 BigActionButton(title: Localized.accept) {
+                    currentUser.createAccount()
                     state.step = .finishOnboarding
                 }
             }
