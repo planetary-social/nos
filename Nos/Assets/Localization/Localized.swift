@@ -220,7 +220,7 @@ enum Localized: String, Localizable, CaseIterable {
     case noNotifications = "No notifications (yet)!"
     case copyNoteIdentifier = "Copy Note Identifier"
     case copyNoteText = "Copy Note Text"
-    case copyUserIdentifier = "Copy User ID"
+    case copyUserIdentifier = "Copy User ID (npub)"
     case deleteNote = "Delete"
     case muteUser = "Mute"
     case mutedUser = "Muted"
