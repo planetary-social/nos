@@ -116,6 +116,9 @@ struct ProfileView: View {
                         Button(Localized.copyUserIdentifier.string) {
                             UIPasteboard.general.string = router.viewedAuthor?.publicKey?.npub ?? ""
                         }
+                        Button(Localized.copyLink.string) {
+                            UIPasteboard.general.string = router.viewedAuthor?.webLink ?? ""
+                        }
                         if let author = router.viewedAuthor {
                             if author == CurrentUser.shared.author {
                                 Button(

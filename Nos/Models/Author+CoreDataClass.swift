@@ -41,6 +41,10 @@ public class Author: NosManagedObject {
         about == nil && name == nil && displayName == nil && profilePhotoURL == nil
     }
     
+    var webLink: String {
+        "https://iris.to/\(publicKey!.npub)"
+    }
+    
     class func find(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author? {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey = %@", pubKey)

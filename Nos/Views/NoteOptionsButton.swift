@@ -40,6 +40,10 @@ struct NoteOptionsButton: View {
                     // Analytics.shared.trackDidSelectAction(actionName: "copy_message_text")
                     copyMessage()
                 }
+                Button(Localized.copyLink.string) {
+                    // Analytics.shared.trackDidSelectAction(actionName: "copy_message_text")
+                    copyLink()
+                }
                 // Button(Localized.shareThisMessage.text) {
                 // Analytics.shared.trackDidSelectAction(actionName: "share_message")
                 // showingShare = true
@@ -69,6 +73,10 @@ struct NoteOptionsButton: View {
 
     func copyMessageIdentifier() {
         UIPasteboard.general.string = note.bech32NoteID
+    }
+    
+    func copyLink() {
+        UIPasteboard.general.string = note.webLink
     }
     
     func copyMessage() {

@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Add the option to copy web links on profile pages and notes.
 
 ## [0.1 (22)] - 2023-03-23Z
 - Fixed a bug in the list of people you are following, where tapping on any name would show your own profile.

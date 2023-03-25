@@ -799,6 +799,10 @@ public class Event: NosManagedObject {
             }
         }
     }
+    
+    var webLink: String {
+        "https://iris.to/\(bech32NoteID!)"
+    }
 }
 // swiftlint:enable type_body_length
 // swiftlint:enable file_length
