@@ -147,9 +147,7 @@ struct NotificationCard: View {
             }
             .buttonStyle(CardButtonStyle())
             .task {
-                if author.needsMetadata {
-                    _ = author.requestMetadata(using: relayService)
-                }
+                note.requestAuthorsMetadataIfNeeded(using: relayService, in: viewContext)
             }
         }
     }

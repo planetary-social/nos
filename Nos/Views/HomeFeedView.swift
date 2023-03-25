@@ -21,7 +21,6 @@ struct HomeFeedView: View {
     @FetchRequest var events: FetchedResults<Event>
     @FetchRequest var followedAuthors: FetchedResults<Author>
 
-    // Probably the logged in user should be in the @Environment eventually
     @ObservedObject var user: Author
     
     @State private var subscriptionIds: [String] = []
@@ -68,42 +67,25 @@ struct HomeFeedView: View {
     }
     
     var body: some View {
-        NavigationStack(path: $router.homeFeedPath) {
-            ScrollView(.vertical) {
-                LazyVStack {
-                    ForEach(events.unmuted) { event in
-                        VStack {
-                            NoteButton(note: event, hideOutOfNetwork: false)
-                                .padding(.horizontal)
-                        }
+        ScrollView(.vertical) {
+            LazyVStack {
+                ForEach(events.unmuted) { event in
+                    VStack {
+                        NoteButton(note: event, hideOutOfNetwork: false)
+                            .padding(.horizontal)
                     }
                 }
             }
-            .background(Color.appBg)
-            .padding(.top, 1)
-            .navigationDestination(for: Event.self) { note in
-                RepliesView(note: note)
-            }
-            .navigationDestination(for: Author.self) { author in
-                if router.currentPath.wrappedValue.count == 1 {
-                    ProfileView(author: author)
-                } else {
-                    if author == CurrentUser.shared.author, CurrentUser.shared.editing {
-                        ProfileEditView(author: author)
-                    } else {
-                        ProfileView(author: author)
-                    }
-                }
-            }
-            .overlay(Group {
-                if !events.contains(where: { !$0.author!.muted }) {
-                    Localized.noEvents.view
-                        .padding()
-                }
-            })
-            .navigationBarItems(leading: SideMenuButton())
-            .nosNavigationBar(title: .homeFeed)
         }
+        .background(Color.appBg)
+        .padding(.top, 1)
+        .overlay(Group {
+            if !events.contains(where: { !$0.author!.muted }) {
+                Localized.noEvents.view
+                    .padding()
+            }
+        })
+        .nosNavigationBar(title: .homeFeed)
         .refreshable {
             refreshHomeFeed()
         }

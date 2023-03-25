@@ -20,14 +20,16 @@ struct NoteButton: View {
     var allowsPush = true
     var showReplyCount = true
     var isInThreadView = false
-
+    var buttonAction: ((Event) -> Void)? 
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
 
     var body: some View {
         if let author = note.author {
             Button {
-                if allowsPush {
+                if let buttonAction {
+                    buttonAction(note)
+                } else if allowsPush {
                     if !isInThreadView, let referencedNote = note.referencedNote() {
                         router.push(referencedNote)
                     } else {

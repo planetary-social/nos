@@ -90,6 +90,14 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc func storiesRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = NSPredicate(format: "kind = %i AND author = %@", eventKind.rawValue, self)
+        fetchRequest.fetchLimit = 10
+        return fetchRequest
+    }
+    
     @nonobjc class func inNetworkRequest(for author: Author? = nil) -> NSFetchRequest<Author> {
         var author = author
         if author == nil {
@@ -116,7 +124,7 @@ public class Author: NosManagedObject {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: "ANY followers = %@",
+            format: "ANY followers.source = %@",
             self
         )
         return fetchRequest
