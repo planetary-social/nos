@@ -784,6 +784,21 @@ public class Event: NosManagedObject {
         }
     }
     // swiftlint:enable legacy_objc_type
+    
+    func requestAuthorsMetadataIfNeeded(using relayService: RelayService, in context: NSManagedObjectContext) {
+        if let author, author.needsMetadata {
+            _ = author.requestMetadata(using: relayService)
+        }
+        
+        self.authorReferences?.forEach { reference in
+            if let reference = reference as? AuthorReference,
+               let pubKey = reference.pubkey,
+               let author = try? Author.findOrCreate(by: pubKey, context: context),
+               author.needsMetadata {
+                    _ = author.requestMetadata(using: relayService)
+            }
+        }
+    }
 }
 // swiftlint:enable type_body_length
 // swiftlint:enable file_length

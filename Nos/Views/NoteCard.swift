@@ -212,10 +212,8 @@ struct NoteCard: View {
             }
         }
         .task {
-            if author.needsMetadata {
-                _ = author.requestMetadata(using: relayService)
-            }
-            
+            note.requestAuthorsMetadataIfNeeded(using: relayService, in: viewContext)
+
             if note.isVerified == false, let publicKey = author.publicKey {
                 let verified = try? publicKey.verifySignature(on: note)
                 if verified != true {
