@@ -12,10 +12,15 @@ import SwiftUI
 struct BigActionButton: View {
     
     var title: Localized
-    var action: () -> Void
+    var action: () async -> Void
+    @State var disabled = false
     
     var body: some View {
-        Button(action: action, label: {
+        Button(action: {
+            disabled = true
+            Task { await action() }
+            disabled = false
+        }, label: {
             PlainText(title.string)
                 .font(.clarityBold)
                 .transition(.opacity)
@@ -24,6 +29,7 @@ struct BigActionButton: View {
         .lineLimit(nil)
         .foregroundColor(.black)
         .buttonStyle(BigActionButtonStyle())
+        .disabled(disabled)
     }
 }
 

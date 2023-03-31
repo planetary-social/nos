@@ -140,10 +140,10 @@ struct ContentView_Previews: PreviewProvider {
     static var router = Router()
     
     static var currentUser: CurrentUser = {
-        let currentUser = CurrentUser()
-        currentUser.context = previewContext
+        let currentUser = CurrentUser(persistenceController: persistenceController)
+        currentUser.viewContext = previewContext
         currentUser.relayService = relayService
-        currentUser.keyPair = KeyFixture.keyPair
+        Task { await currentUser.setKeyPair(KeyFixture.keyPair) }
         return currentUser
     }()
     

@@ -13,71 +13,74 @@ import Dependencies
 // swiftlint:disable type_body_length
 class CurrentUser: ObservableObject {
     
-    static let shared = CurrentUser()
+    static let shared = CurrentUser(persistenceController: PersistenceController.shared)
     
     @Dependency(\.analytics) private var analytics
     
     // TODO: it's time to cache this
     var keyPair: KeyPair? {
-        get {
-            if let privateKey = privateKeyHex, let keyPair = KeyPair.init(privateKeyHex: privateKey) {
-                return keyPair
-            }
-            return nil
+        if let privateKey = privateKeyHex, let keyPair = KeyPair.init(privateKeyHex: privateKey) {
+            return keyPair
         }
-        set {
-            privateKeyHex = newValue?.privateKeyHex
-        }
+        return nil
+    }
+    
+    func setKeyPair(_ newValue: KeyPair?) async {
+        await setPrivateKeyHex(newValue?.privateKeyHex)
     }
     
     private var _privateKeyHex: String?
     
     var privateKeyHex: String? {
-        get {
-            _privateKeyHex
-        } set {
-            guard let privateKeyHex = newValue else {
-                let publicStatus = KeyChain.delete(key: KeyChain.keychainPrivateKey)
-                _privateKeyHex = nil
-                print("Deleted private key from keychain with status: \(publicStatus)")
-                return
-            }
-            
-            guard let keyPair = KeyPair(privateKeyHex: privateKeyHex) else {
-                Log.error("CurrentUser could not initialize KeyPair from privateKeyHex.")
-                return
-            }
-            
-            let privateKeyData = Data(privateKeyHex.utf8)
-            let publicStatus = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKeyData)
-            Log.info("Saved private key to keychain for user: " +
-                "\(keyPair.publicKeyHex) / \(keyPair.npub). Keychain storage status: \(publicStatus)")
-            _privateKeyHex = privateKeyHex
-            analytics.identify(with: keyPair)
-            
-            // TODO: this is fragile
-            // Reset CurrentUser state
-            onboardingRelays = []
-            relayService?.sendClose(subscriptions: subscriptions)
-            subscriptions = []
-            inNetworkAuthors = []
-            subscribe()
-            updateInNetworkAuthors(from: context)
-            refreshFriendMetadata()
+        _privateKeyHex
+    }
+
+    @MainActor func setPrivateKeyHex(_ newValue: String?) async {
+        guard let privateKeyHex = newValue else {
+            let publicStatus = KeyChain.delete(key: KeyChain.keychainPrivateKey)
+            _privateKeyHex = nil
+            print("Deleted private key from keychain with status: \(publicStatus)")
+            return
         }
+        
+        guard let keyPair = KeyPair(privateKeyHex: privateKeyHex) else {
+            Log.error("CurrentUser could not initialize KeyPair from privateKeyHex.")
+            return
+        }
+        
+        let privateKeyData = Data(privateKeyHex.utf8)
+        let publicStatus = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKeyData)
+        Log.info("Saved private key to keychain for user: " +
+                 "\(keyPair.publicKeyHex) / \(keyPair.npub). Keychain storage status: \(publicStatus)")
+        _privateKeyHex = privateKeyHex
+        analytics.identify(with: keyPair)
+        
+        // TODO: this is fragile
+        // Reset CurrentUser state
+        onboardingRelays = []
+        relayService?.sendClose(subscriptions: subscriptions)
+        subscriptions = []
+        inNetworkAuthors = []
+        await subscribe()
+        await updateInNetworkAuthors()
+        refreshFriendMetadata()
     }
     
-    var publicKey: String? {
+    var publicKeyHex: String? {
         keyPair?.publicKey.hex
     }
     
     // swiftlint:disable implicitly_unwrapped_optional
-    var context: NSManagedObjectContext!
+    @MainActor var viewContext: NSManagedObjectContext
+    var backgroundContext: NSManagedObjectContext
+    
     var relayService: RelayService! {
         didSet {
-            subscribe()
-            updateInNetworkAuthors(from: context)
-            refreshFriendMetadata()
+            Task {
+                await subscribe()
+                await updateInNetworkAuthors()
+                await refreshFriendMetadata()
+            }
         }
     }
     // swiftlint:enable implicitly_unwrapped_optional
@@ -88,14 +91,19 @@ class CurrentUser: ObservableObject {
 
     var onboardingRelays: [Relay] = []
 
-    var author: Author? {
-        if let publicKey {
-            return try? Author.findOrCreate(by: publicKey, context: context)
+    // TODO: prevent this from being accessed from contexts other than the view context. Or maybe just get rid of it.
+    @MainActor var author: Author? {
+        author(in: viewContext)
+    }
+    
+    func author(in context: NSManagedObjectContext) -> Author? {
+        if let publicKeyHex {
+            return try? Author.findOrCreate(by: publicKeyHex, context: context)
         }
         return nil
     }
     
-    var follows: Set<Follow>? {
+    @MainActor var follows: Set<Follow>? {
         let followSet = author?.follows as? Set<Follow>
         let umutedSet = followSet?.filter({
             if let author = $0.destination {
@@ -106,9 +114,11 @@ class CurrentUser: ObservableObject {
         return umutedSet
     }
     
-    @Published var inNetworkAuthors = [Author]()
+    @MainActor @Published var inNetworkAuthors = [Author]()
                                              
-    init() {
+    init(persistenceController: PersistenceController) {
+        self.viewContext = persistenceController.viewContext
+        self.backgroundContext = persistenceController.newBackgroundContext()
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             Log.info("CurrentUser loaded a private key from keychain")
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
@@ -122,45 +132,42 @@ class CurrentUser: ObservableObject {
         }
     }
     
-    func createAccount() {
+    @MainActor func createAccount() async {
         let keyPair = KeyPair()!
-        let author = try! Author.findOrCreate(by: keyPair.publicKeyHex, context: context)
-        try! context.save()
-        privateKeyHex = keyPair.privateKeyHex
+        let author = try! Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+        try! viewContext.save()
+
+        await setKeyPair(keyPair)
         analytics.generatedKey()
         
         // Recommended Relays for new user
         for address in Relay.recommended {
             _ = try? Relay(
-                context: context,
+                context: viewContext,
                 address: address,
                 author: author
             )
         }
-        try! context.save()
+        try! viewContext.save()
         
-        publishContactList(tags: [])
+        await publishContactList(tags: [])
     }
 
-    // Pass in relays if you want to request from something other
-    // than the Current User's relays (ie onboarding)
-    func subscribe(relays: [Relay]? = nil) {
+    @MainActor func subscribe() async {
         
-        var relays = relays
-        if relays == nil || relays?.isEmpty == true {
-            // Fetch relays from Core Data
-            relays = author?.relays?.allObjects as? [Relay] ?? []
-            if relays?.isEmpty == true {
-                // If we're still empty connect to all known relays hoping to get some metadata
-                relays = Relay.allKnown.compactMap {
-                    try? Relay.findOrCreate(by: $0, context: context)
+        var overrideRelays: [URL]?
+        let userRelays = author?.relays?.allObjects as? [Relay] ?? []
+        if userRelays.isEmpty {
+            overrideRelays = Relay.allKnown
+                .compactMap {
+                    try? Relay.findOrCreate(by: $0, context: viewContext)
                 }
-                try? context.save()
-            }
+                .compactMap { $0.addressURL }
+            try? viewContext.save()
         }
         
         // Always listen to my changes
-        if let key = publicKey {
+        if let key = publicKeyHex {
             // Close out stale requests
             if !subscriptions.isEmpty {
                 relayService.sendCloseToAll(subscriptions: subscriptions)
@@ -168,47 +175,57 @@ class CurrentUser: ObservableObject {
             }
 
             let metaFilter = Filter(authorKeys: [key], kinds: [.metaData], limit: 1)
-            let metaSub = relayService.requestEventsFromAll(filter: metaFilter, relays: relays)
+            let metaSub = relayService.requestEventsFromAll(filter: metaFilter, overrideRelays: overrideRelays)
             subscriptions.append(metaSub)
             
             let contactFilter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
-            let contactSub = relayService.requestEventsFromAll(filter: contactFilter, relays: relays)
+            let contactSub = relayService.requestEventsFromAll(filter: contactFilter, overrideRelays: overrideRelays)
             subscriptions.append(contactSub)
             
             let muteListFilter = Filter(authorKeys: [key], kinds: [.mute], limit: 1)
-            let muteSub = relayService.requestEventsFromAll(filter: muteListFilter, relays: relays)
+            let muteSub = relayService.requestEventsFromAll(filter: muteListFilter, overrideRelays: overrideRelays)
             subscriptions.append(muteSub)
         }
     }
     
-    func refreshFriendMetadata() {
-        guard let follows else {
-            Log.info("Skipping refreshFriendMetadata because we have no follows.")
+    @MainActor func refreshFriendMetadata() {
+        guard let publicKeyHex else {
+            Log.info("Skipping refreshFriendMetadata because we have no logged in user.")
             return
         }
         
-        Task.detached(priority: .background) { [follows] in
+        Task.detached(priority: .background) { [weak self, publicKeyHex] in
+            guard let backgroundContext = self?.backgroundContext else {
+                return
+            }
             
-            for follow in follows {
-                guard let key = follow.destination?.hexadecimalPublicKey else {
+            let followData = await self?.backgroundContext.perform {
+                let follows = try? Author.findOrCreate(by: publicKeyHex, context: backgroundContext).follows as? Set<Follow>
+                return follows?
+                    .shuffled()
+                    .map { ($0.destination?.hexadecimalPublicKey, $0.destination?.lastUpdatedMetadata) }
+            } ?? [(String?, Date?)]()
+            
+            for followData in followData {
+                guard let followedKey = followData.0 else {
                     continue
                 }
-                
+                let lastUpdated = followData.1
                 let metaFilter = Filter(
-                    authorKeys: [key],
+                    authorKeys: [followedKey],
                     kinds: [.metaData],
                     limit: 1,
-                    since: follow.destination?.lastUpdatedMetadata
+                    since: lastUpdated
                 )
-                _ = self.relayService.requestEventsFromAll(filter: metaFilter)
+                _ = await self?.relayService.requestEventsFromAll(filter: metaFilter)
                 
                 let contactFilter = Filter(
-                    authorKeys: [key],
+                    authorKeys: [followedKey],
                     kinds: [.contactList],
                     limit: 1,
-                    since: follow.destination?.lastUpdatedContactList
+                    since: lastUpdated
                 )
-                _ = self.relayService.requestEventsFromAll(filter: contactFilter)
+                _ = await self?.relayService.requestEventsFromAll(filter: contactFilter)
                 
                 // TODO: check cancellation
                 // Do this slowly so we don't get rate limited
@@ -217,7 +234,7 @@ class CurrentUser: ObservableObject {
         }
     }
     
-    func isFollowing(author profile: Author) -> Bool {
+    @MainActor func isFollowing(author profile: Author) -> Bool {
         guard let following = author?.follows as? Set<Follow>, let key = profile.hexadecimalPublicKey else {
             return false
         }
@@ -226,8 +243,8 @@ class CurrentUser: ObservableObject {
         return followKeys.contains(key)
     }
     
-    func publishMetaData() {
-        guard let pubKey = publicKey else {
+    @MainActor func publishMetaData() async {
+        guard let pubKey = publicKeyHex else {
             Log.debug("Error: no pubKey")
             return
         }
@@ -266,16 +283,16 @@ class CurrentUser: ObservableObject {
         if let pair = keyPair {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
-                relayService.publishToAll(event: event, context: context)
+                let event = try await EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
+                await relayService.publishToAll(event: event, context: viewContext)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }
         }
     }
     
-    func publishMuteList(keys: [String]) {
-        guard let pubKey = publicKey else {
+    @MainActor func publishMuteList(keys: [String]) async {
+        guard let pubKey = publicKeyHex else {
             Log.debug("Error: no pubKey")
             return
         }
@@ -287,16 +304,16 @@ class CurrentUser: ObservableObject {
         if let pair = keyPair {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
-                relayService.publishToAll(event: event, context: context)
+                let event = try await EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
+                await relayService.publishToAll(event: event, context: viewContext)
             } catch {
                 Log.debug("Failed to update mute list \(error.localizedDescription)")
             }
     }
     }
     
-    func publishDelete(for identifiers: [String], reason: String = "") {
-        guard let pubKey = publicKey else {
+    @MainActor func publishDelete(for identifiers: [String], reason: String = "") async {
+        guard let pubKey = publicKeyHex else {
             Log.debug("Error: no pubKey")
             return
         }
@@ -309,16 +326,16 @@ class CurrentUser: ObservableObject {
         if let pair = keyPair {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
-                relayService.publishToAll(event: event, context: context)
+                let event = try await EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
+                await relayService.publishToAll(event: event, context: viewContext)
             } catch {
                 Log.debug("Failed to delete events \(error.localizedDescription)")
             }
         }
     }
     
-    func publishContactList(tags: [[String]]) {
-        guard let pubKey = publicKey else {
+    @MainActor func publishContactList(tags: [[String]]) async {
+        guard let pubKey = publicKeyHex else {
             Log.debug("Error: no pubKey")
             return
         }
@@ -344,8 +361,8 @@ class CurrentUser: ObservableObject {
         if let pair = keyPair {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
-                relayService.publishToAll(event: event, context: context)
+                let event = try await EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
+                await relayService.publishToAll(event: event, context: viewContext)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }
@@ -354,7 +371,7 @@ class CurrentUser: ObservableObject {
     
     // swiftlint:disable legacy_objc_type
     /// Follow by public hex key
-    func follow(author toFollow: Author) {
+    @MainActor func follow(author toFollow: Author) async {
         guard let followKey = toFollow.hexadecimalPublicKey else {
             Log.debug("Error: followKey is nil")
             return
@@ -366,8 +383,8 @@ class CurrentUser: ObservableObject {
         followKeys.append(followKey)
         
         // Update author to add the new follow
-        if let followedAuthor = try? Author.find(by: followKey, context: context), let currentUser = author {
-            let follow = try! Follow.findOrCreate(source: currentUser, destination: followedAuthor, context: context)
+        if let followedAuthor = try? Author.find(by: followKey, context: viewContext), let currentUser = author {
+            let follow = try! Follow.findOrCreate(source: currentUser, destination: followedAuthor, context: viewContext)
 
             // Add to the current user's follows
             currentUser.follows = (currentUser.follows ?? NSSet()).adding(follow)
@@ -376,12 +393,12 @@ class CurrentUser: ObservableObject {
             followedAuthor.followers = (followedAuthor.followers ?? NSSet()).adding(follow)
         }
         
-        try! context.save()
-        publishContactList(tags: followKeys.pTags)
+        try! viewContext.save()
+        await publishContactList(tags: followKeys.pTags)
     }
     
     /// Unfollow by public hex key
-    func unfollow(author toUnfollow: Author) {
+    @MainActor func unfollow(author toUnfollow: Author) async {
         guard let unfollowedKey = toUnfollow.hexadecimalPublicKey else {
             Log.debug("Error: unfollowedKey is nil")
             return
@@ -394,9 +411,9 @@ class CurrentUser: ObservableObject {
             .filter { $0 != unfollowedKey }
         
         // Update author to only follow those still following
-        if let unfollowedAuthor = try? Author.find(by: unfollowedKey, context: context), let currentUser = author {
+        if let unfollowedAuthor = try? Author.find(by: unfollowedKey, context: viewContext), let currentUser = author {
             // Remove from the current user's follows
-            let unfollows = Follow.follows(source: currentUser, destination: unfollowedAuthor, context: context)
+            let unfollows = Follow.follows(source: currentUser, destination: unfollowedAuthor, context: viewContext)
 
             for unfollow in unfollows {
                 // Remove current user's follows
@@ -407,18 +424,14 @@ class CurrentUser: ObservableObject {
             }
         }
 
-        try! context.save()
-        publishContactList(tags: stillFollowingKeys.pTags)
+        try! viewContext.save()
+        await publishContactList(tags: stillFollowingKeys.pTags)
     }
     // swiftlint:enable legacy_objc_type
     
-    func updateInNetworkAuthors(for user: Author? = nil, from context: NSManagedObjectContext) {
+    @MainActor func updateInNetworkAuthors(for user: Author? = nil) async {
         do {
-            let inNetworkAuthors = try context.fetch(Author.inNetworkRequest(for: user))
-            
-            DispatchQueue.main.async {
-                self.inNetworkAuthors = inNetworkAuthors
-            }
+            inNetworkAuthors = try viewContext.fetch(Author.inNetworkRequest(for: user))
         } catch {
             Log.error("Error updating in network authors: \(error.localizedDescription)")
         }

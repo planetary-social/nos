@@ -193,8 +193,8 @@ struct AppView_Previews: PreviewProvider {
     static var relayService = RelayService(persistenceController: persistenceController)
     static var router = Router()
     static var currentUser = {
-        let currentUser = CurrentUser()
-        currentUser.privateKeyHex = KeyFixture.alice.privateKeyHex
+        let currentUser = CurrentUser(persistenceController: persistenceController)
+        Task { await currentUser.setPrivateKeyHex(KeyFixture.alice.privateKeyHex) }
         return currentUser
     }()
     

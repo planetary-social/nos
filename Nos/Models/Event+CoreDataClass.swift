@@ -111,7 +111,7 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func extendedNetworkPredicate(featuredAuthors: [String]) -> NSPredicate {
+    @MainActor @nonobjc public class func extendedNetworkPredicate(featuredAuthors: [String]) -> NSPredicate {
         guard let currentUser = CurrentUser.shared.author else {
             return NSPredicate.false
         }
@@ -205,7 +205,7 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func allReplies(toEventWith id: String) -> NSFetchRequest<Event> {
+    @MainActor @nonobjc public class func allReplies(toEventWith id: String) -> NSFetchRequest<Event> {
         guard let currentUser = CurrentUser.shared.author else {
             return emptyRequest()
         }
@@ -478,7 +478,7 @@ public class Event: NosManagedObject {
         try hydrate(from: jsonEvent, relay: relay, in: context)
     }
 
-    func deleteEvents(identifiers: [String], context: NSManagedObjectContext) {
+    func deleteEvents(identifiers: [String], context: NSManagedObjectContext) async {
         print("Deleting: \(identifiers)")
         let deleteRequest = Event.deletePostsRequest(for: identifiers)
 
@@ -488,7 +488,9 @@ public class Event: NosManagedObject {
             print("Failed to delete posts in \(identifiers). Error: \(error.description)")
         }
         
-        try? context.save()
+        await context.perform {
+            try? context.save()
+        }
     }
     
     /// Populates an event stub (with only its ID set) using the data in the given JSON.
@@ -565,27 +567,6 @@ public class Event: NosManagedObject {
             }
         }
         
-        if author?.hexadecimalPublicKey == CurrentUser.shared.author?.hexadecimalPublicKey {
-            do {
-                try context.save()
-            } catch {
-                Log.error(error.localizedDescription)
-            }
-            CurrentUser.shared.updateInNetworkAuthors(for: author, from: context)
-            CurrentUser.shared.refreshFriendMetadata()
-        }
-        
-        if CurrentUser.shared.author?.follows?.contains(where: {
-            ($0 as? Follow)?.destination?.hexadecimalPublicKey == author?.hexadecimalPublicKey
-        }) == true {
-            do {
-                try context.save()
-            } catch {
-                Log.error(error.localizedDescription)
-            }
-            CurrentUser.shared.updateInNetworkAuthors(from: context)
-        }
-        
         // Get the user's active relays out of the content property
         if let data = jsonEvent.content.data(using: .utf8, allowLossyConversion: false),
             let relayEntries = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
@@ -597,12 +578,30 @@ public class Event: NosManagedObject {
                     newAuthor.add(relay: relay)
                 }
             }
+        }
+        
+        // TODO: Get rid of these side effects to the CurrentUser
+        try? context.save()
+        let authorKey = newAuthor.hexadecimalPublicKey
+        Task { @MainActor [authorKey] in
+            guard let currentUser = CurrentUser.shared.author else {
+                return
+            }
             
-            if author?.hexadecimalPublicKey == CurrentUser.shared.author?.hexadecimalPublicKey {
+            if authorKey == currentUser.hexadecimalPublicKey {
+                await CurrentUser.shared.updateInNetworkAuthors(for: author)
+                CurrentUser.shared.refreshFriendMetadata()
+                
                 // Close sockets for anything not in the above
-                if let keptRelays = newAuthor.relays as? Set<Relay> {
+                if let keptRelays = currentUser.relays as? Set<Relay> {
                     CurrentUser.shared.relayService.closeAllConnections(excluding: keptRelays)
                 }
+            }
+            
+            if currentUser.follows?.contains(where: {
+                ($0 as? Follow)?.destination?.hexadecimalPublicKey == authorKey
+            }) == true {
+                await CurrentUser.shared.updateInNetworkAuthors()
             }
         }
     }
@@ -684,8 +683,10 @@ public class Event: NosManagedObject {
             }
         }
         
-        // Force ensure user never was muted
-        CurrentUser.shared.author?.muted = false
+        // Force ensure current user never was muted
+        Task { @MainActor in
+            CurrentUser.shared.author?.muted = false
+        }
     }
     
     class func all(context: NSManagedObjectContext) -> [Event] {

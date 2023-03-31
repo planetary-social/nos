@@ -194,7 +194,7 @@ struct NoteCard: View {
                             Image.buttonLikeActive
                         } else {
                             Button {
-                                likeNote()
+                                Task { await likeNote() }
                             } label: {
                                 Image.buttonLikeDefault
                             }
@@ -236,7 +236,7 @@ struct NoteCard: View {
         .padding(padding)
     }
     
-    func likeNote() {
+    func likeNote() async {
         
         guard let keyPair = currentUser.keyPair else {
             return
@@ -275,7 +275,7 @@ struct NoteCard: View {
             signature: ""
         )
         do {
-            let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
+            let event = try await Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
             try event.sign(withKey: keyPair)
             try viewContext.save()
             relayService.publishToAll(event: event, context: viewContext)

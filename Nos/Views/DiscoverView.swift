@@ -78,7 +78,7 @@ struct DiscoverView: View {
         relayService.sendCloseToAll(subscriptions: subscriptionIds)
         subscriptionIds.removeAll()
         
-        if let relayFilter {
+        if let relayAddress = relayFilter?.addressURL {
             // TODO: Use a since filter
             let singleRelayFilter = Filter(
                 kinds: [.text],
@@ -86,7 +86,7 @@ struct DiscoverView: View {
             )
             
             subscriptionIds.append(
-                relayService.requestEventsFromAll(filter: singleRelayFilter, relays: [relayFilter])
+                relayService.requestEventsFromAll(filter: singleRelayFilter, overrideRelays: [relayAddress])
             )
         } else {
             
@@ -284,9 +284,9 @@ struct DiscoverView_Previews: PreviewProvider {
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
     static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
     static var currentUser: CurrentUser = {
-        let currentUser = CurrentUser()
-        currentUser.privateKeyHex = KeyFixture.alice.privateKeyHex
-        currentUser.context = previewContext
+        let currentUser = CurrentUser(persistenceController: persistenceController)
+        Task { await currentUser.setPrivateKeyHex(KeyFixture.alice.privateKeyHex) }
+        currentUser.viewContext = previewContext
         currentUser.relayService = relayService
         return currentUser
     }()

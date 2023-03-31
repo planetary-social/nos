@@ -60,7 +60,7 @@ struct NoteOptionsButton: View {
                 if note.author == CurrentUser.shared.author {
                     Button(Localized.deleteNote.string) {
                         // Analytics.shared.trackDidSelectAction(actionName: "delete_message")
-                        deletePost()
+                        Task { await deletePost() }
                     }
                 }
             }
@@ -85,9 +85,9 @@ struct NoteOptionsButton: View {
         }
     }
     
-    func deletePost() {
+    func deletePost() async {
         if let identifier = note.identifier {
-            CurrentUser.shared.publishDelete(for: [identifier])
+            await CurrentUser.shared.publishDelete(for: [identifier])
         }
     }
 

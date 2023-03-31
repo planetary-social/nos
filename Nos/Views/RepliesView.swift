@@ -118,7 +118,7 @@ struct RepliesView: View {
                             AvatarView(imageUrl: author.profilePhotoURL, size: 35)
                         }
                         ExpandingTextFieldAndSubmitButton(placeholder: "Post a reply", reply: $reply) {
-                            postReply(reply)
+                            await postReply(reply)
                         }
                     }
                     .padding(.horizontal)
@@ -133,7 +133,7 @@ struct RepliesView: View {
         .background(Color.appBg)
     }
     
-    func postReply(_ replyText: String) {
+    func postReply(_ replyText: String) async {
         do {
             guard let keyPair = currentUser.keyPair else {
                 alert = AlertState(title: {
@@ -163,7 +163,7 @@ struct RepliesView: View {
                 content: replyText,
                 signature: ""
             )
-            let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
+            let event = try await Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
                 
             try event.sign(withKey: keyPair)
             try viewContext.save()
