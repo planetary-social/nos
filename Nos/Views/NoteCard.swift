@@ -84,7 +84,7 @@ struct NoteCard: View {
     var currentUserLikesNote: Bool {
         likes
             .filter {
-                $0.author?.hexadecimalPublicKey == author.hexadecimalPublicKey
+                $0.author?.hexadecimalPublicKey == currentUser.author?.hexadecimalPublicKey
             }
             .compactMap { $0.eventReferences?.lastObject as? EventReference }
             .contains(where: { $0.eventId == note.identifier })

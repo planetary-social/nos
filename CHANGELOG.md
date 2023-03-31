@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed issue where the like button didn't turn orange when pressed.
+
 ## [0.1 (23)] - 2023-03-25Z
 - Add the option to copy web links on profile pages and notes.
 
