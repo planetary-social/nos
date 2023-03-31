@@ -51,8 +51,10 @@ struct OnboardingTermsOfServiceView: View {
                 }
                 Spacer(minLength: 15)
                 BigActionButton(title: Localized.accept) {
-                    currentUser.createAccount()
-                    state.step = .finishOnboarding
+                    Task {
+                        await currentUser.createAccount()
+                        state.step = .finishOnboarding
+                    }
                 }
             }
             .padding(.horizontal, 24)

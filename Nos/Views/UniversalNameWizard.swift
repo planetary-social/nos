@@ -128,32 +128,30 @@ struct UniversalNameWizard: View {
                     
                     Spacer()
                     BigActionButton(title: .submit) {
-                        Task {
-                            do {
-                                flowState = .loading
-                                try await api.verifyOTPCode(phoneNumber: phoneNumber!, code: textField.trimmingCharacters(in: .whitespacesAndNewlines))
-                                textField = ""
-                                let names = try await api.getNames()
-                                if let name = names.first {
-                                    self.name = name
-                                    var nip05: String
-                                    if let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub) {
-                                        nip05 = try await api.submitNostrVerification(message: message, keyPair: currentUser.keyPair!)
-                                    } else {
-                                        nip05 = try await api.getNIP05()
-                                    }
-                                    author.name = name
-                                    author.nip05 = nip05
-                                    CurrentUser.shared.publishMetaData()
-                                    try viewContext.save()
-                                    flowState = .success
+                        do {
+                            flowState = .loading
+                            try await api.verifyOTPCode(phoneNumber: phoneNumber!, code: textField.trimmingCharacters(in: .whitespacesAndNewlines))
+                            textField = ""
+                            let names = try await api.getNames()
+                            if let name = names.first {
+                                self.name = name
+                                var nip05: String
+                                if let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub) {
+                                    nip05 = try await api.submitNostrVerification(message: message, keyPair: currentUser.keyPair!)
                                 } else {
-                                    flowState = .chooseName
+                                    nip05 = try await api.getNIP05()
                                 }
-                            } catch {
-                                textField = ""
-                                flowState = .error
+                                author.name = name
+                                author.nip05 = nip05
+                                await CurrentUser.shared.publishMetaData()
+                                try viewContext.save()
+                                flowState = .success
+                            } else {
+                                flowState = .chooseName
                             }
+                        } catch {
+                            textField = ""
+                            flowState = .error
                         }
                     }
                     .padding(.horizontal, 24)
@@ -195,7 +193,7 @@ struct UniversalNameWizard: View {
                     .scrollContentBackground(.hidden)
                     Spacer()
                     BigActionButton(title: .submit) {
-                        Task {
+                        do {
                             flowState = .loading
                             guard try await api.createName(textField.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)) else {
                                 flowState = .nameTaken
@@ -207,8 +205,10 @@ struct UniversalNameWizard: View {
                             let nip05 = try await api.submitNostrVerification(message: message, keyPair: currentUser.keyPair!)
                             author.name = name
                             author.nip05 = nip05
-                            CurrentUser.shared.publishMetaData()
+                            await CurrentUser.shared.publishMetaData()
                             flowState = .success
+                        } catch {
+                            flowState = .error
                         }
                     }
                     .padding(.horizontal, 24)

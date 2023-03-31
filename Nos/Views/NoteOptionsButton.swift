@@ -11,6 +11,7 @@ import secp256k1
 
 struct NoteOptionsButton: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var currentUser: CurrentUser
     
     var note: Event
 
@@ -40,6 +41,10 @@ struct NoteOptionsButton: View {
                     // Analytics.shared.trackDidSelectAction(actionName: "copy_message_text")
                     copyMessage()
                 }
+                Button(Localized.copyLink.string) {
+                    // Analytics.shared.trackDidSelectAction(actionName: "copy_message_text")
+                    copyLink()
+                }
                 // Button(Localized.shareThisMessage.text) {
                 // Analytics.shared.trackDidSelectAction(actionName: "share_message")
                 // showingShare = true
@@ -53,10 +58,10 @@ struct NoteOptionsButton: View {
                 //    reportPost()
                 // }
                 
-                if note.author == CurrentUser.shared.author {
+                if note.author == currentUser.author {
                     Button(Localized.deleteNote.string) {
                         // Analytics.shared.trackDidSelectAction(actionName: "delete_message")
-                        deletePost()
+                        Task { await deletePost() }
                     }
                 }
             }
@@ -71,15 +76,19 @@ struct NoteOptionsButton: View {
         UIPasteboard.general.string = note.bech32NoteID
     }
     
+    func copyLink() {
+        UIPasteboard.general.string = note.webLink
+    }
+    
     func copyMessage() {
         if let attrString = note.attributedContent(with: viewContext) {
             UIPasteboard.general.string = String(attrString.characters)
         }
     }
     
-    func deletePost() {
+    func deletePost() async {
         if let identifier = note.identifier {
-            CurrentUser.shared.publishDelete(for: [identifier])
+            await currentUser.publishDelete(for: [identifier])
         }
     }
 

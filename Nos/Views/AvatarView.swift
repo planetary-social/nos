@@ -8,6 +8,11 @@
 import SwiftUI
 import CachedAsyncImage
 
+extension URLCache {
+    // TODO: allow the user to clear this
+    static let imageCache = URLCache(memoryCapacity: 512 * 1000 * 1000, diskCapacity: 1 * 1000 * 1000 * 1000)
+}
+
 struct AvatarView: View {
     
     var imageUrl: URL?
@@ -20,7 +25,7 @@ struct AvatarView: View {
                 .renderingMode(.original)
             
             if let imageURL = imageUrl {
-                CachedAsyncImage(url: imageURL) { phase in
+                CachedAsyncImage(url: imageURL, urlCache: .imageCache) { phase in
                     if let image = phase.image {
                         image
                             .resizable()

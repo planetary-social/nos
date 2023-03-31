@@ -116,6 +116,9 @@ struct ProfileView: View {
                         Button(Localized.copyUserIdentifier.string) {
                             UIPasteboard.general.string = router.viewedAuthor?.publicKey?.npub ?? ""
                         }
+                        Button(Localized.copyLink.string) {
+                            UIPasteboard.general.string = router.viewedAuthor?.webLink ?? ""
+                        }
                         if let author = router.viewedAuthor {
                             if author == CurrentUser.shared.author {
                                 Button(
@@ -130,11 +133,15 @@ struct ProfileView: View {
                             } else {
                                 if author.muted {
                                     Button(Localized.unmuteUser.string) {
-                                        router.viewedAuthor?.unmute(context: viewContext)
+                                        Task {
+                                            await router.viewedAuthor?.unmute(context: viewContext)
+                                        }
                                     }
                                 } else {
                                     Button(Localized.muteUser.string) {
-                                        router.viewedAuthor?.mute(context: viewContext)
+                                        Task {
+                                            await router.viewedAuthor?.mute(context: viewContext)
+                                        }
                                     }
                                 }
                             }

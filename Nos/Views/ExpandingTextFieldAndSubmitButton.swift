@@ -12,10 +12,11 @@ struct ExpandingTextFieldAndSubmitButton: View {
     
     var placeholder: String
     @Binding var reply: String
-    var action: () -> Void
+    var action: () async -> Void
     
     @FocusState private var textEditorInFocus
     @State private var showPostButton = false
+    @State var disabled = false
     
     var body: some View {
         HStack {
@@ -39,8 +40,12 @@ struct ExpandingTextFieldAndSubmitButton: View {
             if showPostButton {
                 Button(
                     action: {
-                        self.action()
-                        reply = ""
+                        disabled = true
+                        Task {
+                            await action()
+                            reply = ""
+                            disabled = false
+                        }
                     },
                     label: {
                         Localized.post.view
@@ -54,7 +59,6 @@ struct ExpandingTextFieldAndSubmitButton: View {
                 showPostButton = bool
             }
         }
-        
         .padding(8)
     }
 }

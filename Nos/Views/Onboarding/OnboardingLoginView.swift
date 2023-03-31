@@ -20,8 +20,8 @@ struct OnboardingLoginView: View {
     @State var privateKeyString = ""
     @State var showError = false
     
-    func importKey(_ keyPair: KeyPair) {
-        currentUser.keyPair = keyPair
+    func importKey(_ keyPair: KeyPair) async {
+        await currentUser.setKeyPair(keyPair)
         analytics.importedKey()
 
         for address in Relay.allKnown {
@@ -36,7 +36,7 @@ struct OnboardingLoginView: View {
                 Log.error(error.localizedDescription)
             }
         }
-        try? CurrentUser.shared.context.save()
+        try? CurrentUser.shared.viewContext.save()
 
         completion()
     }
@@ -61,9 +61,9 @@ struct OnboardingLoginView: View {
             if !privateKeyString.isEmpty {
                 BigActionButton(title: .login) {
                     if let keyPair = KeyPair(nsec: privateKeyString) {
-                        importKey(keyPair)
+                        await importKey(keyPair)
                     } else if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
-                        importKey(keyPair)
+                        await importKey(keyPair)
                     } else {
                         self.showError = true
                     }

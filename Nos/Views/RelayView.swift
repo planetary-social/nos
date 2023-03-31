@@ -48,7 +48,7 @@ struct RelayView: View {
                         }
                         
                         try! viewContext.save()
-                        publishChanges()
+                        Task { await publishChanges() }
                     }
                     
                     if author.relays?.count == 0 {
@@ -74,8 +74,10 @@ struct RelayView: View {
                             Button {
                                 newRelayAddress = address
                                 addRelay()
-                                CurrentUser.shared.subscribe()
-                                publishChanges()
+                                Task {
+                                    await CurrentUser.shared.subscribe()
+                                    await publishChanges()
+                                }
                             } label: {
                                 Label(address, systemImage: "plus.circle")
                             }
@@ -103,8 +105,10 @@ struct RelayView: View {
                     #endif
                 Button(Localized.save.string) {
                     addRelay()
-                    CurrentUser.shared.subscribe()
-                    publishChanges()
+                    Task {
+                        await CurrentUser.shared.subscribe()
+                        await publishChanges()
+                    }
                 }
             } header: {
                 Localized.addRelay.view
@@ -134,9 +138,9 @@ struct RelayView: View {
         }
     }
     
-    func publishChanges() {
+    func publishChanges() async {
         let followKeys = CurrentUser.shared.follows?.keys ?? []
-        CurrentUser.shared.publishContactList(tags: followKeys.pTags)
+        await CurrentUser.shared.publishContactList(tags: followKeys.pTags)
     }
 
     private func addRelay() {

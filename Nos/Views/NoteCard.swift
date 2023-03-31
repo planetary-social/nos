@@ -84,7 +84,7 @@ struct NoteCard: View {
     var currentUserLikesNote: Bool {
         likes
             .filter {
-                $0.author?.hexadecimalPublicKey == author.hexadecimalPublicKey
+                $0.author?.hexadecimalPublicKey == currentUser.author?.hexadecimalPublicKey
             }
             .compactMap { $0.eventReferences?.lastObject as? EventReference }
             .contains(where: { $0.eventId == note.identifier })
@@ -94,6 +94,7 @@ struct NoteCard: View {
         likes
             .compactMap { $0.eventReferences?.lastObject as? EventReference }
             .map { $0.eventId }
+            .filter { $0 == note.identifier }
             .count
     }
     
@@ -194,7 +195,7 @@ struct NoteCard: View {
                             Image.buttonLikeActive
                         } else {
                             Button {
-                                likeNote()
+                                Task { await likeNote() }
                             } label: {
                                 Image.buttonLikeDefault
                             }
@@ -212,10 +213,8 @@ struct NoteCard: View {
             }
         }
         .task {
-            if author.needsMetadata {
-                _ = author.requestMetadata(using: relayService)
-            }
-            
+            note.requestAuthorsMetadataIfNeeded(using: relayService, in: viewContext)
+
             if note.isVerified == false, let publicKey = author.publicKey {
                 let verified = try? publicKey.verifySignature(on: note)
                 if verified != true {
@@ -238,7 +237,7 @@ struct NoteCard: View {
         .padding(padding)
     }
     
-    func likeNote() {
+    func likeNote() async {
         
         guard let keyPair = currentUser.keyPair else {
             return
@@ -277,7 +276,7 @@ struct NoteCard: View {
             signature: ""
         )
         do {
-            let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
+            let event = try await Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
             try event.sign(withKey: keyPair)
             try viewContext.save()
             relayService.publishToAll(event: event, context: viewContext)

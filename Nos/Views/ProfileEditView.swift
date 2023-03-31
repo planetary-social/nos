@@ -134,7 +134,7 @@ struct ProfileEditView: View {
             if let createAccountCompletion {
                 Spacer()
                 BigActionButton(title: .createAccount) {
-                    save()
+                    await save()
                     createAccountCompletion()
                 }
                 .background(Color.appBg)
@@ -157,7 +157,7 @@ struct ProfileEditView: View {
                     if createAccountCompletion == nil {
                         Button(
                             action: {
-                                save()
+                                Task { await save() }
                                 
                                 // Go back to profile page
                                 router.pop()
@@ -192,7 +192,7 @@ struct ProfileEditView: View {
         unsText = author.uns ?? ""
     }
     
-    func save() {
+    func save() async {
         author.displayName = displayNameText
         author.name = nameText
         author.about = bioText
@@ -201,7 +201,7 @@ struct ProfileEditView: View {
         author.uns = unsText
         try! viewContext.save()
         // Post event
-        CurrentUser.shared.publishMetaData()
+        await CurrentUser.shared.publishMetaData()
     }
 }
 

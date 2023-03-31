@@ -134,19 +134,15 @@ struct ProfileHeader: View {
         .navigationDestination(for: Followed.self) { followed in
             FollowsView(followed: followed)
         }
-        .onAppear {
-            Task.detached(priority: .userInitiated) {
-                if let nip05Identifier = await author.nip05,
-                    let publicKey = await author.publicKey?.hex {
-                    let verifiedNip05Identifier = await relayService.verifyInternetIdentifier(
-                        identifier: nip05Identifier,
-                        userPublicKey: publicKey
-                    )
-                    await MainActor.run {
-                        withAnimation {
-                            self.verifiedNip05Identifier = verifiedNip05Identifier
-                        }
-                    }
+        .task {
+            if let nip05Identifier = author.nip05,
+                let publicKey = author.publicKey?.hex {
+                let verifiedNip05Identifier = await relayService.verifyInternetIdentifier(
+                    identifier: nip05Identifier,
+                    userPublicKey: publicKey
+                )
+                withAnimation {
+                    self.verifiedNip05Identifier = verifiedNip05Identifier
                 }
             }
         }

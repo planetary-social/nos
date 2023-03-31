@@ -19,10 +19,10 @@ struct FollowButton: View {
         let following = CurrentUser.shared.isFollowing(author: author)
         ActionButton(title: following ? .unfollow : .follow) {
             if following {
-                CurrentUser.shared.unfollow(author: author)
+                await CurrentUser.shared.unfollow(author: author)
                 analytics.unfollowed(author)
             } else {
-                CurrentUser.shared.follow(author: author)
+                await CurrentUser.shared.follow(author: author)
                 analytics.followed(author)
             }
         }

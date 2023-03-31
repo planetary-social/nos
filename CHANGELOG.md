@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed several crashes
+- Fixed issue where the like button didn't turn orange when pressed.
+- Fixed an issue where likes to replies were counted towards the root note
+- Added more aggressive caching of images
+- Minor performance improvements - more to come!
+
+## [0.1 (23)] - 2023-03-25Z
+- Add the option to copy web links on profile pages and notes.
+
 ## [0.1 (22)] - 2023-03-23Z
 - Fixed a bug in the list of people you are following, where tapping on any name would show your own profile.
 
