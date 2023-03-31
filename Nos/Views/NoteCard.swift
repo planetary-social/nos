@@ -94,6 +94,7 @@ struct NoteCard: View {
         likes
             .compactMap { $0.eventReferences?.lastObject as? EventReference }
             .map { $0.eventId }
+            .filter { $0 == note.identifier }
             .count
     }
     
