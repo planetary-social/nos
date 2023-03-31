@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (24)] - 2023-03-31Z
+
 - Added Crowdin integration for translation services. If you would like to help us translate Nos drop us a line at 
 support@planetary.social.
 - Fixed several crashes.
