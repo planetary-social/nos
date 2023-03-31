@@ -41,9 +41,11 @@ struct ExpandingTextFieldAndSubmitButton: View {
                 Button(
                     action: {
                         disabled = true
-                        Task { await action() }
-                        reply = ""
-                        disabled = false
+                        Task {
+                            await action()
+                            reply = ""
+                            disabled = false
+                        }
                     },
                     label: {
                         Localized.post.view
@@ -57,7 +59,6 @@ struct ExpandingTextFieldAndSubmitButton: View {
                 showPostButton = bool
             }
         }
-        
         .padding(8)
     }
 }

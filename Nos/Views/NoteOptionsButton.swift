@@ -11,6 +11,7 @@ import secp256k1
 
 struct NoteOptionsButton: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var currentUser: CurrentUser
     
     var note: Event
 
@@ -57,7 +58,7 @@ struct NoteOptionsButton: View {
                 //    reportPost()
                 // }
                 
-                if note.author == CurrentUser.shared.author {
+                if note.author == currentUser.author {
                     Button(Localized.deleteNote.string) {
                         // Analytics.shared.trackDidSelectAction(actionName: "delete_message")
                         Task { await deletePost() }
@@ -87,7 +88,7 @@ struct NoteOptionsButton: View {
     
     func deletePost() async {
         if let identifier = note.identifier {
-            await CurrentUser.shared.publishDelete(for: [identifier])
+            await currentUser.publishDelete(for: [identifier])
         }
     }
 

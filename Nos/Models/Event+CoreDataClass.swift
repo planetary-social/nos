@@ -589,7 +589,7 @@ public class Event: NosManagedObject {
             }
             
             if authorKey == currentUser.hexadecimalPublicKey {
-                await CurrentUser.shared.updateInNetworkAuthors(for: author)
+                await CurrentUser.shared.updateInNetworkAuthors(for: currentUser)
                 CurrentUser.shared.refreshFriendMetadata()
                 
                 // Close sockets for anything not in the above

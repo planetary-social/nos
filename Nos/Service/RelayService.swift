@@ -39,7 +39,7 @@ final class RelayService: ObservableObject {
     private var sockets = [WebSocket]()
     private var publishFailedEventsTimer: AsyncTimer?
     private var backgroundContext: NSManagedObjectContext
-    private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .userInitiated)
+    private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .utility)
     private let subscriptionLimit = 10
     private let minimimumOneTimeFilters = 1
     @Dependency(\.analytics) private var analytics
@@ -125,8 +125,8 @@ extension RelayService {
     }
     
     func closeConnection(to relay: Relay) {
+        guard let address = relay.address else { return }
         processingQueue.async {
-            guard let address = relay.address else { return }
             if let socket = self.socket(for: address) {
                 self.requestQueueLock.withLock {
                     for subId in self.activeSubscriptions {
@@ -346,7 +346,9 @@ extension RelayService {
     
     private func parseResponse(_ response: String, _ socket: WebSocket) {
         let relayHost = socket.request.url?.host ?? "unknown relay"
+        #if DEBUG
         Log.info("from \(relayHost): \(response)")
+        #endif
         
         do {
             guard let responseData = response.data(using: .utf8) else {
@@ -361,8 +363,6 @@ extension RelayService {
             
             switch responseType {
             case "EVENT":
-                #if DEBUG
-                #endif
                 parseEvent(responseArray, socket)
             case "NOTICE":
                 if responseArray[safe: 1] as? String == "rate limited" {
@@ -383,11 +383,16 @@ extension RelayService {
 
 // MARK: Publish
 extension RelayService {
-    private func publish(from client: WebSocketClient, event: Event) {
+    private func publish(from client: WebSocketClient, eventID: NSManagedObjectID) {
         do {
             // Keep track of this so if it fails we can retry N times
-            event.sendAttempts += 1
-            let request: [Any] = ["EVENT", event.jsonRepresentation!]
+            var jsonRepresentation = [String: Any]()
+            backgroundContext.performAndWait {
+                let event = self.backgroundContext.object(with: eventID) as! Event
+                event.sendAttempts += 1
+                jsonRepresentation = event.jsonRepresentation!
+            }
+            let request: [Any] = ["EVENT", jsonRepresentation]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
             print(requestString)
@@ -407,7 +412,7 @@ extension RelayService {
         }
         processingQueue.async {
             Task { await self.openSockets() }
-            self.sockets.forEach { self.publish(from: $0, event: event) }
+            self.sockets.forEach { self.publish(from: $0, eventID: event.objectID) }
         }
     }
     
@@ -421,7 +426,7 @@ extension RelayService {
         processingQueue.async {
             Task { await self.openSockets() }
             if let socket = self.socket(from: relay) {
-                self.publish(from: socket, event: event)
+                self.publish(from: socket, eventID: event.objectID)
             } else {
                 Log.error("Could not find socket to publish message")
             }
@@ -429,8 +434,6 @@ extension RelayService {
     }
     
     func publishFailedEvents() async {
-        await self.openSockets()
-        
         await self.backgroundContext.perform {
             
             let objectContext = self.backgroundContext
@@ -449,7 +452,7 @@ extension RelayService {
                     if let socket = self.socket(for: missedAddress) {
                         // Publish again to this socket
                         print("Republishing \(event.identifier!) on \(missedAddress)")
-                        self.publish(from: socket, event: event)
+                        self.publish(from: socket, eventID: event.objectID)
                     }
                 }
             }
@@ -492,9 +495,13 @@ extension RelayService {
             if let overrideRelays {
                 return overrideRelays
             }
-            let userRelays = CurrentUser.shared.author(in: self.backgroundContext)?.relays?.allObjects as? [Relay] ??
-                []
-            return userRelays.compactMap { $0.addressURL }
+            if let currentUserPubKey = CurrentUser.shared.publicKeyHex,
+                let currentUser = try? Author.find(by: currentUserPubKey, context: self.backgroundContext),
+                let userRelays = currentUser.relays?.allObjects as? [Relay] {
+                return userRelays.compactMap { $0.addressURL }
+            } else {
+                return []
+            }
         }
         
         for relayAddress in relayAddresses {

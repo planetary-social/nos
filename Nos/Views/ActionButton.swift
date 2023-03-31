@@ -29,8 +29,10 @@ struct ActionButton: View {
     var body: some View {
         Button(action: {
             disabled = true
-            Task { await action() }
-            disabled = false
+            Task {
+                await action()
+                disabled = false
+            }
         }, label: {
             PlainText(title.string)
                 .font(.clarityBold)

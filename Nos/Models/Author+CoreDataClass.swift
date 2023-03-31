@@ -45,10 +45,16 @@ public class Author: NosManagedObject {
         "https://iris.to/\(publicKey!.npub)"
     }
     
-    class func find(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author? {
+    class func request(by pubKey: HexadecimalString) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey = %@", pubKey)
         fetchRequest.fetchLimit = 1
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+        return fetchRequest
+    }
+    
+    class func find(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author? {
+        let fetchRequest = request(by: pubKey)
         if let author = try context.fetch(fetchRequest).first {
             return author
         }

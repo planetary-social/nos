@@ -11,7 +11,7 @@ import Logger
 import Dependencies
 
 // swiftlint:disable type_body_length
-class CurrentUser: ObservableObject {
+class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
     
     static let shared = CurrentUser(persistenceController: PersistenceController.shared)
     
@@ -39,6 +39,7 @@ class CurrentUser: ObservableObject {
         guard let privateKeyHex = newValue else {
             let publicStatus = KeyChain.delete(key: KeyChain.keychainPrivateKey)
             _privateKeyHex = nil
+            reset()
             print("Deleted private key from keychain with status: \(publicStatus)")
             return
         }
@@ -55,15 +56,35 @@ class CurrentUser: ObservableObject {
         _privateKeyHex = privateKeyHex
         analytics.identify(with: keyPair)
         
-        // TODO: this is fragile
-        // Reset CurrentUser state
+        reset()
+    }
+    
+    // TODO: this is fragile
+    // Reset CurrentUser state
+    @MainActor func reset() {
         onboardingRelays = []
         relayService?.sendClose(subscriptions: subscriptions)
         subscriptions = []
         inNetworkAuthors = []
-        await subscribe()
-        await updateInNetworkAuthors()
-        refreshFriendMetadata()
+        if let keyPair {
+            author = try? Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+            authorWatcher = NSFetchedResultsController(
+                fetchRequest: Author.request(by: keyPair.publicKeyHex),
+                managedObjectContext: viewContext,
+                sectionNameKeyPath: nil,
+                cacheName: nil
+            )
+            authorWatcher?.delegate = self
+            try? authorWatcher?.performFetch()
+            
+            Task {
+                await subscribe()
+                await updateInNetworkAuthors()
+                refreshFriendMetadata()
+            }
+        } else {
+            author = nil
+        }
     }
     
     var publicKeyHex: String? {
@@ -92,16 +113,7 @@ class CurrentUser: ObservableObject {
     var onboardingRelays: [Relay] = []
 
     // TODO: prevent this from being accessed from contexts other than the view context. Or maybe just get rid of it.
-    @MainActor var author: Author? {
-        author(in: viewContext)
-    }
-    
-    func author(in context: NSManagedObjectContext) -> Author? {
-        if let publicKeyHex {
-            return try? Author.findOrCreate(by: publicKeyHex, context: context)
-        }
-        return nil
-    }
+    @MainActor var author: Author?
     
     @MainActor var follows: Set<Follow>? {
         let followSet = author?.follows as? Set<Follow>
@@ -115,14 +127,18 @@ class CurrentUser: ObservableObject {
     }
     
     @MainActor @Published var inNetworkAuthors = [Author]()
+    
+    private var authorWatcher: NSFetchedResultsController<Author>?
                                              
     init(persistenceController: PersistenceController) {
         self.viewContext = persistenceController.viewContext
         self.backgroundContext = persistenceController.newBackgroundContext()
+        super.init()
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             Log.info("CurrentUser loaded a private key from keychain")
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
             _privateKeyHex = hexString
+            Task { @MainActor in self.reset() }
             if let keyPair {
                 Log.info("CurrentUser logged in \(keyPair.publicKeyHex) / \(keyPair.npub)")
                 analytics.identify(with: keyPair)
@@ -435,5 +451,11 @@ class CurrentUser: ObservableObject {
         } catch {
             Log.error("Error updating in network authors: \(error.localizedDescription)")
         }
+    }
+    
+    // MARK: - NSFetchedResultsControllerDelegate
+    
+    @MainActor func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        author = controller.fetchedObjects?.first as? Author
     }
 }
