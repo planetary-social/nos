@@ -744,7 +744,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C9DEBFF8298941020078B43A /* Build configuration list for PBXNativeTarget "Nos" */;
 			buildPhases = (
-				5B46611829CCB66D008B8E8C /* ShellScript */,
+				5B46611829CCB66D008B8E8C /* Export Strings for Localization */,
 				C9DEBFCA298941000078B43A /* Sources */,
 				C9BAB0992996BEEA0003A84E /* SwiftLint */,
 				C9DEBFCB298941000078B43A /* Frameworks */,
@@ -938,18 +938,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		5B46611829CCB66D008B8E8C /* ShellScript */ = {
+		5B46611829CCB66D008B8E8C /* Export Strings for Localization */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Nos/Assets/Localization/Localized.swift",
 			);
+			name = "Export Strings for Localization";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(SRCROOT)/Nos/Assets/Localization/en.lproj/Generated.strings",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
