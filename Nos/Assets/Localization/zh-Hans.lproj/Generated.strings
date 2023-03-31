@@ -64,8 +64,8 @@
 "Localized.bio" = "简介";
 "Localized.displayName" = "显示名";
 "Localized.name" = "名称";
-"Localized.picUrl" = "个人头像图片网址";
-"Localized.noEventsOnProfile" = "我们没有找到这个个人资料的任何记录，但我们会继续查看！";
+"Localized.picUrl" = "头像图片网址";
+"Localized.noEventsOnProfile" = "我们没有找到关于这个个人资料的任何记录，但我们会继续查看！";
 "Localized.basicInfo" = "基本信息";
 "Localized.edit" = "编辑";
 "Localized.debug" = "除错";
