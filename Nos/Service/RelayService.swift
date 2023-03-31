@@ -10,17 +10,36 @@ import CoreData
 import Logger
 import Dependencies
 
+class AsyncTimer {
+    
+    private var task: Task<Void, Never>
+    
+    init(timeInterval: TimeInterval, onFire: @escaping () async -> Void) {
+        self.task = Task(priority: .utility) {
+            while !Task.isCancelled {
+                await onFire()
+                try? await Task.sleep(nanoseconds: UInt64(timeInterval * 1_000_000))
+            }
+        }
+    }
+    
+    func cancel() {
+        task.cancel()
+    }
+}
+
 // swiftlint:disable file_length
 final class RelayService: ObservableObject {
+    
     private var persistenceController: PersistenceController
     // TODO: use a swift Actor to synchronize access to this
     /// Important: lock requestQueueLock before using
     private var requestFilterQueue = [Filter]()
     private var requestQueueLock = NSLock()
     private var sockets = [WebSocket]()
-    private var timer: Timer?
+    private var publishFailedEventsTimer: AsyncTimer?
     private var backgroundContext: NSManagedObjectContext
-    private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .userInitiated)
+    private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .utility)
     private let subscriptionLimit = 10
     private let minimimumOneTimeFilters = 1
     @Dependency(\.analytics) private var analytics
@@ -29,11 +48,18 @@ final class RelayService: ObservableObject {
         self.persistenceController = persistenceController
         self.backgroundContext = persistenceController.newBackgroundContext()
 
-        CurrentUser.shared.context = persistenceController.container.viewContext
-        openSockets()
+        self.publishFailedEventsTimer = AsyncTimer(timeInterval: 120, onFire: { [weak self] in
+            await self?.publishFailedEvents()
+        })
         
-        let pubSel = #selector(publishFailedEvents)
-        timer = Timer.scheduledTimer(timeInterval: 120, target: self, selector: pubSel, userInfo: nil, repeats: true)
+        Task { @MainActor in
+            CurrentUser.shared.viewContext = persistenceController.container.viewContext
+            await openSockets()
+        }
+    }
+    
+    deinit {
+        publishFailedEventsTimer?.cancel()
     }
     
     // TODO: lock requestQueueLock before calling this
@@ -99,8 +125,8 @@ extension RelayService {
     }
     
     func closeConnection(to relay: Relay) {
+        guard let address = relay.address else { return }
         processingQueue.async {
-            guard let address = relay.address else { return }
             if let socket = self.socket(for: address) {
                 self.requestQueueLock.withLock {
                     for subId in self.activeSubscriptions {
@@ -129,7 +155,7 @@ extension RelayService {
         }
     }
     
-    func requestEventsFromAll(filter: Filter = Filter(), relays: [Relay]? = nil) -> String {
+    func requestEventsFromAll(filter: Filter = Filter(), overrideRelays: [URL]? = nil) -> String {
         var subscriptionID: String?
   
         requestQueueLock.withLock {
@@ -155,14 +181,14 @@ extension RelayService {
         
         // Fire of REQs in the background
         processingQueue.async {
-            self.processFilterQueue(adding: filter, relays: relays)
+            self.processFilterQueue(adding: filter, overrideRelays: overrideRelays)
         }
         
         return subscriptionID!
     }
     
-    private func processFilterQueue(adding filter: Filter? = nil, relays: [Relay]? = nil) {
-        openSockets(for: relays)
+    private func processFilterQueue(adding filter: Filter? = nil, overrideRelays: [URL]? = nil) {
+        Task { await openSockets(overrideRelays: overrideRelays) }
         clearStaleSubscriptions()
         
         requestQueueLock.lock()
@@ -320,7 +346,9 @@ extension RelayService {
     
     private func parseResponse(_ response: String, _ socket: WebSocket) {
         let relayHost = socket.request.url?.host ?? "unknown relay"
+        #if DEBUG
         Log.info("from \(relayHost): \(response)")
+        #endif
         
         do {
             guard let responseData = response.data(using: .utf8) else {
@@ -335,8 +363,6 @@ extension RelayService {
             
             switch responseType {
             case "EVENT":
-                #if DEBUG
-                #endif
                 parseEvent(responseArray, socket)
             case "NOTICE":
                 if responseArray[safe: 1] as? String == "rate limited" {
@@ -357,11 +383,16 @@ extension RelayService {
 
 // MARK: Publish
 extension RelayService {
-    private func publish(from client: WebSocketClient, event: Event) {
+    private func publish(from client: WebSocketClient, eventID: NSManagedObjectID) {
         do {
             // Keep track of this so if it fails we can retry N times
-            event.sendAttempts += 1
-            let request: [Any] = ["EVENT", event.jsonRepresentation!]
+            var jsonRepresentation = [String: Any]()
+            backgroundContext.performAndWait {
+                let event = self.backgroundContext.object(with: eventID) as! Event
+                event.sendAttempts += 1
+                jsonRepresentation = event.jsonRepresentation!
+            }
+            let request: [Any] = ["EVENT", jsonRepresentation]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
             print(requestString)
@@ -380,8 +411,8 @@ extension RelayService {
             fatalError("Could not queue event for publishing")
         }
         processingQueue.async {
-            self.openSockets()
-            self.sockets.forEach { self.publish(from: $0, event: event) }
+            Task { await self.openSockets() }
+            self.sockets.forEach { self.publish(from: $0, eventID: event.objectID) }
         }
     }
     
@@ -393,40 +424,35 @@ extension RelayService {
             fatalError("Could not queue event for publishing")
         }
         processingQueue.async {
-            self.openSockets()
+            Task { await self.openSockets() }
             if let socket = self.socket(from: relay) {
-                self.publish(from: socket, event: event)
+                self.publish(from: socket, eventID: event.objectID)
             } else {
                 Log.error("Could not find socket to publish message")
             }
         }
     }
     
-    @objc func publishFailedEvents() {
-        processingQueue.async {
+    func publishFailedEvents() async {
+        await self.backgroundContext.perform {
             
-            self.openSockets()
+            let objectContext = self.backgroundContext
+            let userSentEvents = Event.unpublishedEvents(context: objectContext)
             
-            self.backgroundContext.perform {
+            for event in userSentEvents {
+                let shouldBePublishedToRelays: NSMutableSet = (event.shouldBePublishedTo ?? NSSet())
+                    .mutableCopy() as! NSMutableSet
+                let publishedRelays = (event.publishedTo ?? NSSet()) as Set
+                shouldBePublishedToRelays.minus(publishedRelays)
+                let missedRelays: [Relay] = Array(Set(_immutableCocoaSet: shouldBePublishedToRelays))
                 
-                let objectContext = self.backgroundContext
-                let userSentEvents = Event.unpublishedEvents(context: objectContext)
-                
-                for event in userSentEvents {
-                    let shouldBePublishedToRelays: NSMutableSet = (event.shouldBePublishedTo ?? NSSet())
-                        .mutableCopy() as! NSMutableSet
-                    let publishedRelays = (event.publishedTo ?? NSSet()) as Set
-                    shouldBePublishedToRelays.minus(publishedRelays)
-                    let missedRelays: [Relay] = Array(Set(_immutableCocoaSet: shouldBePublishedToRelays))
-                    
-                    print("\(missedRelays.count) missing a published event.")
-                    for missedRelay in missedRelays {
-                        guard let missedAddress = missedRelay.address else { continue }
-                        if let socket = self.socket(for: missedAddress) {
-                            // Publish again to this socket
-                            print("Republishing \(event.identifier!) on \(missedAddress)")
-                            self.publish(from: socket, event: event)
-                        }
+                print("\(missedRelays.count) missing a published event.")
+                for missedRelay in missedRelays {
+                    guard let missedAddress = missedRelay.address else { continue }
+                    if let socket = self.socket(for: missedAddress) {
+                        // Publish again to this socket
+                        print("Republishing \(event.identifier!) on \(missedAddress)")
+                        self.publish(from: socket, eventID: event.objectID)
                     }
                 }
             }
@@ -462,26 +488,29 @@ extension RelayService {
         }
     }
     
-    private func openSockets(for overrideRelays: [Relay]? = nil) {
+    private func openSockets(overrideRelays: [URL]? = nil) async {
         // Use override relays; fall back to user relays
-        let activeRelays = overrideRelays ?? CurrentUser.shared.author?.relays?.allObjects
         
-        guard let relays = activeRelays as? [Relay] else {
-            print("No relays provided or associated with author!")
-            return
-        }
-
-        for relay in relays {
-            guard let relayAddress = relay.address?.lowercased(),
-                let relayURL = URL(string: relayAddress) else {
-                continue
+        let relayAddresses: [URL] = await backgroundContext.perform { () -> [URL] in
+            if let overrideRelays {
+                return overrideRelays
             }
-                        
-            guard !sockets.contains(where: { $0.request.url == relayURL }) else {
+            if let currentUserPubKey = CurrentUser.shared.publicKeyHex,
+                let currentUser = try? Author.find(by: currentUserPubKey, context: self.backgroundContext),
+                let userRelays = currentUser.relays?.allObjects as? [Relay] {
+                return userRelays.compactMap { $0.addressURL }
+            } else {
+                return []
+            }
+        }
+        
+        for relayAddress in relayAddresses {
+            
+            guard !sockets.contains(where: { $0.request.url == relayAddress }) else {
                 continue
             }
             
-            var request = URLRequest(url: relayURL)
+            var request = URLRequest(url: relayAddress)
             request.timeoutInterval = 10
             let socket = WebSocket(request: request, compressionHandler: .none)
             socket.callbackQueue = processingQueue
@@ -505,7 +534,7 @@ extension RelayService {
             Log.info("websocket connected with unknown host")
         }
         
-        publishFailedEvents()
+        Task { await publishFailedEvents() }
         requestQueueLock.withLock {
             requestFilterQueue
                 .filter { $0.subscriptionStartDate != nil }

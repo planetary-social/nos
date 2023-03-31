@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 /// The event processor consumes raw event data from the relays and writes it to Core Data.
-enum EventProcessor {    
+enum EventProcessor {
     static func parse(
         jsonObject: [String: Any],
         from relay: Relay?,

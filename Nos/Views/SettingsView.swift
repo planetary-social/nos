@@ -19,8 +19,8 @@ struct SettingsView: View {
     
     @State var showError = false
     
-    func importKey(_ keyPair: KeyPair) {
-        currentUser.keyPair = keyPair
+    func importKey(_ keyPair: KeyPair) async {
+        await currentUser.setKeyPair(keyPair)
         analytics.identify(with: keyPair)
         analytics.changedKey()
     }
@@ -36,20 +36,20 @@ struct SettingsView: View {
                     
                     ActionButton(title: Localized.save) {
                         if privateKeyString.isEmpty {
-                            currentUser.keyPair = nil
+                            await currentUser.setKeyPair(nil)
                             analytics.logout()
                             appController.configureCurrentState()
                         } else if let keyPair = KeyPair(nsec: privateKeyString) {
-                            importKey(keyPair)
+                            await importKey(keyPair)
                         } else if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
-                            importKey(keyPair)
+                            await importKey(keyPair)
                         } else {
-                            currentUser.keyPair = nil
+                            await currentUser.setKeyPair(nil)
                             showError = true
                         }
                     }
                     .padding(.vertical, 5)
-                    
+
                     ActionButton(title: Localized.copy) {
                         UIPasteboard.general.string = privateKeyString
                     }
@@ -71,9 +71,9 @@ struct SettingsView: View {
             Section {
                 Text(Localized.sampleDataInstructions.string)
                     .foregroundColor(.primaryTxt)
-                
+
                 Button(Localized.loadSampleData.string) {
-                    PersistenceController.loadSampleData(context: viewContext)
+                    Task { await PersistenceController.loadSampleData(context: viewContext) }
                 }
             } header: {
                 Localized.debug.view

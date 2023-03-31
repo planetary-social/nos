@@ -24,8 +24,8 @@ struct NosApp: App {
                 .environmentObject(AppController(currentUser: currentUser, router: router))
                 .environmentObject(currentUser)
                 .task {
-                    CurrentUser.shared.relayService = relayService
-                    relayService.publishFailedEvents()
+                    currentUser.relayService = relayService
+                    await relayService.publishFailedEvents()
                 }
         }
     }

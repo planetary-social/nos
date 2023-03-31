@@ -8,7 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added Crowdin integration for translation services. If you would like to help us translate Nos drop us a line at 
+support@planetary.social.
+- Fixed several crashes.
 - Fixed issue where the like button didn't turn orange when pressed.
+- Fixed an issue where likes to replies were counted towards the root note.
+- Added more aggressive caching of images.
+- Minor performance improvements - more to come!
 
 ## [0.1 (23)] - 2023-03-25Z
 - Add the option to copy web links on profile pages and notes.

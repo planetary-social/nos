@@ -16,7 +16,7 @@ struct SquareImage: View {
             .aspectRatio(1, contentMode: .fit)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .overlay {
-                CachedAsyncImage(url: url) { phase in
+                CachedAsyncImage(url: url, urlCache: .imageCache) { phase in
                     if let image = phase.image {
                         image
                             .resizable()
