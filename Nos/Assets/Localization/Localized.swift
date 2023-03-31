@@ -14,7 +14,7 @@ import Foundation
 extension Localized {
     static var localizableTypes: [any Localizable.Type] {
         // TODO: Can we compute this using CaseIterable and recursion?
-        [Localized.self]
+        [Localized.self, Localized.Reply.self]
     }
 }
 
