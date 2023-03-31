@@ -123,8 +123,8 @@ struct RepliesView: View {
                     }
                     .padding(.horizontal)
                 }
-                .background(Color.cardBgBottom)
             }
+            .background(Color.cardBgBottom)
             .fixedSize(horizontal: false, vertical: true)
             .onAppear {
                 analytics.showedThread()
