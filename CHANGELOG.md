@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (26)] - 2023-04-03Z
+
 - Minor performance improvements on the Feed and Discover tabs
 
 ## [0.1 (25)] - 2023-03-31Z
