@@ -113,7 +113,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     var onboardingRelays: [Relay] = []
 
     // TODO: prevent this from being accessed from contexts other than the view context. Or maybe just get rid of it.
-    @MainActor var author: Author?
+    @MainActor @Published var author: Author?
     
     @MainActor var follows: Set<Follow>? {
         let followSet = author?.follows as? Set<Follow>
@@ -445,6 +445,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     }
     // swiftlint:enable legacy_objc_type
     
+    // TODO: call this more efficiently
     @MainActor func updateInNetworkAuthors(for user: Author? = nil) async {
         do {
             inNetworkAuthors = try viewContext.fetch(Author.inNetworkRequest(for: user))

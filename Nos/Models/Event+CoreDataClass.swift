@@ -427,7 +427,7 @@ public class Event: NosManagedObject {
         return Bech32.encode(Nostr.notePrefix, baseEightData: Data(identifierBytes))
     }
     
-    func attributedContent(with context: NSManagedObjectContext) -> AttributedString? {
+    func attributedContent(with context: NSManagedObjectContext) async -> AttributedString? {
         guard let content = self.content else {
             return nil
         }
@@ -446,30 +446,32 @@ public class Event: NosManagedObject {
             return AttributedString(content)
         }
         
-        let result = content.replacing(regex) { match in
-            if let tag = tags[safe: match.1],
-                let type = tag[safe: 0],
-                let id = tag[safe: 1] {
-                if type == "p",
-                    let author = try? Author.find(by: id, context: context),
-                    let pubkey = author.hexadecimalPublicKey {
-                    return "[@\(author.safeName)](@\(pubkey))"
+        return await context.perform {
+            let result = content.replacing(regex) { match in
+                if let tag = tags[safe: match.1],
+                    let type = tag[safe: 0],
+                    let id = tag[safe: 1] {
+                    if type == "p",
+                        let author = try? Author.find(by: id, context: context),
+                        let pubkey = author.hexadecimalPublicKey {
+                        return "[@\(author.safeName)](@\(pubkey))"
+                    }
+                    if type == "e",
+                        let event = Event.find(by: id, context: context),
+                        let bech32NoteID = event.bech32NoteID {
+                        return "[@\(bech32NoteID)](%\(id))"
+                    }
                 }
-                if type == "e",
-                    let event = Event.find(by: id, context: context),
-                    let bech32NoteID = event.bech32NoteID {
-                    return "[@\(bech32NoteID)](%\(id))"
-                }
+                return ""
             }
-            return ""
+            
+            let linkedString = (try? result.findAndReplaceUnformattedLinks(in: result)) ?? result
+            
+            return try? AttributedString(
+                markdown: linkedString,
+                options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
+            )
         }
-        
-        let linkedString = (try? result.findAndReplaceUnformattedLinks(in: result)) ?? result
-        
-        return try? AttributedString(
-            markdown: linkedString,
-            options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-        )
     }
 	
     convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent, relay: Relay?) throws {
@@ -577,31 +579,6 @@ public class Event: NosManagedObject {
                 if let relay = try? Relay.findOrCreate(by: address, context: context) {
                     newAuthor.add(relay: relay)
                 }
-            }
-        }
-        
-        // TODO: Get rid of these side effects to the CurrentUser
-        try? context.save()
-        let authorKey = newAuthor.hexadecimalPublicKey
-        Task { @MainActor [authorKey] in
-            guard let currentUser = CurrentUser.shared.author else {
-                return
-            }
-            
-            if authorKey == currentUser.hexadecimalPublicKey {
-                await CurrentUser.shared.updateInNetworkAuthors(for: currentUser)
-                CurrentUser.shared.refreshFriendMetadata()
-                
-                // Close sockets for anything not in the above
-                if let keptRelays = currentUser.relays as? Set<Relay> {
-                    CurrentUser.shared.relayService.closeAllConnections(excluding: keptRelays)
-                }
-            }
-            
-            if currentUser.follows?.contains(where: {
-                ($0 as? Follow)?.destination?.hexadecimalPublicKey == authorKey
-            }) == true {
-                await CurrentUser.shared.updateInNetworkAuthors()
             }
         }
     }
@@ -782,6 +759,7 @@ public class Event: NosManagedObject {
                     deletedEvent.deletedOn = (deletedEvent.deletedOn ?? NSSet()).adding(relay)
                 }
             }
+            try! context.save()
         }
     }
     // swiftlint:enable legacy_objc_type

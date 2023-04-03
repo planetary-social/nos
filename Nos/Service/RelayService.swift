@@ -18,7 +18,7 @@ class AsyncTimer {
         self.task = Task(priority: .utility) {
             while !Task.isCancelled {
                 await onFire()
-                try? await Task.sleep(nanoseconds: UInt64(timeInterval * 1_000_000))
+                try? await Task.sleep(nanoseconds: UInt64(timeInterval * 1_000_000_000))
             }
         }
     }
@@ -37,7 +37,8 @@ final class RelayService: ObservableObject {
     private var requestFilterQueue = [Filter]()
     private var requestQueueLock = NSLock()
     private var sockets = [WebSocket]()
-    private var publishFailedEventsTimer: AsyncTimer?
+    private var saveEventsTimer: AsyncTimer?
+    private var updateSocialGraphTimer: AsyncTimer?
     private var backgroundContext: NSManagedObjectContext
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .utility)
     private let subscriptionLimit = 10
@@ -48,8 +49,24 @@ final class RelayService: ObservableObject {
         self.persistenceController = persistenceController
         self.backgroundContext = persistenceController.newBackgroundContext()
 
-        self.publishFailedEventsTimer = AsyncTimer(timeInterval: 120, onFire: { [weak self] in
-            await self?.publishFailedEvents()
+        self.saveEventsTimer = AsyncTimer(timeInterval: 3, onFire: { [weak self] in
+            self?.backgroundContext.perform {
+                if self?.backgroundContext.hasChanges == true {
+                    try! self?.backgroundContext.save()
+                }
+            }
+        })
+        
+        self.updateSocialGraphTimer = AsyncTimer(timeInterval: 30, onFire: { [weak self] in
+            guard let currentUser = await CurrentUser.shared.author else {
+                return
+            }
+            // Close sockets for anything not in the above
+            if let keptRelays = currentUser.relays as? Set<Relay> {
+                self?.closeAllConnections(excluding: keptRelays)
+            }
+            
+            await CurrentUser.shared.updateInNetworkAuthors()
         })
         
         Task { @MainActor in
@@ -59,7 +76,8 @@ final class RelayService: ObservableObject {
     }
     
     deinit {
-        publishFailedEventsTimer?.cancel()
+        saveEventsTimer?.cancel()
+        updateSocialGraphTimer?.cancel()
     }
     
     // TODO: lock requestQueueLock before calling this
@@ -322,7 +340,6 @@ extension RelayService {
                         
                         // Receiving a confirmation of my own deletion event
                         event.trackDelete(on: relay, context: self.backgroundContext)
-                        try! self.backgroundContext.save()
                     } else {
                         // This will be picked up later in publishFailedEvents
                         if responseArray.count > 2, let message = responseArray[3] as? String {

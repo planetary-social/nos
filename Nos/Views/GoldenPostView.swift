@@ -10,24 +10,26 @@ import SwiftUI
 
 struct GoldenPostView: View {
 
-    var author: Author
+    @ObservedObject var author: Author
 
-    var note: Event {
-        didSet {
-            if let eventAuthor = note.author {
-                self.author = eventAuthor
-            }
-        }
-    }
+    @ObservedObject var note: Event
 
     private let goldenRatio: CGFloat = 0.618
     
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var router: Router
+    
+    @State private var attributedContent: AttributedString
+    
+    internal init(author: Author, note: Event) {
+        self.author = author
+        self.note = note
+        _attributedContent = .init(initialValue: AttributedString(note.content ?? ""))
+    }
 
     var text: some View {
-        Text(note.attributedContent(with: viewContext) ?? "")
+        Text(attributedContent)
             .foregroundColor(.primaryTxt)
             .accentColor(.accent)
             .multilineTextAlignment(.leading)
@@ -57,6 +59,14 @@ struct GoldenPostView: View {
             }
         }
         .padding(10)
+        .task {
+            let backgroundContext = PersistenceController.backgroundViewContext
+            if let parsedAttributedContent = await note.attributedContent(with: backgroundContext) {
+                withAnimation {
+                    attributedContent = parsedAttributedContent
+                }
+            }
+        }
     }
     
     var isTextOnly: Bool {
