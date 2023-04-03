@@ -1,6 +1,6 @@
 # Nos.social
 
-![Unit Tests](https://github.com/planetary-social/nos/actions/workflows/main.yml/badge.svg) [![Crowdin](https://badges.crowdin.net/planetary/localized.svg)](https://crowdin.com/project/nossocial)
+![Unit Tests](https://github.com/planetary-social/nos/actions/workflows/main.yml/badge.svg) [![Crowdin](https://badges.crowdin.net/nossocial/localized.svg)](https://crowdin.com/project/nossocial)
 
 Nos is an experimental Nostr client inspired by our work on [planetary.social](https://planetary.social). 
 
