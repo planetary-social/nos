@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Minor performance improvements on the Feed and Discover tabs
+
 ## [0.1 (25)] - 2023-03-31Z
 
 - Fixed a bug where reply counts were displaying translation keys instead of the count
