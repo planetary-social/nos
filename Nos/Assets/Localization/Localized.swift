@@ -161,16 +161,17 @@ enum Localized: String, Localizable, CaseIterable {
     
     case keys = "Keys"
     case keyEncryptionWarning = "Warning: Never share your private key with anyone."
-    case privateKeyPlaceholder = "nsec..."
+    case privateKeyPlaceholder = "nsec or hex..."
     case save = "Save"
     case copy = "Copy"
     case settings = "Settings"
     case invalidKey = "Invalid Key"
-    case couldNotReadPrivateKeyMessage = "Could not read your private key. Make sure it is in hex format."
+    case couldNotReadPrivateKeyMessage = "Could not read your private key. Please verify that it is in nsec or hex format."
     case createAccount = "Create an account"
     
     case post = "Post" // (verb form)
     case newNote = "New Note"
+    case newNotePlaceholder = "Type your post here..."
     case cancel = "Cancel"
     case done = "Done"
     case editProfile = "Edit Profile"
@@ -229,11 +230,28 @@ enum Localized: String, Localizable, CaseIterable {
     case reportPost = "Report this post"
     case unmuteUser = "Un-Mute"
     case extendedNetwork = "Extended Network"
+    case outsideNetwork = "This user is outside your network."
     case allMyRelays = "All My Relays"
     case about = "About"
     case contactUs = "Contact Us"
     case shareNos = "Share Nos"
     case yourProfile = "Your Profile"
+    
+    case unsTagline = "Universal Name Space brings identity verification you can trust."
+    case unsDescription = "The Universal Namespace gives you one name you can use everywhere. You can verify your identity and get your universal name here in Nos. This screen is for demo purposes only, all names will be reset in the future. Learn more."
+    case unsLearnMore = "Learn more."
+    case verifyYourIdentity = "Verify your identity"
+    case enterCode = "Enter Code"
+    case nameLower = "name"
+    case chooseYourName = "Choose Your Name"
+    case oops = "Oops!"
+    case thatNameIsTaken = "That name is taken."
+    case success = "Success!"
+    case yourNewUNMessage = "is your new Nostr username.\n\nThis demo of the Universal Namespace is for testing purposes only. All names will be reset in the future."
+    case anErrorOccurred = "An error occured."
+    
+    case relayAddressPlaceholder = "wss://yourrelay.com"
+    case someone = "someone"
     
     case aboutNos = "Nos is a new social media app built on the Nostr protocol from the team that brought you Planetary. Designed for humans, not algorithms. Learn more at Nos.social."
     case aboutNosHighlight = "Learn more at Nos.social."
@@ -250,5 +268,12 @@ extension Localized {
     enum Reply: String, Localizable, CaseIterable {
         case one = "{{ count }} reply"
         case many = "{{ count }} replies"
+        
+        case replied = "replied"
+        case posted = "posted"
+        case postAReply = "Post a reply"
+        
+        case repliedToYourNote = "replied to your note:"
+        case mentionedYou = "mentioned you:"
     }
 }

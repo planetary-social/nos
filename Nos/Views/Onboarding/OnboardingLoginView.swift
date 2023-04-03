@@ -45,7 +45,7 @@ struct OnboardingLoginView: View {
         VStack {
             Form {
                 Section {
-                    SecureField("NSec1", text: $privateKeyString)
+                    SecureField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
                         .foregroundColor(.textColor)
                 } header: {
                     Localized.pasteYourSecretKey.view

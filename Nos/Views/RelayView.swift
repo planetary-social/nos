@@ -96,7 +96,7 @@ struct RelayView: View {
             }
             
             Section {
-                TextField("wss://yourrelay.com", text: $newRelayAddress)
+                TextField(Localized.relayAddressPlaceholder.string, text: $newRelayAddress)
                     .foregroundColor(.textColor)
                     .autocorrectionDisabled()
                     #if os(iOS)

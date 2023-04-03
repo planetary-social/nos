@@ -123,7 +123,8 @@ struct NoteCard: View {
     var attributedAuthor: AttributedString {
         var authorName = AttributedString(author.safeName)
         authorName.foregroundColor = .primaryTxt
-        var postedOrReplied = AttributedString(note.isReply ? " replied" : " posted")
+        let postedOrRepliedString = note.isReply ? Localized.Reply.replied.string : Localized.Reply.posted.string
+        var postedOrReplied = AttributedString(" " + postedOrRepliedString)
         postedOrReplied.foregroundColor = .secondaryTxt
         
         authorName.append(postedOrReplied)
@@ -166,7 +167,7 @@ struct NoteCard: View {
                         CompactNoteView(note: note, showFullMessage: showFullMessage)
                     } else {
                         VStack {
-                            Text("This user is outside your network.")
+                            Localized.outsideNetwork.view
                                 .font(.body)
                                 .foregroundColor(.secondaryTxt)
                                 .padding(15)
