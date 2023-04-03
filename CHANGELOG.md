@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Made all the built-in text in the app translatable. If you would like to help translate Nos let us know by emailing support@planetary.social.
+
 ## [0.1 (25)] - 2023-03-31Z
 
 - Fixed a bug where reply counts were displaying translation keys instead of the count
