@@ -9,7 +9,6 @@ import XCTest
 import CoreData
 import secp256k1
 import secp256k1_bindings
-@testable import Nos
 
 // swiftlint:disable force_unwrapping
 
@@ -200,8 +199,7 @@ final class EventTests: XCTestCase {
         let referencingEvent = try EventProcessor.parse(
             jsonEvent: referencingJSONEvent,
             from: nil,
-            in: testContext,
-            skipVerification: true
+            in: testContext
         )
         try testContext.save()
         
@@ -223,8 +221,7 @@ final class EventTests: XCTestCase {
         let referencedEvent = try EventProcessor.parse(
             jsonEvent: referencedJSONEvent,
             from: nil,
-            in: testContext,
-            skipVerification: true
+            in: testContext
         )
         try testContext.save()
         
