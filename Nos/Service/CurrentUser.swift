@@ -388,7 +388,6 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         }
     }
     
-    // swiftlint:disable legacy_objc_type
     /// Follow by public hex key
     @MainActor func follow(author toFollow: Author) async {
         guard let followKey = toFollow.hexadecimalPublicKey else {
@@ -450,7 +449,6 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         try! viewContext.save()
         await publishContactList(tags: stillFollowingKeys.pTags)
     }
-    // swiftlint:enable legacy_objc_type
     
     @MainActor func updateInNetworkAuthors(for user: Author? = nil) async {
         do {
@@ -466,3 +464,4 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         author = controller.fetchedObjects?.first as? Author
     }
 }
+// swiftlint:enable type_body_length

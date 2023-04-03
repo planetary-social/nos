@@ -186,7 +186,6 @@ struct HighlightedText: View {
     }
 }
 
-// swiftlint:disable force_unwrapping
 struct HighlightedText_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

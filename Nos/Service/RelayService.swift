@@ -301,7 +301,6 @@ extension RelayService {
         }
     }
 
-    // swiftlint:disable legacy_objc_type
     private func parseOK(_ responseArray: [Any], _ socket: WebSocket) {
         guard responseArray.count > 2 else {
             return
@@ -342,7 +341,6 @@ extension RelayService {
             }
         }
     }
-    // swiftlint:enable legacy_objc_type
     
     private func parseResponse(_ response: String, _ socket: WebSocket) {
         let relayHost = socket.request.url?.host ?? "unknown relay"

@@ -658,9 +658,7 @@ public class Event: NosManagedObject {
     }
 
     func markSeen(on relay: Relay) {
-        // swiftlint:disable legacy_objc_type
         seenOnRelays = (seenOnRelays ?? NSSet()).adding(relay)
-        // swiftlint:enable legacy_objc_type
     }
     
     func hydrateMuteList(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
@@ -772,7 +770,6 @@ public class Event: NosManagedObject {
         return nil
     }
     
-    // swiftlint:disable legacy_objc_type
     /// This tracks which relays this event is deleted on. Hide posts with deletedOn.count > 0
     func trackDelete(on relay: Relay, context: NSManagedObjectContext) {
         if EventKind(rawValue: kind) == .delete, let eTags = allTags as? [[String]] {
@@ -785,7 +782,6 @@ public class Event: NosManagedObject {
             }
         }
     }
-    // swiftlint:enable legacy_objc_type
     
     func requestAuthorsMetadataIfNeeded(using relayService: RelayService, in context: NSManagedObjectContext) {
         if let author, author.needsMetadata {

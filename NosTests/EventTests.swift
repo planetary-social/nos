@@ -10,8 +10,6 @@ import CoreData
 import secp256k1
 import secp256k1_bindings
 
-// swiftlint:disable force_unwrapping
-
 /// Tests for the Event model.
 final class EventTests: XCTestCase {
     
