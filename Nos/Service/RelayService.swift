@@ -540,7 +540,6 @@ extension RelayService {
                 .filter { $0.subscriptionStartDate != nil }
                 .forEach { self.requestEvents(from: client, subId: $0.subscriptionId, filter: $0) }
         }
-        
     }
 }
 

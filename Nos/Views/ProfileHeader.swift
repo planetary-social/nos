@@ -107,7 +107,6 @@ struct ProfileHeader: View {
                                 } else {
                                     Text("\(relayService.identifierToShow(nip05Identifier))")
                                         .foregroundColor(.secondaryTxt)
-                                    
                                 }
                             }
                         }

@@ -160,7 +160,8 @@ public class Event: NosManagedObject {
     @nonobjc public class func unpublishedEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(format: "author.hexadecimalPublicKey = %@ AND " +
+        fetchRequest.predicate = NSPredicate(
+            format: "author.hexadecimalPublicKey = %@ AND " +
             "SUBQUERY(shouldBePublishedTo, $relay, TRUEPREDICATE).@count != " +
             "SUBQUERY(seenOnRelays, $relay, TRUEPREDICATE).@count"
         )
@@ -538,7 +539,7 @@ public class Event: NosManagedObject {
         }
     }
     
-    // swiftlint:disable function_body_length cyclomatic_complexity
+    // swiftlint:disable cyclomatic_complexity
     func hydrateContactList(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
         guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
             return
@@ -605,7 +606,7 @@ public class Event: NosManagedObject {
             }
         }
     }
-    // swiftlint:enable function_body_length cyclomatic_complexity
+    // swiftlint:enable cyclomatic_complexity
     
     func hydrateDefault(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
         let newEventReferences = NSMutableOrderedSet()
@@ -793,9 +794,9 @@ public class Event: NosManagedObject {
         
         self.authorReferences?.forEach { reference in
             if let reference = reference as? AuthorReference,
-               let pubKey = reference.pubkey,
-               let author = try? Author.findOrCreate(by: pubKey, context: context),
-               author.needsMetadata {
+                let pubKey = reference.pubkey,
+                let author = try? Author.findOrCreate(by: pubKey, context: context),
+                author.needsMetadata {
                     _ = author.requestMetadata(using: relayService)
             }
         }

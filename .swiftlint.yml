@@ -139,6 +139,7 @@ identifier_name:
     - hex
     - to
     - day
+    - api
 number_separator:
   minimum_length: 5
 cyclomatic_complexity:

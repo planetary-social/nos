@@ -52,7 +52,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         let privateKeyData = Data(privateKeyHex.utf8)
         let publicStatus = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKeyData)
         Log.info("Saved private key to keychain for user: " +
-                 "\(keyPair.publicKeyHex) / \(keyPair.npub). Keychain storage status: \(publicStatus)")
+            "\(keyPair.publicKeyHex) / \(keyPair.npub). Keychain storage status: \(publicStatus)")
         _privateKeyHex = privateKeyHex
         analytics.identify(with: keyPair)
         
@@ -216,7 +216,10 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             }
             
             let followData = await self?.backgroundContext.perform {
-                let follows = try? Author.findOrCreate(by: publicKeyHex, context: backgroundContext).follows as? Set<Follow>
+                let follows = try? Author.findOrCreate(
+                    by: publicKeyHex,
+                    context: backgroundContext
+                ).follows as? Set<Follow>
                 return follows?
                     .shuffled()
                     .map { ($0.destination?.hexadecimalPublicKey, $0.destination?.lastUpdatedMetadata) }
@@ -233,7 +236,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                     limit: 1,
                     since: lastUpdated
                 )
-                _ = await self?.relayService.requestEventsFromAll(filter: metaFilter)
+                _ = self?.relayService.requestEventsFromAll(filter: metaFilter)
                 
                 let contactFilter = Filter(
                     authorKeys: [followedKey],
@@ -241,7 +244,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                     limit: 1,
                     since: lastUpdated
                 )
-                _ = await self?.relayService.requestEventsFromAll(filter: contactFilter)
+                _ = self?.relayService.requestEventsFromAll(filter: contactFilter)
                 
                 // TODO: check cancellation
                 // Do this slowly so we don't get rate limited
@@ -299,8 +302,8 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         if let pair = keyPair {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try await EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
-                await relayService.publishToAll(event: event, context: viewContext)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
+                relayService.publishToAll(event: event, context: viewContext)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }
@@ -320,8 +323,8 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         if let pair = keyPair {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try await EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
-                await relayService.publishToAll(event: event, context: viewContext)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
+                relayService.publishToAll(event: event, context: viewContext)
             } catch {
                 Log.debug("Failed to update mute list \(error.localizedDescription)")
             }
@@ -342,8 +345,8 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         if let pair = keyPair {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try await EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
-                await relayService.publishToAll(event: event, context: viewContext)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
+                relayService.publishToAll(event: event, context: viewContext)
             } catch {
                 Log.debug("Failed to delete events \(error.localizedDescription)")
             }
@@ -377,8 +380,8 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         if let pair = keyPair {
             do {
                 try jsonEvent.sign(withKey: pair)
-                let event = try await EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
-                await relayService.publishToAll(event: event, context: viewContext)
+                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
+                relayService.publishToAll(event: event, context: viewContext)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }
@@ -400,7 +403,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         
         // Update author to add the new follow
         if let followedAuthor = try? Author.find(by: followKey, context: viewContext), let currentUser = author {
-            let follow = try! Follow.findOrCreate(source: currentUser, destination: followedAuthor, context: viewContext)
+            let follow = try! Follow.findOrCreate(
+                source: currentUser,
+                destination: followedAuthor,
+                context: viewContext
+            )
 
             // Add to the current user's follows
             currentUser.follows = (currentUser.follows ?? NSSet()).adding(follow)
