@@ -589,13 +589,15 @@ public class Event: NosManagedObject {
         let newAuthorReferences = NSMutableOrderedSet()
         for jsonTag in jsonEvent.tags {
             if jsonTag.first == "e" {
+                // TODO: validdate that the tag looks like an event ref
                 do {
                     let eTag = try EventReference(jsonTag: jsonTag, context: context)
                     newEventReferences.add(eTag)
                 } catch {
                     print("error parsing e tag: \(error.localizedDescription)")
                 }
-            } else {
+            } else if jsonTag.first == "p" {
+                // TODO: validdate that the tag looks like a pubkey
                 let authorReference = AuthorReference(context: context)
                 authorReference.pubkey = jsonTag[safe: 1]
                 authorReference.recommendedRelayUrl = jsonTag[safe: 2]
