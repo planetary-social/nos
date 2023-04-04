@@ -10,6 +10,18 @@ import CoreData
 import Logger
 import Dependencies
 
+extension WebSocket {
+    var host: String {
+        self.request.url?.host ?? "unknown relay"
+    }
+}
+
+extension WebSocketClient {
+    var host: String {
+        (self as? WebSocket)?.host ?? "unkown relay"
+    }
+}
+
 class AsyncTimer {
     
     private var task: Task<Void, Never>
@@ -39,6 +51,7 @@ final class RelayService: ObservableObject {
     private var sockets = [WebSocket]()
     private var saveEventsTimer: AsyncTimer?
     private var updateSocialGraphTimer: AsyncTimer?
+    private var publishFailedEventsTimer: AsyncTimer?
     private var backgroundContext: NSManagedObjectContext
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .utility)
     private let subscriptionLimit = 10
@@ -67,6 +80,11 @@ final class RelayService: ObservableObject {
             }
             
             await CurrentUser.shared.updateInNetworkAuthors()
+        })
+        
+        // TODO: fire this after all relays have connected, not right on init
+        self.publishFailedEventsTimer = AsyncTimer(timeInterval: 60, onFire: { [weak self] in
+            await self?.publishFailedEvents()
         })
         
         Task { @MainActor in
@@ -114,11 +132,11 @@ final class RelayService: ObservableObject {
         }
     }
         
-    private func handleError(_ error: Error?) {
+    private func handleError(_ error: Error?, from socket: WebSocketClient) {
         if let error {
-            print("websocket error: \(error)")
+            Log.info("websocket error: \(error) from: \(socket.host)")
         } else {
-            print("uknown error")
+            Log.info("unknown websocket error from: \(socket.host)")
         }
     }
 }
@@ -193,7 +211,7 @@ extension RelayService {
             let request: [Any] = ["REQ", subscription.id, subscription.filter.dictionary]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
-            Log.info(requestString)
+            Log.info("\(requestString) sent to \(socket.host)")
             socket.write(string: requestString)
         } catch {
             print("Error: Could not send request \(error.localizedDescription)")
@@ -230,10 +248,12 @@ extension RelayService {
         subscriptionQueueAccess.lock()
         defer { subscriptionQueueAccess.unlock() }
         
-        /// Strategy: we have two types of subscriptions: long and one time. We can only have a certain number of
-        /// subscriptions open at once. We want to:
-        /// - Open as many long running subsriptions as we can, leaving room for `minimumOneTimeSubscriptions`
-        /// - fill remaining slots with one time filters
+        // TODO: Make sure active subscriptions are open on all relays
+        
+        // Strategy: we have two types of subscriptions: long and one time. We can only have a certain number of
+        // subscriptions open at once. We want to:
+        // - Open as many long running subsriptions as we can, leaving room for `minimumOneTimeSubscriptions`
+        // - fill remaining slots with one time filters
         let runningLongSubscriptions = subscriptionQueue.filter { !$0.isOneTime && $0.isActive }
         let waitingLongSubscriptions = subscriptionQueue.filter { !$0.isOneTime && !$0.isActive }
         let waitingOneTimeSubscriptions = subscriptionQueue.filter { $0.isOneTime && !$0.isActive }
@@ -380,9 +400,8 @@ extension RelayService {
     // swiftlint:enable legacy_objc_type
     
     private func parseResponse(_ response: String, _ socket: WebSocket) {
-        let relayHost = socket.request.url?.host ?? "unknown relay"
         #if DEBUG
-        Log.info("from \(relayHost): \(response)")
+        Log.info("from \(socket.host): \(response)")
         #endif
         
         do {
@@ -569,12 +588,10 @@ extension RelayService {
             Log.info("websocket connected with unknown host")
         }
         
-        Task { await publishFailedEvents() }
         subscriptionQueueAccess.withLock {
             activeSubscriptions
                 .forEach { self.requestEvents(from: client, subscription: $0) }
         }
-        
     }
 }
 
@@ -610,7 +627,7 @@ extension RelayService: WebSocketDelegate {
             if let index = sockets.firstIndex(where: { $0 === socket }) {
                 sockets.remove(at: index)
             }
-            handleError(error)
+            handleError(error, from: socket)
         }
     }
 }
