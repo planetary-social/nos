@@ -77,6 +77,8 @@ struct NotificationCard: View {
     
     @State private var attributedContent: AttributedString
     
+    @State private var subscriptionIDs = [RelaySubscription.ID]()
+    
     init(note: Event, user: Author) {
         self.note = note
         self.user = user
@@ -150,10 +152,18 @@ struct NotificationCard: View {
                 .padding(.top, 15)
             }
             .buttonStyle(CardButtonStyle())
-            .task {
-                if author.needsMetadata {
-                    _ = author.requestMetadata(using: relayService)
+            .onAppear {
+                Task {
+                    let backgroundContext = PersistenceController.backgroundViewContext
+                    await subscriptionIDs += note.requestAuthorsMetadataIfNeeded(
+                        using: relayService,
+                        in: backgroundContext
+                    )
                 }
+            }
+            .onDisappear {
+                relayService.removeSubscriptions(for: subscriptionIDs)
+                subscriptionIDs.removeAll()
             }
             .task {
                 let backgroundContext = PersistenceController.backgroundViewContext

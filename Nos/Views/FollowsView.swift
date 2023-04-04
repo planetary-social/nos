@@ -21,7 +21,7 @@ struct FollowsView: View {
     func refreshFollows() {
         let keys = followed.compactMap { $0.destination?.hexadecimalPublicKey }
         let filter = Filter(authorKeys: keys, kinds: [.metaData, .contactList], limit: 100)
-        subscriptionId = relayService.requestEventsFromAll(filter: filter)
+        subscriptionId = relayService.openSubscription(with: filter)
     }
     
     var body: some View {
@@ -42,7 +42,7 @@ struct FollowsView: View {
             refreshFollows()
         }
         .onDisappear {
-            relayService.sendCloseToAll(subscriptions: [subscriptionId])
+            relayService.removeSubscription(for: subscriptionId)
             subscriptionId = ""
         }
     }

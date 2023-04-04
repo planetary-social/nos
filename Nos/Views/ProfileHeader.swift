@@ -147,7 +147,7 @@ struct ProfileHeader: View {
             }
         }
         .onDisappear {
-            relayService.sendCloseToAll(subscriptions: [subscriptionId])
+            relayService.removeSubscription(for: subscriptionId)
             subscriptionId = ""
         }
     }

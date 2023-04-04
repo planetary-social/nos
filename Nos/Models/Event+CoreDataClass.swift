@@ -37,7 +37,7 @@ enum EventError: Error {
 	}
 }
 
-public enum EventKind: Int64, CaseIterable {
+public enum EventKind: Int64, CaseIterable, Hashable {
 	case metaData = 0
 	case text = 1
 	case contactList = 3
@@ -764,18 +764,30 @@ public class Event: NosManagedObject {
     }
     // swiftlint:enable legacy_objc_type
     
-    func requestAuthorsMetadataIfNeeded(using relayService: RelayService, in context: NSManagedObjectContext) {
-        if let author, author.needsMetadata {
-            _ = author.requestMetadata(using: relayService)
+    func requestAuthorsMetadataIfNeeded(using relayService: RelayService, in context: NSManagedObjectContext) async -> [RelaySubscription.ID] {
+        guard let authorKey = author?.hexadecimalPublicKey else {
+            return []
         }
         
-        self.authorReferences?.forEach { reference in
-            if let reference = reference as? AuthorReference,
-               let pubKey = reference.pubkey,
-               let author = try? Author.findOrCreate(by: pubKey, context: context),
-               author.needsMetadata {
-                    _ = author.requestMetadata(using: relayService)
+        return await context.perform {
+            var subscriptionIDs = [RelaySubscription.ID]()
+            
+            let author = try! Author.findOrCreate(by: authorKey, context: context)
+            
+            if author.needsMetadata {
+                author.requestMetadata(using: relayService).unwrap { subscriptionIDs.append($0) }
             }
+            
+            self.authorReferences?.forEach { reference in
+                if let reference = reference as? AuthorReference,
+                   let pubKey = reference.pubkey,
+                   let author = try? Author.findOrCreate(by: pubKey, context: context),
+                   author.needsMetadata {
+                    author.requestMetadata(using: relayService).unwrap { subscriptionIDs.append($0) }
+                }
+            }
+            
+            return subscriptionIDs
         }
     }
     

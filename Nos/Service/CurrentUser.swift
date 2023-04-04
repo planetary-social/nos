@@ -63,7 +63,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     // Reset CurrentUser state
     @MainActor func reset() {
         onboardingRelays = []
-        relayService?.sendClose(subscriptions: subscriptions)
+        relayService?.removeSubscriptions(for: subscriptions)
         subscriptions = []
         inNetworkAuthors = []
         if let keyPair {
@@ -78,9 +78,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             try? authorWatcher?.performFetch()
             
             Task {
-                await subscribe()
+                if relayService != nil {
+                    await subscribe()
+                    refreshFriendMetadata()
+                }
                 await updateInNetworkAuthors()
-                refreshFriendMetadata()
             }
         } else {
             author = nil
@@ -186,23 +188,25 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         if let key = publicKeyHex {
             // Close out stale requests
             if !subscriptions.isEmpty {
-                relayService.sendCloseToAll(subscriptions: subscriptions)
+                relayService.removeSubscriptions(for: subscriptions)
                 subscriptions.removeAll()
             }
 
             let metaFilter = Filter(authorKeys: [key], kinds: [.metaData], limit: 1)
-            let metaSub = relayService.requestEventsFromAll(filter: metaFilter, overrideRelays: overrideRelays)
+            let metaSub = relayService.openSubscription(with: metaFilter, to: overrideRelays)
             subscriptions.append(metaSub)
             
             let contactFilter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
-            let contactSub = relayService.requestEventsFromAll(filter: contactFilter, overrideRelays: overrideRelays)
+            let contactSub = relayService.openSubscription(with: contactFilter, to: overrideRelays)
             subscriptions.append(contactSub)
             
             let muteListFilter = Filter(authorKeys: [key], kinds: [.mute], limit: 1)
-            let muteSub = relayService.requestEventsFromAll(filter: muteListFilter, overrideRelays: overrideRelays)
+            let muteSub = relayService.openSubscription(with: muteListFilter, to: overrideRelays)
             subscriptions.append(muteSub)
         }
     }
+    
+    private var friendMetadataTask: Task<Void, any Error>?
     
     @MainActor func refreshFriendMetadata() {
         guard let publicKeyHex else {
@@ -210,7 +214,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             return
         }
         
-        Task.detached(priority: .background) { [weak self, publicKeyHex] in
+        if let friendMetadataTask {
+            friendMetadataTask.cancel()
+        }
+        
+        friendMetadataTask = Task.detached(priority: .background) { [weak self, publicKeyHex] in
             guard let backgroundContext = self?.backgroundContext else {
                 return
             }
@@ -233,7 +241,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                     limit: 1,
                     since: lastUpdated
                 )
-                _ = await self?.relayService.requestEventsFromAll(filter: metaFilter)
+                _ = self?.relayService.openSubscription(with: metaFilter)
                 
                 let contactFilter = Filter(
                     authorKeys: [followedKey],
@@ -241,11 +249,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                     limit: 1,
                     since: lastUpdated
                 )
-                _ = await self?.relayService.requestEventsFromAll(filter: contactFilter)
+                _ = self?.relayService.openSubscription(with: contactFilter)
                 
-                // TODO: check cancellation
                 // Do this slowly so we don't get rate limited
-                try await Task.sleep(for: .seconds(2))
+                try await Task.sleep(for: .seconds(5))
+                try Task.checkCancellation()
             }
         }
     }

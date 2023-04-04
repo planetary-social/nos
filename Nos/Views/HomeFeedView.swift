@@ -35,7 +35,7 @@ struct HomeFeedView: View {
     func refreshHomeFeed() {
         // Close out stale requests
         if !subscriptionIds.isEmpty {
-            relayService.sendCloseToAll(subscriptions: subscriptionIds)
+            relayService.removeSubscriptions(for: subscriptionIds)
             subscriptionIds.removeAll()
         }
         
@@ -51,7 +51,7 @@ struct HomeFeedView: View {
             
             if !authors.isEmpty {
                 let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
-                let textSub = relayService.requestEventsFromAll(filter: textFilter)
+                let textSub = relayService.openSubscription(with: textFilter)
                 subscriptionIds.append(textSub)
             }
             if let currentUser = CurrentUser.shared.author {
@@ -61,7 +61,7 @@ struct HomeFeedView: View {
                     kinds: [.like],
                     limit: 100
                 )
-                let userLikesSub = relayService.requestEventsFromAll(filter: userLikesFilter)
+                let userLikesSub = relayService.openSubscription(with: userLikesFilter)
                 subscriptionIds.append(userLikesSub)
             }
         }
@@ -114,7 +114,7 @@ struct HomeFeedView: View {
             refreshHomeFeed()
         }
         .onDisappear {
-            relayService.sendCloseToAll(subscriptions: subscriptionIds)
+            relayService.removeSubscriptions(for: subscriptionIds)
             subscriptionIds.removeAll()
         }
     }

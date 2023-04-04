@@ -33,13 +33,13 @@ struct ProfileView: View {
     func refreshProfileFeed() {
         // Close out stale requests
         if !subscriptionIds.isEmpty {
-            relayService.sendCloseToAll(subscriptions: subscriptionIds)
+            relayService.removeSubscriptions(for: subscriptionIds)
             subscriptionIds.removeAll()
         }
         
         let authors = [author.hexadecimalPublicKey!]
-        let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
-        let textSub = relayService.requestEventsFromAll(filter: textFilter)
+        let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 50)
+        let textSub = relayService.openSubscription(with: textFilter)
         subscriptionIds.append(textSub)
         
         let metaFilter = Filter(
@@ -48,7 +48,7 @@ struct ProfileView: View {
             limit: 1,
             since: author.lastUpdatedMetadata
         )
-        let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
+        let metaSub = relayService.openSubscription(with: metaFilter)
         subscriptionIds.append(metaSub)
        
         if let currentUser = CurrentUser.shared.author {
@@ -58,7 +58,7 @@ struct ProfileView: View {
                 kinds: [.like],
                 limit: 100
             )
-            let userLikesSub = relayService.requestEventsFromAll(filter: userLikesFilter)
+            let userLikesSub = relayService.openSubscription(with: userLikesFilter)
             subscriptionIds.append(userLikesSub)
         }
         
@@ -68,7 +68,7 @@ struct ProfileView: View {
             limit: 1,
             since: author.lastUpdatedContactList
         )
-        let contactSub = relayService.requestEventsFromAll(filter: contactFilter)
+        let contactSub = relayService.openSubscription(with: contactFilter)
         subscriptionIds.append(contactSub)
     }
     
@@ -160,7 +160,7 @@ struct ProfileView: View {
             refreshProfileFeed()
         }
         .onDisappear {
-            relayService.sendCloseToAll(subscriptions: subscriptionIds)
+            relayService.removeSubscriptions(for: subscriptionIds)
             subscriptionIds.removeAll()
         }
     }

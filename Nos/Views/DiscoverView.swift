@@ -75,7 +75,7 @@ struct DiscoverView: View {
     }
     
     func refreshDiscover() {
-        relayService.sendCloseToAll(subscriptions: subscriptionIds)
+        relayService.removeSubscriptions(for: subscriptionIds)
         subscriptionIds.removeAll()
         
         if let relayAddress = relayFilter?.addressURL {
@@ -86,7 +86,8 @@ struct DiscoverView: View {
             )
             
             subscriptionIds.append(
-                relayService.requestEventsFromAll(filter: singleRelayFilter, overrideRelays: [relayAddress])
+                // TODO: I don't think the override relays will be honored when opening new sockets
+                relayService.openSubscription(with: singleRelayFilter, to: [relayAddress])
             )
         } else {
             
@@ -112,7 +113,7 @@ struct DiscoverView: View {
                 since: fetchSinceDate
             )
             
-            subscriptionIds.append(relayService.requestEventsFromAll(filter: featuredFilter))
+            subscriptionIds.append(relayService.openSubscription(with: featuredFilter))
             
             if !currentUser.inNetworkAuthors.isEmpty {
                 // this filter just requests everything for now, because I think requesting all the authors within
@@ -123,7 +124,7 @@ struct DiscoverView: View {
                     since: fetchSinceDate
                 )
                 
-                subscriptionIds.append(relayService.requestEventsFromAll(filter: twoHopsFilter))
+                subscriptionIds.append(relayService.openSubscription(with: twoHopsFilter))
             }
         }
     }
@@ -223,7 +224,7 @@ struct DiscoverView: View {
             }
             .onDisappear {
                 searchModel.clear()
-                relayService.sendCloseToAll(subscriptions: subscriptionIds)
+                relayService.removeSubscriptions(for: subscriptionIds)
                 subscriptionIds.removeAll()
             }
             .navigationDestination(for: Event.self) { note in

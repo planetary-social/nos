@@ -81,6 +81,8 @@ struct NoteCard: View {
     private let showReplyCount: Bool
     private var hideOutOfNetwork: Bool
     
+    @State private var subscriptionIDs = [RelaySubscription.ID]()
+    
     var currentUserLikesNote: Bool {
         likes
             .filter {
@@ -213,8 +215,6 @@ struct NoteCard: View {
             }
         }
         .task {
-            note.requestAuthorsMetadataIfNeeded(using: relayService, in: viewContext)
-
             if note.isVerified == false, let publicKey = author.publicKey {
                 let verified = try? publicKey.verifySignature(on: note)
                 if verified != true {
@@ -224,6 +224,16 @@ struct NoteCard: View {
                     note.isVerified = true
                 }
             }
+        }
+        .onAppear {
+            Task {
+                let backgroundContext = PersistenceController.backgroundViewContext
+                await subscriptionIDs += note.requestAuthorsMetadataIfNeeded(using: relayService, in: backgroundContext)
+            }
+        }
+        .onDisappear {
+            relayService.removeSubscriptions(for: subscriptionIDs)
+            subscriptionIDs.removeAll()
         }
         .background(
             LinearGradient(

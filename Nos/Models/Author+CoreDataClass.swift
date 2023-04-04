@@ -186,7 +186,7 @@ public class Author: NosManagedObject {
         print("Removed \(relay.address ?? "") from \(hexadecimalPublicKey ?? "")")
     }
     
-    func requestMetadata(using relayService: RelayService) -> String? {
+    func requestMetadata(using relayService: RelayService) -> RelaySubscription.ID? {
         guard let hexadecimalPublicKey else {
             return nil
         }
@@ -197,7 +197,7 @@ public class Author: NosManagedObject {
             limit: 1,
             since: lastUpdatedMetadata
         )
-        let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
+        let metaSub = relayService.openSubscription(with: metaFilter)
         return metaSub
     }
     

@@ -69,13 +69,13 @@ struct RepliesView: View {
     func subscribeToReplies() {
         // Close out stale requests
         if !subscriptionIDs.isEmpty {
-            relayService.sendCloseToAll(subscriptions: subscriptionIDs)
+            relayService.removeSubscriptions(for: subscriptionIDs)
             subscriptionIDs.removeAll()
         }
         
         let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
         let filter = Filter(kinds: [.text, .like], eTags: eTags)
-        let subID = relayService.requestEventsFromAll(filter: filter)
+        let subID = relayService.openSubscription(with: filter)
         subscriptionIDs.append(subID)
     }
     
@@ -107,7 +107,7 @@ struct RepliesView: View {
                 subscribeToReplies()
             }
             .onDisappear {
-                relayService.sendCloseToAll(subscriptions: subscriptionIDs)
+                relayService.removeSubscriptions(for: subscriptionIDs)
                 subscriptionIDs.removeAll()
             }
             VStack {

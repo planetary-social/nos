@@ -7,22 +7,49 @@
 
 import Foundation
 
-/// For REQ
-final class Filter: Hashable {
-    private var authorKeys: [String] {
-        didSet {
-            print("Override author keys to: \(authorKeys)")
-        }
-    }
-    private var kinds: [EventKind]
-    let limit: Int
-    let since: Date?
-
-    // For closing requests; not part of hash
-    var subscriptionId: String = ""
+struct RelaySubscription: Identifiable {
+    
+    let filter: Filter
+    
+    /// The date this Filter was opened as a subscription on relays. Used to close stale subscriptions
     var subscriptionStartDate: Date?
     
-    private var eTags: [String]
+    /// The number of objects using this filter. This is incremented and decremented by the RelayService to determine
+    /// when a filter can be closed.
+    var referenceCount: Int = 0
+    
+    var id: String {
+        subscriptionID
+    }
+    
+    // For closing requests; not part of hash
+    var subscriptionID: String {
+        filter.id
+    }
+    
+    var isActive: Bool {
+        subscriptionStartDate != nil
+    }
+    
+    /// Returns true if this is a "one-time" filter, where we are only looking for a single event
+    var isOneTime: Bool {
+        filter.limit == 1
+    }
+}
+
+
+/// For REQ
+struct Filter: Hashable, Identifiable {
+    
+    let authorKeys: [String]
+    let kinds: [EventKind]
+    let eTags: [String]
+    let limit: Int
+    let since: Date?
+    
+    var id: String {
+        String(hashValue)
+    }
 
     init(
         authorKeys: [String] = [],
@@ -61,7 +88,7 @@ final class Filter: Hashable {
     }
 
     static func == (lhs: Filter, rhs: Filter) -> Bool {
-        lhs.authorKeys == rhs.authorKeys && lhs.kinds == rhs.kinds && lhs.limit == rhs.limit
+        lhs.hashValue == rhs.hashValue
     }
 
     func hash(into hasher: inout Hasher) {
@@ -70,10 +97,6 @@ final class Filter: Hashable {
         hasher.combine(limit)
         hasher.combine(eTags)
         hasher.combine(since)
-    }
-    
-    func matches(_ other: Filter) -> Bool {
-        authorKeys == other.authorKeys && kinds == other.kinds && eTags == other.eTags && since == other.since
     }
     
     func isFulfilled(by event: Event) -> Bool {
