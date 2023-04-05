@@ -13,7 +13,7 @@ import Dependencies
 // swiftlint:disable type_body_length
 class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
     
-    static let shared = CurrentUser(persistenceController: PersistenceController.shared)
+    @MainActor static let shared = CurrentUser(persistenceController: PersistenceController.shared)
     
     @Dependency(\.analytics) private var analytics
     
@@ -59,36 +59,6 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         reset()
     }
     
-    // TODO: this is fragile
-    // Reset CurrentUser state
-    @MainActor func reset() {
-        onboardingRelays = []
-        Task { await relayService?.removeSubscriptions(for: subscriptions) }
-        subscriptions = []
-        inNetworkAuthors = []
-        if let keyPair {
-            author = try? Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
-            authorWatcher = NSFetchedResultsController(
-                fetchRequest: Author.request(by: keyPair.publicKeyHex),
-                managedObjectContext: viewContext,
-                sectionNameKeyPath: nil,
-                cacheName: nil
-            )
-            authorWatcher?.delegate = self
-            try? authorWatcher?.performFetch()
-            
-            Task {
-                if relayService != nil {
-                    await subscribe()
-                    refreshFriendMetadata()
-                }
-                await updateInNetworkAuthors()
-            }
-        } else {
-            author = nil
-        }
-    }
-    
     var publicKeyHex: String? {
         keyPair?.publicKey.hex
     }
@@ -132,7 +102,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     
     private var authorWatcher: NSFetchedResultsController<Author>?
                                              
-    init(persistenceController: PersistenceController) {
+    @MainActor init(persistenceController: PersistenceController) {
         self.viewContext = persistenceController.viewContext
         self.backgroundContext = persistenceController.newBackgroundContext()
         super.init()
@@ -140,13 +110,47 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             Log.info("CurrentUser loaded a private key from keychain")
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
             _privateKeyHex = hexString
-            Task { @MainActor in self.reset() }
+            setUp()
             if let keyPair {
                 Log.info("CurrentUser logged in \(keyPair.publicKeyHex) / \(keyPair.npub)")
                 analytics.identify(with: keyPair)
             } else {
                 Log.error("CurrentUser found bad data in the keychain")
             }
+        }
+    }
+    
+    // TODO: this is fragile
+    // Reset CurrentUser state
+    @MainActor func reset() {
+        onboardingRelays = []
+        Task { await relayService?.removeSubscriptions(for: subscriptions) }
+        subscriptions = []
+        inNetworkAuthors = []
+        setUp()
+    }
+    
+    @MainActor func setUp() {
+        if let keyPair {
+            author = try? Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+            authorWatcher = NSFetchedResultsController(
+                fetchRequest: Author.request(by: keyPair.publicKeyHex),
+                managedObjectContext: viewContext,
+                sectionNameKeyPath: nil,
+                cacheName: nil
+            )
+            authorWatcher?.delegate = self
+            try? authorWatcher?.performFetch()
+            
+            Task {
+                if relayService != nil {
+                    await subscribe()
+                    refreshFriendMetadata()
+                }
+                await updateInNetworkAuthors()
+            }
+        } else {
+            author = nil
         }
     }
     

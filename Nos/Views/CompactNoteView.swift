@@ -119,7 +119,10 @@ struct CompactNoteView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .task {
             let backgroundContext = PersistenceController.backgroundViewContext
-            if let parsedAttributedContent = await note.attributedContent(with: backgroundContext) {
+            if let parsedAttributedContent = await Event.attributedContent(
+                noteID: note.identifier,
+                context: backgroundContext
+            ) {
                 withAnimation {
                     attributedContent = parsedAttributedContent
                 }

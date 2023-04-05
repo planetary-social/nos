@@ -155,7 +155,8 @@ struct NotificationCard: View {
             .onAppear {
                 Task(priority: .userInitiated) {
                     let backgroundContext = PersistenceController.backgroundViewContext
-                    await subscriptionIDs += note.requestAuthorsMetadataIfNeeded(
+                    await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
+                        noteID: note.identifier,
                         using: relayService,
                         in: backgroundContext
                     )
@@ -169,7 +170,10 @@ struct NotificationCard: View {
             }
             .task(priority: .userInitiated) {
                 let backgroundContext = PersistenceController.backgroundViewContext
-                if let parsedAttributedContent = await note.attributedContent(with: backgroundContext) {
+                if let parsedAttributedContent = await Event.attributedContent(
+                    noteID: note.identifier,
+                    context: backgroundContext
+                ) {
                     withAnimation {
                         attributedContent = parsedAttributedContent
                     }

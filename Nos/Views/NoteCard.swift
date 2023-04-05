@@ -228,7 +228,11 @@ struct NoteCard: View {
         .onAppear {
             Task(priority: .userInitiated) {
                 let backgroundContext = PersistenceController.backgroundViewContext
-                await subscriptionIDs += note.requestAuthorsMetadataIfNeeded(using: relayService, in: backgroundContext)
+                await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
+                    noteID: note.identifier,
+                    using: relayService,
+                    in: backgroundContext
+                )
             }
         }
         .onDisappear {

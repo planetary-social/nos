@@ -61,7 +61,10 @@ struct GoldenPostView: View {
         .padding(10)
         .task {
             let backgroundContext = PersistenceController.backgroundViewContext
-            if let parsedAttributedContent = await note.attributedContent(with: backgroundContext) {
+            if let parsedAttributedContent = await Event.attributedContent(
+                noteID: note.identifier,
+                context: backgroundContext
+            ) {
                 withAnimation {
                     attributedContent = parsedAttributedContent
                 }

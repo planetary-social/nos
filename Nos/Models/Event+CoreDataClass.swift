@@ -427,26 +427,31 @@ public class Event: NosManagedObject {
         return Bech32.encode(Nostr.notePrefix, baseEightData: Data(identifierBytes))
     }
     
-    func attributedContent(with context: NSManagedObjectContext) async -> AttributedString? {
-        guard let content = self.content else {
+    class func attributedContent(noteID: String?, context: NSManagedObjectContext) async -> AttributedString? {
+        guard let noteID else {
             return nil
         }
         
-        let regex = Regex {
-            "#["
-            TryCapture {
-                OneOrMore(.digit)
-            } transform: {
-                Int($0)
-            }
-            "]"
-        }
-        
-        guard let tags = self.allTags as? [[String]] else {
-            return AttributedString(content)
-        }
-        
         return await context.perform {
+            guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
+                let content = note.content else {
+                return nil
+            }
+            
+            let regex = Regex {
+                "#["
+                TryCapture {
+                    OneOrMore(.digit)
+                } transform: {
+                    Int($0)
+                }
+                "]"
+            }
+            
+            guard let tags = note.allTags as? [[String]] else {
+                return AttributedString(content)
+            }
+        
             let result = content.replacing(regex) { match in
                 if let tag = tags[safe: match.1],
                     let type = tag[safe: 0],
@@ -766,12 +771,21 @@ public class Event: NosManagedObject {
     }
     // swiftlint:enable legacy_objc_type
     
-    func requestAuthorsMetadataIfNeeded(using relayService: RelayService, in context: NSManagedObjectContext) async -> [RelaySubscription.ID] {
-        guard let authorKey = author?.hexadecimalPublicKey else {
+    class func requestAuthorsMetadataIfNeeded(
+        noteID: String?,
+        using relayService: RelayService,
+        in context: NSManagedObjectContext
+    ) async -> [RelaySubscription.ID] {
+        guard let noteID else {
             return []
         }
         
-        let requestData = await context.perform {
+        let requestData: [(HexadecimalString?, Date?)] = await context.perform {
+            guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
+                let authorKey = note.author?.hexadecimalPublicKey else {
+                return []
+            }
+        
             var requestData = [(HexadecimalString?, Date?)]()
             
             let author = try! Author.findOrCreate(by: authorKey, context: context)
@@ -780,7 +794,7 @@ public class Event: NosManagedObject {
                 requestData.append((author.hexadecimalPublicKey, author.lastUpdatedMetadata))
             }
             
-            self.authorReferences?.forEach { reference in
+            note.authorReferences?.forEach { reference in
                 if let reference = reference as? AuthorReference,
                    let pubKey = reference.pubkey,
                    let author = try? Author.findOrCreate(by: pubKey, context: context),

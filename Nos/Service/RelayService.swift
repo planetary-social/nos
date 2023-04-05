@@ -27,8 +27,8 @@ class AsyncTimer {
     
     private var task: Task<Void, Never>
     
-    init(timeInterval: TimeInterval, onFire: @escaping () async -> Void) {
-        self.task = Task(priority: .utility) {
+    init(timeInterval: TimeInterval, priority: TaskPriority = .utility, onFire: @escaping () async -> Void) {
+        self.task = Task(priority: priority) {
             while !Task.isCancelled {
                 await onFire()
                 try? await Task.sleep(nanoseconds: UInt64(timeInterval * 1_000_000_000))
@@ -133,16 +133,16 @@ final class RelayService: ObservableObject {
         self.backgroundContext = persistenceController.newBackgroundContext()
         self.subscriptions = RelaySubscriptionManager()
 
-        self.saveEventsTimer = AsyncTimer(timeInterval: 2, onFire: { [weak self] in
-            self?.backgroundContext.perform {
+        self.saveEventsTimer = AsyncTimer(timeInterval: 1, priority: .high) { [weak self] in
+            await self?.backgroundContext.perform(schedule: .immediate) {
                 if self?.backgroundContext.hasChanges == true {
                     try! self?.backgroundContext.save()
                 }
             }
-        })
+        }
         
-        self.updateSocialGraphTimer = AsyncTimer(timeInterval: 30, onFire: { [weak self] in
-            guard let currentUser = await CurrentUser.shared.author else {
+        self.updateSocialGraphTimer = AsyncTimer(timeInterval: 30, onFire: { @MainActor [weak self] in
+            guard let currentUser = CurrentUser.shared.author else {
                 return
             }
             // Close sockets for anything not in the above
@@ -215,7 +215,7 @@ extension RelayService {
             let request: [Any] = ["CLOSE", subscription]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
-            print(requestString)
+            Log.info("\(requestString) sent to \(client.host)")
             client.write(string: requestString)
         } catch {
             print("Error: Could not send close \(error.localizedDescription)")
@@ -559,7 +559,7 @@ extension RelayService {
 // MARK: Sockets
 extension RelayService {
     
-    func closeAllConnections(excluding relays: Set<Relay>?) async {
+    @MainActor func closeAllConnections(excluding relays: Set<Relay>?) async {
         let relayAddresses = relays?.map { $0.address } ?? []
 
         let openUnusedSockets = await subscriptions.sockets.filter({
