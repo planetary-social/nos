@@ -40,19 +40,88 @@ class AsyncTimer {
     }
 }
 
+actor RelaySubscriptionManager {
+    
+    var all = [RelaySubscription]()
+    
+    var sockets = [WebSocket]()
+    
+    var active: [RelaySubscription] {
+        all
+            .filter { $0.isActive }
+    }
+    
+    func subscription(from filter: Filter) -> RelaySubscription? {
+        subscription(from: filter.id)
+    }
+    
+    func subscription(from subscriptionID: RelaySubscription.ID) -> RelaySubscription? {
+        if let subscriptionIndex = self.all.firstIndex(where: { $0.id == subscriptionID }) {
+            return all[subscriptionIndex]
+        } else {
+            return nil
+        }
+    }
+    
+    func updateSubscriptions(with newValue: RelaySubscription) {
+        if let subscriptionIndex = self.all.firstIndex(where: { $0.id == newValue.id }) {
+            all[subscriptionIndex] = newValue
+        } else {
+            all.append(newValue)
+        }
+    }
+    
+    func removeSubscription(with subscriptionID: RelaySubscription.ID) {
+        if let subscriptionIndex = self.all.firstIndex(
+            where: { $0.id == subscriptionID }
+        ) {
+            all.remove(at: subscriptionIndex)
+        }
+    }
+    
+    func addSocket(for relayAddress: URL) -> WebSocket? {
+        guard !sockets.contains(where: { $0.request.url == relayAddress }) else {
+            return nil
+        }
+            
+        var request = URLRequest(url: relayAddress)
+        request.timeoutInterval = 10
+        let socket = WebSocket(request: request, compressionHandler: .none)
+        sockets.append(socket)
+        return socket
+    }
+    
+    func close(socket: WebSocket) {
+        socket.disconnect()
+        if let index = sockets.firstIndex(where: { $0 === socket }) {
+            sockets.remove(at: index)
+        }
+    }
+    
+    func remove(_ socket: WebSocketClient) {
+        if let index = sockets.firstIndex(where: { $0 === socket }) {
+            sockets.remove(at: index)
+        }
+    }
+    
+    func socket(for address: String) -> WebSocket? {
+        if let index = sockets.firstIndex(where: { $0.request.url!.absoluteString == address }) {
+            return sockets[index]
+        }
+        return nil
+    }
+}
+
 // swiftlint:disable file_length
 final class RelayService: ObservableObject {
     
     private var persistenceController: PersistenceController
-    // TODO: use a swift Actor to synchronize access to this
-    /// Important: lock requestQueueLock before using
-    private var subscriptionQueue = [RelaySubscription]()
-    private var subscriptionQueueAccess = NSLock()
-    private var sockets = [WebSocket]()
+    private var subscriptions: RelaySubscriptionManager
     private var saveEventsTimer: AsyncTimer?
     private var updateSocialGraphTimer: AsyncTimer?
     private var publishFailedEventsTimer: AsyncTimer?
     private var backgroundContext: NSManagedObjectContext
+    // TODO: use structured concurrency for this
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .utility)
     private let subscriptionLimit = 10
     private let minimimumOneTimeSubscriptions = 1
@@ -61,6 +130,7 @@ final class RelayService: ObservableObject {
     init(persistenceController: PersistenceController) {
         self.persistenceController = persistenceController
         self.backgroundContext = persistenceController.newBackgroundContext()
+        self.subscriptions = RelaySubscriptionManager()
 
         self.saveEventsTimer = AsyncTimer(timeInterval: 3, onFire: { [weak self] in
             self?.backgroundContext.perform {
@@ -76,7 +146,7 @@ final class RelayService: ObservableObject {
             }
             // Close sockets for anything not in the above
             if let keptRelays = currentUser.relays as? Set<Relay> {
-                self?.closeAllConnections(excluding: keptRelays)
+                await self?.closeAllConnections(excluding: keptRelays)
             }
             
             await CurrentUser.shared.updateInNetworkAuthors()
@@ -98,40 +168,6 @@ final class RelayService: ObservableObject {
         updateSocialGraphTimer?.cancel()
     }
     
-    // TODO: lock requestQueueLock before calling this
-    var activeSubscriptions: [RelaySubscription] {
-        subscriptionQueue
-            .filter { $0.isActive }
-    }
-    
-    private func subscription(from filter: Filter) -> RelaySubscription? {
-        subscription(from: filter.id)
-    }
-    
-    private func subscription(from subscriptionID: RelaySubscription.ID) -> RelaySubscription? {
-        if let subscriptionIndex = self.subscriptionQueue.firstIndex(where: { $0.id == subscriptionID }) {
-            return subscriptionQueue[subscriptionIndex]
-        } else {
-            return nil
-        }
-    }
-    
-    private func updateSubscriptions(with newValue: RelaySubscription) {
-        if let subscriptionIndex = self.subscriptionQueue.firstIndex(where: { $0.id == newValue.id }) {
-            subscriptionQueue[subscriptionIndex] = newValue
-        } else {
-            subscriptionQueue.append(newValue)
-        }
-    }
-    
-    private func removeSubscription(with subscriptionID: RelaySubscription.ID) {
-        if let subscriptionIndex = self.subscriptionQueue.firstIndex(
-            where: { $0.id == subscriptionID }
-        ) {
-            subscriptionQueue.remove(at: subscriptionIndex)
-        }
-    }
-        
     private func handleError(_ error: Error?, from socket: WebSocketClient) {
         if let error {
             Log.info("websocket error: \(error) from: \(socket.host)")
@@ -144,22 +180,20 @@ final class RelayService: ObservableObject {
 // MARK: Close subscriptions
 extension RelayService {
     
-    func removeSubscriptions(for subscriptionIDs: [String]) {
-        subscriptionIDs.forEach { self.removeSubscription(for: $0) }
+    func removeSubscriptions(for subscriptionIDs: [String]) async {
+        for subscriptionID in subscriptionIDs {
+            await self.removeSubscription(for: subscriptionID)
+        }
     }
     
-    func removeSubscription(for subscriptionID: String) {
-        processingQueue.async {
-            self.subscriptionQueueAccess.withLock {
-                if var subscription = self.subscription(from: subscriptionID) {
-                    if subscription.referenceCount == 1 {
-                        self.removeSubscription(with: subscriptionID)
-                        self.sendCloseToAll(for: subscriptionID)
-                    } else {
-                        subscription.referenceCount -= 1
-                        self.updateSubscriptions(with: subscription)
-                    }
-                }
+    func removeSubscription(for subscriptionID: String) async {
+        if var subscription = await subscriptions.subscription(from: subscriptionID) {
+            if subscription.referenceCount == 1 {
+                await subscriptions.removeSubscription(with: subscriptionID)
+                await self.sendCloseToAll(for: subscriptionID)
+            } else {
+                subscription.referenceCount -= 1
+                await subscriptions.updateSubscriptions(with: subscription)
             }
         }
     }
@@ -176,27 +210,18 @@ extension RelayService {
         }
     }
     
-    private func sendCloseToAll(for subscription: String) {
-        self.sockets.forEach { self.sendClose(from: $0, subscription: subscription) }
+    private func sendCloseToAll(for subscription: String) async {
+        await subscriptions.sockets.forEach { self.sendClose(from: $0, subscription: subscription) }
     }
     
-    private func sendClose(for subscription: String) {
-        self.removeSubscription(for: subscription)
-        self.sockets.forEach { self.sendClose(from: $0, subscription: subscription) }
-    }
-    
-    func closeConnection(to relay: Relay) {
+    func closeConnection(to relay: Relay) async {
         guard let address = relay.address else { return }
-        processingQueue.async {
-            if let socket = self.socket(for: address) {
-                self.subscriptionQueueAccess.withLock {
-                    for subscription in self.activeSubscriptions {
-                        self.sendClose(from: socket, subscription: subscription.id)
-                    }
-                }
-                
-                self.close(socket: socket)
+        if let socket = await subscriptions.socket(for: address) {
+            for subscription in await subscriptions.active {
+                self.sendClose(from: socket, subscription: subscription.id)
             }
+            
+            await subscriptions.close(socket: socket)
         }
     }
 }
@@ -218,35 +243,44 @@ extension RelayService {
         }
     }
     
-    func openSubscription(with filter: Filter, to overrideRelays: [URL]? = nil) -> RelaySubscription.ID {
+    func openSubscription(with filter: Filter, to overrideRelays: [URL]? = nil) async -> RelaySubscription.ID {
   
         var subscription: RelaySubscription
         
-        subscriptionQueueAccess.lock()
-        if let existingSubscription = self.subscription(from: filter.id) {
+        if let existingSubscription = await subscriptions.subscription(from: filter.id) {
             // dedup
             subscription = existingSubscription
         } else {
             subscription = RelaySubscription(filter: filter)
         }
         subscription.referenceCount += 1
-        updateSubscriptions(with: subscription)
-        subscriptionQueueAccess.unlock()
+        await subscriptions.updateSubscriptions(with: subscription)
         
         // Fire off REQs in the background
-        processingQueue.async {
-            self.processSubscriptionQueue(overrideRelays: overrideRelays)
+        Task.detached(priority: .utility) {
+            await self.processSubscriptionQueue(overrideRelays: overrideRelays)
         }
         
         return subscription.id
     }
     
-    private func processSubscriptionQueue(overrideRelays: [URL]? = nil) {
-        Task { await openSockets(overrideRelays: overrideRelays) }
-        clearStaleSubscriptions()
+    func requestMetadata(for authorKey: HexadecimalString?, since: Date?) async -> RelaySubscription.ID? {
+        guard let authorKey else {
+            return nil
+        }
         
-        subscriptionQueueAccess.lock()
-        defer { subscriptionQueueAccess.unlock() }
+        let metaFilter = Filter(
+            authorKeys: [authorKey],
+            kinds: [.metaData],
+            limit: 1,
+            since: since
+        )
+        return await openSubscription(with: metaFilter)
+    }
+    
+    private func processSubscriptionQueue(overrideRelays: [URL]? = nil) async {
+        await openSockets(overrideRelays: overrideRelays)
+        await clearStaleSubscriptions()
         
         // TODO: Make sure active subscriptions are open on all relays
         
@@ -254,47 +288,45 @@ extension RelayService {
         // subscriptions open at once. We want to:
         // - Open as many long running subsriptions as we can, leaving room for `minimumOneTimeSubscriptions`
         // - fill remaining slots with one time filters
-        let runningLongSubscriptions = subscriptionQueue.filter { !$0.isOneTime && $0.isActive }
-        let waitingLongSubscriptions = subscriptionQueue.filter { !$0.isOneTime && !$0.isActive }
-        let waitingOneTimeSubscriptions = subscriptionQueue.filter { $0.isOneTime && !$0.isActive }
+        let allSubscriptions = await subscriptions.all
+        let runningLongSubscriptions = allSubscriptions.filter { !$0.isOneTime && $0.isActive }
+        let waitingLongSubscriptions = allSubscriptions.filter { !$0.isOneTime && !$0.isActive }
+        let waitingOneTimeSubscriptions = allSubscriptions.filter { $0.isOneTime && !$0.isActive }
         let openOneTimeSlots = max(subscriptionLimit - waitingLongSubscriptions.count, minimimumOneTimeSubscriptions)
-        let openLongSlots = subscriptionLimit - minimimumOneTimeSubscriptions - runningLongSubscriptions.count
         
         for subscription in waitingLongSubscriptions {
             var subscription = subscription
             subscription.subscriptionStartDate = .now
-            self.updateSubscriptions(with: subscription)
-            sockets.forEach { requestEvents(from: $0, subscription: subscription) }
+            await subscriptions.updateSubscriptions(with: subscription)
+            await subscriptions.sockets.forEach { requestEvents(from: $0, subscription: subscription) }
         }
         
         for subscription in waitingOneTimeSubscriptions.prefix(openOneTimeSlots) {
             var subscription = subscription
             subscription.subscriptionStartDate = .now
-            self.updateSubscriptions(with: subscription)
-            sockets.forEach { requestEvents(from: $0, subscription: subscription) }
+            await subscriptions.updateSubscriptions(with: subscription)
+            await subscriptions.sockets.forEach { requestEvents(from: $0, subscription: subscription) }
         }
         
-        Log.info("\(activeSubscriptions.count) active subscriptions. " +
-            "\(subscriptionQueue.count - activeSubscriptions.count) subscriptions waiting in queue.")
+        Log.info("\(await subscriptions.active.count) active subscriptions. " +
+            "\(await subscriptions.all.count - subscriptions.active.count) subscriptions waiting in queue.")
     }
     
-    private func clearStaleSubscriptions() {
+    private func clearStaleSubscriptions() async {
         var staleSubscriptions = [RelaySubscription]()
-        subscriptionQueueAccess.withLock {
-            staleSubscriptions = subscriptionQueue.filter {
-                if $0.isOneTime, let filterStartedAt = $0.subscriptionStartDate {
-                    return filterStartedAt.distance(to: .now) > 5
-                }
-                return false
+        staleSubscriptions = await subscriptions.active.filter {
+            if $0.isOneTime, let filterStartedAt = $0.subscriptionStartDate {
+                return filterStartedAt.distance(to: .now) > 5
             }
+            return false
         }
         
         if !staleSubscriptions.isEmpty {
             Log.info("Found \(staleSubscriptions.count) stale subscriptions. Closing.")
             
-            staleSubscriptions.forEach {
-                removeSubscription(for: $0.subscriptionID)
-                sendCloseToAll(for: $0.subscriptionID)
+            for staleSubscription in staleSubscriptions {
+                await removeSubscription(for: staleSubscription.id)
+                await sendCloseToAll(for: staleSubscription.id)
             }
         }
     }
@@ -302,23 +334,21 @@ extension RelayService {
 
 // MARK: Parsing
 extension RelayService {
-    private func parseEOSE(from socket: WebSocketClient, responseArray: [Any]) {
+    private func parseEOSE(from socket: WebSocketClient, responseArray: [Any]) async {
         guard responseArray.count > 1 else {
             return
         }
         
-        subscriptionQueueAccess.withLock {
-            if let subID = responseArray[1] as? String,
-                let subscription = subscription(from: subID),
-                subscription.isOneTime {
-                Log.info("\(subID) has finished responding. Closing.")
-                // This is a one-off request. Close it.
-                sendClose(from: socket, subscription: subID)
-            }
+        if let subID = responseArray[1] as? String,
+            let subscription = await subscriptions.subscription(from: subID),
+            subscription.isOneTime {
+            Log.info("\(subID) has finished responding. Closing.")
+            // This is a one-off request. Close it.
+            sendClose(from: socket, subscription: subID)
         }
     }
     
-    private func parseEvent(_ responseArray: [Any], _ socket: WebSocket) {
+    private func parseEvent(_ responseArray: [Any], _ socket: WebSocket) async {
         guard responseArray.count >= 3 else {
             print("Error: invalid EVENT response: \(responseArray)")
             return
@@ -329,36 +359,35 @@ extension RelayService {
             return
         }
         
-        Task.detached(priority: .utility) {
-            do {
-                try await self.backgroundContext.perform {
-                    let relay = self.relay(from: socket, in: self.backgroundContext)
-                    let event = try EventProcessor.parse(
-                        jsonObject: eventJSON,
-                        from: relay,
-                        in: self.backgroundContext
-                    )
-                    
-                    relay.unwrap { event.trackDelete(on: $0, context: self.backgroundContext) }
-
-                    var fulfilledSubscriptions = [RelaySubscription]()
-                    self.subscriptionQueueAccess.withLock {
-                        fulfilledSubscriptions = self.subscriptionQueue.filter { $0.filter.isFulfilled(by: event) }
-                    }
-                    if !fulfilledSubscriptions.isEmpty {
-                        Log.info("found \(fulfilledSubscriptions.count) fulfilled filter. Closing.")
-                        fulfilledSubscriptions.forEach { self.sendCloseToAll(for: $0.id) }
-                    }
-                }
-            } catch {
-                print("Error: parsing event from relay (\(socket.request.url?.absoluteString ?? "")): " +
-                    "\(responseArray)\nerror: \(error.localizedDescription)")
+        do {
+            let allSubscriptions = await subscriptions.all
+            let fulfilledSubscriptions = try await self.backgroundContext.perform {
+                let relay = self.relay(from: socket, in: self.backgroundContext)
+                let event = try EventProcessor.parse(
+                    jsonObject: eventJSON,
+                    from: relay,
+                    in: self.backgroundContext
+                )
+                
+                relay.unwrap { event.trackDelete(on: $0, context: self.backgroundContext) }
+                
+                return allSubscriptions.filter { $0.filter.isFulfilled(by: event) }
             }
+            
+            if !fulfilledSubscriptions.isEmpty {
+                Log.info("found \(fulfilledSubscriptions.count) fulfilled filter. Closing.")
+                for fulfilledSubscription in fulfilledSubscriptions {
+                    await self.sendCloseToAll(for: fulfilledSubscription.id)
+                }
+            }
+        } catch {
+            print("Error: parsing event from relay (\(socket.request.url?.absoluteString ?? "")): " +
+                  "\(responseArray)\nerror: \(error.localizedDescription)")
         }
     }
 
     // swiftlint:disable legacy_objc_type
-    private func parseOK(_ responseArray: [Any], _ socket: WebSocket) {
+    private func parseOK(_ responseArray: [Any], _ socket: WebSocket) async {
         guard responseArray.count > 2 else {
             return
         }
@@ -367,7 +396,7 @@ extension RelayService {
             let eventId = responseArray[1] as? String,
             let socketUrl = socket.request.url?.absoluteString {
             
-            backgroundContext.perform {
+            await backgroundContext.perform {
                 
                 if let event = Event.find(by: eventId, context: self.backgroundContext),
                     let relay = self.relay(from: socket, in: self.backgroundContext) {
@@ -399,7 +428,7 @@ extension RelayService {
     }
     // swiftlint:enable legacy_objc_type
     
-    private func parseResponse(_ response: String, _ socket: WebSocket) {
+    private func parseResponse(_ response: String, _ socket: WebSocket) async {
         #if DEBUG
         Log.info("from \(socket.host): \(response)")
         #endif
@@ -417,15 +446,15 @@ extension RelayService {
             
             switch responseType {
             case "EVENT":
-                parseEvent(responseArray, socket)
+                await parseEvent(responseArray, socket)
             case "NOTICE":
                 if responseArray[safe: 1] as? String == "rate limited" {
                     analytics.rateLimited(by: socket)
                 }
             case "EOSE":
-                parseEOSE(from: socket, responseArray: responseArray)
+                await parseEOSE(from: socket, responseArray: responseArray)
             case "OK":
-                parseOK(responseArray, socket)
+                await parseOK(responseArray, socket)
             default:
                 print("got unknown response type: \(response)")
             }
@@ -437,11 +466,12 @@ extension RelayService {
 
 // MARK: Publish
 extension RelayService {
-    private func publish(from client: WebSocketClient, eventID: NSManagedObjectID) {
+    
+    private func publish(from client: WebSocketClient, eventID: NSManagedObjectID) async {
         do {
             // Keep track of this so if it fails we can retry N times
             var jsonRepresentation = [String: Any]()
-            backgroundContext.performAndWait {
+            await backgroundContext.perform {
                 let event = self.backgroundContext.object(with: eventID) as! Event
                 event.sendAttempts += 1
                 jsonRepresentation = event.jsonRepresentation!
@@ -456,7 +486,7 @@ extension RelayService {
         }
     }
     
-    func publishToAll(event: Event, context: NSManagedObjectContext) {
+    func publishToAll(event: Event, context: NSManagedObjectContext) async {
         do {
             let relays = try persistenceController.viewContext.fetch(Relay.relays(for: event.author!))
             event.shouldBePublishedTo = NSSet(array: relays)
@@ -464,26 +494,24 @@ extension RelayService {
         } catch {
             fatalError("Could not queue event for publishing")
         }
-        processingQueue.async {
-            Task { await self.openSockets() }
-            self.sockets.forEach { self.publish(from: $0, eventID: event.objectID) }
+        await self.openSockets()
+        for socket in await subscriptions.sockets {
+            await publish(from: socket, eventID: event.objectID)
         }
     }
     
-    func publish(to relay: Relay, event: Event, context: NSManagedObjectContext) {
+    func publish(to relay: Relay, event: Event, context: NSManagedObjectContext) async {
         do {
             event.shouldBePublishedTo = NSSet(array: [relay])
             try context.save()
         } catch {
             fatalError("Could not queue event for publishing")
         }
-        processingQueue.async {
-            Task { await self.openSockets() }
-            if let socket = self.socket(from: relay) {
-                self.publish(from: socket, eventID: event.objectID)
-            } else {
-                Log.error("Could not find socket to publish message")
-            }
+        await openSockets()
+        if let socket = await socket(from: relay) {
+            await publish(from: socket, eventID: event.objectID)
+        } else {
+            Log.error("Could not find socket to publish message")
         }
     }
     
@@ -503,10 +531,12 @@ extension RelayService {
                 print("\(missedRelays.count) missing a published event.")
                 for missedRelay in missedRelays {
                     guard let missedAddress = missedRelay.address else { continue }
-                    if let socket = self.socket(for: missedAddress) {
-                        // Publish again to this socket
-                        print("Republishing \(event.identifier!) on \(missedAddress)")
-                        self.publish(from: socket, eventID: event.objectID)
+                    Task {
+                        if let socket = await self.subscriptions.socket(for: missedAddress) {
+                            // Publish again to this socket
+                            print("Republishing \(event.identifier!) on \(missedAddress)")
+                                await self.publish(from: socket, eventID: event.objectID)
+                        }
                     }
                 }
             }
@@ -516,17 +546,11 @@ extension RelayService {
 
 // MARK: Sockets
 extension RelayService {
-    private func close(socket: WebSocket) {
-        socket.disconnect()
-        if let index = sockets.firstIndex(where: { $0 === socket }) {
-            sockets.remove(at: index)
-        }
-    }
     
-    func closeAllConnections(excluding relays: Set<Relay>?) {
+    func closeAllConnections(excluding relays: Set<Relay>?) async {
         let relayAddresses = relays?.map { $0.address } ?? []
 
-        let openUnusedSockets = sockets.filter({
+        let openUnusedSockets = await subscriptions.sockets.filter({
             guard let address = $0.request.url?.absoluteString else {
                 return true
             }
@@ -538,7 +562,7 @@ extension RelayService {
         }
 
         for socket in openUnusedSockets {
-            close(socket: socket)
+            await subscriptions.close(socket: socket)
         }
     }
     
@@ -560,37 +584,25 @@ extension RelayService {
         
         for relayAddress in relayAddresses {
             
-            guard !sockets.contains(where: { $0.request.url == relayAddress }) else {
+            guard let socket = await subscriptions.addSocket(for: relayAddress) else {
                 continue
             }
             
-            var request = URLRequest(url: relayAddress)
-            request.timeoutInterval = 10
-            let socket = WebSocket(request: request, compressionHandler: .none)
             socket.callbackQueue = processingQueue
             socket.delegate = self
-            sockets.append(socket)
             socket.connect()
         }
     }
     
-    private func socket(for address: String) -> WebSocket? {
-        if let index = sockets.firstIndex(where: { $0.request.url!.absoluteString == address }) {
-            return sockets[index]
-        }
-        return nil
-    }
-    
-    private func handleConnection(from client: WebSocketClient) {
+    private func handleConnection(from client: WebSocketClient) async {
         if let socket = client as? WebSocket {
             Log.info("websocket is connected: \(String(describing: socket.request.url?.host))")
         } else {
             Log.info("websocket connected with unknown host")
         }
         
-        subscriptionQueueAccess.withLock {
-            activeSubscriptions
-                .forEach { self.requestEvents(from: client, subscription: $0) }
+        for subscription in await subscriptions.active {
+            requestEvents(from: client, subscription: subscription)
         }
     }
 }
@@ -602,32 +614,28 @@ extension RelayService: WebSocketDelegate {
             return
         }
         
-        switch event {
-        case .connected:
-            handleConnection(from: client)
-        case .viabilityChanged(let isViable) where isViable:
-            handleConnection(from: client)
-        case .disconnected(let reason, let code):
-            if let index = sockets.firstIndex(where: { $0 === socket }) {
-                sockets.remove(at: index)
+        Task {
+            switch event {
+            case .connected:
+                await handleConnection(from: client)
+            case .viabilityChanged(let isViable) where isViable:
+                await handleConnection(from: client)
+            case .disconnected(let reason, let code):
+                await subscriptions.remove(socket)
+                print("websocket is disconnected: \(reason) with code: \(code)")
+            case .text(let string):
+                await parseResponse(string, socket)
+            case .binary:
+                break
+            case .ping, .pong, .viabilityChanged, .reconnectSuggested:
+                break
+            case .cancelled:
+                await subscriptions.remove(socket)
+                print("websocket is cancelled")
+            case .error(let error):
+                await subscriptions.remove(socket)
+                handleError(error, from: socket)
             }
-            print("websocket is disconnected: \(reason) with code: \(code)")
-        case .text(let string):
-            parseResponse(string, socket)
-        case .binary:
-            break
-        case .ping, .pong, .viabilityChanged, .reconnectSuggested:
-            break
-        case .cancelled:
-            if let index = sockets.firstIndex(where: { $0 === socket }) {
-                sockets.remove(at: index)
-            }
-            print("websocket is cancelled")
-        case .error(let error):
-            if let index = sockets.firstIndex(where: { $0 === socket }) {
-                sockets.remove(at: index)
-            }
-            handleError(error, from: socket)
         }
     }
 }
@@ -688,8 +696,8 @@ extension RelayService {
         }
     }
     
-    func socket(from relay: Relay) -> WebSocket? {
-        sockets.first(where: { $0.request.url?.absoluteString == relay.addressURL?.absoluteString })
+    func socket(from relay: Relay) async -> WebSocket? {
+        await subscriptions.sockets.first(where: { $0.request.url?.absoluteString == relay.addressURL?.absoluteString })
     }
 
     func unsURL(from unsIdentifier: String) -> URL? {

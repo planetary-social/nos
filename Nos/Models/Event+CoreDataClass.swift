@@ -771,13 +771,13 @@ public class Event: NosManagedObject {
             return []
         }
         
-        return await context.perform {
-            var subscriptionIDs = [RelaySubscription.ID]()
+        let requestData = await context.perform {
+            var requestData = [(HexadecimalString?, Date?)]()
             
             let author = try! Author.findOrCreate(by: authorKey, context: context)
             
             if author.needsMetadata {
-                author.requestMetadata(using: relayService).unwrap { subscriptionIDs.append($0) }
+                requestData.append((author.hexadecimalPublicKey, author.lastUpdatedMetadata))
             }
             
             self.authorReferences?.forEach { reference in
@@ -785,12 +785,20 @@ public class Event: NosManagedObject {
                    let pubKey = reference.pubkey,
                    let author = try? Author.findOrCreate(by: pubKey, context: context),
                    author.needsMetadata {
-                    author.requestMetadata(using: relayService).unwrap { subscriptionIDs.append($0) }
+                    requestData.append((author.hexadecimalPublicKey, author.lastUpdatedMetadata))
                 }
             }
             
-            return subscriptionIDs
+            return requestData
         }
+        
+        var subscriptionIDs = [RelaySubscription.ID]()
+        for requestDatum in requestData {
+            let authorKey = requestDatum.0
+            let sinceDate = requestDatum.1
+            await relayService.requestMetadata(for: authorKey, since: sinceDate).unwrap { subscriptionIDs.append($0) }
+        }
+        return subscriptionIDs
     }
     
     var webLink: String {

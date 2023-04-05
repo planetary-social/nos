@@ -19,9 +19,11 @@ struct FollowsView: View {
     @State private var subscriptionId: String = ""
     
     func refreshFollows() {
-        let keys = followed.compactMap { $0.destination?.hexadecimalPublicKey }
-        let filter = Filter(authorKeys: keys, kinds: [.metaData, .contactList], limit: 100)
-        subscriptionId = relayService.openSubscription(with: filter)
+        Task(priority: .userInitiated) {
+            let keys = followed.compactMap { $0.destination?.hexadecimalPublicKey }
+            let filter = Filter(authorKeys: keys, kinds: [.metaData, .contactList], limit: 100)
+            subscriptionId = await relayService.openSubscription(with: filter)
+        }
     }
     
     var body: some View {
@@ -38,12 +40,14 @@ struct FollowsView: View {
         }
         .background(Color.appBg)
         .nosNavigationBar(title: .follows)
-        .task {
+        .task(priority: .userInitiated) {
             refreshFollows()
         }
         .onDisappear {
-            relayService.removeSubscription(for: subscriptionId)
-            subscriptionId = ""
+            Task(priority: .userInitiated) {
+                await relayService.removeSubscription(for: subscriptionId)
+                subscriptionId = ""
+            }
         }
     }
 }

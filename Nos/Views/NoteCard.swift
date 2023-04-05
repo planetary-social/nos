@@ -214,7 +214,7 @@ struct NoteCard: View {
                 GoldenPostView(author: author, note: note)
             }
         }
-        .task {
+        .task(priority: .userInitiated) {
             if note.isVerified == false, let publicKey = author.publicKey {
                 let verified = try? publicKey.verifySignature(on: note)
                 if verified != true {
@@ -226,14 +226,16 @@ struct NoteCard: View {
             }
         }
         .onAppear {
-            Task {
+            Task(priority: .userInitiated) {
                 let backgroundContext = PersistenceController.backgroundViewContext
                 await subscriptionIDs += note.requestAuthorsMetadataIfNeeded(using: relayService, in: backgroundContext)
             }
         }
         .onDisappear {
-            relayService.removeSubscriptions(for: subscriptionIDs)
-            subscriptionIDs.removeAll()
+            Task(priority: .userInitiated) {
+                await relayService.removeSubscriptions(for: subscriptionIDs)
+                subscriptionIDs.removeAll()
+            }
         }
         .background(
             LinearGradient(
@@ -289,7 +291,7 @@ struct NoteCard: View {
             let event = try await Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
             try event.sign(withKey: keyPair)
             try viewContext.save()
-            relayService.publishToAll(event: event, context: viewContext)
+            await relayService.publishToAll(event: event, context: viewContext)
         } catch {
             Log.info("Error creating event for like")
         }

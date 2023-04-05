@@ -75,56 +75,58 @@ struct DiscoverView: View {
     }
     
     func refreshDiscover() {
-        relayService.removeSubscriptions(for: subscriptionIds)
-        subscriptionIds.removeAll()
-        
-        if let relayAddress = relayFilter?.addressURL {
-            // TODO: Use a since filter
-            let singleRelayFilter = Filter(
-                kinds: [.text],
-                limit: 200
-            )
+        Task(priority: .userInitiated) {
+            await relayService.removeSubscriptions(for: subscriptionIds)
+            subscriptionIds.removeAll()
             
-            subscriptionIds.append(
-                // TODO: I don't think the override relays will be honored when opening new sockets
-                relayService.openSubscription(with: singleRelayFilter, to: [relayAddress])
-            )
-        } else {
-            
-            var fetchSinceDate: Date?
-            /// Make sure the lastRequestDate was more than a minute ago
-            /// to make sure we got all the events from it.
-            if let lastRequestDateUnix {
-                let lastRequestDate = Date(timeIntervalSince1970: lastRequestDateUnix)
-                if lastRequestDate.distance(to: .now) > 60 {
-                    fetchSinceDate = lastRequestDate
+            if let relayAddress = relayFilter?.addressURL {
+                // TODO: Use a since filter
+                let singleRelayFilter = Filter(
+                    kinds: [.text],
+                    limit: 200
+                )
+                
+                subscriptionIds.append(
+                    // TODO: I don't think the override relays will be honored when opening new sockets
+                    await relayService.openSubscription(with: singleRelayFilter, to: [relayAddress])
+                )
+            } else {
+                
+                var fetchSinceDate: Date?
+                /// Make sure the lastRequestDate was more than a minute ago
+                /// to make sure we got all the events from it.
+                if let lastRequestDateUnix {
+                    let lastRequestDate = Date(timeIntervalSince1970: lastRequestDateUnix)
+                    if lastRequestDate.distance(to: .now) > 60 {
+                        fetchSinceDate = lastRequestDate
+                        self.lastRequestDateUnix = Date.now.timeIntervalSince1970
+                    }
+                } else {
                     self.lastRequestDateUnix = Date.now.timeIntervalSince1970
                 }
-            } else {
-                self.lastRequestDateUnix = Date.now.timeIntervalSince1970
-            }
-            
-            let featuredFilter = Filter(
-                authorKeys: featuredAuthors.compactMap {
-                    PublicKey(npub: $0)?.hex
-                },
-                kinds: [.text],
-                limit: 100,
-                since: fetchSinceDate
-            )
-            
-            subscriptionIds.append(relayService.openSubscription(with: featuredFilter))
-            
-            if !currentUser.inNetworkAuthors.isEmpty {
-                // this filter just requests everything for now, because I think requesting all the authors within
-                // two hops is too large of a request and causes the websocket to close.
-                let twoHopsFilter = Filter(
+                
+                let featuredFilter = Filter(
+                    authorKeys: featuredAuthors.compactMap {
+                        PublicKey(npub: $0)?.hex
+                    },
                     kinds: [.text],
-                    limit: 50,
+                    limit: 100,
                     since: fetchSinceDate
                 )
                 
-                subscriptionIds.append(relayService.openSubscription(with: twoHopsFilter))
+                subscriptionIds.append(await relayService.openSubscription(with: featuredFilter))
+                
+                if !currentUser.inNetworkAuthors.isEmpty {
+                    // this filter just requests everything for now, because I think requesting all the authors within
+                    // two hops is too large of a request and causes the websocket to close.
+                    let twoHopsFilter = Filter(
+                        kinds: [.text],
+                        limit: 50,
+                        since: fetchSinceDate
+                    )
+                    
+                    subscriptionIds.append(await relayService.openSubscription(with: twoHopsFilter))
+                }
             }
         }
     }
@@ -223,9 +225,11 @@ struct DiscoverView: View {
                 }
             }
             .onDisappear {
-                searchModel.clear()
-                relayService.removeSubscriptions(for: subscriptionIds)
-                subscriptionIds.removeAll()
+                Task(priority: .userInitiated) {
+                    searchModel.clear()
+                    await relayService.removeSubscriptions(for: subscriptionIds)
+                    subscriptionIds.removeAll()
+                }
             }
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
@@ -252,7 +256,7 @@ struct DiscoverView: View {
     
     func submitSearch() {
         if searchModel.query.contains("@") {
-            Task {
+            Task(priority: .userInitiated) {
                 if let publicKeyHex =
                     await relayService.retrieveInternetIdentifierPublicKeyHex(searchModel.query.lowercased()),
                     let author = author(fromPublicKey: publicKeyHex) {

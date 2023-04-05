@@ -39,16 +39,18 @@ struct RelayView: View {
                             .foregroundColor(.textColor)
                     }
                     .onDelete { indexes in
-                        for index in indexes {
-                            let relay = relays[index]
-                            relayService.closeConnection(to: relay)
-                            analytics.removed(relay)
-                            author.remove(relay: relay)
-                            viewContext.delete(relay)
+                        Task {
+                            for index in indexes {
+                                let relay = relays[index]
+                                await relayService.closeConnection(to: relay)
+                                analytics.removed(relay)
+                                author.remove(relay: relay)
+                                viewContext.delete(relay)
+                            }
+                            
+                            try! viewContext.save()
+                            await publishChanges()
                         }
-                        
-                        try! viewContext.save()
-                        Task { await publishChanges() }
                     }
                     
                     if author.relays?.count == 0 {

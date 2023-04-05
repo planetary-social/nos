@@ -153,7 +153,7 @@ struct NotificationCard: View {
             }
             .buttonStyle(CardButtonStyle())
             .onAppear {
-                Task {
+                Task(priority: .userInitiated) {
                     let backgroundContext = PersistenceController.backgroundViewContext
                     await subscriptionIDs += note.requestAuthorsMetadataIfNeeded(
                         using: relayService,
@@ -162,10 +162,12 @@ struct NotificationCard: View {
                 }
             }
             .onDisappear {
-                relayService.removeSubscriptions(for: subscriptionIDs)
-                subscriptionIDs.removeAll()
+                Task(priority: .userInitiated) {
+                    await relayService.removeSubscriptions(for: subscriptionIDs)
+                    subscriptionIDs.removeAll()
+                }
             }
-            .task {
+            .task(priority: .userInitiated) {
                 let backgroundContext = PersistenceController.backgroundViewContext
                 if let parsedAttributedContent = await note.attributedContent(with: backgroundContext) {
                     withAnimation {

@@ -134,7 +134,7 @@ struct ProfileHeader: View {
         .navigationDestination(for: Followed.self) { followed in
             FollowsView(followed: followed)
         }
-        .task {
+        .task(priority: .userInitiated) {
             if let nip05Identifier = author.nip05,
                 let publicKey = author.publicKey?.hex {
                 let verifiedNip05Identifier = await relayService.verifyInternetIdentifier(
@@ -147,8 +147,10 @@ struct ProfileHeader: View {
             }
         }
         .onDisappear {
-            relayService.removeSubscription(for: subscriptionId)
-            subscriptionId = ""
+            Task(priority: .userInitiated) {
+                await relayService.removeSubscription(for: subscriptionId)
+                subscriptionId = ""
+            }
         }
     }
 }

@@ -63,7 +63,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     // Reset CurrentUser state
     @MainActor func reset() {
         onboardingRelays = []
-        relayService?.removeSubscriptions(for: subscriptions)
+        Task { await relayService?.removeSubscriptions(for: subscriptions) }
         subscriptions = []
         inNetworkAuthors = []
         if let keyPair {
@@ -173,7 +173,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
 
     @MainActor func subscribe() async {
         
-        var overrideRelays: [URL]?
+        let overrideRelays: [URL]?
         let userRelays = author?.relays?.allObjects as? [Relay] ?? []
         if userRelays.isEmpty {
             overrideRelays = Relay.allKnown
@@ -182,27 +182,30 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 }
                 .compactMap { $0.addressURL }
             try? viewContext.save()
+        } else {
+            overrideRelays = nil
         }
         
         // Always listen to my changes
         if let key = publicKeyHex {
             // Close out stale requests
             if !subscriptions.isEmpty {
-                relayService.removeSubscriptions(for: subscriptions)
+                await relayService.removeSubscriptions(for: subscriptions)
                 subscriptions.removeAll()
             }
 
             let metaFilter = Filter(authorKeys: [key], kinds: [.metaData], limit: 1)
-            let metaSub = relayService.openSubscription(with: metaFilter, to: overrideRelays)
-            subscriptions.append(metaSub)
+            async let metaSub = relayService.openSubscription(with: metaFilter, to: overrideRelays)
             
             let contactFilter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
-            let contactSub = relayService.openSubscription(with: contactFilter, to: overrideRelays)
-            subscriptions.append(contactSub)
+            async let contactSub = relayService.openSubscription(with: contactFilter, to: overrideRelays)
             
             let muteListFilter = Filter(authorKeys: [key], kinds: [.mute], limit: 1)
-            let muteSub = relayService.openSubscription(with: muteListFilter, to: overrideRelays)
-            subscriptions.append(muteSub)
+            async let muteSub = relayService.openSubscription(with: muteListFilter, to: overrideRelays)
+            
+            subscriptions.append(await metaSub)
+            subscriptions.append(await contactSub)
+            subscriptions.append(await muteSub)
         }
     }
     
@@ -241,7 +244,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                     limit: 1,
                     since: lastUpdated
                 )
-                _ = self?.relayService.openSubscription(with: metaFilter)
+                _ = await self?.relayService.openSubscription(with: metaFilter)
                 
                 let contactFilter = Filter(
                     authorKeys: [followedKey],
@@ -249,7 +252,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                     limit: 1,
                     since: lastUpdated
                 )
-                _ = self?.relayService.openSubscription(with: contactFilter)
+                _ = await self?.relayService.openSubscription(with: contactFilter)
                 
                 // Do this slowly so we don't get rate limited
                 try await Task.sleep(for: .seconds(5))
