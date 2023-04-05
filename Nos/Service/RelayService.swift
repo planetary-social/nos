@@ -9,6 +9,7 @@ import Starscream
 import CoreData
 import Logger
 import Dependencies
+import UIKit
 
 extension WebSocket {
     var host: String {
@@ -132,7 +133,7 @@ final class RelayService: ObservableObject {
         self.backgroundContext = persistenceController.newBackgroundContext()
         self.subscriptions = RelaySubscriptionManager()
 
-        self.saveEventsTimer = AsyncTimer(timeInterval: 3, onFire: { [weak self] in
+        self.saveEventsTimer = AsyncTimer(timeInterval: 2, onFire: { [weak self] in
             self?.backgroundContext.perform {
                 if self?.backgroundContext.hasChanges == true {
                     try! self?.backgroundContext.save()
@@ -161,11 +162,22 @@ final class RelayService: ObservableObject {
             CurrentUser.shared.viewContext = persistenceController.container.viewContext
             await openSockets()
         }
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appWillEnterForeground),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
     }
     
     deinit {
         saveEventsTimer?.cancel()
         updateSocialGraphTimer?.cancel()
+    }
+    
+    @objc func appWillEnterForeground() {
+        Task { await openSockets() }
     }
     
     private func handleError(_ error: Error?, from socket: WebSocketClient) {
