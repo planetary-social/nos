@@ -292,10 +292,7 @@ struct NoteCard: View {
             signature: ""
         )
         do {
-            let event = try await Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
-            try event.sign(withKey: keyPair)
-            try viewContext.save()
-            await relayService.publishToAll(event: event, context: viewContext)
+            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
         } catch {
             Log.info("Error creating event for like")
         }

@@ -45,8 +45,8 @@ class Analytics {
         }
     }
 
-    func published(note: Event) {
-        track("Published Note", properties: ["length": note.content?.count ?? 0])
+    func published(note: JSONEvent) {
+        track("Published Note", properties: ["length": note.content.count])
     }
     
     // MARK: - Screens

@@ -479,16 +479,10 @@ extension RelayService {
 // MARK: Publish
 extension RelayService {
     
-    private func publish(from client: WebSocketClient, eventID: NSManagedObjectID) async {
+    private func publish(from client: WebSocketClient, jsonEvent: JSONEvent) async {
         do {
             // Keep track of this so if it fails we can retry N times
-            var jsonRepresentation = [String: Any]()
-            await backgroundContext.perform {
-                let event = self.backgroundContext.object(with: eventID) as! Event
-                event.sendAttempts += 1
-                jsonRepresentation = event.jsonRepresentation!
-            }
-            let request: [Any] = ["EVENT", jsonRepresentation]
+            let request: [Any] = ["EVENT", jsonEvent.dictionary]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
             print(requestString)
@@ -498,33 +492,45 @@ extension RelayService {
         }
     }
     
-    func publishToAll(event: Event, context: NSManagedObjectContext) async {
-        do {
-            let relays = try persistenceController.viewContext.fetch(Relay.relays(for: event.author!))
-            event.shouldBePublishedTo = NSSet(array: relays)
-            try context.save()
-        } catch {
-            fatalError("Could not queue event for publishing")
-        }
+    func publishToAll(event: JSONEvent, signingKey: KeyPair, context: NSManagedObjectContext) async throws {
         await self.openSockets()
+        let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
         for socket in await subscriptions.sockets {
-            await publish(from: socket, eventID: event.objectID)
+            await publish(from: socket, jsonEvent: signedEvent)
         }
     }
     
-    func publish(to relay: Relay, event: Event, context: NSManagedObjectContext) async {
-        do {
-            event.shouldBePublishedTo = NSSet(array: [relay])
-            try context.save()
-        } catch {
-            fatalError("Could not queue event for publishing")
-        }
+    func publish(
+        event: JSONEvent,
+        to relay: Relay,
+        signingKey: KeyPair,
+        context: NSManagedObjectContext
+    ) async throws {
         await openSockets()
+        let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
         if let socket = await socket(from: relay) {
-            await publish(from: socket, eventID: event.objectID)
+            await publish(from: socket, jsonEvent: signedEvent)
         } else {
             Log.error("Could not find socket to publish message")
         }
+    }
+    
+    private func signAndSave(
+        event: JSONEvent,
+        signingKey: KeyPair,
+        in context: NSManagedObjectContext
+    ) async throws -> JSONEvent {
+        var jsonEvent = event
+        try jsonEvent.sign(withKey: signingKey)
+        
+        try await context.perform {
+            let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
+            let relays = try context.fetch(Relay.relays(for: event.author!))
+            event.shouldBePublishedTo = NSSet(array: relays)
+            try context.save()
+        }
+        
+        return jsonEvent
     }
     
     func publishFailedEvents() async {
@@ -544,10 +550,11 @@ extension RelayService {
                 for missedRelay in missedRelays {
                     guard let missedAddress = missedRelay.address else { continue }
                     Task {
-                        if let socket = await self.subscriptions.socket(for: missedAddress) {
+                        if let socket = await self.subscriptions.socket(for: missedAddress),
+                           let jsonEvent = event.codable {
                             // Publish again to this socket
                             print("Republishing \(event.identifier!) on \(missedAddress)")
-                                await self.publish(from: socket, eventID: event.objectID)
+                                await self.publish(from: socket, jsonEvent: jsonEvent)
                         }
                     }
                 }

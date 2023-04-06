@@ -309,13 +309,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
 
         let time = Int64(Date.now.timeIntervalSince1970)
         let kind = EventKind.metaData.rawValue
-        var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: [], content: metaString)
+        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: [], content: metaString)
                 
         if let pair = keyPair {
             do {
-                try jsonEvent.sign(withKey: pair)
-                let event = try await EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
-                await relayService.publishToAll(event: event, context: viewContext)
+                try await relayService.publishToAll(event: jsonEvent, signingKey: pair, context: viewContext)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }
@@ -330,13 +328,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         
         let time = Int64(Date.now.timeIntervalSince1970)
         let kind = EventKind.mute.rawValue
-        var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: keys.pTags, content: "")
+        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: keys.pTags, content: "")
         
         if let pair = keyPair {
             do {
-                try jsonEvent.sign(withKey: pair)
-                let event = try await EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
-                await relayService.publishToAll(event: event, context: viewContext)
+                try await relayService.publishToAll(event: jsonEvent, signingKey: pair, context: viewContext)
             } catch {
                 Log.debug("Failed to update mute list \(error.localizedDescription)")
             }
@@ -352,13 +348,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         let tags = identifiers.eTags
         let time = Int64(Date.now.timeIntervalSince1970)
         let kind = EventKind.delete.rawValue
-        var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: reason)
+        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: reason)
         
         if let pair = keyPair {
             do {
-                try jsonEvent.sign(withKey: pair)
-                let event = try await EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
-                await relayService.publishToAll(event: event, context: viewContext)
+                try await relayService.publishToAll(event: jsonEvent, signingKey: pair, context: viewContext)
             } catch {
                 Log.debug("Failed to delete events \(error.localizedDescription)")
             }
@@ -391,9 +385,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         
         if let pair = keyPair {
             do {
-                try jsonEvent.sign(withKey: pair)
-                let event = try await EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
-                await relayService.publishToAll(event: event, context: viewContext)
+                try await relayService.publishToAll(event: jsonEvent, signingKey: pair, context: viewContext)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }

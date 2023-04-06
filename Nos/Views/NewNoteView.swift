@@ -141,18 +141,19 @@ struct NewNoteView: View {
                 content: postText,
                 signature: ""
             )
-            let event = try await Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
-            event.author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
             
-            try event.sign(withKey: keyPair)
-            try viewContext.save()
             if let selectedRelay {
-                await relayService.publish(to: selectedRelay, event: event, context: viewContext)
+                try await relayService.publish(
+                    event: jsonEvent,
+                    to: selectedRelay,
+                    signingKey: keyPair,
+                    context: viewContext
+                )
             } else {
-                await relayService.publishToAll(event: event, context: viewContext)
+                try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
             }
             isPresented = false
-            analytics.published(note: event)
+            analytics.published(note: jsonEvent)
             postText = ""
             router.selectedTab = .home
         } catch {
