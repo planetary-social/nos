@@ -209,6 +209,8 @@ enum Localized: String, Localizable, CaseIterable {
     case noEventsOnProfile = "We don't see any notes for this profile, but we'll keep looking!"
     case basicInfo = "Basic Information"
     case edit = "Edit" // verb form
+
+    case authors = "Authors"
     
     case debug = "Debug"
     case loadSampleData = "Load Sample Data"

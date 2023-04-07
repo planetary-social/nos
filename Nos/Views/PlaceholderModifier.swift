@@ -19,6 +19,7 @@ extension View {
     ) -> some View {
 
         ZStack(alignment: alignment) {
+            
             placeholder().opacity(shouldShow ? 1 : 0)
             self
         }

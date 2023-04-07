@@ -17,8 +17,20 @@ struct NewNoteView: View {
     @EnvironmentObject var currentUser: CurrentUser
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
-    
-    @State private var postText: String = ""
+
+    /// State holding the text the user is typing
+    @State private var postText = AttributedString("")
+
+    /// State containing the offset (index) of text when the user is mentioning someone
+    ///
+    /// When we detect the user typed a '@', we save the position of that character here and open a screen
+    /// that lets the user select someone to mention, then we can replace this character with the full mention.
+    @State private var mentionOffset: Int?
+
+    /// State containing the very last state before `text` changes
+    ///
+    /// We need this so that we can compare and decide what has changed.
+    @State private var oldText: String = ""
     
     @State private var alert: AlertState<Never>?
     
@@ -33,14 +45,23 @@ struct NewNoteView: View {
     
     @FocusState private var focusedField: FocusedField?
 
+    /// Setting this to true will pop up the mention list to select an author to mention in the text editor.
+    private var showAvailableMentions: Binding<Bool> {
+        Binding {
+            mentionOffset != nil
+        } set: { _ in
+            mentionOffset = nil
+        }
+    }
+
     var body: some View {
         NavigationStack {
             ZStack {
                 VStack {
                     Form {
-                        TextEditor(text: $postText)
+                        EditableText($postText)
                             .frame(maxHeight: .infinity)
-                            .placeholder(when: postText.isEmpty, placeholder: {
+                            .placeholder(when: postText.characters.isEmpty, placeholder: {
                                 VStack {
                                     Text("Type your post here...")
                                         .foregroundColor(.secondaryTxt)
@@ -51,6 +72,34 @@ struct NewNoteView: View {
                             })
                             .listRowBackground(Color.appBg)
                             .focused($focusedField, equals: .textEditor)
+                            .onChange(of: postText) { newValue in
+                                let newText = String(newValue.characters)
+                                let difference = newText.difference(from: oldText)
+                                guard difference.count == 1, let change = difference.first else {
+                                    oldText = newText
+                                    return
+                                }
+                                switch change {
+                                case .insert(let offset, let element, _):
+                                    if element == "@" {
+                                        mentionOffset = offset
+                                    }
+                                default:
+                                    break
+                                }
+                                oldText = newText
+                            }
+                            .sheet(isPresented: showAvailableMentions) {
+                                NavigationStack {
+                                    AuthorListView { author in
+                                        guard let offset = mentionOffset else {
+                                            return
+                                        }
+                                        insertMention(at: offset, author: author)
+                                    }
+                                }
+                                .presentationDetents([.medium, .large])
+                            }
                     }
                     Spacer()
                     HStack {
@@ -110,7 +159,7 @@ struct NewNoteView: View {
                 },
                 trailing: ActionButton(title: Localized.post, action: publishPost)
                     .frame(height: 22)
-                    .disabled(postText.isEmpty)
+                    .disabled(postText.characters.isEmpty)
                     .padding(.bottom, 3)
             )
             .onAppear {
@@ -119,6 +168,37 @@ struct NewNoteView: View {
             }
         }
         .alert(unwrapping: $alert)
+    }
+
+    private func insertMention(at offset: Int, author: Author) {
+        var attributeContainer = AttributeContainer()
+        attributeContainer.foregroundColor = .secondaryTxt
+        attributeContainer.font = UIFont.preferredFont(forTextStyle: .body)
+
+        var linkAttributeContainer = AttributeContainer()
+        linkAttributeContainer.font = UIFont.preferredFont(forTextStyle: .body)
+        linkAttributeContainer.link = URL(string: "www.google.com")!
+        linkAttributeContainer.foregroundColor = .accent
+
+        let lowerBound = postText.characters.index(
+            postText.characters.startIndex,
+            offsetBy: offset,
+            limitedBy: postText.characters.endIndex
+        ) ?? postText.characters.startIndex
+        let upperBound = postText.characters.index(
+            lowerBound,
+            offsetBy: 1,
+            limitedBy: postText.characters.endIndex
+        ) ?? postText.characters.endIndex
+        postText.replaceSubrange(
+            Range(uncheckedBounds: (lowerBound, upperBound)),
+            with: AttributedString(
+                author.safeName,
+                attributes: linkAttributeContainer
+            )
+        )
+        oldText = String(postText.characters)
+        mentionOffset = nil
     }
     
     private func publishPost() {
@@ -139,7 +219,7 @@ struct NewNoteView: View {
                     createdAt: Int64(Date().timeIntervalSince1970),
                     kind: 1,
                     tags: [],
-                    content: postText,
+                    content: String(postText.characters),
                     signature: ""
                 )
                 let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
@@ -156,6 +236,7 @@ struct NewNoteView: View {
                 analytics.published(note: event)
                 postText = ""
                 router.selectedTab = .home
+                platformV
             } catch {
                 alert = AlertState(title: {
                     TextState(Localized.error.string)
