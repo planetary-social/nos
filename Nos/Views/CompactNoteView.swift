@@ -31,7 +31,7 @@ struct CompactNoteView: View {
     }
     
     func updateShouldShowReadMore() {
-        shouldShowReadMore = intrinsicSize != truncatedSize
+        shouldShowReadMore = intrinsicSize.height > truncatedSize.height + 100
     }
     
     var body: some View {
@@ -63,7 +63,7 @@ struct CompactNoteView: View {
                         }
                     }
                     .onPreferenceChange(TruncatedSizePreferenceKey.self) { newSize in
-                        if newSize.height > truncatedSize.height + 50 {
+                        if newSize.height > truncatedSize.height {
                             truncatedSize = newSize
                             updateShouldShowReadMore()
                         }
