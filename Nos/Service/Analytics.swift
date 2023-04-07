@@ -149,4 +149,38 @@ class Analytics {
     func rateLimited(by socket: WebSocket) {
         track("Rate Limited", properties: ["relay": socket.request.url?.absoluteString ?? "null"])
     }
+    
+    // MARK: UNS
+    
+    func showedUNSWizard() {
+        track("UNS Showed Wizard")
+    }
+    
+    func canceledUNSWizard() {
+        track("UNS Canceled Wizard")
+    }
+    
+    func completedUNSWizard() {
+        track("UNS Completed Wizard")
+    }
+    
+    func enteredUNSPhone() {
+        track("UNS Entered Phone")
+    }
+    
+    func enteredUNSCode() {
+        track("UNS Entered Code")
+    }
+    
+    func choseUNSName() {
+        track("UNS Chose Name")
+    }
+    
+    func choseInvalidUNSName() {
+        track("UNS Invalid Name")
+    }
+    
+    func encounteredUNSError() {
+        track("UNS Error")
+    }
 }
