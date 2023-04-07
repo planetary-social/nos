@@ -63,10 +63,6 @@ struct UniversalNameWizard: View {
                             HighlightedText(
                                 Localized.unsDescription.string,
                                 highlightedWord: Localized.unsLearnMore.string,
-                                "The Universal Namespace gives you one name you can use everywhere. You can verify " +
-                                "your identity and get your universal name here in Nos. This screen is for demo " +
-                                "purposes only, all names will be reset in the future. Learn more.",
-                                highlightedWord: "Learn more.",
                                 highlight: .diagonalAccent,
                                 link: URL(string: "https://universalname.space")
                             )
