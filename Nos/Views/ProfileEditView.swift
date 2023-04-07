@@ -85,8 +85,7 @@ struct ProfileEditView: View {
                 // TODO: allow remove UNS
                 if author.nip05?.hasSuffix("universalname.space") != true {
                     VStack {
-                        Text("Universal Name Space brings identity verification you can trust.")
-                        //                            .padding(.horizontal, 10)
+                        Localized.unsTagline.view
                             .padding(.top, 24)
                             .padding(.bottom, 12)
                             .foregroundColor(.white)
@@ -177,12 +176,6 @@ struct ProfileEditView: View {
         }
     }
    
-    var learnMoreLink: AttributedString {
-        var result = try! AttributedString(markdown: "[Learn more ](https://www.universalname.space)")
-        result.foregroundColor = .accent
-        return result
-    }
-    
     func populateTextFields() {
         displayNameText = author.displayName ?? ""
         nameText = author.name ?? ""

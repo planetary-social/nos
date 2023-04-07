@@ -1,6 +1,8 @@
 import Foundation
 import SwiftUI
 
+let testingLocalization = ProcessInfo.processInfo.environment["TESTING_LOCALIZATION"]
+
 /// A protocol for strings that are translated into multiple languages. See `Localized` for concrete implementation and
 /// usage docs.
 protocol Localizable: RawRepresentable<String> {
@@ -25,7 +27,12 @@ extension Localizable {
     // You can modify this to perform localization, or overrides based on server or other config
     var string: String {
         let bundle = Bundle(for: CurrentBundle.self)
-        let string = NSLocalizedString(key, tableName: "Generated", bundle: bundle, value: "not_found", comment: "")
+        var string: String
+        if testingLocalization != nil {
+            string = NSLocalizedString(key, tableName: "Generated", bundle: bundle, comment: "")
+        } else {
+            string = NSLocalizedString(key, tableName: "Generated", bundle: bundle, value: "not_found", comment: "")
+        }
         if string == "not_found" {
             if let path = bundle.path(forResource: "en", ofType: "lproj"), let bundle = Bundle(path: path) {
                 return bundle.localizedString(forKey: key, value: nil, table: "Generated")
