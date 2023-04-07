@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Dependencies
 
 struct UniversalNameWizard: View {
         
@@ -30,6 +31,7 @@ struct UniversalNameWizard: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var currentUser: CurrentUser
+    @Dependency(\.analytics) var analytics
     
     @MainActor @State var flowState = FlowState.enterPhone
     @State private var flow: Flow?
@@ -83,6 +85,7 @@ struct UniversalNameWizard: View {
                     
                     BigActionButton(title: .sendCode) {
                         Task {
+                            analytics.enteredUNSPhone()
                             var number = textField
                             number = number.trimmingCharacters(in: .whitespacesAndNewlines)
                             number.replace("-", with: "")
@@ -130,6 +133,7 @@ struct UniversalNameWizard: View {
                     BigActionButton(title: .submit) {
                         do {
                             flowState = .loading
+                            analytics.enteredUNSCode()
                             try await api.verifyOTPCode(
                                 phoneNumber: phoneNumber!,
                                 code: textField.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -203,6 +207,7 @@ struct UniversalNameWizard: View {
                     BigActionButton(title: .submit) {
                         do {
                             flowState = .loading
+                            analytics.choseUNSName()
                             guard try await api.createName(
                                 textField.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
                             ) else {
@@ -242,6 +247,9 @@ struct UniversalNameWizard: View {
                     }
                     .padding(.horizontal, 24)
                     .padding(.bottom, 50)
+                    .onAppear {
+                        analytics.choseInvalidUNSName()
+                    }
                 case .success:
                     VStack {
                         PlainText(Localized.success.string)
@@ -255,6 +263,7 @@ struct UniversalNameWizard: View {
                             .foregroundColor(.primaryTxt)
                         Spacer()
                         BigActionButton(title: .dismiss) {
+                            analytics.completedUNSWizard()
                             dismiss?()
                         }
                         .padding(.horizontal, 24)
@@ -277,10 +286,19 @@ struct UniversalNameWizard: View {
                     }
                     .padding(.horizontal, 24)
                     .padding(.bottom, 50)
+                    .onAppear {
+                        analytics.encounteredUNSError()
+                    }
                 }
             }
             .onAppear {
                 focusedField = .textEditor
+                analytics.showedUNSWizard()
+            }
+            .onDisappear {
+                if flowState != .success {
+                    analytics.canceledUNSWizard()
+                }
             }
             .background(Color.appBg)
             .nosNavigationBar(title: .setUpUNS)
