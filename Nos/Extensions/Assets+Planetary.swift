@@ -313,3 +313,5 @@ extension UIImage {
        static let emptyAvatar = UIImage(named: "emptyAvatar", in: Bundle.current, with: nil)!
        static let newPostButton = UIImage(named: "newPostButton", in: Bundle.current, with: nil)!
 }
+
+// swiftlint:enable all

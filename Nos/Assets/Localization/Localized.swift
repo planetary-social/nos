@@ -277,3 +277,4 @@ extension Localized {
         case mentionedYou = "mentioned you:"
     }
 }
+// swiftlint:enable line_length identifier_name

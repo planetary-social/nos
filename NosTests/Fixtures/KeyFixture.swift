@@ -7,8 +7,6 @@
 
 import Foundation
 
-// swiftlint:disable force_unwrapping
-
 enum KeyFixture {
     static let npub = "npub1xfesa80u4duhetursrgfde2gm8he3ua0xqq9gtujwx53483mqqqsg0cyaj"
     static let pubKeyHex = "32730e9dfcab797caf8380d096e548d9ef98f3af3000542f9271a91a9e3b0001"

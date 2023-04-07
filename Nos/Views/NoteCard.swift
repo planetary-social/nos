@@ -277,7 +277,7 @@ struct NoteCard: View {
             signature: ""
         )
         do {
-            let event = try await Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
+            let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
             try event.sign(withKey: keyPair)
             try viewContext.save()
             relayService.publishToAll(event: event, context: viewContext)

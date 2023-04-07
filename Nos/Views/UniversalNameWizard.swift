@@ -63,6 +63,10 @@ struct UniversalNameWizard: View {
                             HighlightedText(
                                 Localized.unsDescription.string,
                                 highlightedWord: Localized.unsLearnMore.string,
+                                "The Universal Namespace gives you one name you can use everywhere. You can verify " +
+                                "your identity and get your universal name here in Nos. This screen is for demo " +
+                                "purposes only, all names will be reset in the future. Learn more.",
+                                highlightedWord: "Learn more.",
                                 highlight: .diagonalAccent,
                                 link: URL(string: "https://universalname.space")
                             )
@@ -130,14 +134,22 @@ struct UniversalNameWizard: View {
                     BigActionButton(title: .submit) {
                         do {
                             flowState = .loading
-                            try await api.verifyOTPCode(phoneNumber: phoneNumber!, code: textField.trimmingCharacters(in: .whitespacesAndNewlines))
+                            try await api.verifyOTPCode(
+                                phoneNumber: phoneNumber!,
+                                code: textField.trimmingCharacters(in: .whitespacesAndNewlines)
+                            )
                             textField = ""
                             let names = try await api.getNames()
                             if let name = names.first {
                                 self.name = name
                                 var nip05: String
-                                if let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub) {
-                                    nip05 = try await api.submitNostrVerification(message: message, keyPair: currentUser.keyPair!)
+                                if let message = try await api.requestNostrVerification(
+                                    npub: currentUser.keyPair!.npub
+                                ) {
+                                    nip05 = try await api.submitNostrVerification(
+                                        message: message,
+                                        keyPair: currentUser.keyPair!
+                                    )
                                 } else {
                                     nip05 = try await api.getNIP05()
                                 }
@@ -195,14 +207,19 @@ struct UniversalNameWizard: View {
                     BigActionButton(title: .submit) {
                         do {
                             flowState = .loading
-                            guard try await api.createName(textField.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)) else {
+                            guard try await api.createName(
+                                textField.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+                            ) else {
                                 flowState = .nameTaken
                                 return
                             }
                             let names = try await api.getNames()
                             name = names.first!
                             let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub)!
-                            let nip05 = try await api.submitNostrVerification(message: message, keyPair: currentUser.keyPair!)
+                            let nip05 = try await api.submitNostrVerification(
+                                message: message,
+                                keyPair: currentUser.keyPair!
+                            )
                             author.name = name
                             author.nip05 = nip05
                             await CurrentUser.shared.publishMetaData()
@@ -295,23 +312,23 @@ struct UniversalNameWizard_Previews: PreviewProvider {
             .sheet(isPresented: .constant(true)) {
                 UniversalNameWizard(author: author, flowState: .enterOTP)
             }
-                        VStack {}
+        VStack {}
             .sheet(isPresented: .constant(true)) {
                 UniversalNameWizard(author: author, flowState: .loading)
             }
-                        VStack {}
+        VStack {}
             .sheet(isPresented: .constant(true)) {
                 UniversalNameWizard(author: author, flowState: .chooseName)
             }
-                        VStack {}
+        VStack {}
             .sheet(isPresented: .constant(true)) {
                 UniversalNameWizard(author: author, flowState: .success)
             }
-                        VStack {}
+        VStack {}
             .sheet(isPresented: .constant(true)) {
                 UniversalNameWizard(author: author, flowState: .error)
             }
-                        VStack {}
+        VStack {}
             .sheet(isPresented: .constant(true)) {
                 UniversalNameWizard(author: author, flowState: .nameTaken)
             }
