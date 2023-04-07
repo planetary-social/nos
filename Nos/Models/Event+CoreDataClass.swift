@@ -546,7 +546,6 @@ public class Event: NosManagedObject {
         }
     }
     
-    // swiftlint:disable cyclomatic_complexity
     func hydrateContactList(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
         guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
             return
@@ -588,7 +587,6 @@ public class Event: NosManagedObject {
             }
         }
     }
-    // swiftlint:enable cyclomatic_complexity
     
     func hydrateDefault(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
         let newEventReferences = NSMutableOrderedSet()
@@ -793,9 +791,9 @@ public class Event: NosManagedObject {
             
             note.authorReferences?.forEach { reference in
                 if let reference = reference as? AuthorReference,
-                   let pubKey = reference.pubkey,
-                   let author = try? Author.findOrCreate(by: pubKey, context: context),
-                   author.needsMetadata {
+                    let pubKey = reference.pubkey,
+                    let author = try? Author.findOrCreate(by: pubKey, context: context),
+                    author.needsMetadata {
                     requestData.append((author.hexadecimalPublicKey, author.lastUpdatedMetadata))
                 }
             }

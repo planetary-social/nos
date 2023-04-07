@@ -50,7 +50,6 @@ struct ProfileView: View {
             )
             async let metaSub = relayService.openSubscription(with: metaFilter)
             
-            
             let contactFilter = Filter(
                 authorKeys: authors,
                 kinds: [.contactList],

@@ -38,7 +38,7 @@ struct PersistenceController {
     }
     
     static var backgroundViewContext = {
-        return PersistenceController.shared.newBackgroundContext()
+        PersistenceController.shared.newBackgroundContext()
     }()
     
     var container: NSPersistentContainer

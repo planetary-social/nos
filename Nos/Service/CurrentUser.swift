@@ -384,7 +384,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         
         let time = Int64(Date.now.timeIntervalSince1970)
         let kind = EventKind.contactList.rawValue
-        var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: relayString)
+        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: relayString)
         
         if let pair = keyPair {
             do {

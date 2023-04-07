@@ -11,109 +11,10 @@ import Logger
 import Dependencies
 import UIKit
 
-extension WebSocket {
-    var host: String {
-        self.request.url?.host ?? "unknown relay"
-    }
-}
-
-extension WebSocketClient {
-    var host: String {
-        (self as? WebSocket)?.host ?? "unkown relay"
-    }
-}
-
-class AsyncTimer {
-    
-    private var task: Task<Void, Never>
-    
-    init(timeInterval: TimeInterval, priority: TaskPriority = .utility, onFire: @escaping () async -> Void) {
-        self.task = Task(priority: priority) {
-            while !Task.isCancelled {
-                await onFire()
-                try? await Task.sleep(nanoseconds: UInt64(timeInterval * 1_000_000_000))
-            }
-        }
-    }
-    
-    func cancel() {
-        task.cancel()
-    }
-}
-
-actor RelaySubscriptionManager {
-    
-    var all = [RelaySubscription]()
-    
-    var sockets = [WebSocket]()
-    
-    var active: [RelaySubscription] {
-        all
-            .filter { $0.isActive }
-    }
-    
-    func subscription(from filter: Filter) -> RelaySubscription? {
-        subscription(from: filter.id)
-    }
-    
-    func subscription(from subscriptionID: RelaySubscription.ID) -> RelaySubscription? {
-        if let subscriptionIndex = self.all.firstIndex(where: { $0.id == subscriptionID }) {
-            return all[subscriptionIndex]
-        } else {
-            return nil
-        }
-    }
-    
-    func updateSubscriptions(with newValue: RelaySubscription) {
-        if let subscriptionIndex = self.all.firstIndex(where: { $0.id == newValue.id }) {
-            all[subscriptionIndex] = newValue
-        } else {
-            all.append(newValue)
-        }
-    }
-    
-    func removeSubscription(with subscriptionID: RelaySubscription.ID) {
-        if let subscriptionIndex = self.all.firstIndex(
-            where: { $0.id == subscriptionID }
-        ) {
-            all.remove(at: subscriptionIndex)
-        }
-    }
-    
-    func addSocket(for relayAddress: URL) -> WebSocket? {
-        guard !sockets.contains(where: { $0.request.url == relayAddress }) else {
-            return nil
-        }
-            
-        var request = URLRequest(url: relayAddress)
-        request.timeoutInterval = 10
-        let socket = WebSocket(request: request, compressionHandler: .none)
-        sockets.append(socket)
-        return socket
-    }
-    
-    func close(socket: WebSocket) {
-        socket.disconnect()
-        if let index = sockets.firstIndex(where: { $0 === socket }) {
-            sockets.remove(at: index)
-        }
-    }
-    
-    func remove(_ socket: WebSocketClient) {
-        if let index = sockets.firstIndex(where: { $0 === socket }) {
-            sockets.remove(at: index)
-        }
-    }
-    
-    func socket(for address: String) -> WebSocket? {
-        if let index = sockets.firstIndex(where: { $0.request.url!.absoluteString == address }) {
-            return sockets[index]
-        }
-        return nil
-    }
-}
-
 // swiftlint:disable file_length
+
+/// A service that maintains connections to Nostr Relay servers and executes requests for data from those relays
+/// in the form of `Filters` and `RelaySubscription`s.
 final class RelayService: ObservableObject {
     
     private var persistenceController: PersistenceController
@@ -301,7 +202,6 @@ extension RelayService {
         // - Open as many long running subsriptions as we can, leaving room for `minimumOneTimeSubscriptions`
         // - fill remaining slots with one time filters
         let allSubscriptions = await subscriptions.all
-        let runningLongSubscriptions = allSubscriptions.filter { !$0.isOneTime && $0.isActive }
         let waitingLongSubscriptions = allSubscriptions.filter { !$0.isOneTime && !$0.isActive }
         let waitingOneTimeSubscriptions = allSubscriptions.filter { $0.isOneTime && !$0.isActive }
         let openOneTimeSlots = max(subscriptionLimit - waitingLongSubscriptions.count, minimimumOneTimeSubscriptions)
@@ -394,7 +294,7 @@ extension RelayService {
             }
         } catch {
             print("Error: parsing event from relay (\(socket.request.url?.absoluteString ?? "")): " +
-                  "\(responseArray)\nerror: \(error.localizedDescription)")
+                "\(responseArray)\nerror: \(error.localizedDescription)")
         }
     }
 
@@ -549,7 +449,7 @@ extension RelayService {
                     guard let missedAddress = missedRelay.address else { continue }
                     Task {
                         if let socket = await self.subscriptions.socket(for: missedAddress),
-                           let jsonEvent = event.codable {
+                            let jsonEvent = event.codable {
                             // Publish again to this socket
                             print("Republishing \(event.identifier!) on \(missedAddress)")
                                 await self.publish(from: socket, jsonEvent: jsonEvent)
