@@ -61,15 +61,13 @@ struct UniversalNameWizard: View {
                             .autocorrectionDisabled()
                             .focused($focusedField, equals: .textEditor)
                             HighlightedText(
-                                "The Universal Namespace gives you one name you can use everywhere. You can verify " +
-                                "your identity and get your universal name here in Nos. This screen is for demo " +
-                                "purposes only, all names will be reset in the future. Learn more.",
-                                highlightedWord: "Learn more.",
+                                Localized.unsDescription.string,
+                                highlightedWord: Localized.unsLearnMore.string,
                                 highlight: .diagonalAccent,
                                 link: URL(string: "https://universalname.space")
                             )
                         } header: {
-                            Text("Verify your identity")
+                            Localized.verifyYourIdentity.view
                                 .foregroundColor(.primaryTxt)
                                 .fontWeight(.heavy)
                         }
@@ -116,7 +114,7 @@ struct UniversalNameWizard: View {
                             .autocorrectionDisabled()
                             .focused($focusedField, equals: .textEditor)
                         } header: {
-                            Text("Enter Code")
+                            Localized.enterCode.view
                                 .foregroundColor(.primaryTxt)
                                 .fontWeight(.heavy)
                         }
@@ -181,7 +179,7 @@ struct UniversalNameWizard: View {
                     Form {
                         Section {
                             TextField(text: $textField) {
-                                Text("name")
+                                Localized.name.view
                                     .foregroundColor(.secondaryTxt)
                             }
                             .textInputAutocapitalization(.none)
@@ -190,7 +188,7 @@ struct UniversalNameWizard: View {
                             .autocapitalization(.none)
                             .focused($focusedField, equals: .textEditor)
                         } header: {
-                            Text("Choose Your Name")
+                            Localized.chooseYourName.view
                                 .foregroundColor(.primaryTxt)
                                 .fontWeight(.heavy)
                         }
@@ -230,11 +228,11 @@ struct UniversalNameWizard: View {
                     .padding(.bottom, 50)
                 case .nameTaken:
                     Spacer()
-                    PlainText("Oops!")
+                    PlainText(Localized.oops.string)
                         .font(.title2)
                         .padding()
                         .foregroundColor(.primaryTxt)
-                    PlainText("That name is taken.")
+                    PlainText(Localized.thatNameIsTaken.string)
                         .font(.body)
                         .padding()
                         .foregroundColor(.primaryTxt)
@@ -246,12 +244,11 @@ struct UniversalNameWizard: View {
                     .padding(.bottom, 50)
                 case .success:
                     VStack {
-                        PlainText("Success!")
+                        PlainText(Localized.success.string)
                             .font(.title)
                             .padding(.top, 50)
                             .foregroundColor(.primaryTxt)
-                        Text("\(name ?? "") is your new Nostr username.\n\nThis demo of the Universal Namespace " +
-                            "is for testing purposes only. All names will be reset in the future.")
+                        Text("\(name ?? "") \(Localized.yourNewUNMessage.string)")
                             .padding()
                             .multilineTextAlignment(.center)
                             .frame(maxWidth: 500)
@@ -266,11 +263,11 @@ struct UniversalNameWizard: View {
                     .frame(maxWidth: .infinity)
                 case .error:
                     Spacer()
-                    PlainText("Oops!")
+                    PlainText(Localized.oops.string)
                         .font(.title2)
                         .padding()
                         .foregroundColor(.primaryTxt)
-                    PlainText("An error occured.")
+                    PlainText(Localized.anErrorOccurred.string)
                         .font(.body)
                         .padding()
                         .foregroundColor(.primaryTxt)

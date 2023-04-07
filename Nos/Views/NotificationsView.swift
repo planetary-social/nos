@@ -83,12 +83,12 @@ struct NotificationCard: View {
         self.note = note
         self.user = user
         
-        authorName = note.author?.safeName ?? "someone"
+        authorName = note.author?.safeName ?? Localized.someone.string
         
         if note.isReply(to: user) {
-            actionText = "replied to your note:"
+            actionText = Localized.Reply.repliedToYourNote.string
         } else if note.references(author: user) {
-            actionText = "mentioned you:"
+            actionText = Localized.Reply.mentionedYou.string
         } else {
             actionText = nil
         }

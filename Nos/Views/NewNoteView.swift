@@ -42,7 +42,7 @@ struct NewNoteView: View {
                             .frame(maxHeight: .infinity)
                             .placeholder(when: postText.isEmpty, placeholder: {
                                 VStack {
-                                    Text("Type your post here...")
+                                    Localized.newNotePlaceholder.view
                                         .foregroundColor(.secondaryTxt)
                                         .padding(.horizontal, 8.5)
                                         .padding(.vertical, 10)

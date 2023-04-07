@@ -74,6 +74,8 @@
 		C94437E629B0DB83004D8C86 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94437E529B0DB83004D8C86 /* NotificationsView.swift */; };
 		C94D855C2991479900749478 /* NewNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D855B2991479900749478 /* NewNoteView.swift */; };
 		C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = C94D855E29914D2300749478 /* SwiftUINavigation */; };
+		C94FE9F529DB177500019CD3 /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA978299C31A7006929C1 /* Localizable.swift */; };
+		C94FE9F629DB177500019CD3 /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA978299C31A7006929C1 /* Localizable.swift */; };
 		C94FE9F729DB259300019CD3 /* Text+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE629C69FA000466635 /* Text+Gradient.swift */; };
 		C94FE9F829DB25A800019CD3 /* Text+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE629C69FA000466635 /* Text+Gradient.swift */; };
 		C95D68A1299E6D3E00429F86 /* BioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D68A0299E6D3E00429F86 /* BioView.swift */; };
@@ -219,8 +221,6 @@
 		C9DFA971299BF8CD006929C1 /* RepliesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA970299BF8CD006929C1 /* RepliesView.swift */; };
 		C9DFA972299BF9E8006929C1 /* CompactNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA96A299BEE2C006929C1 /* CompactNoteView.swift */; };
 		C9DFA976299C30F0006929C1 /* Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA975299C30F0006929C1 /* Localized.swift */; };
-		C9DFA979299C31A7006929C1 /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA978299C31A7006929C1 /* Localizable.swift */; };
-		C9DFA97A299C31E9006929C1 /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA978299C31A7006929C1 /* Localizable.swift */; };
 		C9DFA97B299C31EE006929C1 /* Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA975299C30F0006929C1 /* Localized.swift */; };
 		C9F0BB6929A5039D000547FC /* Int+Bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F0BB6829A5039D000547FC /* Int+Bool.swift */; };
 		C9F0BB6B29A503D6000547FC /* PublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F0BB6A29A503D6000547FC /* PublicKey.swift */; };
@@ -1092,10 +1092,10 @@
 				C95D68A5299E6E1E00429F86 /* PlaceholderModifier.swift in Sources */,
 				3FFB1D9329A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,
 				C93EC2FA29C370DE0012EE2A /* DiscoverGrid.swift in Sources */,
+				C94FE9F529DB177500019CD3 /* Localizable.swift in Sources */,
 				C93EC2FD29C3785C0012EE2A /* View+RoundedCorner.swift in Sources */,
 				CD09A74829A51EFC0063464F /* Router.swift in Sources */,
 				CD2CF38E299E67F900332116 /* CardButtonStyle.swift in Sources */,
-				C9DFA979299C31A7006929C1 /* Localizable.swift in Sources */,
 				A336DD3C299FD78000A0CBA0 /* Filter.swift in Sources */,
 				C9A0DAEA29C6A34200466635 /* ActivityView.swift in Sources */,
 				CD2CF390299E68BE00332116 /* NoteButton.swift in Sources */,
@@ -1163,7 +1163,6 @@
 				C9ADB13E29929EEF0075E7F8 /* Bech32.swift in Sources */,
 				C92DF80929C25FA900400561 /* SquareImage.swift in Sources */,
 				C9DEC05A2989509B0078B43A /* Persistence.swift in Sources */,
-				C9DFA97A299C31E9006929C1 /* Localizable.swift in Sources */,
 				3F30021529C3BFE5003D4F8B /* OnboardingNotOldEnoughView.swift in Sources */,
 				C9C2B78629E073E300548B4A /* RelaySubscription.swift in Sources */,
 				C9DEC06B298965550078B43A /* RelayView.swift in Sources */,
@@ -1187,6 +1186,7 @@
 				C9F0BB6C29A503D6000547FC /* PublicKey.swift in Sources */,
 				C9DEC06F2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,
 				C9ADB13F29929F1F0075E7F8 /* String+Hex.swift in Sources */,
+				C94FE9F629DB177500019CD3 /* Localizable.swift in Sources */,
 				C9A0DADB29C685E500466635 /* SideMenuButton.swift in Sources */,
 				A362584329C10AD500D07C9A /* NSSet+Add.swift in Sources */,
 				C93EC2F529C34C860012EE2A /* NSPredicate+Bool.swift in Sources */,
