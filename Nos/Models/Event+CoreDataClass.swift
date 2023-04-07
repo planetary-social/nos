@@ -778,8 +778,6 @@ public class Event: NosManagedObject {
         }
         
         let requestData: [(HexadecimalString?, Date?)] = await context.perform {
-            if let reference = reference as? AuthorReference,
-                let pubKey = reference.pubkey,
             guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
                 let authorKey = note.author?.hexadecimalPublicKey else {
                 return []
