@@ -52,7 +52,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         let privateKeyData = Data(privateKeyHex.utf8)
         let publicStatus = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKeyData)
         Log.info("Saved private key to keychain for user: " +
-                 "\(keyPair.publicKeyHex) / \(keyPair.npub). Keychain storage status: \(publicStatus)")
+            "\(keyPair.publicKeyHex) / \(keyPair.npub). Keychain storage status: \(publicStatus)")
         _privateKeyHex = privateKeyHex
         analytics.identify(with: keyPair)
         
@@ -231,7 +231,10 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             }
             
             let followData = await self?.backgroundContext.perform {
-                let follows = try? Author.findOrCreate(by: publicKeyHex, context: backgroundContext).follows as? Set<Follow>
+                let follows = try? Author.findOrCreate(
+                    by: publicKeyHex,
+                    context: backgroundContext
+                ).follows as? Set<Follow>
                 return follows?
                     .shuffled()
                     .map { ($0.destination?.hexadecimalPublicKey, $0.destination?.lastUpdatedMetadata) }
@@ -392,7 +395,6 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         }
     }
     
-    // swiftlint:disable legacy_objc_type
     /// Follow by public hex key
     @MainActor func follow(author toFollow: Author) async {
         guard let followKey = toFollow.hexadecimalPublicKey else {
@@ -407,7 +409,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         
         // Update author to add the new follow
         if let followedAuthor = try? Author.find(by: followKey, context: viewContext), let currentUser = author {
-            let follow = try! Follow.findOrCreate(source: currentUser, destination: followedAuthor, context: viewContext)
+            let follow = try! Follow.findOrCreate(
+                source: currentUser,
+                destination: followedAuthor,
+                context: viewContext
+            )
 
             // Add to the current user's follows
             currentUser.follows = (currentUser.follows ?? NSSet()).adding(follow)
@@ -450,7 +456,6 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         try! viewContext.save()
         await publishContactList(tags: stillFollowingKeys.pTags)
     }
-    // swiftlint:enable legacy_objc_type
     
     // TODO: call this more efficiently
     @MainActor func updateInNetworkAuthors(for user: Author? = nil) async {
@@ -467,3 +472,4 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         author = controller.fetchedObjects?.first as? Author
     }
 }
+// swiftlint:enable type_body_length

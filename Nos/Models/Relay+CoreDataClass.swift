@@ -105,9 +105,7 @@ public class Relay: NosManagedObject {
         self.address = addressURL.absoluteString
         self.createdAt = Date.now
         if let author {
-            // swiftlint:disable legacy_objc_type
             authors = (authors ?? NSSet()).adding(author)
-            // swiftlint:enable legacy_objc_type
             author.add(relay: self)
         }
     }

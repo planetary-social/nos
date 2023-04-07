@@ -149,10 +149,6 @@ class UNSAPI {
         return true
     }
     
-    func hasExistingNostrVerification(npub: String) async throws -> Bool {
-        return false
-    }
-    
     func requestNostrVerification(npub: String) async throws -> String? {
         var request = URLRequest(url: connectionURL.appending(path: "/v1/resolver/social_connections"))
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
@@ -160,7 +156,7 @@ class UNSAPI {
         request.setValue("Bearer \(accessToken!)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let body = [
-            "name_id": nameID,
+            "name_id": nameID ?? "null",
             "connection_type": "NOSTR_SIGNATURE",
             "scope": "PUBLIC",
             "arguments": [
@@ -197,7 +193,7 @@ class UNSAPI {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         var bytesToSign = try message.data(using: .utf8)!.sha256.bytes
         let body = [
-            "verification_id": verificationID,
+            "verification_id": verificationID ?? "null",
             "public_key": keyPair.npub,
             "signature": try keyPair.sign(bytes: &bytesToSign)
         ] as [String: Any]

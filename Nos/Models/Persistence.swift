@@ -123,9 +123,7 @@ struct PersistenceController {
         
         if let publicKey = CurrentUser.shared.publicKeyHex {
             let currentAuthor = try! Author.findOrCreate(by: publicKey, context: context)
-            // swiftlint:disable legacy_objc_type
             currentAuthor.follows = NSSet(array: follows)
-            // swiftlint:enable legacy_objc_type
         }
     }
     

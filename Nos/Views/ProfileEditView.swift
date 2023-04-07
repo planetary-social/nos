@@ -58,9 +58,9 @@ struct ProfileEditView: View {
                     .foregroundColor(.textColor)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.none)
-#if os(iOS)
+                    #if os(iOS)
                     .keyboardType(.URL)
-#endif
+                    #endif
                     let nip05Binding = Binding<String>(
                         get: { self.nip05Text },
                         set: { self.nip05Text = $0.lowercased() }

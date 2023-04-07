@@ -191,3 +191,5 @@ extension Bech32 {
         }
     }
 }
+
+// swiftlint:enable all

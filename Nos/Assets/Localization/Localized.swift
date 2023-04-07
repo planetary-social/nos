@@ -252,3 +252,4 @@ extension Localized {
         case many = "{{ count }} replies"
     }
 }
+// swiftlint:enable line_length identifier_name

@@ -8,7 +8,6 @@
 import Foundation
 import CoreData
 
-// swiftlint:disable legacy_objc_type
 extension NSSet {
     func adding(_ object: NSManagedObject) -> NSSet {
         if let mutableSelf = mutableCopy() as? NSMutableSet {
@@ -28,4 +27,3 @@ extension NSSet {
         return self
     }
 }
-// swiftlint:enable legacy_objc_type
