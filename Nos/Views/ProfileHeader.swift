@@ -107,7 +107,6 @@ struct ProfileHeader: View {
                                 } else {
                                     Text("\(relayService.identifierToShow(nip05Identifier))")
                                         .foregroundColor(.secondaryTxt)
-                                    
                                 }
                             }
                         }
@@ -153,7 +152,6 @@ struct ProfileHeader: View {
     }
 }
 
-// swiftlint:disable force_unwrapping
 struct IdentityHeaderView_Previews: PreviewProvider {
     
     static var persistenceController = PersistenceController.preview

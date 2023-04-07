@@ -103,4 +103,4 @@ func TextField(_ titleKey: LocalizedStringKey, text: Binding<String>, axis: Axis
 func TextField<Label: View>(text: Binding<String>, prompt: Text? = nil, label: () -> Label) -> some View {
     SwiftUI.TextField(text: text, prompt: prompt?.font(.brand), label: label).font(.brand)
 }
-// swiftlint:enableidentifier_name
+// swiftlint:enable identifier_name

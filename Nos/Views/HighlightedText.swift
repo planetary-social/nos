@@ -43,7 +43,13 @@ struct HighlightedText: View {
     ///   - highlightedWord: The word that should be highlighted, if any. Must be a substring of `text`.
     ///   - highlight: The gradient that will be used to highlight the word.
     ///   - link: A link that the highlighted word will open if tapped. Optional.
-    init(_ text: String, highlightedWord: String?, highlight: LinearGradient, textColor: Color = .primaryTxt, link: URL?) {
+    init(
+        _ text: String,
+        highlightedWord: String?,
+        highlight: LinearGradient,
+        textColor: Color = .primaryTxt,
+        link: URL?
+    ) {
         self.text = text
         self.highlightedWord = highlightedWord
         self.highlightGradient = highlight
@@ -180,7 +186,6 @@ struct HighlightedText: View {
     }
 }
 
-// swiftlint:disable force_unwrapping
 struct HighlightedText_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

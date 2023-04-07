@@ -7,7 +7,6 @@
 
 import Foundation
 
-// swiftlint:disable legacy_objc_type
 extension Int32 {
     var boolValue: Bool {
         Bool(truncating: NSNumber(value: self))

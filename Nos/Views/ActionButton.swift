@@ -42,7 +42,11 @@ struct ActionButton: View {
         })
         .lineLimit(nil)
         .foregroundColor(.black)
-        .buttonStyle(ActionButtonStyle(depthEffectColor: depthEffectColor, backgroundGradient: backgroundGradient, textShadow: textShadow))
+        .buttonStyle(ActionButtonStyle(
+            depthEffectColor: depthEffectColor,
+            backgroundGradient: backgroundGradient,
+            textShadow: textShadow
+        ))
         .disabled(disabled)
     }
 }
