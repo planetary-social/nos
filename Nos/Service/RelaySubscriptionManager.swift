@@ -6,6 +6,7 @@
 //
 
 import Starscream
+import Foundation
 
 /// An actor that manages state for a `RelayService` including lists of open sockets and subscriptions.
 actor RelaySubscriptionManager {
