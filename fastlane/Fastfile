@@ -30,6 +30,9 @@ platform :ios do
     changelog = read_changelog
     upload_to_testflight(changelog: changelog)
     stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
+    git_commit(message: "TestFlight deployment")
+    add_git_tag
+    push_to_git_remote
   end
 end
 

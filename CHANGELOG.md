@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (30)] - 2023-04-10Z
+
 - Fixed a bug where the Read More button would show on notes when it didn't need to.
 - Added Chinese (Simplified) translations (thanks rasputin@getalby.com!)
 - Nos now requests delete events from relays.
