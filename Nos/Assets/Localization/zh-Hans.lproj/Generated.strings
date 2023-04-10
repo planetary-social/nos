@@ -43,7 +43,7 @@
 "Localized.setUpUNS" = "预订你的名称";
 "Localized.goBack" = "返回";
 "Localized.startOver" = "重新开始";
-"Localized.setUpUniversalName" = "设置你的通用名称";
+"Localized.setUpUniversalName" = "设置你的通用名";
 "Localized.dismiss" = "忽略";
 "Localized.relays" = "中继器";
 "Localized.noRelaysMessage" = "还没有中继器！在下方添加一个以便开始";
@@ -91,10 +91,10 @@
 "Localized.allMyRelays" = "我的所有中继器";
 "Localized.about" = "关于";
 "Localized.contactUs" = "联系我们";
-"Localized.shareNos" = "分享Nos";
+"Localized.shareNos" = "分享 Nos";
 "Localized.yourProfile" = "你的个人档案";
-"Localized.unsTagline" = "通用名称空间（Universal Name Space）提供你可以信任的身份验证。";
-"Localized.unsDescription" = "通用名称空间（Universal Name Space）为你提供了一个你可以在任何地方使用的名称。你可以验证自己的身份并在Nos中获取通用名称。此屏幕仅用于演示目的，将来所有名称都将被重置。了解更多。";
+"Localized.unsTagline" = "通用名空间（Universal Name Space）提供你可以信任的身份验证。";
+"Localized.unsDescription" = "通用名空间（Universal Name Space）为你提供了一个你可以在任何地方使用的名称。你可以验证自己的身份并在 Nos 中获取通用名称。此屏幕仅用于演示目的，将来所有名称都将被重置。了解更多。";
 "Localized.unsLearnMore" = "了解更多。";
 "Localized.verifyYourIdentity" = "验证你的身份";
 "Localized.enterCode" = "输入验证码";
@@ -103,11 +103,11 @@
 "Localized.oops" = "啊哦！";
 "Localized.thatNameIsTaken" = "这个名称已被使用。";
 "Localized.success" = "成功!";
-"Localized.yourNewUNMessage" = "是你新的 Nostr 用户名。\n\n此通用命名空间的演示仅用于测试。 将来所有名称都将重置。";
+"Localized.yourNewUNMessage" = "是你的新的 Nostr 用户名。\n\n此通用名空间的演示仅用于测试。 将来所有名称都将重置。";
 "Localized.anErrorOccurred" = "出错了。";
 "Localized.relayAddressPlaceholder" = "wss://yourrelay.com";
 "Localized.someone" = "某人";
-"Localized.aboutNos" = "Nos 是一个在 Nostr 协议上由带给你 Planetary 的团队建立的新社交媒体应用。 为人类设计，而不是算法。在 Nos.social 上了解更多信息。";
+"Localized.aboutNos" = "Nos 是一个在 Nostr 协议上由带给你 Planetary 的团队建立的新社交媒体应用。 为人类设计，而不是算法。在 Nos.social 上了解更多。";
 "Localized.aboutNosHighlight" = "在Nos.social上了解更多信息。";
 "Localized.aboutNostr" = "Nostr 是一个开放的社会媒体生态系统，它使你能够控制您的在线关系。Nos 只是许多使用 Nostr 语言的应用之一，你也可以选择你的中继器。了解更多关于 Nostr 为什么很棒的信息。";
 "Localized.aboutNostrHighlight" = "了解更多关于 Nostr 为什么很棒的信息。";
