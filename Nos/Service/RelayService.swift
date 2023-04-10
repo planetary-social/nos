@@ -452,7 +452,7 @@ extension RelayService {
                             let jsonEvent = event.codable {
                             // Publish again to this socket
                             print("Republishing \(event.identifier!) on \(missedAddress)")
-                                await self.publish(from: socket, jsonEvent: jsonEvent)
+                            await self.publish(from: socket, jsonEvent: jsonEvent)
                         }
                     }
                 }
