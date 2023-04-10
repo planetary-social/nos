@@ -31,7 +31,7 @@ platform :ios do
     upload_to_testflight(changelog: changelog)
     stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
     git_commit(message: "TestFlight deployment", path: "*")
-    add_git_tag
+    add_git_tag(tag: "v#{version_number}-#{build_number}")
     push_to_git_remote
     notification(
       subtitle: "Build uploaded", 
