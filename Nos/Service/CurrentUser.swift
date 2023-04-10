@@ -13,7 +13,7 @@ import Dependencies
 // swiftlint:disable type_body_length
 class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
     
-    static let shared = CurrentUser(persistenceController: PersistenceController.shared)
+    @MainActor static let shared = CurrentUser(persistenceController: PersistenceController.shared)
     
     @Dependency(\.analytics) private var analytics
     
@@ -59,34 +59,6 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         reset()
     }
     
-    // TODO: this is fragile
-    // Reset CurrentUser state
-    @MainActor func reset() {
-        onboardingRelays = []
-        relayService?.sendClose(subscriptions: subscriptions)
-        subscriptions = []
-        inNetworkAuthors = []
-        if let keyPair {
-            author = try? Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
-            authorWatcher = NSFetchedResultsController(
-                fetchRequest: Author.request(by: keyPair.publicKeyHex),
-                managedObjectContext: viewContext,
-                sectionNameKeyPath: nil,
-                cacheName: nil
-            )
-            authorWatcher?.delegate = self
-            try? authorWatcher?.performFetch()
-            
-            Task {
-                await subscribe()
-                await updateInNetworkAuthors()
-                refreshFriendMetadata()
-            }
-        } else {
-            author = nil
-        }
-    }
-    
     var publicKeyHex: String? {
         keyPair?.publicKey.hex
     }
@@ -113,7 +85,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     var onboardingRelays: [Relay] = []
 
     // TODO: prevent this from being accessed from contexts other than the view context. Or maybe just get rid of it.
-    @MainActor var author: Author?
+    @MainActor @Published var author: Author?
     
     @MainActor var follows: Set<Follow>? {
         let followSet = author?.follows as? Set<Follow>
@@ -130,7 +102,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     
     private var authorWatcher: NSFetchedResultsController<Author>?
                                              
-    init(persistenceController: PersistenceController) {
+    @MainActor init(persistenceController: PersistenceController) {
         self.viewContext = persistenceController.viewContext
         self.backgroundContext = persistenceController.newBackgroundContext()
         super.init()
@@ -138,13 +110,47 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             Log.info("CurrentUser loaded a private key from keychain")
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
             _privateKeyHex = hexString
-            Task { @MainActor in self.reset() }
+            setUp()
             if let keyPair {
                 Log.info("CurrentUser logged in \(keyPair.publicKeyHex) / \(keyPair.npub)")
                 analytics.identify(with: keyPair)
             } else {
                 Log.error("CurrentUser found bad data in the keychain")
             }
+        }
+    }
+    
+    // TODO: this is fragile
+    // Reset CurrentUser state
+    @MainActor func reset() {
+        onboardingRelays = []
+        Task { await relayService?.removeSubscriptions(for: subscriptions) }
+        subscriptions = []
+        inNetworkAuthors = []
+        setUp()
+    }
+    
+    @MainActor func setUp() {
+        if let keyPair {
+            author = try? Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+            authorWatcher = NSFetchedResultsController(
+                fetchRequest: Author.request(by: keyPair.publicKeyHex),
+                managedObjectContext: viewContext,
+                sectionNameKeyPath: nil,
+                cacheName: nil
+            )
+            authorWatcher?.delegate = self
+            try? authorWatcher?.performFetch()
+            
+            Task {
+                if relayService != nil {
+                    await subscribe()
+                    refreshFriendMetadata()
+                }
+                await updateInNetworkAuthors()
+            }
+        } else {
+            author = nil
         }
     }
     
@@ -171,7 +177,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
 
     @MainActor func subscribe() async {
         
-        var overrideRelays: [URL]?
+        let overrideRelays: [URL]?
         let userRelays = author?.relays?.allObjects as? [Relay] ?? []
         if userRelays.isEmpty {
             overrideRelays = Relay.allKnown
@@ -180,29 +186,34 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 }
                 .compactMap { $0.addressURL }
             try? viewContext.save()
+        } else {
+            overrideRelays = nil
         }
         
         // Always listen to my changes
         if let key = publicKeyHex {
             // Close out stale requests
             if !subscriptions.isEmpty {
-                relayService.sendCloseToAll(subscriptions: subscriptions)
+                await relayService.removeSubscriptions(for: subscriptions)
                 subscriptions.removeAll()
             }
 
             let metaFilter = Filter(authorKeys: [key], kinds: [.metaData], limit: 1)
-            let metaSub = relayService.requestEventsFromAll(filter: metaFilter, overrideRelays: overrideRelays)
-            subscriptions.append(metaSub)
+            async let metaSub = relayService.openSubscription(with: metaFilter, to: overrideRelays)
             
             let contactFilter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
-            let contactSub = relayService.requestEventsFromAll(filter: contactFilter, overrideRelays: overrideRelays)
-            subscriptions.append(contactSub)
+            async let contactSub = relayService.openSubscription(with: contactFilter, to: overrideRelays)
             
             let muteListFilter = Filter(authorKeys: [key], kinds: [.mute], limit: 1)
-            let muteSub = relayService.requestEventsFromAll(filter: muteListFilter, overrideRelays: overrideRelays)
-            subscriptions.append(muteSub)
+            async let muteSub = relayService.openSubscription(with: muteListFilter, to: overrideRelays)
+            
+            subscriptions.append(await metaSub)
+            subscriptions.append(await contactSub)
+            subscriptions.append(await muteSub)
         }
     }
+    
+    private var friendMetadataTask: Task<Void, any Error>?
     
     @MainActor func refreshFriendMetadata() {
         guard let publicKeyHex else {
@@ -210,7 +221,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             return
         }
         
-        Task.detached(priority: .background) { [weak self, publicKeyHex] in
+        if let friendMetadataTask {
+            friendMetadataTask.cancel()
+        }
+        
+        friendMetadataTask = Task.detached(priority: .background) { [weak self, publicKeyHex] in
             guard let backgroundContext = self?.backgroundContext else {
                 return
             }
@@ -236,7 +251,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                     limit: 1,
                     since: lastUpdated
                 )
-                _ = self?.relayService.requestEventsFromAll(filter: metaFilter)
+                _ = await self?.relayService.openSubscription(with: metaFilter)
                 
                 let contactFilter = Filter(
                     authorKeys: [followedKey],
@@ -244,11 +259,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                     limit: 1,
                     since: lastUpdated
                 )
-                _ = self?.relayService.requestEventsFromAll(filter: contactFilter)
+                _ = await self?.relayService.openSubscription(with: contactFilter)
                 
-                // TODO: check cancellation
                 // Do this slowly so we don't get rate limited
-                try await Task.sleep(for: .seconds(2))
+                try await Task.sleep(for: .seconds(5))
+                try Task.checkCancellation()
             }
         }
     }
@@ -297,13 +312,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
 
         let time = Int64(Date.now.timeIntervalSince1970)
         let kind = EventKind.metaData.rawValue
-        var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: [], content: metaString)
+        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: [], content: metaString)
                 
         if let pair = keyPair {
             do {
-                try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
-                relayService.publishToAll(event: event, context: viewContext)
+                try await relayService.publishToAll(event: jsonEvent, signingKey: pair, context: viewContext)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }
@@ -318,13 +331,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         
         let time = Int64(Date.now.timeIntervalSince1970)
         let kind = EventKind.mute.rawValue
-        var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: keys.pTags, content: "")
+        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: keys.pTags, content: "")
         
         if let pair = keyPair {
             do {
-                try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
-                relayService.publishToAll(event: event, context: viewContext)
+                try await relayService.publishToAll(event: jsonEvent, signingKey: pair, context: viewContext)
             } catch {
                 Log.debug("Failed to update mute list \(error.localizedDescription)")
             }
@@ -340,13 +351,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         let tags = identifiers.eTags
         let time = Int64(Date.now.timeIntervalSince1970)
         let kind = EventKind.delete.rawValue
-        var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: reason)
+        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: reason)
         
         if let pair = keyPair {
             do {
-                try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
-                relayService.publishToAll(event: event, context: viewContext)
+                try await relayService.publishToAll(event: jsonEvent, signingKey: pair, context: viewContext)
             } catch {
                 Log.debug("Failed to delete events \(error.localizedDescription)")
             }
@@ -375,13 +384,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         
         let time = Int64(Date.now.timeIntervalSince1970)
         let kind = EventKind.contactList.rawValue
-        var jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: relayString)
+        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: relayString)
         
         if let pair = keyPair {
             do {
-                try jsonEvent.sign(withKey: pair)
-                let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext)
-                relayService.publishToAll(event: event, context: viewContext)
+                try await relayService.publishToAll(event: jsonEvent, signingKey: pair, context: viewContext)
             } catch {
                 Log.debug("failed to update Follows \(error.localizedDescription)")
             }
@@ -450,6 +457,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         await publishContactList(tags: stillFollowingKeys.pTags)
     }
     
+    // TODO: call this more efficiently
     @MainActor func updateInNetworkAuthors(for user: Author? = nil) async {
         do {
             inNetworkAuthors = try viewContext.fetch(Author.inNetworkRequest(for: user))

@@ -67,16 +67,18 @@ struct RepliesView: View {
     var note: Event
     
     func subscribeToReplies() {
-        // Close out stale requests
-        if !subscriptionIDs.isEmpty {
-            relayService.sendCloseToAll(subscriptions: subscriptionIDs)
-            subscriptionIDs.removeAll()
+        Task(priority: .userInitiated) {
+            // Close out stale requests
+            if !subscriptionIDs.isEmpty {
+                await relayService.removeSubscriptions(for: subscriptionIDs)
+                subscriptionIDs.removeAll()
+            }
+            
+            let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
+            let filter = Filter(kinds: [.text, .like, .delete], eTags: eTags)
+            let subID = await relayService.openSubscription(with: filter)
+            subscriptionIDs.append(subID)
         }
-        
-        let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
-        let filter = Filter(kinds: [.text, .like], eTags: eTags)
-        let subID = relayService.requestEventsFromAll(filter: filter)
-        subscriptionIDs.append(subID)
     }
     
     var body: some View {
@@ -107,8 +109,10 @@ struct RepliesView: View {
                 subscribeToReplies()
             }
             .onDisappear {
-                relayService.sendCloseToAll(subscriptions: subscriptionIDs)
-                subscriptionIDs.removeAll()
+                Task(priority: .userInitiated) {
+                    await relayService.removeSubscriptions(for: subscriptionIDs)
+                    subscriptionIDs.removeAll()
+                }
             }
             VStack {
                 Spacer()
@@ -166,11 +170,7 @@ struct RepliesView: View {
                 content: replyText,
                 signature: ""
             )
-            let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
-                
-            try event.sign(withKey: keyPair)
-            try viewContext.save()
-            relayService.publishToAll(event: event, context: viewContext)
+            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
         } catch {
             alert = AlertState(title: {
                 TextState(Localized.error.string)

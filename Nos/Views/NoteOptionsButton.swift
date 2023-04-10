@@ -81,8 +81,13 @@ struct NoteOptionsButton: View {
     }
     
     func copyMessage() {
-        if let attrString = note.attributedContent(with: viewContext) {
-            UIPasteboard.general.string = String(attrString.characters)
+        Task {
+            if let attrString = await Event.attributedContent(
+                noteID: note.identifier,
+                context: viewContext
+            ) {
+                UIPasteboard.general.string = String(attrString.characters)
+            }
         }
     }
     

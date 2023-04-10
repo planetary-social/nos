@@ -37,7 +37,7 @@ enum EventError: Error {
 	}
 }
 
-public enum EventKind: Int64, CaseIterable {
+public enum EventKind: Int64, CaseIterable, Hashable {
 	case metaData = 0
 	case text = 1
 	case contactList = 3
@@ -428,49 +428,56 @@ public class Event: NosManagedObject {
         return Bech32.encode(Nostr.notePrefix, baseEightData: Data(identifierBytes))
     }
     
-    func attributedContent(with context: NSManagedObjectContext) -> AttributedString? {
-        guard let content = self.content else {
+    class func attributedContent(noteID: String?, context: NSManagedObjectContext) async -> AttributedString? {
+        guard let noteID else {
             return nil
         }
         
-        let regex = Regex {
-            "#["
-            TryCapture {
-                OneOrMore(.digit)
-            } transform: {
-                Int($0)
+        return await context.perform {
+            guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
+                let content = note.content else {
+                return nil
             }
-            "]"
-        }
-        
-        guard let tags = self.allTags as? [[String]] else {
-            return AttributedString(content)
-        }
-        
-        let result = content.replacing(regex) { match in
-            if let tag = tags[safe: match.1],
-                let type = tag[safe: 0],
-                let id = tag[safe: 1] {
-                if type == "p",
-                    let author = try? Author.find(by: id, context: context),
-                    let pubkey = author.hexadecimalPublicKey {
-                    return "[@\(author.safeName)](@\(pubkey))"
+            
+            let regex = Regex {
+                "#["
+                TryCapture {
+                    OneOrMore(.digit)
+                } transform: {
+                    Int($0)
                 }
-                if type == "e",
-                    let event = Event.find(by: id, context: context),
-                    let bech32NoteID = event.bech32NoteID {
-                    return "[@\(bech32NoteID)](%\(id))"
-                }
+                "]"
             }
-            return ""
+            
+            guard let tags = note.allTags as? [[String]] else {
+                return AttributedString(content)
+            }
+        
+            let result = content.replacing(regex) { match in
+                if let tag = tags[safe: match.1],
+                    let type = tag[safe: 0],
+                    let id = tag[safe: 1] {
+                    if type == "p",
+                        let author = try? Author.find(by: id, context: context),
+                        let pubkey = author.hexadecimalPublicKey {
+                        return "[@\(author.safeName)](@\(pubkey))"
+                    }
+                    if type == "e",
+                        let event = Event.find(by: id, context: context),
+                        let bech32NoteID = event.bech32NoteID {
+                        return "[@\(bech32NoteID)](%\(id))"
+                    }
+                }
+                return ""
+            }
+            
+            let linkedString = (try? result.findAndReplaceUnformattedLinks(in: result)) ?? result
+            
+            return try? AttributedString(
+                markdown: linkedString,
+                options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
+            )
         }
-        
-        let linkedString = (try? result.findAndReplaceUnformattedLinks(in: result)) ?? result
-        
-        return try? AttributedString(
-            markdown: linkedString,
-            options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-        )
     }
 	
     convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent, relay: Relay?) throws {
@@ -539,7 +546,6 @@ public class Event: NosManagedObject {
         }
     }
     
-    // swiftlint:disable cyclomatic_complexity
     func hydrateContactList(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
         guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
             return
@@ -580,46 +586,22 @@ public class Event: NosManagedObject {
                 }
             }
         }
-        
-        // TODO: Get rid of these side effects to the CurrentUser
-        try? context.save()
-        let authorKey = newAuthor.hexadecimalPublicKey
-        Task { @MainActor [authorKey] in
-            guard let currentUser = CurrentUser.shared.author else {
-                return
-            }
-            
-            if authorKey == currentUser.hexadecimalPublicKey {
-                await CurrentUser.shared.updateInNetworkAuthors(for: currentUser)
-                CurrentUser.shared.refreshFriendMetadata()
-                
-                // Close sockets for anything not in the above
-                if let keptRelays = currentUser.relays as? Set<Relay> {
-                    CurrentUser.shared.relayService.closeAllConnections(excluding: keptRelays)
-                }
-            }
-            
-            if currentUser.follows?.contains(where: {
-                ($0 as? Follow)?.destination?.hexadecimalPublicKey == authorKey
-            }) == true {
-                await CurrentUser.shared.updateInNetworkAuthors()
-            }
-        }
     }
-    // swiftlint:enable cyclomatic_complexity
     
     func hydrateDefault(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
         let newEventReferences = NSMutableOrderedSet()
         let newAuthorReferences = NSMutableOrderedSet()
         for jsonTag in jsonEvent.tags {
             if jsonTag.first == "e" {
+                // TODO: validdate that the tag looks like an event ref
                 do {
                     let eTag = try EventReference(jsonTag: jsonTag, context: context)
                     newEventReferences.add(eTag)
                 } catch {
                     print("error parsing e tag: \(error.localizedDescription)")
                 }
-            } else {
+            } else if jsonTag.first == "p" {
+                // TODO: validdate that the tag looks like a pubkey
                 let authorReference = AuthorReference(context: context)
                 authorReference.pubkey = jsonTag[safe: 1]
                 authorReference.recommendedRelayUrl = jsonTag[safe: 2]
@@ -780,22 +762,52 @@ public class Event: NosManagedObject {
                     deletedEvent.deletedOn = (deletedEvent.deletedOn ?? NSSet()).adding(relay)
                 }
             }
+            try! context.save()
         }
     }
     
-    func requestAuthorsMetadataIfNeeded(using relayService: RelayService, in context: NSManagedObjectContext) {
-        if let author, author.needsMetadata {
-            _ = author.requestMetadata(using: relayService)
+    class func requestAuthorsMetadataIfNeeded(
+        noteID: String?,
+        using relayService: RelayService,
+        in context: NSManagedObjectContext
+    ) async -> [RelaySubscription.ID] {
+        guard let noteID else {
+            return []
         }
         
-        self.authorReferences?.forEach { reference in
-            if let reference = reference as? AuthorReference,
-                let pubKey = reference.pubkey,
-                let author = try? Author.findOrCreate(by: pubKey, context: context),
-                author.needsMetadata {
-                    _ = author.requestMetadata(using: relayService)
+        let requestData: [(HexadecimalString?, Date?)] = await context.perform {
+            guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
+                let authorKey = note.author?.hexadecimalPublicKey else {
+                return []
             }
+        
+            var requestData = [(HexadecimalString?, Date?)]()
+            
+            let author = try! Author.findOrCreate(by: authorKey, context: context)
+            
+            if author.needsMetadata {
+                requestData.append((author.hexadecimalPublicKey, author.lastUpdatedMetadata))
+            }
+            
+            note.authorReferences?.forEach { reference in
+                if let reference = reference as? AuthorReference,
+                    let pubKey = reference.pubkey,
+                    let author = try? Author.findOrCreate(by: pubKey, context: context),
+                    author.needsMetadata {
+                    requestData.append((author.hexadecimalPublicKey, author.lastUpdatedMetadata))
+                }
+            }
+            
+            return requestData
         }
+        
+        var subscriptionIDs = [RelaySubscription.ID]()
+        for requestDatum in requestData {
+            let authorKey = requestDatum.0
+            let sinceDate = requestDatum.1
+            await relayService.requestMetadata(for: authorKey, since: sinceDate).unwrap { subscriptionIDs.append($0) }
+        }
+        return subscriptionIDs
     }
     
     var webLink: String {

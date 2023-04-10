@@ -79,6 +79,18 @@ struct JSONEvent: Codable {
         )
         return serializedEventData.sha256
     }
+    
+    var dictionary: [String: Any] {
+        [
+            "id": id,
+            "pubkey": pubKey,
+            "created_at": createdAt,
+            "kind": kind,
+            "tags": tags,
+            "content": content,
+            "sig": signature,
+        ]
+    }
 }
 // swiftlint:disable identifier_name
 struct MetadataEventJSON: Codable {

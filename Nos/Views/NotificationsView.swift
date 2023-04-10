@@ -75,6 +75,10 @@ struct NotificationCard: View {
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
     
+    @State private var attributedContent: AttributedString
+    
+    @State private var subscriptionIDs = [RelaySubscription.ID]()
+    
     init(note: Event, user: Author) {
         self.note = note
         self.user = user
@@ -88,6 +92,8 @@ struct NotificationCard: View {
         } else {
             actionText = nil
         }
+        
+        _attributedContent = .init(initialValue: AttributedString(note.content ?? ""))
     }
     
     var body: some View {
@@ -115,7 +121,7 @@ struct NotificationCard: View {
                             }
                         }
                         HStack {
-                            Text("\"" + (note.attributedContent(with: viewContext) ?? "null") + "\"")
+                            Text("\"" + (attributedContent) + "\"")
                                 .lineLimit(3)
                                 .font(.body)
                                 .foregroundColor(.primaryTxt)
@@ -146,9 +152,31 @@ struct NotificationCard: View {
                 .padding(.top, 15)
             }
             .buttonStyle(CardButtonStyle())
-            .task {
-                if author.needsMetadata {
-                    _ = author.requestMetadata(using: relayService)
+            .onAppear {
+                Task(priority: .userInitiated) {
+                    let backgroundContext = PersistenceController.backgroundViewContext
+                    await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
+                        noteID: note.identifier,
+                        using: relayService,
+                        in: backgroundContext
+                    )
+                }
+            }
+            .onDisappear {
+                Task(priority: .userInitiated) {
+                    await relayService.removeSubscriptions(for: subscriptionIDs)
+                    subscriptionIDs.removeAll()
+                }
+            }
+            .task(priority: .userInitiated) {
+                let backgroundContext = PersistenceController.backgroundViewContext
+                if let parsedAttributedContent = await Event.attributedContent(
+                    noteID: note.identifier,
+                    context: backgroundContext
+                ) {
+                    withAnimation {
+                        attributedContent = parsedAttributedContent
+                    }
                 }
             }
         }

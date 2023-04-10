@@ -184,21 +184,6 @@ public class Author: NosManagedObject {
         print("Removed \(relay.address ?? "") from \(hexadecimalPublicKey ?? "")")
     }
     
-    func requestMetadata(using relayService: RelayService) -> String? {
-        guard let hexadecimalPublicKey else {
-            return nil
-        }
-        
-        let metaFilter = Filter(
-            authorKeys: [hexadecimalPublicKey],
-            kinds: [.metaData],
-            limit: 1,
-            since: lastUpdatedMetadata
-        )
-        let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
-        return metaSub
-    }
-    
     func unmute(context: NSManagedObjectContext) async {
         guard let unmutedAuthorKey = hexadecimalPublicKey,
             unmutedAuthorKey != CurrentUser.shared.publicKeyHex else {

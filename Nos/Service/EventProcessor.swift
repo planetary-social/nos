@@ -31,8 +31,6 @@ enum EventProcessor {
             throw EventError.missingAuthor
         }
         
-        try parseContext.save()
-        
         return event
     }
     

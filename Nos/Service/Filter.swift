@@ -7,22 +7,18 @@
 
 import Foundation
 
-/// For REQ
-final class Filter: Hashable {
-    private var authorKeys: [String] {
-        didSet {
-            print("Override author keys to: \(authorKeys)")
-        }
-    }
-    private var kinds: [EventKind]
+/// Describes a set of Nostr Events, usually so we can ask relay servers for them.
+struct Filter: Hashable, Identifiable {
+    
+    let authorKeys: [String]
+    let kinds: [EventKind]
+    let eTags: [String]
     let limit: Int
     let since: Date?
-
-    // For closing requests; not part of hash
-    var subscriptionId: String = ""
-    var subscriptionStartDate: Date?
     
-    private var eTags: [String]
+    var id: String {
+        String(hashValue)
+    }
 
     init(
         authorKeys: [String] = [],
@@ -61,7 +57,7 @@ final class Filter: Hashable {
     }
 
     static func == (lhs: Filter, rhs: Filter) -> Bool {
-        lhs.authorKeys == rhs.authorKeys && lhs.kinds == rhs.kinds && lhs.limit == rhs.limit
+        lhs.hashValue == rhs.hashValue
     }
 
     func hash(into hasher: inout Hasher) {
@@ -70,10 +66,6 @@ final class Filter: Hashable {
         hasher.combine(limit)
         hasher.combine(eTags)
         hasher.combine(since)
-    }
-    
-    func matches(_ other: Filter) -> Bool {
-        authorKeys == other.authorKeys && kinds == other.kinds && eTags == other.eTags && since == other.since
     }
     
     func isFulfilled(by event: Event) -> Bool {

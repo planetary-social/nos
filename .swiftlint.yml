@@ -141,6 +141,7 @@ identifier_name:
     - to
     - day
     - api
+    - all
 number_separator:
   minimum_length: 5
 cyclomatic_complexity:

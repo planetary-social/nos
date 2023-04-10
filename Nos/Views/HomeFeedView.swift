@@ -33,36 +33,38 @@ struct HomeFeedView: View {
     }
 
     func refreshHomeFeed() {
-        // Close out stale requests
-        if !subscriptionIds.isEmpty {
-            relayService.sendCloseToAll(subscriptions: subscriptionIds)
-            subscriptionIds.removeAll()
-        }
-        
-        // I can't figure out why but the home feed doesn't update when you follow someone without this.
-        if let currentUserKey = currentUser.author?.hexadecimalPublicKey {
-            // swiftlint:disable line_length
-            events.nsPredicate = NSPredicate(format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND ANY author.followers.source.hexadecimalPublicKey = %@", currentUserKey)
-            // swiftlint:enable line_length
-        }
-
-        if let follows = CurrentUser.shared.follows {
-            let authors = follows.keys
-            
-            if !authors.isEmpty {
-                let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
-                let textSub = relayService.requestEventsFromAll(filter: textFilter)
-                subscriptionIds.append(textSub)
+        Task(priority: .userInitiated) {
+            // Close out stale requests
+            if !subscriptionIds.isEmpty {
+                await relayService.removeSubscriptions(for: subscriptionIds)
+                subscriptionIds.removeAll()
             }
-            if let currentUser = CurrentUser.shared.author {
-                let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
-                let userLikesFilter = Filter(
-                    authorKeys: currentUserAuthorKeys,
-                    kinds: [.like],
-                    limit: 100
-                )
-                let userLikesSub = relayService.requestEventsFromAll(filter: userLikesFilter)
-                subscriptionIds.append(userLikesSub)
+            
+            // I can't figure out why but the home feed doesn't update when you follow someone without this.
+            if let currentUserKey = currentUser.author?.hexadecimalPublicKey {
+                // swiftlint:disable line_length
+                events.nsPredicate = NSPredicate(format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND ANY author.followers.source.hexadecimalPublicKey = %@", currentUserKey)
+                // swiftlint:enable line_length
+            }
+            
+            if let follows = CurrentUser.shared.follows {
+                let authors = follows.keys
+                
+                if !authors.isEmpty {
+                    let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete], limit: 100)
+                    let textSub = await relayService.openSubscription(with: textFilter)
+                    subscriptionIds.append(textSub)
+                }
+                if let currentUser = CurrentUser.shared.author {
+                    let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
+                    let userLikesFilter = Filter(
+                        authorKeys: currentUserAuthorKeys,
+                        kinds: [.like, .delete],
+                        limit: 100
+                    )
+                    let userLikesSub = await relayService.openSubscription(with: userLikesFilter)
+                    subscriptionIds.append(userLikesSub)
+                }
             }
         }
     }
@@ -110,12 +112,14 @@ struct HomeFeedView: View {
         .onAppear {
             analytics.showedHome()
         }
-        .task {
+        .task(priority: .userInitiated) {
             refreshHomeFeed()
         }
         .onDisappear {
-            relayService.sendCloseToAll(subscriptions: subscriptionIds)
-            subscriptionIds.removeAll()
+            Task(priority: .userInitiated) {
+                await relayService.removeSubscriptions(for: subscriptionIds)
+                subscriptionIds.removeAll()
+            }
         }
     }
 }

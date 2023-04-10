@@ -8,8 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Made all the built-in text in the app translatable. If you would like to help translate Nos let us know by emailing support@planetary.social.
+- Fixed a bug where the Read More button would show on notes when it didn't need to.
 - Added Chinese (Simplified) translations (thanks rasputin@getalby.com!)
+- Nos now requests delete events from relays.
+
+## [0.1 (28)] - 2023-04-07Z
+
+- Made all the built-in text in the app translatable. If you would like to help translate Nos let us know by emailing support@planetary.social.
+
+## [0.1 (27)] - 2023-04-05Z
+
+- Minor performance improvements
+- Fixed an occasional hang when publishing
+
+## [0.1 (26)] - 2023-04-03Z
+
+- Minor performance improvements on the Feed and Discover tabs
 
 ## [0.1 (25)] - 2023-03-31Z
 

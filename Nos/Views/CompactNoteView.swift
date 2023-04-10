@@ -16,27 +16,28 @@ struct CompactNoteView: View {
 
     var note: Event
 
-    @State
-    private var shouldShowReadMore = false
-    
+    @State private var shouldShowReadMore = false
     @State var showFullMessage = false
-
-    @State
-    private var intrinsicSize = CGSize.zero
-
-    @State
-    private var truncatedSize = CGSize.zero
-
-    func updateShouldShowReadMore() {
-        shouldShowReadMore = intrinsicSize != truncatedSize
-    }
+    @State private var intrinsicSize = CGSize.zero
+    @State private var truncatedSize = CGSize.zero
+    @State private var attributedContent: AttributedString
     
     @EnvironmentObject var router: Router
+    
+    internal init(note: Event, showFullMessage: Bool = false) {
+        _attributedContent = .init(initialValue: AttributedString(note.content ?? ""))
+        self.note = note
+        self.showFullMessage = showFullMessage
+    }
+    
+    func updateShouldShowReadMore() {
+        shouldShowReadMore = intrinsicSize.height > truncatedSize.height + 100
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             if showFullMessage {
-                Text(note.attributedContent(with: viewContext) ?? "")
+                Text(attributedContent)
                     .font(.body)
                     .foregroundColor(.primaryTxt)
                     .accentColor(.accent)
@@ -46,7 +47,7 @@ struct CompactNoteView: View {
                         return .handled
                     })
             } else {
-                Text(note.attributedContent(with: viewContext) ?? "")
+                Text(attributedContent)
                     .lineLimit(8)
                     .font(.body)
                     .foregroundColor(.primaryTxt)
@@ -68,7 +69,7 @@ struct CompactNoteView: View {
                         }
                     }
                     .background {
-                        Text(note.attributedContent(with: viewContext) ?? "")
+                        Text(attributedContent)
                             .font(.body)
                             .padding(15)
                             .fixedSize(horizontal: false, vertical: true)
@@ -116,6 +117,17 @@ struct CompactNoteView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .task {
+            let backgroundContext = PersistenceController.backgroundViewContext
+            if let parsedAttributedContent = await Event.attributedContent(
+                noteID: note.identifier,
+                context: backgroundContext
+            ) {
+                withAnimation {
+                    attributedContent = parsedAttributedContent
+                }
+            }
+        }
     }
 }
 

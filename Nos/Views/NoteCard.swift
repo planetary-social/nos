@@ -81,6 +81,8 @@ struct NoteCard: View {
     private let showReplyCount: Bool
     private var hideOutOfNetwork: Bool
     
+    @State private var subscriptionIDs = [RelaySubscription.ID]()
+    
     var currentUserLikesNote: Bool {
         likes
             .filter {
@@ -213,9 +215,7 @@ struct NoteCard: View {
                 GoldenPostView(author: author, note: note)
             }
         }
-        .task {
-            note.requestAuthorsMetadataIfNeeded(using: relayService, in: viewContext)
-
+        .task(priority: .userInitiated) {
             if note.isVerified == false, let publicKey = author.publicKey {
                 let verified = try? publicKey.verifySignature(on: note)
                 if verified != true {
@@ -224,6 +224,22 @@ struct NoteCard: View {
                 } else {
                     note.isVerified = true
                 }
+            }
+        }
+        .onAppear {
+            Task(priority: .userInitiated) {
+                let backgroundContext = PersistenceController.backgroundViewContext
+                await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
+                    noteID: note.identifier,
+                    using: relayService,
+                    in: backgroundContext
+                )
+            }
+        }
+        .onDisappear {
+            Task(priority: .userInitiated) {
+                await relayService.removeSubscriptions(for: subscriptionIDs)
+                subscriptionIDs.removeAll()
             }
         }
         .background(
@@ -277,10 +293,7 @@ struct NoteCard: View {
             signature: ""
         )
         do {
-            let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
-            try event.sign(withKey: keyPair)
-            try viewContext.save()
-            relayService.publishToAll(event: event, context: viewContext)
+            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
         } catch {
             Log.info("Error creating event for like")
         }
