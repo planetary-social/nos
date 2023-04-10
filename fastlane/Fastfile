@@ -30,9 +30,15 @@ platform :ios do
     changelog = read_changelog
     upload_to_testflight(changelog: changelog)
     stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
-    git_commit(message: "TestFlight deployment")
+    git_commit(message: "TestFlight deployment", path: "*")
     add_git_tag
     push_to_git_remote
+    notification(
+      subtitle: "Build uploaded", 
+      message: "tap to open App Store Connect", 
+      sound: "Pebble", 
+      open: "https://appstoreconnect.apple.com/apps/1670125746/testflight/ios"
+    )
   end
 end
 
