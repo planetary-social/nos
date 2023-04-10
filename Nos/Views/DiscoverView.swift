@@ -82,7 +82,7 @@ struct DiscoverView: View {
             if let relayAddress = relayFilter?.addressURL {
                 // TODO: Use a since filter
                 let singleRelayFilter = Filter(
-                    kinds: [.text],
+                    kinds: [.text, .delete],
                     limit: 200
                 )
                 
@@ -109,7 +109,7 @@ struct DiscoverView: View {
                     authorKeys: featuredAuthors.compactMap {
                         PublicKey(npub: $0)?.hex
                     },
-                    kinds: [.text],
+                    kinds: [.text, .delete],
                     limit: 100,
                     since: fetchSinceDate
                 )

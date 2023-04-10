@@ -51,7 +51,7 @@ struct HomeFeedView: View {
                 let authors = follows.keys
                 
                 if !authors.isEmpty {
-                    let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
+                    let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete], limit: 100)
                     let textSub = await relayService.openSubscription(with: textFilter)
                     subscriptionIds.append(textSub)
                 }
@@ -59,7 +59,7 @@ struct HomeFeedView: View {
                     let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
                     let userLikesFilter = Filter(
                         authorKeys: currentUserAuthorKeys,
-                        kinds: [.like],
+                        kinds: [.like, .delete],
                         limit: 100
                     )
                     let userLikesSub = await relayService.openSubscription(with: userLikesFilter)
