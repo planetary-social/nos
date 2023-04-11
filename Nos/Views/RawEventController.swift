@@ -49,7 +49,7 @@ import Logger
 
     private func loadRawMessage() {
         loadingMessage = Localized.loading.string
-        Task.detached { [note, weak self] in
+        Task { [note, weak self] in
             var rawMessage: String
             let errorMessage = note.content ?? "error"
             do {

@@ -728,11 +728,18 @@ public class Event: NosManagedObject {
     }
     
     var isReply: Bool {
-        rootNote() != nil
+        rootNote() != nil || referencedNote() != nil
     }
     
     /// Returns the event this note is directly replying to, or nil if there isn't one.
     func referencedNote() -> Event? {
+        if let rootReference = eventReferences?.first(where: {
+            ($0 as? EventReference)?.marker ?? "" == "reply"
+        }) as? EventReference,
+            let referencedNote = rootReference.referencedEvent {
+            return referencedNote
+        }
+        
         if let lastReference = eventReferences?.lastObject as? EventReference,
             let referencedNote = lastReference.referencedEvent {
             return referencedNote

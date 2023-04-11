@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Added a button to view raw event JSON in the options menu on notes.
+- Fixed notes saying "so-and-so posted" at the top when it should say "so-and-so replied".
+- Added code to load the note being replied to if we don't have it. 
 
 ## [0.1 (30)] - 2023-04-10Z
 
