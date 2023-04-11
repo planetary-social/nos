@@ -185,7 +185,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                     try? Relay.findOrCreate(by: $0, context: viewContext)
                 }
                 .compactMap { $0.addressURL }
-            try? viewContext.save()
+            try? viewContext.saveIfNeeded()
         } else {
             overrideRelays = nil
         }

@@ -18,65 +18,36 @@ struct HomeFeedView: View {
     @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
     
-    @FetchRequest var events: FetchedResults<Event>
+//    @FetchRequest var events: FetchedResults<Event>
+    @StateObject var dataSource = PaginatedHomeFeedDataSource()
     @FetchRequest var followedAuthors: FetchedResults<Author>
 
     // Probably the logged in user should be in the @Environment eventually
     @ObservedObject var user: Author
     
-    @State private var subscriptionIds: [String] = []
     
     init(user: Author) {
         self.user = user
-        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user))
+//        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, limit: 0, offset: 0))
         self._followedAuthors = FetchRequest(fetchRequest: user.followsRequest())
+//        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, limit: fetchLimit, offset: fetchOffset))
     }
 
-    func refreshHomeFeed() {
-        Task(priority: .userInitiated) {
-            // Close out stale requests
-            if !subscriptionIds.isEmpty {
-                await relayService.removeSubscriptions(for: subscriptionIds)
-                subscriptionIds.removeAll()
-            }
-            
-            // I can't figure out why but the home feed doesn't update when you follow someone without this.
-            if let currentUserKey = currentUser.author?.hexadecimalPublicKey {
-                // swiftlint:disable line_length
-                events.nsPredicate = NSPredicate(format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND ANY author.followers.source.hexadecimalPublicKey = %@", currentUserKey)
-                // swiftlint:enable line_length
-            }
-            
-            if let follows = CurrentUser.shared.follows {
-                let authors = follows.keys
-                
-                if !authors.isEmpty {
-                    let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete], limit: 100)
-                    let textSub = await relayService.openSubscription(with: textFilter)
-                    subscriptionIds.append(textSub)
-                }
-                if let currentUser = CurrentUser.shared.author {
-                    let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
-                    let userLikesFilter = Filter(
-                        authorKeys: currentUserAuthorKeys,
-                        kinds: [.like, .delete],
-                        limit: 100
-                    )
-                    let userLikesSub = await relayService.openSubscription(with: userLikesFilter)
-                    subscriptionIds.append(userLikesSub)
-                }
-            }
-        }
-    }
-    
     var body: some View {
         NavigationStack(path: $router.homeFeedPath) {
             ScrollView(.vertical) {
-                LazyVStack {
-                    ForEach(events.unmuted) { event in
-                        VStack {
+                VStack {
+                    ForEach(dataSource.events) { event in
+                        LazyVStack {
                             NoteButton(note: event, hideOutOfNetwork: false)
                                 .padding(.horizontal)
+                                .onAppear {
+                                    if event == dataSource.events.last {
+                                        Task {
+                                            await dataSource.loadMore()
+                                        }
+                                    }
+                                }
                         }
                     }
                 }
@@ -98,7 +69,7 @@ struct HomeFeedView: View {
                 }
             }
             .overlay(Group {
-                if !events.contains(where: { !$0.author!.muted }) {
+                if dataSource.events.isEmpty {
                     Localized.noEvents.view
                         .padding()
                 }
@@ -107,19 +78,16 @@ struct HomeFeedView: View {
             .nosNavigationBar(title: .homeFeed)
         }
         .refreshable {
-            refreshHomeFeed()
+            dataSource.refreshHomeFeed()
         }
         .onAppear {
             analytics.showedHome()
         }
-        .task(priority: .userInitiated) {
-            refreshHomeFeed()
-        }
         .onDisappear {
-            Task(priority: .userInitiated) {
-                await relayService.removeSubscriptions(for: subscriptionIds)
-                subscriptionIds.removeAll()
-            }
+            // TODO: close subscriptions
+        }
+        .task {
+            self.dataSource.user = user
         }
     }
 }

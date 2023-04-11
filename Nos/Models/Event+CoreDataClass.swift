@@ -229,21 +229,25 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func homeFeedPredicate(for user: Author) -> NSPredicate {
+    @nonobjc public class func homeFeedPredicate(for user: Author, after: Date) -> NSPredicate {
         NSPredicate(
             // swiftlint:disable line_length
-            format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (ANY author.followers.source = %@ OR author = %@)",
+            format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND createdAt <= %@",
             // swiftlint:enable line_length
             user,
-            user
+            user,
+            after as CVarArg
         )
     }
     
-    @nonobjc public class func homeFeed(for user: Author) -> NSFetchRequest<Event> {
+    @nonobjc public class func homeFeed(for user: Author, after: Date, limit: Int, offset: Int) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        let homeFeedPredicate = homeFeedPredicate(for: user)
+        let homeFeedPredicate = homeFeedPredicate(for: user, after: after)
         fetchRequest.predicate = homeFeedPredicate
+        fetchRequest.fetchLimit = limit
+        fetchRequest.fetchOffset = offset
+        fetchRequest.includesPendingChanges = false
         return fetchRequest
     }
     
@@ -769,7 +773,7 @@ public class Event: NosManagedObject {
                     deletedEvent.deletedOn = (deletedEvent.deletedOn ?? NSSet()).adding(relay)
                 }
             }
-            try! context.save()
+            try! context.saveIfNeeded()
         }
     }
     

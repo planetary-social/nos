@@ -36,7 +36,7 @@ struct OnboardingLoginView: View {
                 Log.error(error.localizedDescription)
             }
         }
-        try? CurrentUser.shared.viewContext.save()
+        try? CurrentUser.shared.viewContext.saveIfNeeded()
 
         completion()
     }

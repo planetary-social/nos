@@ -36,9 +36,7 @@ final class RelayService: ObservableObject {
 
         self.saveEventsTimer = AsyncTimer(timeInterval: 1, priority: .high) { [weak self] in
             await self?.backgroundContext.perform(schedule: .immediate) {
-                if self?.backgroundContext.hasChanges == true {
-                    try! self?.backgroundContext.save()
-                }
+                try! self?.backgroundContext.saveIfNeeded()
             }
         }
         
@@ -284,6 +282,7 @@ extension RelayService {
             let allSubscriptions = await subscriptions.all
             let fulfilledSubscriptions = try await self.backgroundContext.perform {
                 let relay = self.relay(from: socket, in: self.backgroundContext)
+                // TODO: we are letting in duplicate events somehow
                 let event = try EventProcessor.parse(
                     jsonObject: eventJSON,
                     from: relay,
