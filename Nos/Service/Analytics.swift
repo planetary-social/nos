@@ -183,4 +183,26 @@ class Analytics {
     func encounteredUNSError() {
         track("UNS Error")
     }
+    
+    // MARK: Message Actions
+    
+    func copiedNoteIdentifier() {
+        track("Copied Note Identifier")
+    }
+    
+    func copiedNoteLink() {
+        track("Copied Note Link")
+    }
+    
+    func copiedNoteText() {
+        track("Copied Note Text")
+    }
+    
+    func viewedNoteSource() {
+        track("Viewed Note Source")
+    }
+    
+    func deletedNote() {
+        track("Deleted Note")
+    }
 }

@@ -113,6 +113,9 @@
 "Localized.aboutNostrHighlight" = "Learn more about why Nostr is great.";
 "Localized.nosIsOpenSource" = "Nos is open source! You can read the code, contribute new features, or even fork it and build your own Nostr client. No opaque algorithms or secret rules. See the code.";
 "Localized.nosIsOpenSourceHighlight" = "See the code.";
+"Localized.eventSource" = "Raw Event";
+"Localized.loading" = "Loading...";
+"Localized.viewSource" = "View Source";
 
 "Reply.one" = "{{ count }} reply";
 "Reply.many" = "{{ count }} replies";
