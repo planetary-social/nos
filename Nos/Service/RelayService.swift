@@ -155,7 +155,6 @@ extension RelayService {
     }
     
     func openSubscription(with filter: Filter, to overrideRelays: [URL]? = nil) async -> RelaySubscription.ID {
-  
         var subscription: RelaySubscription
         
         if let existingSubscription = await subscriptions.subscription(from: filter.id) {

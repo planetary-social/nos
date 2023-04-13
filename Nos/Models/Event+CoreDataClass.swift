@@ -247,6 +247,8 @@ public class Event: NosManagedObject {
         fetchRequest.predicate = homeFeedPredicate
         fetchRequest.fetchLimit = limit
         fetchRequest.fetchOffset = offset
+        fetchRequest.resultType = .managedObjectResultType
+        fetchRequest.propertiesToFetch = ["identifier"]
         fetchRequest.includesPendingChanges = false
         return fetchRequest
     }
@@ -332,7 +334,7 @@ public class Event: NosManagedObject {
 
         return nil
     }
-    
+
     class func findOrCreate(jsonEvent: JSONEvent, relay: Relay?, context: NSManagedObjectContext) throws -> Event {
         if let existingEvent = try context.fetch(Event.event(by: jsonEvent.id)).first {
             relay.unwrap { existingEvent.markSeen(on: $0) }

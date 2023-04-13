@@ -18,36 +18,44 @@ struct HomeFeedView: View {
     @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
     
-//    @FetchRequest var events: FetchedResults<Event>
     @StateObject var dataSource = PaginatedHomeFeedDataSource()
-    @FetchRequest var followedAuthors: FetchedResults<Author>
 
     // Probably the logged in user should be in the @Environment eventually
     @ObservedObject var user: Author
     
-    
     init(user: Author) {
         self.user = user
-//        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, limit: 0, offset: 0))
-        self._followedAuthors = FetchRequest(fetchRequest: user.followsRequest())
-//        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, limit: fetchLimit, offset: fetchOffset))
     }
 
     var body: some View {
         NavigationStack(path: $router.homeFeedPath) {
-            ScrollView(.vertical) {
-                VStack {
-                    ForEach(dataSource.events) { event in
-                        LazyVStack {
-                            NoteButton(note: event, hideOutOfNetwork: false)
-                                .padding(.horizontal)
-                                .onAppear {
-                                    if event == dataSource.events.last {
-                                        Task {
-                                            await dataSource.loadMore()
+            VStack {
+                if dataSource.eventIDs.isEmpty {
+                    VStack {
+                        Spacer()
+                        ProgressView()
+                        .foregroundColor(.primaryTxt)
+                        .background(Color.appBg)
+                        .scaleEffect(2)
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity)
+                } else {
+                    ScrollView(.vertical, showsIndicators: false) {
+                        VStack {
+                            ForEach(dataSource.eventIDs, id: \.self) { eventID in
+                                LazyVStack {
+                                    NoteButton(noteID: eventID, hideOutOfNetwork: false)
+                                    .padding(.horizontal)
+                                    .onAppear {
+                                        if eventID == dataSource.eventIDs.last {
+                                            Task {
+                                                await dataSource.loadMore()
+                                            }
                                         }
                                     }
                                 }
+                            }
                         }
                     }
                 }
@@ -68,17 +76,17 @@ struct HomeFeedView: View {
                     }
                 }
             }
-            .overlay(Group {
-                if dataSource.events.isEmpty {
-                    Localized.noEvents.view
-                        .padding()
-                }
-            })
+//            .overlay(Group {
+//                if dataSource.eventIDs.isEmpty {
+//                    Localized.noEvents.view
+//                        .padding()
+//                }
+//            })
             .navigationBarItems(leading: SideMenuButton())
             .nosNavigationBar(title: .homeFeed)
         }
         .refreshable {
-            dataSource.refreshHomeFeed()
+            await dataSource.refreshHomeFeed()
         }
         .onAppear {
             analytics.showedHome()
