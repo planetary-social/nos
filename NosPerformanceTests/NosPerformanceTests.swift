@@ -10,16 +10,9 @@ import XCTest
 final class NosPerformanceTests: XCTestCase {
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
+        try super.setUpWithError()
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
     func testExample() throws {
@@ -42,17 +35,10 @@ final class NosPerformanceTests: XCTestCase {
     func testScrollingAnimationPerformance() throws { 
         let app = XCUIApplication()
         app.launch()
-//        app.staticTexts["Meal Planner"].tap()
-        let foodCollection = app.scrollViews["home feed"]
-
-        let measureOptions = XCTMeasureOptions()
-//        measureOptions.invocationOptions = [.manuallyStop]
+        let homeFeed = app.scrollViews["home feed"]
             
-        measure(metrics: [XCTOSSignpostMetric.scrollDecelerationMetric],
-                options: measureOptions) {
-            foodCollection.swipeUp(velocity: .fast)
-//            stopMeasuring()
-//            foodCollection.swipeDown(velocity: .fast)
+        measure(metrics: [XCTOSSignpostMetric.scrollDecelerationMetric]) {
+            homeFeed.swipeUp(velocity: .fast)
         }
     }
 }

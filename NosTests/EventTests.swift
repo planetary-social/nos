@@ -286,7 +286,7 @@ final class EventTests: XCTestCase {
         try testContext.save()
         measure {
             for _ in 0..<1000 {
-                let _ = Event.find(by: eventID, context: testContext)  
+                _ = Event.find(by: eventID, context: testContext)  
             }
         }
     }

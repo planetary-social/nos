@@ -240,15 +240,10 @@ public class Event: NosManagedObject {
         )
     }
     
-    @nonobjc public class func homeFeed(for user: Author, after: Date, limit: Int, offset: Int) -> NSFetchRequest<Event> {
+    @nonobjc public class func homeFeed(for user: Author, after: Date) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        let homeFeedPredicate = homeFeedPredicate(for: user, after: after)
-        fetchRequest.predicate = homeFeedPredicate
-        fetchRequest.fetchLimit = limit
-        fetchRequest.fetchOffset = offset
-        fetchRequest.resultType = .managedObjectResultType
-        fetchRequest.propertiesToFetch = ["identifier"]
+        fetchRequest.predicate = homeFeedPredicate(for: user, after: after)
         fetchRequest.includesPendingChanges = false
         return fetchRequest
     }
@@ -483,6 +478,35 @@ public class Event: NosManagedObject {
                 markdown: linkedString,
                 options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
             )
+        }
+    }
+    
+    class func replyMetadata(for noteID: HexadecimalString?, context: NSManagedObjectContext) async -> (Int, [URL]) {
+        guard let noteID else {
+            return (0, [])
+        }
+        
+        return await context.perform {
+            let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+            fetchRequest.predicate = NSPredicate(format: Event.replyNoteReferences, noteID)
+            fetchRequest.includesPendingChanges = false
+            fetchRequest.includesSubentities = false
+            fetchRequest.relationshipKeyPathsForPrefetching = ["author"]
+            let replies = (try? context.fetch(fetchRequest)) ?? []
+            let replyCount = replies.count
+            
+            var avatarURLs = [URL]()
+            for reply in replies {
+                if let avatarURL = reply.author?.profilePhotoURL,
+                    !avatarURLs.contains(avatarURL) {
+                    avatarURLs.append(avatarURL)
+                    if avatarURLs.count >= 2 {
+                        break
+                    }
+                }
+            }
+            return (replyCount, avatarURLs)
         }
     }
 	

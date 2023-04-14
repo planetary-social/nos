@@ -91,13 +91,6 @@ struct NoteButton: View {
                     .frame(minHeight: 800)
             }
         }
-        .task {
-            let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-            fetchRequest.predicate = NSPredicate(format: "identifier = %@", noteID)
-            fetchRequest.fetchLimit = 1
-            fetchRequest.includesPendingChanges = false
-            note = try? viewContext.fetch(fetchRequest).first
-        }
     }
 }
 

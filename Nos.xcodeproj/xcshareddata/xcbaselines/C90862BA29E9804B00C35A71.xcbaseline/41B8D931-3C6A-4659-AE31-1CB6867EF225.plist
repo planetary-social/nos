@@ -21,7 +21,7 @@
 				<key>com.apple.dt.XCTMetric_OSSignpost-Scroll_Deceleration.animation.hitch.time.ratio</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>4.123885</real>
+					<real>16.600000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>

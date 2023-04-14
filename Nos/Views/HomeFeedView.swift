@@ -18,48 +18,29 @@ struct HomeFeedView: View {
     @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
     
-    @StateObject var dataSource = PaginatedHomeFeedDataSource()
+    @FetchRequest var events: FetchedResults<Event>
+    @State private var date = Date.now
 
     // Probably the logged in user should be in the @Environment eventually
     @ObservedObject var user: Author
     
     init(user: Author) {
         self.user = user
+        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, after: Date.now))
     }
 
     var body: some View {
         NavigationStack(path: $router.homeFeedPath) {
             VStack {
-                if dataSource.eventIDs.isEmpty {
-                    VStack {
-                        Spacer()
-                        ProgressView()
-                        .foregroundColor(.primaryTxt)
-                        .background(Color.appBg)
-                        .scaleEffect(2)
-                        Spacer()
-                    }
-                    .frame(maxWidth: .infinity)
-                } else {
-                    ScrollView(.vertical, showsIndicators: false) {
-                        VStack {
-                            ForEach(dataSource.eventIDs, id: \.self) { eventID in
-                                LazyVStack {
-                                    NoteButton(noteID: eventID, hideOutOfNetwork: false)
-                                    .padding(.horizontal)
-                                    .onAppear {
-                                        if eventID == dataSource.eventIDs.last {
-                                            Task {
-                                                await dataSource.loadMore()
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVStack {
+                        ForEach(events) { event in
+                            NoteButton(note: event, hideOutOfNetwork: false)
+                                .padding(.horizontal)
                         }
                     }
-                    .accessibilityIdentifier("home feed")
                 }
+                .accessibilityIdentifier("home feed")
             }
             .background(Color.appBg)
             .padding(.top, 1)
@@ -77,26 +58,26 @@ struct HomeFeedView: View {
                     }
                 }
             }
-//            .overlay(Group {
-//                if dataSource.eventIDs.isEmpty {
-//                    Localized.noEvents.view
-//                        .padding()
-//                }
-//            })
+            .overlay(Group {
+                if events.isEmpty {
+                    Localized.noEvents.view
+                        .padding()
+                }
+            })
             .navigationBarItems(leading: SideMenuButton())
             .nosNavigationBar(title: .homeFeed)
         }
         .refreshable {
-            await dataSource.refreshHomeFeed()
+            date = .now
+        }
+        .onChange(of: date) { newDate in
+            events.nsPredicate = Event.homeFeedPredicate(for: user, after: newDate)
         }
         .onAppear {
             analytics.showedHome()
         }
         .onDisappear {
             // TODO: close subscriptions
-        }
-        .task {
-            self.dataSource.user = user
         }
     }
 }
