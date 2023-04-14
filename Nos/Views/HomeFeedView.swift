@@ -20,6 +20,7 @@ struct HomeFeedView: View {
     
     @FetchRequest var events: FetchedResults<Event>
     @State private var date = Date.now
+    @State private var subscriptionIDs = [String]()
 
     // Probably the logged in user should be in the @Environment eventually
     @ObservedObject var user: Author
@@ -27,6 +28,34 @@ struct HomeFeedView: View {
     init(user: Author) {
         self.user = user
         self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, after: Date.now))
+    }
+    
+    func subscribeToNewEvents() {
+        Task(priority: .userInitiated) { 
+            // Close out stale requests
+            if !subscriptionIDs.isEmpty {
+                await relayService.removeSubscriptions(for: subscriptionIDs)
+                subscriptionIDs.removeAll()
+            }
+            
+            if let follows = currentUser.follows {
+                let authors = follows.keys
+                
+                if !authors.isEmpty {
+                    let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete], limit: 100)
+                    let textSub = await relayService.openSubscription(with: textFilter)
+                    subscriptionIDs.append(textSub)
+                }
+                let currentUserAuthorKeys = [currentUser.publicKeyHex!]
+                let userLikesFilter = Filter(
+                    authorKeys: currentUserAuthorKeys,
+                    kinds: [.like, .delete],
+                    limit: 100
+                )
+                let userLikesSub = await relayService.openSubscription(with: userLikesFilter)
+                subscriptionIDs.append(userLikesSub)
+            }
+        }
     }
 
     var body: some View {
@@ -75,9 +104,13 @@ struct HomeFeedView: View {
         }
         .onAppear {
             analytics.showedHome()
+            subscribeToNewEvents()
         }
         .onDisappear {
-            // TODO: close subscriptions
+            Task(priority: .userInitiated) {
+                await relayService.removeSubscriptions(for: subscriptionIDs)
+                subscriptionIDs.removeAll()
+            }        
         }
     }
 }

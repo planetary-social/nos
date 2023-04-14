@@ -111,19 +111,23 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @MainActor @nonobjc public class func extendedNetworkPredicate(featuredAuthors: [String]) -> NSPredicate {
+    @MainActor @nonobjc public class func extendedNetworkPredicate(
+        featuredAuthors: [String], 
+        before: Date
+    ) -> NSPredicate {
         guard let currentUser = CurrentUser.shared.author else {
             return NSPredicate.false
         }
         let kind = EventKind.text.rawValue
         let featuredPredicate = NSPredicate(
             format: "kind = %i AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@ " +
-                "AND NOT author IN %@.follows.destination",
+                "AND NOT author IN %@.follows.destination AND createdAt <= %@",
             kind,
             featuredAuthors.compactMap {
                 PublicKey(npub: $0)?.hex
             },
-            currentUser
+            currentUser,
+            before as CVarArg
         )
             
         let twoHopsPredicate = NSPredicate(
@@ -140,9 +144,14 @@ public class Event: NosManagedObject {
         ])
     }
     
-    @nonobjc public class func seen(on relay: Relay) -> NSPredicate {
+    @nonobjc public class func seen(on relay: Relay, before: Date) -> NSPredicate {
         let kind = EventKind.text.rawValue
-        return NSPredicate(format: "kind = %i AND eventReferences.@count = 0 AND %@ IN seenOnRelays", kind, relay)
+        return NSPredicate(
+            format: "kind = %i AND eventReferences.@count = 0 AND %@ IN seenOnRelays AND createdAt <= %@", 
+            kind, 
+            relay,
+            before as CVarArg
+        )
     }
     
     @nonobjc public class func allMentionsPredicate(for user: Author) -> NSPredicate {
@@ -245,6 +254,7 @@ public class Event: NosManagedObject {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = homeFeedPredicate(for: user, after: after)
         fetchRequest.includesPendingChanges = false
+        fetchRequest.fetchLimit = 1000
         return fetchRequest
     }
     
