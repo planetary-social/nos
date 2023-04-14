@@ -58,6 +58,7 @@ struct HomeFeedView: View {
                             }
                         }
                     }
+                    .accessibilityIdentifier("home feed")
                 }
             }
             .background(Color.appBg)
