@@ -113,6 +113,9 @@
 "Localized.aboutNostrHighlight" = "瞭解更多關於為什麼 Nostr 那麼棒的信息。";
 "Localized.nosIsOpenSource" = "Nos 的代碼是開源的！你可以閱讀代碼、貢獻新功能，甚至分叉並建立你自己的 Nostr 客戶端。沒有不透明的算法或秘密規則。請參閱代碼。";
 "Localized.nosIsOpenSourceHighlight" = "查看代碼。";
+"Localized.eventSource" = "原始事件";
+"Localized.loading" = "加載中...";
+"Localized.viewSource" = "查看源代碼";
 
 "Reply.one" = "{{ count }} 條回覆";
 "Reply.many" = "{{ count }} 條回覆";
