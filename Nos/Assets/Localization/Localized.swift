@@ -170,6 +170,7 @@ enum Localized: String, Localizable, CaseIterable {
     case createAccount = "Create an account"
     case shareLogs = "Share logs"
     case failedToExportLogs = "Failed to export logs."
+    case appVersion = "App Version:"
     
     case post = "Post" // (verb form)
     case newNote = "New Note"

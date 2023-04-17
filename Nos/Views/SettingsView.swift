@@ -74,6 +74,9 @@ struct SettingsView: View {
             
             Section {
                 HStack {
+                    Text("\(Localized.appVersion.string) \(Bundle.current.versionAndBuild)")
+                        .foregroundColor(.primaryTxt)
+                    Spacer()
                     SecondaryActionButton(title: Localized.shareLogs) {
                         Task {
                             do {
