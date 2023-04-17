@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Dependencies
+import SwiftUINavigation
 
 struct SettingsView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -15,9 +16,9 @@ struct SettingsView: View {
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var currentUser: CurrentUser
 
-    @State var privateKeyString = ""
-    
-    @State var showError = false
+    @State private var privateKeyString = ""
+    @State private var alert: AlertState<Never>?
+    @State private var logFileURL: URL?
     
     func importKey(_ keyPair: KeyPair) async {
         await currentUser.setKeyPair(keyPair)
@@ -45,7 +46,11 @@ struct SettingsView: View {
                             await importKey(keyPair)
                         } else {
                             await currentUser.setKeyPair(nil)
-                            showError = true
+                            alert = AlertState(title: {
+                                Localized.invalidKey.textState
+                            }, message: {
+                                Localized.couldNotReadPrivateKeyMessage.textState
+                            })
                         }
                     }
                     .padding(.vertical, 5)
@@ -67,14 +72,35 @@ struct SettingsView: View {
                 endPoint: .bottom
             ))
             
-            #if DEBUG
             Section {
+                HStack {
+                    SecondaryActionButton(title: Localized.shareLogs) {
+                        Task {
+                            do {
+                                logFileURL = try await LogHelper.zipLogs()
+                            } catch {
+                                alert = AlertState(title: {
+                                    Localized.error.textState
+                                }, message: {
+                                    Localized.failedToExportLogs.textState
+                                })
+                            }
+                        }
+                    }        
+                }
+                .padding(.vertical, 5)
+                .sheet(unwrapping: $logFileURL) { logFileURL in
+                    ActivityViewController(activityItems: [logFileURL.wrappedValue])
+                }
+
+                #if DEBUG
                 Text(Localized.sampleDataInstructions.string)
                     .foregroundColor(.primaryTxt)
 
                 Button(Localized.loadSampleData.string) {
                     Task { await PersistenceController.loadSampleData(context: viewContext) }
                 }
+                #endif
             } header: {
                 Localized.debug.view
                     .foregroundColor(.textColor)
@@ -86,17 +112,11 @@ struct SettingsView: View {
                 startPoint: .top,
                 endPoint: .bottom
             ))
-            #endif
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
         .nosNavigationBar(title: .settings)
-        .alert(isPresented: $showError) {
-            Alert(
-                title: Localized.invalidKey.view,
-                message: Localized.couldNotReadPrivateKeyMessage.view
-            )
-        }
+        .alert(unwrapping: $alert)
         .onAppear {
             privateKeyString = currentUser.keyPair?.nsec ?? ""
             analytics.showedSettings()

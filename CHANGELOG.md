@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Added a button to view raw event JSON in the options menu on notes.
+- Added a button to share the application logs in the Settings menu
+- Automatically attach debug logs to support emails
 
 ## [0.1 (30)] - 2023-04-10Z
 
