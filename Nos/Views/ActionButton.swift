@@ -53,7 +53,7 @@ struct ActionButton: View {
 
 struct SecondaryActionButton: View {
     var title: Localized
-    var action: () -> Void
+    var action: () async -> Void
     
     var body: some View {
         ActionButton(
