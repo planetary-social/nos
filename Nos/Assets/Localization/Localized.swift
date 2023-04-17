@@ -160,7 +160,7 @@ enum Localized: String, Localizable, CaseIterable {
     case homeFeed = "Feed"
     
     case keys = "Keys"
-    case keyEncryptionWarning = "Warning: Never share your private key with anyone."
+    case privateKeyWarning = "Never share your private key with anyone. Save your private key in a password manager so you can restore access to your account & data."
     case privateKeyPlaceholder = "nsec or hex..."
     case save = "Save"
     case copy = "Copy"
@@ -171,6 +171,11 @@ enum Localized: String, Localizable, CaseIterable {
     case shareLogs = "Share logs"
     case failedToExportLogs = "Failed to export logs."
     case appVersion = "App Version:"
+    
+    case privateKey = "Private Key"
+    case logout = "Logout"
+    case myKeyIsBackedUp = "My key is backed up"
+    case backUpYourKeyWarning = "Logging out will delete your private key (nsec) from the app. Make sure you have your private key backed up before you do this or you will lose access to your account!"
     
     case post = "Post" // (verb form)
     case newNote = "New Note"
