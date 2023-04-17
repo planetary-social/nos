@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (3)] - 2023-04-17Z
+
 - Added a button to share the application logs in the Settings menu
 - Automatically attach debug logs to support emails
 
