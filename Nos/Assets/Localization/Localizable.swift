@@ -1,5 +1,4 @@
 import Foundation
-import SwiftUI
 
 let testingLocalization = ProcessInfo.processInfo.environment["TESTING_LOCALIZATION"]
 
@@ -15,14 +14,15 @@ protocol Localizable: RawRepresentable<String> {
     /// optionally override this to provide your own namespace key
     /// defaults to the type name of the enum
     static var namespace: String { get }
-    
-    /// Creates a SwiftUI Text view for this text.
-    var view: Text { get }
 
     static func exportForStringsFile() -> String
 }
 
 extension Localizable {
+
+    var key: String {
+        "\(Self.namespace).\(String(describing: self))"
+    }
     
     // You can modify this to perform localization, or overrides based on server or other config
     var string: String {
@@ -43,48 +43,11 @@ extension Localizable {
             return string
         }
     }
-
-    // replaces keys in the string with values from the dictionary passed
-    // case greeting = "Hello {{ name }}."
-    // greeting.text(["name": ]) -> Hello
-    func text(_ arguments: [String: String]) -> String {
-        do {
-            var text = self.string
-            for (key, value) in arguments {
-                let regex = try NSRegularExpression(pattern: "\\{\\{\\s*\(key)\\s*\\}\\}", options: .caseInsensitive)
-                text = regex.stringByReplacingMatches(
-                    in: text,
-                    options: NSRegularExpression.MatchingOptions(rawValue: 0),
-                    range: NSRange(location: 0, length: text.count),
-                    withTemplate: value
-                )
-            }
-            return text
-        } catch {
-            return ""
-        }
-    }
-
-    var uppercased: String {
-        string.uppercased()
-    }
-
+    
     static var namespace: String {
         String(describing: self)
     }
     
-    var view: Text {
-        Text(string)
-    }
-    
-    func view(_ arguments: [String: String]) -> Text {
-        Text(text(arguments))
-    }
-
-    var key: String {
-        "\(Self.namespace).\(String(describing: self))"
-    }
-
     // escape newlines in templates, used when exporting templates for Localizable.strings
     var escapedTemplate: String {
         template.replacingOccurrences(of: "\n", with: "\\n")

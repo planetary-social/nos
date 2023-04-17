@@ -30,6 +30,9 @@
 "Localized.invalidKey" = "Invalid Key";
 "Localized.couldNotReadPrivateKeyMessage" = "Could not read your private key. Please verify that it is in nsec or hex format.";
 "Localized.createAccount" = "Create an account";
+"Localized.shareLogs" = "Share logs";
+"Localized.failedToExportLogs" = "Failed to export logs.";
+"Localized.appVersion" = "App Version:";
 "Localized.post" = "Post";
 "Localized.newNote" = "New Note";
 "Localized.newNotePlaceholder" = "Type your post here...";
