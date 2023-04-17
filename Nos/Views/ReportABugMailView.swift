@@ -6,6 +6,8 @@
 //
 import MessageUI
 import SwiftUI
+import Logger
+
 struct ReportABugMailView: UIViewControllerRepresentable {
     
     @Environment(\.presentationMode) var presentation
@@ -53,6 +55,17 @@ struct ReportABugMailView: UIViewControllerRepresentable {
             "Hello, \n\n I have found a bug in Nos and would like to provide feedback",
             isHTML: false
         )
+        Task {
+            do {
+                mailViewController.addAttachmentData(
+                    try Data(contentsOf: try await LogHelper.zipLogs()),
+                    mimeType: "application/zip", 
+                    fileName: "diagnostics.zip"
+                )
+            } catch {
+                Log.error("failed to zip logs for MFMailComposeViewController")
+            }
+        }
         return mailViewController
     }
     
