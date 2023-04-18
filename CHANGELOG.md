@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added French translations. Thank you p2x@p2xco.de!
+- Added Chinese (Traditional) and updated Chinese (Simplified) translations. Thank you rasputin@getalby.com!
 - Added a button to view raw event JSON in the options menu on notes.
 
 ## [0.1 (30)] - 2023-04-10Z
