@@ -123,7 +123,7 @@ import Logger
     
     // MARK: - NSFetchedResultsControllerDelegate
     
-    func controller(
+    nonisolated func controller(
         _ controller: NSFetchedResultsController<NSFetchRequestResult>, 
         didChange anObject: Any, 
         at indexPath: IndexPath?, 
@@ -134,19 +134,21 @@ import Logger
             return
         }
         
-        if controller === oneHopWatcher {
-            switch type {
-            case .insert:
-                process(followed: author)
-            case .delete:
-                process(unfollowed: author)
-            case .update:
-                process(unfollowed: author)
-                process(followed: author)
-            case .move:
-                return
-            @unknown default:
-                return
+        Task { @MainActor in
+            if controller === oneHopWatcher {
+                switch type {
+                case .insert:
+                    process(followed: author)
+                case .delete:
+                    process(unfollowed: author)
+                case .update:
+                    process(unfollowed: author)
+                    process(followed: author)
+                case .move:
+                    return
+                @unknown default:
+                    return
+                }
             }
         }
     }

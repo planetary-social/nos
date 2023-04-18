@@ -121,7 +121,8 @@ public class Event: NosManagedObject {
         let kind = EventKind.text.rawValue
         let featuredPredicate = NSPredicate(
             format: "kind = %i AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@ " +
-                "AND NOT author IN %@.follows.destination AND NOT author = %@ AND createdAt <= %@ AND author.muted = false",
+                "AND NOT author IN %@.follows.destination AND NOT author = %@ AND createdAt <= %@ AND " +
+                "author.muted = false",
             kind,
             featuredAuthors.compactMap {
                 PublicKey(npub: $0)?.hex
