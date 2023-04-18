@@ -8,6 +8,7 @@
 import Foundation
 import Dependencies
 import SwiftUI
+import Logger
 
 class AppController: ObservableObject {
     
@@ -26,7 +27,7 @@ class AppController: ObservableObject {
     init(currentUser: CurrentUser, router: Router) {
         self.router = router
         self.currentUser = currentUser
-        print("Initializing analytics. This is hack to get the dependency initialzed by printing it: \(analytics)")
+        Log.info("App Version: \(Bundle.current.versionAndBuild)")
     }
     
     func configureCurrentState() {
