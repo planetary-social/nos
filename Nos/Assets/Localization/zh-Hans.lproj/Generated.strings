@@ -36,7 +36,7 @@
 "Localized.privateKey" = "私钥";
 "Localized.logout" = "登出";
 "Localized.myKeyIsBackedUp" = "我的密钥已备份";
-"Localized.backUpYourKeyWarning" = "登出将从应用程序中删除你的私钥 (nsec)。 请确保你已经备份了你的私人密钥，否则你将无法访问你的帐户！";
+"Localized.backUpYourKeyWarning" = "登出将从应用程序中删除你的私钥 (nsec)。 请确认你已经备份了你的私钥，否则你将无法访问你的帐户！";
 "Localized.post" = "帖子";
 "Localized.newNote" = "新便条";
 "Localized.newNotePlaceholder" = "在此输入你的帖子...";
