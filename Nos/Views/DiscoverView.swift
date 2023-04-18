@@ -119,17 +119,15 @@ struct DiscoverView: View {
                 
                 subscriptionIDs.append(await relayService.openSubscription(with: featuredFilter))
                 
-                if !currentUser.inNetworkAuthors.isEmpty {
-                    // this filter just requests everything for now, because I think requesting all the authors within
-                    // two hops is too large of a request and causes the websocket to close.
-                    let twoHopsFilter = Filter(
-                        kinds: [.text],
-                        limit: 50,
-                        since: fetchSinceDate
-                    )
-                    
-                    subscriptionIDs.append(await relayService.openSubscription(with: twoHopsFilter))
-                }
+                // this filter just requests everything for now, because I think requesting all the authors within
+                // two hops is too large of a request and causes the websocket to close.
+                let twoHopsFilter = Filter(
+                    kinds: [.text],
+                    limit: 50,
+                    since: fetchSinceDate
+                )
+                
+                subscriptionIDs.append(await relayService.openSubscription(with: twoHopsFilter))
             }
         }
     }

@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added a logout button in the Settings menu.
+- Minor performance improvements on Thread and Discover views.
+- Fixed a bug where muted authors would show up on the Discover tab.
+
 ## [0.1 (33)] - 2023-04-17Z
 
 - Added a button to share the application logs in the Settings menu

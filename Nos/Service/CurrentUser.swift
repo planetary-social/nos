@@ -67,11 +67,12 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     @MainActor var viewContext: NSManagedObjectContext
     var backgroundContext: NSManagedObjectContext
     
+    var socialGraph: SocialGraph?
+    
     var relayService: RelayService! {
         didSet {
             Task {
                 await subscribe()
-                await updateInNetworkAuthors()
                 await refreshFriendMetadata()
             }
         }
@@ -86,17 +87,6 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
 
     // TODO: prevent this from being accessed from contexts other than the view context. Or maybe just get rid of it.
     @MainActor @Published var author: Author?
-    
-    @MainActor var follows: Set<Follow>? {
-        let followSet = author?.follows as? Set<Follow>
-        let umutedSet = followSet?.filter({
-            if let author = $0.destination {
-                return author.muted == false
-            }
-            return false
-        })
-        return umutedSet
-    }
     
     @MainActor @Published var inNetworkAuthors = [Author]()
     
@@ -143,11 +133,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             try? authorWatcher?.performFetch()
             
             Task {
+                socialGraph = await SocialGraph(userKey: keyPair.publicKeyHex, context: backgroundContext)
                 if relayService != nil {
                     await subscribe()
                     refreshFriendMetadata()
                 }
-                await updateInNetworkAuthors()
             }
             
             Task(priority: .background) { [weak self] in
@@ -412,7 +402,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
 
         Log.debug("Following \(followKey)")
 
-        var followKeys = follows?.keys ?? []
+        var followKeys = socialGraph?.followedKeys ?? []
         followKeys.append(followKey)
         
         // Update author to add the new follow
@@ -443,8 +433,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
 
         Log.debug("Unfollowing \(unfollowedKey)")
         
-        let stillFollowingKeys = (follows ?? [])
-            .keys
+        let stillFollowingKeys = (socialGraph?.followedKeys ?? [])
             .filter { $0 != unfollowedKey }
         
         // Update author to only follow those still following
@@ -463,15 +452,6 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
 
         try! viewContext.save()
         await publishContactList(tags: stillFollowingKeys.pTags)
-    }
-    
-    // TODO: call this more efficiently
-    @MainActor func updateInNetworkAuthors(for user: Author? = nil) async {
-        do {
-            inNetworkAuthors = try viewContext.fetch(Author.inNetworkRequest(for: user))
-        } catch {
-            Log.error("Error updating in network authors: \(error.localizedDescription)")
-        }
     }
     
     // MARK: - NSFetchedResultsControllerDelegate

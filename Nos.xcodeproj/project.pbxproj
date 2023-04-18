@@ -184,6 +184,13 @@
 		C9ADB13F29929F1F0075E7F8 /* String+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB13729928CC30075E7F8 /* String+Hex.swift */; };
 		C9ADB14129951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB14029951CB10075E7F8 /* NSManagedObject+Nos.swift */; };
 		C9ADB14229951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB14029951CB10075E7F8 /* NSManagedObject+Nos.swift */; };
+		C9B678DB29EEBF3B00303F33 /* DependencyInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */; };
+		C9B678DC29EEBF3B00303F33 /* DependencyInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */; };
+		C9B678DE29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */; };
+		C9B678DF29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */; };
+		C9B678E129EEC41000303F33 /* SocialGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E029EEC41000303F33 /* SocialGraph.swift */; };
+		C9B678E229EEC41000303F33 /* SocialGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E029EEC41000303F33 /* SocialGraph.swift */; };
+		C9B678E429EED2DC00303F33 /* SocialGraphTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */; };
 		C9BAB09B2996FBA10003A84E /* EventProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BAB09A2996FBA10003A84E /* EventProcessor.swift */; };
 		C9BAB09C2996FBA10003A84E /* EventProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BAB09A2996FBA10003A84E /* EventProcessor.swift */; };
 		C9C2B77C29E072E400548B4A /* WebSocket+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */; };
@@ -415,6 +422,10 @@
 		C9ADB13729928CC30075E7F8 /* String+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hex.swift"; sourceTree = "<group>"; };
 		C9ADB13C29929B540075E7F8 /* Bech32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bech32.swift; sourceTree = "<group>"; };
 		C9ADB14029951CB10075E7F8 /* NSManagedObject+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Nos.swift"; sourceTree = "<group>"; };
+		C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyInjection.swift; sourceTree = "<group>"; };
+		C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Sendable.swift"; sourceTree = "<group>"; };
+		C9B678E029EEC41000303F33 /* SocialGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialGraph.swift; sourceTree = "<group>"; };
+		C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialGraphTests.swift; sourceTree = "<group>"; };
 		C9BAB09A2996FBA10003A84E /* EventProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventProcessor.swift; sourceTree = "<group>"; };
 		C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebSocket+Nos.swift"; sourceTree = "<group>"; };
 		C9C2B77E29E0731600548B4A /* AsyncTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTimer.swift; sourceTree = "<group>"; };
@@ -553,6 +564,8 @@
 				C9A0DAF729C92F4500466635 /* UNSAPI.swift */,
 				C9C2B77E29E0731600548B4A /* AsyncTimer.swift */,
 				C9F64D8B29ED840700563F2B /* LogHelper.swift */,
+				C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */,
+				C9B678E029EEC41000303F33 /* SocialGraph.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -647,6 +660,7 @@
 				C9DEC0042989477A0078B43A /* Fixtures */,
 				C9DEBFE8298941020078B43A /* EventTests.swift */,
 				C9ADB132299287D60075E7F8 /* KeyPairTests.swift */,
+				C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */,
 			);
 			path = NosTests;
 			sourceTree = "<group>";
@@ -682,6 +696,7 @@
 				C93EC2F629C351470012EE2A /* Optional+Unwrap.swift */,
 				C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */,
 				C9F64D8E29ED88CD00563F2B /* Localization+Nos.swift */,
+				C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1099,6 +1114,7 @@
 				C9C2B78529E073E300548B4A /* RelaySubscription.swift in Sources */,
 				3FFB1D9C29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */,
 				C97A1C8E29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift in Sources */,
+				C9B678DE29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */,
 				C9A0DAF529C9112400466635 /* UniversalNameWizard.swift in Sources */,
 				C9CDBBA129A8F14C00C555C7 /* DiscoverView.swift in Sources */,
 				C987F81729BA4C6A00B44E7A /* BigActionButton.swift in Sources */,
@@ -1116,6 +1132,7 @@
 				C987F81A29BA4D0E00B44E7A /* ActionButton.swift in Sources */,
 				C9A0DAF829C92F4500466635 /* UNSAPI.swift in Sources */,
 				3F30020929C23895003D4F8B /* OnboardingNotOldEnoughView.swift in Sources */,
+				C9B678E129EEC41000303F33 /* SocialGraph.swift in Sources */,
 				C9DEC06A298965550078B43A /* RelayView.swift in Sources */,
 				C9A0DAE429C69F0C00466635 /* HighlightedText.swift in Sources */,
 				C94D855C2991479900749478 /* NewNoteView.swift in Sources */,
@@ -1154,6 +1171,7 @@
 				A3B943D5299D514800A15A08 /* Follow+CoreDataClass.swift in Sources */,
 				C92DF80529C25DE900400561 /* URL+MimeTypes.swift in Sources */,
 				3F60F42929B27D3E000D62C4 /* ThreadView.swift in Sources */,
+				C9B678DB29EEBF3B00303F33 /* DependencyInjection.swift in Sources */,
 				C95D68A9299E709900429F86 /* LinearGradient+Planetary.swift in Sources */,
 				3F43C47629A9625700E896A0 /* AuthorReference+CoreDataClass.swift in Sources */,
 				C9ADB13D29929B540075E7F8 /* Bech32.swift in Sources */,
@@ -1232,6 +1250,7 @@
 				C94FE9F829DB25A800019CD3 /* Text+Gradient.swift in Sources */,
 				C9C2B78029E0731600548B4A /* AsyncTimer.swift in Sources */,
 				CD09A75529A521D20063464F /* SelectableText.swift in Sources */,
+				C9B678E229EEC41000303F33 /* SocialGraph.swift in Sources */,
 				A303AF8629A969FF005DC8FC /* FollowCard.swift in Sources */,
 				C9C2B77D29E072E400548B4A /* WebSocket+Nos.swift in Sources */,
 				A303AF8429A969F5005DC8FC /* FollowButton.swift in Sources */,
@@ -1260,6 +1279,7 @@
 				CD09A74A29A521510063464F /* ProfileView.swift in Sources */,
 				CD09A74929A521210063464F /* Router.swift in Sources */,
 				C93EC2F829C351470012EE2A /* Optional+Unwrap.swift in Sources */,
+				C9B678DF29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */,
 				A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */,
 				C93CA0C129AD5A5B00921183 /* DiscoverView.swift in Sources */,
 				C9ADB13E29929EEF0075E7F8 /* Bech32.swift in Sources */,
@@ -1279,6 +1299,7 @@
 				C9DEC0642989541F0078B43A /* Bundle+Current.swift in Sources */,
 				C9ADB13629928AF00075E7F8 /* KeyPair.swift in Sources */,
 				3FFB1D9729A6BBEC002A755D /* Collection+SafeSubscript.swift in Sources */,
+				C9B678DC29EEBF3B00303F33 /* DependencyInjection.swift in Sources */,
 				C987F81829BA4C6A00B44E7A /* BigActionButton.swift in Sources */,
 				C9F0BB6D29A503D9000547FC /* Int+Bool.swift in Sources */,
 				C942566B29B66B2F00C4202C /* NotificationsView.swift in Sources */,
@@ -1296,6 +1317,7 @@
 				C9DEC05B298950A90078B43A /* String+Lorem.swift in Sources */,
 				C9F84C1D298DBC6100C6714D /* Data+Sha.swift in Sources */,
 				3F30021429C3BFE2003D4F8B /* OnboardingAgeVerificationView.swift in Sources */,
+				C9B678E429EED2DC00303F33 /* SocialGraphTests.swift in Sources */,
 				C9A0DAF629C9112400466635 /* UniversalNameWizard.swift in Sources */,
 				3FFB1D9D29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */,
 				C9F0BB7029A50437000547FC /* NostrConstants.swift in Sources */,
@@ -1370,7 +1392,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MARKETING_VERSION = 1.0;
@@ -1378,7 +1400,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Nos;
@@ -1446,7 +1468,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1461,7 +1483,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -1620,6 +1642,7 @@
 				CURRENT_PROJECT_VERSION = 3;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
@@ -1630,6 +1653,7 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1666,6 +1690,7 @@
 				CURRENT_PROJECT_VERSION = 3;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MACOSX_DEPLOYMENT_TARGET = 13.1;
@@ -1675,6 +1700,7 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Nos;

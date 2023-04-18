@@ -99,6 +99,16 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
+    @MainActor @nonobjc class func oneHopRequest(for author: Author) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.lastUpdatedContactList, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey",
+            author
+        )
+        return fetchRequest
+    }
+    
     @MainActor @nonobjc class func inNetworkRequest(for author: Author? = nil) -> NSFetchRequest<Author> {
         var author = author
         if author == nil {

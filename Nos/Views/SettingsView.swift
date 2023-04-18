@@ -17,7 +17,7 @@ struct SettingsView: View {
     @EnvironmentObject private var currentUser: CurrentUser
 
     @State private var privateKeyString = ""
-    @State private var alert: AlertState<Never>?
+    @State private var alert: AlertState<AlertAction>?
     @State private var logFileURL: URL?
     
     func importKey(_ keyPair: KeyPair) async {
@@ -26,20 +26,20 @@ struct SettingsView: View {
         analytics.changedKey()
     }
     
+    fileprivate enum AlertAction {
+        case logout
+    }
+    
     var body: some View {
         Form {
             Section {
-                Localized.keyEncryptionWarning.view
-                    .foregroundColor(.primaryTxt)
                 HStack {
                     SecureField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
                         .foregroundColor(.primaryTxt)
                     
-                    ActionButton(title: Localized.save) {
+                    SecondaryActionButton(title: Localized.save) {
                         if privateKeyString.isEmpty {
-                            await currentUser.setKeyPair(nil)
-                            analytics.logout()
-                            appController.configureCurrentState()
+                            await logout()
                         } else if let keyPair = KeyPair(nsec: privateKeyString) {
                             await importKey(keyPair)
                         } else if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
@@ -55,16 +55,35 @@ struct SettingsView: View {
                     }
                     .padding(.vertical, 5)
 
-                    ActionButton(title: Localized.copy) {
+                    SecondaryActionButton(title: Localized.copy) {
                         UIPasteboard.general.string = privateKeyString
                     }
                     .padding(.vertical, 5)
                 }
+                
+                ActionButton(title: Localized.logout) {
+                    alert = AlertState(
+                        title: { Localized.logout.textState }, 
+                        actions: {
+                            ButtonState(role: .destructive, action: .send(.logout)) {
+                                Localized.myKeyIsBackedUp.textState
+                            }
+                        },
+                        message: { Localized.backUpYourKeyWarning.textState }
+                    )
+                }        
+                .padding(.vertical, 5)
             } header: {
-                Localized.keys.view
-                    .foregroundColor(.textColor)
-                    .fontWeight(.heavy)
-                    .bold()
+                VStack(alignment: .leading, spacing: 10) {
+                    Localized.privateKey.view
+                        .foregroundColor(.textColor)
+                        .bold()
+                    
+                    Localized.privateKeyWarning.view
+                        .foregroundColor(.secondaryTxt)
+                }
+                .textCase(nil)
+                .padding(.vertical, 15)
             }
             .listRowBackground(LinearGradient(
                 colors: [Color.cardBgTop, Color.cardBgBottom],
@@ -74,6 +93,9 @@ struct SettingsView: View {
             
             Section {
                 HStack {
+                    Text("\(Localized.appVersion.string) \(Bundle.current.versionAndBuild)")
+                        .foregroundColor(.primaryTxt)
+                    Spacer()
                     SecondaryActionButton(title: Localized.shareLogs) {
                         Task {
                             do {
@@ -106,6 +128,8 @@ struct SettingsView: View {
                     .foregroundColor(.textColor)
                     .fontWeight(.heavy)
                     .bold()
+                    .textCase(nil)
+                    .padding(.vertical, 15)
             }
             .listRowBackground(LinearGradient(
                 colors: [Color.cardBgTop, Color.cardBgBottom],
@@ -116,11 +140,28 @@ struct SettingsView: View {
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
         .nosNavigationBar(title: .settings)
-        .alert(unwrapping: $alert)
+        .alert(unwrapping: $alert) { (action: AlertAction?) in
+            if let action {
+                await alertButtonTapped(action)
+            }
+        }
         .onAppear {
             privateKeyString = currentUser.keyPair?.nsec ?? ""
             analytics.showedSettings()
         }
+    }
+    
+    fileprivate func alertButtonTapped(_ action: AlertAction) async {
+        switch action {
+        case .logout:
+            await logout()
+        }
+    }
+    
+    func logout() async {
+        await currentUser.setKeyPair(nil)
+        analytics.logout()
+        appController.configureCurrentState() 
     }
 }
 

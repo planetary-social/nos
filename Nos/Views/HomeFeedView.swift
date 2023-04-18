@@ -38,11 +38,10 @@ struct HomeFeedView: View {
                 subscriptionIDs.removeAll()
             }
             
-            if let follows = currentUser.follows {
-                let authors = follows.keys
+            if let followedKeys = currentUser.socialGraph?.followedKeys {
                 
-                if !authors.isEmpty {
-                    let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete], limit: 100)
+                if !followedKeys.isEmpty {
+                    let textFilter = Filter(authorKeys: followedKeys, kinds: [.text, .delete], limit: 100)
                     let textSub = await relayService.openSubscription(with: textFilter)
                     subscriptionIDs.append(textSub)
                 }
