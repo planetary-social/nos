@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (4)] - 2023-04-18Z
+
 - Added French translations. Thank you p2x@p2xco.de!
 - Added Chinese (Traditional) and updated Chinese (Simplified) translations. Thank you rasputin@getalby.com!
 - Added a logout button in the Settings menu.
