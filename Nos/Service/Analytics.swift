@@ -134,13 +134,23 @@ class Analytics {
         postHog?.identify(keyPair.npub)
     }
     
+    func databaseStatistics(eventCount: Int) {
+        track("Database Statistics", properties: [
+            "events": eventCount
+        ])
+    }
+    
     func logout() {
         Log.info("Analytics: User logged out")
         postHog?.reset()
     }
     
     private func track(_ eventName: String, properties: [String: Any] = [:]) {
-        Log.info("Analytics: \(eventName)")
+        if properties.isEmpty {
+            Log.info("Analytics: \(eventName)")
+        } else {
+            Log.info("Analytics: \(eventName): \(properties)")
+        }
         postHog?.capture(eventName, properties: properties)
     }
     

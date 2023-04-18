@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - More performance improvements on the Home tab.
+- Added a logout button in the Settings menu.
 
 Note:
 - In this build you have to pull-to-refresh if you want to see new notes after the initial load of the Home or Discover tabs. 
@@ -18,7 +19,8 @@ Note:
 - Added a button to view raw event JSON in the options menu on notes.
 - Fixed notes saying "so-and-so posted" at the top when it should say "so-and-so replied".
 - Added code to load the note being replied to if we don't have it. 
-- Improved performance on the home feed
+- Added a button to share the application logs in the Settings menu
+- Automatically attach debug logs to support emails
 
 ## [0.1 (30)] - 2023-04-10Z
 

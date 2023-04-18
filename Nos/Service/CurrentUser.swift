@@ -149,6 +149,14 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 }
                 await updateInNetworkAuthors()
             }
+            
+            Task(priority: .background) { [weak self] in
+                let eventCount = try await backgroundContext.perform {
+                    let eventCountRequest = Event.allEventsRequest()
+                    return try self?.backgroundContext.count(for: eventCountRequest) ?? -1
+                }
+                analytics.databaseStatistics(eventCount: eventCount)
+            }
         } else {
             author = nil
         }

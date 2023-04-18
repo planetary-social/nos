@@ -68,7 +68,6 @@ struct NosApp: App {
                 .environmentObject(currentUser)
                 .task {
                     currentUser.relayService = relayService
-                    await relayService.publishFailedEvents()
                 }
                 .onChange(of: scenePhase) { newPhase in
                     // TODO: save all contexts, not just the view and background.
