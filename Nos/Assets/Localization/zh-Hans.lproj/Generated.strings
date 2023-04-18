@@ -22,7 +22,7 @@
 "Localized.addItem" = "添加项目";
 "Localized.homeFeed" = "提要";
 "Localized.keys" = "密钥";
-"Localized.keyEncryptionWarning" = "警告：永远不要与任何人分享你的私钥。";
+"Localized.privateKeyWarning" = "永远不要与任何人分享你的私钥。请在密码管理器中保存你的私钥，以便恢复对你帐户和数据的访问权。";
 "Localized.privateKeyPlaceholder" = "nsec 或十六进制...";
 "Localized.save" = "保存";
 "Localized.copy" = "复制";
@@ -30,6 +30,13 @@
 "Localized.invalidKey" = "私钥无效";
 "Localized.couldNotReadPrivateKeyMessage" = "无法读取你的私钥。请确保它是十六进制（hex）格式。";
 "Localized.createAccount" = "创建帐户";
+"Localized.shareLogs" = "分享记录";
+"Localized.failedToExportLogs" = "导出记录失败。";
+"Localized.appVersion" = "应用版本：";
+"Localized.privateKey" = "私钥";
+"Localized.logout" = "登出";
+"Localized.myKeyIsBackedUp" = "我的密钥已备份";
+"Localized.backUpYourKeyWarning" = "登出将从应用程序中删除你的私钥 (nsec)。 请确保你已经备份了你的私人密钥，否则你将无法访问你的帐户！";
 "Localized.post" = "帖子";
 "Localized.newNote" = "新便条";
 "Localized.newNotePlaceholder" = "在此输入你的帖子...";
