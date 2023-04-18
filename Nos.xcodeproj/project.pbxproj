@@ -426,6 +426,7 @@
 		C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Sendable.swift"; sourceTree = "<group>"; };
 		C9B678E029EEC41000303F33 /* SocialGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialGraph.swift; sourceTree = "<group>"; };
 		C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialGraphTests.swift; sourceTree = "<group>"; };
+		C9B678E529EF1BF200303F33 /* Nos 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 5.xcdatamodel"; sourceTree = "<group>"; };
 		C9BAB09A2996FBA10003A84E /* EventProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventProcessor.swift; sourceTree = "<group>"; };
 		C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebSocket+Nos.swift"; sourceTree = "<group>"; };
 		C9C2B77E29E0731600548B4A /* AsyncTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTimer.swift; sourceTree = "<group>"; };
@@ -1924,12 +1925,13 @@
 		C9DEBFD5298941000078B43A /* Nos.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				C9B678E529EF1BF200303F33 /* Nos 5.xcdatamodel */,
 				C9A0DAF329C870D500466635 /* Nos 4.xcdatamodel */,
 				CD4D210D29C350C9000F8188 /* Nos 3.xcdatamodel */,
 				C92DF80229C22E4F00400561 /* Nos 2.xcdatamodel */,
 				C9DEBFD6298941000078B43A /* Nos.xcdatamodel */,
 			);
-			currentVersion = C9A0DAF329C870D500466635 /* Nos 4.xcdatamodel */;
+			currentVersion = C9B678E529EF1BF200303F33 /* Nos 5.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
