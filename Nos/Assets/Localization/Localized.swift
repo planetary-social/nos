@@ -259,6 +259,9 @@ enum Localized: String, Localizable, CaseIterable {
     case aboutNostrHighlight = "Learn more about why Nostr is great."
     case nosIsOpenSource = "Nos is open source! You can read the code, contribute new features, or even fork it and build your own Nostr client. No opaque algorithms or secret rules. See the code."
     case nosIsOpenSourceHighlight = "See the code."
+    case eventSource = "Raw Event"
+    case loading = "Loading..."
+    case viewSource = "View Source"
 }
 
 // MARK: - Replies
