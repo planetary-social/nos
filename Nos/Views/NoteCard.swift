@@ -14,15 +14,11 @@ import Logger
 /// Use this view inside MessageButton to have nice borders.
 struct NoteCard: View {
 
-    @ObservedObject var author: Author
-    
-    @ObservedObject var note: Event {
-        didSet {
-            if let eventAuthor = note.author {
-                self.author = eventAuthor
-            }
-        }
+    var author: Author? {
+        note.author
     }
+    
+    @ObservedObject var note: Event
     
     @Environment(\.managedObjectContext) private var viewContext
 
@@ -101,14 +97,12 @@ struct NoteCard: View {
     }
     
     init(
-        author: Author,
         note: Event,
         style: CardStyle = .compact,
         showFullMessage: Bool = false,
         hideOutOfNetwork: Bool = true,
         showReplyCount: Bool = true
     ) {
-        self.author = author
         self.note = note
         self.style = style
         self.showFullMessage = showFullMessage
@@ -123,6 +117,10 @@ struct NoteCard: View {
     }
     
     var attributedAuthor: AttributedString {
+        guard let author else {
+            return AttributedString()
+        }
+        
         var authorName = AttributedString(author.safeName)
         authorName.foregroundColor = .primaryTxt
         let postedOrRepliedString = note.isReply ? Localized.Reply.replied.string : Localized.Reply.posted.string
@@ -140,10 +138,12 @@ struct NoteCard: View {
                 HStack(alignment: .center) {
                     if showContents {
                         Button {
-                            router.currentPath.wrappedValue.append(author)
+                            if let author {
+                                router.currentPath.wrappedValue.append(author)
+                            }
                         } label: {
                             HStack(alignment: .center) {
-                                AvatarView(imageUrl: author.profilePhotoURL, size: 24)
+                                AvatarView(imageUrl: author?.profilePhotoURL, size: 24)
                                 Text(attributedAuthor)
                                     .lineLimit(1)
                                     .font(.brand)
@@ -165,7 +165,13 @@ struct NoteCard: View {
                 .padding(10)
                 Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                 Group {
-                    if showContents {
+                    if note.isStub {
+                        HStack {
+                            Spacer()
+                            ProgressView().foregroundColor(.primaryTxt)
+                            Spacer()
+                        }
+                    } else if showContents {
                         CompactNoteView(note: note, showFullMessage: showFullMessage)
                     } else {
                         VStack {
@@ -212,17 +218,24 @@ struct NoteCard: View {
                     .padding(15)
                 }
             case .golden:
-                GoldenPostView(author: author, note: note)
+                if let author {
+                    GoldenPostView(author: author, note: note)
+                } else {
+                    EmptyView()
+                }
             }
         }
         .task(priority: .userInitiated) {
-            if note.isVerified == false, let publicKey = author.publicKey {
+            if note.isStub {
+                _ = await relayService.requestEvent(with: note.identifier)
+            } else if note.isVerified == false, let publicKey = author?.publicKey {
                 let verified = try? publicKey.verifySignature(on: note)
-                if verified != true {
+                if verified == true {
+                    note.isVerified = true
+                } else {
+                    // TODO: why is this happening on Rabble's profile page?
                     Log.error("Found an unverified event: \(note.identifier!)")
                     viewContext.delete(note)
-                } else {
-                    note.isVerified = true
                 }
             }
         }
@@ -279,7 +292,7 @@ struct NoteCard: View {
         if let id = note.identifier {
             tags.append(["e", id])
         }
-        if let pubKey = author.publicKey?.hex {
+        if let pubKey = author?.publicKey?.hex {
             tags.append(["p", pubKey])
         }
         
@@ -376,12 +389,12 @@ struct NoteCard_Previews: PreviewProvider {
         Group {
             ScrollView {
                 VStack {
-                    NoteCard(author: previewAuthor, note: shortNote, hideOutOfNetwork: false)
-                    NoteCard(author: previewAuthor, note: longNote, hideOutOfNetwork: false)
-                    NoteCard(author: previewAuthor, note: imageNote, hideOutOfNetwork: false)
-                    NoteCard(author: previewAuthor, note: verticalImageNote, hideOutOfNetwork: false)
-                    NoteCard(author: previewAuthor, note: veryWideImageNote, hideOutOfNetwork: false)
-                    NoteCard(author: previewAuthor, note: imageNote, style: .golden, hideOutOfNetwork: false)
+                    NoteCard(note: shortNote, hideOutOfNetwork: false)
+                    NoteCard(note: longNote, hideOutOfNetwork: false)
+                    NoteCard(note: imageNote, hideOutOfNetwork: false)
+                    NoteCard(note: verticalImageNote, hideOutOfNetwork: false)
+                    NoteCard(note: veryWideImageNote, hideOutOfNetwork: false)
+                    NoteCard(note: imageNote, style: .golden, hideOutOfNetwork: false)
                 }
             }
         }

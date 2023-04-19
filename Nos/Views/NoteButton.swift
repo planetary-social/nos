@@ -25,27 +25,24 @@ struct NoteButton: View {
     @EnvironmentObject private var relayService: RelayService
 
     var body: some View {
-        if let author = note.author {
-            Button {
-                if allowsPush {
-                    if !isInThreadView, let referencedNote = note.referencedNote() {
-                        router.push(referencedNote)
-                    } else {
-                        router.push(note)
-                    }
+        Button {
+            if allowsPush {
+                if !isInThreadView, let referencedNote = note.referencedNote() {
+                    router.push(referencedNote)
+                } else {
+                    router.push(note)
                 }
-            } label: {
-                NoteCard(
-                    author: author,
-                    note: note,
-                    style: style,
-                    showFullMessage: showFullMessage,
-                    hideOutOfNetwork: hideOutOfNetwork,
-                    showReplyCount: showReplyCount
-                )
             }
-            .buttonStyle(CardButtonStyle())
+        } label: {
+            NoteCard(
+                note: note,
+                style: style,
+                showFullMessage: showFullMessage,
+                hideOutOfNetwork: hideOutOfNetwork,
+                showReplyCount: showReplyCount
+            )
         }
+        .buttonStyle(CardButtonStyle())
     }
 }
 
