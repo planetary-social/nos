@@ -94,7 +94,7 @@ struct HomeFeedView: View {
                 }
             }
             .overlay(Group {
-                if events.isEmpty {
+                if events.isEmpty && !performingInitialLoad {
                     Localized.noEvents.view
                         .padding()
                 }
