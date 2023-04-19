@@ -10,7 +10,7 @@ import CoreData
 import Logger
 
 /// A representation of the people a given user follows and the people they follow designed to cache this data in 
-/// memory and make it fast to access. This class watches the database for changes to the social graph and updates 
+/// memory and make it cheap to access. This class watches the database for changes to the social graph and updates 
 /// itself accordingly.
 @MainActor class SocialGraph: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
     
@@ -61,6 +61,7 @@ import Logger
         
         super.init()
         
+        followedKeys.append(userKey)
         userWatcher = NSFetchedResultsController(
             fetchRequest: Author.request(by: userKey),
             managedObjectContext: context,
