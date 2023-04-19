@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a button to share the application logs in the Settings menu
 - Automatically attach debug logs to support emails
 - Added a logout button in the Settings menu.
+- Fixed a bug where notes would be truncated but the Read More button would not be shown.
 
 ## [0.1 (30)] - 2023-04-10Z
 
