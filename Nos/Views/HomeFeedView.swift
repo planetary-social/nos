@@ -38,7 +38,7 @@ struct HomeFeedView: View {
                 subscriptionIDs.removeAll()
             }
             
-            if let follows = currentUser.follows {
+            if let follows = currentUser.follows, let currentUserKey = currentUser.publicKeyHex {
                 let authors = follows.keys
                 
                 if !authors.isEmpty {
@@ -46,7 +46,7 @@ struct HomeFeedView: View {
                     let textSub = await relayService.openSubscription(with: textFilter)
                     subscriptionIDs.append(textSub)
                 }
-                let currentUserAuthorKeys = [currentUser.publicKeyHex!]
+                let currentUserAuthorKeys = [currentUserKey]
                 let userLikesFilter = Filter(
                     authorKeys: currentUserAuthorKeys,
                     kinds: [.like, .delete],
@@ -60,17 +60,15 @@ struct HomeFeedView: View {
 
     var body: some View {
         NavigationStack(path: $router.homeFeedPath) {
-            VStack {
-                ScrollView(.vertical, showsIndicators: false) {
-                    LazyVStack {
-                        ForEach(events) { event in
-                            NoteButton(note: event, hideOutOfNetwork: false)
-                                .padding(.horizontal)
-                        }
+            ScrollView(.vertical, showsIndicators: false) {
+                LazyVStack {
+                    ForEach(events) { event in
+                        NoteButton(note: event, hideOutOfNetwork: false)
+                            .padding(.horizontal)
                     }
                 }
-                .accessibilityIdentifier("home feed")
             }
+            .accessibilityIdentifier("home feed")
             .background(Color.appBg)
             .padding(.top, 1)
             .navigationDestination(for: Event.self) { note in
