@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a logout button in the Settings menu.
 - Minor performance improvements on Thread and Discover views.
 - Fixed a bug where muted authors would show up on the Discover tab.
+- Added an initial loading indicator when you first open the Home or Discover tabs.
 
 ## [0.1 (33)] - 2023-04-17Z
 

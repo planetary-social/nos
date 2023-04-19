@@ -67,7 +67,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     @MainActor var viewContext: NSManagedObjectContext
     var backgroundContext: NSManagedObjectContext
     
-    var socialGraph: SocialGraph?
+    @Published var socialGraph: SocialGraph
     
     var relayService: RelayService! {
         didSet {
@@ -95,6 +95,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     @MainActor init(persistenceController: PersistenceController) {
         self.viewContext = persistenceController.viewContext
         self.backgroundContext = persistenceController.newBackgroundContext()
+        self.socialGraph = SocialGraph(userKey: nil, context: backgroundContext)
         super.init()
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             Log.info("CurrentUser loaded a private key from keychain")
@@ -402,7 +403,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
 
         Log.debug("Following \(followKey)")
 
-        var followKeys = socialGraph?.followedKeys ?? []
+        var followKeys = socialGraph.followedKeys
         followKeys.append(followKey)
         
         // Update author to add the new follow
@@ -433,7 +434,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
 
         Log.debug("Unfollowing \(unfollowedKey)")
         
-        let stillFollowingKeys = (socialGraph?.followedKeys ?? [])
+        let stillFollowingKeys = socialGraph.followedKeys
             .filter { $0 != unfollowedKey }
         
         // Update author to only follow those still following
