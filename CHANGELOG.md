@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a bug where notes would be truncated but the Read More button would not be shown.
+
 ## [0.1 (4)] - 2023-04-18Z
 
 - Added French translations. Thank you p2x@p2xco.de!
