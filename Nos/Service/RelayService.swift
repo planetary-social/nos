@@ -191,6 +191,15 @@ extension RelayService {
         return await openSubscription(with: metaFilter)
     }
     
+    /// Requests a single event from all relays
+    func requestEvent(with eventID: String?) async -> RelaySubscription.ID? {
+        guard let eventID = eventID else {
+            return nil
+        }
+        
+        return await openSubscription(with: Filter(eventIDs: [eventID], limit: 1))
+    }
+    
     private func processSubscriptionQueue(overrideRelays: [URL]? = nil) async {
         await openSockets(overrideRelays: overrideRelays)
         await clearStaleSubscriptions()
