@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Scrolling performance improvements
 - Fixed a bug where notes would be truncated but the Read More button would not be shown.
 
 ## [0.1 (4)] - 2023-04-18Z
