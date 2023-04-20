@@ -21,6 +21,9 @@ struct HomeFeedView: View {
     @FetchRequest var events: FetchedResults<Event>
     @State private var date = Date.now
     @State private var subscriptionIDs = [String]()
+    @State private var isVisible = false
+    @State private var cancellables = [AnyCancellable]()
+    @State private var performingInitialLoad = true
 
     // Probably the logged in user should be in the @Environment eventually
     @ObservedObject var user: Author
@@ -30,45 +33,54 @@ struct HomeFeedView: View {
         self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, after: Date.now))
     }
     
-    func subscribeToNewEvents() {
-        Task(priority: .userInitiated) { 
-            // Close out stale requests
-            if !subscriptionIDs.isEmpty {
-                await relayService.removeSubscriptions(for: subscriptionIDs)
-                subscriptionIDs.removeAll()
-            }
+    func subscribeToNewEvents() async {
+        await cancelSubscriptions()
+        
+        let followedKeys = currentUser.socialGraph.followedKeys 
             
-            if let follows = currentUser.follows, let currentUserKey = currentUser.publicKeyHex {
-                let authors = follows.keys
+        guard let currentUserKey = currentUser.publicKeyHex else {
+            return
+        }
                 
-                if !authors.isEmpty {
-                    let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete], limit: 100)
-                    let textSub = await relayService.openSubscription(with: textFilter)
-                    subscriptionIDs.append(textSub)
-                }
-                let currentUserAuthorKeys = [currentUserKey]
-                let userLikesFilter = Filter(
-                    authorKeys: currentUserAuthorKeys,
-                    kinds: [.like, .delete],
-                    limit: 100
-                )
-                let userLikesSub = await relayService.openSubscription(with: userLikesFilter)
-                subscriptionIDs.append(userLikesSub)
-            }
+        if !followedKeys.isEmpty {
+            let textFilter = Filter(authorKeys: followedKeys, kinds: [.text, .delete], limit: 100)
+            let textSub = await relayService.openSubscription(with: textFilter)
+            subscriptionIDs.append(textSub)
+        }
+        let currentUserAuthorKeys = [currentUserKey]
+        let userLikesFilter = Filter(
+            authorKeys: currentUserAuthorKeys,
+            kinds: [.like, .delete],
+            limit: 100
+        )
+        let userLikesSub = await relayService.openSubscription(with: userLikesFilter)
+        subscriptionIDs.append(userLikesSub)
+    }
+    
+    func cancelSubscriptions() async {
+        if !subscriptionIDs.isEmpty {
+            await relayService.removeSubscriptions(for: subscriptionIDs)
+            subscriptionIDs.removeAll()
         }
     }
 
     var body: some View {
         NavigationStack(path: $router.homeFeedPath) {
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVStack {
-                    ForEach(events) { event in
-                        NoteButton(note: event, hideOutOfNetwork: false)
-                            .padding(.horizontal)
+            Group {
+                if performingInitialLoad {
+                    FullscreenProgressView(isPresented: $performingInitialLoad, hideAfter: .now() + .seconds(2))
+                } else {
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVStack {
+                            ForEach(events) { event in
+                                NoteButton(note: event, hideOutOfNetwork: false)
+                                    .padding(.horizontal)
+                            }
+                        }
                     }
+                    .accessibilityIdentifier("home feed")
                 }
             }
-            .accessibilityIdentifier("home feed")
             .background(Color.appBg)
             .padding(.top, 1)
             .navigationDestination(for: Event.self) { note in
@@ -86,7 +98,7 @@ struct HomeFeedView: View {
                 }
             }
             .overlay(Group {
-                if events.isEmpty {
+                if events.isEmpty && !performingInitialLoad {
                     Localized.noEvents.view
                         .padding()
                 }
@@ -100,15 +112,25 @@ struct HomeFeedView: View {
         .onChange(of: date) { newDate in
             events.nsPredicate = Event.homeFeedPredicate(for: user, after: newDate)
         }
-        .onAppear {
-            analytics.showedHome()
-            subscribeToNewEvents()
-        }
-        .onDisappear {
-            Task(priority: .userInitiated) {
-                await relayService.removeSubscriptions(for: subscriptionIDs)
-                subscriptionIDs.removeAll()
-            }        
+        .onAppear { isVisible = true }
+        .onDisappear { isVisible = false }
+        .onChange(of: isVisible, perform: { isVisible in
+            if isVisible {
+                analytics.showedHome()
+                Task { await subscribeToNewEvents() }
+            } else {
+                Task { await cancelSubscriptions() }
+            }
+        })
+        .task {
+            currentUser.socialGraph.followedKeys.publisher
+                .removeDuplicates()
+                .debounce(for: 0.2, scheduler: RunLoop.main)
+                .filter { _ in self.isVisible == true }
+                .sink(receiveValue: { _ in
+                    Task { await subscribeToNewEvents() }
+                })
+                .store(in: &cancellables)
         }
     }
 }

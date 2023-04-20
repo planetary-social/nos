@@ -20,7 +20,6 @@ final class RelayService: ObservableObject {
     private var persistenceController: PersistenceController
     private var subscriptions: RelaySubscriptionManager
     private var saveEventsTimer: AsyncTimer?
-    private var updateSocialGraphTimer: AsyncTimer?
     private var publishFailedEventsTimer: AsyncTimer?
     private var backgroundContext: NSManagedObjectContext
     // TODO: use structured concurrency for this
@@ -44,18 +43,6 @@ final class RelayService: ObservableObject {
             }
         }
         
-        self.updateSocialGraphTimer = AsyncTimer(timeInterval: 30, onFire: { @MainActor [weak self] in
-            guard let currentUser = CurrentUser.shared.author else {
-                return
-            }
-            // Close sockets for anything not in the above
-            if let keptRelays = currentUser.relays as? Set<Relay> {
-                await self?.closeAllConnections(excluding: keptRelays)
-            }
-            
-            await CurrentUser.shared.updateInNetworkAuthors()
-        })
-        
         // TODO: fire this after all relays have connected, not right on init
         self.publishFailedEventsTimer = AsyncTimer(timeInterval: 60, onFire: { [weak self] in
             await self?.publishFailedEvents()
@@ -76,7 +63,6 @@ final class RelayService: ObservableObject {
     
     deinit {
         saveEventsTimer?.cancel()
-        updateSocialGraphTimer?.cancel()
     }
     
     @objc func appWillEnterForeground() {

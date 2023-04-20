@@ -9,7 +9,7 @@ import Dependencies
 
 /// We use the Dependencies package to enable testability for our global variables. It is modeled after SwiftUI's
 /// @Environment.
-/// [Docs](https://swiftpackageindex.com/pointfreeco/swift-dependencies)
+/// [Docs](https://pointfreeco.github.io/swift-dependencies/main/documentation/dependencies/)
 extension DependencyValues {
     var analytics: Analytics {
         get { self[AnalyticsKey.self] }

@@ -141,7 +141,7 @@ struct RelayView: View {
     }
     
     func publishChanges() async {
-        let followKeys = CurrentUser.shared.follows?.keys ?? []
+        let followKeys = CurrentUser.shared.socialGraph.followedKeys 
         await CurrentUser.shared.publishContactList(tags: followKeys.pTags)
     }
 
