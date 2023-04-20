@@ -35,7 +35,6 @@ struct ThreadView: View {
     var body: some View {
         LazyVStack {
             NoteButton(note: root, isInThreadView: true)
-                .padding(.horizontal)
             ForEach(thread) { event in
                 VStack {
                     ZStack {
@@ -46,9 +45,9 @@ struct ThreadView: View {
                         .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
                         .fill(Color.secondaryTxt)
                         NoteButton(note: event, isInThreadView: true)
-                            .padding(.horizontal)
                     }
                 }
+                .readabilityPadding()
             }
         }
     }

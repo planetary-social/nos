@@ -73,7 +73,6 @@ struct HomeFeedView: View {
                         LazyVStack {
                             ForEach(events) { event in
                                 NoteButton(note: event, hideOutOfNetwork: false)
-                                    .padding(.horizontal)
                             }
                         }
                     }

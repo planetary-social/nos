@@ -84,6 +84,8 @@ struct NoteButton: View {
                         hideOutOfNetwork: hideOutOfNetwork,
                         showReplyCount: showReplyCount
                     )
+                    .padding(.horizontal)
+                    .readabilityPadding()
                 }
                 .buttonStyle(CardButtonStyle())
             } else {

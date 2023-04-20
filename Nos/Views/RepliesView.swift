@@ -92,7 +92,6 @@ struct RepliesView: View {
                         allowsPush: false,
                         showReplyCount: false
                     )
-                    .padding(.horizontal)
                     
                     ForEach(directReplies.reversed()) { event in
                         ThreadView(root: event, allReplies: replies.reversed())
