@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - More performance improvements on the Home tab.
 - Added a logout button in the Settings menu.
 - Updated the default list of users shown on the Discover tab.
+- Added a logout button in the Settings menu.
+- Fixed a bug where notes would be truncated but the Read More button would not be shown.
 
 Note:
 - In this build you have to pull-to-refresh if you want to see new notes after the initial load of the Home or Discover tabs. 
