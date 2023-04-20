@@ -27,6 +27,7 @@ struct DiscoverGrid: View {
     init(predicate: NSPredicate, columns: Binding<Int>) {
         let fetchRequest = Event.emptyDiscoverRequest()
         fetchRequest.predicate = predicate
+        fetchRequest.fetchLimit = 1000
         _events = FetchRequest(fetchRequest: fetchRequest)
         _columns = columns
     }

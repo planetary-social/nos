@@ -20,13 +20,10 @@ class AppController: ObservableObject {
     @Published private(set) var currentState: CurrentState?
     
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.router) private var router
+    @Dependency(\.currentUser) private var currentUser
     
-    var router: Router
-    var currentUser: CurrentUser
-    
-    init(currentUser: CurrentUser, router: Router) {
-        self.router = router
-        self.currentUser = currentUser
+    init() {
         Log.info("App Version: \(Bundle.current.versionAndBuild)")
     }
     
