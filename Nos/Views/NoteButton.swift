@@ -66,7 +66,7 @@ struct NoteButton: View {
     }
 
     var body: some View {
-        VStack {
+        Group {
             if let note {
                 Button {
                     if allowsPush {

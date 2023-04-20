@@ -38,6 +38,9 @@ struct HomeFeedView: View {
         
         let followedKeys = currentUser.socialGraph.followedKeys 
             
+            if let follows = currentUser.follows, let currentUserKey = currentUser.publicKeyHex {
+                let authors = follows.keys
+                
         if !followedKeys.isEmpty {
             let textFilter = Filter(authorKeys: followedKeys, kinds: [.text, .delete], limit: 100)
             let textSub = await relayService.openSubscription(with: textFilter)
@@ -77,6 +80,7 @@ struct HomeFeedView: View {
                     .accessibilityIdentifier("home feed")
                 }
             }
+            .accessibilityIdentifier("home feed")
             .background(Color.appBg)
             .padding(.top, 1)
             .navigationDestination(for: Event.self) { note in
