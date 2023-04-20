@@ -84,6 +84,11 @@ struct PersistenceController {
         }
     }
     
+    func saveAll() throws {
+        try viewContext.saveIfNeeded()
+        try Self.backgroundViewContext.saveIfNeeded()
+    }
+    
     static func clearCoreData(store storeURL: URL, in container: NSPersistentContainer) {
         Log.info("Dropping Core Data...")
         do {

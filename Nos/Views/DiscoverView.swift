@@ -57,16 +57,19 @@ struct DiscoverView: View {
     
     @State var columns: Int = 0
     
-    @State private var subscriptionIds = [String]()
+    @State private var subscriptionIDs = [String]()
     private var featuredAuthors: [String]
     
     @StateObject private var searchModel = SearchModel()
+    @State private var date = Date.now
+
+    @State var predicate: NSPredicate = .false
     
-    var predicate: NSPredicate {
+    func updatePredicate() {
         if let relayFilter {
-            return Event.seen(on: relayFilter)
+            predicate = Event.seen(on: relayFilter, before: date)
         } else {
-            return Event.extendedNetworkPredicate(featuredAuthors: featuredAuthors)
+            predicate = Event.extendedNetworkPredicate(featuredAuthors: featuredAuthors, before: date)
         }
     }
 
@@ -74,10 +77,10 @@ struct DiscoverView: View {
         self.featuredAuthors = featuredAuthors
     }
     
-    func refreshDiscover() {
+    func subscribeToNewEvents() {
         Task(priority: .userInitiated) {
-            await relayService.removeSubscriptions(for: subscriptionIds)
-            subscriptionIds.removeAll()
+            await relayService.removeSubscriptions(for: subscriptionIDs)
+            subscriptionIDs.removeAll()
             
             if let relayAddress = relayFilter?.addressURL {
                 // TODO: Use a since filter
@@ -86,7 +89,7 @@ struct DiscoverView: View {
                     limit: 200
                 )
                 
-                subscriptionIds.append(
+                subscriptionIDs.append(
                     // TODO: I don't think the override relays will be honored when opening new sockets
                     await relayService.openSubscription(with: singleRelayFilter, to: [relayAddress])
                 )
@@ -114,7 +117,7 @@ struct DiscoverView: View {
                     since: fetchSinceDate
                 )
                 
-                subscriptionIds.append(await relayService.openSubscription(with: featuredFilter))
+                subscriptionIDs.append(await relayService.openSubscription(with: featuredFilter))
                 
                 if !currentUser.inNetworkAuthors.isEmpty {
                     // this filter just requests everything for now, because I think requesting all the authors within
@@ -125,7 +128,7 @@ struct DiscoverView: View {
                         since: fetchSinceDate
                     )
                     
-                    subscriptionIds.append(await relayService.openSubscription(with: twoHopsFilter))
+                    subscriptionIDs.append(await relayService.openSubscription(with: twoHopsFilter))
                 }
             }
         }
@@ -144,12 +147,6 @@ struct DiscoverView: View {
                         isPresented: $showRelayPicker
                     )
                 }
-            }
-            .onChange(of: relayFilter) { _ in
-                withAnimation {
-                    showRelayPicker = false
-                }
-                refreshDiscover()
             }
             .searchable(text: $searchModel.query, placement: .toolbar, prompt: PlainText(Localized.searchBar.string)) {
                 ForEach(searchModel.authorSuggestions, id: \.self) { author in
@@ -214,21 +211,38 @@ struct DiscoverView: View {
                 }
             }
             .animation(.easeInOut, value: columns)
+            .task { 
+                updatePredicate()
+            }
             .refreshable {
-                refreshDiscover()
+                date = .now
+            }
+            .onChange(of: relayFilter) { _ in
+                withAnimation {
+                    showRelayPicker = false
+                }
+                updatePredicate()
+                subscribeToNewEvents()
+            }
+            .onChange(of: date) { _ in
+                updatePredicate()
+                subscribeToNewEvents()
+            }
+            .refreshable {
+                date = .now
             }
             .onAppear {
                 if router.selectedTab == .discover {
                     searchModel.clear()
                     analytics.showedDiscover()
-                    refreshDiscover()
+                    subscribeToNewEvents()
                 }
             }
             .onDisappear {
                 Task(priority: .userInitiated) {
                     searchModel.clear()
-                    await relayService.removeSubscriptions(for: subscriptionIds)
-                    subscriptionIds.removeAll()
+                    await relayService.removeSubscriptions(for: subscriptionIDs)
+                    subscriptionIDs.removeAll()
                 }
             }
             .navigationDestination(for: Event.self) { note in

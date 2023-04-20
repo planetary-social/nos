@@ -36,8 +36,10 @@ final class RelayService: ObservableObject {
 
         self.saveEventsTimer = AsyncTimer(timeInterval: 1, priority: .high) { [weak self] in
             await self?.backgroundContext.perform(schedule: .immediate) {
-                if self?.backgroundContext.hasChanges == true {
-                    try! self?.backgroundContext.save()
+                do {
+                    try self?.backgroundContext.saveIfNeeded()
+                } catch {
+                    Log.error("RelayService.saveEventsTimer failed to save with error: \(error.localizedDescription)")
                 }
             }
         }
@@ -157,7 +159,6 @@ extension RelayService {
     }
     
     func openSubscription(with filter: Filter, to overrideRelays: [URL]? = nil) async -> RelaySubscription.ID {
-  
         var subscription: RelaySubscription
         
         if let existingSubscription = await subscriptions.subscription(from: filter.id) {
