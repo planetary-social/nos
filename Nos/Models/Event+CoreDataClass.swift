@@ -132,19 +132,23 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @MainActor @nonobjc public class func extendedNetworkPredicate(featuredAuthors: [String]) -> NSPredicate {
+    @MainActor @nonobjc public class func extendedNetworkPredicate(
+        featuredAuthors: [String], 
+        before: Date
+    ) -> NSPredicate {
         guard let currentUser = CurrentUser.shared.author else {
             return NSPredicate.false
         }
         let kind = EventKind.text.rawValue
         let featuredPredicate = NSPredicate(
             format: "kind = %i AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@ " +
-                "AND NOT author IN %@.follows.destination",
+                "AND NOT author IN %@.follows.destination AND createdAt <= %@",
             kind,
             featuredAuthors.compactMap {
                 PublicKey(npub: $0)?.hex
             },
-            currentUser
+            currentUser,
+            before as CVarArg
         )
             
         let twoHopsPredicate = NSPredicate(
@@ -161,9 +165,14 @@ public class Event: NosManagedObject {
         ])
     }
     
-    @nonobjc public class func seen(on relay: Relay) -> NSPredicate {
+    @nonobjc public class func seen(on relay: Relay, before: Date) -> NSPredicate {
         let kind = EventKind.text.rawValue
-        return NSPredicate(format: "kind = %i AND eventReferences.@count = 0 AND %@ IN seenOnRelays", kind, relay)
+        return NSPredicate(
+            format: "kind = %i AND eventReferences.@count = 0 AND %@ IN seenOnRelays AND createdAt <= %@", 
+            kind, 
+            relay,
+            before as CVarArg
+        )
     }
     
     @nonobjc public class func allMentionsPredicate(for user: Author) -> NSPredicate {
@@ -250,21 +259,23 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func homeFeedPredicate(for user: Author) -> NSPredicate {
+    @nonobjc public class func homeFeedPredicate(for user: Author, after: Date) -> NSPredicate {
         NSPredicate(
             // swiftlint:disable line_length
-            format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (ANY author.followers.source = %@ OR author = %@)",
+            format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND createdAt <= %@",
             // swiftlint:enable line_length
             user,
-            user
+            user,
+            after as CVarArg
         )
     }
     
-    @nonobjc public class func homeFeed(for user: Author) -> NSFetchRequest<Event> {
+    @nonobjc public class func homeFeed(for user: Author, after: Date) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        let homeFeedPredicate = homeFeedPredicate(for: user)
-        fetchRequest.predicate = homeFeedPredicate
+        fetchRequest.predicate = homeFeedPredicate(for: user, after: after)
+        fetchRequest.includesPendingChanges = false
+        fetchRequest.fetchLimit = 1000
         return fetchRequest
     }
     
@@ -349,7 +360,7 @@ public class Event: NosManagedObject {
 
         return nil
     }
-    
+
     class func findOrCreate(jsonEvent: JSONEvent, relay: Relay?, context: NSManagedObjectContext) throws -> Event {
         if let existingEvent = try context.fetch(Event.event(by: jsonEvent.id)).first {
             relay.unwrap { existingEvent.markSeen(on: $0) }
@@ -498,6 +509,35 @@ public class Event: NosManagedObject {
                 markdown: linkedString,
                 options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
             )
+        }
+    }
+    
+    class func replyMetadata(for noteID: HexadecimalString?, context: NSManagedObjectContext) async -> (Int, [URL]) {
+        guard let noteID else {
+            return (0, [])
+        }
+        
+        return await context.perform {
+            let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+            fetchRequest.predicate = NSPredicate(format: Event.replyNoteReferences, noteID)
+            fetchRequest.includesPendingChanges = false
+            fetchRequest.includesSubentities = false
+            fetchRequest.relationshipKeyPathsForPrefetching = ["author"]
+            let replies = (try? context.fetch(fetchRequest)) ?? []
+            let replyCount = replies.count
+            
+            var avatarURLs = [URL]()
+            for reply in replies {
+                if let avatarURL = reply.author?.profilePhotoURL,
+                    !avatarURLs.contains(avatarURL) {
+                    avatarURLs.append(avatarURL)
+                    if avatarURLs.count >= 2 {
+                        break
+                    }
+                }
+            }
+            return (replyCount, avatarURLs)
         }
     }
 	
@@ -790,7 +830,7 @@ public class Event: NosManagedObject {
                     deletedEvent.deletedOn = (deletedEvent.deletedOn ?? NSSet()).adding(relay)
                 }
             }
-            try! context.save()
+            try! context.saveIfNeeded()
         }
     }
     

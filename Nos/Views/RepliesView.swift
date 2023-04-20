@@ -84,7 +84,7 @@ struct RepliesView: View {
     var body: some View {
         VStack {
             ScrollView(.vertical) {
-                LazyVStack {
+                VStack {
                     NoteButton(
                         note: note,
                         showFullMessage: true,

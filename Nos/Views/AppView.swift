@@ -199,7 +199,7 @@ struct AppView_Previews: PreviewProvider {
     }()
     
     static var loggedInAppController: AppController = {
-        let appController = AppController(currentUser: currentUser, router: router)
+        let appController = AppController()
         appController.completeOnboarding()
         return appController
     }()
@@ -221,12 +221,12 @@ struct AppView_Previews: PreviewProvider {
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
-            .environmentObject(AppController(currentUser: currentUser, router: router))
+            .environmentObject(AppController())
         
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(routerWithSideMenuOpened)
-            .environmentObject(AppController(currentUser: currentUser, router: routerWithSideMenuOpened))
+            .environmentObject(AppController())
     }
 }
