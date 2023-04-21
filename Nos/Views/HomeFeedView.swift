@@ -37,15 +37,16 @@ struct HomeFeedView: View {
         await cancelSubscriptions()
         
         let followedKeys = currentUser.socialGraph.followedKeys 
-        let since = events.first?.createdAt
             
         guard let currentUserKey = currentUser.publicKeyHex else {
             return
         }
+        
+        let since = events.first(where: { $0.author?.hexadecimalPublicKey == currentUserKey })?.createdAt
                 
         if !followedKeys.isEmpty {
             // TODO: we could miss events with this since filter
-            let textFilter = Filter(authorKeys: followedKeys, kinds: [.text, .delete], limit: 100, since: since)
+            let textFilter = Filter(authorKeys: followedKeys, kinds: [.text, .delete], since: since)
             let textSub = await relayService.openSubscription(with: textFilter)
             subscriptionIDs.append(textSub)
         }
@@ -53,7 +54,6 @@ struct HomeFeedView: View {
         let userLikesFilter = Filter(
             authorKeys: currentUserAuthorKeys,
             kinds: [.like, .delete],
-            limit: 100,
             since: since
         )
         let userLikesSub = await relayService.openSubscription(with: userLikesFilter)
