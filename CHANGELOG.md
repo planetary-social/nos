@@ -19,8 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Chinese (Traditional) and updated Chinese (Simplified) translations. Thank you rasputin@getalby.com!
 - Added a logout button in the Settings menu.
 - Minor performance improvements on Thread and Discover views.
+- Updated the default list of users shown on the Discover tab.
 - Fixed a bug where muted authors would show up on the Discover tab.
 - Added an initial loading indicator when you first open the Home or Discover tabs.
+- Added a logout button in the Settings menu.
+- Fixed a bug where notes would be truncated but the Read More button would not be shown.
 
 ## [0.1 (33)] - 2023-04-17Z
 
