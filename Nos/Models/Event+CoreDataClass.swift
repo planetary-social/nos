@@ -287,6 +287,19 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func reposts(noteId: String) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        let noteIsLikedByUserPredicate = NSPredicate(
+            // swiftlint:disable line_length
+            format: "kind = \(String(EventKind.repost.rawValue)) AND SUBQUERY(eventReferences, $reference, $reference.eventId = %@).@count > 0",
+            // swiftlint:enable line_length
+            noteId
+        )
+        fetchRequest.predicate = noteIsLikedByUserPredicate
+        return fetchRequest
+    }
+    
     @nonobjc public class func allFollowedPostsRequest(from publicKeys: [String]) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
@@ -411,6 +424,14 @@ public class Event: NosManagedObject {
         return nil
     }
     
+    var jsonString: String? {
+        guard let jsonRepresentation,  
+            let data = try? JSONSerialization.data(withJSONObject: jsonRepresentation) else {
+            return nil
+        }
+        return String(data: data, encoding: .utf8)
+    }
+    
     var codable: JSONEvent? {
         guard let identifier = identifier,
             let pubKey = author?.hexadecimalPublicKey,
@@ -439,6 +460,10 @@ public class Event: NosManagedObject {
             return nil
         }
         return Bech32.encode(Nostr.notePrefix, baseEightData: Data(identifierBytes))
+    }
+    
+    var seenOnRelayURLs: [String] {
+        seenOnRelays?.compactMap { ($0 as? Relay)?.addressURL?.absoluteString } ?? []
     }
     
     class func attributedContent(noteID: String?, context: NSManagedObjectContext) async -> AttributedString? {

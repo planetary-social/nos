@@ -313,9 +313,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             return
         }
 
-        let time = Int64(Date.now.timeIntervalSince1970)
-        let kind = EventKind.metaData.rawValue
-        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: [], content: metaString)
+        let jsonEvent = JSONEvent(pubKey: pubKey, kind: .metaData, tags: [], content: metaString)
                 
         if let pair = keyPair {
             do {
@@ -332,9 +330,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             return
         }
         
-        let time = Int64(Date.now.timeIntervalSince1970)
-        let kind = EventKind.mute.rawValue
-        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: keys.pTags, content: "")
+        let jsonEvent = JSONEvent(pubKey: pubKey, kind: .mute, tags: keys.pTags, content: "")
         
         if let pair = keyPair {
             do {
@@ -352,9 +348,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         }
         
         let tags = identifiers.eTags
-        let time = Int64(Date.now.timeIntervalSince1970)
-        let kind = EventKind.delete.rawValue
-        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: reason)
+        let jsonEvent = JSONEvent(pubKey: pubKey, kind: .delete, tags: tags, content: reason)
         
         if let pair = keyPair {
             do {
@@ -385,9 +379,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         relayString.removeLast()
         relayString += "}"
         
-        let time = Int64(Date.now.timeIntervalSince1970)
-        let kind = EventKind.contactList.rawValue
-        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: relayString)
+        let jsonEvent = JSONEvent(pubKey: pubKey, kind: .contactList, tags: tags, content: relayString)
         
         if let pair = keyPair {
             do {

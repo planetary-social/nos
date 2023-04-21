@@ -45,11 +45,17 @@ struct JSONEvent: Codable {
         self.signature = signature
     }
     
-    internal init(pubKey: String, createdAt: Int64, kind: Int64, tags: [[String]], content: String) {
+    internal init(
+        pubKey: HexadecimalString, 
+        createdAt: Date = .now, 
+        kind: EventKind, 
+        tags: [[String]], 
+        content: String
+    ) {
         self.id = ""
         self.pubKey = pubKey
-        self.createdAt = createdAt
-        self.kind = kind
+        self.createdAt = Int64(createdAt.timeIntervalSince1970)
+        self.kind = kind.rawValue
         self.tags = tags
         self.content = content
         self.signature = ""

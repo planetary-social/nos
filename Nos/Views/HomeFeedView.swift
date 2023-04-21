@@ -79,14 +79,15 @@ struct HomeFeedView: View {
                         LazyVStack {
                             ForEach(events) { event in
                                 NoteButton(note: event, hideOutOfNetwork: false)
+                                    .padding(.bottom, 15)
                             }
                         }
                     }
                     .accessibilityIdentifier("home feed")
                 }
             }
+            .padding(.top, 15)
             .background(Color.appBg)
-            .padding(.top, 1)
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
