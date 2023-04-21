@@ -39,6 +39,10 @@ struct HomeFeedView: View {
         let followedKeys = currentUser.socialGraph.followedKeys 
         let since = events.first?.createdAt
             
+        guard let currentUserKey = currentUser.publicKeyHex else {
+            return
+        }
+                
         if !followedKeys.isEmpty {
             // TODO: we could miss events with this since filter
             let textFilter = Filter(
@@ -51,7 +55,7 @@ struct HomeFeedView: View {
             subscriptionIDs.append(textSub)
         }
         
-        let currentUserAuthorKeys = [currentUser.publicKeyHex!]
+        let currentUserAuthorKeys = [currentUserKey]
         let userLikesFilter = Filter(
             authorKeys: currentUserAuthorKeys,
             kinds: [.like, .delete],
@@ -71,7 +75,7 @@ struct HomeFeedView: View {
 
     var body: some View {
         NavigationStack(path: $router.homeFeedPath) {
-            VStack {
+            Group {
                 if performingInitialLoad {
                     FullscreenProgressView(isPresented: $performingInitialLoad, hideAfter: .now() + .seconds(2))
                 } else {

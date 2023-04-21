@@ -133,8 +133,9 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             authorWatcher?.delegate = self
             try? authorWatcher?.performFetch()
             
+            socialGraph = SocialGraph(userKey: keyPair.publicKeyHex, context: backgroundContext)
+            
             Task {
-                socialGraph = await SocialGraph(userKey: keyPair.publicKeyHex, context: backgroundContext)
                 if relayService != nil {
                     await subscribe()
                     refreshFriendMetadata()

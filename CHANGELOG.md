@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - WIP reposting notes
+- Updated the default list of users shown on the Discover tab.
+- Fixed a bug where the home and disover feeds would change scroll position while reading them.
 
 ## [0.1 (35)] - 2023-04-19Z
 
@@ -23,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minor performance improvements on Thread and Discover views.
 - Fixed a bug where muted authors would show up on the Discover tab.
 - Added an initial loading indicator when you first open the Home or Discover tabs.
+- Added a logout button in the Settings menu.
+- Fixed a bug where notes would be truncated but the Read More button would not be shown.
 
 ## [0.1 (33)] - 2023-04-17Z
 
