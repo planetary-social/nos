@@ -728,11 +728,18 @@ public class Event: NosManagedObject {
     }
     
     var isReply: Bool {
-        rootNote() != nil
+        rootNote() != nil || referencedNote() != nil
     }
     
     /// Returns the event this note is directly replying to, or nil if there isn't one.
     func referencedNote() -> Event? {
+        if let rootReference = eventReferences?.first(where: {
+            ($0 as? EventReference)?.type == .reply
+        }) as? EventReference,
+            let referencedNote = rootReference.referencedEvent {
+            return referencedNote
+        }
+        
         if let lastReference = eventReferences?.lastObject as? EventReference,
             let referencedNote = lastReference.referencedEvent {
             return referencedNote
@@ -743,7 +750,7 @@ public class Event: NosManagedObject {
     /// Returns the root event of the thread that this note is replying to, or nil if there isn't one.
     func rootNote() -> Event? {
         let rootReference = eventReferences?.first(where: {
-            ($0 as? EventReference)?.marker ?? "" == "root"
+            ($0 as? EventReference)?.type == .root
         }) as? EventReference
         
         if let rootReference, let rootNote = rootReference.referencedEvent {
