@@ -43,7 +43,7 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 	case contactList = 3
 	case directMessage = 4
 	case delete = 5
-	case boost = 6
+    case repost = 6
 	case like = 7
     case channelMessage = 42
     case mute = 10_000
@@ -243,7 +243,7 @@ public class Event: NosManagedObject {
     @nonobjc public class func homeFeedPredicate(for user: Author, after: Date) -> NSPredicate {
         NSPredicate(
             // swiftlint:disable line_length
-            format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND createdAt <= %@",
+            format: "(kind = 1 OR kind = 6) AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND createdAt <= %@",
             // swiftlint:enable line_length
             user,
             user,

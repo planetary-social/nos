@@ -41,10 +41,16 @@ struct HomeFeedView: View {
             
         if !followedKeys.isEmpty {
             // TODO: we could miss events with this since filter
-            let textFilter = Filter(authorKeys: followedKeys, kinds: [.text, .delete], limit: 100, since: since)
+            let textFilter = Filter(
+                authorKeys: followedKeys, 
+                kinds: [.text, .delete, .repost], 
+                limit: 100, 
+                since: since
+            )
             let textSub = await relayService.openSubscription(with: textFilter)
             subscriptionIDs.append(textSub)
         }
+        
         let currentUserAuthorKeys = [currentUser.publicKeyHex!]
         let userLikesFilter = Filter(
             authorKeys: currentUserAuthorKeys,
