@@ -172,7 +172,6 @@ extension RelayService {
         let metaFilter = Filter(
             authorKeys: [authorKey],
             kinds: [.metaData],
-            limit: 1,
             since: since
         )
         return await openSubscription(with: metaFilter)

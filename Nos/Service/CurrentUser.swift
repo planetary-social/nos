@@ -133,8 +133,9 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             authorWatcher?.delegate = self
             try? authorWatcher?.performFetch()
             
+            socialGraph = SocialGraph(userKey: keyPair.publicKeyHex, context: backgroundContext)
+            
             Task {
-                socialGraph = await SocialGraph(userKey: keyPair.publicKeyHex, context: backgroundContext)
                 if relayService != nil {
                     await subscribe()
                     refreshFriendMetadata()
@@ -190,20 +191,24 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         }
         
         // Always listen to my changes
-        if let key = publicKeyHex {
+        if let key = publicKeyHex, let author {
             // Close out stale requests
             if !subscriptions.isEmpty {
                 await relayService.removeSubscriptions(for: subscriptions)
                 subscriptions.removeAll()
             }
-
-            let metaFilter = Filter(authorKeys: [key], kinds: [.metaData], limit: 1)
+            
+            let metaFilter = Filter(authorKeys: [key], kinds: [.metaData], since: author.lastUpdatedMetadata)
             async let metaSub = relayService.openSubscription(with: metaFilter, to: overrideRelays)
             
-            let contactFilter = Filter(authorKeys: [key], kinds: [.contactList], limit: 1)
+            let contactFilter = Filter(
+                authorKeys: [key], 
+                kinds: [.contactList], 
+                since: author.lastUpdatedContactList
+            )
             async let contactSub = relayService.openSubscription(with: contactFilter, to: overrideRelays)
             
-            let muteListFilter = Filter(authorKeys: [key], kinds: [.mute], limit: 1)
+            let muteListFilter = Filter(authorKeys: [key], kinds: [.mute])
             async let muteSub = relayService.openSubscription(with: muteListFilter, to: overrideRelays)
             
             subscriptions.append(await metaSub)
@@ -236,27 +241,27 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 ).follows as? Set<Follow>
                 return follows?
                     .shuffled()
-                    .map { ($0.destination?.hexadecimalPublicKey, $0.destination?.lastUpdatedMetadata) }
-            } ?? [(String?, Date?)]()
+                    .compactMap { $0.destination }
+                    .map { ($0.hexadecimalPublicKey, $0.lastUpdatedMetadata, $0.lastUpdatedContactList) }
+            } ?? [(String?, Date?, Date?)]()
             
             for followData in followData {
                 guard let followedKey = followData.0 else {
                     continue
                 }
-                let lastUpdated = followData.1
+                let lastUpdatedMetadata = followData.1
+                let lastUpdatedContactList = followData.2
                 let metaFilter = Filter(
                     authorKeys: [followedKey],
                     kinds: [.metaData],
-                    limit: 1,
-                    since: lastUpdated
+                    since: lastUpdatedMetadata
                 )
                 _ = await self?.relayService.openSubscription(with: metaFilter)
                 
                 let contactFilter = Filter(
                     authorKeys: [followedKey],
                     kinds: [.contactList],
-                    limit: 1,
-                    since: lastUpdated
+                    since: lastUpdatedContactList
                 )
                 _ = await self?.relayService.openSubscription(with: contactFilter)
                 
