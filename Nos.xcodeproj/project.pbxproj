@@ -90,6 +90,10 @@
 		C95D68B2299ECE0700429F86 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = C95D68AF299ECE0700429F86 /* CHANGELOG.md */; };
 		C95D68B3299ECE0700429F86 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C95D68B0299ECE0700429F86 /* README.md */; };
 		C95D68B4299ECE0700429F86 /* CONTRIBUTING.md in Resources */ = {isa = PBXBuildFile; fileRef = C95D68B1299ECE0700429F86 /* CONTRIBUTING.md */; };
+		C960C57129F3236200929990 /* LikeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C960C57029F3236200929990 /* LikeButton.swift */; };
+		C960C57229F3236200929990 /* LikeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C960C57029F3236200929990 /* LikeButton.swift */; };
+		C960C57429F3251E00929990 /* RepostButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C960C57329F3251E00929990 /* RepostButton.swift */; };
+		C960C57529F3251E00929990 /* RepostButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C960C57329F3251E00929990 /* RepostButton.swift */; };
 		C9646E9A29B79E04007239A4 /* Logger in Frameworks */ = {isa = PBXBuildFile; productRef = C9646E9929B79E04007239A4 /* Logger */; };
 		C9646E9C29B79E4D007239A4 /* Logger in Frameworks */ = {isa = PBXBuildFile; productRef = C9646E9B29B79E4D007239A4 /* Logger */; };
 		C9646EA129B7A22C007239A4 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9646EA029B7A22C007239A4 /* Analytics.swift */; };
@@ -381,6 +385,8 @@
 		C95D68AF299ECE0700429F86 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		C95D68B0299ECE0700429F86 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C95D68B1299ECE0700429F86 /* CONTRIBUTING.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
+		C960C57029F3236200929990 /* LikeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeButton.swift; sourceTree = "<group>"; };
+		C960C57329F3251E00929990 /* RepostButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepostButton.swift; sourceTree = "<group>"; };
 		C9646EA029B7A22C007239A4 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDidLoadModifier.swift; sourceTree = "<group>"; };
 		C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Encoding.swift"; sourceTree = "<group>"; };
@@ -793,6 +799,8 @@
 				C94D855B2991479900749478 /* NewNoteView.swift */,
 				CD2CF38F299E68BE00332116 /* NoteButton.swift */,
 				C9DFA964299BEB96006929C1 /* NoteCard.swift */,
+				C960C57029F3236200929990 /* LikeButton.swift */,
+				C960C57329F3251E00929990 /* RepostButton.swift */,
 				C95D68A4299E6E1E00429F86 /* PlaceholderModifier.swift */,
 				A351E1A129BA92240009B7F6 /* ProfileEditView.swift */,
 				C95D689E299E6B4100429F86 /* ProfileHeader.swift */,
@@ -1208,6 +1216,7 @@
 				C9F84C1C298DBBF400C6714D /* Data+Sha.swift in Sources */,
 				C95D68A6299E6F9E00429F86 /* ProfileHeader.swift in Sources */,
 				C9BAB09B2996FBA10003A84E /* EventProcessor.swift in Sources */,
+				C960C57129F3236200929990 /* LikeButton.swift in Sources */,
 				C97797B9298AA19A0046BD25 /* RelayService.swift in Sources */,
 				C93CA0C329AE3A1E00921183 /* JSONEvent.swift in Sources */,
 				3FFB1D89299FF37C002A755D /* AvatarView.swift in Sources */,
@@ -1221,6 +1230,7 @@
 				C9DFA971299BF8CD006929C1 /* RepliesView.swift in Sources */,
 				C9DFA976299C30F0006929C1 /* Localized.swift in Sources */,
 				C95D68A5299E6E1E00429F86 /* PlaceholderModifier.swift in Sources */,
+				C960C57429F3251E00929990 /* RepostButton.swift in Sources */,
 				3FFB1D9329A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,
 				C93EC2FA29C370DE0012EE2A /* DiscoverGrid.swift in Sources */,
 				C94FE9F529DB177500019CD3 /* Localizable.swift in Sources */,
@@ -1256,6 +1266,7 @@
 				C97A1C8929E45B3C009D9E8D /* RawEventView.swift in Sources */,
 				CD09A75E29A521EB0063464F /* Assets+Planetary.swift in Sources */,
 				CD09A75029A521D20063464F /* HomeFeedView.swift in Sources */,
+				C960C57529F3251E00929990 /* RepostButton.swift in Sources */,
 				CD09A75129A521D20063464F /* CompactNoteView.swift in Sources */,
 				C9C2B78329E0735400548B4A /* RelaySubscriptionManager.swift in Sources */,
 				CD09A75229A521D20063464F /* RepliesView.swift in Sources */,
@@ -1287,6 +1298,7 @@
 				CD09A74E29A521BE0063464F /* NoteCard.swift in Sources */,
 				3F30021329C3BFDB003D4F8B /* OnboardingStartView.swift in Sources */,
 				CD09A74F29A521BE0063464F /* BioView.swift in Sources */,
+				C960C57229F3236200929990 /* LikeButton.swift in Sources */,
 				CD09A74D29A521A70063464F /* CardStyle.swift in Sources */,
 				CD09A74C29A5217A0063464F /* NoteButton.swift in Sources */,
 				A303AF8529A969F5005DC8FC /* FollowsView.swift in Sources */,

@@ -82,11 +82,11 @@ struct HomeFeedView: View {
                                     .padding(.bottom, 15)
                             }
                         }
+                        .padding(.top, 15)
                     }
                     .accessibilityIdentifier("home feed")
                 }
             }
-            .padding(.top, 15)
             .background(Color.appBg)
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)

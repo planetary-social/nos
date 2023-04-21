@@ -19,8 +19,6 @@ struct NoteCard: View {
     
     var style = CardStyle.compact
     
-    @FetchRequest private var likes: FetchedResults<Event>
-    @FetchRequest private var reposts: FetchedResults<Event>
     @State private var subscriptionIDs = [RelaySubscription.ID]()
     @State private var userTappedShowOutOfNetwork = false
     @State private var replyCount = 0
@@ -64,29 +62,6 @@ struct NoteCard: View {
             return nil
         }
     }
-      
-    var currentUserLikesNote: Bool {
-        likes
-            .filter {
-                $0.author?.hexadecimalPublicKey == currentUser.author?.hexadecimalPublicKey
-            }
-            .compactMap { $0.eventReferences?.lastObject as? EventReference }
-            .contains(where: { $0.eventId == note.identifier })
-    }
-    
-    var currentUserRepostedNote: Bool {
-        reposts.contains {
-            $0.author?.hexadecimalPublicKey == currentUser.author?.hexadecimalPublicKey
-        }
-    }
-    
-    var likeCount: Int {
-        likes
-            .compactMap { $0.eventReferences?.lastObject as? EventReference }
-            .map { $0.eventId }
-            .filter { $0 == note.identifier }
-            .count
-    }
     
     init(
         note: Event,
@@ -100,13 +75,6 @@ struct NoteCard: View {
         self.showFullMessage = showFullMessage
         self.hideOutOfNetwork = hideOutOfNetwork
         self.showReplyCount = showReplyCount
-        if style == .compact {
-            _likes = FetchRequest(fetchRequest: Event.likes(noteId: note.identifier!))
-            _reposts = FetchRequest(fetchRequest: Event.reposts(noteId: note.identifier!))
-        } else {
-            _likes = FetchRequest(fetchRequest: Event.emptyRequest())
-            _reposts = FetchRequest(fetchRequest: Event.emptyRequest())
-        }
     }
     
     var attributedAuthor: AttributedString {
@@ -195,51 +163,18 @@ struct NoteCard: View {
                         }
                         Spacer()
                         
-                        AsyncButton { 
+                        RepostButton(note: note) {
                             await repostNote()
-                        } label: {
-                            HStack {
-                                Image.repostButton
-                                    .opacity(currentUserRepostedNote ? 0.5 : 1)
-                                
-                                if reposts.count > 0 {
-                                    Text(reposts.count.description)
-                                        .font(.body)
-                                        .foregroundColor(.secondaryTxt)
-                                }
-                            }
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 12)
                         }
-                        .disabled(currentUserRepostedNote)
                         
                         // TODO: make this a real button
                         Image.buttonReply
                             .padding(.horizontal, 10)
                             .padding(.vertical, 12)
-
-                        // Likes
-                        let likeLabel = HStack {
-                            if currentUserLikesNote {
-                                Image.buttonLikeActive
-                            } else {
-                                Image.buttonLikeDefault
-                            }
-                            if likeCount > 0 {
-                                Text(likeCount.description)
-                                    .font(.body)
-                                    .foregroundColor(.secondaryTxt)
-                            }
-                        }
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 12)
                         
-                        AsyncButton {
+                        LikeButton(note: note) {
                             await likeNote()
-                        } label: {
-                            likeLabel
-                        }                             
-                        .disabled(currentUserLikesNote)
+                        }
                     }
                     .padding(.horizontal, 13)
                 }
