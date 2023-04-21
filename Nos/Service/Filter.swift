@@ -14,7 +14,7 @@ struct Filter: Hashable, Identifiable {
     let eventIDs: [HexadecimalString]
     let kinds: [EventKind]
     let eTags: [HexadecimalString]
-    let limit: Int
+    let limit: Int?
     let since: Date?
     
     var id: String {
@@ -26,7 +26,7 @@ struct Filter: Hashable, Identifiable {
         eventIDs: [HexadecimalString] = [],
         kinds: [EventKind] = [],
         eTags: [HexadecimalString] = [],
-        limit: Int = 100,
+        limit: Int? = nil,
         since: Date? = nil
     ) {
         self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
@@ -38,7 +38,11 @@ struct Filter: Hashable, Identifiable {
     }
     
     var dictionary: [String: Any] {
-        var filterDict: [String: Any] = ["limit": limit]
+        var filterDict = [String: Any]()
+        
+        if let limit {
+            filterDict["limit"] = limit
+        }
 
         if !authorKeys.isEmpty {
             filterDict["authors"] = authorKeys
