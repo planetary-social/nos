@@ -170,15 +170,7 @@ struct UniversalNameWizard: View {
                     .padding(.bottom, 50)
 
                 case .loading:
-                    VStack {
-                        Spacer()
-                        ProgressView()
-                            .foregroundColor(.primaryTxt)
-                            .background(Color.appBg)
-                            .scaleEffect(2)
-                        Spacer()
-                    }
-                    .frame(maxWidth: .infinity)
+                    FullscreenProgressView(isPresented: .constant(true))
                 case .chooseName:
                     Form {
                         Section {

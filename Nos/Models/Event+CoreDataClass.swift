@@ -94,6 +94,27 @@ public class Event: NosManagedObject {
         "npub1sn0wdenkukak0d9dfczzeacvhkrgz92ak56egt7vdgzn8pv2wfqqhrjdv9": ["Edward Snowden"],
         "npub12ye6p9r6h6qpg3wrfch4v9gas6g0g7y6knrkxf6mzstxuax9sv8sdxrdku": ["Heather Everdeen"],
         "npub1pvgcusxk7006hvtlyx555erhq8c5pk9svw57snlxujpkgnkup89sekdx8c": ["Pam"],
+        "npub1veeqt66jt2j209y9nv4a90w3dej074lavqygq5q0c57dharkgw0qk738wt": ["S3x_jay"],
+        "npub12n7xd8xvqwj8k0v44yg3hlwutyyx85n28xx8zjwj6dykswuy28yqu7xsq4": ["Mara"],
+        "npub1f594agr5xkjd9vgxqgdw0el56y55satlh4ey4mck6trfmxhf4gdsh9npnz": ["Bobi"],
+        "npub1ctsq6nmn5af0evwrlka32kqc7tuhkwzmxlmu6lxt5qw2r6wfnuaqmcad65": ["Julien"],
+        "npub10ft5tkcwknwqkspx9cxhxy2yvyqzmavjku7g37n2kk9ja9yd5rwshhz4z3": ["Joi Ito"],
+        "npub1dcl4zejwr8sg9h6jzl75fy4mj6g8gpdqkfczseca6lef0d5gvzxqvux5ey": ["Adam Ritter"],
+        "npub1qd0smfnmu8936edjx3maet6rckw80wz36jdf6a4lj2gn6ayq2m3q76lelz": ["Carlos Rodriguez"],
+        "npub1k7cnst4fh4ajgg8w6ndcmqen4fnyc7ahhm3zpp255vdxqarrtekq5rrg96": ["Bigmarh"],
+        "npub1gk6ufj53zcc07dt8vrnwwslr3zqs2z398808z9gaw0pl2znmacrqp5y8se": ["Andressa Muntro"],
+        "npub188dexxxmyqhj2r9yte0eq08kfrxtgdmer6gz0ljnzq06edc5fttsjtt409": ["Mary Yar"],
+        "npub150stez8ze3qauexuwrtx0tkkxuuvv022nv0lg3dsq6ejk9n6psestaz9xu": ["Evan Prodromou"],
+        "npub1a32cg8ntvpcq0gqk00t73kzywptxjvm2aatysk6g7nfc750976xsm2ea5z": ["Johannes Ernst"],
+        "npub1gvy07gxw6uu8rd57mz72mg4q2x7r5ptpp5gc832dv768e58hqd0q5nyn0t": ["Ferret"],
+        "npub17nd4yu9anyd3004pumgrtazaacujjxwzj36thtqsxskjy0r5urgqf6950x": ["isoabellaart"],
+        "npub1rkqw2kyduqgdzdax03ptqdcht90475gww0jzelzg7vd6ayvyf4vsl2jtk0": ["bannana art"],
+        "npub1chuth0ru5mq5pjeq6magew3kse4d5m7wgzqk3tnz0kgqwu3vt6ls5hq3gd": ["chut"],
+        "npub1ke0hjv9nx5cy4kz3yuw9kwrhey72cphh8cehfnrh2gjlm8dq7ujsuwt0pu": ["LucioMint"],
+        "npub1pkj5lugwrychstydkt9h2xdzst9ejreemleh3hz69nr85cmegqrs232y4t": ["monk_cactus"],
+        "npub1a406tcmltkud34kmqkevkpykp384czamffw2245a9v5uc2z22l2q55gxd2": ["tina"],
+        "npub1matmfxr293jejewrm72u50l2x5e6ypasn0ev2kns6srv05zfzf8s0z6fsr": ["Jon Pincus"],
+        "npub1ftpy6thgy2354xypal6jd0m37wtsgsvcxljvzje5vskc9cg3a5usexrrtq": ["Raúl Piracés"]
     ]
     
     @nonobjc public class func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {

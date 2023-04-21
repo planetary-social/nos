@@ -35,7 +35,11 @@ final class RelayService: ObservableObject {
 
         self.saveEventsTimer = AsyncTimer(timeInterval: 1, priority: .high) { [weak self] in
             await self?.backgroundContext.perform(schedule: .immediate) {
-                try! self?.backgroundContext.saveIfNeeded()
+                do {
+                    try self?.backgroundContext.saveIfNeeded()
+                } catch {
+                    Log.error("RelayService.saveEventsTimer failed to save with error: \(error.localizedDescription)")
+                }
             }
         }
         
@@ -168,7 +172,6 @@ extension RelayService {
         let metaFilter = Filter(
             authorKeys: [authorKey],
             kinds: [.metaData],
-            limit: 1,
             since: since
         )
         return await openSubscription(with: metaFilter)
@@ -267,7 +270,6 @@ extension RelayService {
             let allSubscriptions = await subscriptions.all
             let fulfilledSubscriptions = try await self.backgroundContext.perform {
                 let relay = self.relay(from: socket, in: self.backgroundContext)
-                // TODO: we are letting in duplicate events somehow
                 let event = try EventProcessor.parse(
                     jsonObject: eventJSON,
                     from: relay,

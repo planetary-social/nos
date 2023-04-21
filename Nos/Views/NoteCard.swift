@@ -42,7 +42,7 @@ struct NoteCard: View {
     private var showContents: Bool {
         !hideOutOfNetwork ||
         userTappedShowOutOfNetwork ||
-        currentUser.socialGraph?.contains(note.author?.hexadecimalPublicKey) == true ||
+        currentUser.socialGraph.contains(note.author?.hexadecimalPublicKey) ||
         Event.discoverTabUserIdToInfo.keys.contains(note.author?.hexadecimalPublicKey ?? "")
     }
     

@@ -10,22 +10,18 @@ import CoreData
 import Logger
 
 /// A representation of the people a given user follows and the people they follow designed to cache this data in 
-/// memory and make it fast to access. This class watches the database for changes to the social graph and updates 
+/// memory and make it cheap to access. This class watches the database for changes to the social graph and updates 
 /// itself accordingly.
 @MainActor class SocialGraph: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
     
     // MARK: Public interface 
     
-    var inNetworkKeys: [HexadecimalString] {
-        [user.hexadecimalPublicKey!] + Array(oneHopKeys) + Array(twoHopKeys)
-    }
+    @Published var inNetworkKeys = [HexadecimalString]()
     
-    var followedKeys: [HexadecimalString] {
-        [user.hexadecimalPublicKey!] + Array(oneHopKeys) 
-    }
+    @Published var followedKeys = [HexadecimalString]()  
     
     func contains(_ key: HexadecimalString?) -> Bool {
-        guard let key else {
+        guard let key, let user else {
             return false
         }
         
@@ -34,11 +30,11 @@ import Logger
     
     // MARK: - Private properties
     
-    private let user: Author
+    private let user: Author?
     private let context: NSManagedObjectContext
     
-    private var userWatcher: NSFetchedResultsController<Author>
-    private var oneHopWatcher: NSFetchedResultsController<Author>
+    private var userWatcher: NSFetchedResultsController<Author>?
+    private var oneHopWatcher: NSFetchedResultsController<Author>?
     
     private(set) var oneHopKeys: Set<HexadecimalString>
     private(set) var twoHopKeys: Set<HexadecimalString>
@@ -46,16 +42,26 @@ import Logger
     private var oneHopAuthors: [HexadecimalString: Author]
     private var twoHopReferences: [HexadecimalString: Int]
 
-    init(userKey: HexadecimalString, context: NSManagedObjectContext) async {
-        self.user = await context.perform {
-            try! Author.findOrCreate(by: userKey, context: context)
-        }
+    init(userKey: HexadecimalString?, context: NSManagedObjectContext) {
         self.context = context
         self.oneHopKeys = Set()
         self.twoHopKeys = Set()
         self.oneHopAuthors = [:]
         self.twoHopReferences = [:]
         
+        guard let userKey else {
+            self.user = nil
+            super.init()
+            return
+        }
+        
+        self.user = context.performAndWait {
+            try! Author.findOrCreate(by: userKey, context: context)
+        }
+        
+        super.init()
+        
+        followedKeys.append(userKey)
         userWatcher = NSFetchedResultsController(
             fetchRequest: Author.request(by: userKey),
             managedObjectContext: context,
@@ -63,19 +69,17 @@ import Logger
             cacheName: "SocialGraph.userWatcher"
         )
         oneHopWatcher = NSFetchedResultsController(
-            fetchRequest: Author.oneHopRequest(for: user),
+            fetchRequest: Author.oneHopRequest(for: user!),
             managedObjectContext: context,
             sectionNameKeyPath: nil,
             cacheName: "SocialGraph.oneHopWatcher"
         )
         
-        super.init()
-        
-        userWatcher.delegate = self
-        try! userWatcher.performFetch()
-        oneHopWatcher.delegate = self
-        try! oneHopWatcher.performFetch()
-        oneHopWatcher.fetchedObjects?.forEach {
+        userWatcher?.delegate = self
+        try! userWatcher?.performFetch()
+        oneHopWatcher?.delegate = self
+        try! oneHopWatcher?.performFetch()
+        oneHopWatcher?.fetchedObjects?.forEach {
             process(followed: $0)
         }
     }
@@ -83,10 +87,13 @@ import Logger
     // MARK: - Processing Changes
     
     private func process(followed author: Author) {
-        guard let authorKey = author.hexadecimalPublicKey else {
+        guard let authorKey = author.hexadecimalPublicKey, let user else {
             Log.error("SocialGraph cannot process followed author with no key")
             return
         }
+        
+        let oneHopKeysCount = oneHopKeys.count
+        let twoHopKeysCount = twoHopKeys.count
         
         oneHopAuthors[authorKey] = author
         oneHopKeys.insert(authorKey)
@@ -99,13 +106,23 @@ import Logger
                 twoHopReferences[followedKey] = referenceCount
             }
         }
+        
+        if oneHopKeysCount != oneHopKeys.count {
+            followedKeys = [user.hexadecimalPublicKey!] + Array(oneHopKeys) 
+            inNetworkKeys = [user.hexadecimalPublicKey!] + Array(oneHopKeys) + Array(twoHopKeys)
+        } else if twoHopKeysCount != twoHopKeys.count {
+            inNetworkKeys = [user.hexadecimalPublicKey!] + Array(oneHopKeys) + Array(twoHopKeys)
+        }
     }
     
     private func process(unfollowed author: Author) {
-        guard let authorKey = author.hexadecimalPublicKey else {
+        guard let authorKey = author.hexadecimalPublicKey, let user else {
             Log.error("SocialGraph cannot process unfollowed author with no key")
             return
         }
+        
+        let oneHopKeysCount = oneHopKeys.count
+        let twoHopKeysCount = twoHopKeys.count
         
         oneHopAuthors.removeValue(forKey: authorKey)
         oneHopKeys.remove(authorKey)
@@ -118,6 +135,13 @@ import Logger
                     twoHopReferences.removeValue(forKey: followedKey)
                 }
             }
+        }
+        
+        if oneHopKeysCount != oneHopKeys.count {
+            followedKeys = [user.hexadecimalPublicKey!] + Array(oneHopKeys) 
+            inNetworkKeys = [user.hexadecimalPublicKey!] + Array(oneHopKeys) + Array(twoHopKeys)
+        } else if twoHopKeysCount != twoHopKeys.count {
+            inNetworkKeys = [user.hexadecimalPublicKey!] + Array(oneHopKeys) + Array(twoHopKeys)
         }
     }
     
