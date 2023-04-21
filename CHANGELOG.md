@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- WIP reposting notes
+
 ## [0.1 (35)] - 2023-04-19Z
 
 - Scrolling performance improvements
