@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Updated the default list of users shown on the Discover tab.
+- Fixed a bug where the home and disover feeds would change scroll position while reading them.
 
 ## [0.1 (35)] - 2023-04-19Z
 
