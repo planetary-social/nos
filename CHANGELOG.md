@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a bug where the home and disover feeds would change scroll position while reading them.
 - More performance improvements on the Home tab.
 - Added a logout button in the Settings menu.
 - Minor performance improvements on Thread and Discover views.
