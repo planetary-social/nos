@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed a bug where the home and disover feeds would change scroll position while reading them.
-- More performance improvements on the Home tab.
+
+## [0.1 (35)] - 2023-04-19Z
+
+- Added French translations. Thank you p2x@p2xco.de!
+- Added Chinese (Traditional) and updated Chinese (Simplified) translations. Thank you rasputin@getalby.com!
 - Added a logout button in the Settings menu.
 - Minor performance improvements on Thread and Discover views.
 - Updated the default list of users shown on the Discover tab.
@@ -17,6 +21,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an initial loading indicator when you first open the Home or Discover tabs.
 - Added a logout button in the Settings menu.
 - Fixed a bug where notes would be truncated but the Read More button would not be shown.
+- Scrolling performance improvements
+- Fixed a bug where notes would be truncated but the Read More button would not be shown.
+
+## [0.1 (33)] - 2023-04-17Z
+
+- Added a button to share the application logs in the Settings menu
+- Automatically attach debug logs to support emails
+
+## [0.1 (32)] - 2023-04-14Z
+
+- More performance improvements on the Home tab.
 
 Note:
 - In this build you have to pull-to-refresh if you want to see new notes after the initial load of the Home or Discover tabs. 
@@ -26,8 +41,7 @@ Note:
 - Added a button to view raw event JSON in the options menu on notes.
 - Fixed notes saying "so-and-so posted" at the top when it should say "so-and-so replied".
 - Added code to load the note being replied to if we don't have it. 
-- Added a button to share the application logs in the Settings menu
-- Automatically attach debug logs to support emails
+- Improved performance on the home feed
 
 ## [0.1 (30)] - 2023-04-10Z
 

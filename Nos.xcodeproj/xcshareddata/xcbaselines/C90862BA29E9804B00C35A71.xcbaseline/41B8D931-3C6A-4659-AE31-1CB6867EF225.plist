@@ -18,12 +18,47 @@
 			</dict>
 			<key>testScrollingAnimationPerformance()</key>
 			<dict>
+				<key>com.apple.dt.XCTMetric_OSSignpost-Scroll_Deceleration.animation.frame.count</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>136.600000</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>Apr 14, 2023 at 5:21:11 PM</string>
+				</dict>
+				<key>com.apple.dt.XCTMetric_OSSignpost-Scroll_Deceleration.animation.frame.rate</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>56.053204</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>Apr 14, 2023 at 5:21:11 PM</string>
+				</dict>
+				<key>com.apple.dt.XCTMetric_OSSignpost-Scroll_Deceleration.animation.hitch.number</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>2.400000</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>Apr 14, 2023 at 5:21:11 PM</string>
+				</dict>
 				<key>com.apple.dt.XCTMetric_OSSignpost-Scroll_Deceleration.animation.hitch.time.ratio</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>16.600000</real>
+					<real>35.591984</real>
 					<key>baselineIntegrationDisplayName</key>
-					<string>Local Baseline</string>
+					<string>Apr 14, 2023 at 5:21:11 PM</string>
+				</dict>
+				<key>com.apple.dt.XCTMetric_OSSignpost-Scroll_Deceleration.animation.hitches.total.duration</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>87.082140</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>Apr 14, 2023 at 5:21:11 PM</string>
+				</dict>
+				<key>com.apple.dt.XCTMetric_OSSignpost-Scroll_Deceleration.duration</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>2.437600</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>Apr 14, 2023 at 5:21:11 PM</string>
 				</dict>
 			</dict>
 		</dict>
