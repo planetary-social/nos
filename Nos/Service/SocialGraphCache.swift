@@ -92,6 +92,10 @@ import Logger
     // MARK: - Processing Changes
     
     /// Takes an author that the `user` has followed and updates our cache of one-hop and two-hop authors appropriately.
+    /// - Parameters:
+    ///   - user: the key of the user at the center of the social graph  
+    ///   - followedKey: the key of the author the user has followed
+    ///   - follows: the keys of the authors `followedKey` has followed
     private func process(
         user: HexadecimalString,
         followed followedKey: HexadecimalString, 
@@ -119,6 +123,10 @@ import Logger
     
     /// Takes an author that the `user` has unfollowed and updates our cache of one-hop and two-hop 
     /// authors appropriately.
+    /// - Parameters:
+    ///   - user: the key of the user at the center of the social graph  
+    ///   - unfollowedKey: the key of the author the user has unfollowed
+    ///   - follows: the keys of the authors `unfollowedKey` has followed
     private func process(
         user: HexadecimalString,
         unfollowed unfollowedKey: HexadecimalString, 
