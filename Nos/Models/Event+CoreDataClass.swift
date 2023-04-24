@@ -264,7 +264,7 @@ public class Event: NosManagedObject {
     @nonobjc public class func homeFeedPredicate(for user: Author, after: Date) -> NSPredicate {
         NSPredicate(
             // swiftlint:disable line_length
-            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0)) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND receivedAt <= %@",
+            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND receivedAt <= %@",
             // swiftlint:enable line_length
             user,
             user,
