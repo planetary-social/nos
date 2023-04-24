@@ -1,5 +1,5 @@
 //
-//  SocialGraph.swift
+//  SocialGraphCache.swift
 //  Nos
 //
 //  Created by Matthew Lorentz on 4/18/23.
@@ -12,7 +12,7 @@ import Logger
 /// A representation of the people a given user follows and the people they follow designed to cache this data in 
 /// memory and make it cheap to access. This class watches the database for changes to the social graph and updates 
 /// itself accordingly.
-@MainActor class SocialGraph: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
+@MainActor class SocialGraphCache: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
     
     // MARK: Public interface 
     
@@ -66,13 +66,13 @@ import Logger
             fetchRequest: Author.request(by: userKey),
             managedObjectContext: context,
             sectionNameKeyPath: nil,
-            cacheName: "SocialGraph.userWatcher"
+            cacheName: "SocialGraphCache.userWatcher"
         )
         oneHopWatcher = NSFetchedResultsController(
             fetchRequest: Author.oneHopRequest(for: user!),
             managedObjectContext: context,
             sectionNameKeyPath: nil,
-            cacheName: "SocialGraph.oneHopWatcher"
+            cacheName: "SocialGraphCache.oneHopWatcher"
         )
         
         userWatcher?.delegate = self
@@ -80,15 +80,16 @@ import Logger
         oneHopWatcher?.delegate = self
         try! oneHopWatcher?.performFetch()
         oneHopWatcher?.fetchedObjects?.forEach {
-            process(followed: $0)
+            processUser(followed: $0)
         }
     }
     
     // MARK: - Processing Changes
     
-    private func process(followed author: Author) {
+    /// Takes an author that the `user` has followed and updates our cache of one-hop and two-hop authors appropriately.
+    private func processUser(followed author: Author) {
         guard let authorKey = author.hexadecimalPublicKey, let user else {
-            Log.error("SocialGraph cannot process followed author with no key")
+            Log.error("SocialGraphCache cannot process followed author with no key")
             return
         }
         
@@ -115,9 +116,11 @@ import Logger
         }
     }
     
-    private func process(unfollowed author: Author) {
+    /// Takes an author that the `user` has unfollowed and updates our cache of one-hop and two-hop 
+    /// authors appropriately.
+    private func processUser(unfollowed author: Author) {
         guard let authorKey = author.hexadecimalPublicKey, let user else {
-            Log.error("SocialGraph cannot process unfollowed author with no key")
+            Log.error("SocialGraphCache cannot process unfollowed author with no key")
             return
         }
         
@@ -162,12 +165,12 @@ import Logger
             if controller === oneHopWatcher {
                 switch type {
                 case .insert:
-                    process(followed: author)
+                    processUser(followed: author)
                 case .delete:
-                    process(unfollowed: author)
+                    processUser(unfollowed: author)
                 case .update:
-                    process(unfollowed: author)
-                    process(followed: author)
+                    processUser(unfollowed: author)
+                    processUser(followed: author)
                 case .move:
                     return
                 @unknown default:
@@ -177,7 +180,7 @@ import Logger
                 do {
                     try oneHopWatcher?.performFetch()
                 } catch {
-                    fatalError("SocialGraph could not performFetch on oneHopWatcher")
+                    fatalError("SocialGraphCache could not performFetch on oneHopWatcher")
                 }
             }
         }
