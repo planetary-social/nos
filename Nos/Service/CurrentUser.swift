@@ -67,7 +67,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     @MainActor var viewContext: NSManagedObjectContext
     var backgroundContext: NSManagedObjectContext
     
-    @Published var socialGraph: SocialGraph
+    @Published var socialGraph: SocialGraphCache
     
     var relayService: RelayService! {
         didSet {
@@ -95,7 +95,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     @MainActor init(persistenceController: PersistenceController) {
         self.viewContext = persistenceController.viewContext
         self.backgroundContext = persistenceController.newBackgroundContext()
-        self.socialGraph = SocialGraph(userKey: nil, context: backgroundContext)
+        self.socialGraph = SocialGraphCache(userKey: nil, context: backgroundContext)
         super.init()
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             Log.info("CurrentUser loaded a private key from keychain")
@@ -133,7 +133,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             authorWatcher?.delegate = self
             try? authorWatcher?.performFetch()
             
-            socialGraph = SocialGraph(userKey: keyPair.publicKeyHex, context: backgroundContext)
+            socialGraph = SocialGraphCache(userKey: keyPair.publicKeyHex, context: backgroundContext)
             
             Task {
                 if relayService != nil {

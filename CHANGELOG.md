@@ -10,14 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - WIP reposting notes
 - Updated the default list of users shown on the Discover tab.
+- Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
 - Fixed a bug where the home and disover feeds would change scroll position while reading them.
 
 ## [0.1 (35)] - 2023-04-19Z
-
-- Scrolling performance improvements
-- Fixed a bug where notes would be truncated but the Read More button would not be shown.
-
-## [0.1 (4)] - 2023-04-18Z
 
 - Added French translations. Thank you p2x@p2xco.de!
 - Added Chinese (Traditional) and updated Chinese (Simplified) translations. Thank you rasputin@getalby.com!
@@ -26,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug where muted authors would show up on the Discover tab.
 - Added an initial loading indicator when you first open the Home or Discover tabs.
 - Added a logout button in the Settings menu.
+- Fixed a bug where notes would be truncated but the Read More button would not be shown.
+- Scrolling performance improvements
 - Fixed a bug where notes would be truncated but the Read More button would not be shown.
 
 ## [0.1 (33)] - 2023-04-17Z

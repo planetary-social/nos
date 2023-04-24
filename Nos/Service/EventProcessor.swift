@@ -39,6 +39,7 @@ enum EventProcessor {
                 Log.info("Invalid signature on event: \(jsonEvent)")
                 throw EventError.invalidSignature(event)
             }
+            event.isVerified = true
         }
         
         return event

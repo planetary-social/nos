@@ -194,8 +194,8 @@
 		C9B678DC29EEBF3B00303F33 /* DependencyInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */; };
 		C9B678DE29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */; };
 		C9B678DF29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */; };
-		C9B678E129EEC41000303F33 /* SocialGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E029EEC41000303F33 /* SocialGraph.swift */; };
-		C9B678E229EEC41000303F33 /* SocialGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E029EEC41000303F33 /* SocialGraph.swift */; };
+		C9B678E129EEC41000303F33 /* SocialGraphCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E029EEC41000303F33 /* SocialGraphCache.swift */; };
+		C9B678E229EEC41000303F33 /* SocialGraphCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E029EEC41000303F33 /* SocialGraphCache.swift */; };
 		C9B678E429EED2DC00303F33 /* SocialGraphTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */; };
 		C9B678E729F01A8500303F33 /* FullscreenProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */; };
 		C9B678E829F01A8500303F33 /* FullscreenProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */; };
@@ -209,6 +209,7 @@
 		C9C2B78329E0735400548B4A /* RelaySubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C2B78129E0735400548B4A /* RelaySubscriptionManager.swift */; };
 		C9C2B78529E073E300548B4A /* RelaySubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C2B78429E073E300548B4A /* RelaySubscription.swift */; };
 		C9C2B78629E073E300548B4A /* RelaySubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C2B78429E073E300548B4A /* RelaySubscription.swift */; };
+		C9C9444229F6F0E2002F2C7A /* XCTest+Eventually.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C9444129F6F0E2002F2C7A /* XCTest+Eventually.swift */; };
 		C9CDBBA129A8F14C00C555C7 /* DiscoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */; };
 		C9CDBBA429A8FA2900C555C7 /* GoldenPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CDBBA329A8FA2900C555C7 /* GoldenPostView.swift */; };
 		C9DB207729F30EC700FB7B9D /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DB207629F30EC700FB7B9D /* AsyncButton.swift */; };
@@ -437,7 +438,7 @@
 		C9ADB14029951CB10075E7F8 /* NSManagedObject+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Nos.swift"; sourceTree = "<group>"; };
 		C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyInjection.swift; sourceTree = "<group>"; };
 		C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Sendable.swift"; sourceTree = "<group>"; };
-		C9B678E029EEC41000303F33 /* SocialGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialGraph.swift; sourceTree = "<group>"; };
+		C9B678E029EEC41000303F33 /* SocialGraphCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialGraphCache.swift; sourceTree = "<group>"; };
 		C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialGraphTests.swift; sourceTree = "<group>"; };
 		C9B678E529EF1BF200303F33 /* Nos 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 5.xcdatamodel"; sourceTree = "<group>"; };
 		C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenProgressView.swift; sourceTree = "<group>"; };
@@ -446,6 +447,7 @@
 		C9C2B77E29E0731600548B4A /* AsyncTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTimer.swift; sourceTree = "<group>"; };
 		C9C2B78129E0735400548B4A /* RelaySubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaySubscriptionManager.swift; sourceTree = "<group>"; };
 		C9C2B78429E073E300548B4A /* RelaySubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaySubscription.swift; sourceTree = "<group>"; };
+		C9C9444129F6F0E2002F2C7A /* XCTest+Eventually.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+Eventually.swift"; sourceTree = "<group>"; };
 		C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverView.swift; sourceTree = "<group>"; };
 		C9CDBBA329A8FA2900C555C7 /* GoldenPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoldenPostView.swift; sourceTree = "<group>"; };
 		C9DB207629F30EC700FB7B9D /* AsyncButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncButton.swift; sourceTree = "<group>"; };
@@ -581,7 +583,7 @@
 				C9C2B77E29E0731600548B4A /* AsyncTimer.swift */,
 				C9F64D8B29ED840700563F2B /* LogHelper.swift */,
 				C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */,
-				C9B678E029EEC41000303F33 /* SocialGraph.swift */,
+				C9B678E029EEC41000303F33 /* SocialGraphCache.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -616,6 +618,14 @@
 				C987F82D29BA951E00B44E7A /* ClarityCity-ThinItalic.otf */,
 			);
 			path = Font;
+			sourceTree = "<group>";
+		};
+		C9C9443A29F6E420002F2C7A /* Test Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				C9C9444129F6F0E2002F2C7A /* XCTest+Eventually.swift */,
+			);
+			path = "Test Helpers";
 			sourceTree = "<group>";
 		};
 		C9DEBFC5298941000078B43A = {
@@ -673,6 +683,7 @@
 		C9DEBFE7298941020078B43A /* NosTests */ = {
 			isa = PBXGroup;
 			children = (
+				C9C9443A29F6E420002F2C7A /* Test Helpers */,
 				C9DEC0042989477A0078B43A /* Fixtures */,
 				C9DEBFE8298941020078B43A /* EventTests.swift */,
 				C9ADB132299287D60075E7F8 /* KeyPairTests.swift */,
@@ -1153,7 +1164,7 @@
 				C987F81A29BA4D0E00B44E7A /* ActionButton.swift in Sources */,
 				C9A0DAF829C92F4500466635 /* UNSAPI.swift in Sources */,
 				3F30020929C23895003D4F8B /* OnboardingNotOldEnoughView.swift in Sources */,
-				C9B678E129EEC41000303F33 /* SocialGraph.swift in Sources */,
+				C9B678E129EEC41000303F33 /* SocialGraphCache.swift in Sources */,
 				C9DEC06A298965550078B43A /* RelayView.swift in Sources */,
 				C9A0DAE429C69F0C00466635 /* HighlightedText.swift in Sources */,
 				C94D855C2991479900749478 /* NewNoteView.swift in Sources */,
@@ -1277,7 +1288,7 @@
 				C94FE9F829DB25A800019CD3 /* Text+Gradient.swift in Sources */,
 				C9C2B78029E0731600548B4A /* AsyncTimer.swift in Sources */,
 				CD09A75529A521D20063464F /* SelectableText.swift in Sources */,
-				C9B678E229EEC41000303F33 /* SocialGraph.swift in Sources */,
+				C9B678E229EEC41000303F33 /* SocialGraphCache.swift in Sources */,
 				A303AF8629A969FF005DC8FC /* FollowCard.swift in Sources */,
 				C9B678E829F01A8500303F33 /* FullscreenProgressView.swift in Sources */,
 				C9C2B77D29E072E400548B4A /* WebSocket+Nos.swift in Sources */,
@@ -1332,6 +1343,7 @@
 				C987F81829BA4C6A00B44E7A /* BigActionButton.swift in Sources */,
 				C9F0BB6D29A503D9000547FC /* Int+Bool.swift in Sources */,
 				C9DB207829F30EC700FB7B9D /* AsyncButton.swift in Sources */,
+				C9C9444229F6F0E2002F2C7A /* XCTest+Eventually.swift in Sources */,
 				C942566B29B66B2F00C4202C /* NotificationsView.swift in Sources */,
 				C9A0DADE29C689C900466635 /* NosNavigationBar.swift in Sources */,
 				C9A0DAF029C7394D00466635 /* CreateProfileView.swift in Sources */,
