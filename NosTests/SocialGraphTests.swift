@@ -26,7 +26,7 @@ final class SocialGraphTests: XCTestCase {
         _ = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
         
         // Act
-        let sut = await SocialGraph(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
+        let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
         try testContext.save()
         
         // Assert
@@ -51,7 +51,7 @@ final class SocialGraphTests: XCTestCase {
         bob.followers = (bob.followers ?? NSSet()).adding(follow)
         
         // Act
-        let sut = await SocialGraph(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
+        let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
         try testContext.save()
         
         // Assert
@@ -65,7 +65,7 @@ final class SocialGraphTests: XCTestCase {
         let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
         
         // Act
-        let sut = await SocialGraph(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
+        let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
         try testContext.save()
         
         // Assert

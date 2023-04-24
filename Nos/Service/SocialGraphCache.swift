@@ -39,14 +39,12 @@ import Logger
     private(set) var oneHopKeys: Set<HexadecimalString>
     private(set) var twoHopKeys: Set<HexadecimalString>
     
-    private var oneHopAuthors: [HexadecimalString: Author]
     private var twoHopReferences: [HexadecimalString: Int]
 
     init(userKey: HexadecimalString?, context: NSManagedObjectContext) {
         self.context = context
         self.oneHopKeys = Set()
         self.twoHopKeys = Set()
-        self.oneHopAuthors = [:]
         self.twoHopReferences = [:]
         
         guard let userKey else {
@@ -76,75 +74,74 @@ import Logger
         )
         
         userWatcher?.delegate = self
-        try! userWatcher?.performFetch()
         oneHopWatcher?.delegate = self
-        try! oneHopWatcher?.performFetch()
-        oneHopWatcher?.fetchedObjects?.forEach {
-            processUser(followed: $0)
+        context.performAndWait {
+            try! self.userWatcher?.performFetch()
+            try! self.oneHopWatcher?.performFetch()
+            self.oneHopWatcher?.fetchedObjects?.forEach { author in
+                guard let userKey = user?.hexadecimalPublicKey,
+                    let followedKey = author.hexadecimalPublicKey else {
+                    return
+                }
+                let twoHopsKeys = author.followedKeys
+                self.process(user: userKey, followed: followedKey, whoFollows: twoHopsKeys)
+            }
         }
     }
     
     // MARK: - Processing Changes
     
     /// Takes an author that the `user` has followed and updates our cache of one-hop and two-hop authors appropriately.
-    private func processUser(followed author: Author) {
-        guard let authorKey = author.hexadecimalPublicKey, let user else {
-            Log.error("SocialGraphCache cannot process followed author with no key")
-            return
-        }
-        
+    private func process(
+        user: HexadecimalString,
+        followed followedKey: HexadecimalString, 
+        whoFollows follows: [HexadecimalString]
+    ) {
         let oneHopKeysCount = oneHopKeys.count
         let twoHopKeysCount = twoHopKeys.count
         
-        oneHopAuthors[authorKey] = author
-        oneHopKeys.insert(authorKey)
-        author.follows?.forEach { 
-            if let follow = $0 as? Follow,
-                let followedKey = follow.destination?.hexadecimalPublicKey {
-                twoHopKeys.insert(followedKey)
-                var referenceCount = twoHopReferences[followedKey] ?? 0
-                referenceCount += 1
-                twoHopReferences[followedKey] = referenceCount
-            }
+        oneHopKeys.insert(followedKey)
+        follows.forEach { followedKey in
+            twoHopKeys.insert(followedKey)
+            var referenceCount = twoHopReferences[followedKey] ?? 0
+            referenceCount += 1
+            twoHopReferences[followedKey] = referenceCount
         }
         
+        let defaultArray = [user]
         if oneHopKeysCount != oneHopKeys.count {
-            followedKeys = [user.hexadecimalPublicKey!] + Array(oneHopKeys) 
-            inNetworkKeys = [user.hexadecimalPublicKey!] + Array(oneHopKeys) + Array(twoHopKeys)
+            followedKeys = defaultArray + Array(oneHopKeys) 
+            inNetworkKeys = defaultArray + Array(oneHopKeys) + Array(twoHopKeys)
         } else if twoHopKeysCount != twoHopKeys.count {
-            inNetworkKeys = [user.hexadecimalPublicKey!] + Array(oneHopKeys) + Array(twoHopKeys)
+            inNetworkKeys = defaultArray + Array(oneHopKeys) + Array(twoHopKeys)
         }
     }
     
     /// Takes an author that the `user` has unfollowed and updates our cache of one-hop and two-hop 
     /// authors appropriately.
-    private func processUser(unfollowed author: Author) {
-        guard let authorKey = author.hexadecimalPublicKey, let user else {
-            Log.error("SocialGraphCache cannot process unfollowed author with no key")
-            return
-        }
-        
+    private func process(
+        user: HexadecimalString,
+        unfollowed unfollowedKey: HexadecimalString, 
+        whoFollows follows: [HexadecimalString]
+    ) {
         let oneHopKeysCount = oneHopKeys.count
         let twoHopKeysCount = twoHopKeys.count
         
-        oneHopAuthors.removeValue(forKey: authorKey)
-        oneHopKeys.remove(authorKey)
-        author.follows?.forEach { 
-            if let follow = $0 as? Follow,
-                let followedKey = follow.destination?.hexadecimalPublicKey {
-                let referenceCount = twoHopReferences[followedKey] ?? 1
-                if referenceCount <= 1 {
-                    twoHopKeys.remove(followedKey)
-                    twoHopReferences.removeValue(forKey: followedKey)
-                }
+        oneHopKeys.remove(unfollowedKey)
+        follows.forEach { followedKey in
+            let referenceCount = twoHopReferences[followedKey] ?? 1
+            if referenceCount <= 1 {
+                twoHopKeys.remove(followedKey)
+                twoHopReferences.removeValue(forKey: followedKey)
             }
         }
         
+        let defaultArray = [user]
         if oneHopKeysCount != oneHopKeys.count {
-            followedKeys = [user.hexadecimalPublicKey!] + Array(oneHopKeys) 
-            inNetworkKeys = [user.hexadecimalPublicKey!] + Array(oneHopKeys) + Array(twoHopKeys)
+            followedKeys = defaultArray + Array(oneHopKeys) 
+            inNetworkKeys = defaultArray + Array(oneHopKeys) + Array(twoHopKeys)
         } else if twoHopKeysCount != twoHopKeys.count {
-            inNetworkKeys = [user.hexadecimalPublicKey!] + Array(oneHopKeys) + Array(twoHopKeys)
+            inNetworkKeys = defaultArray + Array(oneHopKeys) + Array(twoHopKeys)
         }
     }
     
@@ -157,28 +154,31 @@ import Logger
         for type: NSFetchedResultsChangeType, 
         newIndexPath: IndexPath?
     ) {
-        guard let author = anObject as? Author else {
+        guard let userKey = user?.hexadecimalPublicKey,
+            let changedAuthor = anObject as? Author,
+            let authorKey = changedAuthor.hexadecimalPublicKey else {
             return
         }
+        let twoHopsKeys = changedAuthor.followedKeys
         
         Task { @MainActor in
-            if controller === oneHopWatcher {
+            if controller === self.oneHopWatcher {
                 switch type {
                 case .insert:
-                    processUser(followed: author)
+                    self.process(user: userKey, followed: authorKey, whoFollows: twoHopsKeys)
                 case .delete:
-                    processUser(unfollowed: author)
+                    self.process(user: userKey, unfollowed: authorKey, whoFollows: twoHopsKeys)
                 case .update:
-                    processUser(unfollowed: author)
-                    processUser(followed: author)
+                    self.process(user: userKey, unfollowed: authorKey, whoFollows: twoHopsKeys)
+                    self.process(user: userKey, followed: authorKey, whoFollows: twoHopsKeys)
                 case .move:
                     return
                 @unknown default:
                     return
                 }
-            } else if controller === userWatcher {
+            } else if controller === self.userWatcher {
                 do {
-                    try oneHopWatcher?.performFetch()
+                    try self.oneHopWatcher?.performFetch()
                 } catch {
                     fatalError("SocialGraphCache could not performFetch on oneHopWatcher")
                 }
