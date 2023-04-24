@@ -209,15 +209,6 @@ struct NoteCard: View {
         .task(priority: .userInitiated) {
             if note.isStub {
                 _ = await relayService.requestEvent(with: note.identifier)
-            } else if note.isVerified == false, let publicKey = author?.publicKey {
-                let verified = try? publicKey.verifySignature(on: note)
-                if verified == true {
-                    note.isVerified = true
-                } else {
-                    // TODO: why is this happening on Rabble's profile page?
-                    Log.error("Found an unverified event: \(note.identifier!)")
-                    viewContext.delete(note)
-                }
             }
         }
         .onAppear {
