@@ -173,6 +173,12 @@ import Logger
                 @unknown default:
                     return
                 }
+            } else if controller === userWatcher {
+                do {
+                    try oneHopWatcher?.performFetch()
+                } catch {
+                    fatalError("SocialGraph could not performFetch on oneHopWatcher")
+                }
             }
         }
     }
