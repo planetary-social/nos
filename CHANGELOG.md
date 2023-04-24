@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
+
 ## [0.1 (35)] - 2023-04-19Z
 
 - Added French translations. Thank you p2x@p2xco.de!
