@@ -203,6 +203,7 @@
 		C9C2B78329E0735400548B4A /* RelaySubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C2B78129E0735400548B4A /* RelaySubscriptionManager.swift */; };
 		C9C2B78529E073E300548B4A /* RelaySubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C2B78429E073E300548B4A /* RelaySubscription.swift */; };
 		C9C2B78629E073E300548B4A /* RelaySubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C2B78429E073E300548B4A /* RelaySubscription.swift */; };
+		C9C9444229F6F0E2002F2C7A /* XCTest+Eventually.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C9444129F6F0E2002F2C7A /* XCTest+Eventually.swift */; };
 		C9CDBBA129A8F14C00C555C7 /* DiscoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */; };
 		C9CDBBA429A8FA2900C555C7 /* GoldenPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CDBBA329A8FA2900C555C7 /* GoldenPostView.swift */; };
 		C9DEBFD2298941000078B43A /* NosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD1298941000078B43A /* NosApp.swift */; };
@@ -434,6 +435,7 @@
 		C9C2B77E29E0731600548B4A /* AsyncTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTimer.swift; sourceTree = "<group>"; };
 		C9C2B78129E0735400548B4A /* RelaySubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaySubscriptionManager.swift; sourceTree = "<group>"; };
 		C9C2B78429E073E300548B4A /* RelaySubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaySubscription.swift; sourceTree = "<group>"; };
+		C9C9444129F6F0E2002F2C7A /* XCTest+Eventually.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+Eventually.swift"; sourceTree = "<group>"; };
 		C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverView.swift; sourceTree = "<group>"; };
 		C9CDBBA329A8FA2900C555C7 /* GoldenPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoldenPostView.swift; sourceTree = "<group>"; };
 		C9DEBFCE298941000078B43A /* Nos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nos.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -605,6 +607,14 @@
 			path = Font;
 			sourceTree = "<group>";
 		};
+		C9C9443A29F6E420002F2C7A /* Test Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				C9C9444129F6F0E2002F2C7A /* XCTest+Eventually.swift */,
+			);
+			path = "Test Helpers";
+			sourceTree = "<group>";
+		};
 		C9DEBFC5298941000078B43A = {
 			isa = PBXGroup;
 			children = (
@@ -660,6 +670,7 @@
 		C9DEBFE7298941020078B43A /* NosTests */ = {
 			isa = PBXGroup;
 			children = (
+				C9C9443A29F6E420002F2C7A /* Test Helpers */,
 				C9DEC0042989477A0078B43A /* Fixtures */,
 				C9DEBFE8298941020078B43A /* EventTests.swift */,
 				C9ADB132299287D60075E7F8 /* KeyPairTests.swift */,
@@ -1308,6 +1319,7 @@
 				C9B678DC29EEBF3B00303F33 /* DependencyInjection.swift in Sources */,
 				C987F81829BA4C6A00B44E7A /* BigActionButton.swift in Sources */,
 				C9F0BB6D29A503D9000547FC /* Int+Bool.swift in Sources */,
+				C9C9444229F6F0E2002F2C7A /* XCTest+Eventually.swift in Sources */,
 				C942566B29B66B2F00C4202C /* NotificationsView.swift in Sources */,
 				C9A0DADE29C689C900466635 /* NosNavigationBar.swift in Sources */,
 				C9A0DAF029C7394D00466635 /* CreateProfileView.swift in Sources */,
