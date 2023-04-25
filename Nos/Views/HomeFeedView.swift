@@ -46,10 +46,16 @@ struct HomeFeedView: View {
                 
         if !followedKeys.isEmpty {
             // TODO: we could miss events with this since filter
-            let textFilter = Filter(authorKeys: followedKeys, kinds: [.text, .delete], since: since)
+            let textFilter = Filter(
+                authorKeys: followedKeys, 
+                kinds: [.text, .delete, .repost], 
+                limit: 100, 
+                since: since
+            )
             let textSub = await relayService.openSubscription(with: textFilter)
             subscriptionIDs.append(textSub)
         }
+        
         let currentUserAuthorKeys = [currentUserKey]
         let userLikesFilter = Filter(
             authorKeys: currentUserAuthorKeys,
@@ -77,14 +83,15 @@ struct HomeFeedView: View {
                         LazyVStack {
                             ForEach(events) { event in
                                 NoteButton(note: event, hideOutOfNetwork: false)
+                                    .padding(.bottom, 15)
                             }
                         }
+                        .padding(.top, 15)
                     }
                     .accessibilityIdentifier("home feed")
                 }
             }
             .background(Color.appBg)
-            .padding(.top, 1)
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }

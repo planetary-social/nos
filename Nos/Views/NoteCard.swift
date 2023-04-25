@@ -19,7 +19,6 @@ struct NoteCard: View {
     
     var style = CardStyle.compact
     
-    @FetchRequest private var likes: FetchedResults<Event>
     @State private var subscriptionIDs = [RelaySubscription.ID]()
     @State private var userTappedShowOutOfNetwork = false
     @State private var replyCount = 0
@@ -63,23 +62,6 @@ struct NoteCard: View {
             return nil
         }
     }
-      
-    var currentUserLikesNote: Bool {
-        likes
-            .filter {
-                $0.author?.hexadecimalPublicKey == currentUser.author?.hexadecimalPublicKey
-            }
-            .compactMap { $0.eventReferences?.lastObject as? EventReference }
-            .contains(where: { $0.eventId == note.identifier })
-    }
-    
-    var likeCount: Int {
-        likes
-            .compactMap { $0.eventReferences?.lastObject as? EventReference }
-            .map { $0.eventId }
-            .filter { $0 == note.identifier }
-            .count
-    }
     
     init(
         note: Event,
@@ -93,7 +75,6 @@ struct NoteCard: View {
         self.showFullMessage = showFullMessage
         self.hideOutOfNetwork = hideOutOfNetwork
         self.showReplyCount = showReplyCount
-        _likes = FetchRequest(fetchRequest: Event.likes(noteId: note.identifier!))
     }
     
     var attributedAuthor: AttributedString {
@@ -152,6 +133,7 @@ struct NoteCard: View {
                             ProgressView().foregroundColor(.primaryTxt)
                             Spacer()
                         }
+                        .padding(30)
                     } else if showContents {
                         CompactNoteView(note: note, showFullMessage: showFullMessage)
                     } else {
@@ -170,7 +152,7 @@ struct NoteCard: View {
                         .frame(maxWidth: .infinity)
                     }
                     Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
-                    HStack {
+                    HStack(spacing: 0) {
                         if showReplyCount {
                             StackedAvatarsView(avatarUrls: replyAvatarURLs, size: 20, border: 0)
                             if let replies = attributedReplies {
@@ -180,23 +162,21 @@ struct NoteCard: View {
                             }
                         }
                         Spacer()
-                        Image.buttonReply
-                        if currentUserLikesNote {
-                            Image.buttonLikeActive
-                        } else {
-                            Button {
-                                Task { await likeNote() }
-                            } label: {
-                                Image.buttonLikeDefault
-                            }
+                        
+                        RepostButton(note: note) {
+                            await repostNote()
                         }
-                        if likeCount > 0 {
-                            Text(likeCount.description)
-                                .font(.body)
-                                .foregroundColor(.secondaryTxt)
+                        
+                        // TODO: make this a real button
+                        Image.buttonReply
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 12)
+                        
+                        LikeButton(note: note) {
+                            await likeNote()
                         }
                     }
-                    .padding(15)
+                    .padding(.horizontal, 13)
                 }
             case .golden:
                 if let author {
@@ -245,7 +225,6 @@ struct NoteCard: View {
         }
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
-        .padding(padding)
     }
     
     func likeNote() async {
@@ -271,34 +250,50 @@ struct NoteCard: View {
         }
 
         if let id = note.identifier {
-            tags.append(["e", id])
+            tags.append(["e", id] + note.seenOnRelayURLs)
         }
         if let pubKey = author?.publicKey?.hex {
             tags.append(["p", pubKey])
         }
         
         let jsonEvent = JSONEvent(
-            id: "",
             pubKey: keyPair.publicKeyHex,
-            createdAt: Int64(Date().timeIntervalSince1970),
-            kind: 7,
+            kind: .like,
             tags: tags,
-            content: "+",
-            signature: ""
+            content: "+"
         )
+        
         do {
             try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
         } catch {
             Log.info("Error creating event for like")
         }
     }
-
-    var padding: EdgeInsets {
-        switch style {
-        case .golden:
-            return EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-        case .compact:
-            return EdgeInsets(top: 15, leading: 0, bottom: 0, trailing: 0)
+    
+    func repostNote() async {
+        guard let keyPair = currentUser.keyPair else {
+            return
+        }
+        
+        var tags: [[String]] = []
+        if let id = note.identifier {
+            tags.append(["e", id] + note.seenOnRelayURLs)
+        }
+        if let pubKey = author?.publicKey?.hex {
+            tags.append(["p", pubKey])
+        }
+        
+        let jsonEvent = JSONEvent(
+            pubKey: keyPair.publicKeyHex,
+            kind: .repost,
+            tags: tags,
+            content: note.jsonString ?? ""
+        )
+        
+        do {
+            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
+        } catch {
+            Log.info("Error creating event for like")
         }
     }
 
@@ -320,49 +315,74 @@ struct NoteCard_Previews: PreviewProvider {
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
     static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
+    static var relayService = RelayService(persistenceController: persistenceController)
+
+    static var currentUser: CurrentUser = {
+        let currentUser = CurrentUser(persistenceController: persistenceController)
+        currentUser.viewContext = previewContext
+        currentUser.relayService = relayService
+        Task { await currentUser.setKeyPair(KeyFixture.keyPair) }
+        return currentUser
+    }()
+
+    static var previewAuthor: Author = {
+        let author = Author(context: previewContext)
+        author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
+        author.profilePhotoURL = URL(string: "https://avatars.githubusercontent.com/u/1165004?s=40&v=4")
+        return author
+    }()
     
     static var shortNote: Event {
         let note = Event(context: previewContext)
+        note.identifier = "1"
         note.content = "Hello, world!"
         note.author = previewAuthor
+        note.createdAt = .now
+        try! previewContext.save()
         return note
     }
     
     static var imageNote: Event {
         let note = Event(context: previewContext)
+        note.identifier = "2"
         note.content = "Hello, world!https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg"
         note.author = previewAuthor
+        note.createdAt = .now
+        try! previewContext.save()
         return note
     }
     
     static var verticalImageNote: Event {
         let note = Event(context: previewContext)
+        note.identifier = "3"
         // swiftlint:disable line_length
         note.content = "Hello, world!https://nostr.build/i/nostr.build_1b958a2af7a2c3fcb2758dd5743912e697ba34d3a6199bfb1300fa6be1dc62ee.jpeg"
         // swiftlint:enable line_length
         note.author = previewAuthor
+        note.createdAt = .now
+        try! previewContext.save()
         return note
     }
     
     static var veryWideImageNote: Event {
         let note = Event(context: previewContext)
         // swiftlint:disable line_length
+        note.identifier = "4"
         note.content = "Hello, world! https://nostr.build/i/nostr.build_db8287dde9aedbc65df59972386fde14edf9e1afc210e80c764706e61cd1cdfa.png"
         // swiftlint:enable line_length
         note.author = previewAuthor
+        note.createdAt = .now
+        try! previewContext.save()
         return note
     }
     
-    static var previewAuthor = Author(context: previewContext)
-    
     static var longNote: Event {
         let note = Event(context: previewContext)
+        note.identifier = "5"
+        note.createdAt = .now
         note.content = .loremIpsum(5)
-        let author = Author(context: previewContext)
-        // TODO: derive from private key
-        author.hexadecimalPublicKey = "32730e9dfcab797caf8380d096e548d9ef98f3af3000542f9271a91a9e3b0001"
-        note.author = author
-        note.author?.profilePhotoURL = URL(string: "https://avatars.githubusercontent.com/u/1165004?s=40&v=4")
+        note.author = previewAuthor
+        try! previewContext.save()
         return note
     }
     
@@ -382,6 +402,7 @@ struct NoteCard_Previews: PreviewProvider {
         .environment(\.managedObjectContext, emptyPreviewContext)
         .environmentObject(emptyRelayService)
         .environmentObject(router)
+        .environmentObject(currentUser)
         .padding()
         .background(Color.appBg)
     }

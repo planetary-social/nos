@@ -8,13 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- WIP reposting notes
+- Updated the default list of users shown on the Discover tab.
+- Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
+- Fixed a bug where the home and disover feeds would change scroll position while reading them.
+
 ## [0.1 (35)] - 2023-04-19Z
 
 - Added French translations. Thank you p2x@p2xco.de!
 - Added Chinese (Traditional) and updated Chinese (Simplified) translations. Thank you rasputin@getalby.com!
 - Added a logout button in the Settings menu.
 - Minor performance improvements on Thread and Discover views.
-- Updated the default list of users shown on the Discover tab.
 - Fixed a bug where muted authors would show up on the Discover tab.
 - Added an initial loading indicator when you first open the Home or Discover tabs.
 - Added a logout button in the Settings menu.

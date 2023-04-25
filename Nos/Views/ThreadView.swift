@@ -35,6 +35,7 @@ struct ThreadView: View {
     var body: some View {
         LazyVStack {
             NoteButton(note: root, isInThreadView: true)
+                .padding(.top, 15)
             ForEach(thread) { event in
                 VStack {
                     ZStack {
@@ -45,6 +46,7 @@ struct ThreadView: View {
                         .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
                         .fill(Color.secondaryTxt)
                         NoteButton(note: event, isInThreadView: true)
+                            .padding(.top, 15)
                     }
                 }
                 .readabilityPadding()
@@ -62,21 +64,76 @@ struct ThreadView_Previews: PreviewProvider {
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
     static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
+
+    static var currentUser: CurrentUser = {
+        let currentUser = CurrentUser(persistenceController: persistenceController)
+        currentUser.viewContext = previewContext
+        currentUser.relayService = relayService
+        Task { await currentUser.setKeyPair(KeyFixture.keyPair) }
+        return currentUser
+    }()
     
-    static var shortNote: Event {
-        let note = Event(context: previewContext)
-        note.kind = 1
-        note.content = "Hello, world!"
-        note.author = user
-        return note
+    static var alice: Author = {
+        let author = Author(context: previewContext)
+        author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
+        author.name = "Alice"
+        return author
+    }()
+    
+    static var bob: Author = {
+        let author = Author(context: previewContext)
+        author.hexadecimalPublicKey = KeyFixture.bob.publicKeyHex
+        author.name = "Bob"
+        
+        return author
+    }()
+        
+    static var rootNote: Event {
+        let bobNote = Event(context: previewContext)
+        bobNote.content = "Hello, world!"
+        bobNote.identifier = "root"
+        bobNote.kind = 1
+        bobNote.author = bob
+        bobNote.createdAt = .now
+        try! bobNote.sign(withKey: KeyFixture.bob)
+        
+        return bobNote
     }
     
-    static var longNote: Event {
-        let note = Event(context: previewContext)
-        note.kind = 1
-        note.content = .loremIpsum(5)
-        note.author = user
-        return note
+    static var replyNote: Event {
+        let replyNote = Event(context: previewContext)
+        replyNote.content = "Top of the morning to you, bob! This text should be truncated."
+        replyNote.kind = 1
+        replyNote.createdAt = .now
+        replyNote.author = alice
+    
+        let eventRef = EventReference(context: previewContext)
+        eventRef.eventId = "root"
+        eventRef.referencedEvent = rootNote
+        eventRef.referencingEvent = replyNote
+        replyNote.eventReferences = NSMutableOrderedSet(array: [eventRef])
+        try! replyNote.sign(withKey: KeyFixture.alice)
+        try! previewContext.save()
+        
+        return replyNote
+    }
+    
+    static var secondReply: Event {
+        let replyNote = Event(context: previewContext)
+        replyNote.content = "Top of the morning to you, bob! This text should be truncated."
+        replyNote.kind = 1
+        replyNote.createdAt = .now
+        replyNote.author = alice
+    
+        let eventRef = EventReference(context: previewContext)
+        eventRef.eventId = "root"
+        eventRef.referencedEvent = rootNote
+        eventRef.referencingEvent = replyNote
+        replyNote.eventReferences = NSMutableOrderedSet(array: [eventRef])
+        try! replyNote.sign(withKey: KeyFixture.alice)
+        try! previewContext.save()
+        
+        return replyNote
     }
     
     static var user: Author {
@@ -86,9 +143,10 @@ struct ThreadView_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        ThreadView(root: shortNote, allReplies: [])
+        ThreadView(root: rootNote, allReplies: [replyNote, secondReply])
             .environment(\.managedObjectContext, emptyPreviewContext)
             .environmentObject(emptyRelayService)
             .environmentObject(router)
+            .environmentObject(currentUser)
     }
 }
