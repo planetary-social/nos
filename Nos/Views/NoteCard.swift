@@ -8,59 +8,49 @@
 
 import SwiftUI
 import Logger
+import CoreData
 
 /// This view displays the information we have for an message suitable for being used in a list or grid.
 ///
 /// Use this view inside MessageButton to have nice borders.
 struct NoteCard: View {
 
-    @ObservedObject var author: Author
+    @ObservedObject var note: Event
     
-    @ObservedObject var note: Event {
-        didSet {
-            if let eventAuthor = note.author {
-                self.author = eventAuthor
-            }
-        }
-    }
-    
-    @Environment(\.managedObjectContext) private var viewContext
-
     var style = CardStyle.compact
     
-    var repliesRequest: FetchRequest<Event>
-    var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
-    
     @FetchRequest private var likes: FetchedResults<Event>
-    
-    @ObservedObject private var currentUser: CurrentUser = .shared
-    
+    @State private var subscriptionIDs = [RelaySubscription.ID]()
     @State private var userTappedShowOutOfNetwork = false
+    @State private var replyCount = 0
+    @State private var replyAvatarURLs = [URL]()
+
+    @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var router: Router
+    @EnvironmentObject private var relayService: RelayService
+    @EnvironmentObject private var currentUser: CurrentUser
+    let backgroundContext = PersistenceController.backgroundViewContext
+
+    private var showFullMessage: Bool
+    private let showReplyCount: Bool
+    private var hideOutOfNetwork: Bool
     
-    var showContents: Bool {
+    private var author: Author? {
+        note.author
+    }
+    
+    private var showContents: Bool {
         !hideOutOfNetwork ||
         userTappedShowOutOfNetwork ||
-        currentUser.inNetworkAuthors.contains(where: {
-            $0.hexadecimalPublicKey == note.author!.hexadecimalPublicKey
-        }) ||
+        currentUser.socialGraph.contains(note.author?.hexadecimalPublicKey) ||
         Event.discoverTabUserIdToInfo.keys.contains(note.author?.hexadecimalPublicKey ?? "")
     }
     
-    var replyAvatarUrls: [URL?] {
-        var uniqueAuthors: [Author] = []
-        var added = Set<Author?>()
-        for author in replies.compactMap({ $0.author }) where !added.contains(author) {
-            uniqueAuthors.append(author)
-            added.insert(author)
-        }
-        return Array(uniqueAuthors.map { $0.profilePhotoURL }.prefix(2))
-    }
-    
     private var attributedReplies: AttributedString? {
-        if replies.isEmpty {
+        if replyCount == 0 {
             return nil
         }
-        let replyCount = replies.count
+        let replyCount = replyCount
         let localized = replyCount == 1 ? Localized.Reply.one : Localized.Reply.many
         let string = localized.text(["count": "**\(replyCount)**"])
         do {
@@ -73,16 +63,7 @@ struct NoteCard: View {
             return nil
         }
     }
-    
-    @EnvironmentObject private var router: Router
-    @EnvironmentObject private var relayService: RelayService
-    
-    private var showFullMessage: Bool
-    private let showReplyCount: Bool
-    private var hideOutOfNetwork: Bool
-    
-    @State private var subscriptionIDs = [RelaySubscription.ID]()
-    
+      
     var currentUserLikesNote: Bool {
         likes
             .filter {
@@ -101,30 +82,28 @@ struct NoteCard: View {
     }
     
     init(
-        author: Author,
         note: Event,
         style: CardStyle = .compact,
         showFullMessage: Bool = false,
         hideOutOfNetwork: Bool = true,
         showReplyCount: Bool = true
     ) {
-        self.author = author
         self.note = note
         self.style = style
         self.showFullMessage = showFullMessage
         self.hideOutOfNetwork = hideOutOfNetwork
         self.showReplyCount = showReplyCount
-        if showReplyCount {
-            self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note), animation: .default)
-        } else {
-            self.repliesRequest = FetchRequest(fetchRequest: Event.emptyRequest())
-        }
         _likes = FetchRequest(fetchRequest: Event.likes(noteId: note.identifier!))
     }
     
     var attributedAuthor: AttributedString {
+        guard let author else {
+            return AttributedString()
+        }
+        
         var authorName = AttributedString(author.safeName)
         authorName.foregroundColor = .primaryTxt
+        authorName.font = Font.clarityBold
         let postedOrRepliedString = note.isReply ? Localized.Reply.replied.string : Localized.Reply.posted.string
         var postedOrReplied = AttributedString(" " + postedOrRepliedString)
         postedOrReplied.foregroundColor = .secondaryTxt
@@ -140,10 +119,12 @@ struct NoteCard: View {
                 HStack(alignment: .center) {
                     if showContents {
                         Button {
-                            router.currentPath.wrappedValue.append(author)
+                            if let author {
+                                router.currentPath.wrappedValue.append(author)
+                            }
                         } label: {
                             HStack(alignment: .center) {
-                                AvatarView(imageUrl: author.profilePhotoURL, size: 24)
+                                AvatarView(imageUrl: author?.profilePhotoURL, size: 24)
                                 Text(attributedAuthor)
                                     .lineLimit(1)
                                     .font(.brand)
@@ -165,7 +146,13 @@ struct NoteCard: View {
                 .padding(10)
                 Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                 Group {
-                    if showContents {
+                    if note.isStub {
+                        HStack {
+                            Spacer()
+                            ProgressView().foregroundColor(.primaryTxt)
+                            Spacer()
+                        }
+                    } else if showContents {
                         CompactNoteView(note: note, showFullMessage: showFullMessage)
                     } else {
                         VStack {
@@ -185,7 +172,7 @@ struct NoteCard: View {
                     Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                     HStack {
                         if showReplyCount {
-                            StackedAvatarsView(avatarUrls: replyAvatarUrls, size: 20, border: 0)
+                            StackedAvatarsView(avatarUrls: replyAvatarURLs, size: 20, border: 0)
                             if let replies = attributedReplies {
                                 Text(replies)
                                     .font(.subheadline)
@@ -212,23 +199,20 @@ struct NoteCard: View {
                     .padding(15)
                 }
             case .golden:
-                GoldenPostView(author: author, note: note)
-            }
-        }
-        .task(priority: .userInitiated) {
-            if note.isVerified == false, let publicKey = author.publicKey {
-                let verified = try? publicKey.verifySignature(on: note)
-                if verified != true {
-                    Log.error("Found an unverified event: \(note.identifier!)")
-                    viewContext.delete(note)
+                if let author {
+                    GoldenPostView(author: author, note: note)
                 } else {
-                    note.isVerified = true
+                    EmptyView()
                 }
             }
         }
+        .task(priority: .userInitiated) {
+            if note.isStub {
+                _ = await relayService.requestEvent(with: note.identifier)
+            } 
+        }
         .onAppear {
             Task(priority: .userInitiated) {
-                let backgroundContext = PersistenceController.backgroundViewContext
                 await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
                     noteID: note.identifier,
                     using: relayService,
@@ -249,6 +233,16 @@ struct NoteCard: View {
                 endPoint: .bottom
             )
         )
+        .task {
+            if showReplyCount {
+                let (replyCount, replyAvatarURLs) = await Event.replyMetadata(
+                    for: note.identifier, 
+                    context: backgroundContext
+                )
+                self.replyCount = replyCount
+                self.replyAvatarURLs = replyAvatarURLs
+            }
+        }
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
         .padding(padding)
@@ -279,7 +273,7 @@ struct NoteCard: View {
         if let id = note.identifier {
             tags.append(["e", id])
         }
-        if let pubKey = author.publicKey?.hex {
+        if let pubKey = author?.publicKey?.hex {
             tags.append(["p", pubKey])
         }
         
@@ -376,12 +370,12 @@ struct NoteCard_Previews: PreviewProvider {
         Group {
             ScrollView {
                 VStack {
-                    NoteCard(author: previewAuthor, note: shortNote, hideOutOfNetwork: false)
-                    NoteCard(author: previewAuthor, note: longNote, hideOutOfNetwork: false)
-                    NoteCard(author: previewAuthor, note: imageNote, hideOutOfNetwork: false)
-                    NoteCard(author: previewAuthor, note: verticalImageNote, hideOutOfNetwork: false)
-                    NoteCard(author: previewAuthor, note: veryWideImageNote, hideOutOfNetwork: false)
-                    NoteCard(author: previewAuthor, note: imageNote, style: .golden, hideOutOfNetwork: false)
+                    NoteCard(note: shortNote, hideOutOfNetwork: false)
+                    NoteCard(note: longNote, hideOutOfNetwork: false)
+                    NoteCard(note: imageNote, hideOutOfNetwork: false)
+                    NoteCard(note: verticalImageNote, hideOutOfNetwork: false)
+                    NoteCard(note: veryWideImageNote, hideOutOfNetwork: false)
+                    NoteCard(note: imageNote, style: .golden, hideOutOfNetwork: false)
                 }
             }
         }

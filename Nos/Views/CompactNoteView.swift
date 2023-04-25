@@ -17,7 +17,7 @@ struct CompactNoteView: View {
     var note: Event
 
     @State private var shouldShowReadMore = false
-    @State var showFullMessage = false
+    @State var showFullMessage: Bool
     @State private var intrinsicSize = CGSize.zero
     @State private var truncatedSize = CGSize.zero
     @State private var attributedContent: AttributedString
@@ -26,12 +26,12 @@ struct CompactNoteView: View {
     
     internal init(note: Event, showFullMessage: Bool = false) {
         _attributedContent = .init(initialValue: AttributedString(note.content ?? ""))
+        _showFullMessage = .init(initialValue: showFullMessage)
         self.note = note
-        self.showFullMessage = showFullMessage
     }
     
     func updateShouldShowReadMore() {
-        shouldShowReadMore = intrinsicSize.height > truncatedSize.height + 100
+        shouldShowReadMore = intrinsicSize.height > truncatedSize.height 
     }
     
     var body: some View {
@@ -48,7 +48,7 @@ struct CompactNoteView: View {
                     })
             } else {
                 Text(attributedContent)
-                    .lineLimit(8)
+                    .lineLimit(12)
                     .font(.body)
                     .foregroundColor(.primaryTxt)
                     .accentColor(.accent)

@@ -10,19 +10,6 @@ import Dependencies
 import Logger
 import Starscream
 
-private enum AnalyticsKey: DependencyKey {
-    static let liveValue = Analytics()
-    static let testValue = Analytics(mock: true)
-    static let previewValue = Analytics(mock: true)
-}
-
-extension DependencyValues {
-    var analytics: Analytics {
-        get { self[AnalyticsKey.self] }
-        set { self[AnalyticsKey.self] = newValue }
-    }
-}
-
 /// An object to manage analytics data, currently wired up to send data to PostHog and registered as a global
 /// dependency using the Dependencies library.
 class Analytics {

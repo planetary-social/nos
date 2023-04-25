@@ -19,66 +19,69 @@ struct HomeFeedView: View {
     @Dependency(\.analytics) private var analytics
     
     @FetchRequest var events: FetchedResults<Event>
-    @FetchRequest var followedAuthors: FetchedResults<Author>
+    @State private var date = Date.now
+    @State private var subscriptionIDs = [String]()
+    @State private var isVisible = false
+    @State private var cancellables = [AnyCancellable]()
+    @State private var performingInitialLoad = true
 
     // Probably the logged in user should be in the @Environment eventually
     @ObservedObject var user: Author
     
-    @State private var subscriptionIds: [String] = []
-    
     init(user: Author) {
         self.user = user
-        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user))
-        self._followedAuthors = FetchRequest(fetchRequest: user.followsRequest())
-    }
-
-    func refreshHomeFeed() {
-        Task(priority: .userInitiated) {
-            // Close out stale requests
-            if !subscriptionIds.isEmpty {
-                await relayService.removeSubscriptions(for: subscriptionIds)
-                subscriptionIds.removeAll()
-            }
-            
-            // I can't figure out why but the home feed doesn't update when you follow someone without this.
-            if let currentUserKey = currentUser.author?.hexadecimalPublicKey {
-                // swiftlint:disable line_length
-                events.nsPredicate = NSPredicate(format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND ANY author.followers.source.hexadecimalPublicKey = %@", currentUserKey)
-                // swiftlint:enable line_length
-            }
-            
-            if let follows = CurrentUser.shared.follows {
-                let authors = follows.keys
-                
-                if !authors.isEmpty {
-                    let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete], limit: 100)
-                    let textSub = await relayService.openSubscription(with: textFilter)
-                    subscriptionIds.append(textSub)
-                }
-                if let currentUser = CurrentUser.shared.author {
-                    let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
-                    let userLikesFilter = Filter(
-                        authorKeys: currentUserAuthorKeys,
-                        kinds: [.like, .delete],
-                        limit: 100
-                    )
-                    let userLikesSub = await relayService.openSubscription(with: userLikesFilter)
-                    subscriptionIds.append(userLikesSub)
-                }
-            }
-        }
+        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, after: Date.now))
     }
     
+    func subscribeToNewEvents() async {
+        await cancelSubscriptions()
+        
+        let followedKeys = currentUser.socialGraph.followedKeys 
+        let since = events.first?.createdAt
+            
+        guard let currentUserKey = currentUser.publicKeyHex else {
+            return
+        }
+                
+        if !followedKeys.isEmpty {
+            // TODO: we could miss events with this since filter
+            let textFilter = Filter(authorKeys: followedKeys, kinds: [.text, .delete], limit: 100, since: since)
+            let textSub = await relayService.openSubscription(with: textFilter)
+            subscriptionIDs.append(textSub)
+        }
+        let currentUserAuthorKeys = [currentUserKey]
+        let userLikesFilter = Filter(
+            authorKeys: currentUserAuthorKeys,
+            kinds: [.like, .delete],
+            limit: 100,
+            since: since
+        )
+        let userLikesSub = await relayService.openSubscription(with: userLikesFilter)
+        subscriptionIDs.append(userLikesSub)
+    }
+    
+    func cancelSubscriptions() async {
+        if !subscriptionIDs.isEmpty {
+            await relayService.removeSubscriptions(for: subscriptionIDs)
+            subscriptionIDs.removeAll()
+        }
+    }
+
     var body: some View {
         NavigationStack(path: $router.homeFeedPath) {
-            ScrollView(.vertical) {
-                LazyVStack {
-                    ForEach(events.unmuted) { event in
-                        VStack {
-                            NoteButton(note: event, hideOutOfNetwork: false)
-                                .padding(.horizontal)
+            Group {
+                if performingInitialLoad {
+                    FullscreenProgressView(isPresented: $performingInitialLoad, hideAfter: .now() + .seconds(2))
+                } else {
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVStack {
+                            ForEach(events) { event in
+                                NoteButton(note: event, hideOutOfNetwork: false)
+                                    .padding(.horizontal)
+                            }
                         }
                     }
+                    .accessibilityIdentifier("home feed")
                 }
             }
             .background(Color.appBg)
@@ -98,7 +101,7 @@ struct HomeFeedView: View {
                 }
             }
             .overlay(Group {
-                if !events.contains(where: { !$0.author!.muted }) {
+                if events.isEmpty && !performingInitialLoad {
                     Localized.noEvents.view
                         .padding()
                 }
@@ -107,19 +110,30 @@ struct HomeFeedView: View {
             .nosNavigationBar(title: .homeFeed)
         }
         .refreshable {
-            refreshHomeFeed()
+            date = .now
         }
-        .onAppear {
-            analytics.showedHome()
+        .onChange(of: date) { newDate in
+            events.nsPredicate = Event.homeFeedPredicate(for: user, after: newDate)
         }
-        .task(priority: .userInitiated) {
-            refreshHomeFeed()
-        }
-        .onDisappear {
-            Task(priority: .userInitiated) {
-                await relayService.removeSubscriptions(for: subscriptionIds)
-                subscriptionIds.removeAll()
+        .onAppear { isVisible = true }
+        .onDisappear { isVisible = false }
+        .onChange(of: isVisible, perform: { isVisible in
+            if isVisible {
+                analytics.showedHome()
+                Task { await subscribeToNewEvents() }
+            } else {
+                Task { await cancelSubscriptions() }
             }
+        })
+        .task {
+            currentUser.socialGraph.followedKeys.publisher
+                .removeDuplicates()
+                .debounce(for: 0.2, scheduler: RunLoop.main)
+                .filter { _ in self.isVisible == true }
+                .sink(receiveValue: { _ in
+                    Task { await subscribeToNewEvents() }
+                })
+                .store(in: &cancellables)
         }
     }
 }

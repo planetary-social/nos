@@ -197,7 +197,8 @@ final class EventTests: XCTestCase {
         let referencingEvent = try EventProcessor.parse(
             jsonEvent: referencingJSONEvent,
             from: nil,
-            in: testContext
+            in: testContext,
+            skipVerification: true
         )
         try testContext.save()
         
@@ -219,7 +220,8 @@ final class EventTests: XCTestCase {
         let referencedEvent = try EventProcessor.parse(
             jsonEvent: referencedJSONEvent,
             from: nil,
-            in: testContext
+            in: testContext,
+            skipVerification: true
         )
         try testContext.save()
         
@@ -275,6 +277,20 @@ final class EventTests: XCTestCase {
         
         // Assert
         XCTAssertFalse(try KeyFixture.keyPair.publicKey.verifySignature(on: event))
+    }
+
+    func testFetchEventByIDPerformance() throws {
+        let persistenceController = PersistenceController()
+        let testContext = persistenceController.container.viewContext
+        let testEvent = try createTestEvent(in: testContext)
+        testEvent.identifier = try testEvent.calculateIdentifier()
+        let eventID = testEvent.identifier!
+        try testContext.save()
+        measure {
+            for _ in 0..<1000 {
+                _ = Event.find(by: eventID, context: testContext)  
+            }
+        }
     }
 
     // MARK: - Helpers

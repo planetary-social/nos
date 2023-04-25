@@ -45,7 +45,6 @@ struct ProfileView: View {
             let metaFilter = Filter(
                 authorKeys: authors,
                 kinds: [.metaData],
-                limit: 1,
                 since: author.lastUpdatedMetadata
             )
             async let metaSub = relayService.openSubscription(with: metaFilter)
@@ -53,7 +52,6 @@ struct ProfileView: View {
             let contactFilter = Filter(
                 authorKeys: authors,
                 kinds: [.contactList],
-                limit: 1,
                 since: author.lastUpdatedContactList
             )
             async let contactSub = relayService.openSubscription(with: contactFilter)

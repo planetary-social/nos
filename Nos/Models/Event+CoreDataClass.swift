@@ -67,7 +67,7 @@ extension FetchedResults where Element == Event {
 public class Event: NosManagedObject {
     
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
-        "AND author.muted == false"
+        "AND author.muted = false"
     
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -94,6 +94,27 @@ public class Event: NosManagedObject {
         "npub1sn0wdenkukak0d9dfczzeacvhkrgz92ak56egt7vdgzn8pv2wfqqhrjdv9": ["Edward Snowden"],
         "npub12ye6p9r6h6qpg3wrfch4v9gas6g0g7y6knrkxf6mzstxuax9sv8sdxrdku": ["Heather Everdeen"],
         "npub1pvgcusxk7006hvtlyx555erhq8c5pk9svw57snlxujpkgnkup89sekdx8c": ["Pam"],
+        "npub1veeqt66jt2j209y9nv4a90w3dej074lavqygq5q0c57dharkgw0qk738wt": ["S3x_jay"],
+        "npub12n7xd8xvqwj8k0v44yg3hlwutyyx85n28xx8zjwj6dykswuy28yqu7xsq4": ["Mara"],
+        "npub1f594agr5xkjd9vgxqgdw0el56y55satlh4ey4mck6trfmxhf4gdsh9npnz": ["Bobi"],
+        "npub1ctsq6nmn5af0evwrlka32kqc7tuhkwzmxlmu6lxt5qw2r6wfnuaqmcad65": ["Julien"],
+        "npub10ft5tkcwknwqkspx9cxhxy2yvyqzmavjku7g37n2kk9ja9yd5rwshhz4z3": ["Joi Ito"],
+        "npub1dcl4zejwr8sg9h6jzl75fy4mj6g8gpdqkfczseca6lef0d5gvzxqvux5ey": ["Adam Ritter"],
+        "npub1qd0smfnmu8936edjx3maet6rckw80wz36jdf6a4lj2gn6ayq2m3q76lelz": ["Carlos Rodriguez"],
+        "npub1k7cnst4fh4ajgg8w6ndcmqen4fnyc7ahhm3zpp255vdxqarrtekq5rrg96": ["Bigmarh"],
+        "npub1gk6ufj53zcc07dt8vrnwwslr3zqs2z398808z9gaw0pl2znmacrqp5y8se": ["Andressa Muntro"],
+        "npub188dexxxmyqhj2r9yte0eq08kfrxtgdmer6gz0ljnzq06edc5fttsjtt409": ["Mary Yar"],
+        "npub150stez8ze3qauexuwrtx0tkkxuuvv022nv0lg3dsq6ejk9n6psestaz9xu": ["Evan Prodromou"],
+        "npub1a32cg8ntvpcq0gqk00t73kzywptxjvm2aatysk6g7nfc750976xsm2ea5z": ["Johannes Ernst"],
+        "npub1gvy07gxw6uu8rd57mz72mg4q2x7r5ptpp5gc832dv768e58hqd0q5nyn0t": ["Ferret"],
+        "npub17nd4yu9anyd3004pumgrtazaacujjxwzj36thtqsxskjy0r5urgqf6950x": ["isoabellaart"],
+        "npub1rkqw2kyduqgdzdax03ptqdcht90475gww0jzelzg7vd6ayvyf4vsl2jtk0": ["bannana art"],
+        "npub1chuth0ru5mq5pjeq6magew3kse4d5m7wgzqk3tnz0kgqwu3vt6ls5hq3gd": ["chut"],
+        "npub1ke0hjv9nx5cy4kz3yuw9kwrhey72cphh8cehfnrh2gjlm8dq7ujsuwt0pu": ["LucioMint"],
+        "npub1pkj5lugwrychstydkt9h2xdzst9ejreemleh3hz69nr85cmegqrs232y4t": ["monk_cactus"],
+        "npub1a406tcmltkud34kmqkevkpykp384czamffw2245a9v5uc2z22l2q55gxd2": ["tina"],
+        "npub1matmfxr293jejewrm72u50l2x5e6ypasn0ev2kns6srv05zfzf8s0z6fsr": ["Jon Pincus"],
+        "npub1ftpy6thgy2354xypal6jd0m37wtsgsvcxljvzje5vskc9cg3a5usexrrtq": ["Raúl Piracés"]
     ]
     
     @nonobjc public class func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
@@ -111,23 +132,29 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @MainActor @nonobjc public class func extendedNetworkPredicate(featuredAuthors: [String]) -> NSPredicate {
+    @MainActor @nonobjc public class func extendedNetworkPredicate(
+        featuredAuthors: [String], 
+        before: Date
+    ) -> NSPredicate {
         guard let currentUser = CurrentUser.shared.author else {
             return NSPredicate.false
         }
         let kind = EventKind.text.rawValue
         let featuredPredicate = NSPredicate(
             format: "kind = %i AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@ " +
-                "AND NOT author IN %@.follows.destination",
+                "AND NOT author IN %@.follows.destination AND NOT author = %@ AND createdAt <= %@ AND " +
+                "author.muted = false",
             kind,
             featuredAuthors.compactMap {
                 PublicKey(npub: $0)?.hex
             },
-            currentUser
+            currentUser,
+            currentUser,
+            before as CVarArg
         )
-            
+        
         let twoHopsPredicate = NSPredicate(
-            format: "kind = %i AND eventReferences.@count = 0 " +
+            format: "kind = %i AND eventReferences.@count = 0 AND author.muted = false " +
                 "AND ANY author.followers.source IN %@.follows.destination AND NOT author IN %@.follows.destination",
             kind,
             currentUser,
@@ -140,9 +167,14 @@ public class Event: NosManagedObject {
         ])
     }
     
-    @nonobjc public class func seen(on relay: Relay) -> NSPredicate {
+    @nonobjc public class func seen(on relay: Relay, before: Date) -> NSPredicate {
         let kind = EventKind.text.rawValue
-        return NSPredicate(format: "kind = %i AND eventReferences.@count = 0 AND %@ IN seenOnRelays", kind, relay)
+        return NSPredicate(
+            format: "kind = %i AND eventReferences.@count = 0 AND %@ IN seenOnRelays AND createdAt <= %@", 
+            kind, 
+            relay,
+            before as CVarArg
+        )
     }
     
     @nonobjc public class func allMentionsPredicate(for user: Author) -> NSPredicate {
@@ -229,21 +261,23 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func homeFeedPredicate(for user: Author) -> NSPredicate {
+    @nonobjc public class func homeFeedPredicate(for user: Author, after: Date) -> NSPredicate {
         NSPredicate(
             // swiftlint:disable line_length
-            format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (ANY author.followers.source = %@ OR author = %@)",
+            format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND createdAt <= %@",
             // swiftlint:enable line_length
             user,
-            user
+            user,
+            after as CVarArg
         )
     }
     
-    @nonobjc public class func homeFeed(for user: Author) -> NSFetchRequest<Event> {
+    @nonobjc public class func homeFeed(for user: Author, after: Date) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        let homeFeedPredicate = homeFeedPredicate(for: user)
-        fetchRequest.predicate = homeFeedPredicate
+        fetchRequest.predicate = homeFeedPredicate(for: user, after: after)
+        fetchRequest.includesPendingChanges = false
+        fetchRequest.fetchLimit = 1000
         return fetchRequest
     }
     
@@ -328,7 +362,7 @@ public class Event: NosManagedObject {
 
         return nil
     }
-    
+
     class func findOrCreate(jsonEvent: JSONEvent, relay: Relay?, context: NSManagedObjectContext) throws -> Event {
         if let existingEvent = try context.fetch(Event.event(by: jsonEvent.id)).first {
             relay.unwrap { existingEvent.markSeen(on: $0) }
@@ -477,6 +511,35 @@ public class Event: NosManagedObject {
                 markdown: linkedString,
                 options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
             )
+        }
+    }
+    
+    class func replyMetadata(for noteID: HexadecimalString?, context: NSManagedObjectContext) async -> (Int, [URL]) {
+        guard let noteID else {
+            return (0, [])
+        }
+        
+        return await context.perform {
+            let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+            fetchRequest.predicate = NSPredicate(format: Event.replyNoteReferences, noteID)
+            fetchRequest.includesPendingChanges = false
+            fetchRequest.includesSubentities = false
+            fetchRequest.relationshipKeyPathsForPrefetching = ["author"]
+            let replies = (try? context.fetch(fetchRequest)) ?? []
+            let replyCount = replies.count
+            
+            var avatarURLs = [URL]()
+            for reply in replies {
+                if let avatarURL = reply.author?.profilePhotoURL,
+                    !avatarURLs.contains(avatarURL) {
+                    avatarURLs.append(avatarURL)
+                    if avatarURLs.count >= 2 {
+                        break
+                    }
+                }
+            }
+            return (replyCount, avatarURLs)
         }
     }
 	
@@ -728,11 +791,18 @@ public class Event: NosManagedObject {
     }
     
     var isReply: Bool {
-        rootNote() != nil
+        rootNote() != nil || referencedNote() != nil
     }
     
     /// Returns the event this note is directly replying to, or nil if there isn't one.
     func referencedNote() -> Event? {
+        if let rootReference = eventReferences?.first(where: {
+            ($0 as? EventReference)?.type == .reply
+        }) as? EventReference,
+            let referencedNote = rootReference.referencedEvent {
+            return referencedNote
+        }
+        
         if let lastReference = eventReferences?.lastObject as? EventReference,
             let referencedNote = lastReference.referencedEvent {
             return referencedNote
@@ -743,7 +813,7 @@ public class Event: NosManagedObject {
     /// Returns the root event of the thread that this note is replying to, or nil if there isn't one.
     func rootNote() -> Event? {
         let rootReference = eventReferences?.first(where: {
-            ($0 as? EventReference)?.marker ?? "" == "root"
+            ($0 as? EventReference)?.type == .root
         }) as? EventReference
         
         if let rootReference, let rootNote = rootReference.referencedEvent {
@@ -762,7 +832,7 @@ public class Event: NosManagedObject {
                     deletedEvent.deletedOn = (deletedEvent.deletedOn ?? NSSet()).adding(relay)
                 }
             }
-            try! context.save()
+            try! context.saveIfNeeded()
         }
     }
     

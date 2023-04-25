@@ -34,19 +34,19 @@ struct RepliesView: View {
             }
             
             let containsRootMarker = eventReferences.contains(where: { (eventReference: EventReference) in
-                eventReference.marker == "root"
+                eventReference.type == .root
             })
             
             let referencesNoteAsRoot = eventReferences.contains(where: { (eventReference: EventReference) in
-                eventReference.eventId == note.identifier && eventReference.marker == "root"
+                eventReference.eventId == note.identifier && eventReference.type == .root
             })
             
             let containsReplyMarker = eventReferences.contains(where: { (eventReference: EventReference) in
-                eventReference.marker == "reply"
+                eventReference.type == .reply
             })
             
             let referencesNoteAsReply = eventReferences.contains(where: { (eventReference: EventReference) in
-                eventReference.eventId == note.identifier && eventReference.marker == "reply"
+                eventReference.eventId == note.identifier && eventReference.type == .reply
             })
             
             // This is sloppy, but I'm writing it anyway in a rush.
@@ -84,7 +84,7 @@ struct RepliesView: View {
     var body: some View {
         VStack {
             ScrollView(.vertical) {
-                LazyVStack {
+                VStack {
                     NoteButton(
                         note: note,
                         showFullMessage: true,
@@ -154,10 +154,10 @@ struct RepliesView: View {
             var tags: [[String]] = [["p", note.author!.publicKey!.hex]]
             // If `note` is a reply to another root, tag that root
             if let rootNoteIdentifier = note.rootNote()?.identifier, rootNoteIdentifier != note.identifier {
-                tags.append(["e", rootNoteIdentifier, "", "root"])
-                tags.append(["e", note.identifier!, "", "reply"])
+                tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
+                tags.append(["e", note.identifier!, "", EventReferenceMarker.reply.rawValue])
             } else {
-                tags.append(["e", note.identifier!, "", "root"])
+                tags.append(["e", note.identifier!, "", EventReferenceMarker.root.rawValue])
             }
             
             // print("tags: \(tags)")

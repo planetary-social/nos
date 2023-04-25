@@ -20,7 +20,6 @@ final class RelayService: ObservableObject {
     private var persistenceController: PersistenceController
     private var subscriptions: RelaySubscriptionManager
     private var saveEventsTimer: AsyncTimer?
-    private var updateSocialGraphTimer: AsyncTimer?
     private var publishFailedEventsTimer: AsyncTimer?
     private var backgroundContext: NSManagedObjectContext
     // TODO: use structured concurrency for this
@@ -36,23 +35,13 @@ final class RelayService: ObservableObject {
 
         self.saveEventsTimer = AsyncTimer(timeInterval: 1, priority: .high) { [weak self] in
             await self?.backgroundContext.perform(schedule: .immediate) {
-                if self?.backgroundContext.hasChanges == true {
-                    try! self?.backgroundContext.save()
+                do {
+                    try self?.backgroundContext.saveIfNeeded()
+                } catch {
+                    Log.error("RelayService.saveEventsTimer failed to save with error: \(error.localizedDescription)")
                 }
             }
         }
-        
-        self.updateSocialGraphTimer = AsyncTimer(timeInterval: 30, onFire: { @MainActor [weak self] in
-            guard let currentUser = CurrentUser.shared.author else {
-                return
-            }
-            // Close sockets for anything not in the above
-            if let keptRelays = currentUser.relays as? Set<Relay> {
-                await self?.closeAllConnections(excluding: keptRelays)
-            }
-            
-            await CurrentUser.shared.updateInNetworkAuthors()
-        })
         
         // TODO: fire this after all relays have connected, not right on init
         self.publishFailedEventsTimer = AsyncTimer(timeInterval: 60, onFire: { [weak self] in
@@ -74,7 +63,6 @@ final class RelayService: ObservableObject {
     
     deinit {
         saveEventsTimer?.cancel()
-        updateSocialGraphTimer?.cancel()
     }
     
     @objc func appWillEnterForeground() {
@@ -157,7 +145,6 @@ extension RelayService {
     }
     
     func openSubscription(with filter: Filter, to overrideRelays: [URL]? = nil) async -> RelaySubscription.ID {
-  
         var subscription: RelaySubscription
         
         if let existingSubscription = await subscriptions.subscription(from: filter.id) {
@@ -185,10 +172,18 @@ extension RelayService {
         let metaFilter = Filter(
             authorKeys: [authorKey],
             kinds: [.metaData],
-            limit: 1,
             since: since
         )
         return await openSubscription(with: metaFilter)
+    }
+    
+    /// Requests a single event from all relays
+    func requestEvent(with eventID: String?) async -> RelaySubscription.ID? {
+        guard let eventID = eventID else {
+            return nil
+        }
+        
+        return await openSubscription(with: Filter(eventIDs: [eventID], limit: 1))
     }
     
     private func processSubscriptionQueue(overrideRelays: [URL]? = nil) async {

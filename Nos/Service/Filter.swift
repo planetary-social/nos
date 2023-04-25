@@ -10,10 +10,11 @@ import Foundation
 /// Describes a set of Nostr Events, usually so we can ask relay servers for them.
 struct Filter: Hashable, Identifiable {
     
-    let authorKeys: [String]
+    let authorKeys: [HexadecimalString]
+    let eventIDs: [HexadecimalString]
     let kinds: [EventKind]
-    let eTags: [String]
-    let limit: Int
+    let eTags: [HexadecimalString]
+    let limit: Int?
     let since: Date?
     
     var id: String {
@@ -21,13 +22,15 @@ struct Filter: Hashable, Identifiable {
     }
 
     init(
-        authorKeys: [String] = [],
+        authorKeys: [HexadecimalString] = [],
+        eventIDs: [HexadecimalString] = [],
         kinds: [EventKind] = [],
-        eTags: [String] = [],
-        limit: Int = 100,
+        eTags: [HexadecimalString] = [],
+        limit: Int? = nil,
         since: Date? = nil
     ) {
         self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
+        self.eventIDs = eventIDs
         self.kinds = kinds.sorted(by: { $0.rawValue > $1.rawValue })
         self.eTags = eTags
         self.limit = limit
@@ -35,10 +38,18 @@ struct Filter: Hashable, Identifiable {
     }
     
     var dictionary: [String: Any] {
-        var filterDict: [String: Any] = ["limit": limit]
+        var filterDict = [String: Any]()
+        
+        if let limit {
+            filterDict["limit"] = limit
+        }
 
         if !authorKeys.isEmpty {
             filterDict["authors"] = authorKeys
+        }
+        
+        if !eventIDs.isEmpty {
+            filterDict["ids"] = eventIDs
         }
 
         if !kinds.isEmpty {
@@ -62,6 +73,7 @@ struct Filter: Hashable, Identifiable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(authorKeys)
+        hasher.combine(eventIDs)
         hasher.combine(kinds)
         hasher.combine(limit)
         hasher.combine(eTags)
