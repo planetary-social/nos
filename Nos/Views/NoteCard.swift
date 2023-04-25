@@ -155,6 +155,7 @@ struct NoteCard: View {
                     HStack(spacing: 0) {
                         if showReplyCount {
                             StackedAvatarsView(avatarUrls: replyAvatarURLs, size: 20, border: 0)
+                                .padding(.trailing, 8)
                             if let replies = attributedReplies {
                                 Text(replies)
                                     .font(.subheadline)
