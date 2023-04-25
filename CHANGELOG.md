@@ -8,10 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- WIP reposting notes
+- Added support for reposting notes.
 - Updated the default list of users shown on the Discover tab.
 - Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
-- Fixed a bug where the home and disover feeds would change scroll position while reading them.
 
 ## [0.1 (35)] - 2023-04-19Z
 
