@@ -29,6 +29,7 @@ struct AvatarView: View {
                     if let image = phase.image {
                         image
                             .resizable()
+                            .aspectRatio(contentMode: .fill)
                     } else if phase.error != nil {
                         emptyAvatar
                     } else {
@@ -45,11 +46,14 @@ struct AvatarView: View {
 }
 
 struct AvatarView_Previews: PreviewProvider {
+    
+    static let avatarURL = URL(string: "https://tinyurl.com/47amhyzz")!
+    
     static var previews: some View {
         VStack {
-            AvatarView(imageUrl: URL(string: "https://avatars.githubusercontent.com/u/1165004?s=40&v=4"), size: 24)
-            AvatarView(imageUrl: URL(string: "https://avatars.githubusercontent.com/u/1165004?s=40&v=4"), size: 45)
-            AvatarView(imageUrl: URL(string: "https://avatars.githubusercontent.com/u/1165004?s=40&v=4"), size: 87)
+            AvatarView(imageUrl: avatarURL, size: 24)
+            AvatarView(imageUrl: avatarURL, size: 45)
+            AvatarView(imageUrl: avatarURL, size: 87)
         }
         VStack {
             AvatarView(size: 24)
