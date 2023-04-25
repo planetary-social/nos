@@ -26,6 +26,9 @@ struct NoteButton: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
+    
+    @State private var subscriptionIDs = [RelaySubscription.ID]()
+    let backgroundContext = PersistenceController.backgroundViewContext
 
     init(
         note: Event, 
@@ -59,24 +62,45 @@ struct NoteButton: View {
         VStack {
             if note.kind == EventKind.repost.rawValue {
                 let repost = note
-                HStack(alignment: .center) {
-                    AvatarView(imageUrl: repost.author?.profilePhotoURL, size: 24)
-                    Text((repost.author?.safeName ?? "error"))
-                        .lineLimit(1)
-                        .font(.brand)
-                        .bold()
-                        .foregroundColor(.primaryTxt)
-                    Image.repostSymbol
-                    if let elapsedTime = repost.createdAt?.elapsedTimeFromNowString() {
-                        Text(elapsedTime)
-                            .lineLimit(1)
-                            .font(.body)
-                            .foregroundColor(.secondaryTxt)
+                Button(action: { 
+                    if let author = repost.author {
+                        router.push(author)
                     }
-                    Spacer()
-                }
-                .padding(.horizontal)
-                .readabilityPadding()
+                }, label: { 
+                    HStack(alignment: .center) {
+                        AvatarView(imageUrl: repost.author?.profilePhotoURL, size: 24)
+                        Text((repost.author?.safeName ?? "error"))
+                            .lineLimit(1)
+                            .font(.brand)
+                            .bold()
+                            .foregroundColor(.primaryTxt)
+                        Image.repostSymbol
+                        if let elapsedTime = repost.createdAt?.elapsedTimeFromNowString() {
+                            Text(elapsedTime)
+                                .lineLimit(1)
+                                .font(.body)
+                                .foregroundColor(.secondaryTxt)
+                        }
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                    .readabilityPadding()
+                    .onAppear {
+                        Task(priority: .userInitiated) {
+                            await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
+                                noteID: note.identifier,
+                                using: relayService,
+                                in: backgroundContext
+                            )
+                        }
+                    }
+                    .onDisappear {
+                        Task(priority: .userInitiated) {
+                            await relayService.removeSubscriptions(for: subscriptionIDs)
+                            subscriptionIDs.removeAll()
+                        }
+                    }
+                })
             }
             
             Button {

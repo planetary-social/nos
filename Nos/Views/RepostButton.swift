@@ -31,8 +31,11 @@ struct RepostButton: View {
             await action()
         } label: {
             HStack {
-                Image.repostButton
-                    .opacity(currentUserRepostedNote ? 0.5 : 1)
+                if currentUserRepostedNote {
+                    Image.repostButtonPressed
+                } else {
+                    Image.repostButton
+                }
                 
                 if reposts.count > 0 {
                     Text(reposts.count.description)
