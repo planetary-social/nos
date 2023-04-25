@@ -18,7 +18,7 @@
 "Localized.accept" = "接受";
 "Localized.reject" = "拒絕";
 "Localized.error" = "錯誤";
-"Localized.noEvents" = "（還）沒有便條！瀏覽發現選項卡並關注一些帳戶以開始操作。";
+"Localized.noEvents" = "（還）沒有筆記！瀏覽發現選項卡並關注一些帳戶以開始操作。";
 "Localized.addItem" = "添加項目";
 "Localized.homeFeed" = "提要";
 "Localized.keys" = "密鑰";
@@ -38,7 +38,7 @@
 "Localized.myKeyIsBackedUp" = "我的密鑰已備份";
 "Localized.backUpYourKeyWarning" = "登出將從應用程序中刪除你的私鑰（nsec）。請確認你已經備份了你的私鑰，否則你將無法訪問你的帳戶！";
 "Localized.post" = "帖子";
-"Localized.newNote" = "新便條";
+"Localized.newNote" = "新筆記";
 "Localized.newNotePlaceholder" = "在此輸入你的帖子...";
 "Localized.cancel" = "取消";
 "Localized.done" = "完成";
@@ -73,7 +73,7 @@
 "Localized.displayName" = "顯示名";
 "Localized.name" = "名稱";
 "Localized.picUrl" = "頭像圖片網址";
-"Localized.noEventsOnProfile" = "我們沒有找到關於這個檔案的任何紀錄，但我們會繼續查看！";
+"Localized.noEventsOnProfile" = "我們沒有找到關於這個檔案的任何筆記，但我們會繼續查看！";
 "Localized.basicInfo" = "基本信息";
 "Localized.edit" = "編輯";
 "Localized.debug" = "偵錯";
@@ -83,8 +83,8 @@
 "Localized.searchBar" = "搜索用戶";
 "Localized.notifications" = "通知";
 "Localized.noNotifications" = "目前（還）沒有通知！";
-"Localized.copyNoteIdentifier" = "複製便條標識符";
-"Localized.copyNoteText" = "複製便條文本";
+"Localized.copyNoteIdentifier" = "複製筆記標識符";
+"Localized.copyNoteText" = "複製筆記文本";
 "Localized.copyLink" = "複製鏈接";
 "Localized.copyUserIdentifier" = "複製用戶 ID (npub)";
 "Localized.deleteNote" = "刪除";
@@ -129,5 +129,5 @@
 "Reply.replied" = "已回覆";
 "Reply.posted" = "已發佈";
 "Reply.postAReply" = "發佈回覆";
-"Reply.repliedToYourNote" = "回覆了你的便條：";
+"Reply.repliedToYourNote" = "回覆了你的筆記：";
 "Reply.mentionedYou" = "提到了你：";

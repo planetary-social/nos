@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added Brazilian Portuguese translations (thanks Andressa!)
+
 ## [0.1 (35)] - 2023-04-19Z
 
 - Added French translations. Thank you p2x@p2xco.de!
