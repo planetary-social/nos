@@ -25,7 +25,6 @@ struct NosApp: App {
                 .environmentObject(currentUser)
                 .task {
                     currentUser.relayService = relayService
-                    await relayService.publishFailedEvents()
                 }
         }
     }
