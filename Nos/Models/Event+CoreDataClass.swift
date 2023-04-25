@@ -155,10 +155,12 @@ public class Event: NosManagedObject {
         
         let twoHopsPredicate = NSPredicate(
             format: "kind = %i AND eventReferences.@count = 0 AND author.muted = false " +
-                "AND ANY author.followers.source IN %@.follows.destination AND NOT author IN %@.follows.destination",
+                "AND ANY author.followers.source IN %@.follows.destination AND NOT author IN %@.follows.destination " +
+                "AND receivedAt <= %@",
             kind,
             currentUser,
-            currentUser
+            currentUser,
+            before as CVarArg
         )
 
         return NSCompoundPredicate(orPredicateWithSubpredicates: [
