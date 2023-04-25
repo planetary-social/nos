@@ -30,7 +30,7 @@ struct HomeFeedView: View {
     
     init(user: Author) {
         self.user = user
-        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, after: Date.now))
+        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, before: Date.now))
     }
     
     func subscribeToNewEvents() async {
@@ -119,7 +119,7 @@ struct HomeFeedView: View {
             date = .now
         }
         .onChange(of: date) { newDate in
-            events.nsPredicate = Event.homeFeedPredicate(for: user, after: newDate)
+            events.nsPredicate = Event.homeFeedPredicate(for: user, before: newDate)
         }
         .onAppear { isVisible = true }
         .onDisappear { isVisible = false }
