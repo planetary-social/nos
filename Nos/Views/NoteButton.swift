@@ -112,15 +112,22 @@ struct NoteButton: View {
                     }
                 }
             } label: {
-                NoteCard(
+                let noteCard = NoteCard(
                     note: displayedNote,
                     style: style,
                     showFullMessage: showFullMessage,
                     hideOutOfNetwork: hideOutOfNetwork,
                     showReplyCount: showReplyCount
                 )
-                .padding(.horizontal)
-                .readabilityPadding()
+                
+                switch style {
+                case .compact:
+                    noteCard
+                        .padding(.horizontal)
+                        .readabilityPadding()
+                case .golden:
+                    noteCard
+                }
             }
             .buttonStyle(CardButtonStyle())
         }
