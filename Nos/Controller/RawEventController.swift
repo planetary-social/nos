@@ -61,7 +61,7 @@ import Logger
             } catch {
                 rawMessage = errorMessage
             }
-            await self?.updateRawMessage(rawMessage)
+            self?.updateRawMessage(rawMessage)
         }
     }
 }

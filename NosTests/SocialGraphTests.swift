@@ -69,7 +69,7 @@ final class SocialGraphTests: XCTestCase {
         try testContext.save()
         
         // Assert
-        var followedKeys = await sut.followedKeys
+        let followedKeys = await sut.followedKeys
         XCTAssertEqual(followedKeys, [KeyFixture.alice.publicKeyHex])
         
         // Rearrange
