@@ -261,21 +261,21 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func homeFeedPredicate(for user: Author, after: Date) -> NSPredicate {
+    @nonobjc public class func homeFeedPredicate(for user: Author, before: Date) -> NSPredicate {
         NSPredicate(
             // swiftlint:disable line_length
-            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND receivedAt <= %@",
+            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND (receivedAt == nil OR receivedAt <= %@)",
             // swiftlint:enable line_length
             user,
             user,
-            after as CVarArg
+            before as CVarArg
         )
     }
     
-    @nonobjc public class func homeFeed(for user: Author, after: Date) -> NSFetchRequest<Event> {
+    @nonobjc public class func homeFeed(for user: Author, before: Date) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = homeFeedPredicate(for: user, after: after)
+        fetchRequest.predicate = homeFeedPredicate(for: user, before: before)
         fetchRequest.includesPendingChanges = false
         fetchRequest.fetchLimit = 1000
         return fetchRequest

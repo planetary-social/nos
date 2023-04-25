@@ -1,17 +1,50 @@
 {
   "images" : [
     {
-      "filename" : "Repost footer.png",
+      "filename" : "post_reply--large--dark-1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Repost footer@2x.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "post_reply--large--dark.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "post_reply--large--dark@2x-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Repost footer@3x.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "post_reply--large--dark@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "post_reply--large--dark@3x-1.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "post_reply--large--dark@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
