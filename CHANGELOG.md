@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (36)] - 2023-04-25Z
+
 - Added support for reposting notes.
 - Added Brazilian Portuguese translations (thanks Andressa!).
 - Fixed the French and Traditional Chinese translations.
