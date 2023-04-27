@@ -142,6 +142,10 @@ struct RepliesView: View {
     
     func postReply(_ replyText: String) async {
         do {
+            guard !replyText.isEmpty else {
+                return
+            }
+
             guard let keyPair = currentUser.keyPair else {
                 alert = AlertState(title: {
                     TextState(Localized.error.string)
