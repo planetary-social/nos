@@ -8,7 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (37)] - 2023-04-27Z
+
 - Performance improvements
+- Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
 
 ## [0.1 (36)] - 2023-04-25Z
 
