@@ -143,4 +143,129 @@ struct PersistenceController {
     static func saveVersionToDisk(_ newVersion: Int) {
         UserDefaults.standard.set(newVersion, forKey: Self.versionKey)
     }
+    
+    static var cleanupTask: Task<Void, Error>?
+    
+    /// Deletes unneeded entities from Core Data.
+    /// The general strategy here is to:
+    /// - keep some max number of events, delete the others 
+    /// - delete authors outside the user's network 
+    /// - delete any other models that are orphaned by the previous deletions
+    /// - fix EventReferences whose referencedEvent was deleted by createing a stubbed Event
+    static func cleanupEntities(for currentUser: CurrentUser) {
+        guard cleanupTask == nil else {
+            Log.info("Core Data cleanup task already running. Aborting.")
+            return
+        }
+        
+        cleanupTask = Task {
+            defer { self.cleanupTask = nil }
+            let context = backgroundViewContext
+            let startTime = Date.now
+            Log.info("Starting Core Data cleanup...")
+            
+            guard let currentAuthor = await currentUser.author else {
+                return
+            }
+            
+            Log.info("Database statistics: \(try databaseStatistics(from: context).sorted(by: { $0.key < $1.key }))")
+            
+            // Delete all but the most recent n events
+            let eventsToKeep = 10_000
+            let fetchFirstEventToDelete = Event.allEventsRequest()
+            fetchFirstEventToDelete.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
+            fetchFirstEventToDelete.fetchLimit = 1
+            fetchFirstEventToDelete.fetchOffset = eventsToKeep
+            fetchFirstEventToDelete.predicate = NSPredicate(format: "receivedAt != nil")
+            var deleteBefore = Date.distantPast
+            if let firstEventToDelete = try context.fetch(fetchFirstEventToDelete).first,
+                let receivedAt = firstEventToDelete.receivedAt {
+                deleteBefore = receivedAt
+            }
+               
+            // Delete events older than `deleteBefore`
+            let oldEventsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
+            oldEventsRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
+            oldEventsRequest.predicate = NSPredicate(format: "receivedAt <= %@ OR receivedAt == nil", deleteBefore as CVarArg)
+            
+            try await context.perform {
+                
+                let orphanedObjectRequests: [NSPersistentStoreRequest] = [
+                    oldEventsRequest,
+                    EventReference.orphanedRequest(),
+                    AuthorReference.orphanedRequest(),
+                    Author.outOfNetwork(for: currentAuthor),
+                    Follow.orphanedRequest(),
+                    Relay.orphanedRequest(),
+                ]
+                
+                for request in orphanedObjectRequests {
+                    guard let fetchRequest = request as? NSFetchRequest<NSManagedObject> else {
+                        Log.error("Bad fetch request: \(request)")
+                        continue
+                    }
+                    
+                    let results = try context.execute(fetchRequest) 
+                    if let asyncFetchResult = results as? NSAsynchronousFetchResult<NSFetchRequestResult> {
+                        if let objects = asyncFetchResult.finalResult as? [NSManagedObject] {
+                            for object in objects {
+                                context.delete(object)
+                            }
+                            if let entityName = fetchRequest.entityName {
+                                Log.info("Deleted \(objects.count) of type \(entityName)")
+                            }
+                        }
+                    }
+                    
+                    // TODO: NSBatchDeleteRequest is only deleting one object for some reason 
+                    // let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+                    // let deleteResult = try context.execute(batchDeleteRequest) as? NSBatchDeleteResult
+                    // if let entityName = fetchRequest.entityName {
+                    //     Log.info("Deleted \(deleteResult?.result ?? 0) of type \(entityName)")
+                    // }
+
+                }
+                
+                // Heal EventReferences
+                let brokenEventReferencesRequest = NSFetchRequest<EventReference>(entityName: "EventReference")
+                brokenEventReferencesRequest.sortDescriptors = [
+                    NSSortDescriptor(keyPath: \EventReference.eventId, ascending: false)
+                ]
+                brokenEventReferencesRequest.predicate = NSPredicate(format: "referencedEvent = nil")
+                let brokenEventReferences = try context.fetch(brokenEventReferencesRequest)
+                Log.info("Healing \(brokenEventReferences.count) EventReferences")
+                for eventReference in brokenEventReferences {
+                    guard let eventID = eventReference.eventId else {
+                        Log.error("Found an EventReference with no eventID")
+                        continue
+                    }
+                    let referencedEvent = try Event.findOrCreateStubBy(id: eventID, context: context)
+                    eventReference.referencedEvent = referencedEvent
+                }
+                
+                try context.saveIfNeeded()
+                context.refreshAllObjects()
+            }
+            
+            Log.info("Database statistics: \(try databaseStatistics(from: context).sorted(by: { $0.key < $1.key }))")
+            
+            let elapsedTime = Date.now.timeIntervalSince1970 - startTime.timeIntervalSince1970 
+            Log.info("Finished Core Data cleanup in \(elapsedTime) seconds.")
+        }
+    }
+    
+    static func databaseStatistics(from context: NSManagedObjectContext) throws -> [String: Int] {
+        var statistics = [String: Int]()
+        if let managedObjectModel = context.persistentStoreCoordinator?.managedObjectModel {
+            let entitiesByName = managedObjectModel.entitiesByName
+            
+            for entityName in entitiesByName.keys {
+                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+                let count = try context.count(for: fetchRequest)
+                statistics[entityName] = count
+            }
+        }
+        
+        return statistics
+    }
 }
