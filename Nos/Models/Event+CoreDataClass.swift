@@ -47,7 +47,6 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 	case like = 7
     case channelMessage = 42
     case mute = 10_000
-    case parameterizedReplaceableEvent = 30_000
 }
 
 extension FetchedResults where Element == Event {
