@@ -142,7 +142,7 @@ public class Event: NosManagedObject {
         let kind = EventKind.text.rawValue
         let featuredPredicate = NSPredicate(
             format: "kind = %i AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@ " +
-                "AND NOT author IN %@.follows.destination AND NOT author = %@ AND createdAt <= %@ AND " +
+                "AND NOT author IN %@.follows.destination AND NOT author = %@ AND receivedAt <= %@ AND " +
                 "author.muted = false",
             kind,
             featuredAuthors.compactMap {
@@ -264,7 +264,7 @@ public class Event: NosManagedObject {
     @nonobjc public class func homeFeedPredicate(for user: Author, after: Date) -> NSPredicate {
         NSPredicate(
             // swiftlint:disable line_length
-            format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND createdAt <= %@",
+            format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND receivedAt <= %@",
             // swiftlint:enable line_length
             user,
             user,
@@ -546,6 +546,7 @@ public class Event: NosManagedObject {
     convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent, relay: Relay?) throws {
         self.init(context: context)
         identifier = jsonEvent.id
+        receivedAt = .now
         try hydrate(from: jsonEvent, relay: relay, in: context)
     }
 
