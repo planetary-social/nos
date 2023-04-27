@@ -13,6 +13,8 @@ struct RepostButton: View {
     var action: () async -> Void
     @FetchRequest private var reposts: FetchedResults<Event>
     @EnvironmentObject private var currentUser: CurrentUser
+    /// We use this to give instant feedback when the button is tapped, even though the action it performs is async.
+    @State private var tapped = false
     
     internal init(note: Event, action: @escaping () async -> Void) {
         self.note = note
@@ -27,11 +29,14 @@ struct RepostButton: View {
     }
 
     var body: some View {
-        AsyncButton { 
-            await action()
+        Button { 
+            tapped = true
+            Task {
+                await action()
+            }
         } label: {
             HStack {
-                if currentUserRepostedNote {
+                if currentUserRepostedNote || tapped {
                     Image.repostButtonPressed
                 } else {
                     Image.repostButton
@@ -46,6 +51,6 @@ struct RepostButton: View {
             .padding(.horizontal, 10)
             .padding(.vertical, 12)
         }
-        .disabled(currentUserRepostedNote)
+        .disabled(currentUserRepostedNote || tapped)
     }
 }
