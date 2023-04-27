@@ -25,7 +25,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
                     VStack {
                         Text(placeholder)
                             .foregroundColor(.secondaryTxt)
-                            .padding(.top, 9.5)
+                            .padding(.top, 10)
                             .padding(.leading, 7.5)
                         Spacer()
                     }
@@ -52,6 +52,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
                     }
                 )
                 .transition(.move(edge: .trailing))
+                .disabled(disabled)
             }
         }
         .onChange(of: textEditorInFocus) { bool in

@@ -45,6 +45,10 @@ public class Author: NosManagedObject {
         "https://iris.to/\(publicKey!.npub)"
     }
     
+    var followedKeys: [HexadecimalString] {
+        follows?.compactMap({ ($0 as? Follow)?.destination?.hexadecimalPublicKey }) ?? []
+    }
+    
     class func request(by pubKey: HexadecimalString) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey = %@", pubKey)
@@ -99,7 +103,7 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
-    @MainActor @nonobjc class func oneHopRequest(for author: Author) -> NSFetchRequest<Author> {
+    @nonobjc class func oneHopRequest(for author: Author) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.lastUpdatedContactList, ascending: false)]
         fetchRequest.predicate = NSPredicate(
