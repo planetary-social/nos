@@ -69,6 +69,20 @@ public class Relay: NosManagedObject {
         return fetchRequest
     }
     
+    static func orphanedRequest() -> NSFetchRequest<Relay> {
+        let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.address, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "SUBQUERY(authors, $a, TRUEPREDICATE).@count = 0 AND " +
+                "SUBQUERY(deletedEvents, $d, TRUEPREDICATE).@count = 0 AND " +
+                "SUBQUERY(events, $e, TRUEPREDICATE).@count = 0 AND " +
+                "SUBQUERY(publishedEvents, $e, TRUEPREDICATE).@count = 0 AND " +
+                "SUBQUERY(shouldBePublishedEvents, $r, TRUEPREDICATE).@count = 0"
+        )
+            
+        return fetchRequest
+    }
+    
     @discardableResult
     class func findOrCreate(by address: String, context: NSManagedObjectContext) throws -> Relay {
         if let existingRelay = try context.fetch(Relay.relay(by: address)).first {
