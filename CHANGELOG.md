@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug where you could post the same reply multiple times.
 - Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
 - Added Brazilian Portuguese translations (thanks Andressa!)
+- Added support for mentioning other users when composing a note.
 
 ## [0.1 (35)] - 2023-04-19Z
 
