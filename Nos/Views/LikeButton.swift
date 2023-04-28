@@ -13,6 +13,8 @@ struct LikeButton: View {
     var action: () async -> Void
     @FetchRequest private var likes: FetchedResults<Event>
     @EnvironmentObject private var currentUser: CurrentUser
+    /// We use this to give instant feedback when the button is tapped, even though the action it performs is async.
+    @State private var tapped = false
     
     internal init(note: Event, action: @escaping () async -> Void) {
         self.note = note
@@ -39,7 +41,7 @@ struct LikeButton: View {
     
     var buttonLabel: some View {
         HStack {
-            if currentUserLikesNote {
+            if currentUserLikesNote || tapped {
                 Image.buttonLikeActive
             } else {
                 Image.buttonLikeDefault
@@ -55,11 +57,14 @@ struct LikeButton: View {
     }
     
     var body: some View {
-        AsyncButton {
-            await action()
+        Button {
+            tapped = true
+            Task {
+                await action()
+            }
         } label: {
             buttonLabel
         }                             
-        .disabled(currentUserLikesNote)
+        .disabled(currentUserLikesNote || tapped)
     }
 }
