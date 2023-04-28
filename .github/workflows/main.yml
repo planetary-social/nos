@@ -9,17 +9,14 @@ on:
   push:
     branches: main
 env:
-  SIMULATOR: platform=iOS Simulator,name=iPhone 14,OS=16.4
-  XCODE_VERSION: 14.3
+  SIMULATOR: platform=iOS Simulator,name=iPhone 14,OS=16.2
+  DEVELOPER_DIR: /Applications/Xcode_14.2.app/Contents/Developer
     
 jobs:
   unit_test:
     name : Unit Tests
     runs-on: macOS-12
     steps:
-    - uses: maxim-lobanov/setup-xcode@v2
-      with:
-        xcode-version: {{ env.XCODE_VERSION }}
     - name: Checkout
       uses: actions/checkout@main
     - name: Build Nos

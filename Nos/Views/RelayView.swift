@@ -32,59 +32,32 @@ struct RelayView: View {
     
     var body: some View {
         List {
-            Section {
-                ForEach(relays) { relay in
-                    Text(relay.address ?? Localized.error.string)
-                        .foregroundColor(.textColor)
-                }
-                .onDelete { indexes in
-                    Task {
-                        for index in indexes {
-                            let relay = relays[index]
-                            await relayService.closeConnection(to: relay)
-                            analytics.removed(relay)
-                            author.remove(relay: relay)
-                            viewContext.delete(relay)
-                        }
-                        
-                        try! viewContext.save()
-                        await publishChanges()
-                    }
-                }
-                
-                if author.relays?.count == 0 {
-                    Localized.noRelaysMessage.view
-                }
-            } header: {
-                Localized.relays.view
-                    .foregroundColor(.textColor)
-                    .fontWeight(.heavy)
-            }
-            .listRowBackground(LinearGradient(
-                colors: [Color.cardBgTop, Color.cardBgBottom],
-                startPoint: .top,
-                endPoint: .bottom
-            ))
-            
-            let authorRelayUrls = (author.relays as? Set<Relay>)?.compactMap { $0.address } ?? []
-            let recommendedRelays = Relay.recommended.filter { !authorRelayUrls.contains($0) }
-            
-            if !recommendedRelays.isEmpty {
+            if let relays {
                 Section {
-                    ForEach(recommendedRelays, id: \.self) { address in
-                        Button {
-                            newRelayAddress = address
-                            addRelay()
-                            Task {
-                                await CurrentUser.shared.subscribe()
-                                await publishChanges()
+                    ForEach(relays) { relay in
+                        Text(relay.address ?? Localized.error.string)
+                            .foregroundColor(.textColor)
+                    }
+                    .onDelete { indexes in
+                        Task {
+                            for index in indexes {
+                                let relay = relays[index]
+                                await relayService.closeConnection(to: relay)
+                                analytics.removed(relay)
+                                author.remove(relay: relay)
+                                viewContext.delete(relay)
                             }
-                        } label: {
-                            Label(address, systemImage: "plus.circle")
+                            
+                            try! viewContext.save()
+                            await publishChanges()
                         }
+                    }
+                    
+                    if author.relays?.count == 0 {
+                        Localized.noRelaysMessage.view
                     }
                 } header: {
-                    Localized.recommendedRelays.view
+                    Localized.relays.view
                         .foregroundColor(.textColor)
                         .fontWeight(.heavy)
                 }
@@ -93,6 +66,35 @@ struct RelayView: View {
                     startPoint: .top,
                     endPoint: .bottom
                 ))
+                
+                let authorRelayUrls = (author.relays as? Set<Relay>)?.compactMap { $0.address } ?? []
+                let recommendedRelays = Relay.recommended.filter { !authorRelayUrls.contains($0) }
+                
+                if !recommendedRelays.isEmpty {
+                    Section {
+                        ForEach(recommendedRelays, id: \.self) { address in
+                            Button {
+                                newRelayAddress = address
+                                addRelay()
+                                Task {
+                                    await CurrentUser.shared.subscribe()
+                                    await publishChanges()
+                                }
+                            } label: {
+                                Label(address, systemImage: "plus.circle")
+                            }
+                        }
+                    } header: {
+                        Localized.recommendedRelays.view
+                            .foregroundColor(.textColor)
+                            .fontWeight(.heavy)
+                    }
+                    .listRowBackground(LinearGradient(
+                        colors: [Color.cardBgTop, Color.cardBgBottom],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                }
             }
             
             Section {
