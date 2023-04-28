@@ -43,7 +43,7 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 	case contactList = 3
 	case directMessage = 4
 	case delete = 5
-	case boost = 6
+    case repost = 6
 	case like = 7
     case channelMessage = 42
     case mute = 10_000
@@ -261,21 +261,21 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func homeFeedPredicate(for user: Author, after: Date) -> NSPredicate {
+    @nonobjc public class func homeFeedPredicate(for user: Author, before: Date) -> NSPredicate {
         NSPredicate(
             // swiftlint:disable line_length
-            format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND receivedAt <= %@",
+            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND (receivedAt == nil OR receivedAt <= %@)",
             // swiftlint:enable line_length
             user,
             user,
-            after as CVarArg
+            before as CVarArg
         )
     }
     
-    @nonobjc public class func homeFeed(for user: Author, after: Date) -> NSFetchRequest<Event> {
+    @nonobjc public class func homeFeed(for user: Author, before: Date) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = homeFeedPredicate(for: user, after: after)
+        fetchRequest.predicate = homeFeedPredicate(for: user, before: before)
         fetchRequest.includesPendingChanges = false
         fetchRequest.fetchLimit = 1000
         return fetchRequest
@@ -295,14 +295,27 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func likes(noteId: String) -> NSFetchRequest<Event> {
+    @nonobjc public class func likes(noteID: String) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let noteIsLikedByUserPredicate = NSPredicate(
             // swiftlint:disable line_length
             format: "kind = \(String(EventKind.like.rawValue)) AND SUBQUERY(eventReferences, $reference, $reference.eventId = %@).@count > 0",
             // swiftlint:enable line_length
-            noteId
+            noteID
+        )
+        fetchRequest.predicate = noteIsLikedByUserPredicate
+        return fetchRequest
+    }
+    
+    @nonobjc public class func reposts(noteID: String) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        let noteIsLikedByUserPredicate = NSPredicate(
+            // swiftlint:disable line_length
+            format: "kind = \(String(EventKind.repost.rawValue)) AND SUBQUERY(eventReferences, $reference, $reference.eventId = %@).@count > 0",
+            // swiftlint:enable line_length
+            noteID
         )
         fetchRequest.predicate = noteIsLikedByUserPredicate
         return fetchRequest
@@ -432,6 +445,14 @@ public class Event: NosManagedObject {
         return nil
     }
     
+    var jsonString: String? {
+        guard let jsonRepresentation,  
+            let data = try? JSONSerialization.data(withJSONObject: jsonRepresentation) else {
+            return nil
+        }
+        return String(data: data, encoding: .utf8)
+    }
+    
     var codable: JSONEvent? {
         guard let identifier = identifier,
             let pubKey = author?.hexadecimalPublicKey,
@@ -460,6 +481,10 @@ public class Event: NosManagedObject {
             return nil
         }
         return Bech32.encode(Nostr.notePrefix, baseEightData: Data(identifierBytes))
+    }
+    
+    var seenOnRelayURLs: [String] {
+        seenOnRelays?.compactMap { ($0 as? Relay)?.addressURL?.absoluteString } ?? []
     }
     
     class func attributedContent(noteID: String?, context: NSManagedObjectContext) async -> AttributedString? {

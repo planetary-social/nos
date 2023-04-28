@@ -30,7 +30,7 @@ struct HomeFeedView: View {
     
     init(user: Author) {
         self.user = user
-        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, after: Date.now))
+        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, before: Date.now))
     }
     
     func subscribeToNewEvents() async {
@@ -45,10 +45,16 @@ struct HomeFeedView: View {
                 
         if !followedKeys.isEmpty {
             // TODO: we could miss events with this since filter
-            let textFilter = Filter(authorKeys: followedKeys, kinds: [.text, .delete], limit: 100, since: since)
+            let textFilter = Filter(
+                authorKeys: followedKeys, 
+                kinds: [.text, .delete, .repost], 
+                limit: 100, 
+                since: since
+            )
             let textSub = await relayService.openSubscription(with: textFilter)
             subscriptionIDs.append(textSub)
         }
+        
         let currentUserAuthorKeys = [currentUserKey]
         let userLikesFilter = Filter(
             authorKeys: currentUserAuthorKeys,
@@ -77,15 +83,15 @@ struct HomeFeedView: View {
                         LazyVStack {
                             ForEach(events) { event in
                                 NoteButton(note: event, hideOutOfNetwork: false)
-                                    .padding(.horizontal)
+                                    .padding(.bottom, 15)
                             }
                         }
+                        .padding(.top, 15)
                     }
                     .accessibilityIdentifier("home feed")
                 }
             }
             .background(Color.appBg)
-            .padding(.top, 1)
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
@@ -113,7 +119,7 @@ struct HomeFeedView: View {
             date = .now
         }
         .onChange(of: date) { newDate in
-            events.nsPredicate = Event.homeFeedPredicate(for: user, after: newDate)
+            events.nsPredicate = Event.homeFeedPredicate(for: user, before: newDate)
         }
         .onAppear { isVisible = true }
         .onDisappear { isVisible = false }

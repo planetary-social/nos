@@ -19,10 +19,6 @@ struct PersistenceController {
     static var preview: PersistenceController = {
         let controller = PersistenceController(inMemory: true)
         let viewContext = controller.container.viewContext
-        Task {
-            await PersistenceController.loadSampleData(context: viewContext)
-            try! viewContext.save()
-        }
         return controller
     }()
     // swiftlint:enable force_try
