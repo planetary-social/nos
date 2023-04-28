@@ -156,7 +156,9 @@ struct PersistenceController {
     /// - delete authors outside the user's network 
     /// - delete any other models that are orphaned by the previous deletions
     /// - fix EventReferences whose referencedEvent was deleted by createing a stubbed Event
+    // swiftlint:disable function_body_length 
     static func cleanupEntities(for currentUser: CurrentUser) {
+        // this function was written in a hurry and probably should be refactored and tested thorougly.
         guard cleanupTask == nil else {
             Log.info("Core Data cleanup task already running. Aborting.")
             return
@@ -190,11 +192,15 @@ struct PersistenceController {
             // Delete events older than `deleteBefore`
             let oldEventsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
             oldEventsRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
-            oldEventsRequest.predicate = NSPredicate(format: "receivedAt <= %@ OR receivedAt == nil", deleteBefore as CVarArg)
+            oldEventsRequest.predicate = NSPredicate(
+                format: "author != %@ AND (receivedAt <= %@ OR receivedAt == nil)", 
+                currentAuthor,
+                deleteBefore as CVarArg
+            )
             
             try await context.perform {
                 
-                let orphanedObjectRequests: [NSPersistentStoreRequest] = [
+                let deleteRequests: [NSPersistentStoreRequest] = [
                     oldEventsRequest,
                     EventReference.orphanedRequest(),
                     AuthorReference.orphanedRequest(),
@@ -203,31 +209,18 @@ struct PersistenceController {
                     Relay.orphanedRequest(),
                 ]
                 
-                for request in orphanedObjectRequests {
-                    guard let fetchRequest = request as? NSFetchRequest<NSManagedObject> else {
+                for request in deleteRequests {
+                    guard let fetchRequest = request as? NSFetchRequest<any NSFetchRequestResult> else {
                         Log.error("Bad fetch request: \(request)")
                         continue
                     }
                     
-                    let results = try context.execute(fetchRequest) 
-                    if let asyncFetchResult = results as? NSAsynchronousFetchResult<NSFetchRequestResult> {
-                        if let objects = asyncFetchResult.finalResult as? [NSManagedObject] {
-                            for object in objects {
-                                context.delete(object)
-                            }
-                            if let entityName = fetchRequest.entityName {
-                                Log.info("Deleted \(objects.count) of type \(entityName)")
-                            }
-                        }
+                    let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+                    batchDeleteRequest.resultType = .resultTypeCount
+                    let deleteResult = try context.execute(batchDeleteRequest) as? NSBatchDeleteResult
+                    if let entityName = fetchRequest.entityName {
+                        Log.info("Deleted \(deleteResult?.result ?? 0) of type \(entityName)")
                     }
-                    
-                    // TODO: NSBatchDeleteRequest is only deleting one object for some reason 
-                    // let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-                    // let deleteResult = try context.execute(batchDeleteRequest) as? NSBatchDeleteResult
-                    // if let entityName = fetchRequest.entityName {
-                    //     Log.info("Deleted \(deleteResult?.result ?? 0) of type \(entityName)")
-                    // }
-
                 }
                 
                 // Heal EventReferences
@@ -257,6 +250,7 @@ struct PersistenceController {
             Log.info("Finished Core Data cleanup in \(elapsedTime) seconds.")
         }
     }
+    // swiftlint:enable function_body_length 
     
     static func databaseStatistics(from context: NSManagedObjectContext) throws -> [String: Int] {
         var statistics = [String: Int]()
