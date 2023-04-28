@@ -8,8 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Added Brazilian Portuguese translations (thanks Andressa!)
+## [0.1 (37)] - 2023-04-27Z
+
 - Performance improvements
+- Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
+
+## [0.1 (36)] - 2023-04-25Z
+
+- Added support for reposting notes.
+- Added Brazilian Portuguese translations (thanks Andressa!).
+- Fixed the French and Traditional Chinese translations.
+- Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
+- Fixed a bug where you could post the same reply multiple times.
+- Fixed an issue where profile pictures could be rendered with the wrong aspect ratio.
 
 ## [0.1 (35)] - 2023-04-19Z
 

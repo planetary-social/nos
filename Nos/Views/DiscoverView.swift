@@ -58,13 +58,14 @@ struct DiscoverView: View {
     @State var columns: Int = 0
     
     @State private var performingInitialLoad = true
+    static let initialLoadTime = 2
     @State private var subscriptionIDs = [String]()
     @State private var isVisible = false
     @State private var cancellables = [AnyCancellable]()
     private var featuredAuthors: [String]
     
     @StateObject private var searchModel = SearchModel()
-    @State private var date = Date.now
+    @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
 
     @State var predicate: NSPredicate = .false
     
@@ -143,7 +144,9 @@ struct DiscoverView: View {
         NavigationStack(path: $router.discoverPath) {
             ZStack {
                 if performingInitialLoad {
-                    FullscreenProgressView(isPresented: $performingInitialLoad, hideAfter: .now() + .seconds(2))
+                    FullscreenProgressView(
+                        isPresented: $performingInitialLoad, 
+                        hideAfter: .now() + .seconds(Self.initialLoadTime))
                 } else {
                     
                     DiscoverGrid(predicate: predicate, columns: $columns)

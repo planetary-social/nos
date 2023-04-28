@@ -240,6 +240,9 @@ extension Image {
        static let tabProfileSelected = Image("tab-profile-selected", bundle: Bundle.current)
        static let tabProfile = Image("tab-profile", bundle: Bundle.current)
        static let checkmark = Image("checkmark", bundle: Bundle.current)
+       static let repostButton = Image("repost-button", bundle: Bundle.current)
+       static let repostButtonPressed = Image("repost-button-pressed", bundle: Bundle.current)
+       static let repostSymbol = Image("repost-symbol", bundle: Bundle.current)
 }
 
 extension UIImage {
