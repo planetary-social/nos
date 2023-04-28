@@ -254,6 +254,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 let metaFilter = Filter(
                     authorKeys: [followedKey],
                     kinds: [.metaData],
+                    limit: 1,
                     since: lastUpdatedMetadata
                 )
                 _ = await self?.relayService.openSubscription(with: metaFilter)
@@ -261,6 +262,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 let contactFilter = Filter(
                     authorKeys: [followedKey],
                     kinds: [.contactList],
+                    limit: 1,
                     since: lastUpdatedContactList
                 )
                 _ = await self?.relayService.openSubscription(with: contactFilter)
