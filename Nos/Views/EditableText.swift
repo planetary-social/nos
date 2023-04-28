@@ -9,14 +9,12 @@ import Foundation
 import SwiftUI
 import UIKit
 
-/// A ViewRepresentable that wraps a UILabel meant to be used in place of Text when selection word by word is desired.
-///
-/// SwiftUI's Text cannot be configured to be selected in a word by word basis, just the whole text, wrapping up a
-/// UILabel achieves this. Also, this is configured to use a monospaced font as the intended use at the moment is
-/// when showing a Source Message.
+/// A ViewRepresentable that wraps a UITextView meant to be used in place of TextEditor when rich text formatting is
+/// desirable.
 struct EditableText: UIViewRepresentable {
 
     @Binding var attributedText: AttributedString
+    @State private var selectedRange = NSRange(location: 0, length: 0)
 
     private var font = UIFont.preferredFont(forTextStyle: .body)
     private var insets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
@@ -37,11 +35,45 @@ struct EditableText: UIViewRepresentable {
         view.font = font
         view.backgroundColor = .clear
         view.delegate = context.coordinator
+
+        NotificationCenter.default.addObserver(
+            forName: .mentionAddedNotification,
+            object: nil,
+            queue: .main
+        ) { [weak view] notification in
+            guard let author = notification.userInfo?["author"] as? Author else {
+                return
+            }
+            guard let url = author.deepLink else {
+                return
+            }
+            let mention = NSAttributedString(
+                string: "@\(author.safeName)",
+                attributes: view?.typingAttributes.merging(
+                    [NSAttributedString.Key.link: url],
+                    uniquingKeysWith: { lhs, _ in lhs }
+                )
+            )
+
+            let mutableAttributedString = NSMutableAttributedString(attributedString: nsAttributedString)
+            mutableAttributedString.replaceCharacters(
+                in: NSRange(location: selectedRange.location - 1, length: 1),
+                with: mention
+            )
+            attributedText = AttributedString(mutableAttributedString)
+            selectedRange.location += mention.length - 1
+        }
+
         return view
+    }
+
+    var nsAttributedString: NSAttributedString {
+        NSAttributedString(attributedText)
     }
 
     func updateUIView(_ uiView: UITextView, context: Context) {
         uiView.attributedText = NSAttributedString(attributedText)
+        uiView.selectedRange = selectedRange
         uiView.typingAttributes = [
             .font: font,
             .foregroundColor: Color.secondaryTxt
@@ -49,21 +81,32 @@ struct EditableText: UIViewRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator($attributedText)
+        Coordinator(text: $attributedText, selectedRange: $selectedRange)
     }
 
     class Coordinator: NSObject, UITextViewDelegate {
         var text: Binding<AttributedString>
+        var selectedRange: Binding<NSRange>
 
-        init(_ text: Binding<AttributedString>) {
+        init(text: Binding<AttributedString>, selectedRange: Binding<NSRange>) {
             self.text = text
+            self.selectedRange = selectedRange
         }
 
         func textViewDidChange(_ textView: UITextView) {
-            self.text.wrappedValue = AttributedString(textView.attributedText)
-            
+            text.wrappedValue = AttributedString(textView.attributedText)
+        }
+
+        func textViewDidChangeSelection(_ textView: UITextView) {
+            DispatchQueue.main.async {
+                self.selectedRange.wrappedValue = textView.selectedRange
+            }
         }
     }
+}
+
+extension Notification.Name {
+    public static let mentionAddedNotification = Notification.Name("mentionAddedNotification")
 }
 
 struct EditableText_Previews: PreviewProvider {

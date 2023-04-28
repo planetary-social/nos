@@ -105,7 +105,7 @@ struct HighlightedText: View {
                 textView(markdown: string).foregroundColor(.clear)
             }
         )
-        .foregroundLinearGradient(highlightGradient)
+        .foregroundLinearGradient(gradient: highlightGradient)
     }
     
     /// A layer that has all text clear, but has a tap target where the highlighted word is, which is used to open

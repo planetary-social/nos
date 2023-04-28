@@ -30,11 +30,21 @@
 		3FFB1D9C29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */; };
 		3FFB1D9D29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */; };
 		3FFF3BD029A9645F00DD0B72 /* AuthorReference+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */; };
+		5B39E64429EDBF8100464830 /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
+		5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
+		5B6EB49029EDBEC1006E750C /* NoteParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */; };
+		5B80BE9E29F9864000A363E4 /* Bech32Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */; };
+		5B80BEA029FAEDE300A363E4 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B80BE9F29FAEDE300A363E4 /* Profile.swift */; };
+		5B80BEA229FAF30F00A363E4 /* ProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B80BEA129FAF30F00A363E4 /* ProfileTests.swift */; };
+		5B80BEA329FAF37700A363E4 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B80BE9F29FAEDE300A363E4 /* Profile.swift */; };
 		5B8C96AC29D52AD200B73AEC /* AuthorListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */; };
 		5B8C96B029DB2E1100B73AEC /* SearchTextFieldObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */; };
 		5B8C96B229DB313300B73AEC /* AuthorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B129DB313300B73AEC /* AuthorCard.swift */; };
-		5B8C96B429DB376A00B73AEC /* TextEditorObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B329DB376A00B73AEC /* TextEditorObserver.swift */; };
 		5B8C96B629DDD3B200B73AEC /* EditableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B529DDD3B200B73AEC /* EditableText.swift */; };
+		5BF3C50629E4F0BA00738A12 /* EditableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B529DDD3B200B73AEC /* EditableText.swift */; };
+		5BF3C50729E4F0D400738A12 /* AuthorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B129DB313300B73AEC /* AuthorCard.swift */; };
+		5BF3C50829E4F0DC00738A12 /* AuthorListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */; };
+		5BF3C50929E4F11E00738A12 /* SearchTextFieldObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */; };
 		A303AF8329A9153A005DC8FC /* FollowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A303AF8229A9153A005DC8FC /* FollowButton.swift */; };
 		A303AF8429A969F5005DC8FC /* FollowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A303AF8229A9153A005DC8FC /* FollowButton.swift */; };
 		A303AF8529A969F5005DC8FC /* FollowsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32B6C7229A6BE9B00653FF5 /* FollowsView.swift */; };
@@ -306,10 +316,14 @@
 		3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "EventReference+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3FFB1D9529A6BBEC002A755D /* Collection+SafeSubscript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Collection+SafeSubscript.swift"; sourceTree = "<group>"; };
 		3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackedAvatarsView.swift; sourceTree = "<group>"; };
+		5B6EB48D29EDBE0E006E750C /* NoteParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParser.swift; sourceTree = "<group>"; };
+		5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParserTests.swift; sourceTree = "<group>"; };
+		5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bech32Tests.swift; sourceTree = "<group>"; };
+		5B80BE9F29FAEDE300A363E4 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		5B80BEA129FAF30F00A363E4 /* ProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTests.swift; sourceTree = "<group>"; };
 		5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorListView.swift; sourceTree = "<group>"; };
 		5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextFieldObserver.swift; sourceTree = "<group>"; };
 		5B8C96B129DB313300B73AEC /* AuthorCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorCard.swift; sourceTree = "<group>"; };
-		5B8C96B329DB376A00B73AEC /* TextEditorObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditorObserver.swift; sourceTree = "<group>"; };
 		5B8C96B529DDD3B200B73AEC /* EditableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableText.swift; sourceTree = "<group>"; };
 		A303AF8229A9153A005DC8FC /* FollowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowButton.swift; sourceTree = "<group>"; };
 		A32B6C7229A6BE9B00653FF5 /* FollowsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsView.swift; sourceTree = "<group>"; };
@@ -593,6 +607,9 @@
 				C9DEC0042989477A0078B43A /* Fixtures */,
 				C9DEBFE8298941020078B43A /* EventTests.swift */,
 				C9ADB132299287D60075E7F8 /* KeyPairTests.swift */,
+				5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */,
+				5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */,
+				5B80BEA129FAF30F00A363E4 /* ProfileTests.swift */,
 			);
 			path = NosTests;
 			sourceTree = "<group>";
@@ -654,6 +671,8 @@
 				C9F84C26298DC98800C6714D /* KeyPair.swift */,
 				C9F0BB6A29A503D6000547FC /* PublicKey.swift */,
 				C9F0BB6E29A50437000547FC /* NostrConstants.swift */,
+				5B6EB48D29EDBE0E006E750C /* NoteParser.swift */,
+				5B80BE9F29FAEDE300A363E4 /* Profile.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -737,7 +756,6 @@
 				C9A0DAF429C9112400466635 /* UniversalNameWizard.swift */,
 				5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */,
 				5B8C96B129DB313300B73AEC /* AuthorCard.swift */,
-				5B8C96B329DB376A00B73AEC /* TextEditorObserver.swift */,
 				5B8C96B529DDD3B200B73AEC /* EditableText.swift */,
 			);
 			path = Views;
@@ -981,7 +999,6 @@
 				3FFB1D9629A6BBEC002A755D /* Collection+SafeSubscript.swift in Sources */,
 				A34E439929A522F20057AFCB /* CurrentUser.swift in Sources */,
 				C9A0DADD29C689C900466635 /* NosNavigationBar.swift in Sources */,
-				5B8C96B429DB376A00B73AEC /* TextEditorObserver.swift in Sources */,
 				3F30020529C1FDD9003D4F8B /* OnboardingStartView.swift in Sources */,
 				C987F81A29BA4D0E00B44E7A /* ActionButton.swift in Sources */,
 				C9A0DAF829C92F4500466635 /* UNSAPI.swift in Sources */,
@@ -989,6 +1006,7 @@
 				C9DEC06A298965550078B43A /* RelayView.swift in Sources */,
 				C9A0DAE429C69F0C00466635 /* HighlightedText.swift in Sources */,
 				C94D855C2991479900749478 /* NewNoteView.swift in Sources */,
+				5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */,
 				C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */,
 				3F170C78299D816200BC8F8B /* AppController.swift in Sources */,
 				C9DEBFD7298941000078B43A /* Nos.xcdatamodeld in Sources */,
@@ -997,6 +1015,7 @@
 				A303AF8329A9153A005DC8FC /* FollowButton.swift in Sources */,
 				A32B6C7329A6BE9B00653FF5 /* FollowsView.swift in Sources */,
 				3F30020D29C382EB003D4F8B /* OnboardingLoginView.swift in Sources */,
+				5B80BEA029FAEDE300A363E4 /* Profile.swift in Sources */,
 				C9DFA972299BF9E8006929C1 /* CompactNoteView.swift in Sources */,
 				C9A0DAE029C697A100466635 /* AboutView.swift in Sources */,
 				A351E1A229BA92240009B7F6 /* ProfileEditView.swift in Sources */,
@@ -1086,12 +1105,14 @@
 				C93EC2F229C337EB0012EE2A /* RelayPicker.swift in Sources */,
 				CD09A76229A5220E0063464F /* AppController.swift in Sources */,
 				C9A0DAF929C92F4500466635 /* UNSAPI.swift in Sources */,
+				5BF3C50729E4F0D400738A12 /* AuthorCard.swift in Sources */,
 				CD09A75F29A521FD0063464F /* RelayService.swift in Sources */,
 				CD09A76029A521FD0063464F /* Filter.swift in Sources */,
 				CD09A75E29A521EB0063464F /* Assets+Planetary.swift in Sources */,
 				CD09A75029A521D20063464F /* HomeFeedView.swift in Sources */,
 				CD09A75129A521D20063464F /* CompactNoteView.swift in Sources */,
 				CD09A75229A521D20063464F /* RepliesView.swift in Sources */,
+				5BF3C50929E4F11E00738A12 /* SearchTextFieldObserver.swift in Sources */,
 				CD09A75329A521D20063464F /* AppView.swift in Sources */,
 				CD09A75429A521D20063464F /* PlaceholderModifier.swift in Sources */,
 				CD09A75529A521D20063464F /* SelectableText.swift in Sources */,
@@ -1112,9 +1133,11 @@
 				CD09A75C29A521D20063464F /* SideMenu.swift in Sources */,
 				CD09A75D29A521D20063464F /* SideMenuContent.swift in Sources */,
 				CD09A74E29A521BE0063464F /* NoteCard.swift in Sources */,
+				5B39E64429EDBF8100464830 /* NoteParser.swift in Sources */,
 				3F30021329C3BFDB003D4F8B /* OnboardingStartView.swift in Sources */,
 				CD09A74F29A521BE0063464F /* BioView.swift in Sources */,
 				CD09A74D29A521A70063464F /* CardStyle.swift in Sources */,
+				5B80BEA329FAF37700A363E4 /* Profile.swift in Sources */,
 				CD09A74C29A5217A0063464F /* NoteButton.swift in Sources */,
 				A303AF8529A969F5005DC8FC /* FollowsView.swift in Sources */,
 				C987F86229BABAF800B44E7A /* String+Markdown.swift in Sources */,
@@ -1123,14 +1146,17 @@
 				CD09A74929A521210063464F /* Router.swift in Sources */,
 				C93EC2F829C351470012EE2A /* Optional+Unwrap.swift in Sources */,
 				A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */,
+				5BF3C50629E4F0BA00738A12 /* EditableText.swift in Sources */,
 				C93CA0C129AD5A5B00921183 /* DiscoverView.swift in Sources */,
 				C9ADB13E29929EEF0075E7F8 /* Bech32.swift in Sources */,
 				C92DF80929C25FA900400561 /* SquareImage.swift in Sources */,
 				C9DEC05A2989509B0078B43A /* Persistence.swift in Sources */,
 				C9DFA97A299C31E9006929C1 /* Localizable.swift in Sources */,
 				3F30021529C3BFE5003D4F8B /* OnboardingNotOldEnoughView.swift in Sources */,
+				5B80BEA229FAF30F00A363E4 /* ProfileTests.swift in Sources */,
 				C9DEC06B298965550078B43A /* RelayView.swift in Sources */,
 				C9DEC05C298953280078B43A /* Nos.xcdatamodeld in Sources */,
+				5B80BE9E29F9864000A363E4 /* Bech32Tests.swift in Sources */,
 				C942566A29B66A2800C4202C /* Date+Elapsed.swift in Sources */,
 				C93CA0C429AE3A1E00921183 /* JSONEvent.swift in Sources */,
 				C9DEC04629894BED0078B43A /* Event+CoreDataClass.swift in Sources */,
@@ -1140,6 +1166,7 @@
 				3F30021629C3BFE8003D4F8B /* OnboardingTermsOfServiceView.swift in Sources */,
 				C9DEC0642989541F0078B43A /* Bundle+Current.swift in Sources */,
 				C9ADB13629928AF00075E7F8 /* KeyPair.swift in Sources */,
+				5BF3C50829E4F0DC00738A12 /* AuthorListView.swift in Sources */,
 				3FFB1D9729A6BBEC002A755D /* Collection+SafeSubscript.swift in Sources */,
 				C987F81829BA4C6A00B44E7A /* BigActionButton.swift in Sources */,
 				C9F0BB6D29A503D9000547FC /* Int+Bool.swift in Sources */,
@@ -1177,6 +1204,7 @@
 				C9DFA97B299C31EE006929C1 /* Localized.swift in Sources */,
 				C9ADB135299288230075E7F8 /* KeyFixture.swift in Sources */,
 				3FFB1D9429A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,
+				5B6EB49029EDBEC1006E750C /* NoteParserTests.swift in Sources */,
 				C987F81B29BA4D0E00B44E7A /* ActionButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

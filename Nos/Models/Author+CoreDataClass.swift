@@ -44,6 +44,16 @@ public class Author: NosManagedObject {
     var webLink: String {
         "https://iris.to/\(publicKey!.npub)"
     }
+
+    /// A URL that links to this author, suitable for being shared with others.
+    ///
+    /// See [NIP-21](https://github.com/nostr-protocol/nips/blob/master/21.md)
+    var deepLink: URL? {
+        if let npub = publicKey?.npub {
+            return URL(string: "nostr:\(npub)")
+        }
+        return nil
+    }
     
     class func find(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author? {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))

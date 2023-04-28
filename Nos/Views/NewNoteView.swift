@@ -171,31 +171,10 @@ struct NewNoteView: View {
     }
 
     private func insertMention(at offset: Int, author: Author) {
-        var attributeContainer = AttributeContainer()
-        attributeContainer.foregroundColor = .secondaryTxt
-        attributeContainer.font = UIFont.preferredFont(forTextStyle: .body)
-
-        var linkAttributeContainer = AttributeContainer()
-        linkAttributeContainer.font = UIFont.preferredFont(forTextStyle: .body)
-        linkAttributeContainer.link = URL(string: "www.google.com")!
-        linkAttributeContainer.foregroundColor = .accent
-
-        let lowerBound = postText.characters.index(
-            postText.characters.startIndex,
-            offsetBy: offset,
-            limitedBy: postText.characters.endIndex
-        ) ?? postText.characters.startIndex
-        let upperBound = postText.characters.index(
-            lowerBound,
-            offsetBy: 1,
-            limitedBy: postText.characters.endIndex
-        ) ?? postText.characters.endIndex
-        postText.replaceSubrange(
-            Range(uncheckedBounds: (lowerBound, upperBound)),
-            with: AttributedString(
-                author.safeName,
-                attributes: linkAttributeContainer
-            )
+        NotificationCenter.default.post(
+            name: .mentionAddedNotification,
+            object: nil,
+            userInfo: ["author": author]
         )
         oldText = String(postText.characters)
         mentionOffset = nil
@@ -213,13 +192,15 @@ struct NewNoteView: View {
         
         withAnimation {
             do {
+                let parser = NoteParser()
+                let (content, tags) = parser.parse(attributedText: postText)
                 let jsonEvent = JSONEvent(
                     id: "",
                     pubKey: keyPair.publicKeyHex,
                     createdAt: Int64(Date().timeIntervalSince1970),
                     kind: 1,
-                    tags: [],
-                    content: String(postText.characters),
+                    tags: tags,
+                    content: content,
                     signature: ""
                 )
                 let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
@@ -236,7 +217,6 @@ struct NewNoteView: View {
                 analytics.published(note: event)
                 postText = ""
                 router.selectedTab = .home
-                platformV
             } catch {
                 alert = AlertState(title: {
                     TextState(Localized.error.string)
