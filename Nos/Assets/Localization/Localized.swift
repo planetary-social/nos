@@ -14,7 +14,7 @@ import Foundation
 extension Localized {
     static var localizableTypes: [any Localizable.Type] {
         // TODO: Can we compute this using CaseIterable and recursion?
-        [Localized.self]
+        [Localized.self, Localized.Reply.self]
     }
 }
 
@@ -64,12 +64,12 @@ enum Localized: String, Localizable, CaseIterable {
     Summary
     This top section summarizes the terms below. This summary is provided to help your understanding of the terms, but be sure to read the entire document, because when you agree to it, you are indicating you accept all of the terms, not just this summary.
 
-    Nos cloud services (the "Services") are a suite of services provided to you by Verse Communications Inc.
-    The Services are provided "as is" and there are no warranties of any kind. There are significant limits on Verse's liability for any damages arising from your use of the Services.
+    Nos cloud services (the \\"Services\\") are a suite of services provided to you by Verse Communications Inc.
+    The Services are provided \\"as is\\" and there are no warranties of any kind. There are significant limits on Verse's liability for any damages arising from your use of the Services.
     Terms of Service
     Introduction
 
-    These Terms of Service ("Terms") govern your use of Nos cloud services, a suite of online services provided by Verse (the "Services").
+    These Terms of Service (\\"Terms\\") govern your use of Nos cloud services, a suite of online services provided by Verse (the \\"Services\\").
 
     Nos Accounts
 
@@ -112,11 +112,11 @@ enum Localized: String, Localizable, CaseIterable {
 
     Indemnification
 
-    You agree to defend, indemnify and hold harmless Verse, its contractors, contributors, licensors, and partners, and their respective directors, officers, employees and agents ("Indemnified Parties") from and against any and all third party claims and expenses, including attorneys' fees, arising out of or related to your use of the Services (including, but not limited to, from any content uploaded by you).
+    You agree to defend, indemnify and hold harmless Verse, its contractors, contributors, licensors, and partners, and their respective directors, officers, employees and agents (\\"Indemnified Parties\\") from and against any and all third party claims and expenses, including attorneys' fees, arising out of or related to your use of the Services (including, but not limited to, from any content uploaded by you).
 
     Disclaimer; Limitation of Liability
 
-    THE SERVICES ARE PROVIDED "AS IS" WITH ALL FAULTS. TO THE EXTENT PERMITTED BY LAW, VERSE AND THE INDEMNIFIED PARTIES HEREBY DISCLAIM ALL WARRANTIES, WHETHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION WARRANTIES THAT THE SERVICES ARE FREE OF DEFECTS, MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE, AND NON-INFRINGING. YOU BEAR THE ENTIRE RISK AS TO SELECTING THE SERVICES FOR YOUR PURPOSES AND AS TO THE QUALITY AND PERFORMANCE OF THE SERVICES, INCLUDING WITHOUT LIMITATION THE RISK THAT YOUR CONTENT IS DELETED OR CORRUPTED OR THAT SOMEONE ELSE ACCESSES YOUR ONLINE ACCOUNTS. THIS LIMITATION WILL APPLY NOTWITHSTANDING THE FAILURE OF ESSENTIAL PURPOSE OF ANY REMEDY. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR LIMITATION OF IMPLIED WARRANTIES, SO THIS DISCLAIMER MAY NOT APPLY TO YOU.
+    THE SERVICES ARE PROVIDED \\"AS IS\\" WITH ALL FAULTS. TO THE EXTENT PERMITTED BY LAW, VERSE AND THE INDEMNIFIED PARTIES HEREBY DISCLAIM ALL WARRANTIES, WHETHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION WARRANTIES THAT THE SERVICES ARE FREE OF DEFECTS, MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE, AND NON-INFRINGING. YOU BEAR THE ENTIRE RISK AS TO SELECTING THE SERVICES FOR YOUR PURPOSES AND AS TO THE QUALITY AND PERFORMANCE OF THE SERVICES, INCLUDING WITHOUT LIMITATION THE RISK THAT YOUR CONTENT IS DELETED OR CORRUPTED OR THAT SOMEONE ELSE ACCESSES YOUR ONLINE ACCOUNTS. THIS LIMITATION WILL APPLY NOTWITHSTANDING THE FAILURE OF ESSENTIAL PURPOSE OF ANY REMEDY. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR LIMITATION OF IMPLIED WARRANTIES, SO THIS DISCLAIMER MAY NOT APPLY TO YOU.
 
     EXCEPT AS REQUIRED BY LAW, VERSE AND THE INDEMNIFIED PARTIES WILL NOT BE LIABLE FOR ANY INDIRECT, SPECIAL, INCIDENTAL, CONSEQUENTIAL, OR EXEMPLARY DAMAGES ARISING OUT OF OR IN ANY WAY RELATING TO THESE TERMS OR THE USE OF OR INABILITY TO USE THE SERVICES, INCLUDING WITHOUT LIMITATION DIRECT AND INDIRECT DAMAGES FOR LOSS OF GOODWILL, WORK STOPPAGE, LOST PROFITS, LOSS OF DATA, AND COMPUTER FAILURE OR MALFUNCTION, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES AND REGARDLESS OF THE THEORY (CONTRACT, TORT, OR OTHERWISE) UPON WHICH SUCH CLAIM IS BASED. THE COLLECTIVE LIABILITY OF VERSE AND THE INDEMNIFIED PARTIES UNDER THIS AGREEMENT WILL NOT EXCEED $500 (FIVE HUNDRED DOLLARS). SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR LIMITATION OF INCIDENTAL, CONSEQUENTIAL, OR SPECIAL DAMAGES, SO THIS EXCLUSION AND LIMITATION MAY NOT APPLY TO YOU.
 
@@ -160,17 +160,26 @@ enum Localized: String, Localizable, CaseIterable {
     case homeFeed = "Feed"
     
     case keys = "Keys"
-    case keyEncryptionWarning = "Warning: Never share your private key with anyone."
-    case privateKeyPlaceholder = "nsec..."
+    case privateKeyWarning = "Never share your private key with anyone. Save your private key in a password manager so you can restore access to your account & data."
+    case privateKeyPlaceholder = "nsec or hex..."
     case save = "Save"
     case copy = "Copy"
     case settings = "Settings"
     case invalidKey = "Invalid Key"
-    case couldNotReadPrivateKeyMessage = "Could not read your private key. Make sure it is in hex format."
+    case couldNotReadPrivateKeyMessage = "Could not read your private key. Please verify that it is in nsec or hex format."
     case createAccount = "Create an account"
+    case shareLogs = "Share logs"
+    case failedToExportLogs = "Failed to export logs."
+    case appVersion = "App Version:"
+    
+    case privateKey = "Private Key"
+    case logout = "Logout"
+    case myKeyIsBackedUp = "My key is backed up"
+    case backUpYourKeyWarning = "Logging out will delete your private key (nsec) from the app. Make sure you have your private key backed up before you do this or you will lose access to your account!"
     
     case post = "Post" // (verb form)
     case newNote = "New Note"
+    case newNotePlaceholder = "Type your post here..."
     case cancel = "Cancel"
     case done = "Done"
     case editProfile = "Edit Profile"
@@ -231,11 +240,28 @@ enum Localized: String, Localizable, CaseIterable {
     case reportPost = "Report this post"
     case unmuteUser = "Un-Mute"
     case extendedNetwork = "Extended Network"
+    case outsideNetwork = "This user is outside your network."
     case allMyRelays = "All My Relays"
     case about = "About"
     case contactUs = "Contact Us"
     case shareNos = "Share Nos"
     case yourProfile = "Your Profile"
+    
+    case unsTagline = "Universal Name Space brings identity verification you can trust."
+    case unsDescription = "The Universal Namespace gives you one name you can use everywhere. You can verify your identity and get your universal name here in Nos. This screen is for demo purposes only, all names will be reset in the future. Learn more."
+    case unsLearnMore = "Learn more."
+    case verifyYourIdentity = "Verify your identity"
+    case enterCode = "Enter Code"
+    case nameLower = "name"
+    case chooseYourName = "Choose Your Name"
+    case oops = "Oops!"
+    case thatNameIsTaken = "That name is taken."
+    case success = "Success!"
+    case yourNewUNMessage = "is your new Nostr username.\n\nThis demo of the Universal Namespace is for testing purposes only. All names will be reset in the future."
+    case anErrorOccurred = "An error occured."
+    
+    case relayAddressPlaceholder = "wss://yourrelay.com"
+    case someone = "someone"
     
     case aboutNos = "Nos is a new social media app built on the Nostr protocol from the team that brought you Planetary. Designed for humans, not algorithms. Learn more at Nos.social."
     case aboutNosHighlight = "Learn more at Nos.social."
@@ -243,6 +269,9 @@ enum Localized: String, Localizable, CaseIterable {
     case aboutNostrHighlight = "Learn more about why Nostr is great."
     case nosIsOpenSource = "Nos is open source! You can read the code, contribute new features, or even fork it and build your own Nostr client. No opaque algorithms or secret rules. See the code."
     case nosIsOpenSourceHighlight = "See the code."
+    case eventSource = "Raw Event"
+    case loading = "Loading..."
+    case viewSource = "View Source"
 }
 
 // MARK: - Replies
@@ -252,5 +281,13 @@ extension Localized {
     enum Reply: String, Localizable, CaseIterable {
         case one = "{{ count }} reply"
         case many = "{{ count }} replies"
+        
+        case replied = "replied"
+        case posted = "posted"
+        case postAReply = "Post a reply"
+        
+        case repliedToYourNote = "replied to your note:"
+        case mentionedYou = "mentioned you:"
     }
 }
+// swiftlint:enable line_length identifier_name

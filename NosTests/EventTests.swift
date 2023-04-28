@@ -9,9 +9,6 @@ import XCTest
 import CoreData
 import secp256k1
 import secp256k1_bindings
-@testable import Nos
-
-// swiftlint:disable force_unwrapping
 
 /// Tests for the Event model.
 final class EventTests: XCTestCase {
@@ -278,6 +275,20 @@ final class EventTests: XCTestCase {
         
         // Assert
         XCTAssertFalse(try KeyFixture.keyPair.publicKey.verifySignature(on: event))
+    }
+
+    func testFetchEventByIDPerformance() throws {
+        let persistenceController = PersistenceController()
+        let testContext = persistenceController.container.viewContext
+        let testEvent = try createTestEvent(in: testContext)
+        testEvent.identifier = try testEvent.calculateIdentifier()
+        let eventID = testEvent.identifier!
+        try testContext.save()
+        measure {
+            for _ in 0..<1000 {
+                _ = Event.find(by: eventID, context: testContext)  
+            }
+        }
     }
 
     // MARK: - Helpers

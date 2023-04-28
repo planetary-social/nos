@@ -6,14 +6,18 @@
 //
 
 import SwiftUI
+import Logger
+import Dependencies
 
 @main
 struct NosApp: App {
     
-    @ObservedObject var router = Router()
     let persistenceController = PersistenceController.shared
-    let relayService = RelayService(persistenceController: PersistenceController.shared)
-    let currentUser = CurrentUser.shared
+    @Dependency(\.relayService) private var relayService
+    @Dependency(\.router) private var router
+    @Dependency(\.currentUser) private var currentUser
+    private let appController = AppController()
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
         WindowGroup {
@@ -21,11 +25,22 @@ struct NosApp: App {
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .environmentObject(relayService)
                 .environmentObject(router)
-                .environmentObject(AppController(currentUser: currentUser, router: router))
+                .environmentObject(appController)
                 .environmentObject(currentUser)
                 .task {
-                    CurrentUser.shared.relayService = relayService
-                    relayService.publishFailedEvents()
+                    currentUser.relayService = relayService
+                }
+                .onChange(of: scenePhase) { newPhase in
+                    // TODO: save all contexts, not just the view and background.
+                    if newPhase == .inactive {
+                        Log.info("Scene change: inactive")
+                        try? persistenceController.saveAll()
+                    } else if newPhase == .active {
+                        Log.info("Scene change: active")
+                    } else if newPhase == .background {
+                        Log.info("Scene change: background")
+                        try? persistenceController.saveAll()
+                    }
                 }
         }
     }

@@ -58,9 +58,9 @@ struct ProfileEditView: View {
                     .foregroundColor(.textColor)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.none)
-#if os(iOS)
+                    #if os(iOS)
                     .keyboardType(.URL)
-#endif
+                    #endif
                     let nip05Binding = Binding<String>(
                         get: { self.nip05Text },
                         set: { self.nip05Text = $0.lowercased() }
@@ -85,8 +85,7 @@ struct ProfileEditView: View {
                 // TODO: allow remove UNS
                 if author.nip05?.hasSuffix("universalname.space") != true {
                     VStack {
-                        Text("Universal Name Space brings identity verification you can trust.")
-                        //                            .padding(.horizontal, 10)
+                        Localized.unsTagline.view
                             .padding(.top, 24)
                             .padding(.bottom, 12)
                             .foregroundColor(.white)
@@ -134,7 +133,7 @@ struct ProfileEditView: View {
             if let createAccountCompletion {
                 Spacer()
                 BigActionButton(title: .createAccount) {
-                    save()
+                    await save()
                     createAccountCompletion()
                 }
                 .background(Color.appBg)
@@ -157,7 +156,7 @@ struct ProfileEditView: View {
                     if createAccountCompletion == nil {
                         Button(
                             action: {
-                                save()
+                                Task { await save() }
                                 
                                 // Go back to profile page
                                 router.pop()
@@ -177,12 +176,6 @@ struct ProfileEditView: View {
         }
     }
    
-    var learnMoreLink: AttributedString {
-        var result = try! AttributedString(markdown: "[Learn more ](https://www.universalname.space)")
-        result.foregroundColor = .accent
-        return result
-    }
-    
     func populateTextFields() {
         displayNameText = author.displayName ?? ""
         nameText = author.name ?? ""
@@ -192,7 +185,7 @@ struct ProfileEditView: View {
         unsText = author.uns ?? ""
     }
     
-    func save() {
+    func save() async {
         author.displayName = displayNameText
         author.name = nameText
         author.about = bioText
@@ -201,7 +194,7 @@ struct ProfileEditView: View {
         author.uns = unsText
         try! viewContext.save()
         // Post event
-        CurrentUser.shared.publishMetaData()
+        await CurrentUser.shared.publishMetaData()
     }
 }
 

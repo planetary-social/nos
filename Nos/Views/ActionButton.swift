@@ -22,11 +22,18 @@ struct ActionButton: View {
         startPoint: .bottomLeading,
         endPoint: .topTrailing
     )
-    var textShadow: Bool = true
-    var action: () -> Void
+    var textShadow = true
+    var action: () async -> Void
+    @State var disabled = false
     
     var body: some View {
-        Button(action: action, label: {
+        Button(action: {
+            disabled = true
+            Task {
+                await action()
+                disabled = false
+            }
+        }, label: {
             PlainText(title.string)
                 .font(.clarityBold)
                 .transition(.opacity)
@@ -35,13 +42,18 @@ struct ActionButton: View {
         })
         .lineLimit(nil)
         .foregroundColor(.black)
-        .buttonStyle(ActionButtonStyle(depthEffectColor: depthEffectColor, backgroundGradient: backgroundGradient, textShadow: textShadow))
+        .buttonStyle(ActionButtonStyle(
+            depthEffectColor: depthEffectColor,
+            backgroundGradient: backgroundGradient,
+            textShadow: textShadow
+        ))
+        .disabled(disabled)
     }
 }
 
 struct SecondaryActionButton: View {
     var title: Localized
-    var action: () -> Void
+    var action: () async -> Void
     
     var body: some View {
         ActionButton(

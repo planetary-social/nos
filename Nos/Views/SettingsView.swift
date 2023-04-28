@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Dependencies
+import SwiftUINavigation
 
 struct SettingsView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -15,51 +16,74 @@ struct SettingsView: View {
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var currentUser: CurrentUser
 
-    @State var privateKeyString = ""
+    @State private var privateKeyString = ""
+    @State private var alert: AlertState<AlertAction>?
+    @State private var logFileURL: URL?
     
-    @State var showError = false
-    
-    func importKey(_ keyPair: KeyPair) {
-        currentUser.keyPair = keyPair
+    func importKey(_ keyPair: KeyPair) async {
+        await currentUser.setKeyPair(keyPair)
         analytics.identify(with: keyPair)
         analytics.changedKey()
+    }
+    
+    fileprivate enum AlertAction {
+        case logout
     }
     
     var body: some View {
         Form {
             Section {
-                Localized.keyEncryptionWarning.view
-                    .foregroundColor(.primaryTxt)
                 HStack {
                     SecureField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
                         .foregroundColor(.primaryTxt)
                     
-                    ActionButton(title: Localized.save) {
+                    SecondaryActionButton(title: Localized.save) {
                         if privateKeyString.isEmpty {
-                            currentUser.keyPair = nil
-                            analytics.logout()
-                            appController.configureCurrentState()
+                            await logout()
                         } else if let keyPair = KeyPair(nsec: privateKeyString) {
-                            importKey(keyPair)
+                            await importKey(keyPair)
                         } else if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
-                            importKey(keyPair)
+                            await importKey(keyPair)
                         } else {
-                            currentUser.keyPair = nil
-                            showError = true
+                            await currentUser.setKeyPair(nil)
+                            alert = AlertState(title: {
+                                Localized.invalidKey.textState
+                            }, message: {
+                                Localized.couldNotReadPrivateKeyMessage.textState
+                            })
                         }
                     }
                     .padding(.vertical, 5)
-                    
-                    ActionButton(title: Localized.copy) {
+
+                    SecondaryActionButton(title: Localized.copy) {
                         UIPasteboard.general.string = privateKeyString
                     }
                     .padding(.vertical, 5)
                 }
+                
+                ActionButton(title: Localized.logout) {
+                    alert = AlertState(
+                        title: { Localized.logout.textState }, 
+                        actions: {
+                            ButtonState(role: .destructive, action: .send(.logout)) {
+                                Localized.myKeyIsBackedUp.textState
+                            }
+                        },
+                        message: { Localized.backUpYourKeyWarning.textState }
+                    )
+                }        
+                .padding(.vertical, 5)
             } header: {
-                Localized.keys.view
-                    .foregroundColor(.textColor)
-                    .fontWeight(.heavy)
-                    .bold()
+                VStack(alignment: .leading, spacing: 10) {
+                    Localized.privateKey.view
+                        .foregroundColor(.textColor)
+                        .bold()
+                    
+                    Localized.privateKeyWarning.view
+                        .foregroundColor(.secondaryTxt)
+                }
+                .textCase(nil)
+                .padding(.vertical, 15)
             }
             .listRowBackground(LinearGradient(
                 colors: [Color.cardBgTop, Color.cardBgBottom],
@@ -67,40 +91,77 @@ struct SettingsView: View {
                 endPoint: .bottom
             ))
             
-            #if DEBUG
             Section {
+                HStack {
+                    Text("\(Localized.appVersion.string) \(Bundle.current.versionAndBuild)")
+                        .foregroundColor(.primaryTxt)
+                    Spacer()
+                    SecondaryActionButton(title: Localized.shareLogs) {
+                        Task {
+                            do {
+                                logFileURL = try await LogHelper.zipLogs()
+                            } catch {
+                                alert = AlertState(title: {
+                                    Localized.error.textState
+                                }, message: {
+                                    Localized.failedToExportLogs.textState
+                                })
+                            }
+                        }
+                    }        
+                }
+                .padding(.vertical, 5)
+                .sheet(unwrapping: $logFileURL) { logFileURL in
+                    ActivityViewController(activityItems: [logFileURL.wrappedValue])
+                }
+
+                #if DEBUG
                 Text(Localized.sampleDataInstructions.string)
                     .foregroundColor(.primaryTxt)
-                
+
                 Button(Localized.loadSampleData.string) {
-                    PersistenceController.loadSampleData(context: viewContext)
+                    Task { await PersistenceController.loadSampleData(context: viewContext) }
                 }
+                #endif
             } header: {
                 Localized.debug.view
                     .foregroundColor(.textColor)
                     .fontWeight(.heavy)
                     .bold()
+                    .textCase(nil)
+                    .padding(.vertical, 15)
             }
             .listRowBackground(LinearGradient(
                 colors: [Color.cardBgTop, Color.cardBgBottom],
                 startPoint: .top,
                 endPoint: .bottom
             ))
-            #endif
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
         .nosNavigationBar(title: .settings)
-        .alert(isPresented: $showError) {
-            Alert(
-                title: Localized.invalidKey.view,
-                message: Localized.couldNotReadPrivateKeyMessage.view
-            )
+        .alert(unwrapping: $alert) { (action: AlertAction?) in
+            if let action {
+                await alertButtonTapped(action)
+            }
         }
         .onAppear {
             privateKeyString = currentUser.keyPair?.nsec ?? ""
             analytics.showedSettings()
         }
+    }
+    
+    fileprivate func alertButtonTapped(_ action: AlertAction) async {
+        switch action {
+        case .logout:
+            await logout()
+        }
+    }
+    
+    func logout() async {
+        await currentUser.setKeyPair(nil)
+        analytics.logout()
+        appController.configureCurrentState() 
     }
 }
 

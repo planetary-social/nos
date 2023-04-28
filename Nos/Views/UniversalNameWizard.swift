@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Dependencies
 
 struct UniversalNameWizard: View {
         
@@ -30,6 +31,7 @@ struct UniversalNameWizard: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var currentUser: CurrentUser
+    @Dependency(\.analytics) var analytics
     
     @MainActor @State var flowState = FlowState.enterPhone
     @State private var flow: Flow?
@@ -61,13 +63,13 @@ struct UniversalNameWizard: View {
                             .autocorrectionDisabled()
                             .focused($focusedField, equals: .textEditor)
                             HighlightedText(
-                                "The Universal Namespace gives you one name you can use everywhere. You can verify your identity and get your universal name here in Nos. This screen is for demo purposes only, all names will be reset in the future. Learn more.",
-                                highlightedWord: "Learn more.",
+                                Localized.unsDescription.string,
+                                highlightedWord: Localized.unsLearnMore.string,
                                 highlight: .diagonalAccent,
                                 link: URL(string: "https://universalname.space")
                             )
                         } header: {
-                            Text("Verify your identity")
+                            Localized.verifyYourIdentity.view
                                 .foregroundColor(.primaryTxt)
                                 .fontWeight(.heavy)
                         }
@@ -83,6 +85,7 @@ struct UniversalNameWizard: View {
                     
                     BigActionButton(title: .sendCode) {
                         Task {
+                            analytics.enteredUNSPhone()
                             var number = textField
                             number = number.trimmingCharacters(in: .whitespacesAndNewlines)
                             number.replace("-", with: "")
@@ -114,7 +117,7 @@ struct UniversalNameWizard: View {
                             .autocorrectionDisabled()
                             .focused($focusedField, equals: .textEditor)
                         } header: {
-                            Text("Enter Code")
+                            Localized.enterCode.view
                                 .foregroundColor(.primaryTxt)
                                 .fontWeight(.heavy)
                         }
@@ -128,52 +131,51 @@ struct UniversalNameWizard: View {
                     
                     Spacer()
                     BigActionButton(title: .submit) {
-                        Task {
-                            do {
-                                flowState = .loading
-                                try await api.verifyOTPCode(phoneNumber: phoneNumber!, code: textField.trimmingCharacters(in: .whitespacesAndNewlines))
-                                textField = ""
-                                let names = try await api.getNames()
-                                if let name = names.first {
-                                    self.name = name
-                                    var nip05: String
-                                    if let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub) {
-                                        nip05 = try await api.submitNostrVerification(message: message, keyPair: currentUser.keyPair!)
-                                    } else {
-                                        nip05 = try await api.getNIP05()
-                                    }
-                                    author.name = name
-                                    author.nip05 = nip05
-                                    CurrentUser.shared.publishMetaData()
-                                    try viewContext.save()
-                                    flowState = .success
+                        do {
+                            flowState = .loading
+                            analytics.enteredUNSCode()
+                            try await api.verifyOTPCode(
+                                phoneNumber: phoneNumber!,
+                                code: textField.trimmingCharacters(in: .whitespacesAndNewlines)
+                            )
+                            textField = ""
+                            let names = try await api.getNames()
+                            if let name = names.first {
+                                self.name = name
+                                var nip05: String
+                                if let message = try await api.requestNostrVerification(
+                                    npub: currentUser.keyPair!.npub
+                                ) {
+                                    nip05 = try await api.submitNostrVerification(
+                                        message: message,
+                                        keyPair: currentUser.keyPair!
+                                    )
                                 } else {
-                                    flowState = .chooseName
+                                    nip05 = try await api.getNIP05()
                                 }
-                            } catch {
-                                textField = ""
-                                flowState = .error
+                                author.name = name
+                                author.nip05 = nip05
+                                await CurrentUser.shared.publishMetaData()
+                                try viewContext.save()
+                                flowState = .success
+                            } else {
+                                flowState = .chooseName
                             }
+                        } catch {
+                            textField = ""
+                            flowState = .error
                         }
                     }
                     .padding(.horizontal, 24)
                     .padding(.bottom, 50)
 
                 case .loading:
-                    VStack {
-                        Spacer()
-                        ProgressView()
-                            .foregroundColor(.primaryTxt)
-                            .background(Color.appBg)
-                            .scaleEffect(2)
-                        Spacer()
-                    }
-                    .frame(maxWidth: .infinity)
+                    FullscreenProgressView(isPresented: .constant(true))
                 case .chooseName:
                     Form {
                         Section {
                             TextField(text: $textField) {
-                                Text("name")
+                                Localized.name.view
                                     .foregroundColor(.secondaryTxt)
                             }
                             .textInputAutocapitalization(.none)
@@ -182,7 +184,7 @@ struct UniversalNameWizard: View {
                             .autocapitalization(.none)
                             .focused($focusedField, equals: .textEditor)
                         } header: {
-                            Text("Choose Your Name")
+                            Localized.chooseYourName.view
                                 .foregroundColor(.primaryTxt)
                                 .fontWeight(.heavy)
                         }
@@ -195,31 +197,39 @@ struct UniversalNameWizard: View {
                     .scrollContentBackground(.hidden)
                     Spacer()
                     BigActionButton(title: .submit) {
-                        Task {
+                        do {
                             flowState = .loading
-                            guard try await api.createName(textField.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)) else {
+                            analytics.choseUNSName()
+                            guard try await api.createName(
+                                textField.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+                            ) else {
                                 flowState = .nameTaken
                                 return
                             }
                             let names = try await api.getNames()
                             name = names.first!
                             let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub)!
-                            let nip05 = try await api.submitNostrVerification(message: message, keyPair: currentUser.keyPair!)
+                            let nip05 = try await api.submitNostrVerification(
+                                message: message,
+                                keyPair: currentUser.keyPair!
+                            )
                             author.name = name
                             author.nip05 = nip05
-                            CurrentUser.shared.publishMetaData()
+                            await CurrentUser.shared.publishMetaData()
                             flowState = .success
+                        } catch {
+                            flowState = .error
                         }
                     }
                     .padding(.horizontal, 24)
                     .padding(.bottom, 50)
                 case .nameTaken:
                     Spacer()
-                    PlainText("Oops!")
+                    PlainText(Localized.oops.string)
                         .font(.title2)
                         .padding()
                         .foregroundColor(.primaryTxt)
-                    PlainText("That name is taken.")
+                    PlainText(Localized.thatNameIsTaken.string)
                         .font(.body)
                         .padding()
                         .foregroundColor(.primaryTxt)
@@ -229,19 +239,23 @@ struct UniversalNameWizard: View {
                     }
                     .padding(.horizontal, 24)
                     .padding(.bottom, 50)
+                    .onAppear {
+                        analytics.choseInvalidUNSName()
+                    }
                 case .success:
                     VStack {
-                        PlainText("Success!")
+                        PlainText(Localized.success.string)
                             .font(.title)
                             .padding(.top, 50)
                             .foregroundColor(.primaryTxt)
-                        Text("\(name ?? "") is your new Nostr username.\n\nThis demo of the Universal Namespace is for testing purposes only. All names will be reset in the future.")
+                        Text("\(name ?? "") \(Localized.yourNewUNMessage.string)")
                             .padding()
                             .multilineTextAlignment(.center)
                             .frame(maxWidth: 500)
                             .foregroundColor(.primaryTxt)
                         Spacer()
                         BigActionButton(title: .dismiss) {
+                            analytics.completedUNSWizard()
                             dismiss?()
                         }
                         .padding(.horizontal, 24)
@@ -250,11 +264,11 @@ struct UniversalNameWizard: View {
                     .frame(maxWidth: .infinity)
                 case .error:
                     Spacer()
-                    PlainText("Oops!")
+                    PlainText(Localized.oops.string)
                         .font(.title2)
                         .padding()
                         .foregroundColor(.primaryTxt)
-                    PlainText("An error occured.")
+                    PlainText(Localized.anErrorOccurred.string)
                         .font(.body)
                         .padding()
                         .foregroundColor(.primaryTxt)
@@ -264,10 +278,19 @@ struct UniversalNameWizard: View {
                     }
                     .padding(.horizontal, 24)
                     .padding(.bottom, 50)
+                    .onAppear {
+                        analytics.encounteredUNSError()
+                    }
                 }
             }
             .onAppear {
                 focusedField = .textEditor
+                analytics.showedUNSWizard()
+            }
+            .onDisappear {
+                if flowState != .success {
+                    analytics.canceledUNSWizard()
+                }
             }
             .background(Color.appBg)
             .nosNavigationBar(title: .setUpUNS)
@@ -295,23 +318,23 @@ struct UniversalNameWizard_Previews: PreviewProvider {
             .sheet(isPresented: .constant(true)) {
                 UniversalNameWizard(author: author, flowState: .enterOTP)
             }
-                        VStack {}
+        VStack {}
             .sheet(isPresented: .constant(true)) {
                 UniversalNameWizard(author: author, flowState: .loading)
             }
-                        VStack {}
+        VStack {}
             .sheet(isPresented: .constant(true)) {
                 UniversalNameWizard(author: author, flowState: .chooseName)
             }
-                        VStack {}
+        VStack {}
             .sheet(isPresented: .constant(true)) {
                 UniversalNameWizard(author: author, flowState: .success)
             }
-                        VStack {}
+        VStack {}
             .sheet(isPresented: .constant(true)) {
                 UniversalNameWizard(author: author, flowState: .error)
             }
-                        VStack {}
+        VStack {}
             .sheet(isPresented: .constant(true)) {
                 UniversalNameWizard(author: author, flowState: .nameTaken)
             }

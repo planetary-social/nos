@@ -34,19 +34,19 @@ struct RepliesView: View {
             }
             
             let containsRootMarker = eventReferences.contains(where: { (eventReference: EventReference) in
-                eventReference.marker == "root"
+                eventReference.type == .root
             })
             
             let referencesNoteAsRoot = eventReferences.contains(where: { (eventReference: EventReference) in
-                eventReference.eventId == note.identifier && eventReference.marker == "root"
+                eventReference.eventId == note.identifier && eventReference.type == .root
             })
             
             let containsReplyMarker = eventReferences.contains(where: { (eventReference: EventReference) in
-                eventReference.marker == "reply"
+                eventReference.type == .reply
             })
             
             let referencesNoteAsReply = eventReferences.contains(where: { (eventReference: EventReference) in
-                eventReference.eventId == note.identifier && eventReference.marker == "reply"
+                eventReference.eventId == note.identifier && eventReference.type == .reply
             })
             
             // This is sloppy, but I'm writing it anyway in a rush.
@@ -67,22 +67,24 @@ struct RepliesView: View {
     var note: Event
     
     func subscribeToReplies() {
-        // Close out stale requests
-        if !subscriptionIDs.isEmpty {
-            relayService.sendCloseToAll(subscriptions: subscriptionIDs)
-            subscriptionIDs.removeAll()
+        Task(priority: .userInitiated) {
+            // Close out stale requests
+            if !subscriptionIDs.isEmpty {
+                await relayService.removeSubscriptions(for: subscriptionIDs)
+                subscriptionIDs.removeAll()
+            }
+            
+            let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
+            let filter = Filter(kinds: [.text, .like, .delete], eTags: eTags)
+            let subID = await relayService.openSubscription(with: filter)
+            subscriptionIDs.append(subID)
         }
-        
-        let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
-        let filter = Filter(kinds: [.text, .like], eTags: eTags)
-        let subID = relayService.requestEventsFromAll(filter: filter)
-        subscriptionIDs.append(subID)
     }
     
     var body: some View {
         VStack {
             ScrollView(.vertical) {
-                LazyVStack {
+                VStack {
                     NoteButton(
                         note: note,
                         showFullMessage: true,
@@ -107,8 +109,10 @@ struct RepliesView: View {
                 subscribeToReplies()
             }
             .onDisappear {
-                relayService.sendCloseToAll(subscriptions: subscriptionIDs)
-                subscriptionIDs.removeAll()
+                Task(priority: .userInitiated) {
+                    await relayService.removeSubscriptions(for: subscriptionIDs)
+                    subscriptionIDs.removeAll()
+                }
             }
             VStack {
                 Spacer()
@@ -117,14 +121,17 @@ struct RepliesView: View {
                         if let author = currentUser.author {
                             AvatarView(imageUrl: author.profilePhotoURL, size: 35)
                         }
-                        ExpandingTextFieldAndSubmitButton(placeholder: "Post a reply", reply: $reply) {
-                            postReply(reply)
+                        ExpandingTextFieldAndSubmitButton(
+                            placeholder: Localized.Reply.postAReply.string,
+                            reply: $reply
+                        ) {
+                            await postReply(reply)
                         }
                     }
                     .padding(.horizontal)
                 }
-                .background(Color.cardBgBottom)
             }
+            .background(Color.cardBgBottom)
             .fixedSize(horizontal: false, vertical: true)
             .onAppear {
                 analytics.showedThread()
@@ -133,8 +140,12 @@ struct RepliesView: View {
         .background(Color.appBg)
     }
     
-    func postReply(_ replyText: String) {
+    func postReply(_ replyText: String) async {
         do {
+            guard !replyText.isEmpty else {
+                return
+            }
+
             guard let keyPair = currentUser.keyPair else {
                 alert = AlertState(title: {
                     TextState(Localized.error.string)
@@ -147,10 +158,10 @@ struct RepliesView: View {
             var tags: [[String]] = [["p", note.author!.publicKey!.hex]]
             // If `note` is a reply to another root, tag that root
             if let rootNoteIdentifier = note.rootNote()?.identifier, rootNoteIdentifier != note.identifier {
-                tags.append(["e", rootNoteIdentifier, "", "root"])
-                tags.append(["e", note.identifier!, "", "reply"])
+                tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
+                tags.append(["e", note.identifier!, "", EventReferenceMarker.reply.rawValue])
             } else {
-                tags.append(["e", note.identifier!, "", "root"])
+                tags.append(["e", note.identifier!, "", EventReferenceMarker.root.rawValue])
             }
             
             // print("tags: \(tags)")
@@ -163,11 +174,7 @@ struct RepliesView: View {
                 content: replyText,
                 signature: ""
             )
-            let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
-                
-            try event.sign(withKey: keyPair)
-            try viewContext.save()
-            relayService.publishToAll(event: event, context: viewContext)
+            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
         } catch {
             alert = AlertState(title: {
                 TextState(Localized.error.string)

@@ -39,16 +39,18 @@ struct RelayView: View {
                             .foregroundColor(.textColor)
                     }
                     .onDelete { indexes in
-                        for index in indexes {
-                            let relay = relays[index]
-                            relayService.closeConnection(to: relay)
-                            analytics.removed(relay)
-                            author.remove(relay: relay)
-                            viewContext.delete(relay)
+                        Task {
+                            for index in indexes {
+                                let relay = relays[index]
+                                await relayService.closeConnection(to: relay)
+                                analytics.removed(relay)
+                                author.remove(relay: relay)
+                                viewContext.delete(relay)
+                            }
+                            
+                            try! viewContext.save()
+                            await publishChanges()
                         }
-                        
-                        try! viewContext.save()
-                        publishChanges()
                     }
                     
                     if author.relays?.count == 0 {
@@ -74,8 +76,10 @@ struct RelayView: View {
                             Button {
                                 newRelayAddress = address
                                 addRelay()
-                                CurrentUser.shared.subscribe()
-                                publishChanges()
+                                Task {
+                                    await CurrentUser.shared.subscribe()
+                                    await publishChanges()
+                                }
                             } label: {
                                 Label(address, systemImage: "plus.circle")
                             }
@@ -94,7 +98,7 @@ struct RelayView: View {
             }
             
             Section {
-                TextField("wss://yourrelay.com", text: $newRelayAddress)
+                TextField(Localized.relayAddressPlaceholder.string, text: $newRelayAddress)
                     .foregroundColor(.textColor)
                     .autocorrectionDisabled()
                     #if os(iOS)
@@ -103,8 +107,10 @@ struct RelayView: View {
                     #endif
                 Button(Localized.save.string) {
                     addRelay()
-                    CurrentUser.shared.subscribe()
-                    publishChanges()
+                    Task {
+                        await CurrentUser.shared.subscribe()
+                        await publishChanges()
+                    }
                 }
             } header: {
                 Localized.addRelay.view
@@ -134,9 +140,9 @@ struct RelayView: View {
         }
     }
     
-    func publishChanges() {
-        let followKeys = CurrentUser.shared.follows?.keys ?? []
-        CurrentUser.shared.publishContactList(tags: followKeys.pTags)
+    func publishChanges() async {
+        let followKeys = CurrentUser.shared.socialGraph.followedKeys 
+        await CurrentUser.shared.publishContactList(tags: followKeys.pTags)
     }
 
     private func addRelay() {

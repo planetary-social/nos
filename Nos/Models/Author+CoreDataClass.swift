@@ -55,11 +55,20 @@ public class Author: NosManagedObject {
         return nil
     }
     
-    class func find(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author? {
+    var followedKeys: [HexadecimalString] {
+        follows?.compactMap({ ($0 as? Follow)?.destination?.hexadecimalPublicKey }) ?? []
+    }
+    
+    class func request(by pubKey: HexadecimalString) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey = %@", pubKey)
         fetchRequest.fetchLimit = 1
-        // *** Terminating app due to uncaught exception 'NSGenericException', reason: '*** Collection <__NSCFSet: 0x6000010aa130> was mutated while being enumerated.'
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+        return fetchRequest
+    }
+    
+    class func find(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author? {
+        let fetchRequest = request(by: pubKey)
         if let author = try context.fetch(fetchRequest).first {
             return author
         }
@@ -104,7 +113,17 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc class func inNetworkRequest(for author: Author? = nil) -> NSFetchRequest<Author> {
+    @nonobjc class func oneHopRequest(for author: Author) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.lastUpdatedContactList, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey",
+            author
+        )
+        return fetchRequest
+    }
+    
+    @MainActor @nonobjc class func inNetworkRequest(for author: Author? = nil) -> NSFetchRequest<Author> {
         var author = author
         if author == nil {
             guard let currentUser = CurrentUser.shared.author else {
@@ -156,9 +175,7 @@ public class Author: NosManagedObject {
     }
     
     func add(relay: Relay) {
-        // swiftlint:disable legacy_objc_type
         relays = (relays ?? NSSet()).adding(relay)
-        // swiftlint:enable legacy_objc_type
         print("Adding \(relay.address ?? "") to \(hexadecimalPublicKey ?? "")")
     }
     
@@ -174,15 +191,15 @@ public class Author: NosManagedObject {
         try? context.save()
     }
     
-    func mute(context: NSManagedObjectContext) {
+    func mute(context: NSManagedObjectContext) async {
         guard let mutedAuthorKey = hexadecimalPublicKey,
-            mutedAuthorKey != CurrentUser.shared.publicKey else {
+            mutedAuthorKey != CurrentUser.shared.publicKeyHex else {
             return
         }
         
         print("Muting \(mutedAuthorKey)")
         muted = true
-        CurrentUser.shared.publishMuteList(keys: [mutedAuthorKey])
+        await CurrentUser.shared.publishMuteList(keys: [mutedAuthorKey])
         deleteAllPosts(context: context)
     }
     
@@ -191,24 +208,9 @@ public class Author: NosManagedObject {
         print("Removed \(relay.address ?? "") from \(hexadecimalPublicKey ?? "")")
     }
     
-    func requestMetadata(using relayService: RelayService) -> String? {
-        guard let hexadecimalPublicKey else {
-            return nil
-        }
-        
-        let metaFilter = Filter(
-            authorKeys: [hexadecimalPublicKey],
-            kinds: [.metaData],
-            limit: 1,
-            since: lastUpdatedMetadata
-        )
-        let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
-        return metaSub
-    }
-    
-    func unmute(context: NSManagedObjectContext) {
+    func unmute(context: NSManagedObjectContext) async {
         guard let unmutedAuthorKey = hexadecimalPublicKey,
-            unmutedAuthorKey != CurrentUser.shared.publicKey else {
+            unmutedAuthorKey != CurrentUser.shared.publicKeyHex else {
             return
         }
         
@@ -226,7 +228,7 @@ public class Author: NosManagedObject {
             mutedList.removeAll(where: { $0 == unmutedAuthorKey })
 
             // Publish that modified list
-            CurrentUser.shared.publishMuteList(keys: mutedList)
+            await CurrentUser.shared.publishMuteList(keys: mutedList)
         }
     }
 }

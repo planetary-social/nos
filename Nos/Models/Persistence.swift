@@ -19,16 +19,9 @@ struct PersistenceController {
     static var preview: PersistenceController = {
         let controller = PersistenceController(inMemory: true)
         let viewContext = controller.container.viewContext
-        PersistenceController.loadSampleData(context: viewContext)
-        
-        do {
-            try viewContext.save()
-        } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this
-            // function in a shipping application, although it may be useful during development.
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        Task {
+            await PersistenceController.loadSampleData(context: viewContext)
+            try! viewContext.save()
         }
         return controller
     }()
@@ -43,6 +36,10 @@ struct PersistenceController {
     var viewContext: NSManagedObjectContext {
         container.viewContext
     }
+    
+    static var backgroundViewContext = {
+        PersistenceController.shared.newBackgroundContext()
+    }()
     
     var container: NSPersistentContainer
 
@@ -87,6 +84,11 @@ struct PersistenceController {
         }
     }
     
+    func saveAll() throws {
+        try viewContext.saveIfNeeded()
+        try Self.backgroundViewContext.saveIfNeeded()
+    }
+    
     static func clearCoreData(store storeURL: URL, in container: NSPersistentContainer) {
         Log.info("Dropping Core Data...")
         do {
@@ -96,7 +98,7 @@ struct PersistenceController {
         }
     }
     
-    static func loadSampleData(context: NSManagedObjectContext) {
+    static func loadSampleData(context: NSManagedObjectContext) async {
         guard let sampleFile = Bundle.current.url(forResource: "sample_data", withExtension: "json") else {
             Log.error("Error: bad sample file location")
             return
@@ -124,11 +126,9 @@ struct PersistenceController {
         let authors = Author.all(context: context)
         let follows = try! context.fetch(Follow.followsRequest(sources: authors))
         
-        if let publicKey = CurrentUser.shared.publicKey {
+        if let publicKey = CurrentUser.shared.publicKeyHex {
             let currentAuthor = try! Author.findOrCreate(by: publicKey, context: context)
-            // swiftlint:disable legacy_objc_type
             currentAuthor.follows = NSSet(array: follows)
-            // swiftlint:enable legacy_objc_type
         }
     }
     

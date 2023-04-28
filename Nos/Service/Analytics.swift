@@ -10,19 +10,6 @@ import Dependencies
 import Logger
 import Starscream
 
-private enum AnalyticsKey: DependencyKey {
-    static let liveValue = Analytics()
-    static let testValue = Analytics(mock: true)
-    static let previewValue = Analytics(mock: true)
-}
-
-extension DependencyValues {
-    var analytics: Analytics {
-        get { self[AnalyticsKey.self] }
-        set { self[AnalyticsKey.self] = newValue }
-    }
-}
-
 /// An object to manage analytics data, currently wired up to send data to PostHog and registered as a global
 /// dependency using the Dependencies library.
 class Analytics {
@@ -45,8 +32,8 @@ class Analytics {
         }
     }
 
-    func published(note: Event) {
-        track("Published Note", properties: ["length": note.content?.count ?? 0])
+    func published(note: JSONEvent) {
+        track("Published Note", properties: ["length": note.content.count])
     }
     
     // MARK: - Screens
@@ -134,13 +121,23 @@ class Analytics {
         postHog?.identify(keyPair.npub)
     }
     
+    func databaseStatistics(eventCount: Int) {
+        track("Database Statistics", properties: [
+            "events": eventCount
+        ])
+    }
+    
     func logout() {
         Log.info("Analytics: User logged out")
         postHog?.reset()
     }
     
     private func track(_ eventName: String, properties: [String: Any] = [:]) {
-        Log.info("Analytics: \(eventName)")
+        if properties.isEmpty {
+            Log.info("Analytics: \(eventName)")
+        } else {
+            Log.info("Analytics: \(eventName): \(properties)")
+        }
         postHog?.capture(eventName, properties: properties)
     }
     
@@ -148,5 +145,61 @@ class Analytics {
     
     func rateLimited(by socket: WebSocket) {
         track("Rate Limited", properties: ["relay": socket.request.url?.absoluteString ?? "null"])
+    }
+    
+    // MARK: UNS
+    
+    func showedUNSWizard() {
+        track("UNS Showed Wizard")
+    }
+    
+    func canceledUNSWizard() {
+        track("UNS Canceled Wizard")
+    }
+    
+    func completedUNSWizard() {
+        track("UNS Completed Wizard")
+    }
+    
+    func enteredUNSPhone() {
+        track("UNS Entered Phone")
+    }
+    
+    func enteredUNSCode() {
+        track("UNS Entered Code")
+    }
+    
+    func choseUNSName() {
+        track("UNS Chose Name")
+    }
+    
+    func choseInvalidUNSName() {
+        track("UNS Invalid Name")
+    }
+    
+    func encounteredUNSError() {
+        track("UNS Error")
+    }
+    
+    // MARK: Message Actions
+    
+    func copiedNoteIdentifier() {
+        track("Copied Note Identifier")
+    }
+    
+    func copiedNoteLink() {
+        track("Copied Note Link")
+    }
+    
+    func copiedNoteText() {
+        track("Copied Note Text")
+    }
+    
+    func viewedNoteSource() {
+        track("Viewed Note Source")
+    }
+    
+    func deletedNote() {
+        track("Deleted Note")
     }
 }

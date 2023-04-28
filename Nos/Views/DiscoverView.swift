@@ -57,16 +57,22 @@ struct DiscoverView: View {
     
     @State var columns: Int = 0
     
-    @State private var subscriptionIds = [String]()
+    @State private var performingInitialLoad = true
+    @State private var subscriptionIDs = [String]()
+    @State private var isVisible = false
+    @State private var cancellables = [AnyCancellable]()
     private var featuredAuthors: [String]
     
     @StateObject private var searchModel = SearchModel()
+    @State private var date = Date.now
+
+    @State var predicate: NSPredicate = .false
     
-    var predicate: NSPredicate {
+    func updatePredicate() {
         if let relayFilter {
-            return Event.seen(on: relayFilter)
+            predicate = Event.seen(on: relayFilter, before: date)
         } else {
-            return Event.extendedNetworkPredicate(featuredAuthors: featuredAuthors)
+            predicate = Event.extendedNetworkPredicate(featuredAuthors: featuredAuthors, before: date)
         }
     }
 
@@ -74,19 +80,19 @@ struct DiscoverView: View {
         self.featuredAuthors = featuredAuthors
     }
     
-    func refreshDiscover() {
-        relayService.sendCloseToAll(subscriptions: subscriptionIds)
-        subscriptionIds.removeAll()
+    func subscribeToNewEvents() async {
+        await cancelSubscriptions()
         
-        if let relayFilter {
+        if let relayAddress = relayFilter?.addressURL {
             // TODO: Use a since filter
             let singleRelayFilter = Filter(
-                kinds: [.text],
+                kinds: [.text, .delete],
                 limit: 200
             )
             
-            subscriptionIds.append(
-                relayService.requestEventsFromAll(filter: singleRelayFilter, relays: [relayFilter])
+            subscriptionIDs.append(
+                // TODO: I don't think the override relays will be honored when opening new sockets
+                await relayService.openSubscription(with: singleRelayFilter, to: [relayAddress])
             )
         } else {
             
@@ -107,46 +113,50 @@ struct DiscoverView: View {
                 authorKeys: featuredAuthors.compactMap {
                     PublicKey(npub: $0)?.hex
                 },
-                kinds: [.text],
+                kinds: [.text, .delete],
                 limit: 100,
                 since: fetchSinceDate
             )
             
-            subscriptionIds.append(relayService.requestEventsFromAll(filter: featuredFilter))
+            subscriptionIDs.append(await relayService.openSubscription(with: featuredFilter))
             
-            if !currentUser.inNetworkAuthors.isEmpty {
-                // this filter just requests everything for now, because I think requesting all the authors within
-                // two hops is too large of a request and causes the websocket to close.
-                let twoHopsFilter = Filter(
-                    kinds: [.text],
-                    limit: 50,
-                    since: fetchSinceDate
-                )
-                
-                subscriptionIds.append(relayService.requestEventsFromAll(filter: twoHopsFilter))
-            }
+            // this filter just requests everything for now, because I think requesting all the authors within
+            // two hops is too large of a request and causes the websocket to close.
+            let twoHopsFilter = Filter(
+                kinds: [.text],
+                limit: 50,
+                since: fetchSinceDate
+            )
+            
+            subscriptionIDs.append(await relayService.openSubscription(with: twoHopsFilter))
+        }
+    }
+    
+    func cancelSubscriptions() async {
+        if !subscriptionIDs.isEmpty {
+            await relayService.removeSubscriptions(for: subscriptionIDs)
+            subscriptionIDs.removeAll()
         }
     }
     
     var body: some View {
         NavigationStack(path: $router.discoverPath) {
             ZStack {
-                DiscoverGrid(predicate: predicate, columns: $columns)
-
-                if showRelayPicker, let author = currentUser.author {
-                    RelayPicker(
-                        selectedRelay: $relayFilter,
-                        defaultSelection: Localized.extendedNetwork.string,
-                        author: author,
-                        isPresented: $showRelayPicker
-                    )
+                if performingInitialLoad {
+                    FullscreenProgressView(isPresented: $performingInitialLoad, hideAfter: .now() + .seconds(2))
+                } else {
+                    
+                    DiscoverGrid(predicate: predicate, columns: $columns)
+                    
+                    if showRelayPicker, let author = currentUser.author {
+                        RelayPicker(
+                            selectedRelay: $relayFilter,
+                            defaultSelection: Localized.extendedNetwork.string,
+                            author: author,
+                            isPresented: $showRelayPicker
+                        )
+                    }
                 }
-            }
-            .onChange(of: relayFilter) { _ in
-                withAnimation {
-                    showRelayPicker = false
-                }
-                refreshDiscover()
             }
             .searchable(text: $searchModel.query, placement: .toolbar, prompt: PlainText(Localized.searchBar.string)) {
                 ForEach(searchModel.authorSuggestions, id: \.self) { author in
@@ -211,21 +221,42 @@ struct DiscoverView: View {
                 }
             }
             .animation(.easeInOut, value: columns)
+            .task { 
+                updatePredicate()
+            }
             .refreshable {
-                refreshDiscover()
+                date = .now
+            }
+            .onChange(of: relayFilter) { _ in
+                withAnimation {
+                    showRelayPicker = false
+                }
+                updatePredicate()
+                Task { await subscribeToNewEvents() }
+            }
+            .onChange(of: date) { _ in
+                updatePredicate()
+            }
+            .refreshable {
+                date = .now
             }
             .onAppear {
                 if router.selectedTab == .discover {
-                    searchModel.clear()
-                    analytics.showedDiscover()
-                    refreshDiscover()
+                    isVisible = true
                 }
             }
             .onDisappear {
-                searchModel.clear()
-                relayService.sendCloseToAll(subscriptions: subscriptionIds)
-                subscriptionIds.removeAll()
+                isVisible = false
             }
+            .onChange(of: isVisible, perform: { isVisible in
+                if isVisible {
+                    analytics.showedDiscover()
+                    Task { await subscribeToNewEvents() }
+                } else {
+                    searchModel.clear()
+                    Task { await cancelSubscriptions() }
+                }
+            })
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
@@ -251,7 +282,7 @@ struct DiscoverView: View {
     
     func submitSearch() {
         if searchModel.query.contains("@") {
-            Task {
+            Task(priority: .userInitiated) {
                 if let publicKeyHex =
                     await relayService.retrieveInternetIdentifierPublicKeyHex(searchModel.query.lowercased()),
                     let author = author(fromPublicKey: publicKeyHex) {
@@ -284,9 +315,9 @@ struct DiscoverView_Previews: PreviewProvider {
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
     static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
     static var currentUser: CurrentUser = {
-        let currentUser = CurrentUser()
-        currentUser.privateKeyHex = KeyFixture.alice.privateKeyHex
-        currentUser.context = previewContext
+        let currentUser = CurrentUser(persistenceController: persistenceController)
+        Task { await currentUser.setPrivateKeyHex(KeyFixture.alice.privateKeyHex) }
+        currentUser.viewContext = previewContext
         currentUser.relayService = relayService
         return currentUser
     }()

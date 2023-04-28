@@ -107,7 +107,6 @@ struct ProfileHeader: View {
                                 } else {
                                     Text("\(relayService.identifierToShow(nip05Identifier))")
                                         .foregroundColor(.secondaryTxt)
-                                    
                                 }
                             }
                         }
@@ -134,30 +133,27 @@ struct ProfileHeader: View {
         .navigationDestination(for: Followed.self) { followed in
             FollowsView(followed: followed)
         }
-        .onAppear {
-            Task.detached(priority: .userInitiated) {
-                if let nip05Identifier = await author.nip05,
-                    let publicKey = await author.publicKey?.hex {
-                    let verifiedNip05Identifier = await relayService.verifyInternetIdentifier(
-                        identifier: nip05Identifier,
-                        userPublicKey: publicKey
-                    )
-                    await MainActor.run {
-                        withAnimation {
-                            self.verifiedNip05Identifier = verifiedNip05Identifier
-                        }
-                    }
+        .task(priority: .userInitiated) {
+            if let nip05Identifier = author.nip05,
+                let publicKey = author.publicKey?.hex {
+                let verifiedNip05Identifier = await relayService.verifyInternetIdentifier(
+                    identifier: nip05Identifier,
+                    userPublicKey: publicKey
+                )
+                withAnimation {
+                    self.verifiedNip05Identifier = verifiedNip05Identifier
                 }
             }
         }
         .onDisappear {
-            relayService.sendCloseToAll(subscriptions: [subscriptionId])
-            subscriptionId = ""
+            Task(priority: .userInitiated) {
+                await relayService.removeSubscription(for: subscriptionId)
+                subscriptionId = ""
+            }
         }
     }
 }
 
-// swiftlint:disable force_unwrapping
 struct IdentityHeaderView_Previews: PreviewProvider {
     
     static var persistenceController = PersistenceController.preview

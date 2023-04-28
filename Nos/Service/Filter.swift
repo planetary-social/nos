@@ -7,31 +7,30 @@
 
 import Foundation
 
-/// For REQ
-final class Filter: Hashable {
-    private var authorKeys: [String] {
-        didSet {
-            print("Override author keys to: \(authorKeys)")
-        }
-    }
-    private var kinds: [EventKind]
-    let limit: Int
-    let since: Date?
-
-    // For closing requests; not part of hash
-    var subscriptionId: String = ""
-    var subscriptionStartDate: Date?
+/// Describes a set of Nostr Events, usually so we can ask relay servers for them.
+struct Filter: Hashable, Identifiable {
     
-    private var eTags: [String]
+    let authorKeys: [HexadecimalString]
+    let eventIDs: [HexadecimalString]
+    let kinds: [EventKind]
+    let eTags: [HexadecimalString]
+    let limit: Int?
+    let since: Date?
+    
+    var id: String {
+        String(hashValue)
+    }
 
     init(
-        authorKeys: [String] = [],
+        authorKeys: [HexadecimalString] = [],
+        eventIDs: [HexadecimalString] = [],
         kinds: [EventKind] = [],
-        eTags: [String] = [],
-        limit: Int = 100,
+        eTags: [HexadecimalString] = [],
+        limit: Int? = nil,
         since: Date? = nil
     ) {
         self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
+        self.eventIDs = eventIDs
         self.kinds = kinds.sorted(by: { $0.rawValue > $1.rawValue })
         self.eTags = eTags
         self.limit = limit
@@ -39,10 +38,18 @@ final class Filter: Hashable {
     }
     
     var dictionary: [String: Any] {
-        var filterDict: [String: Any] = ["limit": limit]
+        var filterDict = [String: Any]()
+        
+        if let limit {
+            filterDict["limit"] = limit
+        }
 
         if !authorKeys.isEmpty {
             filterDict["authors"] = authorKeys
+        }
+        
+        if !eventIDs.isEmpty {
+            filterDict["ids"] = eventIDs
         }
 
         if !kinds.isEmpty {
@@ -61,19 +68,16 @@ final class Filter: Hashable {
     }
 
     static func == (lhs: Filter, rhs: Filter) -> Bool {
-        lhs.authorKeys == rhs.authorKeys && lhs.kinds == rhs.kinds && lhs.limit == rhs.limit
+        lhs.hashValue == rhs.hashValue
     }
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(authorKeys)
+        hasher.combine(eventIDs)
         hasher.combine(kinds)
         hasher.combine(limit)
         hasher.combine(eTags)
         hasher.combine(since)
-    }
-    
-    func matches(_ other: Filter) -> Bool {
-        authorKeys == other.authorKeys && kinds == other.kinds && eTags == other.eTags && since == other.since
     }
     
     func isFulfilled(by event: Event) -> Bool {

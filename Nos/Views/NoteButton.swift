@@ -7,13 +7,16 @@
 
 import Foundation
 import SwiftUI
+import CoreData
 
 /// This view displays the a button with the information we have for a note suitable for being used in a list
 /// or grid.
 ///
 /// The button opens the ThreadView for the note when tapped.
 struct NoteButton: View {
-    var note: Event
+
+    @State var note: Event?
+    var noteID: HexadecimalString
     var style = CardStyle.compact
     var showFullMessage = false
     var hideOutOfNetwork = true
@@ -21,30 +24,72 @@ struct NoteButton: View {
     var showReplyCount = true
     var isInThreadView = false
 
+    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
 
+    init(
+        note: Event, 
+        style: CardStyle = CardStyle.compact, 
+        showFullMessage: Bool = false, 
+        hideOutOfNetwork: Bool = true, 
+        allowsPush: Bool = true, 
+        showReplyCount: Bool = true, 
+        isInThreadView: Bool = false
+    ) {
+        self.note = note
+        self.noteID = note.identifier!
+        self.style = style
+        self.showFullMessage = showFullMessage
+        self.hideOutOfNetwork = hideOutOfNetwork
+        self.allowsPush = allowsPush
+        self.showReplyCount = showReplyCount
+        self.isInThreadView = isInThreadView
+    }
+
+    init(
+        noteID: HexadecimalString, 
+        style: CardStyle = CardStyle.compact, 
+        showFullMessage: Bool = false, 
+        hideOutOfNetwork: Bool = true, 
+        allowsPush: Bool = true, 
+        showReplyCount: Bool = true, 
+        isInThreadView: Bool = false
+    ) {
+        self.noteID = noteID
+        self.style = style
+        self.showFullMessage = showFullMessage
+        self.hideOutOfNetwork = hideOutOfNetwork
+        self.allowsPush = allowsPush
+        self.showReplyCount = showReplyCount
+        self.isInThreadView = isInThreadView
+    }
+
     var body: some View {
-        if let author = note.author {
-            Button {
-                if allowsPush {
-                    if !isInThreadView, let referencedNote = note.referencedNote() {
-                        router.push(referencedNote)
-                    } else {
-                        router.push(note)
+        Group {
+            if let note {
+                Button {
+                    if allowsPush {
+                        if !isInThreadView, let referencedNote = note.referencedNote() {
+                            router.push(referencedNote)
+                        } else {
+                            router.push(note)
+                        }
                     }
+                } label: {
+                    NoteCard(
+                        note: note,
+                        style: style,
+                        showFullMessage: showFullMessage,
+                        hideOutOfNetwork: hideOutOfNetwork,
+                        showReplyCount: showReplyCount
+                    )
                 }
-            } label: {
-                NoteCard(
-                    author: author,
-                    note: note,
-                    style: style,
-                    showFullMessage: showFullMessage,
-                    hideOutOfNetwork: hideOutOfNetwork,
-                    showReplyCount: showReplyCount
-                )
+                .buttonStyle(CardButtonStyle())
+            } else {
+                Color.clear
+                    .frame(minHeight: 800)
             }
-            .buttonStyle(CardButtonStyle())
         }
     }
 }

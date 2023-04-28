@@ -104,8 +104,8 @@ struct SideMenuRow: View {
     
     var title: Localized
     var image: Image
-    var destination: SideMenu.Destination? = nil
-    var action: (() -> Void)? = nil
+    var destination: SideMenu.Destination?
+    var action: (() -> Void)?
     
     @EnvironmentObject private var router: Router
     

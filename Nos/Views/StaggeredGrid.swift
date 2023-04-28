@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-//class StaggeredGridDataSource<E>: RandomAccessCollection {
+// class StaggeredGridDataSource<E>: RandomAccessCollection {
 //
 //    var columnCount: Int
 //    var flatCollection: any RandomAccessCollection<E> where Index == Int
@@ -51,7 +51,7 @@ import SwiftUI
 //        return (x: remainder, y: numberOfRows)
 //    }
 //
-//}
+// }
 
 struct StaggeredGrid<Content: View, T: Identifiable, L: RandomAccessCollection<T>>: View where T: Hashable {
     
@@ -92,7 +92,7 @@ struct StaggeredGrid<Content: View, T: Identifiable, L: RandomAccessCollection<T
     }
     
     var body: some View {
-        ScrollView(.vertical) {
+        ScrollView(.vertical, showsIndicators: false) {
             HStack(alignment: .top) {
                 ForEach(setUpList(), id: \.self) { columnsData in
                     LazyVStack(spacing: spacing) {

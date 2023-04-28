@@ -31,45 +31,46 @@ struct ProfileView: View {
     }
     
     func refreshProfileFeed() {
-        // Close out stale requests
-        if !subscriptionIds.isEmpty {
-            relayService.sendCloseToAll(subscriptions: subscriptionIds)
-            subscriptionIds.removeAll()
-        }
-        
-        let authors = [author.hexadecimalPublicKey!]
-        let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
-        let textSub = relayService.requestEventsFromAll(filter: textFilter)
-        subscriptionIds.append(textSub)
-        
-        let metaFilter = Filter(
-            authorKeys: authors,
-            kinds: [.metaData],
-            limit: 1,
-            since: author.lastUpdatedMetadata
-        )
-        let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
-        subscriptionIds.append(metaSub)
-       
-        if let currentUser = CurrentUser.shared.author {
-            let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
-            let userLikesFilter = Filter(
-                authorKeys: currentUserAuthorKeys,
-                kinds: [.like],
-                limit: 100
+        Task(priority: .userInitiated) {
+            // Close out stale requests
+            if !subscriptionIds.isEmpty {
+                await relayService.removeSubscriptions(for: subscriptionIds)
+                subscriptionIds.removeAll()
+            }
+            
+            let authors = [author.hexadecimalPublicKey!]
+            let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete], limit: 50)
+            async let textSub = relayService.openSubscription(with: textFilter)
+            
+            let metaFilter = Filter(
+                authorKeys: authors,
+                kinds: [.metaData],
+                since: author.lastUpdatedMetadata
             )
-            let userLikesSub = relayService.requestEventsFromAll(filter: userLikesFilter)
-            subscriptionIds.append(userLikesSub)
+            async let metaSub = relayService.openSubscription(with: metaFilter)
+            
+            let contactFilter = Filter(
+                authorKeys: authors,
+                kinds: [.contactList],
+                since: author.lastUpdatedContactList
+            )
+            async let contactSub = relayService.openSubscription(with: contactFilter)
+            
+            if let currentUser = CurrentUser.shared.author {
+                let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
+                let userLikesFilter = Filter(
+                    authorKeys: currentUserAuthorKeys,
+                    kinds: [.like],
+                    limit: 100
+                )
+                let userLikesSub = await relayService.openSubscription(with: userLikesFilter)
+                subscriptionIds.append(userLikesSub)
+            }
+            
+            subscriptionIds.append(await textSub)
+            subscriptionIds.append(await metaSub)
+            subscriptionIds.append(await contactSub)
         }
-        
-        let contactFilter = Filter(
-            authorKeys: authors,
-            kinds: [.contactList],
-            limit: 1,
-            since: author.lastUpdatedContactList
-        )
-        let contactSub = relayService.requestEventsFromAll(filter: contactFilter)
-        subscriptionIds.append(contactSub)
     }
     
     var body: some View {
@@ -133,11 +134,15 @@ struct ProfileView: View {
                             } else {
                                 if author.muted {
                                     Button(Localized.unmuteUser.string) {
-                                        router.viewedAuthor?.unmute(context: viewContext)
+                                        Task {
+                                            await router.viewedAuthor?.unmute(context: viewContext)
+                                        }
                                     }
                                 } else {
                                     Button(Localized.muteUser.string) {
-                                        router.viewedAuthor?.mute(context: viewContext)
+                                        Task {
+                                            await router.viewedAuthor?.mute(context: viewContext)
+                                        }
                                     }
                                 }
                             }
@@ -145,7 +150,7 @@ struct ProfileView: View {
                     }
                 }
         )
-        .task {
+        .task(priority: .userInitiated) {
             refreshProfileFeed()
         }
         .onAppear {
@@ -156,8 +161,10 @@ struct ProfileView: View {
             refreshProfileFeed()
         }
         .onDisappear {
-            relayService.sendCloseToAll(subscriptions: subscriptionIds)
-            subscriptionIds.removeAll()
+            Task(priority: .userInitiated) {
+                await relayService.removeSubscriptions(for: subscriptionIds)
+                subscriptionIds.removeAll()
+            }
         }
     }
 }

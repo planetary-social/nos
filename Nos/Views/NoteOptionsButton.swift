@@ -8,20 +8,19 @@
 import Foundation
 import SwiftUI
 import secp256k1
+import Dependencies
 
 struct NoteOptionsButton: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var currentUser: CurrentUser
+    
+    @Dependency(\.analytics) private var analytics
     
     var note: Event
 
-    @State
-    private var showingOptions = false
-
-    @State
-    private var showingShare = false
-
-    @State
-    private var showingSource = false
+    @State private var showingOptions = false
+    @State private var showingShare = false
+    @State private var showingSource = false
 
     var body: some View {
         VStack {
@@ -33,44 +32,45 @@ struct NoteOptionsButton: View {
             }
             .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
                 Button(Localized.copyNoteIdentifier.string) {
-                    // Analytics.shared.trackDidSelectAction(actionName: "copy_message_identifier")
+                    analytics.copiedNoteIdentifier()
                     copyMessageIdentifier()
                 }
                 Button(Localized.copyNoteText.string) {
-                    // Analytics.shared.trackDidSelectAction(actionName: "copy_message_text")
+                    analytics.copiedNoteText()
                     copyMessage()
                 }
                 Button(Localized.copyLink.string) {
-                    // Analytics.shared.trackDidSelectAction(actionName: "copy_message_text")
+                    analytics.copiedNoteLink()
                     copyLink()
                 }
-                // Button(Localized.shareThisMessage.text) {
-                // Analytics.shared.trackDidSelectAction(actionName: "share_message")
-                // showingShare = true
-                // }
-                // Button(Localized.viewSource.text) {
-                // Analytics.shared.trackDidSelectAction(actionName: "view_message_source")
-                // showingSource = true
-                // }
+                Button(Localized.viewSource.string) {
+                    analytics.viewedNoteSource()
+                    showingSource = true
+                }
                 // Button(Localized.reportPost.string, role: .destructive) {
                 // Analytics.shared.trackDidSelectAction(actionName: "report_post")
                 //    reportPost()
                 // }
                 
-                if note.author == CurrentUser.shared.author {
+                if note.author == currentUser.author {
                     Button(Localized.deleteNote.string) {
-                        // Analytics.shared.trackDidSelectAction(actionName: "delete_message")
-                        deletePost()
+                        analytics.deletedNote()
+                        Task { await deletePost() }
                     }
                 }
             }
             .sheet(isPresented: $showingSource) {
+                NavigationView {
+                    RawEventView(viewModel: RawEventController(note: note, dismissHandler: {
+                        showingSource = false
+                    }))
+                }
             }
             .sheet(isPresented: $showingShare) {
             }
         }
     }
-
+    
     func copyMessageIdentifier() {
         UIPasteboard.general.string = note.bech32NoteID
     }
@@ -80,14 +80,19 @@ struct NoteOptionsButton: View {
     }
     
     func copyMessage() {
-        if let attrString = note.attributedContent(with: viewContext) {
-            UIPasteboard.general.string = String(attrString.characters)
+        Task {
+            if let attrString = await Event.attributedContent(
+                noteID: note.identifier,
+                context: viewContext
+            ) {
+                UIPasteboard.general.string = String(attrString.characters)
+            }
         }
     }
     
-    func deletePost() {
+    func deletePost() async {
         if let identifier = note.identifier {
-            CurrentUser.shared.publishDelete(for: [identifier])
+            await currentUser.publishDelete(for: [identifier])
         }
     }
 

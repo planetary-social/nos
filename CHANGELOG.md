@@ -8,6 +8,76 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a bug where you could post the same reply multiple times.
+- Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
+- Added Brazilian Portuguese translations (thanks Andressa!)
+
+## [0.1 (35)] - 2023-04-19Z
+
+- Added French translations. Thank you p2x@p2xco.de!
+- Added Chinese (Traditional) and updated Chinese (Simplified) translations. Thank you rasputin@getalby.com!
+- Added a logout button in the Settings menu.
+- Minor performance improvements on Thread and Discover views.
+- Updated the default list of users shown on the Discover tab.
+- Fixed a bug where muted authors would show up on the Discover tab.
+- Added an initial loading indicator when you first open the Home or Discover tabs.
+- Added a logout button in the Settings menu.
+- Fixed a bug where notes would be truncated but the Read More button would not be shown.
+- Scrolling performance improvements
+- Fixed a bug where notes would be truncated but the Read More button would not be shown.
+
+## [0.1 (33)] - 2023-04-17Z
+
+- Added a button to share the application logs in the Settings menu
+- Automatically attach debug logs to support emails
+
+## [0.1 (32)] - 2023-04-14Z
+
+- More performance improvements on the Home tab.
+
+Note:
+- In this build you have to pull-to-refresh if you want to see new notes after the initial load of the Home or Discover tabs. 
+
+## [0.1 (31)] - 2023-04-13Z
+
+- Added a button to view raw event JSON in the options menu on notes.
+- Fixed notes saying "so-and-so posted" at the top when it should say "so-and-so replied".
+- Added code to load the note being replied to if we don't have it. 
+- Improved performance on the home feed
+
+## [0.1 (30)] - 2023-04-10Z
+
+- Fixed a bug where the Read More button would show on notes when it didn't need to.
+- Added Chinese (Simplified) translations (thanks rasputin@getalby.com!)
+- Nos now requests delete events from relays.
+
+## [0.1 (28)] - 2023-04-07Z
+
+- Made all the built-in text in the app translatable. If you would like to help translate Nos let us know by emailing support@planetary.social.
+
+## [0.1 (27)] - 2023-04-05Z
+
+- Minor performance improvements
+- Fixed an occasional hang when publishing
+
+## [0.1 (26)] - 2023-04-03Z
+
+- Minor performance improvements on the Feed and Discover tabs
+
+## [0.1 (25)] - 2023-03-31Z
+
+- Fixed a bug where reply counts were displaying translation keys instead of the count
+
+## [0.1 (24)] - 2023-03-31Z
+
+- Added Crowdin integration for translation services. If you would like to help us translate Nos drop us a line at 
+support@planetary.social.
+- Fixed several crashes.
+- Fixed issue where the like button didn't turn orange when pressed.
+- Fixed an issue where likes to replies were counted towards the root note.
+- Added more aggressive caching of images.
+- Minor performance improvements - more to come!
+
 ## [0.1 (23)] - 2023-03-25Z
 - Add the option to copy web links on profile pages and notes.
 

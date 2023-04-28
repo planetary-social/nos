@@ -12,10 +12,11 @@ struct ExpandingTextFieldAndSubmitButton: View {
     
     var placeholder: String
     @Binding var reply: String
-    var action: () -> Void
+    var action: () async -> Void
     
     @FocusState private var textEditorInFocus
     @State private var showPostButton = false
+    @State var disabled = false
     
     var body: some View {
         HStack {
@@ -24,7 +25,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
                     VStack {
                         Text(placeholder)
                             .foregroundColor(.secondaryTxt)
-                            .padding(.top, 9.5)
+                            .padding(.top, 10)
                             .padding(.leading, 7.5)
                         Spacer()
                     }
@@ -39,14 +40,19 @@ struct ExpandingTextFieldAndSubmitButton: View {
             if showPostButton {
                 Button(
                     action: {
-                        self.action()
-                        reply = ""
+                        disabled = true
+                        Task {
+                            await action()
+                            reply = ""
+                            disabled = false
+                        }
                     },
                     label: {
                         Localized.post.view
                     }
                 )
                 .transition(.move(edge: .trailing))
+                .disabled(disabled)
             }
         }
         .onChange(of: textEditorInFocus) { bool in
@@ -54,7 +60,6 @@ struct ExpandingTextFieldAndSubmitButton: View {
                 showPostButton = bool
             }
         }
-        
         .padding(8)
     }
 }

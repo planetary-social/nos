@@ -7,9 +7,10 @@
 
 import Foundation
 import CoreData
+import Logger
 
 /// The event processor consumes raw event data from the relays and writes it to Core Data.
-enum EventProcessor {    
+enum EventProcessor {
     static func parse(
         jsonObject: [String: Any],
         from relay: Relay?,
@@ -23,15 +24,23 @@ enum EventProcessor {
     static func parse(
         jsonEvent: JSONEvent,
         from relay: Relay?,
-        in parseContext: NSManagedObjectContext
+        in parseContext: NSManagedObjectContext,
+        skipVerification: Bool = false
     ) throws -> Event {
         let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: relay, context: parseContext)
         
-        guard event.author?.publicKey != nil else {
+        guard let publicKey = event.author?.publicKey else {
             throw EventError.missingAuthor
         }
         
-        try parseContext.save()
+        if skipVerification == false {
+            guard try publicKey.verifySignature(on: event) else {
+                parseContext.delete(event)
+                Log.info("Invalid signature on event: \(jsonEvent)")
+                throw EventError.invalidSignature(event)
+            }
+            event.isVerified = true
+        }
         
         return event
     }

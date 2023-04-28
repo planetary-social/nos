@@ -19,10 +19,10 @@ struct FollowButton: View {
         let following = CurrentUser.shared.isFollowing(author: author)
         ActionButton(title: following ? .unfollow : .follow) {
             if following {
-                CurrentUser.shared.unfollow(author: author)
+                await CurrentUser.shared.unfollow(author: author)
                 analytics.unfollowed(author)
             } else {
-                CurrentUser.shared.follow(author: author)
+                await CurrentUser.shared.follow(author: author)
                 analytics.followed(author)
             }
         }
@@ -63,7 +63,6 @@ struct FollowButton_Previews: PreviewProvider {
         let follow = Follow(context: previewContext)
         follow.source = user
         follow.destination = alice
-        // swiftlint:disable legacy_objc_type
         user.follows = NSSet(array: [follow])
         try! previewContext.save()
         KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.privateKeyHex.utf8))

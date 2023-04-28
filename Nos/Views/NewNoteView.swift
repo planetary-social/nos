@@ -63,7 +63,7 @@ struct NewNoteView: View {
                             .frame(maxHeight: .infinity)
                             .placeholder(when: postText.characters.isEmpty, placeholder: {
                                 VStack {
-                                    Text("Type your post here...")
+                                    Localized.newNotePlaceholder.view
                                         .foregroundColor(.secondaryTxt)
                                         .padding(.horizontal, 8.5)
                                         .padding(.vertical, 10)
@@ -180,7 +180,7 @@ struct NewNoteView: View {
         mentionOffset = nil
     }
     
-    private func publishPost() {
+    private func publishPost() async {
         guard let keyPair = currentUser.keyPair else {
             alert = AlertState(title: {
                 TextState(Localized.error.string)
@@ -190,45 +190,44 @@ struct NewNoteView: View {
             return
         }
         
-        withAnimation {
-            do {
-                let parser = NoteParser()
-                let (content, tags) = parser.parse(attributedText: postText)
-                let jsonEvent = JSONEvent(
-                    id: "",
-                    pubKey: keyPair.publicKeyHex,
-                    createdAt: Int64(Date().timeIntervalSince1970),
-                    kind: 1,
-                    tags: tags,
-                    content: content,
-                    signature: ""
+        do {
+            let parser = NoteParser()
+            let (content, tags) = parser.parse(attributedText: postText)
+            let jsonEvent = JSONEvent(
+                id: "",
+                pubKey: keyPair.publicKeyHex,
+                createdAt: Int64(Date().timeIntervalSince1970),
+                kind: 1,
+                tags: tags,
+                content: content,
+                signature: ""
+            )
+            
+            if let selectedRelay {
+                try await relayService.publish(
+                    event: jsonEvent,
+                    to: selectedRelay,
+                    signingKey: keyPair,
+                    context: viewContext
                 )
-                let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: nil, context: viewContext)
-                event.author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
-
-                try event.sign(withKey: keyPair)
-                try viewContext.save()
-                if let selectedRelay {
-                    relayService.publish(to: selectedRelay, event: event, context: viewContext)
-                } else {
-                    relayService.publishToAll(event: event, context: viewContext)
-                }
-                isPresented = false
-                analytics.published(note: event)
-                postText = ""
-                router.selectedTab = .home
-            } catch {
-                alert = AlertState(title: {
-                    TextState(Localized.error.string)
-                }, message: {
-                    TextState(error.localizedDescription)
-                })
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this
-                // function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            } else {
+                try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
             }
+            isPresented = false
+            analytics.published(note: jsonEvent)
+            postText = ""
+            router.selectedTab = .home
+        } catch {
+            alert = AlertState(title: {
+                TextState(Localized.error.string)
+            }, message: {
+                TextState(error.localizedDescription)
+            })
+            // Replace this implementation with code to handle the error appropriately.
+            // fatalError() causes the application to generate a crash log and terminate. You should not use this
+            // function in a shipping application, although it may be useful during development.
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
 }
