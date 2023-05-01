@@ -67,7 +67,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     @MainActor var viewContext: NSManagedObjectContext
     var backgroundContext: NSManagedObjectContext
     
-    @Published var socialGraph: SocialGraph
+    @Published var socialGraph: SocialGraphCache
     
     var relayService: RelayService! {
         didSet {
@@ -95,7 +95,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     @MainActor init(persistenceController: PersistenceController) {
         self.viewContext = persistenceController.viewContext
         self.backgroundContext = persistenceController.newBackgroundContext()
-        self.socialGraph = SocialGraph(userKey: nil, context: backgroundContext)
+        self.socialGraph = SocialGraphCache(userKey: nil, context: backgroundContext)
         super.init()
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             Log.info("CurrentUser loaded a private key from keychain")
@@ -133,7 +133,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             authorWatcher?.delegate = self
             try? authorWatcher?.performFetch()
             
-            socialGraph = SocialGraph(userKey: keyPair.publicKeyHex, context: backgroundContext)
+            socialGraph = SocialGraphCache(userKey: keyPair.publicKeyHex, context: backgroundContext)
             
             Task {
                 if relayService != nil {
@@ -253,6 +253,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 let metaFilter = Filter(
                     authorKeys: [followedKey],
                     kinds: [.metaData],
+                    limit: 1,
                     since: lastUpdatedMetadata
                 )
                 _ = await self?.relayService.openSubscription(with: metaFilter)
@@ -260,6 +261,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 let contactFilter = Filter(
                     authorKeys: [followedKey],
                     kinds: [.contactList],
+                    limit: 1,
                     since: lastUpdatedContactList
                 )
                 _ = await self?.relayService.openSubscription(with: contactFilter)
@@ -313,9 +315,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             return
         }
 
-        let time = Int64(Date.now.timeIntervalSince1970)
-        let kind = EventKind.metaData.rawValue
-        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: [], content: metaString)
+        let jsonEvent = JSONEvent(pubKey: pubKey, kind: .metaData, tags: [], content: metaString)
                 
         if let pair = keyPair {
             do {
@@ -332,9 +332,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             return
         }
         
-        let time = Int64(Date.now.timeIntervalSince1970)
-        let kind = EventKind.mute.rawValue
-        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: keys.pTags, content: "")
+        let jsonEvent = JSONEvent(pubKey: pubKey, kind: .mute, tags: keys.pTags, content: "")
         
         if let pair = keyPair {
             do {
@@ -352,9 +350,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         }
         
         let tags = identifiers.eTags
-        let time = Int64(Date.now.timeIntervalSince1970)
-        let kind = EventKind.delete.rawValue
-        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: reason)
+        let jsonEvent = JSONEvent(pubKey: pubKey, kind: .delete, tags: tags, content: reason)
         
         if let pair = keyPair {
             do {
@@ -385,9 +381,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         relayString.removeLast()
         relayString += "}"
         
-        let time = Int64(Date.now.timeIntervalSince1970)
-        let kind = EventKind.contactList.rawValue
-        let jsonEvent = JSONEvent(pubKey: pubKey, createdAt: time, kind: kind, tags: tags, content: relayString)
+        let jsonEvent = JSONEvent(pubKey: pubKey, kind: .contactList, tags: tags, content: relayString)
         
         if let pair = keyPair {
             do {

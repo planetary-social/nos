@@ -91,8 +91,8 @@ struct RepliesView: View {
                         hideOutOfNetwork: false,
                         allowsPush: false,
                         showReplyCount: false
-                    )
-                    .padding(.horizontal)
+                    )                                
+                    .padding(.top, 15)
                     
                     ForEach(directReplies.reversed()) { event in
                         ThreadView(root: event, allReplies: replies.reversed())
@@ -142,6 +142,10 @@ struct RepliesView: View {
     
     func postReply(_ replyText: String) async {
         do {
+            guard !replyText.isEmpty else {
+                return
+            }
+
             guard let keyPair = currentUser.keyPair else {
                 alert = AlertState(title: {
                     TextState(Localized.error.string)
@@ -196,11 +200,21 @@ struct RepliesView_Previews: PreviewProvider {
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
     static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
+    static var relayService = RelayService(persistenceController: persistenceController)
     static var router = Router()
+
+    static var currentUser: CurrentUser = {
+        let currentUser = CurrentUser(persistenceController: persistenceController)
+        currentUser.viewContext = previewContext
+        currentUser.relayService = relayService
+        Task { await currentUser.setKeyPair(KeyFixture.keyPair) }
+        return currentUser
+    }()
     
     static var shortNote: Event {
         let note = Event(context: previewContext)
         note.kind = 1
+        note.createdAt = .now
         note.content = "Hello, world!"
         note.author = user
         return note
@@ -209,6 +223,7 @@ struct RepliesView_Previews: PreviewProvider {
     static var longNote: Event {
         let note = Event(context: previewContext)
         note.kind = 1
+        note.createdAt = .now
         note.content = .loremIpsum(5)
         note.author = user
         return note
@@ -232,6 +247,7 @@ struct RepliesView_Previews: PreviewProvider {
         .environment(\.managedObjectContext, previewContext)
         .environmentObject(emptyRelayService)
         .environmentObject(router)
+        .environmentObject(currentUser)
         .padding()
         .background(Color.cardBackground)
     }

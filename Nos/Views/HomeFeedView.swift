@@ -17,6 +17,7 @@ struct HomeFeedView: View {
     @EnvironmentObject var router: Router
     @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
+    @AppStorage("lastHomeFeedRequestDate") var lastRequestDateUnix: TimeInterval?
     
     @FetchRequest var events: FetchedResults<Event>
     @State private var date = Date.now
@@ -30,31 +31,48 @@ struct HomeFeedView: View {
     
     init(user: Author) {
         self.user = user
-        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, after: Date.now))
+        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, before: Date.now))
     }
     
     func subscribeToNewEvents() async {
         await cancelSubscriptions()
         
         let followedKeys = currentUser.socialGraph.followedKeys 
-        let since = events.first?.createdAt
             
         guard let currentUserKey = currentUser.publicKeyHex else {
             return
         }
+        
+        var fetchSinceDate: Date?
+        /// Make sure the lastRequestDate was more than a minute ago
+        /// to make sure we got all the events from it.
+        if let lastRequestDateUnix {
+            let lastRequestDate = Date(timeIntervalSince1970: lastRequestDateUnix)
+            if lastRequestDate.distance(to: .now) > 60 {
+                fetchSinceDate = lastRequestDate
+                self.lastRequestDateUnix = Date.now.timeIntervalSince1970
+            }
+        } else {
+            self.lastRequestDateUnix = Date.now.timeIntervalSince1970
+        }
                 
         if !followedKeys.isEmpty {
             // TODO: we could miss events with this since filter
-            let textFilter = Filter(authorKeys: followedKeys, kinds: [.text, .delete], limit: 100, since: since)
+            let textFilter = Filter(
+                authorKeys: followedKeys, 
+                kinds: [.text, .delete, .repost], 
+                limit: 400, 
+                since: fetchSinceDate
+            )
             let textSub = await relayService.openSubscription(with: textFilter)
             subscriptionIDs.append(textSub)
         }
+        
         let currentUserAuthorKeys = [currentUserKey]
         let userLikesFilter = Filter(
             authorKeys: currentUserAuthorKeys,
             kinds: [.like, .delete],
-            limit: 100,
-            since: since
+            since: fetchSinceDate
         )
         let userLikesSub = await relayService.openSubscription(with: userLikesFilter)
         subscriptionIDs.append(userLikesSub)
@@ -77,15 +95,15 @@ struct HomeFeedView: View {
                         LazyVStack {
                             ForEach(events) { event in
                                 NoteButton(note: event, hideOutOfNetwork: false)
-                                    .padding(.horizontal)
+                                    .padding(.bottom, 15)
                             }
                         }
+                        .padding(.vertical, 5)
                     }
                     .accessibilityIdentifier("home feed")
                 }
             }
             .background(Color.appBg)
-            .padding(.top, 1)
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
@@ -113,9 +131,14 @@ struct HomeFeedView: View {
             date = .now
         }
         .onChange(of: date) { newDate in
-            events.nsPredicate = Event.homeFeedPredicate(for: user, after: newDate)
+            events.nsPredicate = Event.homeFeedPredicate(for: user, before: newDate)
+            Task { await subscribeToNewEvents() }
         }
-        .onAppear { isVisible = true }
+        .onAppear { 
+            if router.selectedTab == .home {
+                isVisible = true 
+            }
+        }
         .onDisappear { isVisible = false }
         .onChange(of: isVisible, perform: { isVisible in
             if isVisible {
