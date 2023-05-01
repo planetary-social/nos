@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import SwiftUI
 
-/// Class suitable for being used ina searchable modifier as it debounces
+/// Class suitable for being used in a searchable modifier as it debounces
 /// the input to debouncedText.
 class SearchTextFieldObserver: ObservableObject {
     @Published

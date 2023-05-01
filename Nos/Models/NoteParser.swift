@@ -21,7 +21,9 @@ struct NoteParser {
     /// Parses the content and tags stored in a note and returns an attributed text that can be used for displaying
     /// the note in the UI.
     func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> AttributedString {
+        // swiftlint:disable all
         let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)(?:nostr:)(?<npub>[-a-zA-Z0-9@:%._\+~#=]{2,256})/
+        // swiftlint:enable all
         let result = content.replacing(regex) { match in
             let substring = match.0
             let index = match.1
@@ -42,10 +44,12 @@ struct NoteParser {
                 if let tag = tags[safe: index], let type = tag[safe: 0], let hex = tag[safe: 1] {
                     if type == "p" {
                         return findAndReplaceAuthorReference(hex)
-                    } else if type == "e",
-                       let event = Event.find(by: hex, context: context),
-                       let bech32NoteID = event.bech32NoteID {
-                        return "\(prefix)[@\(bech32NoteID)](%\(hex))"
+                    } else if type == "e" {
+                        if let event = Event.find(by: hex, context: context), let bech32NoteID = event.bech32NoteID {
+                            return "\(prefix)[@\(bech32NoteID)](%\(hex))"
+                        } else {
+                            return "\(prefix)[@\(hex)](%\(hex))"
+                        }
                     }
                 }
             } else if let npub {

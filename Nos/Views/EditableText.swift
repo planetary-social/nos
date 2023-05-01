@@ -36,7 +36,7 @@ struct EditableText: UIViewRepresentable {
         view.backgroundColor = .clear
         view.delegate = context.coordinator
 
-        NotificationCenter.default.addObserver(
+        context.coordinator.observer = NotificationCenter.default.addObserver(
             forName: .mentionAddedNotification,
             object: nil,
             queue: .main
@@ -67,6 +67,12 @@ struct EditableText: UIViewRepresentable {
         return view
     }
 
+    static func dismantleUIView(_ uiView: UITextView, coordinator: Coordinator) {
+        if let observer = coordinator.observer {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+
     var nsAttributedString: NSAttributedString {
         NSAttributedString(attributedText)
     }
@@ -85,6 +91,7 @@ struct EditableText: UIViewRepresentable {
     }
 
     class Coordinator: NSObject, UITextViewDelegate {
+        var observer: NSObjectProtocol?
         var text: Binding<AttributedString>
         var selectedRange: Binding<NSRange>
 
