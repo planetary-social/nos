@@ -106,10 +106,15 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
+    @nonobjc func allPostsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(format: "kind = %i AND author = %@", eventKind.rawValue, self)
+        fetchRequest.predicate = NSPredicate(
+            format: "(kind = %i OR kind = %i) AND author = %@", 
+            EventKind.text.rawValue, 
+            EventKind.repost.rawValue, 
+            self
+        )
         return fetchRequest
     }
     
