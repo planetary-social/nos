@@ -83,7 +83,7 @@ struct NotificationsView: View {
                 ProfileView(author: author)
             }
             .refreshable {
-                Task { await subscribeToNewEvents() }
+                await subscribeToNewEvents()
             }
             .onAppear {
                 if router.selectedTab == .notifications {
