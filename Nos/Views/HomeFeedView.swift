@@ -98,7 +98,7 @@ struct HomeFeedView: View {
                                     .padding(.bottom, 15)
                             }
                         }
-                        .padding(.top, 15)
+                        .padding(.vertical, 5)
                     }
                     .accessibilityIdentifier("home feed")
                 }
@@ -134,7 +134,11 @@ struct HomeFeedView: View {
             events.nsPredicate = Event.homeFeedPredicate(for: user, before: newDate)
             Task { await subscribeToNewEvents() }
         }
-        .onAppear { isVisible = true }
+        .onAppear { 
+            if router.selectedTab == .home {
+                isVisible = true 
+            }
+        }
         .onDisappear { isVisible = false }
         .onChange(of: isVisible, perform: { isVisible in
             if isVisible {
