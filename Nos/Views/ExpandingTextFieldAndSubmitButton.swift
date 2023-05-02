@@ -41,6 +41,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
                 Button(
                     action: {
                         disabled = true
+                        focus.wrappedValue = false
                         Task {
                             await action()
                             reply = ""

@@ -188,7 +188,6 @@ struct NoteCard: View {
                                 .padding(.trailing, 23)
                                 .padding(.vertical, 12)
                         })
-                        .background(Color.red)
                     }
                     .padding(.leading, 13)
                 }
