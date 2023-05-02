@@ -107,6 +107,9 @@ struct HomeFeedView: View {
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
+            .navigationDestination(for: URL.self) { url in
+                URLView(url: url)
+            }
             .navigationDestination(for: Author.self) { author in
                 if router.currentPath.wrappedValue.count == 1 {
                     ProfileView(author: author)
