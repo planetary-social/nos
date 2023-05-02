@@ -146,7 +146,8 @@ struct DiscoverView: View {
                 if performingInitialLoad {
                     FullscreenProgressView(
                         isPresented: $performingInitialLoad, 
-                        hideAfter: .now() + .seconds(Self.initialLoadTime))
+                        hideAfter: .now() + .seconds(Self.initialLoadTime)
+                    )
                 } else {
                     
                     DiscoverGrid(predicate: predicate, columns: $columns)
