@@ -9,6 +9,10 @@ import SwiftUI
 import SwiftUINavigation
 import Dependencies
 
+struct ReplyToNavigationDestination: Hashable {
+    var note: Event
+}
+
 struct RepliesView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
@@ -22,6 +26,9 @@ struct RepliesView: View {
     @State private var alert: AlertState<Never>?
     
     @State private var subscriptionIDs = [String]()
+    
+    @FocusState private var focusTextView: Bool
+    @State private var showKeyboardOnAppear: Bool
     
     var repliesRequest: FetchRequest<Event>
     /// All replies
@@ -59,9 +66,10 @@ struct RepliesView: View {
         }
     }
     
-    init(note: Event) {
+    init(note: Event, showKeyboard: Bool = false) {
         self.note = note
         self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note))
+        _showKeyboardOnAppear = .init(initialValue: showKeyboard)
     }
     
     var note: Event
@@ -90,7 +98,8 @@ struct RepliesView: View {
                         showFullMessage: true,
                         hideOutOfNetwork: false,
                         allowsPush: false,
-                        showReplyCount: false
+                        showReplyCount: false,
+                        replyAction: { _ in self.focusTextView = true }
                     )                                
                     .padding(.top, 15)
                     
@@ -123,9 +132,13 @@ struct RepliesView: View {
                         }
                         ExpandingTextFieldAndSubmitButton(
                             placeholder: Localized.Reply.postAReply.string,
-                            reply: $reply
+                            reply: $reply,
+                            focus: $focusTextView
                         ) {
                             await postReply(reply)
+                        }
+                        .onAppear {
+                            focusTextView = showKeyboardOnAppear
                         }
                     }
                     .padding(.horizontal)
@@ -135,6 +148,18 @@ struct RepliesView: View {
             .fixedSize(horizontal: false, vertical: true)
             .onAppear {
                 analytics.showedThread()
+            }
+        }
+        .toolbar {
+            if focusTextView {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { 
+                        focusTextView = false
+                    }, label: { 
+                        Localized.cancel.view
+                            .foregroundColor(.primaryTxt)
+                    })
+                }
             }
         }
         .background(Color.appBg)
