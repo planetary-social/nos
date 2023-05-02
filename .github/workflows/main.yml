@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: {{ env.XCODE_VERSION }}
+          xcode-version: 14.3
       - name: Checkout
         uses: actions/checkout@main
       - name: Build Nos
