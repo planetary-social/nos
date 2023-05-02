@@ -124,7 +124,8 @@ struct DiscoverView: View {
             // two hops is too large of a request and causes the websocket to close.
             let twoHopsFilter = Filter(
                 kinds: [.text],
-                limit: 50,
+                inNetwork: true,
+                limit: 200,
                 since: fetchSinceDate
             )
             

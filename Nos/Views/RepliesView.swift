@@ -75,7 +75,7 @@ struct RepliesView: View {
             }
             
             let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
-            let filter = Filter(kinds: [.text, .like, .delete], eTags: eTags)
+            let filter = Filter(kinds: [.text, .like, .delete, .repost], eTags: eTags)
             let subID = await relayService.openSubscription(with: filter)
             subscriptionIDs.append(subID)
         }

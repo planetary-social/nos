@@ -232,7 +232,7 @@ public class Event: NosManagedObject {
             return emptyRequest()
         }
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
             format: replyNoteReferences,
             noteID
