@@ -146,13 +146,14 @@ struct PersistenceController {
     
     static var cleanupTask: Task<Void, Error>?
     
+    // swiftlint:disable function_body_length 
+    
     /// Deletes unneeded entities from Core Data.
     /// The general strategy here is to:
     /// - keep some max number of events, delete the others 
     /// - delete authors outside the user's network 
     /// - delete any other models that are orphaned by the previous deletions
     /// - fix EventReferences whose referencedEvent was deleted by createing a stubbed Event
-    // swiftlint:disable function_body_length 
     static func cleanupEntities(for currentUser: CurrentUser) {
         // this function was written in a hurry and probably should be refactored and tested thorougly.
         guard cleanupTask == nil else {
