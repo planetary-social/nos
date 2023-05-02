@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - The notifications tab now request more events from relays
+- Open links in an in-app web browser instead of Safari
 - Fixed link detection in notes for URLs without a scheme (i.e. "https://")
 - Made the reply button on notes easier to tap, and it now presents the keyboard when tapped.
 
