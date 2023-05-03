@@ -14,7 +14,7 @@ env:
 jobs:
   unit_test:
     name : Unit Tests
-    runs-on: macOS-13.1
+    runs-on: macOS-13
     steps:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
