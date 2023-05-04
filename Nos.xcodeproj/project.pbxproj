@@ -259,6 +259,10 @@
 		C9F64D8D29ED840700563F2B /* LogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8B29ED840700563F2B /* LogHelper.swift */; };
 		C9F64D8F29ED88CD00563F2B /* Localization+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8E29ED88CD00563F2B /* Localization+Nos.swift */; };
 		C9F64D9029ED88CD00563F2B /* Localization+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8E29ED88CD00563F2B /* Localization+Nos.swift */; };
+		C9F75AD22A02D41E005BBE45 /* ComposerActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F75AD12A02D41E005BBE45 /* ComposerActionBar.swift */; };
+		C9F75AD32A02D41E005BBE45 /* ComposerActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F75AD12A02D41E005BBE45 /* ComposerActionBar.swift */; };
+		C9F75AD62A041FF7005BBE45 /* ExpirationTimePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F75AD52A041FF7005BBE45 /* ExpirationTimePicker.swift */; };
+		C9F75AD72A041FF7005BBE45 /* ExpirationTimePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F75AD52A041FF7005BBE45 /* ExpirationTimePicker.swift */; };
 		C9F84C1A298DBB6300C6714D /* Data+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */; };
 		C9F84C1C298DBBF400C6714D /* Data+Sha.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C1B298DBBF400C6714D /* Data+Sha.swift */; };
 		C9F84C1D298DBC6100C6714D /* Data+Sha.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C1B298DBBF400C6714D /* Data+Sha.swift */; };
@@ -489,6 +493,8 @@
 		C9F0BB6E29A50437000547FC /* NostrConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrConstants.swift; sourceTree = "<group>"; };
 		C9F64D8B29ED840700563F2B /* LogHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogHelper.swift; sourceTree = "<group>"; };
 		C9F64D8E29ED88CD00563F2B /* Localization+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Localization+Nos.swift"; sourceTree = "<group>"; };
+		C9F75AD12A02D41E005BBE45 /* ComposerActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerActionBar.swift; sourceTree = "<group>"; };
+		C9F75AD52A041FF7005BBE45 /* ExpirationTimePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationTimePicker.swift; sourceTree = "<group>"; };
 		C9F84C1B298DBBF400C6714D /* Data+Sha.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Sha.swift"; sourceTree = "<group>"; };
 		C9F84C20298DC36800C6714D /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		C9F84C22298DC7B900C6714D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -858,6 +864,8 @@
 				C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */,
 				C9A25B3C29F174D200B39534 /* ReadabilityPadding.swift */,
 				C9DB207629F30EC700FB7B9D /* AsyncButton.swift */,
+				C9F75AD12A02D41E005BBE45 /* ComposerActionBar.swift */,
+				C9F75AD52A041FF7005BBE45 /* ExpirationTimePicker.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1199,12 +1207,14 @@
 				C95D68AD299E721700429F86 /* ProfileView.swift in Sources */,
 				C942566929B66A2800C4202C /* Date+Elapsed.swift in Sources */,
 				C9ADB13829928CC30075E7F8 /* String+Hex.swift in Sources */,
+				C9F75AD22A02D41E005BBE45 /* ComposerActionBar.swift in Sources */,
 				C9DEBFD2298941000078B43A /* NosApp.swift in Sources */,
 				C9646EAE29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */,
 				C95D68A3299E6D9000429F86 /* SelectableText.swift in Sources */,
 				C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */,
 				C93EC2F129C337EB0012EE2A /* RelayPicker.swift in Sources */,
 				C9F0BB6F29A50437000547FC /* NostrConstants.swift in Sources */,
+				C9F75AD62A041FF7005BBE45 /* ExpirationTimePicker.swift in Sources */,
 				CD76865329B793F400085358 /* DiscoverSearchBar.swift in Sources */,
 				C987F85B29BA9ED800B44E7A /* Font.swift in Sources */,
 				3FB5E651299D28A200386527 /* OnboardingView.swift in Sources */,
@@ -1280,6 +1290,7 @@
 				CD76864D29B133E600085358 /* ExpandingTextFieldAndSubmitButton.swift in Sources */,
 				CD09A76329A522190063464F /* OnboardingView.swift in Sources */,
 				CD09A76129A5220E0063464F /* NosApp.swift in Sources */,
+				C9F75AD72A041FF7005BBE45 /* ExpirationTimePicker.swift in Sources */,
 				C93EC2F229C337EB0012EE2A /* RelayPicker.swift in Sources */,
 				CD09A76229A5220E0063464F /* AppController.swift in Sources */,
 				C9A0DAF929C92F4500466635 /* UNSAPI.swift in Sources */,
@@ -1383,6 +1394,7 @@
 				C9DEBFE9298941020078B43A /* EventTests.swift in Sources */,
 				C9ADB14229951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */,
 				C92DF80629C25DE900400561 /* URL+MimeTypes.swift in Sources */,
+				C9F75AD32A02D41E005BBE45 /* ComposerActionBar.swift in Sources */,
 				C93CA0C029AD59D700921183 /* GoldenPostView.swift in Sources */,
 				C9646EAF29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */,
 				C93EC2FE29C3785C0012EE2A /* View+RoundedCorner.swift in Sources */,

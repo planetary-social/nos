@@ -19,6 +19,7 @@ struct NewNoteView: View {
     @Dependency(\.analytics) private var analytics
     
     @State private var postText: String = ""
+    @State var expirationTime: TimeInterval?
     
     @State private var alert: AlertState<Never>?
     
@@ -53,20 +54,7 @@ struct NewNoteView: View {
                             .focused($focusedField, equals: .textEditor)
                     }
                     Spacer()
-                    HStack {
-                        HighlightedText(
-                            Localized.nostrBuildHelp.string,
-                            highlightedWord: "nostr.build",
-                            highlight: .diagonalAccent,
-                            textColor: .secondaryTxt,
-                            link: URL(string: "https://nostr.build")!
-                        )
-                        .listRowBackground(Color.appBg)
-                        .listRowSeparator(.hidden)
-                        .padding(.leading, 17)
-                        .padding(10)
-                        Spacer()
-                    }
+                    ComposerActionBar(expirationTime: $expirationTime)
                 }
                 .scrollContentBackground(.hidden)
                 
@@ -132,12 +120,18 @@ struct NewNoteView: View {
         }
         
         do {
+            var tags = [[String]]()
+            
+            if let expirationTime {
+                tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
+            }
+            
             let jsonEvent = JSONEvent(
                 id: "",
                 pubKey: keyPair.publicKeyHex,
                 createdAt: Int64(Date().timeIntervalSince1970),
                 kind: 1,
-                tags: [],
+                tags: tags,
                 content: postText,
                 signature: ""
             )

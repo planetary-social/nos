@@ -83,6 +83,7 @@ extension Color {
        static let tabBgTop = Color("tab-bg-top", bundle: Bundle.current)
        static let tabBorderBottom = Color("tab-border-bottom", bundle: Bundle.current)
        static let tabShadowBottom = Color("tab-shadow-bottom", bundle: Bundle.current)
+       static let actionBar = Color("actionBar", bundle: Bundle.current)
 }
 
 extension UIColor {
