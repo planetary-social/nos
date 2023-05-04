@@ -23,7 +23,7 @@ class SearchTextFieldObserver: ObservableObject {
     init() {
         $text
             .removeDuplicates()
-            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .debounce(for: .milliseconds(200), scheduler: RunLoop.main)
             .sink { [weak self] value in
                 self?.debouncedText = value
             }

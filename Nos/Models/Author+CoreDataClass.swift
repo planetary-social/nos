@@ -105,6 +105,12 @@ public class Author: NosManagedObject {
         fetchRequest.predicate = NSPredicate(format: "muted == %i", muted)
         return fetchRequest
     }
+
+    @nonobjc public class func allAuthorsWithDisplayNameRequest(muted: Bool) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.predicate = NSPredicate(format: "muted == %i AND displayName != nil", muted)
+        return fetchRequest
+    }
     
     @nonobjc func allPostsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")

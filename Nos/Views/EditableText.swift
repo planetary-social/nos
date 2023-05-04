@@ -16,11 +16,13 @@ struct EditableText: UIViewRepresentable {
     @Binding var attributedText: AttributedString
     @State private var selectedRange = NSRange(location: 0, length: 0)
 
+    private var guid: UUID
     private var font = UIFont.preferredFont(forTextStyle: .body)
     private var insets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
 
-    init(_ attributedText: Binding<AttributedString>) {
+    init(_ attributedText: Binding<AttributedString>, guid: UUID) {
         _attributedText = attributedText
+        self.guid = guid
     }
 
     func makeUIView(context: Context) -> UITextView {
@@ -42,6 +44,9 @@ struct EditableText: UIViewRepresentable {
             queue: .main
         ) { [weak view] notification in
             guard let author = notification.userInfo?["author"] as? Author else {
+                return
+            }
+            guard let recGUID = notification.userInfo?["guid"] as? UUID, recGUID == guid else {
                 return
             }
             guard let url = author.deepLink else {
@@ -122,7 +127,7 @@ struct EditableText_Previews: PreviewProvider {
     @State static var oldText = AttributedString("Hello")
 
     static var previews: some View {
-        EditableText($attributedString)
+        EditableText($attributedString, guid: UUID())
             .onChange(of: attributedString) { newValue in
                 let newString = String(newValue.characters)
                 let oldString = String(oldText.characters)

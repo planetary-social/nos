@@ -38,7 +38,7 @@ final class KeyPairTests: XCTestCase {
         XCTAssertEqual(keyPair.npub, KeyFixture.npub)
     }
 
-    func testBenchKeyFromNpub() throws {
+    func testBechKeyFromNpub() throws {
         let npub = "npub10elfcs4fr0l0r8af98jlmgdh9c8tcxjvz9qkw038js35mp4dma8qzvjptg"
         let publicKey = try XCTUnwrap(PublicKey(npub: npub))
         print(publicKey.hex)

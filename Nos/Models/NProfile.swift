@@ -1,5 +1,5 @@
 //
-//  Profile.swift
+//  NProfile.swift
 //  Nos
 //
 //  Created by Martin Dutra on 27/4/23.
@@ -12,11 +12,11 @@ import secp256k1
 ///
 /// See https://github.com/nostr-protocol/nips/blob/master/19.md
 /// In the future we can parse and include the relays in this struct, but now we just need the public key.
-struct Profile {
+struct NProfile {
 
     var publicKey: PublicKey
 
-    var hex: String {
+    var publicKeyHex: String {
         publicKey.hex
     }
 
@@ -30,12 +30,19 @@ struct Profile {
             guard let converted = checksum.base8FromBase5 else {
                 return nil
             }
-            let offset = 0
-            let type = converted[offset]
-            let length = converted[offset + 1]
-            let value = converted.subdata(in: offset + 2 ..< offset + 2 + Int(length))
-            let underlyingKey = secp256k1.Signing.XonlyKey(rawRepresentation: value, keyParity: 0)
-            self.publicKey = PublicKey(underlyingKey: underlyingKey)
+            var offset = 0
+            while offset + 1 < converted.count {
+                let type = converted[offset]
+                let length = Int(converted[offset + 1])
+                if type == 0 {
+                    let value = converted.subdata(in: offset + 2 ..< offset + 2 + length)
+                    let underlyingKey = secp256k1.Signing.XonlyKey(rawRepresentation: value, keyParity: 0)
+                    self.publicKey = PublicKey(underlyingKey: underlyingKey)
+                    return
+                }
+                offset += length + 2
+            }
+            return nil
         } catch {
             print("error creating Profile \(error.localizedDescription)")
             return nil

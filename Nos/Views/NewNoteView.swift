@@ -38,7 +38,11 @@ struct NewNoteView: View {
     @State private var selectedRelay: Relay?
 
     @Binding var isPresented: Bool
-    
+
+    init(isPresented: Binding<Bool>) {
+        _isPresented = isPresented
+    }
+
     enum FocusedField {
         case textEditor
     }
@@ -54,12 +58,14 @@ struct NewNoteView: View {
         }
     }
 
+    private var guid = UUID()
+
     var body: some View {
         NavigationStack {
             ZStack {
                 VStack {
                     Form {
-                        EditableText($postText)
+                        EditableText($postText, guid: guid)
                             .frame(maxHeight: .infinity)
                             .placeholder(when: postText.characters.isEmpty, placeholder: {
                                 VStack {
@@ -174,7 +180,7 @@ struct NewNoteView: View {
         NotificationCenter.default.post(
             name: .mentionAddedNotification,
             object: nil,
-            userInfo: ["author": author]
+            userInfo: ["author": author, "guid": guid]
         )
         oldText = String(postText.characters)
         mentionOffset = nil

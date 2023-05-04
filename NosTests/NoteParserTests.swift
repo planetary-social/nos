@@ -64,8 +64,9 @@ final class NoteParserTests: XCTestCase {
 
     func testContentWithNIP08MentionToUnknownAuthor() throws {
         let content = "hello #[0]"
+        let displayName = "npub1937vv..."
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
-        let expectedContent = "hello @\(hex)"
+        let expectedContent = "hello @\(displayName)"
         let tags = [["p", hex]]
         let parser = NoteParser()
         let context = try XCTUnwrap(context)
@@ -74,14 +75,15 @@ final class NoteParserTests: XCTestCase {
         XCTAssertEqual(parsedContent, expectedContent)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
-        XCTAssertEqual(links.first?.key, "@\(hex)")
+        XCTAssertEqual(links.first?.key, "@\(displayName)")
         XCTAssertEqual(links.first?.value, URL(string: "@\(hex)"))
     }
 
     func testContentWithNIP08MentionAtBeginning() throws {
         let content = "#[0]"
+        let displayName = "npub1937vv..."
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
-        let expectedContent = "@\(hex)"
+        let expectedContent = "@\(displayName)"
         let tags = [["p", hex]]
         let parser = NoteParser()
         let context = try XCTUnwrap(context)
@@ -90,14 +92,15 @@ final class NoteParserTests: XCTestCase {
         XCTAssertEqual(parsedContent, expectedContent)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
-        XCTAssertEqual(links.first?.key, "@\(hex)")
+        XCTAssertEqual(links.first?.key, "@\(displayName)")
         XCTAssertEqual(links.first?.value, URL(string: "@\(hex)"))
     }
 
     func testContentWithNIP08MentionAfterNewline() throws {
         let content = "Hello\n#[0]"
+        let displayName = "npub1937vv..."
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
-        let expectedContent = "Hello\n@\(hex)"
+        let expectedContent = "Hello\n@\(displayName)"
         let tags = [["p", hex]]
         let parser = NoteParser()
         let context = try XCTUnwrap(context)
@@ -106,7 +109,7 @@ final class NoteParserTests: XCTestCase {
         XCTAssertEqual(parsedContent, expectedContent)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
-        XCTAssertEqual(links.first?.key, "@\(hex)")
+        XCTAssertEqual(links.first?.key, "@\(displayName)")
         XCTAssertEqual(links.first?.value, URL(string: "@\(hex)"))
     }
 
@@ -144,6 +147,7 @@ final class NoteParserTests: XCTestCase {
 
     /// Example taken from [NIP-27](https://github.com/nostr-protocol/nips/blob/master/27.md)
     func testContentWithNIP27MentionToUnknownAuthor() throws {
+        let displayName = "npub1937vv..."
         let content = "hello nostr:npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags = [["p", hex]]
@@ -152,7 +156,7 @@ final class NoteParserTests: XCTestCase {
         let attributedContent = parser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
-        XCTAssertEqual(links.first?.key, "@\(hex)")
+        XCTAssertEqual(links.first?.key, "@\(displayName)")
         XCTAssertEqual(links.first?.value, URL(string: "@\(hex)"))
     }
 
@@ -176,7 +180,9 @@ final class NoteParserTests: XCTestCase {
 
     func testContentWithMixedMentions() throws {
         let content = "hello nostr:npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6 and #[1]"
+        let displayName1 = "npub1937vv..."
         let hex1 = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
+        let displayName2 = "npub180cvv..."
         let hex2 = "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d"
         let tags = [["p", hex1], ["p", hex2]]
         let parser = NoteParser()
@@ -184,9 +190,9 @@ final class NoteParserTests: XCTestCase {
         let attributedContent = parser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 2)
-        XCTAssertEqual(links[safe: 0]?.key, "@\(hex1)")
+        XCTAssertEqual(links[safe: 0]?.key, "@\(displayName1)")
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "@\(hex1)"))
-        XCTAssertEqual(links[safe: 1]?.key, "@\(hex2)")
+        XCTAssertEqual(links[safe: 1]?.key, "@\(displayName2)")
         XCTAssertEqual(links[safe: 1]?.value, URL(string: "@\(hex2)"))
     }
 }

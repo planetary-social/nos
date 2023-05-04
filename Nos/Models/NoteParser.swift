@@ -34,7 +34,7 @@ struct NoteParser {
                 prefix = firstCharacter
             }
             var findAndReplaceAuthorReference: (String) -> String = { hex in
-                if let author = try? Author.find(by: hex, context: context) {
+                if let author = try? Author.findOrCreate(by: hex, context: context) {
                     return "\(prefix)[@\(author.safeName)](@\(hex))"
                 } else {
                     return "\(prefix)[@\(hex)](@\(hex))"
@@ -45,7 +45,8 @@ struct NoteParser {
                     if type == "p" {
                         return findAndReplaceAuthorReference(hex)
                     } else if type == "e" {
-                        if let event = Event.find(by: hex, context: context), let bech32NoteID = event.bech32NoteID {
+                        if let event = try? Event.findOrCreateStubBy(id: hex, context: context),
+                            let bech32NoteID = event.bech32NoteID {
                             return "\(prefix)[@\(bech32NoteID)](%\(hex))"
                         } else {
                             return "\(prefix)[@\(hex)](%\(hex))"
@@ -56,8 +57,8 @@ struct NoteParser {
                 let string = String(npub)
                 if string.prefix(4) == "npub", let publicKey = PublicKey(npub: string) {
                     return findAndReplaceAuthorReference(publicKey.hex)
-                } else if string.prefix(8) == "nprofile", let profile = Profile(nprofile: string) {
-                    return findAndReplaceAuthorReference(profile.hex)
+                } else if string.prefix(8) == "nprofile", let profile = NProfile(nprofile: string) {
+                    return findAndReplaceAuthorReference(profile.publicKeyHex)
                 }
             }
             return String(substring)
