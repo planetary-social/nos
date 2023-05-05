@@ -84,7 +84,12 @@ extension UIFont {
     static var clarity = UIFont(
         name: "ClarityCity-Regular",
         size: UIFont.preferredFont(forTextStyle: .body).pointSize
-    )
+    )!
+    
+    static var clarityBold = UIFont(
+        name: "ClarityCity-Bold",
+        size: UIFont.preferredFont(forTextStyle: .body).pointSize
+    )!
 }
 
 // swiftlint:disable identifier_name
