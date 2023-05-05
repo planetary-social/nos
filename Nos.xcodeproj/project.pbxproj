@@ -162,6 +162,8 @@
 		C987F86129BABAF800B44E7A /* String+Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F86029BABAF800B44E7A /* String+Markdown.swift */; };
 		C987F86229BABAF800B44E7A /* String+Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F86029BABAF800B44E7A /* String+Markdown.swift */; };
 		C987F86429BAC3C500B44E7A /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = C987F86329BAC3C500B44E7A /* CachedAsyncImage */; };
+		C98A32272A05795E00E3FA13 /* Task+Timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98A32262A05795E00E3FA13 /* Task+Timeout.swift */; };
+		C98A32282A05795E00E3FA13 /* Task+Timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98A32262A05795E00E3FA13 /* Task+Timeout.swift */; };
 		C98B8B4029FBF83B009789C8 /* NotificationCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */; };
 		C98B8B4129FBF85F009789C8 /* NotificationCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */; };
 		C9A0DAD829C6467600466635 /* CreateProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAD729C6467600466635 /* CreateProfileView.swift */; };
@@ -424,6 +426,7 @@
 		C987F85629BA96B700B44E7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C987F85729BA981800B44E7A /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		C987F86029BABAF800B44E7A /* String+Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Markdown.swift"; sourceTree = "<group>"; };
+		C98A32262A05795E00E3FA13 /* Task+Timeout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+Timeout.swift"; sourceTree = "<group>"; };
 		C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCard.swift; sourceTree = "<group>"; };
 		C9A0DAD729C6467600466635 /* CreateProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProfileView.swift; sourceTree = "<group>"; };
 		C9A0DAD929C685E500466635 /* SideMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuButton.swift; sourceTree = "<group>"; };
@@ -730,6 +733,7 @@
 				C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */,
 				C9F64D8E29ED88CD00563F2B /* Localization+Nos.swift */,
 				C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */,
+				C98A32262A05795E00E3FA13 /* Task+Timeout.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1252,6 +1256,7 @@
 				CD09A74629A50F750063464F /* SideMenuContent.swift in Sources */,
 				C9DFA971299BF8CD006929C1 /* RepliesView.swift in Sources */,
 				C9DFA976299C30F0006929C1 /* Localized.swift in Sources */,
+				C98A32272A05795E00E3FA13 /* Task+Timeout.swift in Sources */,
 				C95D68A5299E6E1E00429F86 /* PlaceholderModifier.swift in Sources */,
 				C960C57429F3251E00929990 /* RepostButton.swift in Sources */,
 				3FFB1D9329A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,
@@ -1344,6 +1349,7 @@
 				C93CA0C429AE3A1E00921183 /* JSONEvent.swift in Sources */,
 				C9DEC04629894BED0078B43A /* Event+CoreDataClass.swift in Sources */,
 				A32B6C7129A672BC00653FF5 /* CurrentUser.swift in Sources */,
+				C98A32282A05795E00E3FA13 /* Task+Timeout.swift in Sources */,
 				C9A0DAE129C697A100466635 /* AboutView.swift in Sources */,
 				C9F84C1A298DBB6300C6714D /* Data+Encoding.swift in Sources */,
 				3F30021629C3BFE8003D4F8B /* OnboardingTermsOfServiceView.swift in Sources */,
