@@ -37,7 +37,7 @@ struct ComposerActionBar: View {
                 Button { 
                     subMenu = .attachMedia
                 } label: { 
-                    Image(systemName: "photo.on.rectangle")
+                    Image.attachMediaButton
                         .foregroundColor(.secondaryTxt)
                         .frame(minWidth: 44, minHeight: 44)
                 }
@@ -48,17 +48,19 @@ struct ComposerActionBar: View {
                 if let expirationTime, let option = ExpirationTimeOption(rawValue: expirationTime) {
                     ExpirationTimeButton(
                         model: option, 
+                        showClearButton: true,
                         isSelected: Binding(get: { 
                             self.expirationTime == option.timeInterval
                         }, set: { 
                             self.expirationTime = $0 ? option.timeInterval : nil
                         })
                     )
+                    .padding(12)
                 } else {
                     Button { 
                         subMenu = .expirationDate
                     } label: { 
-                        Image(systemName: "clock")
+                        Image.disappearingMessages
                             .foregroundColor(.secondaryTxt)
                             .frame(minWidth: 44, minHeight: 44)
                     }
@@ -85,13 +87,14 @@ struct ComposerActionBar: View {
                 .padding(10)
                 
                 ExpirationTimePicker(expirationTime: $expirationTime)
+                    .padding(.vertical, 12)
             }
             Spacer()
         }
         .animation(.easeInOut(duration: 0.2), value: subMenu)
         .transition(.move(edge: .leading))
         .background(Color.actionBar)
-        .onChange(of: expirationTime) { newValue in
+        .onChange(of: expirationTime) { _ in
             subMenu = .none
         }
     }
