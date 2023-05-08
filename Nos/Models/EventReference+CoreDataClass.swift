@@ -33,6 +33,14 @@ public class EventReference: NosManagedObject {
         marker.unwrap { EventReferenceMarker(rawValue: $0) }
     }
     
+    /// Retreives all the EventReferences whose referencing Event has been deleted.
+    static func orphanedRequest() -> NSFetchRequest<EventReference> {
+        let fetchRequest = NSFetchRequest<EventReference>(entityName: "EventReference")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \EventReference.eventId, ascending: false)]
+        fetchRequest.predicate = NSPredicate(format: "referencingEvent = nil")
+        return fetchRequest
+    }
+    
     convenience init(jsonTag: [String], context: NSManagedObjectContext) throws {
         guard jsonTag[safe: 0] == "e",
             let eventID = jsonTag[safe: 1] else {

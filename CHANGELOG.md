@@ -9,10 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed link detection in notes for URLs without a scheme (i.e. "https://")
+- Added Spanish translations (thanks Martin!)
+
+## [0.1 (38)] - 2023-04-28Z
+
+- Made the routine to delete old events more efficient and prevent it from deleting our own events. 
+- The notifications tab now request more events from relays
+
+## [0.1 (37)] - 2023-04-27Z
+
+- Performance improvements
 - Added support for reposting notes.
 - Fixed a bug where you could post the same reply multiple times.
 - Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
+
+## [0.1 (36)] - 2023-04-25Z
+
+- Added support for reposting notes.
+- Added Brazilian Portuguese translations (thanks Andressa!).
 - Fixed the French and Traditional Chinese translations.
+- Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
+- Fixed a bug where you could post the same reply multiple times.
 - Fixed an issue where profile pictures could be rendered with the wrong aspect ratio.
 - Added Brazilian Portuguese translations (thanks Andressa!).
 
