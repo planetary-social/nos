@@ -8,8 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Added Brazilian Portuguese translations (thanks Andressa!)
+- The notifications tab now request more events from relays
+- Added support for reposting notes.
+- Fixed a bug where you could post the same reply multiple times.
+- Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
+- Fixed the French and Traditional Chinese translations.
+- Fixed an issue where profile pictures could be rendered with the wrong aspect ratio.
 - Added Spanish translations (thanks Martin!)
+- Added Brazilian Portuguese translations (thanks Andressa!).
 
 ## [0.1 (35)] - 2023-04-19Z
 

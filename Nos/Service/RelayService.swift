@@ -172,6 +172,7 @@ extension RelayService {
         let metaFilter = Filter(
             authorKeys: [authorKey],
             kinds: [.metaData],
+            limit: 1, 
             since: since
         )
         return await openSubscription(with: metaFilter)
@@ -199,9 +200,12 @@ extension RelayService {
         let allSubscriptions = await subscriptions.all
         let waitingLongSubscriptions = allSubscriptions.filter { !$0.isOneTime && !$0.isActive }
         let waitingOneTimeSubscriptions = allSubscriptions.filter { $0.isOneTime && !$0.isActive }
-        let openOneTimeSlots = max(subscriptionLimit - waitingLongSubscriptions.count, minimimumOneTimeSubscriptions)
+        let activeSubscriptionCount = await subscriptions.active.count
+        let openSlots = subscriptionLimit - activeSubscriptionCount
+        let openOneTimeSlots = max(openSlots - waitingLongSubscriptions.count, minimimumOneTimeSubscriptions)
+        let openLongSlots = max(0, openSlots - minimimumOneTimeSubscriptions)
         
-        for subscription in waitingLongSubscriptions {
+        for subscription in waitingLongSubscriptions.prefix(openLongSlots) {
             var subscription = subscription
             subscription.subscriptionStartDate = .now
             await subscriptions.updateSubscriptions(with: subscription)
