@@ -427,7 +427,7 @@ public class Event: NosManagedObject {
     
     func sign(withKey privateKey: KeyPair) throws {
         if allTags == nil {
-            allTags = [] as NSObject
+            allTags = [[String]]() as NSObject
         }
         identifier = try calculateIdentifier()
         var serializedBytes = try identifier!.bytes
