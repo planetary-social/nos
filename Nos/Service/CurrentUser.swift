@@ -142,12 +142,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 }
             }
             
-            Task(priority: .background) { [weak self] in
-                let eventCount = try await backgroundContext.perform {
-                    let eventCountRequest = Event.allEventsRequest()
-                    return try self?.backgroundContext.count(for: eventCountRequest) ?? -1
+            Task(priority: .background) { 
+                let dbStatistics = try await backgroundContext.perform {
+                    try PersistenceController.databaseStatistics(from: self.backgroundContext)
                 }
-                analytics.databaseStatistics(eventCount: eventCount)
+                analytics.databaseStatistics(dbStatistics)
             }
         } else {
             author = nil
