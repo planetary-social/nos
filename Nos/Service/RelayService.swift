@@ -466,7 +466,7 @@ extension RelayService {
                 shouldBePublishedToRelays.minus(publishedRelays)
                 let missedRelays: [Relay] = Array(Set(_immutableCocoaSet: shouldBePublishedToRelays))
                 
-                print("\(missedRelays.count) missing a published event.")
+                print("\(missedRelays.count) relays missing a published event.")
                 for missedRelay in missedRelays {
                     guard let missedAddress = missedRelay.address else { continue }
                     Task {

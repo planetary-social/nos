@@ -19,6 +19,8 @@ struct NotificationsView: View {
 
     private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
+    @State private var subscriptionIDs = [String]()
+    @State private var isVisible = true
     
     // Probably the logged in user should be in the @Environment eventually
     private var user: Author?
@@ -27,6 +29,29 @@ struct NotificationsView: View {
         self.user = user
         if let user {
             eventRequest = FetchRequest(fetchRequest: Event.allNotifications(for: user))
+        }
+    }    
+    
+    func subscribeToNewEvents() async {
+        await cancelSubscriptions()
+        
+        guard let currentUserKey = user?.hexadecimalPublicKey else {
+            return
+        }
+        
+        let filter = Filter(
+            kinds: [.text], 
+            pTags: [currentUserKey], 
+            limit: 100
+        )
+        let subscription = await relayService.openSubscription(with: filter)
+        subscriptionIDs.append(subscription)
+    }
+    
+    func cancelSubscriptions() async {
+        if !subscriptionIDs.isEmpty {
+            await relayService.removeSubscriptions(for: subscriptionIDs)
+            subscriptionIDs.removeAll()
         }
     }
     
@@ -40,6 +65,7 @@ struct NotificationsView: View {
                         }
                     }
                 }
+                .padding(.top, 10)
             }
             .overlay(Group {
                 if events.isEmpty {
@@ -56,129 +82,25 @@ struct NotificationsView: View {
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
             }
-            .onAppear {
-                analytics.showedNotifications()
+            .refreshable {
+                await subscribeToNewEvents()
             }
-        }
-    }
-}
-
-struct NotificationCard: View {
-    
-    @ObservedObject private var note: Event
-    private let user: Author
-    private let actionText: String?
-    private let authorName: String
-    
-    @Environment(\.managedObjectContext) private var viewContext
-    
-    @EnvironmentObject private var router: Router
-    @EnvironmentObject private var relayService: RelayService
-    
-    @State private var attributedContent: AttributedString
-    
-    @State private var subscriptionIDs = [RelaySubscription.ID]()
-    
-    init(note: Event, user: Author) {
-        self.note = note
-        self.user = user
-        
-        authorName = note.author?.safeName ?? Localized.someone.string
-        
-        if note.isReply(to: user) {
-            actionText = Localized.Reply.repliedToYourNote.string
-        } else if note.references(author: user) {
-            actionText = Localized.Reply.mentionedYou.string
-        } else {
-            actionText = nil
-        }
-        
-        _attributedContent = .init(initialValue: AttributedString(note.content ?? ""))
-    }
-    
-    var body: some View {
-        if let author = note.author {
-            Button {
-                router.notificationsPath.append(note.referencedNote() ?? note)
-            } label: {
-                HStack {
-                    AvatarView(imageUrl: author.profilePhotoURL, size: 40)
-                    
-                    VStack {
-                        if let actionText {
-                            HStack(spacing: 4) {
-                                Text(authorName)
-                                    .font(.body)
-                                    .bold()
-                                    .foregroundColor(.primaryTxt)
-                                    .lineLimit(1)
-                                Text(actionText)
-                                    .font(.body)
-                                    .foregroundColor(.primaryTxt)
-                                    .lineLimit(1)
-                                    .fixedSize(horizontal: true, vertical: false)
-                                Spacer()
-                            }
-                        }
-                        HStack {
-                            Text("\"" + (attributedContent) + "\"")
-                                .lineLimit(3)
-                                .font(.body)
-                                .foregroundColor(.primaryTxt)
-                            if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
-                                VStack {
-                                    Text(elapsedTime)
-                                        .lineLimit(1)
-                                        .font(.body)
-                                        .foregroundColor(.secondaryTxt)
-                                    Spacer()
-                                }
-                            }
-                            Spacer()
-                        }
-                    }
-                    Spacer()
-                }
-                .padding(10)
-                .background(
-                    LinearGradient(
-                        colors: [Color.cardBgTop, Color.cardBgBottom],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-                .cornerRadius(20)
-                .padding(.horizontal, 15)
-                .padding(.top, 15)
-            }
-            .buttonStyle(CardButtonStyle())
             .onAppear {
-                Task(priority: .userInitiated) {
-                    let backgroundContext = PersistenceController.backgroundViewContext
-                    await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
-                        noteID: note.identifier,
-                        using: relayService,
-                        in: backgroundContext
-                    )
+                if router.selectedTab == .notifications {
+                    isVisible = true
                 }
             }
             .onDisappear {
-                Task(priority: .userInitiated) {
-                    await relayService.removeSubscriptions(for: subscriptionIDs)
-                    subscriptionIDs.removeAll()
-                }
+                isVisible = false
             }
-            .task(priority: .userInitiated) {
-                let backgroundContext = PersistenceController.backgroundViewContext
-                if let parsedAttributedContent = await Event.attributedContent(
-                    noteID: note.identifier,
-                    context: backgroundContext
-                ) {
-                    withAnimation {
-                        attributedContent = parsedAttributedContent
-                    }
+            .onChange(of: isVisible, perform: { isVisible in
+                if isVisible {
+                    analytics.showedNotifications()
+                    Task { await subscribeToNewEvents() }
+                } else {
+                    Task { await cancelSubscriptions() }
                 }
-            }
+            })
         }
     }
 }

@@ -15,8 +15,8 @@ final class SocialGraphTests: XCTestCase {
     var persistenceController: PersistenceController!
     var testContext: NSManagedObjectContext!
     
-    override func setUpWithError() throws {
-        try super.setUpWithError()
+    override func setUp() async throws {
+        try await super.setUp()
         persistenceController = PersistenceController(inMemory: true)
         testContext = persistenceController.container.viewContext
     }
@@ -79,7 +79,7 @@ final class SocialGraphTests: XCTestCase {
         try testContext.save()
         
         // Reassert
-        await eventually { await sut.followedKeys.count == 2 }
+        try await eventually { await sut.followedKeys.count == 2 }
         let newFollowedKeys = await sut.followedKeys
         XCTAssertEqual(newFollowedKeys, [KeyFixture.alice.publicKeyHex, KeyFixture.bob.publicKeyHex])
     }

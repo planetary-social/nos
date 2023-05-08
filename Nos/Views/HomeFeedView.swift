@@ -20,11 +20,12 @@ struct HomeFeedView: View {
     @AppStorage("lastHomeFeedRequestDate") var lastRequestDateUnix: TimeInterval?
     
     @FetchRequest var events: FetchedResults<Event>
-    @State private var date = Date.now
+    @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
     @State private var subscriptionIDs = [String]()
     @State private var isVisible = false
     @State private var cancellables = [AnyCancellable]()
     @State private var performingInitialLoad = true
+    static let initialLoadTime = 2
 
     // Probably the logged in user should be in the @Environment eventually
     @ObservedObject var user: Author
@@ -62,7 +63,7 @@ struct HomeFeedView: View {
                 authorKeys: followedKeys, 
                 kinds: [.text, .delete, .repost], 
                 limit: 400, 
-                since: fetchSinceDate
+                since: nil
             )
             let textSub = await relayService.openSubscription(with: textFilter)
             subscriptionIDs.append(textSub)
@@ -89,7 +90,10 @@ struct HomeFeedView: View {
         NavigationStack(path: $router.homeFeedPath) {
             Group {
                 if performingInitialLoad {
-                    FullscreenProgressView(isPresented: $performingInitialLoad, hideAfter: .now() + .seconds(2))
+                    FullscreenProgressView(
+                        isPresented: $performingInitialLoad, 
+                        hideAfter: .now() + .seconds(Self.initialLoadTime)
+                    )
                 } else {
                     ScrollView(.vertical, showsIndicators: false) {
                         LazyVStack {

@@ -24,7 +24,7 @@ jobs:
       - name: Build Nos
         run: set -o pipefail && xcodebuild build-for-testing -skipPackagePluginValidation -project Nos.xcodeproj -scheme NosTests -destination "$SIMULATOR" | xcpretty
       - name: Run Tests
-        run: set -o pipefail && xcodebuild test-without-building -project Nos.xcodeproj -scheme NosTests -destination "$SIMULATOR" | xcpretty
+        run: set -o pipefail && xcodebuild test-without-building -project Nos.xcodeproj -scheme NosTests -destination "$SIMULATOR"
   changelog:
     name: Check CHANGELOG
     runs-on: ubuntu-latest
