@@ -76,7 +76,7 @@
 "Localized.noEventsOnProfile" = "We don't see any notes for this profile, but we'll keep looking!";
 "Localized.basicInfo" = "Basic Information";
 "Localized.edit" = "Edit";
-"Localized.authors" = "Authors";
+"Localized.mention" = "Mention";
 "Localized.debug" = "Debug";
 "Localized.loadSampleData" = "Load Sample Data";
 "Localized.sampleDataInstructions" = "This will delete all events and load those in sample_data.json";

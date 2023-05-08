@@ -219,7 +219,7 @@ enum Localized: String, Localizable, CaseIterable {
     case basicInfo = "Basic Information"
     case edit = "Edit" // verb form
 
-    case authors = "Authors"
+    case mention = "Mention"
     
     case debug = "Debug"
     case loadSampleData = "Load Sample Data"
