@@ -69,6 +69,7 @@ public class Relay: NosManagedObject {
         return fetchRequest
     }
     
+    /// Retreives all the Relays that are no longer referenced by anyone in the db.
     static func orphanedRequest() -> NSFetchRequest<Relay> {
         let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.address, ascending: false)]
