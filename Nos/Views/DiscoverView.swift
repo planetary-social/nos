@@ -265,6 +265,9 @@ struct DiscoverView: View {
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
+            .navigationDestination(for: ReplyToNavigationDestination.self) { destination in 
+                RepliesView(note: destination.note, showKeyboard: true)
+            }
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
             }
