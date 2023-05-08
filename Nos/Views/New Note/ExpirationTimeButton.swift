@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// A button that lets the user select an `ExpirationTimeOption` to specify when an event should be deleted.
 struct ExpirationTimeButton: View {
     
     var model: ExpirationTimeOption

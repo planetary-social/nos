@@ -8,6 +8,7 @@
 import SwiftUI
 import Foundation
 
+/// A view that allows the user to pick an expiration date for an event. 
 struct ExpirationTimePicker: View {
     
     struct ExpirationTimeButtonSize: PreferenceKey {

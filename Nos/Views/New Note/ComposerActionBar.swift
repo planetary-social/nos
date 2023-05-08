@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// A horizontal bar that gives the user options to customize their message in the message composer.
 struct ComposerActionBar: View {
     
     @Binding var expirationTime: TimeInterval?
