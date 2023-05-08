@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Made the routine to delete old events more efficient and prevent it from deleting our own events. 
+- The notifications tab now request more events from relays
 
 ## [0.1 (37)] - 2023-04-27Z
 
