@@ -256,6 +256,12 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func expiredRequest() -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.predicate = NSPredicate(format: "expirationDate <= %@", Date.now as CVarArg)
+        return fetchRequest
+    }
+    
     @nonobjc public class func event(by identifier: String) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
@@ -607,6 +613,15 @@ public class Event: NosManagedObject {
         
         // Tags
         allTags = jsonEvent.tags as NSObject
+        for tag in jsonEvent.tags {
+            if tag[safe: 0] == "expiration",
+                let expirationDateString = tag[safe: 1],
+                let expirationDateUnix = TimeInterval(expirationDateString),
+                expirationDateUnix != 0 {
+                let expirationDate = Date(timeIntervalSince1970: expirationDateUnix)
+                self.expirationDate = expirationDate
+            }
+        }
         
         // Author
         guard let newAuthor = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context) else {
@@ -820,6 +835,14 @@ public class Event: NosManagedObject {
     
     var isReply: Bool {
         rootNote() != nil || referencedNote() != nil
+    }
+    
+    var isExpired: Bool {
+        if let expirationDate {
+            return expirationDate <= .now
+        } else {
+            return false
+        }
     }
     
     /// Returns the event this note is directly replying to, or nil if there isn't one.
