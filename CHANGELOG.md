@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Improved performance of loading replies
 - Added Spanish translations (thanks Martin!)
 
 ## [0.1 (38)] - 2023-04-28Z
