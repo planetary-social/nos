@@ -79,9 +79,7 @@ final class SocialGraphTests: XCTestCase {
         try testContext.save()
         
         // Reassert
-        try await eventually { 
-            return await sut.followedKeys.count == 2 
-        }
+        await eventually { await sut.followedKeys.count == 2 }
         let newFollowedKeys = await sut.followedKeys
         XCTAssertEqual(newFollowedKeys, [KeyFixture.alice.publicKeyHex, KeyFixture.bob.publicKeyHex])
     }
