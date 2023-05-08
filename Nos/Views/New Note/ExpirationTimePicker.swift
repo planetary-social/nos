@@ -15,12 +15,10 @@ struct ExpirationTimePicker: View {
         
         static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
             let next = nextValue()
-            print("value: \(value) next: \(next)")
             value = CGSize(
                 width: max(value.width, next.width),
                 height: max(value.height, next.height)
             )
-            print("new value: \(value)")
         }
     }
     
@@ -49,7 +47,6 @@ struct ExpirationTimePicker: View {
             }
         }
         .onPreferenceChange(ExpirationTimeButtonSize.self) {
-            print("onPreferenceChange: \($0)")
             buttonSize = $0
         }
     }

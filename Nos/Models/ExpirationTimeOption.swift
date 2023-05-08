@@ -35,17 +35,21 @@ enum ExpirationTimeOption: Double, Identifiable, CaseIterable {
     var unit: String {
         switch self {
         case .fifteenMins:
-            return "min"
+            return Localized.minuteAbbreviated.string
         case .oneHour:
-            return "hour"
+            return Localized.hourAbbreviated.string
         case .oneDay:
-            return "hours"
+            return Localized.dayAbbreviated.string
         case .sevenDays:
-            return "days"
+            return Localized.daysAbbreviated.string
         }
     }
     
     var timeInterval: TimeInterval {
         rawValue
+    }
+    
+    var accessibilityLabel: String {
+        "\(topText) \(unit)"
     }
 }

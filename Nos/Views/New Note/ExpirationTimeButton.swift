@@ -65,6 +65,7 @@ struct ExpirationTimeButton: View {
                     )
             }
         }
+        .accessibilityLabel(Text(model.accessibilityLabel))
         .cornerRadius(5)
         .onTapGesture {
             isSelected.toggle() 

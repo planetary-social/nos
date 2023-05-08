@@ -30,77 +30,79 @@ struct ComposerActionBar: View {
     }
     
     var body: some View {
-            HStack(spacing: 0) {
-                switch subMenu {
-                case .none:
-                    // Attach Media
+        HStack(spacing: 0) {
+            switch subMenu {
+            case .none:
+                // Attach Media
+                Button { 
+                    subMenu = .attachMedia
+                } label: { 
+                    Image.attachMediaButton
+                        .foregroundColor(.secondaryTxt)
+                        .frame(minWidth: 44, minHeight: 44)
+                }
+                .padding(.leading, 8)
+                .transition(.move(edge: .leading))
+                .accessibilityLabel(Localized.attachMedia.view)
+                
+                // Expiration Time
+                if let expirationTime, let option = ExpirationTimeOption(rawValue: expirationTime) {
+                    ExpirationTimeButton(
+                        model: option, 
+                        showClearButton: true,
+                        isSelected: Binding(get: { 
+                            self.expirationTime == option.timeInterval
+                        }, set: { 
+                            self.expirationTime = $0 ? option.timeInterval : nil
+                        })
+                    )
+                    .accessibilityLabel(Localized.expirationDate.view)
+                    .padding(12)
+                } else {
                     Button { 
-                        subMenu = .attachMedia
+                        subMenu = .expirationDate
                     } label: { 
-                        Image.attachMediaButton
+                        Image.disappearingMessages
                             .foregroundColor(.secondaryTxt)
                             .frame(minWidth: 44, minHeight: 44)
                     }
-                    .padding(.leading, 8)
-                    .transition(.move(edge: .leading))
-                    
-                    // Expiration Time
-                    if let expirationTime, let option = ExpirationTimeOption(rawValue: expirationTime) {
-                        ExpirationTimeButton(
-                            model: option, 
-                            showClearButton: true,
-                            isSelected: Binding(get: { 
-                                self.expirationTime == option.timeInterval
-                            }, set: { 
-                                self.expirationTime = $0 ? option.timeInterval : nil
-                            })
-                        )
-                        .padding(12)
-                    } else {
-                        Button { 
-                            subMenu = .expirationDate
-                        } label: { 
-                            Image.disappearingMessages
-                                .foregroundColor(.secondaryTxt)
-                                .frame(minWidth: 44, minHeight: 44)
-                        }
-                    }
-                    
-                case .attachMedia:
-                    backArrow
-                    HighlightedText(
-                        Localized.nostrBuildHelp.string,
-                        highlightedWord: "nostr.build",
-                        highlight: .diagonalAccent,
-                        textColor: .primaryTxt,
-                        font: .clarityCaption,
-                        link: URL(string: "https://nostr.build")!
-                    )
-                    .transition(.move(edge: .trailing))
-                    .padding(10)
-                case .expirationDate:
-                    backArrow
-                    ScrollView(.horizontal) {
-                        HStack {
-                            PlainText("Note disappears in")
-                                .font(.clarityCaption)
-                                .foregroundColor(.primaryTxt)
-                                .transition(.move(edge: .trailing))
-                                .padding(10)
-                            
-                            ExpirationTimePicker(expirationTime: $expirationTime)
-                                .padding(.vertical, 12)
-                        }
+                }
+                
+            case .attachMedia:
+                backArrow
+                HighlightedText(
+                    Localized.nostrBuildHelp.string,
+                    highlightedWord: "nostr.build",
+                    highlight: .diagonalAccent,
+                    textColor: .primaryTxt,
+                    font: .clarityCaption,
+                    link: URL(string: "https://nostr.build")!
+                )
+                .transition(.move(edge: .trailing))
+                .padding(10)
+            case .expirationDate:
+                backArrow
+                ScrollView(.horizontal) {
+                    HStack {
+                        PlainText(Localized.noteDisappearsIn.string)
+                            .font(.clarityCaption)
+                            .foregroundColor(.primaryTxt)
+                            .transition(.move(edge: .trailing))
+                            .padding(10)
+                        
+                        ExpirationTimePicker(expirationTime: $expirationTime)
+                            .padding(.vertical, 12)
                     }
                 }
-                Spacer()
             }
-            .animation(.easeInOut(duration: 0.2), value: subMenu)
-            .transition(.move(edge: .leading))
-            .onChange(of: expirationTime) { _ in
-                subMenu = .none
-            }
-            .background(Color.actionBar)
+            Spacer()
+        }
+        .animation(.easeInOut(duration: 0.2), value: subMenu)
+        .transition(.move(edge: .leading))
+        .onChange(of: expirationTime) { _ in
+            subMenu = .none
+        }
+        .background(Color.actionBar)
     }
 }
 
