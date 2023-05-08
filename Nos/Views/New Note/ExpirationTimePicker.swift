@@ -20,6 +20,7 @@ struct ExpirationTimePicker: View {
                 width: max(value.width, next.width),
                 height: max(value.height, next.height)
             )
+            print("new value: \(value)")
         }
     }
     
@@ -32,23 +33,23 @@ struct ExpirationTimePicker: View {
             ForEach(ExpirationTimeOption.allCases) { option in
                 ExpirationTimeButton(
                     model: option, 
+                    minSize: $buttonSize,
                     isSelected: Binding(get: { 
                         expirationTime == option.timeInterval
                     }, set: { 
                         expirationTime = $0 ? option.timeInterval : nil
                     })
                 )
-                .id(option.id)
                 .background(GeometryReader { geometry in
                     Color.clear.preference(
                         key: ExpirationTimeButtonSize.self,
                         value: geometry.size
                     )
                 })
-                .frame(width: buttonSize?.width, height: buttonSize?.height)
             }
         }
         .onPreferenceChange(ExpirationTimeButtonSize.self) {
+            print("onPreferenceChange: \($0)")
             buttonSize = $0
         }
     }

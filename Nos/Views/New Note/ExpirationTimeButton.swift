@@ -11,6 +11,7 @@ struct ExpirationTimeButton: View {
     
     var model: ExpirationTimeOption
     @State var showClearButton = false
+    var minSize: Binding<CGSize?>?
     @Binding var isSelected: Bool
     
     var body: some View {
@@ -33,6 +34,7 @@ struct ExpirationTimeButton: View {
             }
             .padding(.horizontal, showClearButton ? 6 : 4)
             .padding(.vertical, 6)
+            .frame(minWidth: minSize?.wrappedValue?.width, minHeight: minSize?.wrappedValue?.height)
             .cornerRadius(5)
             .background(Color(hex: "#1C122E"))
             
