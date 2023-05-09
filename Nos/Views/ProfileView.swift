@@ -84,7 +84,7 @@ struct ProfileView: View {
                     ForEach(events.unmuted) { event in
                         VStack {
                             NoteButton(note: event, hideOutOfNetwork: false)
-                                .padding(.horizontal)
+                                .padding(.bottom, 15)
                         }
                     }
                 }
@@ -101,6 +101,9 @@ struct ProfileView: View {
         .nosNavigationBar(title: .profile)
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
+        }            
+        .navigationDestination(for: ReplyToNavigationDestination.self) { destination in 
+            RepliesView(note: destination.note, showKeyboard: true)
         }
         .navigationBarItems(
             trailing:

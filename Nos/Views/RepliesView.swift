@@ -9,6 +9,10 @@ import SwiftUI
 import SwiftUINavigation
 import Dependencies
 
+struct ReplyToNavigationDestination: Hashable {
+    var note: Event
+}
+
 struct RepliesView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
@@ -22,6 +26,9 @@ struct RepliesView: View {
     @State private var alert: AlertState<Never>?
     
     @State private var subscriptionIDs = [String]()
+    
+    @FocusState private var focusTextView: Bool
+    @State private var showKeyboardOnAppear: Bool
     
     var repliesRequest: FetchRequest<Event>
     /// All replies
@@ -59,9 +66,10 @@ struct RepliesView: View {
         }
     }
     
-    init(note: Event) {
+    init(note: Event, showKeyboard: Bool = false) {
         self.note = note
         self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note))
+        _showKeyboardOnAppear = .init(initialValue: showKeyboard)
     }
     
     var note: Event
@@ -75,7 +83,7 @@ struct RepliesView: View {
             }
             
             let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
-            let filter = Filter(kinds: [.text, .like, .delete], eTags: eTags)
+            let filter = Filter(kinds: [.text, .like, .delete, .repost], eTags: eTags)
             let subID = await relayService.openSubscription(with: filter)
             subscriptionIDs.append(subID)
         }
@@ -90,9 +98,10 @@ struct RepliesView: View {
                         showFullMessage: true,
                         hideOutOfNetwork: false,
                         allowsPush: false,
-                        showReplyCount: false
-                    )
-                    .padding(.horizontal)
+                        showReplyCount: false,
+                        replyAction: { _ in self.focusTextView = true }
+                    )                                
+                    .padding(.top, 15)
                     
                     ForEach(directReplies.reversed()) { event in
                         ThreadView(root: event, allReplies: replies.reversed())
@@ -123,9 +132,13 @@ struct RepliesView: View {
                         }
                         ExpandingTextFieldAndSubmitButton(
                             placeholder: Localized.Reply.postAReply.string,
-                            reply: $reply
+                            reply: $reply,
+                            focus: $focusTextView
                         ) {
                             await postReply(reply)
+                        }
+                        .onAppear {
+                            focusTextView = showKeyboardOnAppear
                         }
                     }
                     .padding(.horizontal)
@@ -137,11 +150,27 @@ struct RepliesView: View {
                 analytics.showedThread()
             }
         }
+        .toolbar {
+            if focusTextView {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { 
+                        focusTextView = false
+                    }, label: { 
+                        Localized.cancel.view
+                            .foregroundColor(.primaryTxt)
+                    })
+                }
+            }
+        }
         .background(Color.appBg)
     }
     
     func postReply(_ replyText: String) async {
         do {
+            guard !replyText.isEmpty else {
+                return
+            }
+
             guard let keyPair = currentUser.keyPair else {
                 alert = AlertState(title: {
                     TextState(Localized.error.string)
@@ -196,11 +225,21 @@ struct RepliesView_Previews: PreviewProvider {
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
     static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
+    static var relayService = RelayService(persistenceController: persistenceController)
     static var router = Router()
+
+    static var currentUser: CurrentUser = {
+        let currentUser = CurrentUser(persistenceController: persistenceController)
+        currentUser.viewContext = previewContext
+        currentUser.relayService = relayService
+        Task { await currentUser.setKeyPair(KeyFixture.keyPair) }
+        return currentUser
+    }()
     
     static var shortNote: Event {
         let note = Event(context: previewContext)
         note.kind = 1
+        note.createdAt = .now
         note.content = "Hello, world!"
         note.author = user
         return note
@@ -209,6 +248,7 @@ struct RepliesView_Previews: PreviewProvider {
     static var longNote: Event {
         let note = Event(context: previewContext)
         note.kind = 1
+        note.createdAt = .now
         note.content = .loremIpsum(5)
         note.author = user
         return note
@@ -232,6 +272,7 @@ struct RepliesView_Previews: PreviewProvider {
         .environment(\.managedObjectContext, previewContext)
         .environmentObject(emptyRelayService)
         .environmentObject(router)
+        .environmentObject(currentUser)
         .padding()
         .background(Color.cardBackground)
     }

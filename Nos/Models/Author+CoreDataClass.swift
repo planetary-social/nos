@@ -45,6 +45,10 @@ public class Author: NosManagedObject {
         "https://iris.to/\(publicKey!.npub)"
     }
     
+    var followedKeys: [HexadecimalString] {
+        follows?.compactMap({ ($0 as? Follow)?.destination?.hexadecimalPublicKey }) ?? []
+    }
+    
     class func request(by pubKey: HexadecimalString) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey = %@", pubKey)
@@ -92,14 +96,19 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
+    @nonobjc func allPostsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(format: "kind = %i AND author = %@", eventKind.rawValue, self)
+        fetchRequest.predicate = NSPredicate(
+            format: "(kind = %i OR kind = %i) AND author = %@", 
+            EventKind.text.rawValue, 
+            EventKind.repost.rawValue, 
+            self
+        )
         return fetchRequest
     }
     
-    @MainActor @nonobjc class func oneHopRequest(for author: Author) -> NSFetchRequest<Author> {
+    @nonobjc class func oneHopRequest(for author: Author) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.lastUpdatedContactList, ascending: false)]
         fetchRequest.predicate = NSPredicate(
@@ -127,6 +136,21 @@ public class Author: NosManagedObject {
             author!,
             author!,
             author!
+        )
+        return fetchRequest
+    }
+    
+    /// Fetches all the authors who are further than 2 hops away on the social graph for the given `author`.
+    static func outOfNetwork(for author: Author) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "NOT (ANY followers.source IN %@.follows.destination) " +
+                "AND NOT (hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey) AND " +
+                "hexadecimalPublicKey != %@.hexadecimalPublicKey",
+            author,
+            author,
+            author
         )
         return fetchRequest
     }
