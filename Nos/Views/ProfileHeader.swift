@@ -66,7 +66,7 @@ struct ProfileHeader: View {
                                 if author.muted {
                                     Text(Localized.mutedUser.string)
                                         .font(.subheadline)
-                                        .foregroundColor(Color.secondaryTxt)
+                                        .foregroundColor(Color.secondaryText)
                                 }
                             }
                         }
@@ -103,10 +103,10 @@ struct ProfileHeader: View {
                                 } else if verifiedNip05Identifier == false {
                                     Text(nip05Identifier)
                                         .strikethrough()
-                                        .foregroundColor(.secondaryTxt)
+                                        .foregroundColor(.secondaryText)
                                 } else {
                                     Text("\(relayService.identifierToShow(nip05Identifier))")
-                                        .foregroundColor(.secondaryTxt)
+                                        .foregroundColor(.secondaryText)
                                 }
                             }
                         }

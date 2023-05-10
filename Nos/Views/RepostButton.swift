@@ -45,7 +45,7 @@ struct RepostButton: View {
                 if reposts.count > 0 {
                     Text(reposts.count.description)
                         .font(.body)
-                        .foregroundColor(.secondaryTxt)
+                        .foregroundColor(.secondaryText)
                 }
             }
             .padding(.horizontal, 10)
