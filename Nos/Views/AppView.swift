@@ -79,7 +79,7 @@ struct AppView: View {
                                         text
                                     } else {
                                         Image.tabIconHome
-                                        text.foregroundColor(.secondaryTxt)
+                                        text.foregroundColor(.secondaryText)
                                     }
                                 }
                             }
@@ -104,7 +104,7 @@ struct AppView: View {
                                     text.foregroundColor(.textColor)
                                 } else {
                                     Image.tabIconEveryone
-                                    text.foregroundColor(.secondaryTxt)
+                                    text.foregroundColor(.secondaryText)
                                 }
                             }
                         }
@@ -130,7 +130,7 @@ struct AppView: View {
                                     text.foregroundColor(.textColor)
                                 } else {
                                     Image.tabIconNotifications
-                                    text.foregroundColor(.secondaryTxt)
+                                    text.foregroundColor(.secondaryText)
                                 }
                             }
                         }
@@ -148,7 +148,7 @@ struct AppView: View {
                                         text.foregroundColor(.textColor)
                                     } else {
                                         Image.tabProfile
-                                        text.foregroundColor(.secondaryTxt)
+                                        text.foregroundColor(.secondaryText)
                                     }
                                 }
                             }

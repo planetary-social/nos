@@ -44,7 +44,7 @@ struct NewNoteView: View {
                             .placeholder(when: postText.isEmpty, placeholder: {
                                 VStack {
                                     Localized.newNotePlaceholder.view
-                                        .foregroundColor(.secondaryTxt)
+                                        .foregroundColor(.secondaryText)
                                         .padding(.horizontal, 8.5)
                                         .padding(.vertical, 10)
                                     Spacer()
