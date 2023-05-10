@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Made the reply button on notes easier to tap, and it now presents the keyboard when tapped.
 - Improved performance of loading replies
 - Added Spanish translations (thanks Martin!)
+- Updated app icon
 
 ## [0.1 (38)] - 2023-04-28Z
 
