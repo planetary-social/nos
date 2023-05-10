@@ -142,6 +142,7 @@ identifier_name:
     - day
     - api
     - all
+    - eve
 number_separator:
   minimum_length: 5
 cyclomatic_complexity:
