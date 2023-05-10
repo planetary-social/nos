@@ -88,8 +88,8 @@ struct ProfileView: View {
                         }
                     }
                 }
+                .padding(.top, 10)
             }
-            .padding(.top, 1)
             .background(Color.appBg)
             .overlay(Group {
                 if !events.contains(where: { !$0.author!.muted }) {
@@ -101,7 +101,8 @@ struct ProfileView: View {
         .nosNavigationBar(title: .profile)
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
-        }            
+        }                  
+        .navigationDestination(for: URL.self) { url in URLView(url: url) }
         .navigationDestination(for: ReplyToNavigationDestination.self) { destination in 
             RepliesView(note: destination.note, showKeyboard: true)
         }

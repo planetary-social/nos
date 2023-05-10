@@ -185,15 +185,8 @@ import Logger
                     return
                 }
             } else if controller === self.userWatcher {
-                do {
-                    try self.userWatcher?.performFetch()
-                    if let user = self.userWatcher?.fetchedObjects?.first as? Author {
-                        user.followedKeys.forEach {
-                            self.process(user: userKey, followed: $0, whoFollows: [])
-                        }
-                    }
-                } catch {
-                    fatalError("SocialGraphCache could not performFetch on oneHopWatcher")
+                changedAuthor.followedKeys.forEach {
+                    self.process(user: authorKey, followed: $0, whoFollows: [])
                 }
             }
         }

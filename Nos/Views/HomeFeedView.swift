@@ -102,7 +102,7 @@ struct HomeFeedView: View {
                                     .padding(.bottom, 15)
                             }
                         }
-                        .padding(.vertical, 5)
+                        .padding(.vertical, 10)
                     }
                     .accessibilityIdentifier("home feed")
                 }
