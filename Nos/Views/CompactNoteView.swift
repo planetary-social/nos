@@ -111,11 +111,15 @@ struct CompactNoteView: View {
                 .frame(maxWidth: .infinity)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
-            if let url = try? note
-                .content?
-                .findUnformattedLinks()
-                .first(where: { $0.isImage }) {
-                SquareImage(url: url)
+            if note.kind == EventKind.text.rawValue,
+                let url = try? note
+                    .content?
+                    .findUnformattedLinks()
+                    .first(where: { $0.isImage }) {
+                    SquareImage(url: url)
+                        .onTapGesture {
+                            router.open(url: url, with: viewContext)
+                        }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
