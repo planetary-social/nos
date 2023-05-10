@@ -216,6 +216,8 @@
 		C9C9444229F6F0E2002F2C7A /* XCTest+Eventually.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C9444129F6F0E2002F2C7A /* XCTest+Eventually.swift */; };
 		C9CDBBA129A8F14C00C555C7 /* DiscoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */; };
 		C9CDBBA429A8FA2900C555C7 /* GoldenPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CDBBA329A8FA2900C555C7 /* GoldenPostView.swift */; };
+		C9CE5B142A0172CF008E198C /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE5B132A0172CF008E198C /* WebView.swift */; };
+		C9CE5B152A0172CF008E198C /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE5B132A0172CF008E198C /* WebView.swift */; };
 		C9DB207729F30EC700FB7B9D /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DB207629F30EC700FB7B9D /* AsyncButton.swift */; };
 		C9DB207829F30EC700FB7B9D /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DB207629F30EC700FB7B9D /* AsyncButton.swift */; };
 		C9DEBFD2298941000078B43A /* NosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD1298941000078B43A /* NosApp.swift */; };
@@ -459,6 +461,7 @@
 		C9C9444129F6F0E2002F2C7A /* XCTest+Eventually.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+Eventually.swift"; sourceTree = "<group>"; };
 		C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverView.swift; sourceTree = "<group>"; };
 		C9CDBBA329A8FA2900C555C7 /* GoldenPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoldenPostView.swift; sourceTree = "<group>"; };
+		C9CE5B132A0172CF008E198C /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		C9DB207629F30EC700FB7B9D /* AsyncButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncButton.swift; sourceTree = "<group>"; };
 		C9DEBFCE298941000078B43A /* Nos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9DEBFD1298941000078B43A /* NosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosApp.swift; sourceTree = "<group>"; };
@@ -862,6 +865,7 @@
 				C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */,
 				C9A25B3C29F174D200B39534 /* ReadabilityPadding.swift */,
 				C9DB207629F30EC700FB7B9D /* AsyncButton.swift */,
+				C9CE5B132A0172CF008E198C /* WebView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1170,6 +1174,7 @@
 				C987F81D29BA6D9A00B44E7A /* ProfileTab.swift in Sources */,
 				C9ADB14129951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */,
 				C9F84C21298DC36800C6714D /* AppView.swift in Sources */,
+				C9CE5B142A0172CF008E198C /* WebView.swift in Sources */,
 				CD4908D429B92941007443DB /* ReportABugMailView.swift in Sources */,
 				C9C2B78229E0735400548B4A /* RelaySubscriptionManager.swift in Sources */,
 				3FFB1D9629A6BBEC002A755D /* Collection+SafeSubscript.swift in Sources */,
@@ -1333,6 +1338,7 @@
 				C987F86229BABAF800B44E7A /* String+Markdown.swift in Sources */,
 				CD09A74B29A521730063464F /* ProfileHeader.swift in Sources */,
 				CD09A74A29A521510063464F /* ProfileView.swift in Sources */,
+				C9CE5B152A0172CF008E198C /* WebView.swift in Sources */,
 				CD09A74929A521210063464F /* Router.swift in Sources */,
 				C93EC2F829C351470012EE2A /* Optional+Unwrap.swift in Sources */,
 				C9B678DF29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */,

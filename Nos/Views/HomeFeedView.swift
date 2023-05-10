@@ -111,6 +111,9 @@ struct HomeFeedView: View {
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
+            .navigationDestination(for: URL.self) { url in
+                URLView(url: url)
+            }
             .navigationDestination(for: ReplyToNavigationDestination.self) { destination in 
                 RepliesView(note: destination.note, showKeyboard: true)
             }
