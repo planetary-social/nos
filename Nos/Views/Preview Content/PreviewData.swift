@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PreviewData {
+enum PreviewData {
     
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
