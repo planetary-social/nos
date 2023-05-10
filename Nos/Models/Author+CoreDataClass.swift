@@ -100,9 +100,10 @@ public class Author: NosManagedObject {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: "(kind = %i OR kind = %i) AND author = %@", 
+            format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@", 
             EventKind.text.rawValue, 
             EventKind.repost.rawValue, 
+            EventKind.longFormContent.rawValue, 
             self
         )
         return fetchRequest
