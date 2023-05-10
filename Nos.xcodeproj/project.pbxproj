@@ -75,7 +75,6 @@
 		C94437E629B0DB83004D8C86 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94437E529B0DB83004D8C86 /* NotificationsView.swift */; };
 		C94BC09B2A0AC74A0098F6F1 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94BC09A2A0AC74A0098F6F1 /* PreviewData.swift */; };
 		C94BC09C2A0AC74A0098F6F1 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94BC09A2A0AC74A0098F6F1 /* PreviewData.swift */; };
-		C94BC0A02A0ACBC00098F6F1 /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = C94BC09F2A0ACBC00098F6F1 /* Down */; };
 		C94D855C2991479900749478 /* NewNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D855B2991479900749478 /* NewNoteView.swift */; };
 		C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = C94D855E29914D2300749478 /* SwiftUINavigation */; };
 		C94FE9F529DB177500019CD3 /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA978299C31A7006929C1 /* Localizable.swift */; };
@@ -532,7 +531,6 @@
 				C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */,
 				C9646E9A29B79E04007239A4 /* Logger in Frameworks */,
 				C9646EA729B7A3DD007239A4 /* Dependencies in Frameworks */,
-				C94BC0A02A0ACBC00098F6F1 /* Down in Frameworks */,
 				C987F85F29BAB66900B44E7A /* CachedAsyncImage in Frameworks */,
 				C9646EA429B7A24A007239A4 /* PostHog in Frameworks */,
 				C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */,
@@ -920,7 +918,6 @@
 				C9646EA329B7A24A007239A4 /* PostHog */,
 				C9646EA629B7A3DD007239A4 /* Dependencies */,
 				C987F85E29BAB66900B44E7A /* CachedAsyncImage */,
-				C94BC09F2A0ACBC00098F6F1 /* Down */,
 			);
 			productName = Nos;
 			productReference = C9DEBFCE298941000078B43A /* Nos.app */;
@@ -1020,7 +1017,6 @@
 				C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */,
 				C9646EA529B7A3DD007239A4 /* XCRemoteSwiftPackageReference "swift-dependencies" */,
 				C987F85D29BAB66900B44E7A /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
-				C94BC09E2A0ACBC00098F6F1 /* XCRemoteSwiftPackageReference "Down" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -1865,14 +1861,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		C94BC09E2A0ACBC00098F6F1 /* XCRemoteSwiftPackageReference "Down" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/johnxnguyen/Down.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.11.0;
-			};
-		};
 		C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swiftui-navigation";
@@ -1940,11 +1928,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C94BC09F2A0ACBC00098F6F1 /* Down */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C94BC09E2A0ACBC00098F6F1 /* XCRemoteSwiftPackageReference "Down" */;
-			productName = Down;
-		};
 		C94D855E29914D2300749478 /* SwiftUINavigation */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */;

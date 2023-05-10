@@ -8,7 +8,6 @@
 
 import SwiftUI
 import Logger
-import Down
 
 /// A view that displays the text of a note (kind: 1 Nostr event) and truncates it with a "Read more" button if
 /// it is too long
@@ -30,17 +29,6 @@ struct CompactNoteView: View {
         _attributedContent = .init(initialValue: AttributedString(note.content ?? ""))
         _showFullMessage = .init(initialValue: showFullMessage)
         
-        // Parse markdown of long form events
-        if note.kind == EventKind.longFormContent.rawValue {
-            do {
-                let markdown = Down(markdownString: note.content ?? "")
-                let style = "* {font-family: Helvetica } code, pre { font-family: Menlo }"
-                let attributedString = try markdown.toAttributedString(stylesheet: style)
-                _attributedContent = .init(initialValue: AttributedString(attributedString))
-            } catch {
-                Log.info("Could not parse markdown for note with id: \(String(describing: note.identifier))")
-            }
-        } 
         self.note = note
     }
     
