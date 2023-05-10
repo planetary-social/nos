@@ -33,6 +33,7 @@ struct NoteCard: View {
     private var showFullMessage: Bool
     private let showReplyCount: Bool
     private var hideOutOfNetwork: Bool
+    private var replyAction: ((Event) -> Void)?
     
     private var author: Author? {
         note.author
@@ -68,13 +69,15 @@ struct NoteCard: View {
         style: CardStyle = .compact,
         showFullMessage: Bool = false,
         hideOutOfNetwork: Bool = true,
-        showReplyCount: Bool = true
+        showReplyCount: Bool = true,
+        replyAction: ((Event) -> Void)? = nil
     ) {
         self.note = note
         self.style = style
         self.showFullMessage = showFullMessage
         self.hideOutOfNetwork = hideOutOfNetwork
         self.showReplyCount = showReplyCount
+        self.replyAction = replyAction
     }
     
     var attributedAuthor: AttributedString {
@@ -168,16 +171,25 @@ struct NoteCard: View {
                             await repostNote()
                         }
                         
-                        // TODO: make this a real button
-                        Image.buttonReply
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 12)
-                        
                         LikeButton(note: note) {
                             await likeNote()
                         }
+                        
+                        // Reply button
+                        Button(action: { 
+                            if let replyAction {
+                                replyAction(note)
+                            } else {
+                                router.push(ReplyToNavigationDestination(note: note))
+                            }
+                        }, label: { 
+                            Image.buttonReply
+                                .padding(.leading, 10)
+                                .padding(.trailing, 23)
+                                .padding(.vertical, 12)
+                        })
                     }
-                    .padding(.horizontal, 13)
+                    .padding(.leading, 13)
                 }
             case .golden:
                 if let author {
