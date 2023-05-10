@@ -268,8 +268,6 @@ public class Event: NosManagedObject {
             // swiftlint:disable line_length
             format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND (receivedAt == nil OR receivedAt <= %@)",
             // swiftlint:enable line_length
-            //EventKind.text.rawValue as CVarArg,
-            //EventKind.longFormContent.rawValue as CVarArg,
             user,
             user,
             before as CVarArg
