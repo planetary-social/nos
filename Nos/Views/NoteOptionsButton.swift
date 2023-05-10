@@ -27,11 +27,9 @@ struct NoteOptionsButton: View {
             Button {
                 showingOptions = true
             } label: {
-                VStack {
-                    Image(systemName: "ellipsis")
-                        .foregroundColor(.nosSecondary)
-                }
-                .frame(minWidth: 44, minHeight: 44)
+                Image(systemName: "ellipsis")
+                    .foregroundColor(.nosSecondary)
+                    .frame(minWidth: 44, minHeight: 44)
             }
             .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
                 Button(Localized.copyNoteIdentifier.string) {
