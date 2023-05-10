@@ -17,8 +17,16 @@ extension String {
         let wholeRange = NSRange(location: 0, length: string.utf16.count)
         if let match = regularExpression.firstMatch(in: string, range: wholeRange) {
             if let range = Range(match.range(withName: "link"), in: string) {
-                let link = "\(string[range])"
-                let replacement = "[\(link)](\(link))"
+                let linkDisplayName = "\(string[range])"
+                var link = linkDisplayName
+                if var url = URL(string: link) {
+                    if url.scheme == nil,
+                        let httpsURL = URL(string: ("https://\(link)")) {
+                        url = httpsURL
+                    }
+                    link = url.absoluteString
+                }
+                let replacement = "[\(linkDisplayName)](\(link))"
                 return try findAndReplaceUnformattedLinks(in: string.replacingCharacters(in: range, with: replacement))
             }
         }
