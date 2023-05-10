@@ -54,12 +54,10 @@ struct NotificationCard: View {
                         .shadow(radius: 10, y: 4)
                     
                     VStack {
-                        if let actionText {
-                            HStack {
-                                Text(actionText)
-                                    .lineLimit(1)
-                                Spacer()
-                            }
+                        HStack {
+                            Text(actionText)
+                                .lineLimit(1)
+                            Spacer()
                         }
                         HStack {
                             Text("\"" + (attributedContent) + "\"")

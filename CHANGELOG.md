@@ -8,8 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- The notifications tab now request more events from relays
+- Fixed link detection in notes for URLs without a scheme (i.e. "https://")
+- Made the reply button on notes easier to tap, and it now presents the keyboard when tapped.
+- Improved performance of loading replies
+- Added Spanish translations (thanks Martin!)
+- Updated app icon
+
+## [0.1 (38)] - 2023-04-28Z
+
 - Made the routine to delete old events more efficient and prevent it from deleting our own events. 
+- The notifications tab now request more events from relays
 
 ## [0.1 (37)] - 2023-04-27Z
 
@@ -26,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
 - Fixed a bug where you could post the same reply multiple times.
 - Fixed an issue where profile pictures could be rendered with the wrong aspect ratio.
+- Added Brazilian Portuguese translations (thanks Andressa!).
 
 ## [0.1 (35)] - 2023-04-19Z
 

@@ -125,7 +125,8 @@ struct DiscoverView: View {
             // two hops is too large of a request and causes the websocket to close.
             let twoHopsFilter = Filter(
                 kinds: [.text],
-                limit: 50,
+                inNetwork: true,
+                limit: 200,
                 since: fetchSinceDate
             )
             
@@ -263,6 +264,9 @@ struct DiscoverView: View {
             })
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
+            }
+            .navigationDestination(for: ReplyToNavigationDestination.self) { destination in 
+                RepliesView(note: destination.note, showKeyboard: true)
             }
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)

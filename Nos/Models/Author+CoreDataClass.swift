@@ -140,6 +140,7 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
+    /// Fetches all the authors who are further than 2 hops away on the social graph for the given `author`.
     static func outOfNetwork(for author: Author) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
