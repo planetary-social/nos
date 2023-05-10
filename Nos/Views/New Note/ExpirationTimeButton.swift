@@ -21,6 +21,7 @@ struct ExpirationTimeButton: View {
                 VStack {
                     Text(model.topText)
                         .foregroundColor(.primaryTxt)
+                        .bold()
                     PlainText(model.unit)
                         .foregroundColor(.secondaryTxt)
                         .font(.clarityCaption2)
@@ -30,14 +31,14 @@ struct ExpirationTimeButton: View {
                     Image(systemName: "xmark")
                         .font(.callout)
                         .fontWeight(.heavy)
-                        .foregroundColor(.secondaryTxt)
+                        .foregroundColor(.secondaryAction)
                 }
             }
             .padding(.horizontal, showClearButton ? 6 : 4)
             .padding(.vertical, 6)
             .frame(minWidth: minSize?.wrappedValue?.width, minHeight: minSize?.wrappedValue?.height)
             .cornerRadius(5)
-            .background(Color(hex: "#1C122E"))
+            .background(Color.appBg)
             
             if isSelected {
                 textLayer
@@ -51,7 +52,7 @@ struct ExpirationTimeButton: View {
                     // bottom bevel
                     .overlay(
                         RoundedRectangle(cornerSize: CGSize(width: 5, height: 5))
-                            .stroke(Color(hex: "#140D21"), lineWidth: 1)
+                            .stroke(Color.buttonBevelBottom, lineWidth: 1)
                             .offset(x: 0, y: 0.8)
                             .padding(.horizontal, -0.8)
                             .clipped()
@@ -59,7 +60,7 @@ struct ExpirationTimeButton: View {
                     // top bevel
                     .overlay(
                         RoundedRectangle(cornerSize: CGSize(width: 5, height: 5))
-                            .stroke(Color(hex: "#362459"), lineWidth: 1)
+                            .stroke(Color.buttonBevelTop, lineWidth: 1)
                             .offset(x: 0, y: -0.8)
                             .padding(.horizontal, -0.8)
                             .clipped()
@@ -97,6 +98,5 @@ struct ExpirationTimeButton_Previews: PreviewProvider {
         .padding(10)
         .frame(maxWidth: .infinity)
         .background(Color.appBg)
-        .preferredColorScheme(.dark)
     }
 }

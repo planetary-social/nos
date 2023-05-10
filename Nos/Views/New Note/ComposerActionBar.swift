@@ -24,7 +24,6 @@ struct ComposerActionBar: View {
             subMenu = .none
         } label: { 
             Image.backChevron
-                .foregroundColor(.secondaryTxt)
                 .frame(minWidth: 44, minHeight: 44)
         }
         .transition(.opacity)
@@ -39,7 +38,7 @@ struct ComposerActionBar: View {
                     subMenu = .attachMedia
                 } label: { 
                     Image.attachMediaButton
-                        .foregroundColor(.secondaryTxt)
+                        .foregroundColor(.secondaryText)
                         .frame(minWidth: 44, minHeight: 44)
                 }
                 .padding(.leading, 8)
@@ -64,7 +63,7 @@ struct ComposerActionBar: View {
                         subMenu = .expirationDate
                     } label: { 
                         Image.disappearingMessages
-                            .foregroundColor(.secondaryTxt)
+                            .foregroundColor(.secondaryText)
                             .frame(minWidth: 44, minHeight: 44)
                     }
                 }
@@ -75,7 +74,7 @@ struct ComposerActionBar: View {
                     Localized.nostrBuildHelp.string,
                     highlightedWord: "nostr.build",
                     highlight: .diagonalAccent,
-                    textColor: .primaryTxt,
+                    textColor: .secondaryText,
                     font: .clarityCaption,
                     link: URL(string: "https://nostr.build")!
                 )
@@ -87,7 +86,7 @@ struct ComposerActionBar: View {
                     HStack {
                         PlainText(Localized.noteDisappearsIn.string)
                             .font(.clarityCaption)
-                            .foregroundColor(.primaryTxt)
+                            .foregroundColor(.secondaryText)
                             .transition(.move(edge: .trailing))
                             .padding(10)
                         
@@ -122,7 +121,6 @@ struct ComposerActionBar_Previews: PreviewProvider {
         }
         .frame(maxWidth: .infinity)
         .background(Color.appBg)
-        .preferredColorScheme(.dark)
         .environment(\.sizeCategory, .extraExtraLarge)
     }
 }

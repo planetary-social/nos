@@ -77,13 +77,14 @@ extension Color {
        static let profileBgTop = Color("profile-bg-top", bundle: Bundle.current)
        static let profileShadow = Color("profile-shadow", bundle: Bundle.current)
        static let relationshipViewBg = Color("relationship-view-bg", bundle: Bundle.current)
-       static let secondaryTxt = Color("secondary-txt", bundle: Bundle.current)
        static let selectedtabBg = Color("selectedtab-bg", bundle: Bundle.current)
        static let tabBgBottom = Color("tab-bg-bottom", bundle: Bundle.current)
        static let tabBgTop = Color("tab-bg-top", bundle: Bundle.current)
        static let tabBorderBottom = Color("tab-border-bottom", bundle: Bundle.current)
        static let tabShadowBottom = Color("tab-shadow-bottom", bundle: Bundle.current)
        static let actionBar = Color("actionBar", bundle: Bundle.current)
+       static let buttonBevelTop = Color("button-bevel-top", bundle: Bundle.current)
+       static let buttonBevelBottom = Color("button-bevel-bottom", bundle: Bundle.current)
 }
 
 extension UIColor {

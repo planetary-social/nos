@@ -68,6 +68,5 @@ struct ExpirationTimePicker_Previews: PreviewProvider {
         }
         .frame(maxWidth: .infinity)
         .background(Color.appBg)
-        .preferredColorScheme(.dark)
     }
 }
