@@ -83,6 +83,9 @@ extension Color {
        static let tabBgTop = Color("tab-bg-top", bundle: Bundle.current)
        static let tabBorderBottom = Color("tab-border-bottom", bundle: Bundle.current)
        static let tabShadowBottom = Color("tab-shadow-bottom", bundle: Bundle.current)
+       static let actionBar = Color("actionBar", bundle: Bundle.current)
+       static let buttonBevelTop = Color("button-bevel-top", bundle: Bundle.current)
+       static let buttonBevelBottom = Color("button-bevel-bottom", bundle: Bundle.current)
 }
 
 extension UIColor {
@@ -243,6 +246,8 @@ extension Image {
        static let repostButton = Image("repost-button", bundle: Bundle.current)
        static let repostButtonPressed = Image("repost-button-pressed", bundle: Bundle.current)
        static let repostSymbol = Image("repost-symbol", bundle: Bundle.current)
+       static let attachMediaButton = Image("attach-media-button", bundle: Bundle.current)
+       static let disappearingMessages = Image("disappearing-messages", bundle: Bundle.current)
 }
 
 extension UIImage {

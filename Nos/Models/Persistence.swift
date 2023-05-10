@@ -199,6 +199,7 @@ struct PersistenceController {
                 
                 let deleteRequests: [NSPersistentStoreRequest] = [
                     oldEventsRequest,
+                    Event.expiredRequest(),
                     EventReference.orphanedRequest(),
                     AuthorReference.orphanedRequest(),
                     Author.outOfNetwork(for: currentAuthor),

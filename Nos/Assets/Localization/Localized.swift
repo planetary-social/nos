@@ -102,6 +102,13 @@ enum Localized: String, Localizable, CaseIterable {
     case editProfile = "Edit Profile"
     case youNeedToEnterAPrivateKeyBeforePosting = "You need to enter a private key in Settings before you can publish posts."
     case nostrBuildHelp = "Use nostr.build to post image links."
+    case noteDisappearsIn = "Note disappears in" // Choices like 15 mins, 1 hour, etc. appear after this text.
+    case attachMedia = "Attach Media"
+    case expirationDate = "Expiration Date"
+    case minuteAbbreviated = "min"
+    case hourAbbreviated = "hour"
+    case dayAbbreviated = "day"
+    case daysAbbreviated = "days"
     case sendCode = "Send code"
     case submit = "Submit"
     case setUpUNS = "Reserve Your Name"
