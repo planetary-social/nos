@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fix link color on macOS
+
 ## [0.1 (40)] - 2023-05-10Z
 
 - Add support for expiration dates when composing notes (please note: messages are not guaranteed to be deleted by relays or other apps)

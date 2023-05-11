@@ -42,7 +42,7 @@ struct CompactNoteView: View {
                 Text(attributedContent)
                     .font(.body)
                     .foregroundColor(.primaryTxt)
-                    .accentColor(.accent)
+                    .tint(.accent) 
                     .padding(15)
                     .environment(\.openURL, OpenURLAction { url in
                         router.open(url: url, with: viewContext)
@@ -53,7 +53,7 @@ struct CompactNoteView: View {
                     .lineLimit(12)
                     .font(.body)
                     .foregroundColor(.primaryTxt)
-                    .accentColor(.accent)
+                    .tint(.accent) 
                     .padding(15)
                     .environment(\.openURL, OpenURLAction { url in
                         router.open(url: url, with: viewContext)
