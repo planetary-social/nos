@@ -22,22 +22,24 @@ struct ExpandingTextFieldAndSubmitButton: View {
     
     var body: some View {
         HStack {
-            EditableText($reply, guid: UUID())
-                .placeholder(when: reply.characters.isEmpty, placeholder: {
-                    VStack {
-                        Text(placeholder)
-                            .foregroundColor(.secondaryText)
-                            .padding(.top, 10)
-                            .padding(.leading, 7.5)
-                        Spacer()
-                    }
-                })
-                .scrollContentBackground(.hidden)
-                .padding(.leading, 6)
-                .background(Color.appBg)
-                .cornerRadius(17.5)
-                .frame(maxHeight: 270)
-                .focused(focus)
+            ScrollView(.vertical) {
+                EditableText($reply, guid: UUID())
+                    .placeholder(when: reply.characters.isEmpty, placeholder: {
+                        VStack {
+                            Text(placeholder)
+                                .foregroundColor(.secondaryText)
+                                .padding(.top, 10)
+                                .padding(.leading, 7.5)
+                            Spacer()
+                        }
+                    })
+                    .scrollContentBackground(.hidden)
+                    .padding(.leading, 6)
+                    .focused(focus)
+            }
+            .frame(maxHeight: 270)
+            .background(Color.appBg)
+            .cornerRadius(17.5)
             
             if showPostButton {
                 Button(
