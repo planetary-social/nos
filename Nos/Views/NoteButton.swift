@@ -22,6 +22,7 @@ struct NoteButton: View {
     var allowsPush = true
     var showReplyCount = true
     var isInThreadView = false
+    private var replyAction: ((Event) -> Void)?
 
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
@@ -37,7 +38,8 @@ struct NoteButton: View {
         hideOutOfNetwork: Bool = true, 
         allowsPush: Bool = true, 
         showReplyCount: Bool = true, 
-        isInThreadView: Bool = false
+        isInThreadView: Bool = false,
+        replyAction: ((Event) -> Void)? = nil
     ) {
         self.note = note
         self.style = style
@@ -46,6 +48,7 @@ struct NoteButton: View {
         self.allowsPush = allowsPush
         self.showReplyCount = showReplyCount
         self.isInThreadView = isInThreadView
+        self.replyAction = replyAction
     }
 
     /// The note displayed in the note card. Could be different from `note` i.e. in the case of a repost.
@@ -117,7 +120,8 @@ struct NoteButton: View {
                     style: style,
                     showFullMessage: showFullMessage,
                     hideOutOfNetwork: hideOutOfNetwork,
-                    showReplyCount: showReplyCount
+                    showReplyCount: showReplyCount,
+                    replyAction: replyAction
                 )
                 
                 switch style {

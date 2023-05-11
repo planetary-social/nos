@@ -27,6 +27,7 @@ final class RelayService: ObservableObject {
     private let subscriptionLimit = 10
     private let minimimumOneTimeSubscriptions = 1
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.currentUser) private var currentUser
     
     init(persistenceController: PersistenceController) {
         self.persistenceController = persistenceController
@@ -49,7 +50,7 @@ final class RelayService: ObservableObject {
         })
         
         Task { @MainActor in
-            CurrentUser.shared.viewContext = persistenceController.container.viewContext
+            currentUser.viewContext = persistenceController.container.viewContext
             await openSockets()
         }
         
@@ -265,8 +266,12 @@ extension RelayService {
             return
         }
         
-        guard let eventJSON = responseArray[2] as? [String: Any] else {
+        guard let eventJSON = responseArray[safe: 2] as? [String: Any] else {
             print("Error: invalid EVENT JSON: \(responseArray)")
+            return
+        }
+        
+        if await !shouldParseEvent(responseArray: responseArray, json: eventJSON) {
             return
         }
         
@@ -371,6 +376,24 @@ extension RelayService {
             print("error parsing response: \(response)\nerror: \(error.localizedDescription)")
         }
     }
+     
+    func shouldParseEvent(responseArray: [Any], json eventJSON: [String: Any]) async -> Bool {
+        // Drop out of network subscriptions if the filter has inNetwork == true
+        if let subscriptionID = responseArray[safe: 1] as? RelaySubscription.ID,
+            let authorKey = eventJSON[JSONEvent.CodingKeys.pubKey.rawValue] as? HexadecimalString,
+            let subscription = await subscriptions.subscription(from: subscriptionID) {
+            if subscription.filter.inNetwork {
+                let eventInNetwork = await currentUser.socialGraph.contains(authorKey) 
+                if !eventInNetwork {
+                    let eventID = eventJSON[JSONEvent.CodingKeys.id.rawValue] ?? "nil"
+                    Log.info("Dropping out of network event \(eventID).")
+                    return false
+                }
+            }
+        }
+        
+        return true
+    }
 }
 
 // MARK: Publish
@@ -443,7 +466,7 @@ extension RelayService {
                 shouldBePublishedToRelays.minus(publishedRelays)
                 let missedRelays: [Relay] = Array(Set(_immutableCocoaSet: shouldBePublishedToRelays))
                 
-                print("\(missedRelays.count) missing a published event.")
+                print("\(missedRelays.count) relays missing a published event.")
                 for missedRelay in missedRelays {
                     guard let missedAddress = missedRelay.address else { continue }
                     Task {
@@ -489,7 +512,7 @@ extension RelayService {
             if let overrideRelays {
                 return overrideRelays
             }
-            if let currentUserPubKey = CurrentUser.shared.publicKeyHex,
+            if let currentUserPubKey = self.currentUser.publicKeyHex,
                 let currentUser = try? Author.find(by: currentUserPubKey, context: self.backgroundContext),
                 let userRelays = currentUser.relays?.allObjects as? [Relay] {
                 return userRelays.compactMap { $0.addressURL }

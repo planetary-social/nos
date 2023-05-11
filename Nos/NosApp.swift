@@ -29,6 +29,7 @@ struct NosApp: App {
                 .environmentObject(currentUser)
                 .task {
                     currentUser.relayService = relayService
+                    PersistenceController.cleanupEntities(for: currentUser)
                 }
                 .onChange(of: scenePhase) { newPhase in
                     // TODO: save all contexts, not just the view and background.

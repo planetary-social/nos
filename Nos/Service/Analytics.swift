@@ -121,10 +121,8 @@ class Analytics {
         postHog?.identify(keyPair.npub)
     }
     
-    func databaseStatistics(eventCount: Int) {
-        track("Database Statistics", properties: [
-            "events": eventCount
-        ])
+    func databaseStatistics(_ statistics: [String: Any]) {
+        track("Database Statistics", properties: statistics)
     }
     
     func logout() {

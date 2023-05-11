@@ -81,54 +81,6 @@ struct ProfileEditView: View {
                     startPoint: .top,
                     endPoint: .bottom
                 ))
-                
-                // TODO: allow remove UNS
-                if author.nip05?.hasSuffix("universalname.space") != true {
-                    VStack {
-                        Localized.unsTagline.view
-                            .padding(.top, 24)
-                            .padding(.bottom, 12)
-                            .foregroundColor(.white)
-                            .bold()
-                            .shadow(radius: 2)
-                        
-                        HStack {
-                            ActionButton(
-                                title: .setUpUniversalName,
-                                textColor: Color(hex: "#f26141"),
-                                depthEffectColor: Color(hex: "#f8d4b6"),
-                                backgroundGradient: LinearGradient(
-                                    colors: [Color(hex: "#FFF8F7"), Color(hex: "#FDF6F5")],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                ),
-                                textShadow: false
-                            ) {
-                                showUniversalNameWizard = true
-                            }
-                            .frame(minHeight: 32)
-                            Spacer()
-                        }
-                    }
-                    .padding(.top, 12)
-                    .padding(.bottom, 24)
-                    .background(
-                        HStack {
-                            Spacer()
-                            Image(systemName: "checkmark.seal.fill")
-                                .resizable()
-                                .aspectRatio(1, contentMode: .fit)
-                                .foregroundColor(Color(hex: "#F95795"))
-                        }
-                    )
-                    .listRowBackground(
-                        LinearGradient(
-                            colors: [Color(hex: "#F08508"), Color(hex: "#F43F75")],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                }
             }
             if let createAccountCompletion {
                 Spacer()

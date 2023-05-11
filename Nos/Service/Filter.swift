@@ -14,6 +14,8 @@ struct Filter: Hashable, Identifiable {
     let eventIDs: [HexadecimalString]
     let kinds: [EventKind]
     let eTags: [HexadecimalString]
+    let pTags: [HexadecimalString]
+    let inNetwork: Bool
     let limit: Int?
     let since: Date?
     
@@ -26,6 +28,8 @@ struct Filter: Hashable, Identifiable {
         eventIDs: [HexadecimalString] = [],
         kinds: [EventKind] = [],
         eTags: [HexadecimalString] = [],
+        pTags: [HexadecimalString] = [],
+        inNetwork: Bool = false,
         limit: Int? = nil,
         since: Date? = nil
     ) {
@@ -33,6 +37,8 @@ struct Filter: Hashable, Identifiable {
         self.eventIDs = eventIDs
         self.kinds = kinds.sorted(by: { $0.rawValue > $1.rawValue })
         self.eTags = eTags
+        self.pTags = pTags
+        self.inNetwork = inNetwork
         self.limit = limit
         self.since = since
     }
@@ -58,6 +64,10 @@ struct Filter: Hashable, Identifiable {
         
         if !eTags.isEmpty {
             filterDict["#e"] = eTags
+        }
+        
+        if !pTags.isEmpty {
+            filterDict["#p"] = pTags
         }
         
         if let since {

@@ -90,6 +90,14 @@ public class Follow: NosManagedObject {
         return fetchRequest
     }
     
+    /// Retreives all the Follows whose source Author has been deleted.
+    static func orphanedRequest() -> NSFetchRequest<Follow> {
+        let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.lastUpdated, ascending: false)]
+        fetchRequest.predicate = NSPredicate(format: "source = nil")
+        return fetchRequest
+    }
+    
     class func follows(source: Author, destination: Author, context: NSManagedObjectContext) -> [Follow] {
         let fetchRequest = Follow.followsRequest(source: source, destination: destination)
         
