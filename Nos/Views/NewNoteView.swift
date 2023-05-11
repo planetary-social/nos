@@ -70,7 +70,7 @@ struct NewNoteView: View {
                             .placeholder(when: postText.characters.isEmpty, placeholder: {
                                 VStack {
                                     Localized.newNotePlaceholder.view
-                                        .foregroundColor(.secondaryTxt)
+                                        .foregroundColor(.secondaryText)
                                         .padding(.horizontal, 8.5)
                                         .padding(.vertical, 10)
                                     Spacer()
@@ -113,7 +113,7 @@ struct NewNoteView: View {
                             Localized.nostrBuildHelp.string,
                             highlightedWord: "nostr.build",
                             highlight: .diagonalAccent,
-                            textColor: .secondaryTxt,
+                            textColor: .secondaryText,
                             link: URL(string: "https://nostr.build")!
                         )
                         .listRowBackground(Color.appBg)
