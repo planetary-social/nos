@@ -26,7 +26,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
                 .placeholder(when: reply.characters.isEmpty, placeholder: {
                     VStack {
                         Text(placeholder)
-                            .foregroundColor(.secondaryTxt)
+                            .foregroundColor(.secondaryText)
                             .padding(.top, 10)
                             .padding(.leading, 7.5)
                         Spacer()
@@ -65,6 +65,8 @@ struct ExpandingTextFieldAndSubmitButton: View {
 }
 
 struct ExpandingTextFieldAndSubmitButton_Previews: PreviewProvider {
+    
+    @FocusState static var isFocused: Bool
     @State static var reply = AttributedString("kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh a")
 
     static var previews: some View {
@@ -72,9 +74,10 @@ struct ExpandingTextFieldAndSubmitButton_Previews: PreviewProvider {
             Spacer()
             VStack {
                 HStack(spacing: 10) {
-                    ExpandingTextFieldAndSubmitButton(placeholder: "Write something", reply: $reply) {
-
-                    }
+                    ExpandingTextFieldAndSubmitButton(
+                        placeholder: "Write something", reply: $reply, 
+                        focus: $isFocused
+                    ) {}
                 }
             }
             .fixedSize(horizontal: false, vertical: true)
