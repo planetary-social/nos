@@ -17,7 +17,7 @@ struct RepliesView: View {
     @EnvironmentObject private var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
 
-    @State private var reply = ""
+    @State private var reply = AttributedString("")
     
     @State private var alert: AlertState<Never>?
     
@@ -140,9 +140,9 @@ struct RepliesView: View {
         .background(Color.appBg)
     }
     
-    func postReply(_ replyText: String) async {
+    func postReply(_ replyText: AttributedString) async {
         do {
-            guard !replyText.isEmpty else {
+            guard !replyText.characters.isEmpty else {
                 return
             }
 
@@ -171,7 +171,7 @@ struct RepliesView: View {
                 createdAt: Int64(Date().timeIntervalSince1970),
                 kind: 1,
                 tags: tags,
-                content: replyText,
+                content: String(replyText.characters),
                 signature: ""
             )
             try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)

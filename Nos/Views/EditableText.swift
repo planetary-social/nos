@@ -13,6 +13,8 @@ import UIKit
 /// desirable.
 struct EditableText: UIViewRepresentable {
 
+    typealias UIViewType = UITextView
+
     @Binding var attributedText: AttributedString
     @State private var selectedRange = NSRange(location: 0, length: 0)
 
@@ -27,9 +29,9 @@ struct EditableText: UIViewRepresentable {
 
     func makeUIView(context: Context) -> UITextView {
         let view = UITextView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.attributedText = NSAttributedString(attributedText)
         view.isUserInteractionEnabled = true
+        view.isScrollEnabled = false
         view.isEditable = true
         view.isSelectable = true
         view.tintColor = .accent
@@ -89,6 +91,7 @@ struct EditableText: UIViewRepresentable {
             .font: font,
             .foregroundColor: Color.secondaryTxt
         ]
+        uiView.invalidateIntrinsicContentSize()
     }
 
     func makeCoordinator() -> Coordinator {

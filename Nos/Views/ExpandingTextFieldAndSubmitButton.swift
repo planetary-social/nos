@@ -9,9 +9,11 @@ import Foundation
 import SwiftUI
 
 struct ExpandingTextFieldAndSubmitButton: View {
-    
+
+    @Environment(\.managedObjectContext) private var viewContext
+
     var placeholder: String
-    @Binding var reply: String
+    @Binding var reply: AttributedString
     var action: () async -> Void
     
     @FocusState private var textEditorInFocus
@@ -20,8 +22,8 @@ struct ExpandingTextFieldAndSubmitButton: View {
     
     var body: some View {
         HStack {
-            TextEditor(text: $reply)
-                .placeholder(when: reply.isEmpty, placeholder: {
+            EditableText($reply, guid: UUID())
+                .placeholder(when: reply.characters.isEmpty, placeholder: {
                     VStack {
                         Text(placeholder)
                             .foregroundColor(.secondaryTxt)
@@ -61,5 +63,23 @@ struct ExpandingTextFieldAndSubmitButton: View {
             }
         }
         .padding(8)
+    }
+}
+
+struct ExpandingTextFieldAndSubmitButton_Previews: PreviewProvider {
+    @State static var reply = AttributedString("kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh a")
+
+    static var previews: some View {
+        VStack {
+            Spacer()
+            VStack {
+                HStack(spacing: 10) {
+                    ExpandingTextFieldAndSubmitButton(placeholder: "Write something", reply: $reply) {
+
+                    }
+                }
+            }
+            .fixedSize(horizontal: false, vertical: true)
+        }
     }
 }
