@@ -90,7 +90,7 @@ struct NoteCard: View {
         authorName.font = Font.clarityBold
         let postedOrRepliedString = note.isReply ? Localized.Reply.replied.string : Localized.Reply.posted.string
         var postedOrReplied = AttributedString(" " + postedOrRepliedString)
-        postedOrReplied.foregroundColor = .secondaryTxt
+        postedOrReplied.foregroundColor = .secondaryText
         
         authorName.append(postedOrReplied)
         return authorName
@@ -119,7 +119,7 @@ struct NoteCard: View {
                                     Text(elapsedTime)
                                         .lineLimit(1)
                                         .font(.body)
-                                        .foregroundColor(.secondaryTxt)
+                                        .foregroundColor(.secondaryText)
                                 }
                             }
                             .padding(.leading, 10)
@@ -144,7 +144,7 @@ struct NoteCard: View {
                         VStack {
                             Localized.outsideNetwork.view
                                 .font(.body)
-                                .foregroundColor(.secondaryTxt)
+                                .foregroundColor(.secondaryText)
                                 .padding(15)
                             SecondaryActionButton(title: Localized.show) {
                                 withAnimation {
@@ -163,7 +163,7 @@ struct NoteCard: View {
                             if let replies = attributedReplies {
                                 Text(replies)
                                     .font(.subheadline)
-                                    .foregroundColor(Color.secondaryTxt)
+                                    .foregroundColor(Color.secondaryText)
                             }
                         }
                         Spacer()

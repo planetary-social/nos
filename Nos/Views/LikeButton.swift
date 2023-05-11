@@ -49,7 +49,7 @@ struct LikeButton: View {
             if likeCount > 0 {
                 Text(likeCount.description)
                     .font(.body)
-                    .foregroundColor(.secondaryTxt)
+                    .foregroundColor(.secondaryText)
             }
         }
         .padding(.horizontal, 10)
