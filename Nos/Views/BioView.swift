@@ -71,7 +71,7 @@ struct BioView: View {
                     } label: {
                         PlainText(Localized.readMore.string.uppercased())
                             .font(.clarityCaption)
-                            .foregroundColor(.secondaryTxt)
+                            .foregroundColor(.secondaryText)
                             .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
                             .background(Color.hashtagBg)
                             .cornerRadius(4)

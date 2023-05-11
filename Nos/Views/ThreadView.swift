@@ -44,7 +44,7 @@ struct ThreadView: View {
                             path.addLine(to: CGPoint(x: 35, y: 15))
                         }
                         .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                        .fill(Color.secondaryTxt)
+                        .fill(Color.secondaryText)
                         NoteButton(note: event, isInThreadView: true)
                             .padding(.top, 15)
                     }

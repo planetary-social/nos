@@ -80,7 +80,7 @@ struct SettingsView: View {
                         .bold()
                     
                     Localized.privateKeyWarning.view
-                        .foregroundColor(.secondaryTxt)
+                        .foregroundColor(.secondaryText)
                 }
                 .textCase(nil)
                 .padding(.vertical, 15)
