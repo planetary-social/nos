@@ -37,7 +37,7 @@ struct FollowCard: View {
                         if author.muted {
                             Text(Localized.mutedUser.string)
                                 .font(.subheadline)
-                                .foregroundColor(Color.secondaryTxt)
+                                .foregroundColor(Color.secondaryText)
                         }
                         Spacer()
                         if let currentUser = CurrentUser.shared.author {

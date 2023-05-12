@@ -50,7 +50,7 @@ struct GoldenPostView: View {
                     Text(author.safeName)
                         .lineLimit(1)
                         .font(.subheadline)
-                        .foregroundColor(Color.secondaryTxt)
+                        .foregroundColor(Color.secondaryText)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     // }

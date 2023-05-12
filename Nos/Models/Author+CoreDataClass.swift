@@ -156,6 +156,21 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
+    /// Fetches all the authors who are further than 2 hops away on the social graph for the given `author`.
+    static func outOfNetwork(for author: Author) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "NOT (ANY followers.source IN %@.follows.destination) " +
+                "AND NOT (hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey) AND " +
+                "hexadecimalPublicKey != %@.hexadecimalPublicKey",
+            author,
+            author,
+            author
+        )
+        return fetchRequest
+    }
+    
     @nonobjc func followsRequest() -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]

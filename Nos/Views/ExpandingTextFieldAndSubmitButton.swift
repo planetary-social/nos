@@ -14,9 +14,9 @@ struct ExpandingTextFieldAndSubmitButton: View {
 
     var placeholder: String
     @Binding var reply: AttributedString
+    var focus: FocusState<Bool>.Binding
     var action: () async -> Void
     
-    @FocusState private var textEditorInFocus
     @State private var showPostButton = false
     @State var disabled = false
     
@@ -26,7 +26,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
                 .placeholder(when: reply.characters.isEmpty, placeholder: {
                     VStack {
                         Text(placeholder)
-                            .foregroundColor(.secondaryTxt)
+                            .foregroundColor(.secondaryText)
                             .padding(.top, 10)
                             .padding(.leading, 7.5)
                         Spacer()
@@ -37,12 +37,13 @@ struct ExpandingTextFieldAndSubmitButton: View {
                 .background(Color.appBg)
                 .cornerRadius(17.5)
                 .frame(maxHeight: 270)
-                .focused($textEditorInFocus)
+                .focused(focus)
             
             if showPostButton {
                 Button(
                     action: {
                         disabled = true
+                        focus.wrappedValue = false
                         Task {
                             await action()
                             reply = ""
@@ -53,14 +54,11 @@ struct ExpandingTextFieldAndSubmitButton: View {
                         Localized.post.view
                     }
                 )
-                .transition(.move(edge: .trailing))
                 .disabled(disabled)
             }
         }
-        .onChange(of: textEditorInFocus) { bool in
-            withAnimation(.spring(response: 0.2)) {
-                showPostButton = bool
-            }
+        .onChange(of: focus.wrappedValue) { bool in
+            showPostButton = bool
         }
         .padding(8)
     }

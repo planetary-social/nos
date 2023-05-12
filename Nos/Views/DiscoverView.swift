@@ -58,13 +58,14 @@ struct DiscoverView: View {
     @State var columns: Int = 0
     
     @State private var performingInitialLoad = true
+    static let initialLoadTime = 2
     @State private var subscriptionIDs = [String]()
     @State private var isVisible = false
     @State private var cancellables = [AnyCancellable]()
     private var featuredAuthors: [String]
     
     @StateObject private var searchModel = SearchModel()
-    @State private var date = Date.now
+    @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
 
     @State var predicate: NSPredicate = .false
     
@@ -124,7 +125,8 @@ struct DiscoverView: View {
             // two hops is too large of a request and causes the websocket to close.
             let twoHopsFilter = Filter(
                 kinds: [.text],
-                limit: 50,
+                inNetwork: true,
+                limit: 200,
                 since: fetchSinceDate
             )
             
@@ -143,7 +145,10 @@ struct DiscoverView: View {
         NavigationStack(path: $router.discoverPath) {
             ZStack {
                 if performingInitialLoad {
-                    FullscreenProgressView(isPresented: $performingInitialLoad, hideAfter: .now() + .seconds(2))
+                    FullscreenProgressView(
+                        isPresented: $performingInitialLoad, 
+                        hideAfter: .now() + .seconds(Self.initialLoadTime)
+                    )
                 } else {
                     
                     DiscoverGrid(predicate: predicate, columns: $columns)
@@ -174,7 +179,7 @@ struct DiscoverView: View {
                             if author.muted {
                                 Text(Localized.mutedUser.string)
                                     .font(.subheadline)
-                                    .foregroundColor(Color.secondaryTxt)
+                                    .foregroundColor(Color.secondaryText)
                             }
                             Spacer()
                             if let currentUser = CurrentUser.shared.author {
@@ -259,6 +264,9 @@ struct DiscoverView: View {
             })
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
+            }
+            .navigationDestination(for: ReplyToNavigationDestination.self) { destination in 
+                RepliesView(note: destination.note, showKeyboard: true)
             }
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
