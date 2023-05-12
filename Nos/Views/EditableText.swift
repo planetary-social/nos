@@ -35,7 +35,7 @@ struct EditableText: UIViewRepresentable {
         view.isEditable = true
         view.isSelectable = true
         view.tintColor = .accent
-        view.textColor = .secondaryTxt
+        view.textColor = .secondaryText
         view.font = font
         view.backgroundColor = .clear
         view.delegate = context.coordinator
@@ -89,7 +89,7 @@ struct EditableText: UIViewRepresentable {
         uiView.selectedRange = selectedRange
         uiView.typingAttributes = [
             .font: font,
-            .foregroundColor: Color.secondaryTxt
+            .foregroundColor: Color.secondaryText
         ]
         uiView.invalidateIntrinsicContentSize()
     }

@@ -66,15 +66,19 @@ struct ExpandingTextFieldAndSubmitButton: View {
 
 struct ExpandingTextFieldAndSubmitButton_Previews: PreviewProvider {
     @State static var reply = AttributedString("kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh a")
+    @FocusState static var isFocused: Bool 
 
     static var previews: some View {
         VStack {
             Spacer()
             VStack {
                 HStack(spacing: 10) {
-                    ExpandingTextFieldAndSubmitButton(placeholder: "Write something", reply: $reply) {
-
-                    }
+                    ExpandingTextFieldAndSubmitButton(
+                        placeholder: "Write something", 
+                        reply: $reply, 
+                        focus: $isFocused,
+                        action: {}
+                    ) 
                 }
             }
             .fixedSize(horizontal: false, vertical: true)
