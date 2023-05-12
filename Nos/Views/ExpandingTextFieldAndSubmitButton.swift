@@ -22,23 +22,25 @@ struct ExpandingTextFieldAndSubmitButton: View {
     
     var body: some View {
         HStack {
-            EditableText($reply, guid: UUID())
-                .placeholder(when: reply.characters.isEmpty, placeholder: {
-                    VStack {
-                        Text(placeholder)
-                            .foregroundColor(.secondaryText)
-                            .padding(.top, 10)
-                            .padding(.leading, 7.5)
-                        Spacer()
-                    }
-                })
-                .scrollContentBackground(.hidden)
-                .padding(.leading, 6)
-                .background(Color.appBg)
-                .cornerRadius(17.5)
-                .frame(maxHeight: 270)
-                .focused(focus)
-            
+            ScrollView(.vertical) {
+                EditableText($reply, guid: UUID())
+                    .placeholder(when: reply.characters.isEmpty, placeholder: {
+                        VStack {
+                            Text(placeholder)
+                                .foregroundColor(.secondaryText)
+                                .padding(.top, 10)
+                                .padding(.leading, 7.5)
+                            Spacer()
+                        }
+                    })
+                    .scrollContentBackground(.hidden)
+                    .padding(.leading, 6)
+                    .focused(focus)
+            }
+            .frame(maxHeight: 270)
+            .background(Color.appBg)
+            .cornerRadius(17.5)
+
             if showPostButton {
                 Button(
                     action: {
@@ -65,8 +67,9 @@ struct ExpandingTextFieldAndSubmitButton: View {
 }
 
 struct ExpandingTextFieldAndSubmitButton_Previews: PreviewProvider {
+    
     @State static var reply = AttributedString("kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh kahj bflkasbhd lkasjdh lkasjdh lkasjdh laksjdh laksjdh a")
-    @FocusState static var isFocused: Bool 
+    @FocusState static var isFocused: Bool
 
     static var previews: some View {
         VStack {
@@ -78,7 +81,7 @@ struct ExpandingTextFieldAndSubmitButton_Previews: PreviewProvider {
                         reply: $reply, 
                         focus: $isFocused,
                         action: {}
-                    ) 
+                    )
                 }
             }
             .fixedSize(horizontal: false, vertical: true)
