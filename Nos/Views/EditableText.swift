@@ -56,7 +56,7 @@ struct EditableText: UIViewRepresentable {
             guard let recGUID = notification.userInfo?["guid"] as? UUID, recGUID == guid else {
                 return
             }
-            guard let url = author.deepLink else {
+            guard let url = author.uri else {
                 return
             }
             guard let selectedRange = view?.selectedRange else {

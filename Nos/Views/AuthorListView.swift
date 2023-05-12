@@ -48,7 +48,7 @@ struct AuthorListView: View {
     }
 
     private func refreshAuthors() {
-        let request = Author.allAuthorsWithDisplayNameRequest(muted: false)
+        let request = Author.allAuthorsWithNameOrDisplayNameRequest(muted: false)
         authors = try? viewContext.fetch(request)
         search(for: searchTextObserver.text)
     }

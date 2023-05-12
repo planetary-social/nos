@@ -34,10 +34,22 @@ struct NoteParser {
                 prefix = firstCharacter
             }
             var findAndReplaceAuthorReference: (String) -> String = { hex in
-                if let author = try? Author.findOrCreate(by: hex, context: context) {
-                    return "\(prefix)[@\(author.safeName)](@\(hex))"
-                } else {
-                    return "\(prefix)[@\(hex)](@\(hex))"
+                return context.performAndWait {
+                    if let author = try? Author.findOrCreate(by: hex, context: context) {
+                        return "\(prefix)[@\(author.safeName)](@\(hex))"
+                    } else {
+                        return "\(prefix)[@\(hex)](@\(hex))"
+                    }
+                }
+            }
+            var findAndReplaceEventReference: (String) -> String = { hex in
+                return context.performAndWait {
+                    if let event = try? Event.findOrCreateStubBy(id: hex, context: context),
+                        let bech32NoteID = event.bech32NoteID {
+                        return "\(prefix)[@\(bech32NoteID)](%\(hex))"
+                    } else {
+                        return "\(prefix)[@\(hex)](%\(hex))"
+                    }
                 }
             }
             if let index, let index = Int(String(index)) {
@@ -45,12 +57,7 @@ struct NoteParser {
                     if type == "p" {
                         return findAndReplaceAuthorReference(hex)
                     } else if type == "e" {
-                        if let event = try? Event.findOrCreateStubBy(id: hex, context: context),
-                            let bech32NoteID = event.bech32NoteID {
-                            return "\(prefix)[@\(bech32NoteID)](%\(hex))"
-                        } else {
-                            return "\(prefix)[@\(hex)](%\(hex))"
-                        }
+                        return findAndReplaceEventReference(hex)
                     }
                 }
             } else if let npub {
