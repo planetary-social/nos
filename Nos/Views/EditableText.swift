@@ -35,11 +35,16 @@ struct EditableText: UIViewRepresentable {
         view.isEditable = true
         view.isSelectable = true
         view.tintColor = .accent
-        view.textColor = .secondaryText
+        view.textColor = .primaryTxt
         view.font = font
         view.backgroundColor = .clear
         view.delegate = context.coordinator
-
+        view.textContainerInset = UIEdgeInsets.zero
+        view.textContainer.lineFragmentPadding = 0
+        view.textContainer.maximumNumberOfLines = 0
+        view.textContainer.lineBreakMode = .byWordWrapping
+        view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        
         context.coordinator.observer = NotificationCenter.default.addObserver(
             forName: .mentionAddedNotification,
             object: nil,
@@ -52,6 +57,9 @@ struct EditableText: UIViewRepresentable {
                 return
             }
             guard let url = author.deepLink else {
+                return
+            }
+            guard let selectedRange = view?.selectedRange else {
                 return
             }
             let mention = NSAttributedString(
@@ -67,8 +75,8 @@ struct EditableText: UIViewRepresentable {
                 in: NSRange(location: selectedRange.location - 1, length: 1),
                 with: mention
             )
-            attributedText = AttributedString(mutableAttributedString)
-            selectedRange.location += mention.length - 1
+            view?.attributedText = mutableAttributedString
+            view?.selectedRange.location += mention.length - 1
         }
 
         return view
@@ -89,7 +97,7 @@ struct EditableText: UIViewRepresentable {
         uiView.selectedRange = selectedRange
         uiView.typingAttributes = [
             .font: font,
-            .foregroundColor: Color.secondaryText
+            .foregroundColor: UIColor.primaryTxt
         ]
         uiView.invalidateIntrinsicContentSize()
     }
@@ -110,12 +118,13 @@ struct EditableText: UIViewRepresentable {
 
         func textViewDidChange(_ textView: UITextView) {
             text.wrappedValue = AttributedString(textView.attributedText)
-        }
-
-        func textViewDidChangeSelection(_ textView: UITextView) {
-            DispatchQueue.main.async {
-                self.selectedRange.wrappedValue = textView.selectedRange
-            }
+            
+            // Update the selected range to the end of the newly added text
+            let newSelectedRange = NSRange(
+                location: textView.selectedRange.location + textView.selectedRange.length, 
+                length: 0
+            )
+            selectedRange.wrappedValue = newSelectedRange
         }
     }
 }

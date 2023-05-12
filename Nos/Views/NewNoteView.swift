@@ -58,7 +58,7 @@ struct NewNoteView: View {
         }
     }
 
-    private var guid = UUID()
+    @State private var guid = UUID()
 
     var body: some View {
         NavigationStack {
