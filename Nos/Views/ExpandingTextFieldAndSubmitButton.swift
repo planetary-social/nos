@@ -13,7 +13,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     var placeholder: String
-    @Binding var reply: AttributedString
+    @Binding var reply: NSAttributedString
     var focus: FocusState<Bool>.Binding
     var action: () async -> Void
     
@@ -27,7 +27,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
             ScrollView(.vertical) {
                 EditableText($reply, guid: UUID(), calculatedHeight: $calculatedHeight)
                     .frame(height: calculatedHeight)
-                    .placeholder(when: reply.characters.isEmpty, placeholder: {
+                    .placeholder(when: reply.string.isEmpty, placeholder: {
                         VStack {
                             Text(placeholder)
                                 .foregroundColor(.secondaryText)
@@ -49,7 +49,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
                         focus.wrappedValue = false
                         Task {
                             await action()
-                            reply = ""
+                            reply = NSAttributedString("")
                             disabled = false
                         }
                     },
@@ -69,7 +69,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
 
 struct ExpandingTextFieldAndSubmitButton_Previews: PreviewProvider {
 
-    @State static var reply = AttributedString("Hello World")
+    @State static var reply = NSAttributedString("Hello World")
     @FocusState static var isFocused: Bool
 
     static var previews: some View {

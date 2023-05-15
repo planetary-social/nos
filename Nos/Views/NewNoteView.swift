@@ -19,7 +19,7 @@ struct NewNoteView: View {
     @Dependency(\.analytics) private var analytics
 
     /// State holding the text the user is typing
-    @State private var postText = AttributedString("")
+    @State private var postText = NSAttributedString("")
 
     /// State containing the offset (index) of text when the user is mentioning someone
     ///
@@ -66,7 +66,7 @@ struct NewNoteView: View {
                 VStack {
                     ScrollView(.vertical) {
                         EditableText($postText, guid: guid)
-                            .placeholder(when: postText.characters.isEmpty, placeholder: {
+                            .placeholder(when: postText.string.isEmpty, placeholder: {
                                 VStack {
                                     Localized.newNotePlaceholder.view
                                         .foregroundColor(.secondaryText)
@@ -78,7 +78,7 @@ struct NewNoteView: View {
                             .focused($focusedField, equals: .textEditor)
                             .padding(.leading, 6)
                             .onChange(of: postText) { newValue in
-                                let newText = String(newValue.characters)
+                                let newText = newValue.string
                                 let difference = newText.difference(from: oldText)
                                 guard difference.count == 1, let change = difference.first else {
                                     oldText = newText
@@ -165,7 +165,7 @@ struct NewNoteView: View {
                 },
                 trailing: ActionButton(title: Localized.post, action: publishPost)
                     .frame(height: 22)
-                    .disabled(postText.characters.isEmpty)
+                    .disabled(postText.string.isEmpty)
                     .padding(.bottom, 3)
             )
             .onAppear {
@@ -182,7 +182,7 @@ struct NewNoteView: View {
             object: nil,
             userInfo: ["author": author, "guid": guid]
         )
-        oldText = String(postText.characters)
+        oldText = postText.string
         mentionOffset = nil
     }
     
@@ -198,7 +198,7 @@ struct NewNoteView: View {
         
         do {
             let parser = NoteParser()
-            let (content, tags) = parser.parse(attributedText: postText)
+            let (content, tags) = parser.parse(attributedText: AttributedString(postText))
             let jsonEvent = JSONEvent(
                 id: "",
                 pubKey: keyPair.publicKeyHex,
@@ -221,7 +221,7 @@ struct NewNoteView: View {
             }
             isPresented = false
             analytics.published(note: jsonEvent)
-            postText = ""
+            postText = NSAttributedString("")
             router.selectedTab = .home
         } catch {
             alert = AlertState(title: {

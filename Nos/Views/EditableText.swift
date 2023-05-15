@@ -15,14 +15,14 @@ struct EditableText: UIViewRepresentable {
 
     typealias UIViewType = UITextView
 
-    @Binding var attributedText: AttributedString
+    @Binding var attributedText: NSAttributedString
     @Binding var calculatedHeight: CGFloat
 
     private var guid: UUID
     private var font = UIFont.preferredFont(forTextStyle: .body)
     private var insets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
 
-    init(_ attributedText: Binding<AttributedString>, guid: UUID, calculatedHeight: Binding<CGFloat>? = nil) {
+    init(_ attributedText: Binding<NSAttributedString>, guid: UUID, calculatedHeight: Binding<CGFloat>? = nil) {
         _attributedText = attributedText
         self.guid = guid
         _calculatedHeight = calculatedHeight ?? .constant(0)
@@ -30,7 +30,7 @@ struct EditableText: UIViewRepresentable {
 
     func makeUIView(context: Context) -> UITextView {
         let view = UITextView()
-        view.attributedText = NSAttributedString(attributedText)
+        view.attributedText = attributedText
         view.isUserInteractionEnabled = true
         view.isScrollEnabled = false
         view.isEditable = true
@@ -69,7 +69,7 @@ struct EditableText: UIViewRepresentable {
                 )
             )
 
-            let mutableAttributedString = NSMutableAttributedString(attributedString: nsAttributedString)
+            let mutableAttributedString = NSMutableAttributedString(attributedString: attributedText)
             mutableAttributedString.replaceCharacters(
                 in: NSRange(location: selectedRange.location - 1, length: 1),
                 with: mention
@@ -87,15 +87,11 @@ struct EditableText: UIViewRepresentable {
         }
     }
 
-    var nsAttributedString: NSAttributedString {
-        NSAttributedString(attributedText)
-    }
-
     func updateUIView(_ uiView: UITextView, context: Context) {
-        uiView.attributedText = NSAttributedString(attributedText)
+        uiView.attributedText = attributedText
         uiView.typingAttributes = [
             .font: font,
-            .foregroundColor: UIColor.secondaryText
+            .foregroundColor: UIColor.primaryTxt
         ]
         Self.recalculateHeight(view: uiView, result: $calculatedHeight)
     }
@@ -114,14 +110,14 @@ struct EditableText: UIViewRepresentable {
 
     class Coordinator: NSObject, UITextViewDelegate {
         var observer: NSObjectProtocol?
-        var text: Binding<AttributedString>
+        var text: Binding<NSAttributedString>
 
-        init(text: Binding<AttributedString>) {
+        init(text: Binding<NSAttributedString>) {
             self.text = text
         }
 
         func textViewDidChange(_ textView: UITextView) {
-            text.wrappedValue = AttributedString(textView.attributedText)
+            text.wrappedValue = textView.attributedText
             
             // Update the selected range to the end of the newly added text
             let newSelectedRange = NSRange(
@@ -139,15 +135,15 @@ extension Notification.Name {
 
 struct EditableText_Previews: PreviewProvider {
 
-    @State static var attributedString = AttributedString("Hello")
-    @State static var oldText = AttributedString("Hello")
+    @State static var attributedString = NSAttributedString("Hello")
+    @State static var oldText = NSAttributedString("Hello")
     @State static var calculatedHeight: CGFloat = 44
 
     static var previews: some View {
         EditableText($attributedString, guid: UUID(), calculatedHeight: $calculatedHeight)
             .onChange(of: attributedString) { newValue in
-                let newString = String(newValue.characters)
-                let oldString = String(oldText.characters)
+                let newString = newValue.string
+                let oldString = oldText.string
                 let difference = newString.difference(from: oldString)
                 guard difference.count == 1, let change = difference.first else {
                     oldText = newValue
