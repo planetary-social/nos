@@ -67,14 +67,9 @@ struct NewNoteView: View {
             ZStack {
                 VStack {
                     ScrollView(.vertical) {
-<<<<<<< Updated upstream
-                        EditableText($postText, guid: guid)
-                            .placeholder(when: postText.string.isEmpty, placeholder: {
-=======
                         EditableText($postText, guid: guid, calculatedHeight: $calculatedHeight)
                             .frame(height: calculatedHeight)
-                            .placeholder(when: postText.characters.isEmpty, placeholder: {
->>>>>>> Stashed changes
+                            .placeholder(when: postText.string.isEmpty, placeholder: {
                                 VStack {
                                     Localized.newNotePlaceholder.view
                                         .foregroundColor(.secondaryText)

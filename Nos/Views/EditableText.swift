@@ -22,11 +22,7 @@ struct EditableText: UIViewRepresentable {
     private var font = UIFont.preferredFont(forTextStyle: .body)
     private var insets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
 
-<<<<<<< Updated upstream
-    init(_ attributedText: Binding<NSAttributedString>, guid: UUID, calculatedHeight: Binding<CGFloat>? = nil) {
-=======
-    init(_ attributedText: Binding<AttributedString>, guid: UUID, calculatedHeight: Binding<CGFloat>) {
->>>>>>> Stashed changes
+    init(_ attributedText: Binding<NSAttributedString>, guid: UUID, calculatedHeight: Binding<CGFloat>) {
         _attributedText = attributedText
         self.guid = guid
         _calculatedHeight = calculatedHeight
