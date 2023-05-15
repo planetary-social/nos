@@ -16,7 +16,6 @@ struct EditableText: UIViewRepresentable {
     typealias UIViewType = UITextView
 
     @Binding var attributedText: AttributedString
-    @State private var selectedRange = NSRange(location: 0, length: 0)
     @Binding var calculatedHeight: CGFloat
 
     private var guid: UUID
@@ -94,7 +93,6 @@ struct EditableText: UIViewRepresentable {
 
     func updateUIView(_ uiView: UITextView, context: Context) {
         uiView.attributedText = NSAttributedString(attributedText)
-        uiView.selectedRange = selectedRange
         uiView.typingAttributes = [
             .font: font,
             .foregroundColor: UIColor.secondaryText
@@ -111,17 +109,15 @@ struct EditableText: UIViewRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(text: $attributedText, selectedRange: $selectedRange)
+        Coordinator(text: $attributedText)
     }
 
     class Coordinator: NSObject, UITextViewDelegate {
         var observer: NSObjectProtocol?
         var text: Binding<AttributedString>
-        var selectedRange: Binding<NSRange>
 
-        init(text: Binding<AttributedString>, selectedRange: Binding<NSRange>) {
+        init(text: Binding<AttributedString>) {
             self.text = text
-            self.selectedRange = selectedRange
         }
 
         func textViewDidChange(_ textView: UITextView) {
@@ -132,7 +128,7 @@ struct EditableText: UIViewRepresentable {
                 location: textView.selectedRange.location + textView.selectedRange.length, 
                 length: 0
             )
-            selectedRange.wrappedValue = newSelectedRange
+            textView.selectedRange = newSelectedRange
         }
     }
 }
