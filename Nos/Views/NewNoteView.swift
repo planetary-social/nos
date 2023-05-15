@@ -60,13 +60,21 @@ struct NewNoteView: View {
 
     @State private var guid = UUID()
 
+    @State private var calculatedHeight: CGFloat = 44
+    
     var body: some View {
         NavigationStack {
             ZStack {
                 VStack {
                     ScrollView(.vertical) {
+<<<<<<< Updated upstream
                         EditableText($postText, guid: guid)
                             .placeholder(when: postText.string.isEmpty, placeholder: {
+=======
+                        EditableText($postText, guid: guid, calculatedHeight: $calculatedHeight)
+                            .frame(height: calculatedHeight)
+                            .placeholder(when: postText.characters.isEmpty, placeholder: {
+>>>>>>> Stashed changes
                                 VStack {
                                     Localized.newNotePlaceholder.view
                                         .foregroundColor(.secondaryText)
