@@ -74,7 +74,7 @@ struct EditableText: UIViewRepresentable {
                 in: NSRange(location: selectedRange.location - 1, length: 1),
                 with: mention
             )
-            view?.attributedText = mutableAttributedString
+            attributedText = mutableAttributedString
             view?.selectedRange.location += mention.length - 1
         }
 
