@@ -16,11 +16,16 @@ struct AuthorListView: View {
     @State private var filteredAuthors: [Author]?
 
     @StateObject private var searchTextObserver = SearchTextFieldObserver()
+    
+    @FocusState private var isSearching: Bool
 
     var didSelectGesture: ((Author) -> Void)?
 
     var body: some View {
         ScrollView(.vertical) {
+            SearchBar(text: $searchTextObserver.text, isSearching: $isSearching)
+                .padding(.horizontal)
+                .padding(.top, 10)
             LazyVStack {
                 if let authors = filteredAuthors {
                     ForEach(authors) { author in
@@ -40,7 +45,9 @@ struct AuthorListView: View {
         .onChange(of: searchTextObserver.debouncedText) { newValue in
             search(for: newValue)
         }
-        .searchable(text: $searchTextObserver.text, placement: .navigationBarDrawer(displayMode: (.always)))
+        .onAppear {
+            isSearching = true
+        }
         .disableAutocorrection(true)
         .task {
             refreshAuthors()
