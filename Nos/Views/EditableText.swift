@@ -17,14 +17,16 @@ struct EditableText: UIViewRepresentable {
 
     @Binding var attributedText: AttributedString
     @State private var selectedRange = NSRange(location: 0, length: 0)
+    @Binding var calculatedHeight: CGFloat
 
     private var guid: UUID
     private var font = UIFont.preferredFont(forTextStyle: .body)
     private var insets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
 
-    init(_ attributedText: Binding<AttributedString>, guid: UUID) {
+    init(_ attributedText: Binding<AttributedString>, guid: UUID, calculatedHeight: Binding<CGFloat>? = nil) {
         _attributedText = attributedText
         self.guid = guid
+        _calculatedHeight = calculatedHeight ?? .constant(0)
     }
 
     func makeUIView(context: Context) -> UITextView {
@@ -39,8 +41,6 @@ struct EditableText: UIViewRepresentable {
         view.font = font
         view.backgroundColor = .clear
         view.delegate = context.coordinator
-        view.textContainerInset = UIEdgeInsets.zero
-        view.textContainer.lineFragmentPadding = 0
         view.textContainer.maximumNumberOfLines = 0
         view.textContainer.lineBreakMode = .byWordWrapping
         view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
@@ -97,9 +97,17 @@ struct EditableText: UIViewRepresentable {
         uiView.selectedRange = selectedRange
         uiView.typingAttributes = [
             .font: font,
-            .foregroundColor: Color.secondaryText
+            .foregroundColor: UIColor.secondaryText
         ]
-        uiView.invalidateIntrinsicContentSize()
+        Self.recalculateHeight(view: uiView, result: $calculatedHeight)
+    }
+
+    fileprivate static func recalculateHeight(view: UIView, result: Binding<CGFloat>) {
+        let newSize = view.sizeThatFits(CGSize(width: view.frame.width, height: .greatestFiniteMagnitude))
+        guard result.wrappedValue != newSize.height else { return }
+        DispatchQueue.main.async { // call in next render cycle.
+            result.wrappedValue = newSize.height
+        }
     }
 
     func makeCoordinator() -> Coordinator {
@@ -137,9 +145,10 @@ struct EditableText_Previews: PreviewProvider {
 
     @State static var attributedString = AttributedString("Hello")
     @State static var oldText = AttributedString("Hello")
+    @State static var calculatedHeight: CGFloat = 44
 
     static var previews: some View {
-        EditableText($attributedString, guid: UUID())
+        EditableText($attributedString, guid: UUID(), calculatedHeight: $calculatedHeight)
             .onChange(of: attributedString) { newValue in
                 let newString = String(newValue.characters)
                 let oldString = String(oldText.characters)

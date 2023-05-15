@@ -64,20 +64,19 @@ struct NewNoteView: View {
         NavigationStack {
             ZStack {
                 VStack {
-                    Form {
+                    ScrollView(.vertical) {
                         EditableText($postText, guid: guid)
-                            .frame(maxHeight: .infinity)
                             .placeholder(when: postText.characters.isEmpty, placeholder: {
                                 VStack {
                                     Localized.newNotePlaceholder.view
                                         .foregroundColor(.secondaryText)
-                                        .padding(.horizontal, 8.5)
-                                        .padding(.vertical, 10)
+                                        .padding(.top, 11)
+                                        .padding(.leading, 6)
                                     Spacer()
                                 }
                             })
-                            .listRowBackground(Color.appBg)
                             .focused($focusedField, equals: .textEditor)
+                            .padding(.leading, 6)
                             .onChange(of: postText) { newValue in
                                 let newText = String(newValue.characters)
                                 let difference = newText.difference(from: oldText)
@@ -107,6 +106,8 @@ struct NewNoteView: View {
                                 .presentationDetents([.medium, .large])
                             }
                     }
+                    .frame(maxHeight: .infinity)
+                    .background { Color.appBg }
                     Spacer()
                     HStack {
                         HighlightedText(
@@ -119,11 +120,10 @@ struct NewNoteView: View {
                         .listRowBackground(Color.appBg)
                         .listRowSeparator(.hidden)
                         .padding(.leading, 17)
-                        .padding(10)
                         Spacer()
                     }
                 }
-                .scrollContentBackground(.hidden)
+                .padding(10)
                 
                 if showRelayPicker, let author = currentUser.author {
                     RelayPicker(
