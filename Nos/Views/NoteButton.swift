@@ -20,8 +20,8 @@ struct NoteButton: View {
     var showFullMessage = false
     var hideOutOfNetwork = true
     var showReplyCount = true
-    var isInThreadView = false
-    private var replyAction: ((Event) -> Void)?
+    private let replyAction: ((Event) -> Void)?
+    private let tapAction: ((Event) -> Void)?
 
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
@@ -36,16 +36,16 @@ struct NoteButton: View {
         showFullMessage: Bool = false, 
         hideOutOfNetwork: Bool = true, 
         showReplyCount: Bool = true, 
-        isInThreadView: Bool = false,
-        replyAction: ((Event) -> Void)? = nil
+        replyAction: ((Event) -> Void)? = nil,
+        tapAction: ((Event) -> Void)? = nil
     ) {
         self.note = note
         self.style = style
         self.showFullMessage = showFullMessage
         self.hideOutOfNetwork = hideOutOfNetwork
         self.showReplyCount = showReplyCount
-        self.isInThreadView = isInThreadView
         self.replyAction = replyAction
+        self.tapAction = tapAction
     }
 
     /// The note displayed in the note card. Could be different from `note` i.e. in the case of a repost.
@@ -104,11 +104,15 @@ struct NoteButton: View {
             }
             
             Button {
-                if isInThreadView {
-                    router.push(displayedNote)
-                } else if let referencedNote = displayedNote.referencedNote(), referencedNote.id != note.id {
-                    router.push(referencedNote)
-                } 
+                if let tapAction {
+                    tapAction(displayedNote)
+                } else {
+                    if let referencedNote = displayedNote.referencedNote() {
+                        router.push(referencedNote)
+                    } else {
+                        router.push(displayedNote)
+                    }
+                }
             } label: {
                 let noteCard = NoteCard(
                     note: displayedNote,
