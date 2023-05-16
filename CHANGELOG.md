@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Increased the contrast of text in light mode
 - Open links in an in-app web browser instead of Safari
 - Fixed link detection in notes for URLs without a scheme (i.e. "https://")
 - Made the reply button on notes easier to tap, and it now presents the keyboard when tapped.
@@ -37,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug where you could post the same reply multiple times.
 - Fixed an issue where profile pictures could be rendered with the wrong aspect ratio.
 - Added Brazilian Portuguese translations (thanks Andressa!).
+- Added support for mentioning other users when composing a note.
 
 ## [0.1 (35)] - 2023-04-19Z
 

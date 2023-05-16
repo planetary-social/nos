@@ -30,7 +30,7 @@ struct OnboardingNotOldEnoughView: View {
                 .padding(.bottom, 20)
                 .padding(.horizontal, 45)
             Text(Localized.notOldEnoughSubtitle.string)
-                .foregroundColor(.secondaryTxt)
+                .foregroundColor(.secondaryText)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 45)
             Spacer()

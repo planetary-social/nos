@@ -499,45 +499,10 @@ public class Event: NosManagedObject {
                 let content = note.content else {
                 return nil
             }
-            
-            let regex = Regex {
-                "#["
-                TryCapture {
-                    OneOrMore(.digit)
-                } transform: {
-                    Int($0)
-                }
-                "]"
-            }
-            
             guard let tags = note.allTags as? [[String]] else {
                 return AttributedString(content)
             }
-        
-            let result = content.replacing(regex) { match in
-                if let tag = tags[safe: match.1],
-                    let type = tag[safe: 0],
-                    let id = tag[safe: 1] {
-                    if type == "p",
-                        let author = try? Author.find(by: id, context: context),
-                        let pubkey = author.hexadecimalPublicKey {
-                        return "[@\(author.safeName)](@\(pubkey))"
-                    }
-                    if type == "e",
-                        let event = Event.find(by: id, context: context),
-                        let bech32NoteID = event.bech32NoteID {
-                        return "[@\(bech32NoteID)](%\(id))"
-                    }
-                }
-                return ""
-            }
-            
-            let linkedString = (try? result.findAndReplaceUnformattedLinks(in: result)) ?? result
-            
-            return try? AttributedString(
-                markdown: linkedString,
-                options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-            )
+            return NoteParser.parse(content: content, tags: tags, context: context)
         }
     }
     

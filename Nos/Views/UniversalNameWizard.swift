@@ -56,7 +56,7 @@ struct UniversalNameWizard: View {
                         Section {
                             TextField(text: $textField) {
                                 Text("+1-234-567-8910")
-                                    .foregroundColor(.secondaryTxt)
+                                    .foregroundColor(.secondaryText)
                             }
                             .foregroundColor(.primaryTxt)
                             .keyboardType(.phonePad)
@@ -110,7 +110,7 @@ struct UniversalNameWizard: View {
                         Section {
                             TextField(text: $textField) {
                                 Text("123456")
-                                    .foregroundColor(.secondaryTxt)
+                                    .foregroundColor(.secondaryText)
                             }
                             .foregroundColor(.primaryTxt)
                             .keyboardType(.phonePad)
@@ -176,7 +176,7 @@ struct UniversalNameWizard: View {
                         Section {
                             TextField(text: $textField) {
                                 Localized.name.view
-                                    .foregroundColor(.secondaryTxt)
+                                    .foregroundColor(.secondaryText)
                             }
                             .textInputAutocapitalization(.none)
                             .foregroundColor(.primaryTxt)

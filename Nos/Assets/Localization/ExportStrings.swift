@@ -19,10 +19,6 @@ extension Localized {
             return
         }
 
-        guard let oldPrimaryLocaleStrings = try? String(contentsOf: primaryLocation) else {
-            return
-        }
-
         let newPrimaryLocaleStrings = localizableTypes.map { $0.exportForStringsFile() }.joined(separator: "\n\n")
 
         let primaryText = "// This file is auto-generated at build time and should not be modified by hand\n\n"

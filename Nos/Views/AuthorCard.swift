@@ -1,30 +1,28 @@
 //
-//  FollowCard.swift
+//  AuthorCard.swift
 //  Nos
 //
-//  Created by Christopher Jorgensen on 2/22/23.
+//  Created by Martin Dutra on 3/4/23.
 //
 
 import SwiftUI
 
-/// This view displays the information we have for an message suitable for being used in a list or grid.
-///
-/// Use this view inside MessageButton to have nice borders.
-struct FollowCard: View {
+/// This view displays the information we have for an author suitable for being used in a list or grid.
+struct AuthorCard: View {
 
     @ObservedObject var author: Author
-    
+
     @Environment(\.managedObjectContext) private var viewContext
-   
+
     var style = CardStyle.compact
 
-    @EnvironmentObject private var router: Router
+    var didTapGesture: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .center) {
                 Button {
-                    router.currentPath.wrappedValue.append(author)
+                    didTapGesture?()
                 } label: {
                     HStack(alignment: .center) {
                         AvatarView(imageUrl: author.profilePhotoURL, size: 24)
@@ -40,13 +38,8 @@ struct FollowCard: View {
                                 .foregroundColor(Color.secondaryText)
                         }
                         Spacer()
-                        if let currentUser = CurrentUser.shared.author {
-                            FollowButton(currentUserAuthor: currentUser, author: author)
-                                .padding(10)
-                        }
                     }
                 }
-                // TODO: Put MessageOptionsButton back here eventually
             }
             .padding(10)
             Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
