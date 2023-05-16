@@ -21,7 +21,7 @@ struct RepliesView: View {
     @EnvironmentObject private var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
 
-    @State private var reply = ""
+    @State private var reply = NSAttributedString("")
     
     @State private var alert: AlertState<Never>?
     
@@ -131,7 +131,7 @@ struct RepliesView: View {
                             AvatarView(imageUrl: author.profilePhotoURL, size: 35)
                         }
                         ExpandingTextFieldAndSubmitButton(
-                            placeholder: Localized.Reply.postAReply.string,
+                            placeholder: Localized.Reply.postAReply,
                             reply: $reply,
                             focus: $focusTextView
                         ) {
@@ -165,9 +165,9 @@ struct RepliesView: View {
         .background(Color.appBg)
     }
     
-    func postReply(_ replyText: String) async {
+    func postReply(_ replyText: NSAttributedString) async {
         do {
-            guard !replyText.isEmpty else {
+            guard !replyText.string.isEmpty else {
                 return
             }
 
@@ -196,7 +196,7 @@ struct RepliesView: View {
                 createdAt: Int64(Date().timeIntervalSince1970),
                 kind: 1,
                 tags: tags,
-                content: replyText,
+                content: replyText.string,
                 signature: ""
             )
             try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
