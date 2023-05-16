@@ -18,12 +18,13 @@ struct NoteParser {
         cleanLinks(in: attributedText)
     }
 
+    // swiftlint:disable function_body_length
     /// Parses the content and tags stored in a note and returns an attributed text that can be used for displaying
     /// the note in the UI.
     func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> AttributedString {
-        // swiftlint:disable all
+        // swiftlint:disable opening_brace
         let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)(?:nostr:)(?<npub>[-a-zA-Z0-9@:%._\+~#=]{2,256})/
-        // swiftlint:enable all
+        // swiftlint:enable opening_brace
         let result = content.replacing(regex) { match in
             let substring = match.0
             let index = match.1
@@ -33,8 +34,8 @@ struct NoteParser {
             if firstCharacter.range(of: #"\s|\r\n|\r|\n"#, options: .regularExpression) != nil {
                 prefix = firstCharacter
             }
-            var findAndReplaceAuthorReference: (String) -> String = { hex in
-                return context.performAndWait {
+            let findAndReplaceAuthorReference: (String) -> String = { hex in
+                context.performAndWait {
                     if let author = try? Author.findOrCreate(by: hex, context: context) {
                         return "\(prefix)[@\(author.safeName)](@\(hex))"
                     } else {
@@ -42,8 +43,8 @@ struct NoteParser {
                     }
                 }
             }
-            var findAndReplaceEventReference: (String) -> String = { hex in
-                return context.performAndWait {
+            let findAndReplaceEventReference: (String) -> String = { hex in
+                context.performAndWait {
                     if let event = try? Event.findOrCreateStubBy(id: hex, context: context),
                         let bech32NoteID = event.bech32NoteID {
                         return "\(prefix)[@\(bech32NoteID)](%\(hex))"
@@ -82,6 +83,7 @@ struct NoteParser {
             return AttributedString(stringLiteral: content)
         }
     }
+    // swiftlint:enable function_body_length
 
     private func cleanLinks(in attributedString: AttributedString, tags: [[String]] = []) -> (String, [[String]]) {
         var mutableAttributedString = attributedString

@@ -92,7 +92,6 @@ struct NewNoteView: View {
             .navigationBarItems(
                 leading: Button {
                     isPresented = false
-                    UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.endEditing(true)
                 }
                 label: {
                     Localized.cancel.view
