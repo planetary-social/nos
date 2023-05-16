@@ -9,6 +9,9 @@ import Foundation
 import SwiftUI
 
 struct AuthorListView: View {
+    
+    @Binding var isPresented: Bool
+    
     @Environment(\.managedObjectContext) private var viewContext
 
     @State private var authors: [Author]?
@@ -50,6 +53,16 @@ struct AuthorListView: View {
         .disableAutocorrection(true)
         .task {
             refreshAuthors()
+        }
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button(action: {
+                    isPresented = false
+                }, label: {
+                    Localized.cancel.view
+                        .foregroundColor(.textColor)
+                })
+            }
         }
     }
 

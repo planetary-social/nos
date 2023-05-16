@@ -99,7 +99,7 @@ struct NewNoteView: View {
                             }
                             .sheet(isPresented: showAvailableMentions) {
                                 NavigationStack {
-                                    AuthorListView { author in
+                                    AuthorListView(isPresented: showAvailableMentions) { author in
                                         guard let offset = mentionOffset else {
                                             return
                                         }

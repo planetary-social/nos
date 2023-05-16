@@ -98,6 +98,7 @@ enum Localized: String, Localizable, CaseIterable {
     case newNote = "New Note"
     case newNotePlaceholder = "Type your post here..."
     case cancel = "Cancel"
+    case clear = "Clear"
     case done = "Done"
     case editProfile = "Edit Profile"
     case youNeedToEnterAPrivateKeyBeforePosting = "You need to enter a private key in Settings before you can publish posts."

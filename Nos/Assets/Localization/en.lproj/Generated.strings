@@ -40,6 +40,7 @@
 "Localized.newNote" = "New Note";
 "Localized.newNotePlaceholder" = "Type your post here...";
 "Localized.cancel" = "Cancel";
+"Localized.clear" = "Clear";
 "Localized.done" = "Done";
 "Localized.editProfile" = "Edit Profile";
 "Localized.youNeedToEnterAPrivateKeyBeforePosting" = "You need to enter a private key in Settings before you can publish posts.";
