@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for mentioning other users when composing a note.
 - Fixed a bug where expired messages could be redownloaded from relays that don't delete them.
+- Fixed a bug where you couldn't view the parent note of a reply when it was displayed at the top of the Thread view.
 
 ## [0.1 (41)] - 2023-05-11Z
 

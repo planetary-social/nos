@@ -97,9 +97,9 @@ struct RepliesView: View {
                         note: note,
                         showFullMessage: true,
                         hideOutOfNetwork: false,
-                        allowsPush: false,
                         showReplyCount: false,
-                        replyAction: { _ in self.focusTextView = true }
+                        replyAction: { _ in self.focusTextView = true },
+                        tapAction: { tappedEvent in tappedEvent.referencedNote().unwrap { router.push($0) } }
                     )                                
                     .padding(.top, 15)
                     
