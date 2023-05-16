@@ -502,8 +502,7 @@ public class Event: NosManagedObject {
             guard let tags = note.allTags as? [[String]] else {
                 return AttributedString(content)
             }
-            let parser = NoteParser()
-            return parser.parse(content: content, tags: tags, context: context)
+            return NoteParser.parse(content: content, tags: tags, context: context)
         }
     }
     

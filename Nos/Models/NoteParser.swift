@@ -10,18 +10,18 @@ import Foundation
 import RegexBuilder
 
 /// This struct encapsulates the algorithms that parse notes and the mentions inside the note.
-struct NoteParser {
+enum NoteParser {
 
     /// Parses attributed text generated when composing a note and returns
     /// the content and tags.
-    func parse(attributedText: AttributedString) -> (String, [[String]]) {
+    static func parse(attributedText: AttributedString) -> (String, [[String]]) {
         cleanLinks(in: attributedText)
     }
 
     // swiftlint:disable function_body_length
     /// Parses the content and tags stored in a note and returns an attributed text that can be used for displaying
     /// the note in the UI.
-    func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> AttributedString {
+    static func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> AttributedString {
         // swiftlint:disable opening_brace
         let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)(?:nostr:)(?<npub>[-a-zA-Z0-9@:%._\+~#=]{2,256})/
         // swiftlint:enable opening_brace
@@ -85,7 +85,10 @@ struct NoteParser {
     }
     // swiftlint:enable function_body_length
 
-    private func cleanLinks(in attributedString: AttributedString, tags: [[String]] = []) -> (String, [[String]]) {
+    private static func cleanLinks(
+        in attributedString: AttributedString, 
+        tags: [[String]] = []
+    ) -> (String, [[String]]) {
         var mutableAttributedString = attributedString
         for attributedRun in mutableAttributedString.runs {
             if let link = attributedRun.attributes.link {

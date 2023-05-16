@@ -121,8 +121,7 @@ struct NewNoteView: View {
         }
         
         do {
-            let parser = NoteParser()
-            let (content, tags) = parser.parse(attributedText: AttributedString(postText))
+            let (content, tags) = NoteParser.parse(attributedText: AttributedString(postText))
             let jsonEvent = JSONEvent(
                 id: "",
                 pubKey: keyPair.publicKeyHex,
