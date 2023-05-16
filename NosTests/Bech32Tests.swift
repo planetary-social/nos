@@ -31,7 +31,6 @@ final class Bech32Tests: XCTestCase {
         XCTAssertEqual(decoded.hrp, prefix)
         let base8data = try XCTUnwrap(decoded.checksum.base8FromBase5)
         let offset = 0
-        let type = base8data[offset]
         let length = base8data[offset + 1]
         let value = base8data.subdata(in: offset + 2 ..< offset + 2 + Int(length))
         XCTAssertEqual(value.hexString, hex)
