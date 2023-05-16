@@ -188,14 +188,14 @@ final class EventTests: XCTestCase {
         }
         
         var jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
-        jsonEvent.tags = [["expiration", "1000"]]
+        jsonEvent.tags = [["expiration", "2378572992"]]
         let context = PersistenceController(inMemory: true).container.viewContext
         
         // Act
         let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context, skipVerification: true)
         
         // Assert
-        XCTAssertEqual(parsedEvent.expirationDate?.timeIntervalSince1970, 1000)
+        XCTAssertEqual(parsedEvent.expirationDate?.timeIntervalSince1970, 2_378_572_992)
     }
     
     func testParseExpirationDateDouble() throws {
@@ -206,14 +206,34 @@ final class EventTests: XCTestCase {
         }
         
         var jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
-        jsonEvent.tags = [["expiration", "1000.123"]]
+        jsonEvent.tags = [["expiration", "2378572992.123"]]
         let context = PersistenceController(inMemory: true).container.viewContext
         
         // Act
         let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context, skipVerification: true)
         
         // Assert
-        XCTAssertEqual(parsedEvent.expirationDate!.timeIntervalSince1970, 1000.123, accuracy: 0.001)
+        XCTAssertEqual(parsedEvent.expirationDate!.timeIntervalSince1970, 2_378_572_992.123, accuracy: 0.001)
+    }
+    
+    func testExpiredEventNotSaved() throws {
+        // Arrange
+        guard let jsonData = sampleEventJSONString.data(using: .utf8) else {
+            XCTFail("Sample data cannot be parsed")
+            return
+        }
+        
+        var jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
+        jsonEvent.tags = [["expiration", "1"]]
+        let context = PersistenceController(inMemory: true).container.viewContext
+        
+        // Act & Assert
+        XCTAssertThrowsError(try EventProcessor.parse(
+            jsonEvent: jsonEvent, 
+            from: nil, 
+            in: context, 
+            skipVerification: true
+        ))
     }
     
     /// Verifies that when we see an event we already have in Core Data as a stub it is updated correctly.
