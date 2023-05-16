@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added support for mentioning other users when composing a note.
+
 ## [0.1 (41)] - 2023-05-11Z
 
 - Fix link color on macOS

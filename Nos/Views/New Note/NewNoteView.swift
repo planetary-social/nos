@@ -17,8 +17,10 @@ struct NewNoteView: View {
     @EnvironmentObject var currentUser: CurrentUser
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
+
+    /// State holding the text the user is typing
+    @State private var postText = NSAttributedString("")
     
-    @State private var postText: String = ""
     @State var expirationTime: TimeInterval?
     
     @State private var alert: AlertState<Never>?
@@ -27,36 +29,26 @@ struct NewNoteView: View {
     @State private var selectedRelay: Relay?
 
     @Binding var isPresented: Bool
-    
-    enum FocusedField {
-        case textEditor
+
+    init(isPresented: Binding<Bool>) {
+        _isPresented = isPresented
     }
     
-    @FocusState private var focusedField: FocusedField?
+    @FocusState private var isTextEditorInFocus: Bool
 
     var body: some View {
         NavigationStack {
             ZStack {
                 VStack {
-                    Form {
-                        TextEditor(text: $postText)
-                            .frame(maxHeight: .infinity)
-                            .placeholder(when: postText.isEmpty, placeholder: {
-                                VStack {
-                                    Localized.newNotePlaceholder.view
-                                        .foregroundColor(.secondaryText)
-                                        .padding(.horizontal, 8.5)
-                                        .padding(.vertical, 10)
-                                    Spacer()
-                                }
-                            })
-                            .listRowBackground(Color.appBg)
-                            .focused($focusedField, equals: .textEditor)
-                    }
+                    NoteTextEditor(
+                        text: $postText, 
+                        placeholder: Localized.newNotePlaceholder, 
+                        focus: $isTextEditorInFocus
+                    )
                     Spacer()
                     ComposerActionBar(expirationTime: $expirationTime)
                 }
-                .scrollContentBackground(.hidden)
+                .padding(10)
                 
                 if showRelayPicker, let author = currentUser.author {
                     RelayPicker(
@@ -90,7 +82,6 @@ struct NewNoteView: View {
             .navigationBarItems(
                 leading: Button {
                     isPresented = false
-                    UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.endEditing(true)
                 }
                 label: {
                     Localized.cancel.view
@@ -98,17 +89,17 @@ struct NewNoteView: View {
                 },
                 trailing: ActionButton(title: Localized.post, action: publishPost)
                     .frame(height: 22)
-                    .disabled(postText.isEmpty)
+                    .disabled(postText.string.isEmpty)
                     .padding(.bottom, 3)
             )
             .onAppear {
-                focusedField = .textEditor
+                isTextEditorInFocus = true
                 analytics.showedNewNote()
             }
         }
         .alert(unwrapping: $alert)
     }
-    
+
     private func publishPost() async {
         guard let keyPair = currentUser.keyPair else {
             alert = AlertState(title: {
@@ -120,7 +111,7 @@ struct NewNoteView: View {
         }
         
         do {
-            var tags = [[String]]()
+            var (content, tags) = NoteParser.parse(attributedText: AttributedString(postText))
             
             if let expirationTime {
                 tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
@@ -132,7 +123,7 @@ struct NewNoteView: View {
                 createdAt: Int64(Date().timeIntervalSince1970),
                 kind: 1,
                 tags: tags,
-                content: postText,
+                content: content,
                 signature: ""
             )
             
@@ -148,7 +139,7 @@ struct NewNoteView: View {
             }
             isPresented = false
             analytics.published(note: jsonEvent)
-            postText = ""
+            postText = NSAttributedString("")
             router.selectedTab = .home
         } catch {
             alert = AlertState(title: {

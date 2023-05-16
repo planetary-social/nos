@@ -40,6 +40,7 @@
 "Localized.newNote" = "New Note";
 "Localized.newNotePlaceholder" = "Type your post here...";
 "Localized.cancel" = "Cancel";
+"Localized.clear" = "Clear";
 "Localized.done" = "Done";
 "Localized.editProfile" = "Edit Profile";
 "Localized.youNeedToEnterAPrivateKeyBeforePosting" = "You need to enter a private key in Settings before you can publish posts.";
@@ -82,6 +83,7 @@
 "Localized.noEventsOnProfile" = "We don't see any notes for this profile, but we'll keep looking!";
 "Localized.basicInfo" = "Basic Information";
 "Localized.edit" = "Edit";
+"Localized.mention" = "Mention";
 "Localized.debug" = "Debug";
 "Localized.loadSampleData" = "Load Sample Data";
 "Localized.sampleDataInstructions" = "This will delete all events and load those in sample_data.json";

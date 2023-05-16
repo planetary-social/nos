@@ -98,6 +98,7 @@ enum Localized: String, Localizable, CaseIterable {
     case newNote = "New Note"
     case newNotePlaceholder = "Type your post here..."
     case cancel = "Cancel"
+    case clear = "Clear"
     case done = "Done"
     case editProfile = "Edit Profile"
     case youNeedToEnterAPrivateKeyBeforePosting = "You need to enter a private key in Settings before you can publish posts."
@@ -142,6 +143,8 @@ enum Localized: String, Localizable, CaseIterable {
     case noEventsOnProfile = "We don't see any notes for this profile, but we'll keep looking!"
     case basicInfo = "Basic Information"
     case edit = "Edit" // verb form
+
+    case mention = "Mention"
     
     case debug = "Debug"
     case loadSampleData = "Load Sample Data"
