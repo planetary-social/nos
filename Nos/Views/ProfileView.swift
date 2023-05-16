@@ -39,7 +39,7 @@ struct ProfileView: View {
             }
             
             let authors = [author.hexadecimalPublicKey!]
-            let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete], limit: 50)
+            let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete, .repost, .longFormContent], limit: 50)
             async let textSub = relayService.openSubscription(with: textFilter)
             
             let metaFilter = Filter(

@@ -61,7 +61,7 @@ struct HomeFeedView: View {
             // TODO: we could miss events with this since filter
             let textFilter = Filter(
                 authorKeys: followedKeys, 
-                kinds: [.text, .delete, .repost], 
+                kinds: [.text, .delete, .repost, .longFormContent], 
                 limit: 400, 
                 since: nil
             )

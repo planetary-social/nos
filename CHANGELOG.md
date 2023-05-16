@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved performance of loading replies
 - Added Spanish translations (thanks Martin!)
 - Updated app icon
+- Nos now displays kind 30023 long-form blog posts in the home and profile feeds.
 
 ## [0.1 (38)] - 2023-04-28Z
 
