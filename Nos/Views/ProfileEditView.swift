@@ -35,13 +35,13 @@ struct ProfileEditView: View {
             Form {
                 Section {
                     TextField(text: $displayNameText) {
-                        Localized.displayName.view.foregroundColor(.secondaryTxt)
+                        Localized.displayName.view.foregroundColor(.secondaryText)
                     }
                     .textInputAutocapitalization(.none)
                     .foregroundColor(.textColor)
                     .autocorrectionDisabled()
                     TextField(text: $nameText) {
-                        Localized.name.view.foregroundColor(.secondaryTxt)
+                        Localized.name.view.foregroundColor(.secondaryText)
                     }
                     .textInputAutocapitalization(.none)
                     .foregroundColor(.textColor)
@@ -49,11 +49,11 @@ struct ProfileEditView: View {
                     TextEditor(text: $bioText)
                         .placeholder(when: bioText.isEmpty, placeholder: {
                             Text(Localized.bio.string)
-                                .foregroundColor(.secondaryTxt)
+                                .foregroundColor(.secondaryText)
                         })
                         .foregroundColor(.textColor)
                     TextField(text: $avatarText) {
-                        Localized.picUrl.view.foregroundColor(.secondaryTxt)
+                        Localized.picUrl.view.foregroundColor(.secondaryText)
                     }
                     .foregroundColor(.textColor)
                     .autocorrectionDisabled()
@@ -66,7 +66,7 @@ struct ProfileEditView: View {
                         set: { self.nip05Text = $0.lowercased() }
                     )
                     TextField(text: nip05Binding) {
-                        Localized.nip05.view.foregroundColor(.secondaryTxt)
+                        Localized.nip05.view.foregroundColor(.secondaryText)
                     }
                     .textInputAutocapitalization(.none)
                     .foregroundColor(.textColor)

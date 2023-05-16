@@ -77,7 +77,6 @@ extension Color {
        static let profileBgTop = Color("profile-bg-top", bundle: Bundle.current)
        static let profileShadow = Color("profile-shadow", bundle: Bundle.current)
        static let relationshipViewBg = Color("relationship-view-bg", bundle: Bundle.current)
-       static let secondaryTxt = Color("secondary-txt", bundle: Bundle.current)
        static let selectedtabBg = Color("selectedtab-bg", bundle: Bundle.current)
        static let tabBgBottom = Color("tab-bg-bottom", bundle: Bundle.current)
        static let tabBgTop = Color("tab-bg-top", bundle: Bundle.current)
@@ -159,7 +158,6 @@ extension UIColor {
        static let profileBgTop = UIColor(named: "profile-bg-top", in: Bundle.current, compatibleWith: nil)!
        static let profileShadow = UIColor(named: "profile-shadow", in: Bundle.current, compatibleWith: nil)!
        static let relationshipViewBg = UIColor(named: "relationship-view-bg", in: Bundle.current, compatibleWith: nil)!
-       static let secondaryTxt = UIColor(named: "secondary-txt", in: Bundle.current, compatibleWith: nil)!
        static let selectedtabBg = UIColor(named: "selectedtab-bg", in: Bundle.current, compatibleWith: nil)!
        static let tabBgBottom = UIColor(named: "tab-bg-bottom", in: Bundle.current, compatibleWith: nil)!
        static let tabBgTop = UIColor(named: "tab-bg-top", in: Bundle.current, compatibleWith: nil)!

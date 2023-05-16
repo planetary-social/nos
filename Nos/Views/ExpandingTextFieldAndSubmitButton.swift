@@ -24,7 +24,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
                 .placeholder(when: reply.isEmpty, placeholder: {
                     VStack {
                         Text(placeholder)
-                            .foregroundColor(.secondaryTxt)
+                            .foregroundColor(.secondaryText)
                             .padding(.top, 10)
                             .padding(.leading, 7.5)
                         Spacer()
