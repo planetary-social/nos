@@ -131,7 +131,7 @@ struct RepliesView: View {
                             AvatarView(imageUrl: author.profilePhotoURL, size: 35)
                         }
                         ExpandingTextFieldAndSubmitButton(
-                            placeholder: Localized.Reply.postAReply.string,
+                            placeholder: Localized.Reply.postAReply,
                             reply: $reply,
                             focus: $focusTextView
                         ) {

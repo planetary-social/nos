@@ -11,6 +11,9 @@ import UIKit
 
 /// A ViewRepresentable that wraps a UITextView meant to be used in place of TextEditor when rich text formatting is
 /// desirable.
+///
+/// This view also listens for the .mentionAddedNotification and inserts markdown links 
+/// to nostr objects when it is received.
 struct EditableText: UIViewRepresentable {
 
     typealias UIViewType = UITextView
@@ -18,6 +21,7 @@ struct EditableText: UIViewRepresentable {
     @Binding var attributedText: NSAttributedString
     @Binding var calculatedHeight: CGFloat
 
+    /// An ID for this view. Only .mentionAddedNotifications matching this ID will be processed.
     private var guid: UUID
     private var font = UIFont.preferredFont(forTextStyle: .body)
     private var insets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)

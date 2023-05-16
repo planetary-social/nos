@@ -20,17 +20,6 @@ struct NewNoteView: View {
 
     /// State holding the text the user is typing
     @State private var postText = NSAttributedString("")
-
-    /// State containing the offset (index) of text when the user is mentioning someone
-    ///
-    /// When we detect the user typed a '@', we save the position of that character here and open a screen
-    /// that lets the user select someone to mention, then we can replace this character with the full mention.
-    @State private var mentionOffset: Int?
-
-    /// State containing the very last state before `text` changes
-    ///
-    /// We need this so that we can compare and decide what has changed.
-    @State private var oldText: String = ""
     
     @State private var alert: AlertState<Never>?
     
@@ -42,74 +31,18 @@ struct NewNoteView: View {
     init(isPresented: Binding<Bool>) {
         _isPresented = isPresented
     }
-
-    enum FocusedField {
-        case textEditor
-    }
     
-    @FocusState private var focusedField: FocusedField?
+    @FocusState private var isTextEditorInFocus: Bool
 
-    /// Setting this to true will pop up the mention list to select an author to mention in the text editor.
-    private var showAvailableMentions: Binding<Bool> {
-        Binding {
-            mentionOffset != nil
-        } set: { _ in
-            mentionOffset = nil
-        }
-    }
-
-    @State private var guid = UUID()
-
-    @State private var calculatedHeight: CGFloat = 44
-    
     var body: some View {
         NavigationStack {
             ZStack {
                 VStack {
-                    ScrollView(.vertical) {
-                        EditableText($postText, guid: guid, calculatedHeight: $calculatedHeight)
-                            .frame(height: calculatedHeight)
-                            .placeholder(when: postText.string.isEmpty, placeholder: {
-                                VStack {
-                                    Localized.newNotePlaceholder.view
-                                        .foregroundColor(.secondaryText)
-                                        .padding(.top, 11)
-                                        .padding(.leading, 6)
-                                    Spacer()
-                                }
-                            })
-                            .focused($focusedField, equals: .textEditor)
-                            .padding(.leading, 6)
-                            .onChange(of: postText) { newValue in
-                                let newText = newValue.string
-                                let difference = newText.difference(from: oldText)
-                                guard difference.count == 1, let change = difference.first else {
-                                    oldText = newText
-                                    return
-                                }
-                                switch change {
-                                case .insert(let offset, let element, _):
-                                    if element == "@" {
-                                        mentionOffset = offset
-                                    }
-                                default:
-                                    break
-                                }
-                                oldText = newText
-                            }
-                            .sheet(isPresented: showAvailableMentions) {
-                                NavigationStack {
-                                    AuthorListView(isPresented: showAvailableMentions) { author in
-                                        guard let offset = mentionOffset else {
-                                            return
-                                        }
-                                        insertMention(at: offset, author: author)
-                                    }
-                                }
-                            }
-                    }
-                    .frame(maxHeight: .infinity)
-                    .background { Color.appBg }
+                    NoteTextEditor(
+                        text: $postText, 
+                        placeholder: Localized.newNotePlaceholder, 
+                        focus: $isTextEditorInFocus
+                    )
                     Spacer()
                     HStack {
                         HighlightedText(
@@ -171,23 +104,13 @@ struct NewNoteView: View {
                     .padding(.bottom, 3)
             )
             .onAppear {
-                focusedField = .textEditor
+                isTextEditorInFocus = true
                 analytics.showedNewNote()
             }
         }
         .alert(unwrapping: $alert)
     }
 
-    private func insertMention(at offset: Int, author: Author) {
-        NotificationCenter.default.post(
-            name: .mentionAddedNotification,
-            object: nil,
-            userInfo: ["author": author, "guid": guid]
-        )
-        oldText = postText.string
-        mentionOffset = nil
-    }
-    
     private func publishPost() async {
         guard let keyPair = currentUser.keyPair else {
             alert = AlertState(title: {

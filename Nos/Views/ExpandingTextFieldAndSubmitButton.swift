@@ -12,7 +12,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
 
     @Environment(\.managedObjectContext) private var viewContext
 
-    var placeholder: String
+    var placeholder: any Localizable
     @Binding var reply: NSAttributedString
     var focus: FocusState<Bool>.Binding
     var action: () async -> Void
@@ -24,24 +24,10 @@ struct ExpandingTextFieldAndSubmitButton: View {
     
     var body: some View {
         HStack {
-            ScrollView(.vertical) {
-                EditableText($reply, guid: UUID(), calculatedHeight: $calculatedHeight)
-                    .frame(height: calculatedHeight)
-                    .placeholder(when: reply.string.isEmpty, placeholder: {
-                        VStack {
-                            Text(placeholder)
-                                .foregroundColor(.secondaryText)
-                                .padding(.top, 10)
-                                .padding(.leading, 6)
-                            Spacer()
-                        }
-                    })
-                    .focused(focus)
-                    .padding(.leading, 6)
-            }
-            .frame(maxHeight: 270)
-            .background(Color.appBg)
-            .cornerRadius(17.5)
+            NoteTextEditor(text: $reply, placeholder: placeholder, focus: focus)
+                .frame(maxHeight: 270)
+                .background(Color.appBg)
+                .cornerRadius(17.5)
             if showPostButton {
                 Button(
                     action: {
@@ -78,7 +64,7 @@ struct ExpandingTextFieldAndSubmitButton_Previews: PreviewProvider {
             VStack {
                 HStack(spacing: 10) {
                     ExpandingTextFieldAndSubmitButton(
-                        placeholder: "Write something", 
+                        placeholder: Localized.Reply.postAReply, 
                         reply: $reply, 
                         focus: $isFocused,
                         action: {}

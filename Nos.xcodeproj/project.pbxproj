@@ -220,6 +220,8 @@
 		C9B678E429EED2DC00303F33 /* SocialGraphTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */; };
 		C9B678E729F01A8500303F33 /* FullscreenProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */; };
 		C9B678E829F01A8500303F33 /* FullscreenProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */; };
+		C9B708BB2A13BE41006C613A /* NoteTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B708BA2A13BE41006C613A /* NoteTextEditor.swift */; };
+		C9B708BC2A13BE41006C613A /* NoteTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B708BA2A13BE41006C613A /* NoteTextEditor.swift */; };
 		C9BAB09B2996FBA10003A84E /* EventProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BAB09A2996FBA10003A84E /* EventProcessor.swift */; };
 		C9BAB09C2996FBA10003A84E /* EventProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BAB09A2996FBA10003A84E /* EventProcessor.swift */; };
 		C9C2B77C29E072E400548B4A /* WebSocket+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */; };
@@ -480,6 +482,7 @@
 		C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialGraphTests.swift; sourceTree = "<group>"; };
 		C9B678E529EF1BF200303F33 /* Nos 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 5.xcdatamodel"; sourceTree = "<group>"; };
 		C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenProgressView.swift; sourceTree = "<group>"; };
+		C9B708BA2A13BE41006C613A /* NoteTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTextEditor.swift; sourceTree = "<group>"; };
 		C9BAB09A2996FBA10003A84E /* EventProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventProcessor.swift; sourceTree = "<group>"; };
 		C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebSocket+Nos.swift"; sourceTree = "<group>"; };
 		C9C2B77E29E0731600548B4A /* AsyncTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTimer.swift; sourceTree = "<group>"; };
@@ -897,6 +900,7 @@
 				5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */,
 				5B8C96B129DB313300B73AEC /* AuthorCard.swift */,
 				5B8C96B529DDD3B200B73AEC /* EditableText.swift */,
+				C9B708BA2A13BE41006C613A /* NoteTextEditor.swift */,
 				C97A1C8729E45B3C009D9E8D /* RawEventView.swift */,
 				C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */,
 				C9A25B3C29F174D200B39534 /* ReadabilityPadding.swift */,
@@ -1306,6 +1310,7 @@
 				C9DFA971299BF8CD006929C1 /* RepliesView.swift in Sources */,
 				C9DFA976299C30F0006929C1 /* Localized.swift in Sources */,
 				C98A32272A05795E00E3FA13 /* Task+Timeout.swift in Sources */,
+				C9B708BB2A13BE41006C613A /* NoteTextEditor.swift in Sources */,
 				C95D68A5299E6E1E00429F86 /* PlaceholderModifier.swift in Sources */,
 				C960C57429F3251E00929990 /* RepostButton.swift in Sources */,
 				3FFB1D9329A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,
@@ -1451,6 +1456,7 @@
 				C93CA0C029AD59D700921183 /* GoldenPostView.swift in Sources */,
 				C9646EAF29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */,
 				C93EC2FE29C3785C0012EE2A /* View+RoundedCorner.swift in Sources */,
+				C9B708BC2A13BE41006C613A /* NoteTextEditor.swift in Sources */,
 				C9BAB09C2996FBA10003A84E /* EventProcessor.swift in Sources */,
 				C931517E29B915AF00934506 /* StaggeredGrid.swift in Sources */,
 				C987F81E29BA6D9A00B44E7A /* ProfileTab.swift in Sources */,
