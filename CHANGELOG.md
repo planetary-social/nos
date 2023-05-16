@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Added support for mentioning other users when composing a note.
+- Fixed a bug where expired messages could be redownloaded from relays that don't delete them.
 
 ## [0.1 (41)] - 2023-05-11Z
 

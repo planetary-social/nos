@@ -20,6 +20,7 @@ enum EventError: Error {
     case missingAuthor
     case invalidETag([String])
     case invalidSignature(Event)
+    case expiredEvent
     
     var description: String? {
         switch self {
@@ -31,6 +32,8 @@ enum EventError: Error {
             return "Invalid e tag \(strings.joined(separator: ","))"
         case .invalidSignature(let event):
             return "Invalid signature on event: \(String(describing: event.identifier))"
+        case .expiredEvent:
+            return "This event has expired"
         default:
             return ""
         }
@@ -585,6 +588,9 @@ public class Event: NosManagedObject {
                 expirationDateUnix != 0 {
                 let expirationDate = Date(timeIntervalSince1970: expirationDateUnix)
                 self.expirationDate = expirationDate
+                if isExpired {
+                    throw EventError.expiredEvent
+                }
             }
         }
         
