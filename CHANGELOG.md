@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Updated support email to support@nos.social
 - Increased the contrast of text in light mode
 - Open links in an in-app web browser instead of Safari
 - Fixed link detection in notes for URLs without a scheme (i.e. "https://")
@@ -80,7 +81,7 @@ Note:
 
 ## [0.1 (28)] - 2023-04-07Z
 
-- Made all the built-in text in the app translatable. If you would like to help translate Nos let us know by emailing support@planetary.social.
+- Made all the built-in text in the app translatable. If you would like to help translate Nos let us know by emailing support@nos.social.
 
 ## [0.1 (27)] - 2023-04-05Z
 
@@ -98,7 +99,7 @@ Note:
 ## [0.1 (24)] - 2023-03-31Z
 
 - Added Crowdin integration for translation services. If you would like to help us translate Nos drop us a line at 
-support@planetary.social.
+support@nos.social.
 - Fixed several crashes.
 - Fixed issue where the like button didn't turn orange when pressed.
 - Fixed an issue where likes to replies were counted towards the root note.
@@ -199,7 +200,7 @@ Known issues:
 - Use only relays added in RelayView for sending and receiving events
 - Add PostHog analytics
 - Render note mentions in NoteCard
-- Open an email compose view controller for support@planetary.social 
+- Open an email compose view controller for support@nos.social 
 - Fix duplicate note on a new post
 - Add mute functionality
 - Publish relay changes
