@@ -9,34 +9,25 @@ import Foundation
 import SwiftUI
 
 struct ExpandingTextFieldAndSubmitButton: View {
-    
-    var placeholder: String
-    @Binding var reply: String
+
+    @Environment(\.managedObjectContext) private var viewContext
+
+    var placeholder: any Localizable
+    @Binding var reply: NSAttributedString
     var focus: FocusState<Bool>.Binding
     var action: () async -> Void
     
     @State private var showPostButton = false
     @State var disabled = false
+
+    @State private var calculatedHeight: CGFloat = 44
     
     var body: some View {
         HStack {
-            TextEditor(text: $reply)
-                .placeholder(when: reply.isEmpty, placeholder: {
-                    VStack {
-                        Text(placeholder)
-                            .foregroundColor(.secondaryText)
-                            .padding(.top, 10)
-                            .padding(.leading, 7.5)
-                        Spacer()
-                    }
-                })
-                .scrollContentBackground(.hidden)
-                .padding(.leading, 6)
+            NoteTextEditor(text: $reply, placeholder: placeholder, focus: focus)
+                .frame(maxHeight: 270)
                 .background(Color.appBg)
                 .cornerRadius(17.5)
-                .frame(maxHeight: 270)
-                .focused(focus)
-            
             if showPostButton {
                 Button(
                     action: {
@@ -44,7 +35,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
                         focus.wrappedValue = false
                         Task {
                             await action()
-                            reply = ""
+                            reply = NSAttributedString("")
                             disabled = false
                         }
                     },
@@ -59,5 +50,28 @@ struct ExpandingTextFieldAndSubmitButton: View {
             showPostButton = bool
         }
         .padding(8)
+    }
+}
+
+struct ExpandingTextFieldAndSubmitButton_Previews: PreviewProvider {
+
+    @State static var reply = NSAttributedString("Hello World")
+    @FocusState static var isFocused: Bool
+
+    static var previews: some View {
+        VStack {
+            Spacer()
+            VStack {
+                HStack(spacing: 10) {
+                    ExpandingTextFieldAndSubmitButton(
+                        placeholder: Localized.Reply.postAReply, 
+                        reply: $reply, 
+                        focus: $isFocused,
+                        action: {}
+                    )
+                }
+            }
+            .fixedSize(horizontal: false, vertical: true)
+        }
     }
 }

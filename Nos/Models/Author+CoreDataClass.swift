@@ -44,6 +44,16 @@ public class Author: NosManagedObject {
     var webLink: String {
         "https://iris.to/\(publicKey!.npub)"
     }
+
+    /// A URL that links to this author, suitable for being shared with others.
+    ///
+    /// See [NIP-21](https://github.com/nostr-protocol/nips/blob/master/21.md)
+    var uri: URL? {
+        if let npub = publicKey?.npub {
+            return URL(string: "nostr:\(npub)")
+        }
+        return nil
+    }
     
     var followedKeys: [HexadecimalString] {
         follows?.compactMap({ ($0 as? Follow)?.destination?.hexadecimalPublicKey }) ?? []
@@ -93,6 +103,12 @@ public class Author: NosManagedObject {
     @nonobjc public class func allAuthorsRequest(muted: Bool) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.predicate = NSPredicate(format: "muted == %i", muted)
+        return fetchRequest
+    }
+
+    @nonobjc public class func allAuthorsWithNameOrDisplayNameRequest(muted: Bool) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.predicate = NSPredicate(format: "muted == %i AND (displayName != nil OR name != nil)", muted)
         return fetchRequest
     }
     
