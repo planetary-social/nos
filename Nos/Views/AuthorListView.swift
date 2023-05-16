@@ -24,7 +24,7 @@ struct AuthorListView: View {
     var body: some View {
         ScrollView(.vertical) {
             SearchBar(text: $searchTextObserver.text, isSearching: $isSearching)
-                .padding(.horizontal)
+                .readabilityPadding()
                 .padding(.top, 10)
             LazyVStack {
                 if let authors = filteredAuthors {
@@ -38,7 +38,6 @@ struct AuthorListView: View {
                     ProgressView()
                 }
             }
-            .padding(.top)
         }
         .background(Color.appBg)
         .nosNavigationBar(title: .mention)
