@@ -106,7 +106,6 @@ struct NewNoteView: View {
                                         insertMention(at: offset, author: author)
                                     }
                                 }
-                                .presentationDetents([.medium, .large])
                             }
                     }
                     .frame(maxHeight: .infinity)
