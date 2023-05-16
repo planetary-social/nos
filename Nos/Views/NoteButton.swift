@@ -19,7 +19,6 @@ struct NoteButton: View {
     var style = CardStyle.compact
     var showFullMessage = false
     var hideOutOfNetwork = true
-    var allowsPush = true
     var showReplyCount = true
     var isInThreadView = false
     private var replyAction: ((Event) -> Void)?
@@ -36,7 +35,6 @@ struct NoteButton: View {
         style: CardStyle = CardStyle.compact, 
         showFullMessage: Bool = false, 
         hideOutOfNetwork: Bool = true, 
-        allowsPush: Bool = true, 
         showReplyCount: Bool = true, 
         isInThreadView: Bool = false,
         replyAction: ((Event) -> Void)? = nil
@@ -45,7 +43,6 @@ struct NoteButton: View {
         self.style = style
         self.showFullMessage = showFullMessage
         self.hideOutOfNetwork = hideOutOfNetwork
-        self.allowsPush = allowsPush
         self.showReplyCount = showReplyCount
         self.isInThreadView = isInThreadView
         self.replyAction = replyAction
@@ -107,13 +104,11 @@ struct NoteButton: View {
             }
             
             Button {
-                if allowsPush {
-                    if !isInThreadView, let referencedNote = displayedNote.referencedNote() {
-                        router.push(referencedNote)
-                    } else {
-                        router.push(displayedNote)
-                    }
-                }
+                if isInThreadView {
+                    router.push(displayedNote)
+                } else if let referencedNote = displayedNote.referencedNote(), referencedNote.id != note.id {
+                    router.push(referencedNote)
+                } 
             } label: {
                 let noteCard = NoteCard(
                     note: displayedNote,

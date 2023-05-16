@@ -97,7 +97,6 @@ struct RepliesView: View {
                         note: note,
                         showFullMessage: true,
                         hideOutOfNetwork: false,
-                        allowsPush: false,
                         showReplyCount: false,
                         replyAction: { _ in self.focusTextView = true }
                     )                                
