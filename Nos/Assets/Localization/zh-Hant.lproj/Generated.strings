@@ -40,6 +40,7 @@
 "Localized.newNote" = "新筆記";
 "Localized.newNotePlaceholder" = "在此輸入你的帖子...";
 "Localized.cancel" = "取消";
+"Localized.clear" = "清除";
 "Localized.done" = "完成";
 "Localized.editProfile" = "編輯個人檔案";
 "Localized.youNeedToEnterAPrivateKeyBeforePosting" = "你必須在設置中輸入私鑰才能發佈帖子。";
@@ -75,6 +76,7 @@
 "Localized.noEventsOnProfile" = "我們沒有找到關於這個檔案的任何筆記，但我們會繼續查看！";
 "Localized.basicInfo" = "基本信息";
 "Localized.edit" = "編輯";
+"Localized.mention" = "提及";
 "Localized.debug" = "偵錯";
 "Localized.loadSampleData" = "加載樣本數據";
 "Localized.sampleDataInstructions" = "這將刪除使用事件並加載 sample_data.json";
