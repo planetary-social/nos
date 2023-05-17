@@ -40,6 +40,7 @@
 "Localized.newNote" = "新笔记";
 "Localized.newNotePlaceholder" = "在此输入你的帖子...";
 "Localized.cancel" = "取消";
+"Localized.clear" = "清除";
 "Localized.done" = "完成";
 "Localized.editProfile" = "编辑个人档案";
 "Localized.youNeedToEnterAPrivateKeyBeforePosting" = "你必须在设置中输入私钥才能发布帖子。";
@@ -75,6 +76,7 @@
 "Localized.noEventsOnProfile" = "我们没有找到关于这个档案的任何笔记，但我们会继续查看！";
 "Localized.basicInfo" = "基本信息";
 "Localized.edit" = "编辑";
+"Localized.mention" = "提及";
 "Localized.debug" = "除错";
 "Localized.loadSampleData" = "加载样本数据";
 "Localized.sampleDataInstructions" = "这将删除所有事件并加载 sample_data.json";
