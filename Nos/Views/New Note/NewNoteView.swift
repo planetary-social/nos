@@ -21,7 +21,6 @@ struct NewNoteView: View {
     /// State holding the text the user is typing
     @State private var postText = NSAttributedString("")
     
-    @State private var postText: String = ""
     @State var expirationTime: TimeInterval?
     
     @State private var alert: AlertState<Never>?
@@ -112,7 +111,7 @@ struct NewNoteView: View {
         }
         
         do {
-            let (content, tags) = NoteParser.parse(attributedText: AttributedString(postText))
+            var (content, tags) = NoteParser.parse(attributedText: AttributedString(postText))
             
             if let expirationTime {
                 tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
