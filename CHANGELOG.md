@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a bug where expired messages could be redownloaded from relays that don't delete them.
 - Increased the tap size of the ellipsis button on note cards.
+- Add support for expiration dates when composing notes (please note: messages are not guaranteed to be deleted by relays or other apps)
 - Increased the contrast of text in light mode
 - Open links in an in-app web browser instead of Safari
 - Fixed link detection in notes for URLs without a scheme (i.e. "https://")
