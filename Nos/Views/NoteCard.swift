@@ -100,7 +100,7 @@ struct NoteCard: View {
         VStack(alignment: .leading, spacing: 0) {
             switch style {
             case .compact:
-                HStack(alignment: .center) {
+                HStack(alignment: .center, spacing: 0) {
                     if showContents {
                         Button {
                             if let author {
@@ -114,6 +114,7 @@ struct NoteCard: View {
                                     .font(.brand)
                                     .multilineTextAlignment(.leading)
                                     .frame(maxWidth: .infinity, alignment: .leading)
+                                Spacer()
                                 if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
                                     Text(elapsedTime)
                                         .lineLimit(1)
@@ -121,13 +122,13 @@ struct NoteCard: View {
                                         .foregroundColor(.secondaryText)
                                 }
                             }
+                            .padding(.leading, 10)
                         }
                         NoteOptionsButton(note: note)
                     } else {
                         Spacer()
                     }
                 }
-                .padding(10)
                 Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                 Group {
                     if note.isStub {
