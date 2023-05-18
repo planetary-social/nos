@@ -50,7 +50,7 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 	case like = 7
     case channelMessage = 42
     case mute = 10_000
-    case parameterizedReplaceableEvent = 30_000
+    case longFormContent = 30_023
 }
 
 extension FetchedResults where Element == Event {
@@ -275,7 +275,7 @@ public class Event: NosManagedObject {
     @nonobjc public class func homeFeedPredicate(for user: Author, before: Date) -> NSPredicate {
         NSPredicate(
             // swiftlint:disable line_length
-            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND (receivedAt == nil OR receivedAt <= %@)",
+            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND (receivedAt == nil OR receivedAt <= %@)",
             // swiftlint:enable line_length
             user,
             user,
@@ -508,45 +508,10 @@ public class Event: NosManagedObject {
                 let content = note.content else {
                 return nil
             }
-            
-            let regex = Regex {
-                "#["
-                TryCapture {
-                    OneOrMore(.digit)
-                } transform: {
-                    Int($0)
-                }
-                "]"
-            }
-            
             guard let tags = note.allTags as? [[String]] else {
                 return AttributedString(content)
             }
-        
-            let result = content.replacing(regex) { match in
-                if let tag = tags[safe: match.1],
-                    let type = tag[safe: 0],
-                    let id = tag[safe: 1] {
-                    if type == "p",
-                        let author = try? Author.find(by: id, context: context),
-                        let pubkey = author.hexadecimalPublicKey {
-                        return "[@\(author.safeName)](@\(pubkey))"
-                    }
-                    if type == "e",
-                        let event = Event.find(by: id, context: context),
-                        let bech32NoteID = event.bech32NoteID {
-                        return "[@\(bech32NoteID)](%\(id))"
-                    }
-                }
-                return ""
-            }
-            
-            let linkedString = (try? result.findAndReplaceUnformattedLinks(in: result)) ?? result
-            
-            return try? AttributedString(
-                markdown: linkedString,
-                options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-            )
+            return NoteParser.parse(content: content, tags: tags, context: context)
         }
     }
     

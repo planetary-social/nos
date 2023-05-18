@@ -44,6 +44,16 @@ public class Author: NosManagedObject {
     var webLink: String {
         "https://iris.to/\(publicKey!.npub)"
     }
+
+    /// A URL that links to this author, suitable for being shared with others.
+    ///
+    /// See [NIP-21](https://github.com/nostr-protocol/nips/blob/master/21.md)
+    var uri: URL? {
+        if let npub = publicKey?.npub {
+            return URL(string: "nostr:\(npub)")
+        }
+        return nil
+    }
     
     var followedKeys: [HexadecimalString] {
         follows?.compactMap({ ($0 as? Follow)?.destination?.hexadecimalPublicKey }) ?? []
@@ -95,14 +105,21 @@ public class Author: NosManagedObject {
         fetchRequest.predicate = NSPredicate(format: "muted == %i", muted)
         return fetchRequest
     }
+
+    @nonobjc public class func allAuthorsWithNameOrDisplayNameRequest(muted: Bool) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.predicate = NSPredicate(format: "muted == %i AND (displayName != nil OR name != nil)", muted)
+        return fetchRequest
+    }
     
     @nonobjc func allPostsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: "(kind = %i OR kind = %i) AND author = %@", 
+            format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@", 
             EventKind.text.rawValue, 
             EventKind.repost.rawValue, 
+            EventKind.longFormContent.rawValue, 
             self
         )
         return fetchRequest
