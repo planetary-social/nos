@@ -23,6 +23,8 @@ struct HighlightedText: View {
     
     let foregroundColor: Color
     
+    let font: Font
+    
     /// A link that the highlighted word will open if tapped. Optional.
     let link: URL?
     
@@ -48,12 +50,14 @@ struct HighlightedText: View {
         highlightedWord: String?,
         highlight: LinearGradient,
         textColor: Color = .primaryTxt,
+        font: Font = .clarity,
         link: URL?
     ) {
         self.text = text
         self.highlightedWord = highlightedWord
         self.highlightGradient = highlight
         self.foregroundColor = textColor
+        self.font = font
         self.link = link
         
         // If we have a highlighted word we break it up into segments.
@@ -173,7 +177,7 @@ struct HighlightedText: View {
             Log.optional(error)
             attributedString = AttributedString(markdown)
         }
-        return Text(attributedString)
+        return Text(attributedString).font(font)
     }
     
     var body: some View {

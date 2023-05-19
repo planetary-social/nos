@@ -21,6 +21,8 @@ struct NewNoteView: View {
     /// State holding the text the user is typing
     @State private var postText = NSAttributedString("")
     
+    @State var expirationTime: TimeInterval?
+    
     @State private var alert: AlertState<Never>?
     
     @State private var showRelayPicker = false
@@ -44,19 +46,7 @@ struct NewNoteView: View {
                         focus: $isTextEditorInFocus
                     )
                     Spacer()
-                    HStack {
-                        HighlightedText(
-                            Localized.nostrBuildHelp.string,
-                            highlightedWord: "nostr.build",
-                            highlight: .diagonalAccent,
-                            textColor: .secondaryText,
-                            link: URL(string: "https://nostr.build")!
-                        )
-                        .listRowBackground(Color.appBg)
-                        .listRowSeparator(.hidden)
-                        .padding(.leading, 17)
-                        Spacer()
-                    }
+                    ComposerActionBar(expirationTime: $expirationTime)
                 }
                 .padding(10)
                 
@@ -121,7 +111,12 @@ struct NewNoteView: View {
         }
         
         do {
-            let (content, tags) = NoteParser.parse(attributedText: AttributedString(postText))
+            var (content, tags) = NoteParser.parse(attributedText: AttributedString(postText))
+            
+            if let expirationTime {
+                tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
+            }
+            
             let jsonEvent = JSONEvent(
                 id: "",
                 pubKey: keyPair.publicKeyHex,
