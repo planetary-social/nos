@@ -180,6 +180,62 @@ final class EventTests: XCTestCase {
         XCTAssertEqual(follow.petName, sampleName)
     }
     
+    func testParseExpirationDate() throws {
+        // Arrange
+        guard let jsonData = sampleEventJSONString.data(using: .utf8) else {
+            XCTFail("Sample data cannot be parsed")
+            return
+        }
+        
+        var jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
+        jsonEvent.tags = [["expiration", "2378572992"]]
+        let context = PersistenceController(inMemory: true).container.viewContext
+        
+        // Act
+        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context, skipVerification: true)
+        
+        // Assert
+        XCTAssertEqual(parsedEvent.expirationDate?.timeIntervalSince1970, 2_378_572_992)
+    }
+    
+    func testParseExpirationDateDouble() throws {
+        // Arrange
+        guard let jsonData = sampleEventJSONString.data(using: .utf8) else {
+            XCTFail("Sample data cannot be parsed")
+            return
+        }
+        
+        var jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
+        jsonEvent.tags = [["expiration", "2378572992.123"]]
+        let context = PersistenceController(inMemory: true).container.viewContext
+        
+        // Act
+        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context, skipVerification: true)
+        
+        // Assert
+        XCTAssertEqual(parsedEvent.expirationDate!.timeIntervalSince1970, 2_378_572_992.123, accuracy: 0.001)
+    }
+    
+    func testExpiredEventNotSaved() throws {
+        // Arrange
+        guard let jsonData = sampleEventJSONString.data(using: .utf8) else {
+            XCTFail("Sample data cannot be parsed")
+            return
+        }
+        
+        var jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
+        jsonEvent.tags = [["expiration", "1"]]
+        let context = PersistenceController(inMemory: true).container.viewContext
+        
+        // Act & Assert
+        XCTAssertThrowsError(try EventProcessor.parse(
+            jsonEvent: jsonEvent, 
+            from: nil, 
+            in: context, 
+            skipVerification: true
+        ))
+    }
+    
     /// Verifies that when we see an event we already have in Core Data as a stub it is updated correctly.
     func testParsingEventStub() throws {
         let persistenceController = PersistenceController(inMemory: true)

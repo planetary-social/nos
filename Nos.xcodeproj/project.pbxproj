@@ -274,6 +274,10 @@
 		C9DFA972299BF9E8006929C1 /* CompactNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA96A299BEE2C006929C1 /* CompactNoteView.swift */; };
 		C9DFA976299C30F0006929C1 /* Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA975299C30F0006929C1 /* Localized.swift */; };
 		C9DFA97B299C31EE006929C1 /* Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA975299C30F0006929C1 /* Localized.swift */; };
+		C9EE3E602A0538B7008A7491 /* ExpirationTimeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EE3E5F2A0538B7008A7491 /* ExpirationTimeButton.swift */; };
+		C9EE3E612A0538B7008A7491 /* ExpirationTimeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EE3E5F2A0538B7008A7491 /* ExpirationTimeButton.swift */; };
+		C9EE3E632A053910008A7491 /* ExpirationTimeOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EE3E622A053910008A7491 /* ExpirationTimeOption.swift */; };
+		C9EE3E642A053910008A7491 /* ExpirationTimeOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EE3E622A053910008A7491 /* ExpirationTimeOption.swift */; };
 		C9F0BB6929A5039D000547FC /* Int+Bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F0BB6829A5039D000547FC /* Int+Bool.swift */; };
 		C9F0BB6B29A503D6000547FC /* PublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F0BB6A29A503D6000547FC /* PublicKey.swift */; };
 		C9F0BB6C29A503D6000547FC /* PublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F0BB6A29A503D6000547FC /* PublicKey.swift */; };
@@ -284,6 +288,10 @@
 		C9F64D8D29ED840700563F2B /* LogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8B29ED840700563F2B /* LogHelper.swift */; };
 		C9F64D8F29ED88CD00563F2B /* Localization+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8E29ED88CD00563F2B /* Localization+Nos.swift */; };
 		C9F64D9029ED88CD00563F2B /* Localization+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8E29ED88CD00563F2B /* Localization+Nos.swift */; };
+		C9F75AD22A02D41E005BBE45 /* ComposerActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F75AD12A02D41E005BBE45 /* ComposerActionBar.swift */; };
+		C9F75AD32A02D41E005BBE45 /* ComposerActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F75AD12A02D41E005BBE45 /* ComposerActionBar.swift */; };
+		C9F75AD62A041FF7005BBE45 /* ExpirationTimePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F75AD52A041FF7005BBE45 /* ExpirationTimePicker.swift */; };
+		C9F75AD72A041FF7005BBE45 /* ExpirationTimePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F75AD52A041FF7005BBE45 /* ExpirationTimePicker.swift */; };
 		C9F84C1A298DBB6300C6714D /* Data+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */; };
 		C9F84C1C298DBBF400C6714D /* Data+Sha.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C1B298DBBF400C6714D /* Data+Sha.swift */; };
 		C9F84C1D298DBC6100C6714D /* Data+Sha.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C1B298DBBF400C6714D /* Data+Sha.swift */; };
@@ -398,6 +406,7 @@
 		A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Follow+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C90862BB29E9804B00C35A71 /* NosPerformanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NosPerformanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C90862BD29E9804B00C35A71 /* NosPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosPerformanceTests.swift; sourceTree = "<group>"; };
+		C91FFD392A09444D00743037 /* Nos 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 6.xcdatamodel"; sourceTree = "<group>"; };
 		C92DF80129BFAF9300400561 /* ProductionSecrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ProductionSecrets.xcconfig; sourceTree = "<group>"; };
 		C92DF80229C22E4F00400561 /* Nos 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 2.xcdatamodel"; sourceTree = "<group>"; };
 		C92DF80429C25DE900400561 /* URL+MimeTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+MimeTypes.swift"; sourceTree = "<group>"; };
@@ -523,11 +532,15 @@
 		C9DFA970299BF8CD006929C1 /* RepliesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepliesView.swift; sourceTree = "<group>"; };
 		C9DFA975299C30F0006929C1 /* Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localized.swift; sourceTree = "<group>"; };
 		C9DFA978299C31A7006929C1 /* Localizable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
+		C9EE3E5F2A0538B7008A7491 /* ExpirationTimeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationTimeButton.swift; sourceTree = "<group>"; };
+		C9EE3E622A053910008A7491 /* ExpirationTimeOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationTimeOption.swift; sourceTree = "<group>"; };
 		C9F0BB6829A5039D000547FC /* Int+Bool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Bool.swift"; sourceTree = "<group>"; };
 		C9F0BB6A29A503D6000547FC /* PublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKey.swift; sourceTree = "<group>"; };
 		C9F0BB6E29A50437000547FC /* NostrConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrConstants.swift; sourceTree = "<group>"; };
 		C9F64D8B29ED840700563F2B /* LogHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogHelper.swift; sourceTree = "<group>"; };
 		C9F64D8E29ED88CD00563F2B /* Localization+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Localization+Nos.swift"; sourceTree = "<group>"; };
+		C9F75AD12A02D41E005BBE45 /* ComposerActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerActionBar.swift; sourceTree = "<group>"; };
+		C9F75AD52A041FF7005BBE45 /* ExpirationTimePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationTimePicker.swift; sourceTree = "<group>"; };
 		C9F84C1B298DBBF400C6714D /* Data+Sha.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Sha.swift"; sourceTree = "<group>"; };
 		C9F84C20298DC36800C6714D /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		C9F84C22298DC7B900C6714D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -806,6 +819,7 @@
 				5B6EB48D29EDBE0E006E750C /* NoteParser.swift */,
 				5B80BE9F29FAEDE300A363E4 /* NProfile.swift */,
 				C9C2B78429E073E300548B4A /* RelaySubscription.swift */,
+				C9EE3E622A053910008A7491 /* ExpirationTimeOption.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -842,6 +856,17 @@
 			path = Controller;
 			sourceTree = "<group>";
 		};
+		C9EE3E652A053CF1008A7491 /* New Note */ = {
+			isa = PBXGroup;
+			children = (
+				C94D855B2991479900749478 /* NewNoteView.swift */,
+				C9F75AD12A02D41E005BBE45 /* ComposerActionBar.swift */,
+				C9F75AD52A041FF7005BBE45 /* ExpirationTimePicker.swift */,
+				C9EE3E5F2A0538B7008A7491 /* ExpirationTimeButton.swift */,
+			);
+			path = "New Note";
+			sourceTree = "<group>";
+		};
 		C9F84C24298DC7C100C6714D /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -861,7 +886,6 @@
 				A32B6C7229A6BE9B00653FF5 /* FollowsView.swift */,
 				C9DEBFD8298941000078B43A /* HomeFeedView.swift */,
 				C95D68A8299E709800429F86 /* LinearGradient+Planetary.swift */,
-				C94D855B2991479900749478 /* NewNoteView.swift */,
 				CD2CF38F299E68BE00332116 /* NoteButton.swift */,
 				C9DFA964299BEB96006929C1 /* NoteCard.swift */,
 				C960C57029F3236200929990 /* LikeButton.swift */,
@@ -911,6 +935,7 @@
 				C9DB207629F30EC700FB7B9D /* AsyncButton.swift */,
 				C9CE5B132A0172CF008E198C /* WebView.swift */,
 				C94D14802A12B3F70014C906 /* SearchBar.swift */,
+				C9EE3E652A053CF1008A7491 /* New Note */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1240,6 +1265,7 @@
 				C9DEBFD7298941000078B43A /* Nos.xcdatamodeld in Sources */,
 				C95D68AB299E710F00429F86 /* Color+Hex.swift in Sources */,
 				C9F0BB6B29A503D6000547FC /* PublicKey.swift in Sources */,
+				C9EE3E602A0538B7008A7491 /* ExpirationTimeButton.swift in Sources */,
 				A303AF8329A9153A005DC8FC /* FollowButton.swift in Sources */,
 				C9C2B77F29E0731600548B4A /* AsyncTimer.swift in Sources */,
 				A32B6C7329A6BE9B00653FF5 /* FollowsView.swift in Sources */,
@@ -1247,6 +1273,7 @@
 				5B80BEA029FAEDE300A363E4 /* NProfile.swift in Sources */,
 				C9A25B3D29F174D200B39534 /* ReadabilityPadding.swift in Sources */,
 				C9DFA972299BF9E8006929C1 /* CompactNoteView.swift in Sources */,
+				C9EE3E632A053910008A7491 /* ExpirationTimeOption.swift in Sources */,
 				C9A0DAE029C697A100466635 /* AboutView.swift in Sources */,
 				A351E1A229BA92240009B7F6 /* ProfileEditView.swift in Sources */,
 				C9DFA969299BEC33006929C1 /* CardStyle.swift in Sources */,
@@ -1256,6 +1283,7 @@
 				C942566929B66A2800C4202C /* Date+Elapsed.swift in Sources */,
 				5B8C96B029DB2E1100B73AEC /* SearchTextFieldObserver.swift in Sources */,
 				C9ADB13829928CC30075E7F8 /* String+Hex.swift in Sources */,
+				C9F75AD22A02D41E005BBE45 /* ComposerActionBar.swift in Sources */,
 				C9DEBFD2298941000078B43A /* NosApp.swift in Sources */,
 				C9646EAE29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */,
 				C95D68A3299E6D9000429F86 /* SelectableText.swift in Sources */,
@@ -1264,6 +1292,7 @@
 				5B8C96B629DDD3B200B73AEC /* EditableText.swift in Sources */,
 				C93EC2F129C337EB0012EE2A /* RelayPicker.swift in Sources */,
 				C9F0BB6F29A50437000547FC /* NostrConstants.swift in Sources */,
+				C9F75AD62A041FF7005BBE45 /* ExpirationTimePicker.swift in Sources */,
 				CD76865329B793F400085358 /* DiscoverSearchBar.swift in Sources */,
 				5B8C96AC29D52AD200B73AEC /* AuthorListView.swift in Sources */,
 				C987F85B29BA9ED800B44E7A /* Font.swift in Sources */,
@@ -1344,6 +1373,7 @@
 				CD76864D29B133E600085358 /* ExpandingTextFieldAndSubmitButton.swift in Sources */,
 				CD09A76329A522190063464F /* OnboardingView.swift in Sources */,
 				CD09A76129A5220E0063464F /* NosApp.swift in Sources */,
+				C9F75AD72A041FF7005BBE45 /* ExpirationTimePicker.swift in Sources */,
 				C93EC2F229C337EB0012EE2A /* RelayPicker.swift in Sources */,
 				CD09A76229A5220E0063464F /* AppController.swift in Sources */,
 				C9A0DAF929C92F4500466635 /* UNSAPI.swift in Sources */,
@@ -1370,6 +1400,7 @@
 				C9B678E829F01A8500303F33 /* FullscreenProgressView.swift in Sources */,
 				C9C2B77D29E072E400548B4A /* WebSocket+Nos.swift in Sources */,
 				A303AF8429A969F5005DC8FC /* FollowButton.swift in Sources */,
+				C9EE3E642A053910008A7491 /* ExpirationTimeOption.swift in Sources */,
 				CD09A75629A521D20063464F /* SettingsView.swift in Sources */,
 				3F30021729C3BFEB003D4F8B /* OnboardingLoginView.swift in Sources */,
 				C9F64D8D29ED840700563F2B /* LogHelper.swift in Sources */,
@@ -1382,6 +1413,7 @@
 				C987F85A29BA9ED800B44E7A /* Font.swift in Sources */,
 				CD09A75A29A521D20063464F /* CardButtonStyle.swift in Sources */,
 				CD09A75B29A521D20063464F /* AvatarView.swift in Sources */,
+				C9EE3E612A0538B7008A7491 /* ExpirationTimeButton.swift in Sources */,
 				CD09A75C29A521D20063464F /* SideMenu.swift in Sources */,
 				CD09A75D29A521D20063464F /* SideMenuContent.swift in Sources */,
 				CD09A74E29A521BE0063464F /* NoteCard.swift in Sources */,
@@ -1459,6 +1491,7 @@
 				C9DEBFE9298941020078B43A /* EventTests.swift in Sources */,
 				C9ADB14229951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */,
 				C92DF80629C25DE900400561 /* URL+MimeTypes.swift in Sources */,
+				C9F75AD32A02D41E005BBE45 /* ComposerActionBar.swift in Sources */,
 				C93CA0C029AD59D700921183 /* GoldenPostView.swift in Sources */,
 				C9646EAF29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */,
 				C93EC2FE29C3785C0012EE2A /* View+RoundedCorner.swift in Sources */,
@@ -2064,13 +2097,14 @@
 		C9DEBFD5298941000078B43A /* Nos.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				C91FFD392A09444D00743037 /* Nos 6.xcdatamodel */,
 				C9B678E529EF1BF200303F33 /* Nos 5.xcdatamodel */,
 				C9A0DAF329C870D500466635 /* Nos 4.xcdatamodel */,
 				CD4D210D29C350C9000F8188 /* Nos 3.xcdatamodel */,
 				C92DF80229C22E4F00400561 /* Nos 2.xcdatamodel */,
 				C9DEBFD6298941000078B43A /* Nos.xcdatamodel */,
 			);
-			currentVersion = C9B678E529EF1BF200303F33 /* Nos 5.xcdatamodel */;
+			currentVersion = C91FFD392A09444D00743037 /* Nos 6.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
