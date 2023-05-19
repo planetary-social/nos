@@ -23,12 +23,12 @@ enum NoteParser {
     /// the note in the UI.
     static func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> AttributedString {
         // swiftlint:disable opening_brace
-        let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)(?:nostr:)(?<npub>[-a-zA-Z0-9@:%._\+~#=]{2,256})/
+        let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)(?:nostr:)(?<npubornprofile>[a-zA-Z0-9]{2,256})/
         // swiftlint:enable opening_brace
         let result = content.replacing(regex) { match in
             let substring = match.0
             let index = match.1
-            let npub = match.2
+            let npubOrNProfile = match.2
             var prefix = ""
             let firstCharacter = String(String(substring).prefix(1))
             if firstCharacter.range(of: #"\s|\r\n|\r|\n"#, options: .regularExpression) != nil {
@@ -61,8 +61,8 @@ enum NoteParser {
                         return findAndReplaceEventReference(hex)
                     }
                 }
-            } else if let npub {
-                let string = String(npub)
+            } else if let npubOrNProfile {
+                let string = String(npubOrNProfile)
                 if string.prefix(4) == "npub", let publicKey = PublicKey(npub: string) {
                     return findAndReplaceAuthorReference(publicKey.hex)
                 } else if string.prefix(8) == "nprofile", let profile = NProfile(nprofile: string) {
