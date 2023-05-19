@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Updated support email to support@nos.social
+- Improved recognition of mentions inside a post
 - Fixed a bug where expired messages could be redownloaded from relays that don't delete them.
 - Increased the tap size of the ellipsis button on note cards.
 - Add support for expiration dates when composing notes (please note: messages are not guaranteed to be deleted by relays or other apps)
