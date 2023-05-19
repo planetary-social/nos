@@ -49,7 +49,7 @@ struct ReportABugMailView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> MFMailComposeViewController {
         let mailViewController = MFMailComposeViewController()
         mailViewController.mailComposeDelegate = context.coordinator
-        mailViewController.setToRecipients(["support@planetary.social"])
+        mailViewController.setToRecipients(["support@nos.social"])
         mailViewController.setSubject("Reporting a bug in Nos")
         mailViewController.setMessageBody(
             "Hello, \n\n I have found a bug in Nos and would like to provide feedback",

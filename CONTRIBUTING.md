@@ -6,7 +6,7 @@ We encourage you to read this guide first or contact any of us. We have a public
 
 ## Translations
 
-If you want to contribute by translating the app to another language, you can head in to our [project in Crowdin](https://crowdin.com/project/nossocial) and start translating there. It will automatically generate a Pull Request with your translations that we will happily take care of merging. If we haven't set up the langauge you would like to translate let us know by [opening an issue](https://github.com/planetary-social/nos/issues) or emailing support@planetary.social. Please do not edit the Generated.strings files in this repository directly.
+If you want to contribute by translating the app to another language, you can head in to our [project in Crowdin](https://crowdin.com/project/nossocial) and start translating there. It will automatically generate a Pull Request with your translations that we will happily take care of merging. If we haven't set up the langauge you would like to translate let us know by [opening an issue](https://github.com/planetary-social/nos/issues) or emailing support@nos.social. Please do not edit the Generated.strings files in this repository directly.
 
 ## Building
 

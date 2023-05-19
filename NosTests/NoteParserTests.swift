@@ -169,6 +169,22 @@ final class NoteNoteParserTests: XCTestCase {
         XCTAssertEqual(links.first?.value, URL(string: "@\(hex)"))
     }
 
+    func testContentWithNIP27ProfileMentionWithADot() throws {
+        let name = "mattn"
+        let content = "Hello nostr:npub1pu3vqm4vzqpxsnhuc684dp2qaq6z69sf65yte4p39spcucv5lzmqswtfch.\n\nBye"
+        let hex = "0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6"
+        let tags = [["p", hex]]
+        let context = try XCTUnwrap(context)
+        let author = try Author.findOrCreate(by: hex, context: context)
+        author.displayName = name
+        try context.save()
+        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links.first?.key, "@\(name)")
+        XCTAssertEqual(links.first?.value, URL(string: "@\(hex)"))
+    }
+
     func testContentWithMixedMentions() throws {
         let content = "hello nostr:npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6 and #[1]"
         let displayName1 = "npub1937vv..."
