@@ -5,6 +5,7 @@
 //  Created by Matthew Lorentz on 2/14/23.
 //
 
+import Logger
 import SwiftUI
 import SwiftUINavigation
 import Dependencies
@@ -171,6 +172,11 @@ struct RepliesView: View {
                 return
             }
 
+            guard let authorHex = note.author?.publicKey?.hex else {
+                Log.error("Author public key not found when replying")
+                return
+            }
+
             guard let keyPair = currentUser.keyPair else {
                 alert = AlertState(title: {
                     TextState(Localized.error.string)
@@ -179,8 +185,11 @@ struct RepliesView: View {
                 })
                 return
             }
-            
-            var tags: [[String]] = [["p", note.author!.publicKey!.hex]]
+
+            var (content, tags) = NoteParser.parse(attributedText: AttributedString(replyText))
+
+            tags.append(["p", authorHex])
+
             // If `note` is a reply to another root, tag that root
             if let rootNoteIdentifier = note.rootNote()?.identifier, rootNoteIdentifier != note.identifier {
                 tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
@@ -196,7 +205,7 @@ struct RepliesView: View {
                 createdAt: Int64(Date().timeIntervalSince1970),
                 kind: 1,
                 tags: tags,
-                content: replyText.string,
+                content: content,
                 signature: ""
             )
             try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)

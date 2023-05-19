@@ -29,6 +29,7 @@ struct NoteOptionsButton: View {
             } label: {
                 Image(systemName: "ellipsis")
                     .foregroundColor(.nosSecondary)
+                    .frame(minWidth: 44, minHeight: 44)
             }
             .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
                 Button(Localized.copyNoteIdentifier.string) {
