@@ -5,6 +5,7 @@
 //  Created by Matthew Lorentz on 2/14/23.
 //
 
+import Logger
 import SwiftUI
 import SwiftUINavigation
 import Dependencies
@@ -21,7 +22,7 @@ struct RepliesView: View {
     @EnvironmentObject private var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
 
-    @State private var reply = ""
+    @State private var reply = NSAttributedString("")
     
     @State private var alert: AlertState<Never>?
     
@@ -131,7 +132,7 @@ struct RepliesView: View {
                             AvatarView(imageUrl: author.profilePhotoURL, size: 35)
                         }
                         ExpandingTextFieldAndSubmitButton(
-                            placeholder: Localized.Reply.postAReply.string,
+                            placeholder: Localized.Reply.postAReply,
                             reply: $reply,
                             focus: $focusTextView
                         ) {
@@ -165,9 +166,14 @@ struct RepliesView: View {
         .background(Color.appBg)
     }
     
-    func postReply(_ replyText: String) async {
+    func postReply(_ replyText: NSAttributedString) async {
         do {
-            guard !replyText.isEmpty else {
+            guard !replyText.string.isEmpty else {
+                return
+            }
+
+            guard let authorHex = note.author?.publicKey?.hex else {
+                Log.error("Author public key not found when replying")
                 return
             }
 
@@ -179,8 +185,11 @@ struct RepliesView: View {
                 })
                 return
             }
-            
-            var tags: [[String]] = [["p", note.author!.publicKey!.hex]]
+
+            var (content, tags) = NoteParser.parse(attributedText: AttributedString(replyText))
+
+            tags.append(["p", authorHex])
+
             // If `note` is a reply to another root, tag that root
             if let rootNoteIdentifier = note.rootNote()?.identifier, rootNoteIdentifier != note.identifier {
                 tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
@@ -196,7 +205,7 @@ struct RepliesView: View {
                 createdAt: Int64(Date().timeIntervalSince1970),
                 kind: 1,
                 tags: tags,
-                content: replyText,
+                content: content,
                 signature: ""
             )
             try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)

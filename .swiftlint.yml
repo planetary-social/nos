@@ -117,6 +117,7 @@ identifier_name:
     - id
     - url
     - URL
+    - uri
     - lhs
     - rhs
     - key

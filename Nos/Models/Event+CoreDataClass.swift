@@ -20,6 +20,7 @@ enum EventError: Error {
     case missingAuthor
     case invalidETag([String])
     case invalidSignature(Event)
+    case expiredEvent
     
     var description: String? {
         switch self {
@@ -31,6 +32,8 @@ enum EventError: Error {
             return "Invalid e tag \(strings.joined(separator: ","))"
         case .invalidSignature(let event):
             return "Invalid signature on event: \(String(describing: event.identifier))"
+        case .expiredEvent:
+            return "This event has expired"
         default:
             return ""
         }
@@ -47,7 +50,7 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 	case like = 7
     case channelMessage = 42
     case mute = 10_000
-    case parameterizedReplaceableEvent = 30_000
+    case longFormContent = 30_023
 }
 
 extension FetchedResults where Element == Event {
@@ -256,6 +259,12 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func expiredRequest() -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.predicate = NSPredicate(format: "expirationDate <= %@", Date.now as CVarArg)
+        return fetchRequest
+    }
+    
     @nonobjc public class func event(by identifier: String) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
@@ -266,7 +275,7 @@ public class Event: NosManagedObject {
     @nonobjc public class func homeFeedPredicate(for user: Author, before: Date) -> NSPredicate {
         NSPredicate(
             // swiftlint:disable line_length
-            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND (receivedAt == nil OR receivedAt <= %@)",
+            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND (receivedAt == nil OR receivedAt <= %@)",
             // swiftlint:enable line_length
             user,
             user,
@@ -499,45 +508,10 @@ public class Event: NosManagedObject {
                 let content = note.content else {
                 return nil
             }
-            
-            let regex = Regex {
-                "#["
-                TryCapture {
-                    OneOrMore(.digit)
-                } transform: {
-                    Int($0)
-                }
-                "]"
-            }
-            
             guard let tags = note.allTags as? [[String]] else {
                 return AttributedString(content)
             }
-        
-            let result = content.replacing(regex) { match in
-                if let tag = tags[safe: match.1],
-                    let type = tag[safe: 0],
-                    let id = tag[safe: 1] {
-                    if type == "p",
-                        let author = try? Author.find(by: id, context: context),
-                        let pubkey = author.hexadecimalPublicKey {
-                        return "[@\(author.safeName)](@\(pubkey))"
-                    }
-                    if type == "e",
-                        let event = Event.find(by: id, context: context),
-                        let bech32NoteID = event.bech32NoteID {
-                        return "[@\(bech32NoteID)](%\(id))"
-                    }
-                }
-                return ""
-            }
-            
-            let linkedString = (try? result.findAndReplaceUnformattedLinks(in: result)) ?? result
-            
-            return try? AttributedString(
-                markdown: linkedString,
-                options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-            )
+            return NoteParser.parse(content: content, tags: tags, context: context)
         }
     }
     
@@ -607,6 +581,18 @@ public class Event: NosManagedObject {
         
         // Tags
         allTags = jsonEvent.tags as NSObject
+        for tag in jsonEvent.tags {
+            if tag[safe: 0] == "expiration",
+                let expirationDateString = tag[safe: 1],
+                let expirationDateUnix = TimeInterval(expirationDateString),
+                expirationDateUnix != 0 {
+                let expirationDate = Date(timeIntervalSince1970: expirationDateUnix)
+                self.expirationDate = expirationDate
+                if isExpired {
+                    throw EventError.expiredEvent
+                }
+            }
+        }
         
         // Author
         guard let newAuthor = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context) else {
@@ -820,6 +806,14 @@ public class Event: NosManagedObject {
     
     var isReply: Bool {
         rootNote() != nil || referencedNote() != nil
+    }
+    
+    var isExpired: Bool {
+        if let expirationDate {
+            return expirationDate <= .now
+        } else {
+            return false
+        }
     }
     
     /// Returns the event this note is directly replying to, or nil if there isn't one.

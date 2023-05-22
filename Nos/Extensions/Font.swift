@@ -39,6 +39,11 @@ extension Font {
             forTextStyle: .caption1
         ).pointSize)
     
+    static var clarityCaption2 = Font
+        .custom("ClarityCity-Regular", size: UIFont.preferredFont(
+            forTextStyle: .caption2
+        ).pointSize)
+    
     static var brand = Font
         .custom("ClarityCity-Regular", size: UIFont.preferredFont(
             forTextStyle: .body

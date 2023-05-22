@@ -40,10 +40,18 @@
 "Localized.newNote" = "New Note";
 "Localized.newNotePlaceholder" = "Type your post here...";
 "Localized.cancel" = "Cancel";
+"Localized.clear" = "Clear";
 "Localized.done" = "Done";
 "Localized.editProfile" = "Edit Profile";
 "Localized.youNeedToEnterAPrivateKeyBeforePosting" = "You need to enter a private key in Settings before you can publish posts.";
 "Localized.nostrBuildHelp" = "Use nostr.build to post image links.";
+"Localized.noteDisappearsIn" = "Note disappears in";
+"Localized.attachMedia" = "Attach Media";
+"Localized.expirationDate" = "Expiration Date";
+"Localized.minuteAbbreviated" = "min";
+"Localized.hourAbbreviated" = "hour";
+"Localized.dayAbbreviated" = "day";
+"Localized.daysAbbreviated" = "days";
 "Localized.sendCode" = "Send code";
 "Localized.submit" = "Submit";
 "Localized.setUpUNS" = "Reserve Your Name";
@@ -75,6 +83,7 @@
 "Localized.noEventsOnProfile" = "We don't see any notes for this profile, but we'll keep looking!";
 "Localized.basicInfo" = "Basic Information";
 "Localized.edit" = "Edit";
+"Localized.mention" = "Mention";
 "Localized.debug" = "Debug";
 "Localized.loadSampleData" = "Load Sample Data";
 "Localized.sampleDataInstructions" = "This will delete all events and load those in sample_data.json";

@@ -20,7 +20,7 @@ final class RelayService: ObservableObject {
     private var persistenceController: PersistenceController
     private var subscriptions: RelaySubscriptionManager
     private var saveEventsTimer: AsyncTimer?
-    private var publishFailedEventsTimer: AsyncTimer?
+    private var backgroundProcessTimer: AsyncTimer?
     private var backgroundContext: NSManagedObjectContext
     // TODO: use structured concurrency for this
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .utility)
@@ -45,8 +45,9 @@ final class RelayService: ObservableObject {
         }
         
         // TODO: fire this after all relays have connected, not right on init
-        self.publishFailedEventsTimer = AsyncTimer(timeInterval: 60, onFire: { [weak self] in
+        self.backgroundProcessTimer = AsyncTimer(timeInterval: 60, onFire: { [weak self] in
             await self?.publishFailedEvents()
+            await self?.deleteExpiredEvents()
         })
         
         Task { @MainActor in
@@ -478,6 +479,18 @@ extension RelayService {
                         }
                     }
                 }
+            }
+        }
+    }
+    
+    func deleteExpiredEvents() async {
+        await self.backgroundContext.perform {
+            do {
+                for event in try self.backgroundContext.fetch(Event.expiredRequest()) {
+                    self.backgroundContext.delete(event)
+                }
+            } catch {
+                Log.error("Error fetching expired events \(error.localizedDescription)")
             }
         }
     }

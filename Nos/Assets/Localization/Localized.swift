@@ -98,10 +98,18 @@ enum Localized: String, Localizable, CaseIterable {
     case newNote = "New Note"
     case newNotePlaceholder = "Type your post here..."
     case cancel = "Cancel"
+    case clear = "Clear"
     case done = "Done"
     case editProfile = "Edit Profile"
     case youNeedToEnterAPrivateKeyBeforePosting = "You need to enter a private key in Settings before you can publish posts."
     case nostrBuildHelp = "Use nostr.build to post image links."
+    case noteDisappearsIn = "Note disappears in" // Choices like 15 mins, 1 hour, etc. appear after this text.
+    case attachMedia = "Attach Media"
+    case expirationDate = "Expiration Date"
+    case minuteAbbreviated = "min"
+    case hourAbbreviated = "hour"
+    case dayAbbreviated = "day"
+    case daysAbbreviated = "days"
     case sendCode = "Send code"
     case submit = "Submit"
     case setUpUNS = "Reserve Your Name"
@@ -135,6 +143,8 @@ enum Localized: String, Localizable, CaseIterable {
     case noEventsOnProfile = "We don't see any notes for this profile, but we'll keep looking!"
     case basicInfo = "Basic Information"
     case edit = "Edit" // verb form
+
+    case mention = "Mention"
     
     case debug = "Debug"
     case loadSampleData = "Load Sample Data"

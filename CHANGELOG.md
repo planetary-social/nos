@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed a bug where you couldn't view the parent note of a reply when it was displayed at the top of the Thread view.
+- Updated support email to support@nos.social
+- Improved recognition of mentions inside a post
+- Fixed a bug where expired messages could be redownloaded from relays that don't delete them.
+- Increased the tap size of the ellipsis button on note cards.
+- Add support for expiration dates when composing notes (please note: messages are not guaranteed to be deleted by relays or other apps)
 - Increased the contrast of text in light mode
 - Open links in an in-app web browser instead of Safari
 - Fixed link detection in notes for URLs without a scheme (i.e. "https://")
@@ -16,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved performance of loading replies
 - Added Spanish translations (thanks Martin!)
 - Updated app icon
+- Nos now displays kind 30023 long-form blog posts in the home and profile feeds.
 
 ## [0.1 (38)] - 2023-04-28Z
 
@@ -38,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug where you could post the same reply multiple times.
 - Fixed an issue where profile pictures could be rendered with the wrong aspect ratio.
 - Added Brazilian Portuguese translations (thanks Andressa!).
+- Added support for mentioning other users when composing a note.
 
 ## [0.1 (35)] - 2023-04-19Z
 
@@ -80,7 +87,7 @@ Note:
 
 ## [0.1 (28)] - 2023-04-07Z
 
-- Made all the built-in text in the app translatable. If you would like to help translate Nos let us know by emailing support@planetary.social.
+- Made all the built-in text in the app translatable. If you would like to help translate Nos let us know by emailing support@nos.social.
 
 ## [0.1 (27)] - 2023-04-05Z
 
@@ -98,7 +105,7 @@ Note:
 ## [0.1 (24)] - 2023-03-31Z
 
 - Added Crowdin integration for translation services. If you would like to help us translate Nos drop us a line at 
-support@planetary.social.
+support@nos.social.
 - Fixed several crashes.
 - Fixed issue where the like button didn't turn orange when pressed.
 - Fixed an issue where likes to replies were counted towards the root note.
@@ -199,7 +206,7 @@ Known issues:
 - Use only relays added in RelayView for sending and receiving events
 - Add PostHog analytics
 - Render note mentions in NoteCard
-- Open an email compose view controller for support@planetary.social 
+- Open an email compose view controller for support@nos.social 
 - Fix duplicate note on a new post
 - Add mute functionality
 - Publish relay changes
