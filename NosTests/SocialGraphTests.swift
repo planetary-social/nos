@@ -83,5 +83,41 @@ final class SocialGraphTests: XCTestCase {
         let newFollowedKeys = await sut.followedKeys
         XCTAssertEqual(newFollowedKeys, [KeyFixture.alice.publicKeyHex, KeyFixture.bob.publicKeyHex])
     }
+    
+    func testTwoFollows() async throws {
+        // Arrange
+        let alice = try! Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        let bob = try! Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
+        let eve = try! Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: testContext)
+        
+        // Act
+        let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
+        try! testContext.save()
+        
+        // Assert
+        let followedKeys = await sut.followedKeys
+        XCTAssertEqual(followedKeys, [KeyFixture.alice.publicKeyHex])
+        
+        // Rearrange
+        // alice follows bob
+        let follow1 = try! Follow.findOrCreate(source: alice, destination: bob, context: testContext)
+        alice.addToFollows(follow1)
+        try! testContext.save()
+        
+        // alice follows carol
+        let follow2 = try! Follow.findOrCreate(source: alice, destination: eve, context: testContext)
+        alice.addToFollows(follow2)
+        try! testContext.save()
+        
+        // Reassert
+        try! await eventually { await sut.followedKeys.count == 3 }
+        var newFollowedKeys = await sut.followedKeys.sorted()
+        var expected = [
+            KeyFixture.alice.publicKeyHex,
+            KeyFixture.eve.publicKeyHex,
+            KeyFixture.bob.publicKeyHex
+        ].sorted()
+        XCTAssertEqual(newFollowedKeys, expected)
+    }
 }
 // swiftlint:enable implicitly_unwrapped_optional

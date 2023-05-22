@@ -45,10 +45,10 @@ struct NewNoteView: View {
                         placeholder: Localized.newNotePlaceholder, 
                         focus: $isTextEditorInFocus
                     )
+                    .padding(10)
                     Spacer()
                     ComposerActionBar(expirationTime: $expirationTime)
                 }
-                .padding(10)
                 
                 if showRelayPicker, let author = currentUser.author {
                     RelayPicker(

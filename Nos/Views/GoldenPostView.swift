@@ -31,7 +31,7 @@ struct GoldenPostView: View {
     var text: some View {
         Text(attributedContent)
             .foregroundColor(.primaryTxt)
-            .accentColor(.accent)
+            .tint(.accent)
             .multilineTextAlignment(.leading)
             .environment(\.openURL, OpenURLAction { url in
                 router.open(url: url, with: viewContext)
