@@ -45,6 +45,13 @@
 "Localized.editProfile" = "编辑个人档案";
 "Localized.youNeedToEnterAPrivateKeyBeforePosting" = "你必须在设置中输入私钥才能发布帖子。";
 "Localized.nostrBuildHelp" = "使用 nostr.build来发布图片链接。";
+"Localized.noteDisappearsIn" = "笔记消失于";
+"Localized.attachMedia" = "附加媒体";
+"Localized.expirationDate" = "到期日期";
+"Localized.minuteAbbreviated" = "分";
+"Localized.hourAbbreviated" = "时";
+"Localized.dayAbbreviated" = "天";
+"Localized.daysAbbreviated" = "天";
 "Localized.sendCode" = "发送验证码";
 "Localized.submit" = "提交";
 "Localized.setUpUNS" = "预订你的名称";
