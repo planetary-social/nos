@@ -19,10 +19,9 @@ struct NoteButton: View {
     var style = CardStyle.compact
     var showFullMessage = false
     var hideOutOfNetwork = true
-    var allowsPush = true
     var showReplyCount = true
-    var isInThreadView = false
-    private var replyAction: ((Event) -> Void)?
+    private let replyAction: ((Event) -> Void)?
+    private let tapAction: ((Event) -> Void)?
 
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
@@ -36,19 +35,17 @@ struct NoteButton: View {
         style: CardStyle = CardStyle.compact, 
         showFullMessage: Bool = false, 
         hideOutOfNetwork: Bool = true, 
-        allowsPush: Bool = true, 
         showReplyCount: Bool = true, 
-        isInThreadView: Bool = false,
-        replyAction: ((Event) -> Void)? = nil
+        replyAction: ((Event) -> Void)? = nil,
+        tapAction: ((Event) -> Void)? = nil
     ) {
         self.note = note
         self.style = style
         self.showFullMessage = showFullMessage
         self.hideOutOfNetwork = hideOutOfNetwork
-        self.allowsPush = allowsPush
         self.showReplyCount = showReplyCount
-        self.isInThreadView = isInThreadView
         self.replyAction = replyAction
+        self.tapAction = tapAction
     }
 
     /// The note displayed in the note card. Could be different from `note` i.e. in the case of a repost.
@@ -107,8 +104,10 @@ struct NoteButton: View {
             }
             
             Button {
-                if allowsPush {
-                    if !isInThreadView, let referencedNote = displayedNote.referencedNote() {
+                if let tapAction {
+                    tapAction(displayedNote)
+                } else {
+                    if let referencedNote = displayedNote.referencedNote() {
                         router.push(referencedNote)
                     } else {
                         router.push(displayedNote)

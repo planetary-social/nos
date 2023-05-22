@@ -13,6 +13,8 @@ struct ThreadView: View {
     
     var thread: [Event] = []
     
+    @EnvironmentObject private var router: Router
+    
     /// Takes a root `Event`, and an array of all replies to the parent note of this thread,
     /// and builds the longest possible thread from that array of all replies.
     init(root: Event, allReplies: [Event]) {
@@ -34,8 +36,10 @@ struct ThreadView: View {
     
     var body: some View {
         LazyVStack {
-            NoteButton(note: root, isInThreadView: true)
-                .padding(.top, 15)
+            NoteButton(note: root, tapAction: { event in
+                router.push(event)
+            })
+            .padding(.top, 15)
             ForEach(thread) { event in
                 VStack {
                     ZStack {
@@ -45,8 +49,10 @@ struct ThreadView: View {
                         }
                         .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
                         .fill(Color.secondaryText)
-                        NoteButton(note: event, isInThreadView: true)
-                            .padding(.top, 15)
+                        NoteButton(note: event, tapAction: { event in
+                            router.push(event)
+                        })
+                        .padding(.top, 15)
                     }
                 }
                 .readabilityPadding()
