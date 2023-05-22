@@ -45,6 +45,13 @@
 "Localized.editProfile" = "編輯個人檔案";
 "Localized.youNeedToEnterAPrivateKeyBeforePosting" = "你必須在設置中輸入私鑰才能發佈帖子。";
 "Localized.nostrBuildHelp" = "使用 nostr.build 來發佈圖片鏈接。";
+"Localized.noteDisappearsIn" = "筆記消失於";
+"Localized.attachMedia" = "附加媒體";
+"Localized.expirationDate" = "到期日期";
+"Localized.minuteAbbreviated" = "分";
+"Localized.hourAbbreviated" = "時";
+"Localized.dayAbbreviated" = "天";
+"Localized.daysAbbreviated" = "天";
 "Localized.sendCode" = "發送驗證碼";
 "Localized.submit" = "提交";
 "Localized.setUpUNS" = "預訂你的名稱";
