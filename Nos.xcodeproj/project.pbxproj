@@ -386,6 +386,7 @@
 		5B46611F29CCB894008B8E8C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Generated.strings; sourceTree = "<group>"; };
 		5B46612129CCBBE2008B8E8C /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Generated.strings; sourceTree = "<group>"; };
 		5B46612229CCBC6C008B8E8C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Generated.strings"; sourceTree = "<group>"; };
+		5B48EC692A1406C4001EDA7F /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Generated.strings; sourceTree = "<group>"; };
 		5B6EB48D29EDBE0E006E750C /* NoteParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParser.swift; sourceTree = "<group>"; };
 		5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParserTests.swift; sourceTree = "<group>"; };
 		5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bech32Tests.swift; sourceTree = "<group>"; };
@@ -1072,6 +1073,7 @@
 				"zh-Hant",
 				fr,
 				"pt-BR",
+				de,
 			);
 			mainGroup = C9DEBFC5298941000078B43A;
 			packageReferences = (
@@ -1548,6 +1550,7 @@
 				C94FE5A629F8441200C27119 /* zh-Hant */,
 				C94FE5A729F8441200C27119 /* fr */,
 				C937786129FC6D1900568C27 /* pt-BR */,
+				5B48EC692A1406C4001EDA7F /* de */,
 			);
 			name = Generated.strings;
 			sourceTree = "<group>";
