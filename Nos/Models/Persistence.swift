@@ -257,7 +257,9 @@ struct PersistenceController {
             
             for entityName in entitiesByName.keys {
                 let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-                let count = try context.count(for: fetchRequest)
+                let count = try context.performAndWait {
+                    try context.count(for: fetchRequest)
+                }
                 statistics[entityName] = count
             }
         }

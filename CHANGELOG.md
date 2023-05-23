@@ -11,22 +11,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added German translations (thanks Peter!).
 - Updated support email to support@nos.social
 - Improved recognition of mentions inside a post
+- 
+## [0.1 (42)] - 2023-05-16Z
+
+- Added support for mentioning other users when composing a note.
 - Fixed a bug where expired messages could be redownloaded from relays that don't delete them.
-- Increased the tap size of the ellipsis button on note cards.
+- Fixed a bug where you couldn't view the parent note of a reply when it was displayed at the top of the Thread view.
+
+## [0.1 (41)] - 2023-05-11Z
+
+- Fix link color on macOS
+
+## [0.1 (40)] - 2023-05-10Z
+
 - Add support for expiration dates when composing notes (please note: messages are not guaranteed to be deleted by relays or other apps)
 - Increased the contrast of text in light mode
 - Open links in an in-app web browser instead of Safari
 - Fixed link detection in notes for URLs without a scheme (i.e. "https://")
 - Made the reply button on notes easier to tap, and it now presents the keyboard when tapped.
-- Improved performance of loading replies
+- Increased the tap size of the ellipsis button on note cards.
 - Added Spanish translations (thanks Martin!)
 - Updated app icon
 - Nos now displays kind 30023 long-form blog posts in the home and profile feeds.
 
+## [0.1 (39)] - 2023-05-02Z
+
+- Improved performance of loading replies
+- The notifications tab now request more events from relays
+
 ## [0.1 (38)] - 2023-04-28Z
 
 - Made the routine to delete old events more efficient and prevent it from deleting our own events. 
-- The notifications tab now request more events from relays
+- Fixed a bug where you could post the same reply multiple times.
 
 ## [0.1 (37)] - 2023-04-27Z
 
@@ -43,8 +59,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
 - Fixed a bug where you could post the same reply multiple times.
 - Fixed an issue where profile pictures could be rendered with the wrong aspect ratio.
-- Added Brazilian Portuguese translations (thanks Andressa!).
-- Added support for mentioning other users when composing a note.
 
 ## [0.1 (35)] - 2023-04-19Z
 

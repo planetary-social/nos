@@ -64,6 +64,7 @@ struct NotificationCard: View {
                                 .lineLimit(1)
                                 .font(.body)
                                 .foregroundColor(.primaryTxt)
+                                .tint(.accent)
                             Spacer()
                         }
                     }
