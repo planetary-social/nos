@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (43)] - 2023-05-23Z
+
 - Added German translations (thanks Peter!).
 - Updated support email to support@nos.social
 - Improved recognition of mentions inside a post
