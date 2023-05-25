@@ -8,6 +8,8 @@
 import CoreData
 import Foundation
 import RegexBuilder
+import secp256k1
+import secp256k1_bindings
 
 /// This struct encapsulates the algorithms that parse notes and the mentions inside the note.
 enum NoteParser {
@@ -25,7 +27,7 @@ enum NoteParser {
         // swiftlint:disable opening_brace
         let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)(?:nostr:)(?<npubornprofile>[a-zA-Z0-9]{2,256})/
         // swiftlint:enable opening_brace
-        let result = content.replacing(regex) { match in
+        var result = content.replacing(regex) { match in
             let substring = match.0
             let index = match.1
             let npubOrNProfile = match.2
@@ -70,6 +72,47 @@ enum NoteParser {
                 }
             }
             return String(substring)
+        }
+
+        // swiftlint:disable opening_brace
+        let unformattedRegex = /(?:^|\s)(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,255}))/
+        // swiftlint:enable opening_brace
+
+        result = result.replacing(unformattedRegex) { match in
+            let substring = match.0
+            let entity = match.1
+            var prefix = ""
+            let firstCharacter = String(String(substring).prefix(1))
+            if firstCharacter.range(of: #"\s|\r\n|\r|\n"#, options: .regularExpression) != nil {
+                prefix = firstCharacter
+            }
+            let string = String(entity)
+
+            do {
+                let (humanReadablePart, checksum) = try Bech32.decode(string)
+
+                let decodeSHA256Key = { () -> String? in
+                    guard let converted = checksum.base8FromBase5 else {
+                        return nil
+                    }
+                    let underlyingKey = secp256k1.Signing.XonlyKey(rawRepresentation: converted, keyParity: 0)
+                    return Data(underlyingKey.bytes).hexString
+                }
+
+                if humanReadablePart == Nostr.publicKeyPrefix, let hex = decodeSHA256Key() {
+                    return "\(prefix)[\(string)](@\(hex))"
+                } else if humanReadablePart == Nostr.notePrefix, let hex = decodeSHA256Key() {
+                    return "\(prefix)[\(string)](%\(hex))"
+                } else if humanReadablePart == Nostr.profilePrefix, let hex = TLV.decode(checksum: checksum) {
+                    return "\(prefix)[\(string)](@\(hex))"
+                } else if humanReadablePart == Nostr.eventPrefix, let hex = TLV.decode(checksum: checksum) {
+                    return "\(prefix)[\(string)](%\(hex))"
+                } else {
+                    return String(substring)
+                }
+            } catch {
+                return String(substring)
+            }
         }
 
         let linkedString = (try? result.findAndReplaceUnformattedLinks(in: result)) ?? result
