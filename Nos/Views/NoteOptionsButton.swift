@@ -21,6 +21,7 @@ struct NoteOptionsButton: View {
     @State private var showingOptions = false
     @State private var showingShare = false
     @State private var showingSource = false
+    @State private var showingReportMenu = false
 
     var body: some View {
         VStack {
@@ -48,11 +49,10 @@ struct NoteOptionsButton: View {
                     analytics.viewedNoteSource()
                     showingSource = true
                 }
-                // Button(Localized.reportPost.string, role: .destructive) {
-                // Analytics.shared.trackDidSelectAction(actionName: "report_post")
-                //    reportPost()
-                // }
-                
+                Button(Localized.reportPost.string, role: .destructive) {
+//                    Analytics.shared.trackDidSelectAction(actionName: "report_post")
+                    showingReportMenu = true
+                }
                 if note.author == currentUser.author {
                     Button(Localized.deleteNote.string) {
                         analytics.deletedNote()
@@ -60,6 +60,7 @@ struct NoteOptionsButton: View {
                     }
                 }
             }
+            .reportMenu($showingReportMenu, reportedObject: .event(note))
             .sheet(isPresented: $showingSource) {
                 NavigationView {
                     RawEventView(viewModel: RawEventController(note: note, dismissHandler: {
@@ -95,10 +96,6 @@ struct NoteOptionsButton: View {
         if let identifier = note.identifier {
             await currentUser.publishDelete(for: [identifier])
         }
-    }
-
-    func reportPost() {
-        // AppController.shared.report(message, in: nil, from: message.author)
     }
 }
 
