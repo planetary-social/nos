@@ -35,14 +35,15 @@ enum NoteParser {
     }
 
     /// Replaces tagged references like #[0] or nostr:npub1... with markdown links
+    // swiftlint:disable function_body_length superfluous_disable_command
     private static func replaceTaggedNostrEntities(
         in content: String,
         tags: [[String]],
         context: NSManagedObjectContext
     ) -> String {
-        // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
+        // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma
         let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)(?:nostr:)(?<npubornprofile>[a-zA-Z0-9]{2,256})/
-        // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
+        // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma
         return content.replacing(regex) { match in
             let substring = match.0
             let index = match.1
@@ -95,6 +96,7 @@ enum NoteParser {
             return String(substring)
         }
     }
+    // swiftlint:enable function_body_length superfluous_disable_command
 
     /// Replaces Nostr entities embedded in the note (without a proper tag) with markdown links
     private static func replaceNostrEntities(in content: String) -> String {
