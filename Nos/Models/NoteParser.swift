@@ -34,8 +34,8 @@ enum NoteParser {
         }
     }
 
-    /// Replaces tagged references like #[0] or nostr:npub1... with markdown links
     // swiftlint:disable function_body_length superfluous_disable_command
+    /// Replaces tagged references like #[0] or nostr:npub1... with markdown links
     private static func replaceTaggedNostrEntities(
         in content: String,
         tags: [[String]],
