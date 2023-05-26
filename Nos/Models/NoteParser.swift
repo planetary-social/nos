@@ -22,9 +22,9 @@ enum NoteParser {
     /// Parses the content and tags stored in a note and returns an attributed text that can be used for displaying
     /// the note in the UI.
     static func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> AttributedString {
-        // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma
+        // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
         let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)(?:nostr:)(?<npubornprofile>[a-zA-Z0-9]{2,256})/
-        // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma
+        // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
         var result = content.replacing(regex) { match in
             let substring = match.0
             let index = match.1
@@ -93,9 +93,9 @@ enum NoteParser {
     // swiftlint:enable function_body_length
 
     private static func replaceNostrEntities(in content: String) -> String {
-        // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma
+        // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
         let unformattedRegex = /(?:^|\s)(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,255}))/
-        // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma
+        // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
 
         return content.replacing(unformattedRegex) { match in
             let substring = match.0

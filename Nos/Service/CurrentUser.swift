@@ -10,6 +10,7 @@ import CoreData
 import Logger
 import Dependencies
 
+// swiftlint:disable type_body_length superfluous_disable_command
 class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
     
     @MainActor static let shared = CurrentUser(persistenceController: PersistenceController.shared)
@@ -462,3 +463,4 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         author = controller.fetchedObjects?.first as? Author
     }
 }
+// swiftlint:enable type_body_length superfluous_disable_command
