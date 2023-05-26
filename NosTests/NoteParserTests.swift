@@ -299,8 +299,6 @@ final class NoteNoteParserTests: XCTestCase {
         let event = "nevent1qqst8cujky046negxgwwm5ynqwn53t8aqjr6afd8g59nfqwxpdhylpcpzamhxue69uhhyetvv9ujuetcv9khqmr99e3k7mg8arnc9"
         // swiftlint:enable line_length
 
-        let hex = "b3e392b11f5d4f28321cedd09303a748acfd0487aea5a7450b3481c60b6e4f87"
-
         let content = "check this \(event)andthisshouldbreakmaybe. Bye!"
         let tags: [[String]] = [[]]
 

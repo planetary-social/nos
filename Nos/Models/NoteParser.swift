@@ -8,8 +8,6 @@
 import CoreData
 import Foundation
 import RegexBuilder
-import secp256k1
-import secp256k1_bindings
 
 /// This struct encapsulates the algorithms that parse notes and the mentions inside the note.
 enum NoteParser {
@@ -24,9 +22,9 @@ enum NoteParser {
     /// Parses the content and tags stored in a note and returns an attributed text that can be used for displaying
     /// the note in the UI.
     static func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> AttributedString {
-        // swiftlint:disable opening_brace
+        // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma
         let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)(?:nostr:)(?<npubornprofile>[a-zA-Z0-9]{2,256})/
-        // swiftlint:enable opening_brace
+        // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma
         var result = content.replacing(regex) { match in
             let substring = match.0
             let index = match.1
@@ -65,55 +63,21 @@ enum NoteParser {
                 }
             } else if let npubOrNProfile {
                 let string = String(npubOrNProfile)
-                if string.prefix(4) == "npub", let publicKey = PublicKey(npub: string) {
-                    return findAndReplaceAuthorReference(publicKey.hex)
-                } else if string.prefix(8) == "nprofile", let profile = NProfile(nprofile: string) {
-                    return findAndReplaceAuthorReference(profile.publicKeyHex)
+                do {
+                    let (humanReadablePart, checksum) = try Bech32.decode(string)
+                    if humanReadablePart == Nostr.publicKeyPrefix, let hex = SHA256Key.decode(base5: checksum) {
+                        return findAndReplaceAuthorReference(hex)
+                    } else if humanReadablePart == Nostr.profilePrefix, let hex = TLV.decode(checksum: checksum) {
+                        return findAndReplaceAuthorReference(hex)
+                    }
+                } catch {
+                    return String(substring)
                 }
             }
             return String(substring)
         }
 
-        // swiftlint:disable opening_brace
-        let unformattedRegex = /(?:^|\s)(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,255}))/
-        // swiftlint:enable opening_brace
-
-        result = result.replacing(unformattedRegex) { match in
-            let substring = match.0
-            let entity = match.1
-            var prefix = ""
-            let firstCharacter = String(String(substring).prefix(1))
-            if firstCharacter.range(of: #"\s|\r\n|\r|\n"#, options: .regularExpression) != nil {
-                prefix = firstCharacter
-            }
-            let string = String(entity)
-
-            do {
-                let (humanReadablePart, checksum) = try Bech32.decode(string)
-
-                let decodeSHA256Key = { () -> String? in
-                    guard let converted = checksum.base8FromBase5 else {
-                        return nil
-                    }
-                    let underlyingKey = secp256k1.Signing.XonlyKey(rawRepresentation: converted, keyParity: 0)
-                    return Data(underlyingKey.bytes).hexString
-                }
-
-                if humanReadablePart == Nostr.publicKeyPrefix, let hex = decodeSHA256Key() {
-                    return "\(prefix)[\(string)](@\(hex))"
-                } else if humanReadablePart == Nostr.notePrefix, let hex = decodeSHA256Key() {
-                    return "\(prefix)[\(string)](%\(hex))"
-                } else if humanReadablePart == Nostr.profilePrefix, let hex = TLV.decode(checksum: checksum) {
-                    return "\(prefix)[\(string)](@\(hex))"
-                } else if humanReadablePart == Nostr.eventPrefix, let hex = TLV.decode(checksum: checksum) {
-                    return "\(prefix)[\(string)](%\(hex))"
-                } else {
-                    return String(substring)
-                }
-            } catch {
-                return String(substring)
-            }
-        }
+        result = replaceNostrEntities(in: result)
 
         let linkedString = (try? result.findAndReplaceUnformattedLinks(in: result)) ?? result
 
@@ -127,6 +91,41 @@ enum NoteParser {
         }
     }
     // swiftlint:enable function_body_length
+
+    private static func replaceNostrEntities(in content: String) -> String {
+        // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma
+        let unformattedRegex = /(?:^|\s)(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,255}))/
+        // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma
+
+        return content.replacing(unformattedRegex) { match in
+            let substring = match.0
+            let entity = match.1
+            var prefix = ""
+            let firstCharacter = String(String(substring).prefix(1))
+            if firstCharacter.range(of: #"\s|\r\n|\r|\n"#, options: .regularExpression) != nil {
+                prefix = firstCharacter
+            }
+            let string = String(entity)
+
+            do {
+                let (humanReadablePart, checksum) = try Bech32.decode(string)
+
+                if humanReadablePart == Nostr.publicKeyPrefix, let hex = SHA256Key.decode(base5: checksum) {
+                    return "\(prefix)[\(string)](@\(hex))"
+                } else if humanReadablePart == Nostr.notePrefix, let hex = SHA256Key.decode(base5: checksum) {
+                    return "\(prefix)[\(string)](%\(hex))"
+                } else if humanReadablePart == Nostr.profilePrefix, let hex = TLV.decode(checksum: checksum) {
+                    return "\(prefix)[\(string)](@\(hex))"
+                } else if humanReadablePart == Nostr.eventPrefix, let hex = TLV.decode(checksum: checksum) {
+                    return "\(prefix)[\(string)](%\(hex))"
+                } else {
+                    return String(substring)
+                }
+            } catch {
+                return String(substring)
+            }
+        }
+    }
 
     private static func cleanLinks(
         in attributedString: AttributedString, 

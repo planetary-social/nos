@@ -144,6 +144,9 @@ identifier_name:
     - api
     - all
     - eve
+type_name:
+  excluded:
+    - TLV
 number_separator:
   minimum_length: 5
 cyclomatic_complexity:

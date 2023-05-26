@@ -24,8 +24,7 @@ public enum TLV {
             let length = Int(converted[offset + 1])
             if type == 0 {
                 let value = converted.subdata(in: offset + 2 ..< offset + 2 + length)
-                let underlyingKey = secp256k1.Signing.XonlyKey(rawRepresentation: value, keyParity: 0)
-                return Data(underlyingKey.bytes).hexString
+                return SHA256Key.decode(base8: value)
             }
             offset += length + 2
         }
