@@ -24,8 +24,6 @@ final class RelayService: ObservableObject {
     private var backgroundContext: NSManagedObjectContext
     // TODO: use structured concurrency for this
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .utility)
-    private let subscriptionLimit = 10
-    private let minimimumOneTimeSubscriptions = 1
     @Dependency(\.analytics) private var analytics
     @Dependency(\.currentUser) private var currentUser
     
@@ -42,6 +40,7 @@ final class RelayService: ObservableObject {
                     Log.error("RelayService.saveEventsTimer failed to save with error: \(error.localizedDescription)")
                 }
             }
+            await self?.processSubscriptionQueue()
         }
         
         // TODO: fire this after all relays have connected, not right on init
@@ -52,7 +51,7 @@ final class RelayService: ObservableObject {
         
         Task { @MainActor in
             currentUser.viewContext = persistenceController.container.viewContext
-            await openSockets()
+            _ = await openSockets()
         }
         
         NotificationCenter.default.addObserver(
@@ -113,8 +112,9 @@ extension RelayService {
         }
     }
     
-    private func sendCloseToAll(for subscription: String) async {
+    private func sendCloseToAll(for subscription: RelaySubscription.ID) async {
         await subscriptions.sockets.forEach { self.sendClose(from: $0, subscription: subscription) }
+        Task { await processSubscriptionQueue(overrideRelays: nil) }
     }
     
     func closeConnection(to relay: Relay) async {
@@ -132,20 +132,6 @@ extension RelayService {
 // MARK: Events
 extension RelayService {
     
-    /// Takes a RelaySubscription model and makes a websockets request to the given socket
-    private func requestEvents(from socket: WebSocketClient, subscription: RelaySubscription) {
-        do {
-            // Track this so we can close requests if needed
-            let request: [Any] = ["REQ", subscription.id, subscription.filter.dictionary]
-            let requestData = try JSONSerialization.data(withJSONObject: request)
-            let requestString = String(data: requestData, encoding: .utf8)!
-            Log.info("\(requestString) sent to \(socket.host)")
-            socket.write(string: requestString)
-        } catch {
-            print("Error: Could not send request \(error.localizedDescription)")
-        }
-    }
-    
     func openSubscription(with filter: Filter, to overrideRelays: [URL]? = nil) async -> RelaySubscription.ID {
         var subscription: RelaySubscription
         
@@ -159,9 +145,7 @@ extension RelayService {
         await subscriptions.updateSubscriptions(with: subscription)
         
         // Fire off REQs in the background
-        Task.detached(priority: .utility) {
-            await self.processSubscriptionQueue(overrideRelays: overrideRelays)
-        }
+        Task { await self.processSubscriptionQueue(overrideRelays: overrideRelays) }
         
         return subscription.id
     }
@@ -190,39 +174,10 @@ extension RelayService {
     }
     
     private func processSubscriptionQueue(overrideRelays: [URL]? = nil) async {
-        await openSockets(overrideRelays: overrideRelays)
+        let relays = await openSockets(overrideRelays: overrideRelays)
         await clearStaleSubscriptions()
         
-        // TODO: Make sure active subscriptions are open on all relays
-        
-        // Strategy: we have two types of subscriptions: long and one time. We can only have a certain number of
-        // subscriptions open at once. We want to:
-        // - Open as many long running subsriptions as we can, leaving room for `minimumOneTimeSubscriptions`
-        // - fill remaining slots with one time filters
-        let allSubscriptions = await subscriptions.all
-        let waitingLongSubscriptions = allSubscriptions.filter { !$0.isOneTime && !$0.isActive }
-        let waitingOneTimeSubscriptions = allSubscriptions.filter { $0.isOneTime && !$0.isActive }
-        let activeSubscriptionCount = await subscriptions.active.count
-        let openSlots = subscriptionLimit - activeSubscriptionCount
-        let openOneTimeSlots = max(openSlots - waitingLongSubscriptions.count, minimimumOneTimeSubscriptions)
-        let openLongSlots = max(0, openSlots - minimimumOneTimeSubscriptions)
-        
-        for subscription in waitingLongSubscriptions.prefix(openLongSlots) {
-            var subscription = subscription
-            subscription.subscriptionStartDate = .now
-            await subscriptions.updateSubscriptions(with: subscription)
-            await subscriptions.sockets.forEach { requestEvents(from: $0, subscription: subscription) }
-        }
-        
-        for subscription in waitingOneTimeSubscriptions.prefix(openOneTimeSlots) {
-            var subscription = subscription
-            subscription.subscriptionStartDate = .now
-            await subscriptions.updateSubscriptions(with: subscription)
-            await subscriptions.sockets.forEach { requestEvents(from: $0, subscription: subscription) }
-        }
-        
-        Log.info("\(await subscriptions.active.count) active subscriptions. " +
-            "\(await subscriptions.all.count - subscriptions.active.count) subscriptions waiting in queue.")
+        await subscriptions.processSubscriptionQueue(relays: relays)
     }
     
     private func clearStaleSubscriptions() async {
@@ -294,6 +249,7 @@ extension RelayService {
             if !fulfilledSubscriptions.isEmpty {
                 Log.info("found \(fulfilledSubscriptions.count) fulfilled filter. Closing.")
                 for fulfilledSubscription in fulfilledSubscriptions {
+                    await subscriptions.removeSubscription(with: fulfilledSubscription.id)
                     await self.sendCloseToAll(for: fulfilledSubscription.id)
                 }
             }
@@ -518,7 +474,7 @@ extension RelayService {
         }
     }
     
-    private func openSockets(overrideRelays: [URL]? = nil) async {
+    @MainActor private func openSockets(overrideRelays: [URL]? = nil) async -> [URL] {
         // Use override relays; fall back to user relays
         
         let relayAddresses: [URL] = await backgroundContext.perform { () -> [URL] in
@@ -544,6 +500,8 @@ extension RelayService {
             socket.delegate = self
             socket.connect()
         }
+        
+        return relayAddresses
     }
     
     private func handleConnection(from client: WebSocketClient) async {
@@ -554,7 +512,7 @@ extension RelayService {
         }
         
         for subscription in await subscriptions.active {
-            requestEvents(from: client, subscription: subscription)
+            await subscriptions.requestEvents(from: client, subscription: subscription)
         }
     }
 }
