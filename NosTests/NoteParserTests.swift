@@ -201,6 +201,130 @@ final class NoteNoteParserTests: XCTestCase {
         XCTAssertEqual(links[safe: 1]?.key, "@\(displayName2)")
         XCTAssertEqual(links[safe: 1]?.value, URL(string: "@\(hex2)"))
     }
+
+    func testContentWithUntaggedNpub() throws {
+        let content = "hello npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
+        let npub = "npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
+        let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
+        let tags: [[String]] = [[]]
+        let context = try XCTUnwrap(context)
+        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links[safe: 0]?.key, "\(npub)")
+        XCTAssertEqual(links[safe: 0]?.value, URL(string: "@\(hex)"))
+    }
+
+    func testContentWithUntaggedNote() throws {
+        let content = "Check this note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
+        let note = "note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
+        let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
+        let tags: [[String]] = [[]]
+        let context = try XCTUnwrap(context)
+        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links[safe: 0]?.key, "\(note)")
+        XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
+    }
+    
+    func testContentWithUntaggedNIP27Note() throws {
+        let content = "Check this nostr:note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
+        let note = "note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
+        let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
+        let tags: [[String]] = [[]]
+        let context = try XCTUnwrap(context)
+        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links[safe: 0]?.key, "\(note)")
+        XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
+    }
+    
+    func testContentWithUntaggedProfile() throws {
+        let profile = "nprofile1qqszclxx9f5haga8sfjjrulaxncvkfekj097t6f3pu65f86rvg49ehqj6f9dh"
+        let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
+
+        let content = "hello \(profile)"
+        let tags: [[String]] = [[]]
+        
+        let expectedContent = content
+        let context = try XCTUnwrap(context)
+        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+
+        let parsedContent = String(attributedContent.characters)
+        XCTAssertEqual(parsedContent, expectedContent)
+
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links[safe: 0]?.key, "\(profile)")
+        XCTAssertEqual(links[safe: 0]?.value, URL(string: "@\(hex)"))
+    }
+
+    func testContentWithUntaggedEvent() throws {
+        // swiftlint:disable line_length
+        let event = "nevent1qqst8cujky046negxgwwm5ynqwn53t8aqjr6afd8g59nfqwxpdhylpcpzamhxue69uhhyetvv9ujuetcv9khqmr99e3k7mg8arnc9"
+        // swiftlint:enable line_length
+
+        let hex = "b3e392b11f5d4f28321cedd09303a748acfd0487aea5a7450b3481c60b6e4f87"
+
+        let content = "check this \(event)"
+        let tags: [[String]] = [[]]
+
+        let expectedContent = content
+        let context = try XCTUnwrap(context)
+        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+
+        let parsedContent = String(attributedContent.characters)
+        XCTAssertEqual(parsedContent, expectedContent)
+
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links[safe: 0]?.key, "\(event)")
+        XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
+    }
+
+    func testContentWithUntaggedEventWithADot() throws {
+        // swiftlint:disable line_length
+        let event = "nevent1qqst8cujky046negxgwwm5ynqwn53t8aqjr6afd8g59nfqwxpdhylpcpzamhxue69uhhyetvv9ujuetcv9khqmr99e3k7mg8arnc9"
+        // swiftlint:enable line_length
+
+        let hex = "b3e392b11f5d4f28321cedd09303a748acfd0487aea5a7450b3481c60b6e4f87"
+
+        let content = "check this \(event). Bye!"
+        let tags: [[String]] = [[]]
+
+        let expectedContent = content
+        let context = try XCTUnwrap(context)
+        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+
+        let parsedContent = String(attributedContent.characters)
+        XCTAssertEqual(parsedContent, expectedContent)
+
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links[safe: 0]?.key, "\(event)")
+        XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
+    }
+
+    func testContentWithMalformedEvent() throws {
+        // swiftlint:disable line_length
+        let event = "nevent1qqst8cujky046negxgwwm5ynqwn53t8aqjr6afd8g59nfqwxpdhylpcpzamhxue69uhhyetvv9ujuetcv9khqmr99e3k7mg8arnc9"
+        // swiftlint:enable line_length
+
+        let content = "check this \(event)andthisshouldbreakmaybe. Bye!"
+        let tags: [[String]] = [[]]
+
+        let expectedContent = content
+        let context = try XCTUnwrap(context)
+        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+
+        let parsedContent = String(attributedContent.characters)
+        XCTAssertEqual(parsedContent, expectedContent)
+
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 0)
+    }
 }
 
 fileprivate extension AttributedString {

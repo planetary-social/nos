@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed several causes of profile pictures and reposts showing infinite spinners.
+- Links to notes or profiles are now tappable.
 
 ## [0.1 (43)] - 2023-05-23Z
 

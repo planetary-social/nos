@@ -18,14 +18,33 @@ enum NoteParser {
         cleanLinks(in: attributedText)
     }
 
-    // swiftlint:disable function_body_length
     /// Parses the content and tags stored in a note and returns an attributed text that can be used for displaying
     /// the note in the UI.
     static func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> AttributedString {
-        // swiftlint:disable opening_brace
+        var result = replaceTaggedNostrEntities(in: content, tags: tags, context: context)
+        result = replaceNostrEntities(in: result)
+        let linkedString = (try? result.findAndReplaceUnformattedLinks(in: result)) ?? result
+        do {
+            return try AttributedString(
+                markdown: linkedString,
+                options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
+            )
+        } catch {
+            return AttributedString(stringLiteral: content)
+        }
+    }
+
+    // swiftlint:disable function_body_length superfluous_disable_command
+    /// Replaces tagged references like #[0] or nostr:npub1... with markdown links
+    private static func replaceTaggedNostrEntities(
+        in content: String,
+        tags: [[String]],
+        context: NSManagedObjectContext
+    ) -> String {
+        // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma
         let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)(?:nostr:)(?<npubornprofile>[a-zA-Z0-9]{2,256})/
-        // swiftlint:enable opening_brace
-        let result = content.replacing(regex) { match in
+        // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma
+        return content.replacing(regex) { match in
             let substring = match.0
             let index = match.1
             let npubOrNProfile = match.2
@@ -63,27 +82,57 @@ enum NoteParser {
                 }
             } else if let npubOrNProfile {
                 let string = String(npubOrNProfile)
-                if string.prefix(4) == "npub", let publicKey = PublicKey(npub: string) {
-                    return findAndReplaceAuthorReference(publicKey.hex)
-                } else if string.prefix(8) == "nprofile", let profile = NProfile(nprofile: string) {
-                    return findAndReplaceAuthorReference(profile.publicKeyHex)
+                do {
+                    let (humanReadablePart, checksum) = try Bech32.decode(string)
+                    if humanReadablePart == Nostr.publicKeyPrefix, let hex = SHA256Key.decode(base5: checksum) {
+                        return findAndReplaceAuthorReference(hex)
+                    } else if humanReadablePart == Nostr.profilePrefix, let hex = TLV.decode(checksum: checksum) {
+                        return findAndReplaceAuthorReference(hex)
+                    }
+                } catch {
+                    return String(substring)
                 }
             }
             return String(substring)
         }
+    }
+    // swiftlint:enable function_body_length superfluous_disable_command
 
-        let linkedString = (try? result.findAndReplaceUnformattedLinks(in: result)) ?? result
+    /// Replaces Nostr entities embedded in the note (without a proper tag) with markdown links
+    private static func replaceNostrEntities(in content: String) -> String {
+        // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
+        let unformattedRegex = /(?:^|\s)(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,255}))/
+        // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
 
-        do {
-            return try AttributedString(
-                markdown: linkedString,
-                options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-            )
-        } catch {
-            return AttributedString(stringLiteral: content)
+        return content.replacing(unformattedRegex) { match in
+            let substring = match.0
+            let entity = match.1
+            var prefix = ""
+            let firstCharacter = String(String(substring).prefix(1))
+            if firstCharacter.range(of: #"\s|\r\n|\r|\n"#, options: .regularExpression) != nil {
+                prefix = firstCharacter
+            }
+            let string = String(entity)
+
+            do {
+                let (humanReadablePart, checksum) = try Bech32.decode(string)
+
+                if humanReadablePart == Nostr.publicKeyPrefix, let hex = SHA256Key.decode(base5: checksum) {
+                    return "\(prefix)[\(string)](@\(hex))"
+                } else if humanReadablePart == Nostr.notePrefix, let hex = SHA256Key.decode(base5: checksum) {
+                    return "\(prefix)[\(string)](%\(hex))"
+                } else if humanReadablePart == Nostr.profilePrefix, let hex = TLV.decode(checksum: checksum) {
+                    return "\(prefix)[\(string)](@\(hex))"
+                } else if humanReadablePart == Nostr.eventPrefix, let hex = TLV.decode(checksum: checksum) {
+                    return "\(prefix)[\(string)](%\(hex))"
+                } else {
+                    return String(substring)
+                }
+            } catch {
+                return String(substring)
+            }
         }
     }
-    // swiftlint:enable function_body_length
 
     private static func cleanLinks(
         in attributedString: AttributedString, 

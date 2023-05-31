@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import secp256k1
 import Dependencies
 
 struct NoteOptionsButton: View {
