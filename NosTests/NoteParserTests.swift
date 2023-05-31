@@ -227,6 +227,20 @@ final class NoteNoteParserTests: XCTestCase {
         XCTAssertEqual(links[safe: 0]?.key, "\(note)")
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
     }
+    
+    func testContentWithUntaggedNIP27Note() throws {
+        let content = "Check this nostr:note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
+        let note = "note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
+        let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
+        let tags: [[String]] = [[]]
+        let context = try XCTUnwrap(context)
+        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links[safe: 0]?.key, "\(note)")
+        XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
+    }
+    
 
     func testContentWithUntaggedProfile() throws {
         let profile = "nprofile1qqszclxx9f5haga8sfjjrulaxncvkfekj097t6f3pu65f86rvg49ehqj6f9dh"
