@@ -241,7 +241,6 @@ final class NoteNoteParserTests: XCTestCase {
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
     }
     
-
     func testContentWithUntaggedProfile() throws {
         let profile = "nprofile1qqszclxx9f5haga8sfjjrulaxncvkfekj097t6f3pu65f86rvg49ehqj6f9dh"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
