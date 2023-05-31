@@ -370,7 +370,7 @@ extension RelayService {
     }
     
     func publishToAll(event: JSONEvent, signingKey: KeyPair, context: NSManagedObjectContext) async throws {
-        await self.openSockets()
+        _ = await self.openSockets()
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
         for socket in await subscriptions.sockets {
             await publish(from: socket, jsonEvent: signedEvent)
@@ -383,7 +383,7 @@ extension RelayService {
         signingKey: KeyPair,
         context: NSManagedObjectContext
     ) async throws {
-        await openSockets()
+        _ = await openSockets()
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
         if let socket = await socket(from: relay) {
             await publish(from: socket, jsonEvent: signedEvent)
