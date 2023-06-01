@@ -17,6 +17,10 @@ struct ReportMenuModifier: ViewModifier {
     @State private var confirmReport = false
     @State private var showMuteDialog = false
     
+    @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var relayService: RelayService
+    @EnvironmentObject private var currentUser: CurrentUser
+    
     func body(content: Content) -> some View {
         content
             .confirmationDialog("Report Content", isPresented: $isPresented, titleVisibility: .visible) {
@@ -31,7 +35,7 @@ struct ReportMenuModifier: ViewModifier {
                 isPresented: $confirmReport,
                 actions: { 
                     Button("Confirm") { 
-                        print("user published report for \(selectedCategory?.displayName ?? "nil")")
+                        publishReport()
                         showMuteDialog = true
                     }
                     Button("Cancel", role: .cancel) { 
@@ -65,12 +69,37 @@ struct ReportMenuModifier: ViewModifier {
                 self.selectedCategory = subCategory
                 if subCategory.subCategories?.count ?? 0 == 0 {
                     confirmReport = true
-                    selectedCategory = nil
                 } else {
-                    Task.detached { 
+                    Task { 
                         self.isPresented = true
                     }
                 }
+            }
+        }
+    }
+    
+    func publishReport() {
+        guard let keyPair = currentUser.keyPair,
+            let selectedCategory else {
+            // TODO: show error
+            return 
+        }
+        print("user published report for \(selectedCategory.displayName)")
+        let event = JSONEvent(
+            pubKey: keyPair.publicKeyHex, 
+            kind: .label, 
+            tags: [
+                ["L", "MOD"],
+                ["l", selectedCategory.code, "MOD"],
+            ], 
+            content: ""
+        )
+        
+        Task {
+            do {
+                try await relayService.publishToAll(event: event, signingKey: keyPair, context: viewContext)
+            } catch {
+                // TODO: handle error
             }
         }
     }
