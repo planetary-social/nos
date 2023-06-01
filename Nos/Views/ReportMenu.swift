@@ -53,6 +53,7 @@ struct ReportMenuModifier: ViewModifier {
                 actions: { 
                     Button("Yes") { 
                         print("user muted ")
+                        Task { await reportedObject.author?.mute(context: viewContext) }
                     }
                     Button("No") { }
                 },
