@@ -32,6 +32,8 @@
 		3FFF3BD029A9645F00DD0B72 /* AuthorReference+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */; };
 		5B39E64429EDBF8100464830 /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
 		5B46611E29CCB894008B8E8C /* Generated.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5B46612029CCB894008B8E8C /* Generated.strings */; };
+		5B503F622A291A1A0098805A /* JSONRelayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */; };
+		5B503F662A291F150098805A /* RelayMetadata+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F642A291F150098805A /* RelayMetadata+CoreDataClass.swift */; };
 		5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
 		5B6EB49029EDBEC1006E750C /* NoteParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */; };
 		5B80BE9E29F9864000A363E4 /* Bech32Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */; };
@@ -387,6 +389,9 @@
 		5B46612129CCBBE2008B8E8C /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Generated.strings; sourceTree = "<group>"; };
 		5B46612229CCBC6C008B8E8C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Generated.strings"; sourceTree = "<group>"; };
 		5B48EC692A1406C4001EDA7F /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Generated.strings; sourceTree = "<group>"; };
+		5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONRelayMetadata.swift; sourceTree = "<group>"; };
+		5B503F632A291D480098805A /* Nos 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 7.xcdatamodel"; sourceTree = "<group>"; };
+		5B503F642A291F150098805A /* RelayMetadata+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RelayMetadata+CoreDataClass.swift"; sourceTree = "<group>"; };
 		5B6EB48D29EDBE0E006E750C /* NoteParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParser.swift; sourceTree = "<group>"; };
 		5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParserTests.swift; sourceTree = "<group>"; };
 		5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bech32Tests.swift; sourceTree = "<group>"; };
@@ -810,6 +815,7 @@
 				C93CA0C229AE3A1E00921183 /* JSONEvent.swift */,
 				3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */,
 				3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */,
+				5B503F642A291F150098805A /* RelayMetadata+CoreDataClass.swift */,
 				A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */,
 				C9DEC04329894BED0078B43A /* Author+CoreDataClass.swift */,
 				C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */,
@@ -820,6 +826,7 @@
 				5B80BE9F29FAEDE300A363E4 /* NProfile.swift */,
 				C9C2B78429E073E300548B4A /* RelaySubscription.swift */,
 				C9EE3E622A053910008A7491 /* ExpirationTimeOption.swift */,
+				5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1348,11 +1355,13 @@
 				C98A32272A05795E00E3FA13 /* Task+Timeout.swift in Sources */,
 				C9B708BB2A13BE41006C613A /* NoteTextEditor.swift in Sources */,
 				C95D68A5299E6E1E00429F86 /* PlaceholderModifier.swift in Sources */,
+				5B503F662A291F150098805A /* RelayMetadata+CoreDataClass.swift in Sources */,
 				C960C57429F3251E00929990 /* RepostButton.swift in Sources */,
 				3FFB1D9329A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,
 				C93EC2FA29C370DE0012EE2A /* DiscoverGrid.swift in Sources */,
 				C94FE9F529DB177500019CD3 /* Localizable.swift in Sources */,
 				C93EC2FD29C3785C0012EE2A /* View+RoundedCorner.swift in Sources */,
+				5B503F622A291A1A0098805A /* JSONRelayMetadata.swift in Sources */,
 				CD09A74829A51EFC0063464F /* Router.swift in Sources */,
 				CD2CF38E299E67F900332116 /* CardButtonStyle.swift in Sources */,
 				A336DD3C299FD78000A0CBA0 /* Filter.swift in Sources */,
@@ -2100,6 +2109,7 @@
 		C9DEBFD5298941000078B43A /* Nos.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				5B503F632A291D480098805A /* Nos 7.xcdatamodel */,
 				C91FFD392A09444D00743037 /* Nos 6.xcdatamodel */,
 				C9B678E529EF1BF200303F33 /* Nos 5.xcdatamodel */,
 				C9A0DAF329C870D500466635 /* Nos 4.xcdatamodel */,

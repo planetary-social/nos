@@ -539,11 +539,40 @@ extension RelayService {
             guard let socket = await subscriptions.addSocket(for: relayAddress) else {
                 continue
             }
-            
             socket.callbackQueue = processingQueue
             socket.delegate = self
             socket.connect()
+            Task.detached(priority: .background) {
+                do {
+                    try await self.queryRelayMetadata(relayAddress)
+                } catch {
+                    print(error)
+                }
+            }
         }
+    }
+
+    private func queryRelayMetadata(_ relayAddress: URL) async throws {
+        guard var components = URLComponents(url: relayAddress, resolvingAgainstBaseURL: true) else {
+            return
+        }
+        components.scheme = "https"
+        guard let url = components.url else {
+            return
+        }
+        var request = URLRequest(url: url)
+        request.addValue("application/nostr+json", forHTTPHeaderField: "Accept")
+        let session = URLSession(configuration: .ephemeral)
+        let (data, response) = try await session.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse else {
+            return
+        }
+        guard httpResponse.statusCode == 200 else {
+            return
+        }
+        let decoder = JSONDecoder()
+        let metadata = try decoder.decode(JSONRelayMetadata.self, from: data)
+        print(metadata)
     }
     
     private func handleConnection(from client: WebSocketClient) async {
