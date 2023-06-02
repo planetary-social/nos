@@ -5,10 +5,11 @@
 //  Created by Matthew Lorentz on 2/6/23.
 //
 
-import SwiftUI
 import CoreData
-import SwiftUINavigation
 import Dependencies
+import Logger
+import SwiftUI
+import SwiftUINavigation
 
 struct NewNoteView: View {
     
@@ -87,7 +88,7 @@ struct NewNoteView: View {
                     Localized.cancel.view
                         .foregroundColor(.textColor)
                 },
-                trailing: ActionButton(title: Localized.post, action: publishPost)
+                trailing: ActionButton(title: Localized.post, action: postAction)
                     .frame(height: 22)
                     .disabled(postText.string.isEmpty)
                     .padding(.bottom, 3)
@@ -100,13 +101,25 @@ struct NewNoteView: View {
         .alert(unwrapping: $alert)
     }
 
-    private func publishPost() async {
-        guard let keyPair = currentUser.keyPair else {
+    private func postAction() async {
+        guard currentUser.keyPair != nil else {
             alert = AlertState(title: {
                 TextState(Localized.error.string)
             }, message: {
                 TextState(Localized.youNeedToEnterAPrivateKeyBeforePosting.string)
             })
+            return
+        }
+        Task {
+            await publishPost()
+        }
+        isPresented = false
+        router.selectedTab = .home
+    }
+
+    private func publishPost() async {
+        guard let keyPair = currentUser.keyPair else {
+            Log.error("Posting without a keypair")
             return
         }
         
@@ -137,21 +150,10 @@ struct NewNoteView: View {
             } else {
                 try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
             }
-            isPresented = false
             analytics.published(note: jsonEvent)
             postText = NSAttributedString("")
-            router.selectedTab = .home
         } catch {
-            alert = AlertState(title: {
-                TextState(Localized.error.string)
-            }, message: {
-                TextState(error.localizedDescription)
-            })
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this
-            // function in a shipping application, although it may be useful during development.
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            Log.error("Error when posting: \(error.localizedDescription)")
         }
     }
 }
