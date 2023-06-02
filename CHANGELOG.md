@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a bug where the note options menu wouldn't show up sometimes.
 - Filter logged user from Discover screen.
 - Improved performance of posting notes.
 - Added German translations (thanks Peter!).
