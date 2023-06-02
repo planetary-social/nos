@@ -79,7 +79,7 @@ struct RepliesView: View {
         Task(priority: .userInitiated) {
             // Close out stale requests
             if !subscriptionIDs.isEmpty {
-                await relayService.removeSubscriptions(for: subscriptionIDs)
+                await relayService.decrementSubscriptionCount(for: subscriptionIDs)
                 subscriptionIDs.removeAll()
             }
             
@@ -120,7 +120,7 @@ struct RepliesView: View {
             }
             .onDisappear {
                 Task(priority: .userInitiated) {
-                    await relayService.removeSubscriptions(for: subscriptionIDs)
+                    await relayService.decrementSubscriptionCount(for: subscriptionIDs)
                     subscriptionIDs.removeAll()
                 }
             }
