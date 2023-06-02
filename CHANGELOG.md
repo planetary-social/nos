@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed several causes of profile pictures and reposts showing infinite spinners.
+- Filter logged user from Discover screen.
+- Improved performance of posting notes.
 - Added German translations (thanks Peter!).
 - Updated support email to support@nos.social
 - Improved recognition of mentions inside a post
