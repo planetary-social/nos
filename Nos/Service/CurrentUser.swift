@@ -115,7 +115,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     // Reset CurrentUser state
     @MainActor func reset() {
         onboardingRelays = []
-        Task { await relayService?.removeSubscriptions(for: subscriptions) }
+        Task { await relayService?.decrementSubscriptionCount(for: subscriptions) }
         subscriptions = []
         inNetworkAuthors = []
         setUp()
@@ -193,7 +193,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         if let key = publicKeyHex, let author {
             // Close out stale requests
             if !subscriptions.isEmpty {
-                await relayService.removeSubscriptions(for: subscriptions)
+                await relayService.decrementSubscriptionCount(for: subscriptions)
                 subscriptions.removeAll()
             }
             

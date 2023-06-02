@@ -22,24 +22,30 @@ final class RelayService: ObservableObject {
     private var saveEventsTimer: AsyncTimer?
     private var backgroundProcessTimer: AsyncTimer?
     private var backgroundContext: NSManagedObjectContext
+    private var parseContext: NSManagedObjectContext
     // TODO: use structured concurrency for this
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .utility)
     @Dependency(\.analytics) private var analytics
-    @Dependency(\.currentUser) private var currentUser
+    @MainActor @Dependency(\.currentUser) private var currentUser
     
     init(persistenceController: PersistenceController) {
         self.persistenceController = persistenceController
         self.backgroundContext = persistenceController.newBackgroundContext()
+        self.parseContext = persistenceController.newBackgroundContext()
         self.subscriptions = RelaySubscriptionManager()
 
         self.saveEventsTimer = AsyncTimer(timeInterval: 1, priority: .high) { [weak self] in
-            await self?.backgroundContext.perform(schedule: .immediate) {
-                do {
+            do {
+                try await self?.parseContext.perform(schedule: .immediate) {
+                    try self?.parseContext.saveIfNeeded()
+                }                
+                try await self?.backgroundContext.perform(schedule: .immediate) {
                     try self?.backgroundContext.saveIfNeeded()
-                } catch {
-                    Log.error("RelayService.saveEventsTimer failed to save with error: \(error.localizedDescription)")
-                }
+                }                
+            } catch {
+                Log.error("RelayService.saveEventsTimer failed to save with error: \(error.localizedDescription)")
             }
+            
             await self?.processSubscriptionQueue()
         }
         
@@ -82,21 +88,16 @@ final class RelayService: ObservableObject {
 // MARK: Close subscriptions
 extension RelayService {
     
-    func removeSubscriptions(for subscriptionIDs: [String]) async {
+    func decrementSubscriptionCount(for subscriptionIDs: [String]) async {
         for subscriptionID in subscriptionIDs {
-            await self.removeSubscription(for: subscriptionID)
+            await self.decrementSubscriptionCount(for: subscriptionID)
         }
     }
     
-    func removeSubscription(for subscriptionID: String) async {
-        if var subscription = await subscriptions.subscription(from: subscriptionID) {
-            if subscription.referenceCount == 1 {
-                await subscriptions.removeSubscription(with: subscriptionID)
-                await self.sendCloseToAll(for: subscriptionID)
-            } else {
-                subscription.referenceCount -= 1
-                await subscriptions.updateSubscriptions(with: subscription)
-            }
+    func decrementSubscriptionCount(for subscriptionID: String) async {
+        let subscriptionStillActive = await subscriptions.decrementSubscriptionCount(for: subscriptionID)
+        if !subscriptionStillActive {
+            await self.sendCloseToAll(for: subscriptionID)
         }
     }
 
@@ -133,21 +134,12 @@ extension RelayService {
 extension RelayService {
     
     func openSubscription(with filter: Filter, to overrideRelays: [URL]? = nil) async -> RelaySubscription.ID {
-        var subscription: RelaySubscription
-        
-        if let existingSubscription = await subscriptions.subscription(from: filter.id) {
-            // dedup
-            subscription = existingSubscription
-        } else {
-            subscription = RelaySubscription(filter: filter)
-        }
-        subscription.referenceCount += 1
-        await subscriptions.updateSubscriptions(with: subscription)
+        let subscriptionID = await subscriptions.queueSubscription(with: filter, to: overrideRelays)
         
         // Fire off REQs in the background
         Task { await self.processSubscriptionQueue(overrideRelays: overrideRelays) }
         
-        return subscription.id
+        return subscriptionID
     }
     
     func requestMetadata(for authorKey: HexadecimalString?, since: Date?) async -> RelaySubscription.ID? {
@@ -193,7 +185,7 @@ extension RelayService {
             Log.info("Found \(staleSubscriptions.count) stale subscriptions. Closing.")
             
             for staleSubscription in staleSubscriptions {
-                await removeSubscription(for: staleSubscription.id)
+                await subscriptions.forceCloseSubscriptionCount(for: staleSubscription.id)
                 await sendCloseToAll(for: staleSubscription.id)
             }
         }
@@ -210,7 +202,7 @@ extension RelayService {
         if let subID = responseArray[1] as? String,
             let subscription = await subscriptions.subscription(from: subID),
             subscription.isOneTime {
-            Log.info("\(subID) has finished responding. Closing.")
+            Log.info("\(socket.host) has finished responding on \(subID). Closing subscription.")
             // This is a one-off request. Close it.
             sendClose(from: socket, subscription: subID)
         }
@@ -233,15 +225,15 @@ extension RelayService {
         
         do {
             let allSubscriptions = await subscriptions.all
-            let fulfilledSubscriptions = try await self.backgroundContext.perform {
-                let relay = self.relay(from: socket, in: self.backgroundContext)
+            let fulfilledSubscriptions = try await self.parseContext.perform {
+                let relay = self.relay(from: socket, in: self.parseContext)
                 let event = try EventProcessor.parse(
                     jsonObject: eventJSON,
                     from: relay,
-                    in: self.backgroundContext
+                    in: self.parseContext
                 )
                 
-                relay.unwrap { event.trackDelete(on: $0, context: self.backgroundContext) }
+                relay.unwrap { event.trackDelete(on: $0, context: self.parseContext) }
                 
                 return allSubscriptions.filter { $0.filter.isFulfilled(by: event) }
             }
@@ -249,8 +241,8 @@ extension RelayService {
             if !fulfilledSubscriptions.isEmpty {
                 Log.info("found \(fulfilledSubscriptions.count) fulfilled filter. Closing.")
                 for fulfilledSubscription in fulfilledSubscriptions {
-                    await subscriptions.removeSubscription(with: fulfilledSubscription.id)
-                    await self.sendCloseToAll(for: fulfilledSubscription.id)
+                    await subscriptions.forceCloseSubscriptionCount(for: fulfilledSubscription.id)
+                    await sendCloseToAll(for: fulfilledSubscription.id)
                 }
             }
         } catch {
@@ -411,10 +403,14 @@ extension RelayService {
     }
     
     func publishFailedEvents() async {
+        guard let user = await currentUser.author else {
+            return
+        }
+        
         await self.backgroundContext.perform {
             
             let objectContext = self.backgroundContext
-            let userSentEvents = Event.unpublishedEvents(context: objectContext)
+            let userSentEvents = Event.unpublishedEvents(for: user, context: objectContext)
             
             for event in userSentEvents {
                 let shouldBePublishedToRelays: NSMutableSet = (event.shouldBePublishedTo ?? NSSet())

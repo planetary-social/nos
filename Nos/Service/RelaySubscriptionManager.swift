@@ -36,7 +36,7 @@ actor RelaySubscriptionManager {
         }
     }
     
-    func updateSubscriptions(with newValue: RelaySubscription) {
+    private func updateSubscriptions(with newValue: RelaySubscription) {
         if let subscriptionIndex = self.all.firstIndex(where: { $0.id == newValue.id }) {
             all[subscriptionIndex] = newValue
         } else {
@@ -44,7 +44,7 @@ actor RelaySubscriptionManager {
         }
     }
     
-    func removeSubscription(with subscriptionID: RelaySubscription.ID) {
+    private func removeSubscription(with subscriptionID: RelaySubscription.ID) {
         if let subscriptionIndex = self.all.firstIndex(
             where: { $0.id == subscriptionID }
         ) {
@@ -52,6 +52,24 @@ actor RelaySubscriptionManager {
         }
     }
     
+    func forceCloseSubscriptionCount(for subscriptionID: RelaySubscription.ID) {
+        removeSubscription(with: subscriptionID)
+    }
+    
+    func decrementSubscriptionCount(for subscriptionID: RelaySubscription.ID) async -> Bool {
+        if var subscription = subscription(from: subscriptionID) {
+            if subscription.referenceCount == 1 {
+                removeSubscription(with: subscriptionID)
+                return false
+            } else {
+                subscription.referenceCount -= 1
+                updateSubscriptions(with: subscription)
+                return true
+            }
+        }
+        return false
+    }
+
     func addSocket(for relayAddress: URL) -> WebSocket? {
         guard !sockets.contains(where: { $0.request.url == relayAddress }) else {
             return nil
@@ -120,10 +138,21 @@ actor RelaySubscriptionManager {
         }
         
         Log.info("\(active.count) active subscriptions. \(all.count - active.count) subscriptions waiting in queue.")
+    }
+    
+    func queueSubscription(with filter: Filter, to overrideRelays: [URL]? = nil) async -> RelaySubscription.ID {
+        var subscription: RelaySubscription
         
-        if active.count > subscriptionLimit {
-            Log.error("bug")
+        if let existingSubscription = self.subscription(from: filter.id) {
+            // dedup
+            subscription = existingSubscription
+        } else {
+            subscription = RelaySubscription(filter: filter)
         }
+        subscription.referenceCount += 1
+        updateSubscriptions(with: subscription)
+        
+        return subscription.id
     }
     
     private func start(subscription: RelaySubscription, relays: [URL]) {

@@ -87,6 +87,7 @@ struct Filter: Hashable, Identifiable {
         hasher.combine(kinds)
         hasher.combine(limit)
         hasher.combine(eTags)
+        hasher.combine(pTags)
         hasher.combine(since)
     }
     

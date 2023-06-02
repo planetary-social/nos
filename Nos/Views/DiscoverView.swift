@@ -136,7 +136,7 @@ struct DiscoverView: View {
     
     func cancelSubscriptions() async {
         if !subscriptionIDs.isEmpty {
-            await relayService.removeSubscriptions(for: subscriptionIDs)
+            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
             subscriptionIDs.removeAll()
         }
     }

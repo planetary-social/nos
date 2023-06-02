@@ -96,7 +96,7 @@ struct NoteButton: View {
                     }
                     .onDisappear {
                         Task(priority: .userInitiated) {
-                            await relayService.removeSubscriptions(for: subscriptionIDs)
+                            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
                             subscriptionIDs.removeAll()
                         }
                     }
