@@ -65,7 +65,14 @@ struct NoteTextEditor: View {
             switch change {
             case .insert(let offset, let element, _):
                 if element == "@" {
-                    mentionOffset = offset
+                    var lastCharacter = Character("\n")
+                    if offset > 0 {
+                        let lastCharacterIndex = newText.index(newText.startIndex, offsetBy: offset - 1)
+                        lastCharacter = newText[safe: lastCharacterIndex] ?? Character("\n")
+                    }
+                    if lastCharacter.isNewline || lastCharacter.isWhitespace {
+                        mentionOffset = offset
+                    }
                 }
             default:
                 break
