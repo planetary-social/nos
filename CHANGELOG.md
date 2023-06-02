@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added German translations (thanks Peter!).
 - Updated support email to support@nos.social
 - Improved recognition of mentions inside a post
-- 
+- Fixed a crash which occurs on some versions of MacOS when attempting to mention other users during post creation.
+
 ## [0.1 (42)] - 2023-05-16Z
 
 - Added support for mentioning other users when composing a note.
