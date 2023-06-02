@@ -15,16 +15,41 @@ class SearchModel: ObservableObject {
     @Published var namedAuthors = [Author]()
     @Published var authorSuggestions = [Author]()
     
+    var isSearching: Bool {
+        query.isEmpty
+    }
+    
+    @Dependency(\.relayService) private var relayService
     private var cancellables = [AnyCancellable]()
+    private var searchSubscriptionID: RelaySubscription.ID?
     private var context: NSManagedObjectContext
     
     init(context: NSManagedObjectContext = PersistenceController.shared.viewContext) {
         self.context = context
         $query
+            .combineLatest(
+                NotificationCenter.default.publisher(
+                    for: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
+                    object: context
+                )
+            )
+            .map { $0.0 } // discard what the notification publisher emits.
             .debounce(for: 0.2, scheduler: RunLoop.main)
             .filter { !$0.isEmpty }
+            .map { query in
+                // SIDE EFFECT WARNING
+                Task { [query] in
+                    if let searchSubscriptionID = self.searchSubscriptionID {
+                        await self.relayService.removeSubscription(for: searchSubscriptionID)
+                    }
+                    self.searchSubscriptionID = await self.relayService.openSubscription(with: Filter(kinds: [.metaData], search: query))
+                }
+                return query
+            }
             .map { self.authors(named: $0) }
-            .sink(receiveValue: { self.authorSuggestions = $0 })
+            .sink(receiveValue: { 
+                self.authorSuggestions = $0 
+            })
             .store(in: &cancellables)
     }
     
@@ -151,7 +176,16 @@ struct DiscoverView: View {
                     )
                 } else {
                     
-                    DiscoverGrid(predicate: predicate, columns: $columns)
+                    if searchModel.query.isEmpty {
+                        DiscoverGrid(predicate: predicate, columns: $columns)
+                    } else {
+                        VStack {
+                            StaggeredGrid(list: searchModel.authorSuggestions, columns: 1) { author in
+                                AuthorCard(author: author)
+//                                    .matchedGeometryEffect(id: author.hexadecimalPublicKey, in: animation)
+                            }
+                        }
+                    }
                     
                     if showRelayPicker, let author = currentUser.author {
                         RelayPicker(
@@ -163,38 +197,39 @@ struct DiscoverView: View {
                     }
                 }
             }
-            .searchable(text: $searchModel.query, placement: .toolbar, prompt: PlainText(Localized.searchBar.string)) {
-                ForEach(searchModel.authorSuggestions, id: \.self) { author in
-                    Button {
-                        router.push(author)
-                    } label: {
-                        HStack(alignment: .center) {
-                            AvatarView(imageUrl: author.profilePhotoURL, size: 24)
-                            Text(author.safeName)
-                                .lineLimit(1)
-                                .font(.subheadline)
-                                .foregroundColor(Color.primaryTxt)
-                                .multilineTextAlignment(.leading)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            if author.muted {
-                                Text(Localized.mutedUser.string)
-                                    .font(.subheadline)
-                                    .foregroundColor(Color.secondaryText)
-                            }
-                            Spacer()
-                            if let currentUser = CurrentUser.shared.author {
-                                FollowButton(currentUserAuthor: currentUser, author: author)
-                                    .padding(10)
-                            }
-                        }
-                        .listRowInsets(.none)
-                        .searchCompletion(author.safeName)
-                    }
-                    .listRowBackground(Color.appBg)
-                }
-                .scrollContentBackground(.hidden)
-                .background(Color.appBg)
-            }
+            .searchable(text: $searchModel.query, placement: .toolbar, prompt: PlainText(Localized.searchBar.string)) 
+//            {
+//                ForEach(searchModel.authorSuggestions, id: \.self) { author in
+//                    Button {
+//                        router.push(author)
+//                    } label: {
+//                        HStack(alignment: .center) {
+//                            AvatarView(imageUrl: author.profilePhotoURL, size: 24)
+//                            Text(author.safeName)
+//                                .lineLimit(1)
+//                                .font(.subheadline)
+//                                .foregroundColor(Color.primaryTxt)
+//                                .multilineTextAlignment(.leading)
+//                                .frame(maxWidth: .infinity, alignment: .leading)
+//                            if author.muted {
+//                                Text(Localized.mutedUser.string)
+//                                    .font(.subheadline)
+//                                    .foregroundColor(Color.secondaryText)
+//                            }
+//                            Spacer()
+//                            if let currentUser = CurrentUser.shared.author {
+//                                FollowButton(currentUserAuthor: currentUser, author: author)
+//                                    .padding(10)
+//                            }
+//                        }
+//                        .listRowInsets(.none)
+//                        .searchCompletion(author.safeName)
+//                    }
+//                    .listRowBackground(Color.appBg)
+//                }
+//                .scrollContentBackground(.hidden)
+//                .background(Color.appBg)
+//            }
             .autocorrectionDisabled()
             .onSubmit(of: .search) {
                 submitSearch()
