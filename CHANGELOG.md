@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed a crash which occurs on some versions of MacOS when attempting to mention other users during post creation.
 - Fixed a bug where the note options menu wouldn't show up sometimes.
+- Strip whitespace and newline characters when parsing search box input on discover screen as npub.
 
 ## [0.1 (44)] - 2023-05-31Z
 
