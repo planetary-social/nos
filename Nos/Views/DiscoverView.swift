@@ -71,7 +71,7 @@ struct DiscoverView: View {
     
     func updatePredicate() {
         if let relayFilter {
-            predicate = Event.seen(on: relayFilter, before: date)
+            predicate = Event.seen(on: relayFilter, before: date, exceptFrom: currentUser.author)
         } else {
             predicate = Event.extendedNetworkPredicate(featuredAuthors: featuredAuthors, before: date)
         }
