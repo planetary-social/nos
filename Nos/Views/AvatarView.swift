@@ -16,7 +16,7 @@ extension URLCache {
 struct AvatarView: View {
     
     var imageUrl: URL?
-    var size: CGFloat?
+    var size: CGFloat
     
     var body: some View {
         Group {

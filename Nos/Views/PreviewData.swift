@@ -8,10 +8,12 @@
 import SwiftUI
 import Foundation
 
+// swiftlint:disable line_length
+
+/// Some test data that can be used in SwiftUI Previews
 enum PreviewData {
     
     // MARK: - Environment
-    
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
     static var router = Router()
@@ -90,9 +92,7 @@ enum PreviewData {
     static var verticalImageNote: Event {
         let note = Event(context: previewContext)
         note.identifier = "3"
-        // swiftlint:disable line_length
         note.content = "Hello, world!https://nostr.build/i/nostr.build_1b958a2af7a2c3fcb2758dd5743912e697ba34d3a6199bfb1300fa6be1dc62ee.jpeg"
-        // swiftlint:enable line_length
         note.author = previewAuthor
         note.createdAt = .now
         try! previewContext.save()
@@ -101,10 +101,8 @@ enum PreviewData {
     
     static var veryWideImageNote: Event {
         let note = Event(context: previewContext)
-        // swiftlint:disable line_length
         note.identifier = "4"
         note.content = "Hello, world! https://nostr.build/i/nostr.build_db8287dde9aedbc65df59972386fde14edf9e1afc210e80c764706e61cd1cdfa.png"
-        // swiftlint:enable line_length
         note.author = previewAuthor
         note.createdAt = .now
         try! previewContext.save()
@@ -140,3 +138,5 @@ enum PreviewData {
         return note
     }
 }
+
+// swiftlint:enable line_length

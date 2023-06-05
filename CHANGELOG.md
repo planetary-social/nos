@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add the ability to search for users by name from the Discover tab
 - Filter logged user from Discover screen.
 - Improved performance of posting notes.
 - Added German translations (thanks Peter!).
