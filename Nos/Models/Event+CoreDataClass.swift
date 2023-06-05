@@ -205,13 +205,14 @@ public class Event: NosManagedObject {
         )
     }
 
-    @nonobjc public class func unpublishedEventsRequest() -> NSFetchRequest<Event> {
+    @nonobjc public class func unpublishedEventsRequest(for user: Author) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
             format: "author.hexadecimalPublicKey = %@ AND " +
             "SUBQUERY(shouldBePublishedTo, $relay, TRUEPREDICATE).@count != " +
-            "SUBQUERY(seenOnRelays, $relay, TRUEPREDICATE).@count"
+            "SUBQUERY(seenOnRelays, $relay, TRUEPREDICATE).@count",
+            user.hexadecimalPublicKey ?? ""
         )
         return fetchRequest
     }
@@ -770,8 +771,8 @@ public class Event: NosManagedObject {
         }
     }
     
-    class func unpublishedEvents(context: NSManagedObjectContext) -> [Event] {
-        let allRequest = Event.unpublishedEventsRequest()
+    class func unpublishedEvents(for user: Author, context: NSManagedObjectContext) -> [Event] {
+        let allRequest = Event.unpublishedEventsRequest(for: user)
         
         do {
             let results = try context.fetch(allRequest)

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed several causes of profile pictures and reposts showing infinite spinners.
 - Links to notes or profiles are now tappable.
 - Fixed a bug where the note options menu wouldn't show up sometimes.
 - Filter logged user from Discover screen.
