@@ -42,7 +42,8 @@ class SearchModel: ObservableObject {
                     if let searchSubscriptionID = self.searchSubscriptionID {
                         await self.relayService.removeSubscription(for: searchSubscriptionID)
                     }
-                    self.searchSubscriptionID = await self.relayService.openSubscription(with: Filter(kinds: [.metaData], search: query))
+                    let searchFilter = Filter(kinds: [.metaData], search: query)
+                    self.searchSubscriptionID = await self.relayService.openSubscription(with: searchFilter)
                 }
                 return query
             }
@@ -175,17 +176,7 @@ struct DiscoverView: View {
                         hideAfter: .now() + .seconds(Self.initialLoadTime)
                     )
                 } else {
-                    
-                    if searchModel.query.isEmpty {
-                        DiscoverGrid(predicate: predicate, columns: $columns)
-                    } else {
-                        VStack {
-                            StaggeredGrid(list: searchModel.authorSuggestions, columns: 1) { author in
-                                AuthorCard(author: author)
-//                                    .matchedGeometryEffect(id: author.hexadecimalPublicKey, in: animation)
-                            }
-                        }
-                    }
+                    DiscoverGrid(predicate: predicate, searchModel: searchModel, columns: $columns)
                     
                     if showRelayPicker, let author = currentUser.author {
                         RelayPicker(
@@ -198,38 +189,6 @@ struct DiscoverView: View {
                 }
             }
             .searchable(text: $searchModel.query, placement: .toolbar, prompt: PlainText(Localized.searchBar.string)) 
-//            {
-//                ForEach(searchModel.authorSuggestions, id: \.self) { author in
-//                    Button {
-//                        router.push(author)
-//                    } label: {
-//                        HStack(alignment: .center) {
-//                            AvatarView(imageUrl: author.profilePhotoURL, size: 24)
-//                            Text(author.safeName)
-//                                .lineLimit(1)
-//                                .font(.subheadline)
-//                                .foregroundColor(Color.primaryTxt)
-//                                .multilineTextAlignment(.leading)
-//                                .frame(maxWidth: .infinity, alignment: .leading)
-//                            if author.muted {
-//                                Text(Localized.mutedUser.string)
-//                                    .font(.subheadline)
-//                                    .foregroundColor(Color.secondaryText)
-//                            }
-//                            Spacer()
-//                            if let currentUser = CurrentUser.shared.author {
-//                                FollowButton(currentUserAuthor: currentUser, author: author)
-//                                    .padding(10)
-//                            }
-//                        }
-//                        .listRowInsets(.none)
-//                        .searchCompletion(author.safeName)
-//                    }
-//                    .listRowBackground(Color.appBg)
-//                }
-//                .scrollContentBackground(.hidden)
-//                .background(Color.appBg)
-//            }
             .autocorrectionDisabled()
             .onSubmit(of: .search) {
                 submitSearch()

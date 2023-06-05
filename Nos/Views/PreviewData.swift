@@ -10,6 +10,8 @@ import Foundation
 
 enum PreviewData {
     
+    // MARK: - Environment
+    
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
     static var router = Router()
@@ -17,6 +19,8 @@ enum PreviewData {
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
     static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
     static var relayService = RelayService(persistenceController: persistenceController)
+    
+    // MARK: - User
 
     @MainActor static var currentUser: CurrentUser = {
         let currentUser = CurrentUser(persistenceController: persistenceController)
@@ -26,12 +30,42 @@ enum PreviewData {
         return currentUser
     }()
 
+    // MARK: - Authors
+    
     static var previewAuthor: Author = {
+        alice
+    }()
+    
+    static var alice: Author = {
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
-        author.profilePhotoURL = URL(string: "https://avatars.githubusercontent.com/u/1165004?s=40&v=4")
+        author.name = "Alice"
+        author.nip05 = "alice@nos.social"
+        author.profilePhotoURL = URL(string: "https://github.com/planetary-social/nos/assets/1165004/07f83f00-4555-4db3-85fc-f1a05b1908a2")
+        author.about = """
+        Bitcoin Maximalist extraordinaire! 🚀 HODLing since the days of Satoshi's personal phone number. Always clad in my 'Bitcoin or Bust' t-shirt, preaching the gospel of the Orange Coin. 🍊 Lover of decentralized currencies, disruptive technology, and long walks on the blockchain. 💪 When I'm not evangelizing BTC, you'll find me stacking sats, perfecting my lambo moonwalk, and dreaming of a world ruled by blockchain memes. 💸 Join me on this rollercoaster ride to financial freedom, where we laugh at the mere mortals still stuck with fiat. #BitcoinFTW #WhenLambo 🚀
+        """
         return author
     }()
+    
+    static var bob: Author = {
+        let author = Author(context: previewContext)
+        author.hexadecimalPublicKey = KeyFixture.bob.publicKeyHex
+        author.name = "Bob"
+        author.profilePhotoURL = URL(string: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.r1ZOH5E3M6WiK6aw5GRdlAHaEK%26pid%3DApi&f=1&ipt=42ae9de7730da3bda152c5980cd64b14ccef37d8f55b8791e41b4667fc38ddf1&ipo=images")
+        
+        return author
+    }()
+    
+    static var eve: Author = {
+        let author = Author(context: previewContext)
+        author.hexadecimalPublicKey = KeyFixture.eve.publicKeyHex
+        author.name = "Eve"
+        
+        return author
+    }()
+    
+    // MARK: - Notes
     
     static var shortNote: Event {
         let note = Event(context: previewContext)
