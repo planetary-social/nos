@@ -10,7 +10,7 @@ import CoreData
 import Logger
 import Dependencies
 
-// swiftlint:disable type_body_length
+// swiftlint:disable type_body_length superfluous_disable_command
 class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
     
     @MainActor static let shared = CurrentUser(persistenceController: PersistenceController.shared)
@@ -50,9 +50,10 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         }
         
         let privateKeyData = Data(privateKeyHex.utf8)
-        let publicStatus = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKeyData)
-        Log.info("Saved private key to keychain for user: " +
-            "\(keyPair.publicKeyHex) / \(keyPair.npub). Keychain storage status: \(publicStatus)")
+        let status = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKeyData)
+        let hex = keyPair.publicKeyHex
+        let npub = keyPair.npub
+        Log.info("Saved private key to keychain for user: " + "\(hex) / \(npub). Keychain storage status: \(status)")
         _privateKeyHex = privateKeyHex
         analytics.identify(with: keyPair)
         
@@ -91,7 +92,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     @MainActor @Published var inNetworkAuthors = [Author]()
     
     private var authorWatcher: NSFetchedResultsController<Author>?
-                                             
+
     @MainActor init(persistenceController: PersistenceController) {
         self.viewContext = persistenceController.viewContext
         self.backgroundContext = persistenceController.newBackgroundContext()
@@ -142,7 +143,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 }
             }
             
-            Task(priority: .background) { 
+            Task(priority: .background) {
                 let dbStatistics = try await backgroundContext.perform {
                     try PersistenceController.databaseStatistics(from: self.backgroundContext)
                 }
@@ -201,8 +202,8 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             async let metaSub = relayService.openSubscription(with: metaFilter, to: overrideRelays)
             
             let contactFilter = Filter(
-                authorKeys: [key], 
-                kinds: [.contactList], 
+                authorKeys: [key],
+                kinds: [.contactList],
                 since: author.lastUpdatedContactList
             )
             async let contactSub = relayService.openSubscription(with: contactFilter, to: overrideRelays)
@@ -296,11 +297,14 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             about: author!.about,
             picture: author!.profilePhotoURL?.absoluteString
         ).dictionary
-        
+
+        guard let rawData = author?.rawMetadata else {
+            Log.debug("Error: no author metadata")
+            return
+        }
         // Tack on any unsupported fields back onto the dictionary before publish
-        if let rawData = author!.rawMetadata,
-            let rawJson = try? JSONSerialization.jsonObject(with: rawData),
-            let rawDictionary = rawJson as? [String: AnyObject] {
+        let rawJson = try? JSONSerialization.jsonObject(with: rawData)
+        if let rawJson, let rawDictionary = rawJson as? [String: AnyObject] {
             for key in rawDictionary.keys {
                 if metaEvent[key] == nil, let rawValue = rawDictionary[key] as? String {
                     metaEvent[key] = rawValue
@@ -309,14 +313,14 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             }
         }
 
-        guard let metaData = try? JSONSerialization.data(withJSONObject: metaEvent),
-            let metaString = String(data: metaData, encoding: .utf8) else {
+        let metaData = try? JSONSerialization.data(withJSONObject: metaEvent)
+        guard let metaData, let metaString = String(data: metaData, encoding: .utf8) else {
             Log.debug("Error: Invalid meta data")
             return
         }
 
         let jsonEvent = JSONEvent(pubKey: pubKey, kind: .metaData, tags: [], content: metaString)
-                
+
         if let pair = keyPair {
             do {
                 try await relayService.publishToAll(event: jsonEvent, signingKey: pair, context: viewContext)
@@ -340,7 +344,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             } catch {
                 Log.debug("Failed to update mute list \(error.localizedDescription)")
             }
-    }
+        }
     }
     
     @MainActor func publishDelete(for identifiers: [String], reason: String = "") async {
@@ -459,4 +463,4 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         author = controller.fetchedObjects?.first as? Author
     }
 }
-// swiftlint:enable type_body_length
+// swiftlint:enable type_body_length superfluous_disable_command

@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import secp256k1
 import Dependencies
 
 struct NoteOptionsButton: View {
@@ -30,6 +29,8 @@ struct NoteOptionsButton: View {
                 Image(systemName: "ellipsis")
                     .foregroundColor(.nosSecondary)
                     .frame(minWidth: 44, minHeight: 44)
+                    // This hack fixes a weird issue where the confirmationDialog wouldn't be shown sometimes. ¯\_(ツ)_/¯
+                    .background(showingOptions == true ? .clear : .clear)
             }
             .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
                 Button(Localized.copyNoteIdentifier.string) {
