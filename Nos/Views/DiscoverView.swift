@@ -247,7 +247,10 @@ struct DiscoverView: View {
     }
     
     func author(fromPublicKey publicKeyString: String) -> Author? {
-        guard let publicKey = PublicKey(npub: publicKeyString) ?? PublicKey(hex: publicKeyString) else {
+        let strippedString = publicKeyString.trimmingCharacters(
+            in: NSCharacterSet.whitespacesAndNewlines
+        )
+        guard let publicKey = PublicKey(npub: strippedString) ?? PublicKey(hex: strippedString) else {
             return nil
         }
         guard let author = try? Author.findOrCreate(by: publicKey.hex, context: viewContext) else {
