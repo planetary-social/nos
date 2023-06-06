@@ -62,6 +62,7 @@ struct NotificationsView: View {
                     ForEach(events.unmuted) { event in
                         if let user {
                             NotificationCard(note: event, user: user)
+                                .readabilityPadding()
                         }
                     }
                 }
