@@ -103,7 +103,8 @@
 "Localized.muted" = "Muted";
 "Localized.mutePrompt" = "Would you like to mute {{ user }}?";
 "Localized.share" = "Share";
-"Localized.reportNote" = "Report this note";
+"Localized.reportNote" = "Report note";
+"Localized.reportUser" = "Report user";
 "Localized.reportContent" = "Report Content";
 "Localized.confirmReport" = "Confirm Report";
 "Localized.reportConfirmation" = "This will publish a report that is publicly visible. Are you sure?";

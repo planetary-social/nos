@@ -19,6 +19,7 @@ struct ProfileView: View {
     @Dependency(\.analytics) private var analytics
     
     @State private var showingOptions = false
+    @State private var showingReportMenu = false
     
     @State private var subscriptionIds: [String] = []
     
@@ -149,11 +150,16 @@ struct ProfileView: View {
                                         }
                                     }
                                 }
+                                
+                                Button(Localized.reportUser.string) {
+                                    showingReportMenu = true
+                                }
                             }
                         }
                     }
                 }
         )
+        .reportMenu($showingReportMenu, reportedObject: .author(author))
         .task(priority: .userInitiated) {
             refreshProfileFeed()
         }
@@ -192,8 +198,11 @@ struct IdentityView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationStack {
-            ProfileView(author: author)
+            ProfileView(author: PreviewData.previewAuthor)
         }
-        .environment(\.managedObjectContext, previewContext)
+        .environment(\.managedObjectContext, PreviewData.previewContext)
+        .environmentObject(PreviewData.relayService)
+        .environmentObject(PreviewData.router)
+        .environmentObject(PreviewData.currentUser)
     }
 }
