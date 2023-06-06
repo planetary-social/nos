@@ -19,6 +19,7 @@ struct ProfileView: View {
     @Dependency(\.analytics) private var analytics
     
     @State private var showingOptions = false
+    @State private var showingReportMenu = false
     
     @State private var subscriptionIds: [String] = []
     
@@ -98,7 +99,7 @@ struct ProfileView: View {
                 }
             })
         }
-        .nosNavigationBar(title: .profile)
+        .nosNavigationBar(title: .profileTitle)
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
         }                  
@@ -143,17 +144,22 @@ struct ProfileView: View {
                                         }
                                     }
                                 } else {
-                                    Button(Localized.muteUser.string) {
+                                    Button(Localized.mute.string) {
                                         Task {
                                             await router.viewedAuthor?.mute(context: viewContext)
                                         }
                                     }
+                                }
+                                
+                                Button(Localized.reportUser.string, role: .destructive) {
+                                    showingReportMenu = true
                                 }
                             }
                         }
                     }
                 }
         )
+        .reportMenu($showingReportMenu, reportedObject: .author(author))
         .task(priority: .userInitiated) {
             refreshProfileFeed()
         }
@@ -192,8 +198,11 @@ struct IdentityView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationStack {
-            ProfileView(author: author)
+            ProfileView(author: PreviewData.previewAuthor)
         }
-        .environment(\.managedObjectContext, previewContext)
+        .environment(\.managedObjectContext, PreviewData.previewContext)
+        .environmentObject(PreviewData.relayService)
+        .environmentObject(PreviewData.router)
+        .environmentObject(PreviewData.currentUser)
     }
 }
