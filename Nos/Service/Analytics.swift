@@ -120,10 +120,6 @@ class Analytics {
         track("Reported", properties: ["type": reportedObject.displayString])
     }
     
-    func mutedUser() {
-        track("Muted User")
-    }
-    
     func identify(with keyPair: KeyPair) {
         Log.info("Analytics: Identified \(keyPair.npub)")
         postHog?.identify(keyPair.npub)

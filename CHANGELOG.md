@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add the ability to report notes and profiles using NIP-32 labels and NIP-69 classification.
 - Fixed a crash which occurs on some versions of MacOS when attempting to mention other users during post creation.
 - Fixed a bug where the note options menu wouldn't show up sometimes.
 

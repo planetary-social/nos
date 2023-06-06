@@ -7,15 +7,23 @@
 
 import Foundation
 
+/// Represents a report of inappropriate content by the user.
 struct Report {
+    
+    /// The object being reported.
     var target: ReportTarget
+    
+    /// The reason the object is inappropriate.
     var reasons: [ReportCategory]
 }
 
+/// The types of objects that can be reported. 
 enum ReportTarget {
+    
     case note(Event)
     case author(Author)
     
+    /// The author who owns the content being reported.
     var author: Author? {
         switch self {
         case .note(let note):
@@ -35,14 +43,22 @@ enum ReportTarget {
     }
 }
 
+/// A model for potential reasons why something might be reported.
 struct ReportCategory: Identifiable {
+    
+    /// A human readable description of the reason/category. Should be short enough to fit in an action menu.
     var displayName: String 
+    
+    /// The machine-readable code corresponding to this category. 
     var code: String 
+    
+    /// A list of all sub-categories that narrow this one down.
     var subCategories: [ReportCategory]?
     
     var id: String { code }
 }
 
+/// Vocabulary from [NIP-69](https://github.com/nostr-protocol/nips/pull/457).
 let topLevelCategories = [
     ReportCategory(displayName: "Coarse Language", code: "CL"),
     ReportCategory(

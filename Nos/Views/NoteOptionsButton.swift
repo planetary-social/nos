@@ -51,7 +51,6 @@ struct NoteOptionsButton: View {
                     showingSource = true
                 }
                 Button(Localized.reportNote.string, role: .destructive) {
-//                    Analytics.shared.trackDidSelectAction(actionName: "report_post")
                     showingReportMenu = true
                 }
                 if note.author == currentUser.author {
