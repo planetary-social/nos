@@ -147,7 +147,7 @@ struct ProfileHeader: View {
         }
         .onDisappear {
             Task(priority: .userInitiated) {
-                await relayService.removeSubscription(for: subscriptionId)
+                await relayService.decrementSubscriptionCount(for: subscriptionId)
                 subscriptionId = ""
             }
         }
