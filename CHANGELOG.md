@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (46)] - 2023-06-06Z
+
 - Add the ability to report notes and profiles using NIP-32 labels and NIP-69 classification.
 - Fixed a crash which occurs on some versions of MacOS when attempting to mention other users during post creation.
 - Add the ability to search for users by name from the Discover tab
