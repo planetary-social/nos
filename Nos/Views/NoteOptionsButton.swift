@@ -50,7 +50,7 @@ struct NoteOptionsButton: View {
                     analytics.viewedNoteSource()
                     showingSource = true
                 }
-                Button(Localized.reportPost.string, role: .destructive) {
+                Button(Localized.reportNote.string, role: .destructive) {
 //                    Analytics.shared.trackDidSelectAction(actionName: "report_post")
                     showingReportMenu = true
                 }
@@ -61,7 +61,7 @@ struct NoteOptionsButton: View {
                     }
                 }
             }
-            .reportMenu($showingReportMenu, reportedObject: .event(note))
+            .reportMenu($showingReportMenu, reportedObject: .note(note))
             .sheet(isPresented: $showingSource) {
                 NavigationView {
                     RawEventView(viewModel: RawEventController(note: note, dismissHandler: {

@@ -35,7 +35,7 @@ struct FollowCard: View {
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         if author.muted {
-                            Text(Localized.mutedUser.string)
+                            Text(Localized.muted.string)
                                 .font(.subheadline)
                                 .foregroundColor(Color.secondaryText)
                         }

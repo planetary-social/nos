@@ -6,7 +6,12 @@
 //
 
 import SwiftUI
+import Dependencies
+import Logger
 
+/// The report menu can be added to another element and controlled with the `isPresented` variable. When `isPresented`
+/// is set to `true` it will walk the user through a series of menus that allows them to report content in a given
+/// category and optionally mute the respective author.
 struct ReportMenuModifier: ViewModifier {
     
     @Binding var isPresented: Bool
@@ -20,50 +25,60 @@ struct ReportMenuModifier: ViewModifier {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var currentUser: CurrentUser
+    @Dependency(\.analytics) private var analytics: Analytics
     
     func body(content: Content) -> some View {
         content
-            .confirmationDialog("Report Content", isPresented: $isPresented, titleVisibility: .visible) {
+            // ReportCategory menu
+            .confirmationDialog(Localized.reportContent.string, isPresented: $isPresented, titleVisibility: .visible) {
                 if let selectedCategory {
                     subCategoryButtons(for: selectedCategory.subCategories ?? [])
                 } else {
                     subCategoryButtons(for: topLevelCategories)
                 }
             }
+            // Report confirmation menu
             .alert(
-                "Confirm Report", 
+                Localized.confirmReport.string, 
                 isPresented: $confirmReport,
                 actions: { 
-                    Button("Confirm") { 
+                    Button(Localized.confirm.string) { 
                         publishReport()
-                        showMuteDialog = true
+                        if let author = reportedObject.author, !author.muted {
+                            showMuteDialog = true
+                        }
                     }
-                    Button("Cancel", role: .cancel) { 
+                    Button(Localized.cancel.string, role: .cancel) { 
                         selectedCategory = nil
                     }
                 },
                 message: {
-                    // TODO: show what is being reported and why
-                    Text("This will publish a report that is publicly visible. Are you sure?")
+                    Localized.reportConfirmation.view
                 }
             ) 
+            // Mute user menu
             .alert(
-                "Mute User", 
+                Localized.muteUser.string, 
                 isPresented: $showMuteDialog,
                 actions: { 
-                    Button("Yes") { 
-                        print("user muted ")
-                        Task { await reportedObject.author?.mute(context: viewContext) }
+                    if let author = reportedObject.author {
+                        Button(Localized.yes.string) { 
+                            Task { await author.mute(context: viewContext) }
+                        }
+                        Button(Localized.no.string) {}
                     }
-                    Button("No") { }
                 },
                 message: {
-                    // TODO: handle nil author
-                    Text("Would you like to mute \(reportedObject.author!.safeName)?")
+                    if let author = reportedObject.author {
+                        Localized.mutePrompt.view(["user": author.safeName])
+                    } else {
+                        Localized.error.view
+                    }
                 }
             ) 
     }
     
+    /// Generates a series of Buttons for the given report categories.
     func subCategoryButtons(for categories: [ReportCategory]) -> some View {
         ForEach(categories) { subCategory in
             Button(subCategory.displayName) { 
@@ -79,13 +94,13 @@ struct ReportMenuModifier: ViewModifier {
         }
     }
     
+    /// Publishes a report for the currently selected 
     func publishReport() {
         guard let keyPair = currentUser.keyPair,
             let selectedCategory else {
-            // TODO: show error
+            Log.error("Cannot publish report - No signed in user")
             return 
         }
-        print("user published report for \(selectedCategory.displayName)")
         let event = JSONEvent(
             pubKey: keyPair.publicKeyHex, 
             kind: .label, 
@@ -99,8 +114,9 @@ struct ReportMenuModifier: ViewModifier {
         Task {
             do {
                 try await relayService.publishToAll(event: event, signingKey: keyPair, context: viewContext)
-            } catch {
-                // TODO: handle error
+                analytics.reported(reportedObject)
+            } catch {            
+                Log.error("Failed to publish report: \(error.localizedDescription)")
             }
         }
     }
@@ -120,7 +136,7 @@ struct ReportMenu_Previews: PreviewProvider {
                 Button("Report this") { 
                     binding.wrappedValue.toggle()
                 }
-                .reportMenu(binding, reportedObject: .event(PreviewData.imageNote))
+                .reportMenu(binding, reportedObject: .note(PreviewData.imageNote))
             }
         }
     }

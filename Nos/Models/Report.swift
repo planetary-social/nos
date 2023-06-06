@@ -13,15 +13,24 @@ struct Report {
 }
 
 enum ReportTarget {
-    case event(Event)
+    case note(Event)
     case author(Author)
     
     var author: Author? {
         switch self {
-        case .event(let event):
-            return event.author
+        case .note(let note):
+            return note.author
         case .author(let author):
             return author
+        }
+    }
+    
+    var displayString: String {
+        switch self {
+        case .note:
+            return Localized.note.string
+        case .author:
+            return Localized.profile.string
         }
     }
 }

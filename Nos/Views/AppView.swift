@@ -42,7 +42,7 @@ struct AppView: View {
             case .newNote:
                 return Localized.newNote.view
             case .profile:
-                return Localized.profile.view
+                return Localized.profileTitle.view
             }
         }
         
@@ -57,7 +57,7 @@ struct AppView: View {
             case .newNote:
                 return Localized.newNote.string
             case .profile:
-                return Localized.profile.string
+                return Localized.profileTitle.string
             }
         }
     }
@@ -142,7 +142,7 @@ struct AppView: View {
                         ProfileTab(author: author, path: $router.profilePath)
                             .tabItem {
                                 VStack {
-                                    let text = Localized.profile.view
+                                    let text = Localized.profileTitle.view
                                     if $router.selectedTab.wrappedValue == .profile {
                                         Image.tabProfileSelected
                                         text.foregroundColor(.textColor)

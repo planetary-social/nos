@@ -98,7 +98,7 @@ struct ProfileView: View {
                 }
             })
         }
-        .nosNavigationBar(title: .profile)
+        .nosNavigationBar(title: .profileTitle)
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
         }                  
@@ -143,7 +143,7 @@ struct ProfileView: View {
                                         }
                                     }
                                 } else {
-                                    Button(Localized.muteUser.string) {
+                                    Button(Localized.mute.string) {
                                         Task {
                                             await router.viewedAuthor?.mute(context: viewContext)
                                         }
