@@ -128,8 +128,8 @@ struct DiscoverView: View {
                     }
                 }
             }
-            .searchable(text: $searchModel.query, placement: .toolbar, prompt: PlainText(Localized.searchBar.string)) {
-                ForEach(searchModel.authorSuggestions, id: \.self) { author in
+            .searchable(text: $searchController.query, placement: .toolbar, prompt: PlainText(Localized.searchBar.string)) {
+                ForEach(searchController.authorSuggestions, id: \.self) { author in
                     Button {
                         router.push(author)
                     } label: {
