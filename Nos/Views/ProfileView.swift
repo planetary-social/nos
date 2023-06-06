@@ -34,7 +34,7 @@ struct ProfileView: View {
         Task(priority: .userInitiated) {
             // Close out stale requests
             if !subscriptionIds.isEmpty {
-                await relayService.removeSubscriptions(for: subscriptionIds)
+                await relayService.decrementSubscriptionCount(for: subscriptionIds)
                 subscriptionIds.removeAll()
             }
             
@@ -166,7 +166,7 @@ struct ProfileView: View {
         }
         .onDisappear {
             Task(priority: .userInitiated) {
-                await relayService.removeSubscriptions(for: subscriptionIds)
+                await relayService.decrementSubscriptionCount(for: subscriptionIds)
                 subscriptionIds.removeAll()
             }
         }

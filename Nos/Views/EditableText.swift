@@ -68,7 +68,7 @@ struct EditableText: UIViewRepresentable {
             let mention = NSAttributedString(
                 string: "@\(author.safeName)",
                 attributes: view?.typingAttributes.merging(
-                    [NSAttributedString.Key.link: url],
+                    [NSAttributedString.Key.link: url.absoluteString],
                     uniquingKeysWith: { lhs, _ in lhs }
                 )
             )
