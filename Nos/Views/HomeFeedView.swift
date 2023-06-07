@@ -68,15 +68,6 @@ struct HomeFeedView: View {
             let textSub = await relayService.openSubscription(with: textFilter)
             subscriptionIDs.append(textSub)
         }
-        
-        let currentUserAuthorKeys = [currentUserKey]
-        let userLikesFilter = Filter(
-            authorKeys: currentUserAuthorKeys,
-            kinds: [.like, .delete],
-            since: fetchSinceDate
-        )
-        let userLikesSub = await relayService.openSubscription(with: userLikesFilter)
-        subscriptionIDs.append(userLikesSub)
     }
     
     func cancelSubscriptions() async {

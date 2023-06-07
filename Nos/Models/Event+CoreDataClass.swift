@@ -239,6 +239,15 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func lastReceived(for user: Author) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = NSPredicate(format: "author != %@", user)
+        fetchRequest.fetchLimit = 1
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
+        return fetchRequest
+    }
+    
     @nonobjc public class func allReplies(to rootEvent: Event) -> NSFetchRequest<Event> {
         allReplies(toNoteWith: rootEvent.identifier)
     }
