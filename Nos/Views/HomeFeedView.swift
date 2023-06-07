@@ -17,7 +17,6 @@ struct HomeFeedView: View {
     @EnvironmentObject var router: Router
     @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
-    @AppStorage("lastHomeFeedRequestDate") var lastRequestDateUnix: TimeInterval?
     
     @FetchRequest var events: FetchedResults<Event>
     @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
@@ -42,19 +41,6 @@ struct HomeFeedView: View {
             
         guard let currentUserKey = currentUser.publicKeyHex else {
             return
-        }
-        
-        var fetchSinceDate: Date?
-        // Make sure the lastRequestDate was more than a minute ago
-        // to make sure we got all the events from it.
-        if let lastRequestDateUnix {
-            let lastRequestDate = Date(timeIntervalSince1970: lastRequestDateUnix)
-            if lastRequestDate.distance(to: .now) > 60 {
-                fetchSinceDate = lastRequestDate
-                self.lastRequestDateUnix = Date.now.timeIntervalSince1970
-            }
-        } else {
-            self.lastRequestDateUnix = Date.now.timeIntervalSince1970
         }
                 
         if !followedKeys.isEmpty {
