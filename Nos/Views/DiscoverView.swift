@@ -71,7 +71,7 @@ struct DiscoverView: View {
     
     func updatePredicate() {
         if let relayFilter {
-            predicate = Event.seen(on: relayFilter, before: date)
+            predicate = Event.seen(on: relayFilter, before: date, exceptFrom: currentUser.author)
         } else {
             predicate = Event.extendedNetworkPredicate(featuredAuthors: featuredAuthors, before: date)
         }
@@ -98,8 +98,8 @@ struct DiscoverView: View {
         } else {
             
             var fetchSinceDate: Date?
-            /// Make sure the lastRequestDate was more than a minute ago
-            /// to make sure we got all the events from it.
+            // Make sure the lastRequestDate was more than a minute ago
+            // to make sure we got all the events from it.
             if let lastRequestDateUnix {
                 let lastRequestDate = Date(timeIntervalSince1970: lastRequestDateUnix)
                 if lastRequestDate.distance(to: .now) > 60 {
@@ -136,7 +136,7 @@ struct DiscoverView: View {
     
     func cancelSubscriptions() async {
         if !subscriptionIDs.isEmpty {
-            await relayService.removeSubscriptions(for: subscriptionIDs)
+            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
             subscriptionIDs.removeAll()
         }
     }
@@ -177,7 +177,7 @@ struct DiscoverView: View {
                                 .multilineTextAlignment(.leading)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             if author.muted {
-                                Text(Localized.mutedUser.string)
+                                Text(Localized.muted.string)
                                     .font(.subheadline)
                                     .foregroundColor(Color.secondaryText)
                             }
@@ -280,7 +280,10 @@ struct DiscoverView: View {
     }
     
     func author(fromPublicKey publicKeyString: String) -> Author? {
-        guard let publicKey = PublicKey(npub: publicKeyString) ?? PublicKey(hex: publicKeyString) else {
+        let strippedString = publicKeyString.trimmingCharacters(
+            in: NSCharacterSet.whitespacesAndNewlines
+        )
+        guard let publicKey = PublicKey(npub: strippedString) ?? PublicKey(hex: strippedString) else {
             return nil
         }
         guard let author = try? Author.findOrCreate(by: publicKey.hex, context: viewContext) else {
