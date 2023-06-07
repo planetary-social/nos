@@ -64,7 +64,7 @@ struct ProfileHeader: View {
                             if author != CurrentUser.shared.author, let currentUser = CurrentUser.shared.author {
                                 FollowButton(currentUserAuthor: currentUser, author: author)
                                 if author.muted {
-                                    Text(Localized.mutedUser.string)
+                                    Text(Localized.muted.string)
                                         .font(.subheadline)
                                         .foregroundColor(Color.secondaryText)
                                 }
