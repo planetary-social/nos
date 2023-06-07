@@ -159,6 +159,7 @@ actor RelaySubscriptionManager {
         var subscription = subscription
         subscription.subscriptionStartDate = .now
         updateSubscriptions(with: subscription)
+        Log.info("starting subscription: \(subscription.id)")
         relays.forEach { relayURL in
             if let socket = socket(for: relayURL) {
                 requestEvents(from: socket, subscription: subscription)

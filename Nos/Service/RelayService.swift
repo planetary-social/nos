@@ -182,9 +182,9 @@ extension RelayService {
         }
         
         if !staleSubscriptions.isEmpty {
-            Log.info("Found \(staleSubscriptions.count) stale subscriptions. Closing.")
             
             for staleSubscription in staleSubscriptions {
+                Log.info("Subscription \(staleSubscription.id) is stale. Closing.")
                 await subscriptions.forceCloseSubscriptionCount(for: staleSubscription.id)
                 await sendCloseToAll(for: staleSubscription.id)
             }
@@ -214,7 +214,8 @@ extension RelayService {
             return
         }
         
-        guard let eventJSON = responseArray[safe: 2] as? [String: Any] else {
+        guard let eventJSON = responseArray[safe: 2] as? [String: Any] ,
+            let subscriptionID = responseArray[safe: 1] as? RelaySubscription.ID else {
             print("Error: invalid EVENT JSON: \(responseArray)")
             return
         }
@@ -224,8 +225,7 @@ extension RelayService {
         }
         
         do {
-            let allSubscriptions = await subscriptions.all
-            let fulfilledSubscriptions = try await self.parseContext.perform {
+            try await self.parseContext.perform {
                 let relay = self.relay(from: socket, in: self.parseContext)
                 let event = try EventProcessor.parse(
                     jsonObject: eventJSON,
@@ -234,16 +234,13 @@ extension RelayService {
                 )
                 
                 relay.unwrap { event.trackDelete(on: $0, context: self.parseContext) }
-                
-                return allSubscriptions.filter { $0.filter.isFulfilled(by: event) }
             }
             
-            if !fulfilledSubscriptions.isEmpty {
-                Log.info("found \(fulfilledSubscriptions.count) fulfilled filter. Closing.")
-                for fulfilledSubscription in fulfilledSubscriptions {
-                    await subscriptions.forceCloseSubscriptionCount(for: fulfilledSubscription.id)
-                    await sendCloseToAll(for: fulfilledSubscription.id)
-                }
+            if let subscription = await subscriptions.subscription(from: subscriptionID),
+                subscription.isOneTime {
+                Log.info("detected subscription with id \(subscription.id) has been fulfilled. Closing.")
+                await subscriptions.forceCloseSubscriptionCount(for: subscription.id)
+                await sendCloseToAll(for: subscription.id)
             }
         } catch {
             print("Error: parsing event from relay (\(socket.request.url?.absoluteString ?? "")): " +
