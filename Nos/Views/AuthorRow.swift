@@ -13,6 +13,7 @@ struct AuthorRow: View {
     @ObservedObject var author: Author
 
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var currentUser: CurrentUser
 
     var didTapGesture: (() -> Void)?
 
@@ -31,7 +32,7 @@ struct AuthorRow: View {
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         if author.muted {
-                            Text(Localized.mutedUser.string)
+                            Text(Localized.muted.string)
                                 .font(.subheadline)
                                 .foregroundColor(Color.secondaryText)
                         }

@@ -42,7 +42,7 @@ class SearchController: ObservableObject {
                 // SIDE EFFECT WARNING
                 Task { [query] in
                     if let searchSubscriptionID = self.searchSubscriptionID {
-                        await self.relayService.removeSubscription(for: searchSubscriptionID)
+                        await self.relayService.decrementSubscriptionCount(for: searchSubscriptionID)
                     }
                     let searchFilter = Filter(kinds: [.metaData], search: query)
                     self.searchSubscriptionID = await self.relayService.openSubscription(with: searchFilter)

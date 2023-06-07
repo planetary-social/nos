@@ -129,36 +129,6 @@ struct DiscoverView: View {
                 }
             }
             .searchable(
-                ForEach(searchModel.authorSuggestions, id: \.self) { author in
-                    Button {
-                        router.push(author)
-                    } label: {
-                        HStack(alignment: .center) {
-                            AvatarView(imageUrl: author.profilePhotoURL, size: 24)
-                            Text(author.safeName)
-                                .lineLimit(1)
-                                .font(.subheadline)
-                                .foregroundColor(Color.primaryTxt)
-                                .multilineTextAlignment(.leading)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            if author.muted {
-                                Text(Localized.muted.string)
-                                    .font(.subheadline)
-                                    .foregroundColor(Color.secondaryText)
-                            }
-                            Spacer()
-                            if let currentUser = CurrentUser.shared.author {
-                                FollowButton(currentUserAuthor: currentUser, author: author)
-                                    .padding(10)
-                            }
-                        }
-                        .listRowInsets(.none)
-                        .searchCompletion(author.safeName)
-                    }
-                    .listRowBackground(Color.appBg)
-                }
-                .scrollContentBackground(.hidden)
-                .background(Color.appBg)
                 text: $searchController.query, 
                 placement: .toolbar, 
                 prompt: PlainText(Localized.searchBar.string)
