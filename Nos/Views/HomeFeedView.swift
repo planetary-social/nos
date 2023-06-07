@@ -39,10 +39,6 @@ struct HomeFeedView: View {
         
         let followedKeys = currentUser.socialGraph.followedKeys 
             
-        guard let currentUserKey = currentUser.publicKeyHex else {
-            return
-        }
-                
         if !followedKeys.isEmpty {
             // TODO: we could miss events with this since filter
             let textFilter = Filter(

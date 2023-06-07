@@ -214,7 +214,7 @@ extension RelayService {
             return
         }
         
-        guard let eventJSON = responseArray[safe: 2] as? [String: Any] ,
+        guard let eventJSON = responseArray[safe: 2] as? [String: Any],
             let subscriptionID = responseArray[safe: 1] as? RelaySubscription.ID else {
             print("Error: invalid EVENT JSON: \(responseArray)")
             return
