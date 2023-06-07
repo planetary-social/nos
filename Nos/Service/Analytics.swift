@@ -116,6 +116,10 @@ class Analytics {
         track("Unfollowed", properties: ["unfollowed": author.publicKey?.npub ?? ""])
     }
     
+    func reported(_ reportedObject: ReportTarget) {
+        track("Reported", properties: ["type": reportedObject.displayString])
+    }
+    
     func identify(with keyPair: KeyPair) {
         Log.info("Analytics: Identified \(keyPair.npub)")
         postHog?.identify(keyPair.npub)
