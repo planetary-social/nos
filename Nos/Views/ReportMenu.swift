@@ -123,6 +123,10 @@ struct ReportMenuModifier: ViewModifier {
 }
 
 extension View {
+    
+    /// The report menu can be added to another element and controlled with the `isPresented` variable. When 
+    /// `isPresented` is set to `true` it will walk the user through a series of menus that allows them to report 
+    /// content in a given category and optionally mute the respective author.
     func reportMenu(_ show: Binding<Bool>, reportedObject: ReportTarget) -> some View {
         self.modifier(ReportMenuModifier(isPresented: show, reportedObject: reportedObject))
     }

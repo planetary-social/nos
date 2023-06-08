@@ -13,6 +13,7 @@ struct AuthorRow: View {
     @ObservedObject var author: Author
 
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var currentUser: CurrentUser
 
     var didTapGesture: (() -> Void)?
 

@@ -13,6 +13,7 @@ struct AuthorCard: View {
     @ObservedObject var author: Author 
     
     @EnvironmentObject private var router: Router
+    @EnvironmentObject private var currentUser: CurrentUser
     
     var body: some View {
         Button {
@@ -36,16 +37,23 @@ struct AuthorCard: View {
                     .lineLimit(1)
                     .foregroundColor(.primaryTxt)
                     .font(.subheadline)
-                Text(author.nip05 ?? author.npubString ?? "")
-                    .foregroundColor(.secondaryText)
-                    .font(.footnote)
-                    .lineLimit(1)
-                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
-                Text(author.about ?? "")
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .multilineTextAlignment(.center)
-                    .allowsHitTesting(false)
-                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+                
+                if author.muted {
+                    Text(Localized.muted.string)
+                        .font(.subheadline)
+                        .foregroundColor(Color.secondaryText)
+                } else {
+                    Text(author.nip05 ?? author.npubString ?? "")
+                        .foregroundColor(.secondaryText)
+                        .font(.footnote)
+                        .lineLimit(1)
+                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
+                    Text(author.about ?? "")
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .multilineTextAlignment(.center)
+                        .allowsHitTesting(false)
+                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+                }
                 Spacer(minLength: 9)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
