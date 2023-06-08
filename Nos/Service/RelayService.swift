@@ -264,7 +264,7 @@ extension RelayService {
                     
                     if success {
                         print("\(eventId) has published successfully to \(socketUrl)")
-                        event.publishedTo = (event.publishedTo ?? NSSet()).adding(relay)
+                        event.publishedTo.insert(relay)
                         
                         // Receiving a confirmation of my own deletion event
                         event.trackDelete(on: relay, context: self.backgroundContext)
@@ -273,7 +273,7 @@ extension RelayService {
                         if responseArray.count > 2, let message = responseArray[3] as? String {
                             // Mark duplicates or replaces as done on our end
                             if message.contains("replaced:") || message.contains("duplicate:") {
-                                event.publishedTo = (event.publishedTo ?? NSSet()).adding(relay)
+                                event.publishedTo.insert(relay)
                             } else {
                                 print("\(eventId) has been rejected. Given reason: \(message)")
                             }
@@ -392,7 +392,7 @@ extension RelayService {
         try await context.perform {
             let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
             let relays = try context.fetch(Relay.relays(for: event.author!))
-            event.shouldBePublishedTo = NSSet(array: relays)
+            event.shouldBePublishedTo = Set(relays)
             try context.save()
         }
         
@@ -410,11 +410,7 @@ extension RelayService {
             let userSentEvents = Event.unpublishedEvents(for: user, context: objectContext)
             
             for event in userSentEvents {
-                let shouldBePublishedToRelays: NSMutableSet = (event.shouldBePublishedTo ?? NSSet())
-                    .mutableCopy() as! NSMutableSet
-                let publishedRelays = (event.publishedTo ?? NSSet()) as Set
-                shouldBePublishedToRelays.minus(publishedRelays)
-                let missedRelays: [Relay] = Array(Set(_immutableCocoaSet: shouldBePublishedToRelays))
+                let missedRelays = event.shouldBePublishedTo.subtracting(event.publishedTo)
                 
                 print("\(missedRelays.count) relays missing a published event.")
                 for missedRelay in missedRelays {
@@ -475,9 +471,8 @@ extension RelayService {
                 return overrideRelays
             }
             if let currentUserPubKey = self.currentUser.publicKeyHex,
-                let currentUser = try? Author.find(by: currentUserPubKey, context: self.backgroundContext),
-                let userRelays = currentUser.relays?.allObjects as? [Relay] {
-                return userRelays.compactMap { $0.addressURL }
+                let currentUser = try? Author.find(by: currentUserPubKey, context: self.backgroundContext) {
+                return currentUser.relays.compactMap { $0.addressURL }
             } else {
                 return []
             }

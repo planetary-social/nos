@@ -120,7 +120,7 @@ public class Relay: NosManagedObject {
         self.address = addressURL.absoluteString
         self.createdAt = Date.now
         if let author {
-            authors = (authors ?? NSSet()).adding(author)
+            authors.insert(author)
             author.add(relay: self)
         }
     }

@@ -124,7 +124,7 @@ struct PersistenceController {
         
         if let publicKey = CurrentUser.shared.publicKeyHex {
             let currentAuthor = try! Author.findOrCreate(by: publicKey, context: context)
-            currentAuthor.follows = NSSet(array: follows)
+            currentAuthor.follows = Set(follows)
         }
     }
     

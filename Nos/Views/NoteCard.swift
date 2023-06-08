@@ -248,7 +248,7 @@ struct NoteCard: View {
         }
         
         var tags: [[String]] = []
-        if let eventReferences = note.eventReferences?.array as? [EventReference] {
+        if let eventReferences = note.eventReferences.array as? [EventReference] {
             // compactMap returns an array of the non-nil results.
             tags += eventReferences.compactMap { event in
                 guard let eventId = event.eventId else { return nil }
@@ -256,7 +256,7 @@ struct NoteCard: View {
             }
         }
 
-        if let authorReferences = note.authorReferences?.array as? [EventReference] {
+        if let authorReferences = note.authorReferences.array as? [EventReference] {
             tags += authorReferences.compactMap { author in
                 guard let eventId = author.eventId else { return nil }
                 return ["p", eventId]

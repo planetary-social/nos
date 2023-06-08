@@ -75,7 +75,7 @@ struct ProfileHeader: View {
                         Button {
                             router.currentPath.wrappedValue.append(follows)
                         } label: {
-                            Text("\(Localized.following.string): \(author.follows?.count ?? 0)")
+                            Text("\(Localized.following.string): \(author.follows.count)")
                         }
                         
                         if !(author.uns ?? "").isEmpty {

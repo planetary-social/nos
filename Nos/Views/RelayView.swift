@@ -52,7 +52,7 @@ struct RelayView: View {
                     }
                 }
                 
-                if author.relays?.count == 0 {
+                if author.relays.count == 0 {
                     Localized.noRelaysMessage.view
                 }
             } header: {
@@ -66,7 +66,7 @@ struct RelayView: View {
                 endPoint: .bottom
             ))
             
-            let authorRelayUrls = (author.relays as? Set<Relay>)?.compactMap { $0.address } ?? []
+            let authorRelayUrls = author.relays.compactMap { $0.address }
             let recommendedRelays = Relay.recommended.filter { !authorRelayUrls.contains($0) }
             
             if !recommendedRelays.isEmpty {
