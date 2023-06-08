@@ -198,22 +198,19 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 subscriptions.removeAll()
             }
             
-            let metaFilter = Filter(authorKeys: [key], kinds: [.metaData], since: author.lastUpdatedMetadata)
-            async let metaSub = relayService.openSubscription(with: metaFilter, to: overrideRelays)
+            // Subscribe to our own events of all kinds.
+            let latestRecievedEvent = try? viewContext.fetch(Event.lastReceived(for: author)).first
+            let allEventsFilter = Filter(authorKeys: [key], since: latestRecievedEvent?.receivedAt)
+            subscriptions.append(await relayService.openSubscription(with: allEventsFilter))
             
+            // Always make a one time request for the latest contact list
             let contactFilter = Filter(
                 authorKeys: [key],
                 kinds: [.contactList],
+                limit: 1,
                 since: author.lastUpdatedContactList
             )
-            async let contactSub = relayService.openSubscription(with: contactFilter, to: overrideRelays)
-            
-            let muteListFilter = Filter(authorKeys: [key], kinds: [.mute])
-            async let muteSub = relayService.openSubscription(with: muteListFilter, to: overrideRelays)
-            
-            subscriptions.append(await metaSub)
-            subscriptions.append(await contactSub)
-            subscriptions.append(await muteSub)
+            subscriptions.append(await relayService.openSubscription(with: contactFilter, to: overrideRelays))
         }
     }
     

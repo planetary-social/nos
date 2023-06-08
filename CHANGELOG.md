@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Improved performance of the relay manager
+
 ## [0.1 (46)] - 2023-06-06Z
 
 - Add the ability to report notes and profiles using NIP-32 labels and NIP-69 classification.
