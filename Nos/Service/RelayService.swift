@@ -220,20 +220,24 @@ extension RelayService {
             return
         }
         
+        #if DEBUG
+        Log.info("from \(socket.host): EVENT type: \(eventJSON["kind"] ?? "nil") subID: \(subscriptionID)")
+        #endif
+
         if await !shouldParseEvent(responseArray: responseArray, json: eventJSON) {
             return
         }
         
         do {
-            try await self.parseContext.perform {
+            try await self.parseContext.perform(schedule: .enqueued) {
                 let relay = self.relay(from: socket, in: self.parseContext)
-                let event = try EventProcessor.parse(
+                if let event = try EventProcessor.parse(
                     jsonObject: eventJSON,
                     from: relay,
                     in: self.parseContext
-                )
-                
-                relay.unwrap { event.trackDelete(on: $0, context: self.parseContext) }
+                ) {
+                    relay.unwrap { event.trackDelete(on: $0, context: self.parseContext) }
+                }
             }
             
             if let subscription = await subscriptions.subscription(from: subscriptionID),
@@ -257,7 +261,7 @@ extension RelayService {
             let eventId = responseArray[1] as? String,
             let socketUrl = socket.request.url?.absoluteString {
             
-            await backgroundContext.perform {
+            await backgroundContext.perform(schedule: .enqueued) {
                 
                 if let event = Event.find(by: eventId, context: self.backgroundContext),
                     let relay = self.relay(from: socket, in: self.backgroundContext) {
@@ -289,9 +293,6 @@ extension RelayService {
     }
     
     private func parseResponse(_ response: String, _ socket: WebSocket) async {
-        #if DEBUG
-        Log.info("from \(socket.host): \(response)")
-        #endif
         
         do {
             guard let responseData = response.data(using: .utf8) else {
@@ -390,7 +391,10 @@ extension RelayService {
         try jsonEvent.sign(withKey: signingKey)
         
         try await context.perform {
-            let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
+            guard let event = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context) else {
+                Log.error("Could not parse new event \(jsonEvent)")
+                throw RelayError.parseError
+            }
             let relays = try context.fetch(Relay.relays(for: event.author!))
             event.shouldBePublishedTo = Set(relays)
             try context.save()
@@ -404,7 +408,7 @@ extension RelayService {
             return
         }
         
-        await self.backgroundContext.perform {
+        await self.backgroundContext.perform(schedule: .enqueued) {
             
             let objectContext = self.backgroundContext
             let userSentEvents = Event.unpublishedEvents(for: user, context: objectContext)
@@ -429,7 +433,7 @@ extension RelayService {
     }
     
     func deleteExpiredEvents() async {
-        await self.backgroundContext.perform {
+        await self.backgroundContext.perform(schedule: .enqueued) {
             do {
                 for event in try self.backgroundContext.fetch(Event.expiredRequest()) {
                     self.backgroundContext.delete(event)
@@ -466,7 +470,7 @@ extension RelayService {
     @MainActor private func openSockets(overrideRelays: [URL]? = nil) async -> [URL] {
         // Use override relays; fall back to user relays
         
-        let relayAddresses: [URL] = await backgroundContext.perform { () -> [URL] in
+        let relayAddresses: [URL] = await backgroundContext.perform(schedule: .enqueued) { () -> [URL] in
             if let overrideRelays {
                 return overrideRelays
             }

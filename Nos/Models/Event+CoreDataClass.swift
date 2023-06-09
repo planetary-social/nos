@@ -294,6 +294,20 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func hydratedEvent(by identifier: String) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.predicate = NSPredicate(format: "identifier = %@ AND content != nil", identifier)
+        fetchRequest.fetchLimit = 1
+        return fetchRequest
+    }
+    
+    @nonobjc public class func event(by identifier: String, seenOn relay: Relay) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.predicate = NSPredicate(format: "identifier = %@ AND ANY seenOnRelays = %@", identifier, relay)
+        fetchRequest.fetchLimit = 1
+        return fetchRequest
+    }
+    
     @nonobjc public class func homeFeedPredicate(for user: Author, before: Date) -> NSPredicate {
         NSPredicate(
             // swiftlint:disable line_length
@@ -409,9 +423,17 @@ public class Event: NosManagedObject {
         return nil
     }
 
-    class func findOrCreate(jsonEvent: JSONEvent, relay: Relay?, context: NSManagedObjectContext) throws -> Event {
+    class func createIfNecessary(
+        jsonEvent: JSONEvent, 
+        relay: Relay?, 
+        context: NSManagedObjectContext
+    ) throws -> Event? {
+        // Optimization: check that no record exists before doing any fetching
+        guard try context.count(for: Event.hydratedEvent(by: jsonEvent.id)) == 0 else {
+            return nil
+        }
+        
         if let existingEvent = try context.fetch(Event.event(by: jsonEvent.id)).first {
-            relay.unwrap { existingEvent.markSeen(on: $0) }
             if existingEvent.isStub {
                 try existingEvent.hydrate(from: jsonEvent, relay: relay, in: context)
             }
