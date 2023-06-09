@@ -178,7 +178,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     @MainActor func subscribe() async {
         
         let overrideRelays: [URL]?
-        let userRelays = author?.relays?.allObjects as? [Relay] ?? []
+        let userRelays = author?.relays ?? Set()
         if userRelays.isEmpty {
             overrideRelays = Relay.allKnown
                 .compactMap {
@@ -235,7 +235,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 let follows = try? Author.findOrCreate(
                     by: publicKeyHex,
                     context: backgroundContext
-                ).follows as? Set<Follow>
+                ).follows
                 return follows?
                     .shuffled()
                     .compactMap { $0.destination }
@@ -368,7 +368,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             return
         }
         
-        guard let relays = author?.relays?.allObjects as? [Relay] else {
+        guard let relays = author?.relays else {
             Log.debug("Error: No relay service")
             return
         }
@@ -414,10 +414,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             )
 
             // Add to the current user's follows
-            currentUser.follows = (currentUser.follows ?? NSSet()).adding(follow)
-
-            // Add from the current user to the author's followers
-            followedAuthor.followers = (followedAuthor.followers ?? NSSet()).adding(follow)
+            currentUser.follows.insert(follow)
         }
         
         try! viewContext.save()
@@ -443,10 +440,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
 
             for unfollow in unfollows {
                 // Remove current user's follows
-                currentUser.follows = currentUser.follows?.removing(unfollow)
-                
-                // Remove from the unfollowed author's followers
-                unfollowedAuthor.followers = unfollowedAuthor.followers?.removing(unfollow)
+                currentUser.follows.remove(unfollow)
             }
         }
 

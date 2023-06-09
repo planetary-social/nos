@@ -60,8 +60,6 @@
 		A34E439929A522F20057AFCB /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34E439829A522F20057AFCB /* CurrentUser.swift */; };
 		A351E1A229BA92240009B7F6 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A351E1A129BA92240009B7F6 /* ProfileEditView.swift */; };
 		A351E1A329BBAA790009B7F6 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A351E1A129BA92240009B7F6 /* ProfileEditView.swift */; };
-		A362584229C10AD500D07C9A /* NSSet+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = A362584129C10AD500D07C9A /* NSSet+Add.swift */; };
-		A362584329C10AD500D07C9A /* NSSet+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = A362584129C10AD500D07C9A /* NSSet+Add.swift */; };
 		A3B943CF299AE00100A15A08 /* KeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943CE299AE00100A15A08 /* KeyChain.swift */; };
 		A3B943D5299D514800A15A08 /* Follow+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */; };
 		A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */; };
@@ -125,6 +123,18 @@
 		C9646EAE29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */; };
 		C9646EAF29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */; };
 		C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */; };
+		C973AB5B2A323167002AED16 /* Follow+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973AB552A323167002AED16 /* Follow+CoreDataProperties.swift */; };
+		C973AB5C2A323167002AED16 /* Follow+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973AB552A323167002AED16 /* Follow+CoreDataProperties.swift */; };
+		C973AB5D2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973AB562A323167002AED16 /* Event+CoreDataProperties.swift */; };
+		C973AB5E2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973AB562A323167002AED16 /* Event+CoreDataProperties.swift */; };
+		C973AB5F2A323167002AED16 /* AuthorReference+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973AB572A323167002AED16 /* AuthorReference+CoreDataProperties.swift */; };
+		C973AB602A323167002AED16 /* AuthorReference+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973AB572A323167002AED16 /* AuthorReference+CoreDataProperties.swift */; };
+		C973AB612A323167002AED16 /* Author+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973AB582A323167002AED16 /* Author+CoreDataProperties.swift */; };
+		C973AB622A323167002AED16 /* Author+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973AB582A323167002AED16 /* Author+CoreDataProperties.swift */; };
+		C973AB632A323167002AED16 /* Relay+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973AB592A323167002AED16 /* Relay+CoreDataProperties.swift */; };
+		C973AB642A323167002AED16 /* Relay+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973AB592A323167002AED16 /* Relay+CoreDataProperties.swift */; };
+		C973AB652A323167002AED16 /* EventReference+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973AB5A2A323167002AED16 /* EventReference+CoreDataProperties.swift */; };
+		C973AB662A323167002AED16 /* EventReference+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973AB5A2A323167002AED16 /* EventReference+CoreDataProperties.swift */; };
 		C97797B9298AA19A0046BD25 /* RelayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97797B8298AA19A0046BD25 /* RelayService.swift */; };
 		C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C97797BB298AB1890046BD25 /* secp256k1 */; };
 		C97797BF298ABE060046BD25 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C97797BE298ABE060046BD25 /* secp256k1 */; };
@@ -417,7 +427,6 @@
 		A336DD3B299FD78000A0CBA0 /* Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
 		A34E439829A522F20057AFCB /* CurrentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
 		A351E1A129BA92240009B7F6 /* ProfileEditView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
-		A362584129C10AD500D07C9A /* NSSet+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSSet+Add.swift"; sourceTree = "<group>"; };
 		A3B943CE299AE00100A15A08 /* KeyChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChain.swift; sourceTree = "<group>"; };
 		A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Follow+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C90862BB29E9804B00C35A71 /* NosPerformanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NosPerformanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -457,6 +466,12 @@
 		C9646EA029B7A22C007239A4 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDidLoadModifier.swift; sourceTree = "<group>"; };
 		C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Encoding.swift"; sourceTree = "<group>"; };
+		C973AB552A323167002AED16 /* Follow+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Follow+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		C973AB562A323167002AED16 /* Event+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		C973AB572A323167002AED16 /* AuthorReference+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthorReference+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		C973AB582A323167002AED16 /* Author+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Author+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		C973AB592A323167002AED16 /* Relay+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Relay+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		C973AB5A2A323167002AED16 /* EventReference+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EventReference+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		C97797B8298AA19A0046BD25 /* RelayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayService.swift; sourceTree = "<group>"; };
 		C97A1C8729E45B3C009D9E8D /* RawEventView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawEventView.swift; sourceTree = "<group>"; };
 		C97A1C8A29E45B4E009D9E8D /* RawEventController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawEventController.swift; sourceTree = "<group>"; };
@@ -802,7 +817,6 @@
 				C9F0BB6829A5039D000547FC /* Int+Bool.swift */,
 				C987F85729BA981800B44E7A /* Font.swift */,
 				C987F86029BABAF800B44E7A /* String+Markdown.swift */,
-				A362584129C10AD500D07C9A /* NSSet+Add.swift */,
 				C92DF80429C25DE900400561 /* URL+MimeTypes.swift */,
 				C93EC2F329C34C860012EE2A /* NSPredicate+Bool.swift */,
 				C93EC2F629C351470012EE2A /* Optional+Unwrap.swift */,
@@ -827,22 +841,28 @@
 		C9DEC02C29894BB20078B43A /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				C9DEBFD5298941000078B43A /* Nos.xcdatamodeld */,
-				C9DEBFD3298941000078B43A /* Persistence.swift */,
-				C9DEC03F29894BED0078B43A /* Event+CoreDataClass.swift */,
-				C93CA0C229AE3A1E00921183 /* JSONEvent.swift */,
-				3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */,
-				3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */,
-				A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */,
 				C9DEC04329894BED0078B43A /* Author+CoreDataClass.swift */,
-				C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */,
+				C973AB582A323167002AED16 /* Author+CoreDataProperties.swift */,
+				3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */,
+				C973AB572A323167002AED16 /* AuthorReference+CoreDataProperties.swift */,
+				C9DEC03F29894BED0078B43A /* Event+CoreDataClass.swift */,
+				C973AB562A323167002AED16 /* Event+CoreDataProperties.swift */,
+				3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */,
+				C973AB5A2A323167002AED16 /* EventReference+CoreDataProperties.swift */,
+				C9EE3E622A053910008A7491 /* ExpirationTimeOption.swift */,
+				A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */,
+				C973AB552A323167002AED16 /* Follow+CoreDataProperties.swift */,
+				C93CA0C229AE3A1E00921183 /* JSONEvent.swift */,
 				C9F84C26298DC98800C6714D /* KeyPair.swift */,
-				C9F0BB6A29A503D6000547FC /* PublicKey.swift */,
 				C9F0BB6E29A50437000547FC /* NostrConstants.swift */,
 				5B6EB48D29EDBE0E006E750C /* NoteParser.swift */,
+				C9DEBFD3298941000078B43A /* Persistence.swift */,
+				C9F0BB6A29A503D6000547FC /* PublicKey.swift */,
+				C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */,
+				C973AB592A323167002AED16 /* Relay+CoreDataProperties.swift */,
 				C9C2B78429E073E300548B4A /* RelaySubscription.swift */,
-				C9EE3E622A053910008A7491 /* ExpirationTimeOption.swift */,
 				C9E37E142A1E8143003D4B0A /* Report.swift */,
+				C9DEBFD5298941000078B43A /* Nos.xcdatamodeld */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1285,6 +1305,7 @@
 				C9E37E122A1E7EC5003D4B0A /* PreviewContainer.swift in Sources */,
 				C9A0DAF829C92F4500466635 /* UNSAPI.swift in Sources */,
 				3F30020929C23895003D4F8B /* OnboardingNotOldEnoughView.swift in Sources */,
+				C973AB612A323167002AED16 /* Author+CoreDataProperties.swift in Sources */,
 				C9B678E129EEC41000303F33 /* SocialGraphCache.swift in Sources */,
 				C9DEC06A298965550078B43A /* RelayView.swift in Sources */,
 				C99E80CD2A0C2C6400187474 /* PreviewData.swift in Sources */,
@@ -1292,6 +1313,8 @@
 				C94D855C2991479900749478 /* NewNoteView.swift in Sources */,
 				5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */,
 				C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */,
+				C973AB652A323167002AED16 /* EventReference+CoreDataProperties.swift in Sources */,
+				C973AB632A323167002AED16 /* Relay+CoreDataProperties.swift in Sources */,
 				C94FE9F729DB259300019CD3 /* Text+Gradient.swift in Sources */,
 				3F170C78299D816200BC8F8B /* AppController.swift in Sources */,
 				C9DEBFD7298941000078B43A /* Nos.xcdatamodeld in Sources */,
@@ -1308,7 +1331,6 @@
 				C9A0DAE029C697A100466635 /* AboutView.swift in Sources */,
 				A351E1A229BA92240009B7F6 /* ProfileEditView.swift in Sources */,
 				C9DFA969299BEC33006929C1 /* CardStyle.swift in Sources */,
-				A362584229C10AD500D07C9A /* NSSet+Add.swift in Sources */,
 				C9F64D8F29ED88CD00563F2B /* Localization+Nos.swift in Sources */,
 				C95D68AD299E721700429F86 /* ProfileView.swift in Sources */,
 				C942566929B66A2800C4202C /* Date+Elapsed.swift in Sources */,
@@ -1317,6 +1339,7 @@
 				C9F75AD22A02D41E005BBE45 /* ComposerActionBar.swift in Sources */,
 				C9DEBFD2298941000078B43A /* NosApp.swift in Sources */,
 				C9646EAE29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */,
+				C973AB5D2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */,
 				C95D68A3299E6D9000429F86 /* SelectableText.swift in Sources */,
 				C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */,
 				5B8C96B629DDD3B200B73AEC /* EditableText.swift in Sources */,
@@ -1327,6 +1350,7 @@
 				5B8C96AC29D52AD200B73AEC /* AuthorListView.swift in Sources */,
 				C987F85B29BA9ED800B44E7A /* Font.swift in Sources */,
 				3FB5E651299D28A200386527 /* OnboardingView.swift in Sources */,
+				C973AB5F2A323167002AED16 /* AuthorReference+CoreDataProperties.swift in Sources */,
 				A3B943CF299AE00100A15A08 /* KeyChain.swift in Sources */,
 				C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */,
 				C9E9D9CA2A2E35440048AF0B /* SearchController.swift in Sources */,
@@ -1383,6 +1407,7 @@
 				3FFB1D9329A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,
 				C93EC2FA29C370DE0012EE2A /* DiscoverGrid.swift in Sources */,
 				C94FE9F529DB177500019CD3 /* Localizable.swift in Sources */,
+				C973AB5B2A323167002AED16 /* Follow+CoreDataProperties.swift in Sources */,
 				C93EC2FD29C3785C0012EE2A /* View+RoundedCorner.swift in Sources */,
 				5B8B77192A1FDA3C004FC675 /* TLV.swift in Sources */,
 				CD09A74829A51EFC0063464F /* Router.swift in Sources */,
@@ -1438,8 +1463,10 @@
 				C9B678E829F01A8500303F33 /* FullscreenProgressView.swift in Sources */,
 				C9C2B77D29E072E400548B4A /* WebSocket+Nos.swift in Sources */,
 				A303AF8429A969F5005DC8FC /* FollowButton.swift in Sources */,
+				C973AB642A323167002AED16 /* Relay+CoreDataProperties.swift in Sources */,
 				C9EE3E642A053910008A7491 /* ExpirationTimeOption.swift in Sources */,
 				CD09A75629A521D20063464F /* SettingsView.swift in Sources */,
+				C973AB5E2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */,
 				3F30021729C3BFEB003D4F8B /* OnboardingLoginView.swift in Sources */,
 				C9F64D8D29ED840700563F2B /* LogHelper.swift in Sources */,
 				5B88051F2A21056E00E21F06 /* TLVTests.swift in Sources */,
@@ -1482,6 +1509,7 @@
 				3F30021529C3BFE5003D4F8B /* OnboardingNotOldEnoughView.swift in Sources */,
 				C9C2B78629E073E300548B4A /* RelaySubscription.swift in Sources */,
 				C9DEC06B298965550078B43A /* RelayView.swift in Sources */,
+				C973AB662A323167002AED16 /* EventReference+CoreDataProperties.swift in Sources */,
 				C9DEC05C298953280078B43A /* Nos.xcdatamodeld in Sources */,
 				5B80BE9E29F9864000A363E4 /* Bech32Tests.swift in Sources */,
 				C942566A29B66A2800C4202C /* Date+Elapsed.swift in Sources */,
@@ -1490,6 +1518,7 @@
 				A32B6C7129A672BC00653FF5 /* CurrentUser.swift in Sources */,
 				C98A32282A05795E00E3FA13 /* Task+Timeout.swift in Sources */,
 				C9A0DAE129C697A100466635 /* AboutView.swift in Sources */,
+				C973AB602A323167002AED16 /* AuthorReference+CoreDataProperties.swift in Sources */,
 				C9F84C1A298DBB6300C6714D /* Data+Encoding.swift in Sources */,
 				3F30021629C3BFE8003D4F8B /* OnboardingTermsOfServiceView.swift in Sources */,
 				C9DEC0642989541F0078B43A /* Bundle+Current.swift in Sources */,
@@ -1513,8 +1542,8 @@
 				C9E9D9CB2A2E35440048AF0B /* SearchController.swift in Sources */,
 				C9ADB13F29929F1F0075E7F8 /* String+Hex.swift in Sources */,
 				C94FE9F629DB177500019CD3 /* Localizable.swift in Sources */,
+				C973AB622A323167002AED16 /* Author+CoreDataProperties.swift in Sources */,
 				C9A0DADB29C685E500466635 /* SideMenuButton.swift in Sources */,
-				A362584329C10AD500D07C9A /* NSSet+Add.swift in Sources */,
 				C93EC2F529C34C860012EE2A /* NSPredicate+Bool.swift in Sources */,
 				C93EC2FB29C370DE0012EE2A /* DiscoverGrid.swift in Sources */,
 				C9DEC05B298950A90078B43A /* String+Lorem.swift in Sources */,
@@ -1542,6 +1571,7 @@
 				C987F81E29BA6D9A00B44E7A /* ProfileTab.swift in Sources */,
 				A351E1A329BBAA790009B7F6 /* ProfileEditView.swift in Sources */,
 				C9DFA97B299C31EE006929C1 /* Localized.swift in Sources */,
+				C973AB5C2A323167002AED16 /* Follow+CoreDataProperties.swift in Sources */,
 				C97A1C8F29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift in Sources */,
 				C9ADB135299288230075E7F8 /* KeyFixture.swift in Sources */,
 				C9E9D9C82A2E1EC40048AF0B /* AuthorCard.swift in Sources */,
