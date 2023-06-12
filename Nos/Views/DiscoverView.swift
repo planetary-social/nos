@@ -54,7 +54,7 @@ struct DiscoverView: View {
             // TODO: Use a since filter
             let singleRelayFilter = Filter(
                 kinds: [.text, .delete],
-                limit: 200
+                limit: 100
             )
             
             subscriptionIDs.append(
@@ -81,7 +81,7 @@ struct DiscoverView: View {
                     PublicKey(npub: $0)?.hex
                 },
                 kinds: [.text, .delete],
-                limit: 100,
+                limit: 50,
                 since: fetchSinceDate
             )
             

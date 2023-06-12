@@ -62,7 +62,7 @@ struct ProfileView: View {
                 let userLikesFilter = Filter(
                     authorKeys: currentUserAuthorKeys,
                     kinds: [.like],
-                    limit: 100
+                    limit: 50
                 )
                 let userLikesSub = await relayService.openSubscription(with: userLikesFilter)
                 subscriptionIds.append(userLikesSub)
