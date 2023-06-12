@@ -25,6 +25,7 @@ final class RelayService: ObservableObject {
     private var parseContext: NSManagedObjectContext
     // TODO: use structured concurrency for this
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .utility)
+    private var parseQueue = ParseQueue()
     @Dependency(\.analytics) private var analytics
     @MainActor @Dependency(\.currentUser) private var currentUser
     
@@ -35,18 +36,20 @@ final class RelayService: ObservableObject {
         self.subscriptions = RelaySubscriptionManager()
 
         self.saveEventsTimer = AsyncTimer(timeInterval: 1, priority: .high) { [weak self] in
-            do {
-                try await self?.parseContext.perform(schedule: .immediate) {
-                    try self?.parseContext.saveIfNeeded()
-                }                
-                try await self?.backgroundContext.perform(schedule: .immediate) {
-                    try self?.backgroundContext.saveIfNeeded()
+            guard let self = self else {
+                return
+            }
+            
+            do {                    
+                try await self.batchParseEvents()
+                try await self.backgroundContext.perform {
+                    try self.backgroundContext.saveIfNeeded()
                 }                
             } catch {
                 Log.error("RelayService.saveEventsTimer failed to save with error: \(error.localizedDescription)")
             }
             
-            await self?.processSubscriptionQueue()
+            await self.processSubscriptionQueue()
         }
         
         // TODO: fire this after all relays have connected, not right on init
@@ -208,7 +211,7 @@ extension RelayService {
         }
     }
     
-    private func parseEvent(_ responseArray: [Any], _ socket: WebSocket) async {
+    private func queueEventForParsing(_ responseArray: [Any], _ socket: WebSocket) async {
         guard responseArray.count >= 3 else {
             print("Error: invalid EVENT response: \(responseArray)")
             return
@@ -229,16 +232,9 @@ extension RelayService {
         }
         
         do {
-            try await self.parseContext.perform(schedule: .enqueued) {
-                let relay = self.relay(from: socket, in: self.parseContext)
-                if let event = try EventProcessor.parse(
-                    jsonObject: eventJSON,
-                    from: relay,
-                    in: self.parseContext
-                ) {
-                    relay.unwrap { event.trackDelete(on: $0, context: self.parseContext) }
-                }
-            }
+            let jsonData = try JSONSerialization.data(withJSONObject: eventJSON)
+            let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
+            await self.parseQueue.push(jsonEvent)
             
             if let subscription = await subscriptions.subscription(from: subscriptionID),
                 subscription.isOneTime {
@@ -251,6 +247,29 @@ extension RelayService {
                 "\(responseArray)\nerror: \(error.localizedDescription)")
         }
     }
+    
+    private func batchParseEvents() async throws {
+        let startDate = Date.now
+        let eventsToParse = await self.parseQueue.popAll()
+        Log.debug("RelayService: parseContext processing \(eventsToParse.count) events")
+        if !eventsToParse.isEmpty {
+            
+            try await self.parseContext.perform {
+                for event in eventsToParse {
+                    // let relay = self.relay(from: socket, in: self.parseContext)
+                    if let event = try EventProcessor.parse(
+                        jsonEvent: event,
+                        from: nil,
+                        in: self.parseContext
+                    ) {
+                        // relay.unwrap { event.trackDelete(on: $0, context: self.parseContext) }
+                    }
+                }
+                try self.parseContext.saveIfNeeded()
+                Log.debug("RelayService: parseContext saved in \(startDate.distance(to: .now)) seconds")
+            }                
+        }
+    }
 
     private func parseOK(_ responseArray: [Any], _ socket: WebSocket) async {
         guard responseArray.count > 2 else {
@@ -261,7 +280,7 @@ extension RelayService {
             let eventId = responseArray[1] as? String,
             let socketUrl = socket.request.url?.absoluteString {
             
-            await backgroundContext.perform(schedule: .enqueued) {
+            await backgroundContext.perform {
                 
                 if let event = Event.find(by: eventId, context: self.backgroundContext),
                     let relay = self.relay(from: socket, in: self.backgroundContext) {
@@ -307,7 +326,7 @@ extension RelayService {
             
             switch responseType {
             case "EVENT":
-                await parseEvent(responseArray, socket)
+                await queueEventForParsing(responseArray, socket)
             case "NOTICE":
                 if responseArray[safe: 1] as? String == "rate limited" {
                     analytics.rateLimited(by: socket)
@@ -408,7 +427,7 @@ extension RelayService {
             return
         }
         
-        await self.backgroundContext.perform(schedule: .enqueued) {
+        await self.backgroundContext.perform {
             
             let objectContext = self.backgroundContext
             let userSentEvents = Event.unpublishedEvents(for: user, context: objectContext)
@@ -433,7 +452,7 @@ extension RelayService {
     }
     
     func deleteExpiredEvents() async {
-        await self.backgroundContext.perform(schedule: .enqueued) {
+        await self.backgroundContext.perform {
             do {
                 for event in try self.backgroundContext.fetch(Event.expiredRequest()) {
                     self.backgroundContext.delete(event)
@@ -470,13 +489,20 @@ extension RelayService {
     @MainActor private func openSockets(overrideRelays: [URL]? = nil) async -> [URL] {
         // Use override relays; fall back to user relays
         
-        let relayAddresses: [URL] = await backgroundContext.perform(schedule: .enqueued) { () -> [URL] in
+        let relayAddresses: [URL] = await backgroundContext.perform { () -> [URL] in
             if let overrideRelays {
                 return overrideRelays
             }
-            if let currentUserPubKey = self.currentUser.publicKeyHex,
-                let currentUser = try? Author.find(by: currentUserPubKey, context: self.backgroundContext) {
-                return currentUser.relays.compactMap { $0.addressURL }
+            if let currentUserPubKey = self.currentUser.publicKeyHex {
+                let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
+                fetchRequest.predicate = NSPredicate(
+                    format: "ANY authors.hexadecimalPublicKey = %@", currentUserPubKey
+                )
+                fetchRequest.propertiesToFetch = ["address"]
+                fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.address, ascending: true)]
+
+                let relays = (try? self.backgroundContext.fetch(fetchRequest)) ?? []
+                return relays.compactMap { $0.addressURL }
             } else {
                 return []
             }
@@ -608,4 +634,20 @@ extension RelayService {
         return url
     }
 }
+
+/// An actor that queues up received Event JSON for parsing. 
+actor ParseQueue {
+    private var events: Set<JSONEvent> = Set()
+    
+    func push(_ event: JSONEvent) {
+        events.insert(event)
+    }
+    
+    func popAll() -> [JSONEvent] {
+        let allEvents = Array(events)
+        events = Set()
+        return allEvents
+    }
+}
+
 // swiftlint:enable file_length

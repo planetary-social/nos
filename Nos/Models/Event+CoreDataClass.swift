@@ -674,27 +674,39 @@ public class Event: NosManagedObject {
         
         newAuthor.lastUpdatedContactList = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
 
-        // Make a copy of what was followed before
-        let originalFollows = newAuthor.follows
+        // Put existing follows into a distionary so we can avoid doing a fetch request to look up each one.
+        var originalFollows = [HexadecimalString: Follow]()
+        for follow in newAuthor.follows {
+            if let pubKey = follow.destination?.hexadecimalPublicKey {
+                originalFollows[pubKey] = follow
+            }
+        }
         
-        var eventFollows = Set<Follow>()
+        var newFollows = Set<Follow>()
         for jsonTag in jsonEvent.tags {
-            do {
-                eventFollows.insert(try Follow.upsert(by: newAuthor, jsonTag: jsonTag, context: context))
-            } catch {
-                print("Error: could not parse Follow from: \(jsonEvent)")
+            if let followedKey = jsonTag[safe: 1], 
+                let existingFollow = originalFollows[followedKey] {
+                // We already have a Core Data Follow model for this user
+                newFollows.insert(existingFollow)
+            } else {
+                do {
+                    newFollows.insert(try Follow.upsert(by: newAuthor, jsonTag: jsonTag, context: context))
+                } catch {
+                    print("Error: could not parse Follow from: \(jsonEvent)")
+                }
             }
         }
         
         // Did we unfollow someone? If so, remove them from core data
-        let follows = originalFollows
-        if follows.count > eventFollows.count {
-            let removedFollows = follows.subtracting(eventFollows)
+        if originalFollows.count > newFollows.count {
+            let removedFollows = Set(originalFollows.values).subtracting(newFollows)
             if !removedFollows.isEmpty {
                 print("Removing \(removedFollows.count) follows")
                 Follow.deleteFollows(in: removedFollows, context: context)
             }
         }
+        
+        newAuthor.follows = newFollows
         
         // Get the user's active relays out of the content property
         if let data = jsonEvent.content.data(using: .utf8, allowLossyConversion: false),
