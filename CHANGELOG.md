@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (48)] - 2023-06-12Z
+
+- Requesting fewer events on Home and Discover tab to reduce the load on the db.
+
 ## [0.1 (47)] - 2023-06-09Z
 
 - Improved performance of the relay manager
