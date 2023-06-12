@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct JSONEvent: Codable {
+struct JSONEvent: Codable, Hashable {
     
     var id: String
     var pubKey: String
