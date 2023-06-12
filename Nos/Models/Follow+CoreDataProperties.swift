@@ -15,7 +15,6 @@ extension Follow {
         NSFetchRequest<Follow>(entityName: "Follow")
     }
 
-    @NSManaged public var lastUpdated: Date?
     @NSManaged public var petName: String?
     @NSManaged public var destination: Author?
     @NSManaged public var source: Author?
