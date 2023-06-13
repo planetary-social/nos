@@ -9,10 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed a bug where ixpred messages could be published to relays that doesn't support them
+- Add the ability to report notes and profiles using NIP-32 labels and NIP-69 classification.
+- Fixed a crash which occurs on some versions of MacOS when attempting to mention other users during post creation.
+- Fixed a bug where the note options menu wouldn't show up sometimes.
+- Strip whitespace and newline characters when parsing search box input on discover screen as npub.
+
+## [0.1 (44)] - 2023-05-31Z
+
+- Fixed several causes of profile pictures and reposts showing infinite spinners.
+- Links to notes or profiles are now tappable.
+- Filter logged user from Discover screen.
+- Improved performance of posting notes.
+
+## [0.1 (43)] - 2023-05-23Z
+
 - Added German translations (thanks Peter!).
 - Updated support email to support@nos.social
 - Improved recognition of mentions inside a post
-- 
+
 ## [0.1 (42)] - 2023-05-16Z
 
 - Added support for mentioning other users when composing a note.
@@ -259,7 +273,7 @@ Known issues:
 - Render user mentions in NoteCard
 - Replace the warning message to tell the user never to share their private key with anyone.
 
-## [0.1 (5)] 2023-03-02 
+## [0.1 (5)] 2023-03-02
 
 - Added a Discover tab that shows all events from all relays.
 - Core Data will now be wiped whenever we change the data model, which is often. This speeds up our development process, but you will have to re-enter your relays when this happens.

@@ -49,6 +49,7 @@ public enum EventKind: Int64, CaseIterable, Hashable {
     case repost = 6
 	case like = 7
     case channelMessage = 42
+    case label = 1985
     case mute = 10_000
     case longFormContent = 30_023
 }
@@ -172,14 +173,25 @@ public class Event: NosManagedObject {
         ])
     }
     
-    @nonobjc public class func seen(on relay: Relay, before: Date) -> NSPredicate {
+    @nonobjc public class func seen(on relay: Relay, before: Date, exceptFrom author: Author?) -> NSPredicate {
         let kind = EventKind.text.rawValue
-        return NSPredicate(
-            format: "kind = %i AND eventReferences.@count = 0 AND %@ IN seenOnRelays AND createdAt <= %@", 
-            kind, 
-            relay,
-            before as CVarArg
-        )
+        let sharedFormat = "kind = %i AND eventReferences.@count = 0 AND %@ IN seenOnRelays AND createdAt <= %@"
+        if let author {
+            return NSPredicate(
+                format: "\(sharedFormat) AND NOT author = %@",
+                kind,
+                relay,
+                before as CVarArg,
+                author
+            )
+        } else {
+            return NSPredicate(
+                format: sharedFormat,
+                kind,
+                relay,
+                before as CVarArg
+            )
+        }
     }
     
     @nonobjc public class func allMentionsPredicate(for user: Author) -> NSPredicate {
@@ -194,13 +206,14 @@ public class Event: NosManagedObject {
         )
     }
 
-    @nonobjc public class func unpublishedEventsRequest() -> NSFetchRequest<Event> {
+    @nonobjc public class func unpublishedEventsRequest(for user: Author) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
             format: "author.hexadecimalPublicKey = %@ AND " +
             "SUBQUERY(shouldBePublishedTo, $relay, TRUEPREDICATE).@count != " +
-            "SUBQUERY(seenOnRelays, $relay, TRUEPREDICATE).@count"
+            "SUBQUERY(seenOnRelays, $relay, TRUEPREDICATE).@count",
+            user.hexadecimalPublicKey ?? ""
         )
         return fetchRequest
     }
@@ -759,8 +772,8 @@ public class Event: NosManagedObject {
         }
     }
     
-    class func unpublishedEvents(context: NSManagedObjectContext) -> [Event] {
-        let allRequest = Event.unpublishedEventsRequest()
+    class func unpublishedEvents(for user: Author, context: NSManagedObjectContext) -> [Event] {
+        let allRequest = Event.unpublishedEventsRequest(for: user)
         
         do {
             let results = try context.fetch(allRequest)

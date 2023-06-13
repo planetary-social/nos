@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import Logger
 
 // Manages the app's navigation state.
 class Router: ObservableObject {
@@ -73,18 +74,18 @@ extension Router {
         let identifier = String(link[link.index(after: link.startIndex)...])
         // handle mentions. mention link will be prefixed with "@" followed by
         // the hex format pubkey of the mentioned author
-        if link.hasPrefix("@") {
-            if let author = try? Author.find(by: identifier, context: context) {
-                push(author)
+        do {
+            if link.hasPrefix("@") {
+                push(try Author.findOrCreate(by: identifier, context: context))
+            } else if link.hasPrefix("%") {
+                push(try Event.findOrCreateStubBy(id: identifier, context: context))
+            } else if url.scheme == "http" || url.scheme == "https" {
+                push(url)
+            } else {
+                UIApplication.shared.open(url)
             }
-        } else if link.hasPrefix("%") {
-            if let event = Event.find(by: identifier, context: context) {
-                push(event)
-            }
-        } else if url.scheme == "http" || url.scheme == "https" {
-            push(url)
-        } else {
-            UIApplication.shared.open(url)
+        } catch {
+            Log.optional(error)
         }
     }
 }

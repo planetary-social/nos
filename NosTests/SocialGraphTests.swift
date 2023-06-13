@@ -111,8 +111,8 @@ final class SocialGraphTests: XCTestCase {
         
         // Reassert
         try! await eventually { await sut.followedKeys.count == 3 }
-        var newFollowedKeys = await sut.followedKeys.sorted()
-        var expected = [
+        let newFollowedKeys = await sut.followedKeys.sorted()
+        let expected = [
             KeyFixture.alice.publicKeyHex,
             KeyFixture.eve.publicKeyHex,
             KeyFixture.bob.publicKeyHex

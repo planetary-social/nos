@@ -45,8 +45,8 @@ struct HomeFeedView: View {
         }
         
         var fetchSinceDate: Date?
-        /// Make sure the lastRequestDate was more than a minute ago
-        /// to make sure we got all the events from it.
+        // Make sure the lastRequestDate was more than a minute ago
+        // to make sure we got all the events from it.
         if let lastRequestDateUnix {
             let lastRequestDate = Date(timeIntervalSince1970: lastRequestDateUnix)
             if lastRequestDate.distance(to: .now) > 60 {
@@ -81,7 +81,7 @@ struct HomeFeedView: View {
     
     func cancelSubscriptions() async {
         if !subscriptionIDs.isEmpty {
-            await relayService.removeSubscriptions(for: subscriptionIDs)
+            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
             subscriptionIDs.removeAll()
         }
     }

@@ -88,7 +88,7 @@ struct NewNoteView: View {
                     Localized.cancel.view
                         .foregroundColor(.textColor)
                 },
-                trailing: ActionButton(title: Localized.post, action: publishPost)
+                trailing: ActionButton(title: Localized.post, action: postAction)
                     .frame(height: 22)
                     .disabled(postText.string.isEmpty)
                     .padding(.bottom, 3)
@@ -101,13 +101,54 @@ struct NewNoteView: View {
         .alert(unwrapping: $alert)
     }
 
-    private func publishPost() async {
-        guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
+    private func postAction() async {
+        guard currentUser.keyPair != nil, let author = currentUser.author else {
             alert = AlertState(title: {
                 TextState(Localized.error.string)
             }, message: {
                 TextState(Localized.youNeedToEnterAPrivateKeyBeforePosting.string)
             })
+            return
+        }
+        if let relay = selectedRelay {
+            guard expirationTime == nil || relay.metadata?.supportedNIPs?.contains(40) ?? false else {
+                alert = AlertState(title: {
+                    TextState(Localized.error.string)
+                }, message: {
+                    TextState(Localized.relayDoesNotSupportNIP40.string)
+                })
+                return
+            }
+        } else if expirationTime != nil {
+            do {
+                let relays = try await Relay.find(supporting: 40, for: author, context: viewContext)
+                if relays.isEmpty {
+                    alert = AlertState(title: {
+                        TextState(Localized.error.string)
+                    }, message: {
+                        TextState(Localized.anyRelaysSupportingNIP40.string)
+                    })
+                    return
+                }
+            } catch {
+                alert = AlertState(title: {
+                    TextState(Localized.error.string)
+                }, message: {
+                    TextState(error.localizedDescription)
+                })
+                return
+            }
+        }
+        Task {
+            await publishPost()
+        }
+        isPresented = false
+        router.selectedTab = .home
+    }
+
+    private func publishPost() async {
+        guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
+            Log.error("Posting without a keypair")
             return
         }
         
@@ -121,40 +162,17 @@ struct NewNoteView: View {
             let jsonEvent = JSONEvent(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
             
             if let relay = selectedRelay {
-                guard expirationTime == nil || relay.metadata?.supportedNIPs?.contains(40) ?? false else {
-                    alert = AlertState(title: {
-                        TextState(Localized.error.string)
-                    }, message: {
-                        TextState(Localized.relayDoesNotSupportNIP40.string)
-                    })
-                    return
-                }
                 try await relayService.publish(event: jsonEvent, to: relay, signingKey: keyPair, context: viewContext)
             } else if expirationTime != nil {
                 let relays = try await Relay.find(supporting: 40, for: author, context: viewContext)
-                guard !relays.isEmpty else {
-                    alert = AlertState(title: {
-                        TextState(Localized.error.string)
-                    }, message: {
-                        TextState(Localized.anyRelaysSupportingNIP40.string)
-                    })
-                    return
-                }
                 try await relayService.publish(event: jsonEvent, to: relays, signingKey: keyPair, context: viewContext)
             } else {
                 try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
             }
-            isPresented = false
             analytics.published(note: jsonEvent)
             postText = NSAttributedString("")
-            router.selectedTab = .home
         } catch {
-            alert = AlertState(title: {
-                TextState(Localized.error.string)
-            }, message: {
-                TextState(error.localizedDescription)
-            })
-            Log.error(error.localizedDescription)
+            Log.error("Error when posting: \(error.localizedDescription)")
         }
     }
 }
