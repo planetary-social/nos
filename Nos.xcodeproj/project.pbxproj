@@ -50,6 +50,7 @@
 		5B8C96B029DB2E1100B73AEC /* SearchTextFieldObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */; };
 		5B8C96B229DB313300B73AEC /* AuthorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B129DB313300B73AEC /* AuthorCard.swift */; };
 		5B8C96B629DDD3B200B73AEC /* EditableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B529DDD3B200B73AEC /* EditableText.swift */; };
+		5BD08BB22A38E96F00BB926C /* JSONRelayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */; };
 		5BF3C50629E4F0BA00738A12 /* EditableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B529DDD3B200B73AEC /* EditableText.swift */; };
 		5BF3C50729E4F0D400738A12 /* AuthorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B129DB313300B73AEC /* AuthorCard.swift */; };
 		5BF3C50829E4F0DC00738A12 /* AuthorListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */; };
@@ -1467,6 +1468,7 @@
 				CD09A74F29A521BE0063464F /* BioView.swift in Sources */,
 				C960C57229F3236200929990 /* LikeButton.swift in Sources */,
 				CD09A74D29A521A70063464F /* CardStyle.swift in Sources */,
+				5BD08BB22A38E96F00BB926C /* JSONRelayMetadata.swift in Sources */,
 				CD09A74C29A5217A0063464F /* NoteButton.swift in Sources */,
 				A303AF8529A969F5005DC8FC /* FollowsView.swift in Sources */,
 				C9E37E162A1E8143003D4B0A /* Report.swift in Sources */,

@@ -95,10 +95,14 @@ public class Relay: NosManagedObject {
         }
     }
 
-    class func find(supporting nip: Int, for author: Author, context: NSManagedObjectContext) async throws -> [Relay] {
+    class func find(
+        supporting nipNumber: Int,
+        for author: Author,
+        context: NSManagedObjectContext
+    ) async throws -> [Relay] {
         try await context.perform {
             let relays = try context.fetch(Relay.relays(for: author))
-            return relays.filter { $0.metadata?.supportedNIPs?.contains(nip) ?? false }
+            return relays.filter { $0.metadata?.supportedNIPs?.contains(nipNumber) ?? false }
         }
     }
     
