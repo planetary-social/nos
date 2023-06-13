@@ -15,6 +15,7 @@ enum RelayError: Error {
 
 @objc(Relay)
 public class Relay: NosManagedObject {
+
     static var recommended: [String] {
         [
         "wss://relay.nostr.band/",
@@ -91,6 +92,13 @@ public class Relay: NosManagedObject {
         } else {
             let relay = try Relay(context: context, address: address)
             return relay
+        }
+    }
+
+    class func find(supporting nip: Int, for author: Author, context: NSManagedObjectContext) async throws -> [Relay] {
+        try await context.perform {
+            let relays = try context.fetch(Relay.relays(for: author))
+            return relays.filter { $0.metadata?.supportedNIPs?.contains(nip) ?? false }
         }
     }
     

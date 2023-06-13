@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a bug where ixpred messages could be published to relays that doesn't support them
 - Added German translations (thanks Peter!).
 - Updated support email to support@nos.social
 - Improved recognition of mentions inside a post

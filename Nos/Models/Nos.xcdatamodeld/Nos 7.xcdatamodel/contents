@@ -65,10 +65,15 @@
         <relationship name="publishedEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="publishedTo" inverseEntity="Event"/>
         <relationship name="shouldBePublishedEvents" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="shouldBePublishedTo" inverseEntity="Event"/>
     </entity>
-    <entity name="RelayMetadata" representedClassName="RelayMetadata" syncable="YES" codeGenerationType="class">
-        <attribute name="name" attributeType="String"/>
-        <attribute name="relayDescription" attributeType="String"/>
-        <attribute name="supportedNIPs" attributeType="Transformable"/>
+    <entity name="RelayMetadata" representedClassName=".RelayMetadata" syncable="YES">
+        <attribute name="contact" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="pubkey" optional="YES" attributeType="String"/>
+        <attribute name="relayDescription" optional="YES" attributeType="String"/>
+        <attribute name="software" optional="YES" attributeType="String"/>
+        <attribute name="supportedNIPs" optional="YES" attributeType="Transformable"/>
+        <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="version" optional="YES" attributeType="String"/>
         <relationship name="relay" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Relay" inverseName="metadata" inverseEntity="Relay"/>
     </entity>
 </model>

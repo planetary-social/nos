@@ -420,6 +420,23 @@ extension RelayService {
             await publish(from: socket, jsonEvent: signedEvent)
         }
     }
+
+    func publish(
+        event: JSONEvent,
+        to relays: [Relay],
+        signingKey: KeyPair,
+        context: NSManagedObjectContext
+    ) async throws {
+        await openSockets()
+        let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
+        for relay in relays {
+            if let socket = await socket(from: relay) {
+                await publish(from: socket, jsonEvent: signedEvent)
+            } else {
+                Log.error("Could not find socket to publish message")
+            }
+        }
+    }
     
     func publish(
         event: JSONEvent,
@@ -427,13 +444,7 @@ extension RelayService {
         signingKey: KeyPair,
         context: NSManagedObjectContext
     ) async throws {
-        await openSockets()
-        let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
-        if let socket = await socket(from: relay) {
-            await publish(from: socket, jsonEvent: signedEvent)
-        } else {
-            Log.error("Could not find socket to publish message")
-        }
+        try await publish(event: event, to: [relay], signingKey: signingKey, context: context)
     }
     
     private func signAndSave(
@@ -544,7 +555,7 @@ extension RelayService {
             socket.connect()
             Task.detached(priority: .background) {
                 do {
-                    try await self.queryRelayMetadata(relayAddress)
+                    try await self.queryRelayMetadataIfNeeded(relayAddress)
                 } catch {
                     print(error)
                 }
@@ -552,7 +563,20 @@ extension RelayService {
         }
     }
 
-    private func queryRelayMetadata(_ relayAddress: URL) async throws {
+    private func queryRelayMetadataIfNeeded(_ relayAddress: URL) async throws {
+        let address = relayAddress.absoluteString
+        let shouldQueryRelayMetadata = try await backgroundContext.perform { [backgroundContext] in
+            guard let relay = try backgroundContext.fetch(Relay.relay(by: address)).first else {
+                return false
+            }
+            guard let timestamp = relay.metadata?.timestamp else {
+                return true
+            }
+            return timestamp.timeIntervalSinceNow > 86_400 * 3 // 3 days
+        }
+        guard shouldQueryRelayMetadata else {
+            return
+        }
         guard var components = URLComponents(url: relayAddress, resolvingAgainstBaseURL: true) else {
             return
         }
@@ -572,7 +596,18 @@ extension RelayService {
         }
         let decoder = JSONDecoder()
         let metadata = try decoder.decode(JSONRelayMetadata.self, from: data)
-        print(metadata)
+
+        try await backgroundContext.perform { [backgroundContext] in
+            guard let relay = try backgroundContext.fetch(Relay.relay(by: address)).first else {
+                return
+            }
+            let relayMetadata = try RelayMetadata(
+                context: backgroundContext,
+                jsonRelayMetadata: metadata
+            )
+            relay.metadata = relayMetadata
+            try backgroundContext.saveIfNeeded()
+        }
     }
     
     private func handleConnection(from client: WebSocketClient) async {

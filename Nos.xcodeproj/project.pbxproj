@@ -33,13 +33,16 @@
 		5B39E64429EDBF8100464830 /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
 		5B46611E29CCB894008B8E8C /* Generated.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5B46612029CCB894008B8E8C /* Generated.strings */; };
 		5B503F622A291A1A0098805A /* JSONRelayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */; };
-		5B503F662A291F150098805A /* RelayMetadata+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F642A291F150098805A /* RelayMetadata+CoreDataClass.swift */; };
 		5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
 		5B6EB49029EDBEC1006E750C /* NoteParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */; };
 		5B80BE9E29F9864000A363E4 /* Bech32Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */; };
 		5B80BEA029FAEDE300A363E4 /* NProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B80BE9F29FAEDE300A363E4 /* NProfile.swift */; };
 		5B80BEA229FAF30F00A363E4 /* NProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B80BEA129FAF30F00A363E4 /* NProfileTests.swift */; };
 		5B80BEA329FAF37700A363E4 /* NProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B80BE9F29FAEDE300A363E4 /* NProfile.swift */; };
+		5B864BEC2A32589F002BB407 /* RelayMetadata+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B864BEA2A32589F002BB407 /* RelayMetadata+CoreDataClass.swift */; };
+		5B864BED2A32589F002BB407 /* RelayMetadata+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B864BEB2A32589F002BB407 /* RelayMetadata+CoreDataProperties.swift */; };
+		5B864BEE2A3258F3002BB407 /* RelayMetadata+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B864BEB2A32589F002BB407 /* RelayMetadata+CoreDataProperties.swift */; };
+		5B864BEF2A3258F5002BB407 /* RelayMetadata+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B864BEA2A32589F002BB407 /* RelayMetadata+CoreDataClass.swift */; };
 		5B8C96AC29D52AD200B73AEC /* AuthorListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */; };
 		5B8C96B029DB2E1100B73AEC /* SearchTextFieldObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */; };
 		5B8C96B229DB313300B73AEC /* AuthorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B129DB313300B73AEC /* AuthorCard.swift */; };
@@ -391,12 +394,13 @@
 		5B48EC692A1406C4001EDA7F /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Generated.strings; sourceTree = "<group>"; };
 		5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONRelayMetadata.swift; sourceTree = "<group>"; };
 		5B503F632A291D480098805A /* Nos 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 7.xcdatamodel"; sourceTree = "<group>"; };
-		5B503F642A291F150098805A /* RelayMetadata+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RelayMetadata+CoreDataClass.swift"; sourceTree = "<group>"; };
 		5B6EB48D29EDBE0E006E750C /* NoteParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParser.swift; sourceTree = "<group>"; };
 		5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParserTests.swift; sourceTree = "<group>"; };
 		5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bech32Tests.swift; sourceTree = "<group>"; };
 		5B80BE9F29FAEDE300A363E4 /* NProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NProfile.swift; sourceTree = "<group>"; };
 		5B80BEA129FAF30F00A363E4 /* NProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NProfileTests.swift; sourceTree = "<group>"; };
+		5B864BEA2A32589F002BB407 /* RelayMetadata+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RelayMetadata+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		5B864BEB2A32589F002BB407 /* RelayMetadata+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RelayMetadata+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorListView.swift; sourceTree = "<group>"; };
 		5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextFieldObserver.swift; sourceTree = "<group>"; };
 		5B8C96B129DB313300B73AEC /* AuthorCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorCard.swift; sourceTree = "<group>"; };
@@ -815,10 +819,11 @@
 				C93CA0C229AE3A1E00921183 /* JSONEvent.swift */,
 				3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */,
 				3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */,
-				5B503F642A291F150098805A /* RelayMetadata+CoreDataClass.swift */,
 				A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */,
 				C9DEC04329894BED0078B43A /* Author+CoreDataClass.swift */,
 				C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */,
+				5B864BEA2A32589F002BB407 /* RelayMetadata+CoreDataClass.swift */,
+				5B864BEB2A32589F002BB407 /* RelayMetadata+CoreDataProperties.swift */,
 				C9F84C26298DC98800C6714D /* KeyPair.swift */,
 				C9F0BB6A29A503D6000547FC /* PublicKey.swift */,
 				C9F0BB6E29A50437000547FC /* NostrConstants.swift */,
@@ -1284,6 +1289,7 @@
 				C9A25B3D29F174D200B39534 /* ReadabilityPadding.swift in Sources */,
 				C9DFA972299BF9E8006929C1 /* CompactNoteView.swift in Sources */,
 				C9EE3E632A053910008A7491 /* ExpirationTimeOption.swift in Sources */,
+				5B864BED2A32589F002BB407 /* RelayMetadata+CoreDataProperties.swift in Sources */,
 				C9A0DAE029C697A100466635 /* AboutView.swift in Sources */,
 				A351E1A229BA92240009B7F6 /* ProfileEditView.swift in Sources */,
 				C9DFA969299BEC33006929C1 /* CardStyle.swift in Sources */,
@@ -1355,7 +1361,7 @@
 				C98A32272A05795E00E3FA13 /* Task+Timeout.swift in Sources */,
 				C9B708BB2A13BE41006C613A /* NoteTextEditor.swift in Sources */,
 				C95D68A5299E6E1E00429F86 /* PlaceholderModifier.swift in Sources */,
-				5B503F662A291F150098805A /* RelayMetadata+CoreDataClass.swift in Sources */,
+				5B864BEC2A32589F002BB407 /* RelayMetadata+CoreDataClass.swift in Sources */,
 				C960C57429F3251E00929990 /* RepostButton.swift in Sources */,
 				3FFB1D9329A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,
 				C93EC2FA29C370DE0012EE2A /* DiscoverGrid.swift in Sources */,
@@ -1440,6 +1446,7 @@
 				C987F86229BABAF800B44E7A /* String+Markdown.swift in Sources */,
 				CD09A74B29A521730063464F /* ProfileHeader.swift in Sources */,
 				CD09A74A29A521510063464F /* ProfileView.swift in Sources */,
+				5B864BEE2A3258F3002BB407 /* RelayMetadata+CoreDataProperties.swift in Sources */,
 				C9CE5B152A0172CF008E198C /* WebView.swift in Sources */,
 				CD09A74929A521210063464F /* Router.swift in Sources */,
 				C93EC2F829C351470012EE2A /* Optional+Unwrap.swift in Sources */,
@@ -1480,6 +1487,7 @@
 				C9A0DAF029C7394D00466635 /* CreateProfileView.swift in Sources */,
 				3FFF3BD029A9645F00DD0B72 /* AuthorReference+CoreDataClass.swift in Sources */,
 				C9F0BB6C29A503D6000547FC /* PublicKey.swift in Sources */,
+				5B864BEF2A3258F5002BB407 /* RelayMetadata+CoreDataClass.swift in Sources */,
 				C9DEC06F2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,
 				C9ADB13F29929F1F0075E7F8 /* String+Hex.swift in Sources */,
 				C94FE9F629DB177500019CD3 /* Localizable.swift in Sources */,
@@ -2117,7 +2125,7 @@
 				C92DF80229C22E4F00400561 /* Nos 2.xcdatamodel */,
 				C9DEBFD6298941000078B43A /* Nos.xcdatamodel */,
 			);
-			currentVersion = C91FFD392A09444D00743037 /* Nos 6.xcdatamodel */;
+			currentVersion = 5B503F632A291D480098805A /* Nos 7.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
