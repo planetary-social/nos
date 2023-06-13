@@ -19,8 +19,9 @@ final class RelayService: ObservableObject {
     
     private var persistenceController: PersistenceController
     private var subscriptions: RelaySubscriptionManager
-    private var saveEventsTimer: AsyncTimer?
+    private var processSubscriptionQueueTimer: AsyncTimer?
     private var backgroundProcessTimer: AsyncTimer?
+    private var eventProcessingLoop: Task<Void, Error>?
     private var backgroundContext: NSManagedObjectContext
     private var parseContext: NSManagedObjectContext
     // TODO: use structured concurrency for this
@@ -34,26 +35,28 @@ final class RelayService: ObservableObject {
         self.backgroundContext = persistenceController.newBackgroundContext()
         self.parseContext = persistenceController.newBackgroundContext()
         self.subscriptions = RelaySubscriptionManager()
+        
+        self.eventProcessingLoop = Task(priority: .userInitiated) { [weak self] in
+            try Task.checkCancellation()
+            while true {
+                do { 
+                    try await self?.batchParseEvents()
+                } catch {
+                    Log.error("RelayService: Error parsing events: \(error.localizedDescription)")
+                }
+            }
+        }
 
-        self.saveEventsTimer = AsyncTimer(timeInterval: 1, priority: .high) { [weak self] in
-            guard let self = self else {
-                return
-            }
-            
-            do {                    
-                try await self.batchParseEvents()
-                try await self.backgroundContext.perform {
-                    try self.backgroundContext.saveIfNeeded()
-                }                
-            } catch {
-                Log.error("RelayService.saveEventsTimer failed to save with error: \(error.localizedDescription)")
-            }
-            
-            await self.processSubscriptionQueue()
+        self.processSubscriptionQueueTimer = AsyncTimer(
+            timeInterval: 1, 
+            priority: .high, 
+            firesImmediately: false
+        ) { [weak self] in
+            await self?.processSubscriptionQueue()
         }
         
         // TODO: fire this after all relays have connected, not right on init
-        self.backgroundProcessTimer = AsyncTimer(timeInterval: 60, onFire: { [weak self] in
+        self.backgroundProcessTimer = AsyncTimer(timeInterval: 60, firesImmediately: false, onFire: { [weak self] in
             await self?.publishFailedEvents()
             await self?.deleteExpiredEvents()
         })
@@ -72,7 +75,9 @@ final class RelayService: ObservableObject {
     }
     
     deinit {
-        saveEventsTimer?.cancel()
+        processSubscriptionQueueTimer?.cancel()
+        backgroundProcessTimer?.cancel()
+        eventProcessingLoop?.cancel()
     }
     
     @objc func appWillEnterForeground() {
@@ -176,21 +181,10 @@ extension RelayService {
     }
     
     private func clearStaleSubscriptions() async {
-        var staleSubscriptions = [RelaySubscription]()
-        staleSubscriptions = await subscriptions.active.filter {
-            if $0.isOneTime, let filterStartedAt = $0.subscriptionStartDate {
-                return filterStartedAt.distance(to: .now) > 5
-            }
-            return false
-        }
-        
-        if !staleSubscriptions.isEmpty {
-            
-            for staleSubscription in staleSubscriptions {
-                Log.info("Subscription \(staleSubscription.id) is stale. Closing.")
-                await subscriptions.forceCloseSubscriptionCount(for: staleSubscription.id)
-                await sendCloseToAll(for: staleSubscription.id)
-            }
+        let staleSubscriptions = await subscriptions.staleSubscriptions()
+        for staleSubscription in staleSubscriptions {
+            Log.info("Subscription \(staleSubscription.id) is stale. Closing.")
+            await sendCloseToAll(for: staleSubscription.id)
         }
     }
 }
@@ -249,11 +243,8 @@ extension RelayService {
     }
     
     private func batchParseEvents() async throws {
-        let startDate = Date.now
-        let eventsToParse = await self.parseQueue.popAll()
-        Log.debug("RelayService: parseContext processing \(eventsToParse.count) events")
+        let eventsToParse = await self.parseQueue.pop(30)
         if !eventsToParse.isEmpty {
-            
             try await self.parseContext.perform {
                 for event in eventsToParse {
                     // let relay = self.relay(from: socket, in: self.parseContext)
@@ -266,7 +257,6 @@ extension RelayService {
                     }
                 }
                 try self.parseContext.saveIfNeeded()
-                Log.debug("RelayService: parseContext saved in \(startDate.distance(to: .now)) seconds")
             }                
         }
     }
@@ -304,6 +294,8 @@ extension RelayService {
                             print("\(eventId) has been rejected. No given reason.")
                         }
                     }
+                    
+                    try? self.backgroundContext.saveIfNeeded()
                 } else {
                     print("Error: got OK for missing Event: \(eventId)")
                 }
@@ -448,6 +440,8 @@ extension RelayService {
                     }
                 }
             }
+            
+            try? self.backgroundContext.saveIfNeeded()
         }
     }
     
@@ -457,6 +451,7 @@ extension RelayService {
                 for event in try self.backgroundContext.fetch(Event.expiredRequest()) {
                     self.backgroundContext.delete(event)
                 }
+                try self.backgroundContext.saveIfNeeded()
             } catch {
                 Log.error("Error fetching expired events \(error.localizedDescription)")
             }
@@ -632,21 +627,6 @@ extension RelayService {
         let urlString = "https://explorer.universalname.space/uns/\(unsIdentifier)"
         guard let url = URL(string: urlString) else { return nil }
         return url
-    }
-}
-
-/// An actor that queues up received Event JSON for parsing. 
-actor ParseQueue {
-    private var events: Set<JSONEvent> = Set()
-    
-    func push(_ event: JSONEvent) {
-        events.insert(event)
-    }
-    
-    func popAll() -> [JSONEvent] {
-        let allEvents = Array(events)
-        events = Set()
-        return allEvents
     }
 }
 
