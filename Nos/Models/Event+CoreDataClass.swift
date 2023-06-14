@@ -296,7 +296,9 @@ public class Event: NosManagedObject {
     
     @nonobjc public class func hydratedEvent(by identifier: String) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.predicate = NSPredicate(format: "identifier = %@ AND content != nil", identifier)
+        fetchRequest.predicate = NSPredicate(
+            format: "identifier = %@ AND createdAt != nil AND author != nil", identifier
+        )
         fetchRequest.fetchLimit = 1
         return fetchRequest
     }
