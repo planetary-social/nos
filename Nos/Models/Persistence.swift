@@ -12,7 +12,7 @@ struct PersistenceController {
     static let shared = PersistenceController()
     
     /// Increment this to delete core data on update
-    static let version = 1
+    static let version = 3
     static let versionKey = "NosPersistenceControllerVersion"
 
     // swiftlint:disable force_try
@@ -72,7 +72,7 @@ struct PersistenceController {
         })
         
         container.viewContext.automaticallyMergesChangesFromParent = true
-        let mergeType = NSMergePolicyType.mergeByPropertyObjectTrumpMergePolicyType
+        let mergeType = NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType
         container.viewContext.mergePolicy = NSMergePolicy(merge: mergeType)
         
         if needsReload {
@@ -131,7 +131,7 @@ struct PersistenceController {
     func newBackgroundContext() -> NSManagedObjectContext {
         let context = container.newBackgroundContext()
         context.automaticallyMergesChangesFromParent = true
-        let mergeType = NSMergePolicyType.mergeByPropertyObjectTrumpMergePolicyType
+        let mergeType = NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType
         context.mergePolicy = NSMergePolicy(merge: mergeType)
         return context
     }

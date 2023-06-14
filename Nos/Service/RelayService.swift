@@ -34,6 +34,7 @@ final class RelayService: ObservableObject {
         self.persistenceController = persistenceController
         self.backgroundContext = persistenceController.newBackgroundContext()
         self.parseContext = persistenceController.newBackgroundContext()
+        parseContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         self.subscriptions = RelaySubscriptionManager()
         
         self.eventProcessingLoop = Task(priority: .userInitiated) { [weak self] in
@@ -56,7 +57,7 @@ final class RelayService: ObservableObject {
         }
         
         // TODO: fire this after all relays have connected, not right on init
-        self.backgroundProcessTimer = AsyncTimer(timeInterval: 60, firesImmediately: false, onFire: { [weak self] in
+        self.backgroundProcessTimer = AsyncTimer(timeInterval: 60, firesImmediately: true, onFire: { [weak self] in
             await self?.publishFailedEvents()
             await self?.deleteExpiredEvents()
         })

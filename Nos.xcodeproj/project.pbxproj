@@ -566,6 +566,7 @@
 		C9E37E0E2A1E7C32003D4B0A /* ReportMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportMenu.swift; sourceTree = "<group>"; };
 		C9E37E112A1E7EC5003D4B0A /* PreviewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewContainer.swift; sourceTree = "<group>"; };
 		C9E37E142A1E8143003D4B0A /* Report.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Report.swift; sourceTree = "<group>"; };
+		C9EDC9792A3A27D1009148D1 /* Nos 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 8.xcdatamodel"; sourceTree = "<group>"; };
 		C9EE3E5F2A0538B7008A7491 /* ExpirationTimeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationTimeButton.swift; sourceTree = "<group>"; };
 		C9EE3E622A053910008A7491 /* ExpirationTimeOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationTimeOption.swift; sourceTree = "<group>"; };
 		C9F0BB6829A5039D000547FC /* Int+Bool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Bool.swift"; sourceTree = "<group>"; };
@@ -2165,6 +2166,7 @@
 		C9DEBFD5298941000078B43A /* Nos.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				C9EDC9792A3A27D1009148D1 /* Nos 8.xcdatamodel */,
 				C9CF23152A378E8F00EBEC31 /* Nos 7.xcdatamodel */,
 				C91FFD392A09444D00743037 /* Nos 6.xcdatamodel */,
 				C9B678E529EF1BF200303F33 /* Nos 5.xcdatamodel */,
@@ -2173,7 +2175,7 @@
 				C92DF80229C22E4F00400561 /* Nos 2.xcdatamodel */,
 				C9DEBFD6298941000078B43A /* Nos.xcdatamodel */,
 			);
-			currentVersion = C9CF23152A378E8F00EBEC31 /* Nos 7.xcdatamodel */;
+			currentVersion = C9EDC9792A3A27D1009148D1 /* Nos 8.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
