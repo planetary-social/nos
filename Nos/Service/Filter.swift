@@ -90,19 +90,4 @@ struct Filter: Hashable, Identifiable {
         hasher.combine(pTags)
         hasher.combine(since)
     }
-    
-    func isFulfilled(by event: Event) -> Bool {
-        guard limit == 1 else {
-            return false
-        }
-        
-        if kinds.count == 1,
-            event.kind == kinds.first?.rawValue,
-            !authorKeys.isEmpty,
-            let authorKey = event.author?.hexadecimalPublicKey {
-            return authorKeys.contains(authorKey)
-        }
-        
-        return false
-    }
 }
