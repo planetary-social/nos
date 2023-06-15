@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (50)] - 2023-06-15Z
+
 - Added code to show the Discover tab when we haven't downloaded the user's follow list yet (like on first login or app reinstall).
 - Improved reliability of loading reposts, user photos, and names.
 - Fixed a bug where tapping on a note would open the associated image instead of the thread view.
