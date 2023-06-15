@@ -160,7 +160,7 @@ final class EventTests: XCTestCase {
         let context = PersistenceController(inMemory: true).container.viewContext
 
         // Act
-        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
+        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)!
          
         // Assert
         XCTAssertEqual(parsedEvent.signature, sampleContactListSignature)
@@ -192,7 +192,12 @@ final class EventTests: XCTestCase {
         let context = PersistenceController(inMemory: true).container.viewContext
         
         // Act
-        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context, skipVerification: true)
+        let parsedEvent = try EventProcessor.parse(
+            jsonEvent: jsonEvent, 
+            from: nil, 
+            in: context, 
+            skipVerification: true
+        )!
         
         // Assert
         XCTAssertEqual(parsedEvent.expirationDate?.timeIntervalSince1970, 2_378_572_992)
@@ -210,7 +215,12 @@ final class EventTests: XCTestCase {
         let context = PersistenceController(inMemory: true).container.viewContext
         
         // Act
-        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context, skipVerification: true)
+        let parsedEvent = try EventProcessor.parse(
+            jsonEvent: jsonEvent, 
+            from: nil, 
+            in: context, 
+            skipVerification: true
+        )!
         
         // Assert
         XCTAssertEqual(parsedEvent.expirationDate!.timeIntervalSince1970, 2_378_572_992.123, accuracy: 0.001)
@@ -255,7 +265,7 @@ final class EventTests: XCTestCase {
             from: nil,
             in: testContext,
             skipVerification: true
-        )
+        )!
         try testContext.save()
         
         var allEvents = try testContext.fetch(Event.allEventsRequest())
@@ -278,7 +288,7 @@ final class EventTests: XCTestCase {
             from: nil,
             in: testContext,
             skipVerification: true
-        )
+        )!
         try testContext.save()
         
         allEvents = try testContext.fetch(Event.allEventsRequest())

@@ -69,6 +69,22 @@ actor RelaySubscriptionManager {
         }
         return false
     }
+    
+    /// Finds stale subscriptions, removes them from the subscription list, and returns them.
+    func staleSubscriptions() async -> [RelaySubscription] {
+        var staleSubscriptions = [RelaySubscription]()
+        for subscription in active {
+            if subscription.isOneTime, 
+                let filterStartedAt = subscription.subscriptionStartDate,
+                filterStartedAt.distance(to: .now) > 5 {
+                staleSubscriptions.append(subscription)
+            }
+        }
+        for subscription in staleSubscriptions {
+            forceCloseSubscriptionCount(for: subscription.subscriptionID)
+        }
+        return staleSubscriptions
+    }
 
     func addSocket(for relayAddress: URL) -> WebSocket? {
         guard !sockets.contains(where: { $0.request.url == relayAddress }) else {

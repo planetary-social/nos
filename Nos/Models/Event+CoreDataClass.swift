@@ -296,7 +296,9 @@ public class Event: NosManagedObject {
     
     @nonobjc public class func hydratedEvent(by identifier: String) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.predicate = NSPredicate(format: "identifier = %@ AND content != nil", identifier)
+        fetchRequest.predicate = NSPredicate(
+            format: "identifier = %@ AND createdAt != nil AND author != nil", identifier
+        )
         fetchRequest.fetchLimit = 1
         return fetchRequest
     }
@@ -467,7 +469,7 @@ public class Event: NosManagedObject {
     /// Returns true if this event doesn't have content. Usually this means we saw it referenced by another event
     /// but we haven't actually downloaded it yet.
     var isStub: Bool {
-        author == nil || createdAt == nil || content == nil
+        author == nil || createdAt == nil 
     }
     
     func calculateIdentifier() throws -> String {
@@ -552,6 +554,7 @@ public class Event: NosManagedObject {
                 let content = note.content else {
                 return nil
             }
+            try? context.saveIfNeeded()
             guard let tags = note.allTags as? [[String]] else {
                 return AttributedString(content)
             }
@@ -939,6 +942,7 @@ public class Event: NosManagedObject {
                 }
             }
             
+            try? context.saveIfNeeded()
             return requestData
         }
         

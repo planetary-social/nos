@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added code to show the Discover tab when we haven't downloaded the user's follow list yet (like on first login or app reinstall).
+- Improved reliability of loading reposts, user photos, and names.
+- Fixed a bug where tapping on a note would open the associated image instead of the thread view.
+- Fixed a bug where profile pages would not load in some cases.
+- Improved performance of the relay manager.
+
 ## [0.1 (49)] - 2023-06-12Z
 
 - More small optimizations to relay traffic and event parsing.
@@ -18,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1 (47)] - 2023-06-09Z
 
-- Improved performance of the relay manager
+- Improved performance of the relay manager.
 
 ## [0.1 (46)] - 2023-06-06Z
 
