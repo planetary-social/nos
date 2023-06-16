@@ -16,7 +16,7 @@ struct DiscoverView: View {
     @EnvironmentObject var router: Router
     @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
-    @AppStorage("lastDiscoverRequestDate") var lastRequestDateUnix: TimeInterval?
+    @State private var lastRequestDate: Date?
 
     @State var showRelayPicker = false
     
@@ -66,14 +66,13 @@ struct DiscoverView: View {
             var fetchSinceDate: Date?
             // Make sure the lastRequestDate was more than a minute ago
             // to make sure we got all the events from it.
-            if let lastRequestDateUnix {
-                let lastRequestDate = Date(timeIntervalSince1970: lastRequestDateUnix)
+            if let lastRequestDate {
                 if lastRequestDate.distance(to: .now) > 60 {
                     fetchSinceDate = lastRequestDate
-                    self.lastRequestDateUnix = Date.now.timeIntervalSince1970
+                    self.lastRequestDate = Date.now
                 }
             } else {
-                self.lastRequestDateUnix = Date.now.timeIntervalSince1970
+                self.lastRequestDate = Date.now
             }
             
             let featuredFilter = Filter(
