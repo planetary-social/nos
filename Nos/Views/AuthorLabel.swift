@@ -33,7 +33,7 @@ struct AuthorLabel: View {
                 .lineLimit(1)
                 .font(.brand)
                 .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(alignment: .leading)
         }
     }
 }
