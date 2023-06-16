@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (51)] - 2023-06-16Z
+
 - Updated design of the relay selector
 - Fixed an issue where the Discover tab wouldn't show new content for a while after upgrading from build 49.
 
