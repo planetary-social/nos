@@ -156,7 +156,7 @@ struct DiscoverView: View {
                     if showRelayPicker, let author = currentUser.author {
                         RelayPicker(
                             selectedRelay: $relayFilter,
-                            defaultSelection: Localized.extendedNetwork.string,
+                            defaultSelection: Localized.allMyRelays.string,
                             author: author,
                             isPresented: $showRelayPicker
                         )
@@ -204,7 +204,7 @@ struct DiscoverView: View {
                 RelayPickerToolbarButton(
                     selectedRelay: $relayFilter,
                     isPresenting: $showRelayPicker,
-                    defaultSelection: Localized.extendedNetwork
+                    defaultSelection: Localized.allMyRelays
                 ) {
                     withAnimation {
                         showRelayPicker.toggle()

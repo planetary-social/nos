@@ -54,7 +54,7 @@ struct NewNoteView: View {
                 if showRelayPicker, let author = currentUser.author {
                     RelayPicker(
                         selectedRelay: $selectedRelay,
-                        defaultSelection: Localized.extendedNetwork.string,
+                        defaultSelection: Localized.allMyRelays.string,
                         author: author,
                         isPresented: $showRelayPicker
                     )

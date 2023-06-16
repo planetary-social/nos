@@ -84,20 +84,22 @@ struct RelayPickerToolbarButton_Previews: PreviewProvider {
                     .toolbar {
                         
                         ToolbarItem(placement: .navigationBarLeading) {
-                                Button { }
+                            Button {}
                             label: {
                                 Localized.cancel.view
                                     .foregroundColor(.secondaryText)
                             }
                         }
-                        RelayPickerToolbarButton(selectedRelay: selectedRelay, isPresenting: isPresented, defaultSelection: .extendedNetwork) { 
-                            
-                        }
+                        RelayPickerToolbarButton(
+                            selectedRelay: selectedRelay, 
+                            isPresenting: isPresented, 
+                            defaultSelection: .allMyRelays
+                        ) {}
                         ToolbarItem(placement: .navigationBarTrailing) {
-                                ActionButton(title: Localized.post, action: {})
-                                    .frame(height: 22)
-                                    .padding(.bottom, 3)
-                            }
+                            ActionButton(title: Localized.post, action: {})
+                                .frame(height: 22)
+                                .padding(.bottom, 3)
+                        }
                     }
                     .navigationBarTitle(Localized.discover.string, displayMode: .inline)
                     .toolbarBackground(.visible, for: .navigationBar)
