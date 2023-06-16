@@ -86,7 +86,7 @@ struct NewNoteView: View {
                 }
                 label: {
                     Localized.cancel.view
-                        .foregroundColor(.textColor)
+                        .foregroundColor(.secondaryText)
                 },
                 trailing: ActionButton(title: Localized.post, action: postAction)
                     .frame(height: 22)
