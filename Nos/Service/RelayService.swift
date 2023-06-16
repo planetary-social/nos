@@ -229,7 +229,7 @@ extension RelayService {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: eventJSON)
             let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
-            await self.parseQueue.push(jsonEvent)
+            await self.parseQueue.push(jsonEvent, from: socket)
             
             if let subscription = await subscriptions.subscription(from: subscriptionID),
                 subscription.isOneTime {
@@ -244,18 +244,12 @@ extension RelayService {
     }
     
     private func batchParseEvents() async throws {
-        let eventsToParse = await self.parseQueue.pop(30)
-        if !eventsToParse.isEmpty {
+        let eventData = await self.parseQueue.pop(30)
+        if !eventData.isEmpty {
             try await self.parseContext.perform {
-                for event in eventsToParse {
-                    // let relay = self.relay(from: socket, in: self.parseContext)
-                    if let event = try EventProcessor.parse(
-                        jsonEvent: event,
-                        from: nil,
-                        in: self.parseContext
-                    ) {
-                        // relay.unwrap { event.trackDelete(on: $0, context: self.parseContext) }
-                    }
+                for (event, socket) in eventData {
+                    let relay = self.relay(from: socket, in: self.parseContext)
+                    _ = try EventProcessor.parse(jsonEvent: event, from: relay, in: self.parseContext) 
                 }
                 try self.parseContext.saveIfNeeded()
             }                
