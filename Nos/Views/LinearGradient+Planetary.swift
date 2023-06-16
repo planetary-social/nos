@@ -28,8 +28,8 @@ extension LinearGradient {
         endPoint: .bottomTrailing
     )
     
-    public static let cardGradient = LinearGradient(
-        colors: [Color.cardBgTop, Color.cardBgBottom],
+    public static let cardBackground = LinearGradient(
+        colors: [.cardBgTop, .cardBgBottom],
         startPoint: .top,
         endPoint: .bottom
     )

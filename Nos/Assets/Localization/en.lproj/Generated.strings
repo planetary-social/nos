@@ -110,7 +110,6 @@
 "Localized.reportConfirmation" = "This will publish a report that is publicly visible. Are you sure?";
 "Localized.note" = "note";
 "Localized.unmuteUser" = "Un-Mute";
-"Localized.extendedNetwork" = "Extended Network";
 "Localized.outsideNetwork" = "This user is outside your network.";
 "Localized.allMyRelays" = "All My Relays";
 "Localized.about" = "About";

@@ -120,7 +120,7 @@ struct DiscoverView: View {
                     if showRelayPicker, let author = currentUser.author {
                         RelayPicker(
                             selectedRelay: $relayFilter,
-                            defaultSelection: Localized.extendedNetwork.string,
+                            defaultSelection: Localized.allMyRelays.string,
                             author: author,
                             isPresented: $showRelayPicker
                         )
@@ -141,7 +141,7 @@ struct DiscoverView: View {
                 RelayPickerToolbarButton(
                     selectedRelay: $relayFilter,
                     isPresenting: $showRelayPicker,
-                    defaultSelection: Localized.extendedNetwork
+                    defaultSelection: Localized.allMyRelays
                 ) {
                     withAnimation {
                         showRelayPicker.toggle()
@@ -320,55 +320,5 @@ struct DiscoverView_Previews: PreviewProvider {
             .environmentObject(currentUser)
             .onAppear { createTestData(in: previewContext) }
             .previewDevice("iPad Air (5th generation)")
-    }
-}
-
-struct RelayPickerToolbarButton: ToolbarContent {
-    
-    @Binding var selectedRelay: Relay?
-    @Binding var isPresenting: Bool
-    var defaultSelection: Localized
-    var action: () -> Void
-    
-    var title: String {
-        if let selectedRelay {
-            return selectedRelay.host ?? Localized.error.string
-        } else {
-            return defaultSelection.string
-        }
-    }
-    
-    var imageName: String {
-        if isPresenting {
-            return "chevron.up"
-        } else {
-            return "chevron.down"
-        }
-    }
-    
-    var body: some ToolbarContent {
-        ToolbarItem(placement: .principal) {
-            Button {
-                action()
-            } label: {
-                HStack {
-                    PlainText(title)
-                        .font(.clarityTitle3)
-                        .foregroundColor(.primaryTxt)
-                        .bold()
-                        .padding(.leading, 14)
-                    Image(systemName: imageName)
-                        .font(.system(size: 10))
-                        .bold()
-                        .foregroundColor(.secondary)
-                }
-            }
-            .frame(height: 35)
-            .background(
-                Color.appBg
-                    .cornerRadius(20)
-            )
-            .padding(.bottom, 3)
-        }
     }
 }

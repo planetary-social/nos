@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Updated design of the relay selector
+- Fixed an issue where the Discover tab wouldn't show new content for a while after upgrading from build 49.
+
 ## [0.1 (50)] - 2023-06-15Z
 
 - Added code to show the Discover tab when we haven't downloaded the user's follow list yet (like on first login or app reinstall).
