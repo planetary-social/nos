@@ -161,6 +161,7 @@ enum Localized: String, Localizable, CaseIterable {
     case copyLink = "Copy Link"
     case copyUserIdentifier = "Copy User ID (npub)"
     case deleteNote = "Delete"
+    case deleteNoteConfirmation = "This will delete a note that is publicly visible. Are you sure?"
     case mute = "Mute"
     case muteUser = "Mute User"
     case muted = "Muted"

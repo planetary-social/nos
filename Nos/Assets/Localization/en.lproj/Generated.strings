@@ -98,6 +98,7 @@
 "Localized.copyLink" = "Copy Link";
 "Localized.copyUserIdentifier" = "Copy User ID (npub)";
 "Localized.deleteNote" = "Delete";
+"Localized.deleteNoteConfirmation" = "This will delete a note that is publicly visible. Are you sure?";
 "Localized.mute" = "Mute";
 "Localized.muteUser" = "Mute User";
 "Localized.muted" = "Muted";
