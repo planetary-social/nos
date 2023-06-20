@@ -27,6 +27,7 @@ final class RelayService: ObservableObject {
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .utility)
     @Dependency(\.analytics) private var analytics
     @MainActor @Dependency(\.currentUser) private var currentUser
+    @Published var numberOfConnectedRelays: Int = 0
     
     init(persistenceController: PersistenceController) {
         self.persistenceController = persistenceController
@@ -170,6 +171,11 @@ extension RelayService {
         await clearStaleSubscriptions()
         
         await subscriptions.processSubscriptionQueue(relays: relays)
+        
+        let socketsCount = await subscriptions.sockets.count
+        Task { @MainActor in
+            numberOfConnectedRelays = socketsCount
+        }
     }
     
     private func clearStaleSubscriptions() async {

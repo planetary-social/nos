@@ -24,6 +24,7 @@ struct HomeFeedView: View {
     @State private var isVisible = false
     @State private var cancellables = [AnyCancellable]()
     @State private var performingInitialLoad = true
+    @State private var numberOfConnectedRelays = 0
     static let initialLoadTime = 2
 
     // Probably the logged in user should be in the @Environment eventually
@@ -107,8 +108,31 @@ struct HomeFeedView: View {
                         .padding()
                 }
             })
-            .navigationBarItems(leading: SideMenuButton())
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    SideMenuButton()
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        router.sideMenuPath.append(SideMenu.Destination.relays)
+                        router.toggleSideMenu()
+                    } label: {
+                        HStack(spacing: 3) {
+                            Image("relay-left")
+                                .colorMultiply(numberOfConnectedRelays > 0 ? .white : .red)
+                            Text("\(numberOfConnectedRelays)")
+                                .font(.clarityTitle3)
+                                .foregroundColor(.primaryTxt)
+                            Image("relay-right")
+                                .colorMultiply(numberOfConnectedRelays > 0 ? .white : .red)
+                        }
+                    }
+                }
+            }
             .nosNavigationBar(title: .homeFeed)
+        }
+        .onChange(of: relayService.numberOfConnectedRelays) { newValue in
+            numberOfConnectedRelays = newValue
         }
         .refreshable {
             date = .now

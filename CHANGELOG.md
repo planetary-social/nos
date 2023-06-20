@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added the number of connected relays at the top right corner of the Home Feed.
 - Improved performance of the relay manager
 - Add the ability to report notes and profiles using NIP-32 labels and NIP-69 classification.
 - Fixed a crash which occurs on some versions of MacOS when attempting to mention other users during post creation.
