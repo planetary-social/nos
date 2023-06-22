@@ -18,7 +18,8 @@ struct NosApp: App {
     @Dependency(\.currentUser) private var currentUser
     private let appController = AppController()
     @Environment(\.scenePhase) private var scenePhase
-
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
         WindowGroup {
             AppView()
