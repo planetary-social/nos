@@ -10,9 +10,17 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         print("apns registered", deviceToken.base64EncodedString())
+        self.sendDeviceTokenToServer(deviceToken: deviceToken)
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("apns error", error)
+    }
+    
+    private func sendDeviceTokenToServer(deviceToken: Data) {
+        // todo how to get our public key?
+        // todo how to get our locale?
+        // todo how to get our relays?
+        // todo how to connect to a relay and send an event to it?
     }
 }
