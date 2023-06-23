@@ -20,7 +20,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     private func sendDeviceTokenToServer(deviceToken: Data) {
         let publicKeyHex = CurrentUser.shared.publicKeyHex;
         print("apns sending", publicKeyHex, deviceToken.base64EncodedString())
-        // todo how to get our locale?
         // todo how to get our relays?
         // todo how to connect to a relay and send an event to it?
     }
