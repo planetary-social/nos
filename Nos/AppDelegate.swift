@@ -4,9 +4,8 @@ import UIKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
 
-    @Dependency(\.relayService) private var relayService
-
-    private notificationRegistrationEventType: Int64 = 6666
+    private var relayService: RelayService // todo how to get this?
+    private var notificationRegistrationEventType: Int64 = 6666
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         application.registerForRemoteNotifications()
@@ -14,7 +13,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        self.sendDeviceTokenToServer(deviceToken: deviceToken)
+        do {
+            try self.sendDeviceTokenToServer(deviceToken: deviceToken)
+        }
+        catch {
+            print("error sending apns token to server: \(error)")
+        }
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
@@ -48,8 +52,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         try await self.relayService.publish(
             event: jsonEvent,
             to: selectedRelay,
-            signingKey: CurrentUser.shared.keyPair,
-            context: nil // todo?
+            signingKey: CurrentUser.shared.keyPair!,
+            context: nil // todo how to not pass this?
         )
         
         // todo how to get our relays?
