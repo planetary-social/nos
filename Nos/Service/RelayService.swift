@@ -511,9 +511,36 @@ extension RelayService {
         var urlRequest = URLRequest(url: relayAddress)
         urlRequest.timeoutInterval = 10
         let socket = WebSocket(request: urlRequest, compressionHandler: .none)
-        socket.write(string: requestString) {
-            socket.disconnect()
-        }
+        return await withCheckedContinuation({
+            continuation in
+            socket.onEvent  = { (event: WebSocketEvent) in
+                switch event {
+                case WebSocketEvent.connected:
+                    print("apns connected socket, writing")
+                    socket.write(string: requestString)
+                    socket.disconnect()
+                case WebSocketEvent.disconnected:
+                    continuation.resume()
+                case WebSocketEvent.text:
+                    print("apns text")
+                case WebSocketEvent.binary:
+                    print("apns binary")
+                case WebSocketEvent.pong:
+                    print("apns pong")
+                case WebSocketEvent.ping:
+                    print("apns ping")
+                case WebSocketEvent.error:
+                    print("apns error")
+                case WebSocketEvent.viabilityChanged:
+                    print("apns viability changed")
+                case WebSocketEvent.reconnectSuggested:
+                    print("apns reconnect suggested")
+                case WebSocketEvent.cancelled:
+                    print("apns cancelled")
+                }
+            }
+            socket.connect()
+        })
     }
     
     private func handleConnection(from client: WebSocketClient) async {

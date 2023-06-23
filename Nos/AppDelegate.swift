@@ -6,7 +6,7 @@ import Dependencies
 class AppDelegate: NSObject, UIApplicationDelegate {
 
     private var notificationRegistrationEventType: Int64 = 6666
-    private var notificationServiceAddress: URL = URL(string: "wss://192.168.200.10:")!
+    private var notificationServiceAddress: URL = URL(string: "ws://192.168.200.3:8008")!
     
     @Dependency(\.relayService) private var relayService
     
