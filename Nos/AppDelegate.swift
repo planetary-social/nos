@@ -3,7 +3,10 @@ import SwiftUI
 import UIKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    private notificationRegistrationEventType:int64 = 6666
+
+    @Dependency(\.relayService) private var relayService
+
+    private notificationRegistrationEventType: Int64 = 6666
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         application.registerForRemoteNotifications()
@@ -20,6 +23,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
     private func sendDeviceTokenToServer(deviceToken: Data) throws {
         let publicKeyHex = CurrentUser.shared.publicKeyHex;
+        
         let relays = [RegistrationRelayAddress(address: "test")]
         let content = Registration(
             apnsToken: deviceToken.hexString,
@@ -41,23 +45,22 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         let selectedRelay = Relay()
         
-        try await relayService.publish(
+        try await self.relayService.publish(
             event: jsonEvent,
             to: selectedRelay,
             signingKey: CurrentUser.shared.keyPair,
-            context: nil
+            context: nil // todo?
         )
         
-        //CurrentUser.shared.relayService.publish(event: <#T##JSONEvent#>, to: <#T##Relay#>, signingKey: <#T##KeyPair#>, context: <#T##NSManagedObjectContext#>)
         // todo how to get our relays?
         // todo how to connect to a relay and send an event to it?
     }
 }
 
 struct Registration: Codable {
-    apnsToken: String
-    publicKey: String
-    relays: RegistrationRelayAddress[]
+    var apnsToken: String
+    var publicKey: String
+    var relays: [RegistrationRelayAddress]
     
     enum CodingKeys: String, CodingKey {
         case apnsToken = "apnsToken"
@@ -67,7 +70,7 @@ struct Registration: Codable {
 }
 
 struct RegistrationRelayAddress: Codable {
-    address: String
+    var address: String
     
     enum CodingKeys: String, CodingKey {
         case address = "address"
