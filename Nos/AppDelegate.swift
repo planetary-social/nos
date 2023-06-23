@@ -1,11 +1,14 @@
 import Foundation
 import SwiftUI
 import UIKit
+import Dependencies
 
 class AppDelegate: NSObject, UIApplicationDelegate {
 
-    private var relayService: RelayService // todo how to get this?
     private var notificationRegistrationEventType: Int64 = 6666
+    private var notificationServiceAddress: URL = URL(string: "wss://192.168.200.10:")!
+    
+    @Dependency(\.relayService) private var relayService
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         application.registerForRemoteNotifications()
@@ -13,11 +16,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        do {
-            try self.sendDeviceTokenToServer(deviceToken: deviceToken)
-        }
-        catch {
-            print("error sending apns token to server: \(error)")
+        Task{
+            do {
+                try await sendDeviceTokenToServer(deviceToken: deviceToken)
+            }
+            catch {
+                print("error sending apns token to server: \(error)")
+            }
         }
     }
     
@@ -25,39 +30,32 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         print("apns error", error)
     }
     
-    private func sendDeviceTokenToServer(deviceToken: Data) throws {
-        let publicKeyHex = CurrentUser.shared.publicKeyHex;
+    private func sendDeviceTokenToServer(deviceToken: Data) async throws {
+        var jsonEvent = JSONEvent(
+            pubKey: CurrentUser.shared.keyPair!.publicKeyHex,
+            kind: EventKind.notificationServiceRegistration,
+            tags: [],
+            content: try await createContent(deviceToken: deviceToken)
+        )
+        try jsonEvent.sign(withKey: CurrentUser.shared.keyPair!)
         
-        let relays = [RegistrationRelayAddress(address: "test")]
+        try await relayService.connectToRelayAndSendAnEventToIt(
+            relayAddress: notificationServiceAddress,
+            signedEvent: jsonEvent
+        )
+    }
+
+    private func createContent(deviceToken: Data) async throws -> String {
+        let publicKeyHex = CurrentUser.shared.publicKeyHex
+        let relays: [RegistrationRelayAddress] = await relayService.getUsersRelays(user: CurrentUser.shared).map{
+            RegistrationRelayAddress(address: $0.absoluteString)
+        }
         let content = Registration(
             apnsToken: deviceToken.hexString,
             publicKey: publicKeyHex!,
             relays: relays
         )
-        let encodedContent = String(data: try JSONEncoder().encode(content), encoding: .utf8)
-        let jsonEvent = JSONEvent(
-            id: "", // ???? why not a different type
-            pubKey: CurrentUser.shared.keyPair?.publicKeyHex!,
-            createdAt: Int64(Date().timeIntervalSince1970),
-            kind: notificationRegistrationEventType,
-            tags: [],
-            content: encodedContent,
-            signature: ""
-        )
-        
-        print("apns sending", jsonEvent)
-        
-        let selectedRelay = Relay()
-        
-        try await self.relayService.publish(
-            event: jsonEvent,
-            to: selectedRelay,
-            signingKey: CurrentUser.shared.keyPair!,
-            context: nil // todo how to not pass this?
-        )
-        
-        // todo how to get our relays?
-        // todo how to connect to a relay and send an event to it?
+        return String(data: try JSONEncoder().encode(content), encoding: .utf8)!
     }
 }
 

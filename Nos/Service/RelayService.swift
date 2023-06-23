@@ -468,23 +468,14 @@ extension RelayService {
     }
     
     @MainActor private func openSockets(overrideRelays: [URL]? = nil) async -> [URL] {
-        // Use override relays; fall back to user relays
-        
-        let relayAddresses: [URL] = await backgroundContext.perform { () -> [URL] in
-            if let overrideRelays {
-                return overrideRelays
-            }
-            if let currentUserPubKey = self.currentUser.publicKeyHex,
-                let currentUser = try? Author.find(by: currentUserPubKey, context: self.backgroundContext),
-                let userRelays = currentUser.relays?.allObjects as? [Relay] {
-                return userRelays.compactMap { $0.addressURL }
-            } else {
-                return []
-            }
+        let relayAddresses: [URL]
+        if let overrideRelays {
+            relayAddresses = overrideRelays
+        } else {
+            relayAddresses = await getUsersRelays(user: self.currentUser)
         }
         
         for relayAddress in relayAddresses {
-            
             guard let socket = await subscriptions.addSocket(for: relayAddress) else {
                 continue
             }
@@ -495,6 +486,34 @@ extension RelayService {
         }
         
         return relayAddresses
+    }
+    
+    func getUsersRelays(user: CurrentUser) async -> [URL] {
+        return await backgroundContext.perform { () -> [URL] in
+            if let currentUserPubKey = user.publicKeyHex,
+                let currentUser = try? Author.find(by: currentUserPubKey, context: self.backgroundContext),
+                let userRelays = currentUser.relays?.allObjects as? [Relay] {
+                return userRelays.compactMap { $0.addressURL }
+            } else {
+                return []
+            }
+        }
+    }
+
+    func connectToRelayAndSendAnEventToIt(
+        relayAddress: URL,
+        signedEvent: JSONEvent
+    ) async throws {        
+        let request: [Any] = ["EVENT", signedEvent.dictionary]
+        let requestData = try JSONSerialization.data(withJSONObject: request)
+        let requestString = String(data: requestData, encoding: .utf8)!
+        
+        var urlRequest = URLRequest(url: relayAddress)
+        urlRequest.timeoutInterval = 10
+        let socket = WebSocket(request: urlRequest, compressionHandler: .none)
+        socket.write(string: requestString) {
+            socket.disconnect()
+        }
     }
     
     private func handleConnection(from client: WebSocketClient) async {

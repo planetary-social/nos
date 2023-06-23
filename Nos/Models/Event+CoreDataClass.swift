@@ -52,6 +52,7 @@ public enum EventKind: Int64, CaseIterable, Hashable {
     case label = 1985
     case mute = 10_000
     case longFormContent = 30_023
+    case notificationServiceRegistration = 6666
 }
 
 extension FetchedResults where Element == Event {
