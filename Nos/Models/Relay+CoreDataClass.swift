@@ -21,6 +21,7 @@ public class Relay: NosManagedObject {
         "wss://relay.damus.io/",
         "wss://e.nos.lol/",
         "wss://nostr-dev.universalname.space",
+        "wss://purplepag.es"
         ]
     }
     
