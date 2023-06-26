@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import Logger
 
 @objc(Author)
 public class Author: NosManagedObject {
@@ -225,8 +226,17 @@ public class Author: NosManagedObject {
         }
         
         print("Muting \(mutedAuthorKey)")
+
+        let request = Author.allAuthorsRequest(muted: true)
+        var mutedAuthorKeys = [mutedAuthorKey]
+        do {
+            mutedAuthorKeys.append(contentsOf: try context.fetch(request).compactMap { $0.hexadecimalPublicKey })
+        } catch {
+            Log.debug("Couldn't fetch list of muted authors")
+        }
+
         muted = true
-        await CurrentUser.shared.publishMuteList(keys: [mutedAuthorKey])
+        await CurrentUser.shared.publishMuteList(keys: Array(Set(mutedAuthorKeys)))
         deleteAllPosts(context: context)
     }
     
