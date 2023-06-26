@@ -6,11 +6,12 @@ import Dependencies
 class AppDelegate: NSObject, UIApplicationDelegate {
 
     private var notificationRegistrationEventType: Int64 = 6666
-    private var notificationServiceAddress: URL = URL(string: "ws://192.168.200.3:8008")!
+    private var notificationServiceAddress: URL = URL(string: "ws://192.168.0.10:8008")!
     
     @Dependency(\.relayService) private var relayService
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        askToDisplayNotifications()
         application.registerForRemoteNotifications()
         return true
     }
@@ -30,7 +31,21 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         print("apns error", error)
     }
     
+    private func askToDisplayNotifications() {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert]) {
+            granted, error in
+            if let err = error {
+                print("apns error asking for permissions to show notifications", err)
+            }
+        }
+    }
+    
     private func sendDeviceTokenToServer(deviceToken: Data) async throws {
+        if CurrentUser.shared.keyPair == nil {
+            return
+        }
+        
         var jsonEvent = JSONEvent(
             pubKey: CurrentUser.shared.keyPair!.publicKeyHex,
             kind: EventKind.notificationServiceRegistration,
