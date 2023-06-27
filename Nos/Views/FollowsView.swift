@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-// This could be used both for followed and followers
+/// Displays a list of people someone is following.
 struct FollowsView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
@@ -20,6 +20,7 @@ struct FollowsView: View {
     
     func refreshFollows() {
         Task(priority: .userInitiated) {
+            // TODO: just grab metadata for people who need it, not a random 100
             let keys = followed.compactMap { $0.destination?.hexadecimalPublicKey }
             let filter = Filter(authorKeys: keys, kinds: [.metaData, .contactList], limit: 100)
             subscriptionId = await relayService.openSubscription(with: filter)

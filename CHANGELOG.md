@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed a bug where expired messages could be published to relays that doesn't support them
+- Added code to show the Discover tab when we haven't downloaded the user's follow list yet (like on first login or app reinstall).
+- Improved reliability of loading reposts, user photos, and names.
+- Fixed a bug where tapping on a note would open the associated image instead of the thread view.
+- Fixed a bug where profile pages would not load in some cases.
+- Improved performance of the relay manager.
 - Add the ability to report notes and profiles using NIP-32 labels and NIP-69 classification.
 - Fixed a crash which occurs on some versions of MacOS when attempting to mention other users during post creation.
 - Fixed a bug where the note options menu wouldn't show up sometimes.

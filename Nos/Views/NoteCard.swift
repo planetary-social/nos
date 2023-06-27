@@ -35,10 +35,6 @@ struct NoteCard: View {
     private var hideOutOfNetwork: Bool
     private var replyAction: ((Event) -> Void)?
     
-    private var author: Author? {
-        note.author
-    }
-    
     private var showContents: Bool {
         !hideOutOfNetwork ||
         userTappedShowOutOfNetwork ||
@@ -80,49 +76,16 @@ struct NoteCard: View {
         self.replyAction = replyAction
     }
     
-    var attributedAuthor: AttributedString {
-        guard let author else {
-            return AttributedString()
-        }
-        
-        var authorName = AttributedString(author.safeName)
-        authorName.foregroundColor = .primaryTxt
-        authorName.font = Font.clarityBold
-        let postedOrRepliedString = note.isReply ? Localized.Reply.replied.string : Localized.Reply.posted.string
-        var postedOrReplied = AttributedString(" " + postedOrRepliedString)
-        postedOrReplied.foregroundColor = .secondaryText
-        
-        authorName.append(postedOrReplied)
-        return authorName
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             switch style {
             case .compact:
                 HStack(alignment: .center, spacing: 0) {
-                    if showContents {
+                    if showContents, let author = note.author {
                         Button {
-                            if let author {
-                                router.currentPath.wrappedValue.append(author)
-                            }
+                            router.currentPath.wrappedValue.append(author)
                         } label: {
-                            HStack(alignment: .center) {
-                                AvatarView(imageUrl: author?.profilePhotoURL, size: 24)
-                                Text(attributedAuthor)
-                                    .lineLimit(1)
-                                    .font(.brand)
-                                    .multilineTextAlignment(.leading)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                Spacer()
-                                if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
-                                    Text(elapsedTime)
-                                        .lineLimit(1)
-                                        .font(.body)
-                                        .foregroundColor(.secondaryText)
-                                }
-                            }
-                            .padding(.leading, 10)
+                            NoteCardHeader(note: note, author: author)
                         }
                         NoteOptionsButton(note: note)
                     } else {
@@ -193,7 +156,7 @@ struct NoteCard: View {
                     .padding(.leading, 13)
                 }
             case .golden:
-                if let author {
+                if let author = note.author {
                     GoldenPostView(author: author, note: note)
                 } else {
                     EmptyView()
@@ -248,7 +211,7 @@ struct NoteCard: View {
         }
         
         var tags: [[String]] = []
-        if let eventReferences = note.eventReferences?.array as? [EventReference] {
+        if let eventReferences = note.eventReferences.array as? [EventReference] {
             // compactMap returns an array of the non-nil results.
             tags += eventReferences.compactMap { event in
                 guard let eventId = event.eventId else { return nil }
@@ -256,7 +219,7 @@ struct NoteCard: View {
             }
         }
 
-        if let authorReferences = note.authorReferences?.array as? [EventReference] {
+        if let authorReferences = note.authorReferences.array as? [EventReference] {
             tags += authorReferences.compactMap { author in
                 guard let eventId = author.eventId else { return nil }
                 return ["p", eventId]
@@ -266,7 +229,7 @@ struct NoteCard: View {
         if let id = note.identifier {
             tags.append(["e", id] + note.seenOnRelayURLs)
         }
-        if let pubKey = author?.publicKey?.hex {
+        if let pubKey = note.author?.publicKey?.hex {
             tags.append(["p", pubKey])
         }
         
@@ -293,7 +256,7 @@ struct NoteCard: View {
         if let id = note.identifier {
             tags.append(["e", id] + note.seenOnRelayURLs)
         }
-        if let pubKey = author?.publicKey?.hex {
+        if let pubKey = note.author?.publicKey?.hex {
             tags.append(["p", pubKey])
         }
         

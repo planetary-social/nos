@@ -45,10 +45,10 @@ final class SocialGraphTests: XCTestCase {
         )
         
         // Add to the current user's follows
-        alice.follows = (alice.follows ?? NSSet()).adding(follow)
+        alice.follows.insert(follow)
         
         // Add from the current user to the author's followers
-        bob.followers = (bob.followers ?? NSSet()).adding(follow)
+        bob.followers.insert(follow)
         
         // Act
         let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)

@@ -11,6 +11,7 @@ import CoreData
 
 enum RelayError: Error {
     case invalidAddress
+    case parseError
 }
 
 @objc(Relay)
@@ -132,7 +133,7 @@ public class Relay: NosManagedObject {
         self.address = addressURL.absoluteString
         self.createdAt = Date.now
         if let author {
-            authors = (authors ?? NSSet()).adding(author)
+            authors.insert(author)
             author.add(relay: self)
         }
     }

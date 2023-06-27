@@ -56,7 +56,7 @@ public class Author: NosManagedObject {
     }
     
     var followedKeys: [HexadecimalString] {
-        follows?.compactMap({ ($0 as? Follow)?.destination?.hexadecimalPublicKey }) ?? []
+        follows.compactMap({ $0.destination?.hexadecimalPublicKey }) 
     }
     
     class func request(by pubKey: HexadecimalString) -> NSFetchRequest<Author> {
@@ -202,7 +202,7 @@ public class Author: NosManagedObject {
     }
     
     func add(relay: Relay) {
-        relays = (relays ?? NSSet()).adding(relay)
+        relays.insert(relay) 
         print("Adding \(relay.address ?? "") to \(hexadecimalPublicKey ?? "")")
     }
     
@@ -231,7 +231,7 @@ public class Author: NosManagedObject {
     }
     
     func remove(relay: Relay) {
-        relays = relays?.removing(relay)
+        relays.remove(relay)
         print("Removed \(relay.address ?? "") from \(hexadecimalPublicKey ?? "")")
     }
     

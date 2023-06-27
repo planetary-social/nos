@@ -17,7 +17,6 @@ struct HomeFeedView: View {
     @EnvironmentObject var router: Router
     @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
-    @AppStorage("lastHomeFeedRequestDate") var lastRequestDateUnix: TimeInterval?
     
     @FetchRequest var events: FetchedResults<Event>
     @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
@@ -40,43 +39,17 @@ struct HomeFeedView: View {
         
         let followedKeys = currentUser.socialGraph.followedKeys 
             
-        guard let currentUserKey = currentUser.publicKeyHex else {
-            return
-        }
-        
-        var fetchSinceDate: Date?
-        // Make sure the lastRequestDate was more than a minute ago
-        // to make sure we got all the events from it.
-        if let lastRequestDateUnix {
-            let lastRequestDate = Date(timeIntervalSince1970: lastRequestDateUnix)
-            if lastRequestDate.distance(to: .now) > 60 {
-                fetchSinceDate = lastRequestDate
-                self.lastRequestDateUnix = Date.now.timeIntervalSince1970
-            }
-        } else {
-            self.lastRequestDateUnix = Date.now.timeIntervalSince1970
-        }
-                
         if !followedKeys.isEmpty {
             // TODO: we could miss events with this since filter
             let textFilter = Filter(
                 authorKeys: followedKeys, 
                 kinds: [.text, .delete, .repost, .longFormContent], 
-                limit: 400, 
+                limit: 50, 
                 since: nil
             )
             let textSub = await relayService.openSubscription(with: textFilter)
             subscriptionIDs.append(textSub)
         }
-        
-        let currentUserAuthorKeys = [currentUserKey]
-        let userLikesFilter = Filter(
-            authorKeys: currentUserAuthorKeys,
-            kinds: [.like, .delete],
-            since: fetchSinceDate
-        )
-        let userLikesSub = await relayService.openSubscription(with: userLikesFilter)
-        subscriptionIDs.append(userLikesSub)
     }
     
     func cancelSubscriptions() async {

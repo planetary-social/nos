@@ -57,17 +57,6 @@ struct ProfileView: View {
             )
             async let contactSub = relayService.openSubscription(with: contactFilter)
             
-            if let currentUser = CurrentUser.shared.author {
-                let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
-                let userLikesFilter = Filter(
-                    authorKeys: currentUserAuthorKeys,
-                    kinds: [.like],
-                    limit: 100
-                )
-                let userLikesSub = await relayService.openSubscription(with: userLikesFilter)
-                subscriptionIds.append(userLikesSub)
-            }
-            
             subscriptionIds.append(await textSub)
             subscriptionIds.append(await metaSub)
             subscriptionIds.append(await contactSub)
