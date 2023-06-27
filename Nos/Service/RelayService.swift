@@ -509,7 +509,7 @@ extension RelayService {
                 do {
                     try await self.queryRelayMetadataIfNeeded(relayAddress)
                 } catch {
-                    print(error)
+                    Log.optional(error)
                 }
             }
         }
