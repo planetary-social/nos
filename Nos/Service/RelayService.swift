@@ -535,7 +535,7 @@ extension RelayService {
             guard let relay = try backgroundContext.fetch(Relay.relay(by: address)).first else {
                 return false
             }
-            guard let timestamp = relay.metadata?.timestamp else {
+            guard let timestamp = relay.metadata?.receivedAt else {
                 return true
             }
             return timestamp.timeIntervalSinceNow > 86_400 * 3 // 3 days

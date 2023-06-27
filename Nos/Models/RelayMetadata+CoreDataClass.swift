@@ -14,7 +14,7 @@ public class RelayMetadata: NosManagedObject {
     convenience init(context: NSManagedObjectContext, jsonRelayMetadata: JSONRelayMetadata) throws {
         self.init(context: context)
         try hydrate(from: jsonRelayMetadata)
-        timestamp = Date.now
+        receivedAt = Date.now
     }
 
     override public var description: String {

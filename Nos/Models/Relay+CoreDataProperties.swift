@@ -22,6 +22,7 @@ extension Relay {
     @NSManaged public var events: Set<Event>
     @NSManaged public var publishedEvents: Set<Event>
     @NSManaged public var shouldBePublishedEvents: Set<Event>
+    @NSManaged public var metadata: RelayMetadata?
 }
 
 // MARK: Generated accessors for authors

@@ -23,7 +23,7 @@ extension RelayMetadata {
     @NSManaged public var software: String?
     @NSManaged public var version: String?
     @NSManaged public var relay: Relay?
-    @NSManaged public var timestamp: Date
+    @NSManaged public var receivedAt: Date
 }
 
 extension RelayMetadata: Identifiable { }
