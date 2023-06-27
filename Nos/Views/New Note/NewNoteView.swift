@@ -111,7 +111,7 @@ struct NewNoteView: View {
             return
         }
         if let relay = selectedRelay {
-            guard expirationTime == nil || relay.metadata?.supportedNIPs?.contains(40) == true else {
+            guard expirationTime == nil || relay.supportedNIPs?.contains(40) == true else {
                 alert = AlertState(title: {
                     TextState(Localized.error.string)
                 }, message: {

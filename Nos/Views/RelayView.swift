@@ -39,7 +39,7 @@ struct RelayView: View {
                             .foregroundColor(.textColor)
                         #if DEBUG
                         if let metadata = relay.metadata {
-                            Text(metadata.description)
+                            Text(metadata)
                                 .foregroundColor(.secondaryText)
                         }
                         #endif
