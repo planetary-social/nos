@@ -104,7 +104,7 @@ enum Localized: String, Localizable, CaseIterable {
     case editProfile = "Edit Profile"
     case youNeedToEnterAPrivateKeyBeforePosting = "You need to enter a private key in Settings before you can publish posts."
     case relayDoesNotSupportNIP40 = "This relay doesn't support expiring messages. Please select another one."
-    case anyRelaysSupportingNIP40 = "There aren't any relays that support expiring messages in your relay list. Please add one and retry."
+    case anyRelaysSupportingNIP40 = "None of your relays support expiring messages. Please add one and retry."
     case nostrBuildHelp = "Use nostr.build to post image links."
     case noteDisappearsIn = "Note disappears in" // Choices like 15 mins, 1 hour, etc. appear after this text.
     case attachMedia = "Attach Media"
