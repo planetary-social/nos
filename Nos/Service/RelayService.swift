@@ -489,7 +489,7 @@ extension RelayService {
     }
     
     func getUsersRelays(user: CurrentUser) async -> [URL] {
-        return await backgroundContext.perform { () -> [URL] in
+        await backgroundContext.perform { () -> [URL] in
             if let currentUserPubKey = user.publicKeyHex,
                 let currentUser = try? Author.find(by: currentUserPubKey, context: self.backgroundContext),
                 let userRelays = currentUser.relays?.allObjects as? [Relay] {
@@ -511,9 +511,8 @@ extension RelayService {
         var urlRequest = URLRequest(url: relayAddress)
         urlRequest.timeoutInterval = 10
         let socket = WebSocket(request: urlRequest, compressionHandler: .none)
-        return await withCheckedContinuation({
-            continuation in
-            socket.onEvent  = { (event: WebSocketEvent) in
+        return await withCheckedContinuation { continuation in
+            socket.onEvent = { (event: WebSocketEvent) in
                 switch event {
                 case WebSocketEvent.connected:
                     print("apns connected socket, writing")
@@ -540,7 +539,7 @@ extension RelayService {
                 }
             }
             socket.connect()
-        })
+        }
     }
     
     private func handleConnection(from client: WebSocketClient) async {
