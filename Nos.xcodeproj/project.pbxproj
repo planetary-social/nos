@@ -127,6 +127,8 @@
 		C9646EAE29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */; };
 		C9646EAF29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */; };
 		C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */; };
+		C97465342A3C95FE0031226F /* RelayPickerToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97465332A3C95FE0031226F /* RelayPickerToolbarButton.swift */; };
+		C97465352A3C95FE0031226F /* RelayPickerToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97465332A3C95FE0031226F /* RelayPickerToolbarButton.swift */; };
 		C97797B9298AA19A0046BD25 /* RelayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97797B8298AA19A0046BD25 /* RelayService.swift */; };
 		C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C97797BB298AB1890046BD25 /* secp256k1 */; };
 		C97797BF298ABE060046BD25 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C97797BE298ABE060046BD25 /* secp256k1 */; };
@@ -457,6 +459,7 @@
 		C9646EA029B7A22C007239A4 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDidLoadModifier.swift; sourceTree = "<group>"; };
 		C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Encoding.swift"; sourceTree = "<group>"; };
+		C97465332A3C95FE0031226F /* RelayPickerToolbarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayPickerToolbarButton.swift; sourceTree = "<group>"; };
 		C97797B8298AA19A0046BD25 /* RelayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayService.swift; sourceTree = "<group>"; };
 		C97A1C8729E45B3C009D9E8D /* RawEventView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawEventView.swift; sourceTree = "<group>"; };
 		C97A1C8A29E45B4E009D9E8D /* RawEventController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawEventController.swift; sourceTree = "<group>"; };
@@ -901,6 +904,7 @@
 		C9F84C24298DC7C100C6714D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3FB5E64F299D288E00386527 /* Onboarding */,
 				C9A0DADF29C697A100466635 /* AboutView.swift */,
 				C987F81929BA4D0E00B44E7A /* ActionButton.swift */,
 				C9A0DAE929C6A34200466635 /* ActivityView.swift */,
@@ -941,6 +945,7 @@
 				C94BC09A2A0AC74A0098F6F1 /* PreviewData.swift */,
 				A351E1A129BA92240009B7F6 /* ProfileEditView.swift */,
 				C95D689E299E6B4100429F86 /* ProfileHeader.swift */,
+				C95D68AC299E721700429F86 /* ProfileView.swift */,
 				C987F81C29BA6D9A00B44E7A /* ProfileTab.swift */,
 				C95D68AC299E721700429F86 /* ProfileView.swift */,
 				C97A1C8729E45B3C009D9E8D /* RawEventView.swift */,
@@ -960,8 +965,27 @@
 				CD09A74529A50F750063464F /* SideMenuContent.swift */,
 				C92DF80729C25FA900400561 /* SquareImage.swift */,
 				3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */,
+				C9DFA970299BF8CD006929C1 /* RepliesView.swift */,
+				C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */,
+				C97465332A3C95FE0031226F /* RelayPickerToolbarButton.swift */,
+				C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */,
+				CD76864B29B12F7E00085358 /* ExpandingTextFieldAndSubmitButton.swift */,
+				C94437E529B0DB83004D8C86 /* NotificationsView.swift */,
+				C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */,
+				CD76864F29B6503500085358 /* NoteOptionsButton.swift */,
+				3F60F42829B27D3E000D62C4 /* ThreadView.swift */,
+				C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */,
+				C9E37E0E2A1E7C32003D4B0A /* ReportMenu.swift */,
+				CD76865229B793F400085358 /* DiscoverSearchBar.swift */,
 				C931517C29B915AF00934506 /* StaggeredGrid.swift */,
 				C9A0DAE629C69FA000466635 /* Text+Gradient.swift */,
+				C9A0DAE929C6A34200466635 /* ActivityView.swift */,
+				C9A0DAF429C9112400466635 /* UniversalNameWizard.swift */,
+				5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */,
+				5B8C96B129DB313300B73AEC /* AuthorCard.swift */,
+				5B8C96B529DDD3B200B73AEC /* EditableText.swift */,
+				C9B708BA2A13BE41006C613A /* NoteTextEditor.swift */,
+				C97A1C8729E45B3C009D9E8D /* RawEventView.swift */,
 				3F60F42829B27D3E000D62C4 /* ThreadView.swift */,
 				C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */,
 				C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */,
@@ -1345,6 +1369,7 @@
 				3F60F42929B27D3E000D62C4 /* ThreadView.swift in Sources */,
 				C9B678DB29EEBF3B00303F33 /* DependencyInjection.swift in Sources */,
 				C95D68A9299E709900429F86 /* LinearGradient+Planetary.swift in Sources */,
+				C97465342A3C95FE0031226F /* RelayPickerToolbarButton.swift in Sources */,
 				3F43C47629A9625700E896A0 /* AuthorReference+CoreDataClass.swift in Sources */,
 				C9ADB13D29929B540075E7F8 /* Bech32.swift in Sources */,
 				C95D68A1299E6D3E00429F86 /* BioView.swift in Sources */,
@@ -1449,6 +1474,7 @@
 				3F30021729C3BFEB003D4F8B /* OnboardingLoginView.swift in Sources */,
 				C9F64D8D29ED840700563F2B /* LogHelper.swift in Sources */,
 				5B88051F2A21056E00E21F06 /* TLVTests.swift in Sources */,
+				C97465352A3C95FE0031226F /* RelayPickerToolbarButton.swift in Sources */,
 				3FBCDE6D29B648FE00A6C2D4 /* ThreadView.swift in Sources */,
 				C9A0DAE529C69F0C00466635 /* HighlightedText.swift in Sources */,
 				CD09A75729A521D20063464F /* NewNoteView.swift in Sources */,
