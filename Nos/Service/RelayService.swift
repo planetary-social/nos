@@ -472,7 +472,7 @@ extension RelayService {
         if let overrideRelays {
             relayAddresses = overrideRelays
         } else {
-            relayAddresses = await getUsersRelays(user: self.currentUser)
+            relayAddresses = await relays(for: self.currentUser)
         }
         
         for relayAddress in relayAddresses {
@@ -488,7 +488,7 @@ extension RelayService {
         return relayAddresses
     }
     
-    func getUsersRelays(user: CurrentUser) async -> [URL] {
+    func relays(for user: CurrentUser) async -> [URL] {
         await backgroundContext.perform { () -> [URL] in
             if let currentUserPubKey = user.publicKeyHex,
                 let currentUser = try? Author.find(by: currentUserPubKey, context: self.backgroundContext),
@@ -500,48 +500,6 @@ extension RelayService {
         }
     }
 
-    func connectToRelayAndSendAnEventToIt(
-        relayAddress: URL,
-        signedEvent: JSONEvent
-    ) async throws {        
-        let request: [Any] = ["EVENT", signedEvent.dictionary]
-        let requestData = try JSONSerialization.data(withJSONObject: request)
-        let requestString = String(data: requestData, encoding: .utf8)!
-        
-        var urlRequest = URLRequest(url: relayAddress)
-        urlRequest.timeoutInterval = 10
-        let socket = WebSocket(request: urlRequest, compressionHandler: .none)
-        return await withCheckedContinuation { continuation in
-            socket.onEvent = { (event: WebSocketEvent) in
-                switch event {
-                case WebSocketEvent.connected:
-                    print("apns connected socket, writing")
-                    socket.write(string: requestString)
-                    socket.disconnect()
-                case WebSocketEvent.disconnected:
-                    continuation.resume()
-                case WebSocketEvent.text:
-                    print("apns text")
-                case WebSocketEvent.binary:
-                    print("apns binary")
-                case WebSocketEvent.pong:
-                    print("apns pong")
-                case WebSocketEvent.ping:
-                    print("apns ping")
-                case WebSocketEvent.error:
-                    print("apns error")
-                case WebSocketEvent.viabilityChanged:
-                    print("apns viability changed")
-                case WebSocketEvent.reconnectSuggested:
-                    print("apns reconnect suggested")
-                case WebSocketEvent.cancelled:
-                    print("apns cancelled")
-                }
-            }
-            socket.connect()
-        }
-    }
-    
     private func handleConnection(from client: WebSocketClient) async {
         if let socket = client as? WebSocket {
             Log.info("websocket is connected: \(String(describing: socket.request.url?.host))")

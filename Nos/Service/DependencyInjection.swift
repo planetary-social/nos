@@ -30,6 +30,11 @@ extension DependencyValues {
         get { self[RelayServiceKey.self] }
         set { self[RelayServiceKey.self] = newValue }
     }
+    
+    var pushNotificationService: PushNotificationService {
+        get { self[PushNotificationServiceKey.self] }
+        set { self[PushNotificationServiceKey.self] = newValue }
+    }
 }
 
 private enum AnalyticsKey: DependencyKey {
@@ -54,4 +59,12 @@ private enum RelayServiceKey: DependencyKey {
     static let liveValue = RelayService(persistenceController: PersistenceController.shared)
     static let testValue = RelayService(persistenceController: PersistenceController.shared)
     static let previewValue = RelayService(persistenceController: PersistenceController.shared)
+}
+
+@MainActor
+private enum PushNotificationServiceKey: DependencyKey {
+    typealias Value = PushNotificationService
+    static let liveValue = PushNotificationService()
+    static let testValue = MockPushNotificationService()
+    static let previewValue = MockPushNotificationService()
 }
