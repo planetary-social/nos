@@ -110,7 +110,6 @@
 "Localized.reportConfirmation" = "这将发布公开可见的报告。你确定吗？";
 "Localized.note" = "笔记";
 "Localized.unmuteUser" = "取消静音";
-"Localized.extendedNetwork" = "扩展网络";
 "Localized.outsideNetwork" = "这个用户在你的网络之外。";
 "Localized.allMyRelays" = "我的所有中继器";
 "Localized.about" = "关于";
