@@ -16,6 +16,11 @@
         <relationship name="followers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Follow" inverseName="destination" inverseEntity="Follow"/>
         <relationship name="follows" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Follow" inverseName="source" inverseEntity="Follow"/>
         <relationship name="relays" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="authors" inverseEntity="Relay"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="hexadecimalPublicKey"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="AuthorReference" representedClassName="AuthorReference" syncable="YES">
         <attribute name="pubkey" optional="YES" attributeType="String"/>
@@ -41,6 +46,11 @@
         <relationship name="referencingEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EventReference" inverseName="referencedEvent" inverseEntity="EventReference"/>
         <relationship name="seenOnRelays" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="events" inverseEntity="Relay"/>
         <relationship name="shouldBePublishedTo" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="shouldBePublishedEvents" inverseEntity="Relay"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="identifier"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="EventReference" representedClassName="EventReference" syncable="YES">
         <attribute name="eventId" optional="YES" attributeType="String"/>
@@ -50,7 +60,6 @@
         <relationship name="referencingEvent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="eventReferences" inverseEntity="Event"/>
     </entity>
     <entity name="Follow" representedClassName=".Follow" syncable="YES">
-        <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="petName" optional="YES" attributeType="String"/>
         <relationship name="destination" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="followers" inverseEntity="Author"/>
         <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="follows" inverseEntity="Author"/>

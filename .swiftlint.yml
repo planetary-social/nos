@@ -145,6 +145,8 @@ identifier_name:
     - api
     - all
     - eve
+    - uns
+    - idx
 number_separator:
   minimum_length: 5
 cyclomatic_complexity:

@@ -15,20 +15,18 @@ struct Filter: Hashable, Identifiable {
     let kinds: [EventKind]
     let eTags: [HexadecimalString]
     let pTags: [HexadecimalString]
+    let search: String?
     let inNetwork: Bool
     let limit: Int?
     let since: Date?
     
-    var id: String {
-        String(hashValue)
-    }
-
     init(
         authorKeys: [HexadecimalString] = [],
         eventIDs: [HexadecimalString] = [],
         kinds: [EventKind] = [],
         eTags: [HexadecimalString] = [],
         pTags: [HexadecimalString] = [],
+        search: String? = nil,
         inNetwork: Bool = false,
         limit: Int? = nil,
         since: Date? = nil
@@ -38,6 +36,7 @@ struct Filter: Hashable, Identifiable {
         self.kinds = kinds.sorted(by: { $0.rawValue > $1.rawValue })
         self.eTags = eTags
         self.pTags = pTags
+        self.search = search
         self.inNetwork = inNetwork
         self.limit = limit
         self.since = since
@@ -70,6 +69,10 @@ struct Filter: Hashable, Identifiable {
             filterDict["#p"] = pTags
         }
         
+        if let search {
+            filterDict["search"] = search
+        }
+        
         if let since {
             filterDict["since"] = Int(since.timeIntervalSince1970)
         }
@@ -78,7 +81,7 @@ struct Filter: Hashable, Identifiable {
     }
 
     static func == (lhs: Filter, rhs: Filter) -> Bool {
-        lhs.hashValue == rhs.hashValue
+        lhs.id == rhs.id
     }
 
     func hash(into hasher: inout Hasher) {
@@ -89,5 +92,24 @@ struct Filter: Hashable, Identifiable {
         hasher.combine(eTags)
         hasher.combine(pTags)
         hasher.combine(since)
+        hasher.combine(inNetwork)
+    }
+    
+    var id: String {
+        let intermediate: [String] = [
+            authorKeys.joined(separator: ","),
+            eventIDs.joined(separator: ","),
+            kinds.map { String($0.rawValue) }.joined(separator: ","),
+            limit?.description ?? "nil",
+            eTags.joined(separator: ","),
+            pTags.joined(separator: ","),
+            since?.timeIntervalSince1970.description ?? "nil",
+            inNetwork.description,
+        ]
+        
+        return intermediate
+            .joined(separator: "|")
+            .data(using: .utf8)!
+            .sha256
     }
 }
