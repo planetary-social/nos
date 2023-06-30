@@ -16,6 +16,7 @@ struct NotificationsView: View {
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.pushNotificationService) private var pushNotificationService
 
     private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
@@ -94,6 +95,7 @@ struct NotificationsView: View {
                 if router.selectedTab == .notifications {
                     isVisible = true
                 }
+                pushNotificationService.requestNotificationPermissionsFromUser()
             }
             .onDisappear {
                 isVisible = false

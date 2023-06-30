@@ -6,12 +6,14 @@ import Dependencies
 class AppDelegate: NSObject, UIApplicationDelegate {
     
     @Dependency(\.currentUser) private var currentUser
+    @Dependency(\.pushNotificationService) private var pushNotificationService
 
     func application(
         _ application: UIApplication, 
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         application.registerForRemoteNotifications()
+        UNUserNotificationCenter.current().delegate = pushNotificationService
         return true
     }
     
@@ -19,10 +21,27 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication, 
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
-        Task { try await PushNotificationService().registerForNotifications(with: deviceToken, user: currentUser) }
+        Task { 
+            do {
+                try await PushNotificationService().registerForNotifications(with: deviceToken, user: currentUser) 
+            } catch {
+                Log.optional(error, "failed to register for push notifications")
+            }
+        }
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         Log.error("apns error \(error.localizedDescription)")
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) async -> UIBackgroundFetchResult {
+        do {
+            await currentUser.subscribe()
+            try await Task.sleep(for: .seconds(5))
+            print(userInfo)
+            return .newData
+        } catch {
+            return .failed
+        }
     }
 }

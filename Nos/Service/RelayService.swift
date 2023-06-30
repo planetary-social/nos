@@ -25,7 +25,7 @@ final class RelayService: ObservableObject {
     private var backgroundContext: NSManagedObjectContext
     private var parseContext: NSManagedObjectContext
     // TODO: use structured concurrency for this
-    private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .utility)
+    private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .userInitiated)
     private var parseQueue = ParseQueue()
     @Dependency(\.analytics) private var analytics
     @MainActor @Dependency(\.currentUser) private var currentUser
@@ -379,7 +379,7 @@ extension RelayService {
         signingKey: KeyPair,
         context: NSManagedObjectContext
     ) async throws {
-        _ = await openSockets()
+        _ = await openSockets(overrideRelays: [relay.addressURL].compactMap { $0 })
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
         if let socket = await socket(from: relay) {
             await publish(from: socket, jsonEvent: signedEvent)
