@@ -16,6 +16,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     @MainActor static let shared = CurrentUser(persistenceController: PersistenceController.shared)
     
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.pushNotificationService) private var pushNotificationService
     
     // TODO: it's time to cache this
     var keyPair: KeyPair? {
@@ -176,9 +177,12 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     }
 
     @MainActor func subscribe() async {
+        guard let key = publicKeyHex, let author else {
+            return
+        }
         
         let overrideRelays: [URL]?
-        let userRelays = author?.relays ?? Set()
+        let userRelays = author.relays 
         if userRelays.isEmpty {
             overrideRelays = Relay.allKnown
                 .compactMap {
@@ -190,28 +194,28 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             overrideRelays = nil
         }
         
-        // Always listen to my changes
-        if let key = publicKeyHex, let author {
-            // Close out stale requests
-            if !subscriptions.isEmpty {
-                await relayService.decrementSubscriptionCount(for: subscriptions)
-                subscriptions.removeAll()
-            }
-            
-            // Subscribe to our own events of all kinds.
-            let latestRecievedEvent = try? viewContext.fetch(Event.lastReceived(for: author)).first
-            let allEventsFilter = Filter(authorKeys: [key], since: latestRecievedEvent?.receivedAt)
-            subscriptions.append(await relayService.openSubscription(with: allEventsFilter))
-            
-            // Always make a one time request for the latest contact list
-            let contactFilter = Filter(
-                authorKeys: [key],
-                kinds: [.contactList],
-                limit: 1,
-                since: author.lastUpdatedContactList
-            )
-            subscriptions.append(await relayService.openSubscription(with: contactFilter, to: overrideRelays))
+        // Close out stale requests
+        if !subscriptions.isEmpty {
+            await relayService.decrementSubscriptionCount(for: subscriptions)
+            subscriptions.removeAll()
         }
+        
+        // Subscribe to our own events of all kinds.
+        let latestRecievedEvent = try? viewContext.fetch(Event.lastReceived(for: author)).first
+        let allEventsFilter = Filter(authorKeys: [key], since: latestRecievedEvent?.receivedAt)
+        subscriptions.append(await relayService.openSubscription(with: allEventsFilter))
+        
+        // Always make a one time request for the latest contact list
+        let contactFilter = Filter(
+            authorKeys: [key],
+            kinds: [.contactList],
+            limit: 1,
+            since: author.lastUpdatedContactList
+        )
+        subscriptions.append(await relayService.openSubscription(with: contactFilter, to: overrideRelays))
+        
+        // Listen for notifications
+        await pushNotificationService.listen(for: self)
     }
     
     private var friendMetadataTask: Task<Void, any Error>?
