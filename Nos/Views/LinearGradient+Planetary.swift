@@ -33,4 +33,10 @@ extension LinearGradient {
         startPoint: .top,
         endPoint: .bottom
     )
+
+    public static let cardBackground = LinearGradient(
+        colors: [.cardBgTop, .cardBgBottom],
+        startPoint: .top,
+        endPoint: .bottom
+    )
 }
