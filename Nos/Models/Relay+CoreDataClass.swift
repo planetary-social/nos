@@ -39,7 +39,7 @@ public class Relay: NosManagedObject {
         "wss://relay.current.fyi/",
         "wss://nostr.relayer.se/",
         "wss://e.nos.lol/",
-        "wss://relay.universalname.space",
+        "wss://purplepag.es",
         ]
     }
     
