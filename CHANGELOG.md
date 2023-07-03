@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Prevent muted authors from appearing in the Discover screen
 - Added a confirmation dialog when deleting a note.
 - Improved performance of the relay manager
 - Add the ability to report notes and profiles using NIP-32 labels and NIP-69 classification.
