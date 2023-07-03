@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Prevent muted authors from appearing in the Discover screen
+- Added a confirmation dialog when deleting a note.
+
 ## [0.1 (51)] - 2023-06-16Z
 
 - Updated design of the relay selector
