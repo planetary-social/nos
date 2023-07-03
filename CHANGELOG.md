@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (52)] - 2023-07-03Z
+
 - Prevent muted authors from appearing in the Discover screen
 - Added a confirmation dialog when deleting a note.
 
