@@ -81,7 +81,15 @@ struct ProfileEditView: View {
                     startPoint: .top,
                     endPoint: .bottom
                 ))
+                
+                // Universal Names Set Up
+                if author.nip05?.hasSuffix("universalname.space") != true {
+                    SetUpUNSBanner {
+                        showUniversalNameWizard = true
+                    }
+                }
             }
+            
             if let createAccountCompletion {
                 Spacer()
                 BigActionButton(title: .createAccount) {
