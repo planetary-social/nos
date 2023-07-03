@@ -5,6 +5,7 @@
 ## Release Config.plist
 
 Nos/Assets/ProductionSecrets.xcconfig
+Nos/Assets/StagingSecrets.xcconfig
 
 ## CocoaPods Keys
 Pods/CocoaPodsKeys
