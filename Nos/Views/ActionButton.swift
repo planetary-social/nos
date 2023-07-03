@@ -135,6 +135,9 @@ struct ActionButton_Previews: PreviewProvider {
                 .disabled(true)
             
             SecondaryActionButton(title: Localized.edit, action: {})
+            
+            // Something that should wrap at larger text sizes
+            SecondaryActionButton(title: Localized.reportConfirmation, action: {})
         }
     }
 }

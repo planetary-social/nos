@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Added the number of connected relays at the top right corner of the Home Feed.
+- Added beta integration with the Universal Name System. Edit your profile to link your Universal Name to your Nostr profile.
+- Updated design of the relay selector
 - Prevent muted authors from appearing in the Discover screen
 - Added a confirmation dialog when deleting a note.
 - Improved performance of the relay manager
