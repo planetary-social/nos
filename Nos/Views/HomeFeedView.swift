@@ -25,6 +25,7 @@ struct HomeFeedView: View {
     @State private var cancellables = [AnyCancellable]()
     @State private var performingInitialLoad = true
     @State private var numberOfConnectedRelays = 0
+    @State private var isShowingRelayList = false
     static let initialLoadTime = 2
 
     // Probably the logged in user should be in the @Environment eventually
@@ -114,17 +115,22 @@ struct HomeFeedView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        router.sideMenuPath.append(SideMenu.Destination.relays)
-                        router.toggleSideMenu()
+                        isShowingRelayList = true
                     } label: {
                         HStack(spacing: 3) {
                             Image("relay-left")
                                 .colorMultiply(numberOfConnectedRelays > 0 ? .white : .red)
                             Text("\(numberOfConnectedRelays)")
                                 .font(.clarityTitle3)
+                                .fontWeight(.heavy)
                                 .foregroundColor(.primaryTxt)
                             Image("relay-right")
                                 .colorMultiply(numberOfConnectedRelays > 0 ? .white : .red)
+                        }
+                    }
+                    .sheet(isPresented: $isShowingRelayList) {
+                        NavigationView {
+                            RelayView(author: user)
                         }
                     }
                 }
