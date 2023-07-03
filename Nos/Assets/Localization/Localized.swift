@@ -174,7 +174,6 @@ enum Localized: String, Localizable, CaseIterable {
     case reportConfirmation = "This will publish a report that is publicly visible. Are you sure?"
     case note = "note"
     case unmuteUser = "Un-Mute"
-    case extendedNetwork = "Extended Network"
     case outsideNetwork = "This user is outside your network."
     case allMyRelays = "All My Relays"
     case about = "About"
