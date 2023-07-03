@@ -24,7 +24,6 @@ struct HomeFeedView: View {
     @State private var isVisible = false
     @State private var cancellables = [AnyCancellable]()
     @State private var performingInitialLoad = true
-    @State private var numberOfConnectedRelays = 0
     @State private var isShowingRelayList = false
     static let initialLoadTime = 2
 
@@ -119,13 +118,13 @@ struct HomeFeedView: View {
                     } label: {
                         HStack(spacing: 3) {
                             Image("relay-left")
-                                .colorMultiply(numberOfConnectedRelays > 0 ? .white : .red)
-                            Text("\(numberOfConnectedRelays)")
+                                .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
+                            Text("\(relayService.numberOfConnectedRelays)")
                                 .font(.clarityTitle3)
                                 .fontWeight(.heavy)
                                 .foregroundColor(.primaryTxt)
                             Image("relay-right")
-                                .colorMultiply(numberOfConnectedRelays > 0 ? .white : .red)
+                                .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
                         }
                     }
                     .sheet(isPresented: $isShowingRelayList) {
@@ -136,9 +135,6 @@ struct HomeFeedView: View {
                 }
             }
             .nosNavigationBar(title: .homeFeed)
-        }
-        .onChange(of: relayService.numberOfConnectedRelays) { newValue in
-            numberOfConnectedRelays = newValue
         }
         .refreshable {
             date = .now
