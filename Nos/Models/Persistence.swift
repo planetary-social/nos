@@ -177,7 +177,7 @@ struct PersistenceController {
             // Delete all but the most recent n events
             let eventsToKeep = 10_000
             let fetchFirstEventToDelete = Event.allEventsRequest()
-            fetchFirstEventToDelete.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
+            fetchFirstEventToDelete.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
             fetchFirstEventToDelete.fetchLimit = 1
             fetchFirstEventToDelete.fetchOffset = eventsToKeep
             fetchFirstEventToDelete.predicate = NSPredicate(format: "receivedAt != nil")
@@ -189,7 +189,7 @@ struct PersistenceController {
                
             // Delete events older than `deleteBefore`
             let oldEventsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
-            oldEventsRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
+            oldEventsRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
             oldEventsRequest.predicate = NSPredicate(
                 format: "author != %@ AND (receivedAt <= %@ OR receivedAt == nil)", 
                 currentAuthor,
@@ -206,6 +206,7 @@ struct PersistenceController {
                     Author.outOfNetwork(for: currentAuthor),
                     Follow.orphanedRequest(),
                     Relay.orphanedRequest(),
+                    // TODO: delete old notifications
                 ]
                 
                 for request in deleteRequests {

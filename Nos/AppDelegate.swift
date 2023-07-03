@@ -34,11 +34,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         Log.error("apns error \(error.localizedDescription)")
     }
     
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) async -> UIBackgroundFetchResult {
+    func application(
+        _ application: UIApplication, 
+        didReceiveRemoteNotification userInfo: [AnyHashable: Any]
+    ) async -> UIBackgroundFetchResult {
         do {
+            // TODO: analytics
+            Log.info("PushNotifications: Received background notification. Subscribing to relays.")
             await currentUser.subscribe()
-            try await Task.sleep(for: .seconds(5))
-            print(userInfo)
+            try await Task.sleep(for: .seconds(10))
+            Log.info("PushNotifications: Sync complete")
             return .newData
         } catch {
             return .failed

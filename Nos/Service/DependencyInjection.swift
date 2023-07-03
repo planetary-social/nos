@@ -35,6 +35,11 @@ extension DependencyValues {
         get { self[PushNotificationServiceKey.self] }
         set { self[PushNotificationServiceKey.self] = newValue }
     }
+    
+    var persistenceController: PersistenceController {
+        get { self[PersistenceControllerKey.self] }
+        set { self[PersistenceControllerKey.self] = newValue }
+    }
 }
 
 private enum AnalyticsKey: DependencyKey {
@@ -67,4 +72,10 @@ private enum PushNotificationServiceKey: DependencyKey {
     static let liveValue = PushNotificationService()
     static let testValue = MockPushNotificationService()
     static let previewValue = MockPushNotificationService()
+}
+
+private enum PersistenceControllerKey: DependencyKey {
+    static let liveValue = PersistenceController.shared
+    static let testValue = PersistenceController.preview
+    static let previewValue = PersistenceController.preview
 }

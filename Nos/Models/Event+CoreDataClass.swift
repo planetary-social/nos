@@ -422,7 +422,7 @@ public class Event: NosManagedObject {
     
     class func oldest() -> NSFetchRequest<Event> {
         let request = Event.allEventsRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
         request.fetchLimit = 1
         return request
     }
@@ -451,7 +451,6 @@ public class Event: NosManagedObject {
         }
     }
     
-
     class func find(by identifier: String, context: NSManagedObjectContext) -> Event? {
         if let existingEvent = try? context.fetch(Event.event(by: identifier)).first {
             return existingEvent
@@ -845,7 +844,6 @@ public class Event: NosManagedObject {
             return (replyCount, avatarURLs)
         }
     }
-    
     
     class func deleteAll(context: NSManagedObjectContext) {
         let deleteRequest = Event.deleteAllEvents()

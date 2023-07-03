@@ -30,6 +30,7 @@ extension Author {
     @NSManaged public var followers: Set<Follow>
     @NSManaged public var follows: Set<Follow>
     @NSManaged public var relays: Set<Relay>
+    @NSManaged public var notifications: Set<NosNotification>
 }
 
 // MARK: Generated accessors for events

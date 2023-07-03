@@ -13,24 +13,31 @@ import CoreData
 import Combine
 
 /// A class that abstracts our interactions with our push notification server.
-@MainActor class PushNotificationService: NSObject, NSFetchedResultsControllerDelegate, UNUserNotificationCenterDelegate {
+@MainActor class PushNotificationService: 
+    NSObject, NSFetchedResultsControllerDelegate, UNUserNotificationCenterDelegate {
     
     @Dependency(\.relayService) private var relayService
-    let viewContext = PersistenceController.shared.viewContext
+    @Dependency(\.persistenceController) private var persistenceController
+    lazy var modelContext: NSManagedObjectContext = {
+        persistenceController.newBackgroundContext()
+    }()
+    
+    var oldNotificationCutoff: Date
     
     private let notificationServiceAddress = "ws://127.0.0.1:8009"
     private var notificationWatcher: NSFetchedResultsController<Event>?
     private var relaySubscription: RelaySubscription.ID?
-    private var oldNotifcationCutoff: Date? 
     private var currentAuthor: Author? 
     
     override init() {
+        oldNotificationCutoff = .now
+        super.init()
+        
         do {
-            let oldestEvent = try viewContext.fetch(Event.oldest()).first
-            oldNotifcationCutoff = oldestEvent?.receivedAt ?? .now
+            let oldestEvent = try persistenceController.viewContext.fetch(Event.oldest()).first
+            oldNotificationCutoff = oldestEvent?.receivedAt ?? .now
         } catch {
             Log.error("Error fetching oldest event \(error.localizedDescription)")
-            oldNotifcationCutoff = .now
         }
     }
     
@@ -43,7 +50,7 @@ import Combine
             let authorKey = author.hexadecimalPublicKey else {
             notificationWatcher = NSFetchedResultsController(
                 fetchRequest: Event.emptyRequest(), 
-                managedObjectContext: viewContext,
+                managedObjectContext: modelContext,
                 sectionNameKeyPath: nil,
                 cacheName: nil
             )
@@ -52,8 +59,8 @@ import Combine
         
         currentAuthor = author
         notificationWatcher = NSFetchedResultsController(
-            fetchRequest: Event.allNotifications(for: author),
-            managedObjectContext: viewContext,
+            fetchRequest: Event.allNotifications(for: author), // TODO: we should reprocess all notifications every time this is called
+            managedObjectContext: modelContext,
             sectionNameKeyPath: nil,
             cacheName: nil
         )
@@ -80,9 +87,18 @@ import Combine
             tags: [],
             content: try await createContent(deviceToken: token, user: user)
         )
-        let relay = try Relay.findOrCreate(by: notificationServiceAddress, context: viewContext)
-        try viewContext.saveIfNeeded()
-        try await relayService.publish(event: jsonEvent, to: relay, signingKey: keyPair, context: viewContext)
+        try await modelContext.perform {
+            let relay = try Relay.findOrCreate(by: self.notificationServiceAddress, context: self.modelContext)
+            try self.modelContext.saveIfNeeded()
+            Task {
+                try await self.relayService.publish(
+                    event: jsonEvent, 
+                    to: relay, 
+                    signingKey: keyPair, 
+                    context: self.modelContext
+                )
+            }
+        }
     }
 
     func requestNotificationPermissionsFromUser() {
@@ -116,8 +132,11 @@ import Combine
         print(response)
     }
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
-        return [.banner, .badge, .sound]
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter, 
+        willPresent notification: UNNotification
+    ) async -> UNNotificationPresentationOptions {
+        [.banner, .badge, .sound]
     }
     
     // MARK: - NSFetchedResultsControllerDelegate
@@ -134,23 +153,46 @@ import Combine
             return
         }
         
-        switch type {
-        case .insert:
-            let content = UNMutableNotificationContent()
-            content.title = "Notification"
-            content.body = event.content ?? "null"
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-            let request = UNNotificationRequest(identifier: eventID, content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request) { error in
-                if let error {
-                    Log.optional(error, "Error showing notification")
+        Task { @MainActor in
+            guard let authorKey = self.currentAuthor?.hexadecimalPublicKey else {
+                return
+            }
+            
+            await modelContext.perform {
+                switch type {
+                case .insert:
+                    guard let event = Event.find(by: eventID, context: self.modelContext),
+                        let _ = try? NosNotification.createIfNecessary(
+                            from: eventID, 
+                            authorKey: authorKey, 
+                            in: self.modelContext
+                        ) else {
+                            // We already have a notification for this event.
+                            return
+                        }
+                    
+                    guard let notificationCreated = event.createdAt, 
+                        notificationCreated > self.oldNotificationCutoff else { 
+                        return
+                    }
+                    
+                    // TODO: analytics
+                    let content = UNMutableNotificationContent()
+                    content.title = "Notification"
+                    content.body = event.content ?? "null"
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+                    let request = UNNotificationRequest(identifier: eventID, content: content, trigger: trigger)
+                    UNUserNotificationCenter.current().add(request) { error in
+                        if let error {
+                            Log.optional(error, "Error showing notification")
+                        }
+                    }
+                case .delete, .update, .move:
+                    fallthrough
+                @unknown default:
+                    return
                 }
             }
-
-        case .delete, .update, .move:
-            fallthrough
-        @unknown default:
-            return
         }
     }
 }

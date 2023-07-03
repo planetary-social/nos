@@ -262,6 +262,10 @@
 		C9C547532A4F1CD1006B0741 /* AuthorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C547522A4F1CD1006B0741 /* AuthorCard.swift */; };
 		C9C547542A4F1CD1006B0741 /* AuthorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C547522A4F1CD1006B0741 /* AuthorCard.swift */; };
 		C9C547552A4F1CDB006B0741 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C547502A4F1CC3006B0741 /* SearchController.swift */; };
+		C9C547592A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C547572A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift */; };
+		C9C5475A2A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C547572A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift */; };
+		C9C5475B2A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C547582A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift */; };
+		C9C5475C2A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C547582A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift */; };
 		C9C9444229F6F0E2002F2C7A /* XCTest+Eventually.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C9444129F6F0E2002F2C7A /* XCTest+Eventually.swift */; };
 		C9CDBBA129A8F14C00C555C7 /* DiscoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */; };
 		C9CDBBA429A8FA2900C555C7 /* GoldenPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CDBBA329A8FA2900C555C7 /* GoldenPostView.swift */; };
@@ -550,6 +554,9 @@
 		C9C2B78429E073E300548B4A /* RelaySubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaySubscription.swift; sourceTree = "<group>"; };
 		C9C547502A4F1CC3006B0741 /* SearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
 		C9C547522A4F1CD1006B0741 /* AuthorCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorCard.swift; sourceTree = "<group>"; };
+		C9C547562A4F1D1A006B0741 /* Nos 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 9.xcdatamodel"; sourceTree = "<group>"; };
+		C9C547572A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NosNotification+CoreDataClass.swift"; sourceTree = "<group>"; };
+		C9C547582A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NosNotification+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		C9C9444129F6F0E2002F2C7A /* XCTest+Eventually.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+Eventually.swift"; sourceTree = "<group>"; };
 		C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverView.swift; sourceTree = "<group>"; };
 		C9CDBBA329A8FA2900C555C7 /* GoldenPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoldenPostView.swift; sourceTree = "<group>"; };
@@ -875,13 +882,15 @@
 				C9F84C26298DC98800C6714D /* KeyPair.swift */,
 				C9F0BB6E29A50437000547FC /* NostrConstants.swift */,
 				5B6EB48D29EDBE0E006E750C /* NoteParser.swift */,
+				C9C547572A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift */,
+				C9C547582A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift */,
+				C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */,
 				C9DEBFD3298941000078B43A /* Persistence.swift */,
 				C9F0BB6A29A503D6000547FC /* PublicKey.swift */,
 				C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */,
 				C973AB592A323167002AED16 /* Relay+CoreDataProperties.swift */,
 				C9C2B78429E073E300548B4A /* RelaySubscription.swift */,
 				C9E37E142A1E8143003D4B0A /* Report.swift */,
-				C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */,
 				C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */,
 			);
 			path = Models;
@@ -1314,6 +1323,7 @@
 				C987F81729BA4C6A00B44E7A /* BigActionButton.swift in Sources */,
 				C987F86129BABAF800B44E7A /* String+Markdown.swift in Sources */,
 				3F30020B29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift in Sources */,
+				C9C5475B2A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift in Sources */,
 				C98B8B4029FBF83B009789C8 /* NotificationCard.swift in Sources */,
 				C987F81D29BA6D9A00B44E7A /* ProfileTab.swift in Sources */,
 				C9ADB14129951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */,
@@ -1400,6 +1410,7 @@
 				C9DB207729F30EC700FB7B9D /* AsyncButton.swift in Sources */,
 				C931517D29B915AF00934506 /* StaggeredGrid.swift in Sources */,
 				C97465312A3B89140031226F /* AuthorLabel.swift in Sources */,
+				C9C547592A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift in Sources */,
 				C9B678E729F01A8500303F33 /* FullscreenProgressView.swift in Sources */,
 				C9F0BB6929A5039D000547FC /* Int+Bool.swift in Sources */,
 				C9A0DAD829C6467600466635 /* CreateProfileView.swift in Sources */,
@@ -1534,8 +1545,10 @@
 				CD09A74B29A521730063464F /* ProfileHeader.swift in Sources */,
 				CD09A74A29A521510063464F /* ProfileView.swift in Sources */,
 				C9CE5B152A0172CF008E198C /* WebView.swift in Sources */,
+				C9C5475A2A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift in Sources */,
 				CD09A74929A521210063464F /* Router.swift in Sources */,
 				C93EC2F829C351470012EE2A /* Optional+Unwrap.swift in Sources */,
+				C9C5475C2A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift in Sources */,
 				C9B678DF29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */,
 				A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */,
 				5BF3C50629E4F0BA00738A12 /* EditableText.swift in Sources */,
@@ -2209,9 +2222,10 @@
 		C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				C9C547562A4F1D1A006B0741 /* Nos 9.xcdatamodel */,
 				C936B4582A4C7B7C00DF1EB9 /* Nos 8.xcdatamodel */,
 			);
-			currentVersion = C936B4582A4C7B7C00DF1EB9 /* Nos 8.xcdatamodel */;
+			currentVersion = C9C547562A4F1D1A006B0741 /* Nos 9.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
