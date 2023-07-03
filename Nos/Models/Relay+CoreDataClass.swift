@@ -20,7 +20,7 @@ public class Relay: NosManagedObject {
         "wss://relay.nostr.band/",
         "wss://relay.damus.io/",
         "wss://e.nos.lol/",
-        "wss://nostr-dev.universalname.space",
+        "wss://purplepag.es",
         ]
     }
     
@@ -38,7 +38,7 @@ public class Relay: NosManagedObject {
         "wss://relay.current.fyi/",
         "wss://nostr.relayer.se/",
         "wss://e.nos.lol/",
-        "wss://relay.universalname.space",
+        "wss://purplepag.es",
         ]
     }
     

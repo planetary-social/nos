@@ -8,39 +8,6 @@
 import SwiftUI
 import CoreData
 import Dependencies
-import Combine
-
-class SearchModel: ObservableObject {
-    @Published var query: String = ""
-    @Published var namedAuthors = [Author]()
-    @Published var authorSuggestions = [Author]()
-    
-    private var cancellables = [AnyCancellable]()
-    private var context: NSManagedObjectContext
-    
-    init(context: NSManagedObjectContext = PersistenceController.shared.viewContext) {
-        self.context = context
-        $query
-            .debounce(for: 0.2, scheduler: RunLoop.main)
-            .filter { !$0.isEmpty }
-            .map { self.authors(named: $0) }
-            .sink(receiveValue: { self.authorSuggestions = $0 })
-            .store(in: &cancellables)
-    }
-    
-    func authors(named name: String) -> [Author] {
-        guard let authors = try? Author.find(named: name, context: context) else {
-            return []
-        }
-
-        return authors
-    }
-    
-    func clear() {
-        query = ""
-        authorSuggestions = []
-    }
-}
 
 struct DiscoverView: View {
     
@@ -61,10 +28,9 @@ struct DiscoverView: View {
     static let initialLoadTime = 2
     @State private var subscriptionIDs = [String]()
     @State private var isVisible = false
-    @State private var cancellables = [AnyCancellable]()
     private var featuredAuthors: [String]
     
-    @StateObject private var searchModel = SearchModel()
+    @StateObject private var searchController = SearchController()
     @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
 
     @State var predicate: NSPredicate = .false
@@ -150,8 +116,7 @@ struct DiscoverView: View {
                         hideAfter: .now() + .seconds(Self.initialLoadTime)
                     )
                 } else {
-                    
-                    DiscoverGrid(predicate: predicate, columns: $columns)
+                    DiscoverGrid(predicate: predicate, searchController: searchController, columns: $columns)
                     
                     if showRelayPicker, let author = currentUser.author {
                         RelayPicker(
@@ -163,38 +128,11 @@ struct DiscoverView: View {
                     }
                 }
             }
-            .searchable(text: $searchModel.query, placement: .toolbar, prompt: PlainText(Localized.searchBar.string)) {
-                ForEach(searchModel.authorSuggestions, id: \.self) { author in
-                    Button {
-                        router.push(author)
-                    } label: {
-                        HStack(alignment: .center) {
-                            AvatarView(imageUrl: author.profilePhotoURL, size: 24)
-                            Text(author.safeName)
-                                .lineLimit(1)
-                                .font(.subheadline)
-                                .foregroundColor(Color.primaryTxt)
-                                .multilineTextAlignment(.leading)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            if author.muted {
-                                Text(Localized.muted.string)
-                                    .font(.subheadline)
-                                    .foregroundColor(Color.secondaryText)
-                            }
-                            Spacer()
-                            if let currentUser = CurrentUser.shared.author {
-                                FollowButton(currentUserAuthor: currentUser, author: author)
-                                    .padding(10)
-                            }
-                        }
-                        .listRowInsets(.none)
-                        .searchCompletion(author.safeName)
-                    }
-                    .listRowBackground(Color.appBg)
-                }
-                .scrollContentBackground(.hidden)
-                .background(Color.appBg)
-            }
+            .searchable(
+                text: $searchController.query, 
+                placement: .toolbar, 
+                prompt: PlainText(Localized.searchBar.string)
+            )
             .autocorrectionDisabled()
             .onSubmit(of: .search) {
                 submitSearch()
@@ -258,7 +196,7 @@ struct DiscoverView: View {
                     analytics.showedDiscover()
                     Task { await subscribeToNewEvents() }
                 } else {
-                    searchModel.clear()
+                    searchController.clear()
                     Task { await cancelSubscriptions() }
                 }
             })
@@ -293,16 +231,16 @@ struct DiscoverView: View {
     }
     
     func submitSearch() {
-        if searchModel.query.contains("@") {
+        if searchController.query.contains("@") {
             Task(priority: .userInitiated) {
                 if let publicKeyHex =
-                    await relayService.retrieveInternetIdentifierPublicKeyHex(searchModel.query.lowercased()),
+                    await relayService.retrieveInternetIdentifierPublicKeyHex(searchController.query.lowercased()),
                     let author = author(fromPublicKey: publicKeyHex) {
                     router.push(author)
                 }
             }
         } else {
-            if let author = author(fromPublicKey: searchModel.query) {
+            if let author = author(fromPublicKey: searchController.query) {
                 router.push(author)
             }
         }
