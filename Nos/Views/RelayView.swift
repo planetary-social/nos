@@ -38,10 +38,8 @@ struct RelayView: View {
                         Text(relay.address ?? Localized.error.string)
                             .foregroundColor(.textColor)
                         #if DEBUG
-                        if let metadata = relay.metadata {
-                            Text(metadata)
-                                .foregroundColor(.secondaryText)
-                        }
+                        Text(relay.metadata)
+                            .foregroundColor(.secondaryText)
                         #endif
                     }
                 }
