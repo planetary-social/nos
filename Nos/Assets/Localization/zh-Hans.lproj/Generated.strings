@@ -98,6 +98,7 @@
 "Localized.copyLink" = "复制链接";
 "Localized.copyUserIdentifier" = "复制用户 ID (npub)";
 "Localized.deleteNote" = "删除";
+"Localized.deleteNoteConfirmation" = "这将要求你所有的中继器永久删除此笔记。你确定吗？";
 "Localized.mute" = "静音";
 "Localized.muteUser" = "静音用户";
 "Localized.muted" = "已静音";
