@@ -69,6 +69,16 @@
 "Localized.invalidURLError" = "Please enter a valid websocket URL.";
 "Localized.saveRelayError" = "Could not save relay.";
 "Localized.ok" = "Ok";
+"Localized.relay" = "Relay";
+"Localized.address" = "Address";
+"Localized.fetchedAt" = "Fetched";
+"Localized.metadata" = "Metadata";
+"Localized.description" = "Description";
+"Localized.supportedNIPs" = "Supported NIPs";
+"Localized.pubkey" = "Public key";
+"Localized.contact" = "Contact";
+"Localized.software" = "Software";
+"Localized.version" = "Version";
 "Localized.profileTitle" = "Profile";
 "Localized.profile" = "profile";
 "Localized.follow" = "Follow";

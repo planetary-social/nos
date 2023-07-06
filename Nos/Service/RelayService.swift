@@ -487,7 +487,7 @@ extension RelayService {
         }
     }
     
-    @MainActor private func openSockets(overrideRelays: [URL]? = nil) async -> [URL] {
+    @discardableResult @MainActor private func openSockets(overrideRelays: [URL]? = nil) async -> [URL] {
         // Use override relays; fall back to user relays
         
         let relayAddresses: [URL] = await backgroundContext.perform { () -> [URL] in

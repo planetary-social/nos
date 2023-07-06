@@ -161,6 +161,10 @@ public class Relay: NosManagedObject {
         addressURL?.host
     }
 
+    var hasMetadata: Bool {
+        metadataFetchedAt != nil
+    }
+
     var metadata: String {
         var attributes = [String]()
         if let name {

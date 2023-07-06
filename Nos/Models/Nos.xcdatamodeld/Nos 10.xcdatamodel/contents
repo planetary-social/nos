@@ -73,7 +73,7 @@
         <attribute name="pubkey" optional="YES" attributeType="String"/>
         <attribute name="relayDescription" optional="YES" attributeType="String"/>
         <attribute name="software" optional="YES" attributeType="String"/>
-        <attribute name="supportedNIPs" optional="YES" attributeType="Transformable"/>
+        <attribute name="supportedNIPs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer"/>
         <attribute name="version" optional="YES" attributeType="String"/>
         <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="relays" inverseEntity="Author"/>
         <relationship name="deletedEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="deletedOn" inverseEntity="Event"/>

@@ -128,6 +128,17 @@ enum Localized: String, Localizable, CaseIterable {
     case invalidURLError = "Please enter a valid websocket URL."
     case saveRelayError = "Could not save relay."
     case ok = "Ok"
+
+    case relay = "Relay"
+    case address = "Address"
+    case fetchedAt = "Fetched"
+    case metadata = "Metadata"
+    case description = "Description"
+    case supportedNIPs = "Supported NIPs"
+    case pubkey = "Public key"
+    case contact = "Contact"
+    case software = "Software"
+    case version = "Version"
     
     case profileTitle = "Profile"
     case profile = "profile"
