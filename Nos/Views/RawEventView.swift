@@ -39,7 +39,6 @@ struct RawEventView<ViewModel>: View where ViewModel: RawEventViewModel {
                     ProgressView()
                         .foregroundColor(.primaryTxt)
                         .background(Color.appBg)
-                        .scaleEffect(2)
                     Text(loadingMessage)
                         .foregroundColor(.mainText)
                 }

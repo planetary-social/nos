@@ -142,9 +142,7 @@ enum PreviewData {
         let originalPostAuthor = Author(context: previewContext)
         originalPostAuthor.hexadecimalPublicKey = KeyFixture.bob.publicKeyHex
         originalPostAuthor.name = "Bob"
-        // swiftlint:disable line_length
         originalPostAuthor.profilePhotoURL = URL(string: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.r1ZOH5E3M6WiK6aw5GRdlAHaEK%26pid%3DApi&f=1&ipt=42ae9de7730da3bda152c5980cd64b14ccef37d8f55b8791e41b4667fc38ddf1&ipo=images")
-        // swiftlint:enable line_length
 
         let repostedNote = Event(context: previewContext)
         repostedNote.identifier = "3"

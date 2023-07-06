@@ -9,18 +9,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed a bug where expired messages could be published to relays that doesn't support them
+
+## [0.1 (53)] - 2023-07-03Z
+
+- Added beta integration with the Universal Name System. Edit your profile to link your Universal Name to your Nostr profile.
+- Updated design of the relay selector
+
+## [0.1 (52)] - 2023-07-03Z
+
+- Prevent muted authors from appearing in the Discover screen
+- Added a confirmation dialog when deleting a note.
+
+## [0.1 (51)] - 2023-06-16Z
+
+- Updated design of the relay selector
+- Fixed an issue where the Discover tab wouldn't show new content for a while after upgrading from build 49.
+
+## [0.1 (50)] - 2023-06-15Z
+
 - Added code to show the Discover tab when we haven't downloaded the user's follow list yet (like on first login or app reinstall).
 - Improved reliability of loading reposts, user photos, and names.
 - Fixed a bug where tapping on a note would open the associated image instead of the thread view.
 - Fixed a bug where profile pages would not load in some cases.
 - Improved performance of the relay manager.
-- Added beta integration with the Universal Name System. Edit your profile to link your Universal Name to your Nostr profile.
-- Updated design of the relay selector
-- Prevent muted authors from appearing in the Discover screen
-- Added a confirmation dialog when deleting a note.
-- Improved performance of the relay manager
+
+## [0.1 (49)] - 2023-06-12Z
+
+- More small optimizations to relay traffic and event parsing.
+
+## [0.1 (48)] - 2023-06-12Z
+
+- Requesting fewer events on Home and Discover tab to reduce the load on the db.
+
+## [0.1 (47)] - 2023-06-09Z
+
+- Improved performance of the relay manager.
+
+## [0.1 (46)] - 2023-06-06Z
+
 - Add the ability to report notes and profiles using NIP-32 labels and NIP-69 classification.
 - Fixed a crash which occurs on some versions of MacOS when attempting to mention other users during post creation.
+- Add the ability to search for users by name from the Discover tab
 - Fixed a bug where the note options menu wouldn't show up sometimes.
 - Strip whitespace and newline characters when parsing search box input on discover screen as npub.
 
