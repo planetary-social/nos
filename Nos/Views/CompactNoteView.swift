@@ -116,10 +116,9 @@ struct CompactNoteView: View {
                     .content?
                     .findUnformattedLinks()
                     .first(where: { $0.isImage }) {
-                    SquareImage(url: url)
-                        .onTapGesture {
-                            router.open(url: url, with: viewContext)
-                        }
+                SquareImage(url: url) {
+                    router.open(url: url, with: viewContext)
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

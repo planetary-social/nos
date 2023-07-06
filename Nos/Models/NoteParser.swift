@@ -93,6 +93,8 @@ enum NoteParser {
                     return String(substring)
                 }
             }
+            
+            try? context.saveIfNeeded()
             return String(substring)
         }
     }

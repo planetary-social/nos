@@ -11,6 +11,8 @@ import CachedAsyncImage
 struct SquareImage: View {
     var url: URL
     
+    var onTap: (() -> Void)?
+    
     var body: some View {
         Color.clear
             .aspectRatio(1, contentMode: .fit)
@@ -27,6 +29,9 @@ struct SquareImage: View {
                     }
                 }
                 .aspectRatio(contentMode: .fill)
+                .onTapGesture {
+                    onTap?()
+                }
             }
             .clipShape(Rectangle())
     }

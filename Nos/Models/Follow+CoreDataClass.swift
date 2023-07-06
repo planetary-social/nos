@@ -43,14 +43,12 @@ public class Follow: NosManagedObject {
         )
         fetchRequest.fetchLimit = 1
         if let existingFollow = try context.fetch(fetchRequest).first {
-            follow = existingFollow
-            // TODO: abort if the event we are processing is older than the one we have in Core Data
+            return existingFollow
         } else {
             follow = Follow(context: context)
         }
         
         follow.source = author
-        follow.lastUpdated = Date.now
         
         let followedKey = jsonTag[1]
         let followedAuthor = try Author.findOrCreate(by: followedKey, context: context)
@@ -93,7 +91,7 @@ public class Follow: NosManagedObject {
     /// Retreives all the Follows whose source Author has been deleted.
     static func orphanedRequest() -> NSFetchRequest<Follow> {
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.lastUpdated, ascending: false)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.destination, ascending: false)]
         fetchRequest.predicate = NSPredicate(format: "source = nil")
         return fetchRequest
     }
