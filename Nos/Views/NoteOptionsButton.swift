@@ -21,6 +21,7 @@ struct NoteOptionsButton: View {
     @State private var showingShare = false
     @State private var showingSource = false
     @State private var showingReportMenu = false
+    @State private var confirmDelete = false
 
     var body: some View {
         VStack {
@@ -54,13 +55,28 @@ struct NoteOptionsButton: View {
                     showingReportMenu = true
                 }
                 if note.author == currentUser.author {
-                    Button(Localized.deleteNote.string) {
-                        analytics.deletedNote()
-                        Task { await deletePost() }
+                    Button(Localized.deleteNote.string, role: .destructive) {
+                        confirmDelete = true
                     }
                 }
             }
             .reportMenu($showingReportMenu, reportedObject: .note(note))
+            .alert(
+                Localized.confirmReport.string,
+                isPresented: $confirmDelete,
+                actions: {
+                    Button(Localized.confirm.string, role: .destructive) {
+                        analytics.deletedNote()
+                        Task { await deletePost() }
+                    }
+                    Button(Localized.cancel.string, role: .cancel) {
+                        confirmDelete = false
+                    }
+                },
+                message: {
+                    Localized.deleteNoteConfirmation.view
+                }
+            )
             .sheet(isPresented: $showingSource) {
                 NavigationView {
                     RawEventView(viewModel: RawEventController(note: note, dismissHandler: {

@@ -160,22 +160,22 @@ final class EventTests: XCTestCase {
         let context = PersistenceController(inMemory: true).container.viewContext
 
         // Act
-        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
+        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)!
          
         // Assert
         XCTAssertEqual(parsedEvent.signature, sampleContactListSignature)
         XCTAssertEqual(parsedEvent.kind, 3)
-        XCTAssertEqual(parsedEvent.author?.follows?.count, 1)
+        XCTAssertEqual(parsedEvent.author?.follows.count, 1)
         XCTAssertEqual(parsedEvent.author?.hexadecimalPublicKey, KeyFixture.pubKeyHex)
         XCTAssertEqual(parsedEvent.createdAt?.timeIntervalSince1970, 1_675_264_762)
         
-        guard let follow = parsedEvent.author?.follows?.allObjects.first as? Follow else {
+        guard let follow = parsedEvent.author?.follows.first as? Follow else {
             XCTFail("Tag is not of the Follow type")
             return
         }
         
-        XCTAssertEqual(parsedEvent.author?.relays?.count, 1)
-        let relay = parsedEvent.author?.relays?.allObjects[0] as! Relay
+        XCTAssertEqual(parsedEvent.author?.relays.count, 1)
+        let relay = parsedEvent.author!.relays.first!
         XCTAssertEqual(relay.address, sampleRelay)
         XCTAssertEqual(follow.petName, sampleName)
     }
@@ -192,7 +192,12 @@ final class EventTests: XCTestCase {
         let context = PersistenceController(inMemory: true).container.viewContext
         
         // Act
-        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context, skipVerification: true)
+        let parsedEvent = try EventProcessor.parse(
+            jsonEvent: jsonEvent, 
+            from: nil, 
+            in: context, 
+            skipVerification: true
+        )!
         
         // Assert
         XCTAssertEqual(parsedEvent.expirationDate?.timeIntervalSince1970, 2_378_572_992)
@@ -210,7 +215,12 @@ final class EventTests: XCTestCase {
         let context = PersistenceController(inMemory: true).container.viewContext
         
         // Act
-        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context, skipVerification: true)
+        let parsedEvent = try EventProcessor.parse(
+            jsonEvent: jsonEvent, 
+            from: nil, 
+            in: context, 
+            skipVerification: true
+        )!
         
         // Assert
         XCTAssertEqual(parsedEvent.expirationDate!.timeIntervalSince1970, 2_378_572_992.123, accuracy: 0.001)
@@ -255,13 +265,13 @@ final class EventTests: XCTestCase {
             from: nil,
             in: testContext,
             skipVerification: true
-        )
+        )!
         try testContext.save()
         
         var allEvents = try testContext.fetch(Event.allEventsRequest())
         XCTAssertEqual(allEvents.count, 2)
-        XCTAssertEqual(referencingEvent.eventReferences?.count, 1)
-        var eventReference = referencingEvent.eventReferences?.firstObject as! EventReference
+        XCTAssertEqual(referencingEvent.eventReferences.count, 1)
+        var eventReference = referencingEvent.eventReferences.firstObject as! EventReference
         XCTAssertEqual(eventReference.referencedEvent?.isStub, true)
         
         let referencedJSONEvent = JSONEvent(
@@ -278,13 +288,13 @@ final class EventTests: XCTestCase {
             from: nil,
             in: testContext,
             skipVerification: true
-        )
+        )!
         try testContext.save()
         
         allEvents = try testContext.fetch(Event.allEventsRequest())
         XCTAssertEqual(allEvents.count, 2)
-        XCTAssertEqual(referencedEvent.referencingEvents?.count, 1)
-        eventReference = referencedEvent.referencingEvents!.allObjects.first as! EventReference
+        XCTAssertEqual(referencedEvent.referencingEvents.count, 1)
+        eventReference = referencedEvent.referencingEvents.first! 
         XCTAssertEqual(eventReference.referencingEvent, referencingEvent)
     }
     

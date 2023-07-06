@@ -63,7 +63,7 @@ struct FollowButton_Previews: PreviewProvider {
         let follow = Follow(context: previewContext)
         follow.source = user
         follow.destination = alice
-        user.follows = NSSet(array: [follow])
+        user.follows = Set([follow])
         try! previewContext.save()
         KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.privateKeyHex.utf8))
     }
