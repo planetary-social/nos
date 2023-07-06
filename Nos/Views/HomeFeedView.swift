@@ -127,6 +127,11 @@ struct HomeFeedView: View {
                                 .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
                         }
                     }
+                    .sheet(isPresented: $isShowingRelayList) {
+                        NavigationView {
+                            RelayView(author: user)
+                        }
+                    }
                 }
             }
             .nosNavigationBar(title: .homeFeed)
@@ -161,11 +166,6 @@ struct HomeFeedView: View {
                     Task { await subscribeToNewEvents() }
                 })
                 .store(in: &cancellables)
-        }
-        .sheet(isPresented: $isShowingRelayList) {
-            NavigationView {
-                RelayView(author: user)
-            }
         }
     }
 }

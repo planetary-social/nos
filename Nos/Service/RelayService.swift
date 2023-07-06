@@ -183,7 +183,9 @@ extension RelayService {
         
         let socketsCount = await subscriptions.sockets.count
         Task { @MainActor in
-            numberOfConnectedRelays = socketsCount
+            if numberOfConnectedRelays != socketsCount {
+                numberOfConnectedRelays = socketsCount
+            }
         }
     }
     
