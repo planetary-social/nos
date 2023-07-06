@@ -17,7 +17,7 @@
     <key>UNS_ORG_CODE</key>
     <string>$(UNS_ORG_CODE)</string>
     <key>UNS_API_KEY</key>
-    <key>$(UNS_API_KEY)</key>
+    <string>$(UNS_API_KEY)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>ClarityCity-Black.otf</string>

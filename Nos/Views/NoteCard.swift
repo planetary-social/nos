@@ -183,13 +183,7 @@ struct NoteCard: View {
                 subscriptionIDs.removeAll()
             }
         }
-        .background(
-            LinearGradient(
-                colors: [Color.cardBgTop, Color.cardBgBottom],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        )
+        .background(LinearGradient.cardBackground)
         .task {
             if showReplyCount {
                 let (replyCount, replyAvatarURLs) = await Event.replyMetadata(

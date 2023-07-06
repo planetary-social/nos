@@ -34,6 +34,7 @@ struct FollowsView: View {
                     if let author = follow.destination {
                         FollowCard(author: author)
                             .padding(.horizontal)
+                            .readabilityPadding()
                     }
                 }
             }

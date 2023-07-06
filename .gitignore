@@ -2,9 +2,10 @@
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
-## Release Config.plist
+## Secrets
 
 Nos/Assets/ProductionSecrets.xcconfig
+Nos/Assets/StagingSecrets.xcconfig
 
 ## CocoaPods Keys
 Pods/CocoaPodsKeys
