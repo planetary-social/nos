@@ -24,7 +24,7 @@ struct LikeButton: View {
     
     var likeCount: Int {
         likes
-            .compactMap { $0.eventReferences?.lastObject as? EventReference }
+            .compactMap { $0.eventReferences.lastObject as? EventReference }
             .map { $0.eventId }
             .filter { $0 == note.identifier }
             .count
@@ -35,7 +35,7 @@ struct LikeButton: View {
             .filter {
                 $0.author?.hexadecimalPublicKey == currentUser.author?.hexadecimalPublicKey
             }
-            .compactMap { $0.eventReferences?.lastObject as? EventReference }
+            .compactMap { $0.eventReferences.lastObject as? EventReference }
             .contains(where: { $0.eventId == note.identifier })
     }
     

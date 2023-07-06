@@ -12,7 +12,7 @@ struct PersistenceController {
     static let shared = PersistenceController()
     
     /// Increment this to delete core data on update
-    static let version = 1
+    static let version = 3
     static let versionKey = "NosPersistenceControllerVersion"
 
     // swiftlint:disable force_try
@@ -49,17 +49,26 @@ struct PersistenceController {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
         
-        var needsReload = false
-        container.loadPersistentStores(completionHandler: { [container] (storeDescription, error) in
+        loadPersistentStores(from: container)
+        
+        container.viewContext.automaticallyMergesChangesFromParent = true
+        let mergeType = NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType
+        container.viewContext.mergePolicy = NSMergePolicy(merge: mergeType)
+    }
+    
+    private func loadPersistentStores(from container: NSPersistentContainer) {
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             
+            // Drop database if necessary
             if Self.loadVersionFromDisk() < Self.version {
                 guard let storeURL = storeDescription.url else {
                     Log.error("need to delete core data due to version change but could not get store URL")
                     return
                 }
                 Self.clearCoreData(store: storeURL, in: container)
-                needsReload = true
                 Self.saveVersionToDisk(Self.version)
+                self.loadPersistentStores(from: container)
+                return
             }
             
             if let error = error as NSError? {
@@ -70,14 +79,6 @@ struct PersistenceController {
                 fatalError("Could not initialize database \(error), \(error.userInfo)")
             }
         })
-        
-        container.viewContext.automaticallyMergesChangesFromParent = true
-        let mergeType = NSMergePolicyType.mergeByPropertyObjectTrumpMergePolicyType
-        container.viewContext.mergePolicy = NSMergePolicy(merge: mergeType)
-        
-        if needsReload {
-            self = PersistenceController(inMemory: inMemory)
-        }
     }
     
     func saveAll() throws {
@@ -124,14 +125,14 @@ struct PersistenceController {
         
         if let publicKey = CurrentUser.shared.publicKeyHex {
             let currentAuthor = try! Author.findOrCreate(by: publicKey, context: context)
-            currentAuthor.follows = NSSet(array: follows)
+            currentAuthor.follows = Set(follows)
         }
     }
     
     func newBackgroundContext() -> NSManagedObjectContext {
         let context = container.newBackgroundContext()
         context.automaticallyMergesChangesFromParent = true
-        let mergeType = NSMergePolicyType.mergeByPropertyObjectTrumpMergePolicyType
+        let mergeType = NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType
         context.mergePolicy = NSMergePolicy(merge: mergeType)
         return context
     }

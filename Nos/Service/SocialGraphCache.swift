@@ -54,7 +54,9 @@ import Logger
         }
         
         self.user = context.performAndWait {
-            try! Author.findOrCreate(by: userKey, context: context)
+            let author = try! Author.findOrCreate(by: userKey, context: context)
+            try? context.saveIfNeeded()
+            return author
         }
         
         super.init()
