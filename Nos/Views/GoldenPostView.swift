@@ -8,13 +8,13 @@
 
 import SwiftUI
 
+let goldenRatio: CGFloat = 0.618
+
 struct GoldenPostView: View {
 
     @ObservedObject var author: Author
 
     @ObservedObject var note: Event
-
-    private let goldenRatio: CGFloat = 0.618
     
     @Environment(\.managedObjectContext) private var viewContext
     

@@ -54,7 +54,7 @@ struct NewNoteView: View {
                 if showRelayPicker, let author = currentUser.author {
                     RelayPicker(
                         selectedRelay: $selectedRelay,
-                        defaultSelection: Localized.extendedNetwork.string,
+                        defaultSelection: Localized.allMyRelays.string,
                         author: author,
                         isPresented: $showRelayPicker
                     )
@@ -86,7 +86,7 @@ struct NewNoteView: View {
                 }
                 label: {
                     Localized.cancel.view
-                        .foregroundColor(.textColor)
+                        .foregroundColor(.secondaryText)
                 },
                 trailing: ActionButton(title: Localized.post, action: postAction)
                     .frame(height: 22)

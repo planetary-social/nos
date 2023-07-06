@@ -100,6 +100,7 @@
 "Localized.copyLink" = "Copy Link";
 "Localized.copyUserIdentifier" = "Copy User ID (npub)";
 "Localized.deleteNote" = "Delete";
+"Localized.deleteNoteConfirmation" = "This will ask all your relay servers to permanently remove this note. Are you sure?";
 "Localized.mute" = "Mute";
 "Localized.muteUser" = "Mute User";
 "Localized.muted" = "Muted";
@@ -112,7 +113,6 @@
 "Localized.reportConfirmation" = "This will publish a report that is publicly visible. Are you sure?";
 "Localized.note" = "note";
 "Localized.unmuteUser" = "Un-Mute";
-"Localized.extendedNetwork" = "Extended Network";
 "Localized.outsideNetwork" = "This user is outside your network.";
 "Localized.allMyRelays" = "All My Relays";
 "Localized.about" = "About";
