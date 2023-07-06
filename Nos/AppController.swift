@@ -29,6 +29,12 @@ class AppController: ObservableObject {
     
     func configureCurrentState() {
         currentState = currentUser.keyPair == nil ? .onboarding : .loggedIn
+        Task { @MainActor in
+            let signedInAuthor = currentUser.author
+            if currentState == .loggedIn, let signedInAuthor, signedInAuthor.lastUpdatedContactList == nil {
+                router.selectedTab = .discover
+            }
+        }
     }
     
     func completeOnboarding() {

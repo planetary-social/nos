@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct JSONEvent: Codable {
+struct JSONEvent: Codable, Hashable {
     
     var id: String
     var pubKey: String
@@ -98,7 +98,7 @@ struct JSONEvent: Codable {
         ]
     }
 }
-// swiftlint:disable identifier_name
+
 struct MetadataEventJSON: Codable {
     var displayName: String?
     var name: String?
@@ -135,4 +135,3 @@ struct MetadataEventJSON: Codable {
         self.picture = picture
     }
 }
-// swiftlint:enable identifier_name

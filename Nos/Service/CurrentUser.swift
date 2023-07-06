@@ -178,7 +178,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     @MainActor func subscribe() async {
         
         let overrideRelays: [URL]?
-        let userRelays = author?.relays?.allObjects as? [Relay] ?? []
+        let userRelays = author?.relays ?? Set()
         if userRelays.isEmpty {
             overrideRelays = Relay.allKnown
                 .compactMap {
@@ -198,22 +198,19 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 subscriptions.removeAll()
             }
             
-            let metaFilter = Filter(authorKeys: [key], kinds: [.metaData], since: author.lastUpdatedMetadata)
-            async let metaSub = relayService.openSubscription(with: metaFilter, to: overrideRelays)
+            // Subscribe to our own events of all kinds.
+            let latestRecievedEvent = try? viewContext.fetch(Event.lastReceived(for: author)).first
+            let allEventsFilter = Filter(authorKeys: [key], since: latestRecievedEvent?.receivedAt)
+            subscriptions.append(await relayService.openSubscription(with: allEventsFilter))
             
+            // Always make a one time request for the latest contact list
             let contactFilter = Filter(
                 authorKeys: [key],
                 kinds: [.contactList],
+                limit: 1,
                 since: author.lastUpdatedContactList
             )
-            async let contactSub = relayService.openSubscription(with: contactFilter, to: overrideRelays)
-            
-            let muteListFilter = Filter(authorKeys: [key], kinds: [.mute])
-            async let muteSub = relayService.openSubscription(with: muteListFilter, to: overrideRelays)
-            
-            subscriptions.append(await metaSub)
-            subscriptions.append(await contactSub)
-            subscriptions.append(await muteSub)
+            subscriptions.append(await relayService.openSubscription(with: contactFilter, to: overrideRelays))
         }
     }
     
@@ -238,7 +235,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 let follows = try? Author.findOrCreate(
                     by: publicKeyHex,
                     context: backgroundContext
-                ).follows as? Set<Follow>
+                ).follows
                 return follows?
                     .shuffled()
                     .compactMap { $0.destination }
@@ -371,7 +368,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             return
         }
         
-        guard let relays = author?.relays?.allObjects as? [Relay] else {
+        guard let relays = author?.relays else {
             Log.debug("Error: No relay service")
             return
         }
@@ -417,10 +414,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             )
 
             // Add to the current user's follows
-            currentUser.follows = (currentUser.follows ?? NSSet()).adding(follow)
-
-            // Add from the current user to the author's followers
-            followedAuthor.followers = (followedAuthor.followers ?? NSSet()).adding(follow)
+            currentUser.follows.insert(follow)
         }
         
         try! viewContext.save()
@@ -446,10 +440,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
 
             for unfollow in unfollows {
                 // Remove current user's follows
-                currentUser.follows = currentUser.follows?.removing(unfollow)
-                
-                // Remove from the unfollowed author's followers
-                unfollowedAuthor.followers = unfollowedAuthor.followers?.removing(unfollow)
+                currentUser.follows.remove(unfollow)
             }
         }
 
