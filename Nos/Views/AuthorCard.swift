@@ -59,7 +59,7 @@ struct AuthorCard: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .aspectRatio(goldenRatio, contentMode: ContentMode.fill)
             .background(
-                LinearGradient.cardGradient
+                LinearGradient.cardBackground
             )
             .cornerRadius(15)
             .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
