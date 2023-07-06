@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (53)] - 2023-07-03Z
+
+- Added beta integration with the Universal Name System. Edit your profile to link your Universal Name to your Nostr profile.
+- Updated design of the relay selector
+
+## [0.1 (52)] - 2023-07-03Z
+
+- Prevent muted authors from appearing in the Discover screen
+- Added a confirmation dialog when deleting a note.
+
 ## [0.1 (51)] - 2023-06-16Z
 
 - Updated design of the relay selector
