@@ -15,7 +15,6 @@
         <relationship name="events" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="author" inverseEntity="Event"/>
         <relationship name="followers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Follow" inverseName="destination" inverseEntity="Follow"/>
         <relationship name="follows" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Follow" inverseName="source" inverseEntity="Follow"/>
-        <relationship name="notifications" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="NosNotification" inverseName="user" inverseEntity="NosNotification"/>
         <relationship name="relays" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="authors" inverseEntity="Relay"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
@@ -65,35 +64,21 @@
         <relationship name="destination" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="followers" inverseEntity="Author"/>
         <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="follows" inverseEntity="Author"/>
     </entity>
-    <entity name="NosNotification" representedClassName="NosNotification" syncable="YES">
-        <attribute name="eventID" optional="YES" attributeType="String"/>
-        <attribute name="isRead" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="notifications" inverseEntity="Author"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="eventID"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
-    </entity>
     <entity name="Relay" representedClassName=".Relay" syncable="YES">
         <attribute name="address" attributeType="String"/>
+        <attribute name="contact" optional="YES" attributeType="String"/>
         <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="metadataFetchedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="pubkey" optional="YES" attributeType="String"/>
+        <attribute name="relayDescription" optional="YES" attributeType="String"/>
+        <attribute name="software" optional="YES" attributeType="String"/>
+        <attribute name="supportedNIPs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer"/>
+        <attribute name="version" optional="YES" attributeType="String"/>
         <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="relays" inverseEntity="Author"/>
         <relationship name="deletedEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="deletedOn" inverseEntity="Event"/>
         <relationship name="events" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="seenOnRelays" inverseEntity="Event"/>
-        <relationship name="metadata" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RelayMetadata" inverseName="relay" inverseEntity="RelayMetadata"/>
         <relationship name="publishedEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="publishedTo" inverseEntity="Event"/>
         <relationship name="shouldBePublishedEvents" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="shouldBePublishedTo" inverseEntity="Event"/>
-    </entity>
-    <entity name="RelayMetadata" representedClassName=".RelayMetadata" syncable="YES">
-        <attribute name="contact" optional="YES" attributeType="String"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="pubkey" optional="YES" attributeType="String"/>
-        <attribute name="receivedAt" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="relayDescription" optional="YES" attributeType="String"/>
-        <attribute name="software" optional="YES" attributeType="String"/>
-        <attribute name="supportedNIPs" optional="YES" attributeType="Transformable"/>
-        <attribute name="version" optional="YES" attributeType="String"/>
-        <relationship name="relay" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Relay" inverseName="metadata" inverseEntity="Relay"/>
     </entity>
 </model>
