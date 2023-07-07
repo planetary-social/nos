@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed several bugs around muting users
 - Fixed a bug where expired messages could be published to relays that doesn't support them
 
 ## [0.1 (53)] - 2023-07-03Z
