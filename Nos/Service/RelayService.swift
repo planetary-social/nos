@@ -372,6 +372,23 @@ extension RelayService {
             await publish(from: socket, jsonEvent: signedEvent)
         }
     }
+
+    func publish(
+        event: JSONEvent,
+        to relays: [Relay],
+        signingKey: KeyPair,
+        context: NSManagedObjectContext
+    ) async throws {
+        await openSockets()
+        let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
+        for relay in relays {
+            if let socket = await socket(from: relay) {
+                await publish(from: socket, jsonEvent: signedEvent)
+            } else {
+                Log.error("Could not find socket to publish message")
+            }
+        }
+    }
     
     func publish(
         event: JSONEvent,
@@ -379,13 +396,7 @@ extension RelayService {
         signingKey: KeyPair,
         context: NSManagedObjectContext
     ) async throws {
-        _ = await openSockets()
-        let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
-        if let socket = await socket(from: relay) {
-            await publish(from: socket, jsonEvent: signedEvent)
-        } else {
-            Log.error("Could not find socket to publish message")
-        }
+        try await publish(event: event, to: [relay], signingKey: signingKey, context: context)
     }
     
     private func signAndSave(
@@ -476,7 +487,7 @@ extension RelayService {
         }
     }
     
-    @MainActor private func openSockets(overrideRelays: [URL]? = nil) async -> [URL] {
+    @discardableResult @MainActor private func openSockets(overrideRelays: [URL]? = nil) async -> [URL] {
         // Use override relays; fall back to user relays
         
         let relayAddresses: [URL] = await backgroundContext.perform { () -> [URL] in
@@ -503,13 +514,62 @@ extension RelayService {
             guard let socket = await subscriptions.addSocket(for: relayAddress) else {
                 continue
             }
-            
             socket.callbackQueue = processingQueue
             socket.delegate = self
             socket.connect()
+            Task.detached(priority: .background) {
+                do {
+                    try await self.queryRelayMetadataIfNeeded(relayAddress)
+                } catch {
+                    Log.optional(error)
+                }
+            }
         }
-        
+
         return relayAddresses
+    }
+
+    private func queryRelayMetadataIfNeeded(_ relayAddress: URL) async throws {
+        let address = relayAddress.absoluteString
+        let shouldQueryRelayMetadata = try await backgroundContext.perform { [backgroundContext] in
+            guard let relay = try backgroundContext.fetch(Relay.relay(by: address)).first else {
+                return false
+            }
+            guard let timestamp = relay.metadataFetchedAt else {
+                return true
+            }
+            return timestamp.timeIntervalSinceNow > 86_400 * 3 // 3 days
+        }
+        guard shouldQueryRelayMetadata else {
+            return
+        }
+        guard var components = URLComponents(url: relayAddress, resolvingAgainstBaseURL: true) else {
+            return
+        }
+        components.scheme = "https"
+        guard let url = components.url else {
+            return
+        }
+        var request = URLRequest(url: url)
+        request.addValue("application/nostr+json", forHTTPHeaderField: "Accept")
+        let session = URLSession(configuration: .ephemeral)
+        let (data, response) = try await session.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse else {
+            return
+        }
+        guard httpResponse.statusCode == 200 else {
+            return
+        }
+        let decoder = JSONDecoder()
+        let metadata = try decoder.decode(JSONRelayMetadata.self, from: data)
+
+        try await backgroundContext.perform { [backgroundContext] in
+            guard let relay = try backgroundContext.fetch(Relay.relay(by: address)).first else {
+                return
+            }
+            try relay.hydrate(from: metadata)
+            try backgroundContext.saveIfNeeded()
+        }
     }
     
     private func handleConnection(from client: WebSocketClient) async {
