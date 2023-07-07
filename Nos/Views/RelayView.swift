@@ -34,8 +34,19 @@ struct RelayView: View {
         List {
             Section {
                 ForEach(relays) { relay in
-                    Text(relay.address ?? Localized.error.string)
-                        .foregroundColor(.textColor)
+                    VStack(alignment: .leading) {
+                        if relay.hasMetadata {
+                            NavigationLink {
+                                RelayDetailView(relay: relay)
+                            } label: {
+                                Text(relay.address ?? Localized.error.string)
+                                    .foregroundColor(.textColor)
+                            }
+                        } else {
+                            Text(relay.address ?? Localized.error.string)
+                                .foregroundColor(.textColor)
+                        }
+                    }
                 }
                 .onDelete { indexes in
                     Task {

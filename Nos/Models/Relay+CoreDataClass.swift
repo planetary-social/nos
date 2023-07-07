@@ -16,6 +16,7 @@ enum RelayError: Error {
 
 @objc(Relay)
 public class Relay: NosManagedObject {
+
     static var recommended: [String] {
         [
         "wss://relay.nostr.band/",
@@ -94,6 +95,29 @@ public class Relay: NosManagedObject {
             return relay
         }
     }
+
+    class func find(
+        supporting nipNumber: Int,
+        for author: Author,
+        context: NSManagedObjectContext
+    ) async throws -> [Relay] {
+        try await context.perform {
+            let relays = try context.fetch(Relay.relays(for: author))
+            return relays.filter { $0.supportedNIPs?.contains(nipNumber) ?? false }
+        }
+    }
+
+    /// Populates metadata using the data in the given JSON.
+    func hydrate(from jsonMetadata: JSONRelayMetadata) throws {
+        name = jsonMetadata.name
+        relayDescription = jsonMetadata.description
+        supportedNIPs = jsonMetadata.supportedNIPs
+        pubkey = jsonMetadata.pubkey
+        contact = jsonMetadata.contact
+        software = jsonMetadata.software
+        version = jsonMetadata.version
+        metadataFetchedAt = Date.now
+    }
     
     var jsonRepresentation: String? {
         address
@@ -135,5 +159,35 @@ public class Relay: NosManagedObject {
     
     var host: String? {
         addressURL?.host
+    }
+
+    var hasMetadata: Bool {
+        metadataFetchedAt != nil
+    }
+
+    var metadata: String {
+        var attributes = [String]()
+        if let name {
+            attributes.append("Name: \(name)")
+        }
+        if let relayDescription {
+            attributes.append("Description: \(relayDescription)")
+        }
+        if let supportedNIPs {
+            attributes.append("Supported NIPs: \(supportedNIPs.map { String($0) }.joined(separator: ", "))")
+        }
+        if let pubkey {
+            attributes.append("PubKey: \(pubkey.prefix(7))")
+        }
+        if let contact {
+            attributes.append("Contact: \(contact.prefix(7))")
+        }
+        if let software {
+            attributes.append("Software: \(software)")
+        }
+        if let version {
+            attributes.append("Version: \(version)")
+        }
+        return attributes.joined(separator: "\n")
     }
 }
