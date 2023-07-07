@@ -58,7 +58,7 @@ extension FetchedResults where Element == Event {
     var unmuted: [Event] {
         filter {
             if let author = $0.author {
-                let notDeleted = ($0.deletedOn?.count ?? 0) == 0
+                let notDeleted = $0.deletedOn.count == 0
                 return !author.muted && notDeleted
             }
             return false
@@ -295,6 +295,22 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func hydratedEvent(by identifier: String) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.predicate = NSPredicate(
+            format: "identifier = %@ AND createdAt != nil AND author != nil", identifier
+        )
+        fetchRequest.fetchLimit = 1
+        return fetchRequest
+    }
+    
+    @nonobjc public class func event(by identifier: String, seenOn relay: Relay) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.predicate = NSPredicate(format: "identifier = %@ AND ANY seenOnRelays = %@", identifier, relay)
+        fetchRequest.fetchLimit = 1
+        return fetchRequest
+    }
+    
     @nonobjc public class func homeFeedPredicate(for user: Author, before: Date) -> NSPredicate {
         NSPredicate(
             // swiftlint:disable line_length
@@ -410,9 +426,17 @@ public class Event: NosManagedObject {
         return nil
     }
 
-    class func findOrCreate(jsonEvent: JSONEvent, relay: Relay?, context: NSManagedObjectContext) throws -> Event {
+    class func createIfNecessary(
+        jsonEvent: JSONEvent, 
+        relay: Relay?, 
+        context: NSManagedObjectContext
+    ) throws -> Event? {
+        // Optimization: check that no record exists before doing any fetching
+        guard try context.count(for: Event.hydratedEvent(by: jsonEvent.id)) == 0 else {
+            return nil
+        }
+        
         if let existingEvent = try context.fetch(Event.event(by: jsonEvent.id)).first {
-            relay.unwrap { existingEvent.markSeen(on: $0) }
             if existingEvent.isStub {
                 try existingEvent.hydrate(from: jsonEvent, relay: relay, in: context)
             }
@@ -446,7 +470,7 @@ public class Event: NosManagedObject {
     /// Returns true if this event doesn't have content. Usually this means we saw it referenced by another event
     /// but we haven't actually downloaded it yet.
     var isStub: Bool {
-        author == nil || createdAt == nil || content == nil
+        author == nil || createdAt == nil 
     }
     
     func calculateIdentifier() throws -> String {
@@ -518,7 +542,7 @@ public class Event: NosManagedObject {
     }
     
     var seenOnRelayURLs: [String] {
-        seenOnRelays?.compactMap { ($0 as? Relay)?.addressURL?.absoluteString } ?? []
+        seenOnRelays.compactMap { $0.addressURL?.absoluteString }
     }
     
     class func attributedContent(noteID: String?, context: NSManagedObjectContext) async -> AttributedString? {
@@ -531,6 +555,7 @@ public class Event: NosManagedObject {
                 let content = note.content else {
                 return nil
             }
+            try? context.saveIfNeeded()
             guard let tags = note.allTags as? [[String]] else {
                 return AttributedString(content)
             }
@@ -653,32 +678,45 @@ public class Event: NosManagedObject {
         
         newAuthor.lastUpdatedContactList = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
 
-        // Make a copy of what was followed before
-        let originalFollows = newAuthor.follows?.copy() as? Set<Follow>
+        // Put existing follows into a distionary so we can avoid doing a fetch request to look up each one.
+        var originalFollows = [HexadecimalString: Follow]()
+        for follow in newAuthor.follows {
+            if let pubKey = follow.destination?.hexadecimalPublicKey {
+                originalFollows[pubKey] = follow
+            }
+        }
         
-        var eventFollows = Set<Follow>()
+        var newFollows = Set<Follow>()
         for jsonTag in jsonEvent.tags {
-            do {
-                eventFollows.insert(try Follow.upsert(by: newAuthor, jsonTag: jsonTag, context: context))
-            } catch {
-                print("Error: could not parse Follow from: \(jsonEvent)")
+            if let followedKey = jsonTag[safe: 1], 
+                let existingFollow = originalFollows[followedKey] {
+                // We already have a Core Data Follow model for this user
+                newFollows.insert(existingFollow)
+            } else {
+                do {
+                    newFollows.insert(try Follow.upsert(by: newAuthor, jsonTag: jsonTag, context: context))
+                } catch {
+                    print("Error: could not parse Follow from: \(jsonEvent)")
+                }
             }
         }
         
         // Did we unfollow someone? If so, remove them from core data
-        if let follows = originalFollows, follows.count > eventFollows.count {
-            let removedFollows = follows.subtracting(eventFollows)
+        if originalFollows.count > newFollows.count {
+            let removedFollows = Set(originalFollows.values).subtracting(newFollows)
             if !removedFollows.isEmpty {
                 print("Removing \(removedFollows.count) follows")
                 Follow.deleteFollows(in: removedFollows, context: context)
             }
         }
         
+        newAuthor.follows = newFollows
+        
         // Get the user's active relays out of the content property
         if let data = jsonEvent.content.data(using: .utf8, allowLossyConversion: false),
             let relayEntries = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
             let relays = (relayEntries as? [String: Any])?.keys {
-            newAuthor.relays = NSMutableSet()
+            newAuthor.relays = Set()
 
             for address in relays {
                 if let relay = try? Relay.findOrCreate(by: address, context: context) {
@@ -740,7 +778,7 @@ public class Event: NosManagedObject {
     }
 
     func markSeen(on relay: Relay) {
-        seenOnRelays = (seenOnRelays ?? NSSet()).adding(relay)
+        seenOnRelays.insert(relay) 
     }
     
     func hydrateMuteList(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
@@ -806,22 +844,14 @@ public class Event: NosManagedObject {
     
     /// Returns true if this event tagged the given author.
     func references(author: Author) -> Bool {
-        guard let authorReferences = authorReferences else {
-            return false
-        }
-        
-        return authorReferences.contains(where: { element in
+        authorReferences.contains(where: { element in
             (element as? AuthorReference)?.pubkey == author.hexadecimalPublicKey
         })
     }
     
     /// Returns true if this event is a reply to an event by the given author.
     func isReply(to author: Author) -> Bool {
-        guard let eventReferences else {
-            return false
-        }
-        
-        return eventReferences.contains(where: { element in
+        eventReferences.contains(where: { element in
             let rootEvent = (element as? EventReference)?.referencedEvent
             return rootEvent?.author?.hexadecimalPublicKey == author.hexadecimalPublicKey
         })
@@ -841,14 +871,14 @@ public class Event: NosManagedObject {
     
     /// Returns the event this note is directly replying to, or nil if there isn't one.
     func referencedNote() -> Event? {
-        if let rootReference = eventReferences?.first(where: {
+        if let rootReference = eventReferences.first(where: {
             ($0 as? EventReference)?.type == .reply
         }) as? EventReference,
             let referencedNote = rootReference.referencedEvent {
             return referencedNote
         }
         
-        if let lastReference = eventReferences?.lastObject as? EventReference,
+        if let lastReference = eventReferences.lastObject as? EventReference,
             let referencedNote = lastReference.referencedEvent {
             return referencedNote
         }
@@ -857,7 +887,7 @@ public class Event: NosManagedObject {
     
     /// Returns the root event of the thread that this note is replying to, or nil if there isn't one.
     func rootNote() -> Event? {
-        let rootReference = eventReferences?.first(where: {
+        let rootReference = eventReferences.first(where: {
             ($0 as? EventReference)?.type == .root
         }) as? EventReference
         
@@ -874,7 +904,7 @@ public class Event: NosManagedObject {
                 if let deletedEvent = Event.find(by: deletedEventId, context: context),
                     deletedEvent.author?.hexadecimalPublicKey == author?.hexadecimalPublicKey {
                     print("\(deletedEvent.identifier ?? "n/a") was deleted on \(relay.address ?? "unknown")")
-                    deletedEvent.deletedOn = (deletedEvent.deletedOn ?? NSSet()).adding(relay)
+                    deletedEvent.deletedOn.insert(relay)
                 }
             }
             try! context.saveIfNeeded()
@@ -904,7 +934,7 @@ public class Event: NosManagedObject {
                 requestData.append((author.hexadecimalPublicKey, author.lastUpdatedMetadata))
             }
             
-            note.authorReferences?.forEach { reference in
+            note.authorReferences.forEach { reference in
                 if let reference = reference as? AuthorReference,
                     let pubKey = reference.pubkey,
                     let author = try? Author.findOrCreate(by: pubKey, context: context),
@@ -913,6 +943,7 @@ public class Event: NosManagedObject {
                 }
             }
             
+            try? context.saveIfNeeded()
             return requestData
         }
         

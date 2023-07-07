@@ -37,7 +37,7 @@ struct RepliesView: View {
     
     var directReplies: [Event] {
         replies.filter { (reply: Event) in
-            guard let eventReferences = reply.eventReferences?.array as? [EventReference] else {
+            guard let eventReferences = reply.eventReferences.array as? [EventReference] else {
                 return false
             }
             

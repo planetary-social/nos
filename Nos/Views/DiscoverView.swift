@@ -16,7 +16,7 @@ struct DiscoverView: View {
     @EnvironmentObject var router: Router
     @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
-    @AppStorage("lastDiscoverRequestDate") var lastRequestDateUnix: TimeInterval?
+    @State private var lastRequestDate: Date?
 
     @State var showRelayPicker = false
     
@@ -54,7 +54,7 @@ struct DiscoverView: View {
             // TODO: Use a since filter
             let singleRelayFilter = Filter(
                 kinds: [.text, .delete],
-                limit: 200
+                limit: 100
             )
             
             subscriptionIDs.append(
@@ -66,14 +66,13 @@ struct DiscoverView: View {
             var fetchSinceDate: Date?
             // Make sure the lastRequestDate was more than a minute ago
             // to make sure we got all the events from it.
-            if let lastRequestDateUnix {
-                let lastRequestDate = Date(timeIntervalSince1970: lastRequestDateUnix)
+            if let lastRequestDate {
                 if lastRequestDate.distance(to: .now) > 60 {
                     fetchSinceDate = lastRequestDate
-                    self.lastRequestDateUnix = Date.now.timeIntervalSince1970
+                    self.lastRequestDate = Date.now
                 }
             } else {
-                self.lastRequestDateUnix = Date.now.timeIntervalSince1970
+                self.lastRequestDate = Date.now
             }
             
             let featuredFilter = Filter(
@@ -81,7 +80,7 @@ struct DiscoverView: View {
                     PublicKey(npub: $0)?.hex
                 },
                 kinds: [.text, .delete],
-                limit: 100,
+                limit: 50,
                 since: fetchSinceDate
             )
             
@@ -227,6 +226,7 @@ struct DiscoverView: View {
         guard let author = try? Author.findOrCreate(by: publicKey.hex, context: viewContext) else {
             return nil
         }
+        try? viewContext.saveIfNeeded()
         return author
     }
     

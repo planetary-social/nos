@@ -20,10 +20,6 @@ struct Filter: Hashable, Identifiable {
     let limit: Int?
     let since: Date?
     
-    var id: String {
-        String(hashValue)
-    }
-
     init(
         authorKeys: [HexadecimalString] = [],
         eventIDs: [HexadecimalString] = [],
@@ -85,7 +81,7 @@ struct Filter: Hashable, Identifiable {
     }
 
     static func == (lhs: Filter, rhs: Filter) -> Bool {
-        lhs.hashValue == rhs.hashValue
+        lhs.id == rhs.id
     }
 
     func hash(into hasher: inout Hasher) {
@@ -96,5 +92,24 @@ struct Filter: Hashable, Identifiable {
         hasher.combine(eTags)
         hasher.combine(pTags)
         hasher.combine(since)
+        hasher.combine(inNetwork)
+    }
+    
+    var id: String {
+        let intermediate: [String] = [
+            authorKeys.joined(separator: ","),
+            eventIDs.joined(separator: ","),
+            kinds.map { String($0.rawValue) }.joined(separator: ","),
+            limit?.description ?? "nil",
+            eTags.joined(separator: ","),
+            pTags.joined(separator: ","),
+            since?.timeIntervalSince1970.description ?? "nil",
+            inNetwork.description,
+        ]
+        
+        return intermediate
+            .joined(separator: "|")
+            .data(using: .utf8)!
+            .sha256
     }
 }

@@ -18,7 +18,6 @@ struct FullscreenProgressView: View {
             Spacer()
             ProgressView()
                 .foregroundColor(.primaryTxt)
-                .scaleEffect(2)
             Spacer()
         }
         .frame(maxWidth: .infinity)
