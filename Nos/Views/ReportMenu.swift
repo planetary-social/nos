@@ -63,7 +63,13 @@ struct ReportMenuModifier: ViewModifier {
                 actions: { 
                     if let author = reportedObject.author {
                         Button(Localized.yes.string) { 
-                            Task { await author.mute(context: viewContext) }
+                            Task {
+                                do {
+                                    try await author.mute(context: viewContext)
+                                } catch {
+                                    Log.error(error.localizedDescription)
+                                }
+                            }
                         }
                         Button(Localized.no.string) {}
                     }
