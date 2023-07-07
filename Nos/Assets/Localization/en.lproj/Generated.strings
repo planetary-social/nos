@@ -32,6 +32,7 @@
 "Localized.shareLogs" = "Share logs";
 "Localized.failedToExportLogs" = "Failed to export logs.";
 "Localized.appVersion" = "App Version:";
+"Localized.allPublishedEvents" = "All published events";
 "Localized.privateKey" = "Private Key";
 "Localized.logout" = "Logout";
 "Localized.myKeyIsBackedUp" = "My key is backed up";
@@ -102,6 +103,7 @@
 "Localized.mute" = "Mute";
 "Localized.muteUser" = "Mute User";
 "Localized.muted" = "Muted";
+"Localized.mutedUsers" = "Muted Users";
 "Localized.mutePrompt" = "Would you like to mute {{ user }}?";
 "Localized.share" = "Share";
 "Localized.reportNote" = "Report note";
