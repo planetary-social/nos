@@ -102,13 +102,42 @@ struct NewNoteView: View {
     }
 
     private func postAction() async {
-        guard currentUser.keyPair != nil else {
+        guard currentUser.keyPair != nil, let author = currentUser.author else {
             alert = AlertState(title: {
                 TextState(Localized.error.string)
             }, message: {
                 TextState(Localized.youNeedToEnterAPrivateKeyBeforePosting.string)
             })
             return
+        }
+        if let relay = selectedRelay {
+            guard expirationTime == nil || relay.supportedNIPs?.contains(40) == true else {
+                alert = AlertState(title: {
+                    TextState(Localized.error.string)
+                }, message: {
+                    TextState(Localized.relayDoesNotSupportNIP40.string)
+                })
+                return
+            }
+        } else if expirationTime != nil {
+            do {
+                let relays = try await Relay.find(supporting: 40, for: author, context: viewContext)
+                if relays.isEmpty {
+                    alert = AlertState(title: {
+                        TextState(Localized.error.string)
+                    }, message: {
+                        TextState(Localized.anyRelaysSupportingNIP40.string)
+                    })
+                    return
+                }
+            } catch {
+                alert = AlertState(title: {
+                    TextState(Localized.error.string)
+                }, message: {
+                    TextState(error.localizedDescription)
+                })
+                return
+            }
         }
         Task {
             await publishPost()
@@ -118,7 +147,7 @@ struct NewNoteView: View {
     }
 
     private func publishPost() async {
-        guard let keyPair = currentUser.keyPair else {
+        guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
             Log.error("Posting without a keypair")
             return
         }
@@ -129,24 +158,14 @@ struct NewNoteView: View {
             if let expirationTime {
                 tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
             }
+
+            let jsonEvent = JSONEvent(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
             
-            let jsonEvent = JSONEvent(
-                id: "",
-                pubKey: keyPair.publicKeyHex,
-                createdAt: Int64(Date().timeIntervalSince1970),
-                kind: 1,
-                tags: tags,
-                content: content,
-                signature: ""
-            )
-            
-            if let selectedRelay {
-                try await relayService.publish(
-                    event: jsonEvent,
-                    to: selectedRelay,
-                    signingKey: keyPair,
-                    context: viewContext
-                )
+            if let relay = selectedRelay {
+                try await relayService.publish(event: jsonEvent, to: relay, signingKey: keyPair, context: viewContext)
+            } else if expirationTime != nil {
+                let relays = try await Relay.find(supporting: 40, for: author, context: viewContext)
+                try await relayService.publish(event: jsonEvent, to: relays, signingKey: keyPair, context: viewContext)
             } else {
                 try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
             }

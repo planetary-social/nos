@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Added the number of connected relays at the top right corner of the Home Feed.
+- Fixed a bug where expired messages could be published to relays that doesn't support them
 
 ## [0.1 (53)] - 2023-07-03Z
 
@@ -312,7 +313,7 @@ Known issues:
 - Render user mentions in NoteCard
 - Replace the warning message to tell the user never to share their private key with anyone.
 
-## [0.1 (5)] 2023-03-02 
+## [0.1 (5)] 2023-03-02
 
 - Added a Discover tab that shows all events from all relays.
 - Core Data will now be wiped whenever we change the data model, which is often. This speeds up our development process, but you will have to re-enter your relays when this happens.
