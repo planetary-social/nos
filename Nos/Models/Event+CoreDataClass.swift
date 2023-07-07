@@ -226,7 +226,7 @@ public class Event: NosManagedObject {
         NSPredicate(format: "kind = 1 AND ANY eventReferences.referencedEvent.author = %@", user)
     }
     
-    @nonobjc public class func allNotifications(for user: Author) -> NSFetchRequest<Event> {
+    @nonobjc public class func all(notifying user: Author, since: Date? = nil) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         
@@ -236,9 +236,12 @@ public class Event: NosManagedObject {
         let allNotificationsPredicate = NSCompoundPredicate(
             orPredicateWithSubpredicates: [mentionsPredicate, repliesPredicate]
         )
-        fetchRequest.predicate = NSCompoundPredicate(
-            andPredicateWithSubpredicates: [allNotificationsPredicate, notSelfPredicate]
-        )
+        var andPredicates = [allNotificationsPredicate, notSelfPredicate]
+        if let since {
+            let sincePredicate = NSPredicate(format: "receivedAt >= %@", since as CVarArg)  
+            andPredicates.append(sincePredicate)
+        } 
+        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: andPredicates)
         
         return fetchRequest
     }
@@ -452,7 +455,7 @@ public class Event: NosManagedObject {
         }
     }
     
-    class func find(by identifier: String, context: NSManagedObjectContext) -> Event? {
+    class func find(by identifier: HexadecimalString, context: NSManagedObjectContext) -> Event? {
         if let existingEvent = try? context.fetch(Event.event(by: identifier)).first {
             return existingEvent
         }

@@ -67,7 +67,7 @@
     </entity>
     <entity name="NosNotification" representedClassName="NosNotification" syncable="YES">
         <attribute name="eventID" optional="YES" attributeType="String"/>
-        <attribute name="isRead" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isRead" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="notifications" inverseEntity="Author"/>
         <uniquenessConstraints>
             <uniquenessConstraint>

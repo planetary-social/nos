@@ -14,20 +14,29 @@ import Combine
 
 /// A class that abstracts our interactions with our push notification server.
 @MainActor class PushNotificationService: 
-    NSObject, NSFetchedResultsControllerDelegate, UNUserNotificationCenterDelegate {
+    NSObject, ObservableObject, NSFetchedResultsControllerDelegate, UNUserNotificationCenterDelegate {
+    
+    // MARK: - Public Properties
+    
+    /// The number of unread notifications that should be displayed as a badge
+    @Published var badgeCount = 0
+    private(set) var oldNotificationCutoff: Date
+    
+    // MARK: - Private Properties
     
     @Dependency(\.relayService) private var relayService
     @Dependency(\.persistenceController) private var persistenceController
-    lazy var modelContext: NSManagedObjectContext = {
-        persistenceController.newBackgroundContext()
-    }()
-    
-    var oldNotificationCutoff: Date
-    
-    private let notificationServiceAddress = "ws://127.0.0.1:8009"
+    @Dependency(\.router) private var router
+    @Dependency(\.analytics) private var analytics
+    private let notificationServiceAddress = "wss://notifications.nos.social"
     private var notificationWatcher: NSFetchedResultsController<Event>?
     private var relaySubscription: RelaySubscription.ID?
     private var currentAuthor: Author? 
+    private lazy var modelContext: NSManagedObjectContext = {
+        persistenceController.newBackgroundContext()
+    }()
+    
+    // MARK: - Setup
     
     override init() {
         oldNotificationCutoff = .now
@@ -59,7 +68,8 @@ import Combine
         
         currentAuthor = author
         notificationWatcher = NSFetchedResultsController(
-            fetchRequest: Event.allNotifications(for: author), // TODO: we should reprocess all notifications every time this is called
+            // TODO: we shouldn't reprocess all notifications every time this is called
+            fetchRequest: Event.all(notifying: author, since: oldNotificationCutoff), 
             managedObjectContext: modelContext,
             sectionNameKeyPath: nil,
             cacheName: nil
@@ -73,6 +83,8 @@ import Combine
             limit: 50
         )
         relaySubscription = await relayService.openSubscription(with: userMentionsFilter)
+        
+        await updateBadgeCount()
     }
     
     func registerForNotifications(with token: Data, user: CurrentUser) async throws {
@@ -81,29 +93,36 @@ import Combine
             return
         }
         
-        let jsonEvent = JSONEvent(
-            pubKey: userKey,
-            kind: EventKind.notificationServiceRegistration,
-            tags: [],
-            content: try await createContent(deviceToken: token, user: user)
-        )
-        try await modelContext.perform {
-            let relay = try Relay.findOrCreate(by: self.notificationServiceAddress, context: self.modelContext)
-            try self.modelContext.saveIfNeeded()
-            Task {
-                try await self.relayService.publish(
-                    event: jsonEvent, 
-                    to: relay, 
-                    signingKey: keyPair, 
-                    context: self.modelContext
-                )
+        do {
+            let jsonEvent = JSONEvent(
+                pubKey: userKey,
+                kind: EventKind.notificationServiceRegistration,
+                tags: [],
+                content: try await createRegistrationContent(deviceToken: token, user: user)
+            )
+            try await modelContext.perform {
+                let relay = try Relay.findOrCreate(by: self.notificationServiceAddress, context: self.modelContext)
+                try self.modelContext.saveIfNeeded()
+                Task {
+                    try await self.relayService.publish(
+                        event: jsonEvent, 
+                        to: relay, 
+                        signingKey: keyPair, 
+                        context: self.modelContext
+                    )
+                }
             }
+        } catch {
+            analytics.pushNotificationRegistrationFailed(reason: error.localizedDescription)
+            throw error
         }
     }
+    
+    // MARK: - Helpers
 
     func requestNotificationPermissionsFromUser() {
         let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert]) { granted, error in
+        center.requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             if granted {
                 Task { @MainActor in UIApplication.shared.registerForRemoteNotifications() }
             }
@@ -113,7 +132,27 @@ import Combine
         }
     }
     
-    private func createContent(deviceToken: Data, user: CurrentUser) async throws -> String {
+    /// Recomputes the number of unread notifications for the `currentAuthor` and published the new new value to 
+    /// `badgeCount` and updates the application badge icon. 
+    func updateBadgeCount() async {
+        var badgeCount = 0
+        if let currentAuthor {
+            badgeCount = await self.modelContext.perform {
+                (try? NosNotification.unreadCount(
+                    for: currentAuthor, 
+                    in: self.modelContext
+                )) ?? 0
+            }
+        }
+        
+        self.badgeCount = badgeCount
+        UIApplication.shared.applicationIconBadgeNumber = badgeCount
+    }
+    
+    // MARK: - Internal
+    
+    /// Builds the string needed for the `content` field in the special 
+    private func createRegistrationContent(deviceToken: Data, user: CurrentUser) async throws -> String {
         let publicKeyHex = CurrentUser.shared.publicKeyHex
         let relays: [RegistrationRelayAddress] = await relayService.relays(for: user).map {
             RegistrationRelayAddress(address: $0.absoluteString)
@@ -126,17 +165,67 @@ import Combine
         return String(data: try JSONEncoder().encode(content), encoding: .utf8)!
     }
     
-    // MARK: - UNUserNotificationCenter
+    /// Tells the system to display a notification for the given event if it's appropriate. This will create a 
+    /// NosNotification record in the database.
+    @MainActor private func showNotificationIfNecessary(for eventID: HexadecimalString) async {
+        guard let authorKey = currentAuthor?.hexadecimalPublicKey else {
+            return
+        }
+        
+        let viewModel: NotificationViewModel? = await modelContext.perform { 
+            guard let event = Event.find(by: eventID, context: self.modelContext),
+                let coreDataNotification = try? NosNotification.createIfNecessary(
+                    from: eventID, 
+                    authorKey: authorKey, 
+                    in: self.modelContext
+                ) else {
+                // We already have a notification for this event.
+                return nil
+            }
+            
+            // Don't alert for old notifications
+            guard let notificationCreated = event.createdAt, 
+                notificationCreated > self.oldNotificationCutoff else { 
+                return nil
+            }
+            
+            return NotificationViewModel(coreDataModel: coreDataNotification, context: self.modelContext) 
+        }
+        
+        if let viewModel {
+            await viewModel.loadContent(in: self.modelContext)
+            do {
+                try await UNUserNotificationCenter.current().add(viewModel.notificationCenterRequest)
+                await updateBadgeCount()
+            } catch {
+                Log.optional(error, "Failed to show local notification for event \(eventID)")
+            }
+        }
+    }
+    
+    // MARK: - UNUserNotificationCenterDelegate
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
-        print(response)
+        analytics.tappedNotification()
+        let userInfo = response.notification.request.content.userInfo
+        if let eventID = userInfo["eventID"] as? String, 
+            !eventID.isEmpty {
+            Task { @MainActor in
+                guard let event = Event.find(by: eventID, context: self.persistenceController.viewContext) else {
+                    return
+                }
+                self.router.selectedTab = .notifications
+                self.router.notificationsPath.append(event.referencedNote() ?? event)
+            }
+        }
     }
     
     func userNotificationCenter(
         _ center: UNUserNotificationCenter, 
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
-        [.banner, .badge, .sound]
+        analytics.displayedNotification()
+        return [.list, .banner, .badge, .sound]
     }
     
     // MARK: - NSFetchedResultsControllerDelegate
@@ -148,52 +237,16 @@ import Combine
         for type: NSFetchedResultsChangeType, 
         newIndexPath: IndexPath?
     ) {
+        guard type == .insert else {
+            return
+        }
+        
         guard let event = anObject as? Event,
             let eventID = event.identifier else {
             return
         }
         
-        Task { @MainActor in
-            guard let authorKey = self.currentAuthor?.hexadecimalPublicKey else {
-                return
-            }
-            
-            await modelContext.perform {
-                switch type {
-                case .insert:
-                    guard let event = Event.find(by: eventID, context: self.modelContext),
-                        let _ = try? NosNotification.createIfNecessary(
-                            from: eventID, 
-                            authorKey: authorKey, 
-                            in: self.modelContext
-                        ) else {
-                            // We already have a notification for this event.
-                            return
-                        }
-                    
-                    guard let notificationCreated = event.createdAt, 
-                        notificationCreated > self.oldNotificationCutoff else { 
-                        return
-                    }
-                    
-                    // TODO: analytics
-                    let content = UNMutableNotificationContent()
-                    content.title = "Notification"
-                    content.body = event.content ?? "null"
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-                    let request = UNNotificationRequest(identifier: eventID, content: content, trigger: trigger)
-                    UNUserNotificationCenter.current().add(request) { error in
-                        if let error {
-                            Log.optional(error, "Error showing notification")
-                        }
-                    }
-                case .delete, .update, .move:
-                    fallthrough
-                @unknown default:
-                    return
-                }
-            }
-        }
+        Task { await showNotificationIfNecessary(for: eventID) }
     }
 }
 

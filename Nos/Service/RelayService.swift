@@ -353,18 +353,39 @@ extension RelayService {
 extension RelayService {
     
     private func publish(from client: WebSocketClient, jsonEvent: JSONEvent) async {
-        do {
-            // Keep track of this so if it fails we can retry N times
-            let request: [Any] = ["EVENT", jsonEvent.dictionary]
-            let requestData = try JSONSerialization.data(withJSONObject: request)
-            let requestString = String(data: requestData, encoding: .utf8)!
-            print(requestString)
-            client.write(string: requestString)
-        } catch {
-            print("Error: Could not send request \(error.localizedDescription)")
-        }
+        // Keep track of this so if it fails we can retry N times
+        let requestString = jsonEvent.publishRequest
+        Log.info(requestString)
+        client.write(string: requestString)
     }
     
+    /// Opens a websocket and writes a single message to it. On failure this function will just log the error to the 
+    /// console.
+    private func openSocket(to url: URL, andSend message: String) async {
+        var urlRequest = URLRequest(url: url)
+        urlRequest.timeoutInterval = 10
+        let socket = WebSocket(request: urlRequest, compressionHandler: .none)
+        
+        // Make sure the socket doesn't stay open too long
+        _ = Task(timeout: 10) { socket.disconnect() }
+        return await withCheckedContinuation({ continuation in
+            socket.onEvent = { (event: WebSocketEvent) in
+                switch event {
+                case WebSocketEvent.connected:
+                    socket.write(string: message)
+                    socket.disconnect()
+                case WebSocketEvent.disconnected:
+                    continuation.resume()
+                case WebSocketEvent.error(let error):
+                    Log.optional(error, "failed to send message: \(message) to websocket")
+                default:
+                    return
+                }
+            }
+            socket.connect()
+        })
+    }
+
     func publishToAll(event: JSONEvent, signingKey: KeyPair, context: NSManagedObjectContext) async throws {
         _ = await self.openSockets()
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
@@ -379,13 +400,11 @@ extension RelayService {
         signingKey: KeyPair,
         context: NSManagedObjectContext
     ) async throws {
-        _ = await openSockets(overrideRelays: [relay.addressURL].compactMap { $0 })
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
-        if let socket = await socket(from: relay) {
-            await publish(from: socket, jsonEvent: signedEvent)
-        } else {
-            Log.error("Could not find socket to publish message")
+        guard let url = relay.addressURL else {
+            return
         }
+        await openSocket(to: url, andSend: signedEvent.publishRequest)
     }
     
     private func signAndSave(

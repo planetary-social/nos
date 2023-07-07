@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreData
 import Dependencies
+import Logger
 
 /// Displays a list of cells that let the user know when other users interact with their notes.
 struct NotificationsView: View {
@@ -29,7 +30,7 @@ struct NotificationsView: View {
     init(user: Author?) {
         self.user = user
         if let user {
-            eventRequest = FetchRequest(fetchRequest: Event.allNotifications(for: user))
+            eventRequest = FetchRequest(fetchRequest: Event.all(notifying: user))
         }
     }    
     
@@ -103,7 +104,18 @@ struct NotificationsView: View {
             .onChange(of: isVisible, perform: { isVisible in
                 if isVisible {
                     analytics.showedNotifications()
-                    Task { await subscribeToNewEvents() }
+                    Task { 
+                        await subscribeToNewEvents() 
+                        if let user {
+                            do {
+                                let backgroundContext = PersistenceController.backgroundViewContext
+                                try await NosNotification.markAllAsRead(for: user, in: backgroundContext)
+                                await pushNotificationService.updateBadgeCount()
+                            } catch {
+                                Log.optional(error, "Error marking notifications as read")
+                            }
+                        }
+                    }
                 } else {
                     Task { await cancelSubscriptions() }
                 }

@@ -44,4 +44,34 @@ public class NosNotification: NSManagedObject {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \NosNotification.eventID, ascending: false)]
         return fetchRequest
     }
+    
+    class func unreadCount(for user: Author, in context: NSManagedObjectContext) throws -> Int {
+        let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
+        fetchRequest.predicate = NSPredicate(format: "isRead = 0")
+        return try context.count(for: fetchRequest)
+    }
+    
+    class func markRead(eventID: HexadecimalString, in context: NSManagedObjectContext) async {
+        await context.perform {
+            if let notification = try? find(by: eventID, in: context), 
+                !notification.isRead {
+                notification.isRead = true
+            }
+            
+            try? context.saveIfNeeded()
+        }
+    }
+    
+    class func markAllAsRead(for user: Author, in context: NSManagedObjectContext) async throws {
+        try await context.perform {
+            let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
+            fetchRequest.predicate = NSPredicate(format: "isRead != 1")
+            let unreadNotifications = try context.fetch(fetchRequest)
+            for notification in unreadNotifications {
+                notification.isRead = true
+            }
+            
+            try? context.saveIfNeeded()
+        }
+    }
 }
