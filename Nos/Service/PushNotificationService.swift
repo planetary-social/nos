@@ -100,18 +100,12 @@ import Combine
                 tags: [],
                 content: try await createRegistrationContent(deviceToken: token, user: user)
             )
-            try await modelContext.perform {
-                let relay = try Relay.findOrCreate(by: self.notificationServiceAddress, context: self.modelContext)
-                try self.modelContext.saveIfNeeded()
-                Task {
-                    try await self.relayService.publish(
-                        event: jsonEvent, 
-                        to: relay, 
-                        signingKey: keyPair, 
-                        context: self.modelContext
-                    )
-                }
-            }
+            try await self.relayService.publish(
+                event: jsonEvent, 
+                to: URL(string: self.notificationServiceAddress)!, 
+                signingKey: keyPair, 
+                context: self.modelContext
+            )
         } catch {
             analytics.pushNotificationRegistrationFailed(reason: error.localizedDescription)
             throw error

@@ -396,15 +396,12 @@ extension RelayService {
     
     func publish(
         event: JSONEvent,
-        to relay: Relay,
+        to relayURL: URL,
         signingKey: KeyPair,
         context: NSManagedObjectContext
     ) async throws {
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
-        guard let url = relay.addressURL else {
-            return
-        }
-        await openSocket(to: url, andSend: signedEvent.publishRequest)
+        await openSocket(to: relayURL, andSend: signedEvent.publishRequest)
     }
     
     private func signAndSave(
@@ -428,13 +425,16 @@ extension RelayService {
         return jsonEvent
     }
     
-    func publishFailedEvents() async {
-        guard let user = await currentUser.author else {
+    @MainActor func publishFailedEvents() async {
+        guard let userKey = currentUser.author?.hexadecimalPublicKey else {
             return
         }
         
         await self.backgroundContext.perform {
             
+            guard let user = try? Author.find(by: userKey, context: self.backgroundContext) else {
+                return
+            }
             let objectContext = self.backgroundContext
             let userSentEvents = Event.unpublishedEvents(for: user, context: objectContext)
             
@@ -443,12 +443,11 @@ extension RelayService {
                 
                 print("\(missedRelays.count) relays missing a published event.")
                 for missedRelay in missedRelays {
-                    guard let missedAddress = missedRelay.address else { continue }
+                    guard let missedAddress = missedRelay.address, let jsonEvent = event.codable else { continue }
                     Task {
-                        if let socket = await self.subscriptions.socket(for: missedAddress),
-                            let jsonEvent = event.codable {
+                        if let socket = await self.subscriptions.socket(for: missedAddress) {
                             // Publish again to this socket
-                            print("Republishing \(event.identifier!) on \(missedAddress)")
+                            print("Republishing \(jsonEvent.id) on \(missedAddress)")
                             await self.publish(from: socket, jsonEvent: jsonEvent)
                         }
                     }

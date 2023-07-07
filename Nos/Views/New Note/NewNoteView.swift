@@ -119,7 +119,7 @@ struct NewNoteView: View {
 
     private func publishPost() async {
         guard let keyPair = currentUser.keyPair else {
-            Log.error("Posting without a keypair")
+            Log.error("Cannot post without a keypair")
             return
         }
         
@@ -140,10 +140,10 @@ struct NewNoteView: View {
                 signature: ""
             )
             
-            if let selectedRelay {
+            if let relayURL = selectedRelay?.addressURL {
                 try await relayService.publish(
                     event: jsonEvent,
-                    to: selectedRelay,
+                    to: relayURL,
                     signingKey: keyPair,
                     context: viewContext
                 )

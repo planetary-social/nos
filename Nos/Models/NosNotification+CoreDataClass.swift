@@ -47,7 +47,7 @@ public class NosNotification: NSManagedObject {
     
     class func unreadCount(for user: Author, in context: NSManagedObjectContext) throws -> Int {
         let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
-        fetchRequest.predicate = NSPredicate(format: "isRead = 0")
+        fetchRequest.predicate = NSPredicate(format: "isRead != 1")
         return try context.count(for: fetchRequest)
     }
     
