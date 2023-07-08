@@ -19,7 +19,7 @@ class NotificationViewModel: ObservableObject, Identifiable {
     let noteID: HexadecimalString
     let authorProfilePhotoURL: URL?
     let actionText: AttributedString
-    var content: AttributedString?
+    @Published var content: AttributedString?
     let date: Date
     
     var id: HexadecimalString {
@@ -81,7 +81,7 @@ class NotificationViewModel: ObservableObject, Identifiable {
     
     /// Populates the `content` variable. This is not done at init in order to keep
     /// it synchronous for use in a View.
-    func loadContent(in context: NSManagedObjectContext) async {
+    @MainActor func loadContent(in context: NSManagedObjectContext) async {
         content = await Event.attributedContent(noteID: id, context: context)
     }
 }
