@@ -45,6 +45,8 @@
 "Localized.done" = "完成";
 "Localized.editProfile" = "編輯個人檔案";
 "Localized.youNeedToEnterAPrivateKeyBeforePosting" = "你必須在設置中輸入私鑰才能發佈帖子。";
+"Localized.relayDoesNotSupportNIP40" = "這個中繼器不支持過期消息。請另選一個。";
+"Localized.anyRelaysSupportingNIP40" = "你沒有支持過期消息的中繼器。請添加一個並重試。";
 "Localized.nostrBuildHelp" = "使用 nostr.build 來發佈圖片鏈接。";
 "Localized.noteDisappearsIn" = "筆記消失於";
 "Localized.attachMedia" = "附加媒體";
@@ -67,6 +69,16 @@
 "Localized.invalidURLError" = "請輸入有效的 websocket 網址。";
 "Localized.saveRelayError" = "無法保存中繼器。";
 "Localized.ok" = "確定";
+"Localized.relay" = "中繼器";
+"Localized.address" = "地址";
+"Localized.fetchedAt" = "已索取";
+"Localized.metadata" = "元數據";
+"Localized.description" = "描述";
+"Localized.supportedNIPs" = "所支持的 NIP";
+"Localized.pubkey" = "公鑰";
+"Localized.contact" = "聯絡";
+"Localized.software" = "軟體";
+"Localized.version" = "版本";
 "Localized.profileTitle" = "個人檔案";
 "Localized.profile" = "個人檔案";
 "Localized.follow" = "關注";
@@ -116,7 +128,7 @@
 "Localized.about" = "關於";
 "Localized.contactUs" = "聯系我們";
 "Localized.shareNos" = "分享 Nos";
-"Localized.yourProfile" = "你的個人檔案";
+"Localized.yourProfile" = "個人檔案";
 "Localized.unsTagline" = "通用名空間（Universal Name Space）提供你可以信任的身份驗證。";
 "Localized.unsDescription" = "通用名空間（Universal Namespace）為你提供了一個你可以在任何地方使用的名稱。你可以驗證自己的身份並在 Nos 中獲取通用名稱。此屏幕僅用於演示目的，將來所有名稱都將被重置。瞭解更多。";
 "Localized.unsLearnMore" = "瞭解更多。";
