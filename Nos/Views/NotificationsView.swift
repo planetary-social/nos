@@ -57,6 +57,18 @@ struct NotificationsView: View {
         }
     }
     
+    func markAllNotificationsRead() async {
+        if let user {
+            do {
+                let backgroundContext = PersistenceController.backgroundViewContext
+                try await NosNotification.markAllAsRead(for: user, in: backgroundContext)
+                await pushNotificationService.updateBadgeCount()
+            } catch {
+                Log.optional(error, "Error marking notifications as read")
+            }
+        }
+    }
+    
     var body: some View {
         NavigationStack(path: $router.notificationsPath) {
             ScrollView(.vertical) {
@@ -102,19 +114,11 @@ struct NotificationsView: View {
                 isVisible = false
             }
             .onChange(of: isVisible, perform: { isVisible in
+                Task { await markAllNotificationsRead() }
                 if isVisible {
                     analytics.showedNotifications()
                     Task { 
                         await subscribeToNewEvents() 
-                        if let user {
-                            do {
-                                let backgroundContext = PersistenceController.backgroundViewContext
-                                try await NosNotification.markAllAsRead(for: user, in: backgroundContext)
-                                await pushNotificationService.updateBadgeCount()
-                            } catch {
-                                Log.optional(error, "Error marking notifications as read")
-                            }
-                        }
                     }
                 } else {
                     Task { await cancelSubscriptions() }

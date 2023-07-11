@@ -20,7 +20,21 @@ import Combine
     
     /// The number of unread notifications that should be displayed as a badge
     @Published var badgeCount = 0
-    private(set) var oldNotificationCutoff: Date
+    
+    private let notificationCutoffKey = "PushNotificationService.notificationCutoff"
+    var notificationCutoff: Date {
+        get {
+            let unixTimestamp = userDefaults.double(forKey: notificationCutoffKey)
+            if unixTimestamp == 0 {
+                return .now
+            } else {
+                return Date(timeIntervalSince1970: unixTimestamp)
+            }
+        }
+        set {
+            userDefaults.set(newValue.timeIntervalSince1970, forKey: notificationCutoffKey)
+        }
+    }
     
     // MARK: - Private Properties
     
@@ -28,6 +42,7 @@ import Combine
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.router) private var router
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.userDefaults) private var userDefaults
     private let notificationServiceAddress = "wss://notifications.nos.social"
     private var notificationWatcher: NSFetchedResultsController<Event>?
     private var relaySubscription: RelaySubscription.ID?
@@ -37,18 +52,6 @@ import Combine
     }()
     
     // MARK: - Setup
-    
-    override init() {
-        oldNotificationCutoff = .now
-        super.init()
-        
-        do {
-            let oldestEvent = try persistenceController.viewContext.fetch(Event.oldest()).first
-            oldNotificationCutoff = oldestEvent?.receivedAt ?? .now
-        } catch {
-            Log.error("Error fetching oldest event \(error.localizedDescription)")
-        }
-    }
     
     func listen(for user: CurrentUser) async {
         if let relaySubscription {
@@ -68,8 +71,7 @@ import Combine
         
         currentAuthor = author
         notificationWatcher = NSFetchedResultsController(
-            // TODO: we shouldn't reprocess all notifications every time this is called
-            fetchRequest: Event.all(notifying: author, since: oldNotificationCutoff), 
+            fetchRequest: Event.all(notifying: author, since: notificationCutoff), 
             managedObjectContext: modelContext,
             sectionNameKeyPath: nil,
             cacheName: nil
@@ -166,7 +168,7 @@ import Combine
             return
         }
         
-        let viewModel: NotificationViewModel? = await modelContext.perform { 
+        let viewModel: NotificationViewModel? = await modelContext.perform { () -> NotificationViewModel? in
             guard let event = Event.find(by: eventID, context: self.modelContext),
                 let coreDataNotification = try? NosNotification.createIfNecessary(
                     from: eventID, 
@@ -177,9 +179,11 @@ import Combine
                 return nil
             }
             
+            try? self.modelContext.save()
+            
             // Don't alert for old notifications
             guard let notificationCreated = event.createdAt, 
-                notificationCreated > self.oldNotificationCutoff else { 
+                notificationCreated > self.notificationCutoff else { 
                 return nil
             }
             
@@ -187,7 +191,10 @@ import Combine
         }
         
         if let viewModel {
+            // Leave an hour of margin on the notificationcutoff to allow for events arriving slightly out of order.
+            notificationCutoff = viewModel.date.addingTimeInterval(-60 * 60)
             await viewModel.loadContent(in: self.modelContext)
+            
             do {
                 try await UNUserNotificationCenter.current().add(viewModel.notificationCenterRequest)
                 await updateBadgeCount()

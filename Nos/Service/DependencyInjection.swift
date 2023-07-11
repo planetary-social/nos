@@ -6,6 +6,7 @@
 //
 
 import Dependencies
+import Foundation
 
 /// We use the Dependencies package to enable testability for our global variables. It is modeled after SwiftUI's
 /// @Environment.
@@ -40,42 +41,53 @@ extension DependencyValues {
         get { self[PersistenceControllerKey.self] }
         set { self[PersistenceControllerKey.self] = newValue }
     }
+    
+    var userDefaults: UserDefaults {
+        get { self[UserDefaultsKey.self] }
+        set { self[UserDefaultsKey.self] = newValue }
+    }
 }
 
-private enum AnalyticsKey: DependencyKey {
+fileprivate enum AnalyticsKey: DependencyKey {
     static let liveValue = Analytics()
     static let testValue = Analytics(mock: true)
     static let previewValue = Analytics(mock: true)
 }
 
-private enum CurrentUserKey: DependencyKey {
+fileprivate enum CurrentUserKey: DependencyKey {
     static let liveValue = CurrentUser.shared
     static let testValue = CurrentUser.shared
     static let previewValue = CurrentUser.shared
 }
 
-private enum RouterKey: DependencyKey {
+fileprivate enum RouterKey: DependencyKey {
     static let liveValue = Router()
     static let testValue = Router()
     static let previewValue = Router()
 }
 
-private enum RelayServiceKey: DependencyKey {
+fileprivate enum RelayServiceKey: DependencyKey {
     static let liveValue = RelayService(persistenceController: PersistenceController.shared)
     static let testValue = RelayService(persistenceController: PersistenceController.shared)
     static let previewValue = RelayService(persistenceController: PersistenceController.shared)
 }
 
 @MainActor
-private enum PushNotificationServiceKey: DependencyKey {
+fileprivate enum PushNotificationServiceKey: DependencyKey {
     typealias Value = PushNotificationService
     static let liveValue = PushNotificationService()
     static let testValue = MockPushNotificationService()
     static let previewValue = MockPushNotificationService()
 }
 
-private enum PersistenceControllerKey: DependencyKey {
+fileprivate enum PersistenceControllerKey: DependencyKey {
     static let liveValue = PersistenceController.shared
     static let testValue = PersistenceController.preview
     static let previewValue = PersistenceController.preview
+}
+
+fileprivate enum UserDefaultsKey: DependencyKey {
+    static let liveValue = UserDefaults.standard
+    static let testValue = UserDefaults()
+    static let previewValue = UserDefaults()
 }
