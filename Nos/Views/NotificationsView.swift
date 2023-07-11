@@ -75,7 +75,7 @@ struct NotificationsView: View {
                 LazyVStack {
                     ForEach(events.unmuted) { event in
                         if let user {
-                            NotificationCard(note: event, user: user)
+                            NotificationCard(viewModel: NotificationViewModel(note: event, user: user))
                                 .readabilityPadding()
                         }
                     }

@@ -16,9 +16,10 @@ struct NotificationCard: View {
     
     @ObservedObject private var viewModel: NotificationViewModel
     @State private var subscriptionIDs = [RelaySubscription.ID]()
+    @State private var content: AttributedString?
     
-    init(note: Event, user: Author) {
-        self.viewModel = NotificationViewModel(note: note, user: user)
+    init(viewModel: NotificationViewModel) {
+        self.viewModel = viewModel
     }
     
     func showNote() {
@@ -43,7 +44,7 @@ struct NotificationCard: View {
                         Spacer()
                     }
                     HStack {
-                        let contentText = Text("\"" + (viewModel.content ?? "") + "\"")
+                        let contentText = Text("\"" + (content ?? "") + "\"")
                             .lineLimit(2)
                             .font(.body)
                             .foregroundColor(.primaryTxt)
@@ -96,7 +97,7 @@ struct NotificationCard: View {
             }
         }
         .task(priority: .userInitiated) {
-            await viewModel.loadContent(in: viewContext)
+            self.content = await viewModel.loadContent(in: viewContext)
         }
     }
 }
