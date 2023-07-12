@@ -12,7 +12,9 @@ import UIKit
 import CoreData
 import Combine
 
-/// A class that abstracts our interactions with our push notification server.
+/// A class that abstracts our interactions with push notification infrastructure and iOS permissions. It can handle
+/// UNUserNotificationCenterDelegate callbacks for receiving and displaying notifications, and it watches the db for
+/// all new events and creates `NosNotification`s and displays them when appropriate.
 @MainActor class PushNotificationService: 
     NSObject, ObservableObject, NSFetchedResultsControllerDelegate, UNUserNotificationCenterDelegate {
     

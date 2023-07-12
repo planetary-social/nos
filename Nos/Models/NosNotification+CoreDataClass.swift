@@ -9,6 +9,8 @@
 import Foundation
 import CoreData
 
+/// Represents a notification we will display to the user. We save records of them to the database in order to 
+/// de-duplicate them and keep track of whether they have been seen by the user.
 @objc(NosNotification)
 public class NosNotification: NSManagedObject {
 
