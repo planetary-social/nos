@@ -26,6 +26,7 @@ import Combine
         get {
             let unixTimestamp = userDefaults.double(forKey: notificationCutoffKey)
             if unixTimestamp == 0 {
+                userDefaults.set(Date.now.timeIntervalSince1970, forKey: notificationCutoffKey)
                 return .now
             } else {
                 return Date(timeIntervalSince1970: unixTimestamp)
@@ -43,7 +44,13 @@ import Combine
     @Dependency(\.router) private var router
     @Dependency(\.analytics) private var analytics
     @Dependency(\.userDefaults) private var userDefaults
+    
+    #if DEBUG
+    private let notificationServiceAddress = "wss://dev-notifications.nos.social"
+    #else
     private let notificationServiceAddress = "wss://notifications.nos.social"
+    #endif
+    
     private var notificationWatcher: NSFetchedResultsController<Event>?
     private var relaySubscription: RelaySubscription.ID?
     private var currentAuthor: Author? 
@@ -182,8 +189,8 @@ import Combine
             try? self.modelContext.save()
             
             // Don't alert for old notifications
-            guard let notificationCreated = event.createdAt, 
-                notificationCreated > self.notificationCutoff else { 
+            guard let eventCreated = event.createdAt, 
+                eventCreated > self.notificationCutoff else { 
                 return nil
             }
             

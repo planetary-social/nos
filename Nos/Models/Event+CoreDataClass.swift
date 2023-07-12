@@ -525,6 +525,9 @@ public class Event: NosManagedObject {
         
         // Meta data
         createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
+        if let createdAt, createdAt > .now {
+            self.createdAt = .now
+        }
         content = jsonEvent.content
         kind = jsonEvent.kind
         signature = jsonEvent.signature
