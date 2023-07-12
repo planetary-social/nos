@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed several bugs around muting users
 - Added the number of connected relays at the top right corner of the Home Feed.
 - Fixed a bug where expired messages could be published to relays that doesn't support them
 - Added support for push notifications.

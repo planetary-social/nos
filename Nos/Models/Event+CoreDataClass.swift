@@ -179,7 +179,7 @@ public class Event: NosManagedObject {
     @nonobjc public class func seen(on relay: Relay, before: Date, exceptFrom author: Author?) -> NSPredicate {
         let kind = EventKind.text.rawValue
         let sharedFormat = "kind = %i AND eventReferences.@count = 0 AND %@ IN seenOnRelays AND createdAt <= %@" +
-            " AND author.muted = 0"
+            " AND author.muted = NO"
         if let author {
             return NSPredicate(
                 format: "\(sharedFormat) AND NOT author = %@",
