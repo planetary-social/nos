@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1 (54)] - 2023-07-12Z
+## [0.1 (55)] - 2023-07-12Z
 
 - Fixed several bugs around muting users
 - Added the number of connected relays at the top right corner of the Home Feed.
