@@ -46,7 +46,7 @@ import Combine
     @Dependency(\.userDefaults) private var userDefaults
     
     #if DEBUG
-    private let notificationServiceAddress = "wss://dev-notifications.nos.social"
+    private let notificationServiceAddress = "ws://dev-notifications.nos.social"
     #else
     private let notificationServiceAddress = "wss://notifications.nos.social"
     #endif
