@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the number of connected relays at the top right corner of the Home Feed.
 - Fixed a bug where expired messages could be published to relays that doesn't support them
+- Added support for push notifications.
 
 ## [0.1 (53)] - 2023-07-03Z
 
