@@ -45,6 +45,8 @@
 "Localized.done" = "完成";
 "Localized.editProfile" = "编辑个人档案";
 "Localized.youNeedToEnterAPrivateKeyBeforePosting" = "你必须在设置中输入私钥才能发布帖子。";
+"Localized.relayDoesNotSupportNIP40" = "这个中继器不支持过期消息。请另选一个。";
+"Localized.anyRelaysSupportingNIP40" = "你没有支持过期消息的中继器。请添加一个并重试。";
 "Localized.nostrBuildHelp" = "使用 nostr.build来发布图片链接。";
 "Localized.noteDisappearsIn" = "笔记消失于";
 "Localized.attachMedia" = "附加媒体";
@@ -67,6 +69,16 @@
 "Localized.invalidURLError" = "请输入有效的 websocket 网址。";
 "Localized.saveRelayError" = "无法保存中继器";
 "Localized.ok" = "确定";
+"Localized.relay" = "中继器";
+"Localized.address" = "地址";
+"Localized.fetchedAt" = "已索取";
+"Localized.metadata" = "元数据";
+"Localized.description" = "描述";
+"Localized.supportedNIPs" = "支持的 NIP";
+"Localized.pubkey" = "公钥";
+"Localized.contact" = "联络";
+"Localized.software" = "软件";
+"Localized.version" = "版本";
 "Localized.profileTitle" = "个人档案";
 "Localized.profile" = "个人档案";
 "Localized.follow" = "关注";
@@ -98,6 +110,7 @@
 "Localized.copyLink" = "复制链接";
 "Localized.copyUserIdentifier" = "复制用户 ID (npub)";
 "Localized.deleteNote" = "删除";
+"Localized.deleteNoteConfirmation" = "这将要求你所有的中继器永久删除此笔记。你确定吗？";
 "Localized.mute" = "静音";
 "Localized.muteUser" = "静音用户";
 "Localized.muted" = "已静音";
@@ -110,7 +123,6 @@
 "Localized.reportConfirmation" = "这将发布公开可见的报告。你确定吗？";
 "Localized.note" = "笔记";
 "Localized.unmuteUser" = "取消静音";
-"Localized.extendedNetwork" = "扩展网络";
 "Localized.outsideNetwork" = "这个用户在你的网络之外。";
 "Localized.allMyRelays" = "我的所有中继器";
 "Localized.about" = "关于";
