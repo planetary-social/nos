@@ -588,6 +588,7 @@
 		C9E9D9C92A2E35440048AF0B /* SearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
 		C9EE3E5F2A0538B7008A7491 /* ExpirationTimeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationTimeButton.swift; sourceTree = "<group>"; };
 		C9EE3E622A053910008A7491 /* ExpirationTimeOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationTimeOption.swift; sourceTree = "<group>"; };
+		C9EF82932A5F29BE0022A1A7 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Generated.strings; sourceTree = "<group>"; };
 		C9F0BB6829A5039D000547FC /* Int+Bool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Bool.swift"; sourceTree = "<group>"; };
 		C9F0BB6A29A503D6000547FC /* PublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKey.swift; sourceTree = "<group>"; };
 		C9F0BB6E29A50437000547FC /* NostrConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrConstants.swift; sourceTree = "<group>"; };
@@ -1154,6 +1155,7 @@
 				fr,
 				"pt-BR",
 				de,
+				nl,
 			);
 			mainGroup = C9DEBFC5298941000078B43A;
 			packageReferences = (
@@ -1668,6 +1670,7 @@
 				C94FE5A729F8441200C27119 /* fr */,
 				C937786129FC6D1900568C27 /* pt-BR */,
 				5B48EC692A1406C4001EDA7F /* de */,
+				C9EF82932A5F29BE0022A1A7 /* nl */,
 			);
 			name = Generated.strings;
 			sourceTree = "<group>";
