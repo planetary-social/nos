@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed high cpu usage when the app is idle
+
 ## [0.1 (55)] - 2023-07-12Z
 
 - Fixed several bugs around muting users
