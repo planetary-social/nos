@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed high cpu usage when the app is idle
 - Added the number of connected relays at the top right corner of the Home Feed.
 - Fixed a bug where expired messages could be published to relays that doesn't support them
 
