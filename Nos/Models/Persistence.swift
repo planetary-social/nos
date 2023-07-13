@@ -7,9 +7,11 @@
 
 import CoreData
 import Logger
+import Dependencies
 
-struct PersistenceController {
-    static let shared = PersistenceController()
+class PersistenceController {
+    
+    @Dependency(\.currentUser) var currentUser
     
     /// Increment this to delete core data on update
     static let version = 3
@@ -33,8 +35,8 @@ struct PersistenceController {
         container.viewContext
     }
     
-    static var backgroundViewContext = {
-        PersistenceController.shared.newBackgroundContext()
+    lazy var backgroundViewContext = {
+        newBackgroundContext()
     }()
     
     var container: NSPersistentContainer
@@ -83,7 +85,7 @@ struct PersistenceController {
     
     func saveAll() throws {
         try viewContext.saveIfNeeded()
-        try Self.backgroundViewContext.saveIfNeeded()
+        try backgroundViewContext.saveIfNeeded()
     }
     
     static func clearCoreData(store storeURL: URL, in container: NSPersistentContainer) {
@@ -95,7 +97,7 @@ struct PersistenceController {
         }
     }
     
-    static func loadSampleData(context: NSManagedObjectContext) async {
+    func loadSampleData(context: NSManagedObjectContext) async {
         guard let sampleFile = Bundle.current.url(forResource: "sample_data", withExtension: "json") else {
             Log.error("Error: bad sample file location")
             return
@@ -123,7 +125,7 @@ struct PersistenceController {
         let authors = Author.all(context: context)
         let follows = try! context.fetch(Follow.followsRequest(sources: authors))
         
-        if let publicKey = CurrentUser.shared.publicKeyHex {
+        if let publicKey = currentUser.publicKeyHex {
             let currentAuthor = try! Author.findOrCreate(by: publicKey, context: context)
             currentAuthor.follows = Set(follows)
         }
@@ -145,7 +147,7 @@ struct PersistenceController {
         UserDefaults.standard.set(newVersion, forKey: Self.versionKey)
     }
     
-    static var cleanupTask: Task<Void, Error>?
+    var cleanupTask: Task<Void, Error>?
     
     // swiftlint:disable function_body_length 
     
@@ -155,7 +157,7 @@ struct PersistenceController {
     /// - delete authors outside the user's network 
     /// - delete any other models that are orphaned by the previous deletions
     /// - fix EventReferences whose referencedEvent was deleted by createing a stubbed Event
-    static func cleanupEntities(for currentUser: CurrentUser) {
+    func cleanupEntities() {
         // this function was written in a hurry and probably should be refactored and tested thorougly.
         guard cleanupTask == nil else {
             Log.info("Core Data cleanup task already running. Aborting.")
@@ -251,7 +253,7 @@ struct PersistenceController {
     }
     // swiftlint:enable function_body_length 
     
-    static func databaseStatistics(from context: NSManagedObjectContext) throws -> [String: Int] {
+    func databaseStatistics(from context: NSManagedObjectContext) throws -> [String: Int] {
         var statistics = [String: Int]()
         if let managedObjectModel = context.persistentStoreCoordinator?.managedObjectModel {
             let entitiesByName = managedObjectModel.entitiesByName

@@ -179,9 +179,10 @@ struct NewNoteView: View {
 
 struct NewPostView_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
+    static var relayService = previewData.relayService
     
     static var previews: some View {
         NewNoteView(isPresented: .constant(true))

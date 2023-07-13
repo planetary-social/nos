@@ -17,25 +17,27 @@ import UIKit
 /// in the form of `Filters` and `RelaySubscription`s.
 final class RelayService: ObservableObject {
     
-    private var persistenceController: PersistenceController
     private var subscriptions: RelaySubscriptionManager
     private var processSubscriptionQueueTimer: AsyncTimer?
     private var backgroundProcessTimer: AsyncTimer?
     private var eventProcessingLoop: Task<Void, Error>?
-    private var backgroundContext: NSManagedObjectContext
-    private var parseContext: NSManagedObjectContext
+    private lazy var backgroundContext: NSManagedObjectContext = {
+        persistenceController.newBackgroundContext()
+    }()
+    private lazy var parseContext: NSManagedObjectContext = {
+        let parseContext = persistenceController.newBackgroundContext()
+        parseContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+        return parseContext
+    }()
     // TODO: use structured concurrency for this
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .utility)
     private var parseQueue = ParseQueue()
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.persistenceController) private var persistenceController
     @MainActor @Dependency(\.currentUser) private var currentUser
     @Published var numberOfConnectedRelays: Int = 0
     
-    init(persistenceController: PersistenceController) {
-        self.persistenceController = persistenceController
-        self.backgroundContext = persistenceController.newBackgroundContext()
-        self.parseContext = persistenceController.newBackgroundContext()
-        parseContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+    init() {
         self.subscriptions = RelaySubscriptionManager()
         
         self.eventProcessingLoop = Task(priority: .userInitiated) { [weak self] in

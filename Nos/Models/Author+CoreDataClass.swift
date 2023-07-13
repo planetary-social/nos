@@ -8,9 +8,12 @@
 
 import Foundation
 import CoreData
+import Dependencies
 
 @objc(Author)
 public class Author: NosManagedObject {
+    
+    @Dependency(\.currentUser) var currentUser
     
     var npubString: String? {
         publicKey?.npub
@@ -135,28 +138,6 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
-    @MainActor @nonobjc class func inNetworkRequest(for author: Author? = nil) -> NSFetchRequest<Author> {
-        var author = author
-        if author == nil {
-            guard let currentUser = CurrentUser.shared.author else {
-                return emptyRequest()
-            }
-            author = currentUser
-        }
-        
-        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
-        fetchRequest.predicate = NSPredicate(
-            format: "ANY followers.source IN %@.follows.destination " +
-                "OR hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey OR " +
-                "hexadecimalPublicKey = %@.hexadecimalPublicKey",
-            author!,
-            author!,
-            author!
-        )
-        return fetchRequest
-    }
-    
     /// Fetches all the authors who are further than 2 hops away on the social graph for the given `author`.
     static func outOfNetwork(for author: Author) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
@@ -220,13 +201,13 @@ public class Author: NosManagedObject {
     
     func mute(context: NSManagedObjectContext) async {
         guard let mutedAuthorKey = hexadecimalPublicKey,
-            mutedAuthorKey != CurrentUser.shared.publicKeyHex else {
+            mutedAuthorKey != currentUser.publicKeyHex else {
             return
         }
         
         print("Muting \(mutedAuthorKey)")
         muted = true
-        await CurrentUser.shared.publishMuteList(keys: [mutedAuthorKey])
+        await currentUser.publishMuteList(keys: [mutedAuthorKey])
         deleteAllPosts(context: context)
     }
     
@@ -237,7 +218,7 @@ public class Author: NosManagedObject {
     
     func unmute(context: NSManagedObjectContext) async {
         guard let unmutedAuthorKey = hexadecimalPublicKey,
-            unmutedAuthorKey != CurrentUser.shared.publicKeyHex else {
+            unmutedAuthorKey != currentUser.publicKeyHex else {
             return
         }
         
@@ -255,7 +236,7 @@ public class Author: NosManagedObject {
             mutedList.removeAll(where: { $0 == unmutedAuthorKey })
 
             // Publish that modified list
-            await CurrentUser.shared.publishMuteList(keys: mutedList)
+            await currentUser.publishMuteList(keys: mutedList)
         }
     }
 }

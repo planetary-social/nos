@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Dependencies
 
 struct NotificationCard: View {
     
@@ -14,9 +15,9 @@ struct NotificationCard: View {
     private var actionText: AttributedString
     
     @Environment(\.managedObjectContext) private var viewContext
-    
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
+    @Dependency(\.persistenceController) private var persistenceController
     
     @State private var attributedContent: AttributedString
     
@@ -94,7 +95,7 @@ struct NotificationCard: View {
             .buttonStyle(CardButtonStyle())
             .onAppear {
                 Task(priority: .userInitiated) {
-                    let backgroundContext = PersistenceController.backgroundViewContext
+                    let backgroundContext = persistenceController.backgroundViewContext
                     await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
                         noteID: note.identifier,
                         using: relayService,
@@ -109,13 +110,13 @@ struct NotificationCard: View {
                 }
             }
             .task(priority: .userInitiated) {
-                let backgroundContext = PersistenceController.backgroundViewContext
+                let backgroundContext = persistenceController.backgroundViewContext
                 if let parsedAttributedContent = await Event.attributedContent(
                     noteID: note.identifier,
                     context: backgroundContext
                 ) {
                     withAnimation {
-                        attributedContent = parsedAttributedContent
+                        (self.attributedContent, _) = parsedAttributedContent
                     }
                 }
             }

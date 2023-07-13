@@ -134,13 +134,14 @@ extension View {
 
 struct ReportMenu_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var previews: some View {
         StatefulPreviewContainer(false) { binding in
             VStack {
                 Button("Report this") { 
                     binding.wrappedValue.toggle()
                 }
-                .reportMenu(binding, reportedObject: .note(PreviewData.imageNote))
+                .reportMenu(binding, reportedObject: .note(previewData.imageNote))
             }
         }
     }

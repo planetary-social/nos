@@ -1,5 +1,5 @@
 //
-//  CurrentUser.shared.swift
+//  CurrentUser.swift
 //  Nos
 //
 //  Created by Christopher Jorgensen on 2/21/23.
@@ -13,9 +13,8 @@ import Dependencies
 // swiftlint:disable type_body_length superfluous_disable_command
 class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
     
-    @MainActor static let shared = CurrentUser(persistenceController: PersistenceController.shared)
-    
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.persistenceController) private var persistenceController
     
     // TODO: it's time to cache this
     var keyPair: KeyPair? {
@@ -65,10 +64,10 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     }
     
     // swiftlint:disable implicitly_unwrapped_optional
-    @MainActor var viewContext: NSManagedObjectContext
-    var backgroundContext: NSManagedObjectContext
+    @MainActor var viewContext: NSManagedObjectContext!
+    var backgroundContext: NSManagedObjectContext!
     
-    @Published var socialGraph: SocialGraphCache
+    @Published var socialGraph: SocialGraphCache!
     
     var relayService: RelayService! {
         didSet {
@@ -93,11 +92,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     
     private var authorWatcher: NSFetchedResultsController<Author>?
 
-    @MainActor init(persistenceController: PersistenceController) {
+    @MainActor override init() {
+        super.init()
         self.viewContext = persistenceController.viewContext
         self.backgroundContext = persistenceController.newBackgroundContext()
         self.socialGraph = SocialGraphCache(userKey: nil, context: backgroundContext)
-        super.init()
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             Log.info("CurrentUser loaded a private key from keychain")
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
@@ -145,7 +144,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             
             Task(priority: .background) {
                 let dbStatistics = try await backgroundContext.perform {
-                    try PersistenceController.databaseStatistics(from: self.backgroundContext)
+                    try self.persistenceController.databaseStatistics(from: self.backgroundContext)
                 }
                 analytics.databaseStatistics(dbStatistics)
             }

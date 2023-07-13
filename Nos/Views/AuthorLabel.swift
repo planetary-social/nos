@@ -39,7 +39,8 @@ struct AuthorLabel: View {
 }
 
 struct AuthorLabel_Previews: PreviewProvider {
+    static var previewData = PreviewData()
     static var previews: some View {
-        AuthorLabel(author: PreviewData.previewAuthor)
+        AuthorLabel(author: previewData.previewAuthor)
     }
 }

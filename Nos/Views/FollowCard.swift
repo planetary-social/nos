@@ -19,6 +19,7 @@ struct FollowCard: View {
     var style = CardStyle.compact
 
     @EnvironmentObject private var router: Router
+    @EnvironmentObject private var currentUser: CurrentUser
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -40,7 +41,7 @@ struct FollowCard: View {
                                 .foregroundColor(Color.secondaryText)
                         }
                         Spacer()
-                        if let currentUser = CurrentUser.shared.author {
+                        if let currentUser = currentUser.author {
                             FollowButton(currentUserAuthor: currentUser, author: author)
                                 .padding(10)
                         }

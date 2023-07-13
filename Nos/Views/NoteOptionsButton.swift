@@ -99,7 +99,8 @@ struct NoteOptionsButton: View {
     
     func copyMessage() {
         Task {
-            if let attrString = await Event.attributedContent(
+            // TODO: put links back in
+            if let (attrString, _) = await Event.attributedContent(
                 noteID: note.identifier,
                 context: viewContext
             ) {
@@ -116,17 +117,11 @@ struct NoteOptionsButton: View {
 }
 
 struct NoteOptionsView_Previews: PreviewProvider {
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
-
-    static var currentUser: CurrentUser = {
-        let currentUser = CurrentUser(persistenceController: persistenceController)
-        currentUser.viewContext = previewContext
-        currentUser.relayService = relayService
-        Task { await currentUser.setKeyPair(KeyFixture.keyPair) }
-        return currentUser
-    }()
+    static var relayService = previewData.relayService
+    static var currentUser = previewData.currentUser
     
     static var shortNote: Event {
         let note = Event(context: previewContext)

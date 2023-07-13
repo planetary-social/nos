@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import CoreData
+import Dependencies
 
 /// This view displays the a button with the information we have for a note suitable for being used in a list
 /// or grid.
@@ -26,9 +27,9 @@ struct NoteButton: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
+    @Dependency(\.persistenceController) private var persistenceController
     
     @State private var subscriptionIDs = [RelaySubscription.ID]()
-    let backgroundContext = PersistenceController.backgroundViewContext
 
     init(
         note: Event, 
@@ -83,7 +84,7 @@ struct NoteButton: View {
                             await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
                                 noteID: note.identifier,
                                 using: relayService,
-                                in: backgroundContext
+                                in: persistenceController.backgroundViewContext
                             )
                         }
                     }
@@ -132,16 +133,17 @@ struct NoteButton: View {
 
 struct NoteButton_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var previews: some View {
         VStack {
-            NoteButton(note: PreviewData.repost, hideOutOfNetwork: false)
-            NoteButton(note: PreviewData.shortNote)
-            NoteButton(note: PreviewData.shortNote, style: .golden)
-            NoteButton(note: PreviewData.longNote)
+            NoteButton(note: previewData.repost, hideOutOfNetwork: false)
+            NoteButton(note: previewData.shortNote)
+            NoteButton(note: previewData.shortNote, style: .golden)
+            NoteButton(note: previewData.longNote)
         }
-        .environment(\.managedObjectContext, PreviewData.previewContext)
-        .environmentObject(PreviewData.relayService)
-        .environmentObject(PreviewData.router)
-        .environmentObject(PreviewData.currentUser)
+        .environment(\.managedObjectContext, previewData.previewContext)
+        .environmentObject(previewData.relayService)
+        .environmentObject(previewData.router)
+        .environmentObject(previewData.currentUser)
     }
 }

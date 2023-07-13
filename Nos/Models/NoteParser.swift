@@ -20,17 +20,18 @@ enum NoteParser {
 
     /// Parses the content and tags stored in a note and returns an attributed text that can be used for displaying
     /// the note in the UI.
-    static func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> AttributedString {
+    static func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> (AttributedString, [URL]) {
         var result = replaceTaggedNostrEntities(in: content, tags: tags, context: context)
         result = replaceNostrEntities(in: result)
-        let linkedString = (try? result.findAndReplaceUnformattedLinks(in: result)) ?? result
+        let (cleanedString, urls) = String.extractAndRemoveURLs(from: result)
+//        let linkedString = (try? result.findAndReplaceUnformattedLinks(in: result)) ?? result
         do {
-            return try AttributedString(
-                markdown: linkedString,
+            return (try AttributedString(
+                markdown: cleanedString,
                 options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-            )
+            ), urls)
         } catch {
-            return AttributedString(stringLiteral: content)
+            return (AttributedString(stringLiteral: content), urls)
         }
     }
 

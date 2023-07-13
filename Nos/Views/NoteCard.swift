@@ -9,6 +9,7 @@
 import SwiftUI
 import Logger
 import CoreData
+import Dependencies
 
 /// This view displays the information we have for an message suitable for being used in a list or grid.
 ///
@@ -28,7 +29,7 @@ struct NoteCard: View {
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var currentUser: CurrentUser
-    let backgroundContext = PersistenceController.backgroundViewContext
+    @Dependency(\.persistenceController) var persistenceController
 
     private var showFullMessage: Bool
     private let showReplyCount: Bool
@@ -173,7 +174,7 @@ struct NoteCard: View {
                 await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
                     noteID: note.identifier,
                     using: relayService,
-                    in: backgroundContext
+                    in: persistenceController.backgroundViewContext
                 )
             }
         }
@@ -188,7 +189,7 @@ struct NoteCard: View {
             if showReplyCount {
                 let (replyCount, replyAvatarURLs) = await Event.replyMetadata(
                     for: note.identifier, 
-                    context: backgroundContext
+                    context: persistenceController.backgroundViewContext
                 )
                 self.replyCount = replyCount
                 self.replyAvatarURLs = replyAvatarURLs
@@ -280,24 +281,25 @@ struct NoteCard: View {
 
 struct NoteCard_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var previews: some View {
         Group {
             ScrollView {
                 VStack {
-                    NoteCard(note: PreviewData.longFormNote, hideOutOfNetwork: false)
-                    NoteCard(note: PreviewData.shortNote, hideOutOfNetwork: false)
-                    NoteCard(note: PreviewData.longNote, hideOutOfNetwork: false)
-                    NoteCard(note: PreviewData.imageNote, hideOutOfNetwork: false)
-                    NoteCard(note: PreviewData.verticalImageNote, hideOutOfNetwork: false)
-                    NoteCard(note: PreviewData.veryWideImageNote, hideOutOfNetwork: false)
-                    NoteCard(note: PreviewData.imageNote, style: .golden, hideOutOfNetwork: false)
+                    NoteCard(note: previewData.longFormNote, hideOutOfNetwork: false)
+                    NoteCard(note: previewData.shortNote, hideOutOfNetwork: false)
+                    NoteCard(note: previewData.longNote, hideOutOfNetwork: false)
+                    NoteCard(note: previewData.imageNote, hideOutOfNetwork: false)
+                    NoteCard(note: previewData.verticalImageNote, hideOutOfNetwork: false)
+                    NoteCard(note: previewData.veryWideImageNote, hideOutOfNetwork: false)
+                    NoteCard(note: previewData.imageNote, style: .golden, hideOutOfNetwork: false)
                 }
             }
         }
-        .environment(\.managedObjectContext, PreviewData.emptyPreviewContext)
-        .environmentObject(PreviewData.emptyRelayService)
-        .environmentObject(PreviewData.router)
-        .environmentObject(PreviewData.currentUser)
+        .environment(\.managedObjectContext, previewData.previewContext)
+        .environmentObject(previewData.relayService)
+        .environmentObject(previewData.router)
+        .environmentObject(previewData.currentUser)
         .padding()
         .background(Color.appBg)
     }

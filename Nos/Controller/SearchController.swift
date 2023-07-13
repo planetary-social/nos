@@ -21,12 +21,14 @@ class SearchController: ObservableObject {
     }
     
     @Dependency(\.relayService) private var relayService
+    @Dependency(\.persistenceController) private var persistenceController
     private var cancellables = [AnyCancellable]()
     private var searchSubscriptionID: RelaySubscription.ID?
-    private var context: NSManagedObjectContext
+    private lazy var context: NSManagedObjectContext = {
+        return persistenceController.viewContext
+    }()
     
-    init(context: NSManagedObjectContext = PersistenceController.shared.viewContext) {
-        self.context = context
+    init() {
         $query
             .combineLatest(
                 // listen for new objects, as this is how we get search results from relays

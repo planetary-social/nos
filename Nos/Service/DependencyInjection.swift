@@ -30,6 +30,11 @@ extension DependencyValues {
         get { self[RelayServiceKey.self] }
         set { self[RelayServiceKey.self] = newValue }
     }
+    
+    var persistenceController: PersistenceController {
+        get { self[PersistenceControllerKey.self] }
+        set { self[PersistenceControllerKey.self] = newValue }
+    }
 }
 
 private enum AnalyticsKey: DependencyKey {
@@ -38,10 +43,10 @@ private enum AnalyticsKey: DependencyKey {
     static let previewValue = Analytics(mock: true)
 }
 
-private enum CurrentUserKey: DependencyKey {
-    static let liveValue = CurrentUser.shared
-    static let testValue = CurrentUser.shared
-    static let previewValue = CurrentUser.shared
+@MainActor private enum CurrentUserKey: DependencyKey {
+    static let liveValue = CurrentUser()
+    static let testValue = CurrentUser()
+    static let previewValue = CurrentUser()
 }
 
 private enum RouterKey: DependencyKey {
@@ -51,7 +56,13 @@ private enum RouterKey: DependencyKey {
 }
 
 private enum RelayServiceKey: DependencyKey {
-    static let liveValue = RelayService(persistenceController: PersistenceController.shared)
-    static let testValue = RelayService(persistenceController: PersistenceController.shared)
-    static let previewValue = RelayService(persistenceController: PersistenceController.shared)
+    static let liveValue = RelayService()
+    static let testValue = RelayService()
+    static let previewValue = RelayService()
+}
+
+fileprivate enum PersistenceControllerKey: DependencyKey {
+    static let liveValue = PersistenceController()
+    static let testValue = PersistenceController(inMemory: true)
+    static let previewValue = PersistenceController(inMemory: true)
 }
