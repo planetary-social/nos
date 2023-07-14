@@ -12,12 +12,14 @@ import CoreData
 
 struct InjectPreviewData: ViewModifier {
     
-    var previewData: PreviewData
+    @State var previewData: PreviewData
     
     func body(content: Content) -> some View {
         content
-            .environmentObject(previewData.router)
             .environment(\.managedObjectContext, previewData.persistenceController.viewContext)
+            .environmentObject(previewData.router)
+            .environmentObject(previewData.relayService)
+            .environmentObject(previewData.currentUser)
     }
 }
 
@@ -113,21 +115,6 @@ struct PreviewData {
         return note
     }()
     
-    lazy var doubleImageNote: Event = {
-        let note = Event(context: previewContext)
-        note.identifier = "2"
-        note.kind = EventKind.text.rawValue
-        note.content = """
-        Hello, world!
-        https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg"
-        https://nostr.build/i/nostr.build_1b958a2af7a2c3fcb2758dd5743912e697ba34d3a6199bfb1300fa6be1dc62ee.jpeg
-        """
-        note.author = previewAuthor
-        note.createdAt = .now
-        try! previewContext.save()
-        return note
-    }()
-    
     lazy var verticalImageNote: Event = {
         let note = Event(context: previewContext)
         note.identifier = "3"
@@ -176,6 +163,51 @@ struct PreviewData {
         And it has a link to [nos.social](https://nos.social).
         """
         note.author = previewAuthor
+        try! previewContext.save()
+        return note
+    }()
+    
+    lazy var doubleImageNote: Event = {
+        let note = Event(context: previewContext)
+        note.identifier = "7"
+        note.kind = EventKind.text.rawValue
+        note.content = """
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore 
+        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+        
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg
+        https://nostr.build/i/nostr.build_1b958a2af7a2c3fcb2758dd5743912e697ba34d3a6199bfb1300fa6be1dc62ee.jpeg
+        """
+        note.author = previewAuthor
+        note.createdAt = .now
+        try! previewContext.save()
+        return note
+    }()
+    
+    lazy var linkNote: Event = {
+        let note = Event(context: previewContext)
+        note.identifier = "8"
+        note.kind = EventKind.text.rawValue
+        note.content = """
+        Wsg fam! 🤙🫂
+        Free sats await at the end, please read carefully ✨️
+        
+        We are officially out of the top 40 on nostr:npub1yfg0d955c2jrj2080ew7pa4xrtj7x7s7umt28wh0zurwmxgpyj9shwv6vg
+        Helluva drop from #7
+        
+        I need your help! 🥺
+        
+        Please, go boost my songs (as little as 1 sat) 💜
+        
+        https://www.wavlake.com/chu-t
+        
+        I'll give 100 sats to everyone who boosts this post
+        
+        Love y'all 🫶
+        """
+        note.author = previewAuthor
+        note.createdAt = .now
         try! previewContext.save()
         return note
     }()

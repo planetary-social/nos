@@ -140,10 +140,8 @@ struct NoteButton_Previews: PreviewProvider {
             NoteButton(note: previewData.shortNote)
             NoteButton(note: previewData.shortNote, style: .golden)
             NoteButton(note: previewData.longNote)
+            NoteButton(note: previewData.doubleImageNote)
         }
-        .environment(\.managedObjectContext, previewData.previewContext)
-        .environmentObject(previewData.relayService)
-        .environmentObject(previewData.router)
-        .environmentObject(previewData.currentUser)
+        .inject(previewData: previewData)
     }
 }

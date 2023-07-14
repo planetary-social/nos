@@ -10,28 +10,7 @@ import SwiftUI
 import Logger
 import Dependencies
 
-import SwiftUI
-import LinkPresentation
 
-struct LinkPreview: UIViewRepresentable {
-    let url: URL
-    
-    func makeUIView(context: Context) -> LPLinkView {
-        let metadataProvider = LPMetadataProvider()
-        let linkView = LPLinkView(url: url)
-        
-        metadataProvider.startFetchingMetadata(for: url) { metadata, _ in
-            if let metadata = metadata {
-                DispatchQueue.main.async {
-                    linkView.metadata = metadata
-                }
-            }
-        }
-        return linkView
-    }
-    
-    func updateUIView(_ uiView: LPLinkView, context: Context) {}
-}
 
 /// A view that displays the text of a note (kind: 1 Nostr event) and truncates it with a "Read more" button if
 /// it is too long
@@ -139,11 +118,13 @@ struct CompactNoteView: View {
             }
             if note.kind == EventKind.text.rawValue, !contentLinks.isEmpty {
                 VStack {
-                    ForEach(contentLinks) { url in
+                    ForEach(contentLinks, id: \.self.absoluteURL) { url in
                         LinkPreview(url: url)
+                            .fixedSize(horizontal: false, vertical: true)
                             .padding(.horizontal, 15)
                     }
                 }
+                .padding(.bottom, 15)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -159,10 +140,6 @@ struct CompactNoteView: View {
             }
         }
     }
-}
-
-extension URL: Identifiable {
-    public var id: String { UUID().uuidString }
 }
 
 fileprivate struct IntrinsicSizePreferenceKey: PreferenceKey {
@@ -181,6 +158,7 @@ struct CompactNoteView_Previews: PreviewProvider {
     
     static var previews: some View {
         Group {
+            CompactNoteView(note: previewData.linkNote)
             CompactNoteView(note: previewData.shortNote)
             CompactNoteView(note: previewData.longNote)
             CompactNoteView(note: previewData.longFormNote)

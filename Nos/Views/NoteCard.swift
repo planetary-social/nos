@@ -293,6 +293,7 @@ struct NoteCard_Previews: PreviewProvider {
                     NoteCard(note: previewData.verticalImageNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.veryWideImageNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.imageNote, style: .golden, hideOutOfNetwork: false)
+                    NoteCard(note: previewData.linkNote, hideOutOfNetwork: false)
                 }
             }
         }
