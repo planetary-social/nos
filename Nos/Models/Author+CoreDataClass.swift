@@ -238,17 +238,7 @@ public class Author: NosManagedObject {
         print("Muting \(mutedAuthorKey)")
         muted = true
 
-        let request = currentAuthor.allPostsRequest(eventKind: .mute)
-
-        let results = try context.fetch(request)
-
-        var mutedList: [String]
-
-        if let mostRecentMuteList = results.first, let pTags = mostRecentMuteList.allTags as? [[String]] {
-            mutedList = pTags.map { $0[1] }
-        } else {
-            mutedList = []
-        }
+        var mutedList = try await loadMuteList(context: context)
 
         mutedList.append(mutedAuthorKey)
 
@@ -275,6 +265,19 @@ public class Author: NosManagedObject {
         relays.remove(relay)
         print("Removed \(relay.address ?? "") from \(hexadecimalPublicKey ?? "")")
     }
+
+    func loadMuteList(context: NSManagedObjectContext) async throws -> [String] {
+        guard let currentAuthor = await CurrentUser.shared.author else {
+            throw CurrentUserError.authorNotFound
+        }
+        let request = currentAuthor.allPostsRequest(eventKind: .mute)
+        let results = try context.fetch(request)
+        if let mostRecentMuteList = results.first, let pTags = mostRecentMuteList.allTags as? [[String]] {
+            return pTags.map { $0[1] }
+        } else {
+            return []
+        }
+    }
     
     func unmute(context: NSManagedObjectContext) async throws {
         guard let unmutedAuthorKey = hexadecimalPublicKey, let currentAuthor = await CurrentUser.shared.author,
@@ -284,21 +287,8 @@ public class Author: NosManagedObject {
         
         print("Un-muting \(unmutedAuthorKey)")
         muted = false
-        
-        let request = currentAuthor.allPostsRequest(eventKind: .mute)
 
-        let results = try context.fetch(request)
-
-        var mutedList: [String]
-
-        if let mostRecentMuteList = results.first,
-            let pTags = mostRecentMuteList.allTags as? [[String]] {
-
-            // Get the current list of muted keys
-            mutedList = pTags.map { $0[1] }
-        } else {
-            mutedList = []
-        }
+        var mutedList = try await loadMuteList(context: context)
 
         mutedList.removeAll(where: { $0 == unmutedAuthorKey })
 
