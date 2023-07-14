@@ -19,27 +19,27 @@ public class Relay: NosManagedObject {
 
     static var recommended: [String] {
         [
-        "wss://relay.nostr.band/",
-        "wss://relay.damus.io/",
-        "wss://e.nos.lol/",
+        "wss://relay.nostr.band",
+        "wss://relay.damus.io",
+        "wss://e.nos.lol",
         "wss://purplepag.es",
         ]
     }
     
     static var allKnown: [String] {
         [
-        "wss://eden.nostr.land/",
-        "wss://nostr.fmt.wiz.biz/",
-        "wss://relay.damus.io/",
-        "wss://nostr-pub.wellorder.net/",
-        "wss://relay.nostr.info/",
-        "wss://offchain.pub/",
-        "wss://nos.lol/",
-        "wss://brb.io/",
-        "wss://relay.snort.social/",
-        "wss://relay.current.fyi/",
-        "wss://nostr.relayer.se/",
-        "wss://e.nos.lol/",
+        "wss://eden.nostr.land",
+        "wss://nostr.fmt.wiz.biz",
+        "wss://relay.damus.io",
+        "wss://nostr-pub.wellorder.net",
+        "wss://relay.nostr.info",
+        "wss://offchain.pub",
+        "wss://nos.lol",
+        "wss://brb.io",
+        "wss://relay.snort.social",
+        "wss://relay.current.fyi",
+        "wss://nostr.relayer.se",
+        "wss://e.nos.lol",
         "wss://purplepag.es",
         ]
     }
@@ -142,7 +142,7 @@ public class Relay: NosManagedObject {
         }
         
         self.init(context: context)
-        self.address = addressURL.absoluteString
+        self.address = addressURL.strippingTrailingSlash()
         self.createdAt = Date.now
         if let author {
             authors.insert(author)
