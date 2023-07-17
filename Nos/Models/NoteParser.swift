@@ -18,12 +18,12 @@ enum NoteParser {
         cleanLinks(in: attributedText)
     }
 
-    /// Parses the content and tags stored in a note and returns an attributed text that can be used for displaying
-    /// the note in the UI.
+    /// Parses the content and tags stored in a note and returns an attributed text and list of URLs that can be used 
+    /// to display the note in the UI.
     static func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> (AttributedString, [URL]) {
         var result = replaceTaggedNostrEntities(in: content, tags: tags, context: context)
         result = replaceNostrEntities(in: result)
-        let (cleanedString, urls) = String.extractAndRemoveURLs(from: result)
+        let (cleanedString, urls) = result.extractURLs()
         do {
             return (try AttributedString(
                 markdown: cleanedString,

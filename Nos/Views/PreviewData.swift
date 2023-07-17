@@ -12,7 +12,11 @@ import CoreData
 
 // swiftlint:disable line_length
 
-/// Some test data that can be used in SwiftUI Previews
+/// A set of test data and an environment that can be used to display Core Data objects in SwiftUI Previews. This 
+/// includes an in-memory persistent store and mocked versions of other singletons like `Router` and `RelayService`.
+/// 
+/// Instantiate an instance as a `static var` in a preview
+/// and inject it into the view using the `inject(previewData:)` view modifier.
 struct PreviewData {
     
     // MARK: - Environment

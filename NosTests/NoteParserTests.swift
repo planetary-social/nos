@@ -348,20 +348,7 @@ final class NoteNoteParserTests: XCTestCase {
         XCTAssertEqual(links.count, 0)
     }
     
-    func testImageNote() throws {
-        let string = "Hello, world!https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg"
-        let expectedString = "Hello, world!"
-        let expectedURLs = [
-            URL(string: "https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg")!
-        ]
-
-        // Act
-        let (actualString, actualURLs) = String.extractAndRemoveURLs(from: string)
-        XCTAssertEqual(actualString, expectedString)
-        XCTAssertEqual(actualURLs, expectedURLs)
-    }
-    
-    func testExtractAndRemoveURLs() throws {
+    func testExtractURLsFromNote() throws {
         // swiftlint:disable line_length
         let string = "Classifieds incoming... 👀\n\nhttps://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg"
         // swiftlint:enable line_length
@@ -371,7 +358,20 @@ final class NoteNoteParserTests: XCTestCase {
         ]
 
         // Act
-        let (actualString, actualURLs) = String.extractAndRemoveURLs(from: string)
+        let (actualString, actualURLs) = string.extractURLs()
+        XCTAssertEqual(actualString, expectedString)
+        XCTAssertEqual(actualURLs, expectedURLs)
+    }
+    
+    func testExtractURLsFromImageNote() throws {
+        let string = "Hello, world!https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg"
+        let expectedString = "Hello, world!"
+        let expectedURLs = [
+            URL(string: "https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg")!
+        ]
+
+        // Act
+        let (actualString, actualURLs) = string.extractURLs()
         XCTAssertEqual(actualString, expectedString)
         XCTAssertEqual(actualURLs, expectedURLs)
     }
