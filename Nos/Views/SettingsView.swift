@@ -119,9 +119,15 @@ struct SettingsView: View {
                 #if DEBUG
                 Text(Localized.sampleDataInstructions.string)
                     .foregroundColor(.primaryTxt)
-
                 Button(Localized.loadSampleData.string) {
                     Task { await persistenceController.loadSampleData(context: viewContext) }
+                }
+                if let author = currentUser.author {
+                    NavigationLink {
+                        PublishedEventsView(author: author)
+                    } label: {
+                        Localized.allPublishedEvents.view
+                    }
                 }
                 #endif
             } header: {

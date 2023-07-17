@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreData
 import Dependencies
+import SwiftUINavigation
 
 struct ProfileView: View {
     
@@ -23,6 +24,8 @@ struct ProfileView: View {
     @State private var showingReportMenu = false
     
     @State private var subscriptionIds: [String] = []
+
+    @State private var alert: AlertState<Never>?
     
     @FetchRequest
     private var events: FetchedResults<Event>
@@ -97,6 +100,9 @@ struct ProfileView: View {
         .navigationDestination(for: ReplyToNavigationDestination.self) { destination in 
             RepliesView(note: destination.note, showKeyboard: true)
         }
+        .navigationDestination(for: MutesDestination.self) { _ in
+            MutesView()
+        }
         .navigationBarItems(
             trailing:
                 Group {
@@ -126,17 +132,41 @@ struct ProfileView: View {
                                         Text(Localized.editProfile.string)
                                     }
                                 )
+                                Button(
+                                    action: {
+                                        router.push(MutesDestination())
+                                    },
+                                    label: {
+                                        Text(Localized.mutedUsers.string)
+                                    }
+                                )
                             } else {
                                 if author.muted {
                                     Button(Localized.unmuteUser.string) {
                                         Task {
-                                            await router.viewedAuthor?.unmute(context: viewContext)
+                                            do {
+                                                try await router.viewedAuthor?.unmute(context: viewContext)
+                                            } catch {
+                                                alert = AlertState(title: {
+                                                    TextState(Localized.error.string)
+                                                }, message: {
+                                                    TextState(error.localizedDescription)
+                                                })
+                                            }
                                         }
                                     }
                                 } else {
                                     Button(Localized.mute.string) {
                                         Task {
-                                            await router.viewedAuthor?.mute(context: viewContext)
+                                            do {
+                                                try await router.viewedAuthor?.mute(context: viewContext)
+                                            } catch {
+                                                alert = AlertState(title: {
+                                                    TextState(Localized.error.string)
+                                                }, message: {
+                                                    TextState(error.localizedDescription)
+                                                })
+                                            }
                                         }
                                     }
                                 }
@@ -153,6 +183,7 @@ struct ProfileView: View {
         .task(priority: .userInitiated) {
             refreshProfileFeed()
         }
+        .alert(unwrapping: $alert)
         .onAppear {
             router.viewedAuthor = author
             analytics.showedProfile()

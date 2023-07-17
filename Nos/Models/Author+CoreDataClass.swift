@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import Dependencies
+import Logger
 
 @objc(Author)
 public class Author: NosManagedObject {
@@ -106,6 +107,7 @@ public class Author: NosManagedObject {
     @nonobjc public class func allAuthorsRequest(muted: Bool) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.predicate = NSPredicate(format: "muted == %i", muted)
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
         return fetchRequest
     }
 
@@ -123,6 +125,27 @@ public class Author: NosManagedObject {
             EventKind.text.rawValue, 
             EventKind.repost.rawValue, 
             EventKind.longFormContent.rawValue, 
+            self
+        )
+        return fetchRequest
+    }
+
+    @nonobjc func allPostsRequest(eventKind: EventKind) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "kind = %i AND author = %@",
+            eventKind.rawValue,
+            self
+        )
+        return fetchRequest
+    }
+
+    @nonobjc func allEventsRequest() -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "author = %@",
             self
         )
         return fetchRequest
@@ -145,7 +168,7 @@ public class Author: NosManagedObject {
         fetchRequest.predicate = NSPredicate(
             format: "NOT (ANY followers.source IN %@.follows.destination) " +
                 "AND NOT (hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey) AND " +
-                "hexadecimalPublicKey != %@.hexadecimalPublicKey",
+                "hexadecimalPublicKey != %@.hexadecimalPublicKey AND muted = 0",
             author,
             author,
             author
@@ -187,56 +210,77 @@ public class Author: NosManagedObject {
         print("Adding \(relay.address ?? "") to \(hexadecimalPublicKey ?? "")")
     }
     
-    func deleteAllPosts(context: NSManagedObjectContext) {
-        let deleteRequest = Event.deleteAllPosts(by: self)
-        
-        do {
-            try context.execute(deleteRequest)
-        } catch let error as NSError {
-            print("Failed to delete texts from \(hexadecimalPublicKey ?? ""). Error: \(error.description)")
-        }
-        
-        try? context.save()
-    }
-    
-    func mute(context: NSManagedObjectContext) async {
-        guard let mutedAuthorKey = hexadecimalPublicKey,
-            mutedAuthorKey != currentUser.publicKeyHex else {
+    func mute(context: NSManagedObjectContext) async throws {
+        guard let mutedAuthorKey = hexadecimalPublicKey, let currentAuthor = await currentUser.author,
+            mutedAuthorKey != currentAuthor.hexadecimalPublicKey else {
             return
         }
         
         print("Muting \(mutedAuthorKey)")
         muted = true
-        await currentUser.publishMuteList(keys: [mutedAuthorKey])
-        deleteAllPosts(context: context)
+
+        var mutedList = try await loadMuteList(context: context)
+
+        mutedList.append(mutedAuthorKey)
+
+        try await context.perform {
+            do {
+                let deleteRequest = Event.deleteAllPosts(by: self)
+                deleteRequest.resultType = .resultTypeObjectIDs
+                try context.execute(deleteRequest)
+                context.refreshAllObjects()
+            } catch {
+                Log.error(error.localizedDescription)
+            }
+
+            if let author = try Author.find(by: mutedAuthorKey, context: context) {
+                author.muted = true
+            }
+            try context.save()
+        }
+        // Publish the modified list
+        await currentUser.publishMuteList(keys: Array(Set(mutedList)))
     }
     
     func remove(relay: Relay) {
         relays.remove(relay)
         print("Removed \(relay.address ?? "") from \(hexadecimalPublicKey ?? "")")
     }
+
+    func loadMuteList(context: NSManagedObjectContext) async throws -> [String] {
+        guard let currentAuthor = await currentUser.author else {
+            throw CurrentUserError.authorNotFound
+        }
+        let request = currentAuthor.allPostsRequest(eventKind: .mute)
+        let results = try context.fetch(request)
+        if let mostRecentMuteList = results.first, let pTags = mostRecentMuteList.allTags as? [[String]] {
+            return pTags.map { $0[1] }
+        } else {
+            return []
+        }
+    }
     
-    func unmute(context: NSManagedObjectContext) async {
-        guard let unmutedAuthorKey = hexadecimalPublicKey,
-            unmutedAuthorKey != currentUser.publicKeyHex else {
+    func unmute(context: NSManagedObjectContext) async throws {
+        guard let unmutedAuthorKey = hexadecimalPublicKey, let currentAuthor = await currentUser.author,
+            unmutedAuthorKey != currentAuthor.hexadecimalPublicKey else {
             return
         }
         
         print("Un-muting \(unmutedAuthorKey)")
         muted = false
-        
-        let request = Event.allPostsRequest(.mute)
-        
-        if let results = try? context.fetch(request),
-            let mostRecentMuteList = results.first,
-            let pTags = mostRecentMuteList.allTags as? [[String]] {
 
-            // Get the current list of muted keys
-            var mutedList = pTags.map { $0[1] }
-            mutedList.removeAll(where: { $0 == unmutedAuthorKey })
+        var mutedList = try await loadMuteList(context: context)
 
-            // Publish that modified list
-            await currentUser.publishMuteList(keys: mutedList)
+        mutedList.removeAll(where: { $0 == unmutedAuthorKey })
+
+        try await context.perform {
+            if let author = try Author.find(by: unmutedAuthorKey, context: context) {
+                author.muted = false
+            }
+            try context.save()
         }
+
+        // Publish the modified list
+        await currentUser.publishMuteList(keys: Array(Set(mutedList)))
     }
 }

@@ -7,14 +7,16 @@
 
 import CoreData
 import XCTest
+import Dependencies
 
 final class NoteNoteParserTests: XCTestCase {
 
+    @Dependency(\.persistenceController) private var persistenceController
     var context: NSManagedObjectContext?
 
     override func setUp() async throws {
         try await super.setUp()
-        let managedObjectModel = PersistenceController.shared.container.managedObjectModel
+        let managedObjectModel = persistenceController.container.managedObjectModel
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
         do {
             try coordinator.addPersistentStore(ofType: NSInMemoryStoreType, configurationName: nil, at: nil)
@@ -355,11 +357,11 @@ final class NoteNoteParserTests: XCTestCase {
         XCTAssertEqual(actualURLs, expectedURLs)
     }
     
-    func testGPTCode() throws {
+    func testExtractAndRemoveURLs() throws {
         // swiftlint:disable line_length
         let string = "Classifieds incoming... 👀\n\nhttps://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg"
         // swiftlint:enable line_length
-        let expectedString = "Classifieds incoming... 👀\n\n"
+        let expectedString = "Classifieds incoming... 👀"
         let expectedURLs = [URL(string: "https://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg")!]
 
         // Act
