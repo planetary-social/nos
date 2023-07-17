@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue where you could have duplicate relays: one with a trailing slash and one without.
+
 ## [0.1 (56)] - 2023-07-13Z
 
 - Fixed high cpu usage when the app is idle

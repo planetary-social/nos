@@ -10,6 +10,17 @@ import CoreData
 import Logger
 import Dependencies
 
+enum CurrentUserError: Error {
+    case authorNotFound
+
+    var description: String? {
+        switch self {
+        case .authorNotFound:
+            return "Current user's author not found"
+        }
+    }
+}
+
 // swiftlint:disable type_body_length superfluous_disable_command
 class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
     

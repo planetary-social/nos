@@ -21,7 +21,6 @@ struct ProfileView: View {
     
     @State private var showingOptions = false
     @State private var showingReportMenu = false
-    @State private var showingMutedAuthors = false
     
     @State private var subscriptionIds: [String] = []
 
