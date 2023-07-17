@@ -25,7 +25,7 @@ class SearchController: ObservableObject {
     private var cancellables = [AnyCancellable]()
     private var searchSubscriptionID: RelaySubscription.ID?
     private lazy var context: NSManagedObjectContext = {
-        return persistenceController.viewContext
+        persistenceController.viewContext
     }()
     
     init() {

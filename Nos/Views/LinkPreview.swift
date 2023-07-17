@@ -8,6 +8,7 @@
 import SwiftUI
 import LinkPresentation
 
+/// A view that displays an Open Graph Protocol preview of the given URL.
 struct LinkPreview: UIViewRepresentable {
     let url: URL
     

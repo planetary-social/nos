@@ -24,7 +24,6 @@ enum NoteParser {
         var result = replaceTaggedNostrEntities(in: content, tags: tags, context: context)
         result = replaceNostrEntities(in: result)
         let (cleanedString, urls) = String.extractAndRemoveURLs(from: result)
-//        let linkedString = (try? result.findAndReplaceUnformattedLinks(in: result)) ?? result
         do {
             return (try AttributedString(
                 markdown: cleanedString,

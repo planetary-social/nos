@@ -10,8 +10,6 @@ import SwiftUI
 import Logger
 import Dependencies
 
-
-
 /// A view that displays the text of a note (kind: 1 Nostr event) and truncates it with a "Read more" button if
 /// it is too long
 struct CompactNoteView: View {
