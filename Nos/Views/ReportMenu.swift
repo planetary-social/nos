@@ -63,7 +63,7 @@ struct ReportMenuModifier: ViewModifier {
                 actions: { 
                     if let author = reportedObject.author {
                         Button(Localized.yes.string) { 
-                            Task { await author.mute(context: viewContext) }
+                            mute(author: author)
                         }
                         Button(Localized.no.string) {}
                     }
@@ -77,7 +77,17 @@ struct ReportMenuModifier: ViewModifier {
                 }
             ) 
     }
-    
+
+    func mute(author: Author) {
+        Task {
+            do {
+                try await author.mute(context: viewContext)
+            } catch {
+                Log.error(error.localizedDescription)
+            }
+        }
+    }
+
     /// Generates a series of Buttons for the given report categories.
     func subCategoryButtons(for categories: [ReportCategory]) -> some View {
         ForEach(categories) { subCategory in
