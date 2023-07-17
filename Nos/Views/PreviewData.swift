@@ -10,25 +10,6 @@ import Foundation
 import Dependencies
 import CoreData
 
-struct InjectPreviewData: ViewModifier {
-    
-    @State var previewData: PreviewData
-    
-    func body(content: Content) -> some View {
-        content
-            .environment(\.managedObjectContext, previewData.persistenceController.viewContext)
-            .environmentObject(previewData.router)
-            .environmentObject(previewData.relayService)
-            .environmentObject(previewData.currentUser)
-    }
-}
-
-extension View {
-    func inject(previewData: PreviewData) -> some View {
-        self.modifier(InjectPreviewData(previewData: previewData))
-    }
-}
-
 // swiftlint:disable line_length
 
 /// Some test data that can be used in SwiftUI Previews
@@ -41,10 +22,6 @@ struct PreviewData {
     lazy var previewContext: NSManagedObjectContext = {
         persistenceController.container.viewContext  
     }()
-//    static var emptyPersistenceController = PersistenceController.empty
-//    static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-//    static var emptyRelayService = RelayService()
-//    static var relayService = RelayService()
     
     // MARK: - User
 
@@ -236,6 +213,25 @@ struct PreviewData {
         try! previewContext.save()
         return repost
     }()
+}
+
+struct InjectPreviewData: ViewModifier {
+    
+    @State var previewData: PreviewData
+    
+    func body(content: Content) -> some View {
+        content
+            .environment(\.managedObjectContext, previewData.persistenceController.viewContext)
+            .environmentObject(previewData.router)
+            .environmentObject(previewData.relayService)
+            .environmentObject(previewData.currentUser)
+    }
+}
+
+extension View {
+    func inject(previewData: PreviewData) -> some View {
+        self.modifier(InjectPreviewData(previewData: previewData))
+    }
 }
 
 // swiftlint:enable line_length
