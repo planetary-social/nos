@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Logger
 
 extension String {
     /// Find all links in a given string and replaces them with markdown formatted links
@@ -33,6 +34,32 @@ extension String {
         return string
     }
     
+    /// Creates a new string with all URLs and any preceding whitespace removed, and returns the new string and an 
+    /// array of all the URLs.
+    func extractURLs() -> (String, [URL]) {
+        var urls: [URL] = []
+        let mutableString = NSMutableString(string: self)
+        let regexPattern = "(\\s*)(https?://[^\\s]*)"
+        
+        do {
+            let regex = try NSRegularExpression(pattern: regexPattern, options: [])
+            let range = NSRange(location: 0, length: mutableString.length)
+            
+            let matches = regex.matches(in: self, options: [], range: range).reversed()
+            
+            for match in matches {
+                if let range = Range(match.range(at: 2), in: self), let url = URL(string: String(self[range])) {
+                    urls.append(url)
+                    regex.replaceMatches(in: mutableString, options: [], range: match.range, withTemplate: "")
+                }
+            }
+        } catch {
+            Log.error("Invalid regex pattern")
+        }
+        
+        return (mutableString as String, urls)
+    }
+
     func findUnformattedLinks() throws -> [URL] {
         // swiftlint:disable line_length
         let regex = "((http|https)?:\\/\\/.)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)"

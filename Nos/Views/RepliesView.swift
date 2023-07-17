@@ -226,6 +226,7 @@ struct RepliesView: View {
 }
 struct RepliesView_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var persistenceController = {
         let persistenceController = PersistenceController.preview
         KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.alice.privateKeyHex.utf8))
@@ -234,17 +235,10 @@ struct RepliesView_Previews: PreviewProvider {
     static var previewContext = persistenceController.container.viewContext
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
-    static var relayService = RelayService(persistenceController: persistenceController)
+    static var emptyRelayService = previewData.relayService
+    static var relayService = previewData.relayService
     static var router = Router()
-
-    static var currentUser: CurrentUser = {
-        let currentUser = CurrentUser(persistenceController: persistenceController)
-        currentUser.viewContext = previewContext
-        currentUser.relayService = relayService
-        Task { await currentUser.setKeyPair(KeyFixture.keyPair) }
-        return currentUser
-    }()
+    static var currentUser = previewData.currentUser
     
     static var shortNote: Event {
         let note = Event(context: previewContext)

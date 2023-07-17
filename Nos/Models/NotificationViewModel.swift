@@ -82,7 +82,7 @@ class NotificationViewModel: ObservableObject, Identifiable {
     /// Populates the `content` variable. This is not done at init in order to keep
     /// it synchronous for use in a View.
     @MainActor @discardableResult func loadContent(in context: NSManagedObjectContext) async -> AttributedString? {
-        let content = await Event.attributedContent(noteID: id, context: context)
+        let (content, _) = await Event.attributedContent(noteID: id, context: context) ?? (nil, nil)
         self.content = content
         return content
     }

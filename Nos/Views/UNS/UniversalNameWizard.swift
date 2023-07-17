@@ -155,7 +155,7 @@ struct UniversalNameWizard: View {
                                 }
                                 author.name = name
                                 author.nip05 = nip05
-                                await CurrentUser.shared.publishMetaData()
+                                await currentUser.publishMetaData()
                                 try viewContext.save()
                                 flowState = .success
                             } else {
@@ -215,7 +215,7 @@ struct UniversalNameWizard: View {
                             )
                             author.name = name
                             author.nip05 = nip05
-                            await CurrentUser.shared.publishMetaData()
+                            await currentUser.publishMetaData()
                             flowState = .success
                         } catch {
                             flowState = .error

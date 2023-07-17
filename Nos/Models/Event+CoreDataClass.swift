@@ -12,6 +12,7 @@ import CoreData
 import RegexBuilder
 import SwiftUI
 import Logger
+import Dependencies
 
 enum EventError: Error {
 	case jsonEncoding
@@ -70,6 +71,8 @@ extension FetchedResults where Element == Event {
 // swiftlint:disable type_body_length
 @objc(Event)
 public class Event: NosManagedObject {
+    
+    @Dependency(\.currentUser) private var currentUser
     
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"
@@ -139,11 +142,12 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @MainActor @nonobjc public class func extendedNetworkPredicate(
+    @MainActor @nonobjc class func extendedNetworkPredicate(
+        currentUser: CurrentUser,
         featuredAuthors: [String], 
         before: Date
     ) -> NSPredicate {
-        guard let currentUser = CurrentUser.shared.author else {
+        guard let currentUser = currentUser.author else {
             return NSPredicate.false
         }
         let kind = EventKind.text.rawValue
@@ -268,22 +272,6 @@ public class Event: NosManagedObject {
         fetchRequest.predicate = NSPredicate(
             format: replyNoteReferences,
             noteID
-        )
-        return fetchRequest
-    }
-    
-    @MainActor @nonobjc public class func allReplies(toEventWith id: String) -> NSFetchRequest<Event> {
-        guard let currentUser = CurrentUser.shared.author else {
-            return emptyRequest()
-        }
-        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(
-            format: replyNoteReferences,
-            id,
-            currentUser,
-            currentUser,
-            currentUser
         )
         return fetchRequest
     }
@@ -710,7 +698,7 @@ public class Event: NosManagedObject {
         
         // Force ensure current user never was muted
         Task { @MainActor in
-            CurrentUser.shared.author?.muted = false
+            currentUser.author?.muted = false
         }
     }
     
@@ -805,7 +793,7 @@ public class Event: NosManagedObject {
         seenOnRelays.compactMap { $0.addressURL?.absoluteString }
     }
     
-    class func attributedContent(noteID: String?, context: NSManagedObjectContext) async -> AttributedString? {
+    class func attributedContent(noteID: String?, context: NSManagedObjectContext) async -> (AttributedString, [URL])? {
         guard let noteID else {
             return nil
         }
@@ -816,9 +804,7 @@ public class Event: NosManagedObject {
                 return nil
             }
             try? context.saveIfNeeded()
-            guard let tags = note.allTags as? [[String]] else {
-                return AttributedString(content)
-            }
+            let tags = note.allTags as? [[String]] ?? []
             return NoteParser.parse(content: content, tags: tags, context: context)
         }
     }

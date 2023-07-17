@@ -90,7 +90,7 @@ struct AppView: View {
                             .onAppear {
                                 // TODO: Move this somewhere better like CurrentUser when it becomes the source of truth
                                 // for who is logged in
-                                if let keyPair = CurrentUser.shared.keyPair {
+                                if let keyPair = currentUser.keyPair {
                                     analytics.identify(with: keyPair)
                                 }
                             }
@@ -122,7 +122,7 @@ struct AppView: View {
                         }
                     .tag(Destination.newNote)
                     
-                    NotificationsView(user: CurrentUser.shared.author)
+                    NotificationsView(user: currentUser.author)
                         .tabItem {
                             VStack {
                                 let text = Localized.notifications.view
@@ -140,7 +140,7 @@ struct AppView: View {
                         .tag(Destination.notifications)
                         .badge(pushNotificationService.badgeCount)
                     
-                    if let author = CurrentUser.shared.author {
+                    if let author = currentUser.author {
                         ProfileTab(author: author, path: $router.profilePath)
                             .tabItem {
                                 VStack {
@@ -190,15 +190,12 @@ struct AppView: View {
 
 struct AppView_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
+    static var relayService = previewData.relayService
     static var router = Router()
-    static var currentUser = {
-        let currentUser = CurrentUser(persistenceController: persistenceController)
-        Task { await currentUser.setPrivateKeyHex(KeyFixture.alice.privateKeyHex) }
-        return currentUser
-    }()
+    static var currentUser = previewData.currentUser 
     
     static var loggedInAppController: AppController = {
         let appController = AppController()

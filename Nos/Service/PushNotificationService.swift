@@ -46,6 +46,7 @@ import Combine
     @Dependency(\.router) private var router
     @Dependency(\.analytics) private var analytics
     @Dependency(\.userDefaults) private var userDefaults
+    @Dependency(\.currentUser) private var currentUser
     
     #if DEBUG
     private let notificationServiceAddress = "wss://dev-notifications.nos.social"
@@ -158,7 +159,7 @@ import Combine
     
     /// Builds the string needed for the `content` field in the special 
     private func createRegistrationContent(deviceToken: Data, user: CurrentUser) async throws -> String {
-        let publicKeyHex = CurrentUser.shared.publicKeyHex
+        let publicKeyHex = currentUser.publicKeyHex
         let relays: [RegistrationRelayAddress] = await relayService.relays(for: user).map {
             RegistrationRelayAddress(address: $0.absoluteString)
         }

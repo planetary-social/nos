@@ -29,14 +29,14 @@ struct OnboardingLoginView: View {
                 let relay = try Relay(
                     context: viewContext,
                     address: address,
-                    author: CurrentUser.shared.author
+                    author: currentUser.author
                 )
-                CurrentUser.shared.onboardingRelays.append(relay)
+                currentUser.onboardingRelays.append(relay)
             } catch {
                 Log.error(error.localizedDescription)
             }
         }
-        try? CurrentUser.shared.viewContext.saveIfNeeded()
+        try? currentUser.viewContext.saveIfNeeded()
 
         completion()
     }

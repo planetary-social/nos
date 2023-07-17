@@ -12,6 +12,7 @@ import SwiftUINavigation
 struct SettingsView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.persistenceController) private var persistenceController
     @EnvironmentObject private var appController: AppController
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var currentUser: CurrentUser
@@ -119,7 +120,7 @@ struct SettingsView: View {
                 Text(Localized.sampleDataInstructions.string)
                     .foregroundColor(.primaryTxt)
                 Button(Localized.loadSampleData.string) {
-                    Task { await PersistenceController.loadSampleData(context: viewContext) }
+                    Task { await persistenceController.loadSampleData(context: viewContext) }
                 }
                 if let author = currentUser.author {
                     NavigationLink {
