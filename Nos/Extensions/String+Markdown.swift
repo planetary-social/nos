@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Logger
 
 extension String {
     /// Find all links in a given string and replaces them with markdown formatted links
@@ -35,51 +36,28 @@ extension String {
     
     static func extractAndRemoveURLs(from string: String) -> (String, [URL]) {
         var urls: [URL] = []
-        var processedString = string
+        let mutableString = NSMutableString(string: string)
+        let regexPattern = "(\\s*)(https?://[^\\s]*)"
         
-        let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
-        let matches = detector?.matches(in: string, options: [], range: NSRange(location: 0, length: string.utf16.count))
-        
-        for match in matches ?? [] {
-            let urlString = (string as NSString).substring(with: match.range)
-            if let url = URL(string: urlString) {
-                urls.append(url)
-                processedString = processedString.replacingOccurrences(of: urlString, with: "")
+        do {
+            let regex = try NSRegularExpression(pattern: regexPattern, options: [])
+            let range = NSRange(location: 0, length: mutableString.length)
+            
+            let matches = regex.matches(in: string, options: [], range: range).reversed()
+            
+            for match in matches {
+                if let range = Range(match.range(at: 2), in: string), let url = URL(string: String(string[range])) {
+                    urls.append(url)
+                    regex.replaceMatches(in: mutableString, options: [], range: match.range, withTemplate: "")
+                }
             }
+        } catch {
+            Log.error("Invalid regex pattern")
         }
         
-        return (processedString, urls)
+        return (mutableString as String, urls)
     }
 
-    
-//    func findAndRemoveLinks(in string: String) throws -> (String, [URL]) {
-//        var string = string
-//        // swiftlint:disable line_length
-//        let regex = "(?:^|\\s)(?<link>((http|https)?:\\/\\/.)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*))"
-//        // swiftlint:enable line_length
-//        let regularExpression = try NSRegularExpression(pattern: regex)
-//        let wholeRange = NSRange(location: 0, length: string.utf16.count)
-//        var urls = [URL]()
-//        while true {
-//            if let match = regularExpression.firstMatch(in: string, range: wholeRange) {
-//                if let range = Range(match.range(withName: "link"), in: string) {
-//                    let linkDisplayName = "\(string[range])"
-//                    var link = linkDisplayName
-//                    if var url = URL(string: link) {
-//                        if url.scheme == nil,
-//                           let httpsURL = URL(string: ("https://\(link)")) {
-//                            url = httpsURL
-//                        }
-//                        urls.append(url)
-//                    }
-//                    let replacement = "[\(linkDisplayName)](\(link))"
-//                    return try findAndRemoveUnformattedLinks(in: string.replacingCharacters(in: range, with: ""))
-//                }
-//            }
-//        }
-//        return string
-//    }
-    
     func findUnformattedLinks() throws -> [URL] {
         // swiftlint:disable line_length
         let regex = "((http|https)?:\\/\\/.)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)"

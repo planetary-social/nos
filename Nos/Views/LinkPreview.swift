@@ -13,7 +13,6 @@ struct LinkPreview: UIViewRepresentable {
     
     func makeUIView(context: Context) -> LPLinkView {
         let linkView = LPLinkView(url: url)
-        linkView.backgroundColor = .appBackground
         linkView.sizeToFit()
         return linkView
     }
