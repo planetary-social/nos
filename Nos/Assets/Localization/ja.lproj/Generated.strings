@@ -4,8 +4,8 @@
 "Localized.onboardingTitle" = "ヒューマン・ネットワーク";
 "Localized.logInWithYourKeys" = "秘密鍵でログインする";
 "Localized.ageVerificationTitle" = "16歳以上ですか？";
-"Localized.ageVerificationSubtitle" = "法的な理由により、Nosをご利用いただくには、この年齢以上であることを確認する必要があります。";
-"Localized.notOldEnoughTitle" = "申し訳ありませんが、Nosはあなた向けではありません";
+"Localized.ageVerificationSubtitle" = "法的な理由により、Nos (ノス) をご利用いただくには、この年齢以上であることを確認する必要があります。";
+"Localized.notOldEnoughTitle" = "申し訳ありませんが、Nos (ノス) はあなた向けではありません";
 "Localized.notOldEnoughSubtitle" = "このアプリを使用するには16歳以上である必要があります。";
 "Localized.notOldEnoughButton" = "戻る (学校へ)";
 "Localized.termsOfServiceTitle" = "利用規約（英文）";
@@ -17,7 +17,7 @@
 "Localized.accept" = "同意";
 "Localized.reject" = "拒否";
 "Localized.error" = "エラーが発生しました。";
-"Localized.noEvents" = "メモはまだありません！Discover / 検索 タブをタップして、何人かのユーザーをフォローして始めましょう。";
+"Localized.noEvents" = "メモはまだありません！ディスカバー / 検索 タブをタップして、何人かのユーザーをフォローして始めましょう。";
 "Localized.addItem" = "追加する";
 "Localized.homeFeed" = "フィード";
 "Localized.keys" = "鍵";
@@ -103,7 +103,7 @@
 "Localized.loadSampleData" = "サンプルデータを読み込む";
 "Localized.sampleDataInstructions" = "これによりすべてのイベントが削除され、sample_data.json 内のイベントがロードされます。";
 "Localized.discover" = "ディスカバー";
-"Localized.searchBar" = "ユーザを検索する";
+"Localized.searchBar" = "ユーザーを検索する";
 "Localized.notifications" = "通知";
 "Localized.noNotifications" = "まだ通知がありません！";
 "Localized.copyNoteIdentifier" = "ノート識別子をコピーする";
