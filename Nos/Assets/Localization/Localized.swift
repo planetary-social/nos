@@ -88,6 +88,7 @@ enum Localized: String, Localizable, CaseIterable {
     case shareLogs = "Share logs"
     case failedToExportLogs = "Failed to export logs."
     case appVersion = "App Version:"
+    case allPublishedEvents = "All published events"
     
     case privateKey = "Private Key"
     case logout = "Logout"
@@ -178,6 +179,7 @@ enum Localized: String, Localizable, CaseIterable {
     case mute = "Mute"
     case muteUser = "Mute User"
     case muted = "Muted"
+    case mutedUsers = "Muted Users"
     case mutePrompt = "Would you like to mute {{ user }}?"
     case share = "Share"
     case reportNote = "Report note"
