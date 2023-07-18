@@ -42,7 +42,10 @@ final class RelayService: ObservableObject {
             try Task.checkCancellation()
             while true {
                 do { 
-                    try await self?.batchParseEvents()
+                    let foundEvents = try await self?.batchParseEvents()
+                    if foundEvents == false {
+                        try await Task.sleep(for: .milliseconds(50))
+                    }
                 } catch {
                     Log.error("RelayService: Error parsing events: \(error.localizedDescription)")
                 }
@@ -251,9 +254,12 @@ extension RelayService {
         }
     }
     
-    private func batchParseEvents() async throws {
+    /// Processes a batch of events from the queue. Returns false if there were no events to process.
+    private func batchParseEvents() async throws -> Bool {
         let eventData = await self.parseQueue.pop(30)
-        if !eventData.isEmpty {
+        if eventData.isEmpty {
+            return false
+        } else {
             try await self.parseContext.perform {
                 for (event, socket) in eventData {
                     let relay = self.relay(from: socket, in: self.parseContext)
@@ -261,6 +267,7 @@ extension RelayService {
                 }
                 try self.parseContext.saveIfNeeded()
             }                
+            return true
         }
     }
 
