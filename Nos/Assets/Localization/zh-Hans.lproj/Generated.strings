@@ -32,6 +32,7 @@
 "Localized.shareLogs" = "分享记录";
 "Localized.failedToExportLogs" = "导出记录失败。";
 "Localized.appVersion" = "应用版本：";
+"Localized.allPublishedEvents" = "所有已发布的事件";
 "Localized.privateKey" = "私钥";
 "Localized.logout" = "登出";
 "Localized.myKeyIsBackedUp" = "我的密钥已备份";
@@ -114,6 +115,7 @@
 "Localized.mute" = "静音";
 "Localized.muteUser" = "静音用户";
 "Localized.muted" = "已静音";
+"Localized.mutedUsers" = "已静音的用户";
 "Localized.mutePrompt" = "你是否想要静音 {{ user }}？";
 "Localized.share" = "分享";
 "Localized.reportNote" = "举报笔记";
