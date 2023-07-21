@@ -7,10 +7,11 @@
 
 import Foundation
 import Starscream
+import DequeModule
 
 /// An actor that queues up received Event JSON for parsing. 
 actor ParseQueue {
-    private var events = [(JSONEvent, WebSocket)]()
+    private var events = Deque<(JSONEvent, WebSocket)>()
     
     func push(_ event: JSONEvent, from socket: WebSocket) {
         events.append((event, socket))

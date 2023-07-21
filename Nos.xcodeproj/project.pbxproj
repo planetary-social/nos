@@ -72,6 +72,7 @@
 		A3B943D5299D514800A15A08 /* Follow+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */; };
 		A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */; };
 		A3B943D8299D758F00A15A08 /* KeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943CE299AE00100A15A08 /* KeyChain.swift */; };
+		C905B0752A619367009B8A78 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = C905B0742A619367009B8A78 /* DequeModule */; };
 		C905EA382A33623F006F1E99 /* SetUpUNSBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C905EA372A33623F006F1E99 /* SetUpUNSBanner.swift */; };
 		C90862BE29E9804B00C35A71 /* NosPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90862BD29E9804B00C35A71 /* NosPerformanceTests.swift */; };
 		C92DF80529C25DE900400561 /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92DF80429C25DE900400561 /* URL+Extensions.swift */; };
@@ -137,6 +138,7 @@
 		C9646EAE29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */; };
 		C9646EAF29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */; };
 		C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */; };
+		C96CB98C2A6040C500498C4E /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = C96CB98B2A6040C500498C4E /* DequeModule */; };
 		C973AB5B2A323167002AED16 /* Follow+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973AB552A323167002AED16 /* Follow+CoreDataProperties.swift */; };
 		C973AB5C2A323167002AED16 /* Follow+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973AB552A323167002AED16 /* Follow+CoreDataProperties.swift */; };
 		C973AB5D2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973AB562A323167002AED16 /* Event+CoreDataProperties.swift */; };
@@ -635,6 +637,7 @@
 				C9646E9A29B79E04007239A4 /* Logger in Frameworks */,
 				C9646EA729B7A3DD007239A4 /* Dependencies in Frameworks */,
 				C987F85F29BAB66900B44E7A /* CachedAsyncImage in Frameworks */,
+				C96CB98C2A6040C500498C4E /* DequeModule in Frameworks */,
 				C9646EA429B7A24A007239A4 /* PostHog in Frameworks */,
 				C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */,
 			);
@@ -649,6 +652,7 @@
 				C9646EA929B7A4F2007239A4 /* PostHog in Frameworks */,
 				C9646EAC29B7A520007239A4 /* Dependencies in Frameworks */,
 				C987F86429BAC3C500B44E7A /* CachedAsyncImage in Frameworks */,
+				C905B0752A619367009B8A78 /* DequeModule in Frameworks */,
 				C9646E9C29B79E4D007239A4 /* Logger in Frameworks */,
 				CDDA1F7D29A527650047ACD8 /* SwiftUINavigation in Frameworks */,
 			);
@@ -1074,6 +1078,7 @@
 				C9646EA329B7A24A007239A4 /* PostHog */,
 				C9646EA629B7A3DD007239A4 /* Dependencies */,
 				C987F85E29BAB66900B44E7A /* CachedAsyncImage */,
+				C96CB98B2A6040C500498C4E /* DequeModule */,
 			);
 			productName = Nos;
 			productReference = C9DEBFCE298941000078B43A /* Nos.app */;
@@ -1101,6 +1106,7 @@
 				C9646EA829B7A4F2007239A4 /* PostHog */,
 				C9646EAB29B7A520007239A4 /* Dependencies */,
 				C987F86329BAC3C500B44E7A /* CachedAsyncImage */,
+				C905B0742A619367009B8A78 /* DequeModule */,
 			);
 			productName = NosTests;
 			productReference = C9DEBFE4298941020078B43A /* NosTests.xctest */;
@@ -1175,6 +1181,7 @@
 				C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */,
 				C9646EA529B7A3DD007239A4 /* XCRemoteSwiftPackageReference "swift-dependencies" */,
 				C987F85D29BAB66900B44E7A /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
+				C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -2122,6 +2129,14 @@
 				minimumVersion = 0.1.4;
 			};
 		};
+		C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GigaBitcoin/secp256k1.swift";
@@ -2157,6 +2172,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C905B0742A619367009B8A78 /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = DequeModule;
+		};
 		C94D855E29914D2300749478 /* SwiftUINavigation */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */;
@@ -2191,6 +2211,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C9646EA529B7A3DD007239A4 /* XCRemoteSwiftPackageReference "swift-dependencies" */;
 			productName = Dependencies;
+		};
+		C96CB98B2A6040C500498C4E /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = DequeModule;
 		};
 		C97797BB298AB1890046BD25 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
