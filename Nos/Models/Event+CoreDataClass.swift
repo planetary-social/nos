@@ -119,7 +119,13 @@ public class Event: NosManagedObject {
         "npub1pkj5lugwrychstydkt9h2xdzst9ejreemleh3hz69nr85cmegqrs232y4t": ["monk_cactus"],
         "npub1a406tcmltkud34kmqkevkpykp384czamffw2245a9v5uc2z22l2q55gxd2": ["tina"],
         "npub1matmfxr293jejewrm72u50l2x5e6ypasn0ev2kns6srv05zfzf8s0z6fsr": ["Jon Pincus"],
-        "npub1ftpy6thgy2354xypal6jd0m37wtsgsvcxljvzje5vskc9cg3a5usexrrtq": ["Raúl Piracés"]
+        "npub1ftpy6thgy2354xypal6jd0m37wtsgsvcxljvzje5vskc9cg3a5usexrrtq": ["Raúl Piracés"],
+        "npub12hcytyr8fumy3axde8wgeced523gyp6v6zczqktwuqeaztfc2xzsz3rdp4": ["NoGood"],
+        "npub1l9kr6ajfwp6vfjp60vuzxwqwwlw884dff98a9cznujs520shsf9s35xfwh": ["Karine"],
+        "npub1rfdkj37rhymcrr5jk9jjaae5c3yj8l24jtr8a27q0chh2y2aq42snhh53u": ["eolaí"],
+        "npub17amtesfzwxl8nlr3ke2l8jl7kw52z60n8msnxh7vps3g9xgpmf9qx5nldk": ["Malos10"],
+        "npub1uch5rxswzes8h9hlzrktqqjf4a75k6w86ys7fvzpxrrpejvccvhq4sl7fj": ["muneomi"],
+        "npub1p458ltjfrxmcymk4j3plsmsksaqsf62cggdqvhv9cphk0wdglzts80t20a": ["Adhhafi"],
     ]
     
     // MARK: - Fetching
@@ -179,7 +185,7 @@ public class Event: NosManagedObject {
     @nonobjc public class func seen(on relay: Relay, before: Date, exceptFrom author: Author?) -> NSPredicate {
         let kind = EventKind.text.rawValue
         let sharedFormat = "kind = %i AND eventReferences.@count = 0 AND %@ IN seenOnRelays AND createdAt <= %@" +
-            " AND author.muted = 0"
+            " AND author.muted = NO"
         if let author {
             return NSPredicate(
                 format: "\(sharedFormat) AND NOT author = %@",
