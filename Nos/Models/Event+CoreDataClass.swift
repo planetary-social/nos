@@ -793,7 +793,26 @@ public class Event: NosManagedObject {
         seenOnRelays.compactMap { $0.addressURL?.absoluteString }
     }
     
-    class func attributedContent(noteID: String?, context: NSManagedObjectContext) async -> (AttributedString, [URL])? {
+    class func attributedContent(noteID: String?, context: NSManagedObjectContext) async -> AttributedString {
+        guard let noteID else {
+            return AttributedString()
+        }
+        
+        return await context.perform {
+            guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
+                let content = note.content else {
+                return AttributedString()
+            }
+            try? context.saveIfNeeded()
+            let tags = note.allTags as? [[String]] ?? []
+            return NoteParser.parse(content: content, tags: tags, context: context)
+        }
+    }
+    
+    class func attributedContentAndURLs(
+        noteID: String?, 
+        context: NSManagedObjectContext
+    ) async -> (AttributedString, [URL])? {
         guard let noteID else {
             return nil
         }
