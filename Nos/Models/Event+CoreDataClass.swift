@@ -239,7 +239,7 @@ public class Event: NosManagedObject {
         let mentionsPredicate = allMentionsPredicate(for: user)
         let repliesPredicate = allRepliesPredicate(for: user)
         let notSelfPredicate = NSPredicate(format: "author != %@", user)
-        let notMuted = NSPredicate(format: "author.isMuted == 0", user)
+        let notMuted = NSPredicate(format: "author.muted == 0", user)
         let allNotificationsPredicate = NSCompoundPredicate(
             orPredicateWithSubpredicates: [mentionsPredicate, repliesPredicate]
         )
