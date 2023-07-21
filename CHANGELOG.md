@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Fixed high cpu usage when the app is idle
+- Fixed several crashes.
 - Added Dutch, Japanese, and Persian translations. Thanks matata, yutaro, and eru-desu! 
 
 ## [0.1 (58)] - 2023-07-17Z
