@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added Dutch, Japanese, and Persian translations. Thanks matata, yutaro, and eru-desu! 
 - Added some visual artists to the list of featured users.
 - Fixed an issue where Nos couldn't find the user's key on startup.
 - Fixed high cpu usage when the app is idle
