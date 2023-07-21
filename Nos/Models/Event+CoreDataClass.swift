@@ -233,10 +233,11 @@ public class Event: NosManagedObject {
         let mentionsPredicate = allMentionsPredicate(for: user)
         let repliesPredicate = allRepliesPredicate(for: user)
         let notSelfPredicate = NSPredicate(format: "author != %@", user)
+        let notMuted = NSPredicate(format: "author.isMuted == 0", user)
         let allNotificationsPredicate = NSCompoundPredicate(
             orPredicateWithSubpredicates: [mentionsPredicate, repliesPredicate]
         )
-        var andPredicates = [allNotificationsPredicate, notSelfPredicate]
+        var andPredicates = [allNotificationsPredicate, notSelfPredicate, notMuted]
         if let since {
             let sincePredicate = NSPredicate(format: "receivedAt >= %@", since as CVarArg)  
             andPredicates.append(sincePredicate)
