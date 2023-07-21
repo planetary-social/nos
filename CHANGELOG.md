@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed several crashes.
+
 ## [0.1 (58)] - 2023-07-17Z
 
 - Added better previews for urls shared in notes.
