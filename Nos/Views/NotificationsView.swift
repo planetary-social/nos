@@ -22,7 +22,7 @@ struct NotificationsView: View {
     private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
     @State private var subscriptionIDs = [String]()
-    @State private var isVisible = true
+    @State private var isVisible = false
     
     // Probably the logged in user should be in the @Environment eventually
     private var user: Author?

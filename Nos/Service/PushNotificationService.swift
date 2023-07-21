@@ -188,12 +188,13 @@ import Combine
                 return nil
             }
             
-            try? self.modelContext.save()
+            defer { try? self.modelContext.save() }
             
             // Don't alert for old notifications or muted authors
             guard let eventCreated = event.createdAt, 
                 eventCreated > self.notificationCutoff,
                 event.author?.muted == false else { 
+                coreDataNotification.isRead = true
                 return nil
             }
             
