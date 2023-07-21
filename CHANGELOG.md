@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added Dutch, Japanese, and Persian translations. Thanks matata, yutaro, and eru-desu! 
 - Fixed an issue where you could have duplicate relays: one with a trailing slash and one without.
 - Fixed several bugs around muting users
 - Added the number of connected relays at the top right corner of the Home Feed.
