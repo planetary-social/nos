@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add a loading placeholder for note contents.
 - Fixed several crashes.
 - Added Dutch, Japanese, and Persian translations. Thanks matata, yutaro, and eru-desu! 
 
