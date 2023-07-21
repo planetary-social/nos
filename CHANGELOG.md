@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added some visual artists to the list of featured users.
+- Fixed an issue where Nos couldn't find the user's key on startup.
+- Fixed high cpu usage when the app is idle
+- Fixed an issue where you could have duplicate relays: one with a trailing slash and one without.
+- Fixed several bugs around muting users
 - Added the number of connected relays at the top right corner of the Home Feed.
 - Fixed a bug where expired messages could be published to relays that doesn't support them
 - Added support for push notifications.
