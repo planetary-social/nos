@@ -11,19 +11,15 @@ import SwiftUI
 struct ComposerActionBar: View {
     
     @Binding var expirationTime: TimeInterval?
-    var fileStorageAPI: FileStorageAPI
+    @Binding var postText: NSAttributedString
+    @State var fileStorageAPI: FileStorageAPI = NoopFileStorageAPI()
     
     enum SubMenu {
         case expirationDate
     }
     
     @State private var subMenu: SubMenu?
-    
-    init(expirationTime: Binding<Optional<TimeInterval>>) {
-        self._expirationTime = expirationTime
-        self.fileStorageAPI = NoopFileStorageAPI()
-    }
-    
+
     var backArrow: some View {
         Button { 
             subMenu = .none
@@ -44,7 +40,9 @@ struct ComposerActionBar: View {
                         do {
                             let attachedFile = AttachedFile(data: image.jpegData(compressionQuality: 0.9)!)
                             let url = try await fileStorageAPI.upload(file: attachedFile)
-                            print(url)
+                            let tmpPostText = NSMutableAttributedString(attributedString: self.postText)
+                            tmpPostText.append(NSAttributedString(string: url.absoluteString))
+                            self.postText = tmpPostText
                         } catch {
                             print("error uploading image: \(error)")
                         }
@@ -109,13 +107,14 @@ struct ComposerActionBar_Previews: PreviewProvider {
     
     @State static var emptyExpirationTime: TimeInterval? 
     @State static var setExpirationTime: TimeInterval? = 60 * 60
+    @State static var postText: NSAttributedString = NSAttributedString()
     
     static var previews: some View {
         VStack {
             Spacer()
-            ComposerActionBar(expirationTime: $emptyExpirationTime)
+            ComposerActionBar(expirationTime: $emptyExpirationTime, postText: $postText)
             Spacer()
-            ComposerActionBar(expirationTime: $setExpirationTime)
+            ComposerActionBar(expirationTime: $setExpirationTime, postText: $postText)
             Spacer()
         }
         .frame(maxWidth: .infinity)

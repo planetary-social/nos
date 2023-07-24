@@ -48,7 +48,7 @@ struct NewNoteView: View {
                     )
                     .padding(10)
                     Spacer()
-                    ComposerActionBar(expirationTime: $expirationTime)
+                    ComposerActionBar(expirationTime: $expirationTime, postText: $postText)
                 }
                 
                 if showRelayPicker, let author = currentUser.author {
