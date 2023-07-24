@@ -50,6 +50,7 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 	case like = 7
     case channelMessage = 42
     case label = 1985
+    case report = 1984
     case mute = 10_000
     case longFormContent = 30_023
 }

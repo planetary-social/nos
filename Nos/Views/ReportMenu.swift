@@ -111,15 +111,19 @@ struct ReportMenuModifier: ViewModifier {
             Log.error("Cannot publish report - No signed in user")
             return 
         }
-        let event = JSONEvent(
+        var event = JSONEvent(
             pubKey: keyPair.publicKeyHex, 
-            kind: .label, 
+            kind: .report, 
             tags: [
                 ["L", "MOD"],
                 ["l", selectedCategory.code, "MOD"],
             ], 
-            content: ""
+            content: "This report uses NIP-69 vocabulary https://github.com/nostr-protocol/nips/pull/457"
         )
+        
+        var targetTag = reportedObject.tag
+        targetTag.append(selectedCategory.nip56Code.rawValue)
+        event.tags.append(targetTag)
         
         Task {
             do {
