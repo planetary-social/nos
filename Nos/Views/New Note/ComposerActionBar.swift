@@ -11,13 +11,18 @@ import SwiftUI
 struct ComposerActionBar: View {
     
     @Binding var expirationTime: TimeInterval?
+    var fileStorageAPI: FileStorageAPI
     
     enum SubMenu {
-        case attachMedia
         case expirationDate
     }
     
     @State private var subMenu: SubMenu?
+    
+    init(expirationTime: Binding<Optional<TimeInterval>>) {
+        self._expirationTime = expirationTime
+        self.fileStorageAPI = NoopFileStorageAPI()
+    }
     
     var backArrow: some View {
         Button { 
@@ -34,17 +39,23 @@ struct ComposerActionBar: View {
             switch subMenu {
             case .none:
                 // Attach Media
-                Button { 
-                    subMenu = .attachMedia
-                } label: { 
+                ImagePickerButton { image in
+                    Task {
+                        do {
+                            let attachedFile = AttachedFile(data: image.jpegData(compressionQuality: 0.9)!)
+                            let url = try await fileStorageAPI.upload(file: attachedFile)
+                            print(url)
+                        } catch {
+                            print("error uploading image: \(error)")
+                        }
+                    }
+                } label: {
                     Image.attachMediaButton
                         .foregroundColor(.secondaryText)
-                        .frame(minWidth: 44, minHeight: 44)
-                }
+                        .frame(minWidth: 44, minHeight: 44)                }
                 .padding(.leading, 8)
-                .transition(.move(edge: .leading))
                 .accessibilityLabel(Localized.attachMedia.view)
-                
+
                 // Expiration Time
                 if let expirationTime, let option = ExpirationTimeOption(rawValue: expirationTime) {
                     ExpirationTimeButton(
@@ -67,19 +78,7 @@ struct ComposerActionBar: View {
                             .frame(minWidth: 44, minHeight: 44)
                     }
                 }
-                
-            case .attachMedia:
-                backArrow
-                HighlightedText(
-                    Localized.nostrBuildHelp.string,
-                    highlightedWord: "nostr.build",
-                    highlight: .diagonalAccent,
-                    textColor: .secondaryText,
-                    font: .clarityCaption,
-                    link: URL(string: "https://nostr.build")!
-                )
-                .transition(.move(edge: .trailing))
-                .padding(10)
+
             case .expirationDate:
                 backArrow
                 ScrollView(.horizontal) {

@@ -48,7 +48,6 @@
 "Localized.youNeedToEnterAPrivateKeyBeforePosting" = "You need to enter a private key in Settings before you can publish posts.";
 "Localized.relayDoesNotSupportNIP40" = "This relay doesn't support expiring messages. Please select another one.";
 "Localized.anyRelaysSupportingNIP40" = "None of your relays support expiring messages. Please add one and retry.";
-"Localized.nostrBuildHelp" = "Use nostr.build to post image links.";
 "Localized.noteDisappearsIn" = "Note disappears in";
 "Localized.attachMedia" = "Attach Media";
 "Localized.expirationDate" = "Expiration Date";
