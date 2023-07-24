@@ -186,7 +186,7 @@ enum Localized: String, Localizable, CaseIterable {
     case reportUser = "Report user"
     case reportContent = "Report Content"
     case confirmReport = "Confirm Report"
-    case reportConfirmation = "This will publish a report that is publicly visible. Are you sure?"
+    case reportConfirmation = "Are you sure you want to report this as {{ report_type }}? This report will be public."
     case note = "note"
     case unmuteUser = "Un-Mute"
     case outsideNetwork = "This user is outside your network."

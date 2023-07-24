@@ -53,7 +53,9 @@ struct ReportMenuModifier: ViewModifier {
                     }
                 },
                 message: {
-                    Localized.reportConfirmation.view
+                    Localized.reportConfirmation.view(
+                        ["report_type": selectedCategory?.displayName ?? Localized.error.string]
+                    )
                 }
             ) 
             // Mute user menu

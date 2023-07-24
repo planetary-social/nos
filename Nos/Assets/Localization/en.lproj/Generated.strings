@@ -122,7 +122,7 @@
 "Localized.reportUser" = "Report user";
 "Localized.reportContent" = "Report Content";
 "Localized.confirmReport" = "Confirm Report";
-"Localized.reportConfirmation" = "This will publish a report that is publicly visible. Are you sure?";
+"Localized.reportConfirmation" = "Are you sure you want to report this as {{ report_type }}? This report will be public.";
 "Localized.note" = "note";
 "Localized.unmuteUser" = "Un-Mute";
 "Localized.outsideNetwork" = "This user is outside your network.";
