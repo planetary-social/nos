@@ -14,7 +14,7 @@ import Foundation
 extension Localized {
     static var localizableTypes: [any Localizable.Type] {
         // TODO: Can we compute this using CaseIterable and recursion?
-        [Localized.self, Localized.Reply.self]
+        [Localized.self, Localized.Reply.self, Localized.ImagePicker.self]
     }
 }
 
@@ -220,6 +220,7 @@ enum Localized: String, Localizable, CaseIterable {
     case eventSource = "Raw Event"
     case loading = "Loading..."
     case viewSource = "View Source"
+    case select = "Select"
 }
 
 // MARK: - Replies
@@ -238,4 +239,20 @@ extension Localized {
         case mentionedYou = "mentioned you:"
     }
 }
+
+// MARK: - ImagePicker
+
+extension Localized {
+    
+    enum ImagePicker: String, Localizable, CaseIterable {
+        case camera = "Camera"
+        case cameraNotAvailable = "Camera is not available on this device"
+        case openSettingsMessage = "You can allow camera permissions by opening the Settings app."
+        case permissionsRequired = "Permissions required for {{ title }}"
+        case photoLibrary = "Photo Library"
+        case selectFrom = "Select from Photo Library"
+        case takePhoto = "Take photo with Camera"
+    }
+}
+
 // swiftlint:enable line_length identifier_name

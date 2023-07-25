@@ -153,6 +153,7 @@
 "Localized.eventSource" = "Raw Event";
 "Localized.loading" = "Loading...";
 "Localized.viewSource" = "View Source";
+"Localized.select" = "Select";
 
 "Reply.one" = "{{ count }} reply";
 "Reply.many" = "{{ count }} replies";
@@ -161,3 +162,11 @@
 "Reply.postAReply" = "Post a reply";
 "Reply.repliedToYourNote" = "replied to your note:";
 "Reply.mentionedYou" = "mentioned you:";
+
+"ImagePicker.camera" = "Camera";
+"ImagePicker.cameraNotAvailable" = "Camera is not available on this device";
+"ImagePicker.openSettingsMessage" = "You can allow camera permissions by opening the Settings app.";
+"ImagePicker.permissionsRequired" = "Permissions required for {{ title }}";
+"ImagePicker.photoLibrary" = "Photo Library";
+"ImagePicker.selectFrom" = "Select from Photo Library";
+"ImagePicker.takePhoto" = "Take photo with Camera";

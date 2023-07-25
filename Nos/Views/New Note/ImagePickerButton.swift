@@ -21,6 +21,7 @@ struct ImagePickerButton<Label>: View where Label: View {
     private var imagePickerSource: UIImagePickerController.SourceType?
     
     @Dependency(\.analytics) private var analytics
+    @EnvironmentObject private var appController: AppController
 
     private var showImagePicker: Binding<Bool> {
         Binding {
@@ -31,8 +32,7 @@ struct ImagePickerButton<Label>: View where Label: View {
     }
 
     private var settingsAlertTitle: String {
-        //Localized.ImagePicker.permissionsRequired.text(["title": Localized.ImagePicker.camera.text])
-        "something" // todo
+        Localized.ImagePicker.permissionsRequired.text(["title": Localized.ImagePicker.camera.string])
     }
 
     var body: some View {
@@ -41,10 +41,8 @@ struct ImagePickerButton<Label>: View where Label: View {
         } label: {
             label()
         }
-        //.confirmationDialog(Localized.select.text, isPresented: $showConfirmationDialog, titleVisibility: .hidden) {
-          //  Button(Localized.ImagePicker.takePhoto.text) {
-                .confirmationDialog("text1", isPresented: $showConfirmationDialog, titleVisibility: .hidden) {
-                    Button("Use the camera") {
+        .confirmationDialog(Localized.select.string, isPresented: $showConfirmationDialog, titleVisibility: .hidden) {
+            Button(Localized.ImagePicker.takePhoto.string) {
                 analytics.selectedUploadFromCamera()
                 // Check permissions
 
@@ -76,12 +74,11 @@ struct ImagePickerButton<Label>: View where Label: View {
                     imagePickerSource = .camera
                 }
             }
-            //Button(Localized.ImagePicker.selectFrom.text) {
-            Button("Use the photo library") {
+            Button(Localized.ImagePicker.selectFrom.string) {
                 analytics.selectedUploadFromPhotoLibrary()
                 imagePickerSource = .photoLibrary
             }
-            Button("Cancel", role: .cancel) {
+            Button(Localized.cancel.string, role: .cancel) {
                 analytics.cancelledUploadSourceSelection()
                 showConfirmationDialog = false
             }
@@ -90,17 +87,16 @@ struct ImagePickerButton<Label>: View where Label: View {
             settingsAlertTitle,
             isPresented: $showSettingsAlert,
             actions: {
-                Button("some text") {
+                Button(Localized.settings.string) {
                     showSettingsAlert = false
-                    //AppController.shared.openOSSettings()
+                    self.appController.openOSSettings()
                 }
-                Button("some text") {
+                Button(Localized.cancel.string) {
                     showSettingsAlert = false
                 }
             },
             message: {
-                Text("text4")
-                //Localized.ImagePicker.openSettingsMessage.view
+                Text(Localized.ImagePicker.openSettingsMessage.string)
             }
         )
         .sheet(isPresented: showImagePicker) {
