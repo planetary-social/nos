@@ -49,10 +49,10 @@ struct ImagePickerButton<Label>: View where Label: View {
                 // Check permissions
 
                 // simulator
-                //guard !UIDevice.isSimulator else {
-                //    imagePickerSource = .camera
-                //    return
-                //}
+                guard !UIDevice.isSimulator else {
+                    imagePickerSource = .camera
+                    return
+                }
 
                 // denied
                 let status = AVCaptureDevice.authorizationStatus(for: .video)

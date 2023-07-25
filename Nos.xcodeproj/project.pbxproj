@@ -384,6 +384,7 @@
 		CD76865429B7DABE00085358 /* DiscoverSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76865229B793F400085358 /* DiscoverSearchBar.swift */; };
 		CDDA1F7B29A527650047ACD8 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = CDDA1F7A29A527650047ACD8 /* Starscream */; };
 		CDDA1F7D29A527650047ACD8 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = CDDA1F7C29A527650047ACD8 /* SwiftUINavigation */; };
+		DC2E54C82A700F1400C2CAAB /* UIDevice+Simulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */; };
 		DC5F203F2A6AE24200F8D73F /* ImagePickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F203E2A6AE24200F8D73F /* ImagePickerButton.swift */; };
 		DC5F20412A6AE31000F8D73F /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F20402A6AE31000F8D73F /* ImagePicker.swift */; };
 		DC5F20432A6ED75C00F8D73F /* FileStorageAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F20422A6ED75C00F8D73F /* FileStorageAPI.swift */; };
@@ -621,6 +622,7 @@
 		CD76864B29B12F7E00085358 /* ExpandingTextFieldAndSubmitButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandingTextFieldAndSubmitButton.swift; sourceTree = "<group>"; };
 		CD76864F29B6503500085358 /* NoteOptionsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteOptionsButton.swift; sourceTree = "<group>"; };
 		CD76865229B793F400085358 /* DiscoverSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverSearchBar.swift; sourceTree = "<group>"; };
+		DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Simulator.swift"; sourceTree = "<group>"; };
 		DC5F203E2A6AE24200F8D73F /* ImagePickerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerButton.swift; sourceTree = "<group>"; };
 		DC5F20402A6AE31000F8D73F /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		DC5F20422A6ED75C00F8D73F /* FileStorageAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageAPI.swift; sourceTree = "<group>"; };
@@ -867,6 +869,7 @@
 				C9F64D8E29ED88CD00563F2B /* Localization+Nos.swift */,
 				C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */,
 				C98A32262A05795E00E3FA13 /* Task+Timeout.swift */,
+				DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1484,6 +1487,7 @@
 				CD09A74829A51EFC0063464F /* Router.swift in Sources */,
 				CD2CF38E299E67F900332116 /* CardButtonStyle.swift in Sources */,
 				A336DD3C299FD78000A0CBA0 /* Filter.swift in Sources */,
+				DC2E54C82A700F1400C2CAAB /* UIDevice+Simulator.swift in Sources */,
 				C9A0DAEA29C6A34200466635 /* ActivityView.swift in Sources */,
 				CD2CF390299E68BE00332116 /* NoteButton.swift in Sources */,
 				C9DEC04D29894BED0078B43A /* Author+CoreDataClass.swift in Sources */,
