@@ -59,7 +59,7 @@ enum ReportTarget {
 }
 
 /// A model for potential reasons why something might be reported.
-struct ReportCategory: Identifiable {
+struct ReportCategory: Identifiable, Equatable {
     
     /// A human readable description of the reason/category. Should be short enough to fit in an action menu.
     var displayName: String 

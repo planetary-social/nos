@@ -8,6 +8,7 @@
 import SwiftUI
 import Dependencies
 import Logger
+import SwiftUINavigation
 
 /// The report menu can be added to another element and controlled with the `isPresented` variable. When `isPresented`
 /// is set to `true` it will walk the user through a series of menus that allows them to report content in a given
@@ -21,22 +22,19 @@ struct ReportMenuModifier: ViewModifier {
     @State private var selectedCategory: ReportCategory?
     @State private var confirmReport = false
     @State private var showMuteDialog = false
+    @State private var previouslySelectedCategory: ReportCategory?
+    @State private var confirmationDialog: ConfirmationDialogState<ReportCategory>? 
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics: Analytics
     
+    // swiftlint:disable function_body_length
     func body(content: Content) -> some View {
         content
             // ReportCategory menu
-            .confirmationDialog(Localized.reportContent.string, isPresented: $isPresented, titleVisibility: .visible) {
-                if let selectedCategory {
-                    subCategoryButtons(for: selectedCategory.subCategories ?? [])
-                } else {
-                    subCategoryButtons(for: topLevelCategories)
-                }
-            }
+            .confirmationDialog(unwrapping: $confirmationDialog, action: userSelectedCategory)
             // Report confirmation menu
             .alert(
                 Localized.confirmReport.string, 
@@ -78,6 +76,41 @@ struct ReportMenuModifier: ViewModifier {
                     }
                 }
             ) 
+            .onChange(of: isPresented) { shouldPresent in
+                if shouldPresent {
+                    confirmationDialog = ConfirmationDialogState(
+                        title: Localized.reportContent.textState, 
+                        buttons: subCategoryButtons(for: topLevelCategories)
+                    )
+                } else {
+                    confirmationDialog = nil
+                }
+            }
+            .onChange(of: confirmationDialog) { newValue in
+                if newValue == nil {
+                    isPresented = false
+                }
+            }
+    }
+    // swiftlint:enable function_body_length
+    
+    func userSelectedCategory(_ category: ReportCategory?) {
+        self.selectedCategory = category
+        
+        guard let category else {
+            return
+        }
+        
+        if category.subCategories?.count ?? 0 == 0 {
+            confirmReport = true
+        } else {
+            Task {
+                confirmationDialog = ConfirmationDialogState(
+                    title: Localized.reportContent.textState, 
+                    buttons: subCategoryButtons(for: category.subCategories ?? [])
+                )
+            }
+        }
     }
 
     func mute(author: Author) {
@@ -91,18 +124,11 @@ struct ReportMenuModifier: ViewModifier {
     }
 
     /// Generates a series of Buttons for the given report categories.
-    func subCategoryButtons(for categories: [ReportCategory]) -> some View {
-        ForEach(categories) { subCategory in
-            Button(subCategory.displayName) { 
-                self.selectedCategory = subCategory
-                if subCategory.subCategories?.count ?? 0 == 0 {
-                    confirmReport = true
-                } else {
-                    Task { 
-                        self.isPresented = true
-                    }
-                }
-            }
+    func subCategoryButtons(for categories: [ReportCategory]) -> [ButtonState<ReportCategory>] {
+        categories.map { subCategory in
+            ButtonState(action: .send(subCategory)) {
+                TextState(verbatim: subCategory.displayName)
+            } 
         }
     }
     
