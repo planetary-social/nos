@@ -12,7 +12,7 @@ struct ComposerActionBar: View {
     
     @Binding var expirationTime: TimeInterval?
     @Binding var postText: NSAttributedString
-    @State var fileStorageAPI: FileStorageAPI = NoopFileStorageAPI()
+    @State var fileStorageAPI: FileStorageAPI = NostrBuildFileStorageAPI()
     
     enum SubMenu {
         case expirationDate
@@ -38,7 +38,7 @@ struct ComposerActionBar: View {
                 ImagePickerButton { image in
                     Task {
                         do {
-                            let attachedFile = AttachedFile(data: image.jpegData(compressionQuality: 0.9)!)
+                            let attachedFile = AttachedFile(image: image)
                             let url = try await fileStorageAPI.upload(file: attachedFile)
                             let tmpPostText = NSMutableAttributedString(attributedString: self.postText)
                             tmpPostText.append(NSAttributedString(string: url.absoluteString))
