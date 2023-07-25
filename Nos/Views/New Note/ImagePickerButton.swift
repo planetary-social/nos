@@ -102,10 +102,10 @@ struct ImagePickerButton<Label>: View where Label: View {
         .sheet(isPresented: showImagePicker) {
             ImagePicker(sourceType: imagePickerSource ?? .photoLibrary, cameraDevice: .rear) { imagePicked in
                 if let image = imagePicked {
-                    //Analytics.shared.trackDidTapButton(buttonName: "choose")
+                    analytics.selectedImage()
                     onCompletion(image)
                 } else {
-                    //Analytics.shared.trackDidTapButton(buttonName: "cancel")
+                    analytics.cancelledImageSelection()
                 }
                 imagePickerSource = nil
             }

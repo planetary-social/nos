@@ -214,6 +214,14 @@ class Analytics {
         track("Selected Upload From Photo Library")
     }
     
+    func selectedImage() {
+        track("Selected Image")
+    }
+    
+    func cancelledImageSelection() {
+        track("Cancelled Image Selection")
+    }
+    
     func cancelledUploadSourceSelection() {
         track("Cancelled Upload Source Selection")
     }

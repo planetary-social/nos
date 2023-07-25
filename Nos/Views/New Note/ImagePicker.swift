@@ -31,16 +31,12 @@ struct ImagePicker: UIViewControllerRepresentable {
             self.parent = parent
         }
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            //Analytics.shared.trackDidTapButton(buttonName: "cancel")
-            // todo
             parent.onCompletion(nil)
         }
         func imagePickerController(
             _ picker: UIImagePickerController,
             didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
         ) {
-            //Analytics.shared.trackDidTapButton(buttonName: "choose")
-            // todo
             let rect = (info[UIImagePickerController.InfoKey.cropRect] as? CGRect) ?? CGRect.zero
             let original = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
             let edited = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
