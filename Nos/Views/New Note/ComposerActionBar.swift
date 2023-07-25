@@ -16,6 +16,7 @@ struct ComposerActionBar: View {
     
     enum SubMenu {
         case expirationDate
+        case uploadingImage
     }
     
     @State private var subMenu: SubMenu?
@@ -38,12 +39,18 @@ struct ComposerActionBar: View {
                 ImagePickerButton { image in
                     Task {
                         do {
+                            subMenu = .uploadingImage
                             let attachedFile = AttachedFile(image: image)
                             let url = try await fileStorageAPI.upload(file: attachedFile)
                             let tmpPostText = NSMutableAttributedString(attributedString: self.postText)
+                            if !tmpPostText.string.isEmpty {
+                                tmpPostText.append(NSAttributedString(string: " "))
+                            }
                             tmpPostText.append(NSAttributedString(string: url.absoluteString))
                             self.postText = tmpPostText
+                            subMenu = .none
                         } catch {
+                            subMenu = .none
                             print("error uploading image: \(error)")
                         }
                     }
@@ -90,6 +97,13 @@ struct ComposerActionBar: View {
                         ExpirationTimePicker(expirationTime: $expirationTime)
                             .padding(.vertical, 12)
                     }
+                }
+            case .uploadingImage:
+                HStack {
+                    Spacer()
+                    ProgressView()
+                        .padding(10)
+                    Spacer()
                 }
             }
             Spacer()
