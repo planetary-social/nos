@@ -204,4 +204,17 @@ class Analytics {
     func deletedNote() {
         track("Deleted Note")
     }
+    
+    // MARK: Uploads
+    func selectedUploadFromCamera() {
+        track("Selected Upload From Camera")
+    }
+    
+    func selectedUploadFromPhotoLibrary() {
+        track("Selected Upload From Photo Library")
+    }
+    
+    func cancelledUploadSourceSelection() {
+        track("Cancelled Upload Source Selection")
+    }
 }

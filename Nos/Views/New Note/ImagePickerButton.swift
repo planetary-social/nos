@@ -1,5 +1,6 @@
 import AVKit
 import SwiftUI
+import Dependencies
 
 struct ImagePickerButton<Label>: View where Label: View {
 
@@ -18,6 +19,8 @@ struct ImagePickerButton<Label>: View where Label: View {
     /// Source used by ImagePicker when opening it
     @State
     private var imagePickerSource: UIImagePickerController.SourceType?
+    
+    @Dependency(\.analytics) private var analytics
 
     private var showImagePicker: Binding<Bool> {
         Binding {
@@ -42,7 +45,7 @@ struct ImagePickerButton<Label>: View where Label: View {
           //  Button(Localized.ImagePicker.takePhoto.text) {
                 .confirmationDialog("text1", isPresented: $showConfirmationDialog, titleVisibility: .hidden) {
                     Button("Use the camera") {
-                //Analytics.shared.trackDidSelectAction(actionName: "camera")
+                analytics.selectedUploadFromCamera()
                 // Check permissions
 
                 // simulator
@@ -75,12 +78,11 @@ struct ImagePickerButton<Label>: View where Label: View {
             }
             //Button(Localized.ImagePicker.selectFrom.text) {
             Button("Use the photo library") {
-                //Analytics.shared.trackDidSelectAction(actionName: "photo_library")
-                // We don't need permissions for this, move on
+                analytics.selectedUploadFromPhotoLibrary()
                 imagePickerSource = .photoLibrary
             }
             Button("Cancel", role: .cancel) {
-                //Analytics.shared.trackDidSelectAction(actionName: "cancel")
+                analytics.cancelledUploadSourceSelection()
                 showConfirmationDialog = false
             }
         }
