@@ -112,9 +112,10 @@ struct RelayPickerRow: View {
 
 struct RelayPicker_Previews: PreviewProvider {
 
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
+    static var relayService = previewData.relayService
     
     static var user: Author {
         let author = Author(context: previewContext)

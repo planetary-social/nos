@@ -21,16 +21,16 @@ import Logger
     @Published var followedKeys = [HexadecimalString]()  
     
     func contains(_ key: HexadecimalString?) -> Bool {
-        guard let key, let user else {
+        guard let key, let userKey else {
             return false
         }
         
-        return twoHopKeys.contains(key) || oneHopKeys.contains(key) || user.hexadecimalPublicKey == key
+        return twoHopKeys.contains(key) || oneHopKeys.contains(key) || userKey == key
     }
     
     // MARK: - Private properties
     
-    private let user: Author?
+    private let userKey: HexadecimalString?
     private let context: NSManagedObjectContext
     
     private var userWatcher: NSFetchedResultsController<Author>?
@@ -42,18 +42,18 @@ import Logger
     private var twoHopReferences: [HexadecimalString: Int]
 
     init(userKey: HexadecimalString?, context: NSManagedObjectContext) {
+        self.userKey = userKey
         self.context = context
         self.oneHopKeys = Set()
         self.twoHopKeys = Set()
         self.twoHopReferences = [:]
         
         guard let userKey else {
-            self.user = nil
             super.init()
             return
         }
         
-        self.user = context.performAndWait {
+        let user = context.performAndWait {
             let author = try! Author.findOrCreate(by: userKey, context: context)
             try? context.saveIfNeeded()
             return author
@@ -69,7 +69,7 @@ import Logger
             cacheName: "SocialGraphCache.userWatcher"
         )
         oneHopWatcher = NSFetchedResultsController(
-            fetchRequest: Author.oneHopRequest(for: user!),
+            fetchRequest: Author.oneHopRequest(for: user),
             managedObjectContext: context,
             sectionNameKeyPath: nil,
             cacheName: "SocialGraphCache.oneHopWatcher"
@@ -81,8 +81,7 @@ import Logger
             try! self.userWatcher?.performFetch()
             try! self.oneHopWatcher?.performFetch()
             self.oneHopWatcher?.fetchedObjects?.forEach { author in
-                guard let userKey = user?.hexadecimalPublicKey,
-                    let followedKey = author.hexadecimalPublicKey else {
+                guard let followedKey = author.hexadecimalPublicKey else {
                     return
                 }
                 let twoHopsKeys = author.followedKeys
@@ -164,12 +163,13 @@ import Logger
         for type: NSFetchedResultsChangeType, 
         newIndexPath: IndexPath?
     ) {
-        guard let userKey = user?.hexadecimalPublicKey,
+        guard let userKey, 
             let changedAuthor = anObject as? Author,
             let authorKey = changedAuthor.hexadecimalPublicKey else {
             return
         }
         let twoHopsKeys = changedAuthor.followedKeys
+        let followedKeys = changedAuthor.followedKeys
         
         Task { @MainActor in
             if controller === self.oneHopWatcher {
@@ -187,7 +187,7 @@ import Logger
                     return
                 }
             } else if controller === self.userWatcher {
-                changedAuthor.followedKeys.forEach {
+                followedKeys.forEach {
                     self.process(user: authorKey, followed: $0, whoFollows: [])
                 }
             }

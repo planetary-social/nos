@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Logger
+import Dependencies
 
 /// A view that displays the text of a note (kind: 1 Nostr event) and truncates it with a "Read more" button if
 /// it is too long
@@ -22,8 +23,10 @@ struct CompactNoteView: View {
     @State private var intrinsicSize = CGSize.zero
     @State private var truncatedSize = CGSize.zero
     @State private var attributedContent: AttributedString
+    @State private var contentLinks = [URL]()
     
     @EnvironmentObject var router: Router
+    @Dependency(\.persistenceController) private var persistenceController
     
     internal init(note: Event, showFullMessage: Bool = false) {
         _attributedContent = .init(initialValue: AttributedString(note.content ?? ""))
@@ -111,25 +114,26 @@ struct CompactNoteView: View {
                 .frame(maxWidth: .infinity)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
-            if note.kind == EventKind.text.rawValue,
-                let url = try? note
-                    .content?
-                    .findUnformattedLinks()
-                    .first(where: { $0.isImage }) {
-                SquareImage(url: url) {
-                    router.open(url: url, with: viewContext)
+            if note.kind == EventKind.text.rawValue, !contentLinks.isEmpty {
+                VStack {
+                    ForEach(contentLinks, id: \.self.absoluteURL) { url in
+                        LinkPreview(url: url)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.horizontal, 15)
+                    }
                 }
+                .padding(.bottom, 15)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .task {
-            let backgroundContext = PersistenceController.backgroundViewContext
+            let backgroundContext = persistenceController.backgroundViewContext
             if let parsedAttributedContent = await Event.attributedContent(
                 noteID: note.identifier,
                 context: backgroundContext
             ) {
                 withAnimation {
-                    attributedContent = parsedAttributedContent
+                    (self.attributedContent, self.contentLinks) = parsedAttributedContent
                 }
             }
         }
@@ -148,21 +152,18 @@ fileprivate struct TruncatedSizePreferenceKey: PreferenceKey {
 
 struct CompactNoteView_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
+    
     static var previews: some View {
         Group {
-            VStack {
-                CompactNoteView(note: PreviewData.shortNote)
-            }
-            VStack {
-                CompactNoteView(note: PreviewData.longNote)
-            }
-            VStack {
-                CompactNoteView(note: PreviewData.longFormNote)
-            }
+            CompactNoteView(note: previewData.linkNote)
+            CompactNoteView(note: previewData.shortNote)
+            CompactNoteView(note: previewData.longNote)
+            CompactNoteView(note: previewData.longFormNote)
+            CompactNoteView(note: previewData.doubleImageNote)
         }
         .padding()
         .background(Color.cardBackground)
-        .environmentObject(PreviewData.router)
-        .environment(\.managedObjectContext, PreviewData.previewContext)
+        .inject(previewData: PreviewData())
     }
 }

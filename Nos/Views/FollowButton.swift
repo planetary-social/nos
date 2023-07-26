@@ -13,16 +13,17 @@ struct FollowButton: View {
     @ObservedObject var currentUserAuthor: Author
     @ObservedObject var author: Author
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
     
     var body: some View {
-        let following = CurrentUser.shared.isFollowing(author: author)
+        let following = currentUser.isFollowing(author: author)
         ActionButton(title: following ? .unfollow : .follow) {
             if following {
-                await CurrentUser.shared.unfollow(author: author)
+                await currentUser.unfollow(author: author)
                 analytics.unfollowed(author)
             } else {
-                await CurrentUser.shared.follow(author: author)
+                await currentUser.follow(author: author)
                 analytics.followed(author)
             }
         }
@@ -74,7 +75,7 @@ struct FollowButton_Previews: PreviewProvider {
             // FollowButton(currentUserAuthor: user, author: bob)
         }
         .onAppear {
-            // I can't get this to work, CurrentUser.shared.context is always nil
+            // I can't get this to work, currentUser.context is always nil
             createTestData(in: previewContext)
         }
     }

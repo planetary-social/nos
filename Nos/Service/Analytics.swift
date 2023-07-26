@@ -149,6 +149,24 @@ class Analytics {
         track("Rate Limited", properties: ["relay": socket.request.url?.absoluteString ?? "null"])
     }
     
+    // MARK: - Notifications
+    
+    func receivedNotification() {
+        track("Push Notification Received")
+    }
+    
+    func displayedNotification() {
+        track("Push Notification Displayed")
+    }
+    
+    func tappedNotification() {
+        track("Push Notification Tapped")
+    }
+    
+    func pushNotificationRegistrationFailed(reason: String) {
+        track("Push Notification Registration Failed", properties: ["reason": reason])
+    }
+    
     // MARK: UNS
     
     func showedUNSWizard() {

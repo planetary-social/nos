@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Dependencies
 
 let goldenRatio: CGFloat = 0.618
 
@@ -21,6 +22,8 @@ struct GoldenPostView: View {
     @EnvironmentObject private var router: Router
     
     @State private var attributedContent: AttributedString
+    @State private var contentLinks = [URL]()
+    @Dependency(\.persistenceController) private var persistenceController
     
     internal init(author: Author, note: Event) {
         self.author = author
@@ -60,13 +63,13 @@ struct GoldenPostView: View {
         }
         .padding(10)
         .task {
-            let backgroundContext = PersistenceController.backgroundViewContext
+            let backgroundContext = persistenceController.backgroundViewContext
             if let parsedAttributedContent = await Event.attributedContent(
                 noteID: note.identifier,
                 context: backgroundContext
             ) {
                 withAnimation {
-                    attributedContent = parsedAttributedContent
+                    (self.attributedContent, self.contentLinks) = parsedAttributedContent
                 }
             }
         }

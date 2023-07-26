@@ -19,7 +19,7 @@ struct RepostButton: View {
     internal init(note: Event, action: @escaping () async -> Void) {
         self.note = note
         self.action = action
-        _reposts = FetchRequest(fetchRequest: Event.reposts(noteID: note.identifier!))
+        _reposts = FetchRequest(fetchRequest: Event.reposts(noteID: note.identifier ?? ""))
     }
     
     var currentUserRepostedNote: Bool {

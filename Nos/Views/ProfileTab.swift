@@ -22,7 +22,7 @@ struct ProfileTab: View {
             ProfileView(author: author)
                 .navigationBarItems(leading: SideMenuButton())
                 .navigationDestination(for: Author.self) { profile in
-                    if profile == CurrentUser.shared.author, CurrentUser.shared.editing {
+                    if profile == currentUser.author, currentUser.editing {
                         ProfileEditView(author: profile)
                     } else {
                         ProfileView(author: profile)
