@@ -28,20 +28,21 @@ class NostrBuildFileStorageAPI: FileStorageAPI {
         data.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
         
         return try await withCheckedThrowingContinuation { continuation in
-            URLSession.shared.uploadTask(with: request, from: data, completionHandler: { responseData, response, error in
-                do {
-                    if error != nil {
-                        continuation.resume(throwing: error!)
-                        return
+            URLSession.shared
+                .uploadTask(with: request, from: data, completionHandler: { responseData, _, error in
+                    do {
+                        if error != nil {
+                            continuation.resume(throwing: error!)
+                            return
+                        }
+                        
+                        let url = try JSONSerialization.jsonObject(with: responseData!, options: .allowFragments) as? String
+                        continuation.resume(returning: URL(string: url!)!)
+                    } catch {
+                        continuation.resume(throwing: error)
                     }
-                    
-                    let url = try JSONSerialization.jsonObject(with: responseData!, options: .allowFragments) as? String
-                    continuation.resume(returning: URL(string: url!)!)
-                }
-                catch {
-                    continuation.resume(throwing: error)
-                }
-            }).resume()
+                })
+                .resume()
         }
     }
 }
