@@ -58,7 +58,7 @@ class Router: ObservableObject {
     }
     
     /// Pushes the given destination item onto the current NavigationPath.
-    func push<D: Hashable>(_ destination: D) {
+    @MainActor func push<D: Hashable>(_ destination: D) {
         currentPath.wrappedValue.append(destination)
     }
     
@@ -69,7 +69,7 @@ class Router: ObservableObject {
 
 extension Router {
     
-    func open(url: URL, with context: NSManagedObjectContext) {
+    @MainActor func open(url: URL, with context: NSManagedObjectContext) {
         let link = url.absoluteString
         let identifier = String(link[link.index(after: link.startIndex)...])
         // handle mentions. mention link will be prefixed with "@" followed by

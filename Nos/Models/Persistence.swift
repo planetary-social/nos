@@ -155,10 +155,14 @@ struct PersistenceController {
     /// - delete authors outside the user's network 
     /// - delete any other models that are orphaned by the previous deletions
     /// - fix EventReferences whose referencedEvent was deleted by createing a stubbed Event
-    static func cleanupEntities(for currentUser: CurrentUser) {
+    @MainActor static func cleanupEntities(for currentUser: CurrentUser) {
         // this function was written in a hurry and probably should be refactored and tested thorougly.
         guard cleanupTask == nil else {
             Log.info("Core Data cleanup task already running. Aborting.")
+            return
+        }
+        
+        guard let authorKey = currentUser.author?.hexadecimalPublicKey else {
             return
         }
         
@@ -168,35 +172,35 @@ struct PersistenceController {
             let startTime = Date.now
             Log.info("Starting Core Data cleanup...")
             
-            guard let currentAuthor = await currentUser.author else {
-                return
-            }
-            
             Log.info("Database statistics: \(try databaseStatistics(from: context).sorted(by: { $0.key < $1.key }))")
             
             // Delete all but the most recent n events
             let eventsToKeep = 10_000
             let fetchFirstEventToDelete = Event.allEventsRequest()
-            fetchFirstEventToDelete.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
+            fetchFirstEventToDelete.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
             fetchFirstEventToDelete.fetchLimit = 1
             fetchFirstEventToDelete.fetchOffset = eventsToKeep
             fetchFirstEventToDelete.predicate = NSPredicate(format: "receivedAt != nil")
             var deleteBefore = Date.distantPast
-            if let firstEventToDelete = try context.fetch(fetchFirstEventToDelete).first,
-                let receivedAt = firstEventToDelete.receivedAt {
-                deleteBefore = receivedAt
-            }
-               
-            // Delete events older than `deleteBefore`
-            let oldEventsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
-            oldEventsRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
-            oldEventsRequest.predicate = NSPredicate(
-                format: "author != %@ AND (receivedAt <= %@ OR receivedAt == nil)", 
-                currentAuthor,
-                deleteBefore as CVarArg
-            )
-            
             try await context.perform {
+                
+                guard let currentAuthor = try? Author.find(by: authorKey, context: context) else {
+                    return
+                }
+                
+                if let firstEventToDelete = try context.fetch(fetchFirstEventToDelete).first,
+                    let receivedAt = firstEventToDelete.receivedAt {
+                    deleteBefore = receivedAt
+                }
+                   
+                // Delete events older than `deleteBefore`
+                let oldEventsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
+                oldEventsRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
+                oldEventsRequest.predicate = NSPredicate(
+                    format: "author != %@ AND (receivedAt <= %@ OR receivedAt == nil)", 
+                    currentAuthor,
+                    deleteBefore as CVarArg
+                )
                 
                 let deleteRequests: [NSPersistentStoreRequest] = [
                     oldEventsRequest,
@@ -206,6 +210,7 @@ struct PersistenceController {
                     Author.outOfNetwork(for: currentAuthor),
                     Follow.orphanedRequest(),
                     Relay.orphanedRequest(),
+                    // TODO: delete old notifications
                 ]
                 
                 for request in deleteRequests {

@@ -16,9 +16,11 @@ struct NosApp: App {
     @Dependency(\.relayService) private var relayService
     @Dependency(\.router) private var router
     @Dependency(\.currentUser) private var currentUser
+    @Dependency(\.pushNotificationService) private var pushNotificationService
     private let appController = AppController()
     @Environment(\.scenePhase) private var scenePhase
-
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
         WindowGroup {
             AppView()
@@ -27,6 +29,7 @@ struct NosApp: App {
                 .environmentObject(router)
                 .environmentObject(appController)
                 .environmentObject(currentUser)
+                .environmentObject(pushNotificationService)
                 .task {
                     currentUser.relayService = relayService
                     PersistenceController.cleanupEntities(for: currentUser)

@@ -148,7 +148,7 @@ struct NewNoteView: View {
 
     private func publishPost() async {
         guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
-            Log.error("Posting without a keypair")
+            Log.error("Cannot post without a keypair")
             return
         }
         
@@ -161,8 +161,13 @@ struct NewNoteView: View {
 
             let jsonEvent = JSONEvent(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
             
-            if let relay = selectedRelay {
-                try await relayService.publish(event: jsonEvent, to: relay, signingKey: keyPair, context: viewContext)
+            if let relayURL = selectedRelay?.addressURL {
+                try await relayService.publish(
+                    event: jsonEvent,
+                    to: relayURL,
+                    signingKey: keyPair,
+                    context: viewContext
+                )
             } else if expirationTime != nil {
                 let relays = try await Relay.find(supporting: 40, for: author, context: viewContext)
                 try await relayService.publish(event: jsonEvent, to: relays, signingKey: keyPair, context: viewContext)
