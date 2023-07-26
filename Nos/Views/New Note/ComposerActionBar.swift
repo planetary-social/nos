@@ -11,7 +11,7 @@ import SwiftUI
 struct ComposerActionBar: View {
     
     @Binding var expirationTime: TimeInterval?
-    @Binding var postText: NSAttributedString
+    @Binding var text: EditableNoteText
     @State var fileStorageAPI: FileStorageAPI = NostrBuildFileStorageAPI()
     
     enum SubMenu {
@@ -42,12 +42,7 @@ struct ComposerActionBar: View {
                             subMenu = .uploadingImage
                             let attachedFile = AttachedFile(image: image)
                             let url = try await fileStorageAPI.upload(file: attachedFile)
-                            let tmpPostText = NSMutableAttributedString(attributedString: self.postText)
-                            if !tmpPostText.string.isEmpty {
-                                tmpPostText.append(NSAttributedString(string: " "))
-                            }
-                            tmpPostText.append(NSAttributedString(string: url.absoluteString))
-                            self.postText = tmpPostText
+                            text.append(string: url.absoluteString)
                             subMenu = .none
                         } catch {
                             subMenu = .none
@@ -122,14 +117,14 @@ struct ComposerActionBar_Previews: PreviewProvider {
     
     @State static var emptyExpirationTime: TimeInterval?
     @State static var setExpirationTime: TimeInterval? = 60 * 60
-    @State static var postText = NSAttributedString()
+    @State static var postText = EditableNoteText()
     
     static var previews: some View {
         VStack {
             Spacer()
-            ComposerActionBar(expirationTime: $emptyExpirationTime, postText: $postText)
+            ComposerActionBar(expirationTime: $emptyExpirationTime, text: $postText)
             Spacer()
-            ComposerActionBar(expirationTime: $setExpirationTime, postText: $postText)
+            ComposerActionBar(expirationTime: $setExpirationTime, text: $postText)
             Spacer()
         }
         .frame(maxWidth: .infinity)

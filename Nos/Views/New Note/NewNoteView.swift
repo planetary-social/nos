@@ -20,7 +20,7 @@ struct NewNoteView: View {
     @Dependency(\.analytics) private var analytics
 
     /// State holding the text the user is typing
-    @State private var postText = NSAttributedString("")
+    @State private var text = EditableNoteText()
     
     @State var expirationTime: TimeInterval?
     
@@ -42,13 +42,13 @@ struct NewNoteView: View {
             ZStack {
                 VStack {
                     NoteTextEditor(
-                        text: $postText, 
+                        text: $text, 
                         placeholder: Localized.newNotePlaceholder, 
                         focus: $isTextEditorInFocus
                     )
                     .padding(10)
                     Spacer()
-                    ComposerActionBar(expirationTime: $expirationTime, postText: $postText)
+                    ComposerActionBar(expirationTime: $expirationTime, text: $text)
                 }
                 
                 if showRelayPicker, let author = currentUser.author {
@@ -90,7 +90,7 @@ struct NewNoteView: View {
                 },
                 trailing: ActionButton(title: Localized.post, action: postAction)
                     .frame(height: 22)
-                    .disabled(postText.string.isEmpty)
+                    .disabled(text.string.isEmpty)
                     .padding(.bottom, 3)
             )
             .onAppear {
@@ -153,7 +153,7 @@ struct NewNoteView: View {
         }
         
         do {
-            var (content, tags) = NoteParser.parse(attributedText: AttributedString(postText))
+            var (content, tags) = NoteParser.parse(attributedText: text.attributedString)
             
             if let expirationTime {
                 tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
@@ -175,7 +175,7 @@ struct NewNoteView: View {
                 try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
             }
             analytics.published(note: jsonEvent)
-            postText = NSAttributedString("")
+            text = EditableNoteText()
         } catch {
             Log.error("Error when posting: \(error.localizedDescription)")
         }

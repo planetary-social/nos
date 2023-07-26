@@ -13,7 +13,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     var placeholder: any Localizable
-    @Binding var reply: NSAttributedString
+    @Binding var reply: EditableNoteText
     var focus: FocusState<Bool>.Binding
     var action: () async -> Void
     
@@ -35,7 +35,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
                         focus.wrappedValue = false
                         Task {
                             await action()
-                            reply = NSAttributedString("")
+                            reply = EditableNoteText()
                             disabled = false
                         }
                     },
@@ -55,7 +55,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
 
 struct ExpandingTextFieldAndSubmitButton_Previews: PreviewProvider {
 
-    @State static var reply = NSAttributedString("Hello World")
+    @State static var reply = EditableNoteText(string: "Hello World")
     @FocusState static var isFocused: Bool
 
     static var previews: some View {
