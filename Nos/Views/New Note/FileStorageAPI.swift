@@ -9,12 +9,6 @@ protocol FileStorageAPI {
     func upload(file: AttachedFile) async throws -> URL
 }
 
-class NoopFileStorageAPI: FileStorageAPI {
-    func upload(file: AttachedFile) async throws -> URL {
-        return URL(string: "https://example.com/abcd.jpg")!
-    }
-}
-
 class NostrBuildFileStorageAPI: FileStorageAPI {
     var uploadURL = URL(string: "https://nostr.build/api/upload/ios.php")!
     
@@ -32,7 +26,7 @@ class NostrBuildFileStorageAPI: FileStorageAPI {
         data.append("Content-Type: image/jpg\r\n\r\n".data(using: .utf8)!)
         data.append(file.image.jpegData(compressionQuality: 85)!)
         data.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
-                
+        
         return try await withCheckedThrowingContinuation { continuation in
             URLSession.shared.uploadTask(with: request, from: data, completionHandler: { responseData, response, error in
                 do {

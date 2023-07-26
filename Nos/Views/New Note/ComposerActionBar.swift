@@ -20,11 +20,11 @@ struct ComposerActionBar: View {
     }
     
     @State private var subMenu: SubMenu?
-
+    
     var backArrow: some View {
-        Button { 
+        Button {
             subMenu = .none
-        } label: { 
+        } label: {
             Image.backChevron
                 .frame(minWidth: 44, minHeight: 44)
         }
@@ -57,33 +57,33 @@ struct ComposerActionBar: View {
                 } label: {
                     Image.attachMediaButton
                         .foregroundColor(.secondaryText)
-                        .frame(minWidth: 44, minHeight: 44)                }
+                    .frame(minWidth: 44, minHeight: 44)                }
                 .padding(.leading, 8)
                 .accessibilityLabel(Localized.attachMedia.view)
-
+                
                 // Expiration Time
                 if let expirationTime, let option = ExpirationTimeOption(rawValue: expirationTime) {
                     ExpirationTimeButton(
-                        model: option, 
+                        model: option,
                         showClearButton: true,
-                        isSelected: Binding(get: { 
+                        isSelected: Binding(get: {
                             self.expirationTime == option.timeInterval
-                        }, set: { 
+                        }, set: {
                             self.expirationTime = $0 ? option.timeInterval : nil
                         })
                     )
                     .accessibilityLabel(Localized.expirationDate.view)
                     .padding(12)
                 } else {
-                    Button { 
+                    Button {
                         subMenu = .expirationDate
-                    } label: { 
+                    } label: {
                         Image.disappearingMessages
                             .foregroundColor(.secondaryText)
                             .frame(minWidth: 44, minHeight: 44)
                     }
                 }
-
+                
             case .expirationDate:
                 backArrow
                 ScrollView(.horizontal) {
@@ -119,9 +119,9 @@ struct ComposerActionBar: View {
 
 struct ComposerActionBar_Previews: PreviewProvider {
     
-    @State static var emptyExpirationTime: TimeInterval? 
+    @State static var emptyExpirationTime: TimeInterval?
     @State static var setExpirationTime: TimeInterval? = 60 * 60
-    @State static var postText: NSAttributedString = NSAttributedString()
+    @State static var postText = NSAttributedString()
     
     static var previews: some View {
         VStack {
