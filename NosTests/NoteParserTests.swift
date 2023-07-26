@@ -375,6 +375,41 @@ final class NoteNoteParserTests: XCTestCase {
         XCTAssertEqual(actualString, expectedString)
         XCTAssertEqual(actualURLs, expectedURLs)
     }
+    
+    func testExtractURLsFromImageNoteWithExtraNewlines() throws {
+        let string = "https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg\n\nHello, world!"
+        let expectedString = "Hello, world!"
+        let expectedURLs = [
+            URL(string: "https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg")!
+        ]
+
+        // Act
+        let (actualString, actualURLs) = string.extractURLs()
+        XCTAssertEqual(actualString, expectedString)
+        XCTAssertEqual(actualURLs, expectedURLs)
+    }
+    
+    func testExtractURLsRemovesDuplicateNewlines() throws {
+        let string = "Hello!\n\nWorld!"
+        let expectedString = "Hello!\nWorld!"
+        let expectedURLs: [URL] = []
+
+        // Act
+        let (actualString, actualURLs) = string.extractURLs()
+        XCTAssertEqual(actualString, expectedString)
+        XCTAssertEqual(actualURLs, expectedURLs)
+    }
+    
+    func testExtractURLsRemovesLeadingAndTrailingWhitespace() throws {
+        let string = "  \n\nHello world!\n\n  "
+        let expectedString = "Hello world!"
+        let expectedURLs: [URL] = []
+
+        // Act
+        let (actualString, actualURLs) = string.extractURLs()
+        XCTAssertEqual(actualString, expectedString)
+        XCTAssertEqual(actualURLs, expectedURLs)
+    }
 }
 
 fileprivate extension AttributedString {

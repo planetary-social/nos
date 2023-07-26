@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed several bugs around muting users
 - Added the number of connected relays at the top right corner of the Home Feed.
 - Fixed a bug where expired messages could be published to relays that doesn't support them
+- Multiple consecutive newlines will be replaced by a single new line in note content.
+- Leading and trailing whitespace will no longer be rendered in note content.
 
 ## [0.1 (53)] - 2023-07-03Z
 
