@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Dependencies
 
 /// A view that details some interaction (reply, like, follow, etc.) with one of your notes.
 struct NotificationCard: View {
@@ -13,6 +14,7 @@ struct NotificationCard: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
+    @Dependency(\.persistenceController) private var persistenceController
     
     @ObservedObject private var viewModel: NotificationViewModel
     @State private var subscriptionIDs = [RelaySubscription.ID]()
@@ -82,7 +84,7 @@ struct NotificationCard: View {
         .buttonStyle(CardButtonStyle())
         .onAppear {
             Task(priority: .userInitiated) {
-                let backgroundContext = PersistenceController.backgroundViewContext
+                let backgroundContext = persistenceController.backgroundViewContext
                 await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
                     noteID: viewModel.id,
                     using: relayService,

@@ -18,6 +18,7 @@ struct NotificationsView: View {
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
     @Dependency(\.pushNotificationService) private var pushNotificationService
+    @Dependency(\.persistenceController) private var persistenceController
 
     private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
@@ -60,7 +61,7 @@ struct NotificationsView: View {
     func markAllNotificationsRead() async {
         if let user {
             do {
-                let backgroundContext = PersistenceController.backgroundViewContext
+                let backgroundContext = persistenceController.backgroundViewContext
                 try await NosNotification.markAllAsRead(for: user, in: backgroundContext)
                 await pushNotificationService.updateBadgeCount()
             } catch {
@@ -130,14 +131,15 @@ struct NotificationsView: View {
 
 struct NotificationsView_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
+    static var relayService = previewData.relayService
     
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
+    static var emptyRelayService = previewData.relayService
     
     static var router = Router()
     

@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Dutch, Japanese, and Persian translations. Thanks matata, yutaro, and eru-desu! 
 - Added some visual artists to the list of featured users.
 
+## [0.1 (58)] - 2023-07-17Z
+
+- Added better previews for urls shared in notes.
+
 ## [0.1 (57)] - 2023-07-17Z
 
 - Fixed an issue where Nos couldn't find the user's key on startup.

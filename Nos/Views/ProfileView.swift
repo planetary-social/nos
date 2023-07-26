@@ -16,6 +16,7 @@ struct ProfileView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
+    @EnvironmentObject private var currentUser: CurrentUser
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
     
@@ -121,10 +122,10 @@ struct ProfileView: View {
                             UIPasteboard.general.string = router.viewedAuthor?.webLink ?? ""
                         }
                         if let author = router.viewedAuthor {
-                            if author == CurrentUser.shared.author {
+                            if author == currentUser.author {
                                 Button(
                                     action: {
-                                        CurrentUser.shared.editing = true
+                                        currentUser.editing = true
                                         router.push(author)
                                     },
                                     label: {
@@ -201,6 +202,7 @@ struct ProfileView: View {
 
 struct IdentityView_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
     
@@ -218,11 +220,11 @@ struct IdentityView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationStack {
-            ProfileView(author: PreviewData.previewAuthor)
+            ProfileView(author: previewData.previewAuthor)
         }
-        .environment(\.managedObjectContext, PreviewData.previewContext)
-        .environmentObject(PreviewData.relayService)
-        .environmentObject(PreviewData.router)
-        .environmentObject(PreviewData.currentUser)
+        .environment(\.managedObjectContext, previewData.previewContext)
+        .environmentObject(previewData.relayService)
+        .environmentObject(previewData.router)
+        .environmentObject(previewData.currentUser)
     }
 }

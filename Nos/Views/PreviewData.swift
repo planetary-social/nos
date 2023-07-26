@@ -7,25 +7,30 @@
 
 import SwiftUI
 import Foundation
+import Dependencies
+import CoreData
 
 // swiftlint:disable line_length
 
-/// Some test data that can be used in SwiftUI Previews
-enum PreviewData {
+/// A set of test data and an environment that can be used to display Core Data objects in SwiftUI Previews. This 
+/// includes an in-memory persistent store and mocked versions of other singletons like `Router` and `RelayService`.
+/// 
+/// Instantiate an instance as a `static var` in a preview
+/// and inject it into the view using the `inject(previewData:)` view modifier.
+struct PreviewData {
     
     // MARK: - Environment
-    static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
-    static var router = Router()
-    static var emptyPersistenceController = PersistenceController.empty
-    static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
-    static var relayService = RelayService(persistenceController: persistenceController)
+    @Dependency(\.persistenceController) var persistenceController 
+    @Dependency(\.router) var router
+    @Dependency(\.relayService) var relayService
+    lazy var previewContext: NSManagedObjectContext = {
+        persistenceController.container.viewContext  
+    }()
     
     // MARK: - User
 
-    @MainActor static var currentUser: CurrentUser = {
-        let currentUser = CurrentUser(persistenceController: persistenceController)
+    @MainActor lazy var currentUser: CurrentUser = {
+        let currentUser = CurrentUser()
         currentUser.viewContext = previewContext
         currentUser.relayService = relayService
         Task { await currentUser.setKeyPair(KeyFixture.keyPair) }
@@ -34,11 +39,11 @@ enum PreviewData {
 
     // MARK: - Authors
     
-    static var previewAuthor: Author = {
+    lazy var previewAuthor: Author = {
         alice
     }()
     
-    static var alice: Author = {
+    lazy var alice: Author = {
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
         author.name = "Alice"
@@ -50,7 +55,7 @@ enum PreviewData {
         return author
     }()
     
-    static var bob: Author = {
+    lazy var bob: Author = {
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.bob.publicKeyHex
         author.name = "Bob"
@@ -59,7 +64,7 @@ enum PreviewData {
         return author
     }()
     
-    static var eve: Author = {
+    lazy var eve: Author = {
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.eve.publicKeyHex
         author.name = "Eve"
@@ -69,57 +74,62 @@ enum PreviewData {
     
     // MARK: - Notes
     
-    static var shortNote: Event {
+    lazy var shortNote: Event = {
         let note = Event(context: previewContext)
         note.identifier = "1"
+        note.kind = EventKind.text.rawValue
         note.content = "Hello, world!"
         note.author = previewAuthor
         note.createdAt = .now
         try! previewContext.save()
         return note
-    }
+    }()
     
-    static var imageNote: Event {
+    lazy var imageNote: Event = {
         let note = Event(context: previewContext)
         note.identifier = "2"
+        note.kind = EventKind.text.rawValue
         note.content = "Hello, world!https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg"
         note.author = previewAuthor
         note.createdAt = .now
         try! previewContext.save()
         return note
-    }
+    }()
     
-    static var verticalImageNote: Event {
+    lazy var verticalImageNote: Event = {
         let note = Event(context: previewContext)
         note.identifier = "3"
+        note.kind = EventKind.text.rawValue
         note.content = "Hello, world!https://nostr.build/i/nostr.build_1b958a2af7a2c3fcb2758dd5743912e697ba34d3a6199bfb1300fa6be1dc62ee.jpeg"
         note.author = previewAuthor
         note.createdAt = .now
         try! previewContext.save()
         return note
-    }
+    }()
     
-    static var veryWideImageNote: Event {
+    lazy var veryWideImageNote: Event = {
         let note = Event(context: previewContext)
         note.identifier = "4"
+        note.kind = EventKind.text.rawValue
         note.content = "Hello, world! https://nostr.build/i/nostr.build_db8287dde9aedbc65df59972386fde14edf9e1afc210e80c764706e61cd1cdfa.png"
         note.author = previewAuthor
         note.createdAt = .now
         try! previewContext.save()
         return note
-    }
+    }()
     
-    static var longNote: Event {
+    lazy var longNote: Event = {
         let note = Event(context: previewContext)
         note.identifier = "5"
+        note.kind = EventKind.text.rawValue
         note.createdAt = .now
         note.content = .loremIpsum(5)
         note.author = previewAuthor
         try! previewContext.save()
         return note
-    }
+    }()
     
-    static var longFormNote: Event {
+    lazy var longFormNote: Event = {
         let note = Event(context: previewContext)
         note.identifier = "6"
         note.createdAt = .now
@@ -136,9 +146,54 @@ enum PreviewData {
         note.author = previewAuthor
         try! previewContext.save()
         return note
-    }   
+    }()
     
-    static var repost: Event {
+    lazy var doubleImageNote: Event = {
+        let note = Event(context: previewContext)
+        note.identifier = "7"
+        note.kind = EventKind.text.rawValue
+        note.content = """
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore 
+        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+        
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg
+        https://nostr.build/i/nostr.build_1b958a2af7a2c3fcb2758dd5743912e697ba34d3a6199bfb1300fa6be1dc62ee.jpeg
+        """
+        note.author = previewAuthor
+        note.createdAt = .now
+        try! previewContext.save()
+        return note
+    }()
+    
+    lazy var linkNote: Event = {
+        let note = Event(context: previewContext)
+        note.identifier = "8"
+        note.kind = EventKind.text.rawValue
+        note.content = """
+        Wsg fam! 🤙🫂
+        Free sats await at the end, please read carefully ✨️
+        
+        We are officially out of the top 40 on nostr:npub1yfg0d955c2jrj2080ew7pa4xrtj7x7s7umt28wh0zurwmxgpyj9shwv6vg
+        Helluva drop from #7
+        
+        I need your help! 🥺
+        
+        Please, go boost my songs (as little as 1 sat) 💜
+        
+        https://www.wavlake.com/chu-t
+        
+        I'll give 100 sats to everyone who boosts this post
+        
+        Love y'all 🫶
+        """
+        note.author = previewAuthor
+        note.createdAt = .now
+        try! previewContext.save()
+        return note
+    }()
+    
+    lazy var repost: Event = {
         let originalPostAuthor = Author(context: previewContext)
         originalPostAuthor.hexadecimalPublicKey = KeyFixture.bob.publicKeyHex
         originalPostAuthor.name = "Bob"
@@ -146,6 +201,7 @@ enum PreviewData {
 
         let repostedNote = Event(context: previewContext)
         repostedNote.identifier = "3"
+        repostedNote.kind = EventKind.text.rawValue
         repostedNote.createdAt = .now
         repostedNote.content = "Please repost this Alice"
         repostedNote.author = originalPostAuthor
@@ -160,6 +216,25 @@ enum PreviewData {
         repost.eventReferences = NSOrderedSet(array: [reference])
         try! previewContext.save()
         return repost
+    }()
+}
+
+struct InjectPreviewData: ViewModifier {
+    
+    @State var previewData: PreviewData
+    
+    func body(content: Content) -> some View {
+        content
+            .environment(\.managedObjectContext, previewData.persistenceController.viewContext)
+            .environmentObject(previewData.router)
+            .environmentObject(previewData.relayService)
+            .environmentObject(previewData.currentUser)
+    }
+}
+
+extension View {
+    func inject(previewData: PreviewData) -> some View {
+        self.modifier(InjectPreviewData(previewData: previewData))
     }
 }
 

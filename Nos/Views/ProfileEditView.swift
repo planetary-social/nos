@@ -11,6 +11,7 @@ struct ProfileEditView: View {
     
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
+    @EnvironmentObject private var currentUser: CurrentUser
     @Environment(\.managedObjectContext) private var viewContext
 
     @ObservedObject var author: Author
@@ -132,7 +133,7 @@ struct ProfileEditView: View {
             populateTextFields()
         }
         .onDisappear {
-            CurrentUser.shared.editing = false
+            currentUser.editing = false
         }
     }
    
@@ -154,7 +155,7 @@ struct ProfileEditView: View {
         author.uns = unsText
         try! viewContext.save()
         // Post event
-        await CurrentUser.shared.publishMetaData()
+        await currentUser.publishMetaData()
     }
 }
 
