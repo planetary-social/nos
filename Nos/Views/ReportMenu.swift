@@ -144,7 +144,7 @@ struct ReportMenuModifier: ViewModifier {
             kind: .report, 
             tags: [
                 ["L", "MOD"],
-                ["l", selectedCategory.code, "MOD"],
+                ["l", "MOD>\(selectedCategory.code)"],
             ], 
             content: "This report uses NIP-69 vocabulary https://github.com/nostr-protocol/nips/pull/457"
         )
