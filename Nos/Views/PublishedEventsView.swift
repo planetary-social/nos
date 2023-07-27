@@ -45,7 +45,8 @@ struct PublishedEventsView: View {
 }
 
 struct PublishedEventsView_Previews: PreviewProvider {
+    static var previewData = PreviewData()
     static var previews: some View {
-        PublishedEventsView(author: PreviewData.previewAuthor)
+        PublishedEventsView(author: previewData.previewAuthor)
     }
 }

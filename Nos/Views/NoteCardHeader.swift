@@ -28,7 +28,8 @@ struct NoteCardHeader: View {
 }
 
 struct AuthorHeader_Previews: PreviewProvider {
+    static var previewData = PreviewData()
     static var previews: some View {
-        NoteCardHeader(note: PreviewData.imageNote, author: PreviewData.previewAuthor)
+        NoteCardHeader(note: previewData.imageNote, author: previewData.previewAuthor)
     }
 }

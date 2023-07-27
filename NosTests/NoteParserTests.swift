@@ -7,14 +7,18 @@
 
 import CoreData
 import XCTest
+import Dependencies
+
+// swiftlint:disable type_body_length
 
 final class NoteNoteParserTests: XCTestCase {
 
+    @Dependency(\.persistenceController) private var persistenceController
     var context: NSManagedObjectContext?
 
     override func setUp() async throws {
         try await super.setUp()
-        let managedObjectModel = PersistenceController.shared.container.managedObjectModel
+        let managedObjectModel = persistenceController.container.managedObjectModel
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
         do {
             try coordinator.addPersistentStore(ofType: NSInMemoryStoreType, configurationName: nil, at: nil)
@@ -51,7 +55,7 @@ final class NoteNoteParserTests: XCTestCase {
         let author = try Author.findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
         let links = attributedContent.links
@@ -67,7 +71,7 @@ final class NoteNoteParserTests: XCTestCase {
         let expectedContent = "hello @\(displayName)"
         let tags = [["p", hex]]
         let context = try XCTUnwrap(context)
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
         let links = attributedContent.links
@@ -83,7 +87,7 @@ final class NoteNoteParserTests: XCTestCase {
         let expectedContent = "@\(displayName)"
         let tags = [["p", hex]]
         let context = try XCTUnwrap(context)
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
         let links = attributedContent.links
@@ -99,7 +103,7 @@ final class NoteNoteParserTests: XCTestCase {
         let expectedContent = "Hello\n@\(displayName)"
         let tags = [["p", hex]]
         let context = try XCTUnwrap(context)
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
         let links = attributedContent.links
@@ -114,7 +118,7 @@ final class NoteNoteParserTests: XCTestCase {
         let expectedContent = "hello#[0]"
         let tags = [["p", hex]]
         let context = try XCTUnwrap(context)
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
         let links = attributedContent.links
@@ -131,7 +135,7 @@ final class NoteNoteParserTests: XCTestCase {
         let author = try Author.findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
         XCTAssertEqual(links.first?.key, "@\(name)")
@@ -145,7 +149,7 @@ final class NoteNoteParserTests: XCTestCase {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags = [["p", hex]]
         let context = try XCTUnwrap(context)
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
         XCTAssertEqual(links.first?.key, "@\(displayName)")
@@ -162,7 +166,7 @@ final class NoteNoteParserTests: XCTestCase {
         let author = try Author.findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
         XCTAssertEqual(links.first?.key, "@\(name)")
@@ -178,7 +182,7 @@ final class NoteNoteParserTests: XCTestCase {
         let author = try Author.findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
         XCTAssertEqual(links.first?.key, "@\(name)")
@@ -193,7 +197,7 @@ final class NoteNoteParserTests: XCTestCase {
         let hex2 = "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d"
         let tags = [["p", hex1], ["p", hex2]]
         let context = try XCTUnwrap(context)
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 2)
         XCTAssertEqual(links[safe: 0]?.key, "@\(displayName1)")
@@ -208,7 +212,7 @@ final class NoteNoteParserTests: XCTestCase {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags: [[String]] = [[]]
         let context = try XCTUnwrap(context)
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
         XCTAssertEqual(links[safe: 0]?.key, "\(npub)")
@@ -221,7 +225,7 @@ final class NoteNoteParserTests: XCTestCase {
         let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [[]]
         let context = try XCTUnwrap(context)
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
         XCTAssertEqual(links[safe: 0]?.key, "\(note)")
@@ -234,7 +238,7 @@ final class NoteNoteParserTests: XCTestCase {
         let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [[]]
         let context = try XCTUnwrap(context)
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
         XCTAssertEqual(links[safe: 0]?.key, "\(note)")
@@ -250,7 +254,7 @@ final class NoteNoteParserTests: XCTestCase {
         let noteHex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [["p", profileHex]]
         let context = try XCTUnwrap(context)
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 2)
         XCTAssertEqual(links[safe: 0]?.key, "\(note)")
@@ -268,7 +272,7 @@ final class NoteNoteParserTests: XCTestCase {
         
         let expectedContent = content
         let context = try XCTUnwrap(context)
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
 
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
@@ -291,7 +295,7 @@ final class NoteNoteParserTests: XCTestCase {
 
         let expectedContent = content
         let context = try XCTUnwrap(context)
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
 
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
@@ -314,7 +318,7 @@ final class NoteNoteParserTests: XCTestCase {
 
         let expectedContent = content
         let context = try XCTUnwrap(context)
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
 
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
@@ -335,13 +339,41 @@ final class NoteNoteParserTests: XCTestCase {
 
         let expectedContent = content
         let context = try XCTUnwrap(context)
-        let attributedContent = NoteParser.parse(content: content, tags: tags, context: context)
+        let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
 
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
 
         let links = attributedContent.links
         XCTAssertEqual(links.count, 0)
+    }
+    
+    func testExtractURLsFromNote() throws {
+        // swiftlint:disable line_length
+        let string = "Classifieds incoming... 👀\n\nhttps://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg"
+        // swiftlint:enable line_length
+        let expectedString = "Classifieds incoming... 👀"
+        let expectedURLs = [
+            URL(string: "https://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg")!
+        ]
+
+        // Act
+        let (actualString, actualURLs) = string.extractURLs()
+        XCTAssertEqual(actualString, expectedString)
+        XCTAssertEqual(actualURLs, expectedURLs)
+    }
+    
+    func testExtractURLsFromImageNote() throws {
+        let string = "Hello, world!https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg"
+        let expectedString = "Hello, world!"
+        let expectedURLs = [
+            URL(string: "https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg")!
+        ]
+
+        // Act
+        let (actualString, actualURLs) = string.extractURLs()
+        XCTAssertEqual(actualString, expectedString)
+        XCTAssertEqual(actualURLs, expectedURLs)
     }
 }
 
@@ -355,3 +387,5 @@ fileprivate extension AttributedString {
         }
     }
 }
+
+// swiftlint:enable type_body_length
