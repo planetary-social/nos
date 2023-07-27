@@ -144,9 +144,9 @@ struct ReportMenuModifier: ViewModifier {
             kind: .report, 
             tags: [
                 ["L", "MOD"],
-                ["l", "MOD>\(selectedCategory.code)"],
+                ["l", "MOD>\(selectedCategory.code)", "MOD"]
             ], 
-            content: "This report uses NIP-69 vocabulary https://github.com/nostr-protocol/nips/pull/457"
+            content: Localized.reportEventContent.text(["report_category": selectedCategory.displayName]) 
         )
         
         var targetTag = reportedObject.tag
