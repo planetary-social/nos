@@ -42,6 +42,7 @@ enum ReportTarget {
         }
     }
     
+    /// Creates a tag referencing this target that can be attached to a report event.
     var tag: [String] {
         switch self {
         case .author(let author):

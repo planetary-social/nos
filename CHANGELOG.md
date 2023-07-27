@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Updated content report style based on the latest NIPs and fixed some bugs with reporting.
 - Fixed the launch screen layout on iPad
 - Added Dutch, Japanese, and Persian translations. Thanks matata, yutaro, and eru-desu! 
 - Added some visual artists to the list of featured users.
