@@ -121,6 +121,23 @@ struct EditableText: UIViewRepresentable {
         ) -> Bool {
             false
         }
+
+        func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+            if text.count > 1, let ransge = Range(range, in: self.text.wrappedValue.attributedString) {
+                do {
+                    let (humanReadablePart, _) = try Bech32.decode(text)
+                    if humanReadablePart == Nostr.publicKeyPrefix || humanReadablePart == Nostr.notePrefix {
+                        self.text.wrappedValue.insertMention(npub: text, at: ransge)
+                        return false
+                    }
+                    return true
+                } catch {
+                    return true
+                }
+            } else {
+                return true
+            }
+        }
     }
 }
 
