@@ -16,17 +16,10 @@ struct ComposerActionBar: View {
     
     enum SubMenu {
         case expirationDate
-        case uploadingImage
     }
     
     @State private var subMenu: SubMenu?
-    
-    private var uploadingImage: Binding<Bool> {
-        Binding {
-            subMenu == .uploadingImage
-        } set: { _ in
-        }
-    }
+    @State private var uploadingImage = false
     
     var backArrow: some View {
         Button {
@@ -46,13 +39,13 @@ struct ComposerActionBar: View {
                 ImagePickerButton { image in
                     Task {
                         do {
-                            subMenu = .uploadingImage
+                            startUploadingImage()
                             let attachedFile = AttachedFile(image: image)
                             let url = try await fileStorageAPI.upload(file: attachedFile)
                             text.append(string: url.absoluteString)
-                            subMenu = .none
+                            endUploadingImage()
                         } catch {
-                            subMenu = .none
+                            endUploadingImage()
                             print("error uploading image: \(error)")
                         }
                     }
@@ -100,12 +93,10 @@ struct ComposerActionBar: View {
                             .padding(.vertical, 12)
                     }
                 }
-            case .uploadingImage:
-                Spacer() // todo a different sheet is shown actually
             }
             Spacer()
         }
-        .sheet(isPresented: uploadingImage) {
+        .sheet(isPresented: $uploadingImage) {
             FullscreenProgressView(isPresented: .constant(true))
         }
         .animation(.easeInOut(duration: 0.2), value: subMenu)
@@ -114,6 +105,15 @@ struct ComposerActionBar: View {
             subMenu = .none
         }
         .background(Color.actionBar)
+    }
+    
+    private func startUploadingImage() {
+        self.uploadingImage = true
+    }
+    
+    private func endUploadingImage() {
+        self.uploadingImage = false
+        self.subMenu = .none
     }
 }
 
