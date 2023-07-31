@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUINavigation
 
 /// A horizontal bar that gives the user options to customize their message in the message composer.
 struct ComposerActionBar: View {
@@ -20,6 +21,10 @@ struct ComposerActionBar: View {
     
     @State private var subMenu: SubMenu?
     @State private var uploadingImage = false
+    @State private var alert: AlertState<AlertAction>?
+    
+    fileprivate enum AlertAction {
+    }
     
     var backArrow: some View {
         Button {
@@ -46,14 +51,20 @@ struct ComposerActionBar: View {
                             endUploadingImage()
                         } catch {
                             endUploadingImage()
-                            print("error uploading image: \(error)")
+                            print("error uploading: \(error)")
+                            
+                            alert = AlertState(title: {
+                                Localized.ImagePicker.errorUploadingFile.textState
+                            }, message: {
+                                Localized.ImagePicker.errorUploadingFileMessage.textState
+                            })
                         }
                     }
                 } label: {
                     Image.attachMediaButton
                         .foregroundColor(.secondaryText)
                         .frame(minWidth: 44, minHeight: 44)
-                }
+                }į
                 .padding(.leading, 8)
                 .accessibilityLabel(Localized.attachMedia.view)
                 
@@ -103,6 +114,8 @@ struct ComposerActionBar: View {
         .transition(.move(edge: .leading))
         .onChange(of: expirationTime) { _ in
             subMenu = .none
+        }
+        .alert(unwrapping: $alert) { (_: AlertAction?) in
         }
         .background(Color.actionBar)
     }
