@@ -16,6 +16,7 @@ struct AppView: View {
 
     @EnvironmentObject private var appController: AppController
     @EnvironmentObject var router: Router
+    @EnvironmentObject var pushNotificationService: PushNotificationService
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) private var analytics
     @EnvironmentObject var currentUser: CurrentUser
@@ -137,6 +138,7 @@ struct AppView: View {
                         .toolbarBackground(.visible, for: .tabBar)
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.notifications)
+                        .badge(pushNotificationService.badgeCount)
                     
                     if let author = currentUser.author {
                         ProfileTab(author: author, path: $router.profilePath)

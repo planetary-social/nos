@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreData
 import Dependencies
+import Logger
 
 /// Displays a list of cells that let the user know when other users interact with their notes.
 struct NotificationsView: View {
@@ -16,11 +17,13 @@ struct NotificationsView: View {
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.pushNotificationService) private var pushNotificationService
+    @Dependency(\.persistenceController) private var persistenceController
 
     private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
     @State private var subscriptionIDs = [String]()
-    @State private var isVisible = true
+    @State private var isVisible = false
     
     // Probably the logged in user should be in the @Environment eventually
     private var user: Author?
@@ -28,7 +31,7 @@ struct NotificationsView: View {
     init(user: Author?) {
         self.user = user
         if let user {
-            eventRequest = FetchRequest(fetchRequest: Event.allNotifications(for: user))
+            eventRequest = FetchRequest(fetchRequest: Event.all(notifying: user))
         }
     }    
     
@@ -55,13 +58,25 @@ struct NotificationsView: View {
         }
     }
     
+    func markAllNotificationsRead() async {
+        if let user {
+            do {
+                let backgroundContext = persistenceController.backgroundViewContext
+                try await NosNotification.markAllAsRead(for: user, in: backgroundContext)
+                await pushNotificationService.updateBadgeCount()
+            } catch {
+                Log.optional(error, "Error marking notifications as read")
+            }
+        }
+    }
+    
     var body: some View {
         NavigationStack(path: $router.notificationsPath) {
             ScrollView(.vertical) {
                 LazyVStack {
                     ForEach(events.unmuted) { event in
                         if let user {
-                            NotificationCard(note: event, user: user)
+                            NotificationCard(viewModel: NotificationViewModel(note: event, user: user))
                                 .readabilityPadding()
                         }
                     }
@@ -94,14 +109,18 @@ struct NotificationsView: View {
                 if router.selectedTab == .notifications {
                     isVisible = true
                 }
+                pushNotificationService.requestNotificationPermissionsFromUser()
             }
             .onDisappear {
                 isVisible = false
             }
             .onChange(of: isVisible, perform: { isVisible in
+                Task { await markAllNotificationsRead() }
                 if isVisible {
                     analytics.showedNotifications()
-                    Task { await subscribeToNewEvents() }
+                    Task { 
+                        await subscribeToNewEvents() 
+                    }
                 } else {
                     Task { await cancelSubscriptions() }
                 }

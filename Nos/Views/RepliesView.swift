@@ -188,6 +188,7 @@ struct RepliesView: View {
 
             var (content, tags) = NoteParser.parse(attributedText: AttributedString(replyText))
 
+            // TODO: Append ptags for all authors involved in the thread
             tags.append(["p", authorHex])
 
             // If `note` is a reply to another root, tag that root

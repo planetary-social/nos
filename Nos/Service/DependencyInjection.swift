@@ -6,6 +6,7 @@
 //
 
 import Dependencies
+import Foundation
 
 /// We use the Dependencies package to enable testability for our global variables. It is modeled after SwiftUI's
 /// @Environment.
@@ -31,13 +32,23 @@ extension DependencyValues {
         set { self[RelayServiceKey.self] = newValue }
     }
     
+    var pushNotificationService: PushNotificationService {
+        get { self[PushNotificationServiceKey.self] }
+        set { self[PushNotificationServiceKey.self] = newValue }
+    }
+    
     var persistenceController: PersistenceController {
         get { self[PersistenceControllerKey.self] }
         set { self[PersistenceControllerKey.self] = newValue }
     }
+    
+    var userDefaults: UserDefaults {
+        get { self[UserDefaultsKey.self] }
+        set { self[UserDefaultsKey.self] = newValue }
+    }
 }
 
-private enum AnalyticsKey: DependencyKey {
+fileprivate enum AnalyticsKey: DependencyKey {
     static let liveValue = Analytics()
     static let testValue = Analytics(mock: true)
     static let previewValue = Analytics(mock: true)
@@ -49,7 +60,7 @@ private enum AnalyticsKey: DependencyKey {
     static let previewValue = CurrentUser()
 }
 
-private enum RouterKey: DependencyKey {
+fileprivate enum RouterKey: DependencyKey {
     static let liveValue = Router()
     static let testValue = Router()
     static let previewValue = Router()
@@ -61,8 +72,22 @@ private enum RelayServiceKey: DependencyKey {
     static let previewValue = RelayService()
 }
 
+@MainActor
+fileprivate enum PushNotificationServiceKey: DependencyKey {
+    typealias Value = PushNotificationService
+    static let liveValue = PushNotificationService()
+    static let testValue = MockPushNotificationService()
+    static let previewValue = MockPushNotificationService()
+}
+
 fileprivate enum PersistenceControllerKey: DependencyKey {
     static let liveValue = PersistenceController()
     static let testValue = PersistenceController(inMemory: true)
     static let previewValue = PersistenceController(inMemory: true)
+}
+
+fileprivate enum UserDefaultsKey: DependencyKey {
+    static let liveValue = UserDefaults.standard
+    static let testValue = UserDefaults()
+    static let previewValue = UserDefaults()
 }

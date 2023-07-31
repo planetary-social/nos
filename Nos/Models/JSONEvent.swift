@@ -97,6 +97,13 @@ struct JSONEvent: Codable, Hashable {
             "sig": signature,
         ]
     }
+    
+    /// Formats this event as a string that can be sent to a relay over a websocket to publish this event.
+    var publishRequest: String {
+        let request: [Any] = ["EVENT", dictionary]
+        let requestData = try! JSONSerialization.data(withJSONObject: request)
+        return String(data: requestData, encoding: .utf8)!
+    }
 }
 
 struct MetadataEventJSON: Codable {

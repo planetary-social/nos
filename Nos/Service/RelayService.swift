@@ -30,7 +30,7 @@ final class RelayService: ObservableObject {
         return parseContext
     }()
     // TODO: use structured concurrency for this
-    private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .utility)
+    private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .userInitiated)
     private var parseQueue = ParseQueue()
     @Dependency(\.analytics) private var analytics
     @Dependency(\.persistenceController) private var persistenceController
@@ -44,7 +44,10 @@ final class RelayService: ObservableObject {
             try Task.checkCancellation()
             while true {
                 do { 
-                    try await self?.batchParseEvents()
+                    let foundEvents = try await self?.batchParseEvents()
+                    if foundEvents == false {
+                        try await Task.sleep(for: .milliseconds(50))
+                    }
                 } catch {
                     Log.error("RelayService: Error parsing events: \(error.localizedDescription)")
                 }
@@ -253,9 +256,12 @@ extension RelayService {
         }
     }
     
-    private func batchParseEvents() async throws {
+    /// Processes a batch of events from the queue. Returns false if there were no events to process.
+    private func batchParseEvents() async throws -> Bool {
         let eventData = await self.parseQueue.pop(30)
-        if !eventData.isEmpty {
+        if eventData.isEmpty {
+            return false
+        } else {
             try await self.parseContext.perform {
                 for (event, socket) in eventData {
                     let relay = self.relay(from: socket, in: self.parseContext)
@@ -263,6 +269,7 @@ extension RelayService {
                 }
                 try self.parseContext.saveIfNeeded()
             }                
+            return true
         }
     }
 
@@ -363,18 +370,39 @@ extension RelayService {
 extension RelayService {
     
     private func publish(from client: WebSocketClient, jsonEvent: JSONEvent) async {
-        do {
-            // Keep track of this so if it fails we can retry N times
-            let request: [Any] = ["EVENT", jsonEvent.dictionary]
-            let requestData = try JSONSerialization.data(withJSONObject: request)
-            let requestString = String(data: requestData, encoding: .utf8)!
-            print(requestString)
-            client.write(string: requestString)
-        } catch {
-            print("Error: Could not send request \(error.localizedDescription)")
-        }
+        // Keep track of this so if it fails we can retry N times
+        let requestString = jsonEvent.publishRequest
+        Log.info(requestString)
+        client.write(string: requestString)
     }
     
+    /// Opens a websocket and writes a single message to it. On failure this function will just log the error to the 
+    /// console.
+    private func openSocket(to url: URL, andSend message: String) async {
+        var urlRequest = URLRequest(url: url)
+        urlRequest.timeoutInterval = 10
+        let socket = WebSocket(request: urlRequest, compressionHandler: .none)
+        
+        // Make sure the socket doesn't stay open too long
+        _ = Task(timeout: 10) { socket.disconnect() }
+        return await withCheckedContinuation({ continuation in
+            socket.onEvent = { (event: WebSocketEvent) in
+                switch event {
+                case WebSocketEvent.connected:
+                    socket.write(string: message)
+                    socket.disconnect()
+                case WebSocketEvent.disconnected:
+                    continuation.resume()
+                case WebSocketEvent.error(let error):
+                    Log.optional(error, "failed to send message: \(message) to websocket")
+                default:
+                    return
+                }
+            }
+            socket.connect()
+        })
+    }
+
     func publishToAll(event: JSONEvent, signingKey: KeyPair, context: NSManagedObjectContext) async throws {
         _ = await self.openSockets()
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
@@ -389,10 +417,11 @@ extension RelayService {
         signingKey: KeyPair,
         context: NSManagedObjectContext
     ) async throws {
+        let relayURLs = relays.compactMap { $0.addressURL }
         await openSockets()
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
-        for relay in relays {
-            if let socket = await socket(from: relay) {
+        for relayURL in relayURLs {
+            if let socket = await socket(from: relayURL) {
                 await publish(from: socket, jsonEvent: signedEvent)
             } else {
                 Log.error("Could not find socket to publish message")
@@ -402,11 +431,12 @@ extension RelayService {
     
     func publish(
         event: JSONEvent,
-        to relay: Relay,
+        to relayURL: URL,
         signingKey: KeyPair,
         context: NSManagedObjectContext
     ) async throws {
-        try await publish(event: event, to: [relay], signingKey: signingKey, context: context)
+        let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
+        await openSocket(to: relayURL, andSend: signedEvent.publishRequest)
     }
     
     private func signAndSave(
@@ -430,13 +460,16 @@ extension RelayService {
         return jsonEvent
     }
     
-    func publishFailedEvents() async {
-        guard let user = await currentUser.author else {
+    @MainActor func publishFailedEvents() async {
+        guard let userKey = currentUser.author?.hexadecimalPublicKey else {
             return
         }
         
         await self.backgroundContext.perform {
             
+            guard let user = try? Author.find(by: userKey, context: self.backgroundContext) else {
+                return
+            }
             let objectContext = self.backgroundContext
             let userSentEvents = Event.unpublishedEvents(for: user, context: objectContext)
             
@@ -445,12 +478,11 @@ extension RelayService {
                 
                 print("\(missedRelays.count) relays missing a published event.")
                 for missedRelay in missedRelays {
-                    guard let missedAddress = missedRelay.address else { continue }
+                    guard let missedAddress = missedRelay.address, let jsonEvent = event.codable else { continue }
                     Task {
-                        if let socket = await self.subscriptions.socket(for: missedAddress),
-                            let jsonEvent = event.codable {
+                        if let socket = await self.subscriptions.socket(for: missedAddress) {
                             // Publish again to this socket
-                            print("Republishing \(event.identifier!) on \(missedAddress)")
+                            print("Republishing \(jsonEvent.id) on \(missedAddress)")
                             await self.publish(from: socket, jsonEvent: jsonEvent)
                         }
                     }
@@ -498,29 +530,14 @@ extension RelayService {
     }
     
     @discardableResult @MainActor private func openSockets(overrideRelays: [URL]? = nil) async -> [URL] {
-        // Use override relays; fall back to user relays
-        
-        let relayAddresses: [URL] = await backgroundContext.perform { () -> [URL] in
-            if let overrideRelays {
-                return overrideRelays
-            }
-            if let currentUserPubKey = self.currentUser.publicKeyHex {
-                let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
-                fetchRequest.predicate = NSPredicate(
-                    format: "ANY authors.hexadecimalPublicKey = %@", currentUserPubKey
-                )
-                fetchRequest.propertiesToFetch = ["address"]
-                fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.address, ascending: true)]
-
-                let relays = (try? self.backgroundContext.fetch(fetchRequest)) ?? []
-                return relays.compactMap { $0.addressURL }
-            } else {
-                return []
-            }
+        let relayAddresses: [URL]
+        if let overrideRelays {
+            relayAddresses = overrideRelays
+        } else {
+            relayAddresses = await relays(for: self.currentUser)
         }
         
         for relayAddress in relayAddresses {
-            
             guard let socket = await subscriptions.addSocket(for: relayAddress) else {
                 continue
             }
@@ -537,6 +554,18 @@ extension RelayService {
         }
 
         return relayAddresses
+    }
+
+    func relays(for user: CurrentUser) async -> [URL] {
+        await backgroundContext.perform { () -> [URL] in
+            if let currentUserPubKey = user.publicKeyHex,
+                let currentUser = try? Author.find(by: currentUserPubKey, context: self.backgroundContext) {
+                let userRelays = currentUser.relays
+                return userRelays.compactMap { $0.addressURL }
+            } else {
+                return []
+            }
+        }
     }
 
     private func queryRelayMetadataIfNeeded(_ relayAddress: URL) async throws {
@@ -581,7 +610,7 @@ extension RelayService {
             try backgroundContext.saveIfNeeded()
         }
     }
-    
+
     private func handleConnection(from client: WebSocketClient) async {
         if let socket = client as? WebSocket {
             Log.info("websocket is connected: \(String(describing: socket.request.url?.host))")
@@ -684,8 +713,9 @@ extension RelayService {
         }
     }
     
-    func socket(from relay: Relay) async -> WebSocket? {
-        await subscriptions.sockets.first(where: { $0.request.url?.absoluteString == relay.addressURL?.absoluteString })
+    func socket(from url: URL?) async -> WebSocket? {
+        guard let url else { return nil }
+        return await subscriptions.socket(for: url)
     }
 
     func unsURL(from unsIdentifier: String) -> URL? {
