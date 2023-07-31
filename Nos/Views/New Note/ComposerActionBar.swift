@@ -21,6 +21,13 @@ struct ComposerActionBar: View {
     
     @State private var subMenu: SubMenu?
     
+    private var uploadingImage: Binding<Bool> {
+        Binding {
+            subMenu == .uploadingImage
+        } set: { _ in
+        }
+    }
+    
     var backArrow: some View {
         Button {
             subMenu = .none
@@ -79,7 +86,6 @@ struct ComposerActionBar: View {
                             .frame(minWidth: 44, minHeight: 44)
                     }
                 }
-                
             case .expirationDate:
                 backArrow
                 ScrollView(.horizontal) {
@@ -95,14 +101,12 @@ struct ComposerActionBar: View {
                     }
                 }
             case .uploadingImage:
-                HStack {
-                    Spacer()
-                    ProgressView()
-                        .padding(10)
-                    Spacer()
-                }
+                Spacer() // todo a different sheet is shown actually
             }
             Spacer()
+        }
+        .sheet(isPresented: uploadingImage) {
+            FullscreenProgressView(isPresented: .constant(true))
         }
         .animation(.easeInOut(duration: 0.2), value: subMenu)
         .transition(.move(edge: .leading))
