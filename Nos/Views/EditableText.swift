@@ -18,7 +18,7 @@ struct EditableText: UIViewRepresentable {
 
     typealias UIViewType = UITextView
 
-    @Binding var attributedText: NSAttributedString
+    @Binding var text: EditableNoteText
     @Binding var calculatedHeight: CGFloat
 
     /// An ID for this view. Only .mentionAddedNotifications matching this ID will be processed.
@@ -26,15 +26,15 @@ struct EditableText: UIViewRepresentable {
     private var font = UIFont.preferredFont(forTextStyle: .body)
     private var insets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
 
-    init(_ attributedText: Binding<NSAttributedString>, guid: UUID, calculatedHeight: Binding<CGFloat>) {
-        _attributedText = attributedText
+    init(_ text: Binding<EditableNoteText>, guid: UUID, calculatedHeight: Binding<CGFloat>) {
         self.guid = guid
+        _text = text
         _calculatedHeight = calculatedHeight
     }
 
     func makeUIView(context: Context) -> UITextView {
         let view = UITextView()
-        view.attributedText = attributedText
+        view.attributedText = text.nsAttributedString
         view.isUserInteractionEnabled = true
         view.isScrollEnabled = false
         view.isEditable = true
@@ -59,27 +59,12 @@ struct EditableText: UIViewRepresentable {
             guard let recGUID = notification.userInfo?["guid"] as? UUID, recGUID == guid else {
                 return
             }
-            guard let url = author.uri else {
+            guard let selectedNSRange = view?.selectedRange,
+                let range = Range(selectedNSRange, in: text.attributedString) else {
                 return
             }
-            guard let selectedRange = view?.selectedRange else {
-                return
-            }
-            let mention = NSAttributedString(
-                string: "@\(author.safeName)",
-                attributes: view?.typingAttributes.merging(
-                    [NSAttributedString.Key.link: url.absoluteString],
-                    uniquingKeysWith: { lhs, _ in lhs }
-                )
-            )
-
-            let mutableAttributedString = NSMutableAttributedString(attributedString: attributedText)
-            mutableAttributedString.replaceCharacters(
-                in: NSRange(location: selectedRange.location - 1, length: 1),
-                with: mention
-            )
-            attributedText = mutableAttributedString
-            view?.selectedRange.location += mention.length - 1
+            text.insertMention(of: author, at: range.lowerBound)
+            view?.selectedRange.location += (view?.attributedText.length ?? 1) - 1
         }
 
         return view
@@ -92,11 +77,8 @@ struct EditableText: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UITextView, context: Context) {
-        uiView.attributedText = attributedText
-        uiView.typingAttributes = [
-            .font: font,
-            .foregroundColor: UIColor.primaryTxt
-        ]
+        uiView.attributedText = text.nsAttributedString
+        uiView.typingAttributes = text.defaultNSAttributes
         Self.recalculateHeight(view: uiView, result: $calculatedHeight)
     }
 
@@ -109,19 +91,19 @@ struct EditableText: UIViewRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(text: $attributedText)
+        Coordinator(text: $text)
     }
 
     class Coordinator: NSObject, UITextViewDelegate {
         var observer: NSObjectProtocol?
-        var text: Binding<NSAttributedString>
+        var text: Binding<EditableNoteText>
 
-        init(text: Binding<NSAttributedString>) {
+        init(text: Binding<EditableNoteText>) {
             self.text = text
         }
 
         func textViewDidChange(_ textView: UITextView) {
-            text.wrappedValue = textView.attributedText
+            text.wrappedValue = EditableNoteText(nsAttributedString: textView.attributedText)
             
             // Update the selected range to the end of the newly added text
             let newSelectedRange = NSRange(
@@ -148,18 +130,16 @@ extension Notification.Name {
 
 struct EditableText_Previews: PreviewProvider {
 
-    @State static var attributedString = NSAttributedString("Hello")
-    @State static var oldText = NSAttributedString("Hello")
+    @State static var attributedString = EditableNoteText(string: "Hello")
+    @State static var oldText = EditableNoteText(string: "Hello")
     @State static var calculatedHeight: CGFloat = 44
 
     static var previews: some View {
         EditableText($attributedString, guid: UUID(), calculatedHeight: $calculatedHeight)
-            .onChange(of: attributedString) { newValue in
-                let newString = newValue.string
-                let oldString = oldText.string
-                let difference = newString.difference(from: oldString)
+            .onChange(of: attributedString) { newText in
+                let difference = newText.difference(from: oldText)
                 guard difference.count == 1, let change = difference.first else {
-                    oldText = newValue
+                    oldText = newText
                     return
                 }
                 switch change {
@@ -170,7 +150,7 @@ struct EditableText_Previews: PreviewProvider {
                 default:
                     break
                 }
-                oldText = newValue
+                oldText = newText
             }
             .previewLayout(.sizeThatFits)
     }
