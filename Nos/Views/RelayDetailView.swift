@@ -15,12 +15,14 @@ struct RelayDetailView: View {
         HStack(alignment: .top) {
             Text("\(title.string): ")
             Text(value)
+                .textSelection(.enabled)
         }
     }
     var body: some View {
         List {
             Section {
                 Text(relay.address ?? Localized.error.string)
+                    .textSelection(.enabled)
             } header: {
                 Localized.address.view
                     .foregroundColor(.textColor)

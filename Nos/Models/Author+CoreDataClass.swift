@@ -59,6 +59,10 @@ public class Author: NosManagedObject {
     var followedKeys: [HexadecimalString] {
         follows.compactMap({ $0.destination?.hexadecimalPublicKey }) 
     }
+
+    var hasHumanFriendlyName: Bool {
+        name?.isEmpty == false || displayName?.isEmpty == false
+    }
     
     class func request(by pubKey: HexadecimalString) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))

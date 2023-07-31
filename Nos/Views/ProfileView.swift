@@ -68,7 +68,7 @@ struct ProfileView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView(.vertical) {
+            ScrollView(.vertical, showsIndicators: false) {
                 ProfileHeader(author: author)
                     .compositingGroup()
                     .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
@@ -101,6 +101,15 @@ struct ProfileView: View {
         }
         .navigationDestination(for: MutesDestination.self) { _ in
             MutesView()
+        }
+        .navigationDestination(for: FollowsDestination.self) { destination in
+            FollowsView(title: Localized.follows, authors: destination.follows)
+        }
+        .navigationDestination(for: FollowersDestination.self) { destination in
+            FollowsView(title: Localized.followedBy, authors: destination.followers)
+        }
+        .navigationDestination(for: RelaysDestination.self) { destination in
+            RelayView(author: destination.author, editable: false)
         }
         .navigationBarItems(
             trailing:

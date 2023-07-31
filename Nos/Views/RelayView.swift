@@ -10,6 +10,11 @@ import CoreData
 import Dependencies
 import SwiftUINavigation
 
+struct RelaysDestination: Hashable {
+    var author: Author
+    var relays: [Relay]
+}
+
 struct RelayView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
@@ -24,9 +29,12 @@ struct RelayView: View {
     @Dependency(\.analytics) private var analytics
     
     @FetchRequest var relays: FetchedResults<Relay>
+
+    var editable: Bool
     
-    init(author: Author) {
+    init(author: Author, editable: Bool = true) {
         self.author = author
+        self.editable = editable
         _relays = FetchRequest(fetchRequest: Relay.relays(for: author))
     }
     
@@ -45,6 +53,7 @@ struct RelayView: View {
                         } else {
                             Text(relay.address ?? Localized.error.string)
                                 .foregroundColor(.textColor)
+                                .textSelection(.enabled)
                         }
                     }
                 }
@@ -63,14 +72,17 @@ struct RelayView: View {
                     }
                 }
                 
-                if author.relays.count == 0 {
+                if author.relays.count == 0, editable {
                     Localized.noRelaysMessage.view
                 }
             } header: {
-                Localized.relays.view
-                    .foregroundColor(.textColor)
-                    .fontWeight(.heavy)
+                if editable {
+                    Localized.relays.view
+                        .foregroundColor(.textColor)
+                        .fontWeight(.heavy)
+                }
             }
+            .deleteDisabled(!editable)
             .listRowBackground(LinearGradient(
                 colors: [Color.cardBgTop, Color.cardBgBottom],
                 startPoint: .top,
@@ -80,7 +92,7 @@ struct RelayView: View {
             let authorRelayUrls = author.relays.compactMap { $0.address }
             let recommendedRelays = Relay.recommended.filter { !authorRelayUrls.contains($0) }
             
-            if !recommendedRelays.isEmpty {
+            if editable, !recommendedRelays.isEmpty {
                 Section {
                     ForEach(recommendedRelays, id: \.self) { address in
                         Button {
@@ -105,43 +117,47 @@ struct RelayView: View {
                     endPoint: .bottom
                 ))
             }
-            
-            Section {
-                TextField(Localized.relayAddressPlaceholder.string, text: $newRelayAddress)
-                    .foregroundColor(.textColor)
-                    .autocorrectionDisabled()
-                    #if os(iOS)
-                    .textInputAutocapitalization(.none)
-                    .keyboardType(.URL)
-                    #endif
-                Button(Localized.save.string) {
-                    addRelay()
-                    Task {
-                        await CurrentUser.shared.subscribe()
-                        await publishChanges()
+
+            if editable {
+                Section {
+                    TextField(Localized.relayAddressPlaceholder.string, text: $newRelayAddress)
+                        .foregroundColor(.textColor)
+                        .autocorrectionDisabled()
+#if os(iOS)
+                        .textInputAutocapitalization(.none)
+                        .keyboardType(.URL)
+#endif
+                    Button(Localized.save.string) {
+                        addRelay()
+                        Task {
+                            await CurrentUser.shared.subscribe()
+                            await publishChanges()
+                        }
                     }
+                } header: {
+                    Localized.addRelay.view
+                        .foregroundColor(.textColor)
+                        .fontWeight(.heavy)
+                        .bold()
                 }
-            } header: {
-                Localized.addRelay.view
-                    .foregroundColor(.textColor)
-                    .fontWeight(.heavy)
-                    .bold()
+                .listRowBackground(LinearGradient(
+                    colors: [Color.cardBgTop, Color.cardBgBottom],
+                    startPoint: .top,
+                    endPoint: .bottom
+                ))
             }
-            .listRowBackground(LinearGradient(
-                colors: [Color.cardBgTop, Color.cardBgBottom],
-                startPoint: .top,
-                endPoint: .bottom
-            ))
         }
         .alert(unwrapping: $alert)
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
         .toolbar {
-            #if os(iOS)
-            ToolbarItem(placement: .navigationBarTrailing) {
-                EditButton()
+            if editable {
+#if os(iOS)
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    EditButton()
+                }
+#endif
             }
-            #endif
         }
         .nosNavigationBar(title: .relays)
         .onAppear {

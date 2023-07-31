@@ -32,6 +32,10 @@ extension Localizable {
         }
     }
 
+    func localizedText(_ arguments: [String: String]) -> LocalizedStringKey {
+        LocalizedStringKey(text(arguments))
+    }
+
     var uppercased: String {
         string.uppercased()
     }
