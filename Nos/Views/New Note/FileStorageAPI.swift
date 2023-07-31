@@ -27,22 +27,8 @@ class NostrBuildFileStorageAPI: FileStorageAPI {
         data.append(file.image.jpegData(compressionQuality: 85)!)
         data.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
         
-        return try await withCheckedThrowingContinuation { continuation in
-            URLSession.shared
-                .uploadTask(with: request, from: data, completionHandler: { responseData, _, error in
-                    do {
-                        if error != nil {
-                            continuation.resume(throwing: error!)
-                            return
-                        }
-                        
-                        let url = try JSONSerialization.jsonObject(with: responseData!, options: .allowFragments) as? String
-                        continuation.resume(returning: URL(string: url!)!)
-                    } catch {
-                        continuation.resume(throwing: error)
-                    }
-                })
-                .resume()
-        }
+        let (responseData, _) = try await URLSession.shared.upload(for: request, from: data)
+        let url = try JSONSerialization.jsonObject(with: responseData, options: .allowFragments) as? String
+        return URL(string: url!)!
     }
 }

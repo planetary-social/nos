@@ -64,7 +64,7 @@ struct ComposerActionBar: View {
                     Image.attachMediaButton
                         .foregroundColor(.secondaryText)
                         .frame(minWidth: 44, minHeight: 44)
-                }į
+                }
                 .padding(.leading, 8)
                 .accessibilityLabel(Localized.attachMedia.view)
                 
