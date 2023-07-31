@@ -33,8 +33,8 @@ extension String {
         return string
     }
     
-    /// Creates a new string with all URLs and any preceding and trailing whitespace removed and removed duplicate newlines, and returns the new string and an
-    /// array of all the URLs.
+    /// Creates a new string with all URLs and any preceding and trailing whitespace removed and removed duplicate
+    /// newlines, and returns the new string and an array of all the URLs.
     func extractURLs() -> (String, [URL]) {
         var urls: [URL] = []
         let mutableString = NSMutableString(string: self)
@@ -56,11 +56,20 @@ extension String {
             Log.error("Invalid regex pattern")
         }
         
-        mutableString.replaceOccurrences(of: "^\\s*", with: "", options: .regularExpression, range: NSRange(location: 0, length: mutableString.length))
-        mutableString.replaceOccurrences(of: "\\s*$", with: "", options: .regularExpression, range: NSRange(location: 0, length: mutableString.length))
-        mutableString.replaceOccurrences(of: "\\n{2,}", with: "\n", options: .regularExpression, range: NSRange(location: 0, length: mutableString.length))
+        replaceOccurrences(mutableString: mutableString, of: "^\\s*", with: "")
+        replaceOccurrences(mutableString: mutableString, of: "\\s*$", with: "")
+        replaceOccurrences(mutableString: mutableString, of: "\\n{2,}", with: "\n")
         
         return (mutableString as String, urls)
+    }
+    
+    private func replaceOccurrences(mutableString: NSMutableString, of: String, with: String) {
+        mutableString.replaceOccurrences(
+            of: of,
+            with: with,
+            options: .regularExpression,
+            range: NSRange(location: 0, length: mutableString.length)
+        )
     }
     
     func findUnformattedLinks() throws -> [URL] {
@@ -72,8 +81,7 @@ extension String {
         let regularExpression = try NSRegularExpression(pattern: regex)
         let wholeRange = NSRange(location: 0, length: self.utf16.count)
         for match in regularExpression.matches(in: self, range: wholeRange) {
-            if let range = Range(match.range, in: self),
-               let url = URL(string: String(self[range])) {
+            if let range = Range(match.range, in: self), let url = URL(string: String(self[range])) {
                 links.append(url)
             }
         }
