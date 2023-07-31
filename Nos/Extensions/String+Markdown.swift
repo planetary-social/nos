@@ -21,8 +21,7 @@ extension String {
                 let linkDisplayName = "\(string[range])"
                 var link = linkDisplayName
                 if var url = URL(string: link) {
-                    if url.scheme == nil,
-                       let httpsURL = URL(string: ("https://\(link)")) {
+                    if url.scheme == nil, let httpsURL = URL(string: ("https://\(link)")) {
                         url = httpsURL
                     }
                     link = url.absoluteString
