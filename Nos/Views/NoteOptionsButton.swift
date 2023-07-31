@@ -100,12 +100,8 @@ struct NoteOptionsButton: View {
     func copyMessage() {
         Task {
             // TODO: put links back in
-            if let (attrString, _) = await Event.attributedContent(
-                noteID: note.identifier,
-                context: viewContext
-            ) {
-                UIPasteboard.general.string = String(attrString.characters)
-            }
+            let attrString = await Event.attributedContent(noteID: note.identifier, context: viewContext) 
+            UIPasteboard.general.string = String(attrString.characters)
         }
     }
     
