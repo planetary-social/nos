@@ -63,10 +63,10 @@ extension String {
         return (mutableString as String, urls)
     }
     
-    private func replaceOccurrences(mutableString: NSMutableString, of: String, with: String) {
+    private func replaceOccurrences(mutableString: NSMutableString, of target: String, with replacement: String) {
         mutableString.replaceOccurrences(
-            of: of,
-            with: with,
+            of: target,
+            with: replacement,
             options: .regularExpression,
             range: NSRange(location: 0, length: mutableString.length)
         )
