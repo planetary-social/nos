@@ -153,11 +153,11 @@ struct RelayView: View {
         .background(Color.appBg)
         .toolbar {
             if editable {
-#if os(iOS)
+                #if os(iOS)
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
                 }
-#endif
+                #endif
             }
         }
         .nosNavigationBar(title: .relays)

@@ -301,7 +301,8 @@ struct IdentityHeaderView_Previews: PreviewProvider {
         author.name = "Sebastian Heit"
         author.nip05 = "chardot@nostr.fan"
         // author.uns = "chardot"
-        author.about = "Go programmer working on Nos/Planetary. You can find me at various European events related to Chaos Computer Club, the hacker community and free software."
+        author.about = "Go programmer working on Nos/Planetary. You can find me at various European events related to" +
+        " Chaos Computer Club, the hacker community and free software."
         let first = Author(context: previewContext)
         first.name = "Craig Nichols"
 
