@@ -364,10 +364,10 @@ final class NoteNoteParserTests: XCTestCase {
     }
     
     func testExtractURLsFromImageNote() throws {
-        let string = "Hello, world!https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg"
+        let string = "Hello, world!https://cdn.ymaws.com/footprints.jpg"
         let expectedString = "Hello, world!"
         let expectedURLs = [
-            URL(string: "https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg")!
+            URL(string: "https://cdn.ymaws.com/footprints.jpg")!
         ]
 
         // Act
@@ -377,10 +377,10 @@ final class NoteNoteParserTests: XCTestCase {
     }
     
     func testExtractURLsFromImageNoteWithExtraNewlines() throws {
-        let string = "https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg\n\nHello, world!"
+        let string = "https://cdn.ymaws.com/footprints.jpg\n\nHello, world!"
         let expectedString = "Hello, world!"
         let expectedURLs = [
-            URL(string: "https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg")!
+            URL(string: "https://cdn.ymaws.com/footprints.jpg")!
         ]
 
         // Act
