@@ -21,7 +21,8 @@ struct ImagePickerButton<Label>: View where Label: View {
     private var imagePickerSource: UIImagePickerController.SourceType?
     
     @Dependency(\.analytics) private var analytics
-    @EnvironmentObject private var appController: AppController
+    
+    @EnvironmentObject private var router: Router
 
     private var showImagePicker: Binding<Bool> {
         Binding {
@@ -89,7 +90,7 @@ struct ImagePickerButton<Label>: View where Label: View {
             actions: {
                 Button(Localized.settings.string) {
                     showSettingsAlert = false
-                    self.appController.openOSSettings()
+                    self.router.openOSSettings()
                 }
                 Button(Localized.cancel.string) {
                     showSettingsAlert = false
