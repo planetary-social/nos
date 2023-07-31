@@ -6,6 +6,7 @@
 //
 
 import Dependencies
+import Foundation
 
 /// We use the Dependencies package to enable testability for our global variables. It is modeled after SwiftUI's
 /// @Environment.
@@ -30,28 +31,63 @@ extension DependencyValues {
         get { self[RelayServiceKey.self] }
         set { self[RelayServiceKey.self] = newValue }
     }
+    
+    var pushNotificationService: PushNotificationService {
+        get { self[PushNotificationServiceKey.self] }
+        set { self[PushNotificationServiceKey.self] = newValue }
+    }
+    
+    var persistenceController: PersistenceController {
+        get { self[PersistenceControllerKey.self] }
+        set { self[PersistenceControllerKey.self] = newValue }
+    }
+    
+    var userDefaults: UserDefaults {
+        get { self[UserDefaultsKey.self] }
+        set { self[UserDefaultsKey.self] = newValue }
+    }
 }
 
-private enum AnalyticsKey: DependencyKey {
+fileprivate enum AnalyticsKey: DependencyKey {
     static let liveValue = Analytics()
     static let testValue = Analytics(mock: true)
     static let previewValue = Analytics(mock: true)
 }
 
-private enum CurrentUserKey: DependencyKey {
-    static let liveValue = CurrentUser.shared
-    static let testValue = CurrentUser.shared
-    static let previewValue = CurrentUser.shared
+@MainActor private enum CurrentUserKey: DependencyKey {
+    static let liveValue = CurrentUser()
+    static let testValue = CurrentUser()
+    static let previewValue = CurrentUser()
 }
 
-private enum RouterKey: DependencyKey {
+fileprivate enum RouterKey: DependencyKey {
     static let liveValue = Router()
     static let testValue = Router()
     static let previewValue = Router()
 }
 
 private enum RelayServiceKey: DependencyKey {
-    static let liveValue = RelayService(persistenceController: PersistenceController.shared)
-    static let testValue = RelayService(persistenceController: PersistenceController.shared)
-    static let previewValue = RelayService(persistenceController: PersistenceController.shared)
+    static let liveValue = RelayService()
+    static let testValue = RelayService()
+    static let previewValue = RelayService()
+}
+
+@MainActor
+fileprivate enum PushNotificationServiceKey: DependencyKey {
+    typealias Value = PushNotificationService
+    static let liveValue = PushNotificationService()
+    static let testValue = MockPushNotificationService()
+    static let previewValue = MockPushNotificationService()
+}
+
+fileprivate enum PersistenceControllerKey: DependencyKey {
+    static let liveValue = PersistenceController()
+    static let testValue = PersistenceController(inMemory: true)
+    static let previewValue = PersistenceController(inMemory: true)
+}
+
+fileprivate enum UserDefaultsKey: DependencyKey {
+    static let liveValue = UserDefaults.standard
+    static let testValue = UserDefaults()
+    static let previewValue = UserDefaults()
 }

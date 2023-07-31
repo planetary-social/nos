@@ -7,9 +7,11 @@
 
 import CoreData
 import Logger
+import Dependencies
 
-struct PersistenceController {
-    static let shared = PersistenceController()
+class PersistenceController {
+    
+    @Dependency(\.currentUser) var currentUser
     
     /// Increment this to delete core data on update
     static let version = 3
@@ -33,8 +35,8 @@ struct PersistenceController {
         container.viewContext
     }
     
-    static var backgroundViewContext = {
-        PersistenceController.shared.newBackgroundContext()
+    lazy var backgroundViewContext = {
+        newBackgroundContext()
     }()
     
     var container: NSPersistentContainer
@@ -83,7 +85,7 @@ struct PersistenceController {
     
     func saveAll() throws {
         try viewContext.saveIfNeeded()
-        try Self.backgroundViewContext.saveIfNeeded()
+        try backgroundViewContext.saveIfNeeded()
     }
     
     static func clearCoreData(store storeURL: URL, in container: NSPersistentContainer) {
@@ -95,7 +97,7 @@ struct PersistenceController {
         }
     }
     
-    static func loadSampleData(context: NSManagedObjectContext) async {
+    func loadSampleData(context: NSManagedObjectContext) async {
         guard let sampleFile = Bundle.current.url(forResource: "sample_data", withExtension: "json") else {
             Log.error("Error: bad sample file location")
             return
@@ -123,7 +125,7 @@ struct PersistenceController {
         let authors = Author.all(context: context)
         let follows = try! context.fetch(Follow.followsRequest(sources: authors))
         
-        if let publicKey = CurrentUser.shared.publicKeyHex {
+        if let publicKey = currentUser.publicKeyHex {
             let currentAuthor = try! Author.findOrCreate(by: publicKey, context: context)
             currentAuthor.follows = Set(follows)
         }
@@ -145,7 +147,7 @@ struct PersistenceController {
         UserDefaults.standard.set(newVersion, forKey: Self.versionKey)
     }
     
-    static var cleanupTask: Task<Void, Error>?
+    var cleanupTask: Task<Void, Error>?
     
     // swiftlint:disable function_body_length 
     
@@ -155,10 +157,14 @@ struct PersistenceController {
     /// - delete authors outside the user's network 
     /// - delete any other models that are orphaned by the previous deletions
     /// - fix EventReferences whose referencedEvent was deleted by createing a stubbed Event
-    static func cleanupEntities(for currentUser: CurrentUser) {
+    @MainActor func cleanupEntities() {
         // this function was written in a hurry and probably should be refactored and tested thorougly.
         guard cleanupTask == nil else {
             Log.info("Core Data cleanup task already running. Aborting.")
+            return
+        }
+        
+        guard let authorKey = currentUser.author?.hexadecimalPublicKey else {
             return
         }
         
@@ -168,35 +174,35 @@ struct PersistenceController {
             let startTime = Date.now
             Log.info("Starting Core Data cleanup...")
             
-            guard let currentAuthor = await currentUser.author else {
-                return
-            }
-            
             Log.info("Database statistics: \(try databaseStatistics(from: context).sorted(by: { $0.key < $1.key }))")
             
             // Delete all but the most recent n events
             let eventsToKeep = 10_000
             let fetchFirstEventToDelete = Event.allEventsRequest()
-            fetchFirstEventToDelete.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
+            fetchFirstEventToDelete.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
             fetchFirstEventToDelete.fetchLimit = 1
             fetchFirstEventToDelete.fetchOffset = eventsToKeep
             fetchFirstEventToDelete.predicate = NSPredicate(format: "receivedAt != nil")
             var deleteBefore = Date.distantPast
-            if let firstEventToDelete = try context.fetch(fetchFirstEventToDelete).first,
-                let receivedAt = firstEventToDelete.receivedAt {
-                deleteBefore = receivedAt
-            }
-               
-            // Delete events older than `deleteBefore`
-            let oldEventsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
-            oldEventsRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
-            oldEventsRequest.predicate = NSPredicate(
-                format: "author != %@ AND (receivedAt <= %@ OR receivedAt == nil)", 
-                currentAuthor,
-                deleteBefore as CVarArg
-            )
-            
             try await context.perform {
+                
+                guard let currentAuthor = try? Author.find(by: authorKey, context: context) else {
+                    return
+                }
+                
+                if let firstEventToDelete = try context.fetch(fetchFirstEventToDelete).first,
+                    let receivedAt = firstEventToDelete.receivedAt {
+                    deleteBefore = receivedAt
+                }
+                   
+                // Delete events older than `deleteBefore`
+                let oldEventsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
+                oldEventsRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
+                oldEventsRequest.predicate = NSPredicate(
+                    format: "author != %@ AND (receivedAt <= %@ OR receivedAt == nil)", 
+                    currentAuthor,
+                    deleteBefore as CVarArg
+                )
                 
                 let deleteRequests: [NSPersistentStoreRequest] = [
                     oldEventsRequest,
@@ -206,6 +212,7 @@ struct PersistenceController {
                     Author.outOfNetwork(for: currentAuthor),
                     Follow.orphanedRequest(),
                     Relay.orphanedRequest(),
+                    // TODO: delete old notifications
                 ]
                 
                 for request in deleteRequests {
@@ -251,7 +258,7 @@ struct PersistenceController {
     }
     // swiftlint:enable function_body_length 
     
-    static func databaseStatistics(from context: NSManagedObjectContext) throws -> [String: Int] {
+    func databaseStatistics(from context: NSManagedObjectContext) throws -> [String: Int] {
         var statistics = [String: Int]()
         if let managedObjectModel = context.persistentStoreCoordinator?.managedObjectModel {
             let entitiesByName = managedObjectModel.entitiesByName

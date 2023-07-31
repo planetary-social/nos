@@ -119,11 +119,11 @@ struct ProfileHeader: View {
                             }
                         }
 
-                        if author != CurrentUser.shared.author, let currentUser = CurrentUser.shared.author {
+                        if author != currentUser.author, let currentUser = currentUser.author {
                             HStack {
                                 FollowButton(currentUserAuthor: currentUser, author: author)
                                 if author.muted {
-                                    PlainText(Localized.muted.string)
+                                    Text(Localized.muted.string)
                                         .font(.subheadline)
                                         .foregroundColor(Color.secondaryText)
                                 }
@@ -287,11 +287,12 @@ fileprivate extension Divider {
 }
 
 struct IdentityHeaderView_Previews: PreviewProvider {
-    
+
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
-    static var currentUser = CurrentUser(persistenceController: persistenceController)
+    static var relayService = previewData.relayService
+    static var currentUser = previewData.currentUser
     
     static var author: Author {
         let author = Author(context: previewContext)

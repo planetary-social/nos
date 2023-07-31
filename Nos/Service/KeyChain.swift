@@ -20,6 +20,7 @@ enum KeyChain {
 		[
             kSecClass as String: kSecClassGenericPassword as String,
             kSecAttrAccount as String: key,
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock,
             kSecValueData as String: data
 		] as [String: Any]
         

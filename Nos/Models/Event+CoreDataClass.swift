@@ -12,6 +12,7 @@ import CoreData
 import RegexBuilder
 import SwiftUI
 import Logger
+import Dependencies
 
 enum EventError: Error {
 	case jsonEncoding
@@ -52,6 +53,7 @@ public enum EventKind: Int64, CaseIterable, Hashable {
     case label = 1985
     case mute = 10_000
     case longFormContent = 30_023
+    case notificationServiceRegistration = 6666
 }
 
 extension FetchedResults where Element == Event {
@@ -69,6 +71,8 @@ extension FetchedResults where Element == Event {
 // swiftlint:disable type_body_length
 @objc(Event)
 public class Event: NosManagedObject {
+    
+    @Dependency(\.currentUser) private var currentUser
     
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"
@@ -118,8 +122,16 @@ public class Event: NosManagedObject {
         "npub1pkj5lugwrychstydkt9h2xdzst9ejreemleh3hz69nr85cmegqrs232y4t": ["monk_cactus"],
         "npub1a406tcmltkud34kmqkevkpykp384czamffw2245a9v5uc2z22l2q55gxd2": ["tina"],
         "npub1matmfxr293jejewrm72u50l2x5e6ypasn0ev2kns6srv05zfzf8s0z6fsr": ["Jon Pincus"],
-        "npub1ftpy6thgy2354xypal6jd0m37wtsgsvcxljvzje5vskc9cg3a5usexrrtq": ["Raúl Piracés"]
+        "npub1ftpy6thgy2354xypal6jd0m37wtsgsvcxljvzje5vskc9cg3a5usexrrtq": ["Raúl Piracés"],
+        "npub12hcytyr8fumy3axde8wgeced523gyp6v6zczqktwuqeaztfc2xzsz3rdp4": ["NoGood"],
+        "npub1l9kr6ajfwp6vfjp60vuzxwqwwlw884dff98a9cznujs520shsf9s35xfwh": ["Karine"],
+        "npub1rfdkj37rhymcrr5jk9jjaae5c3yj8l24jtr8a27q0chh2y2aq42snhh53u": ["eolaí"],
+        "npub17amtesfzwxl8nlr3ke2l8jl7kw52z60n8msnxh7vps3g9xgpmf9qx5nldk": ["Malos10"],
+        "npub1uch5rxswzes8h9hlzrktqqjf4a75k6w86ys7fvzpxrrpejvccvhq4sl7fj": ["muneomi"],
+        "npub1p458ltjfrxmcymk4j3plsmsksaqsf62cggdqvhv9cphk0wdglzts80t20a": ["Adhhafi"],
     ]
+    
+    // MARK: - Fetching
     
     @nonobjc public class func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -136,11 +148,12 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @MainActor @nonobjc public class func extendedNetworkPredicate(
+    @MainActor @nonobjc class func extendedNetworkPredicate(
+        currentUser: CurrentUser,
         featuredAuthors: [String], 
         before: Date
     ) -> NSPredicate {
-        guard let currentUser = CurrentUser.shared.author else {
+        guard let currentUser = currentUser.author else {
             return NSPredicate.false
         }
         let kind = EventKind.text.rawValue
@@ -223,19 +236,23 @@ public class Event: NosManagedObject {
         NSPredicate(format: "kind = 1 AND ANY eventReferences.referencedEvent.author = %@", user)
     }
     
-    @nonobjc public class func allNotifications(for user: Author) -> NSFetchRequest<Event> {
+    @nonobjc public class func all(notifying user: Author, since: Date? = nil) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         
         let mentionsPredicate = allMentionsPredicate(for: user)
         let repliesPredicate = allRepliesPredicate(for: user)
         let notSelfPredicate = NSPredicate(format: "author != %@", user)
+        let notMuted = NSPredicate(format: "author.muted == 0", user)
         let allNotificationsPredicate = NSCompoundPredicate(
             orPredicateWithSubpredicates: [mentionsPredicate, repliesPredicate]
         )
-        fetchRequest.predicate = NSCompoundPredicate(
-            andPredicateWithSubpredicates: [allNotificationsPredicate, notSelfPredicate]
-        )
+        var andPredicates = [allNotificationsPredicate, notSelfPredicate, notMuted]
+        if let since {
+            let sincePredicate = NSPredicate(format: "receivedAt >= %@", since as CVarArg)  
+            andPredicates.append(sincePredicate)
+        } 
+        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: andPredicates)
         
         return fetchRequest
     }
@@ -262,22 +279,6 @@ public class Event: NosManagedObject {
         fetchRequest.predicate = NSPredicate(
             format: replyNoteReferences,
             noteID
-        )
-        return fetchRequest
-    }
-    
-    @MainActor @nonobjc public class func allReplies(toEventWith id: String) -> NSFetchRequest<Event> {
-        guard let currentUser = CurrentUser.shared.author else {
-            return emptyRequest()
-        }
-        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(
-            format: replyNoteReferences,
-            id,
-            currentUser,
-            currentUser,
-            currentUser
         )
         return fetchRequest
     }
@@ -417,14 +418,47 @@ public class Event: NosManagedObject {
         fetchRequest.predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey = %@", kind, key)
         return fetchRequest
     }
-
-    class func find(by identifier: String, context: NSManagedObjectContext) -> Event? {
+    
+    class func oldest() -> NSFetchRequest<Event> {
+        let request = Event.allEventsRequest()
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
+        request.fetchLimit = 1
+        return request
+    }
+    
+    class func all(context: NSManagedObjectContext) -> [Event] {
+        let allRequest = Event.allPostsRequest()
+        
+        do {
+            let results = try context.fetch(allRequest)
+            return results
+        } catch let error as NSError {
+            print("Failed to fetch events. Error: \(error.description)")
+            return []
+        }
+    }
+    
+    class func unpublishedEvents(for user: Author, context: NSManagedObjectContext) -> [Event] {
+        let allRequest = Event.unpublishedEventsRequest(for: user)
+        
+        do {
+            let results = try context.fetch(allRequest)
+            return results
+        } catch let error as NSError {
+            print("Failed to fetch events. Error: \(error.description)")
+            return []
+        }
+    }
+    
+    class func find(by identifier: HexadecimalString, context: NSManagedObjectContext) -> Event? {
         if let existingEvent = try? context.fetch(Event.event(by: identifier)).first {
             return existingEvent
         }
 
         return nil
     }
+    
+    // MARK: - Creating
 
     class func createIfNecessary(
         jsonEvent: JSONEvent, 
@@ -456,142 +490,6 @@ public class Event: NosManagedObject {
         }
     }
     
-    var serializedEventForSigning: [Any?] {
-        [
-            0,
-            author?.hexadecimalPublicKey,
-            Int64(createdAt!.timeIntervalSince1970),
-            kind,
-            allTags,
-            content
-        ]
-    }
-    
-    /// Returns true if this event doesn't have content. Usually this means we saw it referenced by another event
-    /// but we haven't actually downloaded it yet.
-    var isStub: Bool {
-        author == nil || createdAt == nil 
-    }
-    
-    func calculateIdentifier() throws -> String {
-        let serializedEventData = try JSONSerialization.data(
-            withJSONObject: serializedEventForSigning,
-            options: [.withoutEscapingSlashes]
-        )
-        return serializedEventData.sha256
-    }
-    
-    func sign(withKey privateKey: KeyPair) throws {
-        if allTags == nil {
-            allTags = [[String]]() as NSObject
-        }
-        identifier = try calculateIdentifier()
-        var serializedBytes = try identifier!.bytes
-        signature = try privateKey.sign(bytes: &serializedBytes)
-    }
-    
-    var jsonRepresentation: [String: Any]? {
-        if let jsonEvent = codable {
-            do {
-                let data = try JSONEncoder().encode(jsonEvent)
-                return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-            } catch {
-                print("Error encoding event as JSON: \(error.localizedDescription)\n\(self)")
-            }
-        }
-        
-        return nil
-    }
-    
-    var jsonString: String? {
-        guard let jsonRepresentation,  
-            let data = try? JSONSerialization.data(withJSONObject: jsonRepresentation) else {
-            return nil
-        }
-        return String(data: data, encoding: .utf8)
-    }
-    
-    var codable: JSONEvent? {
-        guard let identifier = identifier,
-            let pubKey = author?.hexadecimalPublicKey,
-            let createdAt = createdAt,
-            let content = content,
-            let signature = signature else {
-            return nil
-        }
-        
-        let allTags = (allTags as? [[String]]) ?? []
-        
-        return JSONEvent(
-            id: identifier,
-            pubKey: pubKey,
-            createdAt: Int64(createdAt.timeIntervalSince1970),
-            kind: kind,
-            tags: allTags,
-            content: content,
-            signature: signature
-        )
-    }
-    
-    var bech32NoteID: String? {
-        guard let identifier = self.identifier,
-            let identifierBytes = try? identifier.bytes else {
-            return nil
-        }
-        return Bech32.encode(Nostr.notePrefix, baseEightData: Data(identifierBytes))
-    }
-    
-    var seenOnRelayURLs: [String] {
-        seenOnRelays.compactMap { $0.addressURL?.absoluteString }
-    }
-    
-    class func attributedContent(noteID: String?, context: NSManagedObjectContext) async -> AttributedString? {
-        guard let noteID else {
-            return nil
-        }
-        
-        return await context.perform {
-            guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
-                let content = note.content else {
-                return nil
-            }
-            try? context.saveIfNeeded()
-            guard let tags = note.allTags as? [[String]] else {
-                return AttributedString(content)
-            }
-            return NoteParser.parse(content: content, tags: tags, context: context)
-        }
-    }
-    
-    class func replyMetadata(for noteID: HexadecimalString?, context: NSManagedObjectContext) async -> (Int, [URL]) {
-        guard let noteID else {
-            return (0, [])
-        }
-        
-        return await context.perform {
-            let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-            fetchRequest.predicate = NSPredicate(format: Event.replyNoteReferences, noteID)
-            fetchRequest.includesPendingChanges = false
-            fetchRequest.includesSubentities = false
-            fetchRequest.relationshipKeyPathsForPrefetching = ["author"]
-            let replies = (try? context.fetch(fetchRequest)) ?? []
-            let replyCount = replies.count
-            
-            var avatarURLs = [URL]()
-            for reply in replies {
-                if let avatarURL = reply.author?.profilePhotoURL,
-                    !avatarURLs.contains(avatarURL) {
-                    avatarURLs.append(avatarURL)
-                    if avatarURLs.count >= 2 {
-                        break
-                    }
-                }
-            }
-            return (replyCount, avatarURLs)
-        }
-    }
-	
     convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent, relay: Relay?) throws {
         self.init(context: context)
         identifier = jsonEvent.id
@@ -622,6 +520,9 @@ public class Event: NosManagedObject {
         
         // Meta data
         createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
+        if let createdAt, createdAt > .now {
+            self.createdAt = .now
+        }
         content = jsonEvent.content
         kind = jsonEvent.kind
         signature = jsonEvent.signature
@@ -804,31 +705,162 @@ public class Event: NosManagedObject {
         
         // Force ensure current user never was muted
         Task { @MainActor in
-            CurrentUser.shared.author?.muted = false
+            currentUser.author?.muted = false
         }
     }
     
-    class func all(context: NSManagedObjectContext) -> [Event] {
-        let allRequest = Event.allPostsRequest()
+    // MARK: - Helpers
+    
+    var serializedEventForSigning: [Any?] {
+        [
+            0,
+            author?.hexadecimalPublicKey,
+            Int64(createdAt!.timeIntervalSince1970),
+            kind,
+            allTags,
+            content
+        ]
+    }
+    
+    /// Returns true if this event doesn't have content. Usually this means we saw it referenced by another event
+    /// but we haven't actually downloaded it yet.
+    var isStub: Bool {
+        author == nil || createdAt == nil 
+    }
+    
+    func calculateIdentifier() throws -> String {
+        let serializedEventData = try JSONSerialization.data(
+            withJSONObject: serializedEventForSigning,
+            options: [.withoutEscapingSlashes]
+        )
+        return serializedEventData.sha256
+    }
+    
+    func sign(withKey privateKey: KeyPair) throws {
+        if allTags == nil {
+            allTags = [[String]]() as NSObject
+        }
+        identifier = try calculateIdentifier()
+        var serializedBytes = try identifier!.bytes
+        signature = try privateKey.sign(bytes: &serializedBytes)
+    }
+    
+    var jsonRepresentation: [String: Any]? {
+        if let jsonEvent = codable {
+            do {
+                let data = try JSONEncoder().encode(jsonEvent)
+                return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            } catch {
+                print("Error encoding event as JSON: \(error.localizedDescription)\n\(self)")
+            }
+        }
         
-        do {
-            let results = try context.fetch(allRequest)
-            return results
-        } catch let error as NSError {
-            print("Failed to fetch events. Error: \(error.description)")
-            return []
+        return nil
+    }
+    
+    var jsonString: String? {
+        guard let jsonRepresentation,  
+            let data = try? JSONSerialization.data(withJSONObject: jsonRepresentation) else {
+            return nil
+        }
+        return String(data: data, encoding: .utf8)
+    }
+    
+    var codable: JSONEvent? {
+        guard let identifier = identifier,
+            let pubKey = author?.hexadecimalPublicKey,
+            let createdAt = createdAt,
+            let content = content,
+            let signature = signature else {
+            return nil
+        }
+        
+        let allTags = (allTags as? [[String]]) ?? []
+        
+        return JSONEvent(
+            id: identifier,
+            pubKey: pubKey,
+            createdAt: Int64(createdAt.timeIntervalSince1970),
+            kind: kind,
+            tags: allTags,
+            content: content,
+            signature: signature
+        )
+    }
+    
+    var bech32NoteID: String? {
+        guard let identifier = self.identifier,
+            let identifierBytes = try? identifier.bytes else {
+            return nil
+        }
+        return Bech32.encode(Nostr.notePrefix, baseEightData: Data(identifierBytes))
+    }
+    
+    var seenOnRelayURLs: [String] {
+        seenOnRelays.compactMap { $0.addressURL?.absoluteString }
+    }
+    
+    class func attributedContent(noteID: String?, context: NSManagedObjectContext) async -> AttributedString {
+        guard let noteID else {
+            return AttributedString()
+        }
+        
+        return await context.perform {
+            guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
+                let content = note.content else {
+                return AttributedString()
+            }
+            try? context.saveIfNeeded()
+            let tags = note.allTags as? [[String]] ?? []
+            return NoteParser.parse(content: content, tags: tags, context: context)
         }
     }
     
-    class func unpublishedEvents(for user: Author, context: NSManagedObjectContext) -> [Event] {
-        let allRequest = Event.unpublishedEventsRequest(for: user)
+    class func attributedContentAndURLs(
+        noteID: String?, 
+        context: NSManagedObjectContext
+    ) async -> (AttributedString, [URL])? {
+        guard let noteID else {
+            return nil
+        }
         
-        do {
-            let results = try context.fetch(allRequest)
-            return results
-        } catch let error as NSError {
-            print("Failed to fetch events. Error: \(error.description)")
-            return []
+        return await context.perform {
+            guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
+                let content = note.content else {
+                return nil
+            }
+            try? context.saveIfNeeded()
+            let tags = note.allTags as? [[String]] ?? []
+            return NoteParser.parse(content: content, tags: tags, context: context)
+        }
+    }
+    
+    class func replyMetadata(for noteID: HexadecimalString?, context: NSManagedObjectContext) async -> (Int, [URL]) {
+        guard let noteID else {
+            return (0, [])
+        }
+        
+        return await context.perform {
+            let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+            fetchRequest.predicate = NSPredicate(format: Event.replyNoteReferences, noteID)
+            fetchRequest.includesPendingChanges = false
+            fetchRequest.includesSubentities = false
+            fetchRequest.relationshipKeyPathsForPrefetching = ["author"]
+            let replies = (try? context.fetch(fetchRequest)) ?? []
+            let replyCount = replies.count
+            
+            var avatarURLs = [URL]()
+            for reply in replies {
+                if let avatarURL = reply.author?.profilePhotoURL,
+                    !avatarURLs.contains(avatarURL) {
+                    avatarURLs.append(avatarURL)
+                    if avatarURLs.count >= 2 {
+                        break
+                    }
+                }
+            }
+            return (replyCount, avatarURLs)
         }
     }
     

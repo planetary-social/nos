@@ -18,6 +18,7 @@ struct RelaysDestination: Hashable {
 struct RelayView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
+    @EnvironmentObject private var currentUser: CurrentUser
     @ObservedObject var author: Author
     
     @State var newRelayAddress: String = ""
@@ -99,7 +100,7 @@ struct RelayView: View {
                             newRelayAddress = address
                             addRelay()
                             Task {
-                                await CurrentUser.shared.subscribe()
+                                await currentUser.subscribe()
                                 await publishChanges()
                             }
                         } label: {
@@ -117,20 +118,20 @@ struct RelayView: View {
                     endPoint: .bottom
                 ))
             }
-
+            
             if editable {
                 Section {
                     TextField(Localized.relayAddressPlaceholder.string, text: $newRelayAddress)
                         .foregroundColor(.textColor)
                         .autocorrectionDisabled()
-#if os(iOS)
+                        #if os(iOS)
                         .textInputAutocapitalization(.none)
                         .keyboardType(.URL)
-#endif
+                        #endif
                     Button(Localized.save.string) {
                         addRelay()
                         Task {
-                            await CurrentUser.shared.subscribe()
+                            await currentUser.subscribe()
                             await publishChanges()
                         }
                     }
@@ -166,8 +167,8 @@ struct RelayView: View {
     }
     
     func publishChanges() async {
-        let followKeys = CurrentUser.shared.socialGraph.followedKeys 
-        await CurrentUser.shared.publishContactList(tags: followKeys.pTags)
+        let followKeys = currentUser.socialGraph.followedKeys 
+        await currentUser.publishContactList(tags: followKeys.pTags)
     }
 
     private func addRelay() {
@@ -177,7 +178,7 @@ struct RelayView: View {
             do {
                 let address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
                 let relay = try Relay.findOrCreate(by: address, context: viewContext)
-                CurrentUser.shared.author?.add(relay: relay)
+                currentUser.author?.add(relay: relay)
                 try viewContext.save()
                 analytics.added(relay)
                 newRelayAddress = ""
