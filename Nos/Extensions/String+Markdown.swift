@@ -56,14 +56,14 @@ extension String {
             Log.error("Invalid regex pattern")
         }
         
-        replaceOccurrences(mutableString: mutableString, of: "^\\s*", with: "")
-        replaceOccurrences(mutableString: mutableString, of: "\\s*$", with: "")
-        replaceOccurrences(mutableString: mutableString, of: "\\n{2,}", with: "\n")
+        replaceOccurrences(of: "^\\s*", with: "", in: mutableString)
+        replaceOccurrences(of: "\\s*$", with: "", in: mutableString)
+        replaceOccurrences(of: "\\n{2,}", with: "\n", in: mutableString)
         
         return (mutableString as String, urls)
     }
     
-    private func replaceOccurrences(mutableString: NSMutableString, of target: String, with replacement: String) {
+    private func replaceOccurrences(of target: String, with replacement: String, in mutableString: NSMutableString) {
         mutableString.replaceOccurrences(
             of: target,
             with: replacement,
