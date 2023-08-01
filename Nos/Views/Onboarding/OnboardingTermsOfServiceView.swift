@@ -11,6 +11,9 @@ struct OnboardingTermsOfServiceView: View {
     @EnvironmentObject var state: OnboardingState
     @EnvironmentObject var currentUser: CurrentUser
     
+    /// Completion to be called when all onboarding steps are complete
+    let completion: () -> Void
+    
     var body: some View {
         VStack {
             PlainText(Localized.termsOfServiceTitle.string)
@@ -51,9 +54,12 @@ struct OnboardingTermsOfServiceView: View {
                 }
                 Spacer(minLength: 15)
                 BigActionButton(title: Localized.accept) {
-                    Task {
+                    switch state.flow {
+                    case .createAccount:
                         await currentUser.createAccount()
-                        state.step = .finishOnboarding
+                        completion()
+                    case .loginToExistingAccount:
+                        state.step = .login
                     }
                 }
             }
