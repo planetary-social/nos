@@ -17,4 +17,5 @@ enum KeyFixture {
     static let alice = KeyPair(nsec: "nsec1x0md460pkpmuwu5auvzhtfnx3vahkxu83n9w26m5dy9243q6mgls0zsffn")!
     static let bob = KeyPair(nsec: "nsec1kvlwl8reastryhd75tsj879da6mmk744kl56l7q0sl237x8dqy9qwqqz4g")!
     static let eve = KeyPair(nsec: "nsec16mw0dqelfjumkq3xxqh0zkfkzpyk06mk37a752x35wts7m30y6lsecl6zr")!
+    static let emptyProfile = KeyPair(nsec: "nsec1kqzd5ctfh4j8hqvs3076zgruylz0das00wwfed67dzeevjcqls9s2ate2u")!
 }
