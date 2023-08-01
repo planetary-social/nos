@@ -414,10 +414,11 @@ extension RelayService {
         signingKey: KeyPair,
         context: NSManagedObjectContext
     ) async throws {
+        let relayURLs = relays.compactMap { $0.addressURL }
         await openSockets()
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
-        for relay in relays {
-            if let socket = await socket(from: relay) {
+        for relayURL in relayURLs {
+            if let socket = await socket(from: relayURL) {
                 await publish(from: socket, jsonEvent: signedEvent)
             } else {
                 Log.error("Could not find socket to publish message")
@@ -709,8 +710,9 @@ extension RelayService {
         }
     }
     
-    func socket(from relay: Relay) async -> WebSocket? {
-        await subscriptions.sockets.first(where: { $0.request.url?.absoluteString == relay.addressURL?.absoluteString })
+    func socket(from url: URL?) async -> WebSocket? {
+        guard let url else { return nil }
+        return await subscriptions.socket(for: url)
     }
 
     func unsURL(from unsIdentifier: String) -> URL? {
