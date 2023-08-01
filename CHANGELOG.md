@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed the launch screen layout on iPad
+- Removed the screen to fill out profile information from onboarding and replaced it with a call to action in the sidebar. 
 
 ## [0.1 (59)] - 2023-07-21Z
 
