@@ -21,15 +21,8 @@ final class RelayService: ObservableObject {
     private var processSubscriptionQueueTimer: AsyncTimer?
     private var backgroundProcessTimer: AsyncTimer?
     private var eventProcessingLoop: Task<Void, Error>?
-    private lazy var backgroundContext: NSManagedObjectContext = {
-        persistenceController.newBackgroundContext()
-    }()
-    private lazy var parseContext: NSManagedObjectContext = {
-        let parseContext = persistenceController.newBackgroundContext()
-        parseContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
-        return parseContext
-    }()
-    // TODO: use structured concurrency for this
+    private var backgroundContext: NSManagedObjectContext 
+    private var parseContext: NSManagedObjectContext 
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .userInitiated)
     private var parseQueue = ParseQueue()
     @Dependency(\.analytics) private var analytics
@@ -39,6 +32,10 @@ final class RelayService: ObservableObject {
     
     init() {
         self.subscriptions = RelaySubscriptionManager()
+        @Dependency(\.persistenceController) var persistenceController
+        self.backgroundContext = persistenceController.newBackgroundContext()
+        self.parseContext = persistenceController.newBackgroundContext()
+        parseContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         
         self.eventProcessingLoop = Task(priority: .userInitiated) { [weak self] in
             try Task.checkCancellation()
@@ -133,8 +130,8 @@ extension RelayService {
         Task { await processSubscriptionQueue(overrideRelays: nil) }
     }
     
-    func closeConnection(to relay: Relay) async {
-        guard let address = relay.address else { return }
+    func closeConnection(to relayAddress: String?) async {
+        guard let address = relayAddress else { return }
         if let socket = await subscriptions.socket(for: address) {
             for subscription in await subscriptions.active {
                 self.sendClose(from: socket, subscription: subscription.id)

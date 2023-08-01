@@ -81,7 +81,7 @@ struct ReportMenuModifier: ViewModifier {
     func mute(author: Author) {
         Task {
             do {
-                try await author.mute(context: viewContext)
+                try await author.mute(viewContext: viewContext)
             } catch {
                 Log.error(error.localizedDescription)
             }
