@@ -47,7 +47,7 @@ struct ComposerActionBar: View {
                             startUploadingImage()
                             let attachedFile = AttachedFile(image: image)
                             let url = try await fileStorageAPI.upload(file: attachedFile)
-                            text.append(string: url.absoluteString)
+                            text.append(url)
                             endUploadingImage()
                         } catch {
                             endUploadingImage()
