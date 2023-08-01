@@ -403,6 +403,10 @@
 		CD76865429B7DABE00085358 /* DiscoverSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76865229B793F400085358 /* DiscoverSearchBar.swift */; };
 		CDDA1F7B29A527650047ACD8 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = CDDA1F7A29A527650047ACD8 /* Starscream */; };
 		CDDA1F7D29A527650047ACD8 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = CDDA1F7C29A527650047ACD8 /* SwiftUINavigation */; };
+		DC08FF7E2A7968FF009F87D1 /* FileStorageAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F20422A6ED75C00F8D73F /* FileStorageAPI.swift */; };
+		DC08FF7F2A796930009F87D1 /* ImagePickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F203E2A6AE24200F8D73F /* ImagePickerButton.swift */; };
+		DC08FF802A796997009F87D1 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F20402A6AE31000F8D73F /* ImagePicker.swift */; };
+		DC08FF812A7969C5009F87D1 /* UIDevice+Simulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */; };
 		DC2E54C82A700F1400C2CAAB /* UIDevice+Simulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */; };
 		DC4AB2F62A4475B800D1478A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AB2F52A4475B800D1478A /* AppDelegate.swift */; };
 		DC5F203F2A6AE24200F8D73F /* ImagePickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F203E2A6AE24200F8D73F /* ImagePickerButton.swift */; };
@@ -1602,6 +1606,7 @@
 				C973AB5E2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */,
 				3F30021729C3BFEB003D4F8B /* OnboardingLoginView.swift in Sources */,
 				C9F64D8D29ED840700563F2B /* LogHelper.swift in Sources */,
+				DC08FF7E2A7968FF009F87D1 /* FileStorageAPI.swift in Sources */,
 				5B88051F2A21056E00E21F06 /* TLVTests.swift in Sources */,
 				C97465352A3C95FE0031226F /* RelayPickerToolbarButton.swift in Sources */,
 				3FBCDE6D29B648FE00A6C2D4 /* ThreadView.swift in Sources */,
@@ -1675,6 +1680,7 @@
 				C9F0BB6D29A503D9000547FC /* Int+Bool.swift in Sources */,
 				C97465322A3B89140031226F /* AuthorLabel.swift in Sources */,
 				C98B8B4129FBF85F009789C8 /* NotificationCard.swift in Sources */,
+				DC08FF812A7969C5009F87D1 /* UIDevice+Simulator.swift in Sources */,
 				C9DB207829F30EC700FB7B9D /* AsyncButton.swift in Sources */,
 				C94D14822A12B3F70014C906 /* SearchBar.swift in Sources */,
 				C9E37E102A1E7C32003D4B0A /* ReportMenu.swift in Sources */,
@@ -1696,6 +1702,7 @@
 				C9DEC05B298950A90078B43A /* String+Lorem.swift in Sources */,
 				C9F84C1D298DBC6100C6714D /* Data+Sha.swift in Sources */,
 				C98560B12A65B7960002C1D9 /* AuthorCard.swift in Sources */,
+				DC08FF7F2A796930009F87D1 /* ImagePickerButton.swift in Sources */,
 				3F30021429C3BFE2003D4F8B /* OnboardingAgeVerificationView.swift in Sources */,
 				C9B678E429EED2DC00303F33 /* SocialGraphTests.swift in Sources */,
 				3FFB1D9D29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */,
@@ -1724,6 +1731,7 @@
 				C97A1C8F29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift in Sources */,
 				C9ADB135299288230075E7F8 /* KeyFixture.swift in Sources */,
 				C9C547552A4F1CDB006B0741 /* SearchController.swift in Sources */,
+				DC08FF802A796997009F87D1 /* ImagePicker.swift in Sources */,
 				C9E9D9C82A2E1EC40048AF0B /* (null) in Sources */,
 				3FFB1D9429A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,
 				5B6EB49029EDBEC1006E750C /* NoteParserTests.swift in Sources */,
