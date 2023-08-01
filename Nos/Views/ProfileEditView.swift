@@ -85,7 +85,7 @@ struct ProfileEditView: View {
                 
                 // Universal Names Set Up
                 if author.nip05?.hasSuffix("universalname.space") != true {
-                    SetUpUNSBanner {
+                    ActionBanner(messageText: .unsTagline, buttonText: .setUpUNS) { 
                         showUniversalNameWizard = true
                     }
                 }

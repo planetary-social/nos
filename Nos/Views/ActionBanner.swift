@@ -1,20 +1,22 @@
 //
-//  SetUpUNSBanner.swift
+//  ActionBanner.swift
 //  Nos
 //
-//  Created by Matthew Lorentz on 6/9/23.
+//  Created by Matthew Lorentz on 8/1/23.
 //
 
 import SwiftUI
 
-struct SetUpUNSBanner: View {
+struct ActionBanner: View {
     
+    var messageText: Localized
+    var buttonText: Localized
     var action: () -> Void
     
     var body: some View {
         VStack {
             HStack {
-                Localized.unsTagline.view
+                messageText.view
                     .padding(.top, 8)
                     .padding(.bottom, 12)
                     .padding(.leading, 4)
@@ -26,7 +28,7 @@ struct SetUpUNSBanner: View {
             
             HStack {
                 ActionButton(
-                    title: .setUpUniversalName,
+                    title: buttonText,
                     textColor: Color(hex: "#f26141"),
                     depthEffectColor: Color(hex: "#f8d4b6"),
                     backgroundGradient: LinearGradient(
@@ -52,7 +54,7 @@ struct SetUpUNSBanner: View {
                     .aspectRatio(1, contentMode: .fit)
                     .foregroundColor(Color(hex: "#F95795"))
             }
-            .offset(x: 28)
+                .offset(x: 28)
         )
         .listRowBackground(
             ZStack {
@@ -66,10 +68,13 @@ struct SetUpUNSBanner: View {
     }
 }
 
-struct SetUpUNSBanner_Previews: PreviewProvider {
+struct ActionBanner_Previews: PreviewProvider {
     static var previews: some View {
         Form {
-            SetUpUNSBanner {}
+            ActionBanner(
+                messageText: .unsTagline, 
+                buttonText: .setUpUniversalName
+            ) {}
         }
         .background(Color.appBg)
     }
