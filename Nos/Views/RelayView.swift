@@ -62,7 +62,7 @@ struct RelayView: View {
                     Task {
                         for index in indexes {
                             let relay = relays[index]
-                            await relayService.closeConnection(to: relay)
+                            await relayService.closeConnection(to: relay.address)
                             analytics.removed(relay)
                             author.remove(relay: relay)
                             viewContext.delete(relay)

@@ -10,9 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add list of followers and relays in the Profile screen.
 - Add a loading placeholder for note contents.
-- Fixed the launch screen layout on iPad
+
+## [0.1 (59)] - 2023-07-21Z
+
+- Add a loading placeholder for note contents.
+- Fixed several crashes.
 - Added Dutch, Japanese, and Persian translations. Thanks matata, yutaro, and eru-desu! 
-- Added some visual artists to the list of featured users.
 
 ## [0.1 (58)] - 2023-07-17Z
 
