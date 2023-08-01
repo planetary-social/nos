@@ -73,7 +73,7 @@ struct ProfileEditView: View {
                     .foregroundColor(.textColor)
                     .autocorrectionDisabled()
                 } header: {
-                    createAccountCompletion != nil ? Localized.createAccount.view : Localized.basicInfo.view
+                    createAccountCompletion != nil ? Localized.tryIt.view : Localized.basicInfo.view
                         .foregroundColor(.textColor)
                         .fontWeight(.heavy)
                 }
@@ -85,7 +85,7 @@ struct ProfileEditView: View {
                 
                 // Universal Names Set Up
                 if author.nip05?.hasSuffix("universalname.space") != true {
-                    ActionBanner(messageText: .unsTagline, buttonText: .setUpUNS) { 
+                    SetUpUNSBanner {
                         showUniversalNameWizard = true
                     }
                 }
@@ -93,7 +93,7 @@ struct ProfileEditView: View {
             
             if let createAccountCompletion {
                 Spacer()
-                BigActionButton(title: .createAccount) {
+                BigActionButton(title: .tryIt) {
                     await save()
                     createAccountCompletion()
                 }
