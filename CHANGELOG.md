@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (60)] - 2023-08-01Z
+
 - Updated content report style based on the latest NIPs and fixed some bugs with reporting.
 - Fixed the launch screen layout on iPad
 - Multiple consecutive newlines will be replaced by a single new line in note content.
