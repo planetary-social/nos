@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed several crashes.
 - Added Dutch, Japanese, and Persian translations. Thanks matata, yutaro, and eru-desu! 
 - Added some visual artists to the list of featured users.
-- 
+
 ## [0.1 (58)] - 2023-07-17Z
 
 - Added better previews for urls shared in notes.
