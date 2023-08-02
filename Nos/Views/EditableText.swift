@@ -122,7 +122,11 @@ struct EditableText: UIViewRepresentable {
             false
         }
 
-        func textView(_ textView: UITextView, shouldChangeTextIn nsRange: NSRange, replacementText text: String) -> Bool {
+        func textView(
+            _ textView: UITextView,
+            shouldChangeTextIn nsRange: NSRange,
+            replacementText text: String) -> Bool
+        {
             if text.count > 1, let range = Range(nsRange, in: self.text.wrappedValue.attributedString) {
                 do {
                     let (humanReadablePart, _) = try Bech32.decode(text)
