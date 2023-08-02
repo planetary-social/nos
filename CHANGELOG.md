@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+<<<<<<< Updated upstream
+=======
+- Fixed the launch screen layout on iPad
+- Added support for pasting profile and note references when composing notes
+
+## [0.1 (59)] - 2023-07-21Z
+
+>>>>>>> Stashed changes
 - Add a loading placeholder for note contents.
 - Fixed the launch screen layout on iPad
 - Added Dutch, Japanese, and Persian translations. Thanks matata, yutaro, and eru-desu! 
