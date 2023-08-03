@@ -5,6 +5,7 @@
 //  Created by Matthew Lorentz on 5/3/23.
 //
 
+import Foundation
 import SwiftUI
 import SwiftUINavigation
 
@@ -108,7 +109,10 @@ struct ComposerActionBar: View {
             Spacer()
         }
         .sheet(isPresented: $uploadingImage) {
-            FullscreenProgressView(isPresented: .constant(true))
+            FullscreenProgressView(
+                isPresented: .constant(true), 
+                text: Localized.ImagePicker.uploading.textState
+            )
         }
         .animation(.easeInOut(duration: 0.2), value: subMenu)
         .transition(.move(edge: .leading))

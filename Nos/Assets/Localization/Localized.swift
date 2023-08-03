@@ -254,6 +254,7 @@ extension Localized {
         case takePhoto = "Take photo with Camera"
         case errorUploadingFile = "Error uploading the file"
         case errorUploadingFileMessage = "An error was encountered when uploading the file you provided. Please try again."
+        case uploading = "Uploading..."
     }
 }
 
