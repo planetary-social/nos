@@ -14,7 +14,7 @@ struct RelayDetailView: View {
     func row(title: Localized, value: String) -> some View {
         HStack(alignment: .top) {
             Text("\(title.string): ")
-            Text(value)
+            Text(value).textSelection(.enabled)
         }
     }
     var body: some View {
