@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the launch screen layout on iPad
 - Multiple consecutive newlines will be replaced by a single new line in note content.
 - Leading and trailing whitespace will no longer be rendered in note content.
+- Removed the screen to fill out profile information from onboarding and replaced it with a call to action in the sidebar. 
 
 ## [0.1 (59)] - 2023-07-21Z
 

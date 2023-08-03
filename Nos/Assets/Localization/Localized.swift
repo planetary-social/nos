@@ -61,7 +61,7 @@ enum Localized: String, Localizable, CaseIterable {
     case notOldEnoughButton = "Go back (to school)"
     case termsOfServiceTitle = "Terms of Service"
   
-    case loginToYourAccount = "Login to your account"
+    case loginWithKey = "Login with key"
     case pasteYourSecretKey = "Paste your secret key"
     case login = "Login"
     
@@ -84,7 +84,7 @@ enum Localized: String, Localizable, CaseIterable {
     case settings = "Settings"
     case invalidKey = "Invalid Key"
     case couldNotReadPrivateKeyMessage = "Could not read your private key. Please verify that it is in nsec or hex format."
-    case createAccount = "Create an account"
+    case tryIt = "Try it"
     case shareLogs = "Share logs"
     case failedToExportLogs = "Failed to export logs."
     case appVersion = "App Version:"
@@ -103,6 +103,8 @@ enum Localized: String, Localizable, CaseIterable {
     case clear = "Clear"
     case done = "Done"
     case editProfile = "Edit Profile"
+    case completeProfileMessage = "Finish setting up your profile to help people find you."
+    case completeProfileButton = "Complete My Profile"
     case youNeedToEnterAPrivateKeyBeforePosting = "You need to enter a private key in Settings before you can publish posts."
     case relayDoesNotSupportNIP40 = "This relay doesn't support expiring messages. Please select another one."
     case anyRelaysSupportingNIP40 = "None of your relays support expiring messages. Please add one and retry."

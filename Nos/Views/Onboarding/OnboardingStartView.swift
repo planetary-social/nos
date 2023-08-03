@@ -32,13 +32,13 @@ struct OnboardingStartView: View {
                     .blendMode(.normal)
                 )
             Spacer()
-            BigActionButton(title: .createAccount) {
+            BigActionButton(title: .tryIt) {
                 state.flow = .createAccount
                 state.step = .ageVerification
             }
             .padding(.horizontal, 24)
             .padding(.bottom)
-            Button(Localized.loginToYourAccount.string) {
+            Button(Localized.loginWithKey.string) {
                 state.flow = .loginToExistingAccount
                 state.step = .ageVerification
             }
