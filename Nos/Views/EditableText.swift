@@ -20,6 +20,7 @@ struct EditableText: UIViewRepresentable {
 
     @Binding var text: EditableNoteText
     @Binding var calculatedHeight: CGFloat
+    @State var width: CGFloat
 
     /// An ID for this view. Only .mentionAddedNotifications matching this ID will be processed.
     private var guid: UUID
@@ -28,6 +29,7 @@ struct EditableText: UIViewRepresentable {
 
     init(_ text: Binding<EditableNoteText>, guid: UUID, calculatedHeight: Binding<CGFloat>) {
         self.guid = guid
+        _width = .init(initialValue: 0)
         _text = text
         _calculatedHeight = calculatedHeight
     }
@@ -47,7 +49,7 @@ struct EditableText: UIViewRepresentable {
         view.textContainer.maximumNumberOfLines = 0
         view.textContainer.lineBreakMode = .byWordWrapping
         view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        
+
         context.coordinator.observer = NotificationCenter.default.addObserver(
             forName: .mentionAddedNotification,
             object: nil,
@@ -80,6 +82,16 @@ struct EditableText: UIViewRepresentable {
         uiView.attributedText = text.nsAttributedString
         uiView.typingAttributes = text.defaultNSAttributes
         Self.recalculateHeight(view: uiView, result: $calculatedHeight)
+    }
+
+    func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize? {
+        if width != uiView.frame.size.width {
+            DispatchQueue.main.async { // call in next render cycle.
+                width = uiView.frame.size.width
+                Self.recalculateHeight(view: uiView, result: $calculatedHeight)
+            }
+        }
+        return nil
     }
 
     fileprivate static func recalculateHeight(view: UIView, result: Binding<CGFloat>) {
