@@ -99,10 +99,10 @@ struct BigActionButtonStyle: ButtonStyle {
 struct BigGradientButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
-            BigActionButton(title: Localized.createAccount, action: {})
+            BigActionButton(title: Localized.tryIt, action: {})
                 .frame(width: 268)
             
-            BigActionButton(title: Localized.createAccount, action: {})
+            BigActionButton(title: Localized.tryIt, action: {})
                 .disabled(true)
                 .frame(width: 268)
         }
