@@ -39,6 +39,7 @@ struct FullscreenProgressView: View {
 
 struct FullscreenProgressView_Previews: PreviewProvider {
     static var previews: some View {
-        FullscreenProgressView(isPresented: .constant(true), text: nil)
+        FullscreenProgressView(isPresented: .constant(true))
+        FullscreenProgressView(isPresented: .constant(true), text: "Lorem ipsum...")
     }
 }
