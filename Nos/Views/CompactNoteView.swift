@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Logger
+import Dependencies
 
 /// A view that displays the text of a note (kind: 1 Nostr event) and truncates it with a "Read more" button if
 /// it is too long
@@ -21,14 +22,14 @@ struct CompactNoteView: View {
     @State var showFullMessage: Bool
     @State private var intrinsicSize = CGSize.zero
     @State private var truncatedSize = CGSize.zero
-    @State private var attributedContent: AttributedString
+    @State private var noteContent = LoadingContent<AttributedString>.loading
+    @State private var contentLinks = [URL]()
     
     @EnvironmentObject var router: Router
+    @Dependency(\.persistenceController) private var persistenceController
     
     internal init(note: Event, showFullMessage: Bool = false) {
-        _attributedContent = .init(initialValue: AttributedString(note.content ?? ""))
         _showFullMessage = .init(initialValue: showFullMessage)
-        
         self.note = note
     }
     
@@ -36,29 +37,37 @@ struct CompactNoteView: View {
         shouldShowReadMore = intrinsicSize.height > truncatedSize.height 
     }
     
+    var formattedText: some View {
+        noteText
+            .font(.body)
+            .foregroundColor(.primaryTxt)
+            .tint(.accent) 
+            .padding(15)
+            .environment(\.openURL, OpenURLAction { url in
+                router.open(url: url, with: viewContext)
+                return .handled
+            })
+    }
+    
+    var noteText: some View {
+        Group {
+            switch noteContent {
+            case .loading:
+                Text(note.content ?? "")
+                    .redacted(reason: .placeholder)
+            case .loaded(let attributedString):
+                Text(attributedString)
+            }
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             if showFullMessage {
-                Text(attributedContent)
-                    .font(.body)
-                    .foregroundColor(.primaryTxt)
-                    .tint(.accent) 
-                    .padding(15)
-                    .environment(\.openURL, OpenURLAction { url in
-                        router.open(url: url, with: viewContext)
-                        return .handled
-                    })
+                formattedText
             } else {
-                Text(attributedContent)
+                formattedText
                     .lineLimit(12)
-                    .font(.body)
-                    .foregroundColor(.primaryTxt)
-                    .tint(.accent) 
-                    .padding(15)
-                    .environment(\.openURL, OpenURLAction { url in
-                        router.open(url: url, with: viewContext)
-                        return .handled
-                    })
                     .background {
                         GeometryReader { geometryProxy in
                             Color.clear.preference(key: TruncatedSizePreferenceKey.self, value: geometryProxy.size)
@@ -71,9 +80,7 @@ struct CompactNoteView: View {
                         }
                     }
                     .background {
-                        Text(attributedContent)
-                            .font(.body)
-                            .padding(15)
+                        noteText
                             .fixedSize(horizontal: false, vertical: true)
                             .hidden()
                             .background {
@@ -111,25 +118,28 @@ struct CompactNoteView: View {
                 .frame(maxWidth: .infinity)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
-            if note.kind == EventKind.text.rawValue,
-                let url = try? note
-                    .content?
-                    .findUnformattedLinks()
-                    .first(where: { $0.isImage }) {
-                SquareImage(url: url) {
-                    router.open(url: url, with: viewContext)
+            if note.kind == EventKind.text.rawValue, !contentLinks.isEmpty {
+                VStack {
+                    ForEach(contentLinks, id: \.self.absoluteURL) { url in
+                        LinkPreview(url: url)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.horizontal, 15)
+                    }
                 }
+                .padding(.bottom, 15)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .task {
-            let backgroundContext = PersistenceController.backgroundViewContext
-            if let parsedAttributedContent = await Event.attributedContent(
+            let backgroundContext = persistenceController.backgroundViewContext
+            if let parsedAttributedContent = await Event.attributedContentAndURLs(
                 noteID: note.identifier,
                 context: backgroundContext
             ) {
-                withAnimation {
-                    attributedContent = parsedAttributedContent
+                withAnimation(.easeIn(duration: 0.1)) {
+                    let (attributedString, contentLinks) = parsedAttributedContent
+                    self.noteContent = .loaded(attributedString)
+                    self.contentLinks = contentLinks
                 }
             }
         }
@@ -148,21 +158,18 @@ fileprivate struct TruncatedSizePreferenceKey: PreferenceKey {
 
 struct CompactNoteView_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
+    
     static var previews: some View {
         Group {
-            VStack {
-                CompactNoteView(note: PreviewData.shortNote)
-            }
-            VStack {
-                CompactNoteView(note: PreviewData.longNote)
-            }
-            VStack {
-                CompactNoteView(note: PreviewData.longFormNote)
-            }
+            CompactNoteView(note: previewData.linkNote)
+            CompactNoteView(note: previewData.shortNote)
+            CompactNoteView(note: previewData.longNote)
+            CompactNoteView(note: previewData.longFormNote)
+            CompactNoteView(note: previewData.doubleImageNote)
         }
         .padding()
         .background(Color.cardBackground)
-        .environmentObject(PreviewData.router)
-        .environment(\.managedObjectContext, PreviewData.previewContext)
+        .inject(previewData: PreviewData())
     }
 }

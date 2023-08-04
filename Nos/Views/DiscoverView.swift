@@ -39,7 +39,11 @@ struct DiscoverView: View {
         if let relayFilter {
             predicate = Event.seen(on: relayFilter, before: date, exceptFrom: currentUser.author)
         } else {
-            predicate = Event.extendedNetworkPredicate(featuredAuthors: featuredAuthors, before: date)
+            predicate = Event.extendedNetworkPredicate(
+                currentUser: currentUser, 
+                featuredAuthors: featuredAuthors, 
+                before: date
+            )
         }
     }
 
@@ -257,21 +261,15 @@ struct SizePreferenceKey: PreferenceKey {
 
 struct DiscoverView_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
+    static var relayService = previewData.relayService
     
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
-    static var currentUser: CurrentUser = {
-        let currentUser = CurrentUser(persistenceController: persistenceController)
-        Task { await currentUser.setPrivateKeyHex(KeyFixture.alice.privateKeyHex) }
-        currentUser.viewContext = previewContext
-        currentUser.relayService = relayService
-        return currentUser
-    }()
-    
+    static var emptyRelayService = previewData.relayService
+    static var currentUser = previewData.currentUser
     static var router = Router()
     
     static var user: Author {

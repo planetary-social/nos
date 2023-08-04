@@ -13,6 +13,7 @@ struct ProfileHeader: View {
     @ObservedObject var author: Author
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
+    @EnvironmentObject private var currentUser: CurrentUser
 
     @State private var subscriptionId: String = ""
     
@@ -61,7 +62,7 @@ struct ProfileHeader: View {
                                 .font(.title3.weight(.semibold))
                                 .foregroundColor(Color.primaryTxt)
                             Spacer()
-                            if author != CurrentUser.shared.author, let currentUser = CurrentUser.shared.author {
+                            if author != currentUser.author, let currentUser = currentUser.author {
                                 FollowButton(currentUserAuthor: currentUser, author: author)
                                 if author.muted {
                                     Text(Localized.muted.string)

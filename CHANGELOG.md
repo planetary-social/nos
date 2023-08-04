@@ -8,14 +8,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed the launch screen layout on iPad
+- Multiple consecutive newlines will be replaced by a single new line in note content.
+- Leading and trailing whitespace will no longer be rendered in note content.
+- Removed the screen to fill out profile information from onboarding and replaced it with a call to action in the sidebar. 
+
+## [0.1 (59)] - 2023-07-21Z
+
+- Add a loading placeholder for note contents.
+- Fixed several crashes.
 - Added Dutch, Japanese, and Persian translations. Thanks matata, yutaro, and eru-desu! 
 - Added some visual artists to the list of featured users.
+
+## [0.1 (58)] - 2023-07-17Z
+
+- Added better previews for urls shared in notes.
+
+## [0.1 (57)] - 2023-07-17Z
+
 - Fixed an issue where Nos couldn't find the user's key on startup.
-- Fixed high cpu usage when the app is idle
 - Fixed an issue where you could have duplicate relays: one with a trailing slash and one without.
+
+## [0.1 (56)] - 2023-07-13Z
+
+- Fixed high cpu usage when the app is idle
+
+## [0.1 (55)] - 2023-07-12Z
+
 - Fixed several bugs around muting users
 - Added the number of connected relays at the top right corner of the Home Feed.
 - Fixed a bug where expired messages could be published to relays that doesn't support them
+- Added support for push notifications.
 
 ## [0.1 (53)] - 2023-07-03Z
 

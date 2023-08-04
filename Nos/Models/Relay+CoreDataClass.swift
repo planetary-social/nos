@@ -41,6 +41,7 @@ public class Relay: NosManagedObject {
         "wss://nostr.relayer.se",
         "wss://e.nos.lol",
         "wss://purplepag.es",
+        "wss://soloco.nl",
         ]
     }
     

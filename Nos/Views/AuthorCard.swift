@@ -69,9 +69,10 @@ struct AuthorCard: View {
 }
 
 struct AuthorCard_Previews: PreviewProvider {
+    static var previewData = PreviewData()
     static var previews: some View {
         StaggeredGrid(
-            list: [PreviewData.alice, PreviewData.bob, PreviewData.eve], 
+            list: [previewData.alice, previewData.bob, previewData.eve], 
             columns: 2, 
             content: { author in
                 AuthorCard(author: author)

@@ -95,7 +95,7 @@ struct HomeFeedView: View {
                 if router.currentPath.wrappedValue.count == 1 {
                     ProfileView(author: author)
                 } else {
-                    if author == CurrentUser.shared.author, CurrentUser.shared.editing {
+                    if author == currentUser.author, currentUser.editing {
                         ProfileEditView(author: author)
                     } else {
                         ProfileView(author: author)
@@ -179,23 +179,18 @@ private let itemFormatter: DateFormatter = {
 
 struct ContentView_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
+    static var relayService = previewData.relayService
     
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
+    static var emptyRelayService = previewData.relayService
     
     static var router = Router()
     
-    static var currentUser: CurrentUser = {
-        let currentUser = CurrentUser(persistenceController: persistenceController)
-        currentUser.viewContext = previewContext
-        currentUser.relayService = relayService
-        Task { await currentUser.setKeyPair(KeyFixture.keyPair) }
-        return currentUser
-    }()
+    static var currentUser = previewData.currentUser
     
     static var shortNote: Event {
         let note = Event(context: previewContext)

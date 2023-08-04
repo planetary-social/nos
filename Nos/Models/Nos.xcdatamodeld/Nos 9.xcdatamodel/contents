@@ -15,6 +15,7 @@
         <relationship name="events" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="author" inverseEntity="Event"/>
         <relationship name="followers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Follow" inverseName="destination" inverseEntity="Follow"/>
         <relationship name="follows" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Follow" inverseName="source" inverseEntity="Follow"/>
+        <relationship name="notifications" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="NosNotification" inverseName="user" inverseEntity="NosNotification"/>
         <relationship name="relays" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="authors" inverseEntity="Relay"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
@@ -63,6 +64,16 @@
         <attribute name="petName" optional="YES" attributeType="String"/>
         <relationship name="destination" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="followers" inverseEntity="Author"/>
         <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="follows" inverseEntity="Author"/>
+    </entity>
+    <entity name="NosNotification" representedClassName="NosNotification" syncable="YES">
+        <attribute name="eventID" optional="YES" attributeType="String"/>
+        <attribute name="isRead" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="notifications" inverseEntity="Author"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="eventID"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="Relay" representedClassName=".Relay" syncable="YES">
         <attribute name="address" attributeType="String"/>
