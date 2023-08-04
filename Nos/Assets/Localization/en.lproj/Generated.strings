@@ -174,3 +174,4 @@
 "ImagePicker.takePhoto" = "Take photo with Camera";
 "ImagePicker.errorUploadingFile" = "Error uploading the file";
 "ImagePicker.errorUploadingFileMessage" = "An error was encountered when uploading the file you provided. Please try again.";
+"ImagePicker.uploading" = "Uploading...";
