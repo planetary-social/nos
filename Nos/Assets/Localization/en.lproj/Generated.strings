@@ -9,7 +9,7 @@
 "Localized.notOldEnoughSubtitle" = "You need to be 16 years old to be able to use this app.";
 "Localized.notOldEnoughButton" = "Go back (to school)";
 "Localized.termsOfServiceTitle" = "Terms of Service";
-"Localized.loginToYourAccount" = "Login to your account";
+"Localized.loginWithKey" = "Login with key";
 "Localized.pasteYourSecretKey" = "Paste your secret key";
 "Localized.login" = "Login";
 "Localized.yes" = "Yes";
@@ -28,7 +28,7 @@
 "Localized.settings" = "Settings";
 "Localized.invalidKey" = "Invalid Key";
 "Localized.couldNotReadPrivateKeyMessage" = "Could not read your private key. Please verify that it is in nsec or hex format.";
-"Localized.createAccount" = "Create an account";
+"Localized.tryIt" = "Try it";
 "Localized.shareLogs" = "Share logs";
 "Localized.failedToExportLogs" = "Failed to export logs.";
 "Localized.appVersion" = "App Version:";
@@ -45,6 +45,8 @@
 "Localized.clear" = "Clear";
 "Localized.done" = "Done";
 "Localized.editProfile" = "Edit Profile";
+"Localized.completeProfileMessage" = "Finish setting up your profile to help people find you.";
+"Localized.completeProfileButton" = "Complete My Profile";
 "Localized.youNeedToEnterAPrivateKeyBeforePosting" = "You need to enter a private key in Settings before you can publish posts.";
 "Localized.relayDoesNotSupportNIP40" = "This relay doesn't support expiring messages. Please select another one.";
 "Localized.anyRelaysSupportingNIP40" = "None of your relays support expiring messages. Please add one and retry.";
