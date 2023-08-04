@@ -21,18 +21,28 @@ struct GoldenPostView: View {
     
     @EnvironmentObject private var router: Router
     
-    @State private var attributedContent: AttributedString
+    @State private var noteContent = LoadingContent<AttributedString>.loading
     @State private var contentLinks = [URL]()
     @Dependency(\.persistenceController) private var persistenceController
     
     internal init(author: Author, note: Event) {
         self.author = author
         self.note = note
-        _attributedContent = .init(initialValue: AttributedString(note.content ?? ""))
+    }
+    
+    var noteText: some View {
+        Group {
+            switch noteContent {
+            case .loading:
+                Text(note.content ?? "").redacted(reason: .placeholder)
+            case .loaded(let attributedString):
+                Text(attributedString)
+            }
+        }
     }
 
     var text: some View {
-        Text(attributedContent)
+        noteText
             .foregroundColor(.primaryTxt)
             .tint(.accent)
             .multilineTextAlignment(.leading)
@@ -64,13 +74,12 @@ struct GoldenPostView: View {
         .padding(10)
         .task {
             let backgroundContext = persistenceController.backgroundViewContext
-            if let parsedAttributedContent = await Event.attributedContent(
+            let parsedAttributedContent = await Event.attributedContent(
                 noteID: note.identifier,
                 context: backgroundContext
-            ) {
-                withAnimation {
-                    (self.attributedContent, self.contentLinks) = parsedAttributedContent
-                }
+            ) 
+            withAnimation(.easeIn(duration: 0.1)) {
+                self.noteContent = .loaded(parsedAttributedContent)
             }
         }
     }

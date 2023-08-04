@@ -12,6 +12,8 @@ import SwiftUI
 struct ActionButton: View {
     
     var title: Localized
+    var font: Font = .clarityBold
+    var image: Image?
     var textColor = Color.white
     var depthEffectColor = Color(hex: "#A04651")
     var backgroundGradient = LinearGradient(
@@ -34,11 +36,14 @@ struct ActionButton: View {
                 disabled = false
             }
         }, label: {
-            PlainText(title.string)
-                .font(.clarityBold)
-                .transition(.opacity)
-                .font(.headline)
-                .foregroundColor(textColor)
+            HStack {
+                image
+                PlainText(title.string)
+                    .font(font)
+                    .transition(.opacity)
+                    .font(.headline)
+                    .foregroundColor(textColor)
+            }
         })
         .lineLimit(nil)
         .foregroundColor(.black)
@@ -104,19 +109,17 @@ struct ActionButtonStyle: ButtonStyle {
                 .opacity(isEnabled ? 1 : 0.5)
                 .background(
                     ZStack {
-                        ZStack {
-                            LinearGradient(
-                                colors: [
-                                    Color(red: 1, green: 1, blue: 1, opacity: 0.2),
-                                    Color(red: 1, green: 1, blue: 1, opacity: 1.0),
-                                ],
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                            .blendMode(.softLight)
-                            
-                            backgroundGradient.blendMode(.normal)
-                        }
+                        LinearGradient(
+                            colors: [
+                                Color(red: 1, green: 1, blue: 1, opacity: 0.2),
+                                Color(red: 1, green: 1, blue: 1, opacity: 1.0),
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                        .blendMode(.softLight)
+                        
+                        backgroundGradient.blendMode(.normal)
                     }
                 )
                 .cornerRadius(cornerRadius)
@@ -133,6 +136,21 @@ struct ActionButton_Previews: PreviewProvider {
             
             ActionButton(title: Localized.done, action: {})
                 .disabled(true)
+            
+            ActionButton(
+                title: Localized.edit, 
+                font: .clarityMedium,
+                image: Image.editProfile, 
+                textColor: Color(hex: "#f26141"),
+                depthEffectColor: Color(hex: "#f8d4b6"),
+                backgroundGradient: LinearGradient(
+                    colors: [Color(hex: "#FFF8F7"), Color(hex: "#FDF6F5")],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                ),
+                textShadow: false,
+                action: {}
+            )
             
             SecondaryActionButton(title: Localized.edit, action: {})
             

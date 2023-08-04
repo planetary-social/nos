@@ -29,7 +29,7 @@ enum OnboardingStep {
     case ageVerification
     case notOldEnough
     case termsOfService
-    case finishOnboarding
+    case login
 }
 
 struct OnboardingView: View {
@@ -60,15 +60,10 @@ struct OnboardingView: View {
                         OnboardingNotOldEnoughView()
                             .environmentObject(state)
                     case .termsOfService:
-                        OnboardingTermsOfServiceView()
+                        OnboardingTermsOfServiceView(completion: completion)
                             .environmentObject(state)
-                    case .finishOnboarding:
-                        switch state.flow {
-                        case .createAccount:
-                            CreateProfileView(user: currentUser, createAccountCompletion: completion)
-                        case .loginToExistingAccount:
-                            OnboardingLoginView(completion: completion)
-                        }
+                    case .login:
+                        OnboardingLoginView(completion: completion)
                     }
                 }
         }

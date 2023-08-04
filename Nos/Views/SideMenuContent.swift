@@ -23,9 +23,21 @@ struct SideMenuContent: View {
     
     let closeMenu: () -> Void
     
-    var body: some View {
-        NavigationStack(path: $router.sideMenuPath) {
-            VStack(alignment: .leading, spacing: 0) {
+    var profileHeader: some View {
+        Group {
+            if let author = currentUser.author, author.needsMetadata == true {
+                ActionBanner(
+                    messageText: .completeProfileMessage, 
+                    buttonText: .completeProfileButton
+                ) { 
+                    if let author = currentUser.author {
+                        currentUser.editing = true
+                        router.push(author)
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 30)
+            } else {
                 Button {
                     router.sideMenuPath.append(SideMenu.Destination.profile)
                 } label: {
@@ -49,6 +61,14 @@ struct SideMenuContent: View {
                     }
                 }
                 .padding(.vertical, 80)
+            }
+        }
+    }
+    
+    var body: some View {
+        NavigationStack(path: $router.sideMenuPath) {
+            VStack(alignment: .leading, spacing: 0) {
+                profileHeader
                 SideMenuRow(title: .yourProfile, image: Image(systemName: "person.crop.circle"), destination: .profile)
                 SideMenuRow(title: .settings, image: Image(systemName: "gear"), destination: .settings)
                 SideMenuRow(
@@ -128,5 +148,31 @@ struct SideMenuRow: View {
             }
         }
         .padding()
+    }
+}
+
+struct SideMenuContent_Previews: PreviewProvider {
+    
+    static var previewData = PreviewData()
+    static var emptyUserData = { 
+        var data = PreviewData()
+        _ = data.currentUser
+        Task { await data.currentUser.setKeyPair(KeyFixture.emptyProfile) }
+        return data
+    }()
+    static var menuOpened = true
+    
+    static var previews: some View {
+        Group {
+            SideMenuContent { 
+                menuOpened = false
+            }
+            .inject(previewData: previewData)
+            
+            SideMenuContent { 
+                menuOpened = false
+            }
+            .inject(previewData: emptyUserData)
+        }
     }
 }
