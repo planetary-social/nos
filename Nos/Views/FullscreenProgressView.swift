@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import SwiftUINavigation
 
 struct FullscreenProgressView: View {
     
     @Binding var isPresented: Bool 
-    
+
+    var text: String?
     var hideAfter: DispatchTime?
     
     var body: some View {
@@ -18,6 +20,9 @@ struct FullscreenProgressView: View {
             Spacer()
             ProgressView()
                 .foregroundColor(.primaryTxt)
+            if let text {
+                Text(text).padding(10)
+            }
             Spacer()
         }
         .frame(maxWidth: .infinity)
@@ -35,5 +40,6 @@ struct FullscreenProgressView: View {
 struct FullscreenProgressView_Previews: PreviewProvider {
     static var previews: some View {
         FullscreenProgressView(isPresented: .constant(true))
+        FullscreenProgressView(isPresented: .constant(true), text: "Lorem ipsum...")
     }
 }
