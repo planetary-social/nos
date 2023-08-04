@@ -14,7 +14,7 @@ import Foundation
 extension Localized {
     static var localizableTypes: [any Localizable.Type] {
         // TODO: Can we compute this using CaseIterable and recursion?
-        [Localized.self, Localized.Reply.self]
+        [Localized.self, Localized.Reply.self, Localized.ImagePicker.self, ReportCategory.self]
     }
 }
 
@@ -108,7 +108,6 @@ enum Localized: String, Localizable, CaseIterable {
     case youNeedToEnterAPrivateKeyBeforePosting = "You need to enter a private key in Settings before you can publish posts."
     case relayDoesNotSupportNIP40 = "This relay doesn't support expiring messages. Please select another one."
     case anyRelaysSupportingNIP40 = "None of your relays support expiring messages. Please add one and retry."
-    case nostrBuildHelp = "Use nostr.build to post image links."
     case noteDisappearsIn = "Note disappears in" // Choices like 15 mins, 1 hour, etc. appear after this text.
     case attachMedia = "Attach Media"
     case expirationDate = "Expiration Date"
@@ -188,7 +187,7 @@ enum Localized: String, Localizable, CaseIterable {
     case reportUser = "Report user"
     case reportContent = "Report Content"
     case confirmReport = "Confirm Report"
-    case reportConfirmation = "This will publish a report that is publicly visible. Are you sure?"
+    case reportConfirmation = "Are you sure you want to report this as {{ report_type }}? This report will be public."
     case note = "note"
     case unmuteUser = "Un-Mute"
     case outsideNetwork = "This user is outside your network."
@@ -223,6 +222,8 @@ enum Localized: String, Localizable, CaseIterable {
     case eventSource = "Raw Event"
     case loading = "Loading..."
     case viewSource = "View Source"
+    case reportEventContent = "This content has been reported for {{ report_category }} using NIP-69 vocabulary https://github.com/nostr-protocol/nips/pull/457"
+    case select = "Select"
 }
 
 // MARK: - Replies
@@ -241,4 +242,23 @@ extension Localized {
         case mentionedYou = "mentioned you:"
     }
 }
+
+// MARK: - ImagePicker
+
+extension Localized {
+    
+    enum ImagePicker: String, Localizable, CaseIterable {
+        case camera = "Camera"
+        case cameraNotAvailable = "Camera is not available on this device"
+        case openSettingsMessage = "You can allow camera permissions by opening the Settings app."
+        case permissionsRequired = "Permissions required for {{ title }}"
+        case photoLibrary = "Photo Library"
+        case selectFrom = "Select from Photo Library"
+        case takePhoto = "Take photo with Camera"
+        case errorUploadingFile = "Error uploading the file"
+        case errorUploadingFileMessage = "An error was encountered when uploading the file you provided. Please try again."
+        case uploading = "Uploading..."
+    }
+}
+
 // swiftlint:enable line_length identifier_name

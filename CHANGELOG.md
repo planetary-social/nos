@@ -8,8 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added automatic file uploads to nostr.build.
+
+## [0.1 (60)] - 2023-08-01Z
+
+- Updated content report style based on the latest NIPs and fixed some bugs with reporting.
 - Fixed the launch screen layout on iPad
 - Multiple consecutive newlines will be replaced by a single new line in note content.
+- Removed the screen to fill out profile information from onboarding and replaced it with a call to action in the sidebar. 
 - Leading and trailing whitespace will no longer be rendered in note content.
 - Removed the screen to fill out profile information from onboarding and replaced it with a call to action in the sidebar. 
 

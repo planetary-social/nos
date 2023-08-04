@@ -50,7 +50,6 @@
 "Localized.youNeedToEnterAPrivateKeyBeforePosting" = "You need to enter a private key in Settings before you can publish posts.";
 "Localized.relayDoesNotSupportNIP40" = "This relay doesn't support expiring messages. Please select another one.";
 "Localized.anyRelaysSupportingNIP40" = "None of your relays support expiring messages. Please add one and retry.";
-"Localized.nostrBuildHelp" = "Use nostr.build to post image links.";
 "Localized.noteDisappearsIn" = "Note disappears in";
 "Localized.attachMedia" = "Attach Media";
 "Localized.expirationDate" = "Expiration Date";
@@ -157,6 +156,7 @@
 "Localized.loading" = "Loading...";
 "Localized.viewSource" = "View Source";
 "Localized.reportEventContent" = "This content has been reported for {{ report_category }} using NIP-69 vocabulary https://github.com/nostr-protocol/nips/pull/457";
+"Localized.select" = "Select";
 
 "Reply.one" = "{{ count }} reply";
 "Reply.many" = "{{ count }} replies";
@@ -165,6 +165,18 @@
 "Reply.postAReply" = "Post a reply";
 "Reply.repliedToYourNote" = "replied to your note:";
 "Reply.mentionedYou" = "mentioned you:";
+
+
+"ImagePicker.camera" = "Camera";
+"ImagePicker.cameraNotAvailable" = "Camera is not available on this device";
+"ImagePicker.openSettingsMessage" = "You can allow camera permissions by opening the Settings app.";
+"ImagePicker.permissionsRequired" = "Permissions required for {{ title }}";
+"ImagePicker.photoLibrary" = "Photo Library";
+"ImagePicker.selectFrom" = "Select from Photo Library";
+"ImagePicker.takePhoto" = "Take photo with Camera";
+"ImagePicker.errorUploadingFile" = "Error uploading the file";
+"ImagePicker.errorUploadingFileMessage" = "An error was encountered when uploading the file you provided. Please try again.";
+"ImagePicker.uploading" = "Uploading...";
 
 "Moderation.CL" = "Coarse Language";
 "Moderation.HC" = "Likely to cause harm";

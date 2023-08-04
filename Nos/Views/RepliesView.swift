@@ -22,7 +22,7 @@ struct RepliesView: View {
     @EnvironmentObject private var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
 
-    @State private var reply = NSAttributedString("")
+    @State private var reply = EditableNoteText()
     
     @State private var alert: AlertState<Never>?
     
@@ -166,7 +166,7 @@ struct RepliesView: View {
         .background(Color.appBg)
     }
     
-    func postReply(_ replyText: NSAttributedString) async {
+    func postReply(_ replyText: EditableNoteText) async {
         do {
             guard !replyText.string.isEmpty else {
                 return
@@ -186,7 +186,7 @@ struct RepliesView: View {
                 return
             }
 
-            var (content, tags) = NoteParser.parse(attributedText: AttributedString(replyText))
+            var (content, tags) = NoteParser.parse(attributedText: replyText.attributedString)
 
             // TODO: Append ptags for all authors involved in the thread
             tags.append(["p", authorHex])

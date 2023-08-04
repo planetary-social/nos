@@ -65,6 +65,11 @@ class Router: ObservableObject {
     func pop() {
         currentPath.wrappedValue.removeLast()
     }
+    
+    func openOSSettings() {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
 }
 
 extension Router {
