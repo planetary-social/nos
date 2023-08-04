@@ -20,6 +20,9 @@ struct FollowCard: View {
 
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var currentUser: CurrentUser
+    @EnvironmentObject private var relayService: RelayService
+    
+    @State private var subscriptions = [RelaySubscription.ID]()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -61,6 +64,18 @@ struct FollowCard: View {
         )
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
+        .onAppear {
+            Task(priority: .userInitiated) { 
+                if let subscriptionID = await author.requestLatestMetadata(from: relayService) {
+                    subscriptions.append(subscriptionID) 
+                }
+            }
+        }
+        .onDisappear {
+            subscriptions.forEach { subscriptionID in
+                Task { await relayService.decrementSubscriptionCount(for: subscriptionID) }
+            }
+        }
     }
 
     var cornerRadius: CGFloat {

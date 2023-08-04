@@ -46,24 +46,8 @@ struct ProfileView: View {
             let authors = [author.hexadecimalPublicKey!]
             let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete, .repost, .longFormContent], limit: 50)
             async let textSub = relayService.openSubscription(with: textFilter)
-            
-            let metaFilter = Filter(
-                authorKeys: authors,
-                kinds: [.metaData],
-                since: author.lastUpdatedMetadata
-            )
-            async let metaSub = relayService.openSubscription(with: metaFilter)
-            
-            let contactFilter = Filter(
-                authorKeys: authors,
-                kinds: [.contactList],
-                since: author.lastUpdatedContactList
-            )
-            async let contactSub = relayService.openSubscription(with: contactFilter)
-            
             subscriptionIds.append(await textSub)
-            subscriptionIds.append(await metaSub)
-            subscriptionIds.append(await contactSub)
+            subscriptionIds.append(contentsOf: await author.requestLatestProfileData(from: relayService))
         }
     }
     
