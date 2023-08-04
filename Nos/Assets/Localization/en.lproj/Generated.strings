@@ -123,7 +123,7 @@
 "Localized.reportUser" = "Report user";
 "Localized.reportContent" = "Report Content";
 "Localized.confirmReport" = "Confirm Report";
-"Localized.reportConfirmation" = "This will publish a report that is publicly visible. Are you sure?";
+"Localized.reportConfirmation" = "Are you sure you want to report this as {{ report_type }}? This report will be public.";
 "Localized.note" = "note";
 "Localized.unmuteUser" = "Un-Mute";
 "Localized.outsideNetwork" = "This user is outside your network.";
@@ -155,6 +155,7 @@
 "Localized.eventSource" = "Raw Event";
 "Localized.loading" = "Loading...";
 "Localized.viewSource" = "View Source";
+"Localized.reportEventContent" = "This content has been reported for {{ report_category }} using NIP-69 vocabulary https://github.com/nostr-protocol/nips/pull/457";
 "Localized.select" = "Select";
 
 "Reply.one" = "{{ count }} reply";
@@ -175,3 +176,34 @@
 "ImagePicker.errorUploadingFile" = "Error uploading the file";
 "ImagePicker.errorUploadingFileMessage" = "An error was encountered when uploading the file you provided. Please try again.";
 "ImagePicker.uploading" = "Uploading...";
+
+"Moderation.CL" = "Coarse Language";
+"Moderation.HC" = "Likely to cause harm";
+"Moderation.HC-fin" = "Financial Harm";
+"Moderation.HC-bhd" = "Bodily Harm";
+"Moderation.IH" = "Intolerance & Hate";
+"Moderation.IL" = "Illegal";
+"Moderation.IL-cop" = "Copyright Violation";
+"Moderation.IL-csa" = "Child Sexual Abuse";
+"Moderation.IL-drg" = "Drug-related crime";
+"Moderation.IL-frd" = "Fraud & Scams";
+"Moderation.IL-har" = "Harassment, Stalking, or Doxxing";
+"Moderation.IL-swk" = "Prostitution";
+"Moderation.IL-idt" = "Impersonation";
+"Moderation.IL-mal" = "Malware";
+"Moderation.NS" = "Nudity & Sex";
+"Moderation.NS-nud" = "Casual nudity";
+"Moderation.NS-ero" = "Erotica";
+"Moderation.NS-sex" = "Sex";
+"Moderation.PN" = "Pornography";
+"Moderation.PN-het" = "Heterosexual Porn";
+"Moderation.PN-gay" = "Gay male pron";
+"Moderation.PN-les" = "Lesbian porn";
+"Moderation.PN-bis" = "Bisexual porn";
+"Moderation.PN-trn" = "Transsexual porn";
+"Moderation.PN-fnb" = "Gender-fluid / non-binary porn";
+"Moderation.SP" = "Spam";
+"Moderation.VI" = "Violence";
+"Moderation.VI-hum" = "Violence towards a human being";
+"Moderation.VI-ani" = "Violence towards a sentient animal";
+"Moderation.NA" = "Other";

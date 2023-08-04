@@ -14,7 +14,7 @@ import Foundation
 extension Localized {
     static var localizableTypes: [any Localizable.Type] {
         // TODO: Can we compute this using CaseIterable and recursion?
-        [Localized.self, Localized.Reply.self, Localized.ImagePicker.self]
+        [Localized.self, Localized.Reply.self, Localized.ImagePicker.self, ReportCategory.self]
     }
 }
 
@@ -187,7 +187,7 @@ enum Localized: String, Localizable, CaseIterable {
     case reportUser = "Report user"
     case reportContent = "Report Content"
     case confirmReport = "Confirm Report"
-    case reportConfirmation = "This will publish a report that is publicly visible. Are you sure?"
+    case reportConfirmation = "Are you sure you want to report this as {{ report_type }}? This report will be public."
     case note = "note"
     case unmuteUser = "Un-Mute"
     case outsideNetwork = "This user is outside your network."
@@ -222,6 +222,7 @@ enum Localized: String, Localizable, CaseIterable {
     case eventSource = "Raw Event"
     case loading = "Loading..."
     case viewSource = "View Source"
+    case reportEventContent = "This content has been reported for {{ report_category }} using NIP-69 vocabulary https://github.com/nostr-protocol/nips/pull/457"
     case select = "Select"
 }
 
