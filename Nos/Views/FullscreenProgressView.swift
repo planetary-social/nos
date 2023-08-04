@@ -21,7 +21,7 @@ struct FullscreenProgressView: View {
             ProgressView()
                 .foregroundColor(.primaryTxt)
             if let text {
-                Text(text)
+                Text(text).padding(10)
             }
             Spacer()
         }
