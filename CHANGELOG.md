@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Added automatic file uploads to nostr.build.
+- Fixed a small issue when mentioning profiles in the reply text box.
 
 ## [0.1 (60)] - 2023-08-01Z
 
