@@ -166,7 +166,6 @@
 "Reply.repliedToYourNote" = "replied to your note:";
 "Reply.mentionedYou" = "mentioned you:";
 
-
 "ImagePicker.camera" = "Camera";
 "ImagePicker.cameraNotAvailable" = "Camera is not available on this device";
 "ImagePicker.openSettingsMessage" = "You can allow camera permissions by opening the Settings app.";
