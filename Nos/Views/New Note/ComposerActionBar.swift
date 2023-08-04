@@ -111,7 +111,7 @@ struct ComposerActionBar: View {
         .sheet(isPresented: $uploadingImage) {
             FullscreenProgressView(
                 isPresented: .constant(true), 
-                text: Localized.ImagePicker.uploading.textState
+                text: Localized.ImagePicker.uploading.string
             )
         }
         .animation(.easeInOut(duration: 0.2), value: subMenu)

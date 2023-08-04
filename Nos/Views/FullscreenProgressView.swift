@@ -12,7 +12,7 @@ struct FullscreenProgressView: View {
     
     @Binding var isPresented: Bool 
 
-    var text: TextState?
+    var text: String?
     var hideAfter: DispatchTime?
     
     var body: some View {
