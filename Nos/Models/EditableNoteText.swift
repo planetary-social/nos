@@ -61,12 +61,18 @@ struct EditableNoteText: Equatable {
     
     /// Appends the given URL and adds the default styling attributes. Will append a space before the link if needed.
     mutating func append(_ url: URL) {
-        if let lastCharacter = string.last,
-            !lastCharacter.isWhitespace {
-            append(" \(url.absoluteString)")
-        } else {
-            append(url.absoluteString)
+        if let lastCharacter = string.last, !lastCharacter.isWhitespace {
+            append(" ")
         }
+        
+        attributedString.append(
+            AttributedString(
+                url.absoluteString,
+                attributes: defaultAttributes.merging(
+                    AttributeContainer([NSAttributedString.Key.link: url.absoluteString])
+                )
+            )
+        ) 
     }
     
     /// Inserts the mention of an author as a link at the given index of the string. The `index` should be the index 
