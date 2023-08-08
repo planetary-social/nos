@@ -10,7 +10,7 @@ import SwiftUI
 /// A text editor for composing Nostr notes. Supports autocomplete of mentions.
 struct NoteTextEditor: View {
     
-    @Binding var text: NSAttributedString
+    @Binding var text: EditableNoteText
     var placeholder: any Localizable
     var focus: FocusState<Bool>.Binding
     
@@ -26,7 +26,7 @@ struct NoteTextEditor: View {
     /// State containing the very last state before `text` changes
     ///
     /// We need this so that we can compare and decide what has changed.
-    @State private var oldText: String = ""
+    @State private var oldText = EditableNoteText()
     
     /// Setting this to true will pop up the mention list to select an author to mention in the text editor.
     private var showAvailableMentions: Binding<Bool> {
@@ -41,7 +41,7 @@ struct NoteTextEditor: View {
         ScrollView(.vertical) {
             EditableText($text, guid: guid, calculatedHeight: $calculatedHeight)
                 .frame(height: calculatedHeight)
-                .placeholder(when: text.string.isEmpty, placeholder: {
+                .placeholder(when: text.isEmpty, placeholder: {
                     VStack {
                         placeholder.view
                             .foregroundColor(.secondaryText)
@@ -56,7 +56,7 @@ struct NoteTextEditor: View {
         .frame(maxWidth: .infinity)
         .background { Color.appBg }
         .onChange(of: text) { newValue in
-            let newText = newValue.string
+            let newText = newValue
             let difference = newText.difference(from: oldText)
             guard difference.count == 1, let change = difference.first else {
                 oldText = newText
@@ -65,12 +65,8 @@ struct NoteTextEditor: View {
             switch change {
             case .insert(let offset, let element, _):
                 if element == "@" {
-                    var lastCharacter = Character("\n")
-                    if offset > 0 {
-                        let lastCharacterIndex = newText.index(newText.startIndex, offsetBy: offset - 1)
-                        lastCharacter = newText[safe: lastCharacterIndex] ?? Character("\n")
-                    }
-                    if lastCharacter.isNewline || lastCharacter.isWhitespace {
+                    let precedingCharacter = newText.character(before: offset) ?? Character("\n")
+                    if precedingCharacter.isNewline || precedingCharacter.isWhitespace {
                         mentionOffset = offset
                     }
                 }
@@ -98,14 +94,14 @@ struct NoteTextEditor: View {
             object: nil,
             userInfo: ["author": author, "guid": guid]
         )
-        oldText = text.string
+        oldText = text
         mentionOffset = nil
     }
 }
 
 struct NoteTextEditor_Previews: PreviewProvider {
     
-    @State static var text = NSAttributedString("")
+    @State static var text = EditableNoteText()
     static var placeholder = Localized.newNotePlaceholder
     @FocusState static var isFocused: Bool
     

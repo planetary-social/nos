@@ -14,6 +14,11 @@ extension Font {
             forTextStyle: .body
         ).pointSize)
     
+    static var clarityMedium = Font
+        .custom("ClarityCity-Medium", size: UIFont.preferredFont(
+            forTextStyle: .body
+        ).pointSize)
+    
     static var clarityBold = Font
         .custom("ClarityCity-Bold", size: UIFont.preferredFont(
             forTextStyle: .body

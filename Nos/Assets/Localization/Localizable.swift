@@ -4,7 +4,7 @@ let testingLocalization = ProcessInfo.processInfo.environment["TESTING_LOCALIZAT
 
 /// A protocol for strings that are translated into multiple languages. See `Localized` for concrete implementation and
 /// usage docs.
-protocol Localizable: RawRepresentable<String> {
+protocol Localizable {
     
     var template: String { get }
 

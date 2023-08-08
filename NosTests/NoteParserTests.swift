@@ -364,11 +364,46 @@ final class NoteNoteParserTests: XCTestCase {
     }
     
     func testExtractURLsFromImageNote() throws {
-        let string = "Hello, world!https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg"
+        let string = "Hello, world!https://cdn.ymaws.com/footprints.jpg"
         let expectedString = "Hello, world!"
         let expectedURLs = [
-            URL(string: "https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg")!
+            URL(string: "https://cdn.ymaws.com/footprints.jpg")!
         ]
+
+        // Act
+        let (actualString, actualURLs) = string.extractURLs()
+        XCTAssertEqual(actualString, expectedString)
+        XCTAssertEqual(actualURLs, expectedURLs)
+    }
+    
+    func testExtractURLsFromImageNoteWithExtraNewlines() throws {
+        let string = "https://cdn.ymaws.com/footprints.jpg\n\nHello, world!"
+        let expectedString = "Hello, world!"
+        let expectedURLs = [
+            URL(string: "https://cdn.ymaws.com/footprints.jpg")!
+        ]
+
+        // Act
+        let (actualString, actualURLs) = string.extractURLs()
+        XCTAssertEqual(actualString, expectedString)
+        XCTAssertEqual(actualURLs, expectedURLs)
+    }
+    
+    func testExtractURLsRemovesDuplicateNewlines() throws {
+        let string = "Hello!\n\nWorld!"
+        let expectedString = "Hello!\nWorld!"
+        let expectedURLs: [URL] = []
+
+        // Act
+        let (actualString, actualURLs) = string.extractURLs()
+        XCTAssertEqual(actualString, expectedString)
+        XCTAssertEqual(actualURLs, expectedURLs)
+    }
+    
+    func testExtractURLsRemovesLeadingAndTrailingWhitespace() throws {
+        let string = "  \n\nHello world!\n\n  "
+        let expectedString = "Hello world!"
+        let expectedURLs: [URL] = []
 
         // Act
         let (actualString, actualURLs) = string.extractURLs()

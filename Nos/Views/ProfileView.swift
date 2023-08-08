@@ -154,7 +154,7 @@ struct ProfileView: View {
                                     Button(Localized.unmuteUser.string) {
                                         Task {
                                             do {
-                                                try await router.viewedAuthor?.unmute(context: viewContext)
+                                                try await router.viewedAuthor?.unmute(viewContext: viewContext)
                                             } catch {
                                                 alert = AlertState(title: {
                                                     TextState(Localized.error.string)
@@ -166,9 +166,9 @@ struct ProfileView: View {
                                     }
                                 } else {
                                     Button(Localized.mute.string) {
-                                        Task {
+                                        Task { @MainActor in
                                             do {
-                                                try await router.viewedAuthor?.mute(context: viewContext)
+                                                try await router.viewedAuthor?.mute(viewContext: viewContext)
                                             } catch {
                                                 alert = AlertState(title: {
                                                     TextState(Localized.error.string)
