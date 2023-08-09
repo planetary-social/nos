@@ -9,7 +9,7 @@
 "Localized.notOldEnoughSubtitle" = "You need to be 16 years old to be able to use this app.";
 "Localized.notOldEnoughButton" = "Go back (to school)";
 "Localized.termsOfServiceTitle" = "Terms of Service";
-"Localized.loginToYourAccount" = "Login to your account";
+"Localized.loginWithKey" = "Login with key";
 "Localized.pasteYourSecretKey" = "Paste your secret key";
 "Localized.login" = "Login";
 "Localized.yes" = "Yes";
@@ -28,7 +28,7 @@
 "Localized.settings" = "Settings";
 "Localized.invalidKey" = "Invalid Key";
 "Localized.couldNotReadPrivateKeyMessage" = "Could not read your private key. Please verify that it is in nsec or hex format.";
-"Localized.createAccount" = "Create an account";
+"Localized.tryIt" = "Try it";
 "Localized.shareLogs" = "Share logs";
 "Localized.failedToExportLogs" = "Failed to export logs.";
 "Localized.appVersion" = "App Version:";
@@ -45,6 +45,8 @@
 "Localized.clear" = "Clear";
 "Localized.done" = "Done";
 "Localized.editProfile" = "Edit Profile";
+"Localized.completeProfileMessage" = "Finish setting up your profile to help people find you.";
+"Localized.completeProfileButton" = "Complete My Profile";
 "Localized.youNeedToEnterAPrivateKeyBeforePosting" = "You need to enter a private key in Settings before you can publish posts.";
 "Localized.relayDoesNotSupportNIP40" = "This relay doesn't support expiring messages. Please select another one.";
 "Localized.anyRelaysSupportingNIP40" = "None of your relays support expiring messages. Please add one and retry.";
@@ -121,7 +123,7 @@
 "Localized.reportUser" = "Report user";
 "Localized.reportContent" = "Report Content";
 "Localized.confirmReport" = "Confirm Report";
-"Localized.reportConfirmation" = "This will publish a report that is publicly visible. Are you sure?";
+"Localized.reportConfirmation" = "Are you sure you want to report this as {{ report_type }}? This report will be public.";
 "Localized.note" = "note";
 "Localized.unmuteUser" = "Un-Mute";
 "Localized.outsideNetwork" = "This user is outside your network.";
@@ -153,6 +155,7 @@
 "Localized.eventSource" = "Raw Event";
 "Localized.loading" = "Loading...";
 "Localized.viewSource" = "View Source";
+"Localized.reportEventContent" = "This content has been reported for {{ report_category }} using NIP-69 vocabulary https://github.com/nostr-protocol/nips/pull/457";
 "Localized.select" = "Select";
 
 "Reply.one" = "{{ count }} reply";
@@ -172,3 +175,35 @@
 "ImagePicker.takePhoto" = "Take photo with Camera";
 "ImagePicker.errorUploadingFile" = "Error uploading the file";
 "ImagePicker.errorUploadingFileMessage" = "An error was encountered when uploading the file you provided. Please try again.";
+"ImagePicker.uploading" = "Uploading...";
+
+"Moderation.CL" = "Coarse Language";
+"Moderation.HC" = "Likely to cause harm";
+"Moderation.HC-fin" = "Financial Harm";
+"Moderation.HC-bhd" = "Bodily Harm";
+"Moderation.IH" = "Intolerance & Hate";
+"Moderation.IL" = "Illegal";
+"Moderation.IL-cop" = "Copyright Violation";
+"Moderation.IL-csa" = "Child Sexual Abuse";
+"Moderation.IL-drg" = "Drug-related crime";
+"Moderation.IL-frd" = "Fraud & Scams";
+"Moderation.IL-har" = "Harassment, Stalking, or Doxxing";
+"Moderation.IL-swk" = "Prostitution";
+"Moderation.IL-idt" = "Impersonation";
+"Moderation.IL-mal" = "Malware";
+"Moderation.NS" = "Nudity & Sex";
+"Moderation.NS-nud" = "Casual nudity";
+"Moderation.NS-ero" = "Erotica";
+"Moderation.NS-sex" = "Sex";
+"Moderation.PN" = "Pornography";
+"Moderation.PN-het" = "Heterosexual Porn";
+"Moderation.PN-gay" = "Gay male pron";
+"Moderation.PN-les" = "Lesbian porn";
+"Moderation.PN-bis" = "Bisexual porn";
+"Moderation.PN-trn" = "Transsexual porn";
+"Moderation.PN-fnb" = "Gender-fluid / non-binary porn";
+"Moderation.SP" = "Spam";
+"Moderation.VI" = "Violence";
+"Moderation.VI-hum" = "Violence towards a human being";
+"Moderation.VI-ani" = "Violence towards a sentient animal";
+"Moderation.NA" = "Other";

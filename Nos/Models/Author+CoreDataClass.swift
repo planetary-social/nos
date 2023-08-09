@@ -210,8 +210,8 @@ public class Author: NosManagedObject {
         print("Adding \(relay.address ?? "") to \(hexadecimalPublicKey ?? "")")
     }
     
-    func mute(context: NSManagedObjectContext) async throws {
-        guard let mutedAuthorKey = hexadecimalPublicKey, let currentAuthor = await currentUser.author,
+    @MainActor func mute(viewContext context: NSManagedObjectContext) async throws {
+        guard let mutedAuthorKey = hexadecimalPublicKey, let currentAuthor = currentUser.author,
             mutedAuthorKey != currentAuthor.hexadecimalPublicKey else {
             return
         }
@@ -219,7 +219,7 @@ public class Author: NosManagedObject {
         print("Muting \(mutedAuthorKey)")
         muted = true
 
-        var mutedList = try await loadMuteList(context: context)
+        var mutedList = try await loadMuteList(viewContext: context)
 
         mutedList.append(mutedAuthorKey)
 
@@ -247,8 +247,8 @@ public class Author: NosManagedObject {
         print("Removed \(relay.address ?? "") from \(hexadecimalPublicKey ?? "")")
     }
 
-    func loadMuteList(context: NSManagedObjectContext) async throws -> [String] {
-        guard let currentAuthor = await currentUser.author else {
+    @MainActor func loadMuteList(viewContext context: NSManagedObjectContext) async throws -> [String] {
+        guard let currentAuthor = currentUser.author else {
             throw CurrentUserError.authorNotFound
         }
         let request = currentAuthor.allPostsRequest(eventKind: .mute)
@@ -260,8 +260,8 @@ public class Author: NosManagedObject {
         }
     }
     
-    func unmute(context: NSManagedObjectContext) async throws {
-        guard let unmutedAuthorKey = hexadecimalPublicKey, let currentAuthor = await currentUser.author,
+    @MainActor func unmute(viewContext context: NSManagedObjectContext) async throws {
+        guard let unmutedAuthorKey = hexadecimalPublicKey, let currentAuthor = currentUser.author,
             unmutedAuthorKey != currentAuthor.hexadecimalPublicKey else {
             return
         }
@@ -269,7 +269,7 @@ public class Author: NosManagedObject {
         print("Un-muting \(unmutedAuthorKey)")
         muted = false
 
-        var mutedList = try await loadMuteList(context: context)
+        var mutedList = try await loadMuteList(viewContext: context)
 
         mutedList.removeAll(where: { $0 == unmutedAuthorKey })
 

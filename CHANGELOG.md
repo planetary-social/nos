@@ -10,11 +10,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the launch screen layout on iPad
 - Added support for pasting profile and note references when composing notes
+- Added automatic file uploads to nostr.build.
+
+## [0.1 (60)] - 2023-08-01Z
+
+- Updated content report style based on the latest NIPs and fixed some bugs with reporting.
+- Fixed the launch screen layout on iPad
+- Multiple consecutive newlines will be replaced by a single new line in note content.
+- Removed the screen to fill out profile information from onboarding and replaced it with a call to action in the sidebar. 
+- Leading and trailing whitespace will no longer be rendered in note content.
+- Removed the screen to fill out profile information from onboarding and replaced it with a call to action in the sidebar. 
 
 ## [0.1 (59)] - 2023-07-21Z
 
 - Add a loading placeholder for note contents.
-- Fixed the launch screen layout on iPad
+- Fixed several crashes.
 - Added Dutch, Japanese, and Persian translations. Thanks matata, yutaro, and eru-desu! 
 - Added some visual artists to the list of featured users.
 - Added automatic file uploads to nostr.build.

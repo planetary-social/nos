@@ -5,6 +5,7 @@
 //  Created by Matthew Lorentz on 5/3/23.
 //
 
+import Foundation
 import SwiftUI
 import SwiftUINavigation
 
@@ -47,7 +48,7 @@ struct ComposerActionBar: View {
                             startUploadingImage()
                             let attachedFile = AttachedFile(image: image)
                             let url = try await fileStorageAPI.upload(file: attachedFile)
-                            text.append(string: url.absoluteString)
+                            text.append(url)
                             endUploadingImage()
                         } catch {
                             endUploadingImage()
@@ -108,7 +109,10 @@ struct ComposerActionBar: View {
             Spacer()
         }
         .sheet(isPresented: $uploadingImage) {
-            FullscreenProgressView(isPresented: .constant(true))
+            FullscreenProgressView(
+                isPresented: .constant(true), 
+                text: Localized.ImagePicker.uploading.string
+            )
         }
         .animation(.easeInOut(duration: 0.2), value: subMenu)
         .transition(.move(edge: .leading))

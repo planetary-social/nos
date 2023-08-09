@@ -56,3 +56,22 @@ struct SideMenu: View {
         }
     }
 }
+
+struct SideMenu_Previews: PreviewProvider {
+    
+    static var previewData = PreviewData()
+    static var menuOpened = true
+    
+    static var previews: some View {
+        SideMenu(
+            menuWidth: 300, 
+            menuOpened: menuOpened, 
+            toggleMenu: { 
+                menuOpened.toggle()
+            }, closeMenu: { 
+                menuOpened = false
+            }
+        )
+        .inject(previewData: previewData)
+    }
+}
