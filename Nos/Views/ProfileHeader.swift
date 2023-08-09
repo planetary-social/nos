@@ -196,7 +196,6 @@ struct ProfileHeader: View {
             }
         }
     }
-
 }
 
 struct IdentityHeaderView_Previews: PreviewProvider {
