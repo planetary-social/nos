@@ -55,7 +55,6 @@ struct EditableNoteText: Equatable {
     // MARK: - Modifying the contents
     
     /// Appends the given string and adds the the default styling attributes.
-
     mutating func append(_ string: String) {
         attributedString.append(AttributedString(string, attributes: defaultAttributes))
     }
@@ -103,7 +102,6 @@ struct EditableNoteText: Equatable {
             )
         )
         attributedString.replaceSubrange(range, with: mention)
-        // attributedString.insert(mention, at: index)
     }
 
     /// Inserts the mention of an author as a link at the given index of the string. The `index` should be the index
@@ -116,7 +114,6 @@ struct EditableNoteText: Equatable {
             )
         )
         attributedString.replaceSubrange(range, with: mention)
-        // attributedString.insert(mention, at: index)
     }
     
     // MARK: - Helpers
