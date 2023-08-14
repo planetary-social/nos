@@ -18,6 +18,7 @@ default_platform(:ios)
 platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
+    xcodes # ensure correct version of xcode is installed and selected
     api_key = app_store_connect_api_key(
       key_id: "4L8Z9W89TJ",
       issuer_id: "8985ca52-aba6-4f7a-91bb-d052a5b030fa",
