@@ -28,11 +28,18 @@ struct BioView: View {
         bio == nil
     }
 
+    private let lineSpacing: CGFloat = 7
+
+    private let lineLimit: Int = 5
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(bio ?? "")
-                .lineLimit(5)
-                .padding(EdgeInsets(top: 0, leading: 18, bottom: 9, trailing: 18))
+            Text(LocalizedStringKey(bio ?? ""))
+                .foregroundColor(.primaryTxt)
+                .tint(.accent)
+                .lineSpacing(lineSpacing)
+                .lineLimit(lineLimit)
+                .padding(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
                 .background {
                     GeometryReader { geometryProxy in
                         Color.clear.preference(key: TruncatedSizePreferenceKey.self, value: geometryProxy.size)
@@ -45,8 +52,9 @@ struct BioView: View {
                     }
                 }
                 .background {
-                    Text(bio ?? "")
-                        .padding(EdgeInsets(top: 0, leading: 18, bottom: 9, trailing: 18))
+                    Text(LocalizedStringKey(bio ?? ""))
+                        .lineSpacing(lineSpacing)
+                        .padding(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
                         .fixedSize(horizontal: false, vertical: true)
                         .hidden()
                         .background {
@@ -78,13 +86,14 @@ struct BioView: View {
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
+                .padding(EdgeInsets(top: 3, leading: 0, bottom: 1, trailing: 0))
             }
         }
         .placeholder(when: isLoading) {
             Text(String.loremIpsum(1))
+                .lineSpacing(lineSpacing)
                 .lineLimit(5)
-                .padding(EdgeInsets(top: 0, leading: 18, bottom: 9, trailing: 18))
+                .padding(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
                 .redacted(reason: .placeholder)
         }
         .sheet(isPresented: $showingBio) {
@@ -105,10 +114,11 @@ struct BioView: View {
                     }
             }
         }
+        .padding(0)
     }
 
     private func updateShouldShowReadMore() {
-        shouldShowReadMore = intrinsicSize != truncatedSize
+        shouldShowReadMore = intrinsicSize.height != truncatedSize.height
     }
 
     fileprivate struct IntrinsicSizePreferenceKey: PreferenceKey {

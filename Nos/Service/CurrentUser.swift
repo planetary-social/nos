@@ -293,6 +293,16 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         let followKeys = following.keys
         return followKeys.contains(key)
     }
+
+    @MainActor func isBeingFollowedBy(author profile: Author) -> Bool {
+        let following = profile.follows
+        guard let key = author?.hexadecimalPublicKey else {
+            return false
+        }
+
+        let followKeys = following.keys
+        return followKeys.contains(key)
+    }
     
     @MainActor func publishMetaData() async {
         guard let pubKey = publicKeyHex else {
