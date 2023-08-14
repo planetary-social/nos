@@ -8,20 +8,34 @@
 import Foundation
 import SwiftUI
 
+struct FollowsDestination: Hashable {
+    var author: Author
+    var follows: [Author]
+}
+
+struct FollowersDestination: Hashable {
+    var author: Author
+    var followers: [Author]
+}
+
 /// Displays a list of people someone is following.
 struct FollowsView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject var router: Router
-    
-    var followed: Followed
+
+    /// Screen title
+    var title: Localized
+
+    /// Sorted list of authors to display in the list
+    var authors: [Author]
     
     @State private var subscriptionId: String = ""
     
     func refreshFollows() {
         Task(priority: .userInitiated) {
             // TODO: just grab metadata for people who need it, not a random 100
-            let keys = followed.compactMap { $0.destination?.hexadecimalPublicKey }
+            let keys = authors.compactMap { $0.hexadecimalPublicKey }
             let filter = Filter(authorKeys: keys, kinds: [.metaData, .contactList], limit: 100)
             subscriptionId = await relayService.openSubscription(with: filter)
         }
@@ -30,18 +44,16 @@ struct FollowsView: View {
     var body: some View {
         ScrollView(.vertical) {
             LazyVStack {
-                ForEach(followed) { follow in
-                    if let author = follow.destination {
-                        FollowCard(author: author)
-                            .padding(.horizontal)
-                            .readabilityPadding()
-                    }
+                ForEach(authors) { author in
+                    FollowCard(author: author)
+                        .padding(.horizontal)
+                        .readabilityPadding()
                 }
             }
             .padding(.top)
         }
         .background(Color.appBg)
-        .nosNavigationBar(title: .follows)
+        .nosNavigationBar(title: title)
         .task(priority: .userInitiated) {
             refreshFollows()
         }
