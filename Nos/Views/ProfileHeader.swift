@@ -197,24 +197,6 @@ struct ProfileHeader: View {
             }
         }
     }
-    
-    private func tab(label: Localized, value: Int) -> some View {
-        VStack {
-            PlainText("\(value)")
-                .font(.title)
-                .foregroundColor(.primaryTxt)
-            PlainText(label.string.lowercased())
-                .font(.subheadline)
-                .dynamicTypeSize(...DynamicTypeSize.xLarge)
-                .foregroundColor(.secondaryText)
-        }
-    }
-}
-
-fileprivate extension Divider {
-    static var vertical: some View {
-        Divider().overlay(Color("divider")).shadow(color: Color("divider-shadow"), radius: 0, x: -0.5)
-    }
 }
 
 struct IdentityHeaderView_Previews: PreviewProvider {
