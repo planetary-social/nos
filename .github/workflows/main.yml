@@ -17,8 +17,6 @@ jobs:
     runs-on: macOS-13
     steps:
       - uses: nomasystems/action-xcode-select@v0.1
-        with:
-          xcode-version: 14.3.1
       - name: Checkout
         uses: actions/checkout@main
       - name: Build Nos
