@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1 (65)] - 2023-08-04Z
 
+- Add a loading placeholder for note contents.
 - Added automatic file uploads to nostr.build.
 - Add list of followers and relays in the Profile screen.
 

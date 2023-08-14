@@ -117,6 +117,7 @@ struct ProfileHeader: View {
                                 .font(.claritySubheadline)
                                 .multilineTextAlignment(.leading)
                             }
+                            .padding(.top, 3)
                         }
 
                         if author != currentUser.author, let currentUser = currentUser.author {
@@ -153,89 +154,19 @@ struct ProfileHeader: View {
                             )
                         )
                     } label: {
-                        HStack {
-                            if let second = knownFollowers[safe: 1]?.source {
-                                StackedAvatarsView(avatarUrls: [first.profilePhotoURL, second.profilePhotoURL])
-                                if followers.count > 2 {
-                                    Text(Localized.followedByTwoAndMore.localizedText([
-                                        "one": first.safeName,
-                                        "two": second.safeName,
-                                        "count": "\(followers.count - 2)"
-                                    ]))
-                                } else {
-                                    Text(Localized.followedByTwo.localizedText([
-                                        "one": first.safeName,
-                                        "two": second.safeName
-                                    ]))
-                                }
-                            } else {
-                                StackedAvatarsView(avatarUrls: [first.profilePhotoURL])
-                                if followers.count > 1 {
-                                    Text(Localized.followedByOneAndMore.localizedText([
-                                        "one": first.safeName,
-                                        "count": "\(followers.count - 1)"
-                                    ]))
-                                } else {
-                                    Text(Localized.followedByOne.localizedText([
-                                        "one": first.safeName
-                                    ]))
-                                }
-                            }
-                        }
-                        .font(.subheadline)
-                        .padding(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
-                        .multilineTextAlignment(.leading)
+                        ProfileKnownFollowersView(
+                            first: first,
+                            knownFollowers: knownFollowers,
+                            followers: followers
+                        )
                     }
                 }
 
-                HStack {
-                    Group {
-                        Spacer()
-                        Button {
-                            router.currentPath.wrappedValue.append(
-                                FollowsDestination(
-                                    author: author,
-                                    follows: followsResult.compactMap { $0.destination }
-                                )
-                            )
-                        } label: {
-                            tab(label: .following, value: author.follows.count)
-                        }
-                        Spacer(minLength: 0)
-                    }
-                    Divider.vertical
-                    Group {
-                        Spacer(minLength: 0)
-                        Button {
-                            router.currentPath.wrappedValue.append(
-                                FollowersDestination(
-                                    author: author,
-                                    followers: followersResult.compactMap { $0.source }
-                                )
-                            )
-                        } label: {
-                            tab(label: .followedBy, value: author.followers.count)
-                        }
-                        Spacer(minLength: 0)
-                    }
-                    Divider.vertical
-                    Group {
-                        Spacer(minLength: 0)
-                        Button {
-                            router.currentPath.wrappedValue.append(
-                                RelaysDestination(
-                                    author: author,
-                                    relays: author.relays.map { $0 }
-                                )
-                            )
-                        } label: {
-                            tab(label: .relays, value: author.relays.count)
-                        }
-                        Spacer(minLength: 0)
-                    }
-                }
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.vertical)
+                ProfileSocialStatsView(
+                    author: author,
+                    followsResult: followsResult,
+                    followersResult: followersResult
+                )
             }
             .frame(maxWidth: 500)
         }
