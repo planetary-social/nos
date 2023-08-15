@@ -9,7 +9,7 @@
 "Localized.notOldEnoughSubtitle" = "你必须年满16岁才能使用此应用程序。";
 "Localized.notOldEnoughButton" = "返回 (去上学)";
 "Localized.termsOfServiceTitle" = "服务条款";
-"Localized.loginToYourAccount" = "登陆你的帐户";
+"Localized.loginWithKey" = "使用密钥登录";
 "Localized.pasteYourSecretKey" = "粘贴你的私钥";
 "Localized.login" = "登陆";
 "Localized.yes" = "是";
@@ -28,7 +28,7 @@
 "Localized.settings" = "设置";
 "Localized.invalidKey" = "私钥无效";
 "Localized.couldNotReadPrivateKeyMessage" = "无法读取你的私钥。请确保它是十六进制（hex）格式。";
-"Localized.createAccount" = "创建帐户";
+"Localized.tryIt" = "尝试";
 "Localized.shareLogs" = "分享记录";
 "Localized.failedToExportLogs" = "导出记录失败。";
 "Localized.appVersion" = "应用版本：";
@@ -45,10 +45,11 @@
 "Localized.clear" = "清除";
 "Localized.done" = "完成";
 "Localized.editProfile" = "编辑个人档案";
+"Localized.completeProfileMessage" = "完成设置你的个人档案以帮助他人找到你。";
+"Localized.completeProfileButton" = "完善个人档案";
 "Localized.youNeedToEnterAPrivateKeyBeforePosting" = "你必须在设置中输入私钥才能发布帖子。";
 "Localized.relayDoesNotSupportNIP40" = "这个中继器不支持过期消息。请另选一个。";
 "Localized.anyRelaysSupportingNIP40" = "你没有支持过期消息的中继器。请添加一个并重试。";
-"Localized.nostrBuildHelp" = "使用 nostr.build来发布图片链接。";
 "Localized.noteDisappearsIn" = "笔记消失于";
 "Localized.attachMedia" = "附加媒体";
 "Localized.expirationDate" = "到期日期";
@@ -122,7 +123,7 @@
 "Localized.reportUser" = "举报用户";
 "Localized.reportContent" = "举报内容";
 "Localized.confirmReport" = "确认举报";
-"Localized.reportConfirmation" = "这将发布公开可见的报告。你确定吗？";
+"Localized.reportConfirmation" = "是否确定要将此内容举报为{{ report_type }}？该报告将是公开的。";
 "Localized.note" = "笔记";
 "Localized.unmuteUser" = "取消静音";
 "Localized.outsideNetwork" = "这个用户在你的网络之外。";
@@ -154,6 +155,8 @@
 "Localized.eventSource" = "原始事件";
 "Localized.loading" = "加载中……";
 "Localized.viewSource" = "查看源代码";
+"Localized.reportEventContent" = "此内容已通过 NIP-69 词汇举报为{{ report_category }} https://github.com/nostr-protocol/nips/pull/457";
+"Localized.select" = "选择";
 
 "Reply.one" = "{{ count }} 条回复";
 "Reply.many" = "{{ count }} 条回复";
@@ -162,3 +165,45 @@
 "Reply.postAReply" = "发布回复";
 "Reply.repliedToYourNote" = "回复了你的笔记：";
 "Reply.mentionedYou" = "提到了你：";
+
+"ImagePicker.camera" = "摄像机";
+"ImagePicker.cameraNotAvailable" = "摄像机在此设备上不可用";
+"ImagePicker.openSettingsMessage" = "你可以通过打开设置程序允许摄像机权限。";
+"ImagePicker.permissionsRequired" = "{{ title }} 所需的权限";
+"ImagePicker.photoLibrary" = "相册";
+"ImagePicker.selectFrom" = "从相册选择";
+"ImagePicker.takePhoto" = "使用摄像机拍摄照片";
+"ImagePicker.errorUploadingFile" = "上传文件出错";
+"ImagePicker.errorUploadingFileMessage" = "上传你提供的文件时发生错误。请重试。";
+"ImagePicker.uploading" = "上传中…";
+
+"Moderation.CL" = "粗鲁语言";
+"Moderation.HC" = "可能造成伤害";
+"Moderation.HC-fin" = "财政伤害";
+"Moderation.HC-bhd" = "身体伤害";
+"Moderation.IH" = "不容忍和仇恨行为";
+"Moderation.IL" = "违法";
+"Moderation.IL-cop" = "版权侵犯";
+"Moderation.IL-csa" = "儿童性虐待";
+"Moderation.IL-drg" = "毒品犯罪";
+"Moderation.IL-frd" = "诈骗和欺诈行为";
+"Moderation.IL-har" = "骚扰、跟踪或揭露他人隐私";
+"Moderation.IL-swk" = "卖淫";
+"Moderation.IL-idt" = "冒充他人";
+"Moderation.IL-mal" = "恶意软件";
+"Moderation.NS" = "裸体和性行为";
+"Moderation.NS-nud" = "裸体";
+"Moderation.NS-ero" = "黄色";
+"Moderation.NS-sex" = "性行为";
+"Moderation.PN" = "色情";
+"Moderation.PN-het" = "异性色情";
+"Moderation.PN-gay" = "男性同性色情";
+"Moderation.PN-les" = "女性同性色情";
+"Moderation.PN-bis" = "双性色情";
+"Moderation.PN-trn" = "变性色情";
+"Moderation.PN-fnb" = "性别流体/非二元性色情";
+"Moderation.SP" = "垃圾";
+"Moderation.VI" = "暴力";
+"Moderation.VI-hum" = "对人类的暴力行为";
+"Moderation.VI-ani" = "对情感动物的暴力行为";
+"Moderation.NA" = "其他";
