@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a small issue when mentioning profiles in the reply text box.
+
 ## [0.1 (65)] - 2023-08-04Z
 
 - Add a loading placeholder for note contents.
