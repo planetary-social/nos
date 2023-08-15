@@ -16,9 +16,9 @@ jobs:
     name : Unit Tests
     runs-on: macOS-13
     steps:
+        uses: actions/checkout@main
       - uses: nomasystems/action-xcode-select@v0.1
       - name: Checkout
-        uses: actions/checkout@main
       - name: Build Nos
         run: set -o pipefail && xcodebuild build-for-testing -skipPackagePluginValidation -project Nos.xcodeproj -scheme NosTests -destination "$SIMULATOR" | xcpretty
       - name: Run Tests
