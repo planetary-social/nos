@@ -31,6 +31,11 @@ extension Localizable {
             return ""
         }
     }
+  
+    /// Use this function in place of `text(_ arguments:[String: String]) -> String` to use Markdown-formatted text
+    func localizedMarkdown(_ arguments: [String: String]) -> LocalizedStringKey {
+        LocalizedStringKey(text(arguments))
+    }
 
     var uppercased: String {
         string.uppercased()

@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import Dependencies
 
 struct OnboardingStartView: View {
     @EnvironmentObject var state: OnboardingState
+    @Dependency(\.analytics) private var analytics
     
     var body: some View {
         VStack {
@@ -46,5 +48,8 @@ struct OnboardingStartView: View {
         }
         .background(Color.appBg)
         .navigationBarHidden(true)
+        .onAppear {
+            analytics.startedOnboarding()
+        }
     }
 }

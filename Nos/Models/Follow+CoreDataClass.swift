@@ -26,6 +26,38 @@ extension Array where Element == String {
     }
 }
 
+struct FollowComparator: SortComparator {
+
+    typealias Compared = Follow
+    var order: SortOrder = .forward
+
+    func compare(_ lhs: Follow, _ rhs: Follow) -> ComparisonResult {
+        if let lhsDestination = lhs.destination {
+            if let rhsDestination = rhs.destination {
+                return lhsDestination.safeName.compare(rhsDestination.safeName)
+            }
+            return order == .forward ? .orderedDescending : .orderedAscending
+        }
+        return order == .forward ? .orderedAscending : .orderedDescending
+    }
+}
+
+struct FollowerComparator: SortComparator {
+
+    typealias Compared = Follow
+    var order: SortOrder = .forward
+
+    func compare(_ lhs: Follow, _ rhs: Follow) -> ComparisonResult {
+        if let lhsSource = lhs.source {
+            if let rhsSource = rhs.source {
+                return lhsSource.safeName.compare(rhsSource.safeName)
+            }
+            return order == .forward ? .orderedDescending : .orderedAscending
+        }
+        return order == .forward ? .orderedAscending : .orderedDescending
+    }
+}
+
 @objc(Follow)
 public class Follow: NosManagedObject {
     
@@ -78,6 +110,13 @@ public class Follow: NosManagedObject {
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.petName, ascending: true)]
         fetchRequest.predicate = NSPredicate(format: "source = %@ AND destination = %@", source, destination)
+        return fetchRequest
+    }
+
+    @nonobjc public class func followsRequest(destination authors: [Author]) -> NSFetchRequest<Follow> {
+        let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.petName, ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "destination IN %@", authors)
         return fetchRequest
     }
     
