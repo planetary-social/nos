@@ -117,6 +117,7 @@ struct ProfileHeader: View {
                                 .font(.claritySubheadline)
                                 .multilineTextAlignment(.leading)
                             }
+                            .padding(.top, 3)
                         }
 
                         if author != currentUser.author, let currentUser = currentUser.author {

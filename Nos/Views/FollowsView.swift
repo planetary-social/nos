@@ -30,17 +30,6 @@ struct FollowsView: View {
     /// Sorted list of authors to display in the list
     var authors: [Author]
     
-    @State private var subscriptionId: String = ""
-    
-    func refreshFollows() {
-        Task(priority: .userInitiated) {
-            // TODO: just grab metadata for people who need it, not a random 100
-            let keys = authors.compactMap { $0.hexadecimalPublicKey }
-            let filter = Filter(authorKeys: keys, kinds: [.metaData, .contactList], limit: 100)
-            subscriptionId = await relayService.openSubscription(with: filter)
-        }
-    }
-    
     var body: some View {
         ScrollView(.vertical) {
             LazyVStack {
@@ -54,14 +43,5 @@ struct FollowsView: View {
         }
         .background(Color.appBg)
         .nosNavigationBar(title: title)
-        .task(priority: .userInitiated) {
-            refreshFollows()
-        }
-        .onDisappear {
-            Task(priority: .userInitiated) {
-                await relayService.decrementSubscriptionCount(for: subscriptionId)
-                subscriptionId = ""
-            }
-        }
     }
 }
