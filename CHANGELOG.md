@@ -8,13 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Add list of followers and relays in the Profile screen.
+## [0.1 (65)] - 2023-08-04Z
+
 - Add a loading placeholder for note contents.
 - Added automatic file uploads to nostr.build.
+- Add list of followers and relays in the Profile screen.
 
 ## [0.1 (60)] - 2023-08-01Z
 
 - Updated content report style based on the latest NIPs and fixed some bugs with reporting.
+- Add a loading placeholder for note contents.
 - Fixed the launch screen layout on iPad
 - Multiple consecutive newlines will be replaced by a single new line in note content.
 - Removed the screen to fill out profile information from onboarding and replaced it with a call to action in the sidebar. 
