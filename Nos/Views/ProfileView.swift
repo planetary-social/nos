@@ -46,30 +46,14 @@ struct ProfileView: View {
             let authors = [author.hexadecimalPublicKey!]
             let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete, .repost, .longFormContent], limit: 50)
             async let textSub = relayService.openSubscription(with: textFilter)
-            
-            let metaFilter = Filter(
-                authorKeys: authors,
-                kinds: [.metaData],
-                since: author.lastUpdatedMetadata
-            )
-            async let metaSub = relayService.openSubscription(with: metaFilter)
-            
-            let contactFilter = Filter(
-                authorKeys: authors,
-                kinds: [.contactList],
-                since: author.lastUpdatedContactList
-            )
-            async let contactSub = relayService.openSubscription(with: contactFilter)
-            
             subscriptionIds.append(await textSub)
-            subscriptionIds.append(await metaSub)
-            subscriptionIds.append(await contactSub)
+            subscriptionIds.append(contentsOf: await author.requestLatestProfileData(from: relayService))
         }
     }
     
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView(.vertical) {
+            ScrollView(.vertical, showsIndicators: false) {
                 ProfileHeader(author: author)
                     .compositingGroup()
                     .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
@@ -102,6 +86,15 @@ struct ProfileView: View {
         }
         .navigationDestination(for: MutesDestination.self) { _ in
             MutesView()
+        }
+        .navigationDestination(for: FollowsDestination.self) { destination in
+            FollowsView(title: Localized.follows, authors: destination.follows)
+        }
+        .navigationDestination(for: FollowersDestination.self) { destination in
+            FollowsView(title: Localized.followedBy, authors: destination.followers)
+        }
+        .navigationDestination(for: RelaysDestination.self) { destination in
+            RelayView(author: destination.author, editable: false)
         }
         .navigationBarItems(
             trailing:

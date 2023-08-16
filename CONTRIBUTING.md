@@ -18,7 +18,7 @@ From the Terminal:
 
 2. `git clone git@github.com:planetary-social/nos.git`
 
-3. `cd planetary-ios`
+3. `cd nos`
 
 4. Open the Nos project in Xcode:
 
