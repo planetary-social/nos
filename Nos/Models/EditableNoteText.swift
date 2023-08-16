@@ -91,6 +91,30 @@ struct EditableNoteText: Equatable {
         
         attributedString.replaceSubrange((attributedString.index(beforeCharacter: index))..<index, with: mention)
     }
+
+    /// Inserts the mention of an author as a link at the given index of the string. The `index` should be the index
+    /// after a `@` character, which this function will replace.
+    mutating func insertMention(npub: String, at range: Range<AttributedString.Index>) {
+        let mention = AttributedString(
+            "@\(npub.prefix(10).appending("..."))",
+            attributes: defaultAttributes.merging(
+                AttributeContainer([NSAttributedString.Key.link: "nostr:\(npub)"])
+            )
+        )
+        attributedString.replaceSubrange(range, with: mention)
+    }
+
+    /// Inserts the mention of an author as a link at the given index of the string. The `index` should be the index
+    /// after a `@` character, which this function will replace.
+    mutating func insertMention(note: String, at range: Range<AttributedString.Index>) {
+        let mention = AttributedString(
+            "@\(note.prefix(10).appending("..."))",
+            attributes: defaultAttributes.merging(
+                AttributeContainer([NSAttributedString.Key.link: "nostr:\(note)"])
+            )
+        )
+        attributedString.replaceSubrange(range, with: mention)
+    }
     
     // MARK: - Helpers
     

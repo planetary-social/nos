@@ -10,6 +10,7 @@ protocol FileStorageAPI {
 }
 
 class NostrBuildFileStorageAPI: FileStorageAPI {
+
     static let uploadURL = URL(string: "https://nostr.build/api/upload/ios.php")!
     static let fileName = "file.jpg"
     static let paramName = "fileToUpload"
