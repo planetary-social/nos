@@ -77,8 +77,12 @@ class Router: ObservableObject {
             .scan((previous: nil, current: selectedTab)) { previousPair, current in
                 (previous: previousPair.current, current: current)
             }
-            .filter { $0.previous == $0.current}
-            .compactMap { $0.current == tab ? Void() : nil}
+            .filter {
+                $0.previous == $0.current
+            }
+            .compactMap {
+                $0.current == tab ? Void() : nil
+            }
             .eraseToAnyPublisher()
     }
 }
