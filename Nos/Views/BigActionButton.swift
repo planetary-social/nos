@@ -48,7 +48,7 @@ struct BigActionButtonStyle: ButtonStyle {
                 Color(hex: "#A04651")
             }
             .cornerRadius(80)
-            .offset(y: 7.5)
+            .offset(y: 4.5)
             .shadow(color: Color(white: 0, opacity: 0.2), radius: 20, x: 0, y: 20)
             
             // Button face
@@ -56,12 +56,12 @@ struct BigActionButtonStyle: ButtonStyle {
                 // Gradient background color
                 ZStack {
                     LinearGradient(
-                        colors: [
-                            Color(red: 1, green: 1, blue: 1, opacity: 0.2),
-                            Color(red: 1, green: 1, blue: 1, opacity: 1.0),
+                        stops: [
+                            Gradient.Stop(color: Color(red: 0.94, green: 0.39, blue: 0.22), location: 0.00),
+                            Gradient.Stop(color: Color(red: 0.95, green: 0.3, blue: 0.33), location: 1.00),
                         ],
-                        startPoint: .top,
-                        endPoint: .bottom
+                        startPoint: UnitPoint(x: 0.5, y: 0),
+                        endPoint: UnitPoint(x: 0.5, y: 0.99)
                     )
                     .blendMode(.softLight)
                     
@@ -90,7 +90,7 @@ struct BigActionButtonStyle: ButtonStyle {
                     .opacity(isEnabled ? 1 : 0.5)
             }
             .cornerRadius(cornerRadius)
-            .offset(y: configuration.isPressed ? 6 : 0)
+            .offset(y: configuration.isPressed ? 3 : 0)
         }
         .fixedSize(horizontal: false, vertical: true)
     }

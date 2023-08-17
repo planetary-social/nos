@@ -21,9 +21,10 @@ struct UniversalNameWizard: View {
     
     enum FlowState {
         case loading
-        case chooseName
+        case intro
         case enterPhone
         case enterOTP
+        case chooseName
         case success
         case error
         case nameTaken
@@ -48,253 +49,259 @@ struct UniversalNameWizard: View {
     let api = UNSAPI()!
     
     var body: some View {
-        NavigationView {
-            VStack {
-                switch flowState {
-                case .enterPhone:
-                    Form {
-                        Section {
-                            TextField(text: $textField) {
-                                Text("+1-234-567-8910")
-                                    .foregroundColor(.secondaryText)
-                            }
+        VStack {
+            switch flowState {
+            case .intro:
+                Text("Register your Universal Name")
+                Spacer()
+                BigActionButton(title: .sendCode) {
+                    flowState = .enterPhone
+                }
+                .padding(.horizontal, 37)
+                .padding(.bottom, 41)
+            case .enterPhone:
+                Form {
+                    Section {
+                        TextField(text: $textField) {
+                            Text("+1-234-567-8910")
+                                .foregroundColor(.secondaryText)
+                        }
+                        .foregroundColor(.primaryTxt)
+                        .keyboardType(.phonePad)
+                        .autocorrectionDisabled()
+                        .focused($focusedField, equals: .textEditor)
+                        HighlightedText(
+                            Localized.unsDescription.string,
+                            highlightedWord: Localized.unsLearnMore.string,
+                            highlight: .diagonalAccent,
+                            link: URL(string: "https://universalname.space")
+                        )
+                    } header: {
+                        Localized.verifyYourIdentity.view
                             .foregroundColor(.primaryTxt)
-                            .keyboardType(.phonePad)
-                            .autocorrectionDisabled()
-                            .focused($focusedField, equals: .textEditor)
-                            HighlightedText(
-                                Localized.unsDescription.string,
-                                highlightedWord: Localized.unsLearnMore.string,
-                                highlight: .diagonalAccent,
-                                link: URL(string: "https://universalname.space")
-                            )
-                        } header: {
-                            Localized.verifyYourIdentity.view
-                                .foregroundColor(.primaryTxt)
-                                .fontWeight(.heavy)
-                        }
-                        .listRowBackground(LinearGradient(
-                            colors: [Color.cardBgTop, Color.cardBgBottom],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        ))
+                            .fontWeight(.heavy)
                     }
-                    .scrollContentBackground(.hidden)
-                    
-                    Spacer()
-                    
-                    BigActionButton(title: .sendCode) {
-                        Task {
-                            analytics.enteredUNSPhone()
-                            var number = textField
-                            number = number.trimmingCharacters(in: .whitespacesAndNewlines)
-                            number.replace("-", with: "")
-                            number.replace("+", with: "")
-                            number = "+\(number)"
-                            phoneNumber = number
-                            
-                            textField = ""
-                            do {
-                                flowState = .loading
-                                try await api.requestOTPCode(phoneNumber: number)
-                                flowState = .enterOTP
-                            } catch {
-                                flowState = .error
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 50)
-                case .enterOTP:
-                    Form {
-                        Section {
-                            TextField(text: $textField) {
-                                Text("123456")
-                                    .foregroundColor(.secondaryText)
-                            }
-                            .foregroundColor(.primaryTxt)
-                            .keyboardType(.phonePad)
-                            .autocorrectionDisabled()
-                            .focused($focusedField, equals: .textEditor)
-                        } header: {
-                            Localized.enterCode.view
-                                .foregroundColor(.primaryTxt)
-                                .fontWeight(.heavy)
-                        }
-                        .listRowBackground(LinearGradient(
-                            colors: [Color.cardBgTop, Color.cardBgBottom],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        ))
-                    }
-                    .scrollContentBackground(.hidden)
-                    
-                    Spacer()
-                    BigActionButton(title: .submit) {
+                    .listRowBackground(LinearGradient(
+                        colors: [Color.cardBgTop, Color.cardBgBottom],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                }
+                .scrollContentBackground(.hidden)
+                
+                Spacer()
+                
+                BigActionButton(title: .sendCode) {
+                    Task {
+                        analytics.enteredUNSPhone()
+                        var number = textField
+                        number = number.trimmingCharacters(in: .whitespacesAndNewlines)
+                        number.replace("-", with: "")
+                        number.replace("+", with: "")
+                        number = "+\(number)"
+                        phoneNumber = number
+                        
+                        textField = ""
                         do {
                             flowState = .loading
-                            analytics.enteredUNSCode()
-                            try await api.verifyOTPCode(
-                                phoneNumber: phoneNumber!,
-                                code: textField.trimmingCharacters(in: .whitespacesAndNewlines)
-                            )
-                            textField = ""
-                            let names = try await api.getNames()
-                            if let name = names.first {
-                                self.name = name
-                                var nip05: String
-                                if let message = try await api.requestNostrVerification(
-                                    npub: currentUser.keyPair!.npub
-                                ) {
-                                    nip05 = try await api.submitNostrVerification(
-                                        message: message,
-                                        keyPair: currentUser.keyPair!
-                                    )
-                                } else {
-                                    nip05 = try await api.getNIP05()
-                                }
-                                author.name = name
-                                author.nip05 = nip05
-                                await currentUser.publishMetaData()
-                                try viewContext.save()
-                                flowState = .success
-                            } else {
-                                flowState = .chooseName
-                            }
+                            try await api.requestOTPCode(phoneNumber: number)
+                            flowState = .enterOTP
                         } catch {
-                            textField = ""
                             flowState = .error
                         }
                     }
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 50)
-
-                case .loading:
-                    FullscreenProgressView(isPresented: .constant(true))
-                case .chooseName:
-                    Form {
-                        Section {
-                            TextField(text: $textField) {
-                                Localized.name.view
-                                    .foregroundColor(.secondaryText)
-                            }
-                            .textInputAutocapitalization(.none)
-                            .foregroundColor(.primaryTxt)
-                            .autocorrectionDisabled()
-                            .autocapitalization(.none)
-                            .focused($focusedField, equals: .textEditor)
-                        } header: {
-                            Localized.chooseYourName.view
-                                .foregroundColor(.primaryTxt)
-                                .fontWeight(.heavy)
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 50)
+            case .enterOTP:
+                Form {
+                    Section {
+                        TextField(text: $textField) {
+                            Text("123456")
+                                .foregroundColor(.secondaryText)
                         }
-                        .listRowBackground(LinearGradient(
-                            colors: [Color.cardBgTop, Color.cardBgBottom],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        ))
+                        .foregroundColor(.primaryTxt)
+                        .keyboardType(.phonePad)
+                        .autocorrectionDisabled()
+                        .focused($focusedField, equals: .textEditor)
+                    } header: {
+                        Localized.enterCode.view
+                            .foregroundColor(.primaryTxt)
+                            .fontWeight(.heavy)
                     }
-                    .scrollContentBackground(.hidden)
-                    Spacer()
-                    BigActionButton(title: .submit) {
-                        do {
-                            flowState = .loading
-                            analytics.choseUNSName()
-                            guard try await api.createName(
-                                textField.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-                            ) else {
-                                flowState = .nameTaken
-                                return
+                    .listRowBackground(LinearGradient(
+                        colors: [Color.cardBgTop, Color.cardBgBottom],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                }
+                .scrollContentBackground(.hidden)
+                
+                Spacer()
+                BigActionButton(title: .submit) {
+                    do {
+                        flowState = .loading
+                        analytics.enteredUNSCode()
+                        try await api.verifyOTPCode(
+                            phoneNumber: phoneNumber!,
+                            code: textField.trimmingCharacters(in: .whitespacesAndNewlines)
+                        )
+                        textField = ""
+                        let names = try await api.getNames()
+                        if let name = names.first {
+                            self.name = name
+                            var nip05: String
+                            if let message = try await api.requestNostrVerification(
+                                npub: currentUser.keyPair!.npub
+                            ) {
+                                nip05 = try await api.submitNostrVerification(
+                                    message: message,
+                                    keyPair: currentUser.keyPair!
+                                )
+                            } else {
+                                nip05 = try await api.getNIP05()
                             }
-                            let names = try await api.getNames()
-                            name = names.first!
-                            let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub)!
-                            let nip05 = try await api.submitNostrVerification(
-                                message: message,
-                                keyPair: currentUser.keyPair!
-                            )
                             author.name = name
                             author.nip05 = nip05
                             await currentUser.publishMetaData()
+                            try viewContext.save()
                             flowState = .success
-                        } catch {
-                            flowState = .error
+                        } else {
+                            flowState = .chooseName
                         }
-                    }
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 50)
-                case .nameTaken:
-                    Spacer()
-                    PlainText(Localized.oops.string)
-                        .font(.title2)
-                        .padding()
-                        .foregroundColor(.primaryTxt)
-                    PlainText(Localized.thatNameIsTaken.string)
-                        .font(.body)
-                        .padding()
-                        .foregroundColor(.primaryTxt)
-                    Spacer()
-                    BigActionButton(title: .goBack) {
-                        flowState = .chooseName
-                    }
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 50)
-                    .onAppear {
-                        analytics.choseInvalidUNSName()
-                    }
-                case .success:
-                    VStack {
-                        PlainText(Localized.success.string)
-                            .font(.title)
-                            .padding(.top, 50)
-                            .foregroundColor(.primaryTxt)
-                        Text("\(name ?? "") \(Localized.yourNewUNMessage.string)")
-                            .padding()
-                            .multilineTextAlignment(.center)
-                            .frame(maxWidth: 500)
-                            .foregroundColor(.primaryTxt)
-                        Spacer()
-                        BigActionButton(title: .dismiss) {
-                            analytics.completedUNSWizard()
-                            dismiss?()
-                        }
-                        .padding(.horizontal, 24)
-                        .padding(.bottom, 50)
-                    }
-                    .frame(maxWidth: .infinity)
-                case .error:
-                    Spacer()
-                    PlainText(Localized.oops.string)
-                        .font(.title2)
-                        .padding()
-                        .foregroundColor(.primaryTxt)
-                    PlainText(Localized.anErrorOccurred.string)
-                        .font(.body)
-                        .padding()
-                        .foregroundColor(.primaryTxt)
-                    Spacer()
-                    BigActionButton(title: .startOver) {
-                        flowState = .enterPhone
-                    }
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 50)
-                    .onAppear {
-                        analytics.encounteredUNSError()
+                    } catch {
+                        textField = ""
+                        flowState = .error
                     }
                 }
-            }
-            .onAppear {
-                focusedField = .textEditor
-                analytics.showedUNSWizard()
-            }
-            .onDisappear {
-                if flowState != .success {
-                    analytics.canceledUNSWizard()
+                .padding(.horizontal, 24)
+                .padding(.bottom, 50)
+                
+            case .loading:
+                FullscreenProgressView(isPresented: .constant(true))
+            case .chooseName:
+                Form {
+                    Section {
+                        TextField(text: $textField) {
+                            Localized.name.view
+                                .foregroundColor(.secondaryText)
+                        }
+                        .textInputAutocapitalization(.none)
+                        .foregroundColor(.primaryTxt)
+                        .autocorrectionDisabled()
+                        .autocapitalization(.none)
+                        .focused($focusedField, equals: .textEditor)
+                    } header: {
+                        Localized.chooseYourName.view
+                            .foregroundColor(.primaryTxt)
+                            .fontWeight(.heavy)
+                    }
+                    .listRowBackground(LinearGradient(
+                        colors: [Color.cardBgTop, Color.cardBgBottom],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                }
+                .scrollContentBackground(.hidden)
+                Spacer()
+                BigActionButton(title: .submit) {
+                    do {
+                        flowState = .loading
+                        analytics.choseUNSName()
+                        guard try await api.createName(
+                            textField.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+                        ) else {
+                            flowState = .nameTaken
+                            return
+                        }
+                        let names = try await api.getNames()
+                        name = names.first!
+                        let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub)!
+                        let nip05 = try await api.submitNostrVerification(
+                            message: message,
+                            keyPair: currentUser.keyPair!
+                        )
+                        author.name = name
+                        author.nip05 = nip05
+                        await currentUser.publishMetaData()
+                        flowState = .success
+                    } catch {
+                        flowState = .error
+                    }
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 50)
+            case .nameTaken:
+                Spacer()
+                PlainText(Localized.oops.string)
+                    .font(.title2)
+                    .padding()
+                    .foregroundColor(.primaryTxt)
+                PlainText(Localized.thatNameIsTaken.string)
+                    .font(.body)
+                    .padding()
+                    .foregroundColor(.primaryTxt)
+                Spacer()
+                BigActionButton(title: .goBack) {
+                    flowState = .chooseName
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 50)
+                .onAppear {
+                    analytics.choseInvalidUNSName()
+                }
+            case .success:
+                VStack {
+                    PlainText(Localized.success.string)
+                        .font(.title)
+                        .padding(.top, 50)
+                        .foregroundColor(.primaryTxt)
+                    Text("\(name ?? "") \(Localized.yourNewUNMessage.string)")
+                        .padding()
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: 500)
+                        .foregroundColor(.primaryTxt)
+                    Spacer()
+                    BigActionButton(title: .dismiss) {
+                        analytics.completedUNSWizard()
+                        dismiss?()
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 50)
+                }
+                .frame(maxWidth: .infinity)
+            case .error:
+                Spacer()
+                PlainText(Localized.oops.string)
+                    .font(.title2)
+                    .padding()
+                    .foregroundColor(.primaryTxt)
+                PlainText(Localized.anErrorOccurred.string)
+                    .font(.body)
+                    .padding()
+                    .foregroundColor(.primaryTxt)
+                Spacer()
+                BigActionButton(title: .startOver) {
+                    flowState = .enterPhone
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 50)
+                .onAppear {
+                    analytics.encounteredUNSError()
                 }
             }
-            .background(Color.appBg)
-            .nosNavigationBar(title: .setUpUNS)
         }
+        .onAppear {
+            focusedField = .textEditor
+            analytics.showedUNSWizard()
+        }
+        .onDisappear {
+            if flowState != .success {
+                analytics.canceledUNSWizard()
+            }
+        }
+        .background(Color.appBg)
+        .nosNavigationBar(title: .setUpUNS)
     }
 }
 
@@ -310,6 +317,10 @@ struct UniversalNameWizard_Previews: PreviewProvider {
     }
     
     static var previews: some View {
+        VStack {}
+            .sheet(isPresented: .constant(true)) {
+                UniversalNameWizard(author: author, flowState: .intro)
+            }
         VStack {}
             .sheet(isPresented: .constant(true)) {
                 UniversalNameWizard(author: author, flowState: .enterPhone)
