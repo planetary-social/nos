@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed bug when parsing malformed contact lists.
 - Fixed the launch screen layout on iPad
 - Added support for pasting profile and note references when composing notes
 - Fixed a small issue when mentioning profiles in the reply text box.
