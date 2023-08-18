@@ -66,12 +66,21 @@ public class Follow: NosManagedObject {
         jsonTag: [String],
         context: NSManagedObjectContext
     ) throws -> Follow {
+        guard let followedKey = jsonTag[safe: 1] else {
+            throw DecodingError.valueNotFound(
+                Follow.self,
+                DecodingError.Context(
+                    codingPath: [],
+                    debugDescription: "Encoded tags did not have a key at position 1"
+                )
+            )
+        }
         var follow: Follow
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.predicate = NSPredicate(
             format: "source.hexadecimalPublicKey = %@ AND destination.hexadecimalPublicKey = %@",
             author.hexadecimalPublicKey!,
-            jsonTag[1]
+            followedKey
         )
         fetchRequest.fetchLimit = 1
         if let existingFollow = try context.fetch(fetchRequest).first {
@@ -81,8 +90,7 @@ public class Follow: NosManagedObject {
         }
         
         follow.source = author
-        
-        let followedKey = jsonTag[1]
+
         let followedAuthor = try Author.findOrCreate(by: followedKey, context: context)
         follow.destination = followedAuthor
         
