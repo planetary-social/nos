@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 import CoreData
 import Dependencies
 import Logger
@@ -24,6 +25,8 @@ struct NotificationsView: View {
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
     @State private var subscriptionIDs = [String]()
     @State private var isVisible = false
+
+    @State private var concecutiveTapsCancellable: AnyCancellable?
     
     // Probably the logged in user should be in the @Environment eventually
     private var user: Author?
@@ -104,6 +107,21 @@ struct NotificationsView: View {
             }
             .refreshable {
                 await subscribeToNewEvents()
+            }
+            .task {
+                if concecutiveTapsCancellable == nil {
+                    concecutiveTapsCancellable = router.consecutiveTaps(on: .notifications)
+                        .sink {
+                            guard isVisible else {
+                                return
+                            }
+                            if router.notificationsPath.isEmpty {
+                                // This is a good place to scroll to the top
+                            } else {
+                                router.notificationsPath.removeLast(router.notificationsPath.count)
+                            }
+                        }
+                }
             }
             .onAppear {
                 if router.selectedTab == .notifications {

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 import CoreData
 import Logger
 
@@ -69,6 +70,20 @@ class Router: ObservableObject {
     func openOSSettings() {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
+    func consecutiveTaps(on tab: AppView.Destination) -> AnyPublisher<Void, Never> {
+        $selectedTab
+            .scan((previous: nil, current: selectedTab)) { previousPair, current in
+                (previous: previousPair.current, current: current)
+            }
+            .filter {
+                $0.previous == $0.current
+            }
+            .compactMap {
+                $0.current == tab ? Void() : nil
+            }
+            .eraseToAnyPublisher()
     }
 }
 
