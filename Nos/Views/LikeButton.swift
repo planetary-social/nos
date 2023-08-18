@@ -19,7 +19,11 @@ struct LikeButton: View {
     internal init(note: Event, action: @escaping () async -> Void) {
         self.note = note
         self.action = action
-        _likes = FetchRequest(fetchRequest: Event.likes(noteID: note.identifier ?? ""))
+        if let noteID = note.identifier {
+            _likes = FetchRequest(fetchRequest: Event.likes(noteID: noteID))
+        } else {
+            _likes = FetchRequest(fetchRequest: Event.emptyRequest())
+        }
     }
     
     var likeCount: Int {
