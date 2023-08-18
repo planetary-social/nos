@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (66)] - 2023-08-18Z
+
 - Fixed bug when parsing malformed events.
 - Fixed bug when parsing malformed contact lists.
 - Fixed the launch screen layout on iPad
