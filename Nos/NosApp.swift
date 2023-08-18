@@ -12,6 +12,7 @@ import Dependencies
 @main
 struct NosApp: App {
     
+    @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.relayService) private var relayService
     @Dependency(\.router) private var router
@@ -20,6 +21,10 @@ struct NosApp: App {
     private let appController = AppController()
     @Environment(\.scenePhase) private var scenePhase
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
+    init() {
+        _ = crashReporting // force crash reporting init as early as possible
+    }
     
     var body: some Scene {
         WindowGroup {
@@ -30,10 +35,6 @@ struct NosApp: App {
                 .environmentObject(appController)
                 .environmentObject(currentUser)
                 .environmentObject(pushNotificationService)
-                .task {
-                    currentUser.relayService = relayService
-                    persistenceController.cleanupEntities()
-                }
                 .onChange(of: scenePhase) { newPhase in
                     // TODO: save all contexts, not just the view and background.
                     if newPhase == .inactive {

@@ -19,6 +19,7 @@ struct AppView: View {
     @EnvironmentObject var pushNotificationService: PushNotificationService
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.crashReporting) private var crashReporting
     @EnvironmentObject var currentUser: CurrentUser
     
     @State private var showingOptions = false
@@ -92,6 +93,7 @@ struct AppView: View {
                                 // for who is logged in
                                 if let keyPair = currentUser.keyPair {
                                     analytics.identify(with: keyPair)
+                                    crashReporting.identify(with: keyPair)
                                 }
                             }
                     }
