@@ -29,8 +29,6 @@ struct HomeFeedView: View {
 
     // Probably the logged in user should be in the @Environment eventually
     @ObservedObject var user: Author
-
-    @State private var concecutiveTapsCancellable: AnyCancellable?
     
     init(user: Author) {
         self.user = user
@@ -159,6 +157,7 @@ struct HomeFeedView: View {
                 Task { await cancelSubscriptions() }
             }
         })
+        .modifier(DoubleTapToPopModifier(tab: .home))
         .task {
             currentUser.socialGraph.followedKeys.publisher
                 .removeDuplicates()
@@ -168,20 +167,6 @@ struct HomeFeedView: View {
                     Task { await subscribeToNewEvents() }
                 })
                 .store(in: &cancellables)
-
-            if concecutiveTapsCancellable == nil {
-                concecutiveTapsCancellable = router.consecutiveTaps(on: .home)
-                    .sink {
-                        guard isVisible else {
-                            return
-                        }
-                        if router.homeFeedPath.isEmpty {
-                            // This is a good place to scroll to the top
-                        } else {
-                            router.homeFeedPath.removeLast(router.homeFeedPath.count)
-                        }
-                    }
-            }
         }
     }
 }
