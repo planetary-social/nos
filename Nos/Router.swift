@@ -10,7 +10,7 @@ import CoreData
 import Logger
 
 // Manages the app's navigation state.
-class Router: ObservableObject {
+@MainActor class Router: ObservableObject {
     
     @Published var homeFeedPath = NavigationPath()
     @Published var discoverPath = NavigationPath()
@@ -58,7 +58,7 @@ class Router: ObservableObject {
     }
     
     /// Pushes the given destination item onto the current NavigationPath.
-    @MainActor func push<D: Hashable>(_ destination: D) {
+    func push<D: Hashable>(_ destination: D) {
         currentPath.wrappedValue.append(destination)
     }
     
@@ -74,7 +74,7 @@ class Router: ObservableObject {
 
 extension Router {
     
-    @MainActor func open(url: URL, with context: NSManagedObjectContext) {
+    func open(url: URL, with context: NSManagedObjectContext) {
         let link = url.absoluteString
         let identifier = String(link[link.index(after: link.startIndex)...])
         // handle mentions. mention link will be prefixed with "@" followed by
