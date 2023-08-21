@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (72)] - 2023-08-21Z
+
 - Fixed a crash during onboarding
 - Fixed a crash when following or muting a user
 
