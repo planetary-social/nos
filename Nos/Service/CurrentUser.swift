@@ -28,6 +28,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.pushNotificationService) private var pushNotificationService
+    @Dependency(\.relayService) private var relayService
     
     // TODO: it's time to cache this
     var keyPair: KeyPair? {
@@ -82,15 +83,6 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     var backgroundContext: NSManagedObjectContext!
     
     @Published var socialGraph: SocialGraphCache!
-    
-    var relayService: RelayService! {
-        didSet {
-            Task {
-                await subscribe()
-                await refreshFriendMetadata()
-            }
-        }
-    }
     // swiftlint:enable implicitly_unwrapped_optional
     
     var subscriptions: [String] = []
@@ -130,7 +122,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     // Reset CurrentUser state
     @MainActor func reset() {
         onboardingRelays = []
-        Task { await relayService?.decrementSubscriptionCount(for: subscriptions) }
+        Task { await relayService.decrementSubscriptionCount(for: subscriptions) }
         subscriptions = []
         inNetworkAuthors = []
         setUp()
@@ -151,10 +143,8 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             socialGraph = SocialGraphCache(userKey: keyPair.publicKeyHex, context: backgroundContext)
             
             Task {
-                if relayService != nil {
-                    await subscribe()
-                    refreshFriendMetadata()
-                }
+                await subscribe()
+                refreshFriendMetadata()
             }
             
             Task(priority: .background) {
