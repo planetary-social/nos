@@ -34,6 +34,7 @@
 		5B0D99002A8A693B0039F0C5 /* ProfileSocialStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B834F682A83FC7F000C1432 /* ProfileSocialStatsView.swift */; };
 		5B0D99012A8A693D0039F0C5 /* ProfileKnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B834F662A83FB5C000C1432 /* ProfileKnownFollowersView.swift */; };
 		5B0D99032A94090A0039F0C5 /* DoubleTapToPopModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */; };
+		5B0D99042A94F99A0039F0C5 /* DoubleTapToPopModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */; };
 		5B39E64429EDBF8100464830 /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
 		5B46611E29CCB894008B8E8C /* Generated.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5B46612029CCB894008B8E8C /* Generated.strings */; };
 		5B503F622A291A1A0098805A /* JSONRelayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */; };
@@ -1617,6 +1618,7 @@
 				C936B45F2A4CAF2B00DF1EB9 /* AppDelegate.swift in Sources */,
 				C9B678E829F01A8500303F33 /* FullscreenProgressView.swift in Sources */,
 				C9C2B77D29E072E400548B4A /* WebSocket+Nos.swift in Sources */,
+				5B0D99042A94F99A0039F0C5 /* DoubleTapToPopModifier.swift in Sources */,
 				A303AF8429A969F5005DC8FC /* FollowButton.swift in Sources */,
 				C973AB642A323167002AED16 /* Relay+CoreDataProperties.swift in Sources */,
 				C9EE3E642A053910008A7491 /* ExpirationTimeOption.swift in Sources */,
