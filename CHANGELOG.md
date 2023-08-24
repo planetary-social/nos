@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed potential crashes when using Universal Names API.
 - Fixed bug when parsing malformed events.
 - Fixed bug when parsing malformed contact lists.
 - Fixed the launch screen layout on iPad
