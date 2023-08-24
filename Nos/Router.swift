@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 import CoreData
 import Logger
 
@@ -23,19 +24,8 @@ class Router: ObservableObject {
         if sideMenuOpened {
             return Binding(get: { self.sideMenuPath }, set: { self.sideMenuPath = $0 })
         }
-        
-        switch selectedTab {
-        case .home:
-            return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
-        case .discover:
-            return Binding(get: { self.discoverPath }, set: { self.discoverPath = $0 })
-        case .newNote:
-            return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
-        case .notifications:
-            return Binding(get: { self.notificationsPath }, set: { self.notificationsPath = $0 })
-        case .profile:
-            return Binding(get: { self.profilePath }, set: { self.profilePath = $0 })
-        }
+
+        return path(for: selectedTab)
     }
     
     @Published var userNpubPublicKey = ""
@@ -69,6 +59,35 @@ class Router: ObservableObject {
     func openOSSettings() {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
+    func consecutiveTaps(on tab: AppView.Destination) -> AnyPublisher<Void, Never> {
+        $selectedTab
+            .scan((previous: nil, current: selectedTab)) { previousPair, current in
+                (previous: previousPair.current, current: current)
+            }
+            .filter {
+                $0.previous == $0.current
+            }
+            .compactMap {
+                $0.current == tab ? Void() : nil
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func path(for destination: AppView.Destination) -> Binding<NavigationPath> {
+        switch destination {
+        case .home:
+            return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
+        case .discover:
+            return Binding(get: { self.discoverPath }, set: { self.discoverPath = $0 })
+        case .newNote:
+            return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
+        case .notifications:
+            return Binding(get: { self.notificationsPath }, set: { self.notificationsPath = $0 })
+        case .profile:
+            return Binding(get: { self.profilePath }, set: { self.profilePath = $0 })
+        }
     }
 }
 
