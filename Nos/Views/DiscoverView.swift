@@ -168,7 +168,7 @@ struct DiscoverView: View {
                 }
             }
             .animation(.easeInOut, value: columns)
-            .modifier(DoubleTapToPopModifier(tab: .discover))
+            .doubleTapToPop(tab: .discover)
             .task { 
                 updatePredicate()
             }

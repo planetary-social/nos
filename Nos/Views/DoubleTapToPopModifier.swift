@@ -30,3 +30,9 @@ struct DoubleTapToPopModifier: ViewModifier {
         }
     }
 }
+
+extension View {
+    func doubleTapToPop(tab: AppView.Destination) -> some View {
+        self.modifier(DoubleTapToPopModifier(tab: tab))
+    }
+}

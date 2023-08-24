@@ -108,7 +108,7 @@ struct NotificationsView: View {
             .refreshable {
                 await subscribeToNewEvents()
             }
-            .modifier(DoubleTapToPopModifier(tab: .notifications))
+            .doubleTapToPop(tab: .notifications)
             .onAppear {
                 if router.selectedTab == .notifications {
                     isVisible = true

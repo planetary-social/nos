@@ -29,7 +29,7 @@ struct ProfileTab: View {
                         ProfileView(author: profile)
                     }
                 }
-                .modifier(DoubleTapToPopModifier(tab: .profile))
+                .doubleTapToPop(tab: .profile)
         }
     }
 }
