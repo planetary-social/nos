@@ -212,7 +212,7 @@ enum Localized: String, Localizable, CaseIterable {
     case oops = "Oops!"
     case thatNameIsTaken = "That name is taken."
     case success = "Success!"
-    case yourNewUNMessage = "is your new Nostr username.\n\nThis demo of the Universal Namespace is for testing purposes only. All names will be reset in the future."
+    case yourNewUNMessage = "is your Universal Name.\n\nWe've created a link between your Nostr profile and your Universal Name and filled your Universal Name into the username field on your profile."
     case anErrorOccurred = "An error occured."
     
     case relayAddressPlaceholder = "wss://yourrelay.com"

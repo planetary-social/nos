@@ -138,7 +138,7 @@
 "Localized.shareNos" = "Share Nos";
 "Localized.yourProfile" = "Your Profile";
 "Localized.unsTagline" = "Universal Name Space brings identity verification you can trust.";
-"Localized.unsDescription" = "The Universal Namespace gives you one name you can use everywhere. You can verify your identity and get your universal name here in Nos. This screen is for demo purposes only, all names will be reset in the future. Learn more.";
+"Localized.unsDescription" = "The Universal Namespace gives you one name you can use everywhere. Register your Universal Name and connect it to your Nostr profile. Learn more.";
 "Localized.unsLearnMore" = "Learn more.";
 "Localized.verifyYourIdentity" = "Verify your identity";
 "Localized.enterCode" = "Enter Code";
@@ -147,7 +147,7 @@
 "Localized.oops" = "Oops!";
 "Localized.thatNameIsTaken" = "That name is taken.";
 "Localized.success" = "Success!";
-"Localized.yourNewUNMessage" = "is your new Nostr username.\n\nThis demo of the Universal Namespace is for testing purposes only. All names will be reset in the future.";
+"Localized.yourNewUNMessage" = "is your Universal Name.\n\nWe've created a link between your Nostr profile and your Universal Name and filled your Universal Name into the username field on your profile.";
 "Localized.anErrorOccurred" = "An error occured.";
 "Localized.relayAddressPlaceholder" = "wss://yourrelay.com";
 "Localized.someone" = "someone";
