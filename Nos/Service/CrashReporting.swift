@@ -29,9 +29,9 @@ class CrashReporting {
         sentry.start { options in
             options.dsn = dsn
             
-            // options.enableTracing = true
-            // options.tracesSampleRate = 1.0 // tracing must be enabled for profiling
-            // options.profilesSampleRate = 1.0 // see also `profilesSampler` if you need custom sampling logic
+            options.enableTracing = true
+            options.tracesSampleRate = 0.3 // tracing must be enabled for profiling
+            options.profilesSampleRate = 0.3 // see also `profilesSampler` if you need custom sampling logic
             
             // Enable all experimental features
             options.attachViewHierarchy = true
