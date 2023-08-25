@@ -11,7 +11,7 @@ import CoreData
 import Logger
 
 // Manages the app's navigation state.
-class Router: ObservableObject {
+@MainActor class Router: ObservableObject {
     
     @Published var homeFeedPath = NavigationPath()
     @Published var discoverPath = NavigationPath()
@@ -24,19 +24,8 @@ class Router: ObservableObject {
         if sideMenuOpened {
             return Binding(get: { self.sideMenuPath }, set: { self.sideMenuPath = $0 })
         }
-        
-        switch selectedTab {
-        case .home:
-            return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
-        case .discover:
-            return Binding(get: { self.discoverPath }, set: { self.discoverPath = $0 })
-        case .newNote:
-            return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
-        case .notifications:
-            return Binding(get: { self.notificationsPath }, set: { self.notificationsPath = $0 })
-        case .profile:
-            return Binding(get: { self.profilePath }, set: { self.profilePath = $0 })
-        }
+
+        return path(for: selectedTab)
     }
     
     @Published var userNpubPublicKey = ""
@@ -59,7 +48,7 @@ class Router: ObservableObject {
     }
     
     /// Pushes the given destination item onto the current NavigationPath.
-    @MainActor func push<D: Hashable>(_ destination: D) {
+    func push<D: Hashable>(_ destination: D) {
         currentPath.wrappedValue.append(destination)
     }
     
@@ -85,11 +74,26 @@ class Router: ObservableObject {
             }
             .eraseToAnyPublisher()
     }
+
+    func path(for destination: AppView.Destination) -> Binding<NavigationPath> {
+        switch destination {
+        case .home:
+            return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
+        case .discover:
+            return Binding(get: { self.discoverPath }, set: { self.discoverPath = $0 })
+        case .newNote:
+            return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
+        case .notifications:
+            return Binding(get: { self.notificationsPath }, set: { self.notificationsPath = $0 })
+        case .profile:
+            return Binding(get: { self.profilePath }, set: { self.profilePath = $0 })
+        }
+    }
 }
 
 extension Router {
     
-    @MainActor func open(url: URL, with context: NSManagedObjectContext) {
+    func open(url: URL, with context: NSManagedObjectContext) {
         let link = url.absoluteString
         let identifier = String(link[link.index(after: link.startIndex)...])
         // handle mentions. mention link will be prefixed with "@" followed by

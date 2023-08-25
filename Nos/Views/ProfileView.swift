@@ -67,22 +67,21 @@ struct ProfileView: View {
                     .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 
                 LazyVStack {
-                    ForEach(events.unmuted) { event in
-                        VStack {
-                            NoteButton(note: event, hideOutOfNetwork: false)
-                                .padding(.bottom, 15)
+                    if events.unmuted.isEmpty {
+                        Localized.noEventsOnProfile.view
+                            .padding()
+                    } else {
+                        ForEach(events.unmuted) { event in
+                            VStack {
+                                NoteButton(note: event, hideOutOfNetwork: false)
+                                    .padding(.bottom, 15)
+                            }
                         }
                     }
                 }
                 .padding(.top, 10)
             }
             .background(Color.appBg)
-            .overlay(Group {
-                if !events.contains(where: { !$0.author!.muted }) {
-                    Localized.noEventsOnProfile.view
-                        .padding()
-                }
-            })
         }
         .nosNavigationBar(title: .profileTitle)
         .navigationDestination(for: Event.self) { note in

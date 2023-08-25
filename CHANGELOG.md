@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed potential crashes when using Universal Names API.
+- Fixed bug that rendered the empty notes message for a profile above the header box.
+- Fixed bug that could potentially crash the app sometimes
+
 ## [0.1 (72)] - 2023-08-21Z
 
 - Fixed a crash during onboarding

@@ -18,8 +18,6 @@ struct ProfileTab: View {
     
     @EnvironmentObject private var router: Router
 
-    @State private var concecutiveTapsCancellable: AnyCancellable?
-
     var body: some View {
         NavigationStack(path: $path) {
             ProfileView(author: author)
@@ -31,18 +29,7 @@ struct ProfileTab: View {
                         ProfileView(author: profile)
                     }
                 }
-                .task {
-                    if concecutiveTapsCancellable == nil {
-                        concecutiveTapsCancellable = router.consecutiveTaps(on: .profile)
-                            .sink {
-                                if router.profilePath.isEmpty {
-                                    // This is a good place to scroll to the top
-                                } else {
-                                    router.profilePath.removeLast(router.profilePath.count)
-                                }
-                            }
-                    }
-                }
+                .doubleTapToPop(tab: .profile)
         }
     }
 }
