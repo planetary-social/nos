@@ -157,6 +157,7 @@ struct HomeFeedView: View {
                 Task { await cancelSubscriptions() }
             }
         })
+        .doubleTapToPop(tab: .home)
         .task {
             currentUser.socialGraph.followedKeys.publisher
                 .removeDuplicates()

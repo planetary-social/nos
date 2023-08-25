@@ -21,7 +21,7 @@ struct SideMenuContent: View {
     
     @State var result: Result<MFMailComposeResult, Error>?
     
-    let closeMenu: () -> Void
+    let closeMenu: @MainActor () -> Void
     
     var profileHeader: some View {
         Group {

@@ -12,7 +12,7 @@ struct OnboardingTermsOfServiceView: View {
     @EnvironmentObject var currentUser: CurrentUser
     
     /// Completion to be called when all onboarding steps are complete
-    let completion: () -> Void
+    let completion: @MainActor () -> Void
     
     var body: some View {
         VStack {
