@@ -86,6 +86,11 @@
 "Localized.follow" = "關注";
 "Localized.follows" = "關注";
 "Localized.following" = "已關注";
+"Localized.followedBy" = "被關注";
+"Localized.followedByOne" = "被**{{ one }}**關注";
+"Localized.followedByOneAndMore" = "被**{{ one }}**和**{{ count }}個其他用戶**關注";
+"Localized.followedByTwo" = "被**{{ one }}**和**{{ two }}**關注";
+"Localized.followedByTwoAndMore" = "被**{{ one }}**、**{{ two }}**和**{{ count }}個其他用戶**關注";
 "Localized.unfollow" = "取消關注";
 "Localized.uns" = "UNS";
 "Localized.nip05" = "NIP-05";
