@@ -8,10 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed bug that could potentially crash the app sometimes
+- Fixed bug when parsing malformed events.
 - Fixed bug when parsing malformed contact lists.
 - Fixed the launch screen layout on iPad
 - Added support for pasting profile and note references when composing notes
 - Fixed a small issue when mentioning profiles in the reply text box.
+- Pop screens from the navigation stack when tapping twice on the tab bar.
 
 ## [0.1 (65)] - 2023-08-04Z
 

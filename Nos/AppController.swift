@@ -37,7 +37,7 @@ class AppController: ObservableObject {
         }
     }
     
-    func completeOnboarding() {
+    @MainActor func completeOnboarding() {
         router.sideMenuPath = NavigationPath()
         router.closeSideMenu()
         router.selectedTab = .discover
