@@ -35,8 +35,6 @@ struct DiscoverView: View {
     @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
 
     @State var predicate: NSPredicate = .false
-
-    @State private var concecutiveTapsCancellable: AnyCancellable?
     
     func updatePredicate() {
         if let relayFilter {
@@ -170,22 +168,9 @@ struct DiscoverView: View {
                 }
             }
             .animation(.easeInOut, value: columns)
+            .doubleTapToPop(tab: .discover)
             .task { 
                 updatePredicate()
-
-                if concecutiveTapsCancellable == nil {
-                    concecutiveTapsCancellable = router.consecutiveTaps(on: .discover)
-                        .sink {
-                            guard isVisible else {
-                                return
-                            }
-                            if router.discoverPath.isEmpty {
-                                // This is a good place to scroll to the top
-                            } else {
-                                router.discoverPath.removeLast(router.discoverPath.count)
-                            }
-                        }
-                }
             }
             .refreshable {
                 date = .now

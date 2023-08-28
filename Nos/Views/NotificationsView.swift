@@ -108,21 +108,7 @@ struct NotificationsView: View {
             .refreshable {
                 await subscribeToNewEvents()
             }
-            .task {
-                if concecutiveTapsCancellable == nil {
-                    concecutiveTapsCancellable = router.consecutiveTaps(on: .notifications)
-                        .sink {
-                            guard isVisible else {
-                                return
-                            }
-                            if router.notificationsPath.isEmpty {
-                                // This is a good place to scroll to the top
-                            } else {
-                                router.notificationsPath.removeLast(router.notificationsPath.count)
-                            }
-                        }
-                }
-            }
+            .doubleTapToPop(tab: .notifications)
             .onAppear {
                 if router.selectedTab == .notifications {
                     isVisible = true

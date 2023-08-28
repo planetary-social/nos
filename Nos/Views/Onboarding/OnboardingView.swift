@@ -38,7 +38,7 @@ struct OnboardingView: View {
     @StateObject var state = OnboardingState()
     
     /// Completion to be called when all onboarding steps are complete
-    let completion: () -> Void
+    let completion: @MainActor () -> Void
     
     @State private var selectedTab: OnboardingStep = .onboardingStart
     

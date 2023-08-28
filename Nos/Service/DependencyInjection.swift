@@ -65,7 +65,7 @@ fileprivate enum AnalyticsKey: DependencyKey {
     static let previewValue = CurrentUser()
 }
 
-fileprivate enum RouterKey: DependencyKey {
+@MainActor fileprivate enum RouterKey: DependencyKey {
     static let liveValue = Router()
     static let testValue = Router()
     static let previewValue = Router()
