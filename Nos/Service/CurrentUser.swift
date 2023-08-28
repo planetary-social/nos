@@ -25,6 +25,7 @@ enum CurrentUserError: Error {
 class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
     
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.pushNotificationService) private var pushNotificationService
     
@@ -67,6 +68,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         Log.info("Saved private key to keychain for user: " + "\(hex) / \(npub). Keychain storage status: \(status)")
         _privateKeyHex = privateKeyHex
         analytics.identify(with: keyPair)
+        crashReporting.identify(with: keyPair)
         
         reset()
     }
@@ -117,6 +119,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             if let keyPair {
                 Log.info("CurrentUser logged in \(keyPair.publicKeyHex) / \(keyPair.npub)")
                 analytics.identify(with: keyPair)
+                crashReporting.identify(with: keyPair)
             } else {
                 Log.error("CurrentUser found bad data in the keychain")
             }

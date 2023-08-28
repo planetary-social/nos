@@ -46,6 +46,11 @@ extension DependencyValues {
         get { self[UserDefaultsKey.self] }
         set { self[UserDefaultsKey.self] = newValue }
     }
+    
+    var crashReporting: CrashReporting {
+        get { self[CrashReportingKey.self] }
+        set { self[CrashReportingKey.self] = newValue }
+    }
 }
 
 fileprivate enum AnalyticsKey: DependencyKey {
@@ -90,4 +95,10 @@ fileprivate enum UserDefaultsKey: DependencyKey {
     static let liveValue = UserDefaults.standard
     static let testValue = UserDefaults()
     static let previewValue = UserDefaults()
+}
+
+fileprivate enum CrashReportingKey: DependencyKey {
+    static let liveValue = CrashReporting()
+    static let testValue = CrashReporting(mock: true)
+    static let previewValue = CrashReporting(mock: true)
 }

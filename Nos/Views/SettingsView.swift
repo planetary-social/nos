@@ -12,6 +12,7 @@ import SwiftUINavigation
 struct SettingsView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.persistenceController) private var persistenceController
     @EnvironmentObject private var appController: AppController
     @EnvironmentObject private var router: Router
@@ -24,6 +25,7 @@ struct SettingsView: View {
     func importKey(_ keyPair: KeyPair) async {
         await currentUser.setKeyPair(keyPair)
         analytics.identify(with: keyPair)
+        crashReporting.identify(with: keyPair)
         analytics.changedKey()
     }
     
@@ -168,6 +170,7 @@ struct SettingsView: View {
     func logout() async {
         await currentUser.setKeyPair(nil)
         analytics.logout()
+        crashReporting.logout()
         appController.configureCurrentState() 
     }
 }

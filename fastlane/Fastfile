@@ -34,6 +34,12 @@ platform :ios do
     git_commit(message: "TestFlight deployment", path: "*")
     add_git_tag(tag: "v#{version_number}-#{build_number}")
     push_to_git_remote
+    sentry_upload_dif(
+      org_slug: 'verse',
+      project_slug: 'nos-ios',
+      include_sources: true, 
+      api_host: 'https://sentry.nos.social'
+    )
     notification(
       subtitle: "Build uploaded", 
       message: "tap to open App Store Connect", 
