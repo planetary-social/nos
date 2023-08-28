@@ -10,7 +10,7 @@ Check our website [nos.social](https://nos.social/) for more info! You can also 
 
 You can learn more about contributing in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Support NIPs
+## Supported NIPs
 
 NIPs, or Nostr Implementation Possibilities, are specifications that Nostr apps use to interoperate with one another. Here is a list of NIPs currently supported in Nos:
 
