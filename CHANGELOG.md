@@ -8,9 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed bug that could potentially crash the app sometimes
 - Fixed potential crashes when using Universal Names API.
 - Fixed bug that rendered the empty notes message for a profile above the header box.
-- Fixed bug that could potentially crash the app sometimes
+
+## [0.1 (66)] - 2023-08-18Z
+
 - Fixed bug when parsing malformed events.
 - Fixed bug when parsing malformed contact lists.
 - Fixed the launch screen layout on iPad
