@@ -15,7 +15,7 @@ func eventually(condition: @escaping () async throws -> Bool) async throws {
             if try await condition() {
                 break
             } else {
-                try! await Task.sleep(for: .milliseconds(1))
+                try await Task.sleep(for: .milliseconds(1))
             }
         }
     }.value

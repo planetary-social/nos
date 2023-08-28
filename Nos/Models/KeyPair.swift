@@ -32,8 +32,12 @@ struct KeyPair {
     private let underlyingKey: secp256k1.Signing.PrivateKey
     
     init?() {
-        let key = try! secp256k1.Signing.PrivateKey()
-        self.init(privateKeyHex: key.rawRepresentation.hexString)
+        do {
+            let key = try secp256k1.Signing.PrivateKey()
+            self.init(privateKeyHex: key.rawRepresentation.hexString)
+        } catch {
+            return nil
+        }
     }
     
     init?(privateKeyHex: String) {

@@ -290,17 +290,29 @@ struct DiscoverView_Previews: PreviewProvider {
         longNote.identifier = "2"
         longNote.author = user
         longNote.content = .loremIpsum(5)
-        
-        try! previewContext.save()
+
+        do {
+            try previewContext.save()
+        } catch {
+            print(error)
+        }
     }
     
     static func createRelayData(in context: NSManagedObjectContext, user: Author) {
         let addresses = ["wss://nostr.band", "wss://nos.social", "wss://a.long.domain.name.to.see.what.happens"]
         addresses.forEach {
-            _ = try! Relay(context: previewContext, address: $0, author: user)
+            do {
+                _ = try Relay(context: previewContext, address: $0, author: user)
+            } catch {
+                print(error)
+            }
         }
-        
-        try! previewContext.save()
+
+        do {
+            try previewContext.save()
+        } catch {
+            print(error)
+        }
     }
     
     @State static var relayFilter: Relay?

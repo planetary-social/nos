@@ -81,7 +81,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     @MainActor var viewContext: NSManagedObjectContext!
     var backgroundContext: NSManagedObjectContext!
     
-    @Published var socialGraph: SocialGraphCache!
+    @Published var socialGraph: SocialGraphCache
     
     var relayService: RelayService! {
         didSet {
@@ -107,10 +107,10 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     private var authorWatcher: NSFetchedResultsController<Author>?
 
     @MainActor override init() {
+        self.socialGraph = SocialGraphCache(userKey: nil, context: backgroundContext)
         super.init()
         self.viewContext = persistenceController.viewContext
         self.backgroundContext = persistenceController.newBackgroundContext()
-        self.socialGraph = SocialGraphCache(userKey: nil, context: backgroundContext)
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             Log.info("CurrentUser loaded a private key from keychain")
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
@@ -168,10 +168,10 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         }
     }
     
-    @MainActor func createAccount() async {
+    @MainActor func createAccount() async throws {
         let keyPair = KeyPair()!
-        let author = try! Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
-        try! viewContext.save()
+        let author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+        try viewContext.save()
 
         await setKeyPair(keyPair)
         analytics.generatedKey()
@@ -184,7 +184,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 author: author
             )
         }
-        try! viewContext.save()
+        try viewContext.save()
         
         await publishContactList(tags: [])
     }
@@ -421,7 +421,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     }
     
     /// Follow by public hex key
-    @MainActor func follow(author toFollow: Author) async {
+    @MainActor func follow(author toFollow: Author) async throws {
         guard let followKey = toFollow.hexadecimalPublicKey else {
             Log.debug("Error: followKey is nil")
             return
@@ -433,8 +433,8 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         followKeys.append(followKey)
         
         // Update author to add the new follow
-        if let followedAuthor = try? Author.find(by: followKey, context: viewContext), let currentUser = author {
-            let follow = try! Follow.findOrCreate(
+        if let followedAuthor = try Author.find(by: followKey, context: viewContext), let currentUser = author {
+            let follow = try Follow.findOrCreate(
                 source: currentUser,
                 destination: followedAuthor,
                 context: viewContext
@@ -444,12 +444,12 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             currentUser.follows.insert(follow)
         }
         
-        try! viewContext.save()
+        try viewContext.save()
         await publishContactList(tags: followKeys.pTags)
     }
     
     /// Unfollow by public hex key
-    @MainActor func unfollow(author toUnfollow: Author) async {
+    @MainActor func unfollow(author toUnfollow: Author) async throws {
         guard let unfollowedKey = toUnfollow.hexadecimalPublicKey else {
             Log.debug("Error: unfollowedKey is nil")
             return
@@ -461,7 +461,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             .filter { $0 != unfollowedKey }
         
         // Update author to only follow those still following
-        if let unfollowedAuthor = try? Author.find(by: unfollowedKey, context: viewContext), let currentUser = author {
+        if let unfollowedAuthor = try Author.find(by: unfollowedKey, context: viewContext), let currentUser = author {
             // Remove from the current user's follows
             let unfollows = Follow.follows(source: currentUser, destination: unfollowedAuthor, context: viewContext)
 
@@ -471,7 +471,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             }
         }
 
-        try! viewContext.save()
+        try viewContext.save()
         await publishContactList(tags: stillFollowingKeys.pTags)
     }
     

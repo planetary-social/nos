@@ -199,14 +199,20 @@ struct IdentityView_Previews: PreviewProvider {
     static var previewContext = persistenceController.container.viewContext
     
     static var author: Author = {
-        let author = try! Author.findOrCreate(
-            by: "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e",
-            context: previewContext
-        )
+        let author: Author
+        do {
+            author = try Author.findOrCreate(
+                by: "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e",
+                context: previewContext
+            )
+        } catch {
+            print(error)
+            author = Author(context: previewContext)
+        }
         // TODO: derive from private key
         author.name = "Fred"
         author.about = "Reach for the stars. Someday you just might catch one."
-        try! previewContext.save()
+        try? previewContext.save()
         return author
     }()
     

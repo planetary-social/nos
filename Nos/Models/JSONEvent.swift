@@ -99,9 +99,9 @@ struct JSONEvent: Codable, Hashable {
     }
     
     /// Formats this event as a string that can be sent to a relay over a websocket to publish this event.
-    var publishRequest: String {
+    func buildPublishRequest() throws -> String {
         let request: [Any] = ["EVENT", dictionary]
-        let requestData = try! JSONSerialization.data(withJSONObject: request)
+        let requestData = try JSONSerialization.data(withJSONObject: request)
         return String(data: requestData, encoding: .utf8)!
     }
 }

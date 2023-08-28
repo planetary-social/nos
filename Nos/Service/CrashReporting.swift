@@ -46,6 +46,10 @@ class CrashReporting {
         let user = User(userId: keyPair.npub)
         sentry.setUser(user)
     }
+
+    func report(_ error: Error) {
+        sentry.capture(error: error)
+    }
     
     func logout() {
         SentrySDK.setUser(nil)

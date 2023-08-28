@@ -15,16 +15,21 @@ struct FollowButton: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.crashReporting) private var crashReporting
     
     var body: some View {
         let following = currentUser.isFollowing(author: author)
         ActionButton(title: following ? .unfollow : .follow) {
-            if following {
-                await currentUser.unfollow(author: author)
-                analytics.unfollowed(author)
-            } else {
-                await currentUser.follow(author: author)
-                analytics.followed(author)
+            do {
+                if following {
+                    try await currentUser.unfollow(author: author)
+                    analytics.unfollowed(author)
+                } else {
+                    try await currentUser.follow(author: author)
+                    analytics.followed(author)
+                }
+            } catch {
+                crashReporting.report(error)
             }
         }
     }
@@ -65,8 +70,12 @@ struct FollowButton_Previews: PreviewProvider {
         follow.source = user
         follow.destination = alice
         user.follows = Set([follow])
-        try! previewContext.save()
-        KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.privateKeyHex.utf8))
+        do {
+            try previewContext.save()
+            KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.privateKeyHex.utf8))
+        } catch {
+            print(error)
+        }
     }
     
     static var previews: some View {

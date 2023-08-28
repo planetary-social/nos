@@ -122,7 +122,13 @@ struct SettingsView: View {
                 Text(Localized.sampleDataInstructions.string)
                     .foregroundColor(.primaryTxt)
                 Button(Localized.loadSampleData.string) {
-                    Task { await persistenceController.loadSampleData(context: viewContext) }
+                    Task {
+                        do {
+                            try await persistenceController.loadSampleData(context: viewContext)
+                        } catch {
+                            print(error)
+                        }
+                    }
                 }
                 if let author = currentUser.author {
                     NavigationLink {

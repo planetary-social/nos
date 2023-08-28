@@ -95,8 +95,11 @@ struct ThreadView_Previews: PreviewProvider {
         bobNote.kind = 1
         bobNote.author = bob
         bobNote.createdAt = .now
-        try! bobNote.sign(withKey: KeyFixture.bob)
-        
+        do {
+            try bobNote.sign(withKey: KeyFixture.bob)
+        } catch {
+            print(error)
+        }
         return bobNote
     }
     
@@ -112,9 +115,12 @@ struct ThreadView_Previews: PreviewProvider {
         eventRef.referencedEvent = rootNote
         eventRef.referencingEvent = replyNote
         replyNote.eventReferences = NSMutableOrderedSet(array: [eventRef])
-        try! replyNote.sign(withKey: KeyFixture.alice)
-        try! previewContext.save()
-        
+        do {
+            try replyNote.sign(withKey: KeyFixture.alice)
+            try previewContext.save()
+        } catch {
+            print(error)
+        }
         return replyNote
     }
     
@@ -130,9 +136,12 @@ struct ThreadView_Previews: PreviewProvider {
         eventRef.referencedEvent = rootNote
         eventRef.referencingEvent = replyNote
         replyNote.eventReferences = NSMutableOrderedSet(array: [eventRef])
-        try! replyNote.sign(withKey: KeyFixture.alice)
-        try! previewContext.save()
-        
+        do {
+            try replyNote.sign(withKey: KeyFixture.alice)
+            try previewContext.save()
+        } catch {
+            print(error)
+        }
         return replyNote
     }
     

@@ -52,11 +52,17 @@ import Logger
             super.init()
             return
         }
-        
-        let user = context.performAndWait {
-            let author = try! Author.findOrCreate(by: userKey, context: context)
-            try? context.saveIfNeeded()
-            return author
+
+        let user: Author
+        do {
+            user = try context.performAndWait {
+                let author = try Author.findOrCreate(by: userKey, context: context)
+                try? context.saveIfNeeded()
+                return author
+            }
+        } catch {
+            super.init()
+            return
         }
         
         super.init()
@@ -77,16 +83,20 @@ import Logger
         
         userWatcher?.delegate = self
         oneHopWatcher?.delegate = self
-        context.performAndWait {
-            try! self.userWatcher?.performFetch()
-            try! self.oneHopWatcher?.performFetch()
-            self.oneHopWatcher?.fetchedObjects?.forEach { author in
-                guard let followedKey = author.hexadecimalPublicKey else {
-                    return
+        do {
+            try context.performAndWait {
+                try self.userWatcher?.performFetch()
+                try self.oneHopWatcher?.performFetch()
+                self.oneHopWatcher?.fetchedObjects?.forEach { author in
+                    guard let followedKey = author.hexadecimalPublicKey else {
+                        return
+                    }
+                    let twoHopsKeys = author.followedKeys
+                    self.process(user: userKey, followed: followedKey, whoFollows: twoHopsKeys)
                 }
-                let twoHopsKeys = author.followedKeys
-                self.process(user: userKey, followed: followedKey, whoFollows: twoHopsKeys)
             }
+        } catch {
+            return
         }
     }
     
