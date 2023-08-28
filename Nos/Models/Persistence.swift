@@ -177,9 +177,9 @@ class PersistenceController {
             Log.info("Database statistics: \(try databaseStatistics(from: context).sorted(by: { $0.key < $1.key }))")
             
             // Delete all but the most recent n events
-            let eventsToKeep = 10_000
+            let eventsToKeep = 1000
             let fetchFirstEventToDelete = Event.allEventsRequest()
-            fetchFirstEventToDelete.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
+            fetchFirstEventToDelete.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
             fetchFirstEventToDelete.fetchLimit = 1
             fetchFirstEventToDelete.fetchOffset = eventsToKeep
             fetchFirstEventToDelete.predicate = NSPredicate(format: "receivedAt != nil")
@@ -199,8 +199,7 @@ class PersistenceController {
                 let oldEventsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
                 oldEventsRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
                 oldEventsRequest.predicate = NSPredicate(
-                    format: "author != %@ AND (receivedAt <= %@ OR receivedAt == nil)", 
-                    currentAuthor,
+                    format: "receivedAt <= %@ OR receivedAt == nil", 
                     deleteBefore as CVarArg
                 )
                 
