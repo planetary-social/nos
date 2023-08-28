@@ -168,6 +168,40 @@ extension RelayService {
         return await openSubscription(with: metaFilter)
     }
     
+    func requestContactList(for authorKey: HexadecimalString?, since: Date?) async -> RelaySubscription.ID? {
+        guard let authorKey else {
+            return nil
+        }
+        
+        let contactFilter = Filter(
+            authorKeys: [authorKey],
+            kinds: [.contactList],
+            limit: 1,
+            since: since
+        )
+        return await openSubscription(with: contactFilter)
+    }
+    
+    func requestProfileData(
+        for authorKey: HexadecimalString?, 
+        lastUpdateMetadata: Date?, 
+        lastUpdatedContactList: Date?
+    ) async -> [RelaySubscription.ID] {
+        var subscriptions = [RelaySubscription.ID]()
+        guard let authorKey else {
+            return subscriptions
+        }
+        
+        if let metadataSubscriptionID = await requestMetadata(for: authorKey, since: lastUpdateMetadata) {
+            subscriptions.append(metadataSubscriptionID)
+        }
+        if let contactListSubscriptionID = await requestContactList(for: authorKey, since: lastUpdatedContactList) {
+            subscriptions.append(contactListSubscriptionID)
+        }
+        
+        return subscriptions
+    }
+    
     /// Requests a single event from all relays
     func requestEvent(with eventID: String?) async -> RelaySubscription.ID? {
         guard let eventID = eventID else {

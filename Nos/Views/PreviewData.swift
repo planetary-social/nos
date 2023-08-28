@@ -33,7 +33,6 @@ struct PreviewData {
     @MainActor lazy var currentUser: CurrentUser = {
         let currentUser = CurrentUser()
         currentUser.viewContext = previewContext
-        currentUser.relayService = relayService
         Task { await currentUser.setKeyPair(KeyFixture.keyPair) }
         return currentUser
     }()

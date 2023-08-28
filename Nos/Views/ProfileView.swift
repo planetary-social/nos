@@ -35,20 +35,28 @@ struct ProfileView: View {
         _events = FetchRequest(fetchRequest: author.allPostsRequest())
     }
     
-    func refreshProfileFeed() {
-        Task(priority: .userInitiated) {
-            // Close out stale requests
-            if !subscriptionIds.isEmpty {
-                await relayService.decrementSubscriptionCount(for: subscriptionIds)
-                subscriptionIds.removeAll()
-            }
-            
-            let authors = [author.hexadecimalPublicKey!]
-            let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete, .repost, .longFormContent], limit: 50)
-            async let textSub = relayService.openSubscription(with: textFilter)
-            subscriptionIds.append(await textSub)
-            subscriptionIds.append(contentsOf: await author.requestLatestProfileData(from: relayService))
+    func refreshProfileFeed() async {
+        // Close out stale requests
+        if !subscriptionIds.isEmpty {
+            await relayService.decrementSubscriptionCount(for: subscriptionIds)
+            subscriptionIds.removeAll()
         }
+        
+        guard let authorKey = author.hexadecimalPublicKey else {
+            return
+        }
+        
+        let authors = [authorKey]
+        let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete, .repost, .longFormContent], limit: 50)
+        async let textSub = relayService.openSubscription(with: textFilter)
+        subscriptionIds.append(await textSub)
+        subscriptionIds.append(
+            contentsOf: await relayService.requestProfileData(
+                for: authorKey, 
+                lastUpdateMetadata: author.lastUpdatedMetadata, 
+                lastUpdatedContactList: author.lastUpdatedContactList
+            )
+        )
     }
     
     var body: some View {
@@ -172,8 +180,8 @@ struct ProfileView: View {
                 }
         )
         .reportMenu($showingReportMenu, reportedObject: .author(author))
-        .task(priority: .userInitiated) {
-            refreshProfileFeed()
+        .task {
+            await refreshProfileFeed()
         }
         .alert(unwrapping: $alert)
         .onAppear {
@@ -181,7 +189,7 @@ struct ProfileView: View {
             analytics.showedProfile()
         }
         .refreshable {
-            refreshProfileFeed()
+            await refreshProfileFeed()
         }
         .onDisappear {
             Task(priority: .userInitiated) {
