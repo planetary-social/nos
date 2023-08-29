@@ -323,7 +323,11 @@ extension RelayService {
                         event.publishedTo.insert(relay)
                         
                         // Receiving a confirmation of my own deletion event
-                        try? event.trackDelete(on: relay, context: self.backgroundContext)
+                        do {
+                            try event.trackDelete(on: relay, context: self.backgroundContext)
+                        } catch {
+                            Log.error(error.localizedDescription)
+                        }
                     } else {
                         // This will be picked up later in publishFailedEvents
                         if responseArray.count > 2, let message = responseArray[3] as? String {
@@ -514,7 +518,11 @@ extension RelayService {
                         if let socket = await self.subscriptions.socket(for: missedAddress) {
                             // Publish again to this socket
                             print("Republishing \(jsonEvent.id) on \(missedAddress)")
-                            try? await self.publish(from: socket, jsonEvent: jsonEvent)
+                            do {
+                                try await self.publish(from: socket, jsonEvent: jsonEvent)
+                            } catch {
+                                Log.error(error.localizedDescription)
+                            }
                         }
                     }
                 }

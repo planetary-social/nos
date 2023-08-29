@@ -75,11 +75,20 @@ public class Follow: NosManagedObject {
                 )
             )
         }
+        guard let authorHexPublicKey = author.hexadecimalPublicKey else {
+            throw DecodingError.valueNotFound(
+                Author.self,
+                DecodingError.Context(
+                    codingPath: [],
+                    debugDescription: "Author did not have a hexadecimal public key"
+                )
+            )
+        }
         var follow: Follow
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.predicate = NSPredicate(
             format: "source.hexadecimalPublicKey = %@ AND destination.hexadecimalPublicKey = %@",
-            author.hexadecimalPublicKey!,
+            authorHexPublicKey,
             followedKey
         )
         fetchRequest.fetchLimit = 1

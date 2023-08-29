@@ -159,16 +159,33 @@ import Combine
     
     /// Builds the string needed for the `content` field in the special 
     private func createRegistrationContent(deviceToken: Data, user: CurrentUser) async throws -> String {
-        let publicKeyHex = currentUser.publicKeyHex
+        guard let publicKeyHex = currentUser.publicKeyHex else {
+            throw DecodingError.valueNotFound(
+                CurrentUser.self,
+                DecodingError.Context(
+                    codingPath: [],
+                    debugDescription: "CurrentUser did  ot have a public key hex"
+                )
+            )
+        }
         let relays: [RegistrationRelayAddress] = await relayService.relays(for: user).map {
             RegistrationRelayAddress(address: $0.absoluteString)
         }
         let content = Registration(
             apnsToken: deviceToken.hexString,
-            publicKey: publicKeyHex!,
+            publicKey: publicKeyHex,
             relays: relays
         )
-        return String(data: try JSONEncoder().encode(content), encoding: .utf8)!
+        guard let string = String(data: try JSONEncoder().encode(content), encoding: .utf8) else {
+            throw EncodingError.invalidValue(
+                Registration.self,
+                EncodingError.Context(
+                    codingPath: [],
+                    debugDescription: "Couldn't create a valid registration utf8 string"
+                )
+            )
+        }
+        return string
     }
     
     /// Tells the system to display a notification for the given event if it's appropriate. This will create a 

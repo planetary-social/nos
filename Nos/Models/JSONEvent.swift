@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Logger
 
 struct JSONEvent: Codable, Hashable {
     
@@ -102,7 +103,12 @@ struct JSONEvent: Codable, Hashable {
     func buildPublishRequest() throws -> String {
         let request: [Any] = ["EVENT", dictionary]
         let requestData = try JSONSerialization.data(withJSONObject: request)
-        return String(data: requestData, encoding: .utf8)!
+        if let string = String(data: requestData, encoding: .utf8) {
+            return string
+        } else {
+            Log.error("Couldn't create a utf8 string for a publish request")
+            return ""
+        }
     }
 }
 

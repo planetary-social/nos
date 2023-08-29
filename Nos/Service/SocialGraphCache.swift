@@ -61,6 +61,7 @@ import Logger
                 return author
             }
         } catch {
+            Log.error(error.localizedDescription)
             super.init()
             return
         }
@@ -96,6 +97,7 @@ import Logger
                 }
             }
         } catch {
+            Log.error(error.localizedDescription)
             return
         }
     }

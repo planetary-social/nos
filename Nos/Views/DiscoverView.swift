@@ -291,46 +291,38 @@ struct DiscoverView_Previews: PreviewProvider {
         longNote.author = user
         longNote.content = .loremIpsum(5)
 
-        do {
-            try previewContext.save()
-        } catch {
-            print(error)
-        }
+        try? previewContext.save()
     }
     
     static func createRelayData(in context: NSManagedObjectContext, user: Author) {
         let addresses = ["wss://nostr.band", "wss://nos.social", "wss://a.long.domain.name.to.see.what.happens"]
         addresses.forEach {
-            do {
-                _ = try Relay(context: previewContext, address: $0, author: user)
-            } catch {
-                print(error)
-            }
+            _ = try? Relay(context: previewContext, address: $0, author: user)
         }
 
-        do {
-            try previewContext.save()
-        } catch {
-            print(error)
-        }
+        try? previewContext.save()
     }
     
     @State static var relayFilter: Relay?
     
     static var previews: some View {
-        DiscoverView(featuredAuthors: [user.publicKey!.npub])
-            .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
-            .environmentObject(router)
-            .environmentObject(currentUser)
-            .onAppear { createTestData(in: previewContext) }
-        
-        DiscoverView(featuredAuthors: [user.publicKey!.npub])
-            .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
-            .environmentObject(router)
-            .environmentObject(currentUser)
-            .onAppear { createTestData(in: previewContext) }
-            .previewDevice("iPad Air (5th generation)")
+        if let publicKey = user.publicKey {
+            DiscoverView(featuredAuthors: [publicKey.npub])
+                .environment(\.managedObjectContext, previewContext)
+                .environmentObject(relayService)
+                .environmentObject(router)
+                .environmentObject(currentUser)
+                .onAppear { createTestData(in: previewContext) }
+
+            DiscoverView(featuredAuthors: [publicKey.npub])
+                .environment(\.managedObjectContext, previewContext)
+                .environmentObject(relayService)
+                .environmentObject(router)
+                .environmentObject(currentUser)
+                .onAppear { createTestData(in: previewContext) }
+                .previewDevice("iPad Air (5th generation)")
+        } else {
+            EmptyView()
+        }
     }
 }

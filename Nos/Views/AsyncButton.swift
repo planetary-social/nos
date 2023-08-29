@@ -44,11 +44,7 @@ struct AsyncButton<Label: View>: View {
 struct AsyncButton_Previews: PreviewProvider {
     static var previews: some View {
         AsyncButton {
-            do {
-                try await Task.sleep(nanoseconds: UInt64(2 * 1_000_000_000))
-            } catch {
-                print(error)
-            }
+            try? await Task.sleep(nanoseconds: UInt64(2 * 1_000_000_000))
         } label: { 
             Image(systemName: "arrow.uturn.left.circle")
         }

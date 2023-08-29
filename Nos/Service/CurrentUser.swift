@@ -81,9 +81,9 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     // swiftlint:disable implicitly_unwrapped_optional
     @MainActor var viewContext: NSManagedObjectContext!
     var backgroundContext: NSManagedObjectContext!
-    
-    @Published var socialGraph: SocialGraphCache
     // swiftlint:enable implicitly_unwrapped_optional
+
+    @Published var socialGraph: SocialGraphCache
     
     var subscriptions: [String] = []
 
@@ -423,7 +423,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         followKeys.append(followKey)
         
         // Update author to add the new follow
-        if let followedAuthor = try Author.find(by: followKey, context: viewContext), let currentUser = author {
+        if let followedAuthor = try? Author.find(by: followKey, context: viewContext), let currentUser = author {
             let follow = try Follow.findOrCreate(
                 source: currentUser,
                 destination: followedAuthor,
@@ -451,7 +451,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             .filter { $0 != unfollowedKey }
         
         // Update author to only follow those still following
-        if let unfollowedAuthor = try Author.find(by: unfollowedKey, context: viewContext), let currentUser = author {
+        if let unfollowedAuthor = try? Author.find(by: unfollowedKey, context: viewContext), let currentUser = author {
             // Remove from the current user's follows
             let unfollows = Follow.follows(source: currentUser, destination: unfollowedAuthor, context: viewContext)
 

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Logger
 import secp256k1
 
 /// A model for Ed25519 public/private key pairs. In Nostr one KeyPair identifies a single author (although one author
@@ -36,6 +37,7 @@ struct KeyPair {
             let key = try secp256k1.Signing.PrivateKey()
             self.init(privateKeyHex: key.rawRepresentation.hexString)
         } catch {
+            Log.debug("Could not create a secp254k1 key")
             return nil
         }
     }

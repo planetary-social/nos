@@ -742,8 +742,12 @@ public class Event: NosManagedObject {
             allTags = [[String]]() as NSObject
         }
         identifier = try calculateIdentifier()
-        var serializedBytes = try identifier!.bytes
-        signature = try privateKey.sign(bytes: &serializedBytes)
+        if let identifier {
+            var serializedBytes = try identifier.bytes
+            signature = try privateKey.sign(bytes: &serializedBytes)
+        } else {
+            Log.error("Couldn't calculate identifier when signing a private key")
+        }
     }
     
     var jsonRepresentation: [String: Any]? {
@@ -962,6 +966,7 @@ public class Event: NosManagedObject {
             var requestData = [(HexadecimalString?, Date?)]()
             
             guard let author = try? Author.findOrCreate(by: authorKey, context: context) else {
+                Log.debug("Author not found when requesting metadata of a note's author")
                 return []
             }
             
@@ -992,7 +997,12 @@ public class Event: NosManagedObject {
     }
     
     var webLink: String {
-        "https://iris.to/\(bech32NoteID!)"
+        if let bech32NoteID {
+            return "https://iris.to/\(bech32NoteID)"
+        } else {
+            Log.error("Couldn't find a bech32note key when generating web link")
+            return "https://iris.to"
+        }
     }
 }
 // swiftlint:enable type_body_length

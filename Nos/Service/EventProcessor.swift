@@ -29,7 +29,11 @@ enum EventProcessor {
     ) throws -> Event? {
         if let event = try Event.createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
             relay.unwrap {
-                try? event.trackDelete(on: $0, context: parseContext)
+                do {
+                    try event.trackDelete(on: $0, context: parseContext)
+                } catch {
+                    Log.error(error.localizedDescription)
+                }
             }
         
             guard let publicKey = event.author?.publicKey else {
