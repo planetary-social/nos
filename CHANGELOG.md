@@ -8,15 +8,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (73)] - 2023-08-25Z
+
 - Fixed potential crashes when using Universal Names API.
 - Fixed bug that rendered the empty notes message for a profile above the header box.
 - Fixed bug that could potentially crash the app sometimes
-- Fixed bug when parsing malformed events.
-- Fixed bug when parsing malformed contact lists.
-- Fixed the launch screen layout on iPad
+
+## [0.1 (72)] - 2023-08-21Z
+
 - Added support for pasting profile and note references when composing notes
-- Fixed a small issue when mentioning profiles in the reply text box.
 - Pop screens from the navigation stack when tapping twice on the tab bar.
+- Fixed the launch screen layout on iPad
+- Fixed a small issue when mentioning profiles in the reply text box.
+- Fixed a crash during onboarding
+- Fixed a crash when following or muting a user
+- Fixed crash when parsing malformed events.
+- Fixed crash when parsing malformed contact lists.
+- Added integration with our self-hosted Sentry crash reporting tool (no data shared with third parties)
+
+## [0.1 (66)] - 2023-08-18Z
+
+- Fixed crash when parsing malformed events.
+- Fixed crash when parsing malformed contact lists.
+- Added support for pasting profile and note references when composing notes
+- Pop screens from the navigation stack when tapping twice on the tab bar.
+- Fixed the launch screen layout on iPad
+- Fixed a small issue when mentioning profiles in the reply text box.
 
 ## [0.1 (65)] - 2023-08-04Z
 

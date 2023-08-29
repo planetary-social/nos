@@ -287,46 +287,4 @@ public class Author: NosManagedObject {
         // Publish the modified list
         await currentUser.publishMuteList(keys: Array(Set(mutedList)))
     }
-    
-    func requestLatestMetadata(from relayService: RelayService) async -> RelaySubscription.ID? {
-        guard let hexadecimalPublicKey else {
-            return nil
-        }
-        
-        let metaFilter = Filter(
-            authorKeys: [hexadecimalPublicKey],
-            kinds: [.metaData],
-            limit: 1,
-            since: lastUpdatedMetadata
-        )
-        
-        return await relayService.openSubscription(with: metaFilter)
-    }
-    
-    func requestLatestContactList(from relayService: RelayService) async -> RelaySubscription.ID? {
-        guard let hexadecimalPublicKey else {
-            return nil
-        }
-        
-        let contactFilter = Filter(
-            authorKeys: [hexadecimalPublicKey],
-            kinds: [.contactList],
-            limit: 1,
-            since: lastUpdatedContactList
-        )
-        return await relayService.openSubscription(with: contactFilter)
-    }
-    
-    func requestLatestProfileData(from relayService: RelayService) async -> [RelaySubscription.ID] {
-        var subscriptions = [RelaySubscription.ID]()
-        
-        if let metadataSubscriptionID = await requestLatestMetadata(from: relayService) {
-            subscriptions.append(metadataSubscriptionID)
-        }
-        if let contactListSubscriptionID = await requestLatestContactList(from: relayService) {
-            subscriptions.append(contactListSubscriptionID)
-        }
-        
-        return subscriptions
-    }
 }

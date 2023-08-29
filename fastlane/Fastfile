@@ -38,7 +38,7 @@ platform :ios do
       org_slug: 'verse',
       project_slug: 'nos-ios',
       include_sources: true, 
-      api_host: 'https://sentry.nos.social'
+      url: 'https://sentry.nos.social'
     )
     notification(
       subtitle: "Build uploaded", 
