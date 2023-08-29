@@ -41,6 +41,7 @@ import Logger
     
     private var twoHopReferences: [HexadecimalString: Int]
 
+    // swiftlint:disable function_body_length
     init(userKey: HexadecimalString?, context: NSManagedObjectContext) {
         self.userKey = userKey
         self.context = context
@@ -101,6 +102,7 @@ import Logger
             return
         }
     }
+    // swiftlint:enable function_body_length
     
     // MARK: - Processing Changes
     
