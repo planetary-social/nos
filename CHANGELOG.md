@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fix an issue with the database cleanup script that was causing performance issues.
+
 ## [0.1 (73)] - 2023-08-25Z
 
 - Fixed potential crashes when using Universal Names API.
