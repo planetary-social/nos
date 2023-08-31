@@ -73,8 +73,8 @@ fileprivate enum AnalyticsKey: DependencyKey {
 
 private enum RelayServiceKey: DependencyKey {
     static let liveValue = RelayService()
-    static let testValue = RelayService()
-    static let previewValue = RelayService()
+    static let testValue = RelayService(mock: true)
+    static let previewValue = RelayService(mock: true)
 }
 
 @MainActor
@@ -87,7 +87,7 @@ fileprivate enum PushNotificationServiceKey: DependencyKey {
 
 fileprivate enum PersistenceControllerKey: DependencyKey {
     static let liveValue = PersistenceController()
-    static let testValue = PersistenceController(inMemory: true)
+    static let testValue = PersistenceController.test
     static let previewValue = PersistenceController(inMemory: true)
 }
 

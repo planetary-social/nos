@@ -36,8 +36,11 @@ final class NosPerformanceTests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
         let homeFeed = app.scrollViews["home feed"]
-            
-        measure(metrics: [XCTOSSignpostMetric.scrollDecelerationMetric]) {
+        measure(metrics: [XCTOSSignpostMetric.scrollingAndDecelerationMetric]) {
+            homeFeed.swipeUp(velocity: .fast)
+            homeFeed.swipeUp(velocity: .fast)
+            homeFeed.swipeUp(velocity: .fast)
+            homeFeed.swipeUp(velocity: .fast)
             homeFeed.swipeUp(velocity: .fast)
         }
     }

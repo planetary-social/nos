@@ -22,6 +22,12 @@ actor RelaySubscriptionManager {
         all.filter { $0.isActive }
     }
     
+    var mock: Bool 
+    
+    init(mock: Bool = false) {
+        self.mock = mock
+    }
+    
     // MARK: - Mutating the list of subscriptions
     
     func subscription(from filter: Filter) -> RelaySubscription? {
@@ -87,7 +93,7 @@ actor RelaySubscriptionManager {
     }
 
     func addSocket(for relayAddress: URL) -> WebSocket? {
-        guard !sockets.contains(where: { $0.request.url == relayAddress }) else {
+        guard !sockets.contains(where: { $0.request.url == relayAddress }) || mock else {
             return nil
         }
         

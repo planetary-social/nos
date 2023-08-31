@@ -31,6 +31,11 @@ class PersistenceController {
         return result
     }()
     
+    static var test: PersistenceController = {
+        copyTestDatabase()
+        return PersistenceController(containerName: "NosTests")
+    }()
+    
     var viewContext: NSManagedObjectContext {
         container.viewContext
     }
@@ -41,10 +46,10 @@ class PersistenceController {
     
     var container: NSPersistentContainer
 
-    init(inMemory: Bool = false) {
+    init(inMemory: Bool = false, containerName: String = "Nos") {
         let modelURL = Bundle.current.url(forResource: "Nos", withExtension: "momd")!
         container = NSPersistentContainer(
-            name: "Nos",
+            name: containerName,
             managedObjectModel: NSManagedObjectModel(contentsOf: modelURL)!
         )
         if inMemory {
@@ -128,6 +133,32 @@ class PersistenceController {
         if let publicKey = currentUser.publicKeyHex {
             let currentAuthor = try! Author.findOrCreate(by: publicKey, context: context)
             currentAuthor.follows = Set(follows)
+        }
+    }
+    
+    static func copyTestDatabase() {
+        let fileManager = FileManager.default
+        let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).last
+        
+        guard let documentsPath = documentsUrl?.path else {
+            return
+        }
+        
+        let destinationPath = "\(documentsPath)/.sqlite"
+        
+        if !fileManager.fileExists(atPath: destinationPath) {
+            var sourceURLs = [URL]()
+            sourceURLs.append(Bundle.current.url(forResource: "NosTests", withExtension: "sqlite")!)
+            sourceURLs.append(Bundle.current.url(forResource: "NosTests", withExtension: "sqlite-shm")!)
+            sourceURLs.append(Bundle.current.url(forResource: "NosTests", withExtension: "sqlite-wal")!)
+            
+            sourceURLs.forEach { sourceURL in
+                do {
+                    try fileManager.copyItem(at: sourceURL, to: URL(fileURLWithPath: destinationPath))
+                } catch {
+                    print("Error occurred while copying file to document \(error)")
+                }
+            }
         }
     }
     

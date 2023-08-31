@@ -30,8 +30,8 @@ final class RelayService: ObservableObject {
     @MainActor @Dependency(\.currentUser) private var currentUser
     @Published var numberOfConnectedRelays: Int = 0
     
-    init() {
-        self.subscriptions = RelaySubscriptionManager()
+    init(mock: Bool = false) {
+        self.subscriptions = RelaySubscriptionManager(mock: mock)
         @Dependency(\.persistenceController) var persistenceController
         self.backgroundContext = persistenceController.newBackgroundContext()
         self.parseContext = persistenceController.newBackgroundContext()

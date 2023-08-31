@@ -256,6 +256,15 @@
 		C9A0DAF929C92F4500466635 /* UNSAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAF729C92F4500466635 /* UNSAPI.swift */; };
 		C9A25B3D29F174D200B39534 /* ReadabilityPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A25B3C29F174D200B39534 /* ReadabilityPadding.swift */; };
 		C9A25B3E29F174D200B39534 /* ReadabilityPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A25B3C29F174D200B39534 /* ReadabilityPadding.swift */; };
+		C9A5C5D82A9FDF5B0076AAD1 /* NosTests.sqlite-wal in Resources */ = {isa = PBXBuildFile; fileRef = C9A5C5D52A9FDF5B0076AAD1 /* NosTests.sqlite-wal */; };
+		C9A5C5D92A9FDF5B0076AAD1 /* NosTests.sqlite-wal in Resources */ = {isa = PBXBuildFile; fileRef = C9A5C5D52A9FDF5B0076AAD1 /* NosTests.sqlite-wal */; };
+		C9A5C5DA2A9FDF5B0076AAD1 /* NosTests.sqlite-wal in Resources */ = {isa = PBXBuildFile; fileRef = C9A5C5D52A9FDF5B0076AAD1 /* NosTests.sqlite-wal */; };
+		C9A5C5DB2A9FDF5B0076AAD1 /* NosTests.sqlite-shm in Resources */ = {isa = PBXBuildFile; fileRef = C9A5C5D62A9FDF5B0076AAD1 /* NosTests.sqlite-shm */; };
+		C9A5C5DC2A9FDF5B0076AAD1 /* NosTests.sqlite-shm in Resources */ = {isa = PBXBuildFile; fileRef = C9A5C5D62A9FDF5B0076AAD1 /* NosTests.sqlite-shm */; };
+		C9A5C5DD2A9FDF5B0076AAD1 /* NosTests.sqlite-shm in Resources */ = {isa = PBXBuildFile; fileRef = C9A5C5D62A9FDF5B0076AAD1 /* NosTests.sqlite-shm */; };
+		C9A5C5DE2A9FDF5B0076AAD1 /* NosTests.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = C9A5C5D72A9FDF5B0076AAD1 /* NosTests.sqlite */; };
+		C9A5C5DF2A9FDF5B0076AAD1 /* NosTests.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = C9A5C5D72A9FDF5B0076AAD1 /* NosTests.sqlite */; };
+		C9A5C5E02A9FDF5B0076AAD1 /* NosTests.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = C9A5C5D72A9FDF5B0076AAD1 /* NosTests.sqlite */; };
 		C9AC31AD2A55E0BD00A94E5A /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AC31AC2A55E0BD00A94E5A /* NotificationViewModel.swift */; };
 		C9AC31AE2A55E0BD00A94E5A /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AC31AC2A55E0BD00A94E5A /* NotificationViewModel.swift */; };
 		C9ADB133299287D60075E7F8 /* KeyPairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB132299287D60075E7F8 /* KeyPairTests.swift */; };
@@ -592,6 +601,9 @@
 		C9A0DAF729C92F4500466635 /* UNSAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNSAPI.swift; sourceTree = "<group>"; };
 		C9A25B3C29F174D200B39534 /* ReadabilityPadding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadabilityPadding.swift; sourceTree = "<group>"; };
 		C9A5C5D32A9FDB6A0076AAD1 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Generated.strings; sourceTree = "<group>"; };
+		C9A5C5D52A9FDF5B0076AAD1 /* NosTests.sqlite-wal */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NosTests.sqlite-wal"; sourceTree = "<group>"; };
+		C9A5C5D62A9FDF5B0076AAD1 /* NosTests.sqlite-shm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NosTests.sqlite-shm"; sourceTree = "<group>"; };
+		C9A5C5D72A9FDF5B0076AAD1 /* NosTests.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = NosTests.sqlite; sourceTree = "<group>"; };
 		C9AC31AC2A55E0BD00A94E5A /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
 		C9ADB132299287D60075E7F8 /* KeyPairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPairTests.swift; sourceTree = "<group>"; };
 		C9ADB134299288230075E7F8 /* KeyFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyFixture.swift; sourceTree = "<group>"; };
@@ -946,6 +958,9 @@
 				CD27177529A7C8B200AE8888 /* sample_replies.json */,
 				C9DEC005298947900078B43A /* sample_data.json */,
 				C9ADB134299288230075E7F8 /* KeyFixture.swift */,
+				C9A5C5D72A9FDF5B0076AAD1 /* NosTests.sqlite */,
+				C9A5C5D62A9FDF5B0076AAD1 /* NosTests.sqlite-shm */,
+				C9A5C5D52A9FDF5B0076AAD1 /* NosTests.sqlite-wal */,
 			);
 			path = Fixtures;
 			sourceTree = "<group>";
@@ -1140,6 +1155,8 @@
 				C90862C229E9804B00C35A71 /* PBXTargetDependency */,
 			);
 			name = NosPerformanceTests;
+			packageProductDependencies = (
+			);
 			productName = NosPerformanceTests;
 			productReference = C90862BB29E9804B00C35A71 /* NosPerformanceTests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -1294,6 +1311,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9A5C5DA2A9FDF5B0076AAD1 /* NosTests.sqlite-wal in Resources */,
+				C9A5C5E02A9FDF5B0076AAD1 /* NosTests.sqlite in Resources */,
+				C9A5C5DD2A9FDF5B0076AAD1 /* NosTests.sqlite-shm in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1335,6 +1355,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C987F84B29BA951E00B44E7A /* ClarityCity-Medium.otf in Resources */,
+				C9A5C5DE2A9FDF5B0076AAD1 /* NosTests.sqlite in Resources */,
 				C987F83729BA951E00B44E7A /* ClarityCity-ExtraBold.otf in Resources */,
 				C987F83329BA951E00B44E7A /* ClarityCity-ExtraLight.otf in Resources */,
 				C987F83D29BA951E00B44E7A /* ClarityCity-Bold.otf in Resources */,
@@ -1343,6 +1364,7 @@
 				C987F85329BA951E00B44E7A /* ClarityCity-Regular.otf in Resources */,
 				C987F84729BA951E00B44E7A /* ClarityCity-Light.otf in Resources */,
 				C987F83929BA951E00B44E7A /* ClarityCity-MediumItalic.otf in Resources */,
+				C9A5C5D82A9FDF5B0076AAD1 /* NosTests.sqlite-wal in Resources */,
 				C987F85129BA951E00B44E7A /* ClarityCity-ExtraLightItalic.otf in Resources */,
 				C987F84D29BA951E00B44E7A /* ClarityCity-ThinItalic.otf in Resources */,
 				C987F84F29BA951E00B44E7A /* ClarityCity-RegularItalic.otf in Resources */,
@@ -1350,6 +1372,7 @@
 				C987F83B29BA951E00B44E7A /* ClarityCity-BoldItalic.otf in Resources */,
 				C987F84129BA951E00B44E7A /* ClarityCity-SemiBoldItalic.otf in Resources */,
 				C987F83529BA951E00B44E7A /* ClarityCity-LightItalic.otf in Resources */,
+				C9A5C5DB2A9FDF5B0076AAD1 /* NosTests.sqlite-shm in Resources */,
 				C987F85529BA951E00B44E7A /* ClarityCity-Thin.otf in Resources */,
 				C987F83F29BA951E00B44E7A /* ClarityCity-SemiBold.otf in Resources */,
 				C9DEC006298947900078B43A /* sample_data.json in Resources */,
@@ -1361,6 +1384,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9A5C5D92A9FDF5B0076AAD1 /* NosTests.sqlite-wal in Resources */,
+				C9A5C5DF2A9FDF5B0076AAD1 /* NosTests.sqlite in Resources */,
+				C9A5C5DC2A9FDF5B0076AAD1 /* NosTests.sqlite-shm in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1840,6 +1866,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MARKETING_VERSION = 1.0;
+				OTHER_SWIFT_FLAGS = "-D PERFORMANCE_TEST";
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.NosPerformanceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1860,6 +1887,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MARKETING_VERSION = 1.0;
+				OTHER_SWIFT_FLAGS = "-D PERFORMANCE_TEST";
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.NosPerformanceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
