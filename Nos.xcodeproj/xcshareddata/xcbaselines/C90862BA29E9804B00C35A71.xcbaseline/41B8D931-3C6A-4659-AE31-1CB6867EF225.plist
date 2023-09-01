@@ -11,9 +11,9 @@
 				<key>com.apple.dt.XCTMetric_ApplicationLaunch-AppLaunch.duration</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>0.186815</real>
+					<real>0.483000</real>
 					<key>baselineIntegrationDisplayName</key>
-					<string>Apr 14, 2023 at 8:42:50 AM</string>
+					<string>Local Baseline</string>
 				</dict>
 			</dict>
 			<key>testScrollingAnimationPerformance()</key>
@@ -63,9 +63,11 @@
 				<key>com.apple.dt.XCTMetric_OSSignpost-Scroll_DraggingAndDeceleration.animation.hitch.time.ratio</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>21.829512</real>
+					<real>7.900000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
+					<key>maxPercentRelativeStandardDeviation</key>
+					<real>40.000000</real>
 				</dict>
 			</dict>
 		</dict>

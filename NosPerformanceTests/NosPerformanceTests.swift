@@ -32,7 +32,9 @@ final class NosPerformanceTests: XCTestCase {
         SDImageCache.shared.clearMemory()
         SDImageCache.shared.clearDisk()
             
-        measure(metrics: [XCTOSSignpostMetric.scrollDecelerationMetric]) {
+        measure(metrics: [XCTOSSignpostMetric.scrollingAndDecelerationMetric]) {
+            homeFeed.swipeUp(velocity: .fast)
+            homeFeed.swipeUp(velocity: .fast)
             homeFeed.swipeUp(velocity: .fast)
         }
     }
