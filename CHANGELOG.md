@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (75)] - 2023-09-01Z
+
 - Fix an issue with the database cleanup script that was causing performance issues.
 - Optimize loading of profile pictures
 
