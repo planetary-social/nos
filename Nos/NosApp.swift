@@ -35,6 +35,9 @@ struct NosApp: App {
                 .environmentObject(appController)
                 .environmentObject(currentUser)
                 .environmentObject(pushNotificationService)
+                .task {
+                    persistenceController.cleanupEntities()
+                }
                 .onChange(of: scenePhase) { newPhase in
                     // TODO: save all contexts, not just the view and background.
                     if newPhase == .inactive {
