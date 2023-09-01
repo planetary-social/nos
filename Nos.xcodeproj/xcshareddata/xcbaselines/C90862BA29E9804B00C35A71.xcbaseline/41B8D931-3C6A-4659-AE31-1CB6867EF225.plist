@@ -60,6 +60,13 @@
 					<key>baselineIntegrationDisplayName</key>
 					<string>Apr 14, 2023 at 5:21:11 PM</string>
 				</dict>
+				<key>com.apple.dt.XCTMetric_OSSignpost-Scroll_DraggingAndDeceleration.animation.hitch.time.ratio</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>21.829512</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>Local Baseline</string>
+				</dict>
 			</dict>
 		</dict>
 	</dict>

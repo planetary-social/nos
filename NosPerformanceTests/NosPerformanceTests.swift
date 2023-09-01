@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import SDWebImageSwiftUI
 
 final class NosPerformanceTests: XCTestCase {
 
@@ -13,14 +14,6 @@ final class NosPerformanceTests: XCTestCase {
         try super.setUpWithError()
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-    }
-
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
 
     func testLaunchPerformance() throws {
@@ -36,6 +29,8 @@ final class NosPerformanceTests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
         let homeFeed = app.scrollViews["home feed"]
+        SDImageCache.shared.clearMemory()
+        SDImageCache.shared.clearDisk()
             
         measure(metrics: [XCTOSSignpostMetric.scrollDecelerationMetric]) {
             homeFeed.swipeUp(velocity: .fast)

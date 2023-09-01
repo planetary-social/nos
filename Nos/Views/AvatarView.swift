@@ -6,12 +6,7 @@
 //
 
 import SwiftUI
-import CachedAsyncImage
-
-extension URLCache {
-    // TODO: allow the user to clear this
-    static let imageCache = URLCache(memoryCapacity: 512 * 1000 * 1000, diskCapacity: 1 * 1000 * 1000 * 1000)
-}
+import SDWebImageSwiftUI
 
 struct AvatarView: View {
     
@@ -19,29 +14,16 @@ struct AvatarView: View {
     var size: CGFloat
     
     var body: some View {
-        Group {
-            let emptyAvatar = Image.emptyAvatar
-                .resizable()
-                .renderingMode(.original)
-            
-            if let imageURL = imageUrl {
-                CachedAsyncImage(url: imageURL, urlCache: .imageCache) { phase in
-                    if let image = phase.image {
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    } else if phase.error != nil {
-                        emptyAvatar
-                    } else {
-                        ProgressView()
-                    }
-                }
-            } else {
-                emptyAvatar
+        WebImage(url: imageUrl)
+            .resizable()
+            .placeholder { 
+                Image.emptyAvatar
+                    .resizable()
+                    .renderingMode(.original)
             }
-        }
-        .frame(width: size, height: size)
-        .clipShape(Circle())
+            .indicator(.activity)
+            .frame(width: size, height: size)
+            .clipShape(Circle())
     }
 }
 
