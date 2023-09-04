@@ -17,6 +17,13 @@ import Combine
 /// all new events and creates `NosNotification`s and displays them when appropriate.
 @MainActor class PushNotificationService: 
     NSObject, ObservableObject, NSFetchedResultsControllerDelegate, UNUserNotificationCenterDelegate {
+
+    enum PushNotificationError: LocalizedError {
+        case unexpected
+        var errorDescription: String? {
+            "Something unexpected happened"
+        }
+    }
     
     // MARK: - Public Properties
     
@@ -160,13 +167,7 @@ import Combine
     /// Builds the string needed for the `content` field in the special 
     private func createRegistrationContent(deviceToken: Data, user: CurrentUser) async throws -> String {
         guard let publicKeyHex = currentUser.publicKeyHex else {
-            throw DecodingError.valueNotFound(
-                CurrentUser.self,
-                DecodingError.Context(
-                    codingPath: [],
-                    debugDescription: "CurrentUser did  ot have a public key hex"
-                )
-            )
+            throw PushNotificationError.unexpected
         }
         let relays: [RegistrationRelayAddress] = await relayService.relays(for: user).map {
             RegistrationRelayAddress(address: $0.absoluteString)
@@ -177,13 +178,7 @@ import Combine
             relays: relays
         )
         guard let string = String(data: try JSONEncoder().encode(content), encoding: .utf8) else {
-            throw EncodingError.invalidValue(
-                Registration.self,
-                EncodingError.Context(
-                    codingPath: [],
-                    debugDescription: "Couldn't create a valid registration utf8 string"
-                )
-            )
+            throw PushNotificationError.unexpected
         }
         return string
     }

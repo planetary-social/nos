@@ -81,9 +81,8 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     // swiftlint:disable implicitly_unwrapped_optional
     @MainActor var viewContext: NSManagedObjectContext!
     var backgroundContext: NSManagedObjectContext!
+    @Published var socialGraph: SocialGraphCache!
     // swiftlint:enable implicitly_unwrapped_optional
-
-    @Published var socialGraph: SocialGraphCache
     
     var subscriptions: [String] = []
 
@@ -99,10 +98,10 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     private var authorWatcher: NSFetchedResultsController<Author>?
 
     @MainActor override init() {
-        self.socialGraph = SocialGraphCache(userKey: nil, context: backgroundContext)
         super.init()
         self.viewContext = persistenceController.viewContext
         self.backgroundContext = persistenceController.newBackgroundContext()
+        self.socialGraph = SocialGraphCache(userKey: nil, context: backgroundContext)
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             Log.info("CurrentUser loaded a private key from keychain")
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
