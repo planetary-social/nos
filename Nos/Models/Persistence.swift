@@ -17,13 +17,11 @@ class PersistenceController {
     static let version = 3
     static let versionKey = "NosPersistenceControllerVersion"
 
-    // swiftlint:disable force_try
     static var preview: PersistenceController = {
         let controller = PersistenceController(inMemory: true)
         let viewContext = controller.container.viewContext
         return controller
     }()
-    // swiftlint:enable force_try
     
     static var empty: PersistenceController = {
         let result = PersistenceController(inMemory: true)
