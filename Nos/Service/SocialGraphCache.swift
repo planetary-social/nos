@@ -183,7 +183,6 @@ import Logger
             return
         }
         let twoHopsKeys = changedAuthor.followedKeys
-        let followedKeys = changedAuthor.followedKeys
         
         Task { @MainActor in
             if controller === self.oneHopWatcher {
@@ -201,7 +200,7 @@ import Logger
                     return
                 }
             } else if controller === self.userWatcher {
-                followedKeys.forEach {
+                twoHopsKeys.forEach {
                     self.process(user: authorKey, followed: $0, whoFollows: [])
                 }
             }
