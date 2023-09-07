@@ -171,14 +171,14 @@ struct NotificationsView_Previews: PreviewProvider {
         let authorRef = AuthorReference(context: context)
         authorRef.pubkey = bob.hexadecimalPublicKey
         mentionNote.authorReferences = NSMutableOrderedSet(array: [authorRef])
-        try! mentionNote.sign(withKey: KeyFixture.alice)
+        try? mentionNote.sign(withKey: KeyFixture.alice)
         
         let bobNote = Event(context: context)
         bobNote.content = "Hello, world!"
         bobNote.kind = 1
         bobNote.author = bob
         bobNote.createdAt = .now
-        try! bobNote.sign(withKey: KeyFixture.bob)
+        try? bobNote.sign(withKey: KeyFixture.bob)
         
         let replyNote = Event(context: context)
         replyNote.content = "Top of the morning to you, bob! This text should be truncated."
@@ -189,9 +189,9 @@ struct NotificationsView_Previews: PreviewProvider {
         eventRef.referencedEvent = bobNote
         eventRef.referencingEvent = replyNote
         replyNote.eventReferences = NSMutableOrderedSet(array: [eventRef])
-        try! replyNote.sign(withKey: KeyFixture.alice)
+        try? replyNote.sign(withKey: KeyFixture.alice)
         
-        try! context.save()
+        try? context.save()
     }
     
     static var previews: some View {

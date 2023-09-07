@@ -81,7 +81,6 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     // swiftlint:disable implicitly_unwrapped_optional
     @MainActor var viewContext: NSManagedObjectContext!
     var backgroundContext: NSManagedObjectContext!
-    
     @Published var socialGraph: SocialGraphCache!
     // swiftlint:enable implicitly_unwrapped_optional
     
@@ -158,10 +157,10 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         }
     }
     
-    @MainActor func createAccount() async {
+    @MainActor func createAccount() async throws {
         let keyPair = KeyPair()!
-        let author = try! Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
-        try! viewContext.save()
+        let author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+        try viewContext.save()
 
         await setKeyPair(keyPair)
         analytics.generatedKey()
@@ -174,7 +173,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
                 author: author
             )
         }
-        try! viewContext.save()
+        try viewContext.save()
         
         await publishContactList(tags: [])
     }
@@ -411,7 +410,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     }
     
     /// Follow by public hex key
-    @MainActor func follow(author toFollow: Author) async {
+    @MainActor func follow(author toFollow: Author) async throws {
         guard let followKey = toFollow.hexadecimalPublicKey else {
             Log.debug("Error: followKey is nil")
             return
@@ -424,7 +423,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         
         // Update author to add the new follow
         if let followedAuthor = try? Author.find(by: followKey, context: viewContext), let currentUser = author {
-            let follow = try! Follow.findOrCreate(
+            let follow = try Follow.findOrCreate(
                 source: currentUser,
                 destination: followedAuthor,
                 context: viewContext
@@ -434,12 +433,12 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             currentUser.follows.insert(follow)
         }
         
-        try! viewContext.save()
+        try viewContext.save()
         await publishContactList(tags: followKeys.pTags)
     }
     
     /// Unfollow by public hex key
-    @MainActor func unfollow(author toUnfollow: Author) async {
+    @MainActor func unfollow(author toUnfollow: Author) async throws {
         guard let unfollowedKey = toUnfollow.hexadecimalPublicKey else {
             Log.debug("Error: unfollowedKey is nil")
             return
@@ -461,7 +460,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             }
         }
 
-        try! viewContext.save()
+        try viewContext.save()
         await publishContactList(tags: stillFollowingKeys.pTags)
     }
     

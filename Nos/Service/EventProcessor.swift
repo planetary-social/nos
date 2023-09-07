@@ -28,7 +28,13 @@ enum EventProcessor {
         skipVerification: Bool = false
     ) throws -> Event? {
         if let event = try Event.createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
-            relay.unwrap { event.trackDelete(on: $0, context: parseContext) }
+            relay.unwrap {
+                do {
+                    try event.trackDelete(on: $0, context: parseContext)
+                } catch {
+                    Log.error(error.localizedDescription)
+                }
+            }
         
             guard let publicKey = event.author?.publicKey else {
                 throw EventError.missingAuthor
@@ -51,7 +57,7 @@ enum EventProcessor {
             try parseContext.count(for: Event.event(by: jsonEvent.id, seenOn: relay)) == 0, 
             let event = Event.find(by: jsonEvent.id, context: parseContext) {
             event.markSeen(on: relay)
-            event.trackDelete(on: relay, context: parseContext)
+            try event.trackDelete(on: relay, context: parseContext)
             Log.debug("EventProcessor: marked an existing event seen")
             return event
         }

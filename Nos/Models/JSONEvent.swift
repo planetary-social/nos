@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Logger
 
 struct JSONEvent: Codable, Hashable {
     
@@ -99,10 +100,15 @@ struct JSONEvent: Codable, Hashable {
     }
     
     /// Formats this event as a string that can be sent to a relay over a websocket to publish this event.
-    var publishRequest: String {
+    func buildPublishRequest() throws -> String {
         let request: [Any] = ["EVENT", dictionary]
-        let requestData = try! JSONSerialization.data(withJSONObject: request)
-        return String(data: requestData, encoding: .utf8)!
+        let requestData = try JSONSerialization.data(withJSONObject: request)
+        if let string = String(data: requestData, encoding: .utf8) {
+            return string
+        } else {
+            Log.error("Couldn't create a utf8 string for a publish request")
+            return ""
+        }
     }
 }
 

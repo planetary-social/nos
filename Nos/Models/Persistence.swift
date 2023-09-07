@@ -17,13 +17,11 @@ class PersistenceController {
     static let version = 3
     static let versionKey = "NosPersistenceControllerVersion"
 
-    // swiftlint:disable force_try
     static var preview: PersistenceController = {
         let controller = PersistenceController(inMemory: true)
         let viewContext = controller.container.viewContext
         return controller
     }()
-    // swiftlint:enable force_try
     
     static var empty: PersistenceController = {
         let result = PersistenceController(inMemory: true)
@@ -97,7 +95,7 @@ class PersistenceController {
         }
     }
     
-    func loadSampleData(context: NSManagedObjectContext) async {
+    func loadSampleData(context: NSManagedObjectContext) async throws {
         guard let sampleFile = Bundle.current.url(forResource: "sample_data", withExtension: "json") else {
             Log.error("Error: bad sample file location")
             return
@@ -123,10 +121,10 @@ class PersistenceController {
         
         // Force follow sample data users; This will be wiped if you sync with a relay.
         let authors = Author.all(context: context)
-        let follows = try! context.fetch(Follow.followsRequest(sources: authors))
+        let follows = try context.fetch(Follow.followsRequest(sources: authors))
         
         if let publicKey = currentUser.publicKeyHex {
-            let currentAuthor = try! Author.findOrCreate(by: publicKey, context: context)
+            let currentAuthor = try Author.findOrCreate(by: publicKey, context: context)
             currentAuthor.follows = Set(follows)
         }
     }

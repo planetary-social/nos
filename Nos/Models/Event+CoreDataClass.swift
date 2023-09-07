@@ -742,8 +742,12 @@ public class Event: NosManagedObject {
             allTags = [[String]]() as NSObject
         }
         identifier = try calculateIdentifier()
-        var serializedBytes = try identifier!.bytes
-        signature = try privateKey.sign(bytes: &serializedBytes)
+        if let identifier {
+            var serializedBytes = try identifier.bytes
+            signature = try privateKey.sign(bytes: &serializedBytes)
+        } else {
+            Log.error("Couldn't calculate identifier when signing a private key")
+        }
     }
     
     var jsonRepresentation: [String: Any]? {
@@ -931,7 +935,7 @@ public class Event: NosManagedObject {
     }
     
     /// This tracks which relays this event is deleted on. Hide posts with deletedOn.count > 0
-    func trackDelete(on relay: Relay, context: NSManagedObjectContext) {
+    func trackDelete(on relay: Relay, context: NSManagedObjectContext) throws {
         if EventKind(rawValue: kind) == .delete, let eTags = allTags as? [[String]] {
             for deletedEventId in eTags.map({ $0[1] }) {
                 if let deletedEvent = Event.find(by: deletedEventId, context: context),
@@ -940,7 +944,7 @@ public class Event: NosManagedObject {
                     deletedEvent.deletedOn.insert(relay)
                 }
             }
-            try! context.saveIfNeeded()
+            try context.saveIfNeeded()
         }
     }
     
@@ -961,7 +965,10 @@ public class Event: NosManagedObject {
         
             var requestData = [(HexadecimalString?, Date?)]()
             
-            let author = try! Author.findOrCreate(by: authorKey, context: context)
+            guard let author = try? Author.findOrCreate(by: authorKey, context: context) else {
+                Log.debug("Author not found when requesting metadata of a note's author")
+                return []
+            }
             
             if author.needsMetadata {
                 requestData.append((author.hexadecimalPublicKey, author.lastUpdatedMetadata))
@@ -990,7 +997,12 @@ public class Event: NosManagedObject {
     }
     
     var webLink: String {
-        "https://iris.to/\(bech32NoteID!)"
+        if let bech32NoteID {
+            return "https://iris.to/\(bech32NoteID)"
+        } else {
+            Log.error("Couldn't find a bech32note key when generating web link")
+            return "https://iris.to"
+        }
     }
 }
 // swiftlint:enable type_body_length

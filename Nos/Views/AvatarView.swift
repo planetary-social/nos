@@ -29,7 +29,7 @@ struct AvatarView: View {
 
 struct AvatarView_Previews: PreviewProvider {
     
-    static let avatarURL = URL(string: "https://tinyurl.com/47amhyzz")!
+    static let avatarURL = URL(string: "https://tinyurl.com/47amhyzz") ?? URL.homeDirectory
     
     static var previews: some View {
         VStack {

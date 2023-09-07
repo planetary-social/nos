@@ -177,6 +177,11 @@ struct RepliesView: View {
                 return
             }
 
+            guard let noteIdentifier = note.identifier else {
+                Log.error("Note identifier not found when replying")
+                return
+            }
+
             guard let keyPair = currentUser.keyPair else {
                 alert = AlertState(title: {
                     TextState(Localized.error.string)
@@ -192,11 +197,11 @@ struct RepliesView: View {
             tags.append(["p", authorHex])
 
             // If `note` is a reply to another root, tag that root
-            if let rootNoteIdentifier = note.rootNote()?.identifier, rootNoteIdentifier != note.identifier {
+            if let rootNoteIdentifier = note.rootNote()?.identifier, rootNoteIdentifier != noteIdentifier {
                 tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
-                tags.append(["e", note.identifier!, "", EventReferenceMarker.reply.rawValue])
+                tags.append(["e", noteIdentifier, "", EventReferenceMarker.reply.rawValue])
             } else {
-                tags.append(["e", note.identifier!, "", EventReferenceMarker.root.rawValue])
+                tags.append(["e", noteIdentifier, "", EventReferenceMarker.root.rawValue])
             }
             
             // print("tags: \(tags)")

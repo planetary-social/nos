@@ -127,10 +127,14 @@ struct RelayPicker_Previews: PreviewProvider {
     static func createTestData(in context: NSManagedObjectContext, user: Author) {
         let addresses = ["wss://nostr.com", "wss://nos.social", "wss://alongdomainnametoseewhathappens.com"]
         addresses.forEach {
-            _ = try! Relay(context: previewContext, address: $0, author: user)
+            do {
+                _ = try Relay(context: previewContext, address: $0, author: user)
+            } catch {
+                print(error)
+            }
         }
-        
-        try! previewContext.save()
+
+        try? previewContext.save()
     }
     
     @State static var selectedRelay: Relay?

@@ -46,7 +46,12 @@ public class Author: NosManagedObject {
     }
     
     var webLink: String {
-        "https://iris.to/\(publicKey!.npub)"
+        if let publicKey {
+            return "https://iris.to/\(publicKey.npub)"
+        } else {
+            Log.error("Coudln't find public key when creating weblink")
+            return "https://iris.to/"
+        }
     }
 
     /// A URL that links to this author, suitable for being shared with others.

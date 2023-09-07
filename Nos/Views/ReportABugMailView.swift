@@ -34,11 +34,11 @@ struct ReportABugMailView: UIViewControllerRepresentable {
             defer {
                 $presentation.wrappedValue.dismiss()
             }
-            guard error == nil else {
-                self.result = .failure(error!)
-                return
+            if let error {
+                self.result = .failure(error)
+            } else {
+                self.result = .success(result)
             }
-            self.result = .success(result)
         }
     }
     

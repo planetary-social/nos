@@ -157,7 +157,9 @@ struct SideMenuContent_Previews: PreviewProvider {
     static var emptyUserData = { 
         var data = PreviewData()
         _ = data.currentUser
-        Task { await data.currentUser.setKeyPair(KeyFixture.emptyProfile) }
+        Task {
+            await data.currentUser.setKeyPair(KeyFixture.emptyProfile)
+        }
         return data
     }()
     static var menuOpened = true
