@@ -66,7 +66,10 @@ struct FollowCard: View {
         .cornerRadius(cornerRadius)
         .onAppear {
             Task(priority: .userInitiated) { 
-                if let subscriptionID = await author.requestLatestMetadata(from: relayService) {
+                if let subscriptionID = await relayService.requestMetadata(
+                    for: author.hexadecimalPublicKey, 
+                    since: author.lastUpdatedMetadata
+                ) {
                     subscriptions.append(subscriptionID) 
                 }
             }

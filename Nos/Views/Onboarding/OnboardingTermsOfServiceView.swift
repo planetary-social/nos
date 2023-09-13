@@ -5,14 +5,17 @@
 //  Created by Shane Bielefeld on 3/16/23.
 //
 
+import Dependencies
 import SwiftUI
 
 struct OnboardingTermsOfServiceView: View {
     @EnvironmentObject var state: OnboardingState
     @EnvironmentObject var currentUser: CurrentUser
+
+    @Dependency(\.crashReporting) private var crashReporting
     
     /// Completion to be called when all onboarding steps are complete
-    let completion: () -> Void
+    let completion: @MainActor () -> Void
     
     var body: some View {
         VStack {
@@ -56,8 +59,12 @@ struct OnboardingTermsOfServiceView: View {
                 BigActionButton(title: Localized.accept) {
                     switch state.flow {
                     case .createAccount:
-                        await currentUser.createAccount()
-                        completion()
+                        do {
+                            try await currentUser.createAccount()
+                            completion()
+                        } catch {
+                            crashReporting.report(error)
+                        }
                     case .loginToExistingAccount:
                         state.step = .login
                     }

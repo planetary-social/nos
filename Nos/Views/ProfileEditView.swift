@@ -5,6 +5,7 @@
 //  Created by Christopher Jorgensen on 3/9/23.
 //
 
+import Dependencies
 import SwiftUI
 
 struct ProfileEditView: View {
@@ -13,6 +14,8 @@ struct ProfileEditView: View {
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var currentUser: CurrentUser
     @Environment(\.managedObjectContext) private var viewContext
+
+    @Dependency(\.crashReporting) private var crashReporting
 
     @ObservedObject var author: Author
     
@@ -153,9 +156,13 @@ struct ProfileEditView: View {
         author.profilePhotoURL = URL(string: avatarText)
         author.nip05 = nip05Text
         author.uns = unsText
-        try! viewContext.save()
-        // Post event
-        await currentUser.publishMetaData()
+        do {
+            try viewContext.save()
+            // Post event
+            await currentUser.publishMetaData()
+        } catch {
+            crashReporting.report(error)
+        }
     }
 }
 

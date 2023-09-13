@@ -21,7 +21,7 @@ struct SideMenuContent: View {
     
     @State var result: Result<MFMailComposeResult, Error>?
     
-    let closeMenu: () -> Void
+    let closeMenu: @MainActor () -> Void
     
     var profileHeader: some View {
         Group {
@@ -157,7 +157,9 @@ struct SideMenuContent_Previews: PreviewProvider {
     static var emptyUserData = { 
         var data = PreviewData()
         _ = data.currentUser
-        Task { await data.currentUser.setKeyPair(KeyFixture.emptyProfile) }
+        Task {
+            await data.currentUser.setKeyPair(KeyFixture.emptyProfile)
+        }
         return data
     }()
     static var menuOpened = true

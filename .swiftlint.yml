@@ -8,7 +8,6 @@ disabled_rules: # rule identifiers turned on by default to exclude from running
   - function_parameter_count
   - attributes
   - force_unwrapping
-  - force_try
   - force_cast
   - todo
   - legacy_objc_type
@@ -147,6 +146,7 @@ identifier_name:
     - eve
     - uns
     - idx
+    - dsn
 number_separator:
   minimum_length: 5
 cyclomatic_complexity:

@@ -86,6 +86,11 @@
 "Localized.follow" = "关注";
 "Localized.follows" = "关注";
 "Localized.following" = "已关注";
+"Localized.followedBy" = "被关注";
+"Localized.followedByOne" = "被**{{ one }}**关注";
+"Localized.followedByOneAndMore" = "被**{{ one }}**和**{{ count }}个其他用户**关注";
+"Localized.followedByTwo" = "被**{{ one }}**和**{{ two }}**关注";
+"Localized.followedByTwoAndMore" = "被**{{ one }}**、**{{ two }}**和**{{ count }}个其他用户**关注";
 "Localized.unfollow" = "取消关注";
 "Localized.uns" = "UNS";
 "Localized.nip05" = "NIP-05";
@@ -133,7 +138,7 @@
 "Localized.shareNos" = "分享 Nos";
 "Localized.yourProfile" = "你的个人档案";
 "Localized.unsTagline" = "通用名空间（Universal Name Space）提供你可以信任的身份验证。";
-"Localized.unsDescription" = "通用名空间（Universal Name Space）为你提供了一个你可以在任何地方使用的名称。你可以验证自己的身份并在 Nos 中获取通用名称。此屏幕仅用于演示目的，将来所有名称都将被重置。了解更多。";
+"Localized.unsDescription" = "通用名空间为你提供一个你可以在任何地方使用的名称。注册你的通用名并将其连接到你的 nostr 档案。了解更多。";
 "Localized.unsLearnMore" = "了解更多。";
 "Localized.verifyYourIdentity" = "验证你的身份";
 "Localized.enterCode" = "输入验证码";
@@ -142,7 +147,7 @@
 "Localized.oops" = "啊哦！";
 "Localized.thatNameIsTaken" = "这个名称已被使用。";
 "Localized.success" = "成功!";
-"Localized.yourNewUNMessage" = "是你的新的 Nostr 用户名。\n\n此通用名空间的演示仅用于测试。 将来所有名称都将重置。";
+"Localized.yourNewUNMessage" = "是你的通用名。\n\n我们已连接了你的 nostr 档案和你的通用名，并将你的通用名作为用户名填入了你的档案。";
 "Localized.anErrorOccurred" = "出错了。";
 "Localized.relayAddressPlaceholder" = "wss://yourrelay.com";
 "Localized.someone" = "某人";

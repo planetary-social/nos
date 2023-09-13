@@ -28,6 +28,7 @@ struct RelayView: View {
     @State private var alert: AlertState<Never>?
     
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.crashReporting) private var crashReporting
     
     @FetchRequest var relays: FetchedResults<Relay>
 
@@ -67,9 +68,13 @@ struct RelayView: View {
                             author.remove(relay: relay)
                             viewContext.delete(relay)
                         }
-                        
-                        try! viewContext.save()
-                        await publishChanges()
+
+                        do {
+                            try viewContext.save()
+                            await publishChanges()
+                        } catch {
+                            crashReporting.report(error)
+                        }
                     }
                 }
                 

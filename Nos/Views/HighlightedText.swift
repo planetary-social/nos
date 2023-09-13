@@ -197,7 +197,7 @@ struct HighlightedText_Previews: PreviewProvider {
                 "A test string",
                 highlightedWord: "string",
                 highlight: .diagonalAccent,
-                link: URL(string: "https://planetary.social")!
+                link: URL(string: "https://planetary.social") ?? URL.homeDirectory
             )
             .padding()
         }

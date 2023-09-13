@@ -41,6 +41,7 @@ import Logger
     
     private var twoHopReferences: [HexadecimalString: Int]
 
+    // swiftlint:disable function_body_length
     init(userKey: HexadecimalString?, context: NSManagedObjectContext) {
         self.userKey = userKey
         self.context = context
@@ -52,11 +53,18 @@ import Logger
             super.init()
             return
         }
-        
-        let user = context.performAndWait {
-            let author = try! Author.findOrCreate(by: userKey, context: context)
-            try? context.saveIfNeeded()
-            return author
+
+        let user: Author
+        do {
+            user = try context.performAndWait {
+                let author = try Author.findOrCreate(by: userKey, context: context)
+                try? context.saveIfNeeded()
+                return author
+            }
+        } catch {
+            Log.error(error.localizedDescription)
+            super.init()
+            return
         }
         
         super.init()
@@ -77,18 +85,24 @@ import Logger
         
         userWatcher?.delegate = self
         oneHopWatcher?.delegate = self
-        context.performAndWait {
-            try! self.userWatcher?.performFetch()
-            try! self.oneHopWatcher?.performFetch()
-            self.oneHopWatcher?.fetchedObjects?.forEach { author in
-                guard let followedKey = author.hexadecimalPublicKey else {
-                    return
+        do {
+            try context.performAndWait {
+                try self.userWatcher?.performFetch()
+                try self.oneHopWatcher?.performFetch()
+                self.oneHopWatcher?.fetchedObjects?.forEach { author in
+                    guard let followedKey = author.hexadecimalPublicKey else {
+                        return
+                    }
+                    let twoHopsKeys = author.followedKeys
+                    self.process(user: userKey, followed: followedKey, whoFollows: twoHopsKeys)
                 }
-                let twoHopsKeys = author.followedKeys
-                self.process(user: userKey, followed: followedKey, whoFollows: twoHopsKeys)
             }
+        } catch {
+            Log.error(error.localizedDescription)
+            return
         }
     }
+    // swiftlint:enable function_body_length
     
     // MARK: - Processing Changes
     
@@ -169,7 +183,6 @@ import Logger
             return
         }
         let twoHopsKeys = changedAuthor.followedKeys
-        let followedKeys = changedAuthor.followedKeys
         
         Task { @MainActor in
             if controller === self.oneHopWatcher {
@@ -187,7 +200,7 @@ import Logger
                     return
                 }
             } else if controller === self.userWatcher {
-                followedKeys.forEach {
+                twoHopsKeys.forEach {
                     self.process(user: authorKey, followed: $0, whoFollows: [])
                 }
             }

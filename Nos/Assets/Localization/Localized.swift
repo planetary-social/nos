@@ -203,7 +203,7 @@ enum Localized: String, Localizable, CaseIterable {
     case yourProfile = "Your Profile"
     
     case unsTagline = "Universal Name Space brings identity verification you can trust."
-    case unsDescription = "The Universal Namespace gives you one name you can use everywhere. You can verify your identity and get your universal name here in Nos. This screen is for demo purposes only, all names will be reset in the future. Learn more."
+    case unsDescription = "The Universal Namespace gives you one name you can use everywhere. Register your Universal Name and connect it to your Nostr profile. Learn more."
     case unsLearnMore = "Learn more."
     case verifyYourIdentity = "Verify your identity"
     case enterCode = "Enter Code"
@@ -212,7 +212,7 @@ enum Localized: String, Localizable, CaseIterable {
     case oops = "Oops!"
     case thatNameIsTaken = "That name is taken."
     case success = "Success!"
-    case yourNewUNMessage = "is your new Nostr username.\n\nThis demo of the Universal Namespace is for testing purposes only. All names will be reset in the future."
+    case yourNewUNMessage = "is your Universal Name.\n\nWe've created a link between your Nostr profile and your Universal Name and filled your Universal Name into the username field on your profile."
     case anErrorOccurred = "An error occured."
     
     case relayAddressPlaceholder = "wss://yourrelay.com"

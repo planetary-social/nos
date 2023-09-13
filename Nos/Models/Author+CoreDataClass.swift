@@ -46,7 +46,12 @@ public class Author: NosManagedObject {
     }
     
     var webLink: String {
-        "https://iris.to/\(publicKey!.npub)"
+        if let publicKey {
+            return "https://iris.to/\(publicKey.npub)"
+        } else {
+            Log.error("Coudln't find public key when creating weblink")
+            return "https://iris.to/"
+        }
     }
 
     /// A URL that links to this author, suitable for being shared with others.
@@ -286,47 +291,5 @@ public class Author: NosManagedObject {
 
         // Publish the modified list
         await currentUser.publishMuteList(keys: Array(Set(mutedList)))
-    }
-    
-    func requestLatestMetadata(from relayService: RelayService) async -> RelaySubscription.ID? {
-        guard let hexadecimalPublicKey else {
-            return nil
-        }
-        
-        let metaFilter = Filter(
-            authorKeys: [hexadecimalPublicKey],
-            kinds: [.metaData],
-            limit: 1,
-            since: lastUpdatedMetadata
-        )
-        
-        return await relayService.openSubscription(with: metaFilter)
-    }
-    
-    func requestLatestContactList(from relayService: RelayService) async -> RelaySubscription.ID? {
-        guard let hexadecimalPublicKey else {
-            return nil
-        }
-        
-        let contactFilter = Filter(
-            authorKeys: [hexadecimalPublicKey],
-            kinds: [.contactList],
-            limit: 1,
-            since: lastUpdatedContactList
-        )
-        return await relayService.openSubscription(with: contactFilter)
-    }
-    
-    func requestLatestProfileData(from relayService: RelayService) async -> [RelaySubscription.ID] {
-        var subscriptions = [RelaySubscription.ID]()
-        
-        if let metadataSubscriptionID = await requestLatestMetadata(from: relayService) {
-            subscriptions.append(metadataSubscriptionID)
-        }
-        if let contactListSubscriptionID = await requestLatestContactList(from: relayService) {
-            subscriptions.append(contactListSubscriptionID)
-        }
-        
-        return subscriptions
     }
 }

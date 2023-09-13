@@ -17,6 +17,13 @@ import Combine
 /// all new events and creates `NosNotification`s and displays them when appropriate.
 @MainActor class PushNotificationService: 
     NSObject, ObservableObject, NSFetchedResultsControllerDelegate, UNUserNotificationCenterDelegate {
+
+    enum PushNotificationError: LocalizedError {
+        case unexpected
+        var errorDescription: String? {
+            "Something unexpected happened"
+        }
+    }
     
     // MARK: - Public Properties
     
@@ -159,16 +166,21 @@ import Combine
     
     /// Builds the string needed for the `content` field in the special 
     private func createRegistrationContent(deviceToken: Data, user: CurrentUser) async throws -> String {
-        let publicKeyHex = currentUser.publicKeyHex
+        guard let publicKeyHex = currentUser.publicKeyHex else {
+            throw PushNotificationError.unexpected
+        }
         let relays: [RegistrationRelayAddress] = await relayService.relays(for: user).map {
             RegistrationRelayAddress(address: $0.absoluteString)
         }
         let content = Registration(
             apnsToken: deviceToken.hexString,
-            publicKey: publicKeyHex!,
+            publicKey: publicKeyHex,
             relays: relays
         )
-        return String(data: try JSONEncoder().encode(content), encoding: .utf8)!
+        guard let string = String(data: try JSONEncoder().encode(content), encoding: .utf8) else {
+            throw PushNotificationError.unexpected
+        }
+        return string
     }
     
     /// Tells the system to display a notification for the given event if it's appropriate. This will create a 

@@ -10,7 +10,7 @@ import Dependencies
 import Logger
 
 struct OnboardingLoginView: View {
-    var completion: () -> Void
+    let completion: @MainActor () -> Void
     
     @Dependency(\.analytics) private var analytics
     @EnvironmentObject var currentUser: CurrentUser

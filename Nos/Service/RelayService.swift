@@ -168,6 +168,40 @@ extension RelayService {
         return await openSubscription(with: metaFilter)
     }
     
+    func requestContactList(for authorKey: HexadecimalString?, since: Date?) async -> RelaySubscription.ID? {
+        guard let authorKey else {
+            return nil
+        }
+        
+        let contactFilter = Filter(
+            authorKeys: [authorKey],
+            kinds: [.contactList],
+            limit: 1,
+            since: since
+        )
+        return await openSubscription(with: contactFilter)
+    }
+    
+    func requestProfileData(
+        for authorKey: HexadecimalString?, 
+        lastUpdateMetadata: Date?, 
+        lastUpdatedContactList: Date?
+    ) async -> [RelaySubscription.ID] {
+        var subscriptions = [RelaySubscription.ID]()
+        guard let authorKey else {
+            return subscriptions
+        }
+        
+        if let metadataSubscriptionID = await requestMetadata(for: authorKey, since: lastUpdateMetadata) {
+            subscriptions.append(metadataSubscriptionID)
+        }
+        if let contactListSubscriptionID = await requestContactList(for: authorKey, since: lastUpdatedContactList) {
+            subscriptions.append(contactListSubscriptionID)
+        }
+        
+        return subscriptions
+    }
+    
     /// Requests a single event from all relays
     func requestEvent(with eventID: String?) async -> RelaySubscription.ID? {
         guard let eventID = eventID else {
@@ -289,7 +323,11 @@ extension RelayService {
                         event.publishedTo.insert(relay)
                         
                         // Receiving a confirmation of my own deletion event
-                        event.trackDelete(on: relay, context: self.backgroundContext)
+                        do {
+                            try event.trackDelete(on: relay, context: self.backgroundContext)
+                        } catch {
+                            Log.error(error.localizedDescription)
+                        }
                     } else {
                         // This will be picked up later in publishFailedEvents
                         if responseArray.count > 2, let message = responseArray[3] as? String {
@@ -366,9 +404,9 @@ extension RelayService {
 // MARK: Publish
 extension RelayService {
     
-    private func publish(from client: WebSocketClient, jsonEvent: JSONEvent) async {
+    private func publish(from client: WebSocketClient, jsonEvent: JSONEvent) async throws {
         // Keep track of this so if it fails we can retry N times
-        let requestString = jsonEvent.publishRequest
+        let requestString = try jsonEvent.buildPublishRequest()
         Log.info(requestString)
         client.write(string: requestString)
     }
@@ -404,7 +442,7 @@ extension RelayService {
         _ = await self.openSockets()
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
         for socket in await subscriptions.sockets {
-            await publish(from: socket, jsonEvent: signedEvent)
+            try await publish(from: socket, jsonEvent: signedEvent)
         }
     }
 
@@ -419,7 +457,7 @@ extension RelayService {
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
         for relayURL in relayURLs {
             if let socket = await socket(from: relayURL) {
-                await publish(from: socket, jsonEvent: signedEvent)
+                try await publish(from: socket, jsonEvent: signedEvent)
             } else {
                 Log.error("Could not find socket to publish message")
             }
@@ -433,7 +471,7 @@ extension RelayService {
         context: NSManagedObjectContext
     ) async throws {
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
-        await openSocket(to: relayURL, andSend: signedEvent.publishRequest)
+        await openSocket(to: relayURL, andSend: try signedEvent.buildPublishRequest())
     }
     
     private func signAndSave(
@@ -480,7 +518,11 @@ extension RelayService {
                         if let socket = await self.subscriptions.socket(for: missedAddress) {
                             // Publish again to this socket
                             print("Republishing \(jsonEvent.id) on \(missedAddress)")
-                            await self.publish(from: socket, jsonEvent: jsonEvent)
+                            do {
+                                try await self.publish(from: socket, jsonEvent: jsonEvent)
+                            } catch {
+                                Log.error(error.localizedDescription)
+                            }
                         }
                     }
                 }

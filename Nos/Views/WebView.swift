@@ -44,6 +44,6 @@ struct URLView: View {
 
 struct WebView_Previews: PreviewProvider {
     static var previews: some View {
-        URLView(url: URL(string: "https://www.example.com")!)
+        URLView(url: URL(string: "https://www.example.com") ?? URL.userDirectory)
     }
 }

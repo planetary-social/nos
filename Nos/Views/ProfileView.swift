@@ -35,20 +35,28 @@ struct ProfileView: View {
         _events = FetchRequest(fetchRequest: author.allPostsRequest())
     }
     
-    func refreshProfileFeed() {
-        Task(priority: .userInitiated) {
-            // Close out stale requests
-            if !subscriptionIds.isEmpty {
-                await relayService.decrementSubscriptionCount(for: subscriptionIds)
-                subscriptionIds.removeAll()
-            }
-            
-            let authors = [author.hexadecimalPublicKey!]
-            let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete, .repost, .longFormContent], limit: 50)
-            async let textSub = relayService.openSubscription(with: textFilter)
-            subscriptionIds.append(await textSub)
-            subscriptionIds.append(contentsOf: await author.requestLatestProfileData(from: relayService))
+    func refreshProfileFeed() async {
+        // Close out stale requests
+        if !subscriptionIds.isEmpty {
+            await relayService.decrementSubscriptionCount(for: subscriptionIds)
+            subscriptionIds.removeAll()
         }
+        
+        guard let authorKey = author.hexadecimalPublicKey else {
+            return
+        }
+        
+        let authors = [authorKey]
+        let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete, .repost, .longFormContent], limit: 50)
+        async let textSub = relayService.openSubscription(with: textFilter)
+        subscriptionIds.append(await textSub)
+        subscriptionIds.append(
+            contentsOf: await relayService.requestProfileData(
+                for: authorKey, 
+                lastUpdateMetadata: author.lastUpdatedMetadata, 
+                lastUpdatedContactList: author.lastUpdatedContactList
+            )
+        )
     }
     
     var body: some View {
@@ -59,22 +67,21 @@ struct ProfileView: View {
                     .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 
                 LazyVStack {
-                    ForEach(events.unmuted) { event in
-                        VStack {
-                            NoteButton(note: event, hideOutOfNetwork: false)
-                                .padding(.bottom, 15)
+                    if events.unmuted.isEmpty {
+                        Localized.noEventsOnProfile.view
+                            .padding()
+                    } else {
+                        ForEach(events.unmuted) { event in
+                            VStack {
+                                NoteButton(note: event, hideOutOfNetwork: false)
+                                    .padding(.bottom, 15)
+                            }
                         }
                     }
                 }
                 .padding(.top, 10)
             }
             .background(Color.appBg)
-            .overlay(Group {
-                if !events.contains(where: { !$0.author!.muted }) {
-                    Localized.noEventsOnProfile.view
-                        .padding()
-                }
-            })
         }
         .nosNavigationBar(title: .profileTitle)
         .navigationDestination(for: Event.self) { note in
@@ -173,8 +180,8 @@ struct ProfileView: View {
                 }
         )
         .reportMenu($showingReportMenu, reportedObject: .author(author))
-        .task(priority: .userInitiated) {
-            refreshProfileFeed()
+        .task {
+            await refreshProfileFeed()
         }
         .alert(unwrapping: $alert)
         .onAppear {
@@ -182,7 +189,7 @@ struct ProfileView: View {
             analytics.showedProfile()
         }
         .refreshable {
-            refreshProfileFeed()
+            await refreshProfileFeed()
         }
         .onDisappear {
             Task(priority: .userInitiated) {
@@ -200,14 +207,20 @@ struct IdentityView_Previews: PreviewProvider {
     static var previewContext = persistenceController.container.viewContext
     
     static var author: Author = {
-        let author = try! Author.findOrCreate(
-            by: "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e",
-            context: previewContext
-        )
+        let author: Author
+        do {
+            author = try Author.findOrCreate(
+                by: "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e",
+                context: previewContext
+            )
+        } catch {
+            print(error)
+            author = Author(context: previewContext)
+        }
         // TODO: derive from private key
         author.name = "Fred"
         author.about = "Reach for the stars. Someday you just might catch one."
-        try! previewContext.save()
+        try? previewContext.save()
         return author
     }()
     

@@ -21,8 +21,8 @@ struct SideMenu: View {
     let menuWidth: CGFloat
     let menuOpened: Bool
     
-    let toggleMenu: () -> Void
-    let closeMenu: () -> Void
+    let toggleMenu: @MainActor () -> Void
+    let closeMenu: @MainActor () -> Void
     
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics

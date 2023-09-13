@@ -86,13 +86,13 @@ final class SocialGraphTests: XCTestCase {
     
     func testTwoFollows() async throws {
         // Arrange
-        let alice = try! Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
-        let bob = try! Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
-        let eve = try! Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: testContext)
+        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
+        let eve = try Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: testContext)
         
         // Act
         let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
-        try! testContext.save()
+        try testContext.save()
         
         // Assert
         let followedKeys = await sut.followedKeys
@@ -100,17 +100,17 @@ final class SocialGraphTests: XCTestCase {
         
         // Rearrange
         // alice follows bob
-        let follow1 = try! Follow.findOrCreate(source: alice, destination: bob, context: testContext)
+        let follow1 = try Follow.findOrCreate(source: alice, destination: bob, context: testContext)
         alice.addToFollows(follow1)
-        try! testContext.save()
+        try testContext.save()
         
         // alice follows carol
-        let follow2 = try! Follow.findOrCreate(source: alice, destination: eve, context: testContext)
+        let follow2 = try Follow.findOrCreate(source: alice, destination: eve, context: testContext)
         alice.addToFollows(follow2)
-        try! testContext.save()
+        try testContext.save()
         
         // Reassert
-        try! await eventually { await sut.followedKeys.count == 3 }
+        try await eventually { await sut.followedKeys.count == 3 }
         let newFollowedKeys = await sut.followedKeys.sorted()
         let expected = [
             KeyFixture.alice.publicKeyHex,

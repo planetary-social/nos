@@ -17,13 +17,11 @@ class PersistenceController {
     static let version = 3
     static let versionKey = "NosPersistenceControllerVersion"
 
-    // swiftlint:disable force_try
     static var preview: PersistenceController = {
         let controller = PersistenceController(inMemory: true)
         let viewContext = controller.container.viewContext
         return controller
     }()
-    // swiftlint:enable force_try
     
     static var empty: PersistenceController = {
         let result = PersistenceController(inMemory: true)
@@ -97,7 +95,7 @@ class PersistenceController {
         }
     }
     
-    func loadSampleData(context: NSManagedObjectContext) async {
+    func loadSampleData(context: NSManagedObjectContext) async throws {
         guard let sampleFile = Bundle.current.url(forResource: "sample_data", withExtension: "json") else {
             Log.error("Error: bad sample file location")
             return
@@ -123,10 +121,10 @@ class PersistenceController {
         
         // Force follow sample data users; This will be wiped if you sync with a relay.
         let authors = Author.all(context: context)
-        let follows = try! context.fetch(Follow.followsRequest(sources: authors))
+        let follows = try context.fetch(Follow.followsRequest(sources: authors))
         
         if let publicKey = currentUser.publicKeyHex {
-            let currentAuthor = try! Author.findOrCreate(by: publicKey, context: context)
+            let currentAuthor = try Author.findOrCreate(by: publicKey, context: context)
             currentAuthor.follows = Set(follows)
         }
     }
@@ -177,9 +175,9 @@ class PersistenceController {
             Log.info("Database statistics: \(try databaseStatistics(from: context).sorted(by: { $0.key < $1.key }))")
             
             // Delete all but the most recent n events
-            let eventsToKeep = 10_000
+            let eventsToKeep = 1000
             let fetchFirstEventToDelete = Event.allEventsRequest()
-            fetchFirstEventToDelete.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
+            fetchFirstEventToDelete.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
             fetchFirstEventToDelete.fetchLimit = 1
             fetchFirstEventToDelete.fetchOffset = eventsToKeep
             fetchFirstEventToDelete.predicate = NSPredicate(format: "receivedAt != nil")
@@ -199,8 +197,7 @@ class PersistenceController {
                 let oldEventsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
                 oldEventsRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
                 oldEventsRequest.predicate = NSPredicate(
-                    format: "author != %@ AND (receivedAt <= %@ OR receivedAt == nil)", 
-                    currentAuthor,
+                    format: "receivedAt <= %@ OR receivedAt == nil", 
                     deleteBefore as CVarArg
                 )
                 

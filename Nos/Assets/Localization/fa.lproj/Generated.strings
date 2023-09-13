@@ -9,7 +9,7 @@
 "Localized.notOldEnoughSubtitle" = "لازم است 16 ساله باشید تا بتوانید از این اپ استفاده کنید.";
 "Localized.notOldEnoughButton" = "(به مدرسه) برگردید";
 "Localized.termsOfServiceTitle" = "شرایط استفاده";
-"Localized.loginToYourAccount" = "ورود به حساب کابری";
+"Localized.loginWithKey" = "ورود با کلید";
 "Localized.pasteYourSecretKey" = "کلید خصوصی خود را پیست کنید";
 "Localized.login" = "ورود";
 "Localized.yes" = "بله";
@@ -28,7 +28,7 @@
 "Localized.settings" = "تنظیمات";
 "Localized.invalidKey" = "کلید نامعتبر";
 "Localized.couldNotReadPrivateKeyMessage" = "نمی توان کلید خصوصی شما را خواند. لطفا بررسی کنید که به شکل nsec یا hex باشد.";
-"Localized.createAccount" = "ایجاد حساب کاربری";
+"Localized.tryIt" = "امتحان کنید";
 "Localized.shareLogs" = "اشتراک کارنامه";
 "Localized.failedToExportLogs" = "خطا در خروجی گرفتن از کارنامه داده.";
 "Localized.appVersion" = "نسخه برنامه:";
@@ -45,10 +45,11 @@
 "Localized.clear" = "پاک کردن";
 "Localized.done" = "انجام شد";
 "Localized.editProfile" = "ویرایش نمایه";
+"Localized.completeProfileMessage" = "نمایه خود را تکمیل کنید تا مردم بتوانند شما را بیابند.";
+"Localized.completeProfileButton" = "تکمیل نمایه";
 "Localized.youNeedToEnterAPrivateKeyBeforePosting" = "پبش از آنکه بتوانید یادداشتی منتشر کنید باید در تنظیمات یک کلید خصوصی وارید کنید.";
 "Localized.relayDoesNotSupportNIP40" = "این رله از پیام های منقضی شونده پشتیبانی نمی کند. لطفا رله دیگری انتخاب کنید.";
 "Localized.anyRelaysSupportingNIP40" = "هیچ کدام از رله های شما از پیام های منقضی شونده پشتیبانی نمی کنند. لطفا یکی اضافه کنید یا دوباره سعی کنید.";
-"Localized.nostrBuildHelp" = "برای ارسال لینک تصویر از nostr.build استفاده کنید.";
 "Localized.noteDisappearsIn" = "یاداشت تا این مدت ناپدید می شود";
 "Localized.attachMedia" = "پیوست رسانه";
 "Localized.expirationDate" = "تاريخ انقضاء";
@@ -85,6 +86,11 @@
 "Localized.follow" = "دنبال کردن";
 "Localized.follows" = "دنبال شوندگان";
 "Localized.following" = "دنبال کننده";
+"Localized.followedBy" = "دنبال شده توسط";
+"Localized.followedByOne" = "دنبال شده توسط **{{ one }}**";
+"Localized.followedByOneAndMore" = "دنبال شده توسط **{{ one }}** و **{{ count }}** نفر دیگر";
+"Localized.followedByTwo" = "دنبال شده توسط **{{ one }}** و **{{ two }}**";
+"Localized.followedByTwoAndMore" = "دنبال شده توسط **{{ one }}**، **{{ two }}** و **{{ count }}** نفر دیگر";
 "Localized.unfollow" = "لغو دنبال کردن";
 "Localized.uns" = "UNS";
 "Localized.nip05" = "NIP-05";
@@ -122,7 +128,7 @@
 "Localized.reportUser" = "گزارش کاربر";
 "Localized.reportContent" = "گزارش محتوا";
 "Localized.confirmReport" = "تایید گزارش";
-"Localized.reportConfirmation" = "این یادداشتی را منشر می کند که به طور عمومی قابل دیدن است. مطمئنید؟";
+"Localized.reportConfirmation" = "آیا مطمئنید می خواهید این را به عنوان {{ report_type }} گزارش کنید؟ این گزارش عمومی خواهد بود.";
 "Localized.note" = "یادداشت";
 "Localized.unmuteUser" = "باصدا کردن";
 "Localized.outsideNetwork" = "این کاربر خارج از شبکه شماست.";
@@ -132,7 +138,7 @@
 "Localized.shareNos" = "اشتراک گذاری نوس";
 "Localized.yourProfile" = "نمایه شما";
 "Localized.unsTagline" = "فضای نامگذاری جهانی (Universal Name Space) امکان تایید هویتی را که می توانید به آن اعتماد کنید ارائه می کند.";
-"Localized.unsDescription" = "Universal Namespace به شما یک نام می دهد که می توانید همه جا استفاده کنید. می توانید اینجا در نوس هویت خود را تایید کنید و یک نام جهانی بگیرید. این صفحه فقط برای مقاصد آزمایشی است، تمام نام ها در آینده بازنشانی می شوند. بیشتر بیاموزید.";
+"Localized.unsDescription" = "\"فضای نامگذاری جهانی\" یک نام به شما می دهد که می توانید همه جا استفاده کنید. نامی جهانی ثبت کنید و به نمایه ناستر خود متصل کنید. بیشتر بدانید.";
 "Localized.unsLearnMore" = "بیشتر بیاموزید.";
 "Localized.verifyYourIdentity" = "هویت خود را تایید کنید";
 "Localized.enterCode" = "کد را وارد کنید";
@@ -141,7 +147,7 @@
 "Localized.oops" = "اوه!";
 "Localized.thatNameIsTaken" = "این نام قبلا گرفته شده است.";
 "Localized.success" = "موفقیت!";
-"Localized.yourNewUNMessage" = "نام کاربری جدید ناستر شما است.\n\n این نسخه آزمایشی فقط برای مقاصد آزمایشی است. همه نام ها در آینده بازنشانی خواهند شد.";
+"Localized.yourNewUNMessage" = "\"نام جهانی\" شماست.\n\nما اتصالی بین نمایه ناستر و نام جهانی شما برقرار کرده و نام جهانی تان را در بخش نام کاربری نمایه پر کردیم.";
 "Localized.anErrorOccurred" = "خطایی رخ داده است.";
 "Localized.relayAddressPlaceholder" = "wss://yourrelay.com";
 "Localized.someone" = "کسی";
@@ -154,6 +160,9 @@
 "Localized.eventSource" = "رویدادخام";
 "Localized.loading" = "در حال بارگیری...";
 "Localized.viewSource" = "مشاهده منبع";
+"Localized.reportEventContent" = "این حساب کاربری با استفاده از لغات NIP-69 بابت {{ report_category }} گزارش شده است.
+https://github.com/nostr-protocol/nips/pull/457";
+"Localized.select" = "انتخاب";
 
 "Reply.one" = "{{ count }} پاسخ";
 "Reply.many" = "{{ count }} پاسخ";
@@ -162,3 +171,45 @@
 "Reply.postAReply" = "پاسخی ارسال کنید";
 "Reply.repliedToYourNote" = "به یادداشت شما پاسخ داد:";
 "Reply.mentionedYou" = "به شما اشاره کرده:";
+
+"ImagePicker.camera" = "دوربین";
+"ImagePicker.cameraNotAvailable" = "دوربین در این دستگاه موجود نیست";
+"ImagePicker.openSettingsMessage" = "می توانید مجوز دوربین را در تنظیمات اپ مجاز کنید.";
+"ImagePicker.permissionsRequired" = "برای {{ title }} به مجوز نیاز است";
+"ImagePicker.photoLibrary" = "گالری عکس";
+"ImagePicker.selectFrom" = "انتخاب از گالری عکس";
+"ImagePicker.takePhoto" = "با دوربین عکس بگیرید";
+"ImagePicker.errorUploadingFile" = "خطا در بارگذاری فایل";
+"ImagePicker.errorUploadingFileMessage" = "هنگام بارگذاری فایلی که دادید خطایی رخ داد. لطفا دوباره تلاش کنید.";
+"ImagePicker.uploading" = "در حال بارگذاری...";
+
+"Moderation.CL" = "بدزبانی";
+"Moderation.HC" = "احتمال آسیب";
+"Moderation.HC-fin" = "ضرر مالی";
+"Moderation.HC-bhd" = "صدمه جسمی";
+"Moderation.IH" = "عدم مدارا و نفرت";
+"Moderation.IL" = "غیر قانونی";
+"Moderation.IL-cop" = "نقض حق تکثیر";
+"Moderation.IL-csa" = "سوء استفاده جنسی از کودکان";
+"Moderation.IL-drg" = "جرائم مواد مخدر";
+"Moderation.IL-frd" = "شیادی و کلاهبرداری";
+"Moderation.IL-har" = "مزاحمت یا افشای اطلاعات خصوصی";
+"Moderation.IL-swk" = "تن فروشی";
+"Moderation.IL-idt" = "جعل هویت";
+"Moderation.IL-mal" = "بدافزار";
+"Moderation.NS" = "عریانی و جنسی";
+"Moderation.NS-nud" = "عریانی معمولی";
+"Moderation.NS-ero" = "تحریک آمیز";
+"Moderation.NS-sex" = "سکس";
+"Moderation.PN" = "پورن";
+"Moderation.PN-het" = "پورن جنس مخالف";
+"Moderation.PN-gay" = "پورن مردان";
+"Moderation.PN-les" = "پورن زنان";
+"Moderation.PN-bis" = "پورن دو جنس";
+"Moderation.PN-trn" = "پورن بین جنسی";
+"Moderation.PN-fnb" = "پورن بی جنسیت";
+"Moderation.SP" = "اسپم";
+"Moderation.VI" = "خشونت";
+"Moderation.VI-hum" = "خشونت بر علیه انسان";
+"Moderation.VI-ani" = "خشونت بر علیه حیوان بااحساس";
+"Moderation.NA" = "سایر";

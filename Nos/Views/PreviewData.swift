@@ -33,7 +33,6 @@ struct PreviewData {
     @MainActor lazy var currentUser: CurrentUser = {
         let currentUser = CurrentUser()
         currentUser.viewContext = previewContext
-        currentUser.relayService = relayService
         Task { await currentUser.setKeyPair(KeyFixture.keyPair) }
         return currentUser
     }()
@@ -82,7 +81,7 @@ struct PreviewData {
         note.content = "Hello, world!"
         note.author = previewAuthor
         note.createdAt = .now
-        try! previewContext.save()
+        try? previewContext.save()
         return note
     }()
     
@@ -93,7 +92,7 @@ struct PreviewData {
         note.content = "Hello, world!https://cdn.ymaws.com/nacfm.com/resource/resmgr/images/blog_photos/footprints.jpg"
         note.author = previewAuthor
         note.createdAt = .now
-        try! previewContext.save()
+        try? previewContext.save()
         return note
     }()
     
@@ -104,7 +103,7 @@ struct PreviewData {
         note.content = "Hello, world!https://nostr.build/i/nostr.build_1b958a2af7a2c3fcb2758dd5743912e697ba34d3a6199bfb1300fa6be1dc62ee.jpeg"
         note.author = previewAuthor
         note.createdAt = .now
-        try! previewContext.save()
+        try? previewContext.save()
         return note
     }()
     
@@ -115,7 +114,7 @@ struct PreviewData {
         note.content = "Hello, world! https://nostr.build/i/nostr.build_db8287dde9aedbc65df59972386fde14edf9e1afc210e80c764706e61cd1cdfa.png"
         note.author = previewAuthor
         note.createdAt = .now
-        try! previewContext.save()
+        try? previewContext.save()
         return note
     }()
     
@@ -126,7 +125,7 @@ struct PreviewData {
         note.createdAt = .now
         note.content = .loremIpsum(5)
         note.author = previewAuthor
-        try! previewContext.save()
+        try? previewContext.save()
         return note
     }()
     
@@ -145,7 +144,7 @@ struct PreviewData {
         And it has a link to [nos.social](https://nos.social).
         """
         note.author = previewAuthor
-        try! previewContext.save()
+        try? previewContext.save()
         return note
     }()
     
@@ -163,7 +162,7 @@ struct PreviewData {
         """
         note.author = previewAuthor
         note.createdAt = .now
-        try! previewContext.save()
+        try? previewContext.save()
         return note
     }()
     
@@ -190,7 +189,7 @@ struct PreviewData {
         """
         note.author = previewAuthor
         note.createdAt = .now
-        try! previewContext.save()
+        try? previewContext.save()
         return note
     }()
     
@@ -206,16 +205,22 @@ struct PreviewData {
         repostedNote.createdAt = .now
         repostedNote.content = "Please repost this Alice"
         repostedNote.author = originalPostAuthor
-        
-        let reference = try! EventReference(jsonTag: ["e", "3", ""], context: previewContext)
 
+        let reference: EventReference
+        do {
+            reference = try EventReference(jsonTag: ["e", "3", ""], context: previewContext)
+        } catch {
+            print(error)
+            reference = EventReference(context: previewContext)
+        }
+        
         let repost = Event(context: previewContext)
         repost.identifier = "4"
         repost.kind = EventKind.repost.rawValue
         repost.createdAt = .now
         repost.author = previewAuthor
         repost.eventReferences = NSOrderedSet(array: [reference])
-        try! previewContext.save()
+        try? previewContext.save()
         return repost
     }()
 }
