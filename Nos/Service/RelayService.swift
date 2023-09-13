@@ -444,11 +444,10 @@ extension RelayService {
 
     func publish(
         event: JSONEvent,
-        to relays: [Relay],
+        to relayURLs: [URL],
         signingKey: KeyPair,
         context: NSManagedObjectContext
     ) async throws {
-        let relayURLs = relays.compactMap { $0.addressURL }
         await openSockets()
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
         for relayURL in relayURLs {
