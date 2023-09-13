@@ -247,6 +247,7 @@ extension Image {
        static let attachMediaButton = Image("attach-media-button", bundle: Bundle.current)
        static let disappearingMessages = Image("disappearing-messages", bundle: Bundle.current)
        static let editProfile = Image("edit-profile", bundle: Bundle.current)
+       static let unsIntro = Image("uns-intro", bundle: Bundle.current)
 }
 
 extension UIImage {

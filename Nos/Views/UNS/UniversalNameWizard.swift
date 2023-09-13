@@ -8,16 +8,7 @@
 import SwiftUI
 import Dependencies
 
-struct UniversalNameWizard: View {
-        
-    var author: Author
-
-    var dismiss: (() -> Void)?
-    
-    enum Flow {
-        case signUp
-        case login
-    }
+struct UNSWizardContext {
     
     enum FlowState {
         case loading
@@ -30,15 +21,33 @@ struct UniversalNameWizard: View {
         case nameTaken
     }
     
+    var state: FlowState
+    var authorKey: HexadecimalString
+    var completionHandler: (() -> Void)?
+    var textField: String = ""
+    var phoneNumber: String?
+    var name: String?
+    var api: UNSAPI = UNSAPI()!
+}
+
+struct UniversalNameWizard: View {
+        
+    @State var context: UNSWizardContext
+    
+    var author: Author
+
+    var dismiss: (() -> Void)?
+    
+    enum Flow {
+        case signUp
+        case login
+    }
+    
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var currentUser: CurrentUser
     @Dependency(\.analytics) var analytics
     
-    @MainActor @State var flowState = FlowState.enterPhone
     @State private var flow: Flow?
-    @MainActor @State private var textField: String = ""
-    @MainActor @State private var phoneNumber: String?
-    @MainActor @State private var name: String?
     
     enum FocusedField {
         case textEditor
@@ -48,75 +57,23 @@ struct UniversalNameWizard: View {
     
     let api = UNSAPI()!
     
+    init(author: Author, completion: @escaping () -> Void) {
+        self.author = author
+        self.context = UNSWizardContext(state: .intro, authorKey: author.hexadecimalPublicKey!, completionHandler: completion)
+    }
+    
     var body: some View {
         VStack {
-            switch flowState {
+            switch context.state {
             case .intro:
-                Text("Register your Universal Name")
-                Spacer()
-                BigActionButton(title: .sendCode) {
-                    flowState = .enterPhone
-                }
-                .padding(.horizontal, 37)
-                .padding(.bottom, 41)
+                UNSWizardIntro(context: $context)
             case .enterPhone:
-                Form {
-                    Section {
-                        TextField(text: $textField) {
-                            Text("+1-234-567-8910")
-                                .foregroundColor(.secondaryText)
-                        }
-                        .foregroundColor(.primaryTxt)
-                        .keyboardType(.phonePad)
-                        .autocorrectionDisabled()
-                        .focused($focusedField, equals: .textEditor)
-                        HighlightedText(
-                            Localized.unsDescription.string,
-                            highlightedWord: Localized.unsLearnMore.string,
-                            highlight: .diagonalAccent,
-                            link: URL(string: "https://universalname.space")
-                        )
-                    } header: {
-                        Localized.verifyYourIdentity.view
-                            .foregroundColor(.primaryTxt)
-                            .fontWeight(.heavy)
-                    }
-                    .listRowBackground(LinearGradient(
-                        colors: [Color.cardBgTop, Color.cardBgBottom],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    ))
-                }
-                .scrollContentBackground(.hidden)
-                
-                Spacer()
-                
-                BigActionButton(title: .sendCode) {
-                    Task {
-                        analytics.enteredUNSPhone()
-                        var number = textField
-                        number = number.trimmingCharacters(in: .whitespacesAndNewlines)
-                        number.replace("-", with: "")
-                        number.replace("+", with: "")
-                        number = "+\(number)"
-                        phoneNumber = number
-                        
-                        textField = ""
-                        do {
-                            flowState = .loading
-                            try await api.requestOTPCode(phoneNumber: number)
-                            flowState = .enterOTP
-                        } catch {
-                            flowState = .error
-                        }
-                    }
-                }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 50)
+                UNSWizardPhone(context: $context)
+               
             case .enterOTP:
                 Form {
                     Section {
-                        TextField(text: $textField) {
+                        TextField(text: $context.textField) {
                             Text("123456")
                                 .foregroundColor(.secondaryText)
                         }
@@ -140,16 +97,16 @@ struct UniversalNameWizard: View {
                 Spacer()
                 BigActionButton(title: .submit) {
                     do {
-                        flowState = .loading
+                        context.state = .loading
                         analytics.enteredUNSCode()
                         try await api.verifyOTPCode(
-                            phoneNumber: phoneNumber!,
-                            code: textField.trimmingCharacters(in: .whitespacesAndNewlines)
+                            phoneNumber: context.phoneNumber!,
+                            code: context.textField.trimmingCharacters(in: .whitespacesAndNewlines)
                         )
-                        textField = ""
+                        context.textField = ""
                         let names = try await api.getNames()
                         if let name = names.first {
-                            self.name = name
+                            context.name = name
                             var nip05: String
                             if let message = try await api.requestNostrVerification(
                                 npub: currentUser.keyPair!.npub
@@ -165,13 +122,13 @@ struct UniversalNameWizard: View {
                             author.nip05 = nip05
                             await currentUser.publishMetaData()
                             try viewContext.save()
-                            flowState = .success
+                            context.state = .success
                         } else {
-                            flowState = .chooseName
+                            context.state = .chooseName
                         }
                     } catch {
-                        textField = ""
-                        flowState = .error
+                        context.textField = ""
+                        context.state = .error
                     }
                 }
                 .padding(.horizontal, 24)
@@ -182,7 +139,7 @@ struct UniversalNameWizard: View {
             case .chooseName:
                 Form {
                     Section {
-                        TextField(text: $textField) {
+                        TextField(text: $context.textField) {
                             Localized.name.view
                                 .foregroundColor(.secondaryText)
                         }
@@ -206,27 +163,28 @@ struct UniversalNameWizard: View {
                 Spacer()
                 BigActionButton(title: .submit) {
                     do {
-                        flowState = .loading
+                        context.state = .loading
                         analytics.choseUNSName()
                         guard try await api.createName(
-                            textField.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+                            context.textField.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
                         ) else {
-                            flowState = .nameTaken
+                            context.state = .nameTaken
                             return
                         }
                         let names = try await api.getNames()
-                        name = names.first!
+                        context.name = names.first!
                         let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub)!
                         let nip05 = try await api.submitNostrVerification(
                             message: message,
                             keyPair: currentUser.keyPair!
                         )
-                        author.name = name
+                        let author = try Author.find(by: context.authorKey, context: viewContext)!
+                        author.name = context.name
                         author.nip05 = nip05
                         await currentUser.publishMetaData()
-                        flowState = .success
+                        context.state = .success
                     } catch {
-                        flowState = .error
+                        context.state = .error
                     }
                 }
                 .padding(.horizontal, 24)
@@ -243,7 +201,7 @@ struct UniversalNameWizard: View {
                     .foregroundColor(.primaryTxt)
                 Spacer()
                 BigActionButton(title: .goBack) {
-                    flowState = .chooseName
+                    context.state = .chooseName
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 50)
@@ -256,7 +214,7 @@ struct UniversalNameWizard: View {
                         .font(.title)
                         .padding(.top, 50)
                         .foregroundColor(.primaryTxt)
-                    Text("\(name ?? "") \(Localized.yourNewUNMessage.string)")
+                    Text("\(context.name ?? "") \(Localized.yourNewUNMessage.string)")
                         .padding()
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: 500)
@@ -282,7 +240,7 @@ struct UniversalNameWizard: View {
                     .foregroundColor(.primaryTxt)
                 Spacer()
                 BigActionButton(title: .startOver) {
-                    flowState = .enterPhone
+                    context.state = .enterPhone
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 50)
@@ -296,7 +254,7 @@ struct UniversalNameWizard: View {
             analytics.showedUNSWizard()
         }
         .onDisappear {
-            if flowState != .success {
+            if context.state != .success {
                 analytics.canceledUNSWizard()
             }
         }
@@ -317,37 +275,6 @@ struct UniversalNameWizard_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        VStack {}
-            .sheet(isPresented: .constant(true)) {
-                UniversalNameWizard(author: author, flowState: .intro)
-            }
-        VStack {}
-            .sheet(isPresented: .constant(true)) {
-                UniversalNameWizard(author: author, flowState: .enterPhone)
-            }
-        VStack {}
-            .sheet(isPresented: .constant(true)) {
-                UniversalNameWizard(author: author, flowState: .enterOTP)
-            }
-        VStack {}
-            .sheet(isPresented: .constant(true)) {
-                UniversalNameWizard(author: author, flowState: .loading)
-            }
-        VStack {}
-            .sheet(isPresented: .constant(true)) {
-                UniversalNameWizard(author: author, flowState: .chooseName)
-            }
-        VStack {}
-            .sheet(isPresented: .constant(true)) {
-                UniversalNameWizard(author: author, flowState: .success)
-            }
-        VStack {}
-            .sheet(isPresented: .constant(true)) {
-                UniversalNameWizard(author: author, flowState: .error)
-            }
-        VStack {}
-            .sheet(isPresented: .constant(true)) {
-                UniversalNameWizard(author: author, flowState: .nameTaken)
-            }
+        UniversalNameWizard(author: author) {}
     }
 }

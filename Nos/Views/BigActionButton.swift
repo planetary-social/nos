@@ -49,7 +49,12 @@ struct BigActionButtonStyle: ButtonStyle {
             }
             .cornerRadius(80)
             .offset(y: 4.5)
-            .shadow(color: Color(white: 0, opacity: 0.2), radius: 20, x: 0, y: 20)
+            .shadow(
+                color: Color(white: 0, opacity: 0.2), 
+                radius: 2, 
+                x: 0, 
+                y: configuration.isPressed ? 0 : 1
+            )
             
             // Button face
             ZStack {

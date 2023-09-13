@@ -307,6 +307,12 @@
 		C9CE5B152A0172CF008E198C /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE5B132A0172CF008E198C /* WebView.swift */; };
 		C9CF23172A38A58B00EBEC31 /* ParseQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */; };
 		C9CF23182A38A58B00EBEC31 /* ParseQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */; };
+		C9CFF6CB2AB2316000D4B368 /* UNSWizardIntro.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CFF6CA2AB2316000D4B368 /* UNSWizardIntro.swift */; };
+		C9CFF6CC2AB2316000D4B368 /* UNSWizardIntro.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CFF6CA2AB2316000D4B368 /* UNSWizardIntro.swift */; };
+		C9CFF6CE2AB2328F00D4B368 /* UNSWizardPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CFF6CD2AB2328F00D4B368 /* UNSWizardPhone.swift */; };
+		C9CFF6CF2AB2328F00D4B368 /* UNSWizardPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CFF6CD2AB2328F00D4B368 /* UNSWizardPhone.swift */; };
+		C9CFF6D22AB2423000D4B368 /* Text+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CFF6D12AB2423000D4B368 /* Text+Localized.swift */; };
+		C9CFF6D32AB2423000D4B368 /* Text+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CFF6D12AB2423000D4B368 /* Text+Localized.swift */; };
 		C9DB207729F30EC700FB7B9D /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DB207629F30EC700FB7B9D /* AsyncButton.swift */; };
 		C9DB207829F30EC700FB7B9D /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DB207629F30EC700FB7B9D /* AsyncButton.swift */; };
 		C9DEBFD2298941000078B43A /* NosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD1298941000078B43A /* NosApp.swift */; };
@@ -620,6 +626,9 @@
 		C9CDBBA329A8FA2900C555C7 /* GoldenPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoldenPostView.swift; sourceTree = "<group>"; };
 		C9CE5B132A0172CF008E198C /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseQueue.swift; sourceTree = "<group>"; };
+		C9CFF6CA2AB2316000D4B368 /* UNSWizardIntro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNSWizardIntro.swift; sourceTree = "<group>"; };
+		C9CFF6CD2AB2328F00D4B368 /* UNSWizardPhone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNSWizardPhone.swift; sourceTree = "<group>"; };
+		C9CFF6D12AB2423000D4B368 /* Text+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Localized.swift"; sourceTree = "<group>"; };
 		C9DB207629F30EC700FB7B9D /* AsyncButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncButton.swift; sourceTree = "<group>"; };
 		C9DEBFCE298941000078B43A /* Nos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9DEBFD1298941000078B43A /* NosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosApp.swift; sourceTree = "<group>"; };
@@ -752,6 +761,8 @@
 			children = (
 				C973364E2A7968220012D8B8 /* SetUpUNSBanner.swift */,
 				C936B45B2A4C7D6B00DF1EB9 /* UniversalNameWizard.swift */,
+				C9CFF6CA2AB2316000D4B368 /* UNSWizardIntro.swift */,
+				C9CFF6CD2AB2328F00D4B368 /* UNSWizardPhone.swift */,
 			);
 			path = UNS;
 			sourceTree = "<group>";
@@ -833,6 +844,18 @@
 				C9C9444129F6F0E2002F2C7A /* XCTest+Eventually.swift */,
 			);
 			path = "Test Helpers";
+			sourceTree = "<group>";
+		};
+		C9CFF6D02AB241EB00D4B368 /* Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				C95D68A8299E709800429F86 /* LinearGradient+Planetary.swift */,
+				C9A0DAE629C69FA000466635 /* Text+Gradient.swift */,
+				C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */,
+				C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */,
+				C9CFF6D12AB2423000D4B368 /* Text+Localized.swift */,
+			);
+			path = Modifiers;
 			sourceTree = "<group>";
 		};
 		C9DEBFC5298941000078B43A = {
@@ -917,6 +940,7 @@
 		C9DEC001298944FC0078B43A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				C95D68AA299E710F00429F86 /* Color+Hex.swift */,
 				3FFB1D9529A6BBEC002A755D /* Collection+SafeSubscript.swift */,
 				C9DEC002298945150078B43A /* String+Lorem.swift */,
 				C9DEC0622989541F0078B43A /* Bundle+Current.swift */,
@@ -1055,11 +1079,11 @@
 				C95D68A0299E6D3E00429F86 /* BioView.swift */,
 				CD2CF38D299E67F900332116 /* CardButtonStyle.swift */,
 				C9DFA968299BEC33006929C1 /* CardStyle.swift */,
-				C95D68AA299E710F00429F86 /* Color+Hex.swift */,
 				C9DFA96A299BEE2C006929C1 /* CompactNoteView.swift */,
 				C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */,
 				CD76865229B793F400085358 /* DiscoverSearchBar.swift */,
 				C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */,
+				5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */,
 				5B8C96B529DDD3B200B73AEC /* EditableText.swift */,
 				CD76864B29B12F7E00085358 /* ExpandingTextFieldAndSubmitButton.swift */,
 				A303AF8229A9153A005DC8FC /* FollowButton.swift */,
@@ -1070,7 +1094,6 @@
 				C9A0DAE329C69F0C00466635 /* HighlightedText.swift */,
 				C9DEBFD8298941000078B43A /* HomeFeedView.swift */,
 				C960C57029F3236200929990 /* LikeButton.swift */,
-				C95D68A8299E709800429F86 /* LinearGradient+Planetary.swift */,
 				C905B0762A619E99009B8A78 /* LinkPreview.swift */,
 				5BFF66B52A58A8A000AA79DD /* MutesView.swift */,
 				C9A0DADC29C689C900466635 /* NosNavigationBar.swift */,
@@ -1111,16 +1134,13 @@
 				C92DF80729C25FA900400561 /* SquareImage.swift */,
 				3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */,
 				C931517C29B915AF00934506 /* StaggeredGrid.swift */,
-				C9A0DAE629C69FA000466635 /* Text+Gradient.swift */,
 				3F60F42829B27D3E000D62C4 /* ThreadView.swift */,
-				C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */,
-				C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */,
 				C9CE5B132A0172CF008E198C /* WebView.swift */,
+				C9CFF6D02AB241EB00D4B368 /* Modifiers */,
 				C9EE3E652A053CF1008A7491 /* New Note */,
 				3FB5E64F299D288E00386527 /* Onboarding */,
 				C9DEBFDD298941020078B43A /* Preview Content */,
 				C905EA362A33620A006F1E99 /* UNS */,
-				5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1456,6 +1476,7 @@
 				C9A0DADD29C689C900466635 /* NosNavigationBar.swift in Sources */,
 				3F30020529C1FDD9003D4F8B /* OnboardingStartView.swift in Sources */,
 				C936B4592A4C7B7C00DF1EB9 /* Nos.xcdatamodeld in Sources */,
+				C9CFF6CB2AB2316000D4B368 /* UNSWizardIntro.swift in Sources */,
 				C987F81A29BA4D0E00B44E7A /* ActionButton.swift in Sources */,
 				C9E37E122A1E7EC5003D4B0A /* PreviewContainer.swift in Sources */,
 				C9A0DAF829C92F4500466635 /* UNSAPI.swift in Sources */,
@@ -1469,6 +1490,7 @@
 				C94D855C2991479900749478 /* NewNoteView.swift in Sources */,
 				5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */,
 				C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */,
+				C9CFF6D22AB2423000D4B368 /* Text+Localized.swift in Sources */,
 				C973AB652A323167002AED16 /* EventReference+CoreDataProperties.swift in Sources */,
 				C973AB632A323167002AED16 /* Relay+CoreDataProperties.swift in Sources */,
 				C94FE9F729DB259300019CD3 /* Text+Gradient.swift in Sources */,
@@ -1507,6 +1529,7 @@
 				C9F0BB6F29A50437000547FC /* NostrConstants.swift in Sources */,
 				5BFF66B12A573F6400AA79DD /* RelayDetailView.swift in Sources */,
 				C9F75AD62A041FF7005BBE45 /* ExpirationTimePicker.swift in Sources */,
+				C9CFF6CE2AB2328F00D4B368 /* UNSWizardPhone.swift in Sources */,
 				CD76865329B793F400085358 /* DiscoverSearchBar.swift in Sources */,
 				5B8C96AC29D52AD200B73AEC /* AuthorListView.swift in Sources */,
 				C94A5E152A716A6D00B6EC5D /* EditableNoteText.swift in Sources */,
@@ -1676,6 +1699,7 @@
 				CD09A74D29A521A70063464F /* CardStyle.swift in Sources */,
 				5BD08BB22A38E96F00BB926C /* JSONRelayMetadata.swift in Sources */,
 				CD09A74C29A5217A0063464F /* NoteButton.swift in Sources */,
+				C9CFF6CF2AB2328F00D4B368 /* UNSWizardPhone.swift in Sources */,
 				C936B45A2A4C7B7C00DF1EB9 /* Nos.xcdatamodeld in Sources */,
 				C974652F2A3B86600031226F /* NoteCardHeader.swift in Sources */,
 				A303AF8529A969F5005DC8FC /* FollowsView.swift in Sources */,
@@ -1717,6 +1741,7 @@
 				C9F84C1A298DBB6300C6714D /* Data+Encoding.swift in Sources */,
 				3F30021629C3BFE8003D4F8B /* OnboardingTermsOfServiceView.swift in Sources */,
 				5BFF66B72A58AFF600AA79DD /* PublishedEventsView.swift in Sources */,
+				C9CFF6D32AB2423000D4B368 /* Text+Localized.swift in Sources */,
 				C9DEC0642989541F0078B43A /* Bundle+Current.swift in Sources */,
 				C9ADB13629928AF00075E7F8 /* KeyPair.swift in Sources */,
 				5BF3C50829E4F0DC00738A12 /* AuthorListView.swift in Sources */,
@@ -1778,6 +1803,7 @@
 				C97A1C8F29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift in Sources */,
 				C9ADB135299288230075E7F8 /* KeyFixture.swift in Sources */,
 				C9C547552A4F1CDB006B0741 /* SearchController.swift in Sources */,
+				C9CFF6CC2AB2316000D4B368 /* UNSWizardIntro.swift in Sources */,
 				DC08FF802A796997009F87D1 /* ImagePicker.swift in Sources */,
 				C9E9D9C82A2E1EC40048AF0B /* (null) in Sources */,
 				3FFB1D9429A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,

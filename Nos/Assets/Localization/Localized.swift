@@ -204,7 +204,13 @@ enum Localized: String, Localizable, CaseIterable {
     
     case unsTagline = "Universal Name Space brings identity verification you can trust."
     case unsDescription = "The Universal Namespace gives you one name you can use everywhere. Register your Universal Name and connect it to your Nostr profile. Learn more."
-    case unsLearnMore = "Learn more."
+    case unsRegister = "Register your Universal Name"
+    case unsRegisterDescription = """
+    Universal Name Space gives you a name you can use everywhere.
+            
+    Verify your identity and link your social accounts, government ID, wallets and more.
+    """
+    case unsLearnMore = "Learn more about UNS."
     case verifyYourIdentity = "Verify your identity"
     case enterCode = "Enter Code"
     case nameLower = "name"

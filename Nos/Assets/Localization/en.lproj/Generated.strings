@@ -139,7 +139,9 @@
 "Localized.yourProfile" = "Your Profile";
 "Localized.unsTagline" = "Universal Name Space brings identity verification you can trust.";
 "Localized.unsDescription" = "The Universal Namespace gives you one name you can use everywhere. Register your Universal Name and connect it to your Nostr profile. Learn more.";
-"Localized.unsLearnMore" = "Learn more.";
+"Localized.unsRegister" = "Register your Universal Name";
+"Localized.unsRegisterDescription" = "Universal Name Space gives you a name you can use everywhere.\n        \nVerify your identity and link your social accounts, government ID, wallets and more.";
+"Localized.unsLearnMore" = "Learn more about UNS.";
 "Localized.verifyYourIdentity" = "Verify your identity";
 "Localized.enterCode" = "Enter Code";
 "Localized.nameLower" = "name";

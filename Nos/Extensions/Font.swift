@@ -112,6 +112,10 @@ func PlainText(_ content: any StringProtocol) -> SwiftUI.Text {
     SwiftUI.Text(content)
 }
 
+func PlainText(_ localized: Localized) -> SwiftUI.Text {
+    SwiftUI.Text(localized)
+}
+
 func Text(_ content: any StringProtocol) -> SwiftUI.Text {
     .init(content).font(.brand)
 }
