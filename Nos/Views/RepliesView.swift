@@ -166,9 +166,7 @@ struct RepliesView: View {
             }
         }
         .task {
-            Task {
-                await computeDirectReplies()
-            }
+            await computeDirectReplies()
         }
         .background(Color.appBg)
     }
