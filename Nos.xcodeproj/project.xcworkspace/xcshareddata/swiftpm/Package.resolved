@@ -145,6 +145,15 @@
       }
     },
     {
+      "identity" : "swiftgenplugin",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/BookBeat/SwiftGenPlugin",
+      "state" : {
+        "branch" : "xcodeproject-support",
+        "revision" : "1228d5a43ca791db0719d42f641c34a00b9c32f3"
+      }
+    },
+    {
       "identity" : "swiftui-navigation",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swiftui-navigation",
