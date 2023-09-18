@@ -168,6 +168,11 @@ struct RepliesView: View {
         .task {
             await computeDirectReplies()
         }
+        .onChange(of: replies.count) { _ in
+            Task {
+                await computeDirectReplies()
+            }
+        }
         .background(Color.appBg)
     }
     
