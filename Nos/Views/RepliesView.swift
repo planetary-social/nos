@@ -34,11 +34,9 @@ struct RepliesView: View {
     var repliesRequest: FetchRequest<Event>
     /// All replies
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
-
-    @State private var directReplies: [Event] = []
     
-    func computeDirectReplies() async {
-        directReplies = replies.filter { (reply: Event) in
+    var directReplies: [Event] {
+        replies.filter { (reply: Event) in
             guard let eventReferences = reply.eventReferences.array as? [EventReference] else {
                 return false
             }
@@ -164,9 +162,6 @@ struct RepliesView: View {
                     })
                 }
             }
-        }
-        .task {
-            await computeDirectReplies()
         }
         .background(Color.appBg)
     }
