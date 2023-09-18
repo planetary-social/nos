@@ -170,7 +170,12 @@ struct NewNoteView: View {
                 )
             } else if expirationTime != nil {
                 let relays = try await Relay.find(supporting: 40, for: author, context: viewContext)
-                try await relayService.publish(event: jsonEvent, to: relays, signingKey: keyPair, context: viewContext)
+                try await relayService.publish(
+                    event: jsonEvent, 
+                    to: relays.compactMap { $0.addressURL }, 
+                    signingKey: keyPair, 
+                    context: viewContext
+                )
             } else {
                 try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
             }
