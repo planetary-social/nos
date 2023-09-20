@@ -7,14 +7,15 @@
 
 import Foundation
 import CoreData
+import Logger
 
 /// The event processor consumes raw event data from the relays and writes it to Core Data.
-enum EventProcessor {    
+enum EventProcessor {
     static func parse(
         jsonObject: [String: Any],
         from relay: Relay?,
         in context: NSManagedObjectContext
-    ) throws -> Event {
+    ) throws -> Event? {
         let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
         let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
         return try parse(jsonEvent: jsonEvent, from: relay, in: context)
@@ -23,17 +24,46 @@ enum EventProcessor {
     static func parse(
         jsonEvent: JSONEvent,
         from relay: Relay?,
-        in parseContext: NSManagedObjectContext
-    ) throws -> Event {
-        let event = try Event.findOrCreate(jsonEvent: jsonEvent, relay: relay, context: parseContext)
+        in parseContext: NSManagedObjectContext,
+        skipVerification: Bool = false
+    ) throws -> Event? {
+        if let event = try Event.createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
+            relay.unwrap {
+                do {
+                    try event.trackDelete(on: $0, context: parseContext)
+                } catch {
+                    Log.error(error.localizedDescription)
+                }
+            }
         
-        guard event.author?.publicKey != nil else {
-            throw EventError.missingAuthor
+            guard let publicKey = event.author?.publicKey else {
+                throw EventError.missingAuthor
+            }
+            
+            if skipVerification == false {
+                guard try publicKey.verifySignature(on: event) else {
+                    parseContext.delete(event)
+                    Log.info("Invalid signature on event: \(jsonEvent)")
+                    throw EventError.invalidSignature(event)
+                }
+                event.isVerified = true
+            }
+            
+            Log.debug("EventProcessor: parsed a new event")
+            return event
+            
+        // Verify that this event has been marked seen on the given relay.
+        } else if let relay, 
+            try parseContext.count(for: Event.event(by: jsonEvent.id, seenOn: relay)) == 0, 
+            let event = Event.find(by: jsonEvent.id, context: parseContext) {
+            event.markSeen(on: relay)
+            try event.trackDelete(on: relay, context: parseContext)
+            Log.debug("EventProcessor: marked an existing event seen")
+            return event
         }
         
-        try parseContext.save()
-        
-        return event
+        Log.debug("EventProcessor: skipping a duplicate event")
+        return nil
     }
     
     static func parse(jsonData: Data, from relay: Relay?, in context: NSManagedObjectContext) throws -> [Event] {
@@ -41,8 +71,9 @@ enum EventProcessor {
         var events = [Event]()
         for jsonEvent in jsonEvents {
             do {
-                let event = try parse(jsonEvent: jsonEvent, from: relay, in: context)
-                events.append(event)
+                if let event = try parse(jsonEvent: jsonEvent, from: relay, in: context) {
+                    events.append(event)
+                }
             } catch {
                 print("Error parsing eventJSON: \(jsonEvent): \(error.localizedDescription)")
             }

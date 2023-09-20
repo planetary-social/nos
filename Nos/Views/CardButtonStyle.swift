@@ -10,14 +10,12 @@ import SwiftUI
 struct CardButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .offset(y: configuration.isPressed ? 3 : 0)
-            .compositingGroup()
-            .shadow(color: .cardBorderBottom, radius: 0, x: 0, y: 4)
             .shadow(
                 color: .cardShadowBottom,
                 radius: configuration.isPressed ? 2 : 5,
                 x: 0,
                 y: configuration.isPressed ? 1 : 4
             )
+            .offset(y: configuration.isPressed ? 3 : 0)
     }
 }

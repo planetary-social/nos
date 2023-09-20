@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import Logger
 
-struct JSONEvent: Codable {
+struct JSONEvent: Codable, Hashable {
     
     var id: String
     var pubKey: String
@@ -45,11 +46,17 @@ struct JSONEvent: Codable {
         self.signature = signature
     }
     
-    internal init(pubKey: String, createdAt: Int64, kind: Int64, tags: [[String]], content: String) {
+    internal init(
+        pubKey: HexadecimalString, 
+        createdAt: Date = .now, 
+        kind: EventKind, 
+        tags: [[String]], 
+        content: String
+    ) {
         self.id = ""
         self.pubKey = pubKey
-        self.createdAt = createdAt
-        self.kind = kind
+        self.createdAt = Int64(createdAt.timeIntervalSince1970)
+        self.kind = kind.rawValue
         self.tags = tags
         self.content = content
         self.signature = ""
@@ -79,8 +86,32 @@ struct JSONEvent: Codable {
         )
         return serializedEventData.sha256
     }
+    
+    var dictionary: [String: Any] {
+        [
+            "id": id,
+            "pubkey": pubKey,
+            "created_at": createdAt,
+            "kind": kind,
+            "tags": tags,
+            "content": content,
+            "sig": signature,
+        ]
+    }
+    
+    /// Formats this event as a string that can be sent to a relay over a websocket to publish this event.
+    func buildPublishRequest() throws -> String {
+        let request: [Any] = ["EVENT", dictionary]
+        let requestData = try JSONSerialization.data(withJSONObject: request)
+        if let string = String(data: requestData, encoding: .utf8) {
+            return string
+        } else {
+            Log.error("Couldn't create a utf8 string for a publish request")
+            return ""
+        }
+    }
 }
-// swiftlint:disable identifier_name
+
 struct MetadataEventJSON: Codable {
     var displayName: String?
     var name: String?
@@ -117,4 +148,3 @@ struct MetadataEventJSON: Codable {
         self.picture = picture
     }
 }
-// swiftlint:enable identifier_name

@@ -8,6 +8,258 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (76)] - 2023-09-08Z
+
+- Minor crash fixes and optimizations
+
+## [0.1 (75)] - 2023-09-01Z
+
+- Fix an issue with the database cleanup script that was causing performance issues.
+- Optimize loading of profile pictures
+
+## [0.1 (73)] - 2023-08-25Z
+
+- Fixed potential crashes when using Universal Names API.
+- Fixed bug that rendered the empty notes message for a profile above the header box.
+- Fixed bug that could potentially crash the app sometimes
+
+## [0.1 (72)] - 2023-08-21Z
+
+- Added support for pasting profile and note references when composing notes
+- Pop screens from the navigation stack when tapping twice on the tab bar.
+- Fixed the launch screen layout on iPad
+- Fixed a small issue when mentioning profiles in the reply text box.
+- Fixed a crash during onboarding
+- Fixed a crash when following or muting a user
+- Fixed crash when parsing malformed events.
+- Fixed crash when parsing malformed contact lists.
+- Added integration with our self-hosted Sentry crash reporting tool (no data shared with third parties)
+
+## [0.1 (66)] - 2023-08-18Z
+
+- Fixed crash when parsing malformed events.
+- Fixed crash when parsing malformed contact lists.
+- Added support for pasting profile and note references when composing notes
+- Pop screens from the navigation stack when tapping twice on the tab bar.
+- Fixed the launch screen layout on iPad
+- Fixed a small issue when mentioning profiles in the reply text box.
+
+## [0.1 (65)] - 2023-08-04Z
+
+- Add a loading placeholder for note contents.
+- Added automatic file uploads to nostr.build.
+- Add list of followers and relays in the Profile screen.
+
+## [0.1 (60)] - 2023-08-01Z
+
+- Updated content report style based on the latest NIPs and fixed some bugs with reporting.
+- Add a loading placeholder for note contents.
+- Fixed the launch screen layout on iPad
+- Multiple consecutive newlines will be replaced by a single new line in note content.
+- Removed the screen to fill out profile information from onboarding and replaced it with a call to action in the sidebar. 
+- Leading and trailing whitespace will no longer be rendered in note content.
+- Removed the screen to fill out profile information from onboarding and replaced it with a call to action in the sidebar. 
+
+## [0.1 (59)] - 2023-07-21Z
+
+- Add a loading placeholder for note contents.
+- Fixed several crashes.
+- Added Dutch, Japanese, and Persian translations. Thanks matata, yutaro, and eru-desu! 
+- Added some visual artists to the list of featured users.
+
+## [0.1 (58)] - 2023-07-17Z
+
+- Added better previews for urls shared in notes.
+
+## [0.1 (57)] - 2023-07-17Z
+
+- Fixed an issue where Nos couldn't find the user's key on startup.
+- Fixed an issue where you could have duplicate relays: one with a trailing slash and one without.
+
+## [0.1 (56)] - 2023-07-13Z
+
+- Fixed high cpu usage when the app is idle
+
+## [0.1 (55)] - 2023-07-12Z
+
+- Fixed several bugs around muting users
+- Added the number of connected relays at the top right corner of the Home Feed.
+- Fixed a bug where expired messages could be published to relays that doesn't support them
+- Added support for push notifications.
+
+## [0.1 (53)] - 2023-07-03Z
+
+- Added beta integration with the Universal Name System. Edit your profile to link your Universal Name to your Nostr profile.
+- Updated design of the relay selector
+
+## [0.1 (52)] - 2023-07-03Z
+
+- Prevent muted authors from appearing in the Discover screen
+- Added a confirmation dialog when deleting a note.
+
+## [0.1 (51)] - 2023-06-16Z
+
+- Updated design of the relay selector
+- Fixed an issue where the Discover tab wouldn't show new content for a while after upgrading from build 49.
+
+## [0.1 (50)] - 2023-06-15Z
+
+- Added code to show the Discover tab when we haven't downloaded the user's follow list yet (like on first login or app reinstall).
+- Improved reliability of loading reposts, user photos, and names.
+- Fixed a bug where tapping on a note would open the associated image instead of the thread view.
+- Fixed a bug where profile pages would not load in some cases.
+- Improved performance of the relay manager.
+
+## [0.1 (49)] - 2023-06-12Z
+
+- More small optimizations to relay traffic and event parsing.
+
+## [0.1 (48)] - 2023-06-12Z
+
+- Requesting fewer events on Home and Discover tab to reduce the load on the db.
+
+## [0.1 (47)] - 2023-06-09Z
+
+- Improved performance of the relay manager.
+
+## [0.1 (46)] - 2023-06-06Z
+
+- Add the ability to report notes and profiles using NIP-32 labels and NIP-69 classification.
+- Fixed a crash which occurs on some versions of MacOS when attempting to mention other users during post creation.
+- Add the ability to search for users by name from the Discover tab
+- Fixed a bug where the note options menu wouldn't show up sometimes.
+- Strip whitespace and newline characters when parsing search box input on discover screen as npub.
+
+## [0.1 (44)] - 2023-05-31Z
+
+- Fixed several causes of profile pictures and reposts showing infinite spinners.
+- Links to notes or profiles are now tappable.
+- Filter logged user from Discover screen.
+- Improved performance of posting notes.
+
+## [0.1 (43)] - 2023-05-23Z
+
+- Added German translations (thanks Peter!).
+- Updated support email to support@nos.social
+- Improved recognition of mentions inside a post
+
+## [0.1 (42)] - 2023-05-16Z
+
+- Added support for mentioning other users when composing a note.
+- Fixed a bug where expired messages could be redownloaded from relays that don't delete them.
+- Fixed a bug where you couldn't view the parent note of a reply when it was displayed at the top of the Thread view.
+
+## [0.1 (41)] - 2023-05-11Z
+
+- Fix link color on macOS
+
+## [0.1 (40)] - 2023-05-10Z
+
+- Add support for expiration dates when composing notes (please note: messages are not guaranteed to be deleted by relays or other apps)
+- Increased the contrast of text in light mode
+- Open links in an in-app web browser instead of Safari
+- Fixed link detection in notes for URLs without a scheme (i.e. "https://")
+- Made the reply button on notes easier to tap, and it now presents the keyboard when tapped.
+- Increased the tap size of the ellipsis button on note cards.
+- Added Spanish translations (thanks Martin!)
+- Updated app icon
+- Nos now displays kind 30023 long-form blog posts in the home and profile feeds.
+
+## [0.1 (39)] - 2023-05-02Z
+
+- Improved performance of loading replies
+- The notifications tab now request more events from relays
+
+## [0.1 (38)] - 2023-04-28Z
+
+- Made the routine to delete old events more efficient and prevent it from deleting our own events. 
+- Fixed a bug where you could post the same reply multiple times.
+
+## [0.1 (37)] - 2023-04-27Z
+
+- Performance improvements
+- Added support for reposting notes.
+- Fixed a bug where you could post the same reply multiple times.
+- Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
+
+## [0.1 (36)] - 2023-04-25Z
+
+- Added support for reposting notes.
+- Added Brazilian Portuguese translations (thanks Andressa!).
+- Fixed the French and Traditional Chinese translations.
+- Fixed a bug where the user's follow list could be erased on the first launch after importing a new key.
+- Fixed a bug where you could post the same reply multiple times.
+- Fixed an issue where profile pictures could be rendered with the wrong aspect ratio.
+
+## [0.1 (35)] - 2023-04-19Z
+
+- Added French translations. Thank you p2x@p2xco.de!
+- Added Chinese (Traditional) and updated Chinese (Simplified) translations. Thank you rasputin@getalby.com!
+- Added a logout button in the Settings menu.
+- Minor performance improvements on Thread and Discover views.
+- Updated the default list of users shown on the Discover tab.
+- Fixed a bug where muted authors would show up on the Discover tab.
+- Added an initial loading indicator when you first open the Home or Discover tabs.
+- Added a logout button in the Settings menu.
+- Fixed a bug where notes would be truncated but the Read More button would not be shown.
+- Scrolling performance improvements
+- Fixed a bug where notes would be truncated but the Read More button would not be shown.
+
+## [0.1 (33)] - 2023-04-17Z
+
+- Added a button to share the application logs in the Settings menu
+- Automatically attach debug logs to support emails
+
+## [0.1 (32)] - 2023-04-14Z
+
+- More performance improvements on the Home tab.
+
+Note:
+- In this build you have to pull-to-refresh if you want to see new notes after the initial load of the Home or Discover tabs. 
+
+## [0.1 (31)] - 2023-04-13Z
+
+- Added a button to view raw event JSON in the options menu on notes.
+- Fixed notes saying "so-and-so posted" at the top when it should say "so-and-so replied".
+- Added code to load the note being replied to if we don't have it. 
+- Improved performance on the home feed
+
+## [0.1 (30)] - 2023-04-10Z
+
+- Fixed a bug where the Read More button would show on notes when it didn't need to.
+- Added Chinese (Simplified) translations (thanks rasputin@getalby.com!)
+- Nos now requests delete events from relays.
+
+## [0.1 (28)] - 2023-04-07Z
+
+- Made all the built-in text in the app translatable. If you would like to help translate Nos let us know by emailing support@nos.social.
+
+## [0.1 (27)] - 2023-04-05Z
+
+- Minor performance improvements
+- Fixed an occasional hang when publishing
+
+## [0.1 (26)] - 2023-04-03Z
+
+- Minor performance improvements on the Feed and Discover tabs
+
+## [0.1 (25)] - 2023-03-31Z
+
+- Fixed a bug where reply counts were displaying translation keys instead of the count
+
+## [0.1 (24)] - 2023-03-31Z
+
+- Added Crowdin integration for translation services. If you would like to help us translate Nos drop us a line at 
+support@nos.social.
+- Fixed several crashes.
+- Fixed issue where the like button didn't turn orange when pressed.
+- Fixed an issue where likes to replies were counted towards the root note.
+- Added more aggressive caching of images.
+- Minor performance improvements - more to come!
+
+## [0.1 (23)] - 2023-03-25Z
+- Add the option to copy web links on profile pages and notes.
+
 ## [0.1 (22)] - 2023-03-23Z
 - Fixed a bug in the list of people you are following, where tapping on any name would show your own profile.
 
@@ -99,7 +351,7 @@ Known issues:
 - Use only relays added in RelayView for sending and receiving events
 - Add PostHog analytics
 - Render note mentions in NoteCard
-- Open an email compose view controller for support@planetary.social 
+- Open an email compose view controller for support@nos.social 
 - Fix duplicate note on a new post
 - Add mute functionality
 - Publish relay changes
@@ -137,7 +389,7 @@ Known issues:
 - Render user mentions in NoteCard
 - Replace the warning message to tell the user never to share their private key with anyone.
 
-## [0.1 (5)] 2023-03-02 
+## [0.1 (5)] 2023-03-02
 
 - Added a Discover tab that shows all events from all relays.
 - Core Data will now be wiped whenever we change the data model, which is often. This speeds up our development process, but you will have to re-enter your relays when this happens.

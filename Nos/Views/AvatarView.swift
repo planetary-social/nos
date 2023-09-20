@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import CachedAsyncImage
+import SDWebImageSwiftUI
 
 struct AvatarView: View {
     
@@ -14,37 +14,28 @@ struct AvatarView: View {
     var size: CGFloat
     
     var body: some View {
-        Group {
-            let emptyAvatar = Image.emptyAvatar
-                .resizable()
-                .renderingMode(.original)
-            
-            if let imageURL = imageUrl {
-                CachedAsyncImage(url: imageURL) { phase in
-                    if let image = phase.image {
-                        image
-                            .resizable()
-                    } else if phase.error != nil {
-                        emptyAvatar
-                    } else {
-                        ProgressView()
-                    }
-                }
-            } else {
-                emptyAvatar
+        WebImage(url: imageUrl)
+            .resizable()
+            .placeholder { 
+                Image.emptyAvatar
+                    .resizable()
+                    .renderingMode(.original)
             }
-        }
-        .frame(width: size, height: size)
-        .clipShape(Circle())
+            .indicator(.activity)
+            .frame(width: size, height: size)
+            .clipShape(Circle())
     }
 }
 
 struct AvatarView_Previews: PreviewProvider {
+    
+    static let avatarURL = URL(string: "https://tinyurl.com/47amhyzz") ?? URL.homeDirectory
+    
     static var previews: some View {
         VStack {
-            AvatarView(imageUrl: URL(string: "https://avatars.githubusercontent.com/u/1165004?s=40&v=4"), size: 24)
-            AvatarView(imageUrl: URL(string: "https://avatars.githubusercontent.com/u/1165004?s=40&v=4"), size: 45)
-            AvatarView(imageUrl: URL(string: "https://avatars.githubusercontent.com/u/1165004?s=40&v=4"), size: 87)
+            AvatarView(imageUrl: avatarURL, size: 24)
+            AvatarView(imageUrl: avatarURL, size: 45)
+            AvatarView(imageUrl: avatarURL, size: 87)
         }
         VStack {
             AvatarView(size: 24)

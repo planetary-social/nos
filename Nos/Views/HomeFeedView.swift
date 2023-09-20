@@ -19,7 +19,13 @@ struct HomeFeedView: View {
     @Dependency(\.analytics) private var analytics
     
     @FetchRequest var events: FetchedResults<Event>
-    @FetchRequest var followedAuthors: FetchedResults<Author>
+    @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
+    @State private var subscriptionIDs = [String]()
+    @State private var isVisible = false
+    @State private var cancellables = [AnyCancellable]()
+    @State private var performingInitialLoad = true
+    @State private var isShowingRelayList = false
+    static let initialLoadTime = 2
 
     @ObservedObject var user: Author
     
@@ -27,56 +33,84 @@ struct HomeFeedView: View {
     
     init(user: Author) {
         self.user = user
-        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user))
-        self._followedAuthors = FetchRequest(fetchRequest: user.followsRequest())
+        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, before: Date.now))
     }
-
-    func refreshHomeFeed() {
-        // Close out stale requests
-        if !subscriptionIds.isEmpty {
-            relayService.sendCloseToAll(subscriptions: subscriptionIds)
-            subscriptionIds.removeAll()
-        }
+    
+    func subscribeToNewEvents() async {
+        await cancelSubscriptions()
         
-        // I can't figure out why but the home feed doesn't update when you follow someone without this.
-        if let currentUserKey = currentUser.author?.hexadecimalPublicKey {
-            // swiftlint:disable line_length
-            events.nsPredicate = NSPredicate(format: "kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND ANY author.followers.source.hexadecimalPublicKey = %@", currentUserKey)
-            // swiftlint:enable line_length
-        }
-
-        if let follows = CurrentUser.shared.follows {
-            let authors = follows.keys
+        let followedKeys = currentUser.socialGraph.followedKeys 
             
-            if !authors.isEmpty {
-                let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
-                let textSub = relayService.requestEventsFromAll(filter: textFilter)
-                subscriptionIds.append(textSub)
-            }
-            if let currentUser = CurrentUser.shared.author {
-                let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
-                let userLikesFilter = Filter(
-                    authorKeys: currentUserAuthorKeys,
-                    kinds: [.like],
-                    limit: 100
-                )
-                let userLikesSub = relayService.requestEventsFromAll(filter: userLikesFilter)
-                subscriptionIds.append(userLikesSub)
-            }
+        if !followedKeys.isEmpty {
+            // TODO: we could miss events with this since filter
+            let textFilter = Filter(
+                authorKeys: followedKeys, 
+                kinds: [.text, .delete, .repost, .longFormContent], 
+                limit: 50, 
+                since: nil
+            )
+            let textSub = await relayService.openSubscription(with: textFilter)
+            subscriptionIDs.append(textSub)
         }
     }
     
+    func cancelSubscriptions() async {
+        if !subscriptionIDs.isEmpty {
+            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
+            subscriptionIDs.removeAll()
+        }
+    }
+
     var body: some View {
-        ScrollView(.vertical) {
-            LazyVStack {
-                ForEach(events.unmuted) { event in
-                    VStack {
-                        NoteButton(note: event, hideOutOfNetwork: false)
-                            .padding(.horizontal)
+            Group {
+                if performingInitialLoad {
+                    FullscreenProgressView(
+                        isPresented: $performingInitialLoad, 
+                        hideAfter: .now() + .seconds(Self.initialLoadTime)
+                    )
+                } else {
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVStack {
+                            ForEach(events) { event in
+                                NoteButton(note: event, hideOutOfNetwork: false)
+                                    .padding(.bottom, 15)
+                            }
+                        }
+                        .padding(.vertical, 15)
+                    }
+                    .accessibilityIdentifier("home feed")
+                }
+            }
+            .background(Color.appBg)
+            .overlay(Group {
+                if events.isEmpty && !performingInitialLoad {
+                    Localized.noEvents.view
+                        .padding()
+                }
+            })
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        isShowingRelayList = true
+                    } label: {
+                        HStack(spacing: 3) {
+                            Image("relay-left")
+                                .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
+                            Text("\(relayService.numberOfConnectedRelays)")
+                                .font(.clarityTitle3)
+                                .fontWeight(.heavy)
+                                .foregroundColor(.primaryTxt)
+                            Image("relay-right")
+                                .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
+                        }
+                    }
+                    .sheet(isPresented: $isShowingRelayList) {
+                        NavigationView {
+                            RelayView(author: user)
+                        }
                     }
                 }
             }
-        }
         .background(Color.appBg)
         .padding(.top, 1)
         .overlay(Group {
@@ -87,17 +121,36 @@ struct HomeFeedView: View {
         })
         .nosNavigationBar(title: .homeFeed)
         .refreshable {
-            refreshHomeFeed()
+            date = .now
         }
-        .onAppear {
-            analytics.showedHome()
+        .onChange(of: date) { newDate in
+            events.nsPredicate = Event.homeFeedPredicate(for: user, before: newDate)
+            Task { await subscribeToNewEvents() }
         }
+        .onAppear { 
+            if router.selectedTab == .home {
+                isVisible = true 
+            }
+        }
+        .onDisappear { isVisible = false }
+        .onChange(of: isVisible, perform: { isVisible in
+            if isVisible {
+                analytics.showedHome()
+                Task { await subscribeToNewEvents() }
+            } else {
+                Task { await cancelSubscriptions() }
+            }
+        })
+        .doubleTapToPop(tab: .home)
         .task {
-            refreshHomeFeed()
-        }
-        .onDisappear {
-            relayService.sendCloseToAll(subscriptions: subscriptionIds)
-            subscriptionIds.removeAll()
+            currentUser.socialGraph.followedKeys.publisher
+                .removeDuplicates()
+                .debounce(for: 0.2, scheduler: RunLoop.main)
+                .filter { _ in self.isVisible == true }
+                .sink(receiveValue: { _ in
+                    Task { await subscribeToNewEvents() }
+                })
+                .store(in: &cancellables)
         }
     }
 }
@@ -111,23 +164,18 @@ private let itemFormatter: DateFormatter = {
 
 struct ContentView_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
+    static var relayService = previewData.relayService
     
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
+    static var emptyRelayService = previewData.relayService
     
     static var router = Router()
     
-    static var currentUser: CurrentUser = {
-        let currentUser = CurrentUser()
-        currentUser.context = previewContext
-        currentUser.relayService = relayService
-        currentUser.keyPair = KeyFixture.keyPair
-        return currentUser
-    }()
+    static var currentUser = previewData.currentUser
     
     static var shortNote: Event {
         let note = Event(context: previewContext)

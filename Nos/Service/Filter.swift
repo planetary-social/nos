@@ -7,42 +7,54 @@
 
 import Foundation
 
-/// For REQ
-final class Filter: Hashable {
-    private var authorKeys: [String] {
-        didSet {
-            print("Override author keys to: \(authorKeys)")
-        }
-    }
-    private var kinds: [EventKind]
-    let limit: Int
-    let since: Date?
-
-    // For closing requests; not part of hash
-    var subscriptionId: String = ""
-    var subscriptionStartDate: Date?
+/// Describes a set of Nostr Events, usually so we can ask relay servers for them.
+struct Filter: Hashable, Identifiable {
     
-    private var eTags: [String]
-
+    let authorKeys: [HexadecimalString]
+    let eventIDs: [HexadecimalString]
+    let kinds: [EventKind]
+    let eTags: [HexadecimalString]
+    let pTags: [HexadecimalString]
+    let search: String?
+    let inNetwork: Bool
+    let limit: Int?
+    let since: Date?
+    
     init(
-        authorKeys: [String] = [],
+        authorKeys: [HexadecimalString] = [],
+        eventIDs: [HexadecimalString] = [],
         kinds: [EventKind] = [],
-        eTags: [String] = [],
-        limit: Int = 100,
+        eTags: [HexadecimalString] = [],
+        pTags: [HexadecimalString] = [],
+        search: String? = nil,
+        inNetwork: Bool = false,
+        limit: Int? = nil,
         since: Date? = nil
     ) {
         self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
+        self.eventIDs = eventIDs
         self.kinds = kinds.sorted(by: { $0.rawValue > $1.rawValue })
         self.eTags = eTags
+        self.pTags = pTags
+        self.search = search
+        self.inNetwork = inNetwork
         self.limit = limit
         self.since = since
     }
     
     var dictionary: [String: Any] {
-        var filterDict: [String: Any] = ["limit": limit]
+        var filterDict = [String: Any]()
+        
+        if let limit {
+            filterDict["limit"] = limit
+        }
 
         if !authorKeys.isEmpty {
             filterDict["authors"] = authorKeys
+        }
+        
+        if !eventIDs.isEmpty {
+            filterDict["ids"] = eventIDs
         }
 
         if !kinds.isEmpty {
@@ -53,6 +65,14 @@ final class Filter: Hashable {
             filterDict["#e"] = eTags
         }
         
+        if !pTags.isEmpty {
+            filterDict["#p"] = pTags
+        }
+        
+        if let search {
+            filterDict["search"] = search
+        }
+        
         if let since {
             filterDict["since"] = Int(since.timeIntervalSince1970)
         }
@@ -61,33 +81,35 @@ final class Filter: Hashable {
     }
 
     static func == (lhs: Filter, rhs: Filter) -> Bool {
-        lhs.authorKeys == rhs.authorKeys && lhs.kinds == rhs.kinds && lhs.limit == rhs.limit
+        lhs.id == rhs.id
     }
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(authorKeys)
+        hasher.combine(eventIDs)
         hasher.combine(kinds)
         hasher.combine(limit)
         hasher.combine(eTags)
+        hasher.combine(pTags)
         hasher.combine(since)
+        hasher.combine(inNetwork)
     }
     
-    func matches(_ other: Filter) -> Bool {
-        authorKeys == other.authorKeys && kinds == other.kinds && eTags == other.eTags && since == other.since
-    }
-    
-    func isFulfilled(by event: Event) -> Bool {
-        guard limit == 1 else {
-            return false
-        }
+    var id: String {
+        let intermediate: [String] = [
+            authorKeys.joined(separator: ","),
+            eventIDs.joined(separator: ","),
+            kinds.map { String($0.rawValue) }.joined(separator: ","),
+            limit?.description ?? "nil",
+            eTags.joined(separator: ","),
+            pTags.joined(separator: ","),
+            since?.timeIntervalSince1970.description ?? "nil",
+            inNetwork.description,
+        ]
         
-        if kinds.count == 1,
-            event.kind == kinds.first?.rawValue,
-            !authorKeys.isEmpty,
-            let authorKey = event.author?.hexadecimalPublicKey {
-            return authorKeys.contains(authorKey)
-        }
-        
-        return false
+        return intermediate
+            .joined(separator: "|")
+            .data(using: .utf8)!
+            .sha256
     }
 }

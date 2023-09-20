@@ -13,6 +13,8 @@ struct ThreadView: View {
     
     var thread: [Event] = []
     
+    @EnvironmentObject private var router: Router
+    
     /// Takes a root `Event`, and an array of all replies to the parent note of this thread,
     /// and builds the longest possible thread from that array of all replies.
     init(root: Event, allReplies: [Event]) {
@@ -22,7 +24,7 @@ struct ThreadView: View {
         while true {
             if let nextEvent = allReplies
                 .first(where: {
-                    ($0.eventReferences?.lastObject as? EventReference)?.eventId == currentEvent.identifier
+                    ($0.eventReferences.lastObject as? EventReference)?.eventId == currentEvent.identifier
                 }) {
                 thread.append(nextEvent)
                 currentEvent = nextEvent
@@ -34,8 +36,10 @@ struct ThreadView: View {
     
     var body: some View {
         LazyVStack {
-            NoteButton(note: root, isInThreadView: true)
-                .padding(.horizontal)
+            NoteButton(note: root, tapAction: { event in
+                router.push(event)
+            })
+            .padding(.top, 15)
             ForEach(thread) { event in
                 VStack {
                     ZStack {
@@ -44,40 +48,101 @@ struct ThreadView: View {
                             path.addLine(to: CGPoint(x: 35, y: 15))
                         }
                         .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                        .fill(Color.secondaryTxt)
-                        NoteButton(note: event, isInThreadView: true)
-                            .padding(.horizontal)
+                        .fill(Color.secondaryText)
+                        NoteButton(note: event, tapAction: { event in
+                            router.push(event)
+                        })
+                        .padding(.top, 15)
                     }
                 }
+                .readabilityPadding()
             }
         }
     }
 }
 
 struct ThreadView_Previews: PreviewProvider {
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
+    static var relayService = previewData.relayService
     static var router = Router()
     
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
+    static var emptyRelayService = previewData.relayService
+    static var currentUser = previewData.currentUser
     
-    static var shortNote: Event {
-        let note = Event(context: previewContext)
-        note.kind = 1
-        note.content = "Hello, world!"
-        note.author = user
-        return note
+    static var alice: Author = {
+        let author = Author(context: previewContext)
+        author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
+        author.name = "Alice"
+        return author
+    }()
+    
+    static var bob: Author = {
+        let author = Author(context: previewContext)
+        author.hexadecimalPublicKey = KeyFixture.bob.publicKeyHex
+        author.name = "Bob"
+        
+        return author
+    }()
+        
+    static var rootNote: Event {
+        let bobNote = Event(context: previewContext)
+        bobNote.content = "Hello, world!"
+        bobNote.identifier = "root"
+        bobNote.kind = 1
+        bobNote.author = bob
+        bobNote.createdAt = .now
+        do {
+            try bobNote.sign(withKey: KeyFixture.bob)
+        } catch {
+            print(error)
+        }
+        return bobNote
     }
     
-    static var longNote: Event {
-        let note = Event(context: previewContext)
-        note.kind = 1
-        note.content = .loremIpsum(5)
-        note.author = user
-        return note
+    static var replyNote: Event {
+        let replyNote = Event(context: previewContext)
+        replyNote.content = "Top of the morning to you, bob! This text should be truncated."
+        replyNote.kind = 1
+        replyNote.createdAt = .now
+        replyNote.author = alice
+    
+        let eventRef = EventReference(context: previewContext)
+        eventRef.eventId = "root"
+        eventRef.referencedEvent = rootNote
+        eventRef.referencingEvent = replyNote
+        replyNote.eventReferences = NSMutableOrderedSet(array: [eventRef])
+        do {
+            try replyNote.sign(withKey: KeyFixture.alice)
+            try previewContext.save()
+        } catch {
+            print(error)
+        }
+        return replyNote
+    }
+    
+    static var secondReply: Event {
+        let replyNote = Event(context: previewContext)
+        replyNote.content = "Top of the morning to you, bob! This text should be truncated."
+        replyNote.kind = 1
+        replyNote.createdAt = .now
+        replyNote.author = alice
+    
+        let eventRef = EventReference(context: previewContext)
+        eventRef.eventId = "root"
+        eventRef.referencedEvent = rootNote
+        eventRef.referencingEvent = replyNote
+        replyNote.eventReferences = NSMutableOrderedSet(array: [eventRef])
+        do {
+            try replyNote.sign(withKey: KeyFixture.alice)
+            try previewContext.save()
+        } catch {
+            print(error)
+        }
+        return replyNote
     }
     
     static var user: Author {
@@ -87,9 +152,10 @@ struct ThreadView_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        ThreadView(root: shortNote, allReplies: [])
+        ThreadView(root: rootNote, allReplies: [replyNote, secondReply])
             .environment(\.managedObjectContext, emptyPreviewContext)
             .environmentObject(emptyRelayService)
             .environmentObject(router)
+            .environmentObject(currentUser)
     }
 }

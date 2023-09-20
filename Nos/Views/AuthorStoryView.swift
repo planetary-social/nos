@@ -34,7 +34,7 @@ struct AuthorStoryView: View {
                 NoteButton(
                     note: note,
                     showFullMessage: true,
-                    hideOutOfNetwork: false, allowsPush: false
+                    hideOutOfNetwork: false
                 ) { note in
                     if let currentNoteIndex = notes.firstIndex(of: note) {
                         let nextNoteIndex = notes.index(after: currentNoteIndex)
@@ -53,16 +53,11 @@ struct AuthorStoryView: View {
                 if let currentNote,
                     let currentNoteIndex = notes.firstIndex(of: currentNote) {
                     ForEach(notes.indices) { noteIndex in
-                        let rect = RoundedRectangle(cornerRadius: 21)
+                        RoundedRectangle(cornerRadius: 21)
                             .frame(maxWidth: .infinity, maxHeight: 3)
                             .padding(1.5)
                             .cornerRadius(21)
-                        
-                        if noteIndex <= currentNoteIndex {
-                            rect.foregroundColor(Color.accent)
-                        } else {
-                            rect.foregroundColor(Color.secondaryTxt)
-                        }
+                            .foregroundColor(noteIndex <= currentNoteIndex ? .accent : .secondaryText)
                     }
                 }
             }
@@ -106,102 +101,12 @@ struct AuthorStoryView: View {
 
 struct AuthorStoryView_Previews: PreviewProvider {
     
-    static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
-    
-    static var emptyPersistenceController = PersistenceController.empty
-    static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
-    
-    static var router = Router()
-    
-    static var currentUser: CurrentUser = {
-        let currentUser = CurrentUser()
-        currentUser.context = previewContext
-        currentUser.relayService = relayService
-        currentUser.keyPair = KeyFixture.keyPair
-        return currentUser
-    }()
-    
-    static var alice: Author = {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
-        author.name = "Alice"
-        return author
-    }()
-    
-    static var bob: Author = {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.bob.publicKeyHex
-        author.name = "Bob"
-        
-        return author
-    }()
-    
-    static func createTestData(in context: NSManagedObjectContext) {
-        let mentionNote = Event(context: context)
-        mentionNote.content = "Hello, bob!"
-        mentionNote.kind = 1
-        mentionNote.createdAt = .now
-        mentionNote.author = alice
-        let authorRef = AuthorReference(context: context)
-        authorRef.pubkey = bob.hexadecimalPublicKey
-        mentionNote.authorReferences = NSMutableOrderedSet(array: [authorRef])
-        try! mentionNote.sign(withKey: KeyFixture.alice)
-        
-        let bobNote = Event(context: context)
-        bobNote.content = "Hello, world!"
-        bobNote.kind = 1
-        bobNote.author = bob
-        bobNote.createdAt = .now
-        try! bobNote.sign(withKey: KeyFixture.bob)
-        
-        let replyNote = Event(context: context)
-        replyNote.content = "Top of the morning to you, bob! This text should be truncated."
-        replyNote.kind = 1
-        replyNote.createdAt = .now
-        replyNote.author = alice
-        let eventRef = EventReference(context: context)
-        eventRef.referencedEvent = bobNote
-        eventRef.referencingEvent = replyNote
-        replyNote.eventReferences = NSMutableOrderedSet(array: [eventRef])
-        try! replyNote.sign(withKey: KeyFixture.alice)
-        
-        let follow = Follow(context: context)
-        follow.source = alice
-        follow.destination = bob
-        
-        try! context.save()
-    }
-    
-    static var shortNote: Event {
-        let note = Event(context: previewContext)
-        note.kind = 1
-        note.content = "Hello, world!"
-        note.author = alice
-        note.identifier = "1"
-        return note
-    }
-    
-    static var longNote: Event {
-        let note = Event(context: previewContext)
-        note.kind = 1
-        note.content = .loremIpsum(5)
-        note.author = bob
-        return note
-    }
+    static var previewData = PreviewData()
     
     static var previews: some View {
         NavigationView {
-            AuthorStoryView(author: bob, showPreviousAuthor: {}, showNextAuthor: {})
+            AuthorStoryView(author: previewData.bob, showPreviousAuthor: {}, showNextAuthor: {})
         }
-        .environment(\.managedObjectContext, previewContext)
-        .environmentObject(relayService)
-        .environmentObject(router)
-        .onAppear {
-            createTestData(in: previewContext)
-        }
-        .environmentObject(currentUser)
+        .inject(previewData: previewData)
     }
 }

@@ -7,44 +7,124 @@
 
 import Foundation
 import SwiftUI
+import CoreData
+import Dependencies
 
 /// This view displays the a button with the information we have for a note suitable for being used in a list
 /// or grid.
 ///
 /// The button opens the ThreadView for the note when tapped.
 struct NoteButton: View {
+
     var note: Event
     var style = CardStyle.compact
     var showFullMessage = false
     var hideOutOfNetwork = true
-    var allowsPush = true
     var showReplyCount = true
-    var isInThreadView = false
-    var buttonAction: ((Event) -> Void)? 
+    private let replyAction: ((Event) -> Void)?
+    private let tapAction: ((Event) -> Void)?
+
+    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
+    @Dependency(\.persistenceController) private var persistenceController
+    
+    @State private var subscriptionIDs = [RelaySubscription.ID]()
+
+    init(
+        note: Event, 
+        style: CardStyle = CardStyle.compact, 
+        showFullMessage: Bool = false, 
+        hideOutOfNetwork: Bool = true, 
+        showReplyCount: Bool = true, 
+        replyAction: ((Event) -> Void)? = nil,
+        tapAction: ((Event) -> Void)? = nil
+    ) {
+        self.note = note
+        self.style = style
+        self.showFullMessage = showFullMessage
+        self.hideOutOfNetwork = hideOutOfNetwork
+        self.showReplyCount = showReplyCount
+        self.replyAction = replyAction
+        self.tapAction = tapAction
+    }
+
+    /// The note displayed in the note card. Could be different from `note` i.e. in the case of a repost.
+    var displayedNote: Event {
+        if note.kind == EventKind.repost.rawValue,
+            let repostedNote = note.referencedNote() {
+            return repostedNote
+        } else {
+            return note
+        }
+    }
 
     var body: some View {
-        if let author = note.author {
+        VStack {
+            if note.kind == EventKind.repost.rawValue, let author = note.author {
+                let repost = note
+                Button(action: { 
+                    router.push(author)
+                }, label: { 
+                    HStack(alignment: .center) {
+                        AuthorLabel(author: author)
+                        Image.repostSymbol
+                        if let elapsedTime = repost.createdAt?.elapsedTimeFromNowString() {
+                            Text(elapsedTime)
+                                .lineLimit(1)
+                                .font(.body)
+                                .foregroundColor(.secondaryText)
+                        }
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                    .readabilityPadding()
+                    .onAppear {
+                        Task(priority: .userInitiated) {
+                            await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
+                                noteID: note.identifier,
+                                using: relayService,
+                                in: persistenceController.backgroundViewContext
+                            )
+                        }
+                    }
+                    .onDisappear {
+                        Task(priority: .userInitiated) {
+                            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
+                            subscriptionIDs.removeAll()
+                        }
+                    }
+                })
+            }
+            
             Button {
-                if let buttonAction {
-                    buttonAction(note)
-                } else if allowsPush {
-                    if !isInThreadView, let referencedNote = note.referencedNote() {
+                if let tapAction {
+                    tapAction(displayedNote)
+                } else {
+                    if let referencedNote = displayedNote.referencedNote() {
                         router.push(referencedNote)
                     } else {
-                        router.push(note)
+                        router.push(displayedNote)
                     }
                 }
             } label: {
-                NoteCard(
-                    author: author,
-                    note: note,
+                let noteCard = NoteCard(
+                    note: displayedNote,
                     style: style,
                     showFullMessage: showFullMessage,
                     hideOutOfNetwork: hideOutOfNetwork,
-                    showReplyCount: showReplyCount
+                    showReplyCount: showReplyCount,
+                    replyAction: replyAction
                 )
+                
+                switch style {
+                case .compact:
+                    noteCard
+                        .padding(.horizontal)
+                        .readabilityPadding()
+                case .golden:
+                    noteCard
+                }
             }
             .buttonStyle(CardButtonStyle())
         }
@@ -52,33 +132,16 @@ struct NoteButton: View {
 }
 
 struct NoteButton_Previews: PreviewProvider {
-   
-    static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
-    static var router = Router()
-    static var shortNote: Event {
-        let note = Event(context: previewContext)
-        note.content = "Hello, world!"
-        return note
-    }
     
-    static var longNote: Event {
-        let note = Event(context: previewContext)
-        note.content = .loremIpsum(5)
-        let author = Author(context: previewContext)
-        // TODO: derive from private key
-        author.hexadecimalPublicKey = "32730e9dfcab797caf8380d096e548d9ef98f3af3000542f9271a91a9e3b0001"
-        note.author = author
-        return note
-    }
-    
+    static var previewData = PreviewData()
     static var previews: some View {
-        Group {
-            NoteButton(note: shortNote)
-            NoteButton(note: shortNote, style: .golden)
-            NoteButton(note: longNote)
-                .preferredColorScheme(.dark)
+        VStack {
+            NoteButton(note: previewData.repost, hideOutOfNetwork: false)
+            NoteButton(note: previewData.shortNote)
+            NoteButton(note: previewData.shortNote, style: .golden)
+            NoteButton(note: previewData.longNote)
+            NoteButton(note: previewData.doubleImageNote)
         }
-        .environmentObject(router)
+        .inject(previewData: previewData)
     }
 }

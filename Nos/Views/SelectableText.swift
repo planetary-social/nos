@@ -25,9 +25,12 @@ struct SelectableText: UIViewRepresentable {
     
     init(_ string: String) {
         self.attributedText = AttributedString(string)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 10
         attributedText.setAttributes(AttributeContainer([
             .font: UIFont.clarity,
             .foregroundColor: UIColor.primaryTxt,
+            .paragraphStyle: paragraphStyle
         ]))
     }
 
@@ -38,6 +41,7 @@ struct SelectableText: UIViewRepresentable {
         let view = UITextView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.attributedText = NSAttributedString(attributedText)
+        view.dataDetectorTypes = .link
         view.isUserInteractionEnabled = true
         view.isEditable = false
         view.isSelectable = true

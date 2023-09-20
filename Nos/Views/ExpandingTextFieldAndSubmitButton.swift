@@ -9,52 +9,69 @@ import Foundation
 import SwiftUI
 
 struct ExpandingTextFieldAndSubmitButton: View {
+
+    @Environment(\.managedObjectContext) private var viewContext
+
+    var placeholder: any Localizable
+    @Binding var reply: EditableNoteText
+    var focus: FocusState<Bool>.Binding
+    var action: () async -> Void
     
-    var placeholder: String
-    @Binding var reply: String
-    var action: () -> Void
-    
-    @FocusState private var textEditorInFocus
     @State private var showPostButton = false
+    @State var disabled = false
+
+    @State private var calculatedHeight: CGFloat = 44
     
     var body: some View {
         HStack {
-            TextEditor(text: $reply)
-                .placeholder(when: reply.isEmpty, placeholder: {
-                    VStack {
-                        Text(placeholder)
-                            .foregroundColor(.secondaryTxt)
-                            .padding(.top, 9.5)
-                            .padding(.leading, 7.5)
-                        Spacer()
-                    }
-                })
-                .scrollContentBackground(.hidden)
-                .padding(.leading, 6)
+            NoteTextEditor(text: $reply, placeholder: placeholder, focus: focus)
+                .frame(maxHeight: 270)
                 .background(Color.appBg)
                 .cornerRadius(17.5)
-                .frame(maxHeight: 270)
-                .focused($textEditorInFocus)
-            
             if showPostButton {
                 Button(
                     action: {
-                        self.action()
-                        reply = ""
+                        disabled = true
+                        focus.wrappedValue = false
+                        Task {
+                            await action()
+                            reply = EditableNoteText()
+                            disabled = false
+                        }
                     },
                     label: {
                         Localized.post.view
                     }
                 )
-                .transition(.move(edge: .trailing))
+                .disabled(disabled)
             }
         }
-        .onChange(of: textEditorInFocus) { bool in
-            withAnimation(.spring(response: 0.2)) {
-                showPostButton = bool
-            }
+        .onChange(of: focus.wrappedValue) { bool in
+            showPostButton = bool
         }
-        
         .padding(8)
+    }
+}
+
+struct ExpandingTextFieldAndSubmitButton_Previews: PreviewProvider {
+
+    @State static var reply = EditableNoteText(string: "Hello World")
+    @FocusState static var isFocused: Bool
+
+    static var previews: some View {
+        VStack {
+            Spacer()
+            VStack {
+                HStack(spacing: 10) {
+                    ExpandingTextFieldAndSubmitButton(
+                        placeholder: Localized.Reply.postAReply, 
+                        reply: $reply, 
+                        focus: $isFocused,
+                        action: {}
+                    )
+                }
+            }
+            .fixedSize(horizontal: false, vertical: true)
+        }
     }
 }

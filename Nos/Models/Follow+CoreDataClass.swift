@@ -26,6 +26,38 @@ extension Array where Element == String {
     }
 }
 
+struct FollowComparator: SortComparator {
+
+    typealias Compared = Follow
+    var order: SortOrder = .forward
+
+    func compare(_ lhs: Follow, _ rhs: Follow) -> ComparisonResult {
+        if let lhsDestination = lhs.destination {
+            if let rhsDestination = rhs.destination {
+                return lhsDestination.safeName.compare(rhsDestination.safeName)
+            }
+            return order == .forward ? .orderedDescending : .orderedAscending
+        }
+        return order == .forward ? .orderedAscending : .orderedDescending
+    }
+}
+
+struct FollowerComparator: SortComparator {
+
+    typealias Compared = Follow
+    var order: SortOrder = .forward
+
+    func compare(_ lhs: Follow, _ rhs: Follow) -> ComparisonResult {
+        if let lhsSource = lhs.source {
+            if let rhsSource = rhs.source {
+                return lhsSource.safeName.compare(rhsSource.safeName)
+            }
+            return order == .forward ? .orderedDescending : .orderedAscending
+        }
+        return order == .forward ? .orderedAscending : .orderedDescending
+    }
+}
+
 @objc(Follow)
 public class Follow: NosManagedObject {
     
@@ -34,25 +66,40 @@ public class Follow: NosManagedObject {
         jsonTag: [String],
         context: NSManagedObjectContext
     ) throws -> Follow {
+        guard let followedKey = jsonTag[safe: 1] else {
+            throw DecodingError.valueNotFound(
+                Follow.self,
+                DecodingError.Context(
+                    codingPath: [],
+                    debugDescription: "Encoded tags did not have a key at position 1"
+                )
+            )
+        }
+        guard let authorHexPublicKey = author.hexadecimalPublicKey else {
+            throw DecodingError.valueNotFound(
+                Author.self,
+                DecodingError.Context(
+                    codingPath: [],
+                    debugDescription: "Author did not have a hexadecimal public key"
+                )
+            )
+        }
         var follow: Follow
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.predicate = NSPredicate(
             format: "source.hexadecimalPublicKey = %@ AND destination.hexadecimalPublicKey = %@",
-            author.hexadecimalPublicKey!,
-            jsonTag[1]
+            authorHexPublicKey,
+            followedKey
         )
         fetchRequest.fetchLimit = 1
         if let existingFollow = try context.fetch(fetchRequest).first {
-            follow = existingFollow
-            // TODO: abort if the event we are processing is older than the one we have in Core Data
+            return existingFollow
         } else {
             follow = Follow(context: context)
         }
         
         follow.source = author
-        follow.lastUpdated = Date.now
-        
-        let followedKey = jsonTag[1]
+
         let followedAuthor = try Author.findOrCreate(by: followedKey, context: context)
         follow.destination = followedAuthor
         
@@ -82,11 +129,26 @@ public class Follow: NosManagedObject {
         fetchRequest.predicate = NSPredicate(format: "source = %@ AND destination = %@", source, destination)
         return fetchRequest
     }
+
+    @nonobjc public class func followsRequest(destination authors: [Author]) -> NSFetchRequest<Follow> {
+        let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.petName, ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "destination IN %@", authors)
+        return fetchRequest
+    }
     
     @nonobjc public class func emptyRequest() -> NSFetchRequest<Follow> {
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.petName, ascending: true)]
         fetchRequest.fetchLimit = 0
+        return fetchRequest
+    }
+    
+    /// Retreives all the Follows whose source Author has been deleted.
+    static func orphanedRequest() -> NSFetchRequest<Follow> {
+        let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.destination, ascending: false)]
+        fetchRequest.predicate = NSPredicate(format: "source = nil")
         return fetchRequest
     }
     

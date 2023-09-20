@@ -13,17 +13,23 @@ struct FollowButton: View {
     @ObservedObject var currentUserAuthor: Author
     @ObservedObject var author: Author
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.crashReporting) private var crashReporting
     
     var body: some View {
-        let following = CurrentUser.shared.isFollowing(author: author)
+        let following = currentUser.isFollowing(author: author)
         ActionButton(title: following ? .unfollow : .follow) {
-            if following {
-                CurrentUser.shared.unfollow(author: author)
-                analytics.unfollowed(author)
-            } else {
-                CurrentUser.shared.follow(author: author)
-                analytics.followed(author)
+            do {
+                if following {
+                    try await currentUser.unfollow(author: author)
+                    analytics.unfollowed(author)
+                } else {
+                    try await currentUser.follow(author: author)
+                    analytics.followed(author)
+                }
+            } catch {
+                crashReporting.report(error)
             }
         }
     }
@@ -63,9 +69,8 @@ struct FollowButton_Previews: PreviewProvider {
         let follow = Follow(context: previewContext)
         follow.source = user
         follow.destination = alice
-        // swiftlint:disable legacy_objc_type
-        user.follows = NSSet(array: [follow])
-        try! previewContext.save()
+        user.follows = Set([follow])
+        try? previewContext.save()
         KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.privateKeyHex.utf8))
     }
     
@@ -75,7 +80,7 @@ struct FollowButton_Previews: PreviewProvider {
             // FollowButton(currentUserAuthor: user, author: bob)
         }
         .onAppear {
-            // I can't get this to work, CurrentUser.shared.context is always nil
+            // I can't get this to work, currentUser.context is always nil
             createTestData(in: previewContext)
         }
     }

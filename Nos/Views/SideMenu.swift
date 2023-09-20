@@ -21,8 +21,8 @@ struct SideMenu: View {
     let menuWidth: CGFloat
     let menuOpened: Bool
     
-    let toggleMenu: () -> Void
-    let closeMenu: () -> Void
+    let toggleMenu: @MainActor () -> Void
+    let closeMenu: @MainActor () -> Void
     
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
@@ -54,5 +54,24 @@ struct SideMenu: View {
                 analytics.showedSideMenu()
             }
         }
+    }
+}
+
+struct SideMenu_Previews: PreviewProvider {
+    
+    static var previewData = PreviewData()
+    static var menuOpened = true
+    
+    static var previews: some View {
+        SideMenu(
+            menuWidth: 300, 
+            menuOpened: menuOpened, 
+            toggleMenu: { 
+                menuOpened.toggle()
+            }, closeMenu: { 
+                menuOpened = false
+            }
+        )
+        .inject(previewData: previewData)
     }
 }

@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import Combine
 import CoreData
 import Dependencies
+import Logger
 
 /// Displays a list of cells that let the user know when other users interact with their notes.
 struct NotificationsView: View {
@@ -16,9 +18,15 @@ struct NotificationsView: View {
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.pushNotificationService) private var pushNotificationService
+    @Dependency(\.persistenceController) private var persistenceController
 
     private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
+    @State private var subscriptionIDs = [String]()
+    @State private var isVisible = false
+
+    @State private var concecutiveTapsCancellable: AnyCancellable?
     
     // Probably the logged in user should be in the @Environment eventually
     private var user: Author?
@@ -26,7 +34,42 @@ struct NotificationsView: View {
     init(user: Author?) {
         self.user = user
         if let user {
-            eventRequest = FetchRequest(fetchRequest: Event.allNotifications(for: user))
+            eventRequest = FetchRequest(fetchRequest: Event.all(notifying: user))
+        }
+    }    
+    
+    func subscribeToNewEvents() async {
+        await cancelSubscriptions()
+        
+        guard let currentUserKey = user?.hexadecimalPublicKey else {
+            return
+        }
+        
+        let filter = Filter(
+            kinds: [.text], 
+            pTags: [currentUserKey], 
+            limit: 100
+        )
+        let subscription = await relayService.openSubscription(with: filter)
+        subscriptionIDs.append(subscription)
+    }
+    
+    func cancelSubscriptions() async {
+        if !subscriptionIDs.isEmpty {
+            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
+            subscriptionIDs.removeAll()
+        }
+    }
+    
+    func markAllNotificationsRead() async {
+        if let user {
+            do {
+                let backgroundContext = persistenceController.backgroundViewContext
+                try await NosNotification.markAllAsRead(for: user, in: backgroundContext)
+                await pushNotificationService.updateBadgeCount()
+            } catch {
+                Log.optional(error, "Error marking notifications as read")
+            }
         }
     }
     
@@ -36,10 +79,12 @@ struct NotificationsView: View {
                 LazyVStack {
                     ForEach(events.unmuted) { event in
                         if let user {
-                            NotificationCard(note: event, user: user)
+                            NotificationCard(viewModel: NotificationViewModel(note: event, user: user))
+                                .readabilityPadding()
                         }
                     }
                 }
+                .padding(.top, 10)
             }
             .overlay(Group {
                 if events.isEmpty {
@@ -53,116 +98,52 @@ struct NotificationsView: View {
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
+            .navigationDestination(for: URL.self) { url in URLView(url: url) }
+            .navigationDestination(for: ReplyToNavigationDestination.self) { destination in 
+                RepliesView(note: destination.note, showKeyboard: true)
+            }
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
             }
+            .refreshable {
+                await subscribeToNewEvents()
+            }
+            .doubleTapToPop(tab: .notifications)
             .onAppear {
-                analytics.showedNotifications()
-            }
-        }
-    }
-}
-
-struct NotificationCard: View {
-    
-    @ObservedObject private var note: Event
-    private let user: Author
-    private let actionText: String?
-    private let authorName: String
-    
-    @Environment(\.managedObjectContext) private var viewContext
-    
-    @EnvironmentObject private var router: Router
-    @EnvironmentObject private var relayService: RelayService
-    
-    init(note: Event, user: Author) {
-        self.note = note
-        self.user = user
-        
-        authorName = note.author?.safeName ?? "someone"
-        
-        if note.isReply(to: user) {
-            actionText = "replied to your note:"
-        } else if note.references(author: user) {
-            actionText = "mentioned you:"
-        } else {
-            actionText = nil
-        }
-    }
-    
-    var body: some View {
-        if let author = note.author {
-            Button {
-                router.notificationsPath.append(note.referencedNote() ?? note)
-            } label: {
-                HStack {
-                    AvatarView(imageUrl: author.profilePhotoURL, size: 40)
-                    
-                    VStack {
-                        if let actionText {
-                            HStack(spacing: 4) {
-                                Text(authorName)
-                                    .font(.body)
-                                    .bold()
-                                    .foregroundColor(.primaryTxt)
-                                    .lineLimit(1)
-                                Text(actionText)
-                                    .font(.body)
-                                    .foregroundColor(.primaryTxt)
-                                    .lineLimit(1)
-                                    .fixedSize(horizontal: true, vertical: false)
-                                Spacer()
-                            }
-                        }
-                        HStack {
-                            Text("\"" + (note.attributedContent(with: viewContext) ?? "null") + "\"")
-                                .lineLimit(3)
-                                .font(.body)
-                                .foregroundColor(.primaryTxt)
-                            if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
-                                VStack {
-                                    Text(elapsedTime)
-                                        .lineLimit(1)
-                                        .font(.body)
-                                        .foregroundColor(.secondaryTxt)
-                                    Spacer()
-                                }
-                            }
-                            Spacer()
-                        }
-                    }
-                    Spacer()
+                if router.selectedTab == .notifications {
+                    isVisible = true
                 }
-                .padding(10)
-                .background(
-                    LinearGradient(
-                        colors: [Color.cardBgTop, Color.cardBgBottom],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-                .cornerRadius(20)
-                .padding(.horizontal, 15)
-                .padding(.top, 15)
+                pushNotificationService.requestNotificationPermissionsFromUser()
             }
-            .buttonStyle(CardButtonStyle())
-            .task {
-                note.requestAuthorsMetadataIfNeeded(using: relayService, in: viewContext)
+            .onDisappear {
+                isVisible = false
             }
+            .onChange(of: isVisible, perform: { isVisible in
+                Task { await markAllNotificationsRead() }
+                if isVisible {
+                    analytics.showedNotifications()
+                    Task { 
+                        await subscribeToNewEvents() 
+                    }
+                } else {
+                    Task { await cancelSubscriptions() }
+                }
+            })
         }
     }
 }
 
 struct NotificationsView_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
+    static var relayService = previewData.relayService
     
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
+    static var emptyRelayService = previewData.relayService
     
     static var router = Router()
     
@@ -190,14 +171,14 @@ struct NotificationsView_Previews: PreviewProvider {
         let authorRef = AuthorReference(context: context)
         authorRef.pubkey = bob.hexadecimalPublicKey
         mentionNote.authorReferences = NSMutableOrderedSet(array: [authorRef])
-        try! mentionNote.sign(withKey: KeyFixture.alice)
+        try? mentionNote.sign(withKey: KeyFixture.alice)
         
         let bobNote = Event(context: context)
         bobNote.content = "Hello, world!"
         bobNote.kind = 1
         bobNote.author = bob
         bobNote.createdAt = .now
-        try! bobNote.sign(withKey: KeyFixture.bob)
+        try? bobNote.sign(withKey: KeyFixture.bob)
         
         let replyNote = Event(context: context)
         replyNote.content = "Top of the morning to you, bob! This text should be truncated."
@@ -208,9 +189,9 @@ struct NotificationsView_Previews: PreviewProvider {
         eventRef.referencedEvent = bobNote
         eventRef.referencingEvent = replyNote
         replyNote.eventReferences = NSMutableOrderedSet(array: [eventRef])
-        try! replyNote.sign(withKey: KeyFixture.alice)
+        try? replyNote.sign(withKey: KeyFixture.alice)
         
-        try! context.save()
+        try? context.save()
     }
     
     static var previews: some View {

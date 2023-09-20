@@ -30,7 +30,7 @@ struct OnboardingAgeVerificationView: View {
                     .blendMode(.normal)
                 )
             Text(Localized.ageVerificationSubtitle.string)
-                .foregroundColor(.secondaryTxt)
+                .foregroundColor(.secondaryText)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 44.5)
             Spacer()

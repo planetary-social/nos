@@ -11,6 +11,8 @@ import Foundation
 
 /// Bech32 checksum implementation
 /// Modified from https://github.com/0xDEADP00L/Bech32
+/// https://medium.com/@meshcollider/some-of-the-math-behind-bech32-addresses-cf03c7496285 could help understanding
+/// how Bech32 works
 public enum Bech32 {
     private static let gen: [UInt32] = [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3]
     /// Bech32 checksum delimiter
@@ -104,9 +106,6 @@ public enum Bech32 {
         guard let strBytes = str.data(using: .utf8) else {
             throw DecodingError.nonUTF8String
         }
-        guard strBytes.count <= 90 else {
-            throw DecodingError.stringLengthExceeded
-        }
         var lower: Bool = false
         var upper: Bool = false
         for c in strBytes {
@@ -191,3 +190,5 @@ extension Bech32 {
         }
     }
 }
+
+// swiftlint:enable all

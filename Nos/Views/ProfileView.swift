@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreData
 import Dependencies
+import SwiftUINavigation
 
 struct ProfileView: View {
     
@@ -15,12 +16,16 @@ struct ProfileView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
+    @EnvironmentObject private var currentUser: CurrentUser
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
     
     @State private var showingOptions = false
+    @State private var showingReportMenu = false
     
     @State private var subscriptionIds: [String] = []
+
+    @State private var alert: AlertState<Never>?
     
     @FetchRequest
     private var events: FetchedResults<Event>
@@ -30,76 +35,73 @@ struct ProfileView: View {
         _events = FetchRequest(fetchRequest: author.allPostsRequest())
     }
     
-    func refreshProfileFeed() {
+    func refreshProfileFeed() async {
         // Close out stale requests
         if !subscriptionIds.isEmpty {
-            relayService.sendCloseToAll(subscriptions: subscriptionIds)
+            await relayService.decrementSubscriptionCount(for: subscriptionIds)
             subscriptionIds.removeAll()
         }
         
-        let authors = [author.hexadecimalPublicKey!]
-        let textFilter = Filter(authorKeys: authors, kinds: [.text], limit: 100)
-        let textSub = relayService.requestEventsFromAll(filter: textFilter)
-        subscriptionIds.append(textSub)
-        
-        let metaFilter = Filter(
-            authorKeys: authors,
-            kinds: [.metaData],
-            limit: 1,
-            since: author.lastUpdatedMetadata
-        )
-        let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
-        subscriptionIds.append(metaSub)
-       
-        if let currentUser = CurrentUser.shared.author {
-            let currentUserAuthorKeys = [currentUser.hexadecimalPublicKey!]
-            let userLikesFilter = Filter(
-                authorKeys: currentUserAuthorKeys,
-                kinds: [.like],
-                limit: 100
-            )
-            let userLikesSub = relayService.requestEventsFromAll(filter: userLikesFilter)
-            subscriptionIds.append(userLikesSub)
+        guard let authorKey = author.hexadecimalPublicKey else {
+            return
         }
         
-        let contactFilter = Filter(
-            authorKeys: authors,
-            kinds: [.contactList],
-            limit: 1,
-            since: author.lastUpdatedContactList
+        let authors = [authorKey]
+        let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete, .repost, .longFormContent], limit: 50)
+        async let textSub = relayService.openSubscription(with: textFilter)
+        subscriptionIds.append(await textSub)
+        subscriptionIds.append(
+            contentsOf: await relayService.requestProfileData(
+                for: authorKey, 
+                lastUpdateMetadata: author.lastUpdatedMetadata, 
+                lastUpdatedContactList: author.lastUpdatedContactList
+            )
         )
-        let contactSub = relayService.requestEventsFromAll(filter: contactFilter)
-        subscriptionIds.append(contactSub)
     }
     
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView(.vertical) {
+            ScrollView(.vertical, showsIndicators: false) {
                 ProfileHeader(author: author)
                     .compositingGroup()
                     .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 
                 LazyVStack {
-                    ForEach(events.unmuted) { event in
-                        VStack {
-                            NoteButton(note: event, hideOutOfNetwork: false)
-                                .padding(.horizontal)
+                    if events.unmuted.isEmpty {
+                        Localized.noEventsOnProfile.view
+                            .padding()
+                    } else {
+                        ForEach(events.unmuted) { event in
+                            VStack {
+                                NoteButton(note: event, hideOutOfNetwork: false)
+                                    .padding(.bottom, 15)
+                            }
                         }
                     }
                 }
+                .padding(.top, 10)
             }
-            .padding(.top, 1)
             .background(Color.appBg)
-            .overlay(Group {
-                if !events.contains(where: { !$0.author!.muted }) {
-                    Localized.noEventsOnProfile.view
-                        .padding()
-                }
-            })
         }
-        .nosNavigationBar(title: .profile)
+        .nosNavigationBar(title: .profileTitle)
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
+        }                  
+        .navigationDestination(for: URL.self) { url in URLView(url: url) }
+        .navigationDestination(for: ReplyToNavigationDestination.self) { destination in 
+            RepliesView(note: destination.note, showKeyboard: true)
+        }
+        .navigationDestination(for: MutesDestination.self) { _ in
+            MutesView()
+        }
+        .navigationDestination(for: FollowsDestination.self) { destination in
+            FollowsView(title: Localized.follows, authors: destination.follows)
+        }
+        .navigationDestination(for: FollowersDestination.self) { destination in
+            FollowsView(title: Localized.followedBy, authors: destination.followers)
+        }
+        .navigationDestination(for: RelaysDestination.self) { destination in
+            RelayView(author: destination.author, editable: false)
         }
         .navigationBarItems(
             trailing:
@@ -116,70 +118,119 @@ struct ProfileView: View {
                         Button(Localized.copyUserIdentifier.string) {
                             UIPasteboard.general.string = router.viewedAuthor?.publicKey?.npub ?? ""
                         }
+                        Button(Localized.copyLink.string) {
+                            UIPasteboard.general.string = router.viewedAuthor?.webLink ?? ""
+                        }
                         if let author = router.viewedAuthor {
-                            if author == CurrentUser.shared.author {
+                            if author == currentUser.author {
                                 Button(
                                     action: {
-                                        CurrentUser.shared.editing = true
+                                        currentUser.editing = true
                                         router.push(author)
                                     },
                                     label: {
                                         Text(Localized.editProfile.string)
                                     }
                                 )
+                                Button(
+                                    action: {
+                                        router.push(MutesDestination())
+                                    },
+                                    label: {
+                                        Text(Localized.mutedUsers.string)
+                                    }
+                                )
                             } else {
                                 if author.muted {
                                     Button(Localized.unmuteUser.string) {
-                                        router.viewedAuthor?.unmute(context: viewContext)
+                                        Task {
+                                            do {
+                                                try await router.viewedAuthor?.unmute(viewContext: viewContext)
+                                            } catch {
+                                                alert = AlertState(title: {
+                                                    TextState(Localized.error.string)
+                                                }, message: {
+                                                    TextState(error.localizedDescription)
+                                                })
+                                            }
+                                        }
                                     }
                                 } else {
-                                    Button(Localized.muteUser.string) {
-                                        router.viewedAuthor?.mute(context: viewContext)
+                                    Button(Localized.mute.string) {
+                                        Task { @MainActor in
+                                            do {
+                                                try await router.viewedAuthor?.mute(viewContext: viewContext)
+                                            } catch {
+                                                alert = AlertState(title: {
+                                                    TextState(Localized.error.string)
+                                                }, message: {
+                                                    TextState(error.localizedDescription)
+                                                })
+                                            }
+                                        }
                                     }
+                                }
+                                
+                                Button(Localized.reportUser.string, role: .destructive) {
+                                    showingReportMenu = true
                                 }
                             }
                         }
                     }
                 }
         )
+        .reportMenu($showingReportMenu, reportedObject: .author(author))
         .task {
-            refreshProfileFeed()
+            await refreshProfileFeed()
         }
+        .alert(unwrapping: $alert)
         .onAppear {
             router.viewedAuthor = author
             analytics.showedProfile()
         }
         .refreshable {
-            refreshProfileFeed()
+            await refreshProfileFeed()
         }
         .onDisappear {
-            relayService.sendCloseToAll(subscriptions: subscriptionIds)
-            subscriptionIds.removeAll()
+            Task(priority: .userInitiated) {
+                await relayService.decrementSubscriptionCount(for: subscriptionIds)
+                subscriptionIds.removeAll()
+            }
         }
     }
 }
 
 struct IdentityView_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
     
     static var author: Author = {
-        let author = try! Author.findOrCreate(
-            by: "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e",
-            context: previewContext
-        )
+        let author: Author
+        do {
+            author = try Author.findOrCreate(
+                by: "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e",
+                context: previewContext
+            )
+        } catch {
+            print(error)
+            author = Author(context: previewContext)
+        }
         // TODO: derive from private key
         author.name = "Fred"
         author.about = "Reach for the stars. Someday you just might catch one."
-        try! previewContext.save()
+        try? previewContext.save()
         return author
     }()
     
     static var previews: some View {
         NavigationStack {
-            ProfileView(author: author)
+            ProfileView(author: previewData.previewAuthor)
         }
-        .environment(\.managedObjectContext, previewContext)
+        .environment(\.managedObjectContext, previewData.previewContext)
+        .environmentObject(previewData.relayService)
+        .environmentObject(previewData.router)
+        .environmentObject(previewData.currentUser)
     }
 }

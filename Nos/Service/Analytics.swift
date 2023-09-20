@@ -10,19 +10,6 @@ import Dependencies
 import Logger
 import Starscream
 
-private enum AnalyticsKey: DependencyKey {
-    static let liveValue = Analytics()
-    static let testValue = Analytics(mock: true)
-    static let previewValue = Analytics(mock: true)
-}
-
-extension DependencyValues {
-    var analytics: Analytics {
-        get { self[AnalyticsKey.self] }
-        set { self[AnalyticsKey.self] = newValue }
-    }
-}
-
 /// An object to manage analytics data, currently wired up to send data to PostHog and registered as a global
 /// dependency using the Dependencies library.
 class Analytics {
@@ -45,8 +32,8 @@ class Analytics {
         }
     }
 
-    func published(note: Event) {
-        track("Published Note", properties: ["length": note.content?.count ?? 0])
+    func published(note: JSONEvent) {
+        track("Published Note", properties: ["length": note.content.count])
     }
     
     // MARK: - Screens
@@ -129,9 +116,17 @@ class Analytics {
         track("Unfollowed", properties: ["unfollowed": author.publicKey?.npub ?? ""])
     }
     
+    func reported(_ reportedObject: ReportTarget) {
+        track("Reported", properties: ["type": reportedObject.displayString])
+    }
+    
     func identify(with keyPair: KeyPair) {
         Log.info("Analytics: Identified \(keyPair.npub)")
         postHog?.identify(keyPair.npub)
+    }
+    
+    func databaseStatistics(_ statistics: [String: Any]) {
+        track("Database Statistics", properties: statistics)
     }
     
     func logout() {
@@ -140,7 +135,11 @@ class Analytics {
     }
     
     private func track(_ eventName: String, properties: [String: Any] = [:]) {
-        Log.info("Analytics: \(eventName)")
+        if properties.isEmpty {
+            Log.info("Analytics: \(eventName)")
+        } else {
+            Log.info("Analytics: \(eventName): \(properties)")
+        }
         postHog?.capture(eventName, properties: properties)
     }
     
@@ -148,5 +147,100 @@ class Analytics {
     
     func rateLimited(by socket: WebSocket) {
         track("Rate Limited", properties: ["relay": socket.request.url?.absoluteString ?? "null"])
+    }
+    
+    // MARK: - Notifications
+    
+    func receivedNotification() {
+        track("Push Notification Received")
+    }
+    
+    func displayedNotification() {
+        track("Push Notification Displayed")
+    }
+    
+    func tappedNotification() {
+        track("Push Notification Tapped")
+    }
+    
+    func pushNotificationRegistrationFailed(reason: String) {
+        track("Push Notification Registration Failed", properties: ["reason": reason])
+    }
+    
+    // MARK: UNS
+    
+    func showedUNSWizard() {
+        track("UNS Showed Wizard")
+    }
+    
+    func canceledUNSWizard() {
+        track("UNS Canceled Wizard")
+    }
+    
+    func completedUNSWizard() {
+        track("UNS Completed Wizard")
+    }
+    
+    func enteredUNSPhone() {
+        track("UNS Entered Phone")
+    }
+    
+    func enteredUNSCode() {
+        track("UNS Entered Code")
+    }
+    
+    func choseUNSName() {
+        track("UNS Chose Name")
+    }
+    
+    func choseInvalidUNSName() {
+        track("UNS Invalid Name")
+    }
+    
+    func encounteredUNSError() {
+        track("UNS Error")
+    }
+    
+    // MARK: Message Actions
+    
+    func copiedNoteIdentifier() {
+        track("Copied Note Identifier")
+    }
+    
+    func copiedNoteLink() {
+        track("Copied Note Link")
+    }
+    
+    func copiedNoteText() {
+        track("Copied Note Text")
+    }
+    
+    func viewedNoteSource() {
+        track("Viewed Note Source")
+    }
+    
+    func deletedNote() {
+        track("Deleted Note")
+    }
+    
+    // MARK: Uploads
+    func selectedUploadFromCamera() {
+        track("Selected Upload From Camera")
+    }
+    
+    func selectedUploadFromPhotoLibrary() {
+        track("Selected Upload From Photo Library")
+    }
+    
+    func selectedImage() {
+        track("Selected Image")
+    }
+    
+    func cancelledImageSelection() {
+        track("Cancelled Image Selection")
+    }
+    
+    func cancelledUploadSourceSelection() {
+        track("Cancelled Upload Source Selection")
     }
 }

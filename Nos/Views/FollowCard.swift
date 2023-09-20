@@ -19,6 +19,10 @@ struct FollowCard: View {
     var style = CardStyle.compact
 
     @EnvironmentObject private var router: Router
+    @EnvironmentObject private var currentUser: CurrentUser
+    @EnvironmentObject private var relayService: RelayService
+    
+    @State private var subscriptions = [RelaySubscription.ID]()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -35,12 +39,12 @@ struct FollowCard: View {
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         if author.muted {
-                            Text(Localized.mutedUser.string)
+                            Text(Localized.muted.string)
                                 .font(.subheadline)
-                                .foregroundColor(Color.secondaryTxt)
+                                .foregroundColor(Color.secondaryText)
                         }
                         Spacer()
-                        if let currentUser = CurrentUser.shared.author {
+                        if let currentUser = currentUser.author {
                             FollowButton(currentUserAuthor: currentUser, author: author)
                                 .padding(10)
                         }
@@ -60,6 +64,21 @@ struct FollowCard: View {
         )
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
+        .onAppear {
+            Task(priority: .userInitiated) { 
+                if let subscriptionID = await relayService.requestMetadata(
+                    for: author.hexadecimalPublicKey, 
+                    since: author.lastUpdatedMetadata
+                ) {
+                    subscriptions.append(subscriptionID) 
+                }
+            }
+        }
+        .onDisappear {
+            subscriptions.forEach { subscriptionID in
+                Task { await relayService.decrementSubscriptionCount(for: subscriptionID) }
+            }
+        }
     }
 
     var cornerRadius: CGFloat {

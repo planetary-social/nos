@@ -106,7 +106,9 @@ GEM
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
     fastlane-plugin-changelog (0.16.0)
-    fastlane-plugin-versioning (0.5.1)
+    fastlane-plugin-sentry (1.15.0)
+      os (~> 1.1, >= 1.1.4)
+    fastlane-plugin-versioning (0.5.2)
     gh_inspector (1.1.3)
     google-apis-androidpublisher_v3 (0.34.0)
       google-apis-core (>= 0.9.1, < 2.a)
@@ -213,10 +215,12 @@ GEM
 PLATFORMS
   arm64-darwin-21
   arm64-darwin-22
+  ruby
 
 DEPENDENCIES
   fastlane
   fastlane-plugin-changelog
+  fastlane-plugin-sentry
   fastlane-plugin-versioning
 
 BUNDLED WITH

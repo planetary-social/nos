@@ -5,13 +5,17 @@
 //  Created by Christopher Jorgensen on 3/9/23.
 //
 
+import Dependencies
 import SwiftUI
 
 struct ProfileEditView: View {
     
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
+    @EnvironmentObject private var currentUser: CurrentUser
     @Environment(\.managedObjectContext) private var viewContext
+
+    @Dependency(\.crashReporting) private var crashReporting
 
     @ObservedObject var author: Author
     
@@ -35,13 +39,13 @@ struct ProfileEditView: View {
             Form {
                 Section {
                     TextField(text: $displayNameText) {
-                        Localized.displayName.view.foregroundColor(.secondaryTxt)
+                        Localized.displayName.view.foregroundColor(.secondaryText)
                     }
                     .textInputAutocapitalization(.none)
                     .foregroundColor(.textColor)
                     .autocorrectionDisabled()
                     TextField(text: $nameText) {
-                        Localized.name.view.foregroundColor(.secondaryTxt)
+                        Localized.name.view.foregroundColor(.secondaryText)
                     }
                     .textInputAutocapitalization(.none)
                     .foregroundColor(.textColor)
@@ -49,30 +53,30 @@ struct ProfileEditView: View {
                     TextEditor(text: $bioText)
                         .placeholder(when: bioText.isEmpty, placeholder: {
                             Text(Localized.bio.string)
-                                .foregroundColor(.secondaryTxt)
+                                .foregroundColor(.secondaryText)
                         })
                         .foregroundColor(.textColor)
                     TextField(text: $avatarText) {
-                        Localized.picUrl.view.foregroundColor(.secondaryTxt)
+                        Localized.picUrl.view.foregroundColor(.secondaryText)
                     }
                     .foregroundColor(.textColor)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.none)
-#if os(iOS)
+                    #if os(iOS)
                     .keyboardType(.URL)
-#endif
+                    #endif
                     let nip05Binding = Binding<String>(
                         get: { self.nip05Text },
                         set: { self.nip05Text = $0.lowercased() }
                     )
                     TextField(text: nip05Binding) {
-                        Localized.nip05.view.foregroundColor(.secondaryTxt)
+                        Localized.nip05.view.foregroundColor(.secondaryText)
                     }
                     .textInputAutocapitalization(.none)
                     .foregroundColor(.textColor)
                     .autocorrectionDisabled()
                 } header: {
-                    createAccountCompletion != nil ? Localized.createAccount.view : Localized.basicInfo.view
+                    createAccountCompletion != nil ? Localized.tryIt.view : Localized.basicInfo.view
                         .foregroundColor(.textColor)
                         .fontWeight(.heavy)
                 }
@@ -82,59 +86,18 @@ struct ProfileEditView: View {
                     endPoint: .bottom
                 ))
                 
-                // TODO: allow remove UNS
+                // Universal Names Set Up
                 if author.nip05?.hasSuffix("universalname.space") != true {
-                    VStack {
-                        Text("Universal Name Space brings identity verification you can trust.")
-                        //                            .padding(.horizontal, 10)
-                            .padding(.top, 24)
-                            .padding(.bottom, 12)
-                            .foregroundColor(.white)
-                            .bold()
-                            .shadow(radius: 2)
-                        
-                        HStack {
-                            ActionButton(
-                                title: .setUpUniversalName,
-                                textColor: Color(hex: "#f26141"),
-                                depthEffectColor: Color(hex: "#f8d4b6"),
-                                backgroundGradient: LinearGradient(
-                                    colors: [Color(hex: "#FFF8F7"), Color(hex: "#FDF6F5")],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                ),
-                                textShadow: false
-                            ) {
-                                showUniversalNameWizard = true
-                            }
-                            .frame(minHeight: 32)
-                            Spacer()
-                        }
+                    SetUpUNSBanner {
+                        showUniversalNameWizard = true
                     }
-                    .padding(.top, 12)
-                    .padding(.bottom, 24)
-                    .background(
-                        HStack {
-                            Spacer()
-                            Image(systemName: "checkmark.seal.fill")
-                                .resizable()
-                                .aspectRatio(1, contentMode: .fit)
-                                .foregroundColor(Color(hex: "#F95795"))
-                        }
-                    )
-                    .listRowBackground(
-                        LinearGradient(
-                            colors: [Color(hex: "#F08508"), Color(hex: "#F43F75")],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
                 }
             }
+            
             if let createAccountCompletion {
                 Spacer()
-                BigActionButton(title: .createAccount) {
-                    save()
+                BigActionButton(title: .tryIt) {
+                    await save()
                     createAccountCompletion()
                 }
                 .background(Color.appBg)
@@ -157,7 +120,7 @@ struct ProfileEditView: View {
                     if createAccountCompletion == nil {
                         Button(
                             action: {
-                                save()
+                                Task { await save() }
                                 
                                 // Go back to profile page
                                 router.pop()
@@ -173,16 +136,10 @@ struct ProfileEditView: View {
             populateTextFields()
         }
         .onDisappear {
-            CurrentUser.shared.editing = false
+            currentUser.editing = false
         }
     }
    
-    var learnMoreLink: AttributedString {
-        var result = try! AttributedString(markdown: "[Learn more ](https://www.universalname.space)")
-        result.foregroundColor = .accent
-        return result
-    }
-    
     func populateTextFields() {
         displayNameText = author.displayName ?? ""
         nameText = author.name ?? ""
@@ -192,16 +149,20 @@ struct ProfileEditView: View {
         unsText = author.uns ?? ""
     }
     
-    func save() {
+    func save() async {
         author.displayName = displayNameText
         author.name = nameText
         author.about = bioText
         author.profilePhotoURL = URL(string: avatarText)
         author.nip05 = nip05Text
         author.uns = unsText
-        try! viewContext.save()
-        // Post event
-        CurrentUser.shared.publishMetaData()
+        do {
+            try viewContext.save()
+            // Post event
+            await currentUser.publishMetaData()
+        } catch {
+            crashReporting.report(error)
+        }
     }
 }
 

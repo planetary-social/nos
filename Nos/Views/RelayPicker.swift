@@ -26,42 +26,30 @@ struct RelayPicker: View {
     }
     
     var body: some View {
-        ZStack {
-            VStack {
-                Color.clear
-            }.onTapGesture {
-                // TODO: this doesn't work when color is clear
-                withAnimation {
-                    isPresented = false
-                }
-            }
-            VStack {
-                ScrollView {
-                    VStack(spacing: 0) {
-                        // TODO: scrolling
-                        RelayPickerRow(string: defaultSelection, selection: $selectedRelay)
-                        ForEach(relays) { relay in
-                            Color.cardTextInputBorder
-                                .frame(height: 1)
-                                .shadow(color: Color(hex: "#3A2859"), radius: 0, y: 1)
-                            RelayPickerRow(relay: relay, selection: $selectedRelay)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
+        VStack {
+            ScrollView {
+                VStack(spacing: 0) {
+                    // TODO: scrolling
+                    RelayPickerRow(string: defaultSelection, selection: $selectedRelay)
+                    ForEach(relays) { relay in
+
+                        Divider()
+                            .overlay(Color.cardDivider)
+                            .shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
+                            .padding(.horizontal, 20)
+                        
+                        RelayPickerRow(relay: relay, selection: $selectedRelay)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
-                    .cornerRadius(15, corners: [.bottomLeft, .bottomRight])
                 }
-                Spacer()
+                .cornerRadius(15, corners: [.bottomLeft, .bottomRight])
             }
-            VStack {
-                Color.white
-                    .frame(height: 100)
-                    .offset(y: -100)
-                    .shadow(radius: 2, y: 0)
-                Spacer()
-            }
-            .clipped()
+            Spacer()
         }
+        .background(LinearGradient.cardBackground) 
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .transition(.move(edge: .top))
+        .zIndex(99) // Fixes dismissal animation
     }
 }
 
@@ -106,7 +94,7 @@ struct RelayPickerRow: View {
                     .foregroundColor(.primaryTxt)
                     .bold()
                     .lineLimit(1)
-                    .padding(.horizontal, 14)
+                    .padding(.horizontal, 19)
                     .padding(.vertical, 19)
                 Spacer()
                 if isSelected {
@@ -114,19 +102,20 @@ struct RelayPickerRow: View {
                         .bold()
                         .symbolRenderingMode(.palette)
                         .foregroundStyle(LinearGradient.diagonalAccent)
-                        .padding(.trailing, 20)
+                        .padding(.trailing, 19)
                 }
             }
+            .readabilityPadding()
         }
-        .background(Color.cardBgBottom)
     }
 }
 
 struct RelayPicker_Previews: PreviewProvider {
 
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
+    static var relayService = previewData.relayService
     
     static var user: Author {
         let author = Author(context: previewContext)
@@ -138,10 +127,14 @@ struct RelayPicker_Previews: PreviewProvider {
     static func createTestData(in context: NSManagedObjectContext, user: Author) {
         let addresses = ["wss://nostr.com", "wss://nos.social", "wss://alongdomainnametoseewhathappens.com"]
         addresses.forEach {
-            _ = try! Relay(context: previewContext, address: $0, author: user)
+            do {
+                _ = try Relay(context: previewContext, address: $0, author: user)
+            } catch {
+                print(error)
+            }
         }
-        
-        try! previewContext.save()
+
+        try? previewContext.save()
     }
     
     @State static var selectedRelay: Relay?
@@ -149,7 +142,7 @@ struct RelayPicker_Previews: PreviewProvider {
     static var previews: some View {
         RelayPicker(
             selectedRelay: $selectedRelay,
-            defaultSelection: Localized.extendedNetwork.string,
+            defaultSelection: Localized.allMyRelays.string,
             author: user,
             isPresented: .constant(true)
         )

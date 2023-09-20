@@ -16,8 +16,10 @@ struct AppView: View {
 
     @EnvironmentObject private var appController: AppController
     @EnvironmentObject var router: Router
+    @EnvironmentObject var pushNotificationService: PushNotificationService
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.crashReporting) private var crashReporting
     @EnvironmentObject var currentUser: CurrentUser
     
     @State private var showingOptions = false
@@ -42,7 +44,7 @@ struct AppView: View {
             case .newNote:
                 return Localized.newNote.view
             case .profile:
-                return Localized.profile.view
+                return Localized.profileTitle.view
             }
         }
         
@@ -57,7 +59,7 @@ struct AppView: View {
             case .newNote:
                 return Localized.newNote.string
             case .profile:
-                return Localized.profile.string
+                return Localized.profileTitle.string
             }
         }
     }
@@ -79,7 +81,7 @@ struct AppView: View {
                                         text
                                     } else {
                                         Image.tabIconHome
-                                        text.foregroundColor(.secondaryTxt)
+                                        text.foregroundColor(.secondaryText)
                                     }
                                 }
                             }
@@ -89,8 +91,9 @@ struct AppView: View {
                             .onAppear {
                                 // TODO: Move this somewhere better like CurrentUser when it becomes the source of truth
                                 // for who is logged in
-                                if let keyPair = CurrentUser.shared.keyPair {
+                                if let keyPair = currentUser.keyPair {
                                     analytics.identify(with: keyPair)
+                                    crashReporting.identify(with: keyPair)
                                 }
                             }
                     }
@@ -104,7 +107,7 @@ struct AppView: View {
                                     text.foregroundColor(.textColor)
                                 } else {
                                     Image.tabIconEveryone
-                                    text.foregroundColor(.secondaryTxt)
+                                    text.foregroundColor(.secondaryText)
                                 }
                             }
                         }
@@ -121,7 +124,7 @@ struct AppView: View {
                         }
                     .tag(Destination.newNote)
                     
-                    NotificationsView(user: CurrentUser.shared.author)
+                    NotificationsView(user: currentUser.author)
                         .tabItem {
                             VStack {
                                 let text = Localized.notifications.view
@@ -130,25 +133,26 @@ struct AppView: View {
                                     text.foregroundColor(.textColor)
                                 } else {
                                     Image.tabIconNotifications
-                                    text.foregroundColor(.secondaryTxt)
+                                    text.foregroundColor(.secondaryText)
                                 }
                             }
                         }
                         .toolbarBackground(.visible, for: .tabBar)
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(Destination.notifications)
+                        .badge(pushNotificationService.badgeCount)
                     
-                    if let author = CurrentUser.shared.author {
+                    if let author = currentUser.author {
                         ProfileTab(author: author, path: $router.profilePath)
                             .tabItem {
                                 VStack {
-                                    let text = Localized.profile.view
+                                    let text = Localized.profileTitle.view
                                     if $router.selectedTab.wrappedValue == .profile {
                                         Image.tabProfileSelected
                                         text.foregroundColor(.textColor)
                                     } else {
                                         Image.tabProfile
-                                        text.foregroundColor(.secondaryTxt)
+                                        text.foregroundColor(.secondaryText)
                                     }
                                 }
                             }
@@ -188,18 +192,15 @@ struct AppView: View {
 
 struct AppView_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
+    static var relayService = previewData.relayService
     static var router = Router()
-    static var currentUser = {
-        let currentUser = CurrentUser()
-        currentUser.privateKeyHex = KeyFixture.alice.privateKeyHex
-        return currentUser
-    }()
+    static var currentUser = previewData.currentUser 
     
     static var loggedInAppController: AppController = {
-        let appController = AppController(currentUser: currentUser, router: router)
+        let appController = AppController()
         appController.completeOnboarding()
         return appController
     }()
@@ -221,12 +222,12 @@ struct AppView_Previews: PreviewProvider {
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
-            .environmentObject(AppController(currentUser: currentUser, router: router))
+            .environmentObject(AppController())
         
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(routerWithSideMenuOpened)
-            .environmentObject(AppController(currentUser: currentUser, router: routerWithSideMenuOpened))
+            .environmentObject(AppController())
     }
 }

@@ -2,22 +2,24 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Nos can access camera to allow users to post photos directly.</string>
 	<key>POSTHOG_API_KEY</key>
 	<string>$(POSTHOG_API_KEY)</string>
-    <key>POSTHOG_API_KEY</key>
-    <string>$(POSTHOG_API_KEY)</string>
-    <key>UNS_AUTH_CONNECTION_URL</key>
-    <string>$(UNS_AUTH_CONNECTION_URL)</string>
-    <key>UNS_CONNECTION_URL</key>
-    <string>$(UNS_CONNECTION_URL)</string>
-    <key>UNS_CLIENT_ID</key>
-    <string>$(UNS_CLIENT_ID)</string>
-    <key>UNS_CLIENT_SECRET</key>
-    <string>$(UNS_CLIENT_SECRET)</string>
-    <key>UNS_ORG_CODE</key>
-    <string>$(UNS_ORG_CODE)</string>
-    <key>UNS_API_KEY</key>
-    <key>$(UNS_API_KEY)</key>
+	<key>UNS_AUTH_CONNECTION_URL</key>
+	<string>$(UNS_AUTH_CONNECTION_URL)</string>
+	<key>UNS_CONNECTION_URL</key>
+	<string>$(UNS_CONNECTION_URL)</string>
+	<key>UNS_CLIENT_ID</key>
+	<string>$(UNS_CLIENT_ID)</string>
+	<key>UNS_CLIENT_SECRET</key>
+	<string>$(UNS_CLIENT_SECRET)</string>
+	<key>UNS_ORG_CODE</key>
+	<string>$(UNS_ORG_CODE)</string>
+	<key>UNS_API_KEY</key>
+	<string>$(UNS_API_KEY)</string>
+	<key>SENTRY_DSN</key>
+	<string>$(SENTRY_DSN)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>ClarityCity-Black.otf</string>
@@ -38,6 +40,10 @@
 		<string>ClarityCity-SemiBoldItalic.otf</string>
 		<string>ClarityCity-Thin.otf</string>
 		<string>ClarityCity-ThinItalic.otf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
 	</array>
 </dict>
 </plist>

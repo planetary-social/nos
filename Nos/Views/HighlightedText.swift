@@ -23,6 +23,8 @@ struct HighlightedText: View {
     
     let foregroundColor: Color
     
+    let font: Font
+    
     /// A link that the highlighted word will open if tapped. Optional.
     let link: URL?
     
@@ -43,11 +45,19 @@ struct HighlightedText: View {
     ///   - highlightedWord: The word that should be highlighted, if any. Must be a substring of `text`.
     ///   - highlight: The gradient that will be used to highlight the word.
     ///   - link: A link that the highlighted word will open if tapped. Optional.
-    init(_ text: String, highlightedWord: String?, highlight: LinearGradient, textColor: Color = .primaryTxt, link: URL?) {
+    init(
+        _ text: String,
+        highlightedWord: String?,
+        highlight: LinearGradient,
+        textColor: Color = .primaryTxt,
+        font: Font = .clarity,
+        link: URL?
+    ) {
         self.text = text
         self.highlightedWord = highlightedWord
         self.highlightGradient = highlight
         self.foregroundColor = textColor
+        self.font = font
         self.link = link
         
         // If we have a highlighted word we break it up into segments.
@@ -167,7 +177,7 @@ struct HighlightedText: View {
             Log.optional(error)
             attributedString = AttributedString(markdown)
         }
-        return Text(attributedString)
+        return Text(attributedString).font(font)
     }
     
     var body: some View {
@@ -180,7 +190,6 @@ struct HighlightedText: View {
     }
 }
 
-// swiftlint:disable force_unwrapping
 struct HighlightedText_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
@@ -188,7 +197,7 @@ struct HighlightedText_Previews: PreviewProvider {
                 "A test string",
                 highlightedWord: "string",
                 highlight: .diagonalAccent,
-                link: URL(string: "https://planetary.social")!
+                link: URL(string: "https://planetary.social") ?? URL.homeDirectory
             )
             .padding()
         }

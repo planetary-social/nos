@@ -10,7 +10,7 @@ import Dependencies
 import Logger
 
 struct OnboardingLoginView: View {
-    var completion: () -> Void
+    let completion: @MainActor () -> Void
     
     @Dependency(\.analytics) private var analytics
     @EnvironmentObject var currentUser: CurrentUser
@@ -20,8 +20,8 @@ struct OnboardingLoginView: View {
     @State var privateKeyString = ""
     @State var showError = false
     
-    func importKey(_ keyPair: KeyPair) {
-        currentUser.keyPair = keyPair
+    func importKey(_ keyPair: KeyPair) async {
+        await currentUser.setKeyPair(keyPair)
         analytics.importedKey()
 
         for address in Relay.allKnown {
@@ -29,14 +29,14 @@ struct OnboardingLoginView: View {
                 let relay = try Relay(
                     context: viewContext,
                     address: address,
-                    author: CurrentUser.shared.author
+                    author: currentUser.author
                 )
-                CurrentUser.shared.onboardingRelays.append(relay)
+                currentUser.onboardingRelays.append(relay)
             } catch {
                 Log.error(error.localizedDescription)
             }
         }
-        try? CurrentUser.shared.context.save()
+        try? currentUser.viewContext.saveIfNeeded()
 
         completion()
     }
@@ -45,7 +45,7 @@ struct OnboardingLoginView: View {
         VStack {
             Form {
                 Section {
-                    SecureField("NSec1", text: $privateKeyString)
+                    SecureField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
                         .foregroundColor(.textColor)
                 } header: {
                     Localized.pasteYourSecretKey.view
@@ -61,9 +61,9 @@ struct OnboardingLoginView: View {
             if !privateKeyString.isEmpty {
                 BigActionButton(title: .login) {
                     if let keyPair = KeyPair(nsec: privateKeyString) {
-                        importKey(keyPair)
+                        await importKey(keyPair)
                     } else if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
-                        importKey(keyPair)
+                        await importKey(keyPair)
                     } else {
                         self.showError = true
                     }

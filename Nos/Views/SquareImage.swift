@@ -6,27 +6,25 @@
 //
 
 import SwiftUI
-import CachedAsyncImage
+import SDWebImageSwiftUI
 
 struct SquareImage: View {
     var url: URL
+    
+    var onTap: (() -> Void)?
     
     var body: some View {
         Color.clear
             .aspectRatio(1, contentMode: .fit)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .overlay {
-                CachedAsyncImage(url: url) { phase in
-                    if let image = phase.image {
-                        image
-                            .resizable()
-                    } else if phase.error != nil {
-                        EmptyView()
-                    } else {
-                        ProgressView()
+                WebImage(url: url)
+                    .resizable()
+                    .indicator(.activity)
+                    .aspectRatio(contentMode: .fill)
+                    .onTapGesture {
+                        onTap?()
                     }
-                }
-                .aspectRatio(contentMode: .fill)
             }
             .clipShape(Rectangle())
     }

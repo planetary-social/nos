@@ -36,3 +36,4 @@ extension Color {
         )
     }
 }
+// swiftlint:enable identifier_name

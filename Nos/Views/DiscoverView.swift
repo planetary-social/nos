@@ -6,41 +6,9 @@
 //
 
 import SwiftUI
+import Combine
 import CoreData
 import Dependencies
-import Combine
-
-class SearchModel: ObservableObject {
-    @Published var query: String = ""
-    @Published var namedAuthors = [Author]()
-    @Published var authorSuggestions = [Author]()
-    
-    private var cancellables = [AnyCancellable]()
-    private var context: NSManagedObjectContext
-    
-    init(context: NSManagedObjectContext = PersistenceController.shared.viewContext) {
-        self.context = context
-        $query
-            .debounce(for: 0.2, scheduler: RunLoop.main)
-            .filter { !$0.isEmpty }
-            .map { self.authors(named: $0) }
-            .sink(receiveValue: { self.authorSuggestions = $0 })
-            .store(in: &cancellables)
-    }
-    
-    func authors(named name: String) -> [Author] {
-        guard let authors = try? Author.find(named: name, context: context) else {
-            return []
-        }
-
-        return authors
-    }
-    
-    func clear() {
-        query = ""
-        authorSuggestions = []
-    }
-}
 
 struct DiscoverView: View {
     
@@ -49,7 +17,7 @@ struct DiscoverView: View {
     @EnvironmentObject var router: Router
     @EnvironmentObject var currentUser: CurrentUser
     @Dependency(\.analytics) private var analytics
-    @AppStorage("lastDiscoverRequestDate") var lastRequestDateUnix: TimeInterval?
+    @State private var lastRequestDate: Date?
 
     @State var showRelayPicker = false
     
@@ -57,16 +25,26 @@ struct DiscoverView: View {
     
     @State var columns: Int = 0
     
-    @State private var subscriptionIds = [String]()
+    @State private var performingInitialLoad = true
+    static let initialLoadTime = 2
+    @State private var subscriptionIDs = [String]()
+    @State private var isVisible = false
     private var featuredAuthors: [String]
     
-    @StateObject private var searchModel = SearchModel()
+    @StateObject private var searchController = SearchController()
+    @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
+
+    @State var predicate: NSPredicate = .false
     
-    var predicate: NSPredicate {
+    func updatePredicate() {
         if let relayFilter {
-            return Event.seen(on: relayFilter)
+            predicate = Event.seen(on: relayFilter, before: date, exceptFrom: currentUser.author)
         } else {
-            return Event.extendedNetworkPredicate(featuredAuthors: featuredAuthors)
+            predicate = Event.extendedNetworkPredicate(
+                currentUser: currentUser, 
+                featuredAuthors: featuredAuthors, 
+                before: date
+            )
         }
     }
 
@@ -74,112 +52,91 @@ struct DiscoverView: View {
         self.featuredAuthors = featuredAuthors
     }
     
-    func refreshDiscover() {
-        relayService.sendCloseToAll(subscriptions: subscriptionIds)
-        subscriptionIds.removeAll()
+    func subscribeToNewEvents() async {
+        await cancelSubscriptions()
         
-        if let relayFilter {
+        if let relayAddress = relayFilter?.addressURL {
             // TODO: Use a since filter
             let singleRelayFilter = Filter(
-                kinds: [.text],
-                limit: 200
+                kinds: [.text, .delete],
+                limit: 100
             )
             
-            subscriptionIds.append(
-                relayService.requestEventsFromAll(filter: singleRelayFilter, relays: [relayFilter])
+            subscriptionIDs.append(
+                // TODO: I don't think the override relays will be honored when opening new sockets
+                await relayService.openSubscription(with: singleRelayFilter, to: [relayAddress])
             )
         } else {
             
             var fetchSinceDate: Date?
-            /// Make sure the lastRequestDate was more than a minute ago
-            /// to make sure we got all the events from it.
-            if let lastRequestDateUnix {
-                let lastRequestDate = Date(timeIntervalSince1970: lastRequestDateUnix)
+            // Make sure the lastRequestDate was more than a minute ago
+            // to make sure we got all the events from it.
+            if let lastRequestDate {
                 if lastRequestDate.distance(to: .now) > 60 {
                     fetchSinceDate = lastRequestDate
-                    self.lastRequestDateUnix = Date.now.timeIntervalSince1970
+                    self.lastRequestDate = Date.now
                 }
             } else {
-                self.lastRequestDateUnix = Date.now.timeIntervalSince1970
+                self.lastRequestDate = Date.now
             }
             
             let featuredFilter = Filter(
                 authorKeys: featuredAuthors.compactMap {
                     PublicKey(npub: $0)?.hex
                 },
-                kinds: [.text],
-                limit: 100,
+                kinds: [.text, .delete],
+                limit: 50,
                 since: fetchSinceDate
             )
             
-            subscriptionIds.append(relayService.requestEventsFromAll(filter: featuredFilter))
+            subscriptionIDs.append(await relayService.openSubscription(with: featuredFilter))
             
-            if !currentUser.inNetworkAuthors.isEmpty {
-                // this filter just requests everything for now, because I think requesting all the authors within
-                // two hops is too large of a request and causes the websocket to close.
-                let twoHopsFilter = Filter(
-                    kinds: [.text],
-                    limit: 50,
-                    since: fetchSinceDate
-                )
-                
-                subscriptionIds.append(relayService.requestEventsFromAll(filter: twoHopsFilter))
-            }
+            // this filter just requests everything for now, because I think requesting all the authors within
+            // two hops is too large of a request and causes the websocket to close.
+            let twoHopsFilter = Filter(
+                kinds: [.text],
+                inNetwork: true,
+                limit: 200,
+                since: fetchSinceDate
+            )
+            
+            subscriptionIDs.append(await relayService.openSubscription(with: twoHopsFilter))
+        }
+    }
+    
+    func cancelSubscriptions() async {
+        if !subscriptionIDs.isEmpty {
+            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
+            subscriptionIDs.removeAll()
         }
     }
     
     var body: some View {
         NavigationStack(path: $router.discoverPath) {
             ZStack {
-                DiscoverGrid(predicate: predicate, columns: $columns)
-
-                if showRelayPicker, let author = currentUser.author {
-                    RelayPicker(
-                        selectedRelay: $relayFilter,
-                        defaultSelection: Localized.extendedNetwork.string,
-                        author: author,
-                        isPresented: $showRelayPicker
+                if performingInitialLoad {
+                    FullscreenProgressView(
+                        isPresented: $performingInitialLoad, 
+                        hideAfter: .now() + .seconds(Self.initialLoadTime)
                     )
-                }
-            }
-            .onChange(of: relayFilter) { _ in
-                withAnimation {
-                    showRelayPicker = false
-                }
-                refreshDiscover()
-            }
-            .searchable(text: $searchModel.query, placement: .toolbar, prompt: PlainText(Localized.searchBar.string)) {
-                ForEach(searchModel.authorSuggestions, id: \.self) { author in
-                    Button {
-                        router.push(author)
-                    } label: {
-                        HStack(alignment: .center) {
-                            AvatarView(imageUrl: author.profilePhotoURL, size: 24)
-                            Text(author.safeName)
-                                .lineLimit(1)
-                                .font(.subheadline)
-                                .foregroundColor(Color.primaryTxt)
-                                .multilineTextAlignment(.leading)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            if author.muted {
-                                Text(Localized.mutedUser.string)
-                                    .font(.subheadline)
-                                    .foregroundColor(Color.secondaryTxt)
-                            }
-                            Spacer()
-                            if let currentUser = CurrentUser.shared.author {
-                                FollowButton(currentUserAuthor: currentUser, author: author)
-                                    .padding(10)
-                            }
-                        }
-                        .listRowInsets(.none)
-                        .searchCompletion(author.safeName)
+                } else {
+                    DiscoverGrid(predicate: predicate, searchController: searchController, columns: $columns)
+                    
+                    if showRelayPicker, let author = currentUser.author {
+                        RelayPicker(
+                            selectedRelay: $relayFilter,
+                            defaultSelection: Localized.allMyRelays.string,
+                            author: author,
+                            isPresented: $showRelayPicker
+                        )
                     }
-                    .listRowBackground(Color.appBg)
                 }
-                .scrollContentBackground(.hidden)
-                .background(Color.appBg)
             }
+            .searchable(
+                text: $searchController.query, 
+                placement: .toolbar, 
+                prompt: PlainText(Localized.searchBar.string)
+            )
             .autocorrectionDisabled()
             .onSubmit(of: .search) {
                 submitSearch()
@@ -189,7 +146,7 @@ struct DiscoverView: View {
                 RelayPickerToolbarButton(
                     selectedRelay: $relayFilter,
                     isPresenting: $showRelayPicker,
-                    defaultSelection: Localized.extendedNetwork
+                    defaultSelection: Localized.allMyRelays
                 ) {
                     withAnimation {
                         showRelayPicker.toggle()
@@ -211,23 +168,49 @@ struct DiscoverView: View {
                 }
             }
             .animation(.easeInOut, value: columns)
+            .doubleTapToPop(tab: .discover)
+            .task { 
+                updatePredicate()
+            }
             .refreshable {
-                refreshDiscover()
+                date = .now
+            }
+            .onChange(of: relayFilter) { _ in
+                withAnimation {
+                    showRelayPicker = false
+                }
+                updatePredicate()
+                Task { await subscribeToNewEvents() }
+            }
+            .onChange(of: date) { _ in
+                updatePredicate()
+            }
+            .refreshable {
+                date = .now
             }
             .onAppear {
                 if router.selectedTab == .discover {
-                    searchModel.clear()
-                    analytics.showedDiscover()
-                    refreshDiscover()
+                    isVisible = true
                 }
             }
             .onDisappear {
-                searchModel.clear()
-                relayService.sendCloseToAll(subscriptions: subscriptionIds)
-                subscriptionIds.removeAll()
+                isVisible = false
             }
+            .onChange(of: isVisible, perform: { isVisible in
+                if isVisible {
+                    analytics.showedDiscover()
+                    Task { await subscribeToNewEvents() }
+                } else {
+                    searchController.clear()
+                    Task { await cancelSubscriptions() }
+                }
+            })
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
+            }
+            .navigationDestination(for: URL.self) { url in URLView(url: url) }
+            .navigationDestination(for: ReplyToNavigationDestination.self) { destination in 
+                RepliesView(note: destination.note, showKeyboard: true)
             }
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
@@ -240,26 +223,30 @@ struct DiscoverView: View {
     }
     
     func author(fromPublicKey publicKeyString: String) -> Author? {
-        guard let publicKey = PublicKey(npub: publicKeyString) ?? PublicKey(hex: publicKeyString) else {
+        let strippedString = publicKeyString.trimmingCharacters(
+            in: NSCharacterSet.whitespacesAndNewlines
+        )
+        guard let publicKey = PublicKey(npub: strippedString) ?? PublicKey(hex: strippedString) else {
             return nil
         }
         guard let author = try? Author.findOrCreate(by: publicKey.hex, context: viewContext) else {
             return nil
         }
+        try? viewContext.saveIfNeeded()
         return author
     }
     
     func submitSearch() {
-        if searchModel.query.contains("@") {
-            Task {
+        if searchController.query.contains("@") {
+            Task(priority: .userInitiated) {
                 if let publicKeyHex =
-                    await relayService.retrieveInternetIdentifierPublicKeyHex(searchModel.query.lowercased()),
+                    await relayService.retrieveInternetIdentifierPublicKeyHex(searchController.query.lowercased()),
                     let author = author(fromPublicKey: publicKeyHex) {
                     router.push(author)
                 }
             }
         } else {
-            if let author = author(fromPublicKey: searchModel.query) {
+            if let author = author(fromPublicKey: searchController.query) {
                 router.push(author)
             }
         }
@@ -276,21 +263,15 @@ struct SizePreferenceKey: PreferenceKey {
 
 struct DiscoverView_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
+    static var relayService = previewData.relayService
     
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
-    static var currentUser: CurrentUser = {
-        let currentUser = CurrentUser()
-        currentUser.privateKeyHex = KeyFixture.alice.privateKeyHex
-        currentUser.context = previewContext
-        currentUser.relayService = relayService
-        return currentUser
-    }()
-    
+    static var emptyRelayService = previewData.relayService
+    static var currentUser = previewData.currentUser
     static var router = Router()
     
     static var user: Author {
@@ -309,85 +290,39 @@ struct DiscoverView_Previews: PreviewProvider {
         longNote.identifier = "2"
         longNote.author = user
         longNote.content = .loremIpsum(5)
-        
-        try! previewContext.save()
+
+        try? previewContext.save()
     }
     
     static func createRelayData(in context: NSManagedObjectContext, user: Author) {
         let addresses = ["wss://nostr.band", "wss://nos.social", "wss://a.long.domain.name.to.see.what.happens"]
         addresses.forEach {
-            _ = try! Relay(context: previewContext, address: $0, author: user)
+            _ = try? Relay(context: previewContext, address: $0, author: user)
         }
-        
-        try! previewContext.save()
+
+        try? previewContext.save()
     }
     
     @State static var relayFilter: Relay?
     
     static var previews: some View {
-        DiscoverView(featuredAuthors: [user.publicKey!.npub])
-            .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
-            .environmentObject(router)
-            .environmentObject(currentUser)
-            .onAppear { createTestData(in: previewContext) }
-        
-        DiscoverView(featuredAuthors: [user.publicKey!.npub])
-            .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
-            .environmentObject(router)
-            .environmentObject(currentUser)
-            .onAppear { createTestData(in: previewContext) }
-            .previewDevice("iPad Air (5th generation)")
-    }
-}
+        if let publicKey = user.publicKey {
+            DiscoverView(featuredAuthors: [publicKey.npub])
+                .environment(\.managedObjectContext, previewContext)
+                .environmentObject(relayService)
+                .environmentObject(router)
+                .environmentObject(currentUser)
+                .onAppear { createTestData(in: previewContext) }
 
-struct RelayPickerToolbarButton: ToolbarContent {
-    
-    @Binding var selectedRelay: Relay?
-    @Binding var isPresenting: Bool
-    var defaultSelection: Localized
-    var action: () -> Void
-    
-    var title: String {
-        if let selectedRelay {
-            return selectedRelay.host ?? Localized.error.string
+            DiscoverView(featuredAuthors: [publicKey.npub])
+                .environment(\.managedObjectContext, previewContext)
+                .environmentObject(relayService)
+                .environmentObject(router)
+                .environmentObject(currentUser)
+                .onAppear { createTestData(in: previewContext) }
+                .previewDevice("iPad Air (5th generation)")
         } else {
-            return defaultSelection.string
-        }
-    }
-    
-    var imageName: String {
-        if isPresenting {
-            return "chevron.up"
-        } else {
-            return "chevron.down"
-        }
-    }
-    
-    var body: some ToolbarContent {
-        ToolbarItem(placement: .principal) {
-            Button {
-                action()
-            } label: {
-                HStack {
-                    PlainText(title)
-                        .font(.clarityTitle3)
-                        .foregroundColor(.primaryTxt)
-                        .bold()
-                        .padding(.leading, 14)
-                    Image(systemName: imageName)
-                        .font(.system(size: 10))
-                        .bold()
-                        .foregroundColor(.secondary)
-                }
-            }
-            .frame(height: 35)
-            .background(
-                Color.appBg
-                    .cornerRadius(20)
-            )
-            .padding(.bottom, 3)
+            EmptyView()
         }
     }
 }

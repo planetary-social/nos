@@ -7,29 +7,44 @@
 //
 
 import SwiftUI
+import Dependencies
+
+let goldenRatio: CGFloat = 0.618
 
 struct GoldenPostView: View {
 
-    var author: Author
+    @ObservedObject var author: Author
 
-    var note: Event {
-        didSet {
-            if let eventAuthor = note.author {
-                self.author = eventAuthor
-            }
-        }
-    }
-
-    private let goldenRatio: CGFloat = 0.618
+    @ObservedObject var note: Event
     
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var router: Router
+    
+    @State private var noteContent = LoadingContent<AttributedString>.loading
+    @State private var contentLinks = [URL]()
+    @Dependency(\.persistenceController) private var persistenceController
+    
+    internal init(author: Author, note: Event) {
+        self.author = author
+        self.note = note
+    }
+    
+    var noteText: some View {
+        Group {
+            switch noteContent {
+            case .loading:
+                Text(note.content ?? "").redacted(reason: .placeholder)
+            case .loaded(let attributedString):
+                Text(attributedString)
+            }
+        }
+    }
 
     var text: some View {
-        Text(note.attributedContent(with: viewContext) ?? "")
+        noteText
             .foregroundColor(.primaryTxt)
-            .accentColor(.accent)
+            .tint(.accent)
             .multilineTextAlignment(.leading)
             .environment(\.openURL, OpenURLAction { url in
                 router.open(url: url, with: viewContext)
@@ -48,7 +63,7 @@ struct GoldenPostView: View {
                     Text(author.safeName)
                         .lineLimit(1)
                         .font(.subheadline)
-                        .foregroundColor(Color.secondaryTxt)
+                        .foregroundColor(Color.secondaryText)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     // }
@@ -57,6 +72,16 @@ struct GoldenPostView: View {
             }
         }
         .padding(10)
+        .task {
+            let backgroundContext = persistenceController.backgroundViewContext
+            let parsedAttributedContent = await Event.attributedContent(
+                noteID: note.identifier,
+                context: backgroundContext
+            ) 
+            withAnimation(.easeIn(duration: 0.1)) {
+                self.noteContent = .loaded(parsedAttributedContent)
+            }
+        }
     }
     
     var isTextOnly: Bool {

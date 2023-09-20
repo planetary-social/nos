@@ -9,9 +9,6 @@ import XCTest
 import CoreData
 import secp256k1
 import secp256k1_bindings
-@testable import Nos
-
-// swiftlint:disable force_unwrapping
 
 /// Tests for the Event model.
 final class EventTests: XCTestCase {
@@ -60,7 +57,7 @@ final class EventTests: XCTestCase {
     let sampleEventSignature = "31c710803d3b77cb2c61697c8e2a980a53ec66e980990ca34cc24f9018bf85bfd2b0669c1404f364de776a9d9ed31a5d6d32f5662ac77f2dc6b89c7762132d63"
     let sampleEventPubKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
     let sampleEventContent = "Spent today on our company retreat talking a lot about Nostr. The team seems very keen to build something in this space. It’s exciting to be opening our minds to so many possibilities after being deep in the Scuttlebutt world for so long."
-    let sampleRelay = "wss://nostr.lorentz.is/"
+    let sampleRelay = "wss://nostr.lorentz.is"
     let sampleName = "Test Name"
     
     let sampleContactListSignature = "a01fa191a0236ffe5ee1fbd9401cd7b1da7daad5e19a25962eb7ea4c9335522478bdff255f1de40ca6c98cdf8cf26aa1f5f1b6c263c5004b0b6dcdc12573cfd7"
@@ -81,7 +78,7 @@ final class EventTests: XCTestCase {
         let sampleEvent = try XCTUnwrap(events.first(where: { $0.identifier == sampleEventID }))
         
         // Assert
-        XCTAssertEqual(events.count, 140)
+        XCTAssertEqual(events.count, 115)
         XCTAssertEqual(sampleEvent.signature, sampleEventSignature)
         XCTAssertEqual(sampleEvent.kind, 1)
         XCTAssertEqual(sampleEvent.author?.hexadecimalPublicKey, sampleEventPubKey)
@@ -163,24 +160,90 @@ final class EventTests: XCTestCase {
         let context = PersistenceController(inMemory: true).container.viewContext
 
         // Act
-        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)
+        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)!
          
         // Assert
         XCTAssertEqual(parsedEvent.signature, sampleContactListSignature)
         XCTAssertEqual(parsedEvent.kind, 3)
-        XCTAssertEqual(parsedEvent.author?.follows?.count, 1)
+        XCTAssertEqual(parsedEvent.author?.follows.count, 1)
         XCTAssertEqual(parsedEvent.author?.hexadecimalPublicKey, KeyFixture.pubKeyHex)
         XCTAssertEqual(parsedEvent.createdAt?.timeIntervalSince1970, 1_675_264_762)
         
-        guard let follow = parsedEvent.author?.follows?.allObjects.first as? Follow else {
+        guard let follow = parsedEvent.author?.follows.first as? Follow else {
             XCTFail("Tag is not of the Follow type")
             return
         }
         
-        XCTAssertEqual(parsedEvent.author?.relays?.count, 1)
-        let relay = parsedEvent.author?.relays?.allObjects[0] as! Relay
+        XCTAssertEqual(parsedEvent.author?.relays.count, 1)
+        let relay = parsedEvent.author!.relays.first!
         XCTAssertEqual(relay.address, sampleRelay)
         XCTAssertEqual(follow.petName, sampleName)
+    }
+    
+    func testParseExpirationDate() throws {
+        // Arrange
+        guard let jsonData = sampleEventJSONString.data(using: .utf8) else {
+            XCTFail("Sample data cannot be parsed")
+            return
+        }
+        
+        var jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
+        jsonEvent.tags = [["expiration", "2378572992"]]
+        let context = PersistenceController(inMemory: true).container.viewContext
+        
+        // Act
+        let parsedEvent = try EventProcessor.parse(
+            jsonEvent: jsonEvent, 
+            from: nil, 
+            in: context, 
+            skipVerification: true
+        )!
+        
+        // Assert
+        XCTAssertEqual(parsedEvent.expirationDate?.timeIntervalSince1970, 2_378_572_992)
+    }
+    
+    func testParseExpirationDateDouble() throws {
+        // Arrange
+        guard let jsonData = sampleEventJSONString.data(using: .utf8) else {
+            XCTFail("Sample data cannot be parsed")
+            return
+        }
+        
+        var jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
+        jsonEvent.tags = [["expiration", "2378572992.123"]]
+        let context = PersistenceController(inMemory: true).container.viewContext
+        
+        // Act
+        let parsedEvent = try EventProcessor.parse(
+            jsonEvent: jsonEvent, 
+            from: nil, 
+            in: context, 
+            skipVerification: true
+        )!
+        
+        // Assert
+        XCTAssertEqual(parsedEvent.expirationDate!.timeIntervalSince1970, 2_378_572_992.123, accuracy: 0.001)
+    }
+    
+    func testExpiredEventNotSaved() throws {
+        // Arrange
+        guard let jsonData = sampleEventJSONString.data(using: .utf8) else {
+            XCTFail("Sample data cannot be parsed")
+            return
+        }
+        
+        var jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
+        jsonEvent.tags = [["expiration", "1"]]
+        let context = PersistenceController(inMemory: true).container.viewContext
+        
+        // Act & Assert
+        XCTAssertThrowsError(try EventProcessor.parse(
+            jsonEvent: jsonEvent, 
+            from: nil, 
+            in: context, 
+            skipVerification: true
+        ))
     }
     
     /// Verifies that when we see an event we already have in Core Data as a stub it is updated correctly.
@@ -202,13 +265,13 @@ final class EventTests: XCTestCase {
             from: nil,
             in: testContext,
             skipVerification: true
-        )
+        )!
         try testContext.save()
         
         var allEvents = try testContext.fetch(Event.allEventsRequest())
         XCTAssertEqual(allEvents.count, 2)
-        XCTAssertEqual(referencingEvent.eventReferences?.count, 1)
-        var eventReference = referencingEvent.eventReferences?.firstObject as! EventReference
+        XCTAssertEqual(referencingEvent.eventReferences.count, 1)
+        var eventReference = referencingEvent.eventReferences.firstObject as! EventReference
         XCTAssertEqual(eventReference.referencedEvent?.isStub, true)
         
         let referencedJSONEvent = JSONEvent(
@@ -225,13 +288,13 @@ final class EventTests: XCTestCase {
             from: nil,
             in: testContext,
             skipVerification: true
-        )
+        )!
         try testContext.save()
         
         allEvents = try testContext.fetch(Event.allEventsRequest())
         XCTAssertEqual(allEvents.count, 2)
-        XCTAssertEqual(referencedEvent.referencingEvents?.count, 1)
-        eventReference = referencedEvent.referencingEvents!.allObjects.first as! EventReference
+        XCTAssertEqual(referencedEvent.referencingEvents.count, 1)
+        eventReference = referencedEvent.referencingEvents.first! 
         XCTAssertEqual(eventReference.referencingEvent, referencingEvent)
     }
     
@@ -280,6 +343,20 @@ final class EventTests: XCTestCase {
         
         // Assert
         XCTAssertFalse(try KeyFixture.keyPair.publicKey.verifySignature(on: event))
+    }
+
+    func testFetchEventByIDPerformance() throws {
+        let persistenceController = PersistenceController()
+        let testContext = persistenceController.container.viewContext
+        let testEvent = try createTestEvent(in: testContext)
+        testEvent.identifier = try testEvent.calculateIdentifier()
+        let eventID = testEvent.identifier!
+        try testContext.save()
+        measure {
+            for _ in 0..<1000 {
+                _ = Event.find(by: eventID, context: testContext)  
+            }
+        }
     }
 
     // MARK: - Helpers

@@ -8,12 +8,13 @@
 import Foundation
 
 extension Optional {
-    func unwrap(_ then: (Wrapped) -> Void) {
+    @discardableResult
+    func unwrap<T>(_ then: (Wrapped) -> T?) -> T? {
         switch self {
         case .none:
-            return
+            return nil
         case .some(let unwrapped):
-            then(unwrapped)
+            return then(unwrapped)
         }
     }
 }

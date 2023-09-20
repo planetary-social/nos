@@ -102,15 +102,20 @@ class UNSAPI {
     }
     
     func getNames() async throws -> [String] {
-        var request = URLRequest(url: connectionURL.appending(path: "v1/personas/\(personaID!)/names"))
+        guard let personaID, let accessToken else {
+            throw UNSError.generic
+        }
+        var request = URLRequest(url: connectionURL.appending(path: "v1/personas/\(personaID)/names"))
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
-        request.setValue("Bearer \(accessToken!)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
         let response = try await URLSession.shared.data(for: request)
         let data = response.0
         
-        let responseDict = try JSONSerialization.jsonObject(with: data) as! [String: Any]
+        guard let responseDict = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            throw UNSError.generic
+        }
         guard let dataDict = responseDict["data"] as? [[String: Any]] else {
             logError(response: response)
             throw UNSError.generic
@@ -127,16 +132,19 @@ class UNSAPI {
     }
     
     func createName(_ name: String) async throws -> Bool {
+        guard let accessToken else {
+            throw UNSError.generic
+        }
         var request = URLRequest(url: connectionURL.appending(path: "v1/names"))
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
-        request.setValue("Bearer \(accessToken!)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let body = [
             "name": name,
             "persona_id": personaID,
         ]
-        let jsonBody = try! JSONSerialization.data(withJSONObject: body)
+        let jsonBody = try JSONSerialization.data(withJSONObject: body)
         request.httpBody = jsonBody
         request.httpMethod = "POST"
         let response = try await URLSession.shared.data(for: request)
@@ -149,25 +157,24 @@ class UNSAPI {
         return true
     }
     
-    func hasExistingNostrVerification(npub: String) async throws -> Bool {
-        return false
-    }
-    
     func requestNostrVerification(npub: String) async throws -> String? {
+        guard let accessToken else {
+            throw UNSError.generic
+        }
         var request = URLRequest(url: connectionURL.appending(path: "/v1/resolver/social_connections"))
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
-        request.setValue("Bearer \(accessToken!)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let body = [
-            "name_id": nameID,
+            "name_id": nameID ?? "null",
             "connection_type": "NOSTR_SIGNATURE",
             "scope": "PUBLIC",
             "arguments": [
                 "nostr_pub_key": npub
             ]
         ] as [String: Any]
-        let jsonBody = try! JSONSerialization.data(withJSONObject: body)
+        let jsonBody = try JSONSerialization.data(withJSONObject: body)
         request.httpBody = jsonBody
         request.httpMethod = "POST"
         
@@ -190,18 +197,23 @@ class UNSAPI {
     }
     
     func submitNostrVerification(message: String, keyPair: KeyPair) async throws -> String {
+        guard let accessToken else {
+            throw UNSError.generic
+        }
         var request = URLRequest(url: connectionURL.appending(path: "/v1/resolver/social_connections/nostr/signature"))
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
-        request.setValue("Bearer \(accessToken!)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        var bytesToSign = try message.data(using: .utf8)!.sha256.bytes
+        guard var bytesToSign = try message.data(using: .utf8)?.sha256.bytes else {
+            throw UNSError.generic
+        }
         let body = [
-            "verification_id": verificationID,
+            "verification_id": verificationID ?? "null",
             "public_key": keyPair.npub,
             "signature": try keyPair.sign(bytes: &bytesToSign)
         ] as [String: Any]
-        let jsonBody = try! JSONSerialization.data(withJSONObject: body)
+        let jsonBody = try JSONSerialization.data(withJSONObject: body)
         request.httpBody = jsonBody
         request.httpMethod = "POST"
 
@@ -218,9 +230,12 @@ class UNSAPI {
     }
     
     func getNIP05() async throws -> String {
+        guard let accessToken, let nameID else {
+            throw UNSError.generic
+        }
         var url = connectionURL.appending(path: "/v1/resolver/admin")
         url = url.appending(queryItems: [
-            URLQueryItem(name: "name_id", value: nameID!),
+            URLQueryItem(name: "name_id", value: nameID),
             URLQueryItem(name: "page", value: "1"),
             URLQueryItem(name: "page_size", value: "1"),
             URLQueryItem(name: "key", value: "NOSTR"),
@@ -228,13 +243,15 @@ class UNSAPI {
         var request = URLRequest(url: url)
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
-        request.setValue("Bearer \(accessToken!)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "GET"
         let response = try await URLSession.shared.data(for: request)
         let data = response.0
         
-        let responseDict = try JSONSerialization.jsonObject(with: data) as! [String: Any]
+        guard let responseDict = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            throw UNSError.generic
+        }
         guard let dataDict = responseDict["data"] as? [[String: Any]],
             let nostrConnection = dataDict.first,
             let nip05 = nostrConnection["value"] as? String else {

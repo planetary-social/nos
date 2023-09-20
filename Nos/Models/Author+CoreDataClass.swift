@@ -8,9 +8,13 @@
 
 import Foundation
 import CoreData
+import Dependencies
+import Logger
 
 @objc(Author)
 public class Author: NosManagedObject {
+    
+    @Dependency(\.currentUser) var currentUser
     
     var npubString: String? {
         publicKey?.npub
@@ -41,11 +45,43 @@ public class Author: NosManagedObject {
         about == nil && name == nil && displayName == nil && profilePhotoURL == nil
     }
     
-    class func find(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author? {
+    var webLink: String {
+        if let publicKey {
+            return "https://iris.to/\(publicKey.npub)"
+        } else {
+            Log.error("Coudln't find public key when creating weblink")
+            return "https://iris.to/"
+        }
+    }
+
+    /// A URL that links to this author, suitable for being shared with others.
+    ///
+    /// See [NIP-21](https://github.com/nostr-protocol/nips/blob/master/21.md)
+    var uri: URL? {
+        if let npub = publicKey?.npub {
+            return URL(string: "nostr:\(npub)")
+        }
+        return nil
+    }
+    
+    var followedKeys: [HexadecimalString] {
+        follows.compactMap({ $0.destination?.hexadecimalPublicKey }) 
+    }
+
+    var hasHumanFriendlyName: Bool {
+        name?.isEmpty == false || displayName?.isEmpty == false
+    }
+    
+    class func request(by pubKey: HexadecimalString) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey = %@", pubKey)
         fetchRequest.fetchLimit = 1
-        // *** Terminating app due to uncaught exception 'NSGenericException', reason: '*** Collection <__NSCFSet: 0x6000010aa130> was mutated while being enumerated.'
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+        return fetchRequest
+    }
+    
+    class func find(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author? {
+        let fetchRequest = request(by: pubKey)
         if let author = try context.fetch(fetchRequest).first {
             return author
         }
@@ -80,16 +116,40 @@ public class Author: NosManagedObject {
     @nonobjc public class func allAuthorsRequest(muted: Bool) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.predicate = NSPredicate(format: "muted == %i", muted)
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+        return fetchRequest
+    }
+
+    @nonobjc public class func allAuthorsWithNameOrDisplayNameRequest(muted: Bool) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.predicate = NSPredicate(format: "muted == %i AND (displayName != nil OR name != nil)", muted)
         return fetchRequest
     }
     
-    @nonobjc func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
+    @nonobjc func allPostsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(format: "kind = %i AND author = %@", eventKind.rawValue, self)
+        fetchRequest.predicate = NSPredicate(
+            format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@", 
+            EventKind.text.rawValue, 
+            EventKind.repost.rawValue, 
+            EventKind.longFormContent.rawValue, 
+            self
+        )
         return fetchRequest
     }
-    
+
+    @nonobjc func allPostsRequest(eventKind: EventKind) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "kind = %i AND author = %@",
+            eventKind.rawValue,
+            self
+        )
+        return fetchRequest
+    }
+
     @nonobjc func storiesRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
@@ -97,25 +157,38 @@ public class Author: NosManagedObject {
         fetchRequest.fetchLimit = 10
         return fetchRequest
     }
+
+    @nonobjc func allEventsRequest() -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "author = %@",
+            self
+        )
+        return fetchRequest
+    }
     
-    @nonobjc class func inNetworkRequest(for author: Author? = nil) -> NSFetchRequest<Author> {
-        var author = author
-        if author == nil {
-            guard let currentUser = CurrentUser.shared.author else {
-                return emptyRequest()
-            }
-            author = currentUser
-        }
-        
+    @nonobjc class func oneHopRequest(for author: Author) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.lastUpdatedContactList, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey",
+            author
+        )
+        return fetchRequest
+    }
+    
+    /// Fetches all the authors who are further than 2 hops away on the social graph for the given `author`.
+    static func outOfNetwork(for author: Author) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: "ANY followers.source IN %@.follows.destination " +
-                "OR hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey OR " +
-                "hexadecimalPublicKey = %@.hexadecimalPublicKey",
-            author!,
-            author!,
-            author!
+            format: "NOT (ANY followers.source IN %@.follows.destination) " +
+                "AND NOT (hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey) AND " +
+                "hexadecimalPublicKey != %@.hexadecimalPublicKey AND muted = 0",
+            author,
+            author,
+            author
         )
         return fetchRequest
     }
@@ -150,77 +223,81 @@ public class Author: NosManagedObject {
     }
     
     func add(relay: Relay) {
-        // swiftlint:disable legacy_objc_type
-        relays = (relays ?? NSSet()).adding(relay)
-        // swiftlint:enable legacy_objc_type
+        relays.insert(relay) 
         print("Adding \(relay.address ?? "") to \(hexadecimalPublicKey ?? "")")
     }
     
-    func deleteAllPosts(context: NSManagedObjectContext) {
-        let deleteRequest = Event.deleteAllPosts(by: self)
-        
-        do {
-            try context.execute(deleteRequest)
-        } catch let error as NSError {
-            print("Failed to delete texts from \(hexadecimalPublicKey ?? ""). Error: \(error.description)")
-        }
-        
-        try? context.save()
-    }
-    
-    func mute(context: NSManagedObjectContext) {
-        guard let mutedAuthorKey = hexadecimalPublicKey,
-            mutedAuthorKey != CurrentUser.shared.publicKey else {
+    @MainActor func mute(viewContext context: NSManagedObjectContext) async throws {
+        guard let mutedAuthorKey = hexadecimalPublicKey, let currentAuthor = currentUser.author,
+            mutedAuthorKey != currentAuthor.hexadecimalPublicKey else {
             return
         }
         
         print("Muting \(mutedAuthorKey)")
         muted = true
-        CurrentUser.shared.publishMuteList(keys: [mutedAuthorKey])
-        deleteAllPosts(context: context)
+
+        var mutedList = try await loadMuteList(viewContext: context)
+
+        mutedList.append(mutedAuthorKey)
+
+        try await context.perform {
+            do {
+                let deleteRequest = Event.deleteAllPosts(by: self)
+                deleteRequest.resultType = .resultTypeObjectIDs
+                try context.execute(deleteRequest)
+                context.refreshAllObjects()
+            } catch {
+                Log.error(error.localizedDescription)
+            }
+
+            if let author = try Author.find(by: mutedAuthorKey, context: context) {
+                author.muted = true
+            }
+            try context.save()
+        }
+        // Publish the modified list
+        await currentUser.publishMuteList(keys: Array(Set(mutedList)))
     }
     
     func remove(relay: Relay) {
-        relays = relays?.removing(relay)
+        relays.remove(relay)
         print("Removed \(relay.address ?? "") from \(hexadecimalPublicKey ?? "")")
     }
-    
-    func requestMetadata(using relayService: RelayService) -> String? {
-        guard let hexadecimalPublicKey else {
-            return nil
+
+    @MainActor func loadMuteList(viewContext context: NSManagedObjectContext) async throws -> [String] {
+        guard let currentAuthor = currentUser.author else {
+            throw CurrentUserError.authorNotFound
         }
-        
-        let metaFilter = Filter(
-            authorKeys: [hexadecimalPublicKey],
-            kinds: [.metaData],
-            limit: 1,
-            since: lastUpdatedMetadata
-        )
-        let metaSub = relayService.requestEventsFromAll(filter: metaFilter)
-        return metaSub
+        let request = currentAuthor.allPostsRequest(eventKind: .mute)
+        let results = try context.fetch(request)
+        if let mostRecentMuteList = results.first, let pTags = mostRecentMuteList.allTags as? [[String]] {
+            return pTags.map { $0[1] }
+        } else {
+            return []
+        }
     }
     
-    func unmute(context: NSManagedObjectContext) {
-        guard let unmutedAuthorKey = hexadecimalPublicKey,
-            unmutedAuthorKey != CurrentUser.shared.publicKey else {
+    @MainActor func unmute(viewContext context: NSManagedObjectContext) async throws {
+        guard let unmutedAuthorKey = hexadecimalPublicKey, let currentAuthor = currentUser.author,
+            unmutedAuthorKey != currentAuthor.hexadecimalPublicKey else {
             return
         }
         
         print("Un-muting \(unmutedAuthorKey)")
         muted = false
-        
-        let request = Event.allPostsRequest(.mute)
-        
-        if let results = try? context.fetch(request),
-            let mostRecentMuteList = results.first,
-            let pTags = mostRecentMuteList.allTags as? [[String]] {
 
-            // Get the current list of muted keys
-            var mutedList = pTags.map { $0[1] }
-            mutedList.removeAll(where: { $0 == unmutedAuthorKey })
+        var mutedList = try await loadMuteList(viewContext: context)
 
-            // Publish that modified list
-            CurrentUser.shared.publishMuteList(keys: mutedList)
+        mutedList.removeAll(where: { $0 == unmutedAuthorKey })
+
+        try await context.perform {
+            if let author = try Author.find(by: unmutedAuthorKey, context: context) {
+                author.muted = false
+            }
+            try context.save()
         }
+
+        // Publish the modified list
+        await currentUser.publishMuteList(keys: Array(Set(mutedList)))
     }
 }

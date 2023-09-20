@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import Combine
 import CoreData
+import Logger
 
 // Manages the app's navigation state.
-class Router: ObservableObject {
+@MainActor class Router: ObservableObject {
     
     @Published var homeFeedPath = NavigationPath()
     @Published var discoverPath = NavigationPath()
@@ -22,19 +24,8 @@ class Router: ObservableObject {
         if sideMenuOpened {
             return Binding(get: { self.sideMenuPath }, set: { self.sideMenuPath = $0 })
         }
-        
-        switch selectedTab {
-        case .home:
-            return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
-        case .discover:
-            return Binding(get: { self.discoverPath }, set: { self.discoverPath = $0 })
-        case .newNote:
-            return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
-        case .notifications:
-            return Binding(get: { self.notificationsPath }, set: { self.notificationsPath = $0 })
-        case .profile:
-            return Binding(get: { self.profilePath }, set: { self.profilePath = $0 })
-        }
+
+        return path(for: selectedTab)
     }
     
     @Published var userNpubPublicKey = ""
@@ -64,6 +55,40 @@ class Router: ObservableObject {
     func pop() {
         currentPath.wrappedValue.removeLast()
     }
+    
+    func openOSSettings() {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
+    func consecutiveTaps(on tab: AppView.Destination) -> AnyPublisher<Void, Never> {
+        $selectedTab
+            .scan((previous: nil, current: selectedTab)) { previousPair, current in
+                (previous: previousPair.current, current: current)
+            }
+            .filter {
+                $0.previous == $0.current
+            }
+            .compactMap {
+                $0.current == tab ? Void() : nil
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func path(for destination: AppView.Destination) -> Binding<NavigationPath> {
+        switch destination {
+        case .home:
+            return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
+        case .discover:
+            return Binding(get: { self.discoverPath }, set: { self.discoverPath = $0 })
+        case .newNote:
+            return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
+        case .notifications:
+            return Binding(get: { self.notificationsPath }, set: { self.notificationsPath = $0 })
+        case .profile:
+            return Binding(get: { self.profilePath }, set: { self.profilePath = $0 })
+        }
+    }
 }
 
 extension Router {
@@ -73,16 +98,18 @@ extension Router {
         let identifier = String(link[link.index(after: link.startIndex)...])
         // handle mentions. mention link will be prefixed with "@" followed by
         // the hex format pubkey of the mentioned author
-        if link.hasPrefix("@") {
-            if let author = try? Author.find(by: identifier, context: context) {
-                push(author)
+        do {
+            if link.hasPrefix("@") {
+                push(try Author.findOrCreate(by: identifier, context: context))
+            } else if link.hasPrefix("%") {
+                push(try Event.findOrCreateStubBy(id: identifier, context: context))
+            } else if url.scheme == "http" || url.scheme == "https" {
+                push(url)
+            } else {
+                UIApplication.shared.open(url)
             }
-        } else if link.hasPrefix("%") {
-            if let event = Event.find(by: identifier, context: context) {
-                push(event)
-            }
-        } else {
-            UIApplication.shared.open(url)
+        } catch {
+            Log.optional(error)
         }
     }
 }

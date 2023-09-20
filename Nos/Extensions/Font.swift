@@ -14,6 +14,11 @@ extension Font {
             forTextStyle: .body
         ).pointSize)
     
+    static var clarityMedium = Font
+        .custom("ClarityCity-Medium", size: UIFont.preferredFont(
+            forTextStyle: .body
+        ).pointSize)
+    
     static var clarityBold = Font
         .custom("ClarityCity-Bold", size: UIFont.preferredFont(
             forTextStyle: .body
@@ -37,6 +42,16 @@ extension Font {
     static var clarityCaption = Font
         .custom("ClarityCity-Regular", size: UIFont.preferredFont(
             forTextStyle: .caption1
+        ).pointSize)
+    
+    static var clarityCaption2 = Font
+        .custom("ClarityCity-Regular", size: UIFont.preferredFont(
+            forTextStyle: .caption2
+        ).pointSize)
+
+    static var claritySubheadline = Font
+        .custom("ClarityCity-Medium", size: UIFont.preferredFont(
+            forTextStyle: .subheadline
         ).pointSize)
     
     static var brand = Font
@@ -84,7 +99,12 @@ extension UIFont {
     static var clarity = UIFont(
         name: "ClarityCity-Regular",
         size: UIFont.preferredFont(forTextStyle: .body).pointSize
-    )
+    )!
+    
+    static var clarityBold = UIFont(
+        name: "ClarityCity-Bold",
+        size: UIFont.preferredFont(forTextStyle: .body).pointSize
+    )!
 }
 
 // swiftlint:disable identifier_name
@@ -103,4 +123,4 @@ func TextField(_ titleKey: LocalizedStringKey, text: Binding<String>, axis: Axis
 func TextField<Label: View>(text: Binding<String>, prompt: Text? = nil, label: () -> Label) -> some View {
     SwiftUI.TextField(text: text, prompt: prompt?.font(.brand), label: label).font(.brand)
 }
-// swiftlint:enableidentifier_name
+// swiftlint:enable identifier_name

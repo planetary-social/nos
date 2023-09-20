@@ -73,25 +73,10 @@ struct StoriesView: View {
 
 struct HomeStoriesView_Previews: PreviewProvider {
     
-    static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
-    static var relayService = RelayService(persistenceController: persistenceController)
-    
-    static var emptyPersistenceController = PersistenceController.empty
-    static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = RelayService(persistenceController: emptyPersistenceController)
-    
-    static var router = Router()
-    
-    static var currentUser: CurrentUser = {
-        let currentUser = CurrentUser()
-        currentUser.context = previewContext
-        currentUser.relayService = relayService
-        currentUser.keyPair = KeyFixture.keyPair
-        return currentUser
-    }()
+    static var previewData = PreviewData()
     
     static var previews: some View {
-        StoriesView(user: currentUser.author!)
+        StoriesView(user: previewData.currentUser.author!)
+            .inject(previewData: previewData)
     }
 }
