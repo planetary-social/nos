@@ -46,6 +46,7 @@ struct ProfileEditView: View {
         ScrollView {
             AvatarView(imageUrl: author.profilePhotoURL, size: 99)
                 .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
+                .padding(.top, 16)
             
             NosFormSection(label: .profilePicture) {
                 NosTextField(label: .url, text: $avatarText)
@@ -58,7 +59,7 @@ struct ProfileEditView: View {
                 font: .clarityCaption,
                 link: URL(string: "https://nostr.build")!
             )
-            .padding(.vertical)
+            .padding(13)
             
             NosFormSection(label: .basicInfo) { 
                 NosTextField(label: .name, text: $displayNameText)
@@ -79,11 +80,12 @@ struct ProfileEditView: View {
             //                }
                 
                 // Universal Names Set Up
-//                if author.nip05?.hasSuffix("universalname.space") != true {
-//                    SetUpUNSBanner {
-//                        showUniversalNameWizard = true
-//                    }
-//                }
+                if author.nip05?.hasSuffix("universalname.space") != true {
+                    SetUpUNSBanner {
+                        showUniversalNameWizard = true
+                    }
+                    .padding(13)
+                }
             
             if let createAccountCompletion {
                 Spacer()
