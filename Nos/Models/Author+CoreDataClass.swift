@@ -149,11 +149,25 @@ public class Author: NosManagedObject {
         )
         return fetchRequest
     }
+    
+    @nonobjc func followedWithNewNotes(since: Date) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+        // TODO: need to get rid of replies somehow. Normally we use a subquery but you can't put a subquery in a subquery.
+        // Perhaps we need to make a Core Data "derived attribute" called isRootNote or something on Event.
+        fetchRequest.predicate = NSPredicate(
+            format: "ANY followers.source = %@ AND SUBQUERY(events, $event, ($event.kind = 1 OR $event.kind = 6 OR $event.kind = 30023) AND $event.createdAt > %@).@count > 0",
+            self,
+            since as CVarArg
+        )
+        return fetchRequest
+    }
 
-    @nonobjc func storiesRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
+    @nonobjc func storiesRequest(since: Date) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(format: "kind = %i AND author = %@", eventKind.rawValue, self)
+        fetchRequest.predicate = NSPredicate(format: "author = %@ AND createdAt > %@ AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (kind = 1 OR kind = 6 OR kind = 30023)", self, since as CVarArg)
+        return fetchRequest
         fetchRequest.fetchLimit = 10
         return fetchRequest
     }
@@ -193,16 +207,6 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc func followsRequest() -> NSFetchRequest<Author> {
-        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
-        fetchRequest.predicate = NSPredicate(
-            format: "ANY followers.source = %@",
-            self
-        )
-        return fetchRequest
-    }
-
     @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: true)]

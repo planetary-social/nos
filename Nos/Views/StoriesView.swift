@@ -14,24 +14,46 @@ struct StoriesView: View {
     @FetchRequest private var authors: FetchedResults<Author>
     
     @State private var currentAuthorIndex: Int = 0
+    @State private var scrollViewProxy: ScrollViewProxy?
+    @Binding private var cutoffDate: Date
     
-    init(user: Author) {
+    init(user: Author, cutoffDate: Binding<Date>) {
         self.user = user
-        _authors = FetchRequest(fetchRequest: user.followsRequest())
+        self._cutoffDate = cutoffDate
+        _authors = FetchRequest(fetchRequest: user.followedWithNewNotes(since: cutoffDate.wrappedValue))
     }
     
     var body: some View {
         VStack {
             ScrollView(.horizontal) {
-                HStack {
-                    ForEach(authors) { author in
-                        Button { 
-                            if let index = authors.firstIndex(of: author) {
-                                currentAuthorIndex = index
+                ScrollViewReader { proxy in
+                    HStack {
+                        ForEach(authors) { author in
+                            let index = authors.firstIndex(of: author)
+                            Button { 
+                                if let index {
+                                    currentAuthorIndex = index
+                                }
+                            } label: { 
+                                let avatar = AvatarView(imageUrl: author.profilePhotoURL, size: 54)
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 4)
+                                
+                                if let index, index == currentAuthorIndex {
+                                    avatar
+                                        .background(
+                                            Circle()
+                                                .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
+                                                .frame(width: 58, height: 58)
+                                        )
+                                } else {
+                                    avatar
+                                }
                             }
-                        } label: { 
-                            AvatarView(imageUrl: author.profilePhotoURL, size: 54)
-                                .padding(7)
+                            .id(index)
+                            .onAppear {
+                                scrollViewProxy = proxy
+                            }
                         }
                     }
                 }
@@ -39,6 +61,7 @@ struct StoriesView: View {
             if let currentAuthor = authors[safe: currentAuthorIndex] {
                 AuthorStoryView(
                     author: currentAuthor,
+                    cutoffDate: $cutoffDate,
                     showPreviousAuthor: { self.showPreviousAuthor(from: self.authors) },
                     showNextAuthor: { self.showNextAuthor(from: self.authors) }
                 )
@@ -55,6 +78,7 @@ struct StoriesView: View {
         guard currentAuthorIndex < authors.count else { return }
         let nextAuthorIndex = authors.index(after: currentAuthorIndex)
         currentAuthorIndex = nextAuthorIndex
+        scrollViewProxy?.scrollTo(currentAuthorIndex)
     }
     
     func showPreviousAuthor(from authors: FetchedResults<Author>) {
@@ -67,9 +91,10 @@ struct StoriesView: View {
 struct HomeStoriesView_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
+    @State static var cutoffDate = Calendar.current.date(byAdding: .day, value: -14, to: .now)!
     
     static var previews: some View {
-        StoriesView(user: previewData.currentUser.author!)
+        StoriesView(user: previewData.currentUser.author!, cutoffDate: $cutoffDate)
             .inject(previewData: previewData)
     }
 }

@@ -14,6 +14,7 @@ struct HomeTab: View {
     
     @State private var showStories = false
     @State private var storiesIconRotation: Angle = .zero
+    @State private var storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now)!
     
     @EnvironmentObject var router: Router
     @EnvironmentObject var currentUser: CurrentUser
@@ -22,7 +23,7 @@ struct HomeTab: View {
         NavigationStack(path: $router.homeFeedPath) {
             VStack {
                 if showStories {
-                    StoriesView(user: user)
+                    StoriesView(user: user, cutoffDate: $storiesCutoffDate)
                 } else {
                     HomeFeedView(user: user)
                 }

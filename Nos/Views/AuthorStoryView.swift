@@ -17,30 +17,31 @@ struct AuthorStoryView: View {
     @FetchRequest private var notes: FetchedResults<Event>
     
     @State private var noteIndex: Int = 0
+    @Binding private var cutoffDate: Date
     
-    init(author: Author, showPreviousAuthor: @escaping () -> Void, showNextAuthor: @escaping () -> Void) {
+    init(author: Author, cutoffDate: Binding<Date>, showPreviousAuthor: @escaping () -> Void, showNextAuthor: @escaping () -> Void) {
         self.author = author
+        self._cutoffDate = cutoffDate
         self.showPreviousAuthor = showPreviousAuthor
         self.showNextAuthor = showNextAuthor
-        _notes = FetchRequest(fetchRequest: author.storiesRequest())
+        _notes = FetchRequest(fetchRequest: author.storiesRequest(since: cutoffDate.wrappedValue))
     }
     
     var body: some View {
         VStack {
-            // hack
-//            let _ = handleNotesChanged(to: notes)
-            Spacer()
-            if let note = notes[safe: noteIndex] {
-                NoteButton(
-                    note: note,
-                    showFullMessage: true,
-                    hideOutOfNetwork: false
-                ) 
-                .id(noteIndex) // TODO: Why doesn't it work without this!?
-                .allowsHitTesting(false)
-                .padding()
-            } else {
-                Text("empty")
+            ScrollView {
+                if let note = notes[safe: noteIndex] {
+                    NoteButton(
+                        note: note,
+                        showFullMessage: true,
+                        hideOutOfNetwork: false
+                    ) 
+                    .id(noteIndex) // TODO: Why doesn't it work without this!?
+                    .allowsHitTesting(false)
+                    .padding()
+                } else {
+                    Text("empty")
+                }
             }
             Spacer()
             HStack {
@@ -79,23 +80,23 @@ struct AuthorStoryView: View {
                     showPreviousAuthor()
                 }
             }))
-        
+        .onAppear {
+            // TODO: this is a temporary hack. We should be filtering out authors with no root posts in the database query, not here.
+            if notes.count == 0 {
+                showNextAuthor()
+            }
+        }
     }
-    
-//    func handleNotesChanged(to notes: FetchedResults<Event>) {
-//        Task {
-//            noteIndex = 0
-//        }
-//    }
 }
 
 struct AuthorStoryView_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
+    @State static var cutoffDate = Calendar.current.date(byAdding: .day, value: -14, to: .now)!
     
     static var previews: some View {
         NavigationView {
-            AuthorStoryView(author: previewData.bob, showPreviousAuthor: {}, showNextAuthor: {})
+            AuthorStoryView(author: previewData.bob, cutoffDate: $cutoffDate, showPreviousAuthor: {}, showNextAuthor: {})
         }
         .inject(previewData: previewData)
     }
