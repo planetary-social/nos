@@ -77,6 +77,8 @@ public class Event: NosManagedObject {
     
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"
+    public static var discoverKinds = [EventKind.text, EventKind.longFormContent]
+
     
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -162,12 +164,11 @@ public class Event: NosManagedObject {
         guard let currentUser = currentUser.author else {
             return NSPredicate.false
         }
-        let kind = EventKind.text.rawValue
         let featuredPredicate = NSPredicate(
-            format: "kind = %i AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@ " +
+            format: "kind IN %@ AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@ " +
                 "AND NOT author IN %@.follows.destination AND NOT author = %@ AND receivedAt <= %@ AND " +
                 "author.muted = false",
-            kind,
+            discoverKinds.map { $0.rawValue },
             featuredAuthors.compactMap {
                 PublicKey(npub: $0)?.hex
             },
@@ -177,10 +178,10 @@ public class Event: NosManagedObject {
         )
         
         let twoHopsPredicate = NSPredicate(
-            format: "kind = %i AND eventReferences.@count = 0 AND author.muted = false " +
+            format: "kind IN %@ AND eventReferences.@count = 0 AND author.muted = false " +
                 "AND ANY author.followers.source IN %@.follows.destination AND NOT author IN %@.follows.destination " +
                 "AND receivedAt <= %@",
-            kind,
+            discoverKinds.map { $0.rawValue },
             currentUser,
             currentUser,
             before as CVarArg
@@ -193,13 +194,12 @@ public class Event: NosManagedObject {
     }
     
     @nonobjc public class func seen(on relay: Relay, before: Date, exceptFrom author: Author?) -> NSPredicate {
-        let kind = EventKind.text.rawValue
-        let sharedFormat = "kind = %i AND eventReferences.@count = 0 AND %@ IN seenOnRelays AND createdAt <= %@" +
+        let sharedFormat = "kind IN %@ AND eventReferences.@count = 0 AND %@ IN seenOnRelays AND createdAt <= %@" +
             " AND author.muted = NO"
         if let author {
             return NSPredicate(
                 format: "\(sharedFormat) AND NOT author = %@",
-                kind,
+                discoverKinds.map { $0.rawValue },
                 relay,
                 before as CVarArg,
                 author
@@ -207,7 +207,7 @@ public class Event: NosManagedObject {
         } else {
             return NSPredicate(
                 format: sharedFormat,
-                kind,
+                discoverKinds.map { $0.rawValue },
                 relay,
                 before as CVarArg
             )
