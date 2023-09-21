@@ -240,7 +240,7 @@ struct DiscoverView: View {
         if searchController.query.contains("@") {
             Task(priority: .userInitiated) {
                 if let publicKeyHex =
-                    await relayService.retrieveInternetIdentifierPublicKeyHex(searchController.query.lowercased()),
+                    await relayService.retrievePublicKeyFromUsername(searchController.query.lowercased()),
                     let author = author(fromPublicKey: publicKeyHex) {
                     router.push(author)
                 }
