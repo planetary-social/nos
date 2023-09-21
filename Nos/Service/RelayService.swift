@@ -702,28 +702,70 @@ extension RelayService {
         let internetIdentifierPublicKey = await retrieveInternetIdentifierPublicKeyHex(identifier)
         return internetIdentifierPublicKey == userPublicKey
     }
-    
+
     func retrieveInternetIdentifierPublicKeyHex(_ identifier: String) async -> String? {
-        let localPart = identifier.components(separatedBy: "@")[safe: 0] ?? ""
-        let domain = domain(from: identifier)
+        let count = identifier.filter { $0 == "@" }.count
+        
+        switch count {
+        case 1:
+            return try? await fetchNIP05PublicKey(from: identifier)
+        case 2:
+            return try? await fetchMastodonPublicKey(from: identifier)
+        default:
+            Log.info("Invalid identifier with \(count) '@' signs.")
+            return nil
+        }
+    }
+
+    func fetchNIP05PublicKey(from identifier: String) async throws -> String? {
+        guard let (localPart, domain) = parseNIP05Identifier(from: identifier) else {
+            return nil
+        }
+        
         let urlString = "https://\(domain)/.well-known/nostr.json?name=\(localPart)"
+        return try await fetchPublicKey(from: urlString, username: localPart)
+    }
+
+    func fetchMastodonPublicKey(from identifier: String) async throws -> String? {
+        guard let mastodonUsername = transformMastodonUsername(input: identifier) else {
+            return nil
+        }
+        
+        let urlString = "https://mostr.pub/.well-known/nostr.json?name=\(mastodonUsername)"
+        return try await fetchPublicKey(from: urlString, username: mastodonUsername)
+    }
+
+    func fetchPublicKey(from urlString: String, username: String) async throws -> String? {
         guard let url = URL(string: urlString) else {
             Log.info("Invalid URL: \(urlString)")
             return nil
         }
         
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-            if let names = json?["names"] as? [String: String], let pubkey = names[localPart] {
-                return pubkey
-            }
-        } catch {
-            Log.info("Error verifying username: \(error.localizedDescription)")
-        }
-        return nil
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+        return (json?["names"] as? [String: String])?[username]
     }
 
+    func parseNIP05Identifier(from identifier: String) -> (localPart: String, domain: String)? {
+        let components = identifier.components(separatedBy: "@")
+        guard components.count == 2, let localPart = components.first, let domain = components.last else {
+            return nil
+        }
+        return (localPart, domain)
+    }
+
+    func transformMastodonUsername(input: String) -> String? {
+        guard input.filter({ $0 == "@" }).count == 2 else {
+            Log.info("Invalid Mastodon username format.")
+            return nil
+        }
+        
+        let withoutFirstAt = String(input.dropFirst())
+        return withoutFirstAt.replacingOccurrences(of: "@", with: "_at_", options: [], range: withoutFirstAt.range(of: "@"))
+    }
+
+    
+    
     func identifierToShow(_ identifier: String) -> String {
         let localPart = identifier.components(separatedBy: "@")[safe: 0]
         let domain = identifier.components(separatedBy: "@")[safe: 1]
