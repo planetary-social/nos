@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Long form content is now displayed in the discover tab
+
 ## [0.1 (76)] - 2023-09-08Z
 
 - Minor crash fixes and optimizations
