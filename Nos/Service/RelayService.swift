@@ -698,27 +698,27 @@ extension RelayService: WebSocketDelegate {
 // MARK: NIP-05 and UNS Support
 extension RelayService {
     
-    func verifyInternetIdentifier(identifier: String, userPublicKey: String) async -> Bool {
-        let internetIdentifierPublicKey = await retrieveInternetIdentifierPublicKeyHex(identifier)
+    func verifyNIP05(identifier: String, userPublicKey: HexadecimalString) async -> Bool {
+        let internetIdentifierPublicKey = await retrievePublicKeyFromUsername(identifier)
         return internetIdentifierPublicKey == userPublicKey
     }
 
-    func retrieveInternetIdentifierPublicKeyHex(_ identifier: String) async -> String? {
-        let count = identifier.filter { $0 == "@" }.count
+    /// Takes a NIP-05 or Mastodon username and tries to fetch the associated Nostr public key.
+    func retrievePublicKeyFromUsername(_ userName: String) async -> HexadecimalString? {
+        let count = userName.filter { $0 == "@" }.count
         
         switch count {
         case 1:
-            return try? await fetchNIP05PublicKey(from: identifier)
+            return try? await fetchPublicKeyFromNIP05(userName)
         case 2:
-            return try? await fetchMastodonPublicKey(from: identifier)
+            return try? await fetchPublicKeyFromMastodonUsername(userName)
         default:
-            Log.info("Invalid identifier with \(count) '@' signs.")
             return nil
         }
     }
 
-    func fetchNIP05PublicKey(from identifier: String) async throws -> String? {
-        guard let (localPart, domain) = parseNIP05Identifier(from: identifier) else {
+    func fetchPublicKeyFromNIP05(_ nip05: String) async throws -> String? {
+        guard let (localPart, domain) = parseNIP05(from: nip05) else {
             return nil
         }
         
@@ -726,18 +726,18 @@ extension RelayService {
         return try await fetchPublicKey(from: urlString, username: localPart)
     }
 
-    func fetchMastodonPublicKey(from identifier: String) async throws -> String? {
-        guard let mastodonUsername = transformMastodonUsername(input: identifier) else {
+    func fetchPublicKeyFromMastodonUsername(_ mastodonUsername: String) async throws -> HexadecimalString? {
+        guard let mostrUsername = mostrUsername(from: mastodonUsername) else {
             return nil
         }
         
-        let urlString = "https://mostr.pub/.well-known/nostr.json?name=\(mastodonUsername)"
-        return try await fetchPublicKey(from: urlString, username: mastodonUsername)
+        let urlString = "https://mostr.pub/.well-known/nostr.json?name=\(mostrUsername)"
+        return try await fetchPublicKey(from: urlString, username: mostrUsername)
     }
 
-    func fetchPublicKey(from urlString: String, username: String) async throws -> String? {
-        guard let url = URL(string: urlString) else {
-            Log.info("Invalid URL: \(urlString)")
+    func fetchPublicKey(from nip05URL: String, username: String) async throws -> String? {
+        guard let url = URL(string: nip05URL) else {
+            Log.info("Invalid URL: \(nip05URL)")
             return nil
         }
         
@@ -746,7 +746,7 @@ extension RelayService {
         return (json?["names"] as? [String: String])?[username]
     }
 
-    func parseNIP05Identifier(from identifier: String) -> (localPart: String, domain: String)? {
+    func parseNIP05(from identifier: String) -> (localPart: String, domain: String)? {
         let components = identifier.components(separatedBy: "@")
         guard components.count == 2, let localPart = components.first, let domain = components.last else {
             return nil
@@ -754,18 +754,21 @@ extension RelayService {
         return (localPart, domain)
     }
 
-    func transformMastodonUsername(input: String) -> String? {
-        guard input.filter({ $0 == "@" }).count == 2 else {
+    func mostrUsername(from mastodonUsername: String) -> String? {
+        guard mastodonUsername.filter({ $0 == "@" }).count == 2 else {
             Log.info("Invalid Mastodon username format.")
             return nil
         }
         
-        let withoutFirstAt = String(input.dropFirst())
-        return withoutFirstAt.replacingOccurrences(of: "@", with: "_at_", options: [], range: withoutFirstAt.range(of: "@"))
+        let withoutFirstAt = String(mastodonUsername.dropFirst())
+        return withoutFirstAt.replacingOccurrences(
+            of: "@", 
+            with: "_at_", 
+            options: [], 
+            range: withoutFirstAt.range(of: "@")
+        )
     }
 
-    
-    
     func identifierToShow(_ identifier: String) -> String {
         let localPart = identifier.components(separatedBy: "@")[safe: 0]
         let domain = identifier.components(separatedBy: "@")[safe: 1]
