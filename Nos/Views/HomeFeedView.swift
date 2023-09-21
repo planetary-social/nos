@@ -29,8 +29,6 @@ struct HomeFeedView: View {
 
     @ObservedObject var user: Author
     
-    @State private var subscriptionIds: [String] = []
-    
     init(user: Author) {
         self.user = user
         self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, before: Date.now))
