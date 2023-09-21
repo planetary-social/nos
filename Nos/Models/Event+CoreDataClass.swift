@@ -79,7 +79,6 @@ public class Event: NosManagedObject {
         "AND author.muted = false"
     public static var discoverKinds = [EventKind.text, EventKind.longFormContent]
 
-    
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: true)]
