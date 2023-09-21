@@ -22,6 +22,7 @@ extension Author {
     @NSManaged public var lastUpdatedMetadata: Date?
     @NSManaged public var muted: Bool
     @NSManaged public var name: String?
+    @NSManaged public var website: String?
     @NSManaged public var nip05: String?
     @NSManaged public var profilePhotoURL: URL?
     @NSManaged public var rawMetadata: Data?

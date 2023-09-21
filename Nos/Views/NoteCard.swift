@@ -119,7 +119,7 @@ struct NoteCard: View {
                         }
                         .frame(maxWidth: .infinity)
                     }
-                    Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
+                    BeveledSeparator()
                     HStack(spacing: 0) {
                         if showReplyCount {
                             StackedAvatarsView(avatarUrls: replyAvatarURLs, size: 20, border: 0)

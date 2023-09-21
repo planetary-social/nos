@@ -100,9 +100,12 @@
 "Localized.bio" = "Bio";
 "Localized.displayName" = "Display name";
 "Localized.name" = "Name";
-"Localized.picUrl" = "Profile pic url";
+"Localized.profilePicture" = "Profile picture";
+"Localized.url" = "URL";
 "Localized.noEventsOnProfile" = "We don't see any notes for this profile, but we'll keep looking!";
+"Localized.uploadProfilePicInstructions" = "Go to nostr.build to upload your photo, copy the URL provided and paste it here.";
 "Localized.basicInfo" = "Basic Information";
+"Localized.website" = "Website";
 "Localized.edit" = "Edit";
 "Localized.mention" = "Mention";
 "Localized.debug" = "Debug";

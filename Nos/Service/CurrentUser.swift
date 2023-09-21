@@ -318,6 +318,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         // Tack on any unsupported fields back onto the dictionary before publish
         let rawJson = try? JSONSerialization.jsonObject(with: rawData)
         if let rawJson, let rawDictionary = rawJson as? [String: AnyObject] {
+            print(rawDictionary)
             for key in rawDictionary.keys {
                 if metaEvent[key] == nil, let rawValue = rawDictionary[key] as? String {
                     metaEvent[key] = rawValue

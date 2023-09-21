@@ -161,9 +161,12 @@ enum Localized: String, Localizable, CaseIterable {
     case bio = "Bio"
     case displayName = "Display name"
     case name = "Name"
-    case picUrl = "Profile pic url"
+    case profilePicture = "Profile picture"
+    case url = "URL"
     case noEventsOnProfile = "We don't see any notes for this profile, but we'll keep looking!"
+    case uploadProfilePicInstructions = "Go to nostr.build to upload your photo, copy the URL provided and paste it here."
     case basicInfo = "Basic Information"
+    case website = "Website"
     case edit = "Edit" // verb form
 
     case mention = "Mention"
