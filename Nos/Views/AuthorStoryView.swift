@@ -16,7 +16,7 @@ struct AuthorStoryView: View {
     
     @FetchRequest private var notes: FetchedResults<Event>
     
-    @State private var currentNote: Event?
+    @State private var noteIndex: Int = 0
     
     init(author: Author, showPreviousAuthor: @escaping () -> Void, showNextAuthor: @escaping () -> Void) {
         self.author = author
@@ -28,21 +28,15 @@ struct AuthorStoryView: View {
     var body: some View {
         VStack {
             // hack
-            let _ = handleNotesChanged(to: notes)
+//            let _ = handleNotesChanged(to: notes)
             Spacer()
-            if let note = currentNote ?? notes.first {
+            if let note = notes[safe: noteIndex] {
                 NoteButton(
                     note: note,
                     showFullMessage: true,
                     hideOutOfNetwork: false
-                ) { note in
-                    if let currentNoteIndex = notes.firstIndex(of: note) {
-                        let nextNoteIndex = notes.index(after: currentNoteIndex)
-                        currentNote = notes[nextNoteIndex]
-                    } else {
-                        currentNote = nil
-                    }
-                }
+                ) 
+                .id(noteIndex) // TODO: Why doesn't it work without this!?
                 .allowsHitTesting(false)
                 .padding()
             } else {
@@ -50,14 +44,13 @@ struct AuthorStoryView: View {
             }
             Spacer()
             HStack {
-                if let currentNote,
-                    let currentNoteIndex = notes.firstIndex(of: currentNote) {
+                if let currentNote = notes[safe: noteIndex] {
                     ForEach(notes.indices) { noteIndex in
                         RoundedRectangle(cornerRadius: 21)
                             .frame(maxWidth: .infinity, maxHeight: 3)
                             .padding(1.5)
                             .cornerRadius(21)
-                            .foregroundColor(noteIndex <= currentNoteIndex ? .accent : .secondaryText)
+                            .foregroundColor(noteIndex <= self.noteIndex ? .accent : .secondaryText)
                     }
                 }
             }
@@ -67,12 +60,13 @@ struct AuthorStoryView: View {
         .frame(maxWidth: .infinity)
         .contentShape(Rectangle())
         .onTapGesture {
-            if let currentNote,
-                let currentNoteIndex = notes.firstIndex(of: currentNote) {
+            if let currentNote = notes[safe: noteIndex],
+                let currentNoteIndex = notes.firstIndex(of: currentNote),
+                currentNoteIndex < max(notes.count - 1, 0) {
                 let nextNoteIndex = notes.index(after: currentNoteIndex)
-                self.currentNote = notes[nextNoteIndex]
-            } else {
-                currentNote = nil
+                self.noteIndex = nextNoteIndex
+            } else { 
+                showNextAuthor() 
             }
         }
         .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
@@ -88,15 +82,11 @@ struct AuthorStoryView: View {
         
     }
     
-    func handleNotesChanged(to notes: FetchedResults<Event>) {
-        Task {
-            if notes.isEmpty {
-                currentNote = nil
-            } else if currentNote == nil {
-                currentNote = notes.first
-            }
-        }
-    }
+//    func handleNotesChanged(to notes: FetchedResults<Event>) {
+//        Task {
+//            noteIndex = 0
+//        }
+//    }
 }
 
 struct AuthorStoryView_Previews: PreviewProvider {

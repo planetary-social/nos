@@ -13,25 +13,36 @@ struct StoriesView: View {
     
     @FetchRequest private var authors: FetchedResults<Author>
     
-    @State private var currentAuthor: Author?
     @State private var currentAuthorIndex: Int = 0
     
     init(user: Author) {
         self.user = user
         _authors = FetchRequest(fetchRequest: user.followsRequest())
-        currentAuthor = user
     }
     
     var body: some View {
         VStack {
-            // hack
-            let _ = handleAuthorsChanged(to: authors)
-            if let currentAuthor = currentAuthor {
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(authors) { author in
+                        Button { 
+                            if let index = authors.firstIndex(of: author) {
+                                currentAuthorIndex = index
+                            }
+                        } label: { 
+                            AvatarView(imageUrl: author.profilePhotoURL, size: 54)
+                                .padding(7)
+                        }
+                    }
+                }
+            }
+            if let currentAuthor = authors[safe: currentAuthorIndex] {
                 AuthorStoryView(
                     author: currentAuthor,
                     showPreviousAuthor: { self.showPreviousAuthor(from: self.authors) },
                     showNextAuthor: { self.showNextAuthor(from: self.authors) }
                 )
+                .id(currentAuthorIndex) // TODO: Why doesn't it work without this!?
             } else {
                 Text("Hello, world")
             }
@@ -40,34 +51,16 @@ struct StoriesView: View {
         .nosNavigationBar(title: .stories)
     }
     
-    func handleAuthorsChanged(to authors: FetchedResults<Author>) {
-        Task {
-            if authors.isEmpty {
-                currentAuthor = nil
-            } else if currentAuthor == nil {
-                currentAuthor = authors.first
-            }
-        }
-    }
-    
     func showNextAuthor(from authors: FetchedResults<Author>) {
-        if let currentAuthor,
-           let currentAuthorIndex = authors.firstIndex(of: currentAuthor) {
-            let nextAuthorIndex = authors.index(after: currentAuthorIndex)
-            self.currentAuthor = authors[nextAuthorIndex]
-        } else {
-            currentAuthor = nil
-        }
+        guard currentAuthorIndex < authors.count else { return }
+        let nextAuthorIndex = authors.index(after: currentAuthorIndex)
+        currentAuthorIndex = nextAuthorIndex
     }
     
     func showPreviousAuthor(from authors: FetchedResults<Author>) {
-        if let currentAuthor,
-           let currentAuthorIndex = authors.firstIndex(of: currentAuthor) {
-            let nextAuthorIndex = authors.index(before: currentAuthorIndex)
-            self.currentAuthor = authors[nextAuthorIndex]
-        } else {
-            currentAuthor = nil
-        }
+        guard currentAuthorIndex > 0 else { return }
+        let previousAuthorIndex = authors.index(before: currentAuthorIndex)
+        currentAuthorIndex = previousAuthorIndex
     }
 }
 
