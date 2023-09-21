@@ -74,7 +74,7 @@ struct ProfileEditView: View {
             
             //        header: {
             //                    createAccountCompletion != nil ? Localized.tryIt.view : Localized.basicInfo.view
-            //                        .foregroundColor(.textColor)
+            //                        .foregroundColor(.primaryTxt)
             //                        .fontWeight(.heavy)
             //                }
                 
