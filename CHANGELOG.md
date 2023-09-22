@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Long form content is now displayed in the discover tab
 - Added the ability to search for Mastodon usernames on the Discover tab. 
 
+## [0.1 (77)] - 2023-09-15Z
+
+- App performance improvements
+
 ## [0.1 (76)] - 2023-09-08Z
 
 - Minor crash fixes and optimizations
