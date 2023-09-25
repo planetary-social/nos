@@ -15,6 +15,7 @@ import WalletConnectNetworking
 import Web3Wallet
 import CryptoSwift
 import Web3
+import Combine
 
 //class WalletConnectSocket: WebSocketConnecting {
 //    
@@ -102,6 +103,11 @@ struct DefaultCryptoProvider: CryptoProvider {
 
 
 class WalletConnect {
+    
+    @Published public var account: [Account] = []
+    @Published public var rejectedReason: String = ""
+    var publishers = [AnyCancellable]()
+    
     init() {
         let projectID = Bundle.main.infoDictionary?["WALLET_CONNECT_PROJECT_ID"] as? String ?? ""
         Networking.configure(projectId: projectID, socketFactory: SocketFactory()) 
@@ -117,7 +123,25 @@ class WalletConnect {
             metadata: metadata
         )
         
-        let methods: Set<String> = ["eth_sendTransaction", "personal_sign", "eth_signTypedData"]
+        Sign.instance.sessionSettlePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { session in
+                self.account = session.accounts
+            }
+            .store(in: &publishers)
+        
+        Sign.instance.sessionRejectionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { (session, reason) in
+                self.rejectedReason = reason.message
+            })
+            .store(in: &publishers)
+        
+        let methods: Set<String> = ["personal_sign"]
+        let mainChain = [
+            "eip155": ProposalNamespace(chains: [Blockchain("eip155:11155111")!], methods: [], events: [])
+        ]
+//        let methods: Set<String> = ["eth_sendTransaction", "personal_sign", "eth_signTypedData"]
         let events: Set<String> = ["chainChanged", "accountsChanged"]
         let blockchains: Set<Blockchain> = [Blockchain("eip155:11155111")!]
         let namespaces: [String: ProposalNamespace] = [
@@ -132,15 +156,18 @@ class WalletConnect {
         ]
         
         let defaultSessionParams = SessionParams(
-            requiredNamespaces: namespaces,
-            optionalNamespaces: nil,
-            sessionProperties: sessionProperties
+            requiredNamespaces: mainChain,
+            optionalNamespaces: [:],
+            sessionProperties: nil
         )
         
         WalletConnectModal.set(sessionParams: defaultSessionParams)
     }
     
     func connect() {
-        WalletConnectModal.present()
+        Task {
+            let _ = try! await WalletConnectModal.instance.connect(topic: nil)
+            WalletConnectModal.present()
+        }
     }
 }

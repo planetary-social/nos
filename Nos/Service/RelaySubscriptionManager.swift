@@ -153,7 +153,7 @@ actor RelaySubscriptionManager {
             start(subscription: subscription, relays: relays)
         }
         
-        Log.info("\(active.count) active subscriptions. \(all.count - active.count) subscriptions waiting in queue.")
+//        Log.debug("\(active.count) active subscriptions. \(all.count - active.count) subscriptions waiting in queue.")
     }
     
     func queueSubscription(with filter: Filter, to overrideRelays: [URL]? = nil) async -> RelaySubscription.ID {
