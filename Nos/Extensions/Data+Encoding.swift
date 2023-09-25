@@ -56,11 +56,11 @@ extension Data {
         var output = Data()
         
         for i in (0..<count) {
-            value = (value << startingBase) | UInt32(self[i])
+            value = try! (value << startingBase) | UInt32(self[i])
             bits += startingBase
             while bits >= destinationBase {
                 bits -= destinationBase
-                output.append(UInt8((value >> bits) & maxValueMask))
+                output.append(try! UInt8((value >> bits) & maxValueMask))
             }
         }
         

@@ -165,6 +165,7 @@ enum Localized: String, Localizable, CaseIterable {
     case noEventsOnProfile = "We don't see any notes for this profile, but we'll keep looking!"
     case basicInfo = "Basic Information"
     case edit = "Edit" // verb form
+    case connectWallet = "Connect Wallet"
 
     case mention = "Mention"
     

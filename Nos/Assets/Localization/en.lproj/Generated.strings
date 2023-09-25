@@ -104,6 +104,7 @@
 "Localized.noEventsOnProfile" = "We don't see any notes for this profile, but we'll keep looking!";
 "Localized.basicInfo" = "Basic Information";
 "Localized.edit" = "Edit";
+"Localized.connectWallet" = "Connect Wallet";
 "Localized.mention" = "Mention";
 "Localized.debug" = "Debug";
 "Localized.loadSampleData" = "Load Sample Data";

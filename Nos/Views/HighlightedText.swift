@@ -83,7 +83,7 @@ struct HighlightedText: View {
                 if afterHighlightedWord.prefix(1) == " " {
                     segments.append(.space)
                 }
-                segments.append(.body(String(afterHighlightedWord)))
+                segments.append(.body(try! String(afterHighlightedWord)))
             }
         } else {
             // no highlighted word, so we just have one segment.

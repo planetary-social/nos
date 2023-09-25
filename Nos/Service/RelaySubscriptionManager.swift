@@ -93,7 +93,7 @@ actor RelaySubscriptionManager {
         
         var request = URLRequest(url: relayAddress)
         request.timeoutInterval = 10
-        let socket = WebSocket(request: request, compressionHandler: .none)
+        let socket = WebSocket(request: request)
         sockets.append(socket)
         return socket
     }

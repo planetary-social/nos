@@ -416,26 +416,26 @@ extension RelayService {
     private func openSocket(to url: URL, andSend message: String) async {
         var urlRequest = URLRequest(url: url)
         urlRequest.timeoutInterval = 10
-        let socket = WebSocket(request: urlRequest, compressionHandler: .none)
+        let socket = WebSocket(request: urlRequest)
         
         // Make sure the socket doesn't stay open too long
         _ = Task(timeout: 10) { socket.disconnect() }
-        return await withCheckedContinuation({ continuation in
-            socket.onEvent = { (event: WebSocketEvent) in
-                switch event {
-                case WebSocketEvent.connected:
-                    socket.write(string: message)
-                    socket.disconnect()
-                case WebSocketEvent.disconnected:
-                    continuation.resume()
-                case WebSocketEvent.error(let error):
-                    Log.optional(error, "failed to send message: \(message) to websocket")
-                default:
-                    return
-                }
-            }
-            socket.connect()
-        })
+//        return await withCheckedContinuation({ continuation in
+//            socket.onEvent = { (event: WebSocketEvent) in
+//                switch event {
+//                case WebSocketEvent.connected:
+//                    socket.write(string: message)
+//                    socket.disconnect()
+//                case WebSocketEvent.disconnected:
+//                    continuation.resume()
+//                case WebSocketEvent.error(let error):
+//                    Log.optional(error, "failed to send message: \(message) to websocket")
+//                default:
+//                    return
+//                }
+//            }
+//            socket.connect()
+//        })
     }
 
     func publishToAll(event: JSONEvent, signingKey: KeyPair, context: NSManagedObjectContext) async throws {
@@ -664,35 +664,50 @@ extension RelayService {
 
 // MARK: WebSocketDelegate
 extension RelayService: WebSocketDelegate {
-    func didReceive(event: WebSocketEvent, client: WebSocketClient) {
-        guard let socket = client as? WebSocket else {
-            return
-        }
-        
-        Task {
-            switch event {
-            case .connected:
-                await handleConnection(from: client)
-            case .viabilityChanged(let isViable) where isViable:
-                await handleConnection(from: client)
-            case .disconnected(let reason, let code):
-                await subscriptions.remove(socket)
-                print("websocket is disconnected: \(reason) with code: \(code)")
-            case .text(let string):
-                await parseResponse(string, socket)
-            case .binary:
-                break
-            case .ping, .pong, .viabilityChanged, .reconnectSuggested:
-                break
-            case .cancelled:
-                await subscriptions.remove(socket)
-                print("websocket is cancelled")
-            case .error(let error):
-                await subscriptions.remove(socket)
-                handleError(error, from: socket)
-            }
-        }
+    func websocketDidConnect(socket: Starscream.WebSocketClient) {
     }
+    
+    func websocketDidDisconnect(socket: Starscream.WebSocketClient, error: Error?) {
+    }
+    
+    func websocketDidReceiveMessage(socket: Starscream.WebSocketClient, text: String) {
+    }
+    
+    func websocketDidReceiveData(socket: Starscream.WebSocketClient, data: Data) {
+    }
+    
+//    func didReceive(event: WebSocketEvent, client: WebSocketClient) {
+//        guard let socket = client as? WebSocket else {
+//            return
+//        }
+//        
+//        Task {
+//            switch event {
+//            case .connected:
+//                await handleConnection(from: client)
+//            case .viabilityChanged(let isViable) where isViable:
+//                await handleConnection(from: client)
+//            case .disconnected(let reason, let code):
+//                await subscriptions.remove(socket)
+//                print("websocket is disconnected: \(reason) with code: \(code)")
+//            case .peerClosed:
+//                await subscriptions.remove(socket)
+//                print("websocket is disconnected: peer closed")
+//            case .text(let string):
+//                await parseResponse(string, socket)
+//            case .binary:
+//                break
+//            case .ping, .pong, .viabilityChanged, .reconnectSuggested:
+//                break
+//            case .cancelled:
+//                await subscriptions.remove(socket)
+//                print("websocket is cancelled")
+//            case .error(let error):
+//                await subscriptions.remove(socket)
+//                handleError(error, from: socket)
+//            }
+//        }
+//    }
 }
 
 // MARK: NIP-05 and UNS Support
