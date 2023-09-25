@@ -210,6 +210,11 @@ struct ProfileView: View {
                 await computeUnmutedEvents()
             }
         }
+        .onChange(of: author.events.count) { _ in
+            Task {
+                await computeUnmutedEvents()
+            }
+        }
         .onDisappear {
             Task(priority: .userInitiated) {
                 await relayService.decrementSubscriptionCount(for: subscriptionIds)
