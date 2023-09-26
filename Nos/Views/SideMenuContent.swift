@@ -95,8 +95,7 @@ struct SideMenuContent: View {
                     ActivityViewController(activityItems: [url])
                 }
                 SideMenuRow(title: .connectWallet, image: Image(systemName: "w.circle.fill")) {
-                    let walletConnect = WalletConnect()
-                    walletConnect.connect()
+                    WalletConnect.shared.connect()
                 }
                 Spacer()
             }

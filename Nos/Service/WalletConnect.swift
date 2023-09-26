@@ -16,6 +16,7 @@ import Web3Wallet
 import CryptoSwift
 import Web3
 import Combine
+import UIKit
 
 //class WalletConnectSocket: WebSocketConnecting {
 //    
@@ -101,12 +102,19 @@ struct DefaultCryptoProvider: CryptoProvider {
     
 }
 
+extension Blockchain {
+    static var ethereum = Blockchain("eip155:1")!
+    static var sepolia = Blockchain("eip155:11155111")!
+}
 
 class WalletConnect {
     
     @Published public var account: [Account] = []
     @Published public var rejectedReason: String = ""
     var publishers = [AnyCancellable]()
+    private var sessions = [Session]()
+    
+    static var shared = WalletConnect()
     
     init() {
         let projectID = Bundle.main.infoDictionary?["WALLET_CONNECT_PROJECT_ID"] as? String ?? ""
@@ -123,6 +131,13 @@ class WalletConnect {
             metadata: metadata
         )
         
+        Sign.instance.sessionsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { sessions in
+                self.sessions = sessions
+            }
+            .store(in: &publishers)
+        
         Sign.instance.sessionSettlePublisher
             .receive(on: DispatchQueue.main)
             .sink { session in
@@ -137,22 +152,22 @@ class WalletConnect {
             })
             .store(in: &publishers)
         
-        let methods: Set<String> = ["personal_sign"]
+        WalletConnectModal.instance.sessionResponsePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { response in
+                print(response)
+            }
+            .store(in: &publishers)
+        
+        self.sessions = WalletConnectModal.instance.getSessions()
+        _ = WalletConnectModal.instance.getPairings()
+        
         let mainChain = [
-            "eip155": ProposalNamespace(chains: [Blockchain("eip155:11155111")!], methods: [], events: [])
-        ]
-//        let methods: Set<String> = ["eth_sendTransaction", "personal_sign", "eth_signTypedData"]
-        let events: Set<String> = ["chainChanged", "accountsChanged"]
-        let blockchains: Set<Blockchain> = [Blockchain("eip155:11155111")!]
-        let namespaces: [String: ProposalNamespace] = [
             "eip155": ProposalNamespace(
-                chains: blockchains,
-                methods: methods,
+                chains: [.ethereum], 
+                methods: ["eth_sendTransaction", "personal_sign", "eth_signTypedData"], 
                 events: []
             )
-        ]
-        let sessionProperties: [String: String] = [
-            "caip154-mandatory": "true"
         ]
         
         let defaultSessionParams = SessionParams(
@@ -165,9 +180,34 @@ class WalletConnect {
     }
     
     func connect() {
-        Task {
-            let _ = try! await WalletConnectModal.instance.connect(topic: nil)
+        Task { @MainActor in
+            try! await WalletConnectModal.instance.cleanup()
             WalletConnectModal.present()
         }
+    }
+    
+    func pay() async throws {
+        guard let latestSession = sessions.last else {
+            connect()
+            return
+        }
+        
+        let pairingTopic = latestSession.pairingTopic
+        let topic = latestSession.topic
+        let uri = try await WalletConnectModal.instance.connect(topic: pairingTopic)
+        
+        try await WalletConnectModal.instance.request(
+            params: Request(
+                topic: topic, 
+                method: "eth_sendTransaction", 
+                params: AnyCodable(
+                    EthereumTransaction(
+                        from: try EthereumAddress(hex: "0xF847D1Ae3DF7b18755cDD277acE94164DF9ac794", eip55: false),
+                        to: try EthereumAddress(hex: "0x3d4E120592B3936b1da2Ac888221D4Eb364b5a64", eip55: false)
+                    )
+                ), 
+                chainId: .ethereum
+            )
+        )
     }
 }

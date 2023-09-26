@@ -8,6 +8,7 @@
 
 import SwiftUI
 import CoreData
+import Logger
 
 struct ProfileHeader: View {
     @ObservedObject var author: Author
@@ -80,6 +81,16 @@ struct ProfileHeader: View {
                             .lineLimit(1)
                             .font(.clarityTitle3.weight(.semibold))
                             .foregroundColor(Color.primaryTxt)
+                        
+                        Button("Pay") {
+                            Task {
+                                do {
+                                    try await WalletConnect.shared.pay()
+                                } catch {
+                                    Log.optional(error)
+                                } 
+                            }
+                        }
                         
                         if !(author.uns ?? "").isEmpty {
                             Button {
