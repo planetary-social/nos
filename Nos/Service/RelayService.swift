@@ -698,30 +698,75 @@ extension RelayService: WebSocketDelegate {
 // MARK: NIP-05 and UNS Support
 extension RelayService {
     
-    func verifyInternetIdentifier(identifier: String, userPublicKey: String) async -> Bool {
-        let internetIdentifierPublicKey = await retrieveInternetIdentifierPublicKeyHex(identifier)
+    func verifyNIP05(identifier: String, userPublicKey: HexadecimalString) async -> Bool {
+        let internetIdentifierPublicKey = await retrievePublicKeyFromUsername(identifier)
         return internetIdentifierPublicKey == userPublicKey
     }
-    
-    func retrieveInternetIdentifierPublicKeyHex(_ identifier: String) async -> String? {
-        let localPart = identifier.components(separatedBy: "@")[safe: 0] ?? ""
-        let domain = domain(from: identifier)
-        let urlString = "https://\(domain)/.well-known/nostr.json?name=\(localPart)"
-        guard let url = URL(string: urlString) else {
-            Log.info("Invalid URL: \(urlString)")
+
+    /// Takes a NIP-05 or Mastodon username and tries to fetch the associated Nostr public key.
+    func retrievePublicKeyFromUsername(_ userName: String) async -> HexadecimalString? {
+        let count = userName.filter { $0 == "@" }.count
+        
+        switch count {
+        case 1:
+            return try? await fetchPublicKeyFromNIP05(userName)
+        case 2:
+            return try? await fetchPublicKeyFromMastodonUsername(userName)
+        default:
+            return nil
+        }
+    }
+
+    func fetchPublicKeyFromNIP05(_ nip05: String) async throws -> String? {
+        guard let (localPart, domain) = parseNIP05(from: nip05) else {
             return nil
         }
         
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-            if let names = json?["names"] as? [String: String], let pubkey = names[localPart] {
-                return pubkey
-            }
-        } catch {
-            Log.info("Error verifying username: \(error.localizedDescription)")
+        let urlString = "https://\(domain)/.well-known/nostr.json?name=\(localPart)"
+        return try await fetchPublicKey(from: urlString, username: localPart)
+    }
+
+    func fetchPublicKeyFromMastodonUsername(_ mastodonUsername: String) async throws -> HexadecimalString? {
+        guard let mostrUsername = mostrUsername(from: mastodonUsername) else {
+            return nil
         }
-        return nil
+        
+        let urlString = "https://mostr.pub/.well-known/nostr.json?name=\(mostrUsername)"
+        return try await fetchPublicKey(from: urlString, username: mostrUsername)
+    }
+
+    func fetchPublicKey(from nip05URL: String, username: String) async throws -> String? {
+        guard let url = URL(string: nip05URL) else {
+            Log.info("Invalid URL: \(nip05URL)")
+            return nil
+        }
+        
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+        return (json?["names"] as? [String: String])?[username]
+    }
+
+    func parseNIP05(from identifier: String) -> (localPart: String, domain: String)? {
+        let components = identifier.components(separatedBy: "@")
+        guard components.count == 2, let localPart = components.first, let domain = components.last else {
+            return nil
+        }
+        return (localPart, domain)
+    }
+
+    func mostrUsername(from mastodonUsername: String) -> String? {
+        guard mastodonUsername.filter({ $0 == "@" }).count == 2 else {
+            Log.info("Invalid Mastodon username format.")
+            return nil
+        }
+        
+        let withoutFirstAt = String(mastodonUsername.dropFirst())
+        return withoutFirstAt.replacingOccurrences(
+            of: "@", 
+            with: "_at_", 
+            options: [], 
+            range: withoutFirstAt.range(of: "@")
+        )
     }
 
     func identifierToShow(_ identifier: String) -> String {
