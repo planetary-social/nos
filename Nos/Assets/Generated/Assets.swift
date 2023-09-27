@@ -172,8 +172,6 @@ extension UIColor {
 
 extension Image {
 
-       static let unsIntro = Image("uns-intro", bundle: Bundle.current)
-       static let unsPhone = Image("uns-phone", bundle: Bundle.current)
        static let attachMediaButton = Image("attach-media-button", bundle: Bundle.current)
        static let backChevron = Image("back-chevron", bundle: Bundle.current)
        static let buttonLikeActive = Image("button-like-active", bundle: Bundle.current)
@@ -204,8 +202,6 @@ extension Image {
 
 extension UIImage {
 
-       static let unsIntro = UIImage(named: "uns-intro", in: Bundle.current, with: nil)!
-       static let unsPhone = UIImage(named: "uns-phone", in: Bundle.current, with: nil)!
        static let attachMediaButton = UIImage(named: "attach-media-button", in: Bundle.current, with: nil)!
        static let backChevron = UIImage(named: "back-chevron", in: Bundle.current, with: nil)!
        static let buttonLikeActive = UIImage(named: "button-like-active", in: Bundle.current, with: nil)!

@@ -307,10 +307,6 @@
 		C9CE5B152A0172CF008E198C /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE5B132A0172CF008E198C /* WebView.swift */; };
 		C9CF23172A38A58B00EBEC31 /* ParseQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */; };
 		C9CF23182A38A58B00EBEC31 /* ParseQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */; };
-		C9CFF6CB2AB2316000D4B368 /* UNSWizardIntro.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CFF6CA2AB2316000D4B368 /* UNSWizardIntro.swift */; };
-		C9CFF6CC2AB2316000D4B368 /* UNSWizardIntro.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CFF6CA2AB2316000D4B368 /* UNSWizardIntro.swift */; };
-		C9CFF6CE2AB2328F00D4B368 /* UNSWizardPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CFF6CD2AB2328F00D4B368 /* UNSWizardPhone.swift */; };
-		C9CFF6CF2AB2328F00D4B368 /* UNSWizardPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CFF6CD2AB2328F00D4B368 /* UNSWizardPhone.swift */; };
 		C9CFF6D22AB2423000D4B368 /* Text+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CFF6D12AB2423000D4B368 /* Text+Localized.swift */; };
 		C9CFF6D32AB2423000D4B368 /* Text+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CFF6D12AB2423000D4B368 /* Text+Localized.swift */; };
 		C9D573492AB24B7300E06BB4 /* custom-xcassets.stencil in Resources */ = {isa = PBXBuildFile; fileRef = C9D573482AB24B7300E06BB4 /* custom-xcassets.stencil */; };
@@ -630,8 +626,6 @@
 		C9CDBBA329A8FA2900C555C7 /* GoldenPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoldenPostView.swift; sourceTree = "<group>"; };
 		C9CE5B132A0172CF008E198C /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseQueue.swift; sourceTree = "<group>"; };
-		C9CFF6CA2AB2316000D4B368 /* UNSWizardIntro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNSWizardIntro.swift; sourceTree = "<group>"; };
-		C9CFF6CD2AB2328F00D4B368 /* UNSWizardPhone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNSWizardPhone.swift; sourceTree = "<group>"; };
 		C9CFF6D12AB2423000D4B368 /* Text+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Localized.swift"; sourceTree = "<group>"; };
 		C9D573482AB24B7300E06BB4 /* custom-xcassets.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; name = "custom-xcassets.stencil"; path = "Nos/Assets/SwiftGen Stencils/custom-xcassets.stencil"; sourceTree = SOURCE_ROOT; };
 		C9DB207629F30EC700FB7B9D /* AsyncButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncButton.swift; sourceTree = "<group>"; };
@@ -766,8 +760,6 @@
 			children = (
 				C973364E2A7968220012D8B8 /* SetUpUNSBanner.swift */,
 				C936B45B2A4C7D6B00DF1EB9 /* UniversalNameWizard.swift */,
-				C9CFF6CA2AB2316000D4B368 /* UNSWizardIntro.swift */,
-				C9CFF6CD2AB2328F00D4B368 /* UNSWizardPhone.swift */,
 			);
 			path = UNS;
 			sourceTree = "<group>";
@@ -1495,7 +1487,6 @@
 				C9A0DADD29C689C900466635 /* NosNavigationBar.swift in Sources */,
 				3F30020529C1FDD9003D4F8B /* OnboardingStartView.swift in Sources */,
 				C936B4592A4C7B7C00DF1EB9 /* Nos.xcdatamodeld in Sources */,
-				C9CFF6CB2AB2316000D4B368 /* UNSWizardIntro.swift in Sources */,
 				C987F81A29BA4D0E00B44E7A /* ActionButton.swift in Sources */,
 				C9E37E122A1E7EC5003D4B0A /* PreviewContainer.swift in Sources */,
 				C9A0DAF829C92F4500466635 /* UNSAPI.swift in Sources */,
@@ -1548,7 +1539,6 @@
 				C9F0BB6F29A50437000547FC /* NostrConstants.swift in Sources */,
 				5BFF66B12A573F6400AA79DD /* RelayDetailView.swift in Sources */,
 				C9F75AD62A041FF7005BBE45 /* ExpirationTimePicker.swift in Sources */,
-				C9CFF6CE2AB2328F00D4B368 /* UNSWizardPhone.swift in Sources */,
 				CD76865329B793F400085358 /* DiscoverSearchBar.swift in Sources */,
 				5B8C96AC29D52AD200B73AEC /* AuthorListView.swift in Sources */,
 				C94A5E152A716A6D00B6EC5D /* EditableNoteText.swift in Sources */,
@@ -1717,7 +1707,6 @@
 				CD09A74D29A521A70063464F /* CardStyle.swift in Sources */,
 				5BD08BB22A38E96F00BB926C /* JSONRelayMetadata.swift in Sources */,
 				CD09A74C29A5217A0063464F /* NoteButton.swift in Sources */,
-				C9CFF6CF2AB2328F00D4B368 /* UNSWizardPhone.swift in Sources */,
 				C936B45A2A4C7B7C00DF1EB9 /* Nos.xcdatamodeld in Sources */,
 				C974652F2A3B86600031226F /* NoteCardHeader.swift in Sources */,
 				A303AF8529A969F5005DC8FC /* FollowsView.swift in Sources */,
@@ -1822,7 +1811,6 @@
 				C97A1C8F29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift in Sources */,
 				C9ADB135299288230075E7F8 /* KeyFixture.swift in Sources */,
 				C9C547552A4F1CDB006B0741 /* SearchController.swift in Sources */,
-				C9CFF6CC2AB2316000D4B368 /* UNSWizardIntro.swift in Sources */,
 				DC08FF802A796997009F87D1 /* ImagePicker.swift in Sources */,
 				C9E9D9C82A2E1EC40048AF0B /* (null) in Sources */,
 				3FFB1D9429A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,
