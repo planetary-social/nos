@@ -682,7 +682,7 @@ extension RelayService: WebSocketDelegate {
                 await parseResponse(string, socket)
             case .binary:
                 break
-            case .ping, .pong, .viabilityChanged, .reconnectSuggested:
+            case .ping, .pong, .viabilityChanged, .reconnectSuggested, .peerClosed:
                 break
             case .cancelled:
                 await subscriptions.remove(socket)
