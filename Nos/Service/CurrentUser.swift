@@ -297,28 +297,28 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     }
     
     @MainActor func publishMetaData() async {
-        guard let pubKey = publicKeyHex else {
+        guard let pubKey = publicKeyHex, let author else {
             Log.debug("Error: no pubKey")
             return
         }
 
         var metaEvent = MetadataEventJSON(
-            displayName: author!.displayName,
-            name: author!.name,
-            nip05: author!.nip05,
-            uns: author!.uns,
-            about: author!.about,
-            picture: author!.profilePhotoURL?.absoluteString
+            displayName: author.displayName,
+            name: author.name,
+            nip05: author.nip05,
+            uns: author.uns,
+            about: author.about,
+            website: author.website,
+            picture: author.profilePhotoURL?.absoluteString
         ).dictionary
 
-        guard let rawData = author?.rawMetadata else {
+        guard let rawData = author.rawMetadata else {
             Log.debug("Error: no author metadata")
             return
         }
         // Tack on any unsupported fields back onto the dictionary before publish
         let rawJson = try? JSONSerialization.jsonObject(with: rawData)
         if let rawJson, let rawDictionary = rawJson as? [String: AnyObject] {
-            print(rawDictionary)
             for key in rawDictionary.keys {
                 if metaEvent[key] == nil, let rawValue = rawDictionary[key] as? String {
                     metaEvent[key] = rawValue
