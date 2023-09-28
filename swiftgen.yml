@@ -1,7 +1,5 @@
-input_dir: Nos/Assets
-output_dir: Nos/Assets/Generated
 xcassets:
-  - inputs: Assets.xcassets
+  - inputs: Nos/Assets/Assets.xcassets
     outputs:
       - templatePath: Nos/Assets/SwiftGen Stencils/custom-xcassets.stencil
-        output: Assets.swift
+        output: ${DERIVED_SOURCES_DIR}/AssetsGenerated.swift
