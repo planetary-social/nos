@@ -115,10 +115,11 @@ enum Localized: String, Localizable, CaseIterable {
     case hourAbbreviated = "hour"
     case dayAbbreviated = "day"
     case daysAbbreviated = "days"
-    case sendCode = "Send code"
+    case sendCode = "Send SMS code"
     case submit = "Submit"
     case setUpUNS = "Reserve Your Name"
     case goBack = "Go back"
+    case start = "Start"
     case startOver = "Start over"
     case setUpUniversalName = "Set up your Universal Name"
     case dismiss = "Dismiss"
@@ -216,6 +217,8 @@ enum Localized: String, Localizable, CaseIterable {
             
     Verify your identity and link your social accounts, government ID, wallets and more.
     """
+    case registration = "Registration"
+    case registrationDescription = "Enter your phone number so we can send you an SMS code."
     case unsLearnMore = "Learn more about UNS."
     case verifyYourIdentity = "Verify your identity"
     case enterCode = "Enter Code"

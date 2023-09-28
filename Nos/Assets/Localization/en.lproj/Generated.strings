@@ -57,10 +57,11 @@
 "Localized.hourAbbreviated" = "hour";
 "Localized.dayAbbreviated" = "day";
 "Localized.daysAbbreviated" = "days";
-"Localized.sendCode" = "Send code";
+"Localized.sendCode" = "Send SMS code";
 "Localized.submit" = "Submit";
 "Localized.setUpUNS" = "Reserve Your Name";
 "Localized.goBack" = "Go back";
+"Localized.start" = "Start";
 "Localized.startOver" = "Start over";
 "Localized.setUpUniversalName" = "Set up your Universal Name";
 "Localized.dismiss" = "Dismiss";
@@ -147,6 +148,8 @@
 "Localized.unsDescription" = "The Universal Namespace gives you one name you can use everywhere. Register your Universal Name and connect it to your Nostr profile. Learn more.";
 "Localized.unsRegister" = "Register your Universal Name";
 "Localized.unsRegisterDescription" = "Universal Name Space gives you a name you can use everywhere.\n        \nVerify your identity and link your social accounts, government ID, wallets and more.";
+"Localized.registration" = "Registration";
+"Localized.registrationDescription" = "Enter your phone number so we can send you an SMS code.";
 "Localized.unsLearnMore" = "Learn more about UNS.";
 "Localized.verifyYourIdentity" = "Verify your identity";
 "Localized.enterCode" = "Enter Code";

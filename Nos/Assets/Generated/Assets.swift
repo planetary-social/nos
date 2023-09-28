@@ -84,6 +84,7 @@ extension Color {
        static let tabBgTop = Color("tab-bg-top", bundle: Bundle.current)
        static let tabBorderBottom = Color("tab-border-bottom", bundle: Bundle.current)
        static let tabShadowBottom = Color("tab-shadow-bottom", bundle: Bundle.current)
+       static let textFieldBg = Color("text-field-bg", bundle: Bundle.current)
        static let buttonBevelBottom = Color("button-bevel-bottom", bundle: Bundle.current)
        static let buttonBevelTop = Color("button-bevel-top", bundle: Bundle.current)
 }
@@ -166,12 +167,15 @@ extension UIColor {
        static let tabBgTop = UIColor(named: "tab-bg-top", in: Bundle.current, compatibleWith: nil)!
        static let tabBorderBottom = UIColor(named: "tab-border-bottom", in: Bundle.current, compatibleWith: nil)!
        static let tabShadowBottom = UIColor(named: "tab-shadow-bottom", in: Bundle.current, compatibleWith: nil)!
+       static let textFieldBg = UIColor(named: "text-field-bg", in: Bundle.current, compatibleWith: nil)!
        static let buttonBevelBottom = UIColor(named: "button-bevel-bottom", in: Bundle.current, compatibleWith: nil)!
        static let buttonBevelTop = UIColor(named: "button-bevel-top", in: Bundle.current, compatibleWith: nil)!
 }
 
 extension Image {
 
+       static let unsIntro = Image("uns-intro", bundle: Bundle.current)
+       static let unsPhone = Image("uns-phone", bundle: Bundle.current)
        static let attachMediaButton = Image("attach-media-button", bundle: Bundle.current)
        static let backChevron = Image("back-chevron", bundle: Bundle.current)
        static let buttonLikeActive = Image("button-like-active", bundle: Bundle.current)
@@ -202,6 +206,8 @@ extension Image {
 
 extension UIImage {
 
+       static let unsIntro = UIImage(named: "uns-intro", in: Bundle.current, with: nil)!
+       static let unsPhone = UIImage(named: "uns-phone", in: Bundle.current, with: nil)!
        static let attachMediaButton = UIImage(named: "attach-media-button", in: Bundle.current, with: nil)!
        static let backChevron = UIImage(named: "back-chevron", in: Bundle.current, with: nil)!
        static let buttonLikeActive = UIImage(named: "button-like-active", in: Bundle.current, with: nil)!

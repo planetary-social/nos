@@ -122,6 +122,10 @@
 		C93EC2FE29C3785C0012EE2A /* View+RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */; };
 		C93F488D2AC5C30C00900CEC /* NosFormField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93F488C2AC5C30C00900CEC /* NosFormField.swift */; };
 		C93F488E2AC5C30C00900CEC /* NosFormField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93F488C2AC5C30C00900CEC /* NosFormField.swift */; };
+		C93F48902AC5C9C400900CEC /* UNSWizardPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93F488F2AC5C9C400900CEC /* UNSWizardPhone.swift */; };
+		C93F48912AC5C9C400900CEC /* UNSWizardPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93F488F2AC5C9C400900CEC /* UNSWizardPhone.swift */; };
+		C93F48932AC5C9CE00900CEC /* UNSWizardIntro.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93F48922AC5C9CE00900CEC /* UNSWizardIntro.swift */; };
+		C93F48942AC5C9CE00900CEC /* UNSWizardIntro.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93F48922AC5C9CE00900CEC /* UNSWizardIntro.swift */; };
 		C942566929B66A2800C4202C /* Date+Elapsed.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942566829B66A2800C4202C /* Date+Elapsed.swift */; };
 		C942566A29B66A2800C4202C /* Date+Elapsed.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942566829B66A2800C4202C /* Date+Elapsed.swift */; };
 		C942566B29B66B2F00C4202C /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94437E529B0DB83004D8C86 /* NotificationsView.swift */; };
@@ -132,6 +136,8 @@
 		C94A5E192A72C84200B6EC5D /* ReportCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A5E172A72C84200B6EC5D /* ReportCategory.swift */; };
 		C94D14812A12B3F70014C906 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D14802A12B3F70014C906 /* SearchBar.swift */; };
 		C94D14822A12B3F70014C906 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D14802A12B3F70014C906 /* SearchBar.swift */; };
+		C94D6D5C2AC5D14400F0F11E /* WizardTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D6D5B2AC5D14400F0F11E /* WizardTextField.swift */; };
+		C94D6D5D2AC5D14400F0F11E /* WizardTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D6D5B2AC5D14400F0F11E /* WizardTextField.swift */; };
 		C94D855C2991479900749478 /* NewNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D855B2991479900749478 /* NewNoteView.swift */; };
 		C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = C94D855E29914D2300749478 /* SwiftUINavigation */; };
 		C94FE9F529DB177500019CD3 /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA978299C31A7006929C1 /* Localizable.swift */; };
@@ -539,6 +545,8 @@
 		C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverGrid.swift; sourceTree = "<group>"; };
 		C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+RoundedCorner.swift"; sourceTree = "<group>"; };
 		C93F488C2AC5C30C00900CEC /* NosFormField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosFormField.swift; sourceTree = "<group>"; };
+		C93F488F2AC5C9C400900CEC /* UNSWizardPhone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UNSWizardPhone.swift; sourceTree = "<group>"; };
+		C93F48922AC5C9CE00900CEC /* UNSWizardIntro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UNSWizardIntro.swift; sourceTree = "<group>"; };
 		C942566829B66A2800C4202C /* Date+Elapsed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Elapsed.swift"; sourceTree = "<group>"; };
 		C94437E529B0DB83004D8C86 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		C94A5E142A716A6D00B6EC5D /* EditableNoteText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableNoteText.swift; sourceTree = "<group>"; };
@@ -547,6 +555,7 @@
 		C94D14802A12B3F70014C906 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		C94D39212ABDDDFE0019C4D5 /* Secrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		C94D39242ABDDFB60019C4D5 /* EmptySecrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = EmptySecrets.xcconfig; sourceTree = "<group>"; };
+		C94D6D5B2AC5D14400F0F11E /* WizardTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WizardTextField.swift; sourceTree = "<group>"; };
 		C94D855B2991479900749478 /* NewNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNoteView.swift; sourceTree = "<group>"; };
 		C94FE5A629F8441200C27119 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Generated.strings"; sourceTree = "<group>"; };
 		C94FE5A729F8441200C27119 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Generated.strings; sourceTree = "<group>"; };
@@ -778,6 +787,9 @@
 			children = (
 				C973364E2A7968220012D8B8 /* SetUpUNSBanner.swift */,
 				C936B45B2A4C7D6B00DF1EB9 /* UniversalNameWizard.swift */,
+				C93F48922AC5C9CE00900CEC /* UNSWizardIntro.swift */,
+				C93F488F2AC5C9C400900CEC /* UNSWizardPhone.swift */,
+				C94D6D5B2AC5D14400F0F11E /* WizardTextField.swift */,
 			);
 			path = UNS;
 			sourceTree = "<group>";
@@ -1581,6 +1593,7 @@
 				5B0D99032A94090A0039F0C5 /* DoubleTapToPopModifier.swift in Sources */,
 				5BFF66B42A58853D00AA79DD /* PublishedEventsView.swift in Sources */,
 				C987F85B29BA9ED800B44E7A /* Font.swift in Sources */,
+				C94D6D5C2AC5D14400F0F11E /* WizardTextField.swift in Sources */,
 				3FB5E651299D28A200386527 /* OnboardingView.swift in Sources */,
 				C973AB5F2A323167002AED16 /* AuthorReference+CoreDataProperties.swift in Sources */,
 				A3B943CF299AE00100A15A08 /* KeyChain.swift in Sources */,
@@ -1590,6 +1603,7 @@
 				DC4AB2F62A4475B800D1478A /* AppDelegate.swift in Sources */,
 				5B8C96B229DB313300B73AEC /* AuthorRow.swift in Sources */,
 				C9A0DADA29C685E500466635 /* SideMenuButton.swift in Sources */,
+				C93F48902AC5C9C400900CEC /* UNSWizardPhone.swift in Sources */,
 				A3B943D5299D514800A15A08 /* Follow+CoreDataClass.swift in Sources */,
 				C92DF80529C25DE900400561 /* URL+Extensions.swift in Sources */,
 				3F60F42929B27D3E000D62C4 /* ThreadView.swift in Sources */,
@@ -1662,6 +1676,7 @@
 				DC2E54C82A700F1400C2CAAB /* UIDevice+Simulator.swift in Sources */,
 				C9A0DAEA29C6A34200466635 /* ActivityView.swift in Sources */,
 				CD2CF390299E68BE00332116 /* NoteButton.swift in Sources */,
+				C93F48932AC5C9CE00900CEC /* UNSWizardIntro.swift in Sources */,
 				C9DEC04D29894BED0078B43A /* Author+CoreDataClass.swift in Sources */,
 				C905B0772A619E99009B8A78 /* LinkPreview.swift in Sources */,
 				C9E9D9C72A2E1EC40048AF0B /* (null) in Sources */,
@@ -1720,6 +1735,7 @@
 				3F30021729C3BFEB003D4F8B /* OnboardingLoginView.swift in Sources */,
 				C9F64D8D29ED840700563F2B /* LogHelper.swift in Sources */,
 				DC08FF7E2A7968FF009F87D1 /* FileStorageAPI.swift in Sources */,
+				C93F48942AC5C9CE00900CEC /* UNSWizardIntro.swift in Sources */,
 				5B88051F2A21056E00E21F06 /* TLVTests.swift in Sources */,
 				C93F488E2AC5C30C00900CEC /* NosFormField.swift in Sources */,
 				C97465352A3C95FE0031226F /* RelayPickerToolbarButton.swift in Sources */,
@@ -1808,6 +1824,7 @@
 				C9C9444229F6F0E2002F2C7A /* XCTest+Eventually.swift in Sources */,
 				C942566B29B66B2F00C4202C /* NotificationsView.swift in Sources */,
 				C9A0DADE29C689C900466635 /* NosNavigationBar.swift in Sources */,
+				C93F48912AC5C9C400900CEC /* UNSWizardPhone.swift in Sources */,
 				3FFF3BD029A9645F00DD0B72 /* AuthorReference+CoreDataClass.swift in Sources */,
 				C9F0BB6C29A503D6000547FC /* PublicKey.swift in Sources */,
 				C9DEC06F2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,
@@ -1818,6 +1835,7 @@
 				C973AB622A323167002AED16 /* Author+CoreDataProperties.swift in Sources */,
 				C9A0DADB29C685E500466635 /* SideMenuButton.swift in Sources */,
 				5B0D99012A8A693D0039F0C5 /* ProfileKnownFollowersView.swift in Sources */,
+				C94D6D5D2AC5D14400F0F11E /* WizardTextField.swift in Sources */,
 				C93EC2F529C34C860012EE2A /* NSPredicate+Bool.swift in Sources */,
 				C93EC2FB29C370DE0012EE2A /* DiscoverGrid.swift in Sources */,
 				C9DEC05B298950A90078B43A /* String+Lorem.swift in Sources */,
