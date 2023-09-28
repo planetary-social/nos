@@ -8,9 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Long form content is now displayed in the discover tab
-- Added the ability to search for Mastodon usernames on the Discover tab. 
 - Updated the design of the edit profile screen
+
+## [0.1 (79)] - 2023-09-22Z
+
+- Added the ability to search for Mastodon usernames on the Discover tab. 
+- Long form content is now displayed in the discover tab.
+- Fixed a hang on the thread view.
 
 ## [0.1 (77)] - 2023-09-15Z
 

@@ -9,7 +9,7 @@ on:
   push:
     branches: main
 env:
-  SIMULATOR: platform=iOS Simulator,name=iPhone 14,OS=16.4
+  SIMULATOR: platform=iOS Simulator,name=iPhone 14,OS=17.0
     
 jobs:
   unit_test:
