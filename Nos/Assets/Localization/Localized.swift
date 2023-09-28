@@ -155,6 +155,8 @@ enum Localized: String, Localizable, CaseIterable {
     case unfollow = "Unfollow"
     case uns = "UNS"
     case nip05 = "NIP-05"
+    case nip05LearnMore = "Learn more about NIP-05 name verification."
+    case learnMore = "Learn more"
     case readMore = "Read more"
     case thread = "Thread"
     case show = "Show" // verb form
@@ -162,6 +164,7 @@ enum Localized: String, Localizable, CaseIterable {
     case displayName = "Display name"
     case name = "Name"
     case profilePicture = "Profile picture"
+    case identityVerification = "Identity verification"
     case url = "URL"
     case noEventsOnProfile = "We don't see any notes for this profile, but we'll keep looking!"
     case uploadProfilePicInstructions = "Go to nostr.build to upload your photo, copy the URL provided and paste it here."

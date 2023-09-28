@@ -19,7 +19,6 @@ struct ProfileEditView: View {
 
     @ObservedObject var author: Author
     
-    @State private var displayNameText: String = ""
     @State private var nameText: String = ""
     @State private var bioText: String = ""
     @State private var avatarText: String = ""
@@ -28,8 +27,6 @@ struct ProfileEditView: View {
     @State private var website: String = ""
     @State private var showUniversalNameWizard = false
     
-    var createAccountCompletion: (() -> Void)?
-    
     var nip05: Binding<String> {
         Binding<String>(
             get: { self.nip05Text },
@@ -37,9 +34,8 @@ struct ProfileEditView: View {
         )
     }
     
-    init(author: Author, createAccountCompletion: (() -> Void)? = nil) {
+    init(author: Author) {
         self.author = author
-        self.createAccountCompletion = createAccountCompletion
     }
     
     var body: some View {
@@ -50,6 +46,9 @@ struct ProfileEditView: View {
             
             NosFormSection(label: .profilePicture) {
                 NosTextField(label: .url, text: $avatarText)
+                    #if os(iOS)
+                    .keyboardType(.URL)
+                    #endif
             }
             
             HighlightedText(
@@ -62,40 +61,36 @@ struct ProfileEditView: View {
             .padding(13)
             
             NosFormSection(label: .basicInfo) { 
-                NosTextField(label: .name, text: $displayNameText)
+                NosTextField(label: .name, text: $nameText)
                 BeveledSeparator()
                 NosTextEditor(label: .bio, text: $bioText)
                     .frame(maxHeight: 200)
-#if os(iOS)
-                    .keyboardType(.URL)
-#endif
                 BeveledSeparator()
                 NosTextField(label: .website, text: $website)
             }
             
-            //        header: {
-            //                    createAccountCompletion != nil ? Localized.tryIt.view : Localized.basicInfo.view
-            //                        .foregroundColor(.primaryTxt)
-            //                        .fontWeight(.heavy)
-            //                }
-                
-                // Universal Names Set Up
-                if author.nip05?.hasSuffix("universalname.space") != true {
-                    SetUpUNSBanner {
-                        showUniversalNameWizard = true
-                    }
-                    .padding(13)
-                }
+            NosFormSection(label: .identityVerification) { 
+                NosTextField(label: .nip05, text: $nip05Text)
+            }
             
-            if let createAccountCompletion {
+            HStack {
+                HighlightedText(
+                    text: .nip05LearnMore,
+                    highlightedWord: Localized.learnMore.string, 
+                    highlight: .diagonalAccent, 
+                    font: .clarityCaption,
+                    link: URL(string: "https://nostr.how/en/guides/get-verified")!
+                )
                 Spacer()
-                BigActionButton(title: .tryIt) {
-                    await save()
-                    createAccountCompletion()
+            }
+            .padding(13)
+                
+            // Universal Names Set Up
+            if author.nip05?.hasSuffix("universalname.space") != true {
+                SetUpUNSBanner {
+                    showUniversalNameWizard = true
                 }
-                .background(Color.appBg)
-                .padding(.horizontal, 24)
-                .padding(.bottom, 50)
+                .padding(13)
             }
         }
         .sheet(isPresented: $showUniversalNameWizard, content: {
@@ -106,24 +101,19 @@ struct ProfileEditView: View {
         })
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
-        .nosNavigationBar(title: .editProfile)
+        .nosNavigationBar(title: .profileTitle)
+        .navigationBarBackButtonHidden()
         .navigationBarItems(
+            leading: Button(Localized.cancel.string, action: { 
+                router.pop()
+            }),
             trailing:
-                Group {
-                    if createAccountCompletion == nil {
-                        Button(
-                            action: {
-                                Task { await save() }
-                                
-                                // Go back to profile page
-                                router.pop()
-                            },
-                            label: {
-                                Text(Localized.done.string)
-                            }
-                        )
-                    }
+                ActionButton(title: .done) {
+                    await save() 
+                    // Go back to profile page
+                    router.pop()
                 }
+                .offset(y: -3)
         )
         .task {
             populateTextFields()
@@ -134,8 +124,7 @@ struct ProfileEditView: View {
     }
    
     func populateTextFields() {
-        displayNameText = author.displayName ?? ""
-        nameText = author.name ?? ""
+        nameText = author.name ?? author.displayName ?? ""
         bioText = author.about ?? ""
         avatarText = author.profilePhotoURL?.absoluteString ?? ""
         website = author.website ?? ""
@@ -144,7 +133,6 @@ struct ProfileEditView: View {
     }
     
     func save() async {
-        author.displayName = displayNameText
         author.name = nameText
         author.about = bioText
         author.profilePhotoURL = URL(string: avatarText)
@@ -166,110 +154,9 @@ struct ProfileEditView_Previews: PreviewProvider {
     static var previewData = PreviewData()
 
     static var previews: some View {
-        ProfileEditView(author: previewData.alice)
-            .inject(previewData: previewData)
-    }
-}
-
-struct NosFormSection<Content: View>: View {
-    
-    var label: Localized
-    let content: Content
-    
-    init(label: Localized, @ViewBuilder builder: () -> Content) {
-        self.label = label
-        self.content = builder()
-    }
-    
-    var body: some View {
-        VStack {
-            HStack {
-                Text(label)
-                    .font(.claritySubheadline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.primaryTxt)
-                    .padding(.top, 16)
-                
-                Spacer()
-            }
-            
-            ZStack {
-                // 3d card effect
-                ZStack {
-                    Color.cardBorderBottom
-                }
-                .cornerRadius(21)
-                .offset(y: 4.5)
-                .shadow(
-                    color: Color(white: 0, opacity: 0.2), 
-                    radius: 2, 
-                    x: 0, 
-                    y: 0
-                )
-                
-                VStack {
-                    content
-                }
-                .background(LinearGradient.cardGradient)
-                .cornerRadius(20)
-                .readabilityPadding()
-            }
+        NavigationView {
+            ProfileEditView(author: previewData.alice)
+                .inject(previewData: previewData)
         }
-        .padding(.horizontal, 13)
-    }
-}
-
-struct BeveledSeparator: View {
-    
-    typealias TableRowBody = Divider
-    
-    var body: some View {
-        Divider()
-            .overlay(Color.cardDivider)
-            .shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
-    }
-}
-
-struct NosTextField: View {
-    
-    var label: Localized
-    @Binding var text: String
-    
-    var body: some View {
-        HStack {
-            Text(label)
-                .foregroundColor(.secondaryText)
-                .fontWeight(.medium)
-                .font(.clarityCallout)
-            
-            TextField("", text: $text)
-                .accessibilityLabel(label.string)
-                .textInputAutocapitalization(.none)
-                .foregroundColor(.primaryTxt)
-                .autocorrectionDisabled()
-        }
-        .padding(16)
-    }
-}
-
-struct NosTextEditor: View {
-    
-    var label: Localized
-    @Binding var text: String
-    
-    var body: some View {
-        HStack {
-            Text(label)
-                .foregroundColor(.secondaryText)
-                .fontWeight(.medium)
-                .font(.clarityCallout)
-            
-            TextEditor(text: $text)
-                .accessibilityLabel(label.string)
-                .textInputAutocapitalization(.none)
-                .foregroundColor(.primaryTxt)
-                .autocorrectionDisabled()
-        }
-        .padding(16)
     }
 }

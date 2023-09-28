@@ -22,7 +22,7 @@ struct SetUpUNSBanner: View {
     var body: some View {
         ZStack {
             Color(hex: "#923c2c")
-                .cornerRadius(11)
+                .cornerRadius(21)
                 .offset(y: 2)
             VStack {
                 HStack {
@@ -85,7 +85,7 @@ struct SetUpUNSBanner: View {
                     .offset(y: -2)
             )
             
-            .cornerRadius(9)
+            .cornerRadius(20)
         }
         .fixedSize(horizontal: false, vertical: true)
     }
@@ -95,8 +95,6 @@ struct SetUpUNSBanner_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             SetUpUNSBanner {}
-                .padding(20)
-            ActionBanner(messageText: .unsTagline, buttonText: .setUpUniversalName) { }
                 .padding(20)
         }
         .background(Color.appBg)
