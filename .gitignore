@@ -6,6 +6,7 @@
 
 Nos/Assets/ProductionSecrets.xcconfig
 Nos/Assets/StagingSecrets.xcconfig
+Nos/Assets/Secrets.xcconfig
 
 ## CocoaPods Keys
 Pods/CocoaPodsKeys

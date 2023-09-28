@@ -94,7 +94,7 @@ struct DiscoverView: View {
             // this filter just requests everything for now, because I think requesting all the authors within
             // two hops is too large of a request and causes the websocket to close.
             let twoHopsFilter = Filter(
-                kinds: [.text],
+                kinds: Event.discoverKinds,
                 inNetwork: true,
                 limit: 200,
                 since: fetchSinceDate
