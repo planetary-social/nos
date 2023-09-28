@@ -62,10 +62,10 @@ struct ProfileEditView: View {
             
             NosFormSection(label: .basicInfo) { 
                 NosTextField(label: .name, text: $nameText)
-                BeveledSeparator()
+                FormSeparator()
                 NosTextEditor(label: .bio, text: $bioText)
                     .frame(maxHeight: 200)
-                BeveledSeparator()
+                FormSeparator()
                 NosTextField(label: .website, text: $website)
             }
             
