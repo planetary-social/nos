@@ -150,6 +150,8 @@
 "Localized.unsRegisterDescription" = "Universal Name Space gives you a name you can use everywhere.\n        \nVerify your identity and link your social accounts, government ID, wallets and more.";
 "Localized.registration" = "Registration";
 "Localized.registrationDescription" = "Enter your phone number so we can send you an SMS code.";
+"Localized.verification" = "Verification";
+"Localized.verificationDescription" = "Enter the 4-digit code we sent to {{ phone_number }}";
 "Localized.unsLearnMore" = "Learn more about UNS.";
 "Localized.verifyYourIdentity" = "Verify your identity";
 "Localized.enterCode" = "Enter Code";

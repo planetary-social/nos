@@ -219,6 +219,8 @@ enum Localized: String, Localizable, CaseIterable {
     """
     case registration = "Registration"
     case registrationDescription = "Enter your phone number so we can send you an SMS code."
+    case verification = "Verification"
+    case verificationDescription = "Enter the 4-digit code we sent to {{ phone_number }}"
     case unsLearnMore = "Learn more about UNS."
     case verifyYourIdentity = "Verify your identity"
     case enterCode = "Enter Code"

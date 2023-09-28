@@ -71,68 +71,7 @@ struct UniversalNameWizard: View {
                 UNSWizardPhone(context: $context)
                
             case .enterOTP:
-                Form {
-                    Section {
-                        TextField(text: $context.textField) {
-                            Text("123456")
-                                .foregroundColor(.secondaryText)
-                        }
-                        .foregroundColor(.primaryTxt)
-                        .keyboardType(.phonePad)
-                        .autocorrectionDisabled()
-                        .focused($focusedField, equals: .textEditor)
-                    } header: {
-                        Localized.enterCode.view
-                            .foregroundColor(.primaryTxt)
-                            .fontWeight(.heavy)
-                    }
-                    .listRowBackground(LinearGradient(
-                        colors: [Color.cardBgTop, Color.cardBgBottom],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    ))
-                }
-                .scrollContentBackground(.hidden)
-                
-                Spacer()
-                BigActionButton(title: .submit) {
-                    do {
-                        context.state = .loading
-                        analytics.enteredUNSCode()
-                        try await api.verifyOTPCode(
-                            phoneNumber: context.phoneNumber!,
-                            code: context.textField.trimmingCharacters(in: .whitespacesAndNewlines)
-                        )
-                        context.textField = ""
-                        let names = try await api.getNames()
-                        if let name = names.first {
-                            context.name = name
-                            var nip05: String
-                            if let message = try await api.requestNostrVerification(
-                                npub: currentUser.keyPair!.npub
-                            ) {
-                                nip05 = try await api.submitNostrVerification(
-                                    message: message,
-                                    keyPair: currentUser.keyPair!
-                                )
-                            } else {
-                                nip05 = try await api.getNIP05()
-                            }
-                            author.name = name
-                            author.nip05 = nip05
-                            await currentUser.publishMetaData()
-                            try viewContext.save()
-                            context.state = .success
-                        } else {
-                            context.state = .chooseName
-                        }
-                    } catch {
-                        context.textField = ""
-                        context.state = .error
-                    }
-                }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 50)
+                UNSWizardOTP(context: $context)
                 
             case .loading:
                 FullscreenProgressView(isPresented: .constant(true))
