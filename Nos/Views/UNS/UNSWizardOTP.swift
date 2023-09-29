@@ -10,18 +10,16 @@ import Dependencies
 
 struct UNSWizardOTP: View {
     
-    @Binding var context: UNSWizardContext
     @Dependency(\.analytics) var analytics
-    @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var currentUser: CurrentUser
-    @State var otpCode: String = ""
-    let api = UNSAPI()!
+    @Dependency(\.unsAPI) var api
     
+    @State var otpCode: String = ""
+    @Binding var context: UNSWizardContext
+    @FocusState private var focusedField: FocusedField?
+
     enum FocusedField {
         case textEditor
     }
-    
-    @FocusState private var focusedField: FocusedField?
     
     var body: some View {
         NavigationView {
@@ -82,28 +80,11 @@ struct UNSWizardOTP: View {
             )
             otpCode = ""
             let names = try await api.getNames()
-            if let name = names.first {
-                context.name = name
-                var nip05: String
-                if let message = try await api.requestNostrVerification(
-                    npub: currentUser.keyPair!.npub
-                ) {
-                    nip05 = try await api.submitNostrVerification(
-                        message: message,
-                        keyPair: currentUser.keyPair!
-                    )
-                } else {
-                    nip05 = try await api.getNIP05()
-                }
-                
-                let author = currentUser.author
-                author?.name = name
-                author?.nip05 = nip05
-                try viewContext.save()
-                await currentUser.publishMetaData()
-                context.state = .success
-            } else {
+            if !names.isEmpty {
+                context.names = names
                 context.state = .chooseName
+            } else {
+                context.state = .newName
             }
         } catch {
             otpCode = ""

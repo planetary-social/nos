@@ -59,7 +59,9 @@
 "Localized.daysAbbreviated" = "days";
 "Localized.sendCode" = "Send SMS code";
 "Localized.submit" = "Submit";
+"Localized.next" = "Next";
 "Localized.setUpUNS" = "Reserve Your Name";
+"Localized.createNewName" = "Create a new name";
 "Localized.goBack" = "Go back";
 "Localized.start" = "Start";
 "Localized.startOver" = "Start over";

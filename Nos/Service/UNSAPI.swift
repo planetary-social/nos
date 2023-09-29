@@ -8,11 +8,13 @@
 import Foundation
 import Logger
 
+enum UNSError: Error {
+    case generic
+    case noAccessToken
+    case requiresPayment(URL)
+}
+
 class UNSAPI {
-    
-    enum UNSError: Error {
-        case generic
-    }
     
     private var authConnectionURL: URL
     private var connectionURL: URL
@@ -131,7 +133,7 @@ class UNSAPI {
         return names
     }
     
-    func createName(_ name: String) async throws -> Bool {
+    func createName(_ name: String) async throws {
         guard let accessToken else {
             throw UNSError.generic
         }
@@ -151,10 +153,8 @@ class UNSAPI {
         guard let httpResponse = response.1 as? HTTPURLResponse,
             httpResponse.statusCode == 201 else {
             logError(response: response)
-            return false
+            throw UNSError.generic
         }
-        
-        return true
     }
     
     func requestNostrVerification(npub: String) async throws -> String? {

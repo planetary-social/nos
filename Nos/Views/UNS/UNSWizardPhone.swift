@@ -12,6 +12,7 @@ struct UNSWizardPhone: View {
     
     @Binding var context: UNSWizardContext
     @Dependency(\.analytics) var analytics
+    @Dependency(\.unsAPI) var api
     @State var phoneNumber: String = ""
     
     enum FocusedField {
@@ -77,7 +78,7 @@ struct UNSWizardPhone: View {
         
         do {
             context.state = .loading
-            try await context.api.requestOTPCode(phoneNumber: number)
+            try await api.requestOTPCode(phoneNumber: number)
             context.state = .enterOTP
         } catch {
             context.state = .error

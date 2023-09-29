@@ -8,6 +8,14 @@
 import SwiftUI
 import Dependencies
 
+typealias UNSName = String
+
+extension UNSName: Identifiable {
+    public var id: String {
+        self
+    }
+}
+
 struct UNSWizardContext {
     
     enum FlowState {
@@ -15,6 +23,7 @@ struct UNSWizardContext {
         case intro
         case enterPhone
         case enterOTP
+        case newName
         case chooseName
         case success
         case error
@@ -26,8 +35,10 @@ struct UNSWizardContext {
     var completionHandler: (() -> Void)?
     var textField: String = ""
     var phoneNumber: String?
-    var name: String?
-    var api = UNSAPI()!
+    var name: UNSName?
+    
+    /// All names the user has already registered
+    var names: [UNSName]?
 }
 
 struct UniversalNameWizard: View {
@@ -46,6 +57,7 @@ struct UniversalNameWizard: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var currentUser: CurrentUser
     @Dependency(\.analytics) var analytics
+    @Dependency(\.unsAPI) var api
     
     @State private var flow: Flow?
     
@@ -54,8 +66,6 @@ struct UniversalNameWizard: View {
     }
     
     @FocusState private var focusedField: FocusedField?
-    
-    let api = UNSAPI()!
     
     init(author: Author, completion: @escaping () -> Void) {
         self.author = author
@@ -76,6 +86,8 @@ struct UniversalNameWizard: View {
             case .loading:
                 FullscreenProgressView(isPresented: .constant(true))
             case .chooseName:
+                UNSWizardChooseName(context: $context)
+            case .newName:
                 Form {
                     Section {
                         TextField(text: $context.textField) {
@@ -104,12 +116,9 @@ struct UniversalNameWizard: View {
                     do {
                         context.state = .loading
                         analytics.choseUNSName()
-                        guard try await api.createName(
+                        try await api.createName(
                             context.textField.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-                        ) else {
-                            context.state = .nameTaken
-                            return
-                        }
+                        )
                         let names = try await api.getNames()
                         context.name = names.first!
                         let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub)!
@@ -140,7 +149,7 @@ struct UniversalNameWizard: View {
                     .foregroundColor(.primaryTxt)
                 Spacer()
                 BigActionButton(title: .goBack) {
-                    context.state = .chooseName
+                    context.state = .newName
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 50)

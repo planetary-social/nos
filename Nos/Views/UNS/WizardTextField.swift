@@ -11,7 +11,7 @@ import SwiftUINavigation
 struct WizardTextField: View {
     
     var text: Binding<String>
-    let placeholder: String
+    var placeholder: String = ""
     
     var body: some View {
         PlainTextField(text: text) {
