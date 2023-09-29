@@ -37,7 +37,7 @@ struct StoriesView: View {
                             } label: { 
                                 let avatar = AvatarView(imageUrl: author.profilePhotoURL, size: 54)
                                     .padding(.vertical, 8)
-                                    .padding(.horizontal, 4)
+                                    .padding(.horizontal, 15)
                                 
                                 if let index, index == currentAuthorIndex {
                                     avatar

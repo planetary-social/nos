@@ -53,6 +53,7 @@
 		5B8C96B229DB313300B73AEC /* AuthorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B129DB313300B73AEC /* AuthorRow.swift */; };
 		5B8C96B629DDD3B200B73AEC /* EditableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B529DDD3B200B73AEC /* EditableText.swift */; };
 		5BD08BB22A38E96F00BB926C /* JSONRelayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */; };
+		5BF2A55E2AC2234200B3B493 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF2A55D2AC2234200B3B493 /* TestView.swift */; };
 		5BF3C50629E4F0BA00738A12 /* EditableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B529DDD3B200B73AEC /* EditableText.swift */; };
 		5BF3C50729E4F0D400738A12 /* AuthorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B129DB313300B73AEC /* AuthorRow.swift */; };
 		5BF3C50829E4F0DC00738A12 /* AuthorListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */; };
@@ -494,6 +495,7 @@
 		5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextFieldObserver.swift; sourceTree = "<group>"; };
 		5B8C96B129DB313300B73AEC /* AuthorRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorRow.swift; sourceTree = "<group>"; };
 		5B8C96B529DDD3B200B73AEC /* EditableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableText.swift; sourceTree = "<group>"; };
+		5BF2A55D2AC2234200B3B493 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		5BFF66AF2A4B55FC00AA79DD /* Nos 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 10.xcdatamodel"; sourceTree = "<group>"; };
 		5BFF66B02A573F6400AA79DD /* RelayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayDetailView.swift; sourceTree = "<group>"; };
 		5BFF66B32A58853D00AA79DD /* PublishedEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishedEventsView.swift; sourceTree = "<group>"; };
@@ -1152,6 +1154,7 @@
 				C905EA362A33620A006F1E99 /* UNS */,
 				C9FCFB1129CCE59000BCFB1E /* AuthorStoryView.swift */,
 				5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */,
+				5BF2A55D2AC2234200B3B493 /* TestView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1586,6 +1589,7 @@
 				C9C2B77C29E072E400548B4A /* WebSocket+Nos.swift in Sources */,
 				C9DEC003298945150078B43A /* String+Lorem.swift in Sources */,
 				C97A1C8B29E45B4E009D9E8D /* RawEventController.swift in Sources */,
+				5BF2A55E2AC2234200B3B493 /* TestView.swift in Sources */,
 				C9DEC0632989541F0078B43A /* Bundle+Current.swift in Sources */,
 				C9FCFB0F29CCC2BF00BCFB1E /* StoriesView.swift in Sources */,
 				C93EC2F429C34C860012EE2A /* NSPredicate+Bool.swift in Sources */,

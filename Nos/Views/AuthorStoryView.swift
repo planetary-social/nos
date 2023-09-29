@@ -15,8 +15,9 @@ struct AuthorStoryView: View {
     var showPreviousAuthor: () -> Void
     
     @FetchRequest private var notes: FetchedResults<Event>
-    
-    @State private var noteIndex: Int = 0
+
+    @State private var selectedNoteIndex: Int = 0
+
     @Binding private var cutoffDate: Date
     
     init(author: Author, cutoffDate: Binding<Date>, showPreviousAuthor: @escaping () -> Void, showNextAuthor: @escaping () -> Void) {
@@ -28,58 +29,53 @@ struct AuthorStoryView: View {
     }
     
     var body: some View {
-        VStack {
-            ScrollView {
-                if let note = notes[safe: noteIndex] {
-                    NoteButton(
-                        note: note,
-                        showFullMessage: true,
-                        hideOutOfNetwork: false
-                    ) 
-                    .id(noteIndex) // TODO: Why doesn't it work without this!?
-                    .allowsHitTesting(false)
-                    .padding()
-                } else {
-                    Text("empty")
+        TabView(selection: $selectedNoteIndex) {
+            ForEach(notes.indices) { noteIndex in
+                ScrollView(.vertical, showsIndicators: false) {
+                    CompactNoteView(note: notes[noteIndex], showFullMessage: false)
+                        .padding(.top, 40)
                 }
+                .tag(noteIndex)
             }
-            Spacer()
-            HStack {
-                if let currentNote = notes[safe: noteIndex] {
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .overlay(alignment: .topLeading) {
+            VStack {
+                HStack(spacing: 6) {
                     ForEach(notes.indices) { noteIndex in
+                        let isSelected = noteIndex == selectedNoteIndex
                         RoundedRectangle(cornerRadius: 21)
                             .frame(maxWidth: .infinity, maxHeight: 3)
-                            .padding(1.5)
-                            .cornerRadius(21)
-                            .foregroundColor(noteIndex <= self.noteIndex ? .accent : .secondaryText)
+                            .cornerRadius(7)
+                            .foregroundColor(isSelected ? .accent : .secondaryText)
                     }
                 }
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 15)
-        }
-        .frame(maxWidth: .infinity)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            if let currentNote = notes[safe: noteIndex],
-                let currentNoteIndex = notes.firstIndex(of: currentNote),
-                currentNoteIndex < max(notes.count - 1, 0) {
-                let nextNoteIndex = notes.index(after: currentNoteIndex)
-                self.noteIndex = nextNoteIndex
-            } else { 
-                showNextAuthor() 
-            }
-        }
-        .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
-            .onEnded({ value in
-                if value.translation.width < 0 {
-                    showNextAuthor()
+                .padding(.horizontal, 10)
+                .padding(.bottom, 5)
+
+                Button {
+
+                } label: {
+                    HStack(alignment: .center) {
+                        AuthorLabel(author: author, note: nil)
+                            .padding(0)
+                        if let elapsedTime = notes[safe: selectedNoteIndex]?.createdAt?.elapsedTimeFromNowString() {
+                            Text(elapsedTime)
+                                .lineLimit(1)
+                                .font(.body)
+                                .foregroundColor(.secondaryText)
+                        }
+                        Spacer()
+                        if let note = notes[safe: selectedNoteIndex] {
+                            NoteOptionsButton(note: note)
+                        }
+                    }
+                    .padding(.leading, 10)
+                    .padding(.vertical, 0)
                 }
-                
-                if value.translation.width > 0 {
-                    showPreviousAuthor()
-                }
-            }))
+
+            }
+        }
         .onAppear {
             // TODO: this is a temporary hack. We should be filtering out authors with no root posts in the database query, not here.
             if notes.count == 0 {
