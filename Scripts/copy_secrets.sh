@@ -7,7 +7,7 @@ DESTINATION="${PROJECT_DIR}/Nos/Assets/Secrets.xcconfig"
 if [ "$CONFIGURATION" == "Debug" ] && [ -f "$DEBUG_XCCONFIG" ]; then
     rsync -t $DEBUG_XCCONFIG $DESTINATION
     echo "Copied debug config"
-elif [ "$CONFIGURATION" == "Release" ] && [ -f "$RELEASE_XXCONFIG" ]; then
+elif [ "$CONFIGURATION" == "Release" ] && [ -f "$RELEASE_XCCONFIG" ]; then
     rsync -t $RELEASE_XCCONFIG $DESTINATION
     echo "Copied release config"
 else
