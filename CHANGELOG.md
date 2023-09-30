@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Updated the design of the edit profile screen
+
 ## [0.1 (79)] - 2023-09-22Z
 
 - Added the ability to search for Mastodon usernames on the Discover tab. 

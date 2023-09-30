@@ -675,6 +675,7 @@ public class Event: NosManagedObject {
                 newAuthor.displayName = metadata.displayName
                 newAuthor.about = metadata.about
                 newAuthor.profilePhotoURL = metadata.profilePhotoURL
+                newAuthor.website = metadata.website
                 newAuthor.nip05 = metadata.nip05
                 newAuthor.uns = metadata.uns
             } catch {

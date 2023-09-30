@@ -60,7 +60,7 @@ struct AuthorListView: View {
                     isPresented = false
                 }, label: {
                     Localized.cancel.view
-                        .foregroundColor(.textColor)
+                        .foregroundColor(.primaryTxt)
                 })
             }
         }

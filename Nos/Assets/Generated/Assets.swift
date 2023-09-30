@@ -58,7 +58,6 @@ extension Color {
        static let splashBackgroundColor = Color("splashBackgroundColor", bundle: Bundle.current)
        static let subheadlineText = Color("subheadlineText", bundle: Bundle.current)
        static let textBorderColor = Color("textBorderColor", bundle: Bundle.current)
-       static let textColor = Color("textColor", bundle: Bundle.current)
        static let textInputBackground = Color("textInputBackground", bundle: Bundle.current)
        static let textInputBorder = Color("textInputBorder", bundle: Bundle.current)
        static let accent = Color("accent", bundle: Bundle.current)
@@ -141,7 +140,6 @@ extension UIColor {
        static let splashBackgroundColor = UIColor(named: "splashBackgroundColor", in: Bundle.current, compatibleWith: nil)!
        static let subheadlineText = UIColor(named: "subheadlineText", in: Bundle.current, compatibleWith: nil)!
        static let textBorderColor = UIColor(named: "textBorderColor", in: Bundle.current, compatibleWith: nil)!
-       static let textColor = UIColor(named: "textColor", in: Bundle.current, compatibleWith: nil)!
        static let textInputBackground = UIColor(named: "textInputBackground", in: Bundle.current, compatibleWith: nil)!
        static let textInputBorder = UIColor(named: "textInputBorder", in: Bundle.current, compatibleWith: nil)!
        static let accent = UIColor(named: "accent", in: Bundle.current, compatibleWith: nil)!

@@ -104,7 +104,7 @@ struct AppView: View {
                                 let text = Localized.discover.view
                                 if $router.selectedTab.wrappedValue == .discover {
                                     Image.tabIconEveryoneSelected
-                                    text.foregroundColor(.textColor)
+                                    text.foregroundColor(.primaryTxt)
                                 } else {
                                     Image.tabIconEveryone
                                     text.foregroundColor(.secondaryText)
@@ -130,7 +130,7 @@ struct AppView: View {
                                 let text = Localized.notifications.view
                                 if $router.selectedTab.wrappedValue == .notifications {
                                     Image.tabIconNotificationsSelected
-                                    text.foregroundColor(.textColor)
+                                    text.foregroundColor(.primaryTxt)
                                 } else {
                                     Image.tabIconNotifications
                                     text.foregroundColor(.secondaryText)
@@ -149,7 +149,7 @@ struct AppView: View {
                                     let text = Localized.profileTitle.view
                                     if $router.selectedTab.wrappedValue == .profile {
                                         Image.tabProfileSelected
-                                        text.foregroundColor(.textColor)
+                                        text.foregroundColor(.primaryTxt)
                                     } else {
                                         Image.tabProfile
                                         text.foregroundColor(.secondaryText)

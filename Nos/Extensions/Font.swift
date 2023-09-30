@@ -48,10 +48,20 @@ extension Font {
         .custom("ClarityCity-Regular", size: UIFont.preferredFont(
             forTextStyle: .caption2
         ).pointSize)
+    
+    static var clarityCallout = Font
+        .custom("ClarityCity-Regular", size: UIFont.preferredFont(
+            forTextStyle: .callout
+        ).pointSize)
 
     static var claritySubheadline = Font
         .custom("ClarityCity-Medium", size: UIFont.preferredFont(
             forTextStyle: .subheadline
+        ).pointSize)
+    
+    static var clarityFootnote = Font
+        .custom("ClarityCity-Regular", size: UIFont.preferredFont(
+            forTextStyle: .footnote
         ).pointSize)
     
     static var brand = Font
@@ -110,6 +120,10 @@ extension UIFont {
 // swiftlint:disable identifier_name
 func PlainText(_ content: any StringProtocol) -> SwiftUI.Text {
     SwiftUI.Text(content)
+}
+
+func PlainText(_ localized: Localized) -> SwiftUI.Text {
+    SwiftUI.Text(localized)
 }
 
 func Text(_ content: any StringProtocol) -> SwiftUI.Text {
