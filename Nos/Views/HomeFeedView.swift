@@ -19,6 +19,8 @@ struct HomeFeedView: View {
     @Dependency(\.analytics) private var analytics
     
     @FetchRequest var events: FetchedResults<Event>
+    @FetchRequest private var authors: FetchedResults<Author>
+    
     @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
     @State private var subscriptionIDs = [String]()
     @State private var isVisible = false
@@ -28,10 +30,13 @@ struct HomeFeedView: View {
     static let initialLoadTime = 2
 
     @ObservedObject var user: Author
+    @Binding private var showStories: Bool
     
-    init(user: Author) {
+    init(user: Author, showStories: Binding<Bool>) {
         self.user = user
-        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, before: Date.now))
+        _showStories = showStories
+        _events = FetchRequest(fetchRequest: Event.homeFeed(for: user, before: Date.now))
+        _authors = FetchRequest(fetchRequest: user.followedWithNewNotes(since: Calendar.current.date(byAdding: .day, value: -2, to: .now)!))
     }
     
     func subscribeToNewEvents() async {
@@ -68,6 +73,25 @@ struct HomeFeedView: View {
                     )
                 } else {
                     ScrollView(.vertical, showsIndicators: false) {
+                        ScrollView(.horizontal) {
+                            HStack {
+                                ForEach(authors) { author in
+                                    Button {
+                                        showStories = true
+                                    } label: {
+                                        AvatarView(imageUrl: author.profilePhotoURL, size: 54)
+                                            .padding(.vertical, 10)
+                                            .padding(.horizontal, 15)
+                                            .background(
+                                                Circle()
+                                                    .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
+                                                    .frame(width: 58, height: 58)
+                                            )
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.top, 15)
                         LazyVStack {
                             ForEach(events) { event in
                                 NoteButton(note: event, hideOutOfNetwork: false)
@@ -198,13 +222,13 @@ struct ContentView_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        HomeFeedView(user: user)
+        HomeFeedView(user: user, showStories: .constant(false))
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
             .environmentObject(currentUser)
         
-        HomeFeedView(user: user)
+        HomeFeedView(user: user, showStories: .constant(false))
             .environment(\.managedObjectContext, emptyPreviewContext)
             .environmentObject(emptyRelayService)
             .environmentObject(router)

@@ -23,9 +23,9 @@ struct HomeTab: View {
         NavigationStack(path: $router.homeFeedPath) {
             VStack {
                 if showStories {
-                    StoriesView(user: user, cutoffDate: $storiesCutoffDate)
+                    StoriesView(isPresented: $showStories, user: user, cutoffDate: $storiesCutoffDate)
                 } else {
-                    HomeFeedView(user: user)
+                    HomeFeedView(user: user, showStories: $showStories)
                 }
             }
             .navigationBarItems(
@@ -68,7 +68,7 @@ struct HomeTab_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            HomeFeedView(user: previewData.currentUser.author!) 
+            HomeFeedView(user: previewData.currentUser.author!, showStories: .constant(false))
                 .inject(previewData: previewData)
         }
     }
