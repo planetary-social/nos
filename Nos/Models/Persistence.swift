@@ -166,6 +166,7 @@ class PersistenceController {
             return
         }
         
+        // this is removing the mute list!
         cleanupTask = Task {
             defer { self.cleanupTask = nil }
             let context = backgroundViewContext
@@ -175,8 +176,8 @@ class PersistenceController {
             Log.info("Database statistics: \(try databaseStatistics(from: context).sorted(by: { $0.key < $1.key }))")
             
             // Delete all but the most recent n events
-            let eventsToKeep = 1000
-            let fetchFirstEventToDelete = Event.allEventsRequest()
+            let eventsToKeep = 100
+            let fetchFirstEventToDelete = Event.deletableEventsRequest()
             fetchFirstEventToDelete.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
             fetchFirstEventToDelete.fetchLimit = 1
             fetchFirstEventToDelete.fetchOffset = eventsToKeep

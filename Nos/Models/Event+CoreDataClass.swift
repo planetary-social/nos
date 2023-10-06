@@ -85,6 +85,13 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
+    @nonobjc public class func deletableEventsRequest() -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "kind IN %@", [0, 1, 6, 7, 8, 30023])
+        return fetchRequest
+    }
+    
     /// The userId mapped to an array of strings witn information of the user
     static let discoverTabUserIdToInfo: [String: [String]] = [
         "npub1sg6plzptd64u62a878hep2kev88swjh3tw00gjsfl8f237lmu63q0uf63m": ["Jack Dorsey"],
