@@ -18,10 +18,13 @@ struct ExpirationTimeButton: View {
     var body: some View {
         ZStack {
             let textLayer = HStack(spacing: 3) {
-                VStack {
-                    Text(model.topText)
-                        .foregroundColor(.primaryTxt)
-                        .bold()
+                HStack(spacing: 1) {
+                    if showClearButton {
+                        PlainText(Localized.noteDisappearsIn.string)
+                            .foregroundColor(.secondaryText)
+                            .font(.clarityCaption2)
+                    }
+                    
                     PlainText(model.unit)
                         .foregroundColor(.secondaryText)
                         .font(.clarityCaption2)
@@ -75,6 +78,9 @@ struct ExpirationTimeButton: View {
     }
 }
 
+//ExpirationTimeButton(model: ExpirationTimeOption.fifteenMins, isSelected: .constant(false))
+//
+
 struct ExpirationTimeButton_Previews: PreviewProvider {
     
     @State static var emptyExpirationTime: TimeInterval? 
@@ -84,15 +90,10 @@ struct ExpirationTimeButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             HStack {
-                ExpirationTimeButton(model: ExpirationTimeOption.fifteenMins, isSelected: .constant(false))
                 ExpirationTimeButton(model: ExpirationTimeOption.oneHour, isSelected: .constant(false))
-                ExpirationTimeButton(model: ExpirationTimeOption.oneDay, isSelected: .constant(false))
-                ExpirationTimeButton(model: ExpirationTimeOption.sevenDays, isSelected: .constant(true))
-                ExpirationTimeButton(
-                    model: ExpirationTimeOption.fifteenMins, 
-                    showClearButton: true, 
-                    isSelected: .constant(true)
-                )
+                ExpirationTimeButton(model: ExpirationTimeOption.sevenDays, showClearButton: true, isSelected: .constant(false))
+                ExpirationTimeButton(model: ExpirationTimeOption.oneMonth, isSelected: .constant(false))
+                ExpirationTimeButton(model: ExpirationTimeOption.oneYear, isSelected: .constant(true))
             }
         }
         .padding(10)

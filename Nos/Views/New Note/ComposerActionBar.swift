@@ -94,15 +94,16 @@ struct ComposerActionBar: View {
             case .expirationDate:
                 backArrow
                 ScrollView(.horizontal) {
-                    HStack {
+                    VStack {
                         PlainText(Localized.noteDisappearsIn.string)
                             .font(.clarityCaption)
                             .foregroundColor(.secondaryText)
                             .transition(.move(edge: .trailing))
-                            .padding(10)
+                            .padding(.top, 6)
                         
                         ExpirationTimePicker(expirationTime: $expirationTime)
-                            .padding(.vertical, 12)
+                            .padding(.top, 2)
+                            .padding(.bottom, 4)
                     }
                 }
             }

@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Updated dispearing notes menu removing 15 minute option and adding month and year.
+
 ## [0.1 (81)] - 2023-09-30Z
 
 - Fixed secrets that weren't included in build 79 and 80

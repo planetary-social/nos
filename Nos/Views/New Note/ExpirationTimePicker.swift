@@ -61,8 +61,6 @@ struct ExpirationTimePicker_Previews: PreviewProvider {
     
     static var previews: some View {
         VStack {
-            ExpirationTimePicker(expirationTime: $emptyExpirationTime)
-                .padding(10)
             ExpirationTimePicker(expirationTime: $oneHourExpirationTime)
                 .padding(10)
         }
@@ -70,3 +68,4 @@ struct ExpirationTimePicker_Previews: PreviewProvider {
         .background(Color.appBg)
     }
 }
+

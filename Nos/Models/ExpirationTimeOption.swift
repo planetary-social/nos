@@ -11,40 +11,32 @@ import Foundation
 enum ExpirationTimeOption: Double, Identifiable, CaseIterable {
     
     // Raw value is the number of seconds until this message expires
-    case fifteenMins = 900
-    case oneHour = 3600
-    case oneDay = 86_400
-    case sevenDays = 604_800
+    case oneHour            = 3600
+    case oneDay             = 86_400
+    case sevenDays          = 604_800
+    case oneMonth           = 13_149_000
+    case oneYear            = 31_536_000
+
     
     var id: TimeInterval {
         rawValue
     }
     
-    // The text that will be displayed at the top of a button representing this option.
-    var topText: String {
-        switch self {
-        case .fifteenMins:
-            return "15"
-        case .oneHour:
-            return "1"
-        case .oneDay:
-            return "24"
-        case .sevenDays:
-            return "7"
-        }
-    }
+
     
     // The text that will be displayed below `topText`, representing the unit of time this option uses.
     var unit: String {
         switch self {
-        case .fifteenMins:
-            return Localized.minuteAbbreviated.string
         case .oneHour:
-            return Localized.hourAbbreviated.string
+            return Localized.hour.string
         case .oneDay:
-            return Localized.dayAbbreviated.string
+            return Localized.day.string
         case .sevenDays:
-            return Localized.daysAbbreviated.string
+            return Localized.week.string
+        case .oneMonth:
+            return Localized.month.string
+        case .oneYear:
+            return Localized.year.string
         }
     }
     
@@ -53,6 +45,6 @@ enum ExpirationTimeOption: Double, Identifiable, CaseIterable {
     }
     
     var accessibilityLabel: String {
-        "\(topText) \(unit)"
+        "\(unit)"
     }
 }
