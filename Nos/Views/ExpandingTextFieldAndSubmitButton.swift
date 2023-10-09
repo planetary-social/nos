@@ -12,9 +12,9 @@ struct ExpandingTextFieldAndSubmitButton: View {
 
     @Environment(\.managedObjectContext) private var viewContext
 
-    var placeholder: any Localizable
-    @Binding var reply: EditableNoteText
-    var focus: FocusState<Bool>.Binding
+    var placeholder: Localizable // Ensure 'Localizable' is defined elsewhere
+    @Binding var reply: EditableNoteText // Ensure 'EditableNoteText' is defined elsewhere
+    @FocusState var isFocused: Bool
     var action: () async -> Void
     
     @State private var showPostButton = false
@@ -24,7 +24,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
     
     var body: some View {
         HStack {
-            NoteTextEditor(text: $reply, placeholder: placeholder, focus: focus)
+            NoteTextEditor(text: $reply, placeholder: placeholder, focus: $isFocused)
                 .frame(maxHeight: 270)
                 .background(Color.appBg)
                 .cornerRadius(17.5)
@@ -32,27 +32,33 @@ struct ExpandingTextFieldAndSubmitButton: View {
                 Button(
                     action: {
                         disabled = true
-                        focus.wrappedValue = false
+                        isFocused = false
                         Task {
                             await action()
-                            reply = EditableNoteText()
+                            reply = EditableNoteText() // Ensure appropriate initialization
                             disabled = false
                         }
                     },
                     label: {
-                        Localized.post.view
+                        Localized.post.view // Ensure 'Localized' is defined elsewhere
                     }
                 )
                 .disabled(disabled)
             }
         }
-        .onChange(of: focus.wrappedValue) { bool in
-            showPostButton = bool
+        .onChange(of: reply) { newText in
+            // If newText is not empty or if the editor is focused, show the post button
+            showPostButton = !newText.isEmpty || isFocused
+        }
+        .onChange(of: isFocused) { focused in
+            // Update the post button visibility based on focus state
+            showPostButton = focused
         }
         .padding(8)
     }
 }
 
+// Your previews code
 struct ExpandingTextFieldAndSubmitButton_Previews: PreviewProvider {
 
     @State static var reply = EditableNoteText(string: "Hello World")
@@ -64,9 +70,8 @@ struct ExpandingTextFieldAndSubmitButton_Previews: PreviewProvider {
             VStack {
                 HStack(spacing: 10) {
                     ExpandingTextFieldAndSubmitButton(
-                        placeholder: Localized.Reply.postAReply, 
-                        reply: $reply, 
-                        focus: $isFocused,
+                        placeholder: Localized.Reply.postAReply,
+                        reply: $reply,
                         action: {}
                     )
                 }
