@@ -34,6 +34,7 @@ struct NoteCard: View {
     private var showFullMessage: Bool
     private let showReplyCount: Bool
     private var hideOutOfNetwork: Bool
+    //private var hasContentWarning: Bool
     private var replyAction: ((Event) -> Void)?
     
     private var showContents: Bool {
@@ -43,6 +44,19 @@ struct NoteCard: View {
         Event.discoverTabUserIdToInfo.keys.contains(note.author?.hexadecimalPublicKey ?? "")
     }
     
+    private var reported: Bool {
+        // var reports = FetchRequest(fetchRequest: Event.reports(noteID: note.identifier ?? "value"))
+        return false
+        // return reports.count > 0 ? true : false
+    }
+    
+    
+    private var labeled: Bool {
+        // let labels = Event.labels(noteID: note.identifier ?? "value")
+        // return labels.count > 0 ? true : false
+        return false
+    }
+        
     private var attributedReplies: AttributedString? {
         if replyCount == 0 {
             return nil
@@ -67,7 +81,9 @@ struct NoteCard: View {
         showFullMessage: Bool = false,
         hideOutOfNetwork: Bool = true,
         showReplyCount: Bool = true,
-        replyAction: ((Event) -> Void)? = nil
+        replyAction: ((Event) -> Void)? = nil,
+        reported: Bool = false,
+        labeled: Bool = false
     ) {
         self.note = note
         self.style = style
@@ -75,87 +91,92 @@ struct NoteCard: View {
         self.hideOutOfNetwork = hideOutOfNetwork
         self.showReplyCount = showReplyCount
         self.replyAction = replyAction
+        //self.reported = reported
+        //self.labeled = labeled
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             switch style {
             case .compact:
-                HStack(alignment: .center, spacing: 0) {
-                    if showContents, let author = note.author {
-                        Button {
-                            router.currentPath.wrappedValue.append(author)
-                        } label: {
-                            NoteCardHeader(note: note, author: author)
+                VStack {
+                    HStack(alignment: .center, spacing: 0) {
+                        if let author = note.author {
+                            Button {
+                                router.currentPath.wrappedValue.append(author)
+                            } label: {
+                                NoteCardHeader(note: note, author: author)
+                            }
+                            NoteOptionsButton(note: note)
                         }
-                        NoteOptionsButton(note: note)
-                    } else {
-                        Spacer()
                     }
-                }
-                Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
-                Group {
-                    if note.isStub {
-                        HStack {
-                            Spacer()
-                            ProgressView().foregroundColor(.primaryTxt)
-                            Spacer()
+                    
+                    Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
+                    Group {
+                        if note.isStub {
+                            HStack {
+                                Spacer()
+                                ProgressView().foregroundColor(.primaryTxt)
+                                Spacer()
+                            }
+                            .padding(30)
+                            .frame(maxWidth: .infinity)
+                        } else {
+                            CompactNoteView(note: note, showFullMessage: showFullMessage)
+                                .blur(radius: showContents ? 0 : 6)
+                                .frame(maxWidth: .infinity)
                         }
-                        .padding(30)
-                    } else if showContents {
-                        CompactNoteView(note: note, showFullMessage: showFullMessage)
-                    } else {
-                        VStack {
-                            Localized.outsideNetwork.view
-                                .font(.body)
-                                .foregroundColor(.secondaryText)
-                                .padding(15)
-                            SecondaryActionButton(title: Localized.show) {
-                                withAnimation {
-                                    userTappedShowOutOfNetwork = true
+                        BeveledSeparator()
+                        HStack(spacing: 0) {
+                            if showReplyCount {
+                                StackedAvatarsView(avatarUrls: replyAvatarURLs, size: 20, border: 0)
+                                    .padding(.trailing, 8)
+                                if let replies = attributedReplies {
+                                    Text(replies)
+                                        .font(.subheadline)
+                                        .foregroundColor(Color.secondaryText)
                                 }
                             }
-                            .padding(.bottom, 15)
-                        }
-                        .frame(maxWidth: .infinity)
-                    }
-                    BeveledSeparator()
-                    HStack(spacing: 0) {
-                        if showReplyCount {
-                            StackedAvatarsView(avatarUrls: replyAvatarURLs, size: 20, border: 0)
-                                .padding(.trailing, 8)
-                            if let replies = attributedReplies {
-                                Text(replies)
-                                    .font(.subheadline)
-                                    .foregroundColor(Color.secondaryText)
+                            Spacer()
+                            
+                            RepostButton(note: note) {
+                                await repostNote()
                             }
-                        }
-                        Spacer()
-                        
-                        RepostButton(note: note) {
-                            await repostNote()
-                        }
-                        
-                        LikeButton(note: note) {
-                            await likeNote()
-                        }
-                        
-                        // Reply button
-                        Button(action: { 
-                            if let replyAction {
-                                replyAction(note)
-                            } else {
-                                router.push(ReplyToNavigationDestination(note: note))
+                            
+                            LikeButton(note: note) {
+                                await likeNote()
                             }
-                        }, label: { 
-                            Image.buttonReply
-                                .padding(.leading, 10)
-                                .padding(.trailing, 23)
-                                .padding(.vertical, 12)
-                        })
+                            
+                            // Reply button
+                            Button(action: {
+                                if let replyAction {
+                                    replyAction(note)
+                                } else {
+                                    router.push(ReplyToNavigationDestination(note: note))
+                                }
+                            }, label: {
+                                Image.buttonReply
+                                    .padding(.leading, 10)
+                                    .padding(.trailing, 23)
+                                    .padding(.vertical, 12)
+                            })
+                        }
+                        .padding(.leading, 13)
                     }
-                    .padding(.leading, 13)
+                    
+
                 }
+                .blur(radius: showContents ? 0 : 6)
+                
+                .overlay(
+                    !showContents ? OverlayView(userTappedShowAction: {
+                        userTappedShowOutOfNetwork = true
+                    }, reported: reported, labeled: labeled) : nil
+                )
+
+                //.frame(minHeight: showContents ? nil : 130)
+
+                
             case .golden:
                 if let author = note.author {
                     GoldenPostView(author: author, note: note)
@@ -199,6 +220,90 @@ struct NoteCard: View {
         .cornerRadius(cornerRadius)
     }
     
+    struct OverlayView: View {
+        var userTappedShowAction: () -> Void
+        var reported: Bool
+        var labeled: Bool
+
+        @ViewBuilder
+        var body: some View {
+            if reported {
+                OverlayContentReportView(userTappedShowAction: userTappedShowAction)
+            } else if labeled {
+                OverlayContentLabelView(userTappedShowAction: userTappedShowAction)
+            } else {
+                OverlayOutofNetworkView(userTappedShowAction: userTappedShowAction)
+            }
+        }
+    }
+
+    struct OverlayOutofNetworkView: View{
+        var userTappedShowAction: () -> Void
+        
+        var body: some View {
+            VStack {
+                Localized.outsideNetwork.view
+                    .font(.body)
+                    .foregroundColor(.secondaryText)
+                    .background {
+                        Color.cardBackground
+                            .blur(radius: 8, opaque: false)
+                    }
+                    .padding(20)
+                SecondaryActionButton(title: Localized.show) {
+                    withAnimation {
+                        userTappedShowAction()
+                    }
+                }
+            }
+        }
+    }
+    
+    // we need to set the display to be different and get associated reports
+    struct OverlayContentReportView: View{
+        var userTappedShowAction: () -> Void
+        
+        var body: some View {
+            VStack {
+                Localized.outsideNetwork.view
+                    .font(.body)
+                    .foregroundColor(.secondaryText)
+                    .background {
+                        Color.cardBackground
+                            .blur(radius: 8, opaque: false)
+                    }
+                    .padding(20)
+                SecondaryActionButton(title: Localized.show) {
+                    withAnimation {
+                        userTappedShowAction()
+                    }
+                }
+            }
+        }
+    }
+    
+    // we need to still look for associated lables
+    struct OverlayContentLabelView: View{
+        var userTappedShowAction: () -> Void
+        
+        var body: some View {
+            VStack {
+                Localized.outsideNetwork.view
+                    .font(.body)
+                    .foregroundColor(.secondaryText)
+                    .background {
+                        Color.cardBackground
+                            .blur(radius: 8, opaque: false)
+                    }
+                    .padding(20)
+                SecondaryActionButton(title: Localized.show) {
+                    withAnimation {
+                        userTappedShowAction()
+                    }
+                }
+            }
+        }
+    }
     func likeNote() async {
         
         guard let keyPair = currentUser.keyPair else {
