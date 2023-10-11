@@ -170,6 +170,10 @@
 		C9646EAE29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */; };
 		C9646EAF29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */; };
 		C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */; };
+		C9680AD12ACC5251006C8C93 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9680AD02ACC5251006C8C93 /* Either.swift */; };
+		C9680AD22ACC5251006C8C93 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9680AD02ACC5251006C8C93 /* Either.swift */; };
+		C9680AD42ACDF57D006C8C93 /* UNSWizardNeedsPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9680AD32ACDF57D006C8C93 /* UNSWizardNeedsPayment.swift */; };
+		C9680AD52ACDF57D006C8C93 /* UNSWizardNeedsPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9680AD32ACDF57D006C8C93 /* UNSWizardNeedsPayment.swift */; };
 		C96CB98C2A6040C500498C4E /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = C96CB98B2A6040C500498C4E /* DequeModule */; };
 		C973364F2A7968220012D8B8 /* SetUpUNSBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973364E2A7968220012D8B8 /* SetUpUNSBanner.swift */; };
 		C97336502A7968220012D8B8 /* SetUpUNSBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973364E2A7968220012D8B8 /* SetUpUNSBanner.swift */; };
@@ -578,6 +582,8 @@
 		C9646EA029B7A22C007239A4 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDidLoadModifier.swift; sourceTree = "<group>"; };
 		C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Encoding.swift"; sourceTree = "<group>"; };
+		C9680AD02ACC5251006C8C93 /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
+		C9680AD32ACDF57D006C8C93 /* UNSWizardNeedsPayment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UNSWizardNeedsPayment.swift; sourceTree = "<group>"; };
 		C973364E2A7968220012D8B8 /* SetUpUNSBanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetUpUNSBanner.swift; sourceTree = "<group>"; };
 		C973AB552A323167002AED16 /* Follow+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Follow+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		C973AB562A323167002AED16 /* Event+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -798,6 +804,7 @@
 				C93F48922AC5C9CE00900CEC /* UNSWizardIntro.swift */,
 				C981E2DA2AC6088900FBF4F6 /* UNSWizardOTP.swift */,
 				C93F488F2AC5C9C400900CEC /* UNSWizardPhone.swift */,
+				C9680AD32ACDF57D006C8C93 /* UNSWizardNeedsPayment.swift */,
 				C94D6D5B2AC5D14400F0F11E /* WizardTextField.swift */,
 			);
 			path = UNS;
@@ -1030,7 +1037,8 @@
 				C973AB582A323167002AED16 /* Author+CoreDataProperties.swift */,
 				3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */,
 				C973AB572A323167002AED16 /* AuthorReference+CoreDataProperties.swift */,
-				C930055E2A6AF8320098CA9E /* LoadingContent.swift */,
+				C94A5E142A716A6D00B6EC5D /* EditableNoteText.swift */,
+				C9680AD02ACC5251006C8C93 /* Either.swift */,
 				C9DEC03F29894BED0078B43A /* Event+CoreDataClass.swift */,
 				C973AB562A323167002AED16 /* Event+CoreDataProperties.swift */,
 				3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */,
@@ -1041,11 +1049,11 @@
 				C93CA0C229AE3A1E00921183 /* JSONEvent.swift */,
 				5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */,
 				C9F84C26298DC98800C6714D /* KeyPair.swift */,
+				C930055E2A6AF8320098CA9E /* LoadingContent.swift */,
 				C9C547572A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift */,
 				C9C547582A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift */,
 				C9F0BB6E29A50437000547FC /* NostrConstants.swift */,
 				5B6EB48D29EDBE0E006E750C /* NoteParser.swift */,
-				C94A5E142A716A6D00B6EC5D /* EditableNoteText.swift */,
 				C9AC31AC2A55E0BD00A94E5A /* NotificationViewModel.swift */,
 				C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */,
 				C9DEBFD3298941000078B43A /* Persistence.swift */,
@@ -1521,6 +1529,7 @@
 				C987F86129BABAF800B44E7A /* String+Markdown.swift in Sources */,
 				3F30020B29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift in Sources */,
 				C9C5475B2A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift in Sources */,
+				C9680AD12ACC5251006C8C93 /* Either.swift in Sources */,
 				C98B8B4029FBF83B009789C8 /* NotificationCard.swift in Sources */,
 				5B834F672A83FB5C000C1432 /* ProfileKnownFollowersView.swift in Sources */,
 				C987F81D29BA6D9A00B44E7A /* ProfileTab.swift in Sources */,
@@ -1594,6 +1603,7 @@
 				5B8C96AC29D52AD200B73AEC /* AuthorListView.swift in Sources */,
 				C94A5E152A716A6D00B6EC5D /* EditableNoteText.swift in Sources */,
 				DC5F20412A6AE31000F8D73F /* ImagePicker.swift in Sources */,
+				C9680AD42ACDF57D006C8C93 /* UNSWizardNeedsPayment.swift in Sources */,
 				5B0D99032A94090A0039F0C5 /* DoubleTapToPopModifier.swift in Sources */,
 				5BFF66B42A58853D00AA79DD /* PublishedEventsView.swift in Sources */,
 				C987F85B29BA9ED800B44E7A /* Font.swift in Sources */,
@@ -1770,6 +1780,7 @@
 				CD09A74D29A521A70063464F /* CardStyle.swift in Sources */,
 				5BD08BB22A38E96F00BB926C /* JSONRelayMetadata.swift in Sources */,
 				CD09A74C29A5217A0063464F /* NoteButton.swift in Sources */,
+				C9680AD52ACDF57D006C8C93 /* UNSWizardNeedsPayment.swift in Sources */,
 				C936B45A2A4C7B7C00DF1EB9 /* Nos.xcdatamodeld in Sources */,
 				C974652F2A3B86600031226F /* NoteCardHeader.swift in Sources */,
 				A303AF8529A969F5005DC8FC /* FollowsView.swift in Sources */,
@@ -1831,6 +1842,7 @@
 				C9BCF1C22AC72020009BDE06 /* UNSWizardChooseName.swift in Sources */,
 				C9E37E102A1E7C32003D4B0A /* ReportMenu.swift in Sources */,
 				C9C9444229F6F0E2002F2C7A /* XCTest+Eventually.swift in Sources */,
+				C9680AD22ACC5251006C8C93 /* Either.swift in Sources */,
 				C942566B29B66B2F00C4202C /* NotificationsView.swift in Sources */,
 				C9A0DADE29C689C900466635 /* NosNavigationBar.swift in Sources */,
 				C93F48912AC5C9C400900CEC /* UNSWizardPhone.swift in Sources */,

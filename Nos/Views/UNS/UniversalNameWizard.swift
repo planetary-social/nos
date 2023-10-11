@@ -28,26 +28,23 @@ struct UNSWizardContext {
         case success
         case error
         case nameTaken
+        case needsPayment(URL)
     }
     
-    var state: FlowState
-    var authorKey: HexadecimalString
-    var completionHandler: (() -> Void)?
+    var state: FlowState = .intro
+    var authorKey: HexadecimalString?
     var textField: String = ""
     var phoneNumber: String?
-    var name: UNSName?
+    var nameRecord: UNSNameRecord?
     
     /// All names the user has already registered
-    var names: [UNSName]?
+    var names: [UNSNameRecord]?
 }
 
 struct UniversalNameWizard: View {
         
-    @State var context: UNSWizardContext
-    
-    var author: Author
-
-    var dismiss: (() -> Void)?
+    @Binding var context: UNSWizardContext
+    @Binding var isPresented: Bool
     
     enum Flow {
         case signUp
@@ -67,11 +64,6 @@ struct UniversalNameWizard: View {
     
     @FocusState private var focusedField: FocusedField?
     
-    init(author: Author, completion: @escaping () -> Void) {
-        self.author = author
-        self.context = UNSWizardContext(state: .intro, authorKey: author.hexadecimalPublicKey!, completionHandler: completion)
-    }
-    
     var body: some View {
         VStack {
             switch context.state {
@@ -87,6 +79,9 @@ struct UniversalNameWizard: View {
                 FullscreenProgressView(isPresented: .constant(true))
             case .chooseName:
                 UNSWizardChooseName(context: $context)
+                
+            case .needsPayment:
+                UNSWizardNeedsPayment(context: $context)
             case .newName:
                 Form {
                     Section {
@@ -113,6 +108,11 @@ struct UniversalNameWizard: View {
                 .scrollContentBackground(.hidden)
                 Spacer()
                 BigActionButton(title: .submit) {
+                    guard let authorKey = context.authorKey else {
+                        context.state = .error
+                        return
+                    }
+                    
                     do {
                         context.state = .loading
                         analytics.choseUNSName()
@@ -120,14 +120,14 @@ struct UniversalNameWizard: View {
                             context.textField.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
                         )
                         let names = try await api.getNames()
-                        context.name = names.first!
-                        let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub)!
+                        context.nameRecord = names.first!
+                        let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub, nameID: context.nameRecord!.id)!
                         let nip05 = try await api.submitNostrVerification(
                             message: message,
                             keyPair: currentUser.keyPair!
                         )
-                        let author = try Author.find(by: context.authorKey, context: viewContext)!
-                        author.name = context.name
+                        let author = try Author.find(by: authorKey, context: viewContext)!
+                        author.name = context.nameRecord?.name
                         author.nip05 = nip05
                         await currentUser.publishMetaData()
                         context.state = .success
@@ -162,20 +162,22 @@ struct UniversalNameWizard: View {
                         .font(.title)
                         .padding(.top, 50)
                         .foregroundColor(.primaryTxt)
-                    Text("\(context.name ?? "") \(Localized.yourNewUNMessage.string)")
+                    Text("\(context.nameRecord?.name ?? "") \(Localized.yourNewUNMessage.string)")
                         .padding()
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: 500)
                         .foregroundColor(.primaryTxt)
                     Spacer()
                     BigActionButton(title: .dismiss) {
-                        analytics.completedUNSWizard()
-                        dismiss?()
+                        isPresented = false
                     }
                     .padding(.horizontal, 24)
                     .padding(.bottom, 50)
                 }
                 .frame(maxWidth: .infinity)
+                .onAppear {
+                    analytics.completedUNSWizard()
+                }
             case .error:
                 Spacer()
                 PlainText(Localized.oops.string)
@@ -202,7 +204,10 @@ struct UniversalNameWizard: View {
             analytics.showedUNSWizard()
         }
         .onDisappear {
-            if context.state != .success {
+            switch context.state {
+            case .success:
+                return
+            default:
                 analytics.canceledUNSWizard()
             }
         }
@@ -211,18 +216,12 @@ struct UniversalNameWizard: View {
     }
 }
 
-struct UniversalNameWizard_Previews: PreviewProvider {
+#Preview {
     
-    static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
-
-    static var author: Author {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.pubKeyHex
-        return author
-    }
+    @State var context = UNSWizardContext(authorKey: KeyFixture.pubKeyHex)
+    @State var isPresented = true
+    @State var previewData = PreviewData()
     
-    static var previews: some View {
-        UniversalNameWizard(author: author) {}
-    }
+    return UniversalNameWizard(context: $context, isPresented: $isPresented)
+        .inject(previewData: previewData)
 }

@@ -150,6 +150,12 @@
 "Localized.unsDescription" = "The Universal Namespace gives you one name you can use everywhere. Register your Universal Name and connect it to your Nostr profile. Learn more.";
 "Localized.unsRegister" = "Register your Universal Name";
 "Localized.unsRegisterDescription" = "Universal Name Space gives you a name you can use everywhere.\n        \nVerify your identity and link your social accounts, government ID, wallets and more.";
+"Localized.premiumName" = "This is a Premium name";
+"Localized.premiumNameDescription" = "You'll be redirected to the UNS website where you can register a premium name.";
+"Localized.returnToChooseName" = "Return to the choose name step and choose your registered name.";
+"Localized.goBackAndRegister" = "You may want to go back and register a different name";
+"Localized.registerADifferentName" = "register a different name";
+"Localized.registerPremiumName" = "Register Premium Name";
 "Localized.registration" = "Registration";
 "Localized.registrationDescription" = "Enter your phone number so we can send you an SMS code.";
 "Localized.verification" = "Verification";

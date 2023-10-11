@@ -219,6 +219,12 @@ enum Localized: String, Localizable, CaseIterable {
             
     Verify your identity and link your social accounts, government ID, wallets and more.
     """
+    case premiumName = "This is a Premium name"
+    case premiumNameDescription = "You'll be redirected to the UNS website where you can register a premium name."
+    case returnToChooseName = "Return to the choose name step and choose your registered name."
+    case goBackAndRegister = "You may want to go back and register a different name"
+    case registerADifferentName = "register a different name"
+    case registerPremiumName = "Register Premium Name"
     case registration = "Registration"
     case registrationDescription = "Enter your phone number so we can send you an SMS code."
     case verification = "Verification"
