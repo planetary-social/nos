@@ -64,7 +64,7 @@ struct AuthorCard: View {
             .cornerRadius(15)
             .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
         }
-        .buttonStyle(CardButtonStyle())
+        .buttonStyle(CardButtonStyle(style: .golden))
     }
 }
 
