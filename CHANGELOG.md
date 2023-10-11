@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed aspect ratio on some profile photos
+- Added 3d effect to note cards
+
 ## [0.1 (81)] - 2023-09-30Z
 
 - Fixed secrets that weren't included in build 79 and 80
