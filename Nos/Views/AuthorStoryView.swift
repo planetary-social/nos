@@ -34,104 +34,102 @@ struct AuthorStoryView: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            ScrollView(.vertical, showsIndicators: false) {
-                Group {
-                    if let selectedNote {
-                        CompactNoteView(note: selectedNote, showFullMessage: false)
-                            .padding(.top, 60)
-                    } else {
-                        EmptyView()
-                    }
-                }
-            }
-            .id(selectedNote)
-            .overlay(alignment: .leading) {
-                Button {
-                    guard let selectedNote, let selectedNoteIndex = notes.firstIndex(of: selectedNote) else {
-                        return
-                    }
-                    if selectedNoteIndex > 0 {
-                        let previousIndex = notes.index(before: selectedNoteIndex)
-                        self.selectedNote = notes[safe: previousIndex]
-                    } else {
-                        showPreviousAuthor()
-                    }
-                } label: {
-                    Color.red.opacity(0)
-                }
-                .frame(maxWidth: 100, maxHeight: .infinity)
-            }
-            .overlay(alignment: .trailing) {
-                Button {
-                    guard let selectedNote, let selectedNoteIndex = notes.firstIndex(of: selectedNote) else {
-                        return
-                    }
-                    if selectedNoteIndex < notes.count - 1 {
-                        let nextIndex = notes.index(after: selectedNoteIndex)
-                        self.selectedNote = notes[safe: nextIndex]
-                    } else {
-                        showNextAuthor()
-                    }
-                } label: {
-                    Color.green.opacity(0)
-                }
-                .frame(maxWidth: 100, maxHeight: .infinity)
-            }
-            .overlay(alignment: .topLeading) {
-                VStack {
-                    HStack(spacing: 6) {
-                        ForEach(notes) { note in
-                            Button {
-                                selectedNote = note
-                            } label: {
-                                RoundedRectangle(cornerRadius: 21)
-                                    .frame(maxWidth: .infinity, maxHeight: 3)
-                                    .cornerRadius(7)
-                                    .foregroundColor(note.isEqual(selectedNote) == true ? .accent : .secondaryText)
-                                    .padding(.bottom, 5)
-                                    .padding(.top, 15)
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 10)
-
-                    Button {
-                        router.push(author)
-                    } label: {
-                        HStack(alignment: .center) {
-                            AuthorLabel(author: author)
-                                .padding(0)
-                            if let elapsedTime = selectedNote?.createdAt?.elapsedTimeFromNowString() {
-                                Text(elapsedTime)
-                                    .lineLimit(1)
-                                    .font(.body)
-                                    .foregroundColor(.secondaryText)
-                            }
-                            Spacer()
-                            if let selectedNote {
-                                NoteOptionsButton(note: selectedNote)
-                            }
-                        }
-                        .padding(.leading, 10)
-                        .padding(.vertical, 0)
-                    }
-                }
-                .padding(.bottom, 10)
-                .background {
-                    LinearGradient(
-                        colors: [Color.appBg.opacity(1), Color.appBg.opacity(0)],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                }
-            }
-            .overlay(alignment: .bottomLeading) {
+        ScrollView(.vertical, showsIndicators: false) {
+            Group {
                 if let selectedNote {
-                    BottomOverlay(note: selectedNote)
+                    CompactNoteView(note: selectedNote, showFullMessage: false)
+                        .padding(.top, 60)
                 } else {
                     EmptyView()
                 }
+            }
+        }
+        .id(selectedNote)
+        .overlay(alignment: .leading) {
+            Button {
+                guard let selectedNote, let selectedNoteIndex = notes.firstIndex(of: selectedNote) else {
+                    return
+                }
+                if selectedNoteIndex > 0 {
+                    let previousIndex = notes.index(before: selectedNoteIndex)
+                    self.selectedNote = notes[safe: previousIndex]
+                } else {
+                    showPreviousAuthor()
+                }
+            } label: {
+                Color.red.opacity(0)
+            }
+            .frame(maxWidth: 100, maxHeight: .infinity)
+        }
+        .overlay(alignment: .trailing) {
+            Button {
+                guard let selectedNote, let selectedNoteIndex = notes.firstIndex(of: selectedNote) else {
+                    return
+                }
+                if selectedNoteIndex < notes.count - 1 {
+                    let nextIndex = notes.index(after: selectedNoteIndex)
+                    self.selectedNote = notes[safe: nextIndex]
+                } else {
+                    showNextAuthor()
+                }
+            } label: {
+                Color.green.opacity(0)
+            }
+            .frame(maxWidth: 100, maxHeight: .infinity)
+        }
+        .overlay(alignment: .topLeading) {
+            VStack {
+                HStack(spacing: 6) {
+                    ForEach(notes) { note in
+                        Button {
+                            selectedNote = note
+                        } label: {
+                            RoundedRectangle(cornerRadius: 21)
+                                .frame(maxWidth: .infinity, maxHeight: 3)
+                                .cornerRadius(7)
+                                .foregroundColor(note.isEqual(selectedNote) == true ? .accent : .secondaryText)
+                                .padding(.bottom, 5)
+                                .padding(.top, 15)
+                        }
+                    }
+                }
+                .padding(.horizontal, 10)
+
+                Button {
+                    router.push(author)
+                } label: {
+                    HStack(alignment: .center) {
+                        AuthorLabel(author: author)
+                            .padding(0)
+                        if let elapsedTime = selectedNote?.createdAt?.elapsedTimeFromNowString() {
+                            Text(elapsedTime)
+                                .lineLimit(1)
+                                .font(.body)
+                                .foregroundColor(.secondaryText)
+                        }
+                        Spacer()
+                        if let selectedNote {
+                            NoteOptionsButton(note: selectedNote)
+                        }
+                    }
+                    .padding(.leading, 10)
+                    .padding(.vertical, 0)
+                }
+            }
+            .padding(.bottom, 10)
+            .background {
+                LinearGradient(
+                    colors: [Color.appBg.opacity(1), Color.appBg.opacity(0)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            }
+        }
+        .overlay(alignment: .bottomLeading) {
+            if let selectedNote {
+                BottomOverlay(note: selectedNote)
+            } else {
+                EmptyView()
             }
         }
         .task {
