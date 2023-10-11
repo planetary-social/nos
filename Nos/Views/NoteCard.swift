@@ -24,6 +24,7 @@ struct NoteCard: View {
     @State private var userTappedShowOutOfNetwork = false
     @State private var replyCount = 0
     @State private var replyAvatarURLs = [URL]()
+    @State private var reportingAuthors = [Author]()
 
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
@@ -37,10 +38,14 @@ struct NoteCard: View {
     private var replyAction: ((Event) -> Void)?
     
     private var showContents: Bool {
-        !hideOutOfNetwork ||
+        (!hasContentWarning && !hideOutOfNetwork) ||
         userTappedShowOutOfNetwork ||
-        currentUser.socialGraph.contains(note.author?.hexadecimalPublicKey) ||
-        Event.discoverTabUserIdToInfo.keys.contains(note.author?.hexadecimalPublicKey ?? "")
+        (!hasContentWarning && (currentUser.socialGraph.contains(note.author?.hexadecimalPublicKey) ||
+        Event.discoverTabUserIdToInfo.keys.contains(note.author?.hexadecimalPublicKey ?? "")))
+    }
+    
+    private var hasContentWarning: Bool {
+        reportingAuthors.count > 0
     }
     
     private var attributedReplies: AttributedString? {
@@ -164,10 +169,12 @@ struct NoteCard: View {
                 }
             }
         }
-        .task(priority: .userInitiated) {
+        .task {
             if note.isStub {
                 _ = await relayService.requestEvent(with: note.identifier)
             } 
+            self.reportingAuthors = note.reportingAuthors(followedBy: currentUser)
+            print(self.reportingAuthors)
         }
         .onAppear {
             Task(priority: .userInitiated) {
