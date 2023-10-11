@@ -163,12 +163,12 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
 
-    @nonobjc func storiesRequest(since: Date) -> NSFetchRequest<Event> {
+    @nonobjc func storiesRequest(since: Date, limit: Int = 10, offset: Int = 0) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(format: "author = %@ AND createdAt > %@ AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (kind = 1 OR kind = 6 OR kind = 30023)", self, since as CVarArg)
         return fetchRequest
-        fetchRequest.fetchLimit = 10
+        fetchRequest.fetchLimit = limit
         return fetchRequest
     }
 

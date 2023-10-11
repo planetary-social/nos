@@ -30,11 +30,9 @@ struct HomeFeedView: View {
     static let initialLoadTime = 2
 
     @ObservedObject var user: Author
-    @Binding private var showStories: Bool
     
-    init(user: Author, showStories: Binding<Bool>) {
+    init(user: Author) {
         self.user = user
-        _showStories = showStories
         _events = FetchRequest(fetchRequest: Event.homeFeed(for: user, before: Date.now))
         _authors = FetchRequest(fetchRequest: user.followedWithNewNotes(since: Calendar.current.date(byAdding: .day, value: -2, to: .now)!))
     }
@@ -65,74 +63,78 @@ struct HomeFeedView: View {
     }
 
     var body: some View {
-            Group {
-                if performingInitialLoad {
-                    FullscreenProgressView(
-                        isPresented: $performingInitialLoad, 
-                        hideAfter: .now() + .seconds(Self.initialLoadTime)
-                    )
-                } else {
-                    ScrollView(.vertical, showsIndicators: false) {
-                        ScrollView(.horizontal) {
-                            HStack {
-                                ForEach(authors) { author in
-                                    Button {
-                                        showStories = true
-                                    } label: {
-                                        AvatarView(imageUrl: author.profilePhotoURL, size: 54)
-                                            .padding(.vertical, 10)
-                                            .padding(.horizontal, 15)
-                                            .background(
-                                                Circle()
-                                                    .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
-                                                    .frame(width: 58, height: 58)
-                                            )
+        Group {
+            if performingInitialLoad {
+                FullscreenProgressView(
+                    isPresented: $performingInitialLoad,
+                    hideAfter: .now() + .seconds(Self.initialLoadTime)
+                )
+            } else {
+                ScrollView(.vertical, showsIndicators: false) {
+                    ScrollView(.horizontal) {
+                        HStack(spacing: 15) {
+                            ForEach(authors) { author in
+                                Button {
+                                    var transaction = Transaction()
+                                    transaction.disablesAnimations = true
+                                    withTransaction(transaction) {
+                                        router.push(StoriesDestination(author: author))
                                     }
+                                } label: {
+                                    AvatarView(imageUrl: author.profilePhotoURL, size: 54)
+                                        .padding(.vertical, 10)
+                                        .background(
+                                            Circle()
+                                                .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
+                                                .frame(width: 58, height: 58)
+                                        )
                                 }
                             }
                         }
-                        .padding(.top, 15)
-                        LazyVStack {
-                            ForEach(events) { event in
-                                NoteButton(note: event, hideOutOfNetwork: false)
-                                    .padding(.bottom, 15)
-                            }
-                        }
-                        .padding(.vertical, 15)
+                        .padding(.horizontal, 15)
                     }
-                    .accessibilityIdentifier("home feed")
+                    .padding(.top, 15)
+                    LazyVStack {
+                        ForEach(events) { event in
+                            NoteButton(note: event, hideOutOfNetwork: false)
+                                .padding(.bottom, 15)
+                        }
+                    }
+                    .padding(.vertical, 15)
+                }
+                .accessibilityIdentifier("home feed")
+            }
+        }
+        .background(Color.appBg)
+        .overlay(Group {
+            if events.isEmpty && !performingInitialLoad {
+                Localized.noEvents.view
+                    .padding()
+            }
+        })
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    isShowingRelayList = true
+                } label: {
+                    HStack(spacing: 3) {
+                        Image("relay-left")
+                            .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
+                        Text("\(relayService.numberOfConnectedRelays)")
+                            .font(.clarityTitle3)
+                            .fontWeight(.heavy)
+                            .foregroundColor(.primaryTxt)
+                        Image("relay-right")
+                            .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
+                    }
+                }
+                .sheet(isPresented: $isShowingRelayList) {
+                    NavigationView {
+                        RelayView(author: user)
+                    }
                 }
             }
-            .background(Color.appBg)
-            .overlay(Group {
-                if events.isEmpty && !performingInitialLoad {
-                    Localized.noEvents.view
-                        .padding()
-                }
-            })
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        isShowingRelayList = true
-                    } label: {
-                        HStack(spacing: 3) {
-                            Image("relay-left")
-                                .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
-                            Text("\(relayService.numberOfConnectedRelays)")
-                                .font(.clarityTitle3)
-                                .fontWeight(.heavy)
-                                .foregroundColor(.primaryTxt)
-                            Image("relay-right")
-                                .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
-                        }
-                    }
-                    .sheet(isPresented: $isShowingRelayList) {
-                        NavigationView {
-                            RelayView(author: user)
-                        }
-                    }
-                }
-            }
+        }
         .background(Color.appBg)
         .padding(.top, 1)
         .overlay(Group {
@@ -163,6 +165,18 @@ struct HomeFeedView: View {
                 Task { await cancelSubscriptions() }
             }
         })
+        .navigationBarItems(
+            leading: SideMenuButton(),
+            trailing: Button {
+                var transaction = Transaction()
+                transaction.disablesAnimations = true
+                withTransaction(transaction) {
+                    router.push(StoriesDestination(author: authors.first))
+                }
+            } label: {
+                Image.stories
+            }
+        )
         .doubleTapToPop(tab: .home)
         .task {
             currentUser.socialGraph.followedKeys.publisher
@@ -222,13 +236,13 @@ struct ContentView_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        HomeFeedView(user: user, showStories: .constant(false))
+        HomeFeedView(user: user)
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
             .environmentObject(currentUser)
         
-        HomeFeedView(user: user, showStories: .constant(false))
+        HomeFeedView(user: user)
             .environment(\.managedObjectContext, emptyPreviewContext)
             .environmentObject(emptyRelayService)
             .environmentObject(router)

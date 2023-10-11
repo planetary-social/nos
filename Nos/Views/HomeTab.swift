@@ -13,7 +13,6 @@ struct HomeTab: View {
     @ObservedObject var user: Author
     
     @State private var showStories = false
-    @State private var storiesIconRotation: Angle = .zero
     @State private var storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now)!
     
     @EnvironmentObject var router: Router
@@ -21,29 +20,7 @@ struct HomeTab: View {
     
     var body: some View {
         NavigationStack(path: $router.homeFeedPath) {
-            VStack {
-                if showStories {
-                    StoriesView(isPresented: $showStories, user: user, cutoffDate: $storiesCutoffDate)
-                } else {
-                    HomeFeedView(user: user, showStories: $showStories)
-                }
-            }
-            .navigationBarItems(
-                leading: SideMenuButton(),
-                trailing: Button {
-                    storiesIconRotation += .degrees(90)
-                    withAnimation {
-                        showStories.toggle()
-                    }
-                } label: {
-                    Image.stories
-                        .rotationEffect(storiesIconRotation)
-                        .animation(
-                            .interactiveSpring(),
-                            value: storiesIconRotation
-                        )
-                }
-            )
+            HomeFeedView(user: user)
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
@@ -58,6 +35,25 @@ struct HomeTab: View {
                     }
                 }
             }
+            .navigationDestination(for: ReplyToNavigationDestination.self) { destination in
+                RepliesView(note: destination.note, showKeyboard: true)
+            }
+            .navigationDestination(for: StoriesDestination.self) { stories in
+                StoriesView(user: user, cutoffDate: $storiesCutoffDate, selectedAuthor: stories.author)
+                    .navigationBarBackButtonHidden(true)
+                    .navigationBarItems(
+                        leading: SideMenuButton(),
+                        trailing: Button {
+                            var transaction = Transaction()
+                            transaction.disablesAnimations = true
+                            withTransaction(transaction) {
+                                router.pop()
+                            }
+                        } label: {
+                            Image.stories.rotationEffect(Angle(degrees: 90))
+                        }
+                    )
+            }
         }
     }
 }
@@ -68,7 +64,7 @@ struct HomeTab_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            HomeFeedView(user: previewData.currentUser.author!, showStories: .constant(false))
+            HomeFeedView(user: previewData.currentUser.author!)
                 .inject(previewData: previewData)
         }
     }

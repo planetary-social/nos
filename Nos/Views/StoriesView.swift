@@ -7,22 +7,26 @@
 
 import SwiftUI
 
+struct StoriesDestination: Hashable {
+    var author: Author?
+}
+
 struct StoriesView: View {
     
     @ObservedObject var user: Author
+
+    @EnvironmentObject var router: Router
     
     @FetchRequest private var authors: FetchedResults<Author>
     
-    @State private var selectedAuthor: Author?
+    @State private var selectedAuthor: Author
     @Binding private var cutoffDate: Date
-
-    @Binding private var isPresented: Bool
     
-    init(isPresented: Binding<Bool>, user: Author, cutoffDate: Binding<Date>) {
-        self._isPresented = isPresented
+    init(user: Author, cutoffDate: Binding<Date>, selectedAuthor: Author? = nil) {
         self.user = user
         self._cutoffDate = cutoffDate
         _authors = FetchRequest(fetchRequest: user.followedWithNewNotes(since: cutoffDate.wrappedValue))
+        _selectedAuthor = .init(initialValue: selectedAuthor ?? Author())
     }
     
     var body: some View {
@@ -42,30 +46,45 @@ struct StoriesView: View {
         }
         .background(Color.appBg)
         .nosNavigationBar(title: .stories)
+        .task {
+            if selectedAuthor == Author(), let firstAuthor = authors.first {
+                selectedAuthor = firstAuthor
+            }
+        }
     }
     
     func showNextAuthor(from authors: FetchedResults<Author>) {
-        guard let selectedAuthor, let selectedAuthorIndex = authors.firstIndex(of: selectedAuthor) else {
+        guard let selectedAuthorIndex = authors.firstIndex(of: selectedAuthor) else {
             return
         }
         guard authors.endIndex - 1 > selectedAuthorIndex else {
-            isPresented = false
+            router.pop()
             return
         }
         let nextIndex = authors.index(after: selectedAuthorIndex)
-        self.selectedAuthor = authors[safe: nextIndex]
+        if let nextAuthor = authors[safe: nextIndex] {
+            self.selectedAuthor = nextAuthor
+        } else {
+            router.pop()
+            return
+        }
     }
     
     func showPreviousAuthor(from authors: FetchedResults<Author>) {
-        guard let selectedAuthor, let selectedAuthorIndex = authors.firstIndex(of: selectedAuthor) else {
+        guard let selectedAuthorIndex = authors.firstIndex(of: selectedAuthor) else {
             return
         }
         guard authors.startIndex < selectedAuthorIndex else {
-            isPresented = false
+            router.pop()
             return
         }
         let previousIndex = authors.index(before: selectedAuthorIndex)
-        self.selectedAuthor = authors[safe: previousIndex]
+        if let previousAuthor = authors[safe: previousIndex] {
+            selectedAuthor = previousAuthor
+        } else {
+            router.pop()
+            return
+        }
     }
 }
 
@@ -75,7 +94,7 @@ struct HomeStoriesView_Previews: PreviewProvider {
     @State static var cutoffDate = Calendar.current.date(byAdding: .day, value: -14, to: .now)!
     
     static var previews: some View {
-        StoriesView(isPresented: .constant(true), user: previewData.currentUser.author!, cutoffDate: $cutoffDate)
+        StoriesView(user: previewData.currentUser.author!, cutoffDate: $cutoffDate)
             .inject(previewData: previewData)
     }
 }

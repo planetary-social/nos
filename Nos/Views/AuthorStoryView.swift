@@ -46,25 +46,37 @@ struct AuthorStoryView: View {
                 }
             }
             .id(selectedNote)
-            .onTapGesture { point in
-                guard let selectedNote, let selectedNoteIndex = notes.firstIndex(of: selectedNote) else {
-                    return
-                }
-                if point.x < 100 {
+            .overlay(alignment: .leading) {
+                Button {
+                    guard let selectedNote, let selectedNoteIndex = notes.firstIndex(of: selectedNote) else {
+                        return
+                    }
                     if selectedNoteIndex > 0 {
                         let previousIndex = notes.index(before: selectedNoteIndex)
                         self.selectedNote = notes[safe: previousIndex]
                     } else {
                         showPreviousAuthor()
                     }
-                } else if point.x > geometry.size.width - 100 {
+                } label: {
+                    Color.red.opacity(0)
+                }
+                .frame(maxWidth: 100, maxHeight: .infinity)
+            }
+            .overlay(alignment: .trailing) {
+                Button {
+                    guard let selectedNote, let selectedNoteIndex = notes.firstIndex(of: selectedNote) else {
+                        return
+                    }
                     if selectedNoteIndex < notes.count - 1 {
                         let nextIndex = notes.index(after: selectedNoteIndex)
                         self.selectedNote = notes[safe: nextIndex]
                     } else {
                         showNextAuthor()
                     }
+                } label: {
+                    Color.green.opacity(0)
                 }
+                .frame(maxWidth: 100, maxHeight: .infinity)
             }
             .overlay(alignment: .topLeading) {
                 VStack {
@@ -114,6 +126,13 @@ struct AuthorStoryView: View {
                     )
                 }
             }
+            .overlay(alignment: .bottomLeading) {
+                if let selectedNote {
+                    BottomOverlay(note: selectedNote)
+                } else {
+                    EmptyView()
+                }
+            }
         }
         .task {
             if selectedNote == nil {
@@ -128,6 +147,80 @@ struct AuthorStoryView: View {
     }
 }
 
+fileprivate struct BottomOverlay: View {
+    
+    var note: Event
+
+    @Environment(\.managedObjectContext) private var viewContext
+
+    @EnvironmentObject private var router: Router
+
+    @State private var replyCount = 0
+    @State private var replyAvatarURLs = [URL]()
+
+    var body: some View {
+        HStack(spacing: 0) {
+            StackedAvatarsView(avatarUrls: replyAvatarURLs, size: 20, border: 0)
+                .padding(.trailing, 8)
+
+            if let replies = attributedReplies {
+                Text(replies)
+                    .font(.subheadline)
+                    .foregroundColor(Color.secondaryText)
+            }
+
+            Spacer()
+
+            LikeButton(note: note) {
+                // TODO: await likeNote()
+            }
+
+            // Reply button
+            Button(action: {
+                router.push(ReplyToNavigationDestination(note: note))
+            }, label: {
+                Image.buttonReply
+                    .padding(.leading, 10)
+                    .padding(.trailing, 23)
+                    .padding(.vertical, 12)
+            })
+        }
+        .padding(.leading, 13)
+        .background {
+            LinearGradient(
+                colors: [Color.appBg.opacity(1), Color.appBg.opacity(0)],
+                startPoint: .bottom,
+                endPoint: .top
+            )
+        }
+        .task {
+            let (replyCount, replyAvatarURLs) = await Event.replyMetadata(
+                for: note.identifier,
+                context: viewContext
+            )
+            self.replyCount = replyCount
+            self.replyAvatarURLs = replyAvatarURLs
+        }
+    }
+
+    private var attributedReplies: AttributedString? {
+        if replyCount == 0 {
+            return nil
+        }
+        let replyCount = replyCount
+        let localized = replyCount == 1 ? Localized.Reply.one : Localized.Reply.many
+        let string = localized.text(["count": "**\(replyCount)**"])
+        do {
+            var attributed = try AttributedString(markdown: string)
+            if let range = attributed.range(of: "\(replyCount)") {
+                attributed[range].foregroundColor = .primaryTxt
+            }
+            return attributed
+        } catch {
+            return nil
+        }
+    }
+}
 struct AuthorStoryView_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
