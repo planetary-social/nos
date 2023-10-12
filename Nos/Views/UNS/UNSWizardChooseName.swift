@@ -20,15 +20,15 @@ fileprivate struct PickerRow<Label: View>: View {
     
     var body: some View {
         HStack {
-                if isSelected {
-                    Circle()
-                        .foregroundStyle(LinearGradient.verticalAccent)
-                        .frame(width: 16, height: 16)
-                } else {
-                    Circle()
-                        .stroke(Color.secondaryAction)
-                        .frame(width: 16, height: 16)
-                }
+            if isSelected {
+                Circle()
+                    .foregroundStyle(LinearGradient.verticalAccent)
+                    .frame(width: 16, height: 16)
+            } else {
+                Circle()
+                    .stroke(Color.secondaryAction)
+                    .frame(width: 16, height: 16)
+            }
             
             if isSelected {
                 label.foregroundStyle(LinearGradient.verticalAccent) 

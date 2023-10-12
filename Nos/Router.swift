@@ -10,6 +10,45 @@ import Combine
 import CoreData
 import Logger
 
+/// An enumeration of the destinations for AppView.
+enum AppDestination: String, Hashable, Equatable {
+    case home
+    case discover
+    case notifications
+    case newNote
+    case profile
+    
+    var label: some View {
+        switch self {
+        case .home:
+            return Text(Localized.homeFeed.string)
+        case .discover:
+            return Localized.discover.view
+        case .notifications:
+            return Localized.notifications.view
+        case .newNote:
+            return Localized.newNote.view
+        case .profile:
+            return Localized.profileTitle.view
+        }
+    }
+    
+    var destinationString: String {
+        switch self {
+        case .home:
+            return Localized.homeFeed.string
+        case .discover:
+            return Localized.discover.string
+        case .notifications:
+            return Localized.notifications.string
+        case .newNote:
+            return Localized.newNote.string
+        case .profile:
+            return Localized.profileTitle.string
+        }
+    }
+}
+
 // Manages the app's navigation state.
 @MainActor class Router: ObservableObject {
     
@@ -18,7 +57,7 @@ import Logger
     @Published var notificationsPath = NavigationPath()
     @Published var profilePath = NavigationPath()
     @Published var sideMenuPath = NavigationPath()
-    @Published var selectedTab = AppView.Destination.home
+    @Published var selectedTab = AppDestination.home
     
     var currentPath: Binding<NavigationPath> {
         if sideMenuOpened {
@@ -61,7 +100,7 @@ import Logger
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
-    func consecutiveTaps(on tab: AppView.Destination) -> AnyPublisher<Void, Never> {
+    func consecutiveTaps(on tab: AppDestination) -> AnyPublisher<Void, Never> {
         $selectedTab
             .scan((previous: nil, current: selectedTab)) { previousPair, current in
                 (previous: previousPair.current, current: current)
@@ -75,7 +114,7 @@ import Logger
             .eraseToAnyPublisher()
     }
 
-    func path(for destination: AppView.Destination) -> Binding<NavigationPath> {
+    func path(for destination: AppDestination) -> Binding<NavigationPath> {
         switch destination {
         case .home:
             return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })

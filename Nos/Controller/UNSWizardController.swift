@@ -138,4 +138,3 @@ class UNSWizardController: ObservableObject {
         state = .success
     }
 }
-
