@@ -56,6 +56,9 @@ struct ActionButton: View {
     }
 }
 
+// TODO:    The coloring of these butttons need to not be hard coded
+//          so that they're displayed correctly in both light and dark mode.
+
 struct SecondaryActionButton: View {
     var title: Localized
     var action: () async -> Void

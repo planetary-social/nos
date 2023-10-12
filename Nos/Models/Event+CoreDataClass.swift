@@ -1013,12 +1013,25 @@ public class Event: NosManagedObject {
     /// Returns a list of the authors this event was reported by if any of them are followed by the given user.
     /// This isn't very performant so use sparingly.
     @MainActor func reportingAuthors(followedBy currentUser: CurrentUser) -> [Author] {
-        referencingEvents
+        var events = referencingEvents
             .compactMap { $0.referencingEvent }
             .filter { (event: Event) in event.kind == EventKind.report.rawValue }
             .compactMap { $0.author }
             .filter { currentUser.socialGraph.follows($0.hexadecimalPublicKey) }
+        return events
     }
+    
+    @MainActor func reports(followedBy currentUser: CurrentUser) -> [Event] {
+        let reportEvents = referencingEvents
+            .compactMap { $0.referencingEvent }
+            .filter { (event: Event) in
+                event.kind == EventKind.report.rawValue && currentUser.socialGraph.follows(event.author?.hexadecimalPublicKey ?? "")
+             }
+        return reportEvents
+    }
+
+    
+    
 }
 // swiftlint:enable type_body_length
 // swiftlint:enable file_length

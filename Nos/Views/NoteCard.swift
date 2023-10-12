@@ -25,6 +25,7 @@ struct NoteCard: View {
     @State private var replyCount = 0
     @State private var replyAvatarURLs = [URL]()
     @State private var reportingAuthors = [Author]()
+    @State private var reports = [Event]()
 
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
@@ -35,7 +36,6 @@ struct NoteCard: View {
     private var showFullMessage: Bool
     private let showReplyCount: Bool
     private var hideOutOfNetwork: Bool
-    //private var hasContentWarning: Bool
     private var replyAction: ((Event) -> Void)?
     
     private var showContents: Bool {
@@ -45,23 +45,19 @@ struct NoteCard: View {
         Event.discoverTabUserIdToInfo.keys.contains(note.author?.hexadecimalPublicKey ?? "")))
     }
     
+    private var reportReason: String {
+        let reported = note.reports(followedBy: self.currentUser)
+        return(reported.first?.content ?? "")
+    }
+    
+    private var reportEvents: [Event] {
+        note.reports(followedBy: self.currentUser)
+    }
+ 
     private var hasContentWarning: Bool {
-        reportingAuthors.count > 0
+        reportEvents.count > 0
     }
     
-    private var reported: Bool {
-        // var reports = FetchRequest(fetchRequest: Event.reports(noteID: note.identifier ?? "value"))
-        return false
-        // return reports.count > 0 ? true : false
-    }
-    
-    
-    private var labeled: Bool {
-        // let labels = Event.labels(noteID: note.identifier ?? "value")
-        // return labels.count > 0 ? true : false
-        return false
-    }
-        
     private var attributedReplies: AttributedString? {
         if replyCount == 0 {
             return nil
@@ -95,9 +91,8 @@ struct NoteCard: View {
         self.showFullMessage = showFullMessage
         self.hideOutOfNetwork = hideOutOfNetwork
         self.showReplyCount = showReplyCount
+        self.reportingAuthors = reportingAuthors
         self.replyAction = replyAction
-        //self.reported = reported
-        //self.labeled = labeled
     }
     
     var body: some View {
@@ -168,20 +163,19 @@ struct NoteCard: View {
                         }
                         .padding(.leading, 13)
                     }
-                    
-
                 }
                 .blur(radius: showContents ? 0 : 6)
+                .opacity(showContents ? 1 : 0.3)
+                .frame(minHeight: showContents ? nil : 130)
                 
                 .overlay(
-                    !showContents ? OverlayView(userTappedShowAction: {
-                        userTappedShowOutOfNetwork = true
-                    }, reported: reported, labeled: labeled) : nil
+                    !showContents ? OverlayView(
+                        userTappedShowAction: {
+                            userTappedShowOutOfNetwork = true
+                        }, 
+                        hasContentWarning: hasContentWarning,
+                        reports: reportEvents) : nil
                 )
-
-                //.frame(minHeight: showContents ? nil : 130)
-
-                
             case .golden:
                 if let author = note.author {
                     GoldenPostView(author: author, note: note)
@@ -229,15 +223,13 @@ struct NoteCard: View {
     
     struct OverlayView: View {
         var userTappedShowAction: () -> Void
-        var reported: Bool
-        var labeled: Bool
-
+        var hasContentWarning: Bool
+        var reports: [Event]
+    
         @ViewBuilder
         var body: some View {
-            if reported {
-                OverlayContentReportView(userTappedShowAction: userTappedShowAction)
-            } else if labeled {
-                OverlayContentLabelView(userTappedShowAction: userTappedShowAction)
+            if hasContentWarning  {
+                OverlayContentReportView(userTappedShowAction: userTappedShowAction, reports: reports)
             } else {
                 OverlayOutofNetworkView(userTappedShowAction: userTappedShowAction)
             }
@@ -266,21 +258,56 @@ struct NoteCard: View {
         }
     }
     
-    // we need to set the display to be different and get associated reports
-    struct OverlayContentReportView: View{
+    struct OverlayContentReportView: View {
         var userTappedShowAction: () -> Void
-        
+        var reports: Array<Event>
+
+        // Assuming each 'Event' has an 'Author' and we can get an array of 'Author' names
+        private var authorNames: [String] {
+            // Extracting author names. Adjust according to your actual data structure.
+            reports.compactMap { $0.author?.name }
+        }
+
+        // Assuming there's a property or method 'safeName' in 'Author' that safely returns the author's name.
+        private var firstAuthorSafeName: String {
+            // Getting the safe name of the first author. Adjust according to your actual data structure.
+            reports.first?.author?.safeName ?? "Unknown Author"
+        }
+
+        private var reason: String {
+            reports.first?.content ?? ""
+        }
+
         var body: some View {
             VStack {
-                Localized.outsideNetwork.view
+                // Use 'reason' here
+                Text( reason )
                     .font(.body)
                     .foregroundColor(.secondaryText)
                     .background {
                         Color.cardBackground
                             .blur(radius: 8, opaque: false)
                     }
-                    .padding(20)
-                SecondaryActionButton(title: Localized.show) {
+
+                // Reporting author names with localization
+                if authorNames.count > 1 {
+                    Text(Localized.reportedByOneAndMore.localizedMarkdown([
+                        "one": firstAuthorSafeName,
+                        "count": "\(authorNames.count - 1)"
+                    ]))
+                    .font(.body)  // Adjust font and style as needed
+                    .foregroundColor(.primary)
+                    .padding(.leading, 25)  // Adjust padding as needed
+                } else {
+                    Text(Localized.reportedByOne.localizedMarkdown([
+                        "one": firstAuthorSafeName
+                    ]))
+                    .font(.body)  // Adjust font and style as needed
+                    .foregroundColor(.secondaryText)
+                    .padding(.leading, 25)  // Adjust padding as needed
+                }
+
+                SecondaryActionButton(title: Localized.viewThisPostAnyway) {
                     withAnimation {
                         userTappedShowAction()
                     }
@@ -288,6 +315,9 @@ struct NoteCard: View {
             }
         }
     }
+
+
+
     
     // we need to still look for associated lables
     struct OverlayContentLabelView: View{

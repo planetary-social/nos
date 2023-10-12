@@ -152,6 +152,11 @@ enum Localized: String, Localizable, CaseIterable {
     case followedByOneAndMore = "Followed by **{{ one }}** and **{{ count }} others**"
     case followedByTwo = "Followed by **{{ one }}** and **{{ two }}**"
     case followedByTwoAndMore = "Followed by **{{ one }}**, **{{ two }}** and **{{ count }} others**"
+    case reportedBy = "Reported by"
+    case reportedByOne = "Reported by **{{ one }}**"
+    case reportedByOneAndMore = "Reported by **{{ one }}** and **{{ count }} others**"
+    case reportedByTwo = "Reported by **{{ one }}** and **{{ two }}**"
+    case reportedByTwoAndMore = "Reported by **{{ one }}**, **{{ two }}** and **{{ count }} others**"
     case unfollow = "Unfollow"
     case uns = "UNS"
     case nip05 = "NIP-05"
@@ -160,6 +165,7 @@ enum Localized: String, Localizable, CaseIterable {
     case readMore = "Read more"
     case thread = "Thread"
     case show = "Show" // verb form
+    case viewThisPostAnyway = "View this post anyway" // verb form
     case bio = "Bio"
     case displayName = "Display name"
     case name = "Name"
@@ -239,7 +245,7 @@ enum Localized: String, Localizable, CaseIterable {
     case eventSource = "Raw Event"
     case loading = "Loading..."
     case viewSource = "View Source"
-    case reportEventContent = "This content has been reported for {{ report_category }} using NIP-69 vocabulary https://github.com/nostr-protocol/nips/pull/457"
+    case reportEventContent = "This content has been reported for {{ report_category }}."
     case select = "Select"
 }
 

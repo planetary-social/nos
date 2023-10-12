@@ -91,6 +91,11 @@
 "Localized.followedByOneAndMore" = "Followed by **{{ one }}** and **{{ count }} others**";
 "Localized.followedByTwo" = "Followed by **{{ one }}** and **{{ two }}**";
 "Localized.followedByTwoAndMore" = "Followed by **{{ one }}**, **{{ two }}** and **{{ count }} others**";
+"Localized.reportedBy" = "Reported by";
+"Localized.reportedByOne" = "Reported by **{{ one }}**";
+"Localized.reportedByOneAndMore" = "Reported by **{{ one }}** and **{{ count }} others**";
+"Localized.reportedByTwo" = "Reported by **{{ one }}** and **{{ two }}**";
+"Localized.reportedByTwoAndMore" = "Reported by **{{ one }}**, **{{ two }}** and **{{ count }} others**";
 "Localized.unfollow" = "Unfollow";
 "Localized.uns" = "UNS";
 "Localized.nip05" = "NIP-05";
@@ -99,6 +104,7 @@
 "Localized.readMore" = "Read more";
 "Localized.thread" = "Thread";
 "Localized.show" = "Show";
+"Localized.viewThisPostAnyway" = "View this post anyway";
 "Localized.bio" = "Bio";
 "Localized.displayName" = "Display name";
 "Localized.name" = "Name";
@@ -168,7 +174,7 @@
 "Localized.eventSource" = "Raw Event";
 "Localized.loading" = "Loading...";
 "Localized.viewSource" = "View Source";
-"Localized.reportEventContent" = "This content has been reported for {{ report_category }} using NIP-69 vocabulary https://github.com/nostr-protocol/nips/pull/457";
+"Localized.reportEventContent" = "This content has been reported for {{ report_category }}.";
 "Localized.select" = "Select";
 
 "Reply.one" = "{{ count }} reply";
