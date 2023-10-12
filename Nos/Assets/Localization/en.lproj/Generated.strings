@@ -108,6 +108,7 @@
 "Localized.profilePicture" = "Profile picture";
 "Localized.identityVerification" = "Identity verification";
 "Localized.chooseNameOrRegister" = "Choose from your existing names, or register a new one:";
+"Localized.chooseYourNameDescription" = "This will be your Universal Name. You can register more later. Valid names ";
 "Localized.url" = "URL";
 "Localized.noEventsOnProfile" = "We don't see any notes for this profile, but we'll keep looking!";
 "Localized.uploadProfilePicInstructions" = "Go to nostr.build to upload your photo, copy the URL provided and paste it here.";
@@ -165,7 +166,7 @@
 "Localized.verifyYourIdentity" = "Verify your identity";
 "Localized.enterCode" = "Enter Code";
 "Localized.nameLower" = "name";
-"Localized.chooseYourName" = "Choose Your Name";
+"Localized.chooseYourName" = "Choose your name";
 "Localized.oops" = "Oops!";
 "Localized.thatNameIsTaken" = "That name is taken.";
 "Localized.success" = "Success!";

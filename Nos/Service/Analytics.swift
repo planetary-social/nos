@@ -189,8 +189,12 @@ class Analytics {
         track("UNS Entered Code")
     }
     
-    func choseUNSName() {
-        track("UNS Chose Name")
+    func registeredUNSName() {
+        track("UNS Registered Name")
+    }
+    
+    func linkedUNSName() {
+        track("UNS Linked Name")
     }
     
     func choseInvalidUNSName() {

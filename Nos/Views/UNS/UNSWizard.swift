@@ -50,60 +50,7 @@ struct UNSWizard: View {
             case .needsPayment:
                 UNSWizardNeedsPayment(controller: controller)
             case .newName:
-                Form {
-                    Section {
-                        TextField(text: $controller.textField) {
-                            Localized.name.view
-                                .foregroundColor(.secondaryText)
-                        }
-                        .textInputAutocapitalization(.none)
-                        .foregroundColor(.primaryTxt)
-                        .autocorrectionDisabled()
-                        .autocapitalization(.none)
-                        .focused($focusedField, equals: .textEditor)
-                    } header: {
-                        Localized.chooseYourName.view
-                            .foregroundColor(.primaryTxt)
-                            .fontWeight(.heavy)
-                    }
-                    .listRowBackground(LinearGradient(
-                        colors: [Color.cardBgTop, Color.cardBgBottom],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    ))
-                }
-                .scrollContentBackground(.hidden)
-                Spacer()
-                BigActionButton(title: .submit) {
-                    guard let authorKey = controller.authorKey else {
-                        controller.state = .error
-                        return
-                    }
-                    
-                    do {
-                        controller.state = .loading
-                        analytics.choseUNSName()
-                        try await api.createName(
-                            controller.textField.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-                        )
-                        let names = try await api.getNames()
-                        controller.nameRecord = names.first!
-                        let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub, nameID: controller.nameRecord!.id)!
-                        let nip05 = try await api.submitNostrVerification(
-                            message: message,
-                            keyPair: currentUser.keyPair!
-                        )
-                        let author = try Author.find(by: authorKey, context: viewContext)!
-                        author.name = controller.nameRecord?.name
-                        author.nip05 = nip05
-                        await currentUser.publishMetaData()
-                        controller.state = .success
-                    } catch {
-                        controller.state = .error
-                    }
-                }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 50)
+                UNSNewName(controller: controller)
             case .nameTaken:
                 Spacer()
                 PlainText(Localized.oops.string)

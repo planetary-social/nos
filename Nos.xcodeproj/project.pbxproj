@@ -220,6 +220,7 @@
 		C9A6C7422AD837AD001F9500 /* UNSWizardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A6C7402AD837AD001F9500 /* UNSWizardController.swift */; };
 		C9A6C7452AD83FB0001F9500 /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AC31AC2A55E0BD00A94E5A /* NotificationViewModel.swift */; };
 		C9A6C7472AD84263001F9500 /* UNSNamePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A6C7462AD84263001F9500 /* UNSNamePicker.swift */; };
+		C9A6C7492AD86271001F9500 /* UNSNewName.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A6C7482AD86271001F9500 /* UNSNewName.swift */; };
 		C9AC31AD2A55E0BD00A94E5A /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AC31AC2A55E0BD00A94E5A /* NotificationViewModel.swift */; };
 		C9ADB133299287D60075E7F8 /* KeyPairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB132299287D60075E7F8 /* KeyPairTests.swift */; };
 		C9ADB135299288230075E7F8 /* KeyFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB134299288230075E7F8 /* KeyFixture.swift */; };
@@ -536,6 +537,7 @@
 		C9A5C5D32A9FDB6A0076AAD1 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Generated.strings; sourceTree = "<group>"; };
 		C9A6C7402AD837AD001F9500 /* UNSWizardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNSWizardController.swift; sourceTree = "<group>"; };
 		C9A6C7462AD84263001F9500 /* UNSNamePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNSNamePicker.swift; sourceTree = "<group>"; };
+		C9A6C7482AD86271001F9500 /* UNSNewName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNSNewName.swift; sourceTree = "<group>"; };
 		C9AC31AC2A55E0BD00A94E5A /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
 		C9ADB132299287D60075E7F8 /* KeyPairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPairTests.swift; sourceTree = "<group>"; };
 		C9ADB134299288230075E7F8 /* KeyFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyFixture.swift; sourceTree = "<group>"; };
@@ -697,6 +699,7 @@
 			children = (
 				C973364E2A7968220012D8B8 /* SetUpUNSBanner.swift */,
 				C936B45B2A4C7D6B00DF1EB9 /* UNSWizard.swift */,
+				C9A6C7482AD86271001F9500 /* UNSNewName.swift */,
 				C981E2DC2AC610D600FBF4F6 /* UNSStepImage.swift */,
 				C9BCF1C02AC72020009BDE06 /* UNSWizardChooseName.swift */,
 				C9A6C7462AD84263001F9500 /* UNSNamePicker.swift */,
@@ -1530,6 +1533,7 @@
 				C9A6C7412AD837AD001F9500 /* UNSWizardController.swift in Sources */,
 				C97465342A3C95FE0031226F /* RelayPickerToolbarButton.swift in Sources */,
 				3F43C47629A9625700E896A0 /* AuthorReference+CoreDataClass.swift in Sources */,
+				C9A6C7492AD86271001F9500 /* UNSNewName.swift in Sources */,
 				C9ADB13D29929B540075E7F8 /* Bech32.swift in Sources */,
 				C95D68A1299E6D3E00429F86 /* BioView.swift in Sources */,
 				C94D14812A12B3F70014C906 /* SearchBar.swift in Sources */,

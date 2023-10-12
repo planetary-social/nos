@@ -79,12 +79,12 @@ class UNSWizardController: ObservableObject {
         } else {
             nip05 = try await api.getNIP05(for: nameRecord!.id)
         }
+        analytics.linkedUNSName()
         try await saveDetails(name: existingName.name, nip05: nip05)
     }
     
     func register(desiredName: UNSName) async throws {
         state = .loading
-        analytics.choseUNSName()
         do {
             let response = try await api.createName(
                 // TODO: sanitize somewhere else
@@ -106,6 +106,7 @@ class UNSWizardController: ObservableObject {
                 message: message,
                 keyPair: currentUser.keyPair!
             )
+            analytics.registeredUNSName()
             try await saveDetails(name: desiredName, nip05: nip05)
         } catch {
             if case let UNSError.requiresPayment(paymentURL) = error {
