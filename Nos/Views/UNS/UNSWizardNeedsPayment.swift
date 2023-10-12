@@ -11,7 +11,7 @@ import Dependencies
 /// Shows a screen informing the user the name they registered requires payment and gives them a link to pay.
 struct UNSWizardNeedsPayment: View {
     
-    @Binding var context: UNSWizardContext
+    @ObservedObject var controller: UNSWizardController
     @State var hasOpenedPortal = false
     @Dependency(\.analytics) var analytics
     @Dependency(\.unsAPI) var api
@@ -40,10 +40,10 @@ struct UNSWizardNeedsPayment: View {
             
             Spacer()
             
-            if case let .needsPayment(url) = context.state, !hasOpenedPortal {
+            if case let .needsPayment(url) = controller.state, !hasOpenedPortal {
                 VStack {
                     Button { 
-                        context.state = .chooseName
+                        controller.state = .chooseName
                     } label: { 
                         HighlightedText(
                             text: .goBackAndRegister, 
@@ -67,16 +67,9 @@ struct UNSWizardNeedsPayment: View {
             } else {
                 BigActionButton(title: .next) {
                     do {
-                        context.state = .loading
-                        let names = try await api.getNames()
-                        if !names.isEmpty {
-                            context.names = names
-                            context.state = .chooseName
-                        } else {
-                            context.state = .newName
-                        }
+                        try await controller.navigateToChooseOrRegisterName()
                     } catch {
-                        context.state = .error
+                        controller.state = .error
                     }
                 }
                 .padding(.bottom, 41)
@@ -91,11 +84,11 @@ struct UNSWizardNeedsPayment: View {
 #Preview {
     
     var previewData = PreviewData()
-    @State var context = UNSWizardContext(
+    @State var controller = UNSWizardController(
         state: .needsPayment(URL(string: "https://www.universalname.space/name/frankie")!), 
         authorKey: previewData.alice.hexadecimalPublicKey!,
         nameRecord: UNSNameRecord(name: "frankie", id: "1")
     )
     
-    return UNSWizardNeedsPayment(context: $context)
+    return UNSWizardNeedsPayment(controller: controller)
 }

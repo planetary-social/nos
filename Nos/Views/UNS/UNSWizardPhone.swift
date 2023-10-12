@@ -10,7 +10,7 @@ import Dependencies
 
 struct UNSWizardPhone: View {
     
-    @Binding var context: UNSWizardContext
+    @ObservedObject var controller: UNSWizardController
     @Dependency(\.analytics) var analytics
     @Dependency(\.unsAPI) var api
     @State var phoneNumber: String = ""
@@ -73,15 +73,15 @@ struct UNSWizardPhone: View {
         number.replace("-", with: "")
         number.replace("+", with: "")
         number = "+\(number)"
-        context.phoneNumber = number
+        controller.phoneNumber = number
         self.phoneNumber = ""
         
         do {
-            context.state = .loading
+            controller.state = .loading
             try await api.requestOTPCode(phoneNumber: number)
-            context.state = .enterOTP
+            controller.state = .enterOTP
         } catch {
-            context.state = .error
+            controller.state = .error
         } 
     }
 }
@@ -89,9 +89,9 @@ struct UNSWizardPhone: View {
 struct UNSWizardPhone_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
-    @State static var context = UNSWizardContext(state: .intro, authorKey: previewData.alice.hexadecimalPublicKey!)
+    @State static var controller = UNSWizardController(state: .intro, authorKey: previewData.alice.hexadecimalPublicKey!)
     
     static var previews: some View {
-        UNSWizardPhone(context: $context)
+        UNSWizardPhone(controller: controller)
     }
 }

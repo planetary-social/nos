@@ -9,7 +9,7 @@ import SwiftUI
 
 struct UNSWizardIntro: View {
     
-    @Binding var context: UNSWizardContext
+    @ObservedObject var controller: UNSWizardController
     
     var body: some View {
         VStack {
@@ -47,7 +47,7 @@ struct UNSWizardIntro: View {
             Spacer()
             
             BigActionButton(title: .start) {
-                context.state = .enterPhone
+                controller.state = .enterPhone
             }
             .padding(.bottom, 41)
         }
@@ -60,9 +60,9 @@ struct UNSWizardIntro: View {
 struct UNSWizardIntro_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
-    @State static var context = UNSWizardContext(state: .intro, authorKey: previewData.alice.hexadecimalPublicKey!)
+    @State static var controller = UNSWizardController(state: .intro, authorKey: previewData.alice.hexadecimalPublicKey!)
     
     static var previews: some View {
-        UNSWizardIntro(context: $context)
+        UNSWizardIntro(controller: controller)
     }
 }

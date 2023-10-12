@@ -1,5 +1,5 @@
 //
-//  UniversalNameWizard.swift
+//  UNSWizard.swift
 //  Nos
 //
 //  Created by Matthew Lorentz on 3/20/23.
@@ -8,42 +8,9 @@
 import SwiftUI
 import Dependencies
 
-typealias UNSName = String
-
-extension UNSName: Identifiable {
-    public var id: String {
-        self
-    }
-}
-
-struct UNSWizardContext {
-    
-    enum FlowState {
-        case loading
-        case intro
-        case enterPhone
-        case enterOTP
-        case newName
-        case chooseName
-        case success
-        case error
-        case nameTaken
-        case needsPayment(URL)
-    }
-    
-    var state: FlowState = .intro
-    var authorKey: HexadecimalString?
-    var textField: String = ""
-    var phoneNumber: String?
-    var nameRecord: UNSNameRecord?
-    
-    /// All names the user has already registered
-    var names: [UNSNameRecord]?
-}
-
-struct UniversalNameWizard: View {
+struct UNSWizard: View {
         
-    @Binding var context: UNSWizardContext
+    @ObservedObject var controller: UNSWizardController
     @Binding var isPresented: Bool
     
     enum Flow {
@@ -66,26 +33,26 @@ struct UniversalNameWizard: View {
     
     var body: some View {
         VStack {
-            switch context.state {
+            switch controller.state {
             case .intro:
-                UNSWizardIntro(context: $context)
+                UNSWizardIntro(controller: controller)
             case .enterPhone:
-                UNSWizardPhone(context: $context)
+                UNSWizardPhone(controller: controller)
                
             case .enterOTP:
-                UNSWizardOTP(context: $context)
+                UNSWizardOTP(controller: controller)
                 
             case .loading:
                 FullscreenProgressView(isPresented: .constant(true))
             case .chooseName:
-                UNSWizardChooseName(context: $context)
+                UNSWizardChooseName(controller: controller)
                 
             case .needsPayment:
-                UNSWizardNeedsPayment(context: $context)
+                UNSWizardNeedsPayment(controller: controller)
             case .newName:
                 Form {
                     Section {
-                        TextField(text: $context.textField) {
+                        TextField(text: $controller.textField) {
                             Localized.name.view
                                 .foregroundColor(.secondaryText)
                         }
@@ -108,31 +75,31 @@ struct UniversalNameWizard: View {
                 .scrollContentBackground(.hidden)
                 Spacer()
                 BigActionButton(title: .submit) {
-                    guard let authorKey = context.authorKey else {
-                        context.state = .error
+                    guard let authorKey = controller.authorKey else {
+                        controller.state = .error
                         return
                     }
                     
                     do {
-                        context.state = .loading
+                        controller.state = .loading
                         analytics.choseUNSName()
                         try await api.createName(
-                            context.textField.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+                            controller.textField.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
                         )
                         let names = try await api.getNames()
-                        context.nameRecord = names.first!
-                        let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub, nameID: context.nameRecord!.id)!
+                        controller.nameRecord = names.first!
+                        let message = try await api.requestNostrVerification(npub: currentUser.keyPair!.npub, nameID: controller.nameRecord!.id)!
                         let nip05 = try await api.submitNostrVerification(
                             message: message,
                             keyPair: currentUser.keyPair!
                         )
                         let author = try Author.find(by: authorKey, context: viewContext)!
-                        author.name = context.nameRecord?.name
+                        author.name = controller.nameRecord?.name
                         author.nip05 = nip05
                         await currentUser.publishMetaData()
-                        context.state = .success
+                        controller.state = .success
                     } catch {
-                        context.state = .error
+                        controller.state = .error
                     }
                 }
                 .padding(.horizontal, 24)
@@ -149,7 +116,7 @@ struct UniversalNameWizard: View {
                     .foregroundColor(.primaryTxt)
                 Spacer()
                 BigActionButton(title: .goBack) {
-                    context.state = .newName
+                    controller.state = .newName
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 50)
@@ -162,7 +129,7 @@ struct UniversalNameWizard: View {
                         .font(.title)
                         .padding(.top, 50)
                         .foregroundColor(.primaryTxt)
-                    Text("\(context.nameRecord?.name ?? "") \(Localized.yourNewUNMessage.string)")
+                    Text("\(controller.nameRecord?.name ?? "") \(Localized.yourNewUNMessage.string)")
                         .padding()
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: 500)
@@ -190,7 +157,7 @@ struct UniversalNameWizard: View {
                     .foregroundColor(.primaryTxt)
                 Spacer()
                 BigActionButton(title: .startOver) {
-                    context.state = .enterPhone
+                    controller.state = .enterPhone
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 50)
@@ -204,7 +171,7 @@ struct UniversalNameWizard: View {
             analytics.showedUNSWizard()
         }
         .onDisappear {
-            switch context.state {
+            switch controller.state {
             case .success:
                 return
             default:
@@ -218,10 +185,10 @@ struct UniversalNameWizard: View {
 
 #Preview {
     
-    @State var context = UNSWizardContext(authorKey: KeyFixture.pubKeyHex)
+    @State var controller = UNSWizardController(authorKey: KeyFixture.pubKeyHex)
     @State var isPresented = true
     @State var previewData = PreviewData()
     
-    return UniversalNameWizard(context: $context, isPresented: $isPresented)
+    return UNSWizard(controller: controller, isPresented: $isPresented)
         .inject(previewData: previewData)
 }

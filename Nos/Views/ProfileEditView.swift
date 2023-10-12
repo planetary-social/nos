@@ -26,7 +26,7 @@ struct ProfileEditView: View {
     @State private var nip05Text: String = ""
     @State private var website: String = ""
     @State private var showUniversalNameWizard = false
-    @State private var unsContext = UNSWizardContext()
+    @State private var unsController = UNSWizardController()
     
     var nip05: Binding<String> {
         Binding<String>(
@@ -37,7 +37,7 @@ struct ProfileEditView: View {
     
     init(author: Author) {
         self.author = author
-        self.unsContext.authorKey = author.hexadecimalPublicKey
+        self.unsController.authorKey = author.hexadecimalPublicKey
     }
     
     var body: some View {
@@ -96,7 +96,7 @@ struct ProfileEditView: View {
             }
         }
         .sheet(isPresented: $showUniversalNameWizard, content: {
-            UniversalNameWizard(context: $unsContext, isPresented: $showUniversalNameWizard)
+            UNSWizard(controller: unsController, isPresented: $showUniversalNameWizard)
         })
         .onChange(of: showUniversalNameWizard, perform: { _ in
             if !showUniversalNameWizard {

@@ -14,7 +14,7 @@ struct UNSWizardOTP: View {
     @Dependency(\.unsAPI) var api
     
     @State var otpCode: String = ""
-    @Binding var context: UNSWizardContext
+    @ObservedObject var controller: UNSWizardController
     @FocusState private var focusedField: FocusedField?
 
     enum FocusedField {
@@ -35,7 +35,7 @@ struct UNSWizardOTP: View {
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
                     
-                    let phoneString = context.phoneNumber ?? "you."
+                    let phoneString = controller.phoneNumber ?? "you."
                     HighlightedText(
                         Localized.verificationDescription.text(["phone_number": phoneString]),
                         highlightedWord: phoneString,
@@ -72,23 +72,16 @@ struct UNSWizardOTP: View {
     
     private func submit() async {
         do {
-            context.state = .loading
             analytics.enteredUNSCode()
             try await api.verifyOTPCode(
-                phoneNumber: context.phoneNumber!,
+                phoneNumber: controller.phoneNumber!,
                 code: otpCode.trimmingCharacters(in: .whitespacesAndNewlines)
             )
             otpCode = ""
-            let names = try await api.getNames()
-            if !names.isEmpty {
-                context.names = names
-                context.state = .chooseName
-            } else {
-                context.state = .newName
-            }
+            try await controller.navigateToChooseOrRegisterName()
         } catch {
             otpCode = ""
-            context.state = .error
+            controller.state = .error
         }
     }
 }
@@ -96,13 +89,13 @@ struct UNSWizardOTP: View {
 struct UNSWizardOTP_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
-    @State static var context = UNSWizardContext(
+    @State static var controller = UNSWizardController(
         state: .enterOTP, 
         authorKey: previewData.alice.hexadecimalPublicKey!,
         phoneNumber: "+1768555451"
     )
     
     static var previews: some View {
-        UNSWizardOTP(context: $context)
+        UNSWizardOTP(controller: controller)
     }
 }
