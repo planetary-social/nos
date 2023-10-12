@@ -14,11 +14,11 @@ struct BigActionButton: View {
     var title: Localized
     var backgroundGradient = LinearGradient(
         colors: [
-            Color(hex: "#F08508"),
-            Color(hex: "#F43F75")
+            Color(hex: "#F06337"),
+            Color(hex: "#F24E55")
         ],
-        startPoint: .bottomLeading,
-        endPoint: .topTrailing
+        startPoint: .top,
+        endPoint: .bottom
     )
     var action: () async -> Void
     @State var disabled = false
@@ -54,7 +54,7 @@ struct BigActionButtonStyle: ButtonStyle {
         ZStack {
             // Button shadow/background
             ZStack {
-                Color(hex: "#A04651")
+                Color(hex: "#C13036")
             }
             .cornerRadius(80)
             .offset(y: 4.5)
