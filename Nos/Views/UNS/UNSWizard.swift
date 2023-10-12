@@ -71,27 +71,7 @@ struct UNSWizard: View {
                     analytics.choseInvalidUNSName()
                 }
             case .success:
-                VStack {
-                    PlainText(Localized.success.string)
-                        .font(.title)
-                        .padding(.top, 50)
-                        .foregroundColor(.primaryTxt)
-                    Text("\(controller.nameRecord?.name ?? "") \(Localized.yourNewUNMessage.string)")
-                        .padding()
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: 500)
-                        .foregroundColor(.primaryTxt)
-                    Spacer()
-                    BigActionButton(title: .dismiss) {
-                        isPresented = false
-                    }
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 50)
-                }
-                .frame(maxWidth: .infinity)
-                .onAppear {
-                    analytics.completedUNSWizard()
-                }
+                UNSSuccess(controller: controller, isPresented: $isPresented)
             case .error:
                 Spacer()
                 PlainText(Localized.oops.string)

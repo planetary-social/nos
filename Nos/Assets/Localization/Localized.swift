@@ -239,6 +239,7 @@ enum Localized: String, Localizable, CaseIterable {
     case oops = "Oops!"
     case thatNameIsTaken = "That name is taken."
     case success = "Success!"
+    case unsSuccessDescription = "You have registered your Universal Name and we have linked it to your Nostr profile."
     case yourNewUNMessage = "is your Universal Name.\n\nWe've created a link between your Nostr profile and your Universal Name and filled your Universal Name into the username field on your profile."
     case anErrorOccurred = "An error occured."
     

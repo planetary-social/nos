@@ -55,7 +55,7 @@ struct UNSWizardOTP: View {
                     
                     Spacer()
                     
-                    BigActionButton(title: .sendCode) {
+                    BigActionButton(title: .submit) {
                         await submit()
                     }
                     .padding(.bottom, 41)

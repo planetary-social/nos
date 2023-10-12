@@ -21,8 +21,8 @@ struct UNSWizardChooseName: View {
 
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack {
+            VStack {
+                ScrollView {
                     UNSStepImage { Image.unsChooseName.offset(x: 7, y: 5) }
                         .padding(20)
                         .padding(.top, 50)
@@ -36,16 +36,16 @@ struct UNSWizardChooseName: View {
                     
                     Spacer()
                     UNSNamePicker(selectedName: $selectedName, desiredName: $desiredName, controller: controller)
-                    Spacer()
-                    
-                    BigActionButton(title: .next) {
-                        await submit()
-                    }
-                    .padding(.vertical, 31)
                 }
-                .padding(.horizontal, 38)
-                .readabilityPadding()
+                Spacer()
+                
+                BigActionButton(title: .next) {
+                    await submit()
+                }
+                .padding(.vertical, 31)
             }
+            .padding(.horizontal, 38)
+            .readabilityPadding()
             .background(Color.appBg)
         }
     }    
