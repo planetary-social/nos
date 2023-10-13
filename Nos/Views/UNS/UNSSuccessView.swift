@@ -1,5 +1,5 @@
 //
-//  UNSSuccess.swift
+//  UNSSuccessView.swift
 //  Nos
 //
 //  Created by Matthew Lorentz on 10/12/23.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Dependencies
 
-struct UNSSuccess: View {
+struct UNSSuccessView: View {
     
     @ObservedObject var controller: UNSWizardController
     @Binding var isPresented: Bool
@@ -76,6 +76,6 @@ struct UNSSuccess: View {
     
     return VStack {}
         .sheet(isPresented: $isPresented, content: {
-            UNSSuccess(controller: controller, isPresented: $isPresented)
+            UNSSuccessView(controller: controller, isPresented: $isPresented)
         })
 }

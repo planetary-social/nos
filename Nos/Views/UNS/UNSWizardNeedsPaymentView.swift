@@ -1,5 +1,5 @@
 //
-//  UNSWizardIntro.swift
+//  UNSWizardNeedsPaymentView.swift
 //  Nos
 //
 //  Created by Matthew Lorentz on 9/13/23.
@@ -9,7 +9,7 @@ import SwiftUI
 import Dependencies
 
 /// Shows a screen informing the user the name they registered requires payment and gives them a link to pay.
-struct UNSWizardNeedsPayment: View {
+struct UNSWizardNeedsPaymentView: View {
     
     @ObservedObject var controller: UNSWizardController
     @State var hasOpenedPortal = false
@@ -90,5 +90,5 @@ struct UNSWizardNeedsPayment: View {
         nameRecord: UNSNameRecord(name: "frankie", id: "1")
     )
     
-    return UNSWizardNeedsPayment(controller: controller)
+    return UNSWizardNeedsPaymentView(controller: controller)
 }

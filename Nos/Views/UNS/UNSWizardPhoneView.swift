@@ -1,5 +1,5 @@
 //
-//  UNSWizardPhone.swift
+//  UNSWizardPhoneView.swift
 //  Nos
 //
 //  Created by Matthew Lorentz on 9/13/23.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Dependencies
 
-struct UNSWizardPhone: View {
+struct UNSWizardPhoneView: View {
     
     @ObservedObject var controller: UNSWizardController
     @Dependency(\.analytics) var analytics
@@ -91,6 +91,6 @@ struct UNSWizardPhone_Previews: PreviewProvider {
     @State static var controller = UNSWizardController(state: .intro, authorKey: previewData.alice.hexadecimalPublicKey!)
     
     static var previews: some View {
-        UNSWizardPhone(controller: controller)
+        UNSWizardPhoneView(controller: controller)
     }
 }

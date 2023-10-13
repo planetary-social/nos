@@ -1,5 +1,5 @@
 //
-//  UNSNameTaken.swift
+//  UNSNameTakenView.swift
 //  Nos
 //
 //  Created by Matthew Lorentz on 10/13/23.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Dependencies
 
-struct UNSNameTaken: View {
+struct UNSNameTakenView: View {
     
     @ObservedObject var controller: UNSWizardController
     @Dependency(\.analytics) var analytics
@@ -71,5 +71,5 @@ struct UNSNameTaken: View {
 #Preview {
     @State var controller = UNSWizardController(state: .newName)
     
-    return UNSNameTaken(controller: controller)
+    return UNSNameTakenView(controller: controller)
 }

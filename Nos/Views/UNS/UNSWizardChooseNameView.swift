@@ -1,5 +1,5 @@
 //
-//  UNSWizardChooseName.swift
+//  UNSWizardChooseNameView.swift
 //  Nos
 //
 //  Created by Matthew Lorentz on 9/29/23.
@@ -9,7 +9,7 @@ import SwiftUI
 import Dependencies
 import Logger
 
-struct UNSWizardChooseName: View {
+struct UNSWizardChooseNameView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) var analytics
@@ -77,5 +77,5 @@ struct UNSWizardChooseName: View {
         ]
     )
     
-    return UNSWizardChooseName(controller: controller)
+    return UNSWizardChooseNameView(controller: controller)
 }

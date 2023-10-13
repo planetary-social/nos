@@ -35,23 +35,23 @@ struct UNSWizard: View {
         VStack {
             switch controller.state {
             case .intro:
-                UNSWizardIntro(controller: controller)
+                UNSWizardIntroView(controller: controller)
             case .enterPhone:
-                UNSWizardPhone(controller: controller)
+                UNSWizardPhoneView(controller: controller)
             case .enterOTP:
-                UNSWizardOTP(controller: controller)
+                UNSWizardOTPView(controller: controller)
             case .loading:
                 FullscreenProgressView(isPresented: .constant(true))
             case .chooseName:
-                UNSWizardChooseName(controller: controller)
+                UNSWizardChooseNameView(controller: controller)
             case .needsPayment:
-                UNSWizardNeedsPayment(controller: controller)
+                UNSWizardNeedsPaymentView(controller: controller)
             case .newName:
-                UNSNewName(controller: controller)
+                UNSNewNameView(controller: controller)
             case .nameTaken:
-                UNSNameTaken(controller: controller)
+                UNSNameTakenView(controller: controller)
             case .success:
-                UNSSuccess(controller: controller, isPresented: $isPresented)
+                UNSSuccessView(controller: controller, isPresented: $isPresented)
             case .error:
                 UNSErrorView(controller: controller)
             }

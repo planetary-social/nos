@@ -1,5 +1,5 @@
 //
-//  UNSWizardIntro.swift
+//  UNSWizardIntroView.swift
 //  Nos
 //
 //  Created by Matthew Lorentz on 9/13/23.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct UNSWizardIntro: View {
+struct UNSWizardIntroView: View {
     
     @ObservedObject var controller: UNSWizardController
     
@@ -63,6 +63,6 @@ struct UNSWizardIntro_Previews: PreviewProvider {
     @State static var controller = UNSWizardController(state: .intro, authorKey: previewData.alice.hexadecimalPublicKey!)
     
     static var previews: some View {
-        UNSWizardIntro(controller: controller)
+        UNSWizardIntroView(controller: controller)
     }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 import Dependencies
 
-struct UNSWizardOTP: View {
+struct UNSWizardOTPView: View {
     
     @Dependency(\.analytics) var analytics
     @Dependency(\.unsAPI) var api
@@ -96,6 +96,6 @@ struct UNSWizardOTP_Previews: PreviewProvider {
     )
     
     static var previews: some View {
-        UNSWizardOTP(controller: controller)
+        UNSWizardOTPView(controller: controller)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  UNSNewName.swift
+//  UNSNewNameView.swift
 //  Nos
 //
 //  Created by Matthew Lorentz on 10/12/23.
@@ -9,7 +9,7 @@ import SwiftUI
 import Dependencies
 import Logger
 
-struct UNSNewName: View {
+struct UNSNewNameView: View {
     
     @Dependency(\.analytics) var analytics
     @ObservedObject var controller: UNSWizardController
@@ -71,5 +71,5 @@ struct UNSNewName: View {
 
 #Preview {
     @State var controller = UNSWizardController()
-    return UNSNewName(controller: controller)
+    return UNSNewNameView(controller: controller)
 }
