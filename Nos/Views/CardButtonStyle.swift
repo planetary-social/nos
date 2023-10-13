@@ -23,7 +23,7 @@ struct CardButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             ZStack {
-                Color.card3D
+                Color.card3d
             }
             .cornerRadius(20)
             .offset(y: 4.5)
