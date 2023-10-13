@@ -355,7 +355,7 @@ class UNSAPI {
         return nip05
     }
     
-    func names(matching query: String) async throws -> UNSNameRecord? {
+    func names(matching query: String) async throws -> [HexadecimalString] {
         if accessToken == nil {
             try await refreshAccessToken()
         }
@@ -378,32 +378,33 @@ class UNSAPI {
         let responseJSON = try jsonDictionary(from: response.0)
         
         guard let dataDict = responseJSON["data"] as? JSONObject,
-            let available = dataDict["available"] as? Int,
-            let nameID = dataDict["name_id"] as? String else {
+            let available = dataDict["available"] as? Int else {
             throw UNSError.badResponse
         }
         
-        if available == 0 {
+       if available == 0 { 
+            guard let nameID = dataDict["name_id"] as? String else {
+               throw UNSError.badResponse
+            }
             var nameRecord = UNSNameRecord(name: query, id: nameID)
-            let nostrPubKey = try await nostrKey(for: nameRecord)
-            nameRecord.nostrPubKey = nostrPubKey
-            return nameRecord
+            let nostrPubKeys = try await nostrKeys(for: nameRecord)
+            return nostrPubKeys
         } else {
-            return nil
+            return []
         }
     }
     
-    private func nostrKey(for nameRecord: UNSNameRecord) async throws -> HexadecimalString? {
+    private func nostrKeys(for nameRecord: UNSNameRecord) async throws -> [HexadecimalString] {
         // Assumes we have an access token already
         guard let accessToken else {
             throw UNSError.noAccessToken
         }
-        var url = connectionURL.appending(path: "/v1/resolver/social_connections/nostr/async_connections")
+        var url = connectionURL.appending(path: "/v1/resolver")
         url = url.appending(queryItems: [
             URLQueryItem(name: "name_id", value: nameRecord.id),
+            URLQueryItem(name: "key", value: "NOSTR"),
             URLQueryItem(name: "page", value: "1"),
             URLQueryItem(name: "page_size", value: "250"),
-
         ])
         var request = URLRequest(url: url)
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
@@ -416,12 +417,18 @@ class UNSAPI {
         let responseJSON = try jsonDictionary(from: response.0)
         print(responseJSON)
         
-//        guard let dataDict = responseJSON["data"] as? JSONObject else {
-//            throw UNSError.badResponse
-//        }
-    
-        print(dataDict)
-        return nil
+        guard let dataArray = responseJSON["data"] as? [JSONObject] else {
+            throw UNSError.badResponse
+        }
+       
+       var nostrPubKeys = [HexadecimalString]()
+       for connection in dataArray {
+          if let npub = connection["display_value"] as? String,
+             let pubKey = PublicKey(npub: npub) {
+             nostrPubKeys.append(pubKey.hex)
+          }
+       }
+       return nostrPubKeys
     }
     
     func logout() {
