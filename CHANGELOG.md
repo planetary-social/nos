@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (82)] - 2023-10-13Z
+
 - Fixed a bug where profile changes wouldn't be published in some cases
 - Fix a bug where the "Post" button wouldn't be shown when composing a reply on macOS
 - Fix a bug where the mute list could be overwritten when muting someone
