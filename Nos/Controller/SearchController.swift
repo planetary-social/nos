@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import Dependencies
 import CoreData
+import Logger
 
 /// Manages a search query and list of results.
 class SearchController: ObservableObject {
@@ -22,6 +23,7 @@ class SearchController: ObservableObject {
     
     @Dependency(\.relayService) private var relayService
     @Dependency(\.persistenceController) private var persistenceController
+    @Dependency(\.unsAPI) var unsAPI
     private var cancellables = [AnyCancellable]()
     private var searchSubscriptionID: RelaySubscription.ID?
     private lazy var context: NSManagedObjectContext = {
@@ -42,13 +44,10 @@ class SearchController: ObservableObject {
             .filter { !$0.isEmpty }
             .map { query in
                 // SIDE EFFECT WARNING
-                Task { [query] in
-                    if let searchSubscriptionID = self.searchSubscriptionID {
-                        await self.relayService.decrementSubscriptionCount(for: searchSubscriptionID)
-                    }
-                    let searchFilter = Filter(kinds: [.metaData], search: query)
-                    self.searchSubscriptionID = await self.relayService.openSubscription(with: searchFilter)
-                }
+                // These functions search other systems for the given query and add relevant authors to the database. 
+                // The database then generates a notification which is listened to above and resulst are reloaded.
+                self.searchRelays(for: query)
+                self.searchUNS(for: query)
                 return query
             }
             .map { self.authors(named: $0) }
@@ -62,6 +61,28 @@ class SearchController: ObservableObject {
         }
 
         return authors
+    }
+    
+    func searchRelays(for query: String) {
+        Task {
+            if let searchSubscriptionID = self.searchSubscriptionID {
+                await self.relayService.decrementSubscriptionCount(for: searchSubscriptionID)
+            }
+            let searchFilter = Filter(kinds: [.metaData], search: query)
+            self.searchSubscriptionID = await self.relayService.openSubscription(with: searchFilter)
+        }
+    }
+    
+    func searchUNS(for query: String) {
+        Task {
+            do {
+                let matchingNames = try await unsAPI.names(matching: query)
+                print(matchingNames)
+                // parse names into Authors and save them to the db
+            } catch {
+                Log.optional(error)
+            }
+        }
     }
     
     func clear() {

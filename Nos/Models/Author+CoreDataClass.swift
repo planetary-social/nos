@@ -91,7 +91,9 @@ public class Author: NosManagedObject {
     
     class func find(named name: String, context: NSManagedObjectContext) throws -> [Author] {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
-        fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@ OR displayName CONTAINS[cd] %@", name, name)
+        fetchRequest.predicate = NSPredicate(
+            format: "name CONTAINS[cd] %@ OR displayName CONTAINS[cd] %@ OR uns CONTAINS[cd] %@", name, name, name
+        )
         let authors = try context.fetch(fetchRequest)
         return authors
     }

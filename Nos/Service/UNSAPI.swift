@@ -7,6 +7,7 @@
 
 import Foundation
 import Logger
+import Dependencies
 
 typealias JSONObject = [String: Any]
 typealias UNSNameID = String
@@ -14,6 +15,7 @@ typealias UNSNameID = String
 struct UNSNameRecord: Identifiable, Equatable {
     var name: UNSName
     var id: UNSNameID
+    var nostrPubKey: HexadecimalString?
 }
 
 enum UNSError: Error {
@@ -21,6 +23,8 @@ enum UNSError: Error {
     case noAccessToken
     case requiresPayment(URL)
     case nameTaken
+    case notAuthenticated
+    case badResponse
 }
 
 class UNSAPI {
@@ -33,8 +37,13 @@ class UNSAPI {
     
     // State
     private(set) var accessToken: String?
+    private var refreshToken: String?
     private var personaID: String?
     private var verificationID: String?
+    
+    private let refreshTokenKey = "com.nos.uns.refreshToken"
+    
+    @Dependency(\.userDefaults) private var userDefaults
     
     init?() {
         guard let authConnectionURLString = Self.getEnvironmentVariable(named: "UNS_AUTH_CONNECTION_URL"),
@@ -54,6 +63,7 @@ class UNSAPI {
         self.clientSecret = clientSecret
         self.orgCode = orgCode
         self.apiKey = apiKey
+        loadRefreshToken()
     }
     
     func requestOTPCode(phoneNumber: String) async throws {
@@ -101,13 +111,51 @@ class UNSAPI {
             let accessTokenDict = dataDict["access_token"] as? JSONObject,
             let personaDict = dataDict["persona"] as? JSONObject,
             let personaID = personaDict["persona_id"] as? String,
-            let accessToken = accessTokenDict["access_token"] as? String else {
+            let accessToken = accessTokenDict["access_token"] as? String,
+            let refreshToken = accessTokenDict["refresh_token"] as? String else {
             logError(response: response)
             throw UNSError.generic
         }
         
         self.personaID = personaID
         self.accessToken = accessToken
+        self.refreshToken = refreshToken
+        saveRefreshToken()
+    }
+    
+    func refreshAccessToken() async throws {
+        guard let refreshToken else {
+            throw UNSError.notAuthenticated
+        }
+        
+        var request = URLRequest(url: authConnectionURL.appending(path: "v1/oauth"))
+        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
+        request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body = [
+            "client_id": clientID,
+            "client_secret": clientSecret,
+            "grant_type": "refresh_token",
+            "refresh_token": refreshToken,
+        ]
+        let jsonBody = try JSONSerialization.data(withJSONObject: body)
+        request.httpBody = jsonBody
+        request.httpMethod = "POST"
+        let response = try await URLSession.shared.data(for: request)
+        let data = response.0
+        
+        guard let responseDict = try JSONSerialization.jsonObject(with: data) as? JSONObject,
+            let dataDict = responseDict["data"] as? JSONObject,
+            let accessToken = dataDict["access_token"] as? String,
+            let refreshToken = dataDict["refresh_token"] as? String else {
+            logError(response: response)
+            throw UNSError.generic
+        }
+        
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
+        saveRefreshToken()
     }
     
     func getNames() async throws -> [UNSNameRecord] {
@@ -201,7 +249,7 @@ class UNSAPI {
         
         let response = try await URLSession.shared.data(for: request)
         let responseData = response.0
-        let responseString = String(data: responseData, encoding: .utf8)
+        _ = String(data: responseData, encoding: .utf8)
         
         // This is just a stub response for now.
         return URL(string: "https://www.universalname.space/name/\(name)")!
@@ -307,6 +355,84 @@ class UNSAPI {
         return nip05
     }
     
+    func names(matching query: String) async throws -> UNSNameRecord? {
+        if accessToken == nil {
+            try await refreshAccessToken()
+        }
+        guard let accessToken else {
+            throw UNSError.noAccessToken
+        }
+        
+        var url = connectionURL.appending(path: "/v1/names")
+        url = url.appending(queryItems: [
+            URLQueryItem(name: "name", value: query.lowercased()),
+        ])
+        var request = URLRequest(url: url)
+        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
+        request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "GET"
+        
+        let response = try await URLSession.shared.data(for: request)
+        let responseJSON = try jsonDictionary(from: response.0)
+        
+        guard let dataDict = responseJSON["data"] as? JSONObject,
+            let available = dataDict["available"] as? Int,
+            let nameID = dataDict["name_id"] as? String else {
+            throw UNSError.badResponse
+        }
+        
+        if available == 0 {
+            var nameRecord = UNSNameRecord(name: query, id: nameID)
+            let nostrPubKey = try await nostrKey(for: nameRecord)
+            nameRecord.nostrPubKey = nostrPubKey
+            return nameRecord
+        } else {
+            return nil
+        }
+    }
+    
+    private func nostrKey(for nameRecord: UNSNameRecord) async throws -> HexadecimalString? {
+        // Assumes we have an access token already
+        guard let accessToken else {
+            throw UNSError.noAccessToken
+        }
+        var url = connectionURL.appending(path: "/v1/resolver/social_connections/nostr/async_connections")
+        url = url.appending(queryItems: [
+            URLQueryItem(name: "name_id", value: nameRecord.id),
+            URLQueryItem(name: "page", value: "1"),
+            URLQueryItem(name: "page_size", value: "250"),
+
+        ])
+        var request = URLRequest(url: url)
+        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
+        request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "GET"
+        
+        let response = try await URLSession.shared.data(for: request)
+        let responseJSON = try jsonDictionary(from: response.0)
+        print(responseJSON)
+        
+//        guard let dataDict = responseJSON["data"] as? JSONObject else {
+//            throw UNSError.badResponse
+//        }
+    
+        print(dataDict)
+        return nil
+    }
+    
+    func logout() {
+        refreshToken = nil
+        accessToken = nil
+        personaID = nil
+        saveRefreshToken()
+    }
+    
+    // MARK: - Helpers
+    
     func isNeedPaymentError(_ data: Data) -> Bool {
         guard let responseDict = try? jsonDictionary(from: data) else {
             return false
@@ -333,8 +459,6 @@ class UNSAPI {
         return false
     }
     
-    // MARK: - Helpers
-    
     func jsonDictionary(from data: Data) throws -> JSONObject {
         guard let responseDict = try JSONSerialization.jsonObject(with: data) as? JSONObject else {
             throw UNSError.generic
@@ -349,5 +473,13 @@ class UNSAPI {
     
     class func getEnvironmentVariable(named name: String) -> String? {
         Bundle.main.infoDictionary?[name] as? String
+    }
+    
+    func saveRefreshToken() {
+        userDefaults.set(self.refreshToken, forKey: refreshTokenKey)
+    }
+    
+    func loadRefreshToken() {
+        self.refreshToken = userDefaults.string(forKey: refreshTokenKey)
     }
 }
