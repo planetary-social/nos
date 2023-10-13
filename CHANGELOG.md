@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Updated the design of the edit profile screen
+- Redesigned the Universal Names registration flow
 
 ## [0.1 (79)] - 2023-09-22Z
 
