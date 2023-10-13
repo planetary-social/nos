@@ -25,8 +25,7 @@ struct UNSWizardPhone: View {
         NavigationView {
             ScrollView {
                 VStack {
-                    Image.unsPhone
-                        .frame(width: 178, height: 178)
+                    UNSStepImage { Image.unsPhone.offset(x: 7, y: 5) }
                         .padding(40)
                         .padding(.top, 50)
                     
@@ -81,7 +80,7 @@ struct UNSWizardPhone: View {
             try await api.requestOTPCode(phoneNumber: number)
             controller.state = .enterOTP
         } catch {
-            controller.state = .error
+            controller.state = .error(error)
         } 
     }
 }

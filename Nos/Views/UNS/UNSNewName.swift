@@ -57,14 +57,14 @@ struct UNSNewName: View {
     
     func submit() async {
         guard let authorKey = controller.authorKey else {
-            controller.state = .error
+            controller.state = .error(nil)
             return
         }
         
         do {
             try await controller.register(desiredName: name)
         } catch {
-            controller.state = .error
+            controller.state = .error(error)
         }   
     }
 }

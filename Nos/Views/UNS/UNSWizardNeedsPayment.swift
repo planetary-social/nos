@@ -69,7 +69,7 @@ struct UNSWizardNeedsPayment: View {
                     do {
                         try await controller.navigateToChooseOrRegisterName()
                     } catch {
-                        controller.state = .error
+                        controller.state = .error(error)
                     }
                 }
                 .padding(.bottom, 41)

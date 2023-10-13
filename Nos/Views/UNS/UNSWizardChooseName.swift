@@ -59,7 +59,7 @@ struct UNSWizardChooseName: View {
             }
         } catch {
             Log.optional(error)
-            controller.state = .error
+            controller.state = .error(error)
         }
     }
 }

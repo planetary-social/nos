@@ -23,7 +23,7 @@ extension UNSName: Identifiable {
 /// by the `UNSWizard` view. It also holds some state like the current user information, names they have already 
 /// registered, etc. 
 class UNSWizardController: ObservableObject {
-    enum FlowState {
+    indirect enum FlowState {
         case loading
         case intro
         case enterPhone
@@ -31,8 +31,8 @@ class UNSWizardController: ObservableObject {
         case newName
         case chooseName
         case success
-        case error
-        case nameTaken
+        case error(Error?)
+        case nameTaken(FlowState)
         case needsPayment(URL)
     }
     
@@ -65,7 +65,7 @@ class UNSWizardController: ObservableObject {
         self.names = names
     }
     
-    func link(existingName: UNSNameRecord) async throws {
+    @MainActor func link(existingName: UNSNameRecord) async throws {
         nameRecord = existingName
         var nip05: String
         if let message = try await api.requestNostrVerification(
@@ -83,21 +83,16 @@ class UNSWizardController: ObservableObject {
         try await saveDetails(name: existingName.name, nip05: nip05)
     }
     
-    func register(desiredName: UNSName) async throws {
+    @MainActor func register(desiredName: UNSName) async throws {
+        let previousState = state
         state = .loading
         do {
-            let response = try await api.createName(
+            let nameID = try await api.createName(
                 // TODO: sanitize somewhere else
                 desiredName.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
             ) 
+            nameRecord = UNSNameRecord(name: desiredName, id: nameID)
             
-            switch response {
-            case.left(let nameID):
-                nameRecord = UNSNameRecord(name: desiredName, id: nameID)
-            case .right(let paymentURL):
-                state = .needsPayment(paymentURL)
-                return
-            }
             let message = try await api.requestNostrVerification(
                 npub: currentUser.keyPair!.npub, 
                 nameID: nameRecord!.id
@@ -110,16 +105,16 @@ class UNSWizardController: ObservableObject {
             try await saveDetails(name: desiredName, nip05: nip05)
         } catch {
             if case let UNSError.requiresPayment(paymentURL) = error {
-                print("go to \(paymentURL) to complete payment")
+                state = .needsPayment(paymentURL)
+            } else if case UNSError.nameTaken = error {
+                state = .nameTaken(previousState)
             } else {
-                // TODO: show generic error message if the name isn't taken
-                state = .nameTaken
-                return
+                state = .error(error)
             }
         }
     }
     
-    func navigateToChooseOrRegisterName() async throws {
+    @MainActor func navigateToChooseOrRegisterName() async throws {
         state = .loading
         let names = try await api.getNames()
         if !names.isEmpty {

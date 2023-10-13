@@ -81,7 +81,7 @@ struct UNSWizardOTP: View {
             try await controller.navigateToChooseOrRegisterName()
         } catch {
             otpCode = ""
-            controller.state = .error
+            controller.state = .error(error)
         }
     }
 }

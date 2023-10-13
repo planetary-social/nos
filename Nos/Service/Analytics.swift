@@ -201,8 +201,8 @@ class Analytics {
         track("UNS Invalid Name")
     }
     
-    func encounteredUNSError() {
-        track("UNS Error")
+    func encounteredUNSError(_ error: Error?) {
+        track("UNS Error", properties: ["errorDescription": error?.localizedDescription ?? "null"])
     }
     
     // MARK: Message Actions

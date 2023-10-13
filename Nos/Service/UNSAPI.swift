@@ -20,6 +20,7 @@ enum UNSError: Error {
     case generic
     case noAccessToken
     case requiresPayment(URL)
+    case nameTaken
 }
 
 class UNSAPI {
@@ -31,7 +32,7 @@ class UNSAPI {
     private var apiKey: String
     
     // State
-    private var accessToken: String?
+    private(set) var accessToken: String?
     private var personaID: String?
     private var verificationID: String?
     
@@ -139,7 +140,7 @@ class UNSAPI {
         return names
     }
     
-    func createName(_ name: String) async throws -> Either<UNSNameID, URL> {
+    func createName(_ name: String) async throws -> UNSNameID {
         guard let accessToken else {
             throw UNSError.noAccessToken
         }
@@ -159,11 +160,13 @@ class UNSAPI {
         if let httpResponse = response.1 as? HTTPURLResponse,
             httpResponse.statusCode == 201 {
             // TODO: parse the actual ID
-            return .left("1")
+            return "1"
         } else if isNeedPaymentError(response.0) {
-            return .right(URL(string: "https://www.universalname.space/name/\(name)")!)
+            throw UNSError.requiresPayment(URL(string: "https://www.universalname.space/name/\(name)")!)
             // Waiting for API to support mobile
             // return .right(try await requestPaymentURL(for: name))
+        } else if isNameTakenError(response.0) {
+            throw UNSError.nameTaken
         } else {
             logError(response: response)
             throw UNSError.generic
@@ -181,7 +184,7 @@ class UNSAPI {
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let body = [
-            "persona_id": personaID,
+            "persona_id": personaID ?? "null",
             "cancel_url": "nos://uns/payment/canceled",
             "success_url": "nos://uns/payment/success",
         ] as JSONObject
@@ -305,6 +308,19 @@ class UNSAPI {
             let codeDict = errorDict["code"] as? JSONObject,
             let numCode = codeDict["num_code"] as? Int {
             return numCode == 60_404 
+        }
+        
+        return false
+    }
+    
+    func isNameTakenError(_ data: Data) -> Bool {
+        guard let responseDict = try? jsonDictionary(from: data) else {
+            return false
+        }
+        if let errorDict = responseDict["error"] as? JSONObject,
+            let codeDict = errorDict["code"] as? JSONObject,
+            let numCode = codeDict["num_code"] as? Int {
+            return numCode == 60_105 || numCode == 60_103
         }
         
         return false

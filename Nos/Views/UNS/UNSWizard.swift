@@ -38,59 +38,22 @@ struct UNSWizard: View {
                 UNSWizardIntro(controller: controller)
             case .enterPhone:
                 UNSWizardPhone(controller: controller)
-               
             case .enterOTP:
                 UNSWizardOTP(controller: controller)
-                
             case .loading:
                 FullscreenProgressView(isPresented: .constant(true))
             case .chooseName:
                 UNSWizardChooseName(controller: controller)
-                
             case .needsPayment:
                 UNSWizardNeedsPayment(controller: controller)
             case .newName:
                 UNSNewName(controller: controller)
             case .nameTaken:
-                Spacer()
-                PlainText(Localized.oops.string)
-                    .font(.title2)
-                    .padding()
-                    .foregroundColor(.primaryTxt)
-                PlainText(Localized.thatNameIsTaken.string)
-                    .font(.body)
-                    .padding()
-                    .foregroundColor(.primaryTxt)
-                Spacer()
-                BigActionButton(title: .goBack) {
-                    controller.state = .newName
-                }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 50)
-                .onAppear {
-                    analytics.choseInvalidUNSName()
-                }
+                UNSNameTaken(controller: controller)
             case .success:
                 UNSSuccess(controller: controller, isPresented: $isPresented)
             case .error:
-                Spacer()
-                PlainText(Localized.oops.string)
-                    .font(.title2)
-                    .padding()
-                    .foregroundColor(.primaryTxt)
-                PlainText(Localized.anErrorOccurred.string)
-                    .font(.body)
-                    .padding()
-                    .foregroundColor(.primaryTxt)
-                Spacer()
-                BigActionButton(title: .startOver) {
-                    controller.state = .enterPhone
-                }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 50)
-                .onAppear {
-                    analytics.encounteredUNSError()
-                }
+                UNSErrorView(controller: controller)
             }
         }
         .onAppear {
