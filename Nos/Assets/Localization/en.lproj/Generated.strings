@@ -65,7 +65,7 @@
 "Localized.goBack" = "Go back";
 "Localized.start" = "Start";
 "Localized.startOver" = "Start over";
-"Localized.setUpUniversalName" = "Set up your Universal Name";
+"Localized.manageUniversalName" = "Manage your Universal Name";
 "Localized.dismiss" = "Dismiss";
 "Localized.relays" = "Relays";
 "Localized.noRelaysMessage" = "No relays yet! Add one below to get started";
@@ -95,7 +95,7 @@
 "Localized.followedByTwo" = "Followed by **{{ one }}** and **{{ two }}**";
 "Localized.followedByTwoAndMore" = "Followed by **{{ one }}**, **{{ two }}** and **{{ count }} others**";
 "Localized.unfollow" = "Unfollow";
-"Localized.uns" = "UNS";
+"Localized.universalName" = "Universal name";
 "Localized.nip05" = "NIP-05";
 "Localized.nip05LearnMore" = "Learn more about NIP-05 name verification.";
 "Localized.learnMore" = "Learn more";

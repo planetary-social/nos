@@ -127,7 +127,7 @@ class UNSWizardController: ObservableObject {
     
     @MainActor func saveDetails(name: String, nip05: String) async throws {
         let author = currentUser.author
-        author?.name = name
+        author?.uns = name
         author?.nip05 = nip05
         try currentUser.viewContext.save()
         await currentUser.publishMetaData()

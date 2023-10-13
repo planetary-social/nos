@@ -123,7 +123,7 @@ enum Localized: String, Localizable, CaseIterable {
     case goBack = "Go back"
     case start = "Start"
     case startOver = "Start over"
-    case setUpUniversalName = "Set up your Universal Name"
+    case manageUniversalName = "Manage your Universal Name"
     case dismiss = "Dismiss"
     
     case relays = "Relays"
@@ -156,7 +156,7 @@ enum Localized: String, Localizable, CaseIterable {
     case followedByTwo = "Followed by **{{ one }}** and **{{ two }}**"
     case followedByTwoAndMore = "Followed by **{{ one }}**, **{{ two }}** and **{{ count }} others**"
     case unfollow = "Unfollow"
-    case uns = "UNS"
+    case universalName = "Universal name"
     case nip05 = "NIP-05"
     case nip05LearnMore = "Learn more about NIP-05 name verification."
     case learnMore = "Learn more"

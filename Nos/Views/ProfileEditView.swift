@@ -71,7 +71,24 @@ struct ProfileEditView: View {
                 NosTextField(label: .website, text: $website)
             }
             
-            NosFormSection(label: .identityVerification) { 
+            HStack {
+                Text(.identityVerification)
+                    .font(.clarityTitle3)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primaryTxt)
+                    .padding(.top, 16)
+                
+                Spacer()
+            }
+            .padding(.horizontal, 13)
+            
+            SetUpUNSBanner {
+                showUniversalNameWizard = true
+            }
+            .padding(13)
+            
+            NosFormSection(label: nil) { 
+                NosTextField(label: .universalName, text: $unsText)
                 NosTextField(label: .nip05, text: $nip05Text)
             }
             
@@ -86,21 +103,15 @@ struct ProfileEditView: View {
                 Spacer()
             }
             .padding(13)
-                
-            // Universal Names Set Up
-            if author.nip05?.hasSuffix("universalname.space") != true {
-                SetUpUNSBanner {
-                    showUniversalNameWizard = true
-                }
-                .padding(13)
-            }
         }
         .sheet(isPresented: $showUniversalNameWizard, content: {
             UNSWizard(controller: unsController, isPresented: $showUniversalNameWizard)
         })
         .onChange(of: showUniversalNameWizard, perform: { _ in
             if !showUniversalNameWizard {
-                populateTextFields()
+                nip05Text = author.nip05 ?? ""
+                unsText = author.uns ?? ""
+                unsController = UNSWizardController(authorKey: author.hexadecimalPublicKey)
             }
         })
         .scrollContentBackground(.hidden)

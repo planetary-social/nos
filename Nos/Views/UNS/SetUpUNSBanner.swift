@@ -38,7 +38,7 @@ struct SetUpUNSBanner: View {
                 
                 HStack {
                     ActionButton(
-                        title: .setUpUniversalName,
+                        title: .manageUniversalName,
                         textColor: Color(hex: "#f26141"),
                         depthEffectColor: Color(hex: "#f8d4b6"),
                         backgroundGradient: LinearGradient(

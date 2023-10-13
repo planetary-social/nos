@@ -159,8 +159,15 @@ class UNSAPI {
         let response = try await URLSession.shared.data(for: request)
         if let httpResponse = response.1 as? HTTPURLResponse,
             httpResponse.statusCode == 201 {
-            // TODO: parse the actual ID
-            return "1"
+            
+            guard let responseDict = try? jsonDictionary(from: response.0),
+                let dataDict = responseDict["data"] as? JSONObject,
+                let nameDict = dataDict["name"] as? JSONObject,
+                let nameID = nameDict["name_id"] as? String else {
+                throw UNSError.generic
+            }
+            
+            return nameID
         } else if isNeedPaymentError(response.0) {
             throw UNSError.requiresPayment(URL(string: "https://www.universalname.space/name/\(name)")!)
             // Waiting for API to support mobile

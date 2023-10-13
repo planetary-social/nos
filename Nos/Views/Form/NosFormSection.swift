@@ -10,24 +10,26 @@ import SwiftUINavigation
 
 struct NosFormSection<Content: View>: View {
     
-    var label: Localized
+    var label: Localized?
     let content: Content
     
-    init(label: Localized, @ViewBuilder builder: () -> Content) {
+    init(label: Localized?, @ViewBuilder builder: () -> Content) {
         self.label = label
         self.content = builder()
     }
     
     var body: some View {
         VStack {
-            HStack {
-                Text(label)
-                    .font(.clarityTitle3)
-                    .fontWeight(.bold)
-                    .foregroundColor(.primaryTxt)
-                    .padding(.top, 16)
-                
-                Spacer()
+            if let label {
+                HStack {
+                    Text(label)
+                        .font(.clarityTitle3)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primaryTxt)
+                        .padding(.top, 16)
+                    
+                    Spacer()
+                }
             }
             
             ZStack {
