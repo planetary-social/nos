@@ -172,6 +172,7 @@ extension UIColor {
 
 extension Image {
 
+       static let info = Image("Info", bundle: Bundle.current)
        static let attachMediaButton = Image("attach-media-button", bundle: Bundle.current)
        static let backChevron = Image("back-chevron", bundle: Bundle.current)
        static let buttonLikeActive = Image("button-like-active", bundle: Bundle.current)
@@ -181,6 +182,7 @@ extension Image {
        static let disappearingMessages = Image("disappearing-messages", bundle: Bundle.current)
        static let editProfile = Image("edit-profile", bundle: Bundle.current)
        static let emptyAvatar = Image("emptyAvatar", bundle: Bundle.current)
+       static let flagPlain = Image("flag-plain", bundle: Bundle.current)
        static let navIconDismiss = Image("nav-icon-dismiss", bundle: Bundle.current)
        static let newPostButton = Image("newPostButton", bundle: Bundle.current)
        static let nosLogo = Image("nosLogo", bundle: Bundle.current)
@@ -198,10 +200,13 @@ extension Image {
        static let tabIconNotifications = Image("tab-icon-notifications", bundle: Bundle.current)
        static let tabProfileSelected = Image("tab-profile-selected", bundle: Bundle.current)
        static let tabProfile = Image("tab-profile", bundle: Bundle.current)
+       static let warningEye = Image("warning-eye", bundle: Bundle.current)
+       static let x = Image("x", bundle: Bundle.current)
 }
 
 extension UIImage {
 
+       static let info = UIImage(named: "Info", in: Bundle.current, with: nil)!
        static let attachMediaButton = UIImage(named: "attach-media-button", in: Bundle.current, with: nil)!
        static let backChevron = UIImage(named: "back-chevron", in: Bundle.current, with: nil)!
        static let buttonLikeActive = UIImage(named: "button-like-active", in: Bundle.current, with: nil)!
@@ -211,6 +216,7 @@ extension UIImage {
        static let disappearingMessages = UIImage(named: "disappearing-messages", in: Bundle.current, with: nil)!
        static let editProfile = UIImage(named: "edit-profile", in: Bundle.current, with: nil)!
        static let emptyAvatar = UIImage(named: "emptyAvatar", in: Bundle.current, with: nil)!
+       static let flagPlain = UIImage(named: "flag-plain", in: Bundle.current, with: nil)!
        static let navIconDismiss = UIImage(named: "nav-icon-dismiss", in: Bundle.current, with: nil)!
        static let newPostButton = UIImage(named: "newPostButton", in: Bundle.current, with: nil)!
        static let nosLogo = UIImage(named: "nosLogo", in: Bundle.current, with: nil)!
@@ -228,6 +234,8 @@ extension UIImage {
        static let tabIconNotifications = UIImage(named: "tab-icon-notifications", in: Bundle.current, with: nil)!
        static let tabProfileSelected = UIImage(named: "tab-profile-selected", in: Bundle.current, with: nil)!
        static let tabProfile = UIImage(named: "tab-profile", in: Bundle.current, with: nil)!
+       static let warningEye = UIImage(named: "warning-eye", in: Bundle.current, with: nil)!
+       static let x = UIImage(named: "x", in: Bundle.current, with: nil)!
 }
 
 // swiftlint:enable all
