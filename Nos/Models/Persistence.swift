@@ -197,7 +197,7 @@ class PersistenceController {
                 let oldEventsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
                 oldEventsRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
                 oldEventsRequest.predicate = NSPredicate(
-                    format: "receivedAt <= %@ OR receivedAt == nil", 
+                    format: "(receivedAt <= %@ OR receivedAt == nil) AND (author.hexadecimalPublicKey != authorKey)", 
                     deleteBefore as CVarArg
                 )
                 

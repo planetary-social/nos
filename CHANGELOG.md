@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed a bug where profile changes wouldn't be published in some cases
 - Fix a bug where the "Post" button wouldn't be shown when composing a reply on macOS
+- Fix a bug where the mute list could be overwritten when muting someone
 - Fixed aspect ratio on some profile photos
 - Added 3d effect to note cards
 
