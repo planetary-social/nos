@@ -135,14 +135,13 @@ struct RepliesView: View {
                         }
                         ExpandingTextFieldAndSubmitButton(
                             placeholder: Localized.Reply.postAReply,
-                            reply: $reply
+                            reply: $reply,
+                            focus: $focusTextView
                         ) {
                             await postReply(reply)
                         }
                         .onAppear {
-                            if showKeyboardOnAppear {
-                                focusTextView = true
-                            }
+                            focusTextView = showKeyboardOnAppear
                         }
                     }
                     .padding(.horizontal)
