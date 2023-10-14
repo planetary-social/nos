@@ -12,21 +12,29 @@ struct StoriesDestination: Hashable {
 }
 
 struct StoriesView: View {
-    
+
     @ObservedObject var user: Author
 
     @EnvironmentObject var router: Router
-    
-    @FetchRequest private var authors: FetchedResults<Author>
-    
+
+    private var authors: FetchedResults<Author>
+
+    @Binding var selectedAuthorInStories: Author?
+
     @State private var selectedAuthor: Author
     @Binding private var cutoffDate: Date
     
-    init(user: Author, cutoffDate: Binding<Date>, selectedAuthor: Author? = nil) {
+    init(
+        user: Author,
+        cutoffDate: Binding<Date>,
+        authors: FetchedResults<Author>,
+        selectedAuthor: Binding<Author?>
+    ) {
         self.user = user
         self._cutoffDate = cutoffDate
-        _authors = FetchRequest(fetchRequest: user.followedWithNewNotes(since: cutoffDate.wrappedValue))
-        _selectedAuthor = .init(initialValue: selectedAuthor ?? Author())
+        self.authors = authors
+        _selectedAuthor = .init(initialValue: selectedAuthor.wrappedValue ?? Author())
+        _selectedAuthorInStories = selectedAuthor
     }
     
     var body: some View {
@@ -46,8 +54,10 @@ struct StoriesView: View {
         }
         .background(Color.appBg)
         .nosNavigationBar(title: .stories)
-        .task {
-            if selectedAuthor == Author(), let firstAuthor = authors.first {
+        .task(id: selectedAuthorInStories) {
+            if let selectedAuthorInStories {
+                selectedAuthor = selectedAuthorInStories
+            } else if let firstAuthor = authors.first {
                 selectedAuthor = firstAuthor
             }
         }
@@ -58,14 +68,14 @@ struct StoriesView: View {
             return
         }
         guard authors.endIndex - 1 > selectedAuthorIndex else {
-            router.pop()
+            selectedAuthorInStories = nil
             return
         }
         let nextIndex = authors.index(after: selectedAuthorIndex)
         if let nextAuthor = authors[safe: nextIndex] {
             self.selectedAuthor = nextAuthor
         } else {
-            router.pop()
+            selectedAuthorInStories = nil
             return
         }
     }
@@ -75,26 +85,15 @@ struct StoriesView: View {
             return
         }
         guard authors.startIndex < selectedAuthorIndex else {
-            router.pop()
+            selectedAuthorInStories = nil
             return
         }
         let previousIndex = authors.index(before: selectedAuthorIndex)
         if let previousAuthor = authors[safe: previousIndex] {
             selectedAuthor = previousAuthor
         } else {
-            router.pop()
+            selectedAuthorInStories = nil
             return
         }
-    }
-}
-
-struct HomeStoriesView_Previews: PreviewProvider {
-    
-    static var previewData = PreviewData()
-    @State static var cutoffDate = Calendar.current.date(byAdding: .day, value: -14, to: .now)!
-    
-    static var previews: some View {
-        StoriesView(user: previewData.currentUser.author!, cutoffDate: $cutoffDate)
-            .inject(previewData: previewData)
     }
 }

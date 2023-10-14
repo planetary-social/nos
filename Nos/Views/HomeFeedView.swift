@@ -30,6 +30,9 @@ struct HomeFeedView: View {
     static let initialLoadTime = 2
 
     @ObservedObject var user: Author
+
+    @State private var selectedStoryAuthor: Author?
+    @State private var storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now)!
     
     init(user: Author) {
         self.user = user
@@ -70,39 +73,57 @@ struct HomeFeedView: View {
                     hideAfter: .now() + .seconds(Self.initialLoadTime)
                 )
             } else {
-                ScrollView(.vertical, showsIndicators: false) {
-                    ScrollView(.horizontal) {
-                        HStack(spacing: 15) {
-                            ForEach(authors) { author in
-                                Button {
-                                    var transaction = Transaction()
-                                    transaction.disablesAnimations = true
-                                    withTransaction(transaction) {
-                                        router.push(StoriesDestination(author: author))
+                ZStack {
+                    ScrollView(.vertical, showsIndicators: false) {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 15) {
+                                ForEach(authors) { author in
+                                    Button {
+                                        withAnimation {
+                                            selectedStoryAuthor = author
+                                        }
+                                    } label: {
+                                        AvatarView(imageUrl: author.profilePhotoURL, size: 54)
+                                            .padding(.vertical, 10)
+                                            .background(
+                                                Circle()
+                                                    .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
+                                                    .frame(width: 58, height: 58)
+                                            )
                                     }
-                                } label: {
-                                    AvatarView(imageUrl: author.profilePhotoURL, size: 54)
-                                        .padding(.vertical, 10)
-                                        .background(
-                                            Circle()
-                                                .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
-                                                .frame(width: 58, height: 58)
-                                        )
                                 }
                             }
+                            .padding(.horizontal, 15)
                         }
-                        .padding(.horizontal, 15)
-                    }
-                    .padding(.top, 15)
-                    LazyVStack {
-                        ForEach(events) { event in
-                            NoteButton(note: event, hideOutOfNetwork: false)
-                                .padding(.bottom, 15)
+                        .padding(.top, 15)
+                        LazyVStack {
+                            ForEach(events) { event in
+                                NoteButton(note: event, hideOutOfNetwork: false)
+                                    .padding(.bottom, 15)
+                            }
                         }
+                        .padding(.vertical, 15)
                     }
-                    .padding(.vertical, 15)
+                    .accessibilityIdentifier("home feed")
+
+                    StoriesView(
+                        user: user,
+                        cutoffDate: $storiesCutoffDate,
+                        authors: authors,
+                        selectedAuthor: $selectedStoryAuthor
+                    )
+                    .rotation3DEffect(
+                        Angle(degrees: 180),
+                        axis: (x: 0.0, y: 1.0, z: 0.0)
+                    )
+                    .opacity(selectedStoryAuthor == nil ? 0 : 1)
+                    .animation(.default, value: selectedStoryAuthor)
                 }
-                .accessibilityIdentifier("home feed")
+                .rotation3DEffect(
+                    selectedStoryAuthor == nil ? Angle.zero : Angle(degrees: 180),
+                    axis: (x: 0.0, y: 1.0, z: 0.0)
+                )
+                .animation(.default, value: selectedStoryAuthor)
             }
         }
         .background(Color.appBg)
@@ -113,24 +134,36 @@ struct HomeFeedView: View {
             }
         })
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                SideMenuButton()
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    isShowingRelayList = true
-                } label: {
-                    HStack(spacing: 3) {
-                        Image("relay-left")
-                            .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
-                        Text("\(relayService.numberOfConnectedRelays)")
-                            .font(.clarityTitle3)
-                            .fontWeight(.heavy)
-                            .foregroundColor(.primaryTxt)
-                        Image("relay-right")
-                            .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
+                if selectedStoryAuthor != nil {
+                    Button {
+                        selectedStoryAuthor = nil
+                    } label: {
+                        Image.stories.rotationEffect(selectedStoryAuthor == nil ? Angle.zero : Angle(degrees: 90))
+                            .animation(.default, value: selectedStoryAuthor)
                     }
-                }
-                .sheet(isPresented: $isShowingRelayList) {
-                    NavigationView {
-                        RelayView(author: user)
+                } else {
+                    Button {
+                        isShowingRelayList = true
+                    } label: {
+                        HStack(spacing: 3) {
+                            Image("relay-left")
+                                .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
+                            Text("\(relayService.numberOfConnectedRelays)")
+                                .font(.clarityTitle3)
+                                .fontWeight(.heavy)
+                                .foregroundColor(.primaryTxt)
+                            Image("relay-right")
+                                .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
+                        }
+                    }
+                    .sheet(isPresented: $isShowingRelayList) {
+                        NavigationView {
+                            RelayView(author: user)
+                        }
                     }
                 }
             }
@@ -165,18 +198,6 @@ struct HomeFeedView: View {
                 Task { await cancelSubscriptions() }
             }
         })
-        .navigationBarItems(
-            leading: SideMenuButton(),
-            trailing: Button {
-                var transaction = Transaction()
-                transaction.disablesAnimations = true
-                withTransaction(transaction) {
-                    router.push(StoriesDestination(author: authors.first))
-                }
-            } label: {
-                Image.stories
-            }
-        )
         .doubleTapToPop(tab: .home)
         .task {
             currentUser.socialGraph.followedKeys.publisher
