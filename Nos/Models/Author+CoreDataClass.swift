@@ -194,6 +194,46 @@ public class Author: NosManagedObject {
         )
         return fetchRequest
     }
+    
+    @nonobjc func lookupReportsByAuthor() -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "kind = %i AND author = %@",
+            EventKind.report.rawValue,
+            self
+        )
+        return fetchRequest
+    }
+    
+    @nonobjc func lookupReportsOnAuthor(context: NSManagedObjectContext) -> [Event] {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+
+        // Unwrap hexadecimalPublicKey or provide a default value
+        let publicKey = self.hexadecimalPublicKey ?? ""
+
+        // Create a predicate for the "tags" condition
+        let tagsPredicate = NSPredicate(format: "SUBQUERY(allTags, $tag, $tag.p == %@ AND $tag.tagValue == %@).@count > 0", "p", publicKey)
+
+        // Set the predicate for the fetch request
+        fetchRequest.predicate = tagsPredicate
+            
+        var allEvents: [Event] = []
+        do {
+            allEvents = try context.fetch(fetchRequest)
+        } catch {
+            print("Failed to fetch events. Error: \(error.localizedDescription)")
+        }
+
+        // Filter the events to only include those of kind 'report'
+        let reportEvents = allEvents.filter {
+            $0.kind == EventKind.report.rawValue
+        }
+
+        return reportEvents
+    }
+
 
     @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
@@ -201,6 +241,7 @@ public class Author: NosManagedObject {
         fetchRequest.predicate = NSPredicate.false
         return fetchRequest
     }
+    
     
     class func all(context: NSManagedObjectContext) -> [Author] {
         let allRequest = Author.allAuthorsRequest()

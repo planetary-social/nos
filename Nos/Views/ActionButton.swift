@@ -12,7 +12,7 @@ import SwiftUI
 struct ActionButton: View {
     
     var title: Localized
-    var font: Font = .clarityBold
+    var font: Font = .clarity
     var image: Image?
     var textColor = Color.white
     var depthEffectColor = Color(hex: "#A04651")
@@ -48,9 +48,7 @@ struct ActionButton: View {
         .lineLimit(nil)
         .foregroundColor(.black)
         .buttonStyle(ActionButtonStyle(
-            depthEffectColor: depthEffectColor,
-            backgroundGradient: backgroundGradient,
-            textShadow: textShadow
+            textShadow: textShadow, borderColor: depthEffectColor
         ))
         .disabled(disabled)
     }
@@ -85,17 +83,17 @@ struct ActionButtonStyle: ButtonStyle {
     @SwiftUI.Environment(\.isEnabled) private var isEnabled
     
     let cornerRadius: CGFloat = 17
-    let depthEffectColor: Color
-    let backgroundGradient: LinearGradient
     var textShadow: Bool
+    var borderColor: Color
     
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             ZStack {
-                depthEffectColor
+                Color.clear
             }
-            .cornerRadius(16)
-            .offset(y: 1)
+            .cornerRadius(cornerRadius)
+            .overlay(RoundedRectangle(cornerRadius: cornerRadius)
+                        .stroke(borderColor, lineWidth: 2))
 
             // Text container
             configuration.label
@@ -110,22 +108,6 @@ struct ActionButtonStyle: ButtonStyle {
                     y: 2
                 )
                 .opacity(isEnabled ? 1 : 0.5)
-                .background(
-                    ZStack {
-                        LinearGradient(
-                            colors: [
-                                Color(red: 1, green: 1, blue: 1, opacity: 0.2),
-                                Color(red: 1, green: 1, blue: 1, opacity: 1.0),
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                        .blendMode(.softLight)
-                        
-                        backgroundGradient.blendMode(.normal)
-                    }
-                )
-                .cornerRadius(cornerRadius)
                 .offset(y: configuration.isPressed ? 2 : 0)
         }
         .fixedSize(horizontal: true, vertical: true)

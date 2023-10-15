@@ -26,7 +26,8 @@ struct NoteCard: View {
     @State private var replyAvatarURLs = [URL]()
     @State private var reportingAuthors = [Author]()
     @State private var reports = [Event]()
-
+    @State private var isOverlayHelpTextBoxShown: Bool = false
+    
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
@@ -53,9 +54,25 @@ struct NoteCard: View {
     private var reportEvents: [Event] {
         note.reports(followedBy: self.currentUser)
     }
+    
+    private var authorReports: [Event] {
+        if (note.author != nil) {
+            let reports =  note.reports(referencingAuthor: note.author!, followedBy: self.currentUser)
+
+        }
+        
+        if let author = note.author {
+            let reports = author.lookupReportsOnAuthor(context: viewContext)
+            if reports.count > 0 {
+                print(reports)
+            }
+            return reports
+        }
+        return []
+    }
  
     private var hasContentWarning: Bool {
-        reportEvents.count > 0
+        reportEvents.count > 0 || authorReports.count > 0
     }
     
     private var attributedReplies: AttributedString? {
@@ -166,7 +183,7 @@ struct NoteCard: View {
                 }
                 .blur(radius: showContents ? 0 : 6)
                 .opacity(showContents ? 1 : 0.3)
-                .frame(minHeight: showContents ? nil : 130)
+                .frame(minHeight: showContents ? 130 : hasContentWarning ? 300 : nil)
                 
                 .overlay(
                     !showContents ? OverlayView(
@@ -174,7 +191,8 @@ struct NoteCard: View {
                             userTappedShowOutOfNetwork = true
                         }, 
                         hasContentWarning: hasContentWarning,
-                        reports: reportEvents) : nil
+                        reports: reportEvents + authorReports,
+                        isOverlayHelpTextBoxShown: $isOverlayHelpTextBoxShown) : nil
                 )
             case .golden:
                 if let author = note.author {
@@ -225,42 +243,85 @@ struct NoteCard: View {
         var userTappedShowAction: () -> Void
         var hasContentWarning: Bool
         var reports: [Event]
+        @Binding var isOverlayHelpTextBoxShown: Bool
     
         @ViewBuilder
         var body: some View {
             if hasContentWarning  {
-                OverlayContentReportView(userTappedShowAction: userTappedShowAction, reports: reports)
+                OverlayContentReportView(userTappedShowAction: userTappedShowAction, reports: reports, isOverlayHelpTextBoxShown: $isOverlayHelpTextBoxShown)
             } else {
-                OverlayOutofNetworkView(userTappedShowAction: userTappedShowAction)
-            }
-        }
-    }
-
-    struct OverlayOutofNetworkView: View{
-        var userTappedShowAction: () -> Void
-        
-        var body: some View {
-            VStack {
-                Localized.outsideNetwork.view
-                    .font(.body)
-                    .foregroundColor(.secondaryText)
-                    .background {
-                        Color.cardBackground
-                            .blur(radius: 8, opaque: false)
-                    }
-                    .padding(20)
-                SecondaryActionButton(title: Localized.show) {
-                    withAnimation {
-                        userTappedShowAction()
-                    }
-                }
+                OverlayOutofNetworkView(userTappedShowAction: userTappedShowAction, isOverlayHelpTextBoxShown: $isOverlayHelpTextBoxShown)
             }
         }
     }
     
-    struct OverlayContentReportView: View {
+    struct OverlayOutofNetworkView: View {
+        @State private var isTextBoxShown: Bool = false
         var userTappedShowAction: () -> Void
-        var reports: Array<Event>
+        @Binding var isOverlayHelpTextBoxShown: Bool
+
+        var body: some View {
+            VStack(alignment: .leading) {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        self.isOverlayHelpTextBoxShown.toggle()
+                    }) {
+                        (isTextBoxShown ? Image.x : Image.info)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                    }
+                    .padding(.trailing, 24)
+                }
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .padding(.top, 24)
+
+                // Center align the content
+                VStack(alignment: .center) {
+                    Spacer() // pushes content to the center
+
+                    if self.isOverlayHelpTextBoxShown {
+                        Localized.outsideNetworkExplanation.view
+                            .font(.body)
+                            .foregroundColor(.secondaryText)
+                            .background {
+                                Color.cardBackground
+                                    .blur(radius: 8, opaque: false)
+                            }
+                            .padding(.horizontal, 24)
+                            .fixedSize(horizontal: false, vertical: true)
+                    } else {
+                        Localized.outsideNetwork.view
+                            .font(.body)
+                            .foregroundColor(.secondaryText)
+                            .background {
+                                Color.cardBackground
+                                    .blur(radius: 8, opaque: false)
+                            }
+                            .padding(.horizontal, 24)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    
+                    SecondaryActionButton(title: Localized.viewThisPostAnyway) {
+                        withAnimation {
+                            userTappedShowAction()
+                        }
+                    }
+                    .padding(.top, 10) // Move the button closer to the text
+
+                    Spacer() // pushes content to the center
+                }
+                .frame(maxWidth: .infinity) // Allow the VStack to take full width
+                Spacer(minLength: 30) // Ensure there's some spacing at the bottom
+            }
+        }
+    }
+
+    struct OverlayContentReportView: View {
+        @State private var isTextBoxShown: Bool = false
+        var userTappedShowAction: () -> Void
+        var reports: [Event]
+        @Binding var isOverlayHelpTextBoxShown: Bool
 
         // Assuming each 'Event' has an 'Author' and we can get an array of 'Author' names
         private var authorNames: [String] {
@@ -277,47 +338,85 @@ struct NoteCard: View {
         private var reason: String {
             reports.first?.content ?? ""
         }
-
+        
         var body: some View {
-            VStack {
-                // Use 'reason' here
-                Text( reason )
-                    .font(.body)
-                    .foregroundColor(.secondaryText)
-                    .background {
-                        Color.cardBackground
-                            .blur(radius: 8, opaque: false)
+            VStack(alignment: .leading) {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        withAnimation {
+                            self.isOverlayHelpTextBoxShown.toggle()
+                        }
+                    }) {
+                        (isTextBoxShown ? Image.x : Image.info)
+                            .resizable()
+                            .frame(width: 24, height: 24)
                     }
-
-                // Reporting author names with localization
-                if authorNames.count > 1 {
-                    Text(Localized.reportedByOneAndMore.localizedMarkdown([
-                        "one": firstAuthorSafeName,
-                        "count": "\(authorNames.count - 1)"
-                    ]))
-                    .font(.body)  // Adjust font and style as needed
-                    .foregroundColor(.primary)
-                    .padding(.leading, 25)  // Adjust padding as needed
-                } else {
-                    Text(Localized.reportedByOne.localizedMarkdown([
-                        "one": firstAuthorSafeName
-                    ]))
-                    .font(.body)  // Adjust font and style as needed
-                    .foregroundColor(.secondaryText)
-                    .padding(.leading, 25)  // Adjust padding as needed
+                    .padding(.trailing, 24)
                 }
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .padding(.top, 24)
 
-                SecondaryActionButton(title: Localized.viewThisPostAnyway) {
-                    withAnimation {
-                        userTappedShowAction()
+                // Center align the content
+                VStack(alignment: .center) {
+                    Spacer() // pushes content to the center
+                    
+                    // TextBox or Image based on isTextBoxShown
+                    if self.isOverlayHelpTextBoxShown {
+                        Localized.contentWarningExplanation.view
+                            .font(.body)
+                            .foregroundColor(.secondaryText)
+                            .padding(.horizontal, 24)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .layoutPriority(1)
+                    } else {
+
+                        Image.warningEye
+                            .scaledToFit()
+                            .frame(width: 48, height: 48) // Set the width and height to 48
+                            .padding(.bottom, 20)
+                            
+                        Text( reason )
+                            .font(.body)
+                            .foregroundColor(.secondaryText)
+                            .background {
+                                Color.cardBackground
+                                    .blur(radius: 8, opaque: false)
+                            }
+                        
+                        // Reporting author names with localization
+                        if authorNames.count > 1 {
+                            Text(Localized.reportedByOneAndMore.localizedMarkdown([
+                                "one": firstAuthorSafeName,
+                                "count": "\(authorNames.count - 1)"
+                            ]))
+                            .font(.body)  // Adjust font and style as needed
+                            .foregroundColor(.primary)
+                            .padding(.leading, 25)  // Adjust padding as needed
+                        } else {
+                            Text(Localized.reportedByOne.localizedMarkdown([
+                                "one": firstAuthorSafeName
+                            ]))
+                            .font(.body)  // Adjust font and style as needed
+                            .foregroundColor(.secondaryText)
+                            .padding(.leading, 25)  // Adjust padding as needed
+                        }
                     }
+                    SecondaryActionButton(title: Localized.viewThisPostAnyway) {
+                        withAnimation {
+                            userTappedShowAction()
+                        }
+                    }
+                    .padding(.top, 10) // Move the button closer to the text
+
+                    Spacer() // pushes content to the center
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                Spacer(minLength: 30) // Ensure there's some spacing at the bottom
+
             }
         }
     }
-
-
-
     
     // we need to still look for associated lables
     struct OverlayContentLabelView: View{
