@@ -21,6 +21,7 @@ struct NoteButton: View {
     var showFullMessage = false
     var hideOutOfNetwork = true
     var showReplyCount = true
+    var displayRootMessage = false
     private let replyAction: ((Event) -> Void)?
     private let tapAction: ((Event) -> Void)?
 
@@ -37,6 +38,7 @@ struct NoteButton: View {
         showFullMessage: Bool = false, 
         hideOutOfNetwork: Bool = true, 
         showReplyCount: Bool = true, 
+        displayRootMessage: Bool = false,
         replyAction: ((Event) -> Void)? = nil,
         tapAction: ((Event) -> Void)? = nil
     ) {
@@ -45,6 +47,7 @@ struct NoteButton: View {
         self.showFullMessage = showFullMessage
         self.hideOutOfNetwork = hideOutOfNetwork
         self.showReplyCount = showReplyCount
+        self.displayRootMessage = displayRootMessage
         self.replyAction = replyAction
         self.tapAction = tapAction
     }
@@ -108,6 +111,10 @@ struct NoteButton: View {
                     }
                 }
             } label: {
+                if displayRootMessage, let root = note.rootNote() ?? note.referencedNote() {
+                    let action = replyAction ?? { _ in }
+                    ThreadRootView(root: root, tapAction: nil)
+                }
                 let noteCard = NoteCard(
                     note: displayedNote,
                     style: style,

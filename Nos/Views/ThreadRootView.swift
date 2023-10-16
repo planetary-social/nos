@@ -9,24 +9,20 @@ import SwiftUI
 
 struct ThreadRootView: View {
     var root: Event
-    var tapAction: (Event) -> Void
+    var tapAction: ((Event) -> Void)?
     
     var thread: [Event] = []
     
     @EnvironmentObject private var router: Router
     
-    init(root: Event, tapAction: @escaping (Event) -> Void) {
+    init(root: Event, tapAction: ((Event) -> Void)?) {
         self.root = root
-        self.tapAction = { event in
-            print("Button tapped with event: \(event)")
-            tapAction(event)
-        }
-        var currentEvent: Event = root
+        self.tapAction = tapAction
     }
-
+    
     var body: some View {
         LazyVStack {
-            NoteButton(note: root, tapAction: tapAction)
+            NoteButton(note: root, hideOutOfNetwork: false, tapAction: tapAction)
             .scaleEffect(0.9) // Make the button 80% of its original size.
             .offset(y: 40) // Move the button downward by 40 pixels.
             .clipped() // Ensure that the part of the button moved outside of its container is not visible.
@@ -40,7 +36,7 @@ struct ThreadRootView: View {
             ]), startPoint: .center, endPoint: .bottom)
         )
         .onTapGesture {
-            self.tapAction(self.root) // Tap action is called when the overlay is tapped.
+            self.tapAction?(self.root) // Use optional chaining to call tapAction.
         }
     }
 }
