@@ -29,10 +29,12 @@ struct NewNoteView: View {
     @State private var showRelayPicker = false
     @State private var selectedRelay: Relay?
 
+    var initialContents: String?
     @Binding var isPresented: Bool
 
-    init(isPresented: Binding<Bool>) {
+    init(initialContents: String? = nil, isPresented: Binding<Bool>) {
         _isPresented = isPresented
+        self.initialContents = initialContents
     }
     
     @FocusState private var isTextEditorInFocus: Bool
@@ -94,6 +96,9 @@ struct NewNoteView: View {
                     .padding(.bottom, 3)
             )
             .onAppear {
+                if let initialContents, text.isEmpty {
+                    text = EditableNoteText(string: initialContents)
+                }
                 isTextEditorInFocus = true
                 analytics.showedNewNote()
             }

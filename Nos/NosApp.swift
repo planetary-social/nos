@@ -35,6 +35,7 @@ struct NosApp: App {
                 .environmentObject(appController)
                 .environmentObject(currentUser)
                 .environmentObject(pushNotificationService)
+                .onOpenURL { DeepLinkService.handle($0, router: router) }
                 .task {
                     persistenceController.cleanupEntities()
                 }
