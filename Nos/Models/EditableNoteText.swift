@@ -45,7 +45,9 @@ struct EditableNoteText: Equatable {
     }
     
     init(string: String) {
+        // We initialize this twice to avoid an error about `defaultAttributes` not being around before `self`.
         self.attributedString = AttributedString(string)
+        self.attributedString = AttributedString(string, attributes: defaultAttributes)
     }
     
     init(nsAttributedString: NSAttributedString) {

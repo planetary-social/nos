@@ -90,6 +90,15 @@ struct EditableText: UIViewRepresentable {
                 width = uiView.frame.size.width
                 Self.recalculateHeight(view: uiView, result: $calculatedHeight)
             }
+        } else if width == 0,
+            uiView.frame.size.width == 0, 
+            let proposedWidth = proposal.width, 
+            proposedWidth > 0,
+            proposedWidth < CGFloat.infinity {
+            DispatchQueue.main.async { // call in next render cycle.
+                uiView.frame.size.width = proposedWidth
+                Self.recalculateHeight(view: uiView, result: $calculatedHeight)
+            }
         }
         return nil
     }

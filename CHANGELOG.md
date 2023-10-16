@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix a bug where the mute list could be overwritten when muting someone
 - Fixed aspect ratio on some profile photos
 - Added 3d effect to note cards
+- Added a URL scheme to open the note composer: nos://note/new?contents=theContentsOfTheNote
 
 ## [0.1 (81)] - 2023-09-30Z
 
