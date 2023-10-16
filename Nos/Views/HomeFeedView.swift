@@ -96,6 +96,7 @@ struct HomeFeedView: View {
                             .padding(.horizontal, 15)
                         }
                         .padding(.top, 15)
+                        .readabilityPadding()
                         LazyVStack {
                             ForEach(events) { event in
                                 NoteButton(note: event, hideOutOfNetwork: false)

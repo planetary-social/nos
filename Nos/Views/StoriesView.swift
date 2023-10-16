@@ -54,6 +54,7 @@ struct StoriesView: View {
         }
         .background(Color.appBg)
         .nosNavigationBar(title: .stories)
+        .readabilityPadding()
         .task(id: selectedAuthorInStories) {
             if let selectedAuthorInStories {
                 selectedAuthor = selectedAuthorInStories

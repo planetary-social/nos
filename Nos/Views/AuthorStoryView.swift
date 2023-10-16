@@ -5,6 +5,7 @@
 //  Created by Matthew Lorentz on 3/23/23.
 //
 
+import Dependencies
 import SwiftUI
 import CoreData
 
@@ -24,6 +25,7 @@ struct AuthorStoryView: View {
 
     @EnvironmentObject private var router: Router
     @Environment(\.managedObjectContext) private var viewContext
+    @Dependency(\.persistenceController) private var persistenceController
     
     init(author: Author, cutoffDate: Binding<Date>, showPreviousAuthor: @escaping () -> Void, showNextAuthor: @escaping () -> Void) {
         self.author = author
@@ -34,13 +36,14 @@ struct AuthorStoryView: View {
     }
     
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            Group {
-                if let selectedNote {
-                    CompactNoteView(note: selectedNote, showFullMessage: false)
-                        .padding(.top, 60)
-                } else {
-                    EmptyView()
+        GeometryReader { geometry in
+            ScrollView(.vertical, showsIndicators: false) {
+                Group {
+                    if let selectedNote {
+                        StoryNoteView(note: selectedNote, minHeight: geometry.size.height)
+                    } else {
+                        EmptyView()
+                    }
                 }
             }
         }
@@ -137,10 +140,23 @@ struct AuthorStoryView: View {
                 if let firstNote = notes.first {
                     selectedNote = firstNote
                 } else {
-                    // TODO: this is a temporary hack. We should be filtering out authors with no root posts in the database query, not here.
                     showNextAuthor()
                 }
             }
+        }
+        .task(id: selectedNote) {
+            guard let note = selectedNote else {
+                return
+            }
+            let context = persistenceController.newBackgroundContext()
+            do {
+                try await context.perform {
+                    let replies = try context.fetch(Event.allReplies(to: note))
+                }
+            } catch {
+
+            }
+
         }
     }
 }
@@ -149,6 +165,7 @@ fileprivate struct BottomOverlay: View {
     
     var note: Event
 
+    @Dependency(\.persistenceController) private var persistenceController
     @Environment(\.managedObjectContext) private var viewContext
 
     @EnvironmentObject private var router: Router
@@ -184,6 +201,7 @@ fileprivate struct BottomOverlay: View {
             })
         }
         .padding(.leading, 13)
+        .padding(.bottom, 10)
         .background {
             LinearGradient(
                 colors: [Color.appBg.opacity(1), Color.appBg.opacity(0)],
@@ -192,9 +210,10 @@ fileprivate struct BottomOverlay: View {
             )
         }
         .task {
+            let context = persistenceController.newBackgroundContext()
             let (replyCount, replyAvatarURLs) = await Event.replyMetadata(
                 for: note.identifier,
-                context: viewContext
+                context: context
             )
             self.replyCount = replyCount
             self.replyAvatarURLs = replyAvatarURLs
