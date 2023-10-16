@@ -153,10 +153,8 @@ public class Author: NosManagedObject {
     @nonobjc func followedWithNewNotes(since: Date) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
-        // TODO: need to get rid of replies somehow. Normally we use a subquery but you can't put a subquery in a subquery.
-        // Perhaps we need to make a Core Data "derived attribute" called isRootNote or something on Event.
         fetchRequest.predicate = NSPredicate(
-            format: "ANY followers.source = %@ AND SUBQUERY(events, $event, ($event.kind = 1 OR $event.kind = 6 OR $event.kind = 30023) AND $event.createdAt > %@).@count > 0",
+            format: "ANY followers.source = %@ AND SUBQUERY(events, $event, ($event.kind = 1 OR $event.kind = 6 OR $event.kind = 30023) AND $event.createdAt > %@ AND SUBQUERY($event.eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0).@count > 0",
             self,
             since as CVarArg
         )
