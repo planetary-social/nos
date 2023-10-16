@@ -24,17 +24,17 @@ struct ThreadRootView: View {
         LazyVStack {
             NoteButton(note: root, hideOutOfNetwork: false, tapAction: tapAction)
             .scaleEffect(0.9) // Make the button 80% of its original size.
-            .offset(y: 40) // Move the button downward by 40 pixels.
+            .offset(y: 50) // Move the button downward by 40 pixels.
             .clipped() // Ensure that the part of the button moved outside of its container is not visible.
         }
-        
         .overlay(
             LinearGradient(gradient: Gradient(stops: [
                 .init(color: Color.clear, location: 0),
-                .init(color: Color.clear, location: 0.6), // Add more clear stops
+                .init(color: Color.clear, location: 0.5), // Add more clear stops
                 .init(color: Color.appBg, location: 1)
             ]), startPoint: .center, endPoint: .bottom)
         )
+        
         .onTapGesture {
             self.tapAction?(self.root) // Use optional chaining to call tapAction.
         }

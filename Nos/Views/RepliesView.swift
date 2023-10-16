@@ -102,7 +102,6 @@ struct RepliesView: View {
                     VStack {
                         if let safeParent = parent {
                             ThreadRootView(root: safeParent, tapAction: { safeParent in
-                                print("ThreadRootView button was tapped with safeParent: \(safeParent)")
                                 router.push(safeParent)
                             })
                         }

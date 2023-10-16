@@ -86,7 +86,7 @@ struct ProfileView: View {
                         ForEach(unmutedEvents) { event in
                             VStack {
                                 NoteButton(note: event, hideOutOfNetwork: false, displayRootMessage: true)
-                                    .padding(.bottom, 15)
+                                .padding(.bottom, 15)
                             }
                         }
                     }
