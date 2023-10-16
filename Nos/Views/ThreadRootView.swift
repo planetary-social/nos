@@ -1,68 +1,52 @@
 //
-//  ThreadView.swift
-//  Nos
+//  ThreadRootView.swift
+//  Nos - This is the root note card for threads.
 //
-//  Created by Shane Bielefeld on 3/3/23.
+//  Created by Rabble on 10/16/23.
 //
 
 import SwiftUI
 
-struct ThreadView: View {
-    
+struct ThreadRootView: View {
     var root: Event
-
+    var tapAction: (Event) -> Void
+    
     var thread: [Event] = []
     
     @EnvironmentObject private var router: Router
-    @State private var width: CGFloat = 0
     
-    /// Takes a root `Event`, and an array of all replies to the parent note of this thread,
-    /// and builds the longest possible thread from that array of all replies.
-    init(root: Event, allReplies: [Event]) {
+    init(root: Event, tapAction: @escaping (Event) -> Void) {
         self.root = root
-        
-        var currentEvent: Event = root
-        while true {
-            if let nextEvent = allReplies
-                .first(where: {
-                    ($0.eventReferences.lastObject as? EventReference)?.eventId == currentEvent.identifier
-                }) {
-                thread.append(nextEvent)
-                currentEvent = nextEvent
-            } else {
-                break
-            }
+        self.tapAction = { event in
+            print("Button tapped with event: \(event)")
+            tapAction(event)
         }
+        var currentEvent: Event = root
     }
+
     var body: some View {
         LazyVStack {
-            NoteButton(note: root, tapAction: { event in
-                router.push(event)
-            })
-            .padding(.top, 15)
-
-            ForEach(thread) { event in
-                VStack {
-                    Path { path in
-                        path.move(to: CGPoint(x: 130, y: -4))
-                        path.addLine(to: CGPoint(x: 130, y: 15))
-                    }
-                    .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                    .fill(Color.secondaryText)
-
-                    NoteButton(note: event, tapAction: { event in
-                        router.push(event)
-                    })
-                    .padding(.horizontal, 24)
-                    .readabilityPadding()
-                    .frame(minWidth: 150)
-                }
-            }
+            NoteButton(note: root, tapAction: tapAction)
+            .scaleEffect(0.9) // Make the button 80% of its original size.
+            .offset(y: 40) // Move the button downward by 40 pixels.
+            .clipped() // Ensure that the part of the button moved outside of its container is not visible.
+        }
+        
+        .overlay(
+            LinearGradient(gradient: Gradient(stops: [
+                .init(color: Color.clear, location: 0),
+                .init(color: Color.clear, location: 0.6), // Add more clear stops
+                .init(color: Color.appBg, location: 1)
+            ]), startPoint: .center, endPoint: .bottom)
+        )
+        .onTapGesture {
+            self.tapAction(self.root) // Tap action is called when the overlay is tapped.
         }
     }
 }
 
-struct ThreadView_Previews: PreviewProvider {
+
+struct ThreadRootView_Previews: PreviewProvider {
     static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
