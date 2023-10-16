@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Updated UI around displaying nested threads and displaying more context of conversations. 
 - Fix a bug where the "Post" button wouldn't be shown when composing a reply on macOS
 
 ## [0.1 (81)] - 2023-09-30Z
