@@ -7,7 +7,7 @@
 
 import Foundation
 import Logger
-import Starscream
+import StarscreamOld
 import Auth
 import WalletConnectModal
 import WalletConnectRelay

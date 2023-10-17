@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -99,6 +99,8 @@
 		C93005602A6AF8320098CA9E /* LoadingContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C930055E2A6AF8320098CA9E /* LoadingContent.swift */; };
 		C931517D29B915AF00934506 /* StaggeredGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = C931517C29B915AF00934506 /* StaggeredGrid.swift */; };
 		C931517E29B915AF00934506 /* StaggeredGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = C931517C29B915AF00934506 /* StaggeredGrid.swift */; };
+		C9332C632ADECFA700AD7B0E /* StarscreamOld in Frameworks */ = {isa = PBXBuildFile; productRef = C9332C622ADECFA700AD7B0E /* StarscreamOld */; };
+		C9332C662ADED0D700AD7B0E /* StarscreamOld in Frameworks */ = {isa = PBXBuildFile; productRef = C9332C652ADED0D700AD7B0E /* StarscreamOld */; };
 		C936B4592A4C7B7C00DF1EB9 /* Nos.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */; };
 		C936B45A2A4C7B7C00DF1EB9 /* Nos.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */; };
 		C936B45C2A4C7D6B00DF1EB9 /* UniversalNameWizard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C936B45B2A4C7D6B00DF1EB9 /* UniversalNameWizard.swift */; };
@@ -730,11 +732,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9DEC068298965270078B43A /* Starscream in Frameworks */,
+				C9332C662ADED0D700AD7B0E /* StarscreamOld in Frameworks */,
 				C95F0ACA2ABA379700A0D9CE /* WalletConnect in Frameworks */,
 				C9B71DC02A8E9BAD0031ED9F /* SentrySwiftUI in Frameworks */,
 				C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */,
 				C9AA1BB42ABA3D5C00E8BD6D /* Web3Wallet in Frameworks */,
 				C9B71DBE2A8E9BAD0031ED9F /* Sentry in Frameworks */,
+				C9332C632ADECFA700AD7B0E /* StarscreamOld in Frameworks */,
 				C9646E9A29B79E04007239A4 /* Logger in Frameworks */,
 				C9646EA729B7A3DD007239A4 /* Dependencies in Frameworks */,
 				C9AA1BBC2ABB6E8900E8BD6D /* WalletConnectModal in Frameworks */,
@@ -1246,6 +1250,8 @@
 				C9AA1BB32ABA3D5C00E8BD6D /* Web3Wallet */,
 				C9AA1BB92ABB62EB00E8BD6D /* Web3 */,
 				C9AA1BBB2ABB6E8900E8BD6D /* WalletConnectModal */,
+				C9332C622ADECFA700AD7B0E /* StarscreamOld */,
+				C9332C652ADED0D700AD7B0E /* StarscreamOld */,
 			);
 			productName = Nos;
 			productReference = C9DEBFCE298941000078B43A /* Nos.app */;
@@ -1356,6 +1362,7 @@
 				C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */,
 				C95F0AC82ABA379700A0D9CE /* XCRemoteSwiftPackageReference "WalletConnectSwiftV2" */,
 				C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3" */,
+				C9332C642ADED0D700AD7B0E /* XCLocalSwiftPackageReference "StarscreamOld" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -2348,6 +2355,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		C9332C642ADED0D700AD7B0E /* XCLocalSwiftPackageReference "StarscreamOld" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = StarscreamOld;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -2457,8 +2471,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/daltoniam/Starscream.git";
 			requirement = {
-				kind = exactVersion;
-				version = 3.1.2;
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -2468,6 +2482,14 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = DequeModule;
+		};
+		C9332C622ADECFA700AD7B0E /* StarscreamOld */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StarscreamOld;
+		};
+		C9332C652ADED0D700AD7B0E /* StarscreamOld */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StarscreamOld;
 		};
 		C94D855E29914D2300749478 /* SwiftUINavigation */ = {
 			isa = XCSwiftPackageProductDependency;
