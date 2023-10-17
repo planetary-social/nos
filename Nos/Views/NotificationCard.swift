@@ -81,7 +81,7 @@ struct NotificationCard: View {
             .cornerRadius(20)
             .padding(.horizontal, 15)
         }
-        .buttonStyle(CardButtonStyle())
+        .buttonStyle(CardButtonStyle(style: .compact))
         .onAppear {
             Task(priority: .userInitiated) {
                 let backgroundContext = persistenceController.backgroundViewContext
