@@ -46,8 +46,11 @@ struct ExpandingTextFieldAndSubmitButton: View {
                 .disabled(disabled)
             }
         }
+        .onChange(of: reply) { newText in
+            showPostButton = !newText.isEmpty || focus.wrappedValue
+        }
         .onChange(of: focus.wrappedValue) { bool in
-            showPostButton = bool
+            showPostButton = !reply.isEmpty || bool
         }
         .padding(8)
     }

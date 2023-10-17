@@ -10,9 +10,8 @@ import Dependencies
 
 struct AppView: View {
 
-    @State var isCreatingNewPost = false
-    
     @State var showNewPost = false
+    @State var newPostContents: String? 
 
     @EnvironmentObject private var appController: AppController
     @EnvironmentObject var router: Router
@@ -26,11 +25,11 @@ struct AppView: View {
     @State private var lastSelectedTab = Destination.home
     
     /// An enumeration of the destinations for AppView.
-    enum Destination: String, Hashable, Equatable {
+    enum Destination: Hashable, Equatable {
         case home
         case discover
         case notifications
-        case newNote
+        case newNote(String?)
         case profile
         
         var label: some View {
@@ -61,6 +60,10 @@ struct AppView: View {
             case .profile:
                 return Localized.profileTitle.string
             }
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(destinationString)
         }
     }
     
@@ -122,7 +125,7 @@ struct AppView: View {
                                 Localized.post.view
                             }
                         }
-                    .tag(Destination.newNote)
+                    .tag(Destination.newNote(nil))
                     
                     NotificationsView(user: currentUser.author)
                         .tabItem {
@@ -162,7 +165,8 @@ struct AppView: View {
                     }
                 }
                 .onChange(of: router.selectedTab) { newTab in
-                    if newTab == Destination.newNote {
+                    if case let Destination.newNote(contents) = newTab {
+                        newPostContents = contents
                         showNewPost = true
                         router.selectedTab = lastSelectedTab
                     } else if !showNewPost {
@@ -170,7 +174,7 @@ struct AppView: View {
                     }
                 }
                 .sheet(isPresented: $showNewPost, content: {
-                    NewNoteView(isPresented: $showNewPost)
+                    NewNoteView(initialContents: newPostContents, isPresented: $showNewPost)
                 })
                 
                 SideMenu(
