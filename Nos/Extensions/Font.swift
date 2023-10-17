@@ -126,6 +126,10 @@ func PlainText(_ localized: Localized) -> SwiftUI.Text {
     SwiftUI.Text(localized)
 }
 
+func PlainTextField<Label: View>(text: Binding<String>, prompt: Text? = nil, label: () -> Label) -> some View {
+    SwiftUI.TextField(text: text, prompt: prompt, label: label)
+}
+
 func Text(_ content: any StringProtocol) -> SwiftUI.Text {
     .init(content).font(.brand)
 }

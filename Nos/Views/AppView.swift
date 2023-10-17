@@ -22,7 +22,7 @@ struct AppView: View {
     @EnvironmentObject var currentUser: CurrentUser
     
     @State private var showingOptions = false
-    @State private var lastSelectedTab = Destination.home
+    @State private var lastSelectedTab = AppDestination.home
     
     /// An enumeration of the destinations for AppView.
     enum Destination: Hashable, Equatable {
@@ -90,7 +90,7 @@ struct AppView: View {
                             }
                             .toolbarBackground(.visible, for: .tabBar)
                             .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                            .tag(Destination.home)
+                            .tag(AppDestination.home)
                             .onAppear {
                                 // TODO: Move this somewhere better like CurrentUser when it becomes the source of truth
                                 // for who is logged in
@@ -116,7 +116,7 @@ struct AppView: View {
                         }
                         .toolbarBackground(.visible, for: .tabBar)
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                        .tag(Destination.discover)
+                        .tag(AppDestination.discover)
                     
                     VStack {}
                         .tabItem {
@@ -125,7 +125,7 @@ struct AppView: View {
                                 Localized.post.view
                             }
                         }
-                    .tag(Destination.newNote(nil))
+                    .tag(AppDestination.newNote(nil))
                     
                     NotificationsView(user: currentUser.author)
                         .tabItem {
@@ -142,7 +142,7 @@ struct AppView: View {
                         }
                         .toolbarBackground(.visible, for: .tabBar)
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                        .tag(Destination.notifications)
+                        .tag(AppDestination.notifications)
                         .badge(pushNotificationService.badgeCount)
                     
                     if let author = currentUser.author {
@@ -161,11 +161,11 @@ struct AppView: View {
                             }
                             .toolbarBackground(.visible, for: .tabBar)
                             .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                            .tag(Destination.profile)
+                            .tag(AppDestination.profile)
                     }
                 }
                 .onChange(of: router.selectedTab) { newTab in
-                    if case let Destination.newNote(contents) = newTab {
+                    if case let AppDestination.newNote(contents) = newTab {
                         newPostContents = contents
                         showNewPost = true
                         router.selectedTab = lastSelectedTab

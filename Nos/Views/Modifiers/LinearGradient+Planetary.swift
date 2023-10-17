@@ -22,6 +22,12 @@ extension LinearGradient {
         endPoint: .bottomTrailing
     )
     
+    public static let verticalAccent = LinearGradient(
+        colors: [ Color(hex: "#F08508"), Color(hex: "#F43F75")],
+        startPoint: .top,
+        endPoint: .bottom
+    )
+    
     public static let solidBlack = LinearGradient(
         colors: [Color.black],
         startPoint: .topLeading,
@@ -36,6 +42,12 @@ extension LinearGradient {
 
     public static let cardBackground = LinearGradient(
         colors: [.cardBgTop, .cardBgBottom],
+        startPoint: .top,
+        endPoint: .bottom
+    )
+    
+    public static let gold = LinearGradient(
+        colors: [Color(hex: "#FFC46B"), Color(hex: "#DE7C21")],
         startPoint: .top,
         endPoint: .bottom
     )

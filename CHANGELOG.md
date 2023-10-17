@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added 3d effect to note cards
 - Fix a bug where the "Post" button wouldn't be shown when composing a reply on macOS
 - Added a URL scheme to open the note composer: nos://note/new?contents=theContentsOfTheNote
+- Redesigned the Universal Names registration flow
 
 ## [0.1 (81)] - 2023-09-30Z
 
