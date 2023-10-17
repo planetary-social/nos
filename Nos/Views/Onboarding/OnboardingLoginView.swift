@@ -46,10 +46,10 @@ struct OnboardingLoginView: View {
             Form {
                 Section {
                     SecureField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
-                        .foregroundColor(.textColor)
+                        .foregroundColor(.primaryTxt)
                 } header: {
                     Localized.pasteYourSecretKey.view
-                        .foregroundColor(.textColor)
+                        .foregroundColor(.primaryTxt)
                         .fontWeight(.heavy)
                 }
                 .listRowBackground(LinearGradient(

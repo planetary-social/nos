@@ -155,15 +155,21 @@ enum Localized: String, Localizable, CaseIterable {
     case unfollow = "Unfollow"
     case uns = "UNS"
     case nip05 = "NIP-05"
+    case nip05LearnMore = "Learn more about NIP-05 name verification."
+    case learnMore = "Learn more"
     case readMore = "Read more"
     case thread = "Thread"
     case show = "Show" // verb form
     case bio = "Bio"
     case displayName = "Display name"
     case name = "Name"
-    case picUrl = "Profile pic url"
+    case profilePicture = "Profile picture"
+    case identityVerification = "Identity verification"
+    case url = "URL"
     case noEventsOnProfile = "We don't see any notes for this profile, but we'll keep looking!"
+    case uploadProfilePicInstructions = "Go to nostr.build to upload your photo, copy the URL provided and paste it here."
     case basicInfo = "Basic Information"
+    case website = "Website"
     case edit = "Edit" // verb form
     case connectWallet = "Connect Wallet"
 
@@ -205,7 +211,13 @@ enum Localized: String, Localizable, CaseIterable {
     
     case unsTagline = "Universal Name Space brings identity verification you can trust."
     case unsDescription = "The Universal Namespace gives you one name you can use everywhere. Register your Universal Name and connect it to your Nostr profile. Learn more."
-    case unsLearnMore = "Learn more."
+    case unsRegister = "Register your Universal Name"
+    case unsRegisterDescription = """
+    Universal Name Space gives you a name you can use everywhere.
+            
+    Verify your identity and link your social accounts, government ID, wallets and more.
+    """
+    case unsLearnMore = "Learn more about UNS."
     case verifyYourIdentity = "Verify your identity"
     case enterCode = "Enter Code"
     case nameLower = "name"

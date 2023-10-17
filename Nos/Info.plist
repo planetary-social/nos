@@ -2,22 +2,21 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>Nos can access camera to allow users to post photos directly.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.verse.nos</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>nos</string>
+			</array>
+		</dict>
+	</array>
 	<key>POSTHOG_API_KEY</key>
 	<string>$(POSTHOG_API_KEY)</string>
-	<key>UNS_AUTH_CONNECTION_URL</key>
-	<string>$(UNS_AUTH_CONNECTION_URL)</string>
-	<key>UNS_CONNECTION_URL</key>
-	<string>$(UNS_CONNECTION_URL)</string>
-	<key>UNS_CLIENT_ID</key>
-	<string>$(UNS_CLIENT_ID)</string>
-	<key>UNS_CLIENT_SECRET</key>
-	<string>$(UNS_CLIENT_SECRET)</string>
-	<key>UNS_ORG_CODE</key>
-	<string>$(UNS_ORG_CODE)</string>
-	<key>UNS_API_KEY</key>
-	<string>$(UNS_API_KEY)</string>
 	<key>SENTRY_DSN</key>
 	<string>$(SENTRY_DSN)</string>
 	<key>WALLET_CONNECT_PROJECT_ID</key>
@@ -47,5 +46,17 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
+	<key>UNS_API_KEY</key>
+	<string>$(UNS_API_KEY)</string>
+	<key>UNS_AUTH_CONNECTION_URL</key>
+	<string>$(UNS_AUTH_CONNECTION_URL)</string>
+	<key>UNS_CLIENT_ID</key>
+	<string>$(UNS_CLIENT_ID)</string>
+	<key>UNS_CLIENT_SECRET</key>
+	<string>$(UNS_CLIENT_SECRET)</string>
+	<key>UNS_CONNECTION_URL</key>
+	<string>$(UNS_CONNECTION_URL)</string>
+	<key>UNS_ORG_CODE</key>
+	<string>$(UNS_ORG_CODE)</string>
 </dict>
 </plist>

@@ -130,7 +130,7 @@ class Analytics {
     }
     
     func logout() {
-        Log.info("Analytics: User logged out")
+        track("Logged out")
         postHog?.reset()
     }
     

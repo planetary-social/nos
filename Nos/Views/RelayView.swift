@@ -50,11 +50,11 @@ struct RelayView: View {
                                 RelayDetailView(relay: relay)
                             } label: {
                                 Text(relay.address ?? Localized.error.string)
-                                    .foregroundColor(.textColor)
+                                    .foregroundColor(.primaryTxt)
                             }
                         } else {
                             Text(relay.address ?? Localized.error.string)
-                                .foregroundColor(.textColor)
+                                .foregroundColor(.primaryTxt)
                                 .textSelection(.enabled)
                         }
                     }
@@ -84,7 +84,7 @@ struct RelayView: View {
             } header: {
                 if editable {
                     Localized.relays.view
-                        .foregroundColor(.textColor)
+                        .foregroundColor(.primaryTxt)
                         .fontWeight(.heavy)
                 }
             }
@@ -114,7 +114,7 @@ struct RelayView: View {
                     }
                 } header: {
                     Localized.recommendedRelays.view
-                        .foregroundColor(.textColor)
+                        .foregroundColor(.primaryTxt)
                         .fontWeight(.heavy)
                 }
                 .listRowBackground(LinearGradient(
@@ -127,7 +127,7 @@ struct RelayView: View {
             if editable {
                 Section {
                     TextField(Localized.relayAddressPlaceholder.string, text: $newRelayAddress)
-                        .foregroundColor(.textColor)
+                        .foregroundColor(.primaryTxt)
                         .autocorrectionDisabled()
                         #if os(iOS)
                         .textInputAutocapitalization(.none)
@@ -142,7 +142,7 @@ struct RelayView: View {
                     }
                 } header: {
                     Localized.addRelay.view
-                        .foregroundColor(.textColor)
+                        .foregroundColor(.primaryTxt)
                         .fontWeight(.heavy)
                         .bold()
                 }

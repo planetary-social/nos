@@ -29,6 +29,18 @@ struct ProfileView: View {
     
     @FetchRequest
     private var events: FetchedResults<Event>
+
+    @State private var unmutedEvents: [Event] = []
+
+    private func computeUnmutedEvents() async {
+        unmutedEvents = events.filter {
+            if let author = $0.author {
+                let notDeleted = $0.deletedOn.count == 0
+                return !author.muted && notDeleted
+            }
+            return false
+        }
+    }
     
     init(author: Author) {
         self.author = author
@@ -67,11 +79,11 @@ struct ProfileView: View {
                     .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 
                 LazyVStack {
-                    if events.unmuted.isEmpty {
+                    if unmutedEvents.isEmpty {
                         Localized.noEventsOnProfile.view
                             .padding()
                     } else {
-                        ForEach(events.unmuted) { event in
+                        ForEach(unmutedEvents) { event in
                             VStack {
                                 NoteButton(note: event, hideOutOfNetwork: false)
                                     .padding(.bottom, 15)
@@ -182,6 +194,7 @@ struct ProfileView: View {
         .reportMenu($showingReportMenu, reportedObject: .author(author))
         .task {
             await refreshProfileFeed()
+            await computeUnmutedEvents()
         }
         .alert(unwrapping: $alert)
         .onAppear {
@@ -190,6 +203,17 @@ struct ProfileView: View {
         }
         .refreshable {
             await refreshProfileFeed()
+            await computeUnmutedEvents()
+        }
+        .onChange(of: author.muted) { _ in
+            Task {
+                await computeUnmutedEvents()
+            }
+        }
+        .onChange(of: author.events.count) { _ in
+            Task {
+                await computeUnmutedEvents()
+            }
         }
         .onDisappear {
             Task(priority: .userInitiated) {

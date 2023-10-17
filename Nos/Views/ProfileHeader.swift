@@ -192,7 +192,7 @@ struct ProfileHeader: View {
         .task(priority: .userInitiated) {
             if let nip05Identifier = author.nip05,
                 let publicKey = author.publicKey?.hex {
-                let verifiedNip05Identifier = await relayService.verifyInternetIdentifier(
+                let verifiedNip05Identifier = await relayService.verifyNIP05(
                     identifier: nip05Identifier,
                     userPublicKey: publicKey
                 )

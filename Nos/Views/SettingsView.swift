@@ -79,7 +79,7 @@ struct SettingsView: View {
             } header: {
                 VStack(alignment: .leading, spacing: 10) {
                     Localized.privateKey.view
-                        .foregroundColor(.textColor)
+                        .foregroundColor(.primaryTxt)
                         .bold()
                     
                     Localized.privateKeyWarning.view
@@ -140,7 +140,7 @@ struct SettingsView: View {
                 #endif
             } header: {
                 Localized.debug.view
-                    .foregroundColor(.textColor)
+                    .foregroundColor(.primaryTxt)
                     .fontWeight(.heavy)
                     .bold()
                     .textCase(nil)

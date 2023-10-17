@@ -8,6 +8,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a bug where profile changes wouldn't be published in some cases
+- Fixed aspect ratio on some profile photos
+- Added 3d effect to note cards
+- Fix a bug where the "Post" button wouldn't be shown when composing a reply on macOS
+- Added a URL scheme to open the note composer: nos://note/new?contents=theContentsOfTheNote
+
+## [0.1 (81)] - 2023-09-30Z
+
+- Fixed secrets that weren't included in build 79 and 80
+
+## [0.1 (80)] - 2023-09-30Z
+
+- Updated the design of the edit profile screen
+- Fixed a hang on the profile screen
+
+## [0.1 (79)] - 2023-09-22Z
+
+- Added the ability to search for Mastodon usernames on the Discover tab. 
+- Long form content is now displayed in the discover tab.
+- Fixed a hang on the thread view.
+
+## [0.1 (77)] - 2023-09-15Z
+
+- App performance improvements
+
 ## [0.1 (76)] - 2023-09-08Z
 
 - Minor crash fixes and optimizations
