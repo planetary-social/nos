@@ -94,9 +94,6 @@ struct SideMenuContent: View {
                     let url = URL(string: "https://nos.social")!
                     ActivityViewController(activityItems: [url])
                 }
-                SideMenuRow(title: .connectWallet, image: Image(systemName: "w.circle.fill")) {
-                    WalletConnect.shared.connect()
-                }
                 Spacer()
             }
             .background(Color.appBg)

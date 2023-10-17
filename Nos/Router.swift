@@ -11,11 +11,11 @@ import CoreData
 import Logger
 
 /// An enumeration of the destinations for AppView.
-enum AppDestination: String, Hashable, Equatable {
+enum AppDestination: Hashable, Equatable {
     case home
     case discover
     case notifications
-    case newNote
+    case newNote(String?)
     case profile
     
     var label: some View {
@@ -46,6 +46,10 @@ enum AppDestination: String, Hashable, Equatable {
         case .profile:
             return Localized.profileTitle.string
         }
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(destinationString)
     }
 }
 

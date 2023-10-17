@@ -20,6 +20,7 @@ struct ProfileHeader: View {
     
     @State private var nip05Identifier: String = ""
     @State private var verifiedNip05Identifier: Bool?
+    @State private var walletConnectIsPresented = false
     
     var followsRequest: FetchRequest<Follow>
     var followsResult: FetchedResults<Follow> { followsRequest.wrappedValue }
@@ -83,13 +84,10 @@ struct ProfileHeader: View {
                             .foregroundColor(Color.primaryTxt)
                         
                         Button("Pay") {
-                            Task {
-                                do {
-                                    try await WalletConnect.shared.pay()
-                                } catch {
-                                    Log.optional(error)
-                                } 
-                            }
+                            walletConnectIsPresented = true
+                        }
+                        .sheet(isPresented: $walletConnectIsPresented) { 
+                            WalletConnectPairingView()
                         }
                         
                         if !(author.uns ?? "").isEmpty {

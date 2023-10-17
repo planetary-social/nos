@@ -19,7 +19,7 @@ struct UNSErrorView: View {
         NavigationView {
             VStack {
                 ScrollView {
-                    UNSStepImage { Image.unsOTP.offset(x: 7, y: 5) }
+                    UNSStepImage { Image.unsOtp.offset(x: 7, y: 5) }
                         .padding(40)
                         .padding(.top, 50)
                     
