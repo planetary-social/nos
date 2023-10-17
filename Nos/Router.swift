@@ -99,6 +99,10 @@ enum AppDestination: String, Hashable, Equatable {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
+    
+    func showNewNoteView(contents: String?) {
+        selectedTab = .newNote(contents)
+    }
 
     func consecutiveTaps(on tab: AppDestination) -> AnyPublisher<Void, Never> {
         $selectedTab

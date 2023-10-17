@@ -10,9 +10,8 @@ import Dependencies
 
 struct AppView: View {
 
-    @State var isCreatingNewPost = false
-    
     @State var showNewPost = false
+    @State var newPostContents: String? 
 
     @EnvironmentObject private var appController: AppController
     @EnvironmentObject var router: Router
@@ -24,6 +23,49 @@ struct AppView: View {
     
     @State private var showingOptions = false
     @State private var lastSelectedTab = AppDestination.home
+    
+    /// An enumeration of the destinations for AppView.
+    enum Destination: Hashable, Equatable {
+        case home
+        case discover
+        case notifications
+        case newNote(String?)
+        case profile
+        
+        var label: some View {
+            switch self {
+            case .home:
+                return Text(Localized.homeFeed.string)
+            case .discover:
+                return Localized.discover.view
+            case .notifications:
+                return Localized.notifications.view
+            case .newNote:
+                return Localized.newNote.view
+            case .profile:
+                return Localized.profileTitle.view
+            }
+        }
+        
+        var destinationString: String {
+            switch self {
+            case .home:
+                return Localized.homeFeed.string
+            case .discover:
+                return Localized.discover.string
+            case .notifications:
+                return Localized.notifications.string
+            case .newNote:
+                return Localized.newNote.string
+            case .profile:
+                return Localized.profileTitle.string
+            }
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(destinationString)
+        }
+    }
     
     var body: some View {
         
@@ -83,7 +125,7 @@ struct AppView: View {
                                 Localized.post.view
                             }
                         }
-                    .tag(AppDestination.newNote)
+                    .tag(AppDestination.newNote(nil))
                     
                     NotificationsView(user: currentUser.author)
                         .tabItem {
@@ -123,7 +165,8 @@ struct AppView: View {
                     }
                 }
                 .onChange(of: router.selectedTab) { newTab in
-                    if newTab == AppDestination.newNote {
+                    if case let AppDestination.newNote(contents) = newTab {
+                        newPostContents = contents
                         showNewPost = true
                         router.selectedTab = lastSelectedTab
                     } else if !showNewPost {
@@ -131,7 +174,7 @@ struct AppView: View {
                     }
                 }
                 .sheet(isPresented: $showNewPost, content: {
-                    NewNoteView(isPresented: $showNewPost)
+                    NewNoteView(initialContents: newPostContents, isPresented: $showNewPost)
                 })
                 
                 SideMenu(
