@@ -22,7 +22,6 @@ struct AuthorCard: View {
         followersResult.map { $0 }
     }
 
-    
     private var knownFollowers: [Follow] {
         author.followers.filter {
             guard let source = $0.source else {
