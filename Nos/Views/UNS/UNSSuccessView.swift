@@ -16,7 +16,7 @@ struct UNSSuccessView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 ScrollView {
                     ZStack {

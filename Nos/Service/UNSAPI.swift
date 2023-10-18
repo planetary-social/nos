@@ -21,6 +21,7 @@ enum UNSError: Error {
     case noAccessToken
     case requiresPayment(URL)
     case nameTaken
+    case developer
 }
 
 class UNSAPI {
@@ -56,7 +57,7 @@ class UNSAPI {
         self.apiKey = apiKey
     }
     
-    func requestOTPCode(phoneNumber: String) async throws {
+    func requestVerificationCode(phoneNumber: String) async throws {
         var request = URLRequest(url: authConnectionURL.appending(path: "v1/phone_verification/request_otp"))
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
@@ -79,7 +80,7 @@ class UNSAPI {
         }
     }
     
-    func verifyOTPCode(phoneNumber: String, code: String) async throws {
+    func verifyPhone(phoneNumber: String, code: String) async throws {
         var request = URLRequest(url: authConnectionURL.appending(path: "v1/phone_verification/validate_otp"))
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
@@ -201,7 +202,7 @@ class UNSAPI {
         
         let response = try await URLSession.shared.data(for: request)
         let responseData = response.0
-        let responseString = String(data: responseData, encoding: .utf8)
+        _ = String(data: responseData, encoding: .utf8)
         
         // This is just a stub response for now.
         return URL(string: "https://www.universalname.space/name/\(name)")!

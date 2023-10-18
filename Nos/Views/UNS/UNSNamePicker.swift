@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PickerRow<Label: View>: View {
+fileprivate struct PickerRow<Label: View>: View {
     @Binding var isSelected: Bool
     var label: Label
     

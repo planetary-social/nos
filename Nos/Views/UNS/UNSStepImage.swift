@@ -30,5 +30,5 @@ struct UNSStepImage<Content: View>: View {
 }
 
 #Preview {
-    UNSStepImage { Image.unsOtp }
+    UNSStepImage { Image.unsVerificationCode }
 }

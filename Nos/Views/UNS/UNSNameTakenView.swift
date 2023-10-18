@@ -14,7 +14,7 @@ struct UNSNameTakenView: View {
     @Dependency(\.analytics) var analytics
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 ScrollView {
                     UNSStepImage { Image.unsNameTaken.offset(x: 7, y: 5) }

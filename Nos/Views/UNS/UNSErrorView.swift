@@ -14,12 +14,13 @@ struct UNSErrorView: View {
     @ObservedObject var controller: UNSWizardController
     @Dependency(\.analytics) var analytics
     @Dependency(\.unsAPI) var api
+    @Dependency(\.crashReporting) var crashReporting
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 ScrollView {
-                    UNSStepImage { Image.unsOtp.offset(x: 7, y: 5) }
+                    UNSStepImage { Image.unsVerificationCode.offset(x: 7, y: 5) }
                         .padding(40)
                         .padding(.top, 50)
                     
@@ -71,9 +72,12 @@ struct UNSErrorView: View {
                 switch controller.state {
                 case .error(let error):
                     Log.optional(error, "UNSWizard encountered an error.")
+                    crashReporting.report(error?.localizedDescription ?? "UNS Wizard encountered an unknown error")
                     analytics.encounteredUNSError(error)
                 default:
-                    Log.error("UNSWizard encountered an error.")
+                    let errorMessage = "UNSWizard presented UNSErrorView without state == .error"
+                    Log.error(errorMessage)
+                    crashReporting.report(errorMessage)
                 }
             }
         } 
