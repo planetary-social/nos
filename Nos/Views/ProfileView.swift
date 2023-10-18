@@ -22,6 +22,7 @@ struct ProfileView: View {
     
     @State private var showingOptions = false
     @State private var showingReportMenu = false
+    @State private var walletConnectIsPresented = false
     
     @State private var subscriptionIds: [String] = []
 
@@ -95,6 +96,9 @@ struct ProfileView: View {
             }
             .background(Color.appBg)
         }
+        .sheet(isPresented: $walletConnectIsPresented) { 
+            WalletConnectPairingView()
+        }
         .nosNavigationBar(title: .profileTitle)
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
@@ -117,7 +121,15 @@ struct ProfileView: View {
         }
         .navigationBarItems(
             trailing:
-                Group {
+                HStack {
+                    Button(
+                        action: {
+                            walletConnectIsPresented = true
+                        },
+                        label: {
+                            Text("USBC")
+                        }
+                    )
                     Button(
                         action: {
                             showingOptions = true

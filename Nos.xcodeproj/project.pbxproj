@@ -348,6 +348,7 @@
 		C9F204802AE029D90029A858 /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047F2AE029D90029A858 /* AppDestination.swift */; };
 		C9F204812AE02D8C0029A858 /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047F2AE029D90029A858 /* AppDestination.swift */; };
 		C9F204832AE03A8E0029A858 /* bignumber.js in Resources */ = {isa = PBXBuildFile; fileRef = C9F204822AE03A8D0029A858 /* bignumber.js */; };
+		C9F204862AE067130029A858 /* USBCWizard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204852AE067130029A858 /* USBCWizard.swift */; };
 		C9F64D8C29ED840700563F2B /* LogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8B29ED840700563F2B /* LogHelper.swift */; };
 		C9F64D8D29ED840700563F2B /* LogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8B29ED840700563F2B /* LogHelper.swift */; };
 		C9F64D8F29ED88CD00563F2B /* Localization+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8E29ED88CD00563F2B /* Localization+Nos.swift */; };
@@ -661,6 +662,7 @@
 		C9F2047C2ADEDE600029A858 /* MethodDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MethodDetailView.swift; sourceTree = "<group>"; };
 		C9F2047F2AE029D90029A858 /* AppDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDestination.swift; sourceTree = "<group>"; };
 		C9F204822AE03A8D0029A858 /* bignumber.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = bignumber.js; sourceTree = "<group>"; };
+		C9F204852AE067130029A858 /* USBCWizard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBCWizard.swift; sourceTree = "<group>"; };
 		C9F64D8B29ED840700563F2B /* LogHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogHelper.swift; sourceTree = "<group>"; };
 		C9F64D8E29ED88CD00563F2B /* Localization+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Localization+Nos.swift"; sourceTree = "<group>"; };
 		C9F75AD12A02D41E005BBE45 /* ComposerActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerActionBar.swift; sourceTree = "<group>"; };
@@ -1103,6 +1105,7 @@
 			isa = PBXGroup;
 			children = (
 				C9F2046A2ADEDCB80029A858 /* WalletConnectPairingView.swift */,
+				C9F204852AE067130029A858 /* USBCWizard.swift */,
 				C9F204702ADEDDE20029A858 /* AvailableMethodsListView.swift */,
 				C9F2046F2ADEDDE20029A858 /* AvailableMethodsListViewModel.swift */,
 				C9F204742ADEDDEB0029A858 /* SessionListView.swift */,
@@ -1654,6 +1657,7 @@
 				C9BCF1C12AC72020009BDE06 /* UNSWizardChooseNameView.swift in Sources */,
 				C9A6C7412AD837AD001F9500 /* UNSWizardController.swift in Sources */,
 				C9F204722ADEDDE20029A858 /* AvailableMethodsListView.swift in Sources */,
+				C9F204862AE067130029A858 /* USBCWizard.swift in Sources */,
 				C97465342A3C95FE0031226F /* RelayPickerToolbarButton.swift in Sources */,
 				3F43C47629A9625700E896A0 /* AuthorReference+CoreDataClass.swift in Sources */,
 				C9A6C7492AD86271001F9500 /* UNSNewNameView.swift in Sources */,

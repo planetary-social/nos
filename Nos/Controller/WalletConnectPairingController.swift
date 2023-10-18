@@ -22,6 +22,7 @@ class WalletConnectPairingController: ObservableObject {
     @Published var currencyItems: [CurrencyItem] = []
     
     init() {
+        Task { try? await initiateConnectionToWC() }
         walletConnectManager.onReinitiateConnection = {
             Task {
                 try? await self.initiateConnectionToWC()

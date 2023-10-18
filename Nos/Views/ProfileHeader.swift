@@ -20,7 +20,6 @@ struct ProfileHeader: View {
     
     @State private var nip05Identifier: String = ""
     @State private var verifiedNip05Identifier: Bool?
-    @State private var walletConnectIsPresented = false
     
     var followsRequest: FetchRequest<Follow>
     var followsResult: FetchedResults<Follow> { followsRequest.wrappedValue }
@@ -82,13 +81,6 @@ struct ProfileHeader: View {
                             .lineLimit(1)
                             .font(.clarityTitle3.weight(.semibold))
                             .foregroundColor(Color.primaryTxt)
-                        
-                        Button("Pay") {
-                            walletConnectIsPresented = true
-                        }
-                        .sheet(isPresented: $walletConnectIsPresented) { 
-                            WalletConnectPairingView()
-                        }
                         
                         if !(author.uns ?? "").isEmpty {
                             Button {

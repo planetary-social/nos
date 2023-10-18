@@ -26,7 +26,6 @@ class WalletConnectManager {
     var onSessionInitiated: ((Session) -> Void)?
     var onSessionResponse: ((Response) -> Void)?
     
-    
     static func initialize() -> WalletConnectManager {
         let manager = WalletConnectManager()
         return manager
@@ -51,7 +50,6 @@ class WalletConnectManager {
     func deleteSession(topic: String) async throws {
         return try await Sign.instance.disconnect(topic: topic)
     }
-    
     
     func personalSign(message: String, address: String, blockChain: SupportedChainType) {
         if let topic = initiatedSession?.topic {
