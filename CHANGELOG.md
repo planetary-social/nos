@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Updated search results to show mutual followers and sort by the most followers in common.
 
 - Fixed a bug where profile changes wouldn't be published in some cases
 - Fixed aspect ratio on some profile photos
