@@ -94,15 +94,21 @@
 "Localized.unfollow" = "取消關注";
 "Localized.uns" = "UNS";
 "Localized.nip05" = "NIP-05";
+"Localized.nip05LearnMore" = "瞭解更多關於 NIP-05 名稱驗證的信息。";
+"Localized.learnMore" = "瞭解更多";
 "Localized.readMore" = "查看更多";
 "Localized.thread" = "話題";
 "Localized.show" = "顯示";
 "Localized.bio" = "簡介";
 "Localized.displayName" = "顯示名";
 "Localized.name" = "名稱";
-"Localized.picUrl" = "頭像圖片網址";
+"Localized.profilePicture" = "頭像";
+"Localized.identityVerification" = "身份驗證";
+"Localized.url" = "URL";
 "Localized.noEventsOnProfile" = "我們沒有找到關於這個檔案的任何筆記，但我們會繼續查看！";
+"Localized.uploadProfilePicInstructions" = "前往 nostr.build 上傳你的照片、複製所提供的鏈接並在此貼上。";
 "Localized.basicInfo" = "基本信息";
+"Localized.website" = "網站";
 "Localized.edit" = "編輯";
 "Localized.mention" = "提及";
 "Localized.debug" = "偵錯";
@@ -139,7 +145,10 @@
 "Localized.yourProfile" = "個人檔案";
 "Localized.unsTagline" = "通用名空間（Universal Name Space）提供你可以信任的身份驗證。";
 "Localized.unsDescription" = "通用名空間爲你提供一個你可以在任何地方使用的名稱。註冊你的通用名並將其連接到你的 nostr 檔案。瞭解更多。";
-"Localized.unsLearnMore" = "瞭解更多。";
+"Localized.unsRegister" = "設置你的通用名";
+"Localized.unsRegisterDescription" = "通用名空間（Universal Name Space）為你提供一個你可以在任何地方使用的名稱。\n        \n驗證你的身份並關聯你的社交媒體帳戶
+、政府身分證件、錢包等。";
+"Localized.unsLearnMore" = "瞭解更多關於 UNS 的信息。";
 "Localized.verifyYourIdentity" = "驗證你的身份";
 "Localized.enterCode" = "輸入驗證碼";
 "Localized.nameLower" = "名稱";

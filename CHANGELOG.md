@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Updated search results to show mutual followers and sort by the most followers in common.
 
+- Fixed a bug where profile changes wouldn't be published in some cases
+- Fixed aspect ratio on some profile photos
+- Added 3d effect to note cards
+- Fix a bug where the "Post" button wouldn't be shown when composing a reply on macOS
+- Added a URL scheme to open the note composer: nos://note/new?contents=theContentsOfTheNote
+
 ## [0.1 (81)] - 2023-09-30Z
 
 - Fixed secrets that weren't included in build 79 and 80
