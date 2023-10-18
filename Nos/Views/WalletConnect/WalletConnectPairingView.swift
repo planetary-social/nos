@@ -37,6 +37,10 @@ struct WalletConnectPairingView: View {
                         Text("Open link")
                     })
                     Spacer()
+                    Button(action: { viewModel.payPressed() }, label: {
+                        Text("Pay")
+                    })
+                    Spacer()
                 }
                 Spacer()
                     .frame(height: 20)

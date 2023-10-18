@@ -52,6 +52,11 @@ class WalletConnectPairingController: ObservableObject {
         UIApplication.shared.open(URL(string: "globalid-staging://wc?uri=\(uri)")!)
     }
     
+    func payPressed() {
+        walletConnectManager.sendTransaction(fromAddress: "0xF847D1Ae3DF7b18755cDD277acE94164DF9ac794", toAddress: "0x3d4E120592B3936b1da2Ac888221D4Eb364b5a64", amount: "1", blockChain: .ethereum)
+        UIApplication.shared.open(URL(string: "globalid-staging://")!)
+    }
+    
     private func prepareAddressList(for session: Session) {
         let namespaces = session.namespaces.values
         var currencyItems: [CurrencyItem] = []

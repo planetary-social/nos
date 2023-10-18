@@ -331,8 +331,6 @@
 		C9F0BB7029A50437000547FC /* NostrConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F0BB6E29A50437000547FC /* NostrConstants.swift */; };
 		C9F2045F2ADED8F70029A858 /* WalletConnectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2045E2ADED8F70029A858 /* WalletConnectManager.swift */; };
 		C9F204612ADEDB720029A858 /* Wei.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204602ADEDB720029A858 /* Wei.swift */; };
-		C9F204802AE029D90029A858 /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047F2AE029D90029A858 /* AppDestination.swift */; };
-		C9F204812AE02D8C0029A858 /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047F2AE029D90029A858 /* AppDestination.swift */; };
 		C9F204632ADEDB910029A858 /* Web3Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204622ADEDB910029A858 /* Web3Utils.swift */; };
 		C9F204652ADEDB9B0029A858 /* BigDecimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204642ADEDB9A0029A858 /* BigDecimal.swift */; };
 		C9F204672ADEDBA80029A858 /* String+Extra.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204662ADEDBA80029A858 /* String+Extra.swift */; };
@@ -347,6 +345,9 @@
 		C9F2047A2ADEDE120029A858 /* SupportedMethodsType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204782ADEDE120029A858 /* SupportedMethodsType.swift */; };
 		C9F2047D2ADEDE600029A858 /* MethodDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047B2ADEDE5F0029A858 /* MethodDetailViewModel.swift */; };
 		C9F2047E2ADEDE600029A858 /* MethodDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047C2ADEDE600029A858 /* MethodDetailView.swift */; };
+		C9F204802AE029D90029A858 /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047F2AE029D90029A858 /* AppDestination.swift */; };
+		C9F204812AE02D8C0029A858 /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047F2AE029D90029A858 /* AppDestination.swift */; };
+		C9F204832AE03A8E0029A858 /* bignumber.js in Resources */ = {isa = PBXBuildFile; fileRef = C9F204822AE03A8D0029A858 /* bignumber.js */; };
 		C9F64D8C29ED840700563F2B /* LogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8B29ED840700563F2B /* LogHelper.swift */; };
 		C9F64D8D29ED840700563F2B /* LogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8B29ED840700563F2B /* LogHelper.swift */; };
 		C9F64D8F29ED88CD00563F2B /* Localization+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8E29ED88CD00563F2B /* Localization+Nos.swift */; };
@@ -643,7 +644,6 @@
 		C9F0BB6A29A503D6000547FC /* PublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKey.swift; sourceTree = "<group>"; };
 		C9F0BB6E29A50437000547FC /* NostrConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrConstants.swift; sourceTree = "<group>"; };
 		C9F2045E2ADED8F70029A858 /* WalletConnectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectManager.swift; sourceTree = "<group>"; };
-		C9F2047F2AE029D90029A858 /* AppDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDestination.swift; sourceTree = "<group>"; };
 		C9F204602ADEDB720029A858 /* Wei.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wei.swift; sourceTree = "<group>"; };
 		C9F204622ADEDB910029A858 /* Web3Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Web3Utils.swift; sourceTree = "<group>"; };
 		C9F204642ADEDB9A0029A858 /* BigDecimal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BigDecimal.swift; sourceTree = "<group>"; };
@@ -659,6 +659,8 @@
 		C9F204782ADEDE120029A858 /* SupportedMethodsType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportedMethodsType.swift; sourceTree = "<group>"; };
 		C9F2047B2ADEDE5F0029A858 /* MethodDetailViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MethodDetailViewModel.swift; sourceTree = "<group>"; };
 		C9F2047C2ADEDE600029A858 /* MethodDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MethodDetailView.swift; sourceTree = "<group>"; };
+		C9F2047F2AE029D90029A858 /* AppDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDestination.swift; sourceTree = "<group>"; };
+		C9F204822AE03A8D0029A858 /* bignumber.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = bignumber.js; sourceTree = "<group>"; };
 		C9F64D8B29ED840700563F2B /* LogHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogHelper.swift; sourceTree = "<group>"; };
 		C9F64D8E29ED88CD00563F2B /* Localization+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Localization+Nos.swift"; sourceTree = "<group>"; };
 		C9F75AD12A02D41E005BBE45 /* ComposerActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerActionBar.swift; sourceTree = "<group>"; };
@@ -966,9 +968,6 @@
 		C9DEC001298944FC0078B43A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				C95D68AA299E710F00429F86 /* Color+Hex.swift */,
-				3FFB1D9529A6BBEC002A755D /* Collection+SafeSubscript.swift */,
-				C9DEC002298945150078B43A /* String+Lorem.swift */,
 				C9DEC0622989541F0078B43A /* Bundle+Current.swift */,
 				3FFB1D9529A6BBEC002A755D /* Collection+SafeSubscript.swift */,
 				C95D68AA299E710F00429F86 /* Color+Hex.swift */,
@@ -1112,6 +1111,7 @@
 				C9F204782ADEDE120029A858 /* SupportedMethodsType.swift */,
 				C9F2047C2ADEDE600029A858 /* MethodDetailView.swift */,
 				C9F2047B2ADEDE5F0029A858 /* MethodDetailViewModel.swift */,
+				C9F204822AE03A8D0029A858 /* bignumber.js */,
 			);
 			path = WalletConnect;
 			sourceTree = "<group>";
@@ -1418,6 +1418,7 @@
 				C9D573492AB24B7300E06BB4 /* custom-xcassets.stencil in Resources */,
 				C987F84229BA951E00B44E7A /* ClarityCity-Black.otf in Resources */,
 				C987F84029BA951E00B44E7A /* ClarityCity-SemiBoldItalic.otf in Resources */,
+				C9F204832AE03A8E0029A858 /* bignumber.js in Resources */,
 				C95D68B2299ECE0700429F86 /* CHANGELOG.md in Resources */,
 				C987F85429BA951E00B44E7A /* ClarityCity-Thin.otf in Resources */,
 				C987F84429BA951E00B44E7A /* ClarityCity-ExtraBoldItalic.otf in Resources */,
