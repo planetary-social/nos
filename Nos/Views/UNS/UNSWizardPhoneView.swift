@@ -22,7 +22,7 @@ struct UNSWizardPhoneView: View {
     @FocusState private var focusedField: FocusedField?
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
                 VStack {
                     UNSStepImage { Image.unsPhone.offset(x: 7, y: 5) }
@@ -77,8 +77,8 @@ struct UNSWizardPhoneView: View {
         
         do {
             controller.state = .loading
-            try await api.requestOTPCode(phoneNumber: number)
-            controller.state = .enterOTP
+            try await api.requestVerificationCode(phoneNumber: number)
+            controller.state = .verificationCode
         } catch {
             controller.state = .error(error)
         } 
@@ -88,7 +88,10 @@ struct UNSWizardPhoneView: View {
 struct UNSWizardPhone_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
-    @State static var controller = UNSWizardController(state: .intro, authorKey: previewData.alice.hexadecimalPublicKey!)
+    @State static var controller = UNSWizardController(
+        state: .intro, 
+        authorKey: previewData.alice.hexadecimalPublicKey!
+    )
     
     static var previews: some View {
         UNSWizardPhoneView(controller: controller)

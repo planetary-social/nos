@@ -17,7 +17,7 @@ struct UNSNewNameView: View {
     @State var name: UNSName = ""
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
                 VStack {
                     UNSStepImage { Image.unsName.offset(x: 7, y: 5) }
@@ -56,11 +56,6 @@ struct UNSNewNameView: View {
     }
     
     func submit() async {
-        guard let authorKey = controller.authorKey else {
-            controller.state = .error(nil)
-            return
-        }
-        
         do {
             try await controller.register(desiredName: name)
         } catch {

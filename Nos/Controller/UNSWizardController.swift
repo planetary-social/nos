@@ -27,7 +27,7 @@ class UNSWizardController: ObservableObject {
         case loading
         case intro
         case enterPhone
-        case enterOTP
+        case verificationCode
         case newName
         case chooseName
         case success

@@ -10,45 +10,6 @@ import Combine
 import CoreData
 import Logger
 
-/// An enumeration of the destinations for AppView.
-enum AppDestination: String, Hashable, Equatable {
-    case home
-    case discover
-    case notifications
-    case newNote
-    case profile
-    
-    var label: some View {
-        switch self {
-        case .home:
-            return Text(Localized.homeFeed.string)
-        case .discover:
-            return Localized.discover.view
-        case .notifications:
-            return Localized.notifications.view
-        case .newNote:
-            return Localized.newNote.view
-        case .profile:
-            return Localized.profileTitle.view
-        }
-    }
-    
-    var destinationString: String {
-        switch self {
-        case .home:
-            return Localized.homeFeed.string
-        case .discover:
-            return Localized.discover.string
-        case .notifications:
-            return Localized.notifications.string
-        case .newNote:
-            return Localized.newNote.string
-        case .profile:
-            return Localized.profileTitle.string
-        }
-    }
-}
-
 // Manages the app's navigation state.
 @MainActor class Router: ObservableObject {
     
