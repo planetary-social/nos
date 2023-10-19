@@ -195,7 +195,7 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc func lookupReportsByAuthor() -> NSFetchRequest<Event> {
+    @nonobjc func authoredReportsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(

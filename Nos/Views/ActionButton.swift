@@ -93,7 +93,7 @@ struct ActionButtonStyle: ButtonStyle {
             }
             .cornerRadius(cornerRadius)
             .overlay(RoundedRectangle(cornerRadius: cornerRadius)
-                        .stroke(borderColor, lineWidth: 2))
+                .stroke(borderColor, lineWidth: 2))
 
             // Text container
             configuration.label
