@@ -319,7 +319,7 @@ extension RelayService {
                     let relay = self.relay(from: socket, in: self.backgroundContext) {
                     
                     if success {
-                        print("\(eventId) has published successfully to \(socketUrl)")
+                        //print("\(eventId) has published successfully to \(socketUrl)")
                         event.publishedTo.insert(relay)
                         
                         // Receiving a confirmation of my own deletion event
@@ -510,13 +510,13 @@ extension RelayService {
             for event in userSentEvents {
                 let missedRelays = event.shouldBePublishedTo.subtracting(event.publishedTo)
                 
-                print("\(missedRelays.count) relays missing a published event.")
+                //print("\(missedRelays.count) relays missing a published event.")
                 for missedRelay in missedRelays {
                     guard let missedAddress = missedRelay.address, let jsonEvent = event.codable else { continue }
                     Task {
                         if let socket = await self.subscriptions.socket(for: missedAddress) {
                             // Publish again to this socket
-                            print("Republishing \(jsonEvent.id) on \(missedAddress)")
+                            //print("Republishing \(jsonEvent.id) on \(missedAddress)")
                             do {
                                 try await self.publish(from: socket, jsonEvent: jsonEvent)
                             } catch {

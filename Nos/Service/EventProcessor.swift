@@ -62,7 +62,7 @@ enum EventProcessor {
             return event
         }
         
-        Log.debug("EventProcessor: skipping a duplicate event")
+        //Log.debug("EventProcessor: skipping a duplicate event")
         return nil
     }
     

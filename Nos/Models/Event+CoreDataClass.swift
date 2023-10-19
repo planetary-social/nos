@@ -640,6 +640,7 @@ public class Event: NosManagedObject {
                 // TODO: validdate that the tag looks like an event ref
                 do {
                     let eTag = try EventReference(jsonTag: jsonTag, context: context)
+                    handleEmptyeTagMarker(eTag: eTag)
                     newEventReferences.add(eTag)
                 } catch {
                     print("error parsing e tag: \(error.localizedDescription)")
@@ -652,6 +653,7 @@ public class Event: NosManagedObject {
                 newAuthorReferences.add(authorReference)
             }
         }
+        extractEventReferencesFromContent(from: jsonEvent, newEventReferences: newEventReferences, context: context)
         eventReferences = newEventReferences
         authorReferences = newAuthorReferences
     }
@@ -683,7 +685,40 @@ public class Event: NosManagedObject {
             }
         }
     }
+    
+    
+    func extractEventReferencesFromContent(from: JSONEvent, newEventReferences: NSMutableOrderedSet, context: NSManagedObjectContext) {
+        let content = from.content ?? ""
+        let regexPattern = "(note1|nevent1)(\\w*)"
+      
+        do {
+            let regex = try NSRegularExpression(pattern: regexPattern, options: [])
+            let matches = regex.matches(in: content, options: [], range: NSRange(location: 0, length: content.utf16.count))
 
+            for match in matches {
+                let range = match.range(at: 2)
+                if let swiftRange = Range(range, in: content) {
+                    let matchedString = String(content[swiftRange])
+
+                    // let mystring = matchedString
+                    // let mydata = Data(mystring.utf8)
+                    // let myHexString: HexadecimalString = mydata.hexString
+
+                    let newEventReference = try EventReference(eventId: matchedString, marker: EventReferenceMarker.mention.rawValue, context: context)
+                    //newEventReference.eventId = matchedString
+                    //newEventReference.marker = EventReferenceMarker.mention.rawValue
+                    
+                    //newEventReference.referencedEvent = try Event.find(by: myHexString, context: context)
+
+                    //newEventReference.referencedEvent = try Event.findOrCreateStubBy(id: matchedString, context: context)
+                    newEventReferences.add(newEventReference)
+                }
+            }
+        } catch {
+            print("Invalid regex: \(error.localizedDescription)")
+        }
+    }
+   
     func markSeen(on relay: Relay) {
         seenOnRelays.insert(relay) 
     }
@@ -726,6 +761,14 @@ public class Event: NosManagedObject {
             allTags,
             content
         ]
+    }
+    
+    func handleEmptyeTagMarker(eTag: EventReference) {
+        // Check if marker is nil
+        if eTag.marker == nil {
+            // Set marker to mention
+            eTag.marker = EventReferenceMarker.mention.rawValue
+        }
     }
     
     /// Returns true if this event doesn't have content. Usually this means we saw it referenced by another event
@@ -841,6 +884,9 @@ public class Event: NosManagedObject {
             }
             try? context.saveIfNeeded()
             let tags = note.allTags as? [[String]] ?? []
+            if !tags.isEmpty {
+                print(tags)
+            }
             return NoteParser.parse(content: content, tags: tags, context: context)
         }
     }
@@ -926,6 +972,30 @@ public class Event: NosManagedObject {
         }
         return nil
     }
+    
+    func getMentionedEvents(event: Event) -> NSOrderedSet {
+        let mentionedEventReferences = event.eventReferences.filter {
+            ($0 as? EventReference)?.marker == EventReferenceMarker.mention.rawValue
+        }
+        let mentionedEvents = mentionedEventReferences.compactMap { ($0 as? EventReference)?.referencedEvent }
+        return NSOrderedSet(array: mentionedEvents)
+    }
+
+    func getRepliedEventReferences(event: Event) -> [EventReference] {
+        let repliedEventReferences = event.eventReferences.filter {
+            ($0 as? EventReference)?.marker == EventReferenceMarker.reply.rawValue
+        }
+        return repliedEventReferences as? [EventReference] ?? []
+    }
+
+    func getRootEventReferences(event: Event) -> [EventReference] {
+        let rootEventReferences = event.eventReferences.filter {
+            ($0 as? EventReference)?.marker == EventReferenceMarker.root.rawValue
+        }
+        return rootEventReferences as? [EventReference] ?? []
+    }
+    
+
     
     /// Returns the root event of the thread that this note is replying to, or nil if there isn't one.
     func rootNote() -> Event? {

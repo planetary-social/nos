@@ -9,6 +9,7 @@
 import SwiftUI
 import Logger
 import Dependencies
+import Combine
 
 /// A view that displays the text of a note (kind: 1 Nostr event) and truncates it with a "Read more" button if
 /// it is too long
@@ -61,10 +62,28 @@ struct CompactNoteView: View {
         }
     }
     
+    var mentionedEvents: some View {
+        Group {
+            if let events = note.getMentionedEvents(event: note) as? [Event] {
+                ForEach(events, id: \.self) { event in
+                    NoteButton(note: event, hideOutOfNetwork: false) { tappedEvent in
+                        print("event")
+                        router.push(tappedEvent)
+                    }
+                    .onReceive(Just(event)) {
+                        print("PRINGINTIN EVENTS FUCKI FUKI FUCK");
+                        print($0) }  // Add this line
+                    Text("Just hanging out")
+                }
+            }
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             if showFullMessage {
                 formattedText
+                mentionedEvents
             } else {
                 formattedText
                     .lineLimit(12)
