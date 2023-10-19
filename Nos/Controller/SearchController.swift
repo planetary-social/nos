@@ -52,6 +52,7 @@ class SearchController: ObservableObject {
                 return query
             }
             .map { self.authors(named: $0) }
+            .map { $0.sorted(by: { $0.followers.count > $1.followers.count }) }
             .sink(receiveValue: { self.authorSuggestions = $0 })
             .store(in: &cancellables)
     }
