@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue where the app could become slow after searching for a user.
+
 ## [0.1 (83)] - 2023-10-16Z
 
 - Fixed crash on launch

@@ -46,7 +46,7 @@ class SearchController: ObservableObject {
                     if let searchSubscriptionID = self.searchSubscriptionID {
                         await self.relayService.decrementSubscriptionCount(for: searchSubscriptionID)
                     }
-                    let searchFilter = Filter(kinds: [.metaData], search: query)
+                    let searchFilter = Filter(kinds: [.metaData], search: query, limit: 100)
                     self.searchSubscriptionID = await self.relayService.openSubscription(with: searchFilter)
                 }
                 return query
