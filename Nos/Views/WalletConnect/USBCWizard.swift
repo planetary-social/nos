@@ -12,7 +12,30 @@ enum USBCWizardStep {
 }
 
 class USBCWizardController: ObservableObject {
-    @Published var step = USBCWizardStep.pair
+    @Published var step = USBCWizardStep.loading
+    
+    private let walletConnectManager = WalletConnectManager.shared
+    
+    init() {
+        walletConnectManager.onSessionInitiated = { [weak self] _ in 
+            Task { @MainActor [weak self] in
+                self?.updateStep()
+            }
+        }
+        
+        Task {
+            try! await walletConnectManager.initiateConnectionRequest()
+            await updateStep()
+        }
+    }
+    
+    @MainActor func updateStep() {
+        if walletConnectManager.getAllSessions().isEmpty == false {
+            step = .amount
+        } else {
+            step = .pair
+        }
+    }
 }
 
 struct USBCWizard: View {
@@ -39,10 +62,16 @@ struct USBCWizard: View {
             // Content
             VStack {
                 switch controller.step {
+                case .loading:
+                    Text("Loading")
                 case .pair:
                     WalletConnectPairingView()
-                default:
-                    Text("not implemented")
+                case .amount:
+                    Text("Enter amount")
+                case .error:
+                    Text("Error")
+                case .success:
+                    Text("Success")
                 }
             }
             .padding(.top, borderWidth)

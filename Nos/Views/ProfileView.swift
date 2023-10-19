@@ -97,7 +97,7 @@ struct ProfileView: View {
             .background(Color.appBg)
         }
         .sheet(isPresented: $walletConnectIsPresented) { 
-            WalletConnectPairingView()
+            USBCWizard()
         }
         .nosNavigationBar(title: .profileTitle)
         .navigationDestination(for: Event.self) { note in
