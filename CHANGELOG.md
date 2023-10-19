@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Updated search results to show mutual followers and sort by the most followers in common.
 
+- Fix a bug where the mute list could be overwritten when muting someone
 - Fixed a bug where profile changes wouldn't be published in some cases
 - Fixed aspect ratio on some profile photos
 - Added 3d effect to note cards
