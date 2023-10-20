@@ -116,7 +116,7 @@ struct NoteButton: View {
                     ThreadRootView(root: root, tapAction: { root in router.push(root) })
                     .padding(.top, displayRootMessage ? -50 : 0)
                 }
-                let noteCard = NoteCard(
+                NoteCard(
                     note: displayedNote,
                     style: style,
                     showFullMessage: showFullMessage,

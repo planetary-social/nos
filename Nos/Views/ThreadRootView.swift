@@ -32,7 +32,8 @@ struct ThreadRootView: View {
                 .init(color: Color.clear, location: 0),
                 .init(color: Color.clear, location: 0.5), // Add more clear stops
                 .init(color: Color.appBg, location: 1)
-            ]), startPoint: .center, endPoint: .bottom)
+            ]), startPoint: .center,
+                endPoint: .bottom)
         )
         
         .onTapGesture {
