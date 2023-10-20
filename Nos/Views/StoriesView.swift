@@ -18,6 +18,9 @@ struct StoriesView: View {
     /// Used to highlight it when the view appears and to close the view (by setting it to null)
     @Binding private var selectedAuthorInStories: Author?
 
+    /// Used to avoid re-selecting the tapped author in the Home Feed when navigating back to the Stories
+    @State private var previousSelectedAuthorInStories: Author?
+
     /// Author currently highlighted
     @State private var selectedAuthor: Author
 
@@ -53,11 +56,15 @@ struct StoriesView: View {
         .nosNavigationBar(title: .stories)
         .readabilityPadding()
         .task(id: selectedAuthorInStories) {
+            guard previousSelectedAuthorInStories != selectedAuthorInStories else {
+                return
+            }
             if let selectedAuthorInStories {
                 selectedAuthor = selectedAuthorInStories
             } else if let firstAuthor = authors.first {
                 selectedAuthor = firstAuthor
             }
+            previousSelectedAuthorInStories = selectedAuthorInStories
         }
     }
     
