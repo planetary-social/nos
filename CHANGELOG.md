@@ -8,8 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add Stories view to the Home Feed
+- Fixed an issue where the app could become slow after searching for a user.
 - Updated search results to show mutual followers and sort by the most followers in common.
 - Change links to notes so that they don't display the long note id and instead it's a pretty link. 
+- Redesigned the Universal Names registration flow
 
 ## [0.1 (83)] - 2023-10-16Z
 
@@ -23,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix a bug where the mute list could be overwritten when muting someone
 - Fixed aspect ratio on some profile photos
 - Added 3d effect to note cards
+- Added a URL scheme to open the note composer: nos://note/new?contents=theContentsOfTheNote
 
 ## [0.1 (81)] - 2023-09-30Z
 

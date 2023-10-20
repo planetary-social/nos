@@ -154,7 +154,7 @@ struct HighlightedText: View {
                     let linkMarkdown = "[\(string)](\(link.absoluteURL))"
                     view = textView(markdown: linkMarkdown)
                 } else {
-                    view = textView(markdown: string)
+                    view = textView(markdown: string).foregroundColor(.clear)
                 }
                 return view
             },

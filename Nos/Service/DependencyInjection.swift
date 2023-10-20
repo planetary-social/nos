@@ -51,6 +51,11 @@ extension DependencyValues {
         get { self[CrashReportingKey.self] }
         set { self[CrashReportingKey.self] = newValue }
     }
+    
+    var unsAPI: UNSAPI {
+        get { self[UNSAPIKey.self] }
+        set { self[UNSAPIKey.self] = newValue }
+    }
 }
 
 fileprivate enum AnalyticsKey: DependencyKey {
@@ -101,4 +106,8 @@ fileprivate enum CrashReportingKey: DependencyKey {
     static let liveValue = CrashReporting()
     static let testValue = CrashReporting(mock: true)
     static let previewValue = CrashReporting(mock: true)
+}
+
+fileprivate enum UNSAPIKey: DependencyKey {
+    static let liveValue = UNSAPI()!
 }
