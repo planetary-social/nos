@@ -9,6 +9,9 @@ import SwiftUI
 import CoreData
 import Dependencies
 import SwiftUINavigation
+import Logger
+
+typealias USBCAddress = String
 
 struct ProfileView: View {
     
@@ -19,10 +22,12 @@ struct ProfileView: View {
     @EnvironmentObject private var currentUser: CurrentUser
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.unsAPI) private var unsAPI
     
     @State private var showingOptions = false
     @State private var showingReportMenu = false
-    @State private var walletConnectIsPresented = false
+    @State private var usbcAddress: USBCAddress?
+    @State private var usbcBalance: Double?
     
     @State private var subscriptionIds: [String] = []
 
@@ -43,8 +48,13 @@ struct ProfileView: View {
         }
     }
     
+    var isShowingLoggedInUser: Bool {
+        author.hexadecimalPublicKey == currentUser.publicKeyHex
+    }
+    
     init(author: Author) {
         self.author = author
+        print(author)
         _events = FetchRequest(fetchRequest: author.allPostsRequest())
     }
     
@@ -72,6 +82,21 @@ struct ProfileView: View {
         )
     }
     
+    func loadUSBCBalance() async {
+        guard let unsName = author.uns else {
+            return
+        }
+        do {
+            usbcAddress = try await unsAPI.usbcAddress(for: unsName)
+            print("isshowingloggedinuser \(isShowingLoggedInUser)")
+            if isShowingLoggedInUser {
+                usbcBalance = try await unsAPI.usbcBalance(for: unsName)
+            }
+        } catch {
+            Log.optional(error)
+        }
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             ScrollView(.vertical, showsIndicators: false) {
@@ -96,9 +121,6 @@ struct ProfileView: View {
             }
             .background(Color.appBg)
         }
-        .sheet(isPresented: $walletConnectIsPresented) { 
-            USBCWizard()
-        }
         .nosNavigationBar(title: .profileTitle)
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
@@ -122,14 +144,9 @@ struct ProfileView: View {
         .navigationBarItems(
             trailing:
                 HStack {
-                    Button(
-                        action: {
-                            walletConnectIsPresented = true
-                        },
-                        label: {
-                            Text("USBC")
-                        }
-                    )
+                    if usbcAddress != nil && (!isShowingLoggedInUser || usbcBalance != nil) {
+                        USBCBarButtonItem(address: $usbcAddress, balance: $usbcBalance)
+                    }
                     Button(
                         action: {
                             showingOptions = true
@@ -140,64 +157,62 @@ struct ProfileView: View {
                     )
                     .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
                         Button(Localized.copyUserIdentifier.string) {
-                            UIPasteboard.general.string = router.viewedAuthor?.publicKey?.npub ?? ""
+                            UIPasteboard.general.string = author.publicKey?.npub ?? ""
                         }
                         Button(Localized.copyLink.string) {
-                            UIPasteboard.general.string = router.viewedAuthor?.webLink ?? ""
+                            UIPasteboard.general.string = author.webLink 
                         }
-                        if let author = router.viewedAuthor {
-                            if author == currentUser.author {
-                                Button(
-                                    action: {
-                                        currentUser.editing = true
-                                        router.push(author)
-                                    },
-                                    label: {
-                                        Text(Localized.editProfile.string)
+                        if isShowingLoggedInUser {
+                            Button(
+                                action: {
+                                    currentUser.editing = true
+                                    router.push(author)
+                                },
+                                label: {
+                                    Text(Localized.editProfile.string)
+                                }
+                            )
+                            Button(
+                                action: {
+                                    router.push(MutesDestination())
+                                },
+                                label: {
+                                    Text(Localized.mutedUsers.string)
+                                }
+                            )
+                        } else {
+                            if author.muted {
+                                Button(Localized.unmuteUser.string) {
+                                    Task {
+                                        do {
+                                            try await author.unmute(viewContext: viewContext)
+                                        } catch {
+                                            alert = AlertState(title: {
+                                                TextState(Localized.error.string)
+                                            }, message: {
+                                                TextState(error.localizedDescription)
+                                            })
+                                        }
                                     }
-                                )
-                                Button(
-                                    action: {
-                                        router.push(MutesDestination())
-                                    },
-                                    label: {
-                                        Text(Localized.mutedUsers.string)
-                                    }
-                                )
+                                }
                             } else {
-                                if author.muted {
-                                    Button(Localized.unmuteUser.string) {
-                                        Task {
-                                            do {
-                                                try await router.viewedAuthor?.unmute(viewContext: viewContext)
-                                            } catch {
-                                                alert = AlertState(title: {
-                                                    TextState(Localized.error.string)
-                                                }, message: {
-                                                    TextState(error.localizedDescription)
-                                                })
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    Button(Localized.mute.string) {
-                                        Task { @MainActor in
-                                            do {
-                                                try await router.viewedAuthor?.mute(viewContext: viewContext)
-                                            } catch {
-                                                alert = AlertState(title: {
-                                                    TextState(Localized.error.string)
-                                                }, message: {
-                                                    TextState(error.localizedDescription)
-                                                })
-                                            }
+                                Button(Localized.mute.string) {
+                                    Task { @MainActor in
+                                        do {
+                                            try await author.mute(viewContext: viewContext)
+                                        } catch {
+                                            alert = AlertState(title: {
+                                                TextState(Localized.error.string)
+                                            }, message: {
+                                                TextState(error.localizedDescription)
+                                            })
                                         }
                                     }
                                 }
-                                
-                                Button(Localized.reportUser.string, role: .destructive) {
-                                    showingReportMenu = true
-                                }
+                            }
+                            
+                            Button(Localized.reportUser.string, role: .destructive) {
+                                showingReportMenu = true
                             }
                         }
                     }
@@ -206,11 +221,15 @@ struct ProfileView: View {
         .reportMenu($showingReportMenu, reportedObject: .author(author))
         .task {
             await refreshProfileFeed()
+        }
+        .task {
             await computeUnmutedEvents()
+        }
+        .task {
+            await loadUSBCBalance()
         }
         .alert(unwrapping: $alert)
         .onAppear {
-            router.viewedAuthor = author
             analytics.showedProfile()
         }
         .refreshable {
@@ -236,37 +255,43 @@ struct ProfileView: View {
     }
 }
 
-struct IdentityView_Previews: PreviewProvider {
+#Preview("Generic user") {
+    var previewData = PreviewData()
     
-    static var previewData = PreviewData()
-    static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
-    
-    static var author: Author = {
-        let author: Author
-        do {
-            author = try Author.findOrCreate(
-                by: "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e",
-                context: previewContext
-            )
-        } catch {
-            print(error)
-            author = Author(context: previewContext)
-        }
-        // TODO: derive from private key
-        author.name = "Fred"
-        author.about = "Reach for the stars. Someday you just might catch one."
-        try? previewContext.save()
-        return author
-    }()
-    
-    static var previews: some View {
-        NavigationStack {
-            ProfileView(author: previewData.previewAuthor)
-        }
-        .environment(\.managedObjectContext, previewData.previewContext)
-        .environmentObject(previewData.relayService)
-        .environmentObject(previewData.router)
-        .environmentObject(previewData.currentUser)
+    return NavigationStack {
+        ProfileView(author: previewData.previewAuthor)
     }
+    .inject(previewData: previewData)
+}
+
+#Preview("UNS") {
+    var previewData = PreviewData()
+    
+    return NavigationStack {
+        ProfileView(author: previewData.eve)
+    }
+    .inject(previewData: previewData)
+}
+
+#Preview("Logged in User") {
+    
+    @Dependency(\.persistenceController) var persistenceController 
+    
+    lazy var previewContext: NSManagedObjectContext = {
+        persistenceController.container.viewContext  
+    }()
+
+    lazy var currentUser: CurrentUser = {
+        let currentUser = CurrentUser()
+        currentUser.viewContext = previewContext
+        Task { await currentUser.setKeyPair(KeyFixture.eve) }
+        return currentUser
+    }() 
+    
+    var previewData = PreviewData(currentUser: currentUser)
+    
+    return NavigationStack {
+        ProfileView(author: previewData.eve)
+    }
+    .inject(previewData: previewData)
 }

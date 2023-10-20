@@ -297,10 +297,11 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     }
     
     @MainActor func publishMetaData() async {
-        guard let pubKey = publicKeyHex, let author else {
-            Log.debug("Error: no pubKey")
+        guard let pubKey = publicKeyHex, let author = try? Author.find(by: pubKey, context: viewContext) else {
+            Log.debug("Error: no user")
             return
         }
+        self.author = author
         
         var metaEvent = MetadataEventJSON(
             displayName: author.displayName,

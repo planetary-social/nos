@@ -10,7 +10,7 @@ import Foundation
 import Dependencies
 import CoreData
 
-// swiftlint:disable line_length
+// swiftlint:disable line_length force_try
 
 /// A set of test data and an environment that can be used to display Core Data objects in SwiftUI Previews. This 
 /// includes an in-memory persistent store and mocked versions of other singletons like `Router` and `RelayService`.
@@ -44,8 +44,7 @@ struct PreviewData {
     }()
     
     lazy var alice: Author = {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
+        let author = try! Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: previewContext)
         author.name = "Alice"
         author.nip05 = "alice@nos.social"
         author.profilePhotoURL = URL(string: "https://github.com/planetary-social/nos/assets/1165004/07f83f00-4555-4db3-85fc-f1a05b1908a2")
@@ -68,8 +67,14 @@ struct PreviewData {
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.eve.publicKeyHex
         author.name = "Eve"
+        author.uns = "eve"
+        author.nip05 = "eve@nos.social"
         
         return author
+    }()
+    
+    lazy var unsAuthor: Author = {
+        return eve
     }()
     
     // MARK: - Notes
@@ -244,4 +249,4 @@ extension View {
     }
 }
 
-// swiftlint:enable line_length
+// swiftlint:enable line_length force_try

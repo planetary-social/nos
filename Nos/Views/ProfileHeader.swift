@@ -200,15 +200,23 @@ struct ProfileHeader: View {
     }
 }
 
-struct IdentityHeaderView_Previews: PreviewProvider {
-
-    static var previewData = PreviewData()
-    static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
-    static var relayService = previewData.relayService
-    static var currentUser = previewData.currentUser
+#Preview {
+    var previewData = PreviewData()
     
-    static var author: Author {
+    return Group {
+        // ProfileHeader(author: author)
+        ProfileHeader(author: previewData.previewAuthor)
+            .inject(previewData: previewData)
+            .padding()
+            .background(Color.cardBackground)
+    }
+}
+
+#Preview {
+    var previewData = PreviewData()
+
+    var author: Author {
+        let previewContext = previewData.previewContext
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.pubKeyHex
         author.add(relay: Relay(context: previewContext))
@@ -236,15 +244,11 @@ struct IdentityHeaderView_Previews: PreviewProvider {
         return author
     }
     
-    static var previews: some View {
-        Group {
-            // ProfileHeader(author: author)
-            ProfileHeader(author: author).preferredColorScheme(.light)
-        }
-        .environmentObject(relayService)
-        .environmentObject(currentUser)
-        .previewDevice("iPhone SE (2nd generation)")
-        .padding()
-        .background(Color.cardBackground)
+    return Group {
+        ProfileHeader(author: author)
     }
+    .inject(previewData: previewData)
+    .previewDevice("iPhone SE (2nd generation)")
+    .padding()
+    .background(Color.cardBackground)
 }
