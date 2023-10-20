@@ -100,7 +100,7 @@ struct NoteButton: View {
                 })
             }
             
-            Button {
+            let button = Button {
                 if let tapAction {
                     tapAction(displayedNote)
                 } else {
@@ -124,17 +124,17 @@ struct NoteButton: View {
                     showReplyCount: showReplyCount,
                     replyAction: replyAction
                 )
-                
-                switch style {
-                case .compact:
-                    noteCard
-                        .padding(.horizontal)
-                        .readabilityPadding()
-                case .golden:
-                    noteCard
-                }
             }
-            .buttonStyle(CardButtonStyle())
+            .buttonStyle(CardButtonStyle(style: style))
+            
+            switch style {
+            case .compact:
+                button
+                    .padding(.horizontal)
+                    .readabilityPadding()
+            case .golden:
+                button
+            }
         }
     }
 }
