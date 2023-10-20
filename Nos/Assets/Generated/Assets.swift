@@ -81,6 +81,8 @@ extension Color {
        static let relationshipViewBg = Color("relationship-view-bg", bundle: Bundle.current)
        static let secondaryText = Color("secondaryText", bundle: Bundle.current)
        static let selectedtabBg = Color("selectedtab-bg", bundle: Bundle.current)
+       static let storiesBgBottom = Color("stories-bg-bottom", bundle: Bundle.current)
+       static let storiesBgTop = Color("stories-bg-top", bundle: Bundle.current)
        static let tabBgBottom = Color("tab-bg-bottom", bundle: Bundle.current)
        static let tabBgTop = Color("tab-bg-top", bundle: Bundle.current)
        static let tabBorderBottom = Color("tab-border-bottom", bundle: Bundle.current)
@@ -164,6 +166,8 @@ extension UIColor {
        static let relationshipViewBg = UIColor(named: "relationship-view-bg", in: Bundle.current, compatibleWith: nil)!
        static let secondaryText = UIColor(named: "secondaryText", in: Bundle.current, compatibleWith: nil)!
        static let selectedtabBg = UIColor(named: "selectedtab-bg", in: Bundle.current, compatibleWith: nil)!
+       static let storiesBgBottom = UIColor(named: "stories-bg-bottom", in: Bundle.current, compatibleWith: nil)!
+       static let storiesBgTop = UIColor(named: "stories-bg-top", in: Bundle.current, compatibleWith: nil)!
        static let tabBgBottom = UIColor(named: "tab-bg-bottom", in: Bundle.current, compatibleWith: nil)!
        static let tabBgTop = UIColor(named: "tab-bg-top", in: Bundle.current, compatibleWith: nil)!
        static let tabBorderBottom = UIColor(named: "tab-border-bottom", in: Bundle.current, compatibleWith: nil)!

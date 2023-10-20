@@ -19,11 +19,13 @@ struct AuthorStoryView: View {
 
     @State private var selectedNote: Event?
 
-    @State private var offset: Int = 0
-
     @Binding private var cutoffDate: Date
 
+    @State private var subscriptionIDs = [String]()
+
     @EnvironmentObject private var router: Router
+    @EnvironmentObject private var relayService: RelayService
+
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.persistenceController) private var persistenceController
     
@@ -40,7 +42,11 @@ struct AuthorStoryView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 Group {
                     if let selectedNote {
-                        StoryNoteView(note: selectedNote, minHeight: geometry.size.height)
+                        Button {
+                            router.push(selectedNote)
+                        } label: {
+                            StoryNoteView(note: selectedNote, minHeight: geometry.size.height)
+                        }
                     } else {
                         EmptyView()
                     }
@@ -122,7 +128,10 @@ struct AuthorStoryView: View {
             .padding(.bottom, 10)
             .background {
                 LinearGradient(
-                    colors: [Color.appBg.opacity(1), Color.appBg.opacity(0)],
+                    stops: [
+                        Gradient.Stop(color: .storiesBgTop.opacity(1), location: 0.25),
+                        Gradient.Stop(color: .storiesBgTop.opacity(0), location: 1),
+                    ],
                     startPoint: .top,
                     endPoint: .bottom
                 )
@@ -144,20 +153,22 @@ struct AuthorStoryView: View {
                 }
             }
         }
-        .task(id: selectedNote) {
-            guard let note = selectedNote else {
-                return
-            }
-            let context = persistenceController.newBackgroundContext()
-            do {
-                try await context.perform {
-                    let replies = try context.fetch(Event.allReplies(to: note))
-                }
-            } catch {
-
-            }
-
+        .task {
+            await subscribeToReplies()
         }
+    }
+
+    func subscribeToReplies() async {
+        // Close out stale requests
+        if !subscriptionIDs.isEmpty {
+            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
+            subscriptionIDs.removeAll()
+        }
+
+        let eTags = notes.compactMap { $0.identifier }
+        let filter = Filter(kinds: [.text, .like, .delete, .repost], eTags: eTags)
+        let subID = await relayService.openSubscription(with: filter)
+        subscriptionIDs.append(subID)
     }
 }
 
@@ -186,9 +197,7 @@ fileprivate struct BottomOverlay: View {
 
             Spacer()
 
-            LikeButton(note: note) {
-                // TODO: await likeNote()
-            }
+            LikeButton(note: note)
 
             // Reply button
             Button(action: {
@@ -204,9 +213,12 @@ fileprivate struct BottomOverlay: View {
         .padding(.bottom, 10)
         .background {
             LinearGradient(
-                colors: [Color.appBg.opacity(1), Color.appBg.opacity(0)],
-                startPoint: .bottom,
-                endPoint: .top
+                stops: [
+                    Gradient.Stop(color: .storiesBgBottom.opacity(0), location: 0),
+                    Gradient.Stop(color: .storiesBgBottom.opacity(1), location: 0.75),
+                ],
+                startPoint: .top,
+                endPoint: .bottom
             )
         }
         .task {

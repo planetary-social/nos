@@ -52,7 +52,7 @@ struct StoriesView: View {
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
         }
-        .background(Color.appBg)
+        .background(LinearGradient.storiesBackground)
         .nosNavigationBar(title: .stories)
         .readabilityPadding()
         .task(id: selectedAuthorInStories) {

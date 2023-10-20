@@ -136,9 +136,7 @@ struct NoteCard: View {
                             await repostNote()
                         }
                         
-                        LikeButton(note: note) {
-                            await likeNote()
-                        }
+                        LikeButton(note: note)
                         
                         // Reply button
                         Button(action: { 
@@ -197,49 +195,6 @@ struct NoteCard: View {
         }
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
-    }
-    
-    func likeNote() async {
-        
-        guard let keyPair = currentUser.keyPair else {
-            return
-        }
-        
-        var tags: [[String]] = []
-        if let eventReferences = note.eventReferences.array as? [EventReference] {
-            // compactMap returns an array of the non-nil results.
-            tags += eventReferences.compactMap { event in
-                guard let eventId = event.eventId else { return nil }
-                return ["e", eventId]
-            }
-        }
-
-        if let authorReferences = note.authorReferences.array as? [EventReference] {
-            tags += authorReferences.compactMap { author in
-                guard let eventId = author.eventId else { return nil }
-                return ["p", eventId]
-            }
-        }
-
-        if let id = note.identifier {
-            tags.append(["e", id] + note.seenOnRelayURLs)
-        }
-        if let pubKey = note.author?.publicKey?.hex {
-            tags.append(["p", pubKey])
-        }
-        
-        let jsonEvent = JSONEvent(
-            pubKey: keyPair.publicKeyHex,
-            kind: .like,
-            tags: tags,
-            content: "+"
-        )
-        
-        do {
-            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
-        } catch {
-            Log.info("Error creating event for like")
-        }
     }
     
     func repostNote() async {

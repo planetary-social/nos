@@ -39,4 +39,10 @@ extension LinearGradient {
         startPoint: .top,
         endPoint: .bottom
     )
+
+    public static let storiesBackground = LinearGradient(
+        colors: [.storiesBgTop, .storiesBgBottom],
+        startPoint: .top,
+        endPoint: .bottom
+    )
 }

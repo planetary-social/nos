@@ -33,6 +33,10 @@ struct HomeFeedView: View {
 
     @State private var selectedStoryAuthor: Author?
     @State private var storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now)!
+
+    private var isShowingStories: Bool {
+        selectedStoryAuthor != nil
+    }
     
     init(user: Author) {
         self.user = user
@@ -113,17 +117,10 @@ struct HomeFeedView: View {
                         authors: authors,
                         selectedAuthor: $selectedStoryAuthor
                     )
-                    .rotation3DEffect(
-                        Angle(degrees: 180),
-                        axis: (x: 0.0, y: 1.0, z: 0.0)
-                    )
+                    .scaleEffect(selectedStoryAuthor == nil ? 0.5 : 1)
                     .opacity(selectedStoryAuthor == nil ? 0 : 1)
                     .animation(.default, value: selectedStoryAuthor)
                 }
-                .rotation3DEffect(
-                    selectedStoryAuthor == nil ? Angle.zero : Angle(degrees: 180),
-                    axis: (x: 0.0, y: 1.0, z: 0.0)
-                )
                 .animation(.default, value: selectedStoryAuthor)
             }
         }
@@ -177,7 +174,7 @@ struct HomeFeedView: View {
                     .padding()
             }
         })
-        .nosNavigationBar(title: .homeFeed)
+        .nosNavigationBar(title: isShowingStories ? Localized.stories :  Localized.homeFeed)
         .refreshable {
             date = .now
         }
