@@ -690,8 +690,6 @@ extension RelayService: WebSocketDelegate {
             case .error(let error):
                 await subscriptions.remove(socket)
                 handleError(error, from: socket)
-            case .peerClosed:
-                break
             }
         }
     }
