@@ -6,15 +6,23 @@
 //
 
 import SwiftUI
+import Combine
+import Dependencies
 
 enum USBCWizardStep {
     case pair, amount, success, error, loading
 }
 
 class USBCWizardController: ObservableObject {
-    @Published var step = USBCWizardStep.loading
+    @Dependency(\.currentUser) private var currentUser
     
-    private let walletConnectManager = WalletConnectManager.shared
+    @Published var step = USBCWizardStep.loading
+    @Published var fromAddress: USBCAddress?
+    @Published var toAddress: USBCAddress?
+    
+    private var cancellables = [AnyCancellable]()
+    
+    let walletConnectManager = WalletConnectManager.shared
     
     init() {
         walletConnectManager.onSessionInitiated = { [weak self] _ in 
@@ -27,10 +35,16 @@ class USBCWizardController: ObservableObject {
             try! await walletConnectManager.initiateConnectionRequest()
             await updateStep()
         }
+        
+        currentUser.$usbcAddress.sink { [weak self] newAddress in
+            self?.fromAddress = newAddress
+        }
+        .store(in: &cancellables)
     }
     
     @MainActor func updateStep() {
-        if walletConnectManager.getAllSessions().isEmpty == false {
+        if let session = walletConnectManager.getAllSessions().last {
+            walletConnectManager.saveInitiatedSessions(sessions: session)
             step = .amount
         } else {
             step = .pair
@@ -45,6 +59,9 @@ struct USBCWizard: View {
     private let borderWidth: CGFloat = 6
     private let cornerRadius: CGFloat = 8
     private let inDrawer = true
+    
+    var toAddress: USBCAddress
+    @State var amount: String = ""
     
     var body: some View {
         ZStack {
@@ -67,7 +84,19 @@ struct USBCWizard: View {
                 case .pair:
                     WalletConnectPairingView()
                 case .amount:
-                    Text("Enter amount")
+                    VStack {
+                        Text("Enter amount")
+                        WizardTextField(text: $amount)
+                        BigActionButton(title: .submit) { 
+                            guard let doubleAmount = Double(amount),
+                                  let fromAddress = controller.fromAddress else {
+                                print("error")
+                                controller.step = .error
+                                return
+                            }
+                            controller.walletConnectManager.sendTransaction(fromAddress: fromAddress, toAddress: toAddress, amount: amount, blockChain: .universalLedger)
+                        }
+                    }
                 case .error:
                     Text("Error")
                 case .success:
@@ -89,6 +118,6 @@ struct USBCWizard: View {
 #Preview {
     VStack {}
         .sheet(isPresented: .constant(true)) {
-            USBCWizard()
+            USBCWizard(toAddress: "0x1234")
         }
 }

@@ -29,6 +29,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.pushNotificationService) private var pushNotificationService
     @Dependency(\.relayService) private var relayService
+    @Dependency(\.unsAPI) private var unsAPI
     
     // TODO: it's time to cache this
     var keyPair: KeyPair? {
@@ -47,6 +48,8 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     var privateKeyHex: String? {
         _privateKeyHex
     }
+    
+    @Published var usbcAddress: USBCAddress? 
 
     @MainActor func setPrivateKeyHex(_ newValue: String?) async {
         guard let privateKeyHex = newValue else {
@@ -144,6 +147,9 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             Task {
                 await subscribe()
                 refreshFriendMetadata()
+                if let unsName = author?.uns {
+                    usbcAddress = try await unsAPI.usbcAddress(for: unsName)
+                }
             }
             
             Task(priority: .background) {

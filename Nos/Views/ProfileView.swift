@@ -54,7 +54,6 @@ struct ProfileView: View {
     
     init(author: Author) {
         self.author = author
-        print(author)
         _events = FetchRequest(fetchRequest: author.allPostsRequest())
     }
     
@@ -91,6 +90,7 @@ struct ProfileView: View {
             print("isshowingloggedinuser \(isShowingLoggedInUser)")
             if isShowingLoggedInUser {
                 usbcBalance = try await unsAPI.usbcBalance(for: unsName)
+                currentUser.usbcAddress = usbcAddress
             }
         } catch {
             Log.optional(error)
@@ -144,8 +144,8 @@ struct ProfileView: View {
         .navigationBarItems(
             trailing:
                 HStack {
-                    if usbcAddress != nil && (!isShowingLoggedInUser || usbcBalance != nil) {
-                        USBCBarButtonItem(address: $usbcAddress, balance: $usbcBalance)
+                    if let usbcAddress, (!isShowingLoggedInUser || usbcBalance != nil) {
+                        USBCBarButtonItem(address: usbcAddress, balance: $usbcBalance)
                     }
                     Button(
                         action: {

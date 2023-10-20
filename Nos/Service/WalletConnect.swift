@@ -53,8 +53,7 @@ struct ETHWalletConnectService: WalletConnectProvidable {
     
     private func prepareEthereumChains() -> [String: ProposalNamespace]  {
         let methods: Set<String> = ["eth_sendTransaction", "personal_sign", "eth_signTypedData", "eth_getBalance",]
-        let blockchains: Set<Blockchain> = [SupportedChainType.ethereum.blockChainValue!, SupportedChainType.ethereum.blockChainValue!, SupportedChainType
-            .universalLedger.blockChainValue!]
+        let blockchains: Set<Blockchain> = [SupportedChainType.universalLedger.blockChainValue!]
         let namespaces: [String: ProposalNamespace] = ["eip155": ProposalNamespace(chains: blockchains, methods: methods, events: ["any"])]
         return namespaces
     }

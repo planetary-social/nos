@@ -72,7 +72,6 @@ struct MethodDetailView: View {
                     TextField("Amount", text: $viewModel.sendAmount)
                         .background(Color.gray.opacity(0.1))
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-
                 }
             }
             Spacer()

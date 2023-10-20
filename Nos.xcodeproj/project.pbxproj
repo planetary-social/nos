@@ -210,9 +210,7 @@
 		C98A32282A05795E00E3FA13 /* Task+Timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98A32262A05795E00E3FA13 /* Task+Timeout.swift */; };
 		C98B8B4029FBF83B009789C8 /* NotificationCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */; };
 		C98DC9BB2A795CAD004E5F0F /* ActionBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */; };
-		C98DC9BC2A795CAD004E5F0F /* ActionBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */; };
 		C99B0CB92AE08C5A008C2FFB /* AuthorCardKnowFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* AuthorCardKnowFollowersView.swift */; };
-		C996E8CD2AD9F4B0003A3BB7 /* NoteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2CF38F299E68BE00332116 /* NoteButton.swift */; };
 		C99DBF7E2A9E81CF00F7068F /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C99DBF7D2A9E81CF00F7068F /* SDWebImageSwiftUI */; };
 		C99DBF802A9E8BCF00F7068F /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C99DBF7F2A9E8BCF00F7068F /* SDWebImageSwiftUI */; };
 		C99DBF822A9E8BDE00F7068F /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C99DBF812A9E8BDE00F7068F /* SDWebImageSwiftUI */; };
@@ -1128,7 +1126,6 @@
 		C9F84C24298DC7C100C6714D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				2D4010A12AD87DF300F93AD4 /* AuthorCardKnowFollowersView.swift */,
 				C9A0DADF29C697A100466635 /* AboutView.swift */,
 				C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */,
 				C987F81929BA4D0E00B44E7A /* ActionButton.swift */,
@@ -1136,6 +1133,7 @@
 				C9F84C20298DC36800C6714D /* AppView.swift */,
 				C9DB207629F30EC700FB7B9D /* AsyncButton.swift */,
 				C9E9D9C62A2E1EC40048AF0B /* AuthorCard.swift */,
+				2D4010A12AD87DF300F93AD4 /* AuthorCardKnowFollowersView.swift */,
 				C97465302A3B89140031226F /* AuthorLabel.swift */,
 				5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */,
 				5B8C96B129DB313300B73AEC /* AuthorRow.swift */,
@@ -1179,7 +1177,6 @@
 				5B834F682A83FC7F000C1432 /* ProfileSocialStatsView.swift */,
 				C987F81C29BA6D9A00B44E7A /* ProfileTab.swift */,
 				C95D68AC299E721700429F86 /* ProfileView.swift */,
-				C9DF76272AE1D11F000134DF /* USBCBarButtonItem.swift */,
 				5BFF66B32A58853D00AA79DD /* PublishedEventsView.swift */,
 				C97A1C8729E45B3C009D9E8D /* RawEventView.swift */,
 				C9A25B3C29F174D200B39534 /* ReadabilityPadding.swift */,
@@ -1202,7 +1199,7 @@
 				3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */,
 				C931517C29B915AF00934506 /* StaggeredGrid.swift */,
 				3F60F42829B27D3E000D62C4 /* ThreadView.swift */,
-				C9F2046E2ADEDDCA0029A858 /* WalletConnect */,
+				C9DF76272AE1D11F000134DF /* USBCBarButtonItem.swift */,
 				C9CE5B132A0172CF008E198C /* WebView.swift */,
 				C92F01502AC4D67B00972489 /* Form */,
 				C9CFF6D02AB241EB00D4B368 /* Modifiers */,
@@ -1210,6 +1207,7 @@
 				3FB5E64F299D288E00386527 /* Onboarding */,
 				C9DEBFDD298941020078B43A /* Preview Content */,
 				C905EA362A33620A006F1E99 /* UNS */,
+				C9F2046E2ADEDDCA0029A858 /* WalletConnect */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1793,9 +1791,7 @@
 				C9B678DF29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */,
 				C9AA1BB22ABA383F00E8BD6D /* WalletConnect.swift in Sources */,
 				A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */,
-				5BF3C50629E4F0BA00738A12 /* EditableText.swift in Sources */,
 				C99B0CB92AE08C5A008C2FFB /* AuthorCardKnowFollowersView.swift in Sources */,
-				C93CA0C129AD5A5B00921183 /* DiscoverView.swift in Sources */,
 				C9ADB13E29929EEF0075E7F8 /* Bech32.swift in Sources */,
 				C9DEC05A2989509B0078B43A /* Persistence.swift in Sources */,
 				C9C2B78629E073E300548B4A /* RelaySubscription.swift in Sources */,

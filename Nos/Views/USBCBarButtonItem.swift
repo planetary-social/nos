@@ -9,7 +9,7 @@ import SwiftUI
 
 struct USBCBarButtonItem: View {
     
-    @Binding var address: USBCAddress?
+    var address: USBCAddress?
     @Binding var balance: Double?
     @State private var walletConnectIsPresented = false
     
@@ -30,7 +30,9 @@ struct USBCBarButtonItem: View {
             }
         )
         .sheet(isPresented: $walletConnectIsPresented) { 
-            USBCWizard()
+            if let toAddress = address {
+                USBCWizard(toAddress: toAddress)
+            }
         }
     }
 }
@@ -43,7 +45,7 @@ struct USBCBarButtonItem: View {
         VStack {}
             .toolbar(content: {
                 ToolbarItem(placement: .navigationBarTrailing) { 
-                    USBCBarButtonItem(address: $address, balance: $balance)
+                    USBCBarButtonItem(address: address, balance: $balance)
                 }
             })
     }
@@ -57,7 +59,7 @@ struct USBCBarButtonItem: View {
         VStack {}
             .toolbar(content: {
                 ToolbarItem(placement: .navigationBarTrailing) { 
-                    USBCBarButtonItem(address: $address, balance: $balance)
+                    USBCBarButtonItem(address: address, balance: $balance)
                 }
             })
     }
