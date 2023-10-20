@@ -95,6 +95,7 @@ struct USBCWizard: View {
                                 return
                             }
                             controller.walletConnectManager.sendTransaction(fromAddress: fromAddress, toAddress: toAddress, amount: amount, blockChain: .universalLedger)
+                            // TODO: open GlobaliD
                         }
                     }
                 case .error:
