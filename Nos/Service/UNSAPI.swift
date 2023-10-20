@@ -24,6 +24,7 @@ enum UNSError: Error {
     case requiresPayment(URL)
     case nameTaken
     case notAuthenticated
+    case developer
     case badResponse
 }
 
@@ -66,7 +67,7 @@ class UNSAPI {
         loadRefreshToken()
     }
     
-    func requestOTPCode(phoneNumber: String) async throws {
+    func requestVerificationCode(phoneNumber: String) async throws {
         var request = URLRequest(url: authConnectionURL.appending(path: "v1/phone_verification/request_otp"))
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
@@ -89,7 +90,7 @@ class UNSAPI {
         }
     }
     
-    func verifyOTPCode(phoneNumber: String, code: String) async throws {
+    func verifyPhone(phoneNumber: String, code: String) async throws {
         var request = URLRequest(url: authConnectionURL.appending(path: "v1/phone_verification/validate_otp"))
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         request.setValue(orgCode, forHTTPHeaderField: "x-org-code")

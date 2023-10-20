@@ -20,7 +20,7 @@ struct UNSWizardChooseNameView: View {
     @State var desiredName: UNSName = ""
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 ScrollView {
                     UNSStepImage { Image.unsChooseName.offset(x: 7, y: 5) }

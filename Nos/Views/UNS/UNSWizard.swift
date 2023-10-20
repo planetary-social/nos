@@ -37,8 +37,8 @@ struct UNSWizard: View {
                 UNSWizardIntroView(controller: controller)
             case .enterPhone:
                 UNSWizardPhoneView(controller: controller)
-            case .enterOTP:
-                UNSWizardOTPView(controller: controller)
+            case .verificationCode:
+                UNSVerifyCodeView(controller: controller)
             case .loading:
                 FullscreenProgressView(isPresented: .constant(true))
             case .chooseName:

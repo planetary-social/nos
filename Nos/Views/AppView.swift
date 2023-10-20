@@ -10,9 +10,8 @@ import Dependencies
 
 struct AppView: View {
 
-    @State var isCreatingNewPost = false
-    
     @State var showNewPost = false
+    @State var newPostContents: String? 
 
     @EnvironmentObject private var appController: AppController
     @EnvironmentObject var router: Router
@@ -83,7 +82,7 @@ struct AppView: View {
                                 Localized.post.view
                             }
                         }
-                    .tag(AppDestination.newNote)
+                    .tag(AppDestination.newNote(nil))
                     
                     NotificationsView(user: currentUser.author)
                         .tabItem {
@@ -123,7 +122,8 @@ struct AppView: View {
                     }
                 }
                 .onChange(of: router.selectedTab) { newTab in
-                    if newTab == AppDestination.newNote {
+                    if case let AppDestination.newNote(contents) = newTab {
+                        newPostContents = contents
                         showNewPost = true
                         router.selectedTab = lastSelectedTab
                     } else if !showNewPost {
@@ -131,7 +131,7 @@ struct AppView: View {
                     }
                 }
                 .sheet(isPresented: $showNewPost, content: {
-                    NewNoteView(isPresented: $showNewPost)
+                    NewNoteView(initialContents: newPostContents, isPresented: $showNewPost)
                 })
                 
                 SideMenu(

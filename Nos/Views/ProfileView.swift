@@ -205,6 +205,16 @@ struct ProfileView: View {
             await refreshProfileFeed()
             await computeUnmutedEvents()
         }
+        .onChange(of: author.muted) { _ in
+            Task {
+                await computeUnmutedEvents()
+            }
+        }
+        .onChange(of: author.events.count) { _ in
+            Task {
+                await computeUnmutedEvents()
+            }
+        }
         .onDisappear {
             Task(priority: .userInitiated) {
                 await relayService.decrementSubscriptionCount(for: subscriptionIds)

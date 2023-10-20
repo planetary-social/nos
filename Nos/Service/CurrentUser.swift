@@ -301,7 +301,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             Log.debug("Error: no pubKey")
             return
         }
-
+        
         var metaEvent = MetadataEventJSON(
             displayName: author.displayName,
             name: author.name,
@@ -311,18 +311,16 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             website: author.website,
             picture: author.profilePhotoURL?.absoluteString
         ).dictionary
-
-        guard let rawData = author.rawMetadata else {
-            Log.debug("Error: no author metadata")
-            return
-        }
-        // Tack on any unsupported fields back onto the dictionary before publish
-        let rawJson = try? JSONSerialization.jsonObject(with: rawData)
-        if let rawJson, let rawDictionary = rawJson as? [String: AnyObject] {
-            for key in rawDictionary.keys {
-                if metaEvent[key] == nil, let rawValue = rawDictionary[key] as? String {
-                    metaEvent[key] = rawValue
-                    Log.debug("Added \(key) : \(rawValue)")
+        
+        if let rawData = author.rawMetadata {
+            // Tack on any unsupported fields back onto the dictionary before publish
+            let rawJson = try? JSONSerialization.jsonObject(with: rawData)
+            if let rawJson, let rawDictionary = rawJson as? [String: AnyObject] {
+                for key in rawDictionary.keys {
+                    if metaEvent[key] == nil, let rawValue = rawDictionary[key] as? String {
+                        metaEvent[key] = rawValue
+                        Log.debug("Added \(key) : \(rawValue)")
+                    }
                 }
             }
         }

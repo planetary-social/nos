@@ -60,7 +60,10 @@ struct UNSWizardIntroView: View {
 struct UNSWizardIntro_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
-    @State static var controller = UNSWizardController(state: .intro, authorKey: previewData.alice.hexadecimalPublicKey!)
+    @State static var controller = UNSWizardController(
+        state: .intro, 
+        authorKey: previewData.alice.hexadecimalPublicKey!
+    )
     
     static var previews: some View {
         UNSWizardIntroView(controller: controller)

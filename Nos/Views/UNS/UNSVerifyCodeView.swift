@@ -1,5 +1,5 @@
 //
-//  UNSWizardIntro.swift
+//  UNSVerifyCodeView.swift
 //  Nos
 //
 //  Created by Matthew Lorentz on 9/13/23.
@@ -8,12 +8,12 @@
 import SwiftUI
 import Dependencies
 
-struct UNSWizardOTPView: View {
+struct UNSVerifyCodeView: View {
     
     @Dependency(\.analytics) var analytics
     @Dependency(\.unsAPI) var api
     
-    @State var otpCode: String = ""
+    @State var verificationCode: String = ""
     @ObservedObject var controller: UNSWizardController
     @FocusState private var focusedField: FocusedField?
 
@@ -22,10 +22,10 @@ struct UNSWizardOTPView: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
                 VStack {
-                    UNSStepImage { Image.unsOTP.offset(x: 7, y: 5) }
+                    UNSStepImage { Image.unsVerificationCode.offset(x: 7, y: 5) }
                         .padding(40)
                         .padding(.top, 50)
                     
@@ -48,7 +48,7 @@ struct UNSWizardOTPView: View {
                     .padding(.vertical, 17)
                     .padding(.horizontal, 20)
                     
-                    WizardTextField(text: $otpCode, placeholder: "123456")
+                    WizardTextField(text: $verificationCode, placeholder: "123456")
                         .focused($focusedField, equals: .textEditor)
                         .keyboardType(.numberPad)
                         .autocorrectionDisabled()
@@ -72,30 +72,35 @@ struct UNSWizardOTPView: View {
     
     private func submit() async {
         do {
+            guard let phoneNumber = controller.phoneNumber else {
+                // Shouldn't end up here
+                throw UNSError.developer
+            }
+            
             analytics.enteredUNSCode()
-            try await api.verifyOTPCode(
-                phoneNumber: controller.phoneNumber!,
-                code: otpCode.trimmingCharacters(in: .whitespacesAndNewlines)
+            try await api.verifyPhone(
+                phoneNumber: phoneNumber,
+                code: verificationCode.trimmingCharacters(in: .whitespacesAndNewlines)
             )
-            otpCode = ""
+            verificationCode = ""
             try await controller.navigateToChooseOrRegisterName()
         } catch {
-            otpCode = ""
+            verificationCode = ""
             controller.state = .error(error)
         }
     }
 }
 
-struct UNSWizardOTP_Previews: PreviewProvider {
+struct UNSVerifyCodeView_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
     @State static var controller = UNSWizardController(
-        state: .enterOTP, 
+        state: .verificationCode, 
         authorKey: previewData.alice.hexadecimalPublicKey!,
         phoneNumber: "+1768555451"
     )
     
     static var previews: some View {
-        UNSWizardOTPView(controller: controller)
+        UNSVerifyCodeView(controller: controller)
     }
 }
