@@ -19,118 +19,116 @@ struct ProfileEditView: View {
 
     @ObservedObject var author: Author
     
-    @State private var displayNameText: String = ""
     @State private var nameText: String = ""
     @State private var bioText: String = ""
     @State private var avatarText: String = ""
     @State private var unsText: String = ""
     @State private var nip05Text: String = ""
+    @State private var website: String = ""
     @State private var showUniversalNameWizard = false
+    @State private var unsController = UNSWizardController()
     
-    var createAccountCompletion: (() -> Void)?
+    var nip05: Binding<String> {
+        Binding<String>(
+            get: { self.nip05Text },
+            set: { self.nip05Text = $0.lowercased() }
+        )
+    }
     
-    init(author: Author, createAccountCompletion: (() -> Void)? = nil) {
+    init(author: Author) {
         self.author = author
-        self.createAccountCompletion = createAccountCompletion
+        self.unsController.authorKey = author.hexadecimalPublicKey
     }
     
     var body: some View {
-        VStack {
-            Form {
-                Section {
-                    TextField(text: $displayNameText) {
-                        Localized.displayName.view.foregroundColor(.secondaryText)
-                    }
-                    .textInputAutocapitalization(.none)
-                    .foregroundColor(.textColor)
-                    .autocorrectionDisabled()
-                    TextField(text: $nameText) {
-                        Localized.name.view.foregroundColor(.secondaryText)
-                    }
-                    .textInputAutocapitalization(.none)
-                    .foregroundColor(.textColor)
-                    .autocorrectionDisabled()
-                    TextEditor(text: $bioText)
-                        .placeholder(when: bioText.isEmpty, placeholder: {
-                            Text(Localized.bio.string)
-                                .foregroundColor(.secondaryText)
-                        })
-                        .foregroundColor(.textColor)
-                    TextField(text: $avatarText) {
-                        Localized.picUrl.view.foregroundColor(.secondaryText)
-                    }
-                    .foregroundColor(.textColor)
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.none)
+        ScrollView {
+            AvatarView(imageUrl: URL(string: avatarText), size: 99)
+                .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
+                .padding(.top, 16)
+            
+            NosFormSection(label: .profilePicture) {
+                NosTextField(label: .url, text: $avatarText)
                     #if os(iOS)
                     .keyboardType(.URL)
                     #endif
-                    let nip05Binding = Binding<String>(
-                        get: { self.nip05Text },
-                        set: { self.nip05Text = $0.lowercased() }
-                    )
-                    TextField(text: nip05Binding) {
-                        Localized.nip05.view.foregroundColor(.secondaryText)
-                    }
-                    .textInputAutocapitalization(.none)
-                    .foregroundColor(.textColor)
-                    .autocorrectionDisabled()
-                } header: {
-                    createAccountCompletion != nil ? Localized.tryIt.view : Localized.basicInfo.view
-                        .foregroundColor(.textColor)
-                        .fontWeight(.heavy)
-                }
-                .listRowBackground(LinearGradient(
-                    colors: [Color.cardBgTop, Color.cardBgBottom],
-                    startPoint: .top,
-                    endPoint: .bottom
-                ))
-                
-                // Universal Names Set Up
-                if author.nip05?.hasSuffix("universalname.space") != true {
-                    SetUpUNSBanner {
-                        showUniversalNameWizard = true
-                    }
-                }
             }
             
-            if let createAccountCompletion {
-                Spacer()
-                BigActionButton(title: .tryIt) {
-                    await save()
-                    createAccountCompletion()
-                }
-                .background(Color.appBg)
-                .padding(.horizontal, 24)
-                .padding(.bottom, 50)
+            HighlightedText(
+                text: .uploadProfilePicInstructions,
+                highlightedWord: "nostr.build", 
+                highlight: .diagonalAccent, 
+                font: .clarityCaption,
+                link: URL(string: "https://nostr.build")!
+            )
+            .padding(13)
+            
+            NosFormSection(label: .basicInfo) { 
+                NosTextField(label: .name, text: $nameText)
+                FormSeparator()
+                NosTextEditor(label: .bio, text: $bioText)
+                    .frame(maxHeight: 200)
+                FormSeparator()
+                NosTextField(label: .website, text: $website)
             }
+            
+            HStack {
+                Text(.identityVerification)
+                    .font(.clarityTitle3)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primaryTxt)
+                    .padding(.top, 16)
+                
+                Spacer()
+            }
+            .padding(.horizontal, 13)
+            
+            SetUpUNSBanner {
+                showUniversalNameWizard = true
+            }
+            .padding(13)
+            
+            NosFormSection(label: nil) { 
+                NosTextField(label: .universalName, text: $unsText)
+                NosTextField(label: .nip05, text: $nip05Text)
+            }
+            
+            HStack {
+                HighlightedText(
+                    text: .nip05LearnMore,
+                    highlightedWord: Localized.learnMore.string, 
+                    highlight: .diagonalAccent, 
+                    font: .clarityCaption,
+                    link: URL(string: "https://nostr.how/en/guides/get-verified")!
+                )
+                Spacer()
+            }
+            .padding(13)
         }
         .sheet(isPresented: $showUniversalNameWizard, content: {
-            UniversalNameWizard(author: author) {
-                populateTextFields()
-                self.showUniversalNameWizard = false
+            UNSWizard(controller: unsController, isPresented: $showUniversalNameWizard)
+        })
+        .onChange(of: showUniversalNameWizard, perform: { _ in
+            if !showUniversalNameWizard {
+                nip05Text = author.nip05 ?? ""
+                unsText = author.uns ?? ""
+                unsController = UNSWizardController(authorKey: author.hexadecimalPublicKey)
             }
         })
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
-        .nosNavigationBar(title: .editProfile)
+        .nosNavigationBar(title: .profileTitle)
+        .navigationBarBackButtonHidden()
         .navigationBarItems(
+            leading: Button(Localized.cancel.string, action: { 
+                router.pop()
+            }),
             trailing:
-                Group {
-                    if createAccountCompletion == nil {
-                        Button(
-                            action: {
-                                Task { await save() }
-                                
-                                // Go back to profile page
-                                router.pop()
-                            },
-                            label: {
-                                Text(Localized.done.string)
-                            }
-                        )
-                    }
+                ActionButton(title: .done) {
+                    await save() 
+                    // Go back to profile page
+                    router.pop()
                 }
+                .offset(y: -3)
         )
         .task {
             populateTextFields()
@@ -141,19 +139,20 @@ struct ProfileEditView: View {
     }
    
     func populateTextFields() {
-        displayNameText = author.displayName ?? ""
-        nameText = author.name ?? ""
+        viewContext.refresh(author, mergeChanges: true)
+        nameText = author.name ?? author.displayName ?? ""
         bioText = author.about ?? ""
         avatarText = author.profilePhotoURL?.absoluteString ?? ""
+        website = author.website ?? ""
         nip05Text = author.nip05 ?? ""
         unsText = author.uns ?? ""
     }
     
     func save() async {
-        author.displayName = displayNameText
         author.name = nameText
         author.about = bioText
         author.profilePhotoURL = URL(string: avatarText)
+        author.website = website
         author.nip05 = nip05Text
         author.uns = unsText
         do {
@@ -168,16 +167,12 @@ struct ProfileEditView: View {
 
 struct ProfileEditView_Previews: PreviewProvider {
     
-    static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
+    static var previewData = PreviewData()
 
-    static var author: Author {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.pubKeyHex
-        return author
-    }
-    
     static var previews: some View {
-        ProfileEditView(author: author)
+        NavigationView {
+            ProfileEditView(author: previewData.alice)
+                .inject(previewData: previewData)
+        }
     }
 }

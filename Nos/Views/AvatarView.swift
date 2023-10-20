@@ -22,6 +22,7 @@ struct AvatarView: View {
                     .renderingMode(.original)
             }
             .indicator(.activity)
+            .aspectRatio(contentMode: .fill)
             .frame(width: size, height: size)
             .clipShape(Circle())
     }

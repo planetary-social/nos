@@ -10,9 +10,8 @@ import Dependencies
 
 struct AppView: View {
 
-    @State var isCreatingNewPost = false
-    
     @State var showNewPost = false
+    @State var newPostContents: String? 
 
     @EnvironmentObject private var appController: AppController
     @EnvironmentObject var router: Router
@@ -23,46 +22,7 @@ struct AppView: View {
     @EnvironmentObject var currentUser: CurrentUser
     
     @State private var showingOptions = false
-    @State private var lastSelectedTab = Destination.home
-    
-    /// An enumeration of the destinations for AppView.
-    enum Destination: String, Hashable, Equatable {
-        case home
-        case discover
-        case notifications
-        case newNote
-        case profile
-        
-        var label: some View {
-            switch self {
-            case .home:
-                return Text(Localized.homeFeed.string)
-            case .discover:
-                return Localized.discover.view
-            case .notifications:
-                return Localized.notifications.view
-            case .newNote:
-                return Localized.newNote.view
-            case .profile:
-                return Localized.profileTitle.view
-            }
-        }
-        
-        var destinationString: String {
-            switch self {
-            case .home:
-                return Localized.homeFeed.string
-            case .discover:
-                return Localized.discover.string
-            case .notifications:
-                return Localized.notifications.string
-            case .newNote:
-                return Localized.newNote.string
-            case .profile:
-                return Localized.profileTitle.string
-            }
-        }
-    }
+    @State private var lastSelectedTab = AppDestination.home
     
     var body: some View {
         
@@ -87,7 +47,7 @@ struct AppView: View {
                             }
                             .toolbarBackground(.visible, for: .tabBar)
                             .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                            .tag(Destination.home)
+                            .tag(AppDestination.home)
                             .onAppear {
                                 // TODO: Move this somewhere better like CurrentUser when it becomes the source of truth
                                 // for who is logged in
@@ -104,7 +64,7 @@ struct AppView: View {
                                 let text = Localized.discover.view
                                 if $router.selectedTab.wrappedValue == .discover {
                                     Image.tabIconEveryoneSelected
-                                    text.foregroundColor(.textColor)
+                                    text.foregroundColor(.primaryTxt)
                                 } else {
                                     Image.tabIconEveryone
                                     text.foregroundColor(.secondaryText)
@@ -113,7 +73,7 @@ struct AppView: View {
                         }
                         .toolbarBackground(.visible, for: .tabBar)
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                        .tag(Destination.discover)
+                        .tag(AppDestination.discover)
                     
                     VStack {}
                         .tabItem {
@@ -122,7 +82,7 @@ struct AppView: View {
                                 Localized.post.view
                             }
                         }
-                    .tag(Destination.newNote)
+                    .tag(AppDestination.newNote(nil))
                     
                     NotificationsView(user: currentUser.author)
                         .tabItem {
@@ -130,7 +90,7 @@ struct AppView: View {
                                 let text = Localized.notifications.view
                                 if $router.selectedTab.wrappedValue == .notifications {
                                     Image.tabIconNotificationsSelected
-                                    text.foregroundColor(.textColor)
+                                    text.foregroundColor(.primaryTxt)
                                 } else {
                                     Image.tabIconNotifications
                                     text.foregroundColor(.secondaryText)
@@ -139,7 +99,7 @@ struct AppView: View {
                         }
                         .toolbarBackground(.visible, for: .tabBar)
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                        .tag(Destination.notifications)
+                        .tag(AppDestination.notifications)
                         .badge(pushNotificationService.badgeCount)
                     
                     if let author = currentUser.author {
@@ -149,7 +109,7 @@ struct AppView: View {
                                     let text = Localized.profileTitle.view
                                     if $router.selectedTab.wrappedValue == .profile {
                                         Image.tabProfileSelected
-                                        text.foregroundColor(.textColor)
+                                        text.foregroundColor(.primaryTxt)
                                     } else {
                                         Image.tabProfile
                                         text.foregroundColor(.secondaryText)
@@ -158,11 +118,12 @@ struct AppView: View {
                             }
                             .toolbarBackground(.visible, for: .tabBar)
                             .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                            .tag(Destination.profile)
+                            .tag(AppDestination.profile)
                     }
                 }
                 .onChange(of: router.selectedTab) { newTab in
-                    if newTab == Destination.newNote {
+                    if case let AppDestination.newNote(contents) = newTab {
+                        newPostContents = contents
                         showNewPost = true
                         router.selectedTab = lastSelectedTab
                     } else if !showNewPost {
@@ -170,7 +131,7 @@ struct AppView: View {
                     }
                 }
                 .sheet(isPresented: $showNewPost, content: {
-                    NewNoteView(isPresented: $showNewPost)
+                    NewNoteView(initialContents: newPostContents, isPresented: $showNewPost)
                 })
                 
                 SideMenu(

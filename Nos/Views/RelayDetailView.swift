@@ -25,7 +25,7 @@ struct RelayDetailView: View {
                     .textSelection(.enabled)
             } header: {
                 Localized.address.view
-                    .foregroundColor(.textColor)
+                    .foregroundColor(.primaryTxt)
                     .fontWeight(.heavy)
             }
             .listRowBackground(LinearGradient(
@@ -57,7 +57,7 @@ struct RelayDetailView: View {
                 }
             } header: {
                 Localized.metadata.view
-                    .foregroundColor(.textColor)
+                    .foregroundColor(.primaryTxt)
                     .fontWeight(.heavy)
             } footer: {
                 #if DEBUG

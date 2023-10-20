@@ -15,6 +15,29 @@ struct AuthorCard: View {
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var currentUser: CurrentUser
     
+    var followersRequest: FetchRequest<Follow>
+    var followersResult: FetchedResults<Follow> { followersRequest.wrappedValue }
+
+    var followers: Followed {
+        followersResult.map { $0 }
+    }
+
+    private var knownFollowers: [Follow] {
+        author.followers.filter {
+            guard let source = $0.source else {
+                return false
+            }
+            return source.hasHumanFriendlyName == true &&
+                source != author &&
+                (currentUser.isFollowing(author: source) || currentUser.isBeingFollowedBy(author: source))
+        }
+    }
+    
+    init(author: Author) {
+        self.author = author
+        self.followersRequest = FetchRequest(fetchRequest: Follow.followsRequest(destination: [author]))
+    }
+    
     var body: some View {
         Button {
             router.push(author)
@@ -55,6 +78,15 @@ struct AuthorCard: View {
                         .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                 }
                 Spacer(minLength: 9)
+                
+                if let first = knownFollowers[safe: 0]?.source {
+                    AuthorCardKnownFollowersView(
+                        first: first,
+                        knownFollowers: knownFollowers,
+                        followers: followers
+                    )
+                    Spacer(minLength: 9)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .aspectRatio(goldenRatio, contentMode: ContentMode.fill)
@@ -64,7 +96,7 @@ struct AuthorCard: View {
             .cornerRadius(15)
             .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
         }
-        .buttonStyle(CardButtonStyle())
+        .buttonStyle(CardButtonStyle(style: .golden))
     }
 }
 

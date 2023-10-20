@@ -8,25 +8,6 @@
 
 import SwiftUI
 
-/// A view model for the RawEventView
-@MainActor protocol RawEventViewModel: ObservableObject {
-
-    /// The raw message to display in screen
-    var rawMessage: String? { get }
-
-    /// A loading message that should be displayed when it is not nil
-    var loadingMessage: String? { get }
-
-    /// An error message that should be displayed when it is not nil
-    var errorMessage: String? { get }
-
-    /// Called when the user dismisses the shown error message. Should clear `errorMessage`.
-    func didDismissError()
-
-    /// Called when the user taps on the Cancel button
-    func didDismiss()
-}
-
 struct RawEventView<ViewModel>: View where ViewModel: RawEventViewModel {
     @ObservedObject var viewModel: ViewModel
 
