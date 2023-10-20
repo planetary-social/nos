@@ -37,6 +37,15 @@ struct CompactNoteView: View {
         shouldShowReadMore = intrinsicSize.height > truncatedSize.height 
     }
     
+    // I'm not sure where this should be, probably not here - rabble
+    func isUrlAnImage(_ url: URL) -> Bool {
+        let imageExtensions = [".png", ".gif", ".jpg", ".jpeg"]
+        
+        return imageExtensions.contains { url.absoluteString.hasSuffix($0) }
+    }
+    
+    
+    
     var formattedText: some View {
         noteText
             .font(.body)
@@ -57,6 +66,28 @@ struct CompactNoteView: View {
                     .redacted(reason: .placeholder)
             case .loaded(let attributedString):
                 Text(attributedString)
+            }
+        }
+    }
+    
+    struct ImageLinkButton: View {
+        let url: URL
+
+        var body: some View {
+            Button(action: {
+                UIApplication.shared.open(url)
+            }) {
+                AsyncImage(url: url) { image in
+                    image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } placeholder: {
+                    ProgressView()
+                    .scaleEffect(2) // change 1.5 to any scale you want
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(15)
+                }
             }
         }
     }
@@ -120,10 +151,14 @@ struct CompactNoteView: View {
             }
             if note.kind == EventKind.text.rawValue, !contentLinks.isEmpty {
                 VStack {
-                    ForEach(contentLinks, id: \.self.absoluteURL) { url in
-                        LinkPreview(url: url)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(.horizontal, 15)
+                    ForEach(contentLinks, id: \.self.absoluteURL) {
+                        url in
+                        if isUrlAnImage(url) {
+                            ImageLinkButton(url: url)
+                        } else {
+                            LinkPreview(url: url)
+                                .padding(.horizontal, 15)
+                        }
                     }
                 }
                 .padding(.bottom, 15)

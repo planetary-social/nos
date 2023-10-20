@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Changed inline images so we don't display the domain / size / file type for images
 - Updated search results to show mutual followers and sort by the most followers in common.
 
 ## [0.1 (83)] - 2023-10-16Z
