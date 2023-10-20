@@ -228,7 +228,7 @@ final class NoteNoteParserTests: XCTestCase {
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
-        XCTAssertEqual(links[safe: 0]?.key, "\(note)")
+        XCTAssertEqual(links[safe: 0]?.key, "🔗 Link to note")
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
     }
     
@@ -241,7 +241,7 @@ final class NoteNoteParserTests: XCTestCase {
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
-        XCTAssertEqual(links[safe: 0]?.key, "\(note)")
+        XCTAssertEqual(links[safe: 0]?.key, "🔗 Link to note")
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
     }
 
@@ -257,7 +257,7 @@ final class NoteNoteParserTests: XCTestCase {
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 2)
-        XCTAssertEqual(links[safe: 0]?.key, "\(note)")
+        XCTAssertEqual(links[safe: 0]?.key, "🔗 Link to note")
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(noteHex)"))
         XCTAssertEqual(links[safe: 1]?.key, "\(profileDisplayName)")
         XCTAssertEqual(links[safe: 1]?.value, URL(string: "@\(profileHex)"))
@@ -293,7 +293,7 @@ final class NoteNoteParserTests: XCTestCase {
         let content = "check this \(event)"
         let tags: [[String]] = [[]]
 
-        let expectedContent = content
+        let expectedContent = "check this 🔗 Link to note"
         let context = try XCTUnwrap(context)
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
 
@@ -302,7 +302,7 @@ final class NoteNoteParserTests: XCTestCase {
 
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
-        XCTAssertEqual(links[safe: 0]?.key, "\(event)")
+        XCTAssertEqual(links[safe: 0]?.key, "🔗 Link to note")
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
     }
 
@@ -316,7 +316,7 @@ final class NoteNoteParserTests: XCTestCase {
         let content = "check this \(event). Bye!"
         let tags: [[String]] = [[]]
 
-        let expectedContent = content
+        let expectedContent = "check this 🔗 Link to note. Bye!"
         let context = try XCTUnwrap(context)
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
 
@@ -325,7 +325,7 @@ final class NoteNoteParserTests: XCTestCase {
 
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
-        XCTAssertEqual(links[safe: 0]?.key, "\(event)")
+        XCTAssertEqual(links[safe: 0]?.key, "🔗 Link to note")
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
     }
 

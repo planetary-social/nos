@@ -322,6 +322,7 @@
 		C9EE3E602A0538B7008A7491 /* ExpirationTimeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EE3E5F2A0538B7008A7491 /* ExpirationTimeButton.swift */; };
 		C9EE3E632A053910008A7491 /* ExpirationTimeOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EE3E622A053910008A7491 /* ExpirationTimeOption.swift */; };
 		C9EE3E642A053910008A7491 /* ExpirationTimeOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EE3E622A053910008A7491 /* ExpirationTimeOption.swift */; };
+		C9EEB5512AE3253200027649 /* Generated.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5B46612029CCB894008B8E8C /* Generated.strings */; };
 		C9F0BB6929A5039D000547FC /* Int+Bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F0BB6829A5039D000547FC /* Int+Bool.swift */; };
 		C9F0BB6B29A503D6000547FC /* PublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F0BB6A29A503D6000547FC /* PublicKey.swift */; };
 		C9F0BB6C29A503D6000547FC /* PublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F0BB6A29A503D6000547FC /* PublicKey.swift */; };
@@ -1379,6 +1380,7 @@
 				C987F83B29BA951E00B44E7A /* ClarityCity-BoldItalic.otf in Resources */,
 				C987F84129BA951E00B44E7A /* ClarityCity-SemiBoldItalic.otf in Resources */,
 				C987F83529BA951E00B44E7A /* ClarityCity-LightItalic.otf in Resources */,
+				C9EEB5512AE3253200027649 /* Generated.strings in Resources */,
 				C987F85529BA951E00B44E7A /* ClarityCity-Thin.otf in Resources */,
 				C987F83F29BA951E00B44E7A /* ClarityCity-SemiBold.otf in Resources */,
 				C9DEC006298947900078B43A /* sample_data.json in Resources */,
