@@ -45,6 +45,12 @@ extension LinearGradient {
         startPoint: .top,
         endPoint: .bottom
     )
+
+    public static let storiesBackground = LinearGradient(
+        colors: [.storiesBgTop, .storiesBgBottom],
+        startPoint: .top,
+        endPoint: .bottom
+    )
     
     public static let gold = LinearGradient(
         colors: [Color(hex: "#FFC46B"), Color(hex: "#DE7C21")],

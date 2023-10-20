@@ -245,6 +245,7 @@ enum Localized: String, Localizable, CaseIterable {
     case yourNewUNMessage = "is your Universal Name.\n\nWe've created a link between your Nostr profile and your Universal Name and filled your Universal Name into the username field on your profile."
     case anErrorOccurred = "An error occured."
     
+    case stories = "Stories"
     case relayAddressPlaceholder = "wss://yourrelay.com"
     case someone = "someone"
     
