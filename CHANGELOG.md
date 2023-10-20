@@ -8,9 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-<<<<<<< HEAD
 - Updated UI around displaying nested threads and displaying more context of conversations. 
-=======
 - Updated search results to show mutual followers and sort by the most followers in common.
 
 ## [0.1 (83)] - 2023-10-16Z
@@ -21,7 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1 (82)] - 2023-10-13Z
 
 - Fixed a bug where profile changes wouldn't be published in some cases
->>>>>>> main
 - Fix a bug where the "Post" button wouldn't be shown when composing a reply on macOS
 - Fix a bug where the mute list could be overwritten when muting someone
 - Fixed aspect ratio on some profile photos
