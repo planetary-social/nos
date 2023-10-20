@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue where the app could become slow after searching for a user.
 - Updated search results to show mutual followers and sort by the most followers in common.
 - Redesigned the Universal Names registration flow
 
