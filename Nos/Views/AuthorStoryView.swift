@@ -47,11 +47,7 @@ struct AuthorStoryView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 Group {
                     if let selectedNote {
-                        Button {
-                            router.push(selectedNote)
-                        } label: {
-                            StoryNoteView(note: selectedNote, minHeight: geometry.size.height)
-                        }
+                        StoryNoteView(note: selectedNote, minHeight: geometry.size.height)
                     } else {
                         EmptyView()
                     }

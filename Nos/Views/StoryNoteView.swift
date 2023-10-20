@@ -83,37 +83,46 @@ struct StoryNoteView: View {
     }
 
     var body: some View {
-        VStack {
-            if shouldShowSpacing {
-                Spacer(minLength: 85)
-            }
-            if note.kind == EventKind.text.rawValue, !contentLinks.isEmpty {
-                TabView {
-                    ForEach(contentLinks, id: \.self.absoluteURL) { url in
-                        LinkPreview(url: url)
-                            .padding(.horizontal, 15)
-                            .padding(.vertical, 0)
-                    }
+        ZStack {
+            Rectangle()
+                .foregroundColor(Color.yellow.opacity(0))
+                .background(Color.yellow.opacity(0))
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    router.push(note)
                 }
-                .tabViewStyle(.page)
-                .frame(height: 320)
+            VStack {
+                if shouldShowSpacing {
+                    Spacer(minLength: 85)
+                }
+                if note.kind == EventKind.text.rawValue, !contentLinks.isEmpty {
+                    TabView {
+                        ForEach(contentLinks, id: \.self.absoluteURL) { url in
+                            LinkPreview(url: url)
+                                .padding(.horizontal, 15)
+                                .padding(.vertical, 0)
+                        }
+                    }
+                    .tabViewStyle(.page)
+                    .frame(height: 320)
+                }
+                formattedText
+                if shouldShowSpacing {
+                    Spacer(minLength: 55)
+                }
             }
-            formattedText
-            if shouldShowSpacing {
-                Spacer(minLength: 55)
+            .frame(maxWidth: .infinity)
+            .frame(minHeight: minHeight)
+            .background {
+                GeometryReader { geometryProxy in
+                    Color.clear.preference(key: IntrinsicSizePreferenceKey.self, value: geometryProxy.size)
+                }
             }
-        }
-        .frame(maxWidth: .infinity)
-        .frame(minHeight: minHeight)
-        .background {
-            GeometryReader { geometryProxy in
-                Color.clear.preference(key: IntrinsicSizePreferenceKey.self, value: geometryProxy.size)
-            }
-        }
-        .onPreferenceChange(IntrinsicSizePreferenceKey.self) { newSize in
-            if newSize.height > intrinsicSize.height {
-                intrinsicSize = newSize
-                updateShouldShowSpacing()
+            .onPreferenceChange(IntrinsicSizePreferenceKey.self) { newSize in
+                if newSize.height > intrinsicSize.height {
+                    intrinsicSize = newSize
+                    updateShouldShowSpacing()
+                }
             }
         }
         .task {
