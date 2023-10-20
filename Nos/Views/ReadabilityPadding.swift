@@ -14,7 +14,7 @@ extension View {
     }
     
     func getReadabilityPadding(isEnabled: Bool = true) -> ReadabilityPadding {
-        return ReadabilityPadding(isEnabled: isEnabled)
+        ReadabilityPadding(isEnabled: isEnabled)
     }
     
     func reducedWidthPadding(reduction: CGFloat) -> some View {

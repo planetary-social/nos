@@ -112,7 +112,6 @@ struct NoteButton: View {
                 }
             } label: {
                 if displayRootMessage, let root = note.rootNote() ?? note.referencedNote() {
-                    let action = replyAction ?? { _ in }
                     ThreadRootView(root: root, tapAction: { root in router.push(root) })
                     .padding(.top, displayRootMessage ? -50 : 0)
                 }

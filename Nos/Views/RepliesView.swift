@@ -96,7 +96,7 @@ struct RepliesView: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
+        GeometryReader { _ in
             VStack {
                 ScrollView(.vertical) {
                     VStack {

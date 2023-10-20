@@ -28,20 +28,21 @@ struct ThreadRootView: View {
             .clipped() // Ensure that the part of the button moved outside of its container is not visible.
         }
         .overlay(
-            LinearGradient(gradient: Gradient(stops: [
-                .init(color: Color.clear, location: 0),
-                .init(color: Color.clear, location: 0.5), // Add more clear stops
-                .init(color: Color.appBg, location: 1)
-            ]), startPoint: .center,
-                endPoint: .bottom)
+            LinearGradient(
+                gradient: Gradient(stops: [
+                    .init(color: Color.clear, location: 0),
+                    .init(color: Color.clear, location: 0.5), // Add more clear stops
+                    .init(color: Color.appBg, location: 1)
+                ]),
+                startPoint: .center,
+                endPoint: .bottom
+            )
         )
-        
         .onTapGesture {
             self.tapAction?(self.root) // Use optional chaining to call tapAction.
         }
     }
 }
-
 
 struct ThreadRootView_Previews: PreviewProvider {
     static var previewData = PreviewData()
