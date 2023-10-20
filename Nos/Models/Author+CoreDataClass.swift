@@ -153,8 +153,20 @@ public class Author: NosManagedObject {
     @nonobjc func followedWithNewNotes(since: Date) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+        let onlyFollowedAuthorsClause = "ANY followers.source = %@"
+        let onlyPostsClause = "($event.kind = 1 OR $event.kind = 6 OR $event.kind = 30023)"
+        let onlyRecentStoriesClause = "$event.createdAt > %@"
+        let onlyRootPostsClause = "SUBQUERY(" +
+            "$event.eventReferences, " +
+            "$reference, " +
+            "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
+        ").@count = 0"
+        let onlyAuthorsWithStoriesClause = "SUBQUERY(events, $event, \(onlyPostsClause) " +
+            "AND \(onlyRecentStoriesClause) " +
+            "AND \(onlyRootPostsClause)).@count > 0"
+
         fetchRequest.predicate = NSPredicate(
-            format: "ANY followers.source = %@ AND SUBQUERY(events, $event, ($event.kind = 1 OR $event.kind = 6 OR $event.kind = 30023) AND $event.createdAt > %@ AND SUBQUERY($event.eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0).@count > 0",
+            format: "\(onlyFollowedAuthorsClause) AND \(onlyAuthorsWithStoriesClause)",
             self,
             since as CVarArg
         )
@@ -165,7 +177,22 @@ public class Author: NosManagedObject {
     @nonobjc func storiesRequest(since: Date) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(format: "author = %@ AND createdAt > %@ AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0 AND (kind = 1 OR kind = 6 OR kind = 30023)", self, since as CVarArg)
+        let onlyStoriesFromTheAuthorClause = "author = %@"
+        let onlyPostsClause = "(kind = 1 OR kind = 6 OR kind = 30023)"
+        let onlyRecentStoriesClause = "createdAt > %@"
+        let onlyRootPostsClause = "SUBQUERY(" +
+            "eventReferences, " +
+            "$reference, " +
+            "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
+        ").@count = 0"
+        fetchRequest.predicate = NSPredicate(
+            format: "\(onlyStoriesFromTheAuthorClause) " +
+                "AND \(onlyRecentStoriesClause) " +
+                "AND \(onlyRootPostsClause) " +
+                "AND \(onlyPostsClause)",
+            self,
+            since as CVarArg
+        )
         fetchRequest.fetchLimit = 10
         return fetchRequest
     }

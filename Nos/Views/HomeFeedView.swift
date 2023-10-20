@@ -41,7 +41,11 @@ struct HomeFeedView: View {
     init(user: Author) {
         self.user = user
         _events = FetchRequest(fetchRequest: Event.homeFeed(for: user, before: Date.now))
-        _authors = FetchRequest(fetchRequest: user.followedWithNewNotes(since: Calendar.current.date(byAdding: .day, value: -2, to: .now)!))
+        _authors = FetchRequest(
+            fetchRequest: user.followedWithNewNotes(
+                since: Calendar.current.date(byAdding: .day, value: -2, to: .now)!
+            )
+        )
     }
     
     func subscribeToNewEvents() async {
@@ -172,7 +176,7 @@ struct HomeFeedView: View {
                     .padding()
             }
         })
-        .nosNavigationBar(title: isShowingStories ? Localized.stories :  Localized.homeFeed)
+        .nosNavigationBar(title: isShowingStories ? Localized.stories : Localized.homeFeed)
         .refreshable {
             date = .now
         }

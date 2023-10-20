@@ -255,7 +255,12 @@ struct AuthorStoryView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            AuthorStoryView(author: previewData.bob, cutoffDate: $cutoffDate, showPreviousAuthor: {}, showNextAuthor: {})
+            AuthorStoryView(
+                author: previewData.bob,
+                cutoffDate: $cutoffDate,
+                showPreviousAuthor: {},
+                showNextAuthor: {}
+            )
         }
         .inject(previewData: previewData)
     }
