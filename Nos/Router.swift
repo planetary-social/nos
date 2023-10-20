@@ -18,7 +18,7 @@ import Logger
     @Published var notificationsPath = NavigationPath()
     @Published var profilePath = NavigationPath()
     @Published var sideMenuPath = NavigationPath()
-    @Published var selectedTab = AppView.Destination.home
+    @Published var selectedTab = AppDestination.home
     
     var currentPath: Binding<NavigationPath> {
         if sideMenuOpened {
@@ -65,7 +65,7 @@ import Logger
         selectedTab = .newNote(contents)
     }
 
-    func consecutiveTaps(on tab: AppView.Destination) -> AnyPublisher<Void, Never> {
+    func consecutiveTaps(on tab: AppDestination) -> AnyPublisher<Void, Never> {
         $selectedTab
             .scan((previous: nil, current: selectedTab)) { previousPair, current in
                 (previous: previousPair.current, current: current)
@@ -79,7 +79,7 @@ import Logger
             .eraseToAnyPublisher()
     }
 
-    func path(for destination: AppView.Destination) -> Binding<NavigationPath> {
+    func path(for destination: AppDestination) -> Binding<NavigationPath> {
         switch destination {
         case .home:
             return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
