@@ -8,10 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Add Stories to the Home Feed
+- Add Stories view to the Home Feed
+- Fixed an issue where the app could become slow after searching for a user.
 - Updated search results to show mutual followers and sort by the most followers in common.
 - Redesigned the Universal Names registration flow
-
 
 ## [0.1 (83)] - 2023-10-16Z
 
