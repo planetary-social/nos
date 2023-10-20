@@ -9,14 +9,17 @@ import Dependencies
 import SwiftUI
 import CoreData
 
+/// Displays a list of stories for a given Author
 struct AuthorStoryView: View {
     
     var author: Author
     var showNextAuthor: () -> Void
     var showPreviousAuthor: () -> Void
-    
+
+    /// The list of stories to present
     @FetchRequest private var notes: FetchedResults<Event>
 
+    /// The note currently being shown
     @State private var selectedNote: Event?
 
     @Binding private var cutoffDate: Date
@@ -25,15 +28,17 @@ struct AuthorStoryView: View {
 
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
-
-    @Environment(\.managedObjectContext) private var viewContext
-    @Dependency(\.persistenceController) private var persistenceController
     
-    init(author: Author, cutoffDate: Binding<Date>, showPreviousAuthor: @escaping () -> Void, showNextAuthor: @escaping () -> Void) {
+    init(
+        author: Author,
+        cutoffDate: Binding<Date>,
+        showPreviousAuthor: @escaping () -> Void,
+        showNextAuthor: @escaping () -> Void
+    ) {
         self.author = author
-        self._cutoffDate = cutoffDate
         self.showPreviousAuthor = showPreviousAuthor
         self.showNextAuthor = showNextAuthor
+        _cutoffDate = cutoffDate
         _notes = FetchRequest(fetchRequest: author.storiesRequest(since: cutoffDate.wrappedValue))
     }
     
@@ -103,7 +108,6 @@ struct AuthorStoryView: View {
                     }
                 }
                 .padding(.horizontal, 10)
-
                 Button {
                     router.push(author)
                 } label: {
@@ -145,12 +149,15 @@ struct AuthorStoryView: View {
             }
         }
         .task {
-            if selectedNote == nil {
-                if let firstNote = notes.first {
-                    selectedNote = firstNote
-                } else {
-                    showNextAuthor()
-                }
+            // Select the first note in the fetch results when presenting the view
+            guard selectedNote == nil else {
+                return
+            }
+            if let firstNote = notes.first {
+                selectedNote = firstNote
+            } else {
+                // Notes shouldn't be empty here, but if they are, just advance to the next author
+                showNextAuthor()
             }
         }
         .task {
@@ -158,13 +165,13 @@ struct AuthorStoryView: View {
         }
     }
 
-    func subscribeToReplies() async {
+    /// Fetches replies to the list of stories from connected relays (to update reply count to each one)
+    private func subscribeToReplies() async {
         // Close out stale requests
         if !subscriptionIDs.isEmpty {
             await relayService.decrementSubscriptionCount(for: subscriptionIDs)
             subscriptionIDs.removeAll()
         }
-
         let eTags = notes.compactMap { $0.identifier }
         let filter = Filter(kinds: [.text, .like, .delete, .repost], eTags: eTags)
         let subID = await relayService.openSubscription(with: filter)
@@ -177,7 +184,6 @@ fileprivate struct BottomOverlay: View {
     var note: Event
 
     @Dependency(\.persistenceController) private var persistenceController
-    @Environment(\.managedObjectContext) private var viewContext
 
     @EnvironmentObject private var router: Router
 
@@ -199,15 +205,7 @@ fileprivate struct BottomOverlay: View {
 
             LikeButton(note: note)
 
-            // Reply button
-            Button(action: {
-                router.push(ReplyToNavigationDestination(note: note))
-            }, label: {
-                Image.buttonReply
-                    .padding(.leading, 10)
-                    .padding(.trailing, 23)
-                    .padding(.vertical, 12)
-            })
+            ReplyButton(note: note)
         }
         .padding(.leading, 13)
         .padding(.bottom, 10)

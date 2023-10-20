@@ -112,16 +112,14 @@ struct HomeFeedView: View {
                     .accessibilityIdentifier("home feed")
 
                     StoriesView(
-                        user: user,
                         cutoffDate: $storiesCutoffDate,
                         authors: authors,
                         selectedAuthor: $selectedStoryAuthor
                     )
-                    .scaleEffect(selectedStoryAuthor == nil ? 0.5 : 1)
-                    .opacity(selectedStoryAuthor == nil ? 0 : 1)
+                    .scaleEffect(isShowingStories ? 1 : 0.5)
+                    .opacity(isShowingStories ? 1 : 0)
                     .animation(.default, value: selectedStoryAuthor)
                 }
-                .animation(.default, value: selectedStoryAuthor)
             }
         }
         .background(Color.appBg)
@@ -136,7 +134,7 @@ struct HomeFeedView: View {
                 SideMenuButton()
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                if selectedStoryAuthor != nil {
+                if isShowingStories {
                     Button {
                         selectedStoryAuthor = nil
                     } label: {

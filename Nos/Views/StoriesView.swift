@@ -7,30 +7,27 @@
 
 import SwiftUI
 
-struct StoriesDestination: Hashable {
-    var author: Author?
-}
-
+/// Shows a list of authors with stories in a carousel
 struct StoriesView: View {
 
-    @ObservedObject var user: Author
-
-    @EnvironmentObject var router: Router
-
+    /// Authors to display
     private var authors: FetchedResults<Author>
 
-    @Binding var selectedAuthorInStories: Author?
+    /// Author tapped in the Home Feed
+    ///
+    /// Used to highlight it when the view appears and to close the view (by setting it to null)
+    @Binding private var selectedAuthorInStories: Author?
 
+    /// Author currently highlighted
     @State private var selectedAuthor: Author
+
     @Binding private var cutoffDate: Date
     
     init(
-        user: Author,
         cutoffDate: Binding<Date>,
         authors: FetchedResults<Author>,
         selectedAuthor: Binding<Author?>
     ) {
-        self.user = user
         self._cutoffDate = cutoffDate
         self.authors = authors
         _selectedAuthor = .init(initialValue: selectedAuthor.wrappedValue ?? Author())

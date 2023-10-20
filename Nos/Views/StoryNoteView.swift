@@ -9,29 +9,26 @@ import SwiftUI
 import Logger
 import Dependencies
 
-/// A view that displays the text of a note (kind: 1 Nostr event) and truncates it with a "Read more" button if
-/// it is too long
+/// A view that displays a note in "fullscreen"
 struct StoryNoteView: View {
 
-    @Environment(\.managedObjectContext) private var viewContext
-
+    /// The note to display
     var note: Event
+
+    /// Minimum height the view should have
     var minHeight: CGFloat
 
     @State private var noteContent = LoadingContent<AttributedString>.loading
     @State private var contentLinks = [URL]()
 
-    @State
-    private var shouldShowSpacing = false
+    /// If true, it will add spacing to the top and bottom of the view
+    @State private var shouldShowSpacing = false
 
-    @State
-    private var intrinsicSize = CGSize.zero
+    /// Used to store the current height of the view
+    @State private var intrinsicSize = CGSize.zero
 
-    private func updateShouldShowSpacing() {
-        shouldShowSpacing = intrinsicSize.height + 140 > minHeight
-    }
-
-    @EnvironmentObject var router: Router
+    @EnvironmentObject private var router: Router
+    @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.persistenceController) private var persistenceController
 
     internal init(note: Event, minHeight: CGFloat) {
@@ -132,6 +129,10 @@ struct StoryNoteView: View {
                 }
             }
         }
+    }
+
+    private func updateShouldShowSpacing() {
+        shouldShowSpacing = intrinsicSize.height + 140 > minHeight
     }
 
     fileprivate struct IntrinsicSizePreferenceKey: PreferenceKey {

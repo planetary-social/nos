@@ -137,20 +137,8 @@ struct NoteCard: View {
                         }
                         
                         LikeButton(note: note)
-                        
-                        // Reply button
-                        Button(action: { 
-                            if let replyAction {
-                                replyAction(note)
-                            } else {
-                                router.push(ReplyToNavigationDestination(note: note))
-                            }
-                        }, label: { 
-                            Image.buttonReply
-                                .padding(.leading, 10)
-                                .padding(.trailing, 23)
-                                .padding(.vertical, 12)
-                        })
+
+                        ReplyButton(note: note, replyAction: replyAction)
                     }
                     .padding(.leading, 13)
                 }

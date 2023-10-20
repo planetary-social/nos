@@ -158,6 +158,7 @@ public class Author: NosManagedObject {
             self,
             since as CVarArg
         )
+        fetchRequest.fetchLimit = 50
         return fetchRequest
     }
 

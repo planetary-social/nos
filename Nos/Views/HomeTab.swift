@@ -12,8 +12,6 @@ struct HomeTab: View {
     
     @ObservedObject var user: Author
     
-    @State private var storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now)!
-    
     @EnvironmentObject var router: Router
     @EnvironmentObject var currentUser: CurrentUser
     
