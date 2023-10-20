@@ -38,7 +38,6 @@
 		5B39E64429EDBF8100464830 /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
 		5B46611E29CCB894008B8E8C /* Generated.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5B46612029CCB894008B8E8C /* Generated.strings */; };
 		5B503F622A291A1A0098805A /* JSONRelayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */; };
-		5B5ECB122AD7426F007F1381 /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = 5B5ECB112AD7426F007F1381 /* NavigationTransitions */; };
 		5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
 		5B6EB49029EDBEC1006E750C /* NoteParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */; };
 		5B80BE9E29F9864000A363E4 /* Bech32Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */; };
@@ -716,7 +715,6 @@
 				C9646E9A29B79E04007239A4 /* Logger in Frameworks */,
 				C9646EA729B7A3DD007239A4 /* Dependencies in Frameworks */,
 				C96CB98C2A6040C500498C4E /* DequeModule in Frameworks */,
-				5B5ECB122AD7426F007F1381 /* NavigationTransitions in Frameworks */,
 				C99DBF7E2A9E81CF00F7068F /* SDWebImageSwiftUI in Frameworks */,
 				C9646EA429B7A24A007239A4 /* PostHog in Frameworks */,
 				C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */,
@@ -1212,7 +1210,6 @@
 				C9B71DBD2A8E9BAD0031ED9F /* Sentry */,
 				C9B71DBF2A8E9BAD0031ED9F /* SentrySwiftUI */,
 				C99DBF7D2A9E81CF00F7068F /* SDWebImageSwiftUI */,
-				5B5ECB112AD7426F007F1381 /* NavigationTransitions */,
 			);
 			productName = Nos;
 			productReference = C9DEBFCE298941000078B43A /* Nos.app */;
@@ -1320,7 +1317,6 @@
 				C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				C99DBF7C2A9E81CF00F7068F /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */,
-				5B5ECB102AD7426F007F1381 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -2287,14 +2283,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		5B5ECB102AD7426F007F1381 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/davdroman/swiftui-navigation-transitions";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.13.1;
-			};
-		};
 		C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swiftui-navigation";
@@ -2394,11 +2382,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		5B5ECB112AD7426F007F1381 /* NavigationTransitions */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5B5ECB102AD7426F007F1381 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */;
-			productName = NavigationTransitions;
-		};
 		C905B0742A619367009B8A78 /* DequeModule */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
