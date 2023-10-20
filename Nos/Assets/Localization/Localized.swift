@@ -260,6 +260,7 @@ enum Localized: String, Localizable, CaseIterable {
     case viewSource = "View Source"
     case reportEventContent = "This content has been reported for {{ report_category }} using NIP-69 vocabulary https://github.com/nostr-protocol/nips/pull/457"
     case select = "Select"
+    case linkToNote = "🔗 Link to note"
 }
 
 // MARK: - Replies

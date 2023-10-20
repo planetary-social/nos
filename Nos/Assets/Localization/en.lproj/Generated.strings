@@ -189,6 +189,7 @@
 "Localized.viewSource" = "View Source";
 "Localized.reportEventContent" = "This content has been reported for {{ report_category }} using NIP-69 vocabulary https://github.com/nostr-protocol/nips/pull/457";
 "Localized.select" = "Select";
+"Localized.linkToNote" = "🔗 Link to note";
 
 "Reply.one" = "{{ count }} reply";
 "Reply.many" = "{{ count }} replies";
