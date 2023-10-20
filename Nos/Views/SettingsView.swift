@@ -11,6 +11,7 @@ import SwiftUINavigation
 
 struct SettingsView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Dependency(\.unsAPI) var unsAPI
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.persistenceController) private var persistenceController
@@ -177,6 +178,7 @@ struct SettingsView: View {
         await currentUser.setKeyPair(nil)
         analytics.logout()
         crashReporting.logout()
+        unsAPI.logout()
         appController.configureCurrentState() 
     }
 }
