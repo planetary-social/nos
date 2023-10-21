@@ -97,6 +97,7 @@ enum Localized: String, Localizable, CaseIterable {
     
     case post = "Post" // (verb form)
     case newNote = "New Note"
+    case new = "New"
     case newNotePlaceholder = "Type your post here..."
     case cancel = "Cancel"
     case confirm = "Confirm"

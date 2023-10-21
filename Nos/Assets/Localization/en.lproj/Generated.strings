@@ -39,6 +39,7 @@
 "Localized.backUpYourKeyWarning" = "Logging out will delete your private key (nsec) from the app. Make sure you have your private key backed up before you do this or you will lose access to your account!";
 "Localized.post" = "Post";
 "Localized.newNote" = "New Note";
+"Localized.new" = "New";
 "Localized.newNotePlaceholder" = "Type your post here...";
 "Localized.cancel" = "Cancel";
 "Localized.confirm" = "Confirm";

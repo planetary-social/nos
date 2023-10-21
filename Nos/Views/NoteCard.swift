@@ -218,6 +218,9 @@ struct NoteCard: View {
                 )
             }
         }
+        .onAppear {
+            note.viewedAt = Date() // Update the `viewedAt` property to the current date and time
+        }
         .onDisappear {
             Task(priority: .userInitiated) {
                 await relayService.decrementSubscriptionCount(for: subscriptionIDs)
