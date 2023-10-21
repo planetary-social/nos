@@ -30,7 +30,7 @@ enum UNSError: Error {
     case badResponse
 }
 
-// swiftlint:disable type_body_length
+// swiftlint:disable file_length type_body_length
 
 class UNSAPI {
     private var authConnectionURL: URL
@@ -351,40 +351,40 @@ class UNSAPI {
         return nip05
     }    
    
-   func nameRecord(for name: UNSName) async throws -> UNSNameRecord? {
-      let accessToken = try await checkAccessToken()
-      var url = connectionURL.appending(path: "/v1/names")
-      url = url.appending(queryItems: [
-         URLQueryItem(name: "name", value: name.lowercased()),
-      ])
-      var request = URLRequest(url: url)
-      request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
-      request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
-      request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-      request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-      request.httpMethod = "GET"
-      
-      let response = try await URLSession.shared.data(for: request)
-      let responseJSON = try jsonDictionary(from: response.0)
-      
-      guard let dataDict = responseJSON["data"] as? JSONObject,
+    func nameRecord(for name: UNSName) async throws -> UNSNameRecord? {
+        let accessToken = try await checkAccessToken()
+        var url = connectionURL.appending(path: "/v1/names")
+        url = url.appending(queryItems: [
+            URLQueryItem(name: "name", value: name.lowercased()),
+        ])
+        var request = URLRequest(url: url)
+        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
+        request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "GET"
+        
+        let response = try await URLSession.shared.data(for: request)
+        let responseJSON = try jsonDictionary(from: response.0)
+        
+        guard let dataDict = responseJSON["data"] as? JSONObject,
             let available = dataDict["available"] as? Int else {
-         logError(response: response)
-         throw UNSError.badResponse
-      }
-      
-      if available == 0 { 
-         guard let nameID = dataDict["name_id"] as? String else {
+            logError(response: response)
             throw UNSError.badResponse
-         }
-         return UNSNameRecord(name: name, id: nameID)
-      } else {
-         return nil
-      }
-   }
+        }
+        
+        if available == 0 { 
+            guard let nameID = dataDict["name_id"] as? String else {
+                throw UNSError.badResponse
+            }
+            return UNSNameRecord(name: name, id: nameID)
+        } else {
+            return nil
+        }
+    }
     
     func names(matching query: String) async throws -> [HexadecimalString] {
-       if let nameRecord = try await nameRecord(for: query) {
+        if let nameRecord = try await nameRecord(for: query) {
             let nostrPubKeys = try await nostrKeys(for: nameRecord)
             return nostrPubKeys
         } else {
@@ -415,7 +415,7 @@ class UNSAPI {
         guard let dataArray = responseJSON["data"] as? [JSONObject] else {
             throw UNSError.badResponse
         }
-       
+        
         var nostrPubKeys = [HexadecimalString]()
         for connection in dataArray {
             if let npub = connection["display_value"] as? String,
@@ -423,10 +423,10 @@ class UNSAPI {
                 nostrPubKeys.append(pubKey.hex)
             }
         }
-       
+        
         return nostrPubKeys
     }
-
+    
     func usbcAddress(for name: UNSName) async throws -> USBCAddress? {
         let accessToken = try await checkAccessToken()
         var url = connectionURL.appending(path: "/v1/universal_ledger")
@@ -450,38 +450,38 @@ class UNSAPI {
         
         return usbcAddress
     }
-   
-   func usbcBalance(for name: UNSName) async throws -> Double? {
+    
+    func usbcBalance(for name: UNSName) async throws -> Double? {
         guard let nameRecord = try await nameRecord(for: name) else {
-          return nil
-       }
-      return try await usbcBalance(for: nameRecord)
-   }
+            return nil
+        }
+        return try await usbcBalance(for: nameRecord)
+    }
     
     func usbcBalance(for nameRecord: UNSNameRecord) async throws -> Double? {
-       let accessToken = try await checkAccessToken()
-       var url = connectionURL.appending(path: "/v1/universal_ledger/balance")
-       url = url.appending(queryItems: [
-         URLQueryItem(name: "name_id", value: nameRecord.id),
-       ])
-       var request = URLRequest(url: url)
-       request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
-       request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
-       request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-       request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-       request.httpMethod = "GET"
-       
-       let response = try await URLSession.shared.data(for: request)
-       let responseJSON = try jsonDictionary(from: response.0)
-       
-       guard let dataDict = responseJSON["data"] as? JSONObject,
-             let accountDict = dataDict["account_balance"] as? JSONObject,
-             let balance = accountDict["balance"] as? Double else {
-          logError(response: response)
-          throw UNSError.badResponse
-       }
-       
-       return balance / 1e+18
+        let accessToken = try await checkAccessToken()
+        var url = connectionURL.appending(path: "/v1/universal_ledger/balance")
+        url = url.appending(queryItems: [
+            URLQueryItem(name: "name_id", value: nameRecord.id),
+        ])
+        var request = URLRequest(url: url)
+        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
+        request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "GET"
+        
+        let response = try await URLSession.shared.data(for: request)
+        let responseJSON = try jsonDictionary(from: response.0)
+        
+        guard let dataDict = responseJSON["data"] as? JSONObject,
+            let accountDict = dataDict["account_balance"] as? JSONObject,
+            let balance = accountDict["balance"] as? Double else {
+            logError(response: response)
+            throw UNSError.badResponse
+        }
+        
+        return balance / 1e+18
     }
     
     func logout() {
@@ -543,7 +543,7 @@ class UNSAPI {
         self.refreshToken = userDefaults.string(forKey: refreshTokenKey)
     }
    
-   func checkAccessToken() async throws -> String {
+    func checkAccessToken() async throws -> String {
         if accessToken == nil {
             try await refreshAccessToken()
         }
@@ -551,7 +551,7 @@ class UNSAPI {
             throw UNSError.noAccessToken
         }
         return accessToken
-   }
+    }
 }
 
-// swiftlint:enable type_body_length
+// swiftlint:enable type_body_length file_length

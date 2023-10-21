@@ -583,7 +583,7 @@
 		C9A0DAE629C69FA000466635 /* Text+Gradient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Text+Gradient.swift"; sourceTree = "<group>"; };
 		C9A0DAE929C6A34200466635 /* ActivityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		C9A0DAEC29C6A66C00466635 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
-		C9A0DAF729C92F4500466635 /* UNSAPI.swift */ = {isa = PBXFileReference; indentWidth = 3; lastKnownFileType = sourcecode.swift; path = UNSAPI.swift; sourceTree = "<group>"; };
+		C9A0DAF729C92F4500466635 /* UNSAPI.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = UNSAPI.swift; sourceTree = "<group>"; };
 		C9A25B3C29F174D200B39534 /* ReadabilityPadding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadabilityPadding.swift; sourceTree = "<group>"; };
 		C9A5C5D32A9FDB6A0076AAD1 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Generated.strings; sourceTree = "<group>"; };
 		C9A6C7402AD837AD001F9500 /* UNSWizardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNSWizardController.swift; sourceTree = "<group>"; };
@@ -985,9 +985,6 @@
 		C9DEC001298944FC0078B43A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				C95D68AA299E710F00429F86 /* Color+Hex.swift */,
-				3FFB1D9529A6BBEC002A755D /* Collection+SafeSubscript.swift */,
-				C9DEC002298945150078B43A /* String+Lorem.swift */,
 				C9DEC0622989541F0078B43A /* Bundle+Current.swift */,
 				3FFB1D9529A6BBEC002A755D /* Collection+SafeSubscript.swift */,
 				C95D68AA299E710F00429F86 /* Color+Hex.swift */,
