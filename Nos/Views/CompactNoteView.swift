@@ -119,13 +119,15 @@ struct CompactNoteView: View {
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
             if note.kind == EventKind.text.rawValue, !contentLinks.isEmpty {
-                VStack {
+                TabView {
                     ForEach(contentLinks, id: \.self.absoluteURL) { url in
                         LinkPreview(url: url)
-                            .fixedSize(horizontal: false, vertical: true)
                             .padding(.horizontal, 15)
+                            .padding(.vertical, 0)
                     }
                 }
+                .tabViewStyle(.page)
+                .frame(height: 320)
                 .padding(.bottom, 15)
             }
         }
