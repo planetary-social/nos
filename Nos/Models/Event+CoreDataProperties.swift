@@ -17,6 +17,7 @@ extension Event {
 
     @NSManaged public var allTags: NSObject?
     @NSManaged public var content: String?
+    @NSManaged public var viewedAt: Date?
     @NSManaged public var createdAt: Date?
     @NSManaged public var expirationDate: Date?
     @NSManaged public var identifier: String?

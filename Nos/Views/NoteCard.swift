@@ -242,6 +242,7 @@ struct NoteCard: View {
         .cornerRadius(cornerRadius)
     }
     
+<<<<<<< HEAD
     struct OverlayView: View {
         var userTappedShowAction: () -> Void
         var hasContentWarning: Bool
@@ -486,6 +487,8 @@ struct NoteCard: View {
         }
     }
     
+=======
+>>>>>>> main
     func repostNote() async {
         guard let keyPair = currentUser.keyPair else {
             return

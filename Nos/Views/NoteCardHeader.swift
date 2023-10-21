@@ -13,17 +13,32 @@ struct NoteCardHeader: View {
     @ObservedObject var author: Author
     
     var body: some View {
-        HStack(alignment: .center) {
-            AuthorLabel(author: author, note: note)
-            Spacer()
-            if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
-                Text(elapsedTime)
-                    .lineLimit(1)
-                    .font(.body)
-                    .foregroundColor(.secondaryText)
+        VStack {
+            HStack(alignment: .center) {
+                AuthorLabel(author: author, note: note)
+                    .padding(.trailing, 10)
+                Spacer()
+                let currentTime = Date()
+                let oneHourAgo = Calendar.current.date(byAdding: .minute, value: -1, to: currentTime)
+                // viewedAt >= oneHourAgo! ||
+                if note.viewedAt == nil { //maybe it auto assigns a value?
+                    NewPostFlagView()
+                } else
+                {
+                  Text("SHIT")
+                }
+                if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
+                    Text(elapsedTime)
+                        .lineLimit(1)
+                        .font(.body)
+                        .foregroundColor(.secondaryText)
+                }
             }
+            .padding(.leading, 10)
+            
+            // Check if note.viewedAt is set and older than 10 minutes ago
+
         }
-        .padding(.leading, 10)
     }
 }
 

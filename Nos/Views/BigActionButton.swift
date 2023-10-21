@@ -12,6 +12,14 @@ import SwiftUI
 struct BigActionButton: View {
     
     var title: Localized
+    var backgroundGradient = LinearGradient(
+        colors: [
+            Color(hex: "#F06337"),
+            Color(hex: "#F24E55")
+        ],
+        startPoint: .top,
+        endPoint: .bottom
+    )
     var action: () async -> Void
     @State var disabled = false
     
@@ -30,7 +38,7 @@ struct BigActionButton: View {
         })
         .lineLimit(nil)
         .foregroundColor(.black)
-        .buttonStyle(BigActionButtonStyle())
+        .buttonStyle(BigActionButtonStyle(backgroundGradient: backgroundGradient))
         .disabled(disabled)
     }
 }
@@ -39,13 +47,14 @@ struct BigActionButtonStyle: ButtonStyle {
     
     @SwiftUI.Environment(\.isEnabled) private var isEnabled
     
+    var backgroundGradient: LinearGradient
     let cornerRadius: CGFloat = 50
     
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             // Button shadow/background
             ZStack {
-                Color(hex: "#A04651")
+                Color(hex: "#C13036")
             }
             .cornerRadius(80)
             .offset(y: 4.5)
@@ -70,15 +79,7 @@ struct BigActionButtonStyle: ButtonStyle {
                     )
                     .blendMode(.softLight)
                     
-                    LinearGradient(
-                        colors: [
-                            Color(hex: "#F08508"),
-                            Color(hex: "#F43F75")
-                        ],
-                        startPoint: .bottomLeading,
-                        endPoint: .topTrailing
-                    )
-                    .blendMode(.normal)
+                    backgroundGradient.blendMode(.normal)
                 }
                 
                 // Text container

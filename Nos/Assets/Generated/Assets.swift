@@ -58,6 +58,10 @@ extension Color {
        static let splashBackgroundColor = Color("splashBackgroundColor", bundle: Bundle.current)
        static let subheadlineText = Color("subheadlineText", bundle: Bundle.current)
        static let textBorderColor = Color("textBorderColor", bundle: Bundle.current)
+<<<<<<< HEAD
+=======
+       static let textColor = Color("textColor", bundle: Bundle.current)
+>>>>>>> main
        static let textInputBackground = Color("textInputBackground", bundle: Bundle.current)
        static let textInputBorder = Color("textInputBorder", bundle: Bundle.current)
        static let accent = Color("accent", bundle: Bundle.current)
@@ -80,6 +84,8 @@ extension Color {
        static let relationshipViewBg = Color("relationship-view-bg", bundle: Bundle.current)
        static let secondaryText = Color("secondaryText", bundle: Bundle.current)
        static let selectedtabBg = Color("selectedtab-bg", bundle: Bundle.current)
+       static let storiesBgBottom = Color("stories-bg-bottom", bundle: Bundle.current)
+       static let storiesBgTop = Color("stories-bg-top", bundle: Bundle.current)
        static let tabBgBottom = Color("tab-bg-bottom", bundle: Bundle.current)
        static let tabBgTop = Color("tab-bg-top", bundle: Bundle.current)
        static let tabBorderBottom = Color("tab-border-bottom", bundle: Bundle.current)
@@ -140,6 +146,7 @@ extension UIColor {
        static let splashBackgroundColor = UIColor(named: "splashBackgroundColor", in: Bundle.current, compatibleWith: nil)!
        static let subheadlineText = UIColor(named: "subheadlineText", in: Bundle.current, compatibleWith: nil)!
        static let textBorderColor = UIColor(named: "textBorderColor", in: Bundle.current, compatibleWith: nil)!
+       static let textColor = UIColor(named: "textColor", in: Bundle.current, compatibleWith: nil)!
        static let textInputBackground = UIColor(named: "textInputBackground", in: Bundle.current, compatibleWith: nil)!
        static let textInputBorder = UIColor(named: "textInputBorder", in: Bundle.current, compatibleWith: nil)!
        static let accent = UIColor(named: "accent", in: Bundle.current, compatibleWith: nil)!
@@ -162,6 +169,8 @@ extension UIColor {
        static let relationshipViewBg = UIColor(named: "relationship-view-bg", in: Bundle.current, compatibleWith: nil)!
        static let secondaryText = UIColor(named: "secondaryText", in: Bundle.current, compatibleWith: nil)!
        static let selectedtabBg = UIColor(named: "selectedtab-bg", in: Bundle.current, compatibleWith: nil)!
+       static let storiesBgBottom = UIColor(named: "stories-bg-bottom", in: Bundle.current, compatibleWith: nil)!
+       static let storiesBgTop = UIColor(named: "stories-bg-top", in: Bundle.current, compatibleWith: nil)!
        static let tabBgBottom = UIColor(named: "tab-bg-bottom", in: Bundle.current, compatibleWith: nil)!
        static let tabBgTop = UIColor(named: "tab-bg-top", in: Bundle.current, compatibleWith: nil)!
        static let tabBorderBottom = UIColor(named: "tab-border-bottom", in: Bundle.current, compatibleWith: nil)!
@@ -174,6 +183,7 @@ extension Image {
 
        static let info = Image("Info", bundle: Bundle.current)
        static let x = Image("X", bundle: Bundle.current)
+       static let stories = Image("stories", bundle: Bundle.current)
        static let attachMediaButton = Image("attach-media-button", bundle: Bundle.current)
        static let backChevron = Image("back-chevron", bundle: Bundle.current)
        static let buttonLikeActive = Image("button-like-active", bundle: Bundle.current)
@@ -208,6 +218,7 @@ extension UIImage {
 
        static let info = UIImage(named: "Info", in: Bundle.current, with: nil)!
        static let x = UIImage(named: "X", in: Bundle.current, with: nil)!
+       static let stories = UIImage(named: "stories", in: Bundle.current, with: nil)!
        static let attachMediaButton = UIImage(named: "attach-media-button", in: Bundle.current, with: nil)!
        static let backChevron = UIImage(named: "back-chevron", in: Bundle.current, with: nil)!
        static let buttonLikeActive = UIImage(named: "button-like-active", in: Bundle.current, with: nil)!

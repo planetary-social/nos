@@ -134,7 +134,7 @@ struct MetadataEventJSON: Codable {
             "display_name": displayName ?? "",
             "name": name ?? "",
             "nip05": nip05 ?? "",
-            "uns": uns ?? "",
+            "uns_name": uns ?? "",
             "about": about ?? "",
             "website": website ?? "",
             "picture": picture ?? "",
