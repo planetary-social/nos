@@ -16,7 +16,7 @@ import Dependencies
 /// The button opens the ThreadView for the note when tapped.
 struct NoteButton: View {
 
-    var note: Event
+    @ObservedObject var note: Event
     var style = CardStyle.compact
     var showFullMessage = false
     var hideOutOfNetwork = true

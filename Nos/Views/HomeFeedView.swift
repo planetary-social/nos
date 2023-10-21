@@ -19,6 +19,8 @@ struct HomeFeedView: View {
     @Dependency(\.analytics) private var analytics
     
     @FetchRequest var events: FetchedResults<Event>
+    @FetchRequest private var authors: FetchedResults<Author>
+    
     @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
     @State private var subscriptionIDs = [String]()
     @State private var isVisible = false
@@ -27,12 +29,23 @@ struct HomeFeedView: View {
     @State private var isShowingRelayList = false
     static let initialLoadTime = 2
 
-    // Probably the logged in user should be in the @Environment eventually
     @ObservedObject var user: Author
+
+    @State private var selectedStoryAuthor: Author?
+    @State private var storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now)!
+
+    private var isShowingStories: Bool {
+        selectedStoryAuthor != nil
+    }
     
     init(user: Author) {
         self.user = user
-        self._events = FetchRequest(fetchRequest: Event.homeFeed(for: user, before: Date.now))
+        _events = FetchRequest(fetchRequest: Event.homeFeed(for: user, before: Date.now))
+        _authors = FetchRequest(
+            fetchRequest: user.followedWithNewNotes(
+                since: Calendar.current.date(byAdding: .day, value: -2, to: .now)!
+            )
+        )
     }
     
     func subscribeToNewEvents() async {
@@ -61,15 +74,37 @@ struct HomeFeedView: View {
     }
 
     var body: some View {
-        NavigationStack(path: $router.homeFeedPath) {
-            Group {
-                if performingInitialLoad {
-                    FullscreenProgressView(
-                        isPresented: $performingInitialLoad, 
-                        hideAfter: .now() + .seconds(Self.initialLoadTime)
-                    )
-                } else {
+        Group {
+            if performingInitialLoad {
+                FullscreenProgressView(
+                    isPresented: $performingInitialLoad,
+                    hideAfter: .now() + .seconds(Self.initialLoadTime)
+                )
+            } else {
+                ZStack {
                     ScrollView(.vertical, showsIndicators: false) {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 15) {
+                                ForEach(authors) { author in
+                                    Button {
+                                        withAnimation {
+                                            selectedStoryAuthor = author
+                                        }
+                                    } label: {
+                                        AvatarView(imageUrl: author.profilePhotoURL, size: 54)
+                                            .padding(.vertical, 10)
+                                            .background(
+                                                Circle()
+                                                    .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
+                                                    .frame(width: 58, height: 58)
+                                            )
+                                    }
+                                }
+                            }
+                            .padding(.horizontal, 15)
+                        }
+                        .padding(.top, 15)
+                        .readabilityPadding()
                         LazyVStack {
                             ForEach(events) { event in
                                 NoteButton(note: event, hideOutOfNetwork: false)
@@ -79,40 +114,38 @@ struct HomeFeedView: View {
                         .padding(.vertical, 15)
                     }
                     .accessibilityIdentifier("home feed")
+
+                    StoriesView(
+                        cutoffDate: $storiesCutoffDate,
+                        authors: authors,
+                        selectedAuthor: $selectedStoryAuthor
+                    )
+                    .scaleEffect(isShowingStories ? 1 : 0.5)
+                    .opacity(isShowingStories ? 1 : 0)
+                    .animation(.default, value: selectedStoryAuthor)
                 }
             }
-            .background(Color.appBg)
-            .navigationDestination(for: Event.self) { note in
-                RepliesView(note: note)
+        }
+        .background(Color.appBg)
+        .overlay(Group {
+            if events.isEmpty && !performingInitialLoad {
+                Localized.noEvents.view
+                    .padding()
             }
-            .navigationDestination(for: URL.self) { url in
-                URLView(url: url)
+        })
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                SideMenuButton()
             }
-            .navigationDestination(for: ReplyToNavigationDestination.self) { destination in 
-                RepliesView(note: destination.note, showKeyboard: true)
-            }
-            .navigationDestination(for: Author.self) { author in
-                if router.currentPath.wrappedValue.count == 1 {
-                    ProfileView(author: author)
-                } else {
-                    if author == currentUser.author, currentUser.editing {
-                        ProfileEditView(author: author)
-                    } else {
-                        ProfileView(author: author)
+            ToolbarItem(placement: .navigationBarTrailing) {
+                if isShowingStories {
+                    Button {
+                        selectedStoryAuthor = nil
+                    } label: {
+                        Image.stories.rotationEffect(selectedStoryAuthor == nil ? Angle.zero : Angle(degrees: 90))
+                            .animation(.default, value: selectedStoryAuthor)
                     }
-                }
-            }
-            .overlay(Group {
-                if events.isEmpty && !performingInitialLoad {
-                    Localized.noEvents.view
-                        .padding()
-                }
-            })
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    SideMenuButton()
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
+                } else {
                     Button {
                         isShowingRelayList = true
                     } label: {
@@ -134,8 +167,16 @@ struct HomeFeedView: View {
                     }
                 }
             }
-            .nosNavigationBar(title: .homeFeed)
         }
+        .background(Color.appBg)
+        .padding(.top, 1)
+        .overlay(Group {
+            if !events.contains(where: { !$0.author!.muted }) {
+                Localized.noEvents.view
+                    .padding()
+            }
+        })
+        .nosNavigationBar(title: isShowingStories ? Localized.stories : Localized.homeFeed)
         .refreshable {
             date = .now
         }

@@ -32,7 +32,7 @@ struct AppView: View {
             } else {
                 TabView(selection: $router.selectedTab) {
                     if let author = currentUser.author {
-                        HomeFeedView(user: author)
+                        HomeTab(user: author)
                             .tabItem {
                                 VStack {
                                     let text = Localized.homeFeed.view

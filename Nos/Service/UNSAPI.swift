@@ -30,6 +30,8 @@ enum UNSError: Error {
     case badResponse
 }
 
+// swiftlint:disable type_body_length
+
 class UNSAPI {
     private var authConnectionURL: URL
     private var connectionURL: URL
@@ -414,14 +416,15 @@ class UNSAPI {
             throw UNSError.badResponse
         }
        
-       var nostrPubKeys = [HexadecimalString]()
-       for connection in dataArray {
-          if let npub = connection["display_value"] as? String,
-             let pubKey = PublicKey(npub: npub) {
-             nostrPubKeys.append(pubKey.hex)
-          }
-       }
-       return nostrPubKeys
+        var nostrPubKeys = [HexadecimalString]()
+        for connection in dataArray {
+            if let npub = connection["display_value"] as? String,
+                let pubKey = PublicKey(npub: npub) {
+                nostrPubKeys.append(pubKey.hex)
+            }
+        }
+       
+        return nostrPubKeys
     }
 
     func usbcAddress(for name: UNSName) async throws -> USBCAddress? {
@@ -550,3 +553,5 @@ class UNSAPI {
         return accessToken
    }
 }
+
+// swiftlint:enable type_body_length

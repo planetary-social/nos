@@ -176,6 +176,7 @@
 "Localized.unsSuccessDescription" = "You have registered your Universal Name and we have linked it to your Nostr profile.";
 "Localized.yourNewUNMessage" = "is your Universal Name.\n\nWe've created a link between your Nostr profile and your Universal Name and filled your Universal Name into the username field on your profile.";
 "Localized.anErrorOccurred" = "An error occured.";
+"Localized.stories" = "Stories";
 "Localized.relayAddressPlaceholder" = "wss://yourrelay.com";
 "Localized.someone" = "someone";
 "Localized.aboutNos" = "Nos is a new social media app built on the Nostr protocol from the team that brought you Planetary. Designed for humans, not algorithms. Learn more at Nos.social.";
@@ -189,6 +190,7 @@
 "Localized.viewSource" = "View Source";
 "Localized.reportEventContent" = "This content has been reported for {{ report_category }} using NIP-69 vocabulary https://github.com/nostr-protocol/nips/pull/457";
 "Localized.select" = "Select";
+"Localized.linkToNote" = "🔗 Link to note";
 
 "Reply.one" = "{{ count }} reply";
 "Reply.many" = "{{ count }} replies";

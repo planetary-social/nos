@@ -10,11 +10,13 @@ import LinkPresentation
 
 /// A view that displays an Open Graph Protocol preview of the given URL.
 struct LinkPreview: UIViewRepresentable {
+
     let url: URL
     
     func makeUIView(context: Context) -> LPLinkView {
         let linkView = LPLinkView(url: url)
         linkView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        linkView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
         linkView.sizeToFit()
         return linkView
     }

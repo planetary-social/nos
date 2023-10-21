@@ -70,7 +70,7 @@ class SearchController: ObservableObject {
     
     func searchRelays(for query: String) {
         Task {
-            let searchFilter = Filter(kinds: [.metaData], search: query)
+            let searchFilter = Filter(kinds: [.metaData], search: query, limit: 100)
             self.searchSubscriptions.append(await self.relayService.openSubscription(with: searchFilter))
         }
     }

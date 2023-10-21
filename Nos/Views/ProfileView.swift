@@ -230,6 +230,7 @@ struct ProfileView: View {
         }
         .alert(unwrapping: $alert)
         .onAppear {
+            Task { await loadUSBCBalance() }
             analytics.showedProfile()
         }
         .refreshable {
