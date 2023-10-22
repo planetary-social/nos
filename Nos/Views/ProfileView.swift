@@ -93,7 +93,7 @@ struct ProfileView: View {
                 currentUser.usbcAddress = usbcAddress
             }
         } catch {
-            Log.optional(error)
+            Log.optional(error, "Failed to load USBC balance for \(author.hexadecimalPublicKey ?? "null")")
         }
     }
     
