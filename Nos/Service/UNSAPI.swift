@@ -155,7 +155,7 @@ class UNSAPI {
             let accessToken = dataDict["access_token"] as? String,
             let refreshToken = dataDict["refresh_token"] as? String else {
             logError(response: response)
-            throw UNSError.generic
+            throw UNSError.badResponse
         }
         
         self.accessToken = accessToken
