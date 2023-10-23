@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (85)] - 2023-10-23Z
+
+- Fixed missing secrets
+
+## [0.1 (84)] - 2023-10-20Z
+
 - Add Stories view to the Home Feed
 - Fixed an issue where the app could become slow after searching for a user.
 - Updated search results to show mutual followers and sort by the most followers in common.
