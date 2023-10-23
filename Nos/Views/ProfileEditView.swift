@@ -41,7 +41,7 @@ struct ProfileEditView: View {
     }
     
     var body: some View {
-        ScrollView {
+        NosForm {
             AvatarView(imageUrl: URL(string: avatarText), size: 99)
                 .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
                 .padding(.top, 16)
@@ -53,13 +53,16 @@ struct ProfileEditView: View {
                     #endif
             }
             
-            HighlightedText(
-                text: .uploadProfilePicInstructions,
-                highlightedWord: "nostr.build", 
-                highlight: .diagonalAccent, 
-                font: .clarityCaption,
-                link: URL(string: "https://nostr.build")!
-            )
+            HStack {
+                HighlightedText(
+                    text: .uploadProfilePicInstructions,
+                    highlightedWord: "nostr.build", 
+                    highlight: .diagonalAccent, 
+                    font: .clarityCaption,
+                    link: URL(string: "https://nostr.build")!
+                )
+                Spacer()
+            }
             .padding(13)
             
             NosFormSection(label: .basicInfo) { 
@@ -171,7 +174,7 @@ struct ProfileEditView_Previews: PreviewProvider {
     static var previewData = PreviewData()
 
     static var previews: some View {
-        NavigationView {
+        NavigationStack {
             ProfileEditView(author: previewData.alice)
                 .inject(previewData: previewData)
         }
