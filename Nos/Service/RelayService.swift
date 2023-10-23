@@ -407,7 +407,7 @@ extension RelayService {
     private func publish(from client: WebSocketClient, jsonEvent: JSONEvent) async throws {
         // Keep track of this so if it fails we can retry N times
         let requestString = try jsonEvent.buildPublishRequest()
-        Log.info(requestString)
+        Log.info("publishing \(requestString)")
         client.write(string: requestString)
     }
     
