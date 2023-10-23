@@ -112,6 +112,7 @@ struct ProfileEditView: View {
                 nip05Text = currentUser.author?.nip05 ?? ""
                 unsText = currentUser.author?.uns ?? ""
                 unsController = UNSWizardController(authorKey: author.hexadecimalPublicKey)
+                author.willChangeValue(for: \Author.uns) // Trigger ProfileView to load USBC balance
             }
         })
         .scrollContentBackground(.hidden)

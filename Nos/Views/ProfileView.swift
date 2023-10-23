@@ -87,7 +87,6 @@ struct ProfileView: View {
         }
         do {
             usbcAddress = try await unsAPI.usbcAddress(for: unsName)
-            print("isshowingloggedinuser \(isShowingLoggedInUser)")
             if isShowingLoggedInUser {
                 usbcBalance = try await unsAPI.usbcBalance(for: unsName)
                 currentUser.usbcAddress = usbcAddress
@@ -144,7 +143,7 @@ struct ProfileView: View {
         .navigationBarItems(
             trailing:
                 HStack {
-                    if let usbcAddress, (!isShowingLoggedInUser || usbcBalance != nil) {
+                    if let usbcAddress, !isShowingLoggedInUser || usbcBalance != nil {
                         USBCBarButtonItem(address: usbcAddress, balance: $usbcBalance)
                     }
                     Button(
