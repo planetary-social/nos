@@ -114,6 +114,11 @@ struct UNSNamePicker: View {
                 .textInputAutocapitalization(.none)
                 .padding(15)
                 .offset(x: -6)
+                .onChange(of: desiredName) { newValue in
+                    if newValue.isEmpty == false {
+                        selectedName = nil
+                    }
+                }
                 
                 Spacer()
             }
