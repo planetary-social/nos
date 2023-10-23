@@ -107,6 +107,7 @@ type_name:
   excluded: 
     - Tag
     - TLV
+    - Wei
   allowed_symbols: ["_"] # these are allowed in type names
 identifier_name:
   min_length: # only min_length
@@ -148,7 +149,6 @@ identifier_name:
     - uns
     - idx
     - dsn
-    - Wei
     - wei
 number_separator:
   minimum_length: 5

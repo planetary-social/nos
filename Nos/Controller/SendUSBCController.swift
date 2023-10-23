@@ -73,8 +73,6 @@ class SendUSBCController: ObservableObject {
         .store(in: &cancellables)
     }
     
-    
-    
     @MainActor func updateStep() {
         if let session = walletConnectManager.getAllSessions().last {
             walletConnectManager.saveInitiatedSessions(sessions: session)
