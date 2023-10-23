@@ -192,9 +192,13 @@ fileprivate struct BottomOverlay: View {
                 .padding(.trailing, 8)
 
             if let replies = attributedReplies {
-                Text(replies)
-                    .font(.subheadline)
-                    .foregroundColor(Color.secondaryText)
+                Button {
+                    router.push(note)
+                } label: {
+                    Text(replies)
+                        .font(.subheadline)
+                        .foregroundColor(Color.secondaryText)
+                }
             }
 
             Spacer()
