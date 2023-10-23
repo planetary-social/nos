@@ -102,6 +102,7 @@ enum Localized: String, Localizable, CaseIterable {
     case confirm = "Confirm"
     case clear = "Clear"
     case done = "Done"
+    case send = "Send"
     case editProfile = "Edit Profile"
     case completeProfileMessage = "Finish setting up your profile to help people find you."
     case completeProfileButton = "Complete My Profile"

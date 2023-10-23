@@ -44,6 +44,7 @@
 "Localized.confirm" = "Confirm";
 "Localized.clear" = "Clear";
 "Localized.done" = "Done";
+"Localized.send" = "Send";
 "Localized.editProfile" = "Edit Profile";
 "Localized.completeProfileMessage" = "Finish setting up your profile to help people find you.";
 "Localized.completeProfileButton" = "Complete My Profile";

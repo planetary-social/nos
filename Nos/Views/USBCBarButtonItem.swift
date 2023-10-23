@@ -13,6 +13,21 @@ struct USBCBarButtonItem: View {
     @Binding var balance: Double?
     @State private var walletConnectIsPresented = false
     
+    var formattedBalance: String {
+        let errorText = "~"
+        guard let balance else {
+            return errorText
+        }
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        numberFormatter.locale = Locale.current
+        numberFormatter.usesGroupingSeparator = true
+        numberFormatter.currencySymbol = ""
+        
+        let formattedBalance = numberFormatter.string(from: NSNumber(value: balance))
+        return formattedBalance ?? errorText
+    }
+    
     var body: some View {
         Button(
             action: {
@@ -20,13 +35,31 @@ struct USBCBarButtonItem: View {
             },
             label: {
                 HStack {
-                    if let balance {
-                        Text("USBC")
-                        Text(String(format: "%.2f", balance))
-                    } else {
-                        Text("Send USBC")
+                    HStack {
+                        Image.usbcLogo
+                            .resizable()
+                            .frame(width: 22, height: 22)
+                            .background(Circle().foregroundColor(Color(hex: "#19072C")))
+                        
+                        if let balance {
+                            PlainText(formattedBalance)
+                                .font(.subheadline)
+                                .foregroundColor(.primaryTxt)
+                                .bold()
+                        } else {
+                            PlainText(.send)
+                                .foregroundColor(.primaryTxt)
+                                .font(.subheadline)
+                                .bold()                        
+                                .baselineOffset(1)
+                                .padding(.trailing, 2)
+                        }
                     }
+                    .padding(3)
+                    .padding(.trailing, 4)
                 }
+                .background(Color.appBg)
+                .cornerRadius(14)
             }
         )
         .sheet(isPresented: $walletConnectIsPresented) { 
@@ -39,7 +72,7 @@ struct USBCBarButtonItem: View {
 
 #Preview("Logged in User") {
     @State var address: USBCAddress? = "0x918234"
-    @State var balance: Double? = 100.23109184091284
+    @State var balance: Double? = 10_028_732.23109184091284
     
     return NavigationStack { 
         VStack {}
