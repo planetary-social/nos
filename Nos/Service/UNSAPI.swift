@@ -61,7 +61,7 @@ class UNSAPI {
             let orgCode = Self.getEnvironmentVariable(named: "UNS_ORG_CODE") else {
             return nil
         }
-              
+        
         self.authConnectionURL = authConnectionURL
         self.connectionURL = connectionURL
         self.clientID = clientID
@@ -178,7 +178,7 @@ class UNSAPI {
         let data = response.0
         
         guard let responseDict = try JSONSerialization.jsonObject(with: data) as? JSONObject else {
-            throw UNSError.generic
+            throw UNSError.badResponse
         }
         guard let dataDict = responseDict["data"] as? [JSONObject] else {
             logError(response: response)
@@ -522,7 +522,7 @@ class UNSAPI {
     
     func jsonDictionary(from data: Data) throws -> JSONObject {
         guard let responseDict = try JSONSerialization.jsonObject(with: data) as? JSONObject else {
-            throw UNSError.generic
+            throw UNSError.badResponse
         }
         
         return responseDict
