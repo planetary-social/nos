@@ -346,14 +346,7 @@
 		C9F204692ADEDC4E0029A858 /* WalletConnectCryptoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204682ADEDC4E0029A858 /* WalletConnectCryptoProvider.swift */; };
 		C9F2046B2ADEDCB80029A858 /* WalletConnectPairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2046A2ADEDCB80029A858 /* WalletConnectPairingView.swift */; };
 		C9F2046D2ADEDD6F0029A858 /* WalletConnectPairingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2046C2ADEDD6F0029A858 /* WalletConnectPairingController.swift */; };
-		C9F204712ADEDDE20029A858 /* AvailableMethodsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2046F2ADEDDE20029A858 /* AvailableMethodsListViewModel.swift */; };
-		C9F204722ADEDDE20029A858 /* AvailableMethodsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204702ADEDDE20029A858 /* AvailableMethodsListView.swift */; };
-		C9F204752ADEDDEB0029A858 /* SessionListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204732ADEDDEB0029A858 /* SessionListViewModel.swift */; };
-		C9F204762ADEDDEB0029A858 /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204742ADEDDEB0029A858 /* SessionListView.swift */; };
-		C9F204792ADEDE120029A858 /* SupportedChainType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204772ADEDE120029A858 /* SupportedChainType.swift */; };
-		C9F2047A2ADEDE120029A858 /* SupportedMethodsType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204782ADEDE120029A858 /* SupportedMethodsType.swift */; };
-		C9F2047D2ADEDE600029A858 /* MethodDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047B2ADEDE5F0029A858 /* MethodDetailViewModel.swift */; };
-		C9F2047E2ADEDE600029A858 /* MethodDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047C2ADEDE600029A858 /* MethodDetailView.swift */; };
+		C9F204792ADEDE120029A858 /* WalletConnectChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204772ADEDE120029A858 /* WalletConnectChain.swift */; };
 		C9F204802AE029D90029A858 /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047F2AE029D90029A858 /* AppDestination.swift */; };
 		C9F204812AE02D8C0029A858 /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047F2AE029D90029A858 /* AppDestination.swift */; };
 		C9F204832AE03A8E0029A858 /* bignumber.js in Resources */ = {isa = PBXBuildFile; fileRef = C9F204822AE03A8D0029A858 /* bignumber.js */; };
@@ -668,14 +661,7 @@
 		C9F204682ADEDC4E0029A858 /* WalletConnectCryptoProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectCryptoProvider.swift; sourceTree = "<group>"; };
 		C9F2046A2ADEDCB80029A858 /* WalletConnectPairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectPairingView.swift; sourceTree = "<group>"; };
 		C9F2046C2ADEDD6F0029A858 /* WalletConnectPairingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletConnectPairingController.swift; sourceTree = "<group>"; };
-		C9F2046F2ADEDDE20029A858 /* AvailableMethodsListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvailableMethodsListViewModel.swift; sourceTree = "<group>"; };
-		C9F204702ADEDDE20029A858 /* AvailableMethodsListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvailableMethodsListView.swift; sourceTree = "<group>"; };
-		C9F204732ADEDDEB0029A858 /* SessionListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionListViewModel.swift; sourceTree = "<group>"; };
-		C9F204742ADEDDEB0029A858 /* SessionListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionListView.swift; sourceTree = "<group>"; };
-		C9F204772ADEDE120029A858 /* SupportedChainType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportedChainType.swift; sourceTree = "<group>"; };
-		C9F204782ADEDE120029A858 /* SupportedMethodsType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportedMethodsType.swift; sourceTree = "<group>"; };
-		C9F2047B2ADEDE5F0029A858 /* MethodDetailViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MethodDetailViewModel.swift; sourceTree = "<group>"; };
-		C9F2047C2ADEDE600029A858 /* MethodDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MethodDetailView.swift; sourceTree = "<group>"; };
+		C9F204772ADEDE120029A858 /* WalletConnectChain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletConnectChain.swift; sourceTree = "<group>"; };
 		C9F2047F2AE029D90029A858 /* AppDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDestination.swift; sourceTree = "<group>"; };
 		C9F204822AE03A8D0029A858 /* bignumber.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = bignumber.js; sourceTree = "<group>"; };
 		C9F204852AE067130029A858 /* USBCWizard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBCWizard.swift; sourceTree = "<group>"; };
@@ -1058,6 +1044,7 @@
 				C9C2B78429E073E300548B4A /* RelaySubscription.swift */,
 				C9E37E142A1E8143003D4B0A /* Report.swift */,
 				C94A5E172A72C84200B6EC5D /* ReportCategory.swift */,
+				C9F204772ADEDE120029A858 /* WalletConnectChain.swift */,
 				C9F204602ADEDB720029A858 /* Wei.swift */,
 				C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */,
 			);
@@ -1122,14 +1109,6 @@
 			children = (
 				C9F2046A2ADEDCB80029A858 /* WalletConnectPairingView.swift */,
 				C9F204852AE067130029A858 /* USBCWizard.swift */,
-				C9F204702ADEDDE20029A858 /* AvailableMethodsListView.swift */,
-				C9F2046F2ADEDDE20029A858 /* AvailableMethodsListViewModel.swift */,
-				C9F204742ADEDDEB0029A858 /* SessionListView.swift */,
-				C9F204732ADEDDEB0029A858 /* SessionListViewModel.swift */,
-				C9F204772ADEDE120029A858 /* SupportedChainType.swift */,
-				C9F204782ADEDE120029A858 /* SupportedMethodsType.swift */,
-				C9F2047C2ADEDE600029A858 /* MethodDetailView.swift */,
-				C9F2047B2ADEDE5F0029A858 /* MethodDetailViewModel.swift */,
 				C9F204822AE03A8D0029A858 /* bignumber.js */,
 			);
 			path = WalletConnect;
@@ -1552,7 +1531,6 @@
 				CD09A74429A50F1D0063464F /* SideMenu.swift in Sources */,
 				C9F2046B2ADEDCB80029A858 /* WalletConnectPairingView.swift in Sources */,
 				C9C547512A4F1CC3006B0741 /* SearchController.swift in Sources */,
-				C9F204712ADEDDE20029A858 /* AvailableMethodsListViewModel.swift in Sources */,
 				C9DEC06E2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,
 				C9F64D8C29ED840700563F2B /* LogHelper.swift in Sources */,
 				C9C2B78529E073E300548B4A /* RelaySubscription.swift in Sources */,
@@ -1572,7 +1550,6 @@
 				C98B8B4029FBF83B009789C8 /* NotificationCard.swift in Sources */,
 				5B834F672A83FB5C000C1432 /* ProfileKnownFollowersView.swift in Sources */,
 				C987F81D29BA6D9A00B44E7A /* ProfileTab.swift in Sources */,
-				C9F2047D2ADEDE600029A858 /* MethodDetailViewModel.swift in Sources */,
 				C9ADB14129951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */,
 				C9F84C21298DC36800C6714D /* AppView.swift in Sources */,
 				C9CE5B142A0172CF008E198C /* WebView.swift in Sources */,
@@ -1608,7 +1585,7 @@
 				C94FE9F729DB259300019CD3 /* Text+Gradient.swift in Sources */,
 				3F170C78299D816200BC8F8B /* AppController.swift in Sources */,
 				C9F204672ADEDBA80029A858 /* String+Extra.swift in Sources */,
-				C9F204792ADEDE120029A858 /* SupportedChainType.swift in Sources */,
+				C9F204792ADEDE120029A858 /* WalletConnectChain.swift in Sources */,
 				C95D68AB299E710F00429F86 /* Color+Hex.swift in Sources */,
 				C94A5E182A72C84200B6EC5D /* ReportCategory.swift in Sources */,
 				C973364F2A7968220012D8B8 /* SetUpUNSBanner.swift in Sources */,
@@ -1634,7 +1611,6 @@
 				C9F75AD22A02D41E005BBE45 /* ComposerActionBar.swift in Sources */,
 				C9F204652ADEDB9B0029A858 /* BigDecimal.swift in Sources */,
 				C9DEBFD2298941000078B43A /* NosApp.swift in Sources */,
-				C9F204752ADEDDEB0029A858 /* SessionListViewModel.swift in Sources */,
 				C930055F2A6AF8320098CA9E /* LoadingContent.swift in Sources */,
 				C9A6C74D2AD98E2A001F9500 /* UNSNameTakenView.swift in Sources */,
 				C9646EAE29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */,
@@ -1677,12 +1653,10 @@
 				5BE281C12AE2CCB400880466 /* StoryNoteView.swift in Sources */,
 				3F60F42929B27D3E000D62C4 /* ThreadView.swift in Sources */,
 				C9B678DB29EEBF3B00303F33 /* DependencyInjection.swift in Sources */,
-				C9F204762ADEDDEB0029A858 /* SessionListView.swift in Sources */,
 				C95D68A9299E709900429F86 /* LinearGradient+Planetary.swift in Sources */,
 				C92F01522AC4D6AB00972489 /* NosFormSection.swift in Sources */,
 				C9BCF1C12AC72020009BDE06 /* UNSWizardChooseNameView.swift in Sources */,
 				C9A6C7412AD837AD001F9500 /* UNSWizardController.swift in Sources */,
-				C9F204722ADEDDE20029A858 /* AvailableMethodsListView.swift in Sources */,
 				C9F204862AE067130029A858 /* USBCWizard.swift in Sources */,
 				C97465342A3C95FE0031226F /* RelayPickerToolbarButton.swift in Sources */,
 				3F43C47629A9625700E896A0 /* AuthorReference+CoreDataClass.swift in Sources */,
@@ -1698,13 +1672,11 @@
 				C9DEBFD9298941000078B43A /* HomeFeedView.swift in Sources */,
 				3F30020729C237AB003D4F8B /* OnboardingAgeVerificationView.swift in Sources */,
 				C9DB207729F30EC700FB7B9D /* AsyncButton.swift in Sources */,
-				C9F2047A2ADEDE120029A858 /* SupportedMethodsType.swift in Sources */,
 				C931517D29B915AF00934506 /* StaggeredGrid.swift in Sources */,
 				C97465312A3B89140031226F /* AuthorLabel.swift in Sources */,
 				C9C547592A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift in Sources */,
 				C9B678E729F01A8500303F33 /* FullscreenProgressView.swift in Sources */,
 				C9F0BB6929A5039D000547FC /* Int+Bool.swift in Sources */,
-				C9F2047E2ADEDE600029A858 /* MethodDetailView.swift in Sources */,
 				DC5F203F2A6AE24200F8D73F /* ImagePickerButton.swift in Sources */,
 				C981E2DD2AC610D600FBF4F6 /* UNSStepImage.swift in Sources */,
 				C9CDBBA429A8FA2900C555C7 /* GoldenPostView.swift in Sources */,

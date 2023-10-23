@@ -40,7 +40,6 @@ public struct BigDecimal {
     func isValid() -> Bool {
         amount != nil
     }
-
 }
 
 // MARK: - Comparable
@@ -48,9 +47,8 @@ public struct BigDecimal {
 extension BigDecimal: Comparable {
 
     public static func < (lhs: BigDecimal, rhs: BigDecimal) -> Bool {
-        return Web3Utils.shared.isLhs(lhs, lessThan: rhs)
+        Web3Utils.shared.isLhs(lhs, lessThan: rhs)
     }
-
 }
 
 // MARK: - AdditiveArithmetic
@@ -58,17 +56,16 @@ extension BigDecimal: Comparable {
 extension BigDecimal: AdditiveArithmetic {
 
     public static var zero: BigDecimal {
-        return BigDecimal("0")
+        BigDecimal("0")
     }
 
     public static func + (lhs: BigDecimal, rhs: BigDecimal) -> BigDecimal {
-        return Web3Utils.shared.add(lhs: lhs, rhs: rhs)
+        Web3Utils.shared.add(lhs: lhs, rhs: rhs)
     }
 
     public static func - (lhs: BigDecimal, rhs: BigDecimal) -> BigDecimal {
-        return Web3Utils.shared.subtract(lhs: lhs, with: rhs)
+        Web3Utils.shared.subtract(lhs: lhs, with: rhs)
     }
-
 }
 
 // MARK: - Multiply
@@ -76,7 +73,6 @@ extension BigDecimal: AdditiveArithmetic {
 extension BigDecimal {
 
     public static func * (lhs: BigDecimal, rhs: BigDecimal) -> BigDecimal {
-        return Web3Utils.shared.multiply(lhs: lhs, with: rhs)
+        Web3Utils.shared.multiply(lhs: lhs, with: rhs)
     }
-
 }

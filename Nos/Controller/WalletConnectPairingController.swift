@@ -22,7 +22,6 @@ class WalletConnectPairingController: ObservableObject {
     @Published var qrImage: Image?
     @Published var qrCodeValue: String?
     @Published var session: Session?
-    @Published var currencyItems: [CurrencyItem] = []
     
     init() {
         Task { try? await initiateConnectionToWC() }
@@ -34,7 +33,6 @@ class WalletConnectPairingController: ObservableObject {
         
         walletConnectManager.onSessionInitiated = {[weak self] session in
             self?.session = session
-            self?.prepareAddressList(for: session)
         }
     }
     
@@ -60,31 +58,10 @@ class WalletConnectPairingController: ObservableObject {
         
         UIApplication.shared.open(url) { success in
             if !success {
-                UIApplication.shared.open(URL(string: "https://apps.apple.com/us/app/globalid-private-digital-id/id1439340119")!)
+                UIApplication.shared.open(
+                    URL(string: "https://apps.apple.com/us/app/globalid-private-digital-id/id1439340119")!
+                )
             }
         }
     }
-    
-    private func prepareAddressList(for session: Session) {
-        let namespaces = session.namespaces.values
-        var currencyItems: [CurrencyItem] = []
-        namespaces.forEach { namespace in
-            let accounts = namespace.accounts
-            accounts.forEach { account in
-                let blockchain = account.blockchain
-                let addressValue = account.address
-                currencyItems.append(.init(address: addressValue,
-                                           blockchain: blockchain,
-                                           methods: namespace.methods.compactMap { $0 }))
-            }
-        }
-        self.currencyItems = currencyItems
-    }
-}
-
-
-struct CurrencyItem: Hashable {
-    let address: String
-    let blockchain: Blockchain
-    let methods: [String]
 }

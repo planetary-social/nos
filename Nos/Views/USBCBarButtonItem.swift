@@ -41,7 +41,7 @@ struct USBCBarButtonItem: View {
                             .frame(width: 22, height: 22)
                             .background(Circle().foregroundColor(Color(hex: "#19072C")))
                         
-                        if let balance {
+                        if balance != nil {
                             PlainText(formattedBalance)
                                 .font(.subheadline)
                                 .foregroundColor(.primaryTxt)

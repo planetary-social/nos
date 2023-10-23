@@ -8,18 +8,16 @@
 import Foundation
 import WalletConnectUtils
 
-
-enum SupportedChainType: CaseIterable {
+enum WalletConnectChain: CaseIterable {
     case ethereum
     case universalLedger
-
 
     var displayValue: String {
         switch self {
         case .ethereum:
-            return WalletConnectManager.shared.testMode ? "Ethereum Sepolia" : "Ethereum"
+            return "Ethereum"
         case .universalLedger:
-            return WalletConnectManager.shared.testMode ? "Universal ledger testnet" : "Universal ledger"
+            return "Universal ledger"
         }
     }
 
@@ -33,9 +31,9 @@ enum SupportedChainType: CaseIterable {
     var blockChainValue: Blockchain? {
         switch self {
         case .ethereum:
-            return WalletConnectManager.shared.testMode ?  Blockchain("\(self.blockChainId):11155111") : Blockchain("\(self.blockChainId):1")
+            return Blockchain("\(self.blockChainId):1")
         case .universalLedger:
-            return WalletConnectManager.shared.testMode ?  Blockchain("\(self.blockChainId):20231") : Blockchain("\(self.blockChainId):2024")
+            return Blockchain("\(self.blockChainId):2024")
         }
     }
 }

@@ -14,8 +14,7 @@ import Combine
 
 class WalletConnectManager {
     
-    static var shared: WalletConnectManager = WalletConnectManager.initialize()
-    var testMode: Bool = true
+    static var shared = WalletConnectManager.initialize()
     let wcService: WalletConnectProvidable = ETHWalletConnectService()
     private var initiatedSession: Session?
     private var disposeBag = Set<AnyCancellable>()
@@ -51,7 +50,7 @@ class WalletConnectManager {
         return try await Sign.instance.disconnect(topic: topic)
     }
     
-    func personalSign(message: String, address: String, blockChain: SupportedChainType) {
+    func personalSign(message: String, address: String, blockChain: WalletConnectChain) {
         if let topic = initiatedSession?.topic {
             Task {
                 do {
@@ -64,7 +63,7 @@ class WalletConnectManager {
         }
     }
     
-    func getBalance(address: String, blockChain: SupportedChainType) {
+    func getBalance(address: String, blockChain: WalletConnectChain) {
         if let topic = initiatedSession?.topic {
             Task {
                 do {
@@ -79,7 +78,7 @@ class WalletConnectManager {
         }
     }
     
-    func sendTransaction(fromAddress: String, toAddress: String, amount: String, blockChain: SupportedChainType) {
+    func sendTransaction(fromAddress: String, toAddress: String, amount: String, blockChain: WalletConnectChain) {
         if let topic = initiatedSession?.topic {
             Task {
                 do {

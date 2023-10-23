@@ -26,9 +26,9 @@ struct SocketFactory: WebSocketFactory {
 extension WebSocket: WebSocketConnecting { }
 
 protocol WalletConnectProvidable {
-    func personalSign(topic: String, message: String, address: String, blockChain: SupportedChainType) -> Request
-    func getBalance(topic: String, address: String, blockChain: SupportedChainType) -> Request
-    func sendTransaction(topic: String, fromAddress: String, toAddress: String, amount: String, blockChain: SupportedChainType) -> Request?
+    func personalSign(topic: String, message: String, address: String, blockChain: WalletConnectChain) -> Request
+    func getBalance(topic: String, address: String, blockChain: WalletConnectChain) -> Request
+    func sendTransaction(topic: String, fromAddress: String, toAddress: String, amount: String, blockChain: WalletConnectChain) -> Request?
     func initialize() async throws -> String
 }
 
@@ -53,12 +53,12 @@ struct ETHWalletConnectService: WalletConnectProvidable {
     
     private func prepareEthereumChains() -> [String: ProposalNamespace]  {
         let methods: Set<String> = ["eth_sendTransaction", "personal_sign", "eth_signTypedData", "eth_getBalance",]
-        let blockchains: Set<Blockchain> = [SupportedChainType.universalLedger.blockChainValue!]
+        let blockchains: Set<Blockchain> = [WalletConnectChain.universalLedger.blockChainValue!]
         let namespaces: [String: ProposalNamespace] = ["eip155": ProposalNamespace(chains: blockchains, methods: methods, events: ["any"])]
         return namespaces
     }
     
-    func personalSign(topic: String, message: String, address: String, blockChain: SupportedChainType = .ethereum) -> Request {
+    func personalSign(topic: String, message: String, address: String, blockChain: WalletConnectChain = .ethereum) -> Request {
         return Request(
             topic: topic,
             method: "personal_sign",
@@ -67,7 +67,7 @@ struct ETHWalletConnectService: WalletConnectProvidable {
         )
     }
     
-    func getBalance(topic: String, address: String, blockChain: SupportedChainType = .ethereum) -> Request {
+    func getBalance(topic: String, address: String, blockChain: WalletConnectChain = .ethereum) -> Request {
         return Request(
             topic: topic,
             method: "eth_getBalance",
@@ -80,7 +80,7 @@ struct ETHWalletConnectService: WalletConnectProvidable {
                          fromAddress: String,
                          toAddress: String,
                          amount: String,
-                         blockChain: SupportedChainType = .ethereum) -> Request? {
+                         blockChain: WalletConnectChain = .ethereum) -> Request? {
         let decimalValue = BigDecimal(hexString: amount)
         guard let eth = Decimal(string: decimalValue.amount ?? ""),
               let wei = Web3Utils.shared.weiFrom(ether: eth) else { return nil }

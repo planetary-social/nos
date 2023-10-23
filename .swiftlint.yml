@@ -148,6 +148,8 @@ identifier_name:
     - uns
     - idx
     - dsn
+    - Wei
+    - wei
 number_separator:
   minimum_length: 5
 cyclomatic_complexity:

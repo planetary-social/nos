@@ -10,7 +10,7 @@ import JavaScriptCore
 
 /// This class uses a javascript library to perform big number conversions. https://mikemcl.github.io/bignumber.js/
 /// The reason we decided for this library is because it is used by 1.1M repositories and has 5.9k stars.
-final public class Web3Utils {
+public final class Web3Utils {
 
     // MARK: - Properties
 
@@ -40,7 +40,6 @@ final public class Web3Utils {
         context.evaluateScript(erc20tokenJS)
         context.evaluateScript(bigUintOperationsJS)
     }
-
 }
 
 extension Web3Utils {
@@ -49,9 +48,8 @@ extension Web3Utils {
 
     public func add(lhs: BigDecimal, rhs: BigDecimal) -> BigDecimal {
         guard let jsFunction = jsContext.objectForKeyedSubscript("add"),
-              let valueString = jsFunction.call(withArguments: [lhs.amount, rhs.amount]).toString(),
-              valueString != "NaN"
-        else {
+            let valueString = jsFunction.call(withArguments: [lhs.amount!, rhs.amount!]).toString(),
+            valueString != "NaN" else {
             fatalError("Web3Utils error in JavaScript.")
         }
         return BigDecimal(valueString)
@@ -59,9 +57,8 @@ extension Web3Utils {
 
     public func subtract(lhs: BigDecimal, with rhs: BigDecimal) -> BigDecimal {
         guard let jsFunction = jsContext.objectForKeyedSubscript("subtract"),
-              let valueString = jsFunction.call(withArguments: [lhs.amount, rhs.amount]).toString(),
-              valueString != "NaN"
-        else {
+            let valueString = jsFunction.call(withArguments: [lhs.amount!, rhs.amount!]).toString(),
+            valueString != "NaN" else {
             fatalError("NcwWeb3Utils error in JavaScript.")
         }
         return BigDecimal(valueString)
@@ -69,9 +66,8 @@ extension Web3Utils {
 
     public func multiply(lhs: BigDecimal, with rhs: BigDecimal) -> BigDecimal {
         guard let jsFunction = jsContext.objectForKeyedSubscript("multiply"),
-              let valueString = jsFunction.call(withArguments: [lhs.amount, rhs.amount]).toString(),
-              valueString != "NaN"
-        else {
+            let valueString = jsFunction.call(withArguments: [lhs.amount!, rhs.amount!]).toString(),
+            valueString != "NaN" else {
             fatalError("NcwWeb3Utils error in JavaScript.")
         }
         return BigDecimal(valueString)
@@ -81,8 +77,7 @@ extension Web3Utils {
 
     public func isLhs(_ lhs: BigDecimal, lessThan rhs: BigDecimal) -> Bool {
         guard let jsFunction = jsContext.objectForKeyedSubscript("isLhs"),
-              let valueString = jsFunction.call(withArguments: [lhs.amount, rhs.amount]).toString()
-        else {
+            let valueString = jsFunction.call(withArguments: [lhs.amount!, rhs.amount!]).toString() else {
             fatalError("NcwWeb3Utils error in JavaScript.")
         }
         return Bool(valueString == "true")
@@ -90,10 +85,9 @@ extension Web3Utils {
 
     public func parseToBigInt(from string: String) -> String? {
         guard let jsFunction = jsContext.objectForKeyedSubscript("parseToBigUInt"),
-              let valueString = jsFunction.call(withArguments: [string]).toString(),
-              valueString != "NaN",
-              !string.isEmpty
-        else {
+            let valueString = jsFunction.call(withArguments: [string]).toString(),
+            valueString != "NaN",
+            !string.isEmpty else {
             return nil
         }
         return valueString
@@ -101,10 +95,9 @@ extension Web3Utils {
 
     public func hex(from number: BigDecimal) -> String? {
         guard let value = number.amount,
-              let jsFunction = jsContext.objectForKeyedSubscript("hex"),
-              let valueString = jsFunction.call(withArguments: [value]).toString(),
-              valueString != "NaN"
-        else {
+            let jsFunction = jsContext.objectForKeyedSubscript("hex"),
+            let valueString = jsFunction.call(withArguments: [value]).toString(),
+            valueString != "NaN" else {
             return nil
         }
         if valueString.starts(with: "0x") {
@@ -112,7 +105,6 @@ extension Web3Utils {
         } else {
             return "0x" + valueString
         }
-
     }
 
     // MARK: - JavaScript
@@ -179,18 +171,15 @@ extension Web3Utils {
         }
     """
     }
-
 }
-
 
 extension Web3Utils {
 
     public func tokensAmount(fullValueNumber: BigDecimal, currencyBase: Double) -> Decimal? {
         guard let fullValue = fullValueNumber.amount,
-              let jsFunction = jsContext.objectForKeyedSubscript("tokenAmount"),
-              let valueString = jsFunction.call(withArguments: ["\(fullValue)", "\(currencyBase)"]).toString(),
-              valueString != "NaN"
-        else {
+            let jsFunction = jsContext.objectForKeyedSubscript("tokenAmount"),
+            let valueString = jsFunction.call(withArguments: ["\(fullValue)", "\(currencyBase)"]).toString(),
+            valueString != "NaN" else {
             return nil
         }
         return Decimal(string: valueString)
@@ -208,17 +197,15 @@ extension Web3Utils {
         }
     """
     }
-
 }
 
 extension Web3Utils {
 
     public func etherFrom(wei: Wei) -> Decimal? {
         guard let amount = wei.value.amount,
-              let jsFunction = jsContext.objectForKeyedSubscript("ethFromWei"),
-              let valueString = jsFunction.call(withArguments: [amount]).toString(),
-              valueString != "NaN"
-        else {
+            let jsFunction = jsContext.objectForKeyedSubscript("ethFromWei"),
+            let valueString = jsFunction.call(withArguments: [amount]).toString(),
+            valueString != "NaN" else {
             return nil
         }
         return Decimal(string: valueString)
@@ -226,10 +213,9 @@ extension Web3Utils {
 
     public func gweiFrom(wei: Wei) -> Decimal? {
         guard let amount = wei.value.amount,
-              let jsFunction = jsContext.objectForKeyedSubscript("gweiFromWei"),
-              let valueString = jsFunction.call(withArguments: [amount]).toString(),
-              valueString != "NaN"
-        else {
+            let jsFunction = jsContext.objectForKeyedSubscript("gweiFromWei"),
+            let valueString = jsFunction.call(withArguments: [amount]).toString(),
+            valueString != "NaN" else {
             return nil
         }
         return Decimal(string: valueString)
@@ -237,9 +223,8 @@ extension Web3Utils {
 
     public func weiFrom(ether: Decimal) -> BigDecimal? {
         guard let jsFunction = jsContext.objectForKeyedSubscript("weiFromEth"),
-              let valueString = jsFunction.call(withArguments: [NSDecimalNumber(decimal: ether).stringValue]).toString(),
-              valueString != "NaN"
-        else {
+            let valueString = jsFunction.call(withArguments: [NSDecimalNumber(decimal: ether).stringValue]).toString(),
+            valueString != "NaN" else {
             return nil
         }
         return BigDecimal(valueString)
@@ -247,16 +232,15 @@ extension Web3Utils {
 
     public func weiFrom(gwei: Decimal) -> BigDecimal? {
         guard let jsFunction = jsContext.objectForKeyedSubscript("weiFromGwei"),
-              let valueString = jsFunction.call(withArguments: [NSDecimalNumber(decimal: gwei).stringValue]).toString(),
-              valueString != "NaN"
-        else {
+            let valueString = jsFunction.call(withArguments: [NSDecimalNumber(decimal: gwei).stringValue]).toString(),
+            valueString != "NaN" else {
             return nil
         }
         return BigDecimal(valueString)
     }
 
     public func weiFrom(hex: String) -> BigDecimal {
-        return BigDecimal(hexString: hex)
+        BigDecimal(hexString: hex)
     }
 
     // MARK: - JavaScript
@@ -328,5 +312,4 @@ extension Web3Utils {
         }
     """
     }
-
 }

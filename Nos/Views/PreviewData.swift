@@ -74,7 +74,7 @@ struct PreviewData {
     }()
     
     lazy var unsAuthor: Author = {
-        return eve
+        eve
     }()
     
     // MARK: - Notes

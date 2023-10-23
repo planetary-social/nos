@@ -7,7 +7,7 @@
 
 import Foundation
 
-
+/// Wei is the smallest unit of Ethereum, like a satoshi in Bitcoin.
 public struct Wei {
 
     @inlinable public static var zero: Self { Wei(hex: "0x0")! }
@@ -31,19 +31,26 @@ public struct Wei {
     }
 
     public init?(ether: Decimal) {
-        guard !ether.isSignMinus, let weiValue = Web3Utils.shared.weiFrom(ether: ether), let hexValue = weiValue.hex else { return nil }
+        guard !ether.isSignMinus, 
+            let weiValue = Web3Utils.shared.weiFrom(ether: ether), 
+            let hexValue = weiValue.hex else { 
+            return nil 
+        }
 
         value = weiValue
         hex = hexValue
     }
 
     public init?(gwei: Decimal) {
-        guard !gwei.isSignMinus, let weiValue = Web3Utils.shared.weiFrom(gwei: gwei), let hexValue = weiValue.hex else { return nil }
+        guard !gwei.isSignMinus, 
+            let weiValue = Web3Utils.shared.weiFrom(gwei: gwei), 
+            let hexValue = weiValue.hex else { 
+            return nil 
+        }
 
         value = weiValue
         hex = hexValue
     }
-
 }
 
 // MARK: - Equatable
@@ -53,7 +60,6 @@ extension Wei: Comparable {
     public static func < (lhs: Wei, rhs: Wei) -> Bool {
         lhs.value < rhs.value
     }
-
 }
 
 // MARK: - Units
@@ -63,15 +69,14 @@ extension Wei {
     /// This value is to be used for UI and rounded to 18 decimal precision.
     /// For accurate amount use the `value` property.
     public var ether: Decimal? {
-        return Web3Utils.shared.etherFrom(wei: self)
+        Web3Utils.shared.etherFrom(wei: self)
     }
 
     /// This value is to be used for UI and rounded to 18 decimal precision.
     /// For accurate amount use the `value` property.
     public var gwei: Decimal? {
-        return Web3Utils.shared.gweiFrom(wei: self)
+        Web3Utils.shared.gweiFrom(wei: self)
     }
-
 }
 
 // MARK: - Constants
@@ -92,5 +97,4 @@ public extension Wei {
             }
         }
     }
-
 }
