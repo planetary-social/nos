@@ -62,7 +62,7 @@ struct RelayDetailView: View {
             } footer: {
                 #if DEBUG
                 if let date = relay.metadataFetchedAt {
-                    Text("\(Localized.fetchedAt.string): \(date.elapsedTimeFromNowString())")
+                    Text("\(Localized.fetchedAt.string): \(date.distanceFromNowString())")
                 }
                 #endif
             }

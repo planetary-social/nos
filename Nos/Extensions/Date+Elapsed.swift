@@ -10,7 +10,7 @@ import Foundation
 
 extension Date {
 
-    func elapsedTimeFromNowString() -> String {
+    func distanceFromNowString() -> String {
 
         // from and to dates
         var calendar = Calendar.current
@@ -22,14 +22,9 @@ extension Date {
         // TODO this is off by one hour during the daylight savings switch (for 24 hours only)
         // compute delta
         let delta = calendar.dateComponents([.timeZone, .minute, .hour, .day], from: from, to: to)
-        let minutes = delta.minute ?? -1
-        let hours = delta.hour ?? -1
-        let day = delta.day ?? -1
-
-        // catch any future dates
-        if minutes < 0 || hours < 0 || day < 0 {
-            return "In the future"
-        }
+        let minutes = abs(delta.minute ?? 0)
+        let hours = abs(delta.hour ?? 0)
+        let day = abs(delta.day ?? 0)
 
         switch day {
         case 0:
