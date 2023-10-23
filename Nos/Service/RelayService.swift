@@ -118,10 +118,10 @@ extension RelayService {
             let request: [Any] = ["CLOSE", subscription]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
-            Log.info("\(requestString) sent to \(client.host)")
+            Log.debug("\(requestString) sent to \(client.host)")
             client.write(string: requestString)
         } catch {
-            print("Error: Could not send close \(error.localizedDescription)")
+            Log.error("Error: Could not send close \(error.localizedDescription)")
         }
     }
     
@@ -228,7 +228,7 @@ extension RelayService {
     private func clearStaleSubscriptions() async {
         let staleSubscriptions = await subscriptions.staleSubscriptions()
         for staleSubscription in staleSubscriptions {
-            Log.info("Subscription \(staleSubscription.id) is stale. Closing.")
+            Log.debug("Subscription \(staleSubscription.id) is stale. Closing.")
             await sendCloseToAll(for: staleSubscription.id)
         }
     }
@@ -244,7 +244,7 @@ extension RelayService {
         if let subID = responseArray[1] as? String,
             let subscription = await subscriptions.subscription(from: subID),
             subscription.isOneTime {
-            Log.info("\(socket.host) has finished responding on \(subID). Closing subscription.")
+            Log.debug("\(socket.host) has finished responding on \(subID). Closing subscription.")
             // This is a one-off request. Close it.
             sendClose(from: socket, subscription: subID)
         }
@@ -252,18 +252,18 @@ extension RelayService {
     
     private func queueEventForParsing(_ responseArray: [Any], _ socket: WebSocket) async {
         guard responseArray.count >= 3 else {
-            print("Error: invalid EVENT response: \(responseArray)")
+            Log.error("Error: invalid EVENT response: \(responseArray)")
             return
         }
         
         guard let eventJSON = responseArray[safe: 2] as? [String: Any],
             let subscriptionID = responseArray[safe: 1] as? RelaySubscription.ID else {
-            print("Error: invalid EVENT JSON: \(responseArray)")
+            Log.error("Error: invalid EVENT JSON: \(responseArray)")
             return
         }
         
         #if DEBUG
-        Log.info("from \(socket.host): EVENT type: \(eventJSON["kind"] ?? "nil") subID: \(subscriptionID)")
+        Log.debug("from \(socket.host): EVENT type: \(eventJSON["kind"] ?? "nil") subID: \(subscriptionID)")
         #endif
 
         if await !shouldParseEvent(responseArray: responseArray, json: eventJSON) {
@@ -277,7 +277,7 @@ extension RelayService {
             
             if let subscription = await subscriptions.subscription(from: subscriptionID),
                 subscription.isOneTime {
-                Log.info("detected subscription with id \(subscription.id) has been fulfilled. Closing.")
+                Log.debug("detected subscription with id \(subscription.id) has been fulfilled. Closing.")
                 await subscriptions.forceCloseSubscriptionCount(for: subscription.id)
                 await sendCloseToAll(for: subscription.id)
             }
@@ -391,7 +391,7 @@ extension RelayService {
                 let eventInNetwork = await currentUser.socialGraph.contains(authorKey) 
                 if !eventInNetwork {
                     let eventID = eventJSON[JSONEvent.CodingKeys.id.rawValue] ?? "nil"
-                    Log.info("Dropping out of network event \(eventID).")
+                    Log.debug("Dropping out of network event \(eventID).")
                     return false
                 }
             }
@@ -651,9 +651,9 @@ extension RelayService {
 
     private func handleConnection(from client: WebSocketClient) async {
         if let socket = client as? WebSocket {
-            Log.info("websocket is connected: \(String(describing: socket.request.url?.host))")
+            Log.debug("websocket is connected: \(String(describing: socket.request.url?.host))")
         } else {
-            Log.info("websocket connected with unknown host")
+            Log.error("websocket connected with unknown host")
         }
         
         for subscription in await subscriptions.active {
