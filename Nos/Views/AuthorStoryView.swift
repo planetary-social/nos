@@ -110,7 +110,16 @@ struct AuthorStoryView: View {
                     HStack(alignment: .center) {
                         AuthorLabel(author: author)
                             .padding(0)
-                        if let elapsedTime = selectedNote?.createdAt?.elapsedTimeFromNowString() {
+                        if let expirationTime = selectedNote?.expirationDate?.distanceFromNowString() {
+                            Image.disappearingMessages
+                                .resizable()
+                                .foregroundColor(.secondaryText)
+                                .frame(width: 25, height: 25)
+                            Text(expirationTime)
+                                .lineLimit(1)
+                                .font(.body)
+                                .foregroundColor(.secondaryText)
+                        } else if let elapsedTime = selectedNote?.createdAt?.distanceFromNowString() {
                             Text(elapsedTime)
                                 .lineLimit(1)
                                 .font(.body)

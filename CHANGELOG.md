@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated search results to show mutual followers and sort by the most followers in common.
 - Change links to notes so that they don't display the long note id and instead it's a pretty link. 
 - Redesigned the Universal Names registration flow
+- Added more relays to the recommended list
+- Added an icon to indicate expiring notes, and the timestamp they display is the time until they expire.
 
 ## [0.1 (83)] - 2023-10-16Z
 

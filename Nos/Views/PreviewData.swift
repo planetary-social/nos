@@ -89,6 +89,23 @@ struct PreviewData {
         return note
     }()
     
+    lazy var expiringNote: Event = {
+        let note = Event(context: previewContext)
+        note.identifier = "1"
+        note.kind = EventKind.text.rawValue
+        note.content = "Hello, world!"
+        note.author = previewAuthor
+        note.createdAt = .now
+        let currentDate = Date() 
+        let calendar = Calendar.current 
+        var dateComponents = DateComponents() 
+        dateComponents.day = 1 
+        let tomorrow = calendar.date(byAdding: dateComponents, to: currentDate)!
+        note.expirationDate = tomorrow
+        try? previewContext.save()
+        return note
+    }()
+    
     lazy var imageNote: Event = {
         let note = Event(context: previewContext)
         note.identifier = "2"
