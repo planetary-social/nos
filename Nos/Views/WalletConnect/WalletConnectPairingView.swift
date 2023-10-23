@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WalletConnectPairingView: View {
     
-    @ObservedObject private var viewModel = WalletConnectPairingController()
+    @ObservedObject var viewModel: SendUSBCController 
     
     private let borderWidth: CGFloat = 6
     private let cornerRadius: CGFloat = 8
@@ -17,16 +17,22 @@ struct WalletConnectPairingView: View {
     
     var body: some View {
         VStack {
-            PlainText(.connectGlobalIDTitle)
-                .font(.clarityTitle)
-                .foregroundColor(.primaryTxt)
-                .multilineTextAlignment(.leading)
-                .padding(0)
+            HStack {
+                PlainText(.connectGlobalIDTitle)
+                    .font(.clarityTitle)
+                    .foregroundColor(.primaryTxt)
+                    .multilineTextAlignment(.leading)
+                    .padding(0)
+                Spacer()
+            }
             
-            PlainText(.scanTheWalletConnectQR)
-                .font(.callout)
-                .foregroundColor(.secondaryText)
-                .padding(.vertical, 8)
+            HStack {
+                PlainText(.scanTheWalletConnectQR)
+                    .font(.callout)
+                    .foregroundColor(.secondaryText)
+                    .padding(.vertical, 8)
+                Spacer()
+            }
             
             if let qrImage = viewModel.qrImage {
                 ZStack {
@@ -70,5 +76,12 @@ struct WalletConnectPairingView: View {
 }
 
 #Preview {
-    WalletConnectPairingView()
+    var previewData = PreviewData()
+    var controller = SendUSBCController(
+        state: .pair, 
+        destinationAddress: "0x12389749827", 
+        destinationAuthor: previewData.unsAuthor
+    ) 
+    
+    return WalletConnectPairingView(viewModel: controller)
 }

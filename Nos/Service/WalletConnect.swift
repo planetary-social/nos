@@ -76,11 +76,13 @@ struct ETHWalletConnectService: WalletConnectProvidable {
         )
     }
     
-    func sendTransaction(topic: String,
-                         fromAddress: String,
-                         toAddress: String,
-                         amount: String,
-                         blockChain: WalletConnectChain = .ethereum) -> Request? {
+    func sendTransaction(
+        topic: String,
+        fromAddress: String,
+        toAddress: String,
+        amount: String,
+        blockChain: WalletConnectChain = .ethereum
+    ) -> Request? {
         let decimalValue = BigDecimal(hexString: amount)
         guard let eth = Decimal(string: decimalValue.amount ?? ""),
               let wei = Web3Utils.shared.weiFrom(ether: eth) else { return nil }

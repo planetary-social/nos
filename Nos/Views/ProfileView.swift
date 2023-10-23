@@ -143,8 +143,10 @@ struct ProfileView: View {
         .navigationBarItems(
             trailing:
                 HStack {
-                    if let usbcAddress, !isShowingLoggedInUser || usbcBalance != nil {
-                        USBCBarButtonItem(address: usbcAddress, balance: $usbcBalance)
+                    if let usbcBalance {
+                        USBCBalanceBarButtonItem(balance: $usbcBalance)
+                    } else if let usbcAddress, !isShowingLoggedInUser {
+                        SendUSBCBarButtonItem(destinationAddress: usbcAddress, destinationAuthor: author)
                     }
                     Button(
                         action: {

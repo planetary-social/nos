@@ -12,9 +12,12 @@ import WalletConnectSign
 import Auth
 import Combine
 
+let globalIDURLScheme = "globalid-staging://"
+
 class WalletConnectManager {
     
     static var shared = WalletConnectManager.initialize()
+    let testMode = true
     let wcService: WalletConnectProvidable = ETHWalletConnectService()
     private var initiatedSession: Session?
     private var disposeBag = Set<AnyCancellable>()
@@ -78,21 +81,26 @@ class WalletConnectManager {
         }
     }
     
-    func sendTransaction(fromAddress: String, toAddress: String, amount: String, blockChain: WalletConnectChain) {
-        if let topic = initiatedSession?.topic {
-            Task {
-                do {
-                    guard let request = wcService.sendTransaction(topic: topic,
-                                                                  fromAddress: fromAddress,
-                                                                  toAddress: toAddress,
-                                                                  amount: amount,
-                                                                  blockChain: blockChain) else { return }
-                    try await Sign.instance.request(params: request)
-                } catch {
-                    print("\n errorr \n get balance  \(error)")
-                }
-            }
+    func sendTransaction(
+        fromAddress: String, 
+        toAddress: String, 
+        amount: String, 
+        blockChain: WalletConnectChain
+    ) async throws {
+        guard let topic = initiatedSession?.topic else {
+            throw SendUSBCError.noSession
         }
+        
+        guard let request = wcService.sendTransaction(
+            topic: topic,
+            fromAddress: fromAddress,
+            toAddress: toAddress,
+            amount: amount,
+            blockChain: blockChain) else { 
+            throw SendUSBCError.couldNotCreateTransaction
+        }
+        
+        try await Sign.instance.request(params: request)
     }
 }
 

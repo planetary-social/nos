@@ -183,6 +183,10 @@ enum Localized: String, Localizable, CaseIterable {
     case scanTheWalletConnectQR = "Scan the QR code or download the Global ID app to send USBC to your friends!"
     case copyQRLink = "Copy QR link"
     case connectGlobalID = "Connect GlobaliD app"
+    case sendUSBC = "Send USBC"
+    case sendTo = "Send to"
+    case amount = "Amount"
+    case reconnectWallet = "Reconnect wallet"
 
     case mention = "Mention"
     

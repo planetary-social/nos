@@ -121,6 +121,10 @@
 "Localized.scanTheWalletConnectQR" = "Scan the QR code or download the Global ID app to send USBC to your friends!";
 "Localized.copyQRLink" = "Copy QR link";
 "Localized.connectGlobalID" = "Connect GlobaliD app";
+"Localized.sendUSBC" = "Send USBC";
+"Localized.sendTo" = "Send to";
+"Localized.amount" = "Amount";
+"Localized.reconnectWallet" = "Reconnect wallet";
 "Localized.mention" = "Mention";
 "Localized.debug" = "Debug";
 "Localized.loadSampleData" = "Load Sample Data";

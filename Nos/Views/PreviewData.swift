@@ -64,8 +64,7 @@ struct PreviewData {
     }()
     
     lazy var eve: Author = {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.eve.publicKeyHex
+        let author = try! Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: previewContext)
         author.name = "Eve"
         author.uns = "eve"
         author.nip05 = "eve@nos.social"

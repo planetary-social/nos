@@ -217,6 +217,7 @@
 		C98A32282A05795E00E3FA13 /* Task+Timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98A32262A05795E00E3FA13 /* Task+Timeout.swift */; };
 		C98B8B4029FBF83B009789C8 /* NotificationCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */; };
 		C98DC9BB2A795CAD004E5F0F /* ActionBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */; };
+		C99D053C2AE6E5F50053D472 /* WalletConnectSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99D053B2AE6E5F50053D472 /* WalletConnectSendView.swift */; };
 		C99DBF7E2A9E81CF00F7068F /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C99DBF7D2A9E81CF00F7068F /* SDWebImageSwiftUI */; };
 		C99DBF802A9E8BCF00F7068F /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C99DBF7F2A9E8BCF00F7068F /* SDWebImageSwiftUI */; };
 		C99DBF822A9E8BDE00F7068F /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C99DBF812A9E8BDE00F7068F /* SDWebImageSwiftUI */; };
@@ -230,6 +231,9 @@
 		C9A0DAF829C92F4500466635 /* UNSAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAF729C92F4500466635 /* UNSAPI.swift */; };
 		C9A0DAF929C92F4500466635 /* UNSAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAF729C92F4500466635 /* UNSAPI.swift */; };
 		C9A25B3D29F174D200B39534 /* ReadabilityPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A25B3C29F174D200B39534 /* ReadabilityPadding.swift */; };
+		C9A2FCA22AE6FF360020A5C6 /* USBCBalanceBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A2FCA12AE6FF360020A5C6 /* USBCBalanceBarButtonItem.swift */; };
+		C9A2FCA42AE701510020A5C6 /* SendUSBCController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A2FCA32AE701510020A5C6 /* SendUSBCController.swift */; };
+		C9A2FCA52AE701510020A5C6 /* SendUSBCController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A2FCA32AE701510020A5C6 /* SendUSBCController.swift */; };
 		C9A6C7412AD837AD001F9500 /* UNSWizardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A6C7402AD837AD001F9500 /* UNSWizardController.swift */; };
 		C9A6C7422AD837AD001F9500 /* UNSWizardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A6C7402AD837AD001F9500 /* UNSWizardController.swift */; };
 		C9A6C7452AD83FB0001F9500 /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AC31AC2A55E0BD00A94E5A /* NotificationViewModel.swift */; };
@@ -315,7 +319,7 @@
 		C9DEC06A298965550078B43A /* RelayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEC069298965540078B43A /* RelayView.swift */; };
 		C9DEC06E2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */; };
 		C9DEC06F2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */; };
-		C9DF76282AE1D11F000134DF /* USBCBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DF76272AE1D11F000134DF /* USBCBarButtonItem.swift */; };
+		C9DF76282AE1D11F000134DF /* SendUSBCBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DF76272AE1D11F000134DF /* SendUSBCBarButtonItem.swift */; };
 		C9DFA966299BEB96006929C1 /* NoteCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA964299BEB96006929C1 /* NoteCard.swift */; };
 		C9DFA969299BEC33006929C1 /* CardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA968299BEC33006929C1 /* CardStyle.swift */; };
 		C9DFA971299BF8CD006929C1 /* RepliesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA970299BF8CD006929C1 /* RepliesView.swift */; };
@@ -345,12 +349,11 @@
 		C9F204672ADEDBA80029A858 /* String+Extra.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204662ADEDBA80029A858 /* String+Extra.swift */; };
 		C9F204692ADEDC4E0029A858 /* WalletConnectCryptoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204682ADEDC4E0029A858 /* WalletConnectCryptoProvider.swift */; };
 		C9F2046B2ADEDCB80029A858 /* WalletConnectPairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2046A2ADEDCB80029A858 /* WalletConnectPairingView.swift */; };
-		C9F2046D2ADEDD6F0029A858 /* WalletConnectPairingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2046C2ADEDD6F0029A858 /* WalletConnectPairingController.swift */; };
 		C9F204792ADEDE120029A858 /* WalletConnectChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204772ADEDE120029A858 /* WalletConnectChain.swift */; };
 		C9F204802AE029D90029A858 /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047F2AE029D90029A858 /* AppDestination.swift */; };
 		C9F204812AE02D8C0029A858 /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047F2AE029D90029A858 /* AppDestination.swift */; };
 		C9F204832AE03A8E0029A858 /* bignumber.js in Resources */ = {isa = PBXBuildFile; fileRef = C9F204822AE03A8D0029A858 /* bignumber.js */; };
-		C9F204862AE067130029A858 /* USBCWizard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204852AE067130029A858 /* USBCWizard.swift */; };
+		C9F204862AE067130029A858 /* SendUSBCWizard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204852AE067130029A858 /* SendUSBCWizard.swift */; };
 		C9F64D8C29ED840700563F2B /* LogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8B29ED840700563F2B /* LogHelper.swift */; };
 		C9F64D8D29ED840700563F2B /* LogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8B29ED840700563F2B /* LogHelper.swift */; };
 		C9F64D8F29ED88CD00563F2B /* Localization+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8E29ED88CD00563F2B /* Localization+Nos.swift */; };
@@ -570,6 +573,7 @@
 		C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCard.swift; sourceTree = "<group>"; };
 		C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionBanner.swift; sourceTree = "<group>"; };
 		C99507332AB9EE40005B1096 /* Nos 12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 12.xcdatamodel"; sourceTree = "<group>"; };
+		C99D053B2AE6E5F50053D472 /* WalletConnectSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSendView.swift; sourceTree = "<group>"; };
 		C9A0DAD929C685E500466635 /* SideMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuButton.swift; sourceTree = "<group>"; };
 		C9A0DADC29C689C900466635 /* NosNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosNavigationBar.swift; sourceTree = "<group>"; };
 		C9A0DADF29C697A100466635 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
@@ -579,6 +583,8 @@
 		C9A0DAEC29C6A66C00466635 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		C9A0DAF729C92F4500466635 /* UNSAPI.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = UNSAPI.swift; sourceTree = "<group>"; };
 		C9A25B3C29F174D200B39534 /* ReadabilityPadding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadabilityPadding.swift; sourceTree = "<group>"; };
+		C9A2FCA12AE6FF360020A5C6 /* USBCBalanceBarButtonItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBCBalanceBarButtonItem.swift; sourceTree = "<group>"; };
+		C9A2FCA32AE701510020A5C6 /* SendUSBCController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendUSBCController.swift; sourceTree = "<group>"; };
 		C9A5C5D32A9FDB6A0076AAD1 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Generated.strings; sourceTree = "<group>"; };
 		C9A6C7402AD837AD001F9500 /* UNSWizardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNSWizardController.swift; sourceTree = "<group>"; };
 		C9A6C7462AD84263001F9500 /* UNSNamePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNSNamePicker.swift; sourceTree = "<group>"; };
@@ -636,7 +642,7 @@
 		C9DEC0622989541F0078B43A /* Bundle+Current.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Current.swift"; sourceTree = "<group>"; };
 		C9DEC069298965540078B43A /* RelayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayView.swift; sourceTree = "<group>"; };
 		C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Relay+CoreDataClass.swift"; sourceTree = "<group>"; };
-		C9DF76272AE1D11F000134DF /* USBCBarButtonItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBCBarButtonItem.swift; sourceTree = "<group>"; };
+		C9DF76272AE1D11F000134DF /* SendUSBCBarButtonItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendUSBCBarButtonItem.swift; sourceTree = "<group>"; };
 		C9DFA964299BEB96006929C1 /* NoteCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteCard.swift; sourceTree = "<group>"; };
 		C9DFA968299BEC33006929C1 /* CardStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardStyle.swift; sourceTree = "<group>"; };
 		C9DFA96A299BEE2C006929C1 /* CompactNoteView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompactNoteView.swift; sourceTree = "<group>"; };
@@ -660,11 +666,10 @@
 		C9F204662ADEDBA80029A858 /* String+Extra.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extra.swift"; sourceTree = "<group>"; };
 		C9F204682ADEDC4E0029A858 /* WalletConnectCryptoProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectCryptoProvider.swift; sourceTree = "<group>"; };
 		C9F2046A2ADEDCB80029A858 /* WalletConnectPairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectPairingView.swift; sourceTree = "<group>"; };
-		C9F2046C2ADEDD6F0029A858 /* WalletConnectPairingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletConnectPairingController.swift; sourceTree = "<group>"; };
 		C9F204772ADEDE120029A858 /* WalletConnectChain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletConnectChain.swift; sourceTree = "<group>"; };
 		C9F2047F2AE029D90029A858 /* AppDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDestination.swift; sourceTree = "<group>"; };
 		C9F204822AE03A8D0029A858 /* bignumber.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = bignumber.js; sourceTree = "<group>"; };
-		C9F204852AE067130029A858 /* USBCWizard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBCWizard.swift; sourceTree = "<group>"; };
+		C9F204852AE067130029A858 /* SendUSBCWizard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendUSBCWizard.swift; sourceTree = "<group>"; };
 		C9F64D8B29ED840700563F2B /* LogHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogHelper.swift; sourceTree = "<group>"; };
 		C9F64D8E29ED88CD00563F2B /* Localization+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Localization+Nos.swift"; sourceTree = "<group>"; };
 		C9F75AD12A02D41E005BBE45 /* ComposerActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerActionBar.swift; sourceTree = "<group>"; };
@@ -1082,10 +1087,10 @@
 		C9EB171929E5976700A15ABB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				C9F2046C2ADEDD6F0029A858 /* WalletConnectPairingController.swift */,
 				C9C547502A4F1CC3006B0741 /* SearchController.swift */,
 				C97A1C8A29E45B4E009D9E8D /* RawEventController.swift */,
 				C9A6C7402AD837AD001F9500 /* UNSWizardController.swift */,
+				C9A2FCA32AE701510020A5C6 /* SendUSBCController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1108,8 +1113,9 @@
 			isa = PBXGroup;
 			children = (
 				C9F2046A2ADEDCB80029A858 /* WalletConnectPairingView.swift */,
-				C9F204852AE067130029A858 /* USBCWizard.swift */,
+				C9F204852AE067130029A858 /* SendUSBCWizard.swift */,
 				C9F204822AE03A8D0029A858 /* bignumber.js */,
+				C99D053B2AE6E5F50053D472 /* WalletConnectSendView.swift */,
 			);
 			path = WalletConnect;
 			sourceTree = "<group>";
@@ -1195,7 +1201,8 @@
 				3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */,
 				C931517C29B915AF00934506 /* StaggeredGrid.swift */,
 				3F60F42829B27D3E000D62C4 /* ThreadView.swift */,
-				C9DF76272AE1D11F000134DF /* USBCBarButtonItem.swift */,
+				C9DF76272AE1D11F000134DF /* SendUSBCBarButtonItem.swift */,
+				C9A2FCA12AE6FF360020A5C6 /* USBCBalanceBarButtonItem.swift */,
 				C9CE5B132A0172CF008E198C /* WebView.swift */,
 				C92F01502AC4D67B00972489 /* Form */,
 				C9CFF6D02AB241EB00D4B368 /* Modifiers */,
@@ -1573,7 +1580,7 @@
 				C93F488D2AC5C30C00900CEC /* NosFormField.swift in Sources */,
 				C9DEC06A298965550078B43A /* RelayView.swift in Sources */,
 				C99E80CD2A0C2C6400187474 /* PreviewData.swift in Sources */,
-				C9DF76282AE1D11F000134DF /* USBCBarButtonItem.swift in Sources */,
+				C9DF76282AE1D11F000134DF /* SendUSBCBarButtonItem.swift in Sources */,
 				C9A0DAE429C69F0C00466635 /* HighlightedText.swift in Sources */,
 				C94D855C2991479900749478 /* NewNoteView.swift in Sources */,
 				5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */,
@@ -1606,6 +1613,7 @@
 				C9F64D8F29ED88CD00563F2B /* Localization+Nos.swift in Sources */,
 				C95D68AD299E721700429F86 /* ProfileView.swift in Sources */,
 				C942566929B66A2800C4202C /* Date+Elapsed.swift in Sources */,
+				C9A2FCA22AE6FF360020A5C6 /* USBCBalanceBarButtonItem.swift in Sources */,
 				5B8C96B029DB2E1100B73AEC /* SearchTextFieldObserver.swift in Sources */,
 				C9ADB13829928CC30075E7F8 /* String+Hex.swift in Sources */,
 				C9F75AD22A02D41E005BBE45 /* ComposerActionBar.swift in Sources */,
@@ -1631,6 +1639,7 @@
 				DC5F20412A6AE31000F8D73F /* ImagePicker.swift in Sources */,
 				C9680AD42ACDF57D006C8C93 /* UNSWizardNeedsPaymentView.swift in Sources */,
 				C94C4CF32AD993CA00F801CA /* UNSErrorView.swift in Sources */,
+				C9A2FCA42AE701510020A5C6 /* SendUSBCController.swift in Sources */,
 				5B0D99032A94090A0039F0C5 /* DoubleTapToPopModifier.swift in Sources */,
 				5BFF66B42A58853D00AA79DD /* PublishedEventsView.swift in Sources */,
 				C987F85B29BA9ED800B44E7A /* Font.swift in Sources */,
@@ -1642,7 +1651,6 @@
 				C9E9D9CA2A2E35440048AF0B /* (null) in Sources */,
 				C9646EA129B7A22C007239A4 /* Analytics.swift in Sources */,
 				C9A6C74B2AD866A7001F9500 /* UNSSuccessView.swift in Sources */,
-				C9F2046D2ADEDD6F0029A858 /* WalletConnectPairingController.swift in Sources */,
 				C981E2DB2AC6088900FBF4F6 /* UNSVerifyCodeView.swift in Sources */,
 				DC4AB2F62A4475B800D1478A /* AppDelegate.swift in Sources */,
 				5B8C96B229DB313300B73AEC /* AuthorRow.swift in Sources */,
@@ -1657,7 +1665,7 @@
 				C92F01522AC4D6AB00972489 /* NosFormSection.swift in Sources */,
 				C9BCF1C12AC72020009BDE06 /* UNSWizardChooseNameView.swift in Sources */,
 				C9A6C7412AD837AD001F9500 /* UNSWizardController.swift in Sources */,
-				C9F204862AE067130029A858 /* USBCWizard.swift in Sources */,
+				C9F204862AE067130029A858 /* SendUSBCWizard.swift in Sources */,
 				C97465342A3C95FE0031226F /* RelayPickerToolbarButton.swift in Sources */,
 				3F43C47629A9625700E896A0 /* AuthorReference+CoreDataClass.swift in Sources */,
 				C9A6C7492AD86271001F9500 /* UNSNewNameView.swift in Sources */,
@@ -1686,6 +1694,7 @@
 				C97A1C8B29E45B4E009D9E8D /* RawEventController.swift in Sources */,
 				C9DEC0632989541F0078B43A /* Bundle+Current.swift in Sources */,
 				C93EC2F429C34C860012EE2A /* NSPredicate+Bool.swift in Sources */,
+				C99D053C2AE6E5F50053D472 /* WalletConnectSendView.swift in Sources */,
 				C9F84C1C298DBBF400C6714D /* Data+Sha.swift in Sources */,
 				5BE281BE2AE2CCAE00880466 /* StoriesView.swift in Sources */,
 				C936B4622A4CB01C00DF1EB9 /* PushNotificationService.swift in Sources */,
@@ -1777,6 +1786,7 @@
 				C9F204812AE02D8C0029A858 /* AppDestination.swift in Sources */,
 				C9E37E162A1E8143003D4B0A /* Report.swift in Sources */,
 				C987F86229BABAF800B44E7A /* String+Markdown.swift in Sources */,
+				C9A2FCA52AE701510020A5C6 /* SendUSBCController.swift in Sources */,
 				C94A5E192A72C84200B6EC5D /* ReportCategory.swift in Sources */,
 				C936B4632A4CB01C00DF1EB9 /* PushNotificationService.swift in Sources */,
 				C9C5475A2A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift in Sources */,
