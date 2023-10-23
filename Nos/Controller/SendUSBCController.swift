@@ -17,7 +17,7 @@ import Logger
 import SwiftUI
 
 enum SendUSBCWizardState {
-    case pair, amount, success, error(Error), loading
+    case pair, amount, error(Error), loading
 }
 
 enum SendUSBCError: Error {
@@ -82,15 +82,15 @@ class SendUSBCController: ObservableObject {
         }
     }
     
-    func startOver() {
-        state = .pair
+    @MainActor func startOver() {
+        updateStep()
     }
     
     func initiateConnectionToWC() async throws {
         let wcDeeplink = try await walletConnectManager.initiateConnectionRequest()
         let globalIDDeeplink = "\(globalIDURLScheme)wc?uri=\(wcDeeplink)"
         await MainActor.run {
-            print("URI FOR QR CODE TO GENERATE \(globalIDDeeplink)")
+            Log.info("Generated WalletConnect URI: \(globalIDDeeplink)")
             qrCodeValue = globalIDDeeplink
             qrImage = globalIDDeeplink.generateQRCode()
         }

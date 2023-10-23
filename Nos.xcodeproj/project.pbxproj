@@ -108,6 +108,7 @@
 		C94A5E192A72C84200B6EC5D /* ReportCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A5E172A72C84200B6EC5D /* ReportCategory.swift */; };
 		C94C4CF32AD993CA00F801CA /* UNSErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94C4CF22AD993CA00F801CA /* UNSErrorView.swift */; };
 		C94D14812A12B3F70014C906 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D14802A12B3F70014C906 /* SearchBar.swift */; };
+		C94D59AC2AE711A400295AE8 /* WalletConnectErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D59AB2AE711A400295AE8 /* WalletConnectErrorView.swift */; };
 		C94D6D5C2AC5D14400F0F11E /* WizardTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D6D5B2AC5D14400F0F11E /* WizardTextField.swift */; };
 		C94D855C2991479900749478 /* NewNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D855B2991479900749478 /* NewNoteView.swift */; };
 		C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = C94D855E29914D2300749478 /* SwiftUINavigation */; };
@@ -506,6 +507,7 @@
 		C94D14802A12B3F70014C906 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		C94D39212ABDDDFE0019C4D5 /* Secrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		C94D39242ABDDFB60019C4D5 /* EmptySecrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = EmptySecrets.xcconfig; sourceTree = "<group>"; };
+		C94D59AB2AE711A400295AE8 /* WalletConnectErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectErrorView.swift; sourceTree = "<group>"; };
 		C94D6D5B2AC5D14400F0F11E /* WizardTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WizardTextField.swift; sourceTree = "<group>"; };
 		C94D855B2991479900749478 /* NewNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNoteView.swift; sourceTree = "<group>"; };
 		C94FE5A629F8441200C27119 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Generated.strings"; sourceTree = "<group>"; };
@@ -1109,15 +1111,16 @@
 			path = "New Note";
 			sourceTree = "<group>";
 		};
-		C9F2046E2ADEDDCA0029A858 /* WalletConnect */ = {
+		C9F2046E2ADEDDCA0029A858 /* USBC */ = {
 			isa = PBXGroup;
 			children = (
 				C9F2046A2ADEDCB80029A858 /* WalletConnectPairingView.swift */,
 				C9F204852AE067130029A858 /* SendUSBCWizard.swift */,
 				C9F204822AE03A8D0029A858 /* bignumber.js */,
 				C99D053B2AE6E5F50053D472 /* WalletConnectSendView.swift */,
+				C94D59AB2AE711A400295AE8 /* WalletConnectErrorView.swift */,
 			);
-			path = WalletConnect;
+			path = USBC;
 			sourceTree = "<group>";
 		};
 		C9F84C24298DC7C100C6714D /* Views */ = {
@@ -1210,7 +1213,7 @@
 				3FB5E64F299D288E00386527 /* Onboarding */,
 				C9DEBFDD298941020078B43A /* Preview Content */,
 				C905EA362A33620A006F1E99 /* UNS */,
-				C9F2046E2ADEDDCA0029A858 /* WalletConnect */,
+				C9F2046E2ADEDDCA0029A858 /* USBC */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1622,6 +1625,7 @@
 				C930055F2A6AF8320098CA9E /* LoadingContent.swift in Sources */,
 				C9A6C74D2AD98E2A001F9500 /* UNSNameTakenView.swift in Sources */,
 				C9646EAE29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */,
+				C94D59AC2AE711A400295AE8 /* WalletConnectErrorView.swift in Sources */,
 				C92F015B2AC4D74E00972489 /* NosTextEditor.swift in Sources */,
 				C973AB5D2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */,
 				C95D68A3299E6D9000429F86 /* SelectableText.swift in Sources */,

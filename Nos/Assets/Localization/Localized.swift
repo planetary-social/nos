@@ -187,6 +187,7 @@ enum Localized: String, Localizable, CaseIterable {
     case sendTo = "Send to"
     case amount = "Amount"
     case reconnectWallet = "Reconnect wallet"
+    case somethingWentWrong = "Something went wrong."
 
     case mention = "Mention"
     

@@ -38,10 +38,7 @@ struct SendUSBCWizard: View {
                 case .amount:
                     WalletConnectSendView(controller: controller)
                 case .error(let error):
-                    Text("Error")
-                    Text(error.localizedDescription)
-                case .success:
-                    Text("Success")
+                    WalletConnectErrorView(controller: controller, error: error)
                 }
             }
             .background(Color.appBg)
