@@ -34,7 +34,8 @@ struct GoldenPostView: View {
         Group {
             switch noteContent {
             case .loading:
-                Text(note.content ?? "").redacted(reason: .placeholder)
+                Text(String.loremIpsum(3))
+                    .redacted(reason: .placeholder)
             case .loaded(let attributedString):
                 Text(attributedString)
             }
