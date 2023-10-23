@@ -16,7 +16,16 @@ struct NoteCardHeader: View {
         HStack(alignment: .center) {
             AuthorLabel(author: author, note: note)
             Spacer()
-            if let elapsedTime = note.createdAt?.elapsedTimeFromNowString() {
+            if let expirationTime = note.expirationDate?.distanceFromNowString() {
+                Image.disappearingMessages
+                    .resizable()
+                    .foregroundColor(.secondaryText)
+                    .frame(width: 25, height: 25)
+                Text(expirationTime)
+                    .lineLimit(1)
+                    .font(.body)
+                    .foregroundColor(.secondaryText)
+            } else if let elapsedTime = note.createdAt?.distanceFromNowString() {
                 Text(elapsedTime)
                     .lineLimit(1)
                     .font(.body)
@@ -27,9 +36,12 @@ struct NoteCardHeader: View {
     }
 }
 
-struct AuthorHeader_Previews: PreviewProvider {
+struct NoteCardHeader_Previews: PreviewProvider {
     static var previewData = PreviewData()
     static var previews: some View {
         NoteCardHeader(note: previewData.imageNote, author: previewData.previewAuthor)
+            .inject(previewData: previewData)
+        NoteCardHeader(note: previewData.expiringNote, author: previewData.previewAuthor)
+            .inject(previewData: previewData)
     }
 }
