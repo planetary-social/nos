@@ -89,6 +89,21 @@ struct RepliesView: View {
             let filter = Filter(kinds: [.text, .like, .delete, .repost, .report, .label], eTags: eTags)
             let subID = await relayService.openSubscription(with: filter)
             subscriptionIDs.append(subID)
+            
+            // download reports for this user
+            guard let authorKey = note.author?.hexadecimalPublicKey else {
+                return
+            }
+            let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
+            subscriptionIDs.append(await relayService.openSubscription(with: reportFilter))
+            
+            // places we should do this
+            // - do it here in the RepliesView for all the others whose replies we are showing (I only did it for the root note)
+            // - home feed view
+            // - discover view
+            // - profile
+            // - notifications
+            // - stories view
         }
     }
     

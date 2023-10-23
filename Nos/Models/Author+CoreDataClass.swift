@@ -262,14 +262,14 @@ public class Author: NosManagedObject {
         let publicKey = self.hexadecimalPublicKey ?? ""
 
         // Create a predicate to filter events of kind 1984 and 1985 and with an 'allTags' tag 'p' pointing to the author's public key
-        //let eventPredicate = NSPredicate(format: "(kind == 1984 OR kind == 1985) AND SUBQUERY(allTags, $tag, $tag.p == %@).@count > 0", publicKey)
+        let eventPredicate = NSPredicate(format: "(kind == 1984 OR kind == 1985) AND SUBQUERY(authorReferences, $tag, $tag.pubkey == %@).@count > 0", publicKey)
 
         // Set the predicate for the fetch request
-        //fetchRequest.predicate = eventPredicate
+        fetchRequest.predicate = eventPredicate
 
         var events: [Event] = []
         do {
-        //    events = try context.fetch(fetchRequest)
+            events = try context.fetch(fetchRequest)
         } catch {
             print("Failed to fetch events. Error: \(error.localizedDescription)")
         }

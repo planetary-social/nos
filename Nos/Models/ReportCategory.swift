@@ -9,7 +9,7 @@ import Foundation
 
 /// A model for potential reasons why something might be reported.
 struct ReportCategory: Identifiable, Equatable {
-    
+
     /// A localized human readable description of the reason/category. Should be short enough to fit in an action menu.
     var displayName: String {
         string
@@ -28,6 +28,24 @@ struct ReportCategory: Identifiable, Equatable {
     var subCategories: [ReportCategory]?
     
     var id: String { code }
+ 
+    static func findCategory(from code: String) -> ReportCategory? {
+        var searchForCategoryByCode: ((String, [ReportCategory]) -> ReportCategory?)?
+        searchForCategoryByCode = { (code: String, categories: [ReportCategory]) -> ReportCategory? in
+            for category in categories {
+                if category.code == code {
+                    return category
+                } else if let subCategories = category.subCategories,
+                          let subCategory = searchForCategoryByCode?(code, subCategories) {
+                    return subCategory
+                }
+            }
+            
+            return nil
+        }
+        
+        return searchForCategoryByCode?(code, topLevelCategories)
+    }  
 }
 
 extension ReportCategory: Localizable {
