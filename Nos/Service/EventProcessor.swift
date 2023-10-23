@@ -75,7 +75,7 @@ enum EventProcessor {
                     events.append(event)
                 }
             } catch {
-                print("Error parsing eventJSON: \(jsonEvent): \(error.localizedDescription)")
+                Log.error("Error parsing eventJSON: \(jsonEvent): \(error.localizedDescription)")
             }
         }
         

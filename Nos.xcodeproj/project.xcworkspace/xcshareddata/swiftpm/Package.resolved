@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CocoaLumberjack/CocoaLumberjack.git",
       "state" : {
-        "revision" : "0188d31089b5881a269e01777be74c7316924346",
-        "version" : "3.8.0"
+        "revision" : "67ec5818a757aba4d7c534e21a905d878d128dbf",
+        "version" : "3.8.1"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/planetary-social/logger-ios",
       "state" : {
-        "revision" : "77b1df4808a711e02e9980600cd8206e46b5af29",
-        "version" : "1.0.0"
+        "revision" : "d25fb7d95d76953b8bbbc2ce167b26914bc5264b",
+        "version" : "1.1.0"
       }
     },
     {
