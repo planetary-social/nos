@@ -16,7 +16,7 @@ enum USBCWizardStep {
 class USBCWizardController: ObservableObject {
     @Dependency(\.currentUser) private var currentUser
     
-    @Published var step = USBCWizardStep.loading
+    @Published var step: USBCWizardStep
     @Published var fromAddress: USBCAddress?
     @Published var toAddress: USBCAddress?
     
@@ -24,7 +24,9 @@ class USBCWizardController: ObservableObject {
     
     let walletConnectManager = WalletConnectManager.shared
     
-    init() {
+    init(step: USBCWizardStep = .loading) {
+        self.step = step
+        
         walletConnectManager.onSessionInitiated = { [weak self] _ in 
             Task { @MainActor [weak self] in
                 self?.updateStep()
@@ -104,6 +106,7 @@ struct USBCWizard: View {
                     Text("Success")
                 }
             }
+            .background(Color.appBg)
             .padding(.top, borderWidth)
             .padding(.horizontal, borderWidth)
             .padding(.bottom, inDrawer ? 0 : borderWidth)
@@ -113,6 +116,7 @@ struct USBCWizard: View {
         }
         .edgesIgnoringSafeArea(.bottom)
         .frame(idealWidth: 320, idealHeight: 480)
+        .presentationDetents([.medium])
     }
 }
 

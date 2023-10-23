@@ -178,6 +178,11 @@ enum Localized: String, Localizable, CaseIterable {
     case website = "Website"
     case edit = "Edit" // verb form
     case connectWallet = "Connect Wallet"
+    
+    case connectGlobalIDTitle = "Connect your GlobaliD wallet to send USBC"
+    case scanTheWalletConnectQR = "Scan the QR code or download the Global ID app to send USBC to your friends!"
+    case copyQRLink = "Copy QR link"
+    case connectGlobalID = "Connect GlobaliD app"
 
     case mention = "Mention"
     

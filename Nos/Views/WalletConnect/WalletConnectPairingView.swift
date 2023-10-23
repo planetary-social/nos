@@ -17,21 +17,28 @@ struct WalletConnectPairingView: View {
     
     var body: some View {
         VStack {
-            PlainText("Connect your GlobaliD wallet to send USBC")
+            PlainText(.connectGlobalIDTitle)
                 .font(.clarityTitle)
                 .foregroundColor(.primaryTxt)
                 .multilineTextAlignment(.leading)
                 .padding(0)
             
-            PlainText("Scan the QR code or download the Global ID app to send USBC to your friends!")
+            PlainText(.scanTheWalletConnectQR)
                 .font(.callout)
                 .foregroundColor(.secondaryText)
+                .padding(.vertical, 8)
             
             if let qrImage = viewModel.qrImage {
-                qrImage
-                    .interpolation(.none)
-                    .resizable()
-                    .frame(width: 300, height: 300)
+                ZStack {
+                    RoundedRectangle(cornerRadius: 9)
+                        .foregroundColor(.white)
+                        .aspectRatio(contentMode: .fit)
+                    qrImage
+                        .interpolation(.none)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(4)
+                }
             } else {
                 ProgressView()
                     .frame(width: 300, height: 300)
@@ -41,28 +48,27 @@ struct WalletConnectPairingView: View {
             }
             HStack {
                 Spacer()
-                Button(action: { viewModel.copyDidPressed() }, label: {
-                    Text("Copy QR link")
-                })
-                Spacer()
-                Button(action: { viewModel.deeplinkPressed() }, label: {
-                    Text("Open link")
-                })
-                Spacer()
-                Button(action: { viewModel.payPressed() }, label: {
-                    Text("Pay")
+                Button(action: { viewModel.copyLinkPressed() }, label: {
+                    HighlightedText(
+                        text: .copyQRLink, 
+                        highlightedWord: Localized.copyQRLink.string, 
+                        highlight: .verticalAccent, 
+                        link: nil
+                    )
                 })
                 Spacer()
             }
+            .padding(13)
+            
+            BigActionButton(title: .connectGlobalID) { 
+                viewModel.connectPressed()
+            }
         }
-        .padding(.horizontal, 38)
+        .padding(38)
         .background(Color.appBg)
     }
 }
 
 #Preview {
-    VStack {}
-        .sheet(isPresented: .constant(true)) {
-            WalletConnectPairingView()
-        }
+    WalletConnectPairingView()
 }

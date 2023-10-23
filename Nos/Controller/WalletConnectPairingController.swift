@@ -12,6 +12,9 @@ import WalletConnectPairing
 import WalletConnectRelay
 import WalletConnectSign
 import Auth
+import Logger
+
+let globalIDURLScheme = "globalid-staging://"
 
 class WalletConnectPairingController: ObservableObject {
     private let walletConnectManager = WalletConnectManager.shared
@@ -36,26 +39,30 @@ class WalletConnectPairingController: ObservableObject {
     }
     
     func initiateConnectionToWC() async throws {
-        let pairingDeeplink = try await walletConnectManager.initiateConnectionRequest()
+        let wcDeeplink = try await walletConnectManager.initiateConnectionRequest()
+        let globalIDDeeplink = "\(globalIDURLScheme)wc?uri=\(wcDeeplink)"
         await MainActor.run {
-            print("URI FOR QR CODE TO GENERATE \(pairingDeeplink)")
-            qrCodeValue = pairingDeeplink
-            qrImage = pairingDeeplink.generateQRCode()
+            print("URI FOR QR CODE TO GENERATE \(globalIDDeeplink)")
+            qrCodeValue = globalIDDeeplink
+            qrImage = globalIDDeeplink.generateQRCode()
         }
     }
     
-    func copyDidPressed() {
+    func copyLinkPressed() {
         UIPasteboard.general.string = qrCodeValue
     }
     
-    func deeplinkPressed() {
-        guard let uri = qrCodeValue else { return }
-        UIApplication.shared.open(URL(string: "globalid-staging://wc?uri=\(uri)")!)
-    }
-    
-    func payPressed() {
-        walletConnectManager.sendTransaction(fromAddress: "0xF847D1Ae3DF7b18755cDD277acE94164DF9ac794", toAddress: "0x3d4E120592B3936b1da2Ac888221D4Eb364b5a64", amount: "1", blockChain: .ethereum)
-        UIApplication.shared.open(URL(string: "globalid-staging://")!)
+    func connectPressed() {
+        guard let qrCodeValue, let url = URL(string: qrCodeValue) else {
+            Log.error("Could not construct URL")
+            return
+        }
+        
+        UIApplication.shared.open(url) { success in
+            if !success {
+                UIApplication.shared.open(URL(string: "https://apps.apple.com/us/app/globalid-private-digital-id/id1439340119")!)
+            }
+        }
     }
     
     private func prepareAddressList(for session: Session) {
