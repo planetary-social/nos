@@ -273,8 +273,6 @@ enum Localized: String, Localizable, CaseIterable {
     case viewSource = "View Source"
     case reportEventContent = "This content has been reported for {{ report_category }}."
     case select = "Select"
-<<<<<<< HEAD
-    
     case nip56code_CL = "Coarse Language"
     case nip56code_HC = "Likely to cause harm"
     case nip56code_HC_fin = "Financial Harm"

@@ -92,7 +92,6 @@ struct NoteCard: View {
             return nil
         }
     }
-    
     init(
         note: Event,
         style: CardStyle = .compact,
@@ -118,16 +117,17 @@ struct NoteCard: View {
             case .compact:
                 VStack {
                     HStack(alignment: .center, spacing: 0) {
-                        if let author = note.author {
+                        if showContents, let author = note.author {
                             Button {
                                 router.currentPath.wrappedValue.append(author)
                             } label: {
                                 NoteCardHeader(note: note, author: author)
                             }
                             NoteOptionsButton(note: note)
+                        } else {
+                            Spacer()
                         }
                     }
-                    
                     Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
                     Group {
                         if note.isStub {
@@ -137,9 +137,8 @@ struct NoteCard: View {
                                 Spacer()
                             }
                             .padding(30)
-                            .frame(maxWidth: .infinity)
-                        } else {
-                            CompactNoteView(note: note, showFullMessage: showFullMessage)
+                        }  else {
+                            CompactNoteView(note: note, showFullMessage: showFullMessage, loadLinks: !showContents)
                                 .blur(radius: showContents ? 0 : 6)
                                 .frame(maxWidth: .infinity)
                         }
@@ -155,28 +154,11 @@ struct NoteCard: View {
                                 }
                             }
                             Spacer()
-                            
                             RepostButton(note: note) {
                                 await repostNote()
                             }
-                            
-                            LikeButton(note: note) {
-                                await likeNote()
-                            }
-                            
-                            // Reply button
-                            Button(action: {
-                                if let replyAction {
-                                    replyAction(note)
-                                } else {
-                                    router.push(ReplyToNavigationDestination(note: note))
-                                }
-                            }, label: {
-                                Image.buttonReply
-                                    .padding(.leading, 10)
-                                    .padding(.trailing, 23)
-                                    .padding(.vertical, 12)
-                            })
+                            LikeButton(note: note)
+                            ReplyButton(note: note, replyAction: replyAction)
                         }
                         .padding(.leading, 13)
                     }
@@ -184,12 +166,11 @@ struct NoteCard: View {
                 .blur(radius: showContents ? 0 : 6)
                 .opacity(showContents ? 1 : 0.3)
                 .frame(minHeight: showContents ? 130 : hasContentWarning ? 300 : nil)
-                
                 .overlay(
                     !showContents ? OverlayView(
                         userTappedShowAction: {
                             userTappedShowOutOfNetwork = true
-                        }, 
+                        },
                         hasContentWarning: hasContentWarning,
                         reports: reportEvents + authorReports,
                         isOverlayHelpTextBoxShown: $isOverlayHelpTextBoxShown) : nil
@@ -207,7 +188,7 @@ struct NoteCard: View {
                 _ = await relayService.requestEvent(with: note.identifier)
             } 
             self.reportingAuthors = note.reportingAuthors(followedBy: currentUser)
-            print(self.reportingAuthors)
+            // print(self.reportingAuthors)
         }
         .onAppear {
             Task(priority: .userInitiated) {
@@ -242,7 +223,6 @@ struct NoteCard: View {
         .cornerRadius(cornerRadius)
     }
     
-<<<<<<< HEAD
     struct OverlayView: View {
         var userTappedShowAction: () -> Void
         var hasContentWarning: Bool
@@ -487,8 +467,6 @@ struct NoteCard: View {
         }
     }
     
-=======
->>>>>>> main
     func repostNote() async {
         guard let keyPair = currentUser.keyPair else {
             return

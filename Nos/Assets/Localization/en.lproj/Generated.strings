@@ -198,7 +198,6 @@
 "Localized.viewSource" = "View Source";
 "Localized.reportEventContent" = "This content has been reported for {{ report_category }}.";
 "Localized.select" = "Select";
-<<<<<<< HEAD
 "Localized.nip56code_CL" = "Coarse Language";
 "Localized.nip56code_HC" = "Likely to cause harm";
 "Localized.nip56code_HC_fin" = "Financial Harm";

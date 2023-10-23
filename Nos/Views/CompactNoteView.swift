@@ -24,13 +24,16 @@ struct CompactNoteView: View {
     @State private var truncatedSize = CGSize.zero
     @State private var noteContent = LoadingContent<AttributedString>.loading
     @State private var contentLinks = [URL]()
+    @State private var loadLinks = true
+    // the loadLinks doesn't work... not sure why, need help.
     
     @EnvironmentObject var router: Router
     @Dependency(\.persistenceController) private var persistenceController
     
-    internal init(note: Event, showFullMessage: Bool = false) {
+    internal init(note: Event, showFullMessage: Bool = false, loadLinks: Bool = true) {
         _showFullMessage = .init(initialValue: showFullMessage)
         self.note = note
+        self.loadLinks = loadLinks
     }
     
     func updateShouldShowReadMore() {
@@ -100,7 +103,6 @@ struct CompactNoteView: View {
                     }
             }
             if shouldShowReadMore && !showFullMessage {
-                
                 ZStack(alignment: .center) {
                     Button {
                         withAnimation {
@@ -118,7 +120,7 @@ struct CompactNoteView: View {
                 .frame(maxWidth: .infinity)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
-            if note.kind == EventKind.text.rawValue, !contentLinks.isEmpty {
+            if note.kind == EventKind.text.rawValue, !contentLinks.isEmpty && loadLinks {
                 VStack {
                     ForEach(contentLinks, id: \.self.absoluteURL) { url in
                         LinkPreview(url: url)

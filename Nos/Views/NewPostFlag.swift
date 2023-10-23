@@ -9,8 +9,10 @@ import SwiftUI
 
 struct NewPostFlagView: View {
     var body: some View {
-        ZStack {
-            // Background gradient for RoundedRectangle
+       ZStack {
+                   
+                   /*
+                // Background gradient for RoundedRectangle
             RoundedRectangle(cornerRadius: 30, style: .continuous)
                 .fill(LinearGradient(
                     gradient: Gradient(colors: [
@@ -28,6 +30,7 @@ struct NewPostFlagView: View {
                 .font(.brand)
                 .foregroundColor(.primaryTxt)
                 .padding(2)
+                    */
         }
     }
 }

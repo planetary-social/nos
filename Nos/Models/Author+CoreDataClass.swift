@@ -253,6 +253,7 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
+    // this is is inefficent and broken... commenting out for now.
     @nonobjc func lookupReportsOnAuthor(context: NSManagedObjectContext) -> [Event] {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
@@ -260,26 +261,52 @@ public class Author: NosManagedObject {
         // Unwrap hexadecimalPublicKey or provide a default value
         let publicKey = self.hexadecimalPublicKey ?? ""
 
-        // Create a predicate for the "tags" condition
-        let tagsPredicate = NSPredicate(format: "SUBQUERY(allTags, $tag, $tag.p == %@ AND $tag.tagValue == %@).@count > 0", "p", publicKey)
+        // Create a predicate to filter events of kind 1984 and 1985 and with an 'allTags' tag 'p' pointing to the author's public key
+        //let eventPredicate = NSPredicate(format: "(kind == 1984 OR kind == 1985) AND SUBQUERY(allTags, $tag, $tag.p == %@).@count > 0", publicKey)
 
         // Set the predicate for the fetch request
-        fetchRequest.predicate = tagsPredicate
-            
-        var allEvents: [Event] = []
+        //fetchRequest.predicate = eventPredicate
+
+        var events: [Event] = []
         do {
-            allEvents = try context.fetch(fetchRequest)
+        //    events = try context.fetch(fetchRequest)
         } catch {
             print("Failed to fetch events. Error: \(error.localizedDescription)")
         }
 
-        // Filter the events to only include those of kind 'report'
-        let reportEvents = allEvents.filter {
-            $0.kind == EventKind.report.rawValue
-        }
-
-        return reportEvents
+        return events
     }
+    
+//
+//    @nonobjc func lookupReportsOnAuthor(context: NSManagedObjectContext) -> [Event] {
+//        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+//
+//        // Unwrap hexadecimalPublicKey or provide a default value
+//        let publicKey = self.hexadecimalPublicKey ?? ""
+//
+//        // Create a predicate for the "tags" condition
+//        //let tagsPredicate = NSPredicate(format: "SUBQUERY(allTags, $tag, $tag.p == %@ AND $tag.tagValue == %@).@count > 0", publicKey, publicKey)
+//        
+//        // Set the predicate for the fetch request
+//        //fetchRequest.predicate = tagsPredicate
+//        
+//        
+//            
+//        var allEvents: [Event] = []
+//        do {
+//            allEvents = try context.fetch(fetchRequest)
+//        } catch {
+//            print("Failed to fetch events. Error: \(error.localizedDescription)")
+//        }
+//
+//        // Filter the events to only include those of kind 'report'
+//        let reportEvents = allEvents.filter {
+//            $0.kind == EventKind.report.rawValue
+//        }
+//
+//        return reportEvents
+//    }
 
 
     @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {

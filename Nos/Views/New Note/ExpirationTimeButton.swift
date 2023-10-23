@@ -52,7 +52,7 @@ struct ExpirationTimeButton: View {
                     // bottom bevel
                     .overlay(
                         RoundedRectangle(cornerSize: CGSize(width: 5, height: 5))
-                            .stroke(Color.buttonBevelBottom, lineWidth: 1)
+                            .stroke(Color.buttonBevelTop, lineWidth: 1)
                             .offset(x: 0, y: 0.8)
                             .padding(.horizontal, -0.8)
                             .clipped()
