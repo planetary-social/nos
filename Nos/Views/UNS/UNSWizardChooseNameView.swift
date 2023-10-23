@@ -52,11 +52,11 @@ struct UNSWizardChooseNameView: View {
     
     @MainActor func submit() async {
         do {
-            if !desiredName.isEmpty {
-                try await controller.register(desiredName: desiredName)
-            } else if let selectedName {
+            if let selectedName {
                 try await controller.link(existingName: selectedName)
-            }
+            } else if !desiredName.isEmpty {
+                try await controller.register(desiredName: desiredName)
+            } 
         } catch {
             Log.optional(error)
             controller.state = .error(error)
