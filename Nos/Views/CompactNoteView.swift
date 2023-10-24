@@ -53,7 +53,7 @@ struct CompactNoteView: View {
         Group {
             switch noteContent {
             case .loading:
-                Text(String.loremIpsum(3))
+                Text(note.content ?? "")
                     .redacted(reason: .placeholder)
             case .loaded(let attributedString):
                 Text(attributedString)
