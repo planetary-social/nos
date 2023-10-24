@@ -125,6 +125,7 @@
 "Localized.sendTo" = "Send to";
 "Localized.amount" = "Amount";
 "Localized.reconnectWallet" = "Reconnect wallet";
+"Localized.somethingWentWrong" = "Something went wrong.";
 "Localized.mention" = "Mention";
 "Localized.debug" = "Debug";
 "Localized.loadSampleData" = "Load Sample Data";

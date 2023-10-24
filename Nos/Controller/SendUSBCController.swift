@@ -16,6 +16,8 @@ import Auth
 import Logger
 import SwiftUI
 
+typealias USBCAddress = String
+
 enum SendUSBCWizardState {
     case pair, amount, error(Error), loading
 }
@@ -40,13 +42,19 @@ class SendUSBCController: ObservableObject {
     var destinationAuthor: Author
     
     private var cancellables = [AnyCancellable]()
-    
     private let walletConnectManager = WalletConnectManager.shared
+    private var dismissHandler: () -> Void
     
-    init(state: SendUSBCWizardState = .loading, destinationAddress: USBCAddress, destinationAuthor: Author) {
+    init(
+        state: SendUSBCWizardState = .loading, 
+        destinationAddress: USBCAddress, 
+        destinationAuthor: Author,
+        dismiss: @escaping () -> Void
+    ) {
         self.state = state
         self.destinationAddress = destinationAddress
         self.destinationAuthor = destinationAuthor
+        self.dismissHandler = dismiss
         
         Task { try? await initiateConnectionToWC() }
         
@@ -59,6 +67,15 @@ class SendUSBCController: ObservableObject {
         walletConnectManager.onSessionInitiated = { [weak self] _ in 
             Task { @MainActor [weak self] in
                 self?.updateStep()
+            }
+        }
+        
+        walletConnectManager.onSessionResponse = { [weak self] response in
+            switch response.result {
+            case .response:
+                self?.dismissHandler()
+            case .error(let error):
+                self?.state = .error(error)
             }
         }
         
@@ -90,7 +107,7 @@ class SendUSBCController: ObservableObject {
         let wcDeeplink = try await walletConnectManager.initiateConnectionRequest()
         let globalIDDeeplink = "\(globalIDURLScheme)wc?uri=\(wcDeeplink)"
         await MainActor.run {
-            Log.info("Generated WalletConnect URI: \(globalIDDeeplink)")
+            Logger.Log.info("Generated WalletConnect URI: \(globalIDDeeplink)")
             qrCodeValue = globalIDDeeplink
             qrImage = globalIDDeeplink.generateQRCode()
         }

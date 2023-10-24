@@ -14,7 +14,7 @@ struct WalletConnectErrorView: View {
     var error: Error
     
     var body: some View {
-        VStack {
+        VStack(spacing: 8) {
             HStack {
                 PlainText("😕")
                     .font(.system(size: 50))
@@ -34,7 +34,6 @@ struct WalletConnectErrorView: View {
                 PlainText("\(error.localizedDescription). \(Localized.tryAgainOrContactSupport.string)")
                     .font(.callout)
                     .foregroundColor(.secondaryText)
-                    .padding(.vertical, 8)
                 Spacer()
             }
             
@@ -55,7 +54,8 @@ struct WalletConnectErrorView: View {
     var controller = SendUSBCController(
         state: .error(error), 
         destinationAddress: "0x12389749827", 
-        destinationAuthor: previewData.unsAuthor
+        destinationAuthor: previewData.unsAuthor,
+        dismiss: {}
     )
     
     return WalletConnectErrorView(controller: controller, error: error)

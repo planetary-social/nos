@@ -5,6 +5,7 @@
 //  Created by Marcel Salej on 27/09/2023.
 //
 
+import Logger
 import Foundation
 import WalletConnectPairing
 import WalletConnectRelay
@@ -46,11 +47,11 @@ class WalletConnectManager {
     }
     
     func getAllSessions() -> [Session] {
-        return Sign.instance.getSessions()
+        Sign.instance.getSessions()
     }
     
     func deleteSession(topic: String) async throws {
-        return try await Sign.instance.disconnect(topic: topic)
+        try await Sign.instance.disconnect(topic: topic)
     }
     
     func personalSign(message: String, address: String, blockChain: WalletConnectChain) {
@@ -60,7 +61,7 @@ class WalletConnectManager {
                     let signRequest = wcService.personalSign(topic: topic, message: message, address: address, blockChain: blockChain)
                     try await Sign.instance.request(params: signRequest)
                 } catch {
-                    print("\n errorr \n personalSign  \(error)")
+                    Logger.Log.info("\n errorr \n personalSign  \(error)")
                 }
             }
         }
@@ -75,7 +76,7 @@ class WalletConnectManager {
                                                               blockChain: blockChain)
                     try await Sign.instance.request(params: balanceRequest)
                 } catch {
-                    print("\n errorr \n get balance  \(error)")
+                    Logger.Log.info("\n errorr \n get balance  \(error)")
                 }
             }
         }
@@ -96,7 +97,8 @@ class WalletConnectManager {
             fromAddress: fromAddress,
             toAddress: toAddress,
             amount: amount,
-            blockChain: blockChain) else { 
+            blockChain: blockChain
+        ) else { 
             throw SendUSBCError.couldNotCreateTransaction
         }
         
@@ -112,14 +114,14 @@ private extension WalletConnectManager {
             .sink { [weak self] (_, result) in
                 switch result {
                 case .success(let cacao):
-                    print("Auth succedded \(cacao)")
+                    Logger.Log.info("Auth succedded \(cacao)")
                 case .failure(let error):
-                    print("Auth failure \(error)")
+                    Logger.Log.info("Auth failure \(error)")
                 }
             }.store(in: &disposeBag)
         
         Networking.instance.socketConnectionStatusPublisher.sink { status in
-            print(status)
+            Logger.Log.info(String(describing: status))
         }.store(in: &disposeBag)
         
         Sign
@@ -128,7 +130,7 @@ private extension WalletConnectManager {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sessionProposal in
                 // present proposal to the user
-                print(sessionProposal)
+                Logger.Log.info(String(describing: sessionProposal))
                 
             }.store(in: &disposeBag)
         Sign
@@ -136,7 +138,7 @@ private extension WalletConnectManager {
             .sessionEventPublisher
             .receive(on: DispatchQueue.main)
             .sink { (event, topic, _) in
-                print("Ecvent \(event)  \n \n topic  \(topic)")
+                Logger.Log.info("Event \(event)  \n \n topic  \(topic)")
             }.store(in: &disposeBag)
         Sign
             .instance
@@ -144,7 +146,7 @@ private extension WalletConnectManager {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sessionRequest in
                 // present session request to the user
-                print(sessionRequest)
+                Logger.Log.info(String(describing: sessionRequest))
                 
                 
             }.store(in: &disposeBag)
@@ -154,8 +156,7 @@ private extension WalletConnectManager {
             .sessionResponsePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sessionResponse in
-                // present session request to the user
-                print(sessionResponse)
+                Logger.Log.info(String(describing: sessionResponse))
                 self?.onSessionResponse?(sessionResponse)
             }.store(in: &disposeBag)
         
@@ -165,8 +166,8 @@ private extension WalletConnectManager {
             .receive(on: DispatchQueue.main)
             .sink { sessionRequest in
                 // present session request to the user
-                print("Session settled! \n \n Users namespaces are \(sessionRequest.namespaces) \n \n")
-                print(sessionRequest)
+                Logger.Log.info("Session settled! \n \n Users namespaces are \(sessionRequest.namespaces) \n \n")
+                Logger.Log.info(String(describing: sessionRequest))
                 self.initiatedSession = sessionRequest
                 self.onSessionInitiated?(sessionRequest)
                 
@@ -181,8 +182,8 @@ private extension WalletConnectManager {
                 let proposal = sessionRequest.0
                 let status = sessionRequest.1
                 if status.code != 200 {
-                    print("Session cleaned:   \(proposal.pairingTopic)  \n  dapp: \(proposal.proposer.name) \n status code \(status.code) \n status mesasge \(status.message)")
-                    print("Recreating session")
+                    Logger.Log.info("Session cleaned:   \(proposal.pairingTopic)  \n  dapp: \(proposal.proposer.name) \n status code \(status.code) \n status mesasge \(status.message)")
+                    Logger.Log.info("Recreating session")
                     Task {
                         self.onReinitiateConnection?()
                     }
@@ -194,7 +195,7 @@ private extension WalletConnectManager {
             .socketConnectionStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] status in
-                print("Status connection  \(status)")
+                Logger.Log.info("Status connection  \(status)")
             }
         
     }

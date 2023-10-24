@@ -11,8 +11,6 @@ import Dependencies
 import SwiftUINavigation
 import Logger
 
-typealias USBCAddress = String
-
 struct ProfileView: View {
     
     @ObservedObject var author: Author

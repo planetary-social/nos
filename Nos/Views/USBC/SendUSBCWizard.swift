@@ -60,7 +60,8 @@ struct SendUSBCWizard: View {
     var controller = SendUSBCController(
         state: .amount, 
         destinationAddress: "0x12389749827", 
-        destinationAuthor: previewData.unsAuthor
+        destinationAuthor: previewData.unsAuthor,
+        dismiss: {}
     ) 
     
     return VStack {}

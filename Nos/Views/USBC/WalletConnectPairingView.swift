@@ -80,7 +80,8 @@ struct WalletConnectPairingView: View {
     var controller = SendUSBCController(
         state: .pair, 
         destinationAddress: "0x12389749827", 
-        destinationAuthor: previewData.unsAuthor
+        destinationAuthor: previewData.unsAuthor,
+        dismiss: {}
     ) 
     
     return WalletConnectPairingView(viewModel: controller)

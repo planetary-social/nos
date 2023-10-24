@@ -114,7 +114,7 @@ struct WalletConnectSendView: View {
             
             HStack {
                 Spacer()
-                Button(action: { controller.startOver() }, label: {
+                Button(action: { controller.state = .pair }, label: {
                     HighlightedText(
                         text: .reconnectWallet, 
                         highlightedWord: Localized.reconnectWallet.string, 
@@ -148,7 +148,8 @@ struct WalletConnectSendView: View {
     var controller = SendUSBCController(
         state: .amount, 
         destinationAddress: "0x12389749827", 
-        destinationAuthor: previewData.unsAuthor
+        destinationAuthor: previewData.unsAuthor,
+        dismiss: {}
     )
     
     return WalletConnectSendView(controller: controller)

@@ -45,15 +45,16 @@ struct SendUSBCBarButtonItem: View {
             SendUSBCWizard(
                 controller: SendUSBCController(
                     destinationAddress: destinationAddress, 
-                    destinationAuthor: destinationAuthor
-                )
+                    destinationAuthor: destinationAuthor,
+                    dismiss: { walletConnectIsPresented = false }
+                ) 
             )
         }
     }
 }
 
 #Preview {
-    var address: USBCAddress = "0x918234"
+    let address: USBCAddress = "0x918234"
     var previewData = PreviewData()
     
     return NavigationStack { 
