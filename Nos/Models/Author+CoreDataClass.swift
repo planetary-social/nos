@@ -252,19 +252,14 @@ public class Author: NosManagedObject {
         )
         return fetchRequest
     }
-    
-    // this is is inefficent and broken... commenting out for now.
-    @nonobjc func lookupReportsOnAuthor(context: NSManagedObjectContext) -> [Event] {
+         // commenting out becuase i need help finding current user in async
+//    @nonobjc func lookupReportsOnAuthor(context: NSManagedObjectContext, followedBy currentUser: CurrentUser?) async -> [Event] {
+    @nonobjc func lookupReportsOnAuthor(context: NSManagedObjectContext)  -> [Event] {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
 
-        // Unwrap hexadecimalPublicKey or provide a default value
         let publicKey = self.hexadecimalPublicKey ?? ""
-
-        // Create a predicate to filter events of kind 1984 and 1985 and with an 'allTags' tag 'p' pointing to the author's public key
         let eventPredicate = NSPredicate(format: "(kind == 1984 OR kind == 1985) AND SUBQUERY(authorReferences, $tag, $tag.pubkey == %@).@count > 0", publicKey)
-
-        // Set the predicate for the fetch request
         fetchRequest.predicate = eventPredicate
 
         var events: [Event] = []
@@ -274,41 +269,20 @@ public class Author: NosManagedObject {
             print("Failed to fetch events. Error: \(error.localizedDescription)")
         }
 
+        // Filter out events authored by people you don't follow, only if currentUser is not nil
+//        if let currentUser = currentUser {
+//            var filteredEvents: [Event] = []
+//            for event in events {
+//                let authorPublicKey = event.author?.hexadecimalPublicKey ?? ""
+//                if await currentUser.socialGraph.follows(authorPublicKey) {
+//                    filteredEvents.append(event)
+//                }
+//            }
+//            events = filteredEvents
+//        }
+
         return events
     }
-    
-//
-//    @nonobjc func lookupReportsOnAuthor(context: NSManagedObjectContext) -> [Event] {
-//        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-//        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-//
-//        // Unwrap hexadecimalPublicKey or provide a default value
-//        let publicKey = self.hexadecimalPublicKey ?? ""
-//
-//        // Create a predicate for the "tags" condition
-//        //let tagsPredicate = NSPredicate(format: "SUBQUERY(allTags, $tag, $tag.p == %@ AND $tag.tagValue == %@).@count > 0", publicKey, publicKey)
-//        
-//        // Set the predicate for the fetch request
-//        //fetchRequest.predicate = tagsPredicate
-//        
-//        
-//            
-//        var allEvents: [Event] = []
-//        do {
-//            allEvents = try context.fetch(fetchRequest)
-//        } catch {
-//            print("Failed to fetch events. Error: \(error.localizedDescription)")
-//        }
-//
-//        // Filter the events to only include those of kind 'report'
-//        let reportEvents = allEvents.filter {
-//            $0.kind == EventKind.report.rawValue
-//        }
-//
-//        return reportEvents
-//    }
-
-
     @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: true)]

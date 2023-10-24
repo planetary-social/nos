@@ -15,7 +15,7 @@ import Dependencies
 ///
 /// Use this view inside MessageButton to have nice borders.
 struct NoteCard: View {
-
+    
     @ObservedObject var note: Event
     
     var style = CardStyle.compact
@@ -33,7 +33,7 @@ struct NoteCard: View {
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var currentUser: CurrentUser
     @Dependency(\.persistenceController) var persistenceController
-
+    
     private var showFullMessage: Bool
     private let showReplyCount: Bool
     private var hideOutOfNetwork: Bool
@@ -43,7 +43,7 @@ struct NoteCard: View {
         (!hasContentWarning && !hideOutOfNetwork) ||
         userTappedShowOutOfNetwork ||
         (!hasContentWarning && (currentUser.socialGraph.contains(note.author?.hexadecimalPublicKey) ||
-        Event.discoverTabUserIdToInfo.keys.contains(note.author?.hexadecimalPublicKey ?? "")))
+                                Event.discoverTabUserIdToInfo.keys.contains(note.author?.hexadecimalPublicKey ?? "")))
     }
     
     private var reportReason: String {
@@ -51,28 +51,32 @@ struct NoteCard: View {
         return(reported.first?.content ?? "")
     }
     
-    private var reportEvents: [Event] {
+        private var eventReports: [Event] {
         note.reports(followedBy: self.currentUser)
     }
     
     private var authorReports: [Event] {
-        if (note.author != nil) {
-            let reports =  note.reports(referencingAuthor: note.author!, followedBy: self.currentUser)
-
-        }
-        
-        if let author = note.author {
-            let reports = author.lookupReportsOnAuthor(context: viewContext)
-            if reports.count > 0 {
-                print(reports)
-            }
-            return reports
-        }
-        return []
+        note.author?.lookupReportsOnAuthor(context: self.viewContext) ?? []
     }
+    
+//    private var authorReports: [Event] {
+//        if (note.author != nil) {
+//            let reports =  note.reports(referencingAuthor: note.author!, followedBy: self.currentUser)
+//
+//        }
+//        
+//        if let author = note.author {
+//            let reports = author.lookupReportsOnAuthor(context: viewContext, followedBy: self.currentUser)
+//            if reports.count > 0 {
+//                //print(reports)
+//            }
+//            return reports
+//        }
+//        return []
+//    }
  
     private var hasContentWarning: Bool {
-        reportEvents.count > 0 || authorReports.count > 0
+        eventReports.count > 0 || authorReports.count > 0
     }
     
     private var attributedReplies: AttributedString? {
@@ -92,6 +96,8 @@ struct NoteCard: View {
             return nil
         }
     }
+    
+
     init(
         note: Event,
         style: CardStyle = .compact,
@@ -107,7 +113,6 @@ struct NoteCard: View {
         self.showFullMessage = showFullMessage
         self.hideOutOfNetwork = hideOutOfNetwork
         self.showReplyCount = showReplyCount
-        self.reportingAuthors = reportingAuthors
         self.replyAction = replyAction
     }
     
@@ -172,7 +177,8 @@ struct NoteCard: View {
                             userTappedShowOutOfNetwork = true
                         },
                         hasContentWarning: hasContentWarning,
-                        reports: reportEvents + authorReports,
+                        eventReports: eventReports,
+                        authorReports: authorReports,
                         isOverlayHelpTextBoxShown: $isOverlayHelpTextBoxShown) : nil
                 )
             case .golden:
@@ -226,13 +232,14 @@ struct NoteCard: View {
     struct OverlayView: View {
         var userTappedShowAction: () -> Void
         var hasContentWarning: Bool
-        var reports: [Event]
+        var eventReports: [Event]
+        var authorReports: [Event]
         @Binding var isOverlayHelpTextBoxShown: Bool
-    
+        
         @ViewBuilder
         var body: some View {
             if hasContentWarning  {
-                OverlayContentReportView(userTappedShowAction: userTappedShowAction, reports: reports, isOverlayHelpTextBoxShown: $isOverlayHelpTextBoxShown)
+                OverlayContentReportView(userTappedShowAction: userTappedShowAction, eventReports: eventReports, authorReports: authorReports, isOverlayHelpTextBoxShown: $isOverlayHelpTextBoxShown)
             } else {
                 OverlayOutofNetworkView(userTappedShowAction: userTappedShowAction, isOverlayHelpTextBoxShown: $isOverlayHelpTextBoxShown)
             }
@@ -304,24 +311,14 @@ struct NoteCard: View {
     struct OverlayContentReportView: View {
         @State private var isTextBoxShown: Bool = false
         var userTappedShowAction: () -> Void
-        var reports: [Event]
+        var eventReports: [Event]
+        var authorReports: [Event]
+        
+        //var eventReports  = self.eventReports
+        //var authorReports = self.authorReports
         @Binding var isOverlayHelpTextBoxShown: Bool
 
-        // Assuming each 'Event' has an 'Author' and we can get an array of 'Author' names
-        private var authorNames: [String] {
-            // Extracting author names. Adjust according to your actual data structure.
-            reports.compactMap { $0.author?.name }
-        }
 
-        // Assuming there's a property or method 'safeName' in 'Author' that safely returns the author's name.
-        private var firstAuthorSafeName: String {
-            // Getting the safe name of the first author. Adjust according to your actual data structure.
-            reports.first?.author?.safeName ?? "Unknown Author"
-        }
-
-        private var reason: String {
-            reports.first?.content ?? ""
-        }
         
         var body: some View {
             VStack(alignment: .leading) {
@@ -331,7 +328,8 @@ struct NoteCard: View {
                         withAnimation {
                             self.isOverlayHelpTextBoxShown.toggle()
                         }
-                    }) {
+                    })
+                    {
                         (isTextBoxShown ? Image.x : Image.info)
                             .resizable()
                             .frame(width: 24, height: 24)
@@ -359,31 +357,13 @@ struct NoteCard: View {
                             .scaledToFit()
                             .frame(width: 48, height: 48) // Set the width and height to 48
                             .padding(.bottom, 20)
-                            
-                        Text( reason )
-                            .font(.body)
-                            .foregroundColor(.secondaryText)
-                            .background {
-                                Color.cardBackground
-                                    .blur(radius: 8, opaque: false)
-                            }
-                        
-                        // Reporting author names with localization
-                        if authorNames.count > 1 {
-                            Text(Localized.reportedByOneAndMore.localizedMarkdown([
-                                "one": firstAuthorSafeName,
-                                "count": "\(authorNames.count - 1)"
-                            ]))
-                            .font(.body)  // Adjust font and style as needed
-                            .foregroundColor(.primary)
-                            .padding(.leading, 25)  // Adjust padding as needed
-                        } else {
-                            Text(Localized.reportedByOne.localizedMarkdown([
-                                "one": firstAuthorSafeName
-                            ]))
-                            .font(.body)  // Adjust font and style as needed
-                            .foregroundColor(.secondaryText)
-                            .padding(.leading, 25)  // Adjust padding as needed
+                        if authorReports.count > 0
+                        {
+                            contentWarningMessage(reports: authorReports, type: "author")
+                        }
+                        if eventReports.count > 0
+                        {
+                            contentWarningMessage(reports: eventReports, type: "note")
                         }
                     }
                     SecondaryActionButton(title: Localized.viewThisPostAnyway) {
@@ -399,6 +379,125 @@ struct NoteCard: View {
                 Spacer(minLength: 30) // Ensure there's some spacing at the bottom
 
             }
+        }
+    }
+    
+    struct contentWarningMessage: View {
+        var reports: [Event]
+        var type: String
+        
+        // Assuming each 'Event' has an 'Author' and we can get an array of 'Author' names
+        private var authorNames: [String] {
+            // Extracting author names. Adjust according to your actual data structure.
+            reports.compactMap { $0.author?.name }
+        }
+
+        // Assuming there's a property or method 'safeName' in 'Author' that safely returns the author's name.
+        private var firstAuthorSafeName: String {
+            // Getting the safe name of the first author. Adjust according to your actual data structure.
+            reports.first?.author?.safeName ?? "Unknown Author"
+        }
+        
+        private var reason: String {
+            // Extract content from reports and remove empty content
+            let contents = reports.compactMap { (($0.content?.isEmpty) != nil) ? nil : $0.content }
+            
+            // Convert set of unique reasons to array and remove any empty reasons
+            let reasons = uniqueReasons.filter { !$0.isEmpty }
+            
+            // Combine both arrays
+            let combined = contents + reasons
+            
+            // Join them with comma separator
+            return combined.joined(separator: ", ")
+        }
+        
+        private var tags: [[String]] {
+            var allTags = [[String]]()
+            for report in reports {
+                guard let reportTags = report.allTags as? [[String]] else {
+                    print("Error: Cannot convert allTags to [[String]]")
+                    continue
+                }
+                allTags.append(contentsOf: reportTags)
+            }
+            return allTags
+        }
+        
+        private var uniqueReasons: Set<String> {
+            var reasons = [String]()
+            for report in reports {
+                guard let reportTags = report.allTags as? [[String]] else {
+                    print("Error: Cannot convert allTags to [[String]]")
+                    continue
+                }
+                for tag in reportTags {
+                    if tag.count >= 2 {
+                        let reasonCode = tag[1]
+                        var reason = reasonCode
+                        if reasonCode.hasPrefix("MOD>") {
+                            let codeSuffix = String(reasonCode.dropFirst(4)) // Drop "MOD>" prefix
+                            let localizedKey = "nip56code_" + codeSuffix
+                            if let localizedEnum = Localized(rawValue: localizedKey) {
+                                
+                                // MATT! I need help with this, this doesn't seem to get out the localized tag name, but i'm not sure how to do it. 
+                                reason = localizedEnum.description // Assuming you have a description property for human-readable name
+                            }
+                        }
+                        else if tag[0] == "report" {
+                            reasons.append(reason)
+                        } else if tag.count == 3 && !reasonCode.hasPrefix("MOD>") {
+                            reasons.append(tag[2])
+                        }
+                    }
+                }
+            }
+            return Set(reasons)
+        }
+        
+        var body: some View {
+            if type == "author" {
+                Text( Localized.userHasBeen )
+                    .font(.body)
+                    .foregroundColor(.secondaryText)
+                    .background {
+                        Color.cardBackground
+                            .blur(radius: 8, opaque: false)
+                    }
+            } else if type == "note" {
+                Text( Localized.noteHasBeen )
+                    .font(.body)
+                    .foregroundColor(.secondaryText)
+                    .background {
+                        Color.cardBackground
+                            .blur(radius: 8, opaque: false)
+                    }
+            }
+            if authorNames.count > 1 {
+                Text(Localized.reportedByOneAndMore.localizedMarkdown([
+                    "one": firstAuthorSafeName,
+                    "count": "\(authorNames.count - 1)"
+                ]))
+                .font(.body)  // Adjust font and style as needed
+                .foregroundColor(.primary)
+                .padding(.leading, 25)  // Adjust padding as needed
+            } else {
+                Text(Localized.reportedByOne.localizedMarkdown([
+                    "one": firstAuthorSafeName
+                ]))
+                .font(.body)  // Adjust font and style as needed
+                .foregroundColor(.secondaryText)
+                .padding(.leading, 25)  // Adjust padding as needed
+            }
+            
+            Text( Localized.reportedFor.localizedMarkdown(["reason": reason]) )
+                .font(.body)
+                .foregroundColor(.secondaryText)
+                .background {
+                    Color.cardBackground
+                        .blur(radius: 8, opaque: false)
+                }
+
         }
     }
     

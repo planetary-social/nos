@@ -1021,28 +1021,29 @@ public class Event: NosManagedObject {
         return events
     }
     
-    @MainActor func reports(followedBy currentUser: CurrentUser) -> [Event] {
+    @MainActor
+    func reports(followedBy currentUser: CurrentUser) -> [Event] {
         let reportEvents = referencingEvents
             .compactMap { $0.referencingEvent }
-            .filter { (event: Event) in
-                event.kind == EventKind.report.rawValue && currentUser.socialGraph.follows(event.author?.hexadecimalPublicKey ?? "")
-             }
+            .filter { event in
+                let isReportEvent = event.kind == EventKind.report.rawValue
+                let isFollowed = currentUser.socialGraph.follows(event.author?.hexadecimalPublicKey ?? "")
+                return isReportEvent && isFollowed
+            }
         return reportEvents
     }
     
-    
-    @MainActor func reports(referencingAuthor author: Author, followedBy currentUser: CurrentUser) -> [Event] {
+    @MainActor
+    func reports(referencingAuthor author: Author, followedBy currentUser: CurrentUser) -> [Event] {
         let reportEvents = referencingEvents
             .compactMap { $0.referencingEvent }
-            .filter { (event: Event) in
+            .filter { event in
                 event.kind == EventKind.report.rawValue
                 && event.author == author
                 && currentUser.socialGraph.follows(author.hexadecimalPublicKey)
-             }
+            }
         return reportEvents
     }
-    
-    
 }
 // swiftlint:enable type_body_length
 // swiftlint:enable file_length

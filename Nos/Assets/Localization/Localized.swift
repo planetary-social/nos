@@ -156,11 +156,14 @@ enum Localized: String, Localizable, CaseIterable {
     case followedByOneAndMore = "Followed by **{{ one }}** and **{{ count }} others**"
     case followedByTwo = "Followed by **{{ one }}** and **{{ two }}**"
     case followedByTwoAndMore = "Followed by **{{ one }}**, **{{ two }}** and **{{ count }} others**"
-    case reportedBy = "Reported by"
-    case reportedByOne = "Reported by **{{ one }}**"
-    case reportedByOneAndMore = "Reported by **{{ one }}** and **{{ count }} others**"
-    case reportedByTwo = "Reported by **{{ one }}** and **{{ two }}**"
-    case reportedByTwoAndMore = "Reported by **{{ one }}**, **{{ two }}** and **{{ count }} others**"
+    case userHasBeen = "This user has been"
+    case noteHasBeen = "This note has been"
+    case reportedBy = "reported by"
+    case reportedByOne = "reported by **{{ one }}**"
+    case reportedByOneAndMore = "reported by **{{ one }}** and **{{ count }} others**"
+    case reportedByTwo = "reported by **{{ one }}** and **{{ two }}**"
+    case reportedByTwoAndMore = "reported by **{{ one }}**, **{{ two }}** and **{{ count }} others**"
+    case reportedFor = "for {{reason}}"
     case unfollow = "Unfollow"
     case universalName = "Universal name"
     case nip05 = "NIP-05"
@@ -216,9 +219,9 @@ enum Localized: String, Localizable, CaseIterable {
     case outsideNetwork = "This user is outside your network."
     case outsideNetworkExplanation = "This particular note originates from someone beyond your direct 'friends of friends' network. To prioritize your comfort and trust, we've concealed it with a content warning."
     case contentWarningExplanation = """
-        Nos is committed to fostering a safe and respectful community. To achieve this, we've integrated OpenAI's moderation API to scan the text in posts and comments.
-        
-        This automated system identifies offensive language, hate speech, and content that violates our community guidelines, flagging it for review or removal. This ensures that discussions remain respectful and aligned with our values.
+    Nos is committed to fostering a safe and respectful community. To achieve this, display content reports and labels from people who you follow.
+    
+    In addition, we've integrated OpenAI's moderation API to scan the text in posts, comments, and reports by other users. This automated system identifies offensive language, hate speech, and content that violates our community guidelines, flagging it for review or removal. This ensures that discussions remain respectful and aligned with our values.
     """
     case allMyRelays = "All My Relays"
     case about = "About"
