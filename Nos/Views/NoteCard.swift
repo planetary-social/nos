@@ -614,6 +614,7 @@ struct NoteCard_Previews: PreviewProvider {
                     NoteCard(note: previewData.shortNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.longNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.imageNote, hideOutOfNetwork: false)
+                    NoteCard(note: previewData.expiringNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.verticalImageNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.veryWideImageNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.imageNote, style: .golden, hideOutOfNetwork: false)

@@ -7,6 +7,7 @@
 //
 
 // swiftlint:disable file_length
+import secp256k1
 import Foundation
 import CoreData
 import RegexBuilder
