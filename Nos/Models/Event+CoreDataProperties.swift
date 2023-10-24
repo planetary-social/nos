@@ -33,6 +33,7 @@ extension Event {
     @NSManaged public var referencingEvents: Set<EventReference>
     @NSManaged public var seenOnRelays: Set<Relay>
     @NSManaged public var shouldBePublishedTo: Set<Relay>
+    @NSManaged public var isRead: Bool
 }
 
 // MARK: Generated accessors for authorReferences

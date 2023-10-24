@@ -45,6 +45,10 @@ public class Author: NosManagedObject {
         about == nil && name == nil && displayName == nil && profilePhotoURL == nil
     }
     
+    @MainActor var hasUnreadStories: Bool {
+        !events.filter { !$0.isRead }.isEmpty
+    }
+    
     var webLink: String {
         if let publicKey {
             return "https://iris.to/\(publicKey.npub)"
@@ -158,6 +162,7 @@ public class Author: NosManagedObject {
         let onlyFollowedAuthorsClause = "ANY followers.source = %@"
         let onlyPostsClause = "($event.kind = 1 OR $event.kind = 6 OR $event.kind = 30023)"
         let onlyRecentStoriesClause = "$event.createdAt > %@"
+        let onlyReadClause = "$event.isRead = true"
         let onlyRootPostsClause = "SUBQUERY(" +
             "$event.eventReferences, " +
             "$reference, " +
@@ -218,7 +223,32 @@ public class Author: NosManagedObject {
         )
         return fetchRequest
     }
-    
+
+    static func unreadAuthorStories(pubkey: HexadecimalString, since: Date) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        let onlyStoriesFromTheAuthorClause = "author.hexadecimalPublicKey = %@"
+        let onlyPostsClause = "(kind = 1 OR kind = 6 OR kind = 30023)"
+        let unreadStoryClause = "isRead = false"
+        let onlyRecentStoriesClause = "createdAt > %@"
+        let onlyRootPostsClause = "SUBQUERY(" +
+            "eventReferences, " +
+            "$reference, " +
+            "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
+        ").@count = 0"
+        fetchRequest.predicate = NSPredicate(
+            format: "\(onlyStoriesFromTheAuthorClause) " +
+                "AND \(onlyRecentStoriesClause) " +
+                "AND \(unreadStoryClause) " +
+                "AND \(onlyRootPostsClause) " +
+                "AND \(onlyPostsClause)",
+            pubkey,
+            since as CVarArg
+        )
+        fetchRequest.fetchLimit = 10
+        return fetchRequest
+    }
+
     /// Fetches all the authors who are further than 2 hops away on the social graph for the given `author`.
     static func outOfNetwork(for author: Author) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
