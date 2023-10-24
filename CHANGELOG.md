@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added display of content warnings and reports. 
+
 ## [0.1 (85)] - 2023-10-23Z
 
 - Fixed missing secrets
