@@ -82,19 +82,7 @@ struct ProfileHeader: View {
                             .font(.clarityTitle3.weight(.semibold))
                             .foregroundColor(Color.primaryTxt)
                         
-                        if !(author.uns ?? "").isEmpty {
-                            Button {
-                                if let url = relayService.unsURL(from: author.uns ?? "") {
-                                    UIApplication.shared.open(url)
-                                }
-                            } label: {
-                                PlainText("\(author.uns ?? "")@universalname.space")
-                                    .foregroundColor(.secondaryText)
-                                    .font(.claritySubheadline)
-                                    .multilineTextAlignment(.leading)
-                            }
-                        }
-                        
+                        // NIP-05
                         if let nip05Identifier = author.nip05, !nip05Identifier.isEmpty {
                             Button {
                                 let domain = relayService.domain(from: nip05Identifier)
@@ -119,6 +107,23 @@ struct ProfileHeader: View {
                                 .multilineTextAlignment(.leading)
                             }
                             .padding(.top, 3)
+                        }
+                        
+                        // Universal name
+                        if !(author.uns ?? "").isEmpty {
+                            Button {
+                                if let url = relayService.unsURL(from: author.uns ?? "") {
+                                    UIApplication.shared.open(url)
+                                }
+                            } label: {
+                                HStack(spacing: 3) {
+                                    Image.unsLogoLight
+                                    PlainText(author.uns ?? "")
+                                        .foregroundColor(.secondaryText)
+                                        .font(.claritySubheadline)
+                                        .multilineTextAlignment(.leading)
+                                }
+                            }
                         }
 
                         if author != currentUser.author, let currentUser = currentUser.author {
@@ -251,4 +256,15 @@ struct ProfileHeader: View {
     .previewDevice("iPhone SE (2nd generation)")
     .padding()
     .background(Color.cardBackground)
+}
+
+#Preview("UNS") {
+    var previewData = PreviewData()
+    
+    return Group {
+        ProfileHeader(author: previewData.unsAuthor)
+            .inject(previewData: previewData)
+            .padding()
+            .background(Color.cardBackground)
+    }
 }
