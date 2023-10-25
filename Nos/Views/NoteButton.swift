@@ -133,9 +133,11 @@ struct NoteButton: View {
                     note.kind != EventKind.repost.rawValue,
                     let root = note.rootNote() ?? note.referencedNote() {
                     
-                    ThreadRootView(root: root, tapAction: { root in router.push(root) }) {
-                        compactButton
-                    }
+                    ThreadRootView(
+                        root: root, 
+                        tapAction: { root in router.push(root) },
+                        reply: { compactButton }
+                    )
                 } else {
                     compactButton
                 }

@@ -61,9 +61,11 @@ struct ThreadRootView_Previews: PreviewProvider {
     static var previews: some View {
         ScrollView {
             VStack {
-                ThreadRootView(root: previewData.longNote, tapAction: { _ in }) {
-                    
-                }
+                ThreadRootView(
+                    root: previewData.longNote, 
+                    tapAction: { _ in },
+                    reply: { EmptyView() } 
+                )
             }
         }
         .background(Color.appBg)
