@@ -201,7 +201,6 @@ struct DiscoverView: View {
                     analytics.showedDiscover()
                     Task { await subscribeToNewEvents() }
                 } else {
-                    searchController.clear()
                     Task { await cancelSubscriptions() }
                 }
             })

@@ -11,7 +11,8 @@ import SwiftUI
 /// Detects double taps on a tab item and pops the opened screens to return the user to the root view
 struct DoubleTapToPopModifier: ViewModifier {
 
-    var tab: AppView.Destination
+    var tab: AppDestination
+    var onRoot: (@MainActor () -> Void)?
 
     @EnvironmentObject private var router: Router
     @State private var cancellable: AnyCancellable?
@@ -22,7 +23,11 @@ struct DoubleTapToPopModifier: ViewModifier {
                 cancellable = router.consecutiveTaps(on: tab)
                     .sink {
                         let path = router.path(for: tab)
-                        if !path.wrappedValue.isEmpty {
+                        if path.wrappedValue.isEmpty {
+                            if let onRoot {
+                                onRoot()
+                            }
+                        } else {
                             path.wrappedValue.removeLast(path.wrappedValue.count)
                         }
                     }
@@ -32,7 +37,7 @@ struct DoubleTapToPopModifier: ViewModifier {
 }
 
 extension View {
-    func doubleTapToPop(tab: AppView.Destination) -> some View {
-        self.modifier(DoubleTapToPopModifier(tab: tab))
+    func doubleTapToPop(tab: AppDestination, onRoot: (@MainActor () -> Void)? = nil) -> some View {
+        self.modifier(DoubleTapToPopModifier(tab: tab, onRoot: onRoot))
     }
 }

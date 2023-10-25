@@ -5,6 +5,7 @@
 //  Created by Matthew Lorentz on 2/28/23.
 //
 
+import secp256k1
 import Foundation
 import Logger
 
@@ -134,7 +135,7 @@ struct MetadataEventJSON: Codable {
             "display_name": displayName ?? "",
             "name": name ?? "",
             "nip05": nip05 ?? "",
-            "uns": uns ?? "",
+            "uns_name": uns ?? "",
             "about": about ?? "",
             "website": website ?? "",
             "picture": picture ?? "",

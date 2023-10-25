@@ -136,23 +136,9 @@ struct NoteCard: View {
                             await repostNote()
                         }
                         
-                        LikeButton(note: note) {
-                            await likeNote()
-                        }
-                        
-                        // Reply button
-                        Button(action: { 
-                            if let replyAction {
-                                replyAction(note)
-                            } else {
-                                router.push(ReplyToNavigationDestination(note: note))
-                            }
-                        }, label: { 
-                            Image.buttonReply
-                                .padding(.leading, 10)
-                                .padding(.trailing, 23)
-                                .padding(.vertical, 12)
-                        })
+                        LikeButton(note: note)
+
+                        ReplyButton(note: note, replyAction: replyAction)
                     }
                     .padding(.leading, 13)
                 }
@@ -197,49 +183,6 @@ struct NoteCard: View {
         }
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
-    }
-    
-    func likeNote() async {
-        
-        guard let keyPair = currentUser.keyPair else {
-            return
-        }
-        
-        var tags: [[String]] = []
-        if let eventReferences = note.eventReferences.array as? [EventReference] {
-            // compactMap returns an array of the non-nil results.
-            tags += eventReferences.compactMap { event in
-                guard let eventId = event.eventId else { return nil }
-                return ["e", eventId]
-            }
-        }
-
-        if let authorReferences = note.authorReferences.array as? [EventReference] {
-            tags += authorReferences.compactMap { author in
-                guard let eventId = author.eventId else { return nil }
-                return ["p", eventId]
-            }
-        }
-
-        if let id = note.identifier {
-            tags.append(["e", id] + note.seenOnRelayURLs)
-        }
-        if let pubKey = note.author?.publicKey?.hex {
-            tags.append(["p", pubKey])
-        }
-        
-        let jsonEvent = JSONEvent(
-            pubKey: keyPair.publicKeyHex,
-            kind: .like,
-            tags: tags,
-            content: "+"
-        )
-        
-        do {
-            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
-        } catch {
-            Log.info("Error creating event for like")
-        }
     }
     
     func repostNote() async {
@@ -290,6 +233,7 @@ struct NoteCard_Previews: PreviewProvider {
                     NoteCard(note: previewData.shortNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.longNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.imageNote, hideOutOfNetwork: false)
+                    NoteCard(note: previewData.expiringNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.verticalImageNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.veryWideImageNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.imageNote, style: .golden, hideOutOfNetwork: false)
