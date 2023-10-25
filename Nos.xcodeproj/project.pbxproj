@@ -2238,7 +2238,7 @@
 			repositoryURL = "https://github.com/planetary-social/logger-ios";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 1.1.0;
 			};
 		};
 		C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
