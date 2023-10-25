@@ -23,6 +23,10 @@ public class Relay: NosManagedObject {
         "wss://relay.damus.io",
         "wss://e.nos.lol",
         "wss://purplepag.es",
+        "wss://relay.current.fyi",
+        "wss://relay.nos.social",
+        "wss://relayable.org",
+        "wss://relay.snort.social",
         ]
     }
     
@@ -42,6 +46,8 @@ public class Relay: NosManagedObject {
         "wss://e.nos.lol",
         "wss://purplepag.es",
         "wss://soloco.nl",
+        "wss://relayable.org",
+        "wss://relay.nos.social",
         ]
     }
     

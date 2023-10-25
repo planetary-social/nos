@@ -153,7 +153,7 @@ actor RelaySubscriptionManager {
             start(subscription: subscription, relays: relays)
         }
         
-        Log.info("\(active.count) active subscriptions. \(all.count - active.count) subscriptions waiting in queue.")
+        Log.debug("\(active.count) active subscriptions. \(all.count - active.count) subscriptions waiting in queue.")
     }
     
     func queueSubscription(with filter: Filter, to overrideRelays: [URL]? = nil) async -> RelaySubscription.ID {
@@ -175,7 +175,7 @@ actor RelaySubscriptionManager {
         var subscription = subscription
         subscription.subscriptionStartDate = .now
         updateSubscriptions(with: subscription)
-        Log.info("starting subscription: \(subscription.id)")
+        Log.debug("starting subscription: \(subscription.id)")
         relays.forEach { relayURL in
             if let socket = socket(for: relayURL) {
                 requestEvents(from: socket, subscription: subscription)
@@ -190,10 +190,10 @@ actor RelaySubscriptionManager {
             let request: [Any] = ["REQ", subscription.id, subscription.filter.dictionary]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
-            Log.info("REQ for \(subscription.id) sent to \(socket.host)")
+            Log.debug("REQ for \(subscription.id) sent to \(socket.host)")
             socket.write(string: requestString)
         } catch {
-            print("Error: Could not send request \(error.localizedDescription)")
+            Log.error("Error: Could not send request \(error.localizedDescription)")
         }
     }
 }

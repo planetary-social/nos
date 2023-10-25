@@ -21,7 +21,6 @@ struct UNSWizard: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var currentUser: CurrentUser
     @Dependency(\.analytics) var analytics
-    @Dependency(\.unsAPI) var api
     
     @State private var flow: Flow?
     
