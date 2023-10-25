@@ -107,7 +107,10 @@ struct HighlightedText: View {
                 if afterHighlightedWord.prefix(1) == " " {
                     segments.append(.space)
                 }
-                segments.append(.body(String(afterHighlightedWord)))
+                
+                if let string = try? String(afterHighlightedWord) {
+                    segments.append(.body(string))
+                }
             }
         } else {
             // no highlighted word, so we just have one segment.

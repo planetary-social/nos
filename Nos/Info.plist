@@ -19,6 +19,8 @@
 	<string>$(POSTHOG_API_KEY)</string>
 	<key>SENTRY_DSN</key>
 	<string>$(SENTRY_DSN)</string>
+	<key>WALLET_CONNECT_PROJECT_ID</key>
+	<string>$(WALLET_CONNECT_PROJECT_ID)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>ClarityCity-Black.otf</string>

@@ -5,6 +5,7 @@
 //  Created by Matthew Lorentz on 3/20/23.
 //
 
+import secp256k1
 import Foundation
 import Logger
 import Dependencies
@@ -25,10 +26,11 @@ enum UNSError: Error {
     case nameTaken
     case notAuthenticated
     case developer
+    case noUser
     case badResponse
 }
 
-// swiftlint:disable type_body_length
+// swiftlint:disable file_length type_body_length
 
 class UNSAPI {
     private var authConnectionURL: URL
@@ -59,7 +61,7 @@ class UNSAPI {
             let orgCode = Self.getEnvironmentVariable(named: "UNS_ORG_CODE") else {
             return nil
         }
-              
+        
         self.authConnectionURL = authConnectionURL
         self.connectionURL = connectionURL
         self.clientID = clientID
@@ -117,7 +119,7 @@ class UNSAPI {
             let accessToken = accessTokenDict["access_token"] as? String,
             let refreshToken = accessTokenDict["refresh_token"] as? String else {
             logError(response: response)
-            throw UNSError.generic
+            throw UNSError.badResponse
         }
         
         self.personaID = personaID
@@ -153,7 +155,8 @@ class UNSAPI {
             let accessToken = dataDict["access_token"] as? String,
             let refreshToken = dataDict["refresh_token"] as? String else {
             logError(response: response)
-            throw UNSError.generic
+            self.refreshToken = nil
+            throw UNSError.badResponse
         }
         
         self.accessToken = accessToken
@@ -162,8 +165,9 @@ class UNSAPI {
     }
     
     func getNames() async throws -> [UNSNameRecord] {
-        guard let personaID, let accessToken else {
-            throw UNSError.generic
+        let accessToken = try await checkAccessToken()
+        guard let personaID else {
+            throw UNSError.developer
         }
         var request = URLRequest(url: connectionURL.appending(path: "v1/personas/\(personaID)/names"))
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
@@ -174,11 +178,11 @@ class UNSAPI {
         let data = response.0
         
         guard let responseDict = try JSONSerialization.jsonObject(with: data) as? JSONObject else {
-            throw UNSError.generic
+            throw UNSError.badResponse
         }
         guard let dataDict = responseDict["data"] as? [JSONObject] else {
             logError(response: response)
-            throw UNSError.generic
+            throw UNSError.badResponse
         }
         var names = [UNSNameRecord]()
         for nameDict in dataDict {
@@ -192,9 +196,7 @@ class UNSAPI {
     }
     
     func createName(_ name: String) async throws -> UNSNameID {
-        guard let accessToken else {
-            throw UNSError.noAccessToken
-        }
+        let accessToken = try await checkAccessToken()
         var request = URLRequest(url: connectionURL.appending(path: "v1/names"))
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
@@ -215,7 +217,7 @@ class UNSAPI {
                 let dataDict = responseDict["data"] as? JSONObject,
                 let nameDict = dataDict["name"] as? JSONObject,
                 let nameID = nameDict["name_id"] as? String else {
-                throw UNSError.generic
+                throw UNSError.badResponse
             }
             
             return nameID
@@ -227,15 +229,13 @@ class UNSAPI {
             throw UNSError.nameTaken
         } else {
             logError(response: response)
-            throw UNSError.generic
+            throw UNSError.badResponse
         }
     }
     
     @available(*, deprecated, message: "This doesn't work yet because the API doesn't support non-http redirect URLs")
     func requestPaymentURL(for name: UNSName) async throws -> URL {
-        guard let accessToken else {
-            throw UNSError.noAccessToken
-        }
+        let accessToken = try await checkAccessToken()
         var request = URLRequest(url: connectionURL.appending(path: "/v1/names/\(name)/payments"))
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
@@ -259,9 +259,7 @@ class UNSAPI {
     }
     
     func requestNostrVerification(npub: String, nameID: String) async throws -> String? {
-        guard let accessToken else {
-            throw UNSError.noAccessToken
-        }
+        let accessToken = try await checkAccessToken()
         var request = URLRequest(url: connectionURL.appending(path: "/v1/resolver/social_connections"))
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
@@ -291,16 +289,14 @@ class UNSAPI {
             let verificationID = dataDict["verification_id"] as? String,
             let message = dataDict["message"] as? String else {
             logError(response: response)
-            throw UNSError.generic
+            throw UNSError.badResponse
         }
         self.verificationID = verificationID
         return message
     }
     
     func submitNostrVerification(message: String, keyPair: KeyPair) async throws -> String {
-        guard let accessToken else {
-            throw UNSError.noAccessToken
-        }
+        let accessToken = try await checkAccessToken()
         var request = URLRequest(url: connectionURL.appending(path: "/v1/resolver/social_connections/nostr/signature"))
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
@@ -324,15 +320,13 @@ class UNSAPI {
             let verificationDict = dataDict["verification"] as? JSONObject,
             let externalID = verificationDict["external_id"] as? String else {
             logError(response: response)
-            throw UNSError.generic
+            throw UNSError.badResponse
         }
         return externalID
     }
     
     func getNIP05(for nameID: UNSNameID) async throws -> String {
-        guard let accessToken else {
-            throw UNSError.noAccessToken
-        }
+        let accessToken = try await checkAccessToken()
         var url = connectionURL.appending(path: "/v1/resolver/admin")
         url = url.appending(queryItems: [
             URLQueryItem(name: "name_id", value: nameID),
@@ -353,22 +347,16 @@ class UNSAPI {
             let nostrConnection = dataDict.first,
             let nip05 = nostrConnection["value"] as? String else {
             logError(response: response)
-            throw UNSError.generic
+            throw UNSError.badResponse
         }
         return nip05
-    }
-    
-    func names(matching query: String) async throws -> [HexadecimalString] {
-        if accessToken == nil {
-            try await refreshAccessToken()
-        }
-        guard let accessToken else {
-            throw UNSError.noAccessToken
-        }
-        
+    }    
+   
+    func nameRecord(for name: UNSName) async throws -> UNSNameRecord? {
+        let accessToken = try await checkAccessToken()
         var url = connectionURL.appending(path: "/v1/names")
         url = url.appending(queryItems: [
-            URLQueryItem(name: "name", value: query.lowercased()),
+            URLQueryItem(name: "name", value: name.lowercased()),
         ])
         var request = URLRequest(url: url)
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
@@ -382,6 +370,7 @@ class UNSAPI {
         
         guard let dataDict = responseJSON["data"] as? JSONObject,
             let available = dataDict["available"] as? Int else {
+            logError(response: response)
             throw UNSError.badResponse
         }
         
@@ -389,7 +378,14 @@ class UNSAPI {
             guard let nameID = dataDict["name_id"] as? String else {
                 throw UNSError.badResponse
             }
-            let nameRecord = UNSNameRecord(name: query, id: nameID)
+            return UNSNameRecord(name: name, id: nameID)
+        } else {
+            return nil
+        }
+    }
+    
+    func names(matching query: String) async throws -> [HexadecimalString] {
+        if let nameRecord = try await nameRecord(for: query) {
             let nostrPubKeys = try await nostrKeys(for: nameRecord)
             return nostrPubKeys
         } else {
@@ -398,10 +394,7 @@ class UNSAPI {
     }
     
     private func nostrKeys(for nameRecord: UNSNameRecord) async throws -> [HexadecimalString] {
-        // Assumes we have an access token already
-        guard let accessToken else {
-            throw UNSError.noAccessToken
-        }
+        let accessToken = try await checkAccessToken()
         var url = connectionURL.appending(path: "/v1/resolver")
         url = url.appending(queryItems: [
             URLQueryItem(name: "name_id", value: nameRecord.id),
@@ -423,7 +416,7 @@ class UNSAPI {
         guard let dataArray = responseJSON["data"] as? [JSONObject] else {
             throw UNSError.badResponse
         }
-       
+        
         var nostrPubKeys = [HexadecimalString]()
         for connection in dataArray {
             if let npub = connection["display_value"] as? String,
@@ -431,7 +424,65 @@ class UNSAPI {
                 nostrPubKeys.append(pubKey.hex)
             }
         }
+        
         return nostrPubKeys
+    }
+    
+    func usbcAddress(for name: UNSName) async throws -> USBCAddress? {
+        let accessToken = try await checkAccessToken()
+        var url = connectionURL.appending(path: "/v1/universal_ledger")
+        url = url.appending(queryItems: [
+            URLQueryItem(name: "name", value: name),
+        ])
+        var request = URLRequest(url: url)
+        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
+        request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "GET"
+        let response = try await URLSession.shared.data(for: request)
+        let responseJSON = try jsonDictionary(from: response.0)
+        
+        guard let dataDict = responseJSON["data"] as? JSONObject,
+            let usbcAddress = dataDict["account_address"] as? String? else {
+            logError(response: response)
+            throw UNSError.badResponse
+        }
+        
+        return usbcAddress
+    }
+    
+    func usbcBalance(for name: UNSName) async throws -> Double? {
+        guard let nameRecord = try await nameRecord(for: name) else {
+            return nil
+        }
+        return try await usbcBalance(for: nameRecord)
+    }
+    
+    func usbcBalance(for nameRecord: UNSNameRecord) async throws -> Double? {
+        let accessToken = try await checkAccessToken()
+        var url = connectionURL.appending(path: "/v1/universal_ledger/balance")
+        url = url.appending(queryItems: [
+            URLQueryItem(name: "name_id", value: nameRecord.id),
+        ])
+        var request = URLRequest(url: url)
+        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
+        request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "GET"
+        
+        let response = try await URLSession.shared.data(for: request)
+        let responseJSON = try jsonDictionary(from: response.0)
+        
+        guard let dataDict = responseJSON["data"] as? JSONObject,
+            let accountDict = dataDict["account_balance"] as? JSONObject,
+            let balance = accountDict["balance"] as? Double else {
+            logError(response: response)
+            throw UNSError.badResponse
+        }
+        
+        return balance / 1e+18
     }
     
     func logout() {
@@ -471,7 +522,7 @@ class UNSAPI {
     
     func jsonDictionary(from data: Data) throws -> JSONObject {
         guard let responseDict = try JSONSerialization.jsonObject(with: data) as? JSONObject else {
-            throw UNSError.generic
+            throw UNSError.badResponse
         }
         
         return responseDict
@@ -492,6 +543,16 @@ class UNSAPI {
     func loadRefreshToken() {
         self.refreshToken = userDefaults.string(forKey: refreshTokenKey)
     }
+   
+    func checkAccessToken() async throws -> String {
+        if accessToken == nil {
+            try await refreshAccessToken()
+        }
+        guard let accessToken else {
+            throw UNSError.noAccessToken
+        }
+        return accessToken
+    }
 }
 
-// swiftlint:enable type_body_length
+// swiftlint:enable type_body_length file_length

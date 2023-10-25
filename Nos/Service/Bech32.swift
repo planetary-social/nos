@@ -36,7 +36,7 @@ public enum Bech32 {
         var chk: UInt32 = 1
         for v in values {
             let top = (chk >> 25)
-            chk = (chk & 0x1ffffff) << 5 ^ UInt32(v)
+            chk = try! (chk & 0x1ffffff) << 5 ^ UInt32(v)
             for i: UInt8 in 0..<5 {
                 chk ^= ((top >> i) & 1) == 0 ? 0 : gen[Int(i)]
             }
@@ -71,7 +71,7 @@ public enum Bech32 {
         let mod: UInt32 = polymod(enc) ^ 1
         var ret: Data = Data(repeating: 0x00, count: 6)
         for i in 0..<6 {
-            ret[i] = UInt8((mod >> (5 * (5 - i))) & 31)
+            ret[i] = try! UInt8((mod >> (5 * (5 - i))) & 31)
         }
         return ret
     }
@@ -149,7 +149,7 @@ public enum Bech32 {
         guard verifyChecksum(hrp: hrp, checksum: values) else {
             throw DecodingError.checksumMismatch
         }
-        return (hrp, Data(values[..<(vSize-6)]))
+        return (hrp, try! Data(values[..<(vSize-6)]))
     }
 }
 

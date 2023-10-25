@@ -221,7 +221,6 @@ final class NoteNoteParserTests: XCTestCase {
 
     func testContentWithUntaggedNote() throws {
         let content = "Check this note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
-        let note = "note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
         let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [[]]
         let context = try XCTUnwrap(context)
@@ -234,7 +233,6 @@ final class NoteNoteParserTests: XCTestCase {
     
     func testContentWithUntaggedNIP27Note() throws {
         let content = "Check this nostr:note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
-        let note = "note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
         let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [[]]
         let context = try XCTUnwrap(context)

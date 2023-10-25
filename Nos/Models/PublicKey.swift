@@ -45,7 +45,7 @@ struct PublicKey {
                 print("error creating PublicKey from npub: invalid human readable part")
                 return nil
             }
-            guard let converted = checksum.base8FromBase5 else {
+            guard let converted = try? checksum.base8FromBase5() else {
                 return nil
             }
             
