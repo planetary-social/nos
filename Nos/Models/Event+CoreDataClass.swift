@@ -1004,10 +1004,10 @@ public class Event: NosManagedObject {
     
     var webLink: String {
         if let bech32NoteID {
-            return "https://iris.to/\(bech32NoteID)"
+            return "https://njump.me/\(bech32NoteID)"
         } else {
             Log.error("Couldn't find a bech32note key when generating web link")
-            return "https://iris.to"
+            return "https://njump.me"
         }
     }
 }
