@@ -16,6 +16,9 @@ struct SideMenuButton: View {
             router.toggleSideMenu()
         } label: {
             Image.sideMenu
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(height: 24)
         }
     }
 }

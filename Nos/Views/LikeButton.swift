@@ -5,20 +5,21 @@
 //  Created by Matthew Lorentz on 4/21/23.
 //
 
+import Logger
 import SwiftUI
 
 struct LikeButton: View {
     
     var note: Event
-    var action: () async -> Void
     @FetchRequest private var likes: FetchedResults<Event>
-    @EnvironmentObject private var currentUser: CurrentUser
     /// We use this to give instant feedback when the button is tapped, even though the action it performs is async.
     @State private var tapped = false
+    @EnvironmentObject private var relayService: RelayService
+    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(\.managedObjectContext) private var viewContext
     
-    internal init(note: Event, action: @escaping () async -> Void) {
+    internal init(note: Event) {
         self.note = note
-        self.action = action
         if let noteID = note.identifier {
             _likes = FetchRequest(fetchRequest: Event.likes(noteID: noteID))
         } else {
@@ -70,5 +71,48 @@ struct LikeButton: View {
             buttonLabel
         }                             
         .disabled(currentUserLikesNote || tapped)
+    }
+    
+    private func action() async {
+
+        guard let keyPair = currentUser.keyPair else {
+            return
+        }
+
+        var tags: [[String]] = []
+        if let eventReferences = note.eventReferences.array as? [EventReference] {
+            // compactMap returns an array of the non-nil results.
+            tags += eventReferences.compactMap { event in
+                guard let eventId = event.eventId else { return nil }
+                return ["e", eventId]
+            }
+        }
+
+        if let authorReferences = note.authorReferences.array as? [EventReference] {
+            tags += authorReferences.compactMap { author in
+                guard let eventId = author.eventId else { return nil }
+                return ["p", eventId]
+            }
+        }
+
+        if let id = note.identifier {
+            tags.append(["e", id] + note.seenOnRelayURLs)
+        }
+        if let pubKey = note.author?.publicKey?.hex {
+            tags.append(["p", pubKey])
+        }
+
+        let jsonEvent = JSONEvent(
+            pubKey: keyPair.publicKeyHex,
+            kind: .like,
+            tags: tags,
+            content: "+"
+        )
+
+        do {
+            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
+        } catch {
+            Log.info("Error creating event for like")
+        }
     }
 }

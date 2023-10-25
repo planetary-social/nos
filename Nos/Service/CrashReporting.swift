@@ -51,6 +51,10 @@ class CrashReporting {
         sentry.capture(error: error)
     }
     
+    func report(_ errorMessage: String) {
+        sentry.capture(message: errorMessage)
+    }
+    
     func logout() {
         SentrySDK.setUser(nil)
     }

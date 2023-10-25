@@ -26,6 +26,7 @@ struct ProfileEditView: View {
     @State private var nip05Text: String = ""
     @State private var website: String = ""
     @State private var showUniversalNameWizard = false
+    @State private var unsController = UNSWizardController()
     
     var nip05: Binding<String> {
         Binding<String>(
@@ -36,11 +37,12 @@ struct ProfileEditView: View {
     
     init(author: Author) {
         self.author = author
+        self.unsController.authorKey = author.hexadecimalPublicKey
     }
     
     var body: some View {
         ScrollView {
-            AvatarView(imageUrl: author.profilePhotoURL, size: 99)
+            AvatarView(imageUrl: URL(string: avatarText), size: 99)
                 .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
                 .padding(.top, 16)
             
@@ -69,7 +71,24 @@ struct ProfileEditView: View {
                 NosTextField(label: .website, text: $website)
             }
             
-            NosFormSection(label: .identityVerification) { 
+            HStack {
+                Text(.identityVerification)
+                    .font(.clarityTitle3)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primaryTxt)
+                    .padding(.top, 16)
+                
+                Spacer()
+            }
+            .padding(.horizontal, 13)
+            
+            SetUpUNSBanner {
+                showUniversalNameWizard = true
+            }
+            .padding(13)
+            
+            NosFormSection(label: nil) { 
+                NosTextField(label: .universalName, text: $unsText)
                 NosTextField(label: .nip05, text: $nip05Text)
             }
             
@@ -84,19 +103,15 @@ struct ProfileEditView: View {
                 Spacer()
             }
             .padding(13)
-                
-            // Universal Names Set Up
-            if author.nip05?.hasSuffix("universalname.space") != true {
-                SetUpUNSBanner {
-                    showUniversalNameWizard = true
-                }
-                .padding(13)
-            }
         }
         .sheet(isPresented: $showUniversalNameWizard, content: {
-            UniversalNameWizard(author: author) {
-                populateTextFields()
-                self.showUniversalNameWizard = false
+            UNSWizard(controller: unsController, isPresented: $showUniversalNameWizard)
+        })
+        .onChange(of: showUniversalNameWizard, perform: { _ in
+            if !showUniversalNameWizard {
+                nip05Text = author.nip05 ?? ""
+                unsText = author.uns ?? ""
+                unsController = UNSWizardController(authorKey: author.hexadecimalPublicKey)
             }
         })
         .scrollContentBackground(.hidden)
@@ -124,6 +139,7 @@ struct ProfileEditView: View {
     }
    
     func populateTextFields() {
+        viewContext.refresh(author, mergeChanges: true)
         nameText = author.name ?? author.displayName ?? ""
         bioText = author.about ?? ""
         avatarText = author.profilePhotoURL?.absoluteString ?? ""

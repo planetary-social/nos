@@ -91,7 +91,9 @@ public class Author: NosManagedObject {
     
     class func find(named name: String, context: NSManagedObjectContext) throws -> [Author] {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
-        fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@ OR displayName CONTAINS[cd] %@", name, name)
+        fetchRequest.predicate = NSPredicate(
+            format: "name CONTAINS[cd] %@ OR displayName CONTAINS[cd] %@ OR uns CONTAINS[cd] %@", name, name, name
+        )
         let authors = try context.fetch(fetchRequest)
         return authors
     }
@@ -149,6 +151,53 @@ public class Author: NosManagedObject {
         )
         return fetchRequest
     }
+    
+    @nonobjc func followedWithNewNotes(since: Date) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+        let onlyFollowedAuthorsClause = "ANY followers.source = %@"
+        let onlyPostsClause = "($event.kind = 1 OR $event.kind = 6 OR $event.kind = 30023)"
+        let onlyRecentStoriesClause = "$event.createdAt > %@"
+        let onlyRootPostsClause = "SUBQUERY(" +
+            "$event.eventReferences, " +
+            "$reference, " +
+            "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
+        ").@count = 0"
+        let onlyAuthorsWithStoriesClause = "SUBQUERY(events, $event, \(onlyPostsClause) " +
+            "AND \(onlyRecentStoriesClause) " +
+            "AND \(onlyRootPostsClause)).@count > 0"
+
+        fetchRequest.predicate = NSPredicate(
+            format: "\(onlyFollowedAuthorsClause) AND \(onlyAuthorsWithStoriesClause)",
+            self,
+            since as CVarArg
+        )
+        fetchRequest.fetchLimit = 50
+        return fetchRequest
+    }
+
+    @nonobjc func storiesRequest(since: Date) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        let onlyStoriesFromTheAuthorClause = "author = %@"
+        let onlyPostsClause = "(kind = 1 OR kind = 6 OR kind = 30023)"
+        let onlyRecentStoriesClause = "createdAt > %@"
+        let onlyRootPostsClause = "SUBQUERY(" +
+            "eventReferences, " +
+            "$reference, " +
+            "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
+        ").@count = 0"
+        fetchRequest.predicate = NSPredicate(
+            format: "\(onlyStoriesFromTheAuthorClause) " +
+                "AND \(onlyRecentStoriesClause) " +
+                "AND \(onlyRootPostsClause) " +
+                "AND \(onlyPostsClause)",
+            self,
+            since as CVarArg
+        )
+        fetchRequest.fetchLimit = 10
+        return fetchRequest
+    }
 
     @nonobjc func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -185,16 +234,6 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc func followsRequest() -> NSFetchRequest<Author> {
-        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
-        fetchRequest.predicate = NSPredicate(
-            format: "ANY followers = %@",
-            self
-        )
-        return fetchRequest
-    }
-
     @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: true)]

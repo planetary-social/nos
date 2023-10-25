@@ -64,7 +64,7 @@ struct NotificationCard: View {
                 
                 VStack {
                     Spacer()
-                    Text(viewModel.date.elapsedTimeFromNowString())
+                    Text(viewModel.date.distanceFromNowString())
                         .lineLimit(1)
                         .font(.body)
                         .foregroundColor(.secondaryText)
