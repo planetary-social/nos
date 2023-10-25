@@ -15,9 +15,9 @@ enum WalletConnectChain: CaseIterable {
     var displayValue: String {
         switch self {
         case .ethereum:
-            return WalletConnectManager.shared.testMode ? "Ethereum Sepolia" : "Ethereum"
+            return walletConnectTestMode ? "Ethereum Sepolia" : "Ethereum"
         case .universalLedger:
-            return WalletConnectManager.shared.testMode ? "Universal ledger testnet" : "Universal ledger"
+            return walletConnectTestMode ? "Universal ledger testnet" : "Universal ledger"
         }
     }
 
@@ -29,7 +29,7 @@ enum WalletConnectChain: CaseIterable {
     }
 
     var blockChainValue: Blockchain? {
-        let testMode = WalletConnectManager.shared.testMode
+        let testMode = walletConnectTestMode
         switch self {
         case .ethereum:
             return testMode ? Blockchain("\(self.blockChainId):11155111") : Blockchain("\(self.blockChainId):1")

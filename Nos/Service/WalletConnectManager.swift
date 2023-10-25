@@ -13,12 +13,18 @@ import WalletConnectSign
 import Auth
 import Combine
 
+#if DEBUG
+let walletConnectTestMode = true
 let globalIDURLScheme = "globalid-staging://"
+#else 
+let walletConnectTestMode = false
+let globalIDURLScheme = "globalid://"
+#endif
 
 class WalletConnectManager {
     
     static var shared = WalletConnectManager.initialize()
-    let testMode = true
+    
     let wcService: WalletConnectProvidable = ETHWalletConnectService()
     private var initiatedSession: Session?
     private var disposeBag = Set<AnyCancellable>()
