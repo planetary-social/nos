@@ -56,6 +56,7 @@
 "Localized.expirationDate" = "Expiration Date";
 "Localized.minuteAbbreviated" = "min";
 "Localized.hourAbbreviated" = "hour";
+"Localized.hoursAbbreviated" = "hours";
 "Localized.dayAbbreviated" = "day";
 "Localized.daysAbbreviated" = "days";
 "Localized.sendCode" = "Send SMS code";

@@ -11,11 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated link previews in feed to use the stories ui with fixed height and carousel gallery. 
 - Updated UI around displaying nested threads and displaying more context of conversations. 
 - Changed inline images so we don't display the domain / size / file type for images
+- Added the ability to initiate USBC transactions and check your balance if you have linked a Universal Name to your profile with an attached USBC wallet.
+- Add "1 year" as an option when posting a disappearing message
 
 ## [0.1 (85)] - 2023-10-23Z
 
 - Fixed missing secrets
-- Added the ability to initiate USBC transactions and check your balance if you have linked a Universal Name to your profile with an attached USBC wallet.
 
 ## [0.1 (84)] - 2023-10-20Z
 

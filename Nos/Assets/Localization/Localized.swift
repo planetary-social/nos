@@ -114,6 +114,7 @@ enum Localized: String, Localizable, CaseIterable {
     case expirationDate = "Expiration Date"
     case minuteAbbreviated = "min"
     case hourAbbreviated = "hour"
+    case hoursAbbreviated = "hours"
     case dayAbbreviated = "day"
     case daysAbbreviated = "days"
     case sendCode = "Send SMS code"
