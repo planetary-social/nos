@@ -1,5 +1,5 @@
 //
-//  WalletConnectManager.swift
+//  WalletConnectSessionManager.swift
 //  DAppExample
 //
 //  Created by Marcel Salej on 27/09/2023.
@@ -21,11 +21,12 @@ let walletConnectTestMode = false
 let globalIDURLScheme = "globalid://"
 #endif
 
-class WalletConnectManager {
+/// Manages the state of a WalletConnect session that can be used to connect and communicate with a crypto wallet app.
+class WalletConnectSessionManager {
     
-    static var shared = WalletConnectManager.initialize()
+    static var shared = WalletConnectSessionManager.initialize()
     
-    let wcService: WalletConnectProvidable = ETHWalletConnectService()
+    let wcService: WalletConnectProvidable = USBCWalletConnectService()
     private var initiatedSession: Session?
     private var disposeBag = Set<AnyCancellable>()
     
@@ -35,8 +36,8 @@ class WalletConnectManager {
     var onSessionInitiated: ((Session) -> Void)?
     var onSessionResponse: ((Response) -> Void)?
     
-    static func initialize() -> WalletConnectManager {
-        let manager = WalletConnectManager()
+    static func initialize() -> WalletConnectSessionManager {
+        let manager = WalletConnectSessionManager()
         return manager
     }
     
@@ -78,9 +79,6 @@ class WalletConnectManager {
         
         try await Sign.instance.request(params: request)
     }
-}
-
-private extension WalletConnectManager {
     
     // swiftlint:disable:next function_body_length
     func setupListeners() {

@@ -16,8 +16,6 @@ import Auth
 import Logger
 import SwiftUI
 
-typealias USBCAddress = String
-
 enum SendUSBCWizardState {
     case pair, amount, error(Error), loading
 }
@@ -30,7 +28,7 @@ enum SendUSBCError: Error {
 }
 
 /// A controller to support pairing with a wallet using Wallet Connect 2.0 and sending USBC to another Nostr user with
-/// a universal name.
+/// a universal name. Works with the SendUSBCWizard.
 class SendUSBCController: ObservableObject {
     @Dependency(\.currentUser) private var currentUser
     
@@ -42,7 +40,7 @@ class SendUSBCController: ObservableObject {
     var destinationAuthor: Author
     
     private var cancellables = [AnyCancellable]()
-    private let walletConnectManager = WalletConnectManager.shared
+    private let walletConnectSessionManager = WalletConnectSessionManager.shared
     private var dismissHandler: () -> Void
     
     init(
@@ -58,19 +56,19 @@ class SendUSBCController: ObservableObject {
         
         Task { try? await initiateConnectionToWC() }
         
-        walletConnectManager.onReinitiateConnection = {
+        walletConnectSessionManager.onReinitiateConnection = {
             Task {
                 try? await self.initiateConnectionToWC()
             }
         }
         
-        walletConnectManager.onSessionInitiated = { [weak self] _ in 
+        walletConnectSessionManager.onSessionInitiated = { [weak self] _ in 
             Task { @MainActor [weak self] in
                 self?.updateStep()
             }
         }
         
-        walletConnectManager.onSessionResponse = { [weak self] response in
+        walletConnectSessionManager.onSessionResponse = { [weak self] response in
             switch response.result {
             case .response:
                 self?.dismissHandler()
@@ -81,7 +79,7 @@ class SendUSBCController: ObservableObject {
         
         Task {
             do {
-                _ = try await walletConnectManager.initiateConnectionRequest()
+                _ = try await walletConnectSessionManager.initiateConnectionRequest()
             } catch {
                 self.state = .error(error)
             }
@@ -95,8 +93,8 @@ class SendUSBCController: ObservableObject {
     }
     
     @MainActor func updateStep() {
-        if let session = walletConnectManager.getAllSessions().last {
-            walletConnectManager.saveInitiatedSessions(sessions: session)
+        if let session = walletConnectSessionManager.getAllSessions().last {
+            walletConnectSessionManager.saveInitiatedSessions(sessions: session)
             state = .amount
         } else {
             state = .pair
@@ -108,7 +106,7 @@ class SendUSBCController: ObservableObject {
     }
     
     func initiateConnectionToWC() async throws {
-        let wcDeeplink = try await walletConnectManager.initiateConnectionRequest()
+        let wcDeeplink = try await walletConnectSessionManager.initiateConnectionRequest()
         let globalIDDeeplink = "\(globalIDURLScheme)wc?uri=\(wcDeeplink)"
         await MainActor.run {
             Logger.Log.info("Generated WalletConnect URI: \(globalIDDeeplink)")
@@ -144,7 +142,7 @@ class SendUSBCController: ObservableObject {
         
         state = .loading
         
-        try await walletConnectManager.sendTransaction(
+        try await walletConnectSessionManager.sendTransaction(
             fromAddress: fromAddress, 
             toAddress: destinationAddress, 
             amount: amount, 

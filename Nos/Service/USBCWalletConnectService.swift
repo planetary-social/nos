@@ -17,14 +17,8 @@ import Web3
 import Combine
 import UIKit
 
-struct SocketFactory: WebSocketFactory {
-    func create(with url: URL) -> WebSocketConnecting {
-        WebSocket(url: url)
-    }
-}
-
-extension WebSocket: WebSocketConnecting { }
-
+/// A protocol for different adapters that abstract the WalletConnect protocol. The idea is that we might have different
+/// ones for different cryptocurrencies.
 protocol WalletConnectProvidable {
     func initialize() async throws -> String
     func sendTransaction(
@@ -36,9 +30,10 @@ protocol WalletConnectProvidable {
     ) -> Request?
 }
 
-struct ETHWalletConnectService: WalletConnectProvidable {
+/// A service that helps us interact with a USBC crypto wallet via the WalletConnect protocol. 
+struct USBCWalletConnectService: WalletConnectProvidable {
+    
     func initialize() async throws -> String {
-        
         let metadata = AppMetadata(
             name: "Nos",
             description: "Connect your wallet to Nos to send payments to other users",
@@ -64,6 +59,7 @@ struct ETHWalletConnectService: WalletConnectProvidable {
         return namespaces
     }
     
+    /// Sends a request for a transaction to be signed to the wallet app via WalletConnect's websockets.
     func sendTransaction(
         topic: String,
         fromAddress: String,
@@ -129,3 +125,12 @@ extension RequestParams {
     }
 }
 // swiftlint:enable identifier_name
+
+/// Needed for WalletConnect to use websockets
+struct SocketFactory: WebSocketFactory {
+    func create(with url: URL) -> WebSocketConnecting {
+        WebSocket(url: url)
+    }
+}
+
+extension WebSocket: WebSocketConnecting { }

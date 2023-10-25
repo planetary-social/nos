@@ -10,6 +10,7 @@ import Web3
 import CryptoSwift
 import Auth
 
+/// Needed by WalletConnect... because they said so? Idk.
 struct WalletConnectCryptoProvider: CryptoProvider {
     
     func recoverPubKey(signature: EthereumSignature, message: Data) throws -> Data {

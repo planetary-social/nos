@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+/// A series of views that enables the user to connect a USBC wallet application and send USBC to other users with 
+/// connect wallets and Universal Names.
 struct SendUSBCWizard: View {
     
     @StateObject var controller: SendUSBCController
