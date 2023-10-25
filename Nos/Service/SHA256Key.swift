@@ -17,7 +17,7 @@ public enum SHA256Key {
     ///
     /// Check https://github.com/nostr-protocol/nips/blob/master/19.md for more information.
     public static func decode(base5 checksum: Data) -> String? {
-        guard let converted = checksum.base8FromBase5 else {
+        guard let converted = try? checksum.base8FromBase5() else {
             return nil
         }
         return decode(base8: converted)

@@ -66,7 +66,7 @@ struct KeyPair {
                 return nil
             }
             
-            guard let converted = checksum.base8FromBase5 else {
+            guard let converted = try? checksum.base8FromBase5() else {
                 return nil
             }
             

@@ -51,7 +51,7 @@ struct SendUSBCWizard: View {
         }
         .edgesIgnoringSafeArea(.bottom)
         .frame(idealWidth: 320, idealHeight: 480)
-        .presentationDetents([.medium])
+//        .presentationDetents([.medium])
     }
 }
 
