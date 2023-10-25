@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (86)] - 2023-10-25Z
+
 - Updated link previews in feed to use the stories ui with fixed height and carousel gallery. 
 - Updated UI around displaying nested threads and displaying more context of conversations. 
 - Changed inline images so we don't display the domain / size / file type for images
