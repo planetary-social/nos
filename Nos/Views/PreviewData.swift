@@ -87,7 +87,7 @@ struct PreviewData {
     
     lazy var expiringNote: Event = {
         let note = Event(context: previewContext)
-        note.identifier = "1"
+        note.identifier = "10"
         note.kind = EventKind.text.rawValue
         note.content = "Hello, world!"
         note.author = previewAuthor
@@ -239,6 +239,27 @@ struct PreviewData {
         repost.eventReferences = NSOrderedSet(array: [reference])
         try? previewContext.save()
         return repost
+    }()
+    
+    lazy var reply: Event = {
+        let rootNote = longNote
+        
+        let note = Event(context: previewContext)
+        note.identifier = "11"
+        note.kind = EventKind.text.rawValue
+        note.content = "Well that's pretty neat"
+        note.author = bob
+        note.createdAt = .now
+        
+        let rootReference = EventReference(context: previewContext)
+        rootReference.eventId = rootNote.identifier
+        rootReference.marker = "root"
+        rootReference.referencedEvent = rootNote
+        
+        note.insertIntoEventReferences(rootReference, at: 0)
+        
+        try? previewContext.save()
+        return note
     }()
 }
 

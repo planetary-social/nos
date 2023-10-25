@@ -34,7 +34,7 @@ struct RepliesView: View {
     var repliesRequest: FetchRequest<Event>
     /// All replies
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
-
+  
     @State private var directReplies: [Event] = []
     
     func computeDirectReplies() async {
@@ -93,87 +93,90 @@ struct RepliesView: View {
     }
     
     var body: some View {
-        VStack {
-            ScrollView(.vertical) {
-                VStack {
-                    NoteButton(
-                        note: note,
-                        showFullMessage: true,
-                        hideOutOfNetwork: false,
-                        showReplyCount: false,
-                        replyAction: { _ in self.focusTextView = true },
-                        tapAction: { tappedEvent in tappedEvent.referencedNote().unwrap { router.push($0) } }
-                    )                                
-                    .padding(.top, 15)
-                    
-                    ForEach(directReplies.reversed()) { event in
-                        ThreadView(root: event, allReplies: replies.reversed())
-                    }
-                }
-                .padding(.bottom)
-            }
-            .padding(.top, 1)
-            .nosNavigationBar(title: .thread)
-            .onAppear {
-                subscribeToReplies()
-            }
-            .refreshable {
-                subscribeToReplies()
-            }
-            .onDisappear {
-                Task(priority: .userInitiated) {
-                    await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-                    subscriptionIDs.removeAll()
-                }
-            }
+        GeometryReader { _ in
             VStack {
-                Spacer()
-                VStack {
-                    HStack(spacing: 10) {
-                        if let author = currentUser.author {
-                            AvatarView(imageUrl: author.profilePhotoURL, size: 35)
-                        }
-                        ExpandingTextFieldAndSubmitButton(
-                            placeholder: Localized.Reply.postAReply,
-                            reply: $reply,
-                            focus: $focusTextView
-                        ) {
-                            await postReply(reply)
-                        }
-                        .onAppear {
-                            focusTextView = showKeyboardOnAppear
+                ScrollView(.vertical) {
+                    VStack {
+                        NoteButton(
+                            note: note,
+                            showFullMessage: true,
+                            hideOutOfNetwork: false,
+                            showReplyCount: false,
+                            displayRootMessage: true,
+                            replyAction: { _ in self.focusTextView = true },
+                            tapAction: { tappedEvent in tappedEvent.referencedNote().unwrap { router.push($0) } }
+                        )
+                        .padding(.top, 15)
+                        
+                        ForEach(directReplies) { event in
+                            ThreadView(root: event, allReplies: Array(replies))
                         }
                     }
-                    .padding(.horizontal)
+                    .padding(.bottom)
+                }
+                .padding(.top, 1)
+                .nosNavigationBar(title: .thread)
+                .onAppear {
+                    subscribeToReplies()
+                }
+                .refreshable {
+                    subscribeToReplies()
+                }
+                .onDisappear {
+                    Task(priority: .userInitiated) {
+                        await relayService.decrementSubscriptionCount(for: subscriptionIDs)
+                        subscriptionIDs.removeAll()
+                    }
+                }
+                VStack {
+                    Spacer()
+                    VStack {
+                        HStack(spacing: 10) {
+                            if let author = currentUser.author {
+                                AvatarView(imageUrl: author.profilePhotoURL, size: 35)
+                            }
+                            ExpandingTextFieldAndSubmitButton(
+                                placeholder: Localized.Reply.postAReply,
+                                reply: $reply,
+                                focus: $focusTextView
+                            ) {
+                                await postReply(reply)
+                            }
+                            .onAppear {
+                                focusTextView = showKeyboardOnAppear
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                }
+                .background(Color.cardBgBottom)
+                .fixedSize(horizontal: false, vertical: true)
+                .onAppear {
+                    analytics.showedThread()
                 }
             }
-            .background(Color.cardBgBottom)
-            .fixedSize(horizontal: false, vertical: true)
-            .onAppear {
-                analytics.showedThread()
-            }
-        }
-        .toolbar {
-            if focusTextView {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { 
-                        focusTextView = false
-                    }, label: { 
-                        Localized.cancel.view
-                            .foregroundColor(.primaryTxt)
-                    })
+            .toolbar {
+                if focusTextView {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            focusTextView = false
+                        }, label: {
+                            Localized.cancel.view
+                                .foregroundColor(.primaryTxt)
+                        })
+                    }
                 }
             }
-        }
-        .task {
-            await computeDirectReplies()
-        }
-        .onChange(of: replies.count) { _ in
-            Task {
+            .task {
                 await computeDirectReplies()
             }
+            .onChange(of: replies.count) { _ in
+                Task {
+                    await computeDirectReplies()
+                }
+            }
+            .background(Color.appBg)
         }
-        .background(Color.appBg)
     }
     
     func postReply(_ replyText: EditableNoteText) async {

@@ -10,7 +10,7 @@ import SwiftUI
 struct ThreadView: View {
     
     var root: Event
-    
+
     var thread: [Event] = []
     
     @EnvironmentObject private var router: Router
@@ -40,6 +40,7 @@ struct ThreadView: View {
                 router.push(event)
             })
             .padding(.top, 15)
+
             ForEach(thread) { event in
                 VStack {
                     ZStack {
@@ -54,8 +55,8 @@ struct ThreadView: View {
                         })
                         .padding(.top, 15)
                     }
+                    .readabilityPadding()
                 }
-                .readabilityPadding()
             }
         }
     }

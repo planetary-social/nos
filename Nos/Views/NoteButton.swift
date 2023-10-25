@@ -21,6 +21,7 @@ struct NoteButton: View {
     var showFullMessage = false
     var hideOutOfNetwork = true
     var showReplyCount = true
+    var displayRootMessage = false
     private let replyAction: ((Event) -> Void)?
     private let tapAction: ((Event) -> Void)?
 
@@ -37,6 +38,7 @@ struct NoteButton: View {
         showFullMessage: Bool = false, 
         hideOutOfNetwork: Bool = true, 
         showReplyCount: Bool = true, 
+        displayRootMessage: Bool = false,
         replyAction: ((Event) -> Void)? = nil,
         tapAction: ((Event) -> Void)? = nil
     ) {
@@ -45,6 +47,7 @@ struct NoteButton: View {
         self.showFullMessage = showFullMessage
         self.hideOutOfNetwork = hideOutOfNetwork
         self.showReplyCount = showReplyCount
+        self.displayRootMessage = displayRootMessage
         self.replyAction = replyAction
         self.tapAction = tapAction
     }
@@ -121,9 +124,23 @@ struct NoteButton: View {
             
             switch style {
             case .compact:
-                button
+                let compactButton = button
+                    .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal)
                     .readabilityPadding()
+                
+                if displayRootMessage, 
+                    note.kind != EventKind.repost.rawValue,
+                    let root = note.rootNote() ?? note.referencedNote() {
+                    
+                    ThreadRootView(
+                        root: root, 
+                        tapAction: { root in router.push(root) },
+                        reply: { compactButton }
+                    )
+                } else {
+                    compactButton
+                }
             case .golden:
                 button
             }
@@ -135,13 +152,16 @@ struct NoteButton_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
     static var previews: some View {
-        VStack {
-            NoteButton(note: previewData.repost, hideOutOfNetwork: false)
-            NoteButton(note: previewData.shortNote)
-            NoteButton(note: previewData.shortNote, style: .golden)
-            NoteButton(note: previewData.longNote)
-            NoteButton(note: previewData.doubleImageNote)
+        ScrollView {
+            VStack {
+                NoteButton(note: previewData.repost, hideOutOfNetwork: false)
+                NoteButton(note: previewData.shortNote)
+                NoteButton(note: previewData.longNote)
+                NoteButton(note: previewData.reply, hideOutOfNetwork: false, displayRootMessage: true)
+                NoteButton(note: previewData.doubleImageNote)
+            }
         }
+        .background(Color.appBg)
         .inject(previewData: previewData)
     }
 }

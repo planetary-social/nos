@@ -85,8 +85,8 @@ struct ProfileView: View {
                     } else {
                         ForEach(unmutedEvents) { event in
                             VStack {
-                                NoteButton(note: event, hideOutOfNetwork: false)
-                                    .padding(.bottom, 15)
+                                NoteButton(note: event, hideOutOfNetwork: false, displayRootMessage: true)
+                                .padding(.bottom, 15)
                             }
                         }
                     }
@@ -100,7 +100,7 @@ struct ProfileView: View {
             RepliesView(note: note)
         }                  
         .navigationDestination(for: URL.self) { url in URLView(url: url) }
-        .navigationDestination(for: ReplyToNavigationDestination.self) { destination in 
+        .navigationDestination(for: ReplyToNavigationDestination.self) { destination in
             RepliesView(note: destination.note, showKeyboard: true)
         }
         .navigationDestination(for: MutesDestination.self) { _ in
