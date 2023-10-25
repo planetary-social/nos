@@ -14,7 +14,6 @@ struct ThreadView: View {
     var thread: [Event] = []
     
     @EnvironmentObject private var router: Router
-    @State private var width: CGFloat = 0
     
     /// Takes a root `Event`, and an array of all replies to the parent note of this thread,
     /// and builds the longest possible thread from that array of all replies.
@@ -34,6 +33,7 @@ struct ThreadView: View {
             }
         }
     }
+    
     var body: some View {
         LazyVStack {
             NoteButton(note: root, tapAction: { event in
@@ -43,19 +43,19 @@ struct ThreadView: View {
 
             ForEach(thread) { event in
                 VStack {
-                    Path { path in
-                        path.move(to: CGPoint(x: 130, y: -4))
-                        path.addLine(to: CGPoint(x: 130, y: 15))
+                    ZStack {
+                        Path { path in
+                            path.move(to: CGPoint(x: 35, y: -4))
+                            path.addLine(to: CGPoint(x: 35, y: 15))
+                        }
+                        .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                        .fill(Color.secondaryText)
+                        NoteButton(note: event, tapAction: { event in
+                            router.push(event)
+                        })
+                        .padding(.top, 15)
                     }
-                    .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                    .fill(Color.secondaryText)
-
-                    NoteButton(note: event, tapAction: { event in
-                        router.push(event)
-                    })
-                    .padding(.horizontal, 24)
                     .readabilityPadding()
-                    .frame(minWidth: 150)
                 }
             }
         }

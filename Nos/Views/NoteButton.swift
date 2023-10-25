@@ -111,10 +111,6 @@ struct NoteButton: View {
                     }
                 }
             } label: {
-                if displayRootMessage, let root = note.rootNote() ?? note.referencedNote() {
-                    ThreadRootView(root: root, tapAction: { root in router.push(root) })
-                    .padding(.top, displayRootMessage ? -50 : 0)
-                }
                 NoteCard(
                     note: displayedNote,
                     style: style,
@@ -128,9 +124,21 @@ struct NoteButton: View {
             
             switch style {
             case .compact:
-                button
+                let compactButton = button
+                    .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal)
                     .readabilityPadding()
+                
+                if displayRootMessage, 
+                    note.kind != EventKind.repost.rawValue,
+                    let root = note.rootNote() ?? note.referencedNote() {
+                    
+                    ThreadRootView(root: root, tapAction: { root in router.push(root) }) {
+                        compactButton
+                    }
+                } else {
+                    compactButton
+                }
             case .golden:
                 button
             }
@@ -142,13 +150,16 @@ struct NoteButton_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
     static var previews: some View {
-        VStack {
-            NoteButton(note: previewData.repost, hideOutOfNetwork: false)
-            NoteButton(note: previewData.shortNote)
-            NoteButton(note: previewData.shortNote, style: .golden)
-            NoteButton(note: previewData.longNote)
-            NoteButton(note: previewData.doubleImageNote)
+        ScrollView {
+            VStack {
+                NoteButton(note: previewData.repost, hideOutOfNetwork: false)
+                NoteButton(note: previewData.shortNote)
+                NoteButton(note: previewData.longNote)
+                NoteButton(note: previewData.reply, hideOutOfNetwork: false, displayRootMessage: true)
+                NoteButton(note: previewData.doubleImageNote)
+            }
         }
+        .background(Color.appBg)
         .inject(previewData: previewData)
     }
 }

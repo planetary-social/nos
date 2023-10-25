@@ -35,8 +35,6 @@ struct RepliesView: View {
     /// All replies
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
   
-    var parent: Event?
- 
     @State private var directReplies: [Event] = []
     
     func computeDirectReplies() async {
@@ -75,7 +73,6 @@ struct RepliesView: View {
         self.note = note
         self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note))
         _showKeyboardOnAppear = .init(initialValue: showKeyboard)
-        self.parent = note.rootNote() ?? note.referencedNote()
     }
     
     var note: Event
@@ -100,24 +97,19 @@ struct RepliesView: View {
             VStack {
                 ScrollView(.vertical) {
                     VStack {
-                        if let safeParent = parent {
-                            ThreadRootView(root: safeParent, tapAction: { safeParent in
-                                router.push(safeParent)
-                            })
-                        }
-                        
                         NoteButton(
                             note: note,
                             showFullMessage: true,
                             hideOutOfNetwork: false,
                             showReplyCount: false,
+                            displayRootMessage: true,
                             replyAction: { _ in self.focusTextView = true },
                             tapAction: { tappedEvent in tappedEvent.referencedNote().unwrap { router.push($0) } }
                         )
-                        .padding(.top, parent == nil ? 15 : 0)
+                        .padding(.top, 15)
                         
-                        ForEach(directReplies.reversed()) { event in
-                            ThreadView(root: event, allReplies: replies.reversed())
+                        ForEach(directReplies) { event in
+                            ThreadView(root: event, allReplies: Array(replies))
                         }
                     }
                     .padding(.bottom)
