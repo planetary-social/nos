@@ -119,16 +119,23 @@ struct CompactNoteView: View {
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
             if note.kind == EventKind.text.rawValue, !contentLinks.isEmpty {
-                TabView {
-                    ForEach(contentLinks, id: \.self.absoluteURL) { url in
-                        LinkPreview(url: url)
-                            .padding(.horizontal, 15)
-                            .padding(.vertical, 0)
+                if contentLinks.count == 1, let url = contentLinks.first {
+                    LinkPreview(url: url)
+                        .padding(.horizontal, 15)
+                        .padding(.vertical, 0)
+                        .padding(.bottom, 15)
+                } else {
+                    TabView {
+                        ForEach(contentLinks, id: \.self.absoluteURL) { url in
+                            LinkPreview(url: url)
+                                .padding(.horizontal, 15)
+                                .padding(.vertical, 0)
+                        }
                     }
+                    .tabViewStyle(.page)
+                    .frame(height: 320)
+                    .padding(.bottom, 15)
                 }
-                .tabViewStyle(.page)
-                .frame(height: 320)
-                .padding(.bottom, 15)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
