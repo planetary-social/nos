@@ -51,7 +51,7 @@ struct WalletConnectErrorView: View {
 #Preview {
     let error = SendUSBCError.developer
     var previewData = PreviewData()
-    var controller = SendUSBCController(
+    let controller = SendUSBCController(
         state: .error(error), 
         destinationAddress: "0x12389749827", 
         destinationAuthor: previewData.unsAuthor,

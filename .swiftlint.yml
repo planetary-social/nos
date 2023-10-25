@@ -150,6 +150,7 @@ identifier_name:
     - idx
     - dsn
     - wei
+    - gas
 number_separator:
   minimum_length: 5
 cyclomatic_complexity:

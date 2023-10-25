@@ -29,11 +29,12 @@ enum WalletConnectChain: CaseIterable {
     }
 
     var blockChainValue: Blockchain? {
+        let testMode = WalletConnectManager.shared.testMode
         switch self {
         case .ethereum:
-            return WalletConnectManager.shared.testMode ?  Blockchain("\(self.blockChainId):11155111") : Blockchain("\(self.blockChainId):1")
+            return testMode ? Blockchain("\(self.blockChainId):11155111") : Blockchain("\(self.blockChainId):1")
         case .universalLedger:
-            return WalletConnectManager.shared.testMode ?  Blockchain("\(self.blockChainId):20231") : Blockchain("\(self.blockChainId):2024")
+            return testMode ? Blockchain("\(self.blockChainId):20231") : Blockchain("\(self.blockChainId):2024")
         }
     }
 }

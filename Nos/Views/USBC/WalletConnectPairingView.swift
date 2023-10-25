@@ -77,7 +77,7 @@ struct WalletConnectPairingView: View {
 
 #Preview {
     var previewData = PreviewData()
-    var controller = SendUSBCController(
+    let controller = SendUSBCController(
         state: .pair, 
         destinationAddress: "0x12389749827", 
         destinationAuthor: previewData.unsAuthor,

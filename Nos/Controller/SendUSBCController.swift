@@ -80,7 +80,11 @@ class SendUSBCController: ObservableObject {
         }
         
         Task {
-            _ = try! await walletConnectManager.initiateConnectionRequest()
+            do {
+                _ = try await walletConnectManager.initiateConnectionRequest()
+            } catch {
+                self.state = .error(error)
+            }
             await updateStep()
         }
         

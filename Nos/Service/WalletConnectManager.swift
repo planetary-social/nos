@@ -50,38 +50,6 @@ class WalletConnectManager {
         Sign.instance.getSessions()
     }
     
-    func deleteSession(topic: String) async throws {
-        try await Sign.instance.disconnect(topic: topic)
-    }
-    
-    func personalSign(message: String, address: String, blockChain: WalletConnectChain) {
-        if let topic = initiatedSession?.topic {
-            Task {
-                do {
-                    let signRequest = wcService.personalSign(topic: topic, message: message, address: address, blockChain: blockChain)
-                    try await Sign.instance.request(params: signRequest)
-                } catch {
-                    Logger.Log.info("\n errorr \n personalSign  \(error)")
-                }
-            }
-        }
-    }
-    
-    func getBalance(address: String, blockChain: WalletConnectChain) {
-        if let topic = initiatedSession?.topic {
-            Task {
-                do {
-                    let balanceRequest = wcService.getBalance(topic: topic,
-                                                              address: address,
-                                                              blockChain: blockChain)
-                    try await Sign.instance.request(params: balanceRequest)
-                } catch {
-                    Logger.Log.info("\n errorr \n get balance  \(error)")
-                }
-            }
-        }
-    }
-    
     func sendTransaction(
         fromAddress: String, 
         toAddress: String, 
@@ -107,49 +75,53 @@ class WalletConnectManager {
 }
 
 private extension WalletConnectManager {
+    
+    // swiftlint:disable:next function_body_length
     func setupListeners() {
         Auth
             .instance
             .authResponsePublisher
-            .sink { [weak self] (_, result) in
+            .sink { (_, result) in
                 switch result {
                 case .success(let cacao):
                     Logger.Log.info("Auth succedded \(cacao)")
                 case .failure(let error):
                     Logger.Log.info("Auth failure \(error)")
                 }
-            }.store(in: &disposeBag)
+            }
+            .store(in: &disposeBag)
         
-        Networking.instance.socketConnectionStatusPublisher.sink { status in
-            Logger.Log.info(String(describing: status))
-        }.store(in: &disposeBag)
+        Networking.instance.socketConnectionStatusPublisher
+            .sink { status in
+                Logger.Log.info(String(describing: status))
+            }
+            .store(in: &disposeBag)
         
         Sign
             .instance
             .sessionProposalPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] sessionProposal in
+            .sink { sessionProposal in
                 // present proposal to the user
                 Logger.Log.info(String(describing: sessionProposal))
-                
-            }.store(in: &disposeBag)
+            }
+            .store(in: &disposeBag)
         Sign
             .instance
             .sessionEventPublisher
             .receive(on: DispatchQueue.main)
             .sink { (event, topic, _) in
                 Logger.Log.info("Event \(event)  \n \n topic  \(topic)")
-            }.store(in: &disposeBag)
+            }
+            .store(in: &disposeBag)
         Sign
             .instance
             .sessionRequestPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] sessionRequest in
-                // present session request to the user
+            .sink { sessionRequest in
                 Logger.Log.info(String(describing: sessionRequest))
-                
-                
-            }.store(in: &disposeBag)
+            }
+            .store(in: &disposeBag)
         
         Sign
             .instance
@@ -158,7 +130,8 @@ private extension WalletConnectManager {
             .sink { [weak self] sessionResponse in
                 Logger.Log.info(String(describing: sessionResponse))
                 self?.onSessionResponse?(sessionResponse)
-            }.store(in: &disposeBag)
+            }
+            .store(in: &disposeBag)
         
         Sign
             .instance
@@ -170,8 +143,8 @@ private extension WalletConnectManager {
                 Logger.Log.info(String(describing: sessionRequest))
                 self.initiatedSession = sessionRequest
                 self.onSessionInitiated?(sessionRequest)
-                
-            }.store(in: &disposeBag)
+            }
+            .store(in: &disposeBag)
         
         Sign
             .instance
@@ -182,21 +155,25 @@ private extension WalletConnectManager {
                 let proposal = sessionRequest.0
                 let status = sessionRequest.1
                 if status.code != 200 {
-                    Logger.Log.info("Session cleaned:   \(proposal.pairingTopic)  \n  dapp: \(proposal.proposer.name) \n status code \(status.code) \n status mesasge \(status.message)")
+                    Logger.Log.info(
+                        "Session cleaned: \(proposal.pairingTopic)\n dapp: \(proposal.proposer.name)\n status code " + 
+                            "\(status.code)\n status mesasge \(status.message)"
+                    )
                     Logger.Log.info("Recreating session")
                     Task {
                         self.onReinitiateConnection?()
                     }
                 }
-            }.store(in: &disposeBag)
+            }
+            .store(in: &disposeBag)
         
         Auth
             .instance
             .socketConnectionStatusPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] status in
+            .sink { status in
                 Logger.Log.info("Status connection  \(status)")
             }
-        
+            .store(in: &disposeBag)
     }
 }
