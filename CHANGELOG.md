@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1 (85)] - 2023-10-23Z
 
 - Fixed missing secrets
+- Add "1 year" as an option when posting a disappearing message
 
 ## [0.1 (84)] - 2023-10-20Z
 
