@@ -26,6 +26,7 @@ struct ProfileView: View {
     @State private var showingReportMenu = false
     @State private var usbcAddress: USBCAddress?
     @State private var usbcBalance: Double?
+    @State private var usbcBalanceTimer: Timer?
     
     @State private var subscriptionIds: [String] = []
 
@@ -80,7 +81,11 @@ struct ProfileView: View {
     }
     
     func loadUSBCBalance() async {
-        guard let unsName = author.uns else {
+        guard let unsName = author.uns, !unsName.isEmpty else {
+            usbcAddress = nil
+            usbcBalance = nil
+            usbcBalanceTimer?.invalidate()
+            usbcBalanceTimer = nil
             return
         }
         do {
@@ -88,6 +93,11 @@ struct ProfileView: View {
             if isShowingLoggedInUser {
                 usbcBalance = try await unsAPI.usbcBalance(for: unsName)
                 currentUser.usbcAddress = usbcAddress
+                usbcBalanceTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
+                    Task { @MainActor in 
+                        usbcBalance = try await unsAPI.usbcBalance(for: unsName) 
+                    }
+                }
             }
         } catch {
             Log.optional(error, "Failed to load USBC balance for \(author.hexadecimalPublicKey ?? "null")")
@@ -224,8 +234,10 @@ struct ProfileView: View {
         .task {
             await computeUnmutedEvents()
         }
-        .task {
-            await loadUSBCBalance()
+        .onChange(of: author.uns) { _ in
+            Task {
+                await loadUSBCBalance()
+            }
         }
         .alert(unwrapping: $alert)
         .onAppear {

@@ -43,7 +43,7 @@ class WalletConnectSessionManager {
     
     // Function creates pairing request
     // It returns wc:// deeplink, to use for pairing
-    func initiateConnectionRequest() async throws -> String {
+    @MainActor func initiateConnectionRequest() async throws -> String {
         let uri = try await wcService.initialize()
         setupListeners()
         return uri
