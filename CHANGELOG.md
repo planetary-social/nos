@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Updated link previews in feed to use the stories ui with fixed height and carousel gallery. 
+- Changed copied links to notes and authors to open in njump.me.
 
 ## [0.1 (85)] - 2023-10-23Z
 
