@@ -84,12 +84,11 @@ struct ExpirationTimeButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             HStack {
-                ExpirationTimeButton(model: ExpirationTimeOption.fifteenMins, isSelected: .constant(false))
                 ExpirationTimeButton(model: ExpirationTimeOption.oneHour, isSelected: .constant(false))
                 ExpirationTimeButton(model: ExpirationTimeOption.oneDay, isSelected: .constant(false))
                 ExpirationTimeButton(model: ExpirationTimeOption.sevenDays, isSelected: .constant(true))
                 ExpirationTimeButton(
-                    model: ExpirationTimeOption.fifteenMins, 
+                    model: ExpirationTimeOption.oneHour, 
                     showClearButton: true, 
                     isSelected: .constant(true)
                 )

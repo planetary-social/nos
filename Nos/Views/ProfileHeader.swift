@@ -8,6 +8,7 @@
 
 import SwiftUI
 import CoreData
+import Logger
 
 struct ProfileHeader: View {
     @ObservedObject var author: Author
@@ -81,19 +82,7 @@ struct ProfileHeader: View {
                             .font(.clarityTitle3.weight(.semibold))
                             .foregroundColor(Color.primaryTxt)
                         
-                        if !(author.uns ?? "").isEmpty {
-                            Button {
-                                if let url = relayService.unsURL(from: author.uns ?? "") {
-                                    UIApplication.shared.open(url)
-                                }
-                            } label: {
-                                PlainText("\(author.uns ?? "")@universalname.space")
-                                    .foregroundColor(.secondaryText)
-                                    .font(.claritySubheadline)
-                                    .multilineTextAlignment(.leading)
-                            }
-                        }
-                        
+                        // NIP-05
                         if let nip05Identifier = author.nip05, !nip05Identifier.isEmpty {
                             Button {
                                 let domain = relayService.domain(from: nip05Identifier)
@@ -118,6 +107,23 @@ struct ProfileHeader: View {
                                 .multilineTextAlignment(.leading)
                             }
                             .padding(.top, 3)
+                        }
+                        
+                        // Universal name
+                        if !(author.uns ?? "").isEmpty {
+                            Button {
+                                if let url = relayService.unsURL(from: author.uns ?? "") {
+                                    UIApplication.shared.open(url)
+                                }
+                            } label: {
+                                HStack(spacing: 3) {
+                                    Image.unsLogoLight
+                                    PlainText(author.uns ?? "")
+                                        .foregroundColor(.secondaryText)
+                                        .font(.claritySubheadline)
+                                        .multilineTextAlignment(.leading)
+                                }
+                            }
                         }
 
                         if author != currentUser.author, let currentUser = currentUser.author {
@@ -199,15 +205,23 @@ struct ProfileHeader: View {
     }
 }
 
-struct IdentityHeaderView_Previews: PreviewProvider {
-
-    static var previewData = PreviewData()
-    static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
-    static var relayService = previewData.relayService
-    static var currentUser = previewData.currentUser
+#Preview {
+    var previewData = PreviewData()
     
-    static var author: Author {
+    return Group {
+        // ProfileHeader(author: author)
+        ProfileHeader(author: previewData.previewAuthor)
+            .inject(previewData: previewData)
+            .padding()
+            .background(Color.cardBackground)
+    }
+}
+
+#Preview {
+    var previewData = PreviewData()
+
+    var author: Author {
+        let previewContext = previewData.previewContext
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.pubKeyHex
         author.add(relay: Relay(context: previewContext))
@@ -235,15 +249,22 @@ struct IdentityHeaderView_Previews: PreviewProvider {
         return author
     }
     
-    static var previews: some View {
-        Group {
-            // ProfileHeader(author: author)
-            ProfileHeader(author: author).preferredColorScheme(.light)
-        }
-        .environmentObject(relayService)
-        .environmentObject(currentUser)
-        .previewDevice("iPhone SE (2nd generation)")
-        .padding()
-        .background(Color.cardBackground)
+    return Group {
+        ProfileHeader(author: author)
+    }
+    .inject(previewData: previewData)
+    .previewDevice("iPhone SE (2nd generation)")
+    .padding()
+    .background(Color.cardBackground)
+}
+
+#Preview("UNS") {
+    var previewData = PreviewData()
+    
+    return Group {
+        ProfileHeader(author: previewData.unsAuthor)
+            .inject(previewData: previewData)
+            .padding()
+            .background(Color.cardBackground)
     }
 }

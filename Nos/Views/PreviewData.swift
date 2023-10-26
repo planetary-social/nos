@@ -10,7 +10,7 @@ import Foundation
 import Dependencies
 import CoreData
 
-// swiftlint:disable line_length
+// swiftlint:disable line_length force_try
 
 /// A set of test data and an environment that can be used to display Core Data objects in SwiftUI Previews. This 
 /// includes an in-memory persistent store and mocked versions of other singletons like `Router` and `RelayService`.
@@ -44,8 +44,7 @@ struct PreviewData {
     }()
     
     lazy var alice: Author = {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
+        let author = try! Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: previewContext)
         author.name = "Alice"
         author.nip05 = "alice@nos.social"
         author.profilePhotoURL = URL(string: "https://github.com/planetary-social/nos/assets/1165004/07f83f00-4555-4db3-85fc-f1a05b1908a2")
@@ -65,11 +64,16 @@ struct PreviewData {
     }()
     
     lazy var eve: Author = {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.eve.publicKeyHex
+        let author = try! Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: previewContext)
         author.name = "Eve"
+        author.uns = "eve"
+        author.nip05 = "eve@nos.social"
         
         return author
+    }()
+    
+    lazy var unsAuthor: Author = {
+        eve
     }()
     
     // MARK: - Notes
@@ -87,7 +91,7 @@ struct PreviewData {
     
     lazy var expiringNote: Event = {
         let note = Event(context: previewContext)
-        note.identifier = "1"
+        note.identifier = "10"
         note.kind = EventKind.text.rawValue
         note.content = "Hello, world!"
         note.author = previewAuthor
@@ -240,6 +244,27 @@ struct PreviewData {
         try? previewContext.save()
         return repost
     }()
+    
+    lazy var reply: Event = {
+        let rootNote = longNote
+        
+        let note = Event(context: previewContext)
+        note.identifier = "11"
+        note.kind = EventKind.text.rawValue
+        note.content = "Well that's pretty neat"
+        note.author = bob
+        note.createdAt = .now
+        
+        let rootReference = EventReference(context: previewContext)
+        rootReference.eventId = rootNote.identifier
+        rootReference.marker = "root"
+        rootReference.referencedEvent = rootNote
+        
+        note.insertIntoEventReferences(rootReference, at: 0)
+        
+        try? previewContext.save()
+        return note
+    }()
 }
 
 struct InjectPreviewData: ViewModifier {
@@ -261,4 +286,4 @@ extension View {
     }
 }
 
-// swiftlint:enable line_length
+// swiftlint:enable line_length force_try

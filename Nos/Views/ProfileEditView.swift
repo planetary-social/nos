@@ -41,7 +41,7 @@ struct ProfileEditView: View {
     }
     
     var body: some View {
-        ScrollView {
+        NosForm {
             AvatarView(imageUrl: URL(string: avatarText), size: 99)
                 .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
                 .padding(.top, 16)
@@ -53,13 +53,16 @@ struct ProfileEditView: View {
                     #endif
             }
             
-            HighlightedText(
-                text: .uploadProfilePicInstructions,
-                highlightedWord: "nostr.build", 
-                highlight: .diagonalAccent, 
-                font: .clarityCaption,
-                link: URL(string: "https://nostr.build")!
-            )
+            HStack {
+                HighlightedText(
+                    text: .uploadProfilePicInstructions,
+                    highlightedWord: "nostr.build", 
+                    highlight: .diagonalAccent, 
+                    font: .clarityCaption,
+                    link: URL(string: "https://nostr.build")!
+                )
+                Spacer()
+            }
             .padding(13)
             
             NosFormSection(label: .basicInfo) { 
@@ -107,11 +110,12 @@ struct ProfileEditView: View {
         .sheet(isPresented: $showUniversalNameWizard, content: {
             UNSWizard(controller: unsController, isPresented: $showUniversalNameWizard)
         })
-        .onChange(of: showUniversalNameWizard, perform: { _ in
-            if !showUniversalNameWizard {
-                nip05Text = author.nip05 ?? ""
-                unsText = author.uns ?? ""
+        .onChange(of: showUniversalNameWizard, perform: { newValue in
+            if !newValue {
+                nip05Text = currentUser.author?.nip05 ?? ""
+                unsText = currentUser.author?.uns ?? ""
                 unsController = UNSWizardController(authorKey: author.hexadecimalPublicKey)
+                author.willChangeValue(for: \Author.uns) // Trigger ProfileView to load USBC balance
             }
         })
         .scrollContentBackground(.hidden)
@@ -170,7 +174,7 @@ struct ProfileEditView_Previews: PreviewProvider {
     static var previewData = PreviewData()
 
     static var previews: some View {
-        NavigationView {
+        NavigationStack {
             ProfileEditView(author: previewData.alice)
                 .inject(previewData: previewData)
         }

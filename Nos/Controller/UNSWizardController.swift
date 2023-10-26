@@ -48,6 +48,7 @@ class UNSWizardController: ObservableObject {
     @Dependency(\.unsAPI) var api
     @Dependency(\.currentUser) var currentUser 
     @Dependency(\.analytics) var analytics
+    @Dependency(\.persistenceController) var persistenceController
     
     internal init(
         state: UNSWizardController.FlowState = .intro, 
@@ -126,10 +127,14 @@ class UNSWizardController: ObservableObject {
     }
     
     @MainActor func saveDetails(name: String, nip05: String) async throws {
-        let author = currentUser.author
-        author?.uns = name
-        author?.nip05 = nip05
-        try currentUser.viewContext.save()
+        let context = currentUser.viewContext!
+        guard let authorKey = currentUser.publicKeyHex,
+            let author = try Author.find(by: authorKey, context: context) else {
+            throw UNSError.noUser
+        }
+        author.uns = name
+        author.nip05 = nip05
+        try context.save()
         await currentUser.publishMetaData()
         state = .success
     }

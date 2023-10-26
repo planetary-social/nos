@@ -30,7 +30,7 @@ struct WizardTextField: View {
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
-                Button("Done") {
+                Button(Localized.done.string) {
                     hideKeyboard()
                 }
             }

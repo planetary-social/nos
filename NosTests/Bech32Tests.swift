@@ -17,7 +17,7 @@ final class Bech32Tests: XCTestCase {
         let hex = "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d"
         let decoded = try Bech32.decode(npub)
         XCTAssertEqual(decoded.hrp, prefix)
-        XCTAssertEqual(decoded.checksum.base8FromBase5?.hexString, hex)
+        XCTAssertEqual(try decoded.checksum.base8FromBase5().hexString, hex)
     }
 
     /// Example taken from [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md)
@@ -29,7 +29,7 @@ final class Bech32Tests: XCTestCase {
         let hex = "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d"
         let decoded = try Bech32.decode(nprofile)
         XCTAssertEqual(decoded.hrp, prefix)
-        let base8data = try XCTUnwrap(decoded.checksum.base8FromBase5)
+        let base8data = try XCTUnwrap(try decoded.checksum.base8FromBase5())
         let offset = 0
         let length = base8data[offset + 1]
         let value = base8data.subdata(in: offset + 2 ..< offset + 2 + Int(length))

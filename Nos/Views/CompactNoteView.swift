@@ -63,7 +63,7 @@ struct CompactNoteView: View {
             }
         }
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             if showFullMessage {
@@ -120,15 +120,8 @@ struct CompactNoteView: View {
                 .frame(maxWidth: .infinity)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
-            if note.kind == EventKind.text.rawValue, !contentLinks.isEmpty && loadLinks {
-                VStack {
-                    ForEach(contentLinks, id: \.self.absoluteURL) { url in
-                        LinkPreview(url: url)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(.horizontal, 15)
-                    }
-                }
-                .padding(.bottom, 15)
+            if note.kind == EventKind.text.rawValue, loadLinks, !contentLinks.isEmpty {
+                LinkPreviewCarousel(links: contentLinks)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

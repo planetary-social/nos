@@ -15,7 +15,7 @@ public enum TLV {
     ///
     /// Check https://github.com/nostr-protocol/nips/blob/master/19.md for more information.
     public static func decode(checksum: Data) -> String? {
-        guard let converted = checksum.base8FromBase5 else {
+        guard let converted = try? checksum.base8FromBase5() else {
             return nil
         }
         var offset = 0

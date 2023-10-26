@@ -9,6 +9,10 @@ import Foundation
 
 typealias HexadecimalString = String
 
+enum DataError: Error {
+    case generic
+}
+
 extension Data {
     var hexString: String {
         let hexDigits = Array("0123456789abcdef".utf16)
@@ -47,7 +51,7 @@ extension Data {
         return Data(outputArray)
     }
     
-    var base8FromBase5: Data? {
+    func base8FromBase5() throws -> Data {
         let destinationBase = 8
         let startingBase = 5
         let maxValueMask: UInt32 = ((UInt32(1)) << 8) - 1
@@ -56,16 +60,16 @@ extension Data {
         var output = Data()
         
         for i in (0..<count) {
-            value = (value << startingBase) | UInt32(self[i])
+            value = try (value << startingBase) | UInt32(self[i])
             bits += startingBase
             while bits >= destinationBase {
                 bits -= destinationBase
-                output.append(UInt8((value >> bits) & maxValueMask))
+                output.append(try UInt8((value >> bits) & maxValueMask))
             }
         }
         
         if ((value << (destinationBase - bits)) & maxValueMask) != 0 || bits >= startingBase {
-            return nil
+            throw DataError.generic
         }
         
         return output

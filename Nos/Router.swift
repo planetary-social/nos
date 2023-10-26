@@ -32,9 +32,6 @@ import Logger
     
     @Published private(set) var sideMenuOpened = false
 
-    /// Set when a profile is viewed
-    @Published var viewedAuthor: Author?
-
     func toggleSideMenu() {
         withAnimation(.easeIn(duration: 0.2)) {
             sideMenuOpened.toggle()

@@ -103,6 +103,7 @@ enum Localized: String, Localizable, CaseIterable {
     case confirm = "Confirm"
     case clear = "Clear"
     case done = "Done"
+    case send = "Send"
     case editProfile = "Edit Profile"
     case completeProfileMessage = "Finish setting up your profile to help people find you."
     case completeProfileButton = "Complete My Profile"
@@ -114,6 +115,7 @@ enum Localized: String, Localizable, CaseIterable {
     case expirationDate = "Expiration Date"
     case minuteAbbreviated = "min"
     case hourAbbreviated = "hour"
+    case hoursAbbreviated = "hours"
     case dayAbbreviated = "day"
     case daysAbbreviated = "days"
     case sendCode = "Send SMS code"
@@ -186,6 +188,17 @@ enum Localized: String, Localizable, CaseIterable {
     case basicInfo = "Basic Information"
     case website = "Website"
     case edit = "Edit" // verb form
+    case connectWallet = "Connect Wallet"
+    
+    case connectGlobalIDTitle = "Connect your GlobaliD wallet to send USBC"
+    case scanTheWalletConnectQR = "Scan the QR code or download the Global ID app to send USBC to your friends!"
+    case copyQRLink = "Copy QR link"
+    case connectGlobalID = "Connect GlobaliD app"
+    case sendUSBC = "Send USBC"
+    case sendTo = "Send to"
+    case amount = "Amount"
+    case reconnectWallet = "Reconnect wallet"
+    case somethingWentWrong = "Something went wrong."
 
     case mention = "Mention"
     
