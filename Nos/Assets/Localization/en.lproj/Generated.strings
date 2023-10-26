@@ -184,7 +184,7 @@
 "Localized.tryAnotherName" = "Please try with a different name.";
 "Localized.tryAgainOrContactSupport" = "Please try again or contact support.";
 "Localized.success" = "Success!";
-"Localized.unsSuccessDescription" = "You have registered your Universal Name and we have linked it to your Nostr profile.";
+"Localized.unsSuccessDescription" = "You have successfully linked your Universal Name to your Nostr profile.";
 "Localized.yourNewUNMessage" = "is your Universal Name.\n\nWe've created a link between your Nostr profile and your Universal Name and filled your Universal Name into the username field on your profile.";
 "Localized.anErrorOccurred" = "An error occured.";
 "Localized.stories" = "Stories";

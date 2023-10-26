@@ -44,6 +44,7 @@ class WalletConnectSessionManager {
     // Function creates pairing request
     // It returns wc:// deeplink, to use for pairing
     @MainActor func initiateConnectionRequest() async throws -> String {
+        disposeBag = Set<AnyCancellable>()
         let uri = try await wcService.initialize()
         setupListeners()
         return uri
@@ -55,6 +56,11 @@ class WalletConnectSessionManager {
     
     func getAllSessions() -> [Session] {
         Sign.instance.getSessions()
+    }
+    
+    func clearSessions() async throws {
+        try await Sign.instance.cleanup()
+        _ = try await initiateConnectionRequest()
     }
     
     func sendTransaction(

@@ -802,7 +802,7 @@ extension RelayService {
     }
 
     func unsURL(from unsIdentifier: String) -> URL? {
-        let urlString = "https://explorer.universalname.space/uns/\(unsIdentifier)"
+        let urlString = "https://universalname.space/profile/\(unsIdentifier)"
         guard let url = URL(string: urlString) else { return nil }
         return url
     }
