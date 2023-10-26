@@ -49,7 +49,7 @@ struct SideMenu: View {
             .transition(.move(edge: .leading))
             // weirdly fixes dismissal animation
             // https://sarunw.com/posts/how-to-fix-zstack-transition-animation-in-swiftui/#solution
-            .zIndex(0)
+            .zIndex(1)
             .onAppear {
                 analytics.showedSideMenu()
             }

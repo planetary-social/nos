@@ -123,8 +123,8 @@ struct RepliesView: View {
                         )
                         .padding(.top, 15)
                         
-                        ForEach(directReplies) { event in
-                            ThreadView(root: event, allReplies: Array(replies))
+                        ForEach(directReplies.reversed()) { event in
+                            ThreadView(root: event, allReplies: replies.reversed())
                         }
                     }
                     .padding(.bottom)

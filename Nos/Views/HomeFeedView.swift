@@ -108,9 +108,7 @@ struct HomeFeedView: View {
                         LazyVStack {
                             ForEach(events) { event in
                                 NoteButton(note: event, hideOutOfNetwork: false)
-                                    .frame(maxWidth: .infinity, alignment: .top)
                                     .padding(.bottom, 15)
-                                    .animation(.default)
                             }
                         }
                         .padding(.vertical, 15)

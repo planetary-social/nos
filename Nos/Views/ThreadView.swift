@@ -50,7 +50,6 @@ struct ThreadView: View {
                         }
                         .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
                         .fill(Color.secondaryText)
-                        //if event.kind == .note ||
                         NoteButton(note: event, tapAction: { event in
                             router.push(event)
                         })

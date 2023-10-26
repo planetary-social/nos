@@ -26,7 +26,7 @@ struct NoteCard: View {
     @State private var replyAvatarURLs = [URL]()
     @State private var reportingAuthors = [Author]()
     @State private var reports = [Event]()
-    @State private var isOverlayHelpTextBoxShown: Bool = false
+    @StateObject private var warningController = NoteWarningController()
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
@@ -38,46 +38,6 @@ struct NoteCard: View {
     private let showReplyCount: Bool
     private var hideOutOfNetwork: Bool
     private var replyAction: ((Event) -> Void)?
-    
-    private var showContents: Bool {
-        (!hasContentWarning && !hideOutOfNetwork) ||
-        userTappedShowOutOfNetwork ||
-        (!hasContentWarning && (currentUser.socialGraph.contains(note.author?.hexadecimalPublicKey) ||
-                                Event.discoverTabUserIdToInfo.keys.contains(note.author?.hexadecimalPublicKey ?? "")))
-    }
-    
-    private var reportReason: String {
-        let reported = note.reports(followedBy: self.currentUser)
-        return(reported.first?.content ?? "")
-    }
-    
-        private var eventReports: [Event] {
-        note.reports(followedBy: self.currentUser)
-    }
-    
-    private var authorReports: [Event] {
-        note.author?.lookupReportsOnAuthor(context: self.viewContext) ?? []
-    }
-    
-//    private var authorReports: [Event] {
-//        if (note.author != nil) {
-//            let reports =  note.reports(referencingAuthor: note.author!, followedBy: self.currentUser)
-//
-//        }
-//        
-//        if let author = note.author {
-//            let reports = author.lookupReportsOnAuthor(context: viewContext, followedBy: self.currentUser)
-//            if reports.count > 0 {
-//                //print(reports)
-//            }
-//            return reports
-//        }
-//        return []
-//    }
- 
-    private var hasContentWarning: Bool {
-        eventReports.count > 0 || authorReports.count > 0
-    }
     
     private var attributedReplies: AttributedString? {
         if replyCount == 0 {
@@ -96,7 +56,6 @@ struct NoteCard: View {
             return nil
         }
     }
-    
 
     init(
         note: Event,
@@ -122,7 +81,7 @@ struct NoteCard: View {
             case .compact:
                 VStack {
                     HStack(alignment: .center, spacing: 0) {
-                        if showContents, let author = note.author {
+                        if !warningController.showWarning, let author = note.author {
                             Button {
                                 router.currentPath.wrappedValue.append(author)
                             } label: {
@@ -142,10 +101,14 @@ struct NoteCard: View {
                                 Spacer()
                             }
                             .padding(30)
-                        }  else {
-                            CompactNoteView(note: note, showFullMessage: showFullMessage, loadLinks: !showContents)
-                                .blur(radius: showContents ? 0 : 6)
-                                .frame(maxWidth: .infinity)
+                        } else {
+                            CompactNoteView(
+                                note: note, 
+                                showFullMessage: showFullMessage, 
+                                loadLinks: !warningController.showWarning
+                            )
+                            .blur(radius: warningController.showWarning ? 6 : 0)
+                            .frame(maxWidth: .infinity)
                         }
                         BeveledSeparator()
                         HStack(spacing: 0) {
@@ -168,19 +131,10 @@ struct NoteCard: View {
                         .padding(.leading, 13)
                     }
                 }
-                .blur(radius: showContents ? 0 : 6)
-                .opacity(showContents ? 1 : 0.3)
-                .frame(minHeight: showContents ? 130 : hasContentWarning ? 300 : nil)
-                .overlay(
-                    !showContents ? OverlayView(
-                        userTappedShowAction: {
-                            userTappedShowOutOfNetwork = true
-                        },
-                        hasContentWarning: hasContentWarning,
-                        eventReports: eventReports,
-                        authorReports: authorReports,
-                        isOverlayHelpTextBoxShown: $isOverlayHelpTextBoxShown) : nil
-                )
+                .blur(radius: warningController.showWarning ? 6 : 0)
+                .opacity(warningController.showWarning ? 0.3 : 1)
+                .frame(minHeight: warningController.showWarning ? 300 : nil)
+                .overlay(WarningView(controller: warningController))
             case .golden:
                 if let author = note.author {
                     GoldenPostView(author: author, note: note)
@@ -188,6 +142,10 @@ struct NoteCard: View {
                     EmptyView()
                 }
             }
+        }
+        .task {
+            warningController.note = note
+            warningController.shouldHideOutOfNetwork = hideOutOfNetwork
         }
         .task {
             if note.isStub {
@@ -204,9 +162,6 @@ struct NoteCard: View {
                     in: persistenceController.backgroundViewContext
                 )
             }
-        }
-        .onAppear {
-            note.viewedAt = Date() // Update the `viewedAt` property to the current date and time
         }
         .onDisappear {
             Task(priority: .userInitiated) {
@@ -228,344 +183,7 @@ struct NoteCard: View {
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
     }
-    
-    struct OverlayView: View {
-        var userTappedShowAction: () -> Void
-        var hasContentWarning: Bool
-        var eventReports: [Event]
-        var authorReports: [Event]
-        @Binding var isOverlayHelpTextBoxShown: Bool
-        
-        @ViewBuilder
-        var body: some View {
-            if hasContentWarning  {
-                OverlayContentReportView(userTappedShowAction: userTappedShowAction, eventReports: eventReports, authorReports: authorReports, isOverlayHelpTextBoxShown: $isOverlayHelpTextBoxShown)
-            } else {
-                OverlayOutofNetworkView(userTappedShowAction: userTappedShowAction, isOverlayHelpTextBoxShown: $isOverlayHelpTextBoxShown)
-            }
-        }
-    }
-    
-    struct OverlayOutofNetworkView: View {
-        @State private var isTextBoxShown: Bool = false
-        var userTappedShowAction: () -> Void
-        @Binding var isOverlayHelpTextBoxShown: Bool
 
-        var body: some View {
-            VStack(alignment: .leading) {
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        self.isOverlayHelpTextBoxShown.toggle()
-                    }) {
-                        (isTextBoxShown ? Image.x : Image.info)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                    }
-                    .padding(.trailing, 24)
-                }
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .padding(.top, 24)
-
-                // Center align the content
-                VStack(alignment: .center) {
-                    Spacer() // pushes content to the center
-
-                    if self.isOverlayHelpTextBoxShown {
-                        Localized.outsideNetworkExplanation.view
-                            .font(.body)
-                            .foregroundColor(.secondaryText)
-                            .background {
-                                Color.cardBackground
-                                    .blur(radius: 8, opaque: false)
-                            }
-                            .padding(.horizontal, 24)
-                            .fixedSize(horizontal: false, vertical: true)
-                    } else {
-                        Localized.outsideNetwork.view
-                            .font(.body)
-                            .foregroundColor(.secondaryText)
-                            .background {
-                                Color.cardBackground
-                                    .blur(radius: 8, opaque: false)
-                            }
-                            .padding(.horizontal, 24)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    
-                    SecondaryActionButton(title: Localized.viewThisPostAnyway) {
-                        withAnimation {
-                            userTappedShowAction()
-                        }
-                    }
-                    .padding(.top, 10) // Move the button closer to the text
-
-                    Spacer() // pushes content to the center
-                }
-                .frame(maxWidth: .infinity) // Allow the VStack to take full width
-                Spacer(minLength: 30) // Ensure there's some spacing at the bottom
-            }
-        }
-    }
-
-    struct OverlayContentReportView: View {
-        @State private var isTextBoxShown: Bool = false
-        var userTappedShowAction: () -> Void
-        var eventReports: [Event]
-        var authorReports: [Event]
-        
-        //var eventReports  = self.eventReports
-        //var authorReports = self.authorReports
-        @Binding var isOverlayHelpTextBoxShown: Bool
-
-
-        
-        var body: some View {
-            VStack(alignment: .leading) {
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        withAnimation {
-                            self.isOverlayHelpTextBoxShown.toggle()
-                        }
-                    })
-                    {
-                        (isTextBoxShown ? Image.x : Image.info)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                    }
-                    .padding(.trailing, 24)
-                }
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .padding(.top, 24)
-
-                // Center align the content
-                VStack(alignment: .center) {
-                    Spacer() // pushes content to the center
-                    
-                    // TextBox or Image based on isTextBoxShown
-                    if self.isOverlayHelpTextBoxShown {
-                        Localized.contentWarningExplanation.view
-                            .font(.body)
-                            .foregroundColor(.secondaryText)
-                            .padding(.horizontal, 24)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .layoutPriority(1)
-                    } else {
-
-                        Image.warningEye
-                            .scaledToFit()
-                            .frame(width: 48, height: 48) // Set the width and height to 48
-                            .padding(.bottom, 20)
-                        if authorReports.count > 0
-                        {
-                            contentWarningMessage(reports: authorReports, type: "author")
-                        }
-                        if eventReports.count > 0
-                        {
-                            contentWarningMessage(reports: eventReports, type: "note")
-                        }
-                    }
-                    SecondaryActionButton(title: Localized.viewThisPostAnyway) {
-                        withAnimation {
-                            userTappedShowAction()
-                        }
-                    }
-                    .padding(.top, 10) // Move the button closer to the text
-
-                    Spacer() // pushes content to the center
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                Spacer(minLength: 30) // Ensure there's some spacing at the bottom
-
-            }
-        }
-    }
-    
-    struct contentWarningMessage: View {
-        var reports: [Event]
-        var type: String
-        
-        // Assuming each 'Event' has an 'Author' and we can get an array of 'Author' names
-        private var authorNames: [String] {
-            // Extracting author names. Adjust according to your actual data structure.
-            reports.compactMap { $0.author?.name }
-        }
-
-        // Assuming there's a property or method 'safeName' in 'Author' that safely returns the author's name.
-        private var firstAuthorSafeName: String {
-            // Getting the safe name of the first author. Adjust according to your actual data structure.
-            reports.first?.author?.safeName ?? "Unknown Author"
-        }
-        
-        private var reason: String {
-            // Extract content from reports and remove empty content
-            let contents = reports.compactMap { (($0.content?.isEmpty) != nil) ? nil : $0.content }
-            
-            // Convert set of unique reasons to array and remove any empty reasons
-            let reasons = uniqueReasons.filter { !$0.isEmpty }
-            
-            // Combine both arrays
-            let combined = contents + reasons
-            
-            // Join them with comma separator
-            return combined.joined(separator: ", ")
-        }
-        
-        private var tags: [[String]] {
-            var allTags = [[String]]()
-            for report in reports {
-                guard let reportTags = report.allTags as? [[String]] else {
-                    print("Error: Cannot convert allTags to [[String]]")
-                    continue
-                }
-                allTags.append(contentsOf: reportTags)
-            }
-            return allTags
-        }
-        
-        private var uniqueReasons: Set<String> {
-            var reasons = [String]()
-            for report in reports {
-                guard let reportTags = report.allTags as? [[String]] else {
-                    print("Error: Cannot convert allTags to [[String]]")
-                    continue
-                }
-                for tag in reportTags {
-                    if tag.count >= 2 {
-                        let reasonCode = tag[1]
-                        var reason = reasonCode
-                        if reasonCode.hasPrefix("MOD>") {
-                            let codeSuffix = String(reasonCode.dropFirst(4)) // Drop "MOD>" prefix
-                            let localizedKey = "nip56code_" + codeSuffix
-                            if let localizedEnum = Localized(rawValue: localizedKey) {
-                                
-                                // MATT! I need help with this, this doesn't seem to get out the localized tag name, but i'm not sure how to do it. 
-                                reason = localizedEnum.description // Assuming you have a description property for human-readable name
-                            }
-                        }
-                        else if tag[0] == "report" {
-                            reasons.append(reason)
-                        } else if tag.count == 3 && !reasonCode.hasPrefix("MOD>") {
-                            reasons.append(tag[2])
-                        }
-                    }
-                }
-            }
-            return Set(reasons)
-        }
-        
-        var body: some View {
-            if type == "author" {
-                Text( Localized.userHasBeen )
-                    .font(.body)
-                    .foregroundColor(.secondaryText)
-                    .background {
-                        Color.cardBackground
-                            .blur(radius: 8, opaque: false)
-                    }
-            } else if type == "note" {
-                Text( Localized.noteHasBeen )
-                    .font(.body)
-                    .foregroundColor(.secondaryText)
-                    .background {
-                        Color.cardBackground
-                            .blur(radius: 8, opaque: false)
-                    }
-            }
-            if authorNames.count > 1 {
-                Text(Localized.reportedByOneAndMore.localizedMarkdown([
-                    "one": firstAuthorSafeName,
-                    "count": "\(authorNames.count - 1)"
-                ]))
-                .font(.body)  // Adjust font and style as needed
-                .foregroundColor(.primary)
-                .padding(.leading, 25)  // Adjust padding as needed
-            } else {
-                Text(Localized.reportedByOne.localizedMarkdown([
-                    "one": firstAuthorSafeName
-                ]))
-                .font(.body)  // Adjust font and style as needed
-                .foregroundColor(.secondaryText)
-                .padding(.leading, 25)  // Adjust padding as needed
-            }
-            
-            Text( Localized.reportedFor.localizedMarkdown(["reason": reason]) )
-                .font(.body)
-                .foregroundColor(.secondaryText)
-                .background {
-                    Color.cardBackground
-                        .blur(radius: 8, opaque: false)
-                }
-
-        }
-    }
-    
-    // we need to still look for associated lables
-    struct OverlayContentLabelView: View{
-        var userTappedShowAction: () -> Void
-        
-        var body: some View {
-            VStack {
-                Localized.outsideNetwork.view
-                    .font(.body)
-                    .foregroundColor(.secondaryText)
-                    .background {
-                        Color.cardBackground
-                            .blur(radius: 8, opaque: false)
-                    }
-                    .padding(20)
-                SecondaryActionButton(title: Localized.show) {
-                    withAnimation {
-                        userTappedShowAction()
-                    }
-                }
-            }
-        }
-    }
-    func likeNote() async {
-        
-        guard let keyPair = currentUser.keyPair else {
-            return
-        }
-        
-        var tags: [[String]] = []
-        if let eventReferences = note.eventReferences.array as? [EventReference] {
-            // compactMap returns an array of the non-nil results.
-            tags += eventReferences.compactMap { event in
-                guard let eventId = event.eventId else { return nil }
-                return ["e", eventId]
-            }
-        }
-
-        if let authorReferences = note.authorReferences.array as? [EventReference] {
-            tags += authorReferences.compactMap { author in
-                guard let eventId = author.eventId else { return nil }
-                return ["p", eventId]
-            }
-        }
-
-        if let id = note.identifier {
-            tags.append(["e", id] + note.seenOnRelayURLs)
-        }
-        if let pubKey = note.author?.publicKey?.hex {
-            tags.append(["p", pubKey])
-        }
-        
-        let jsonEvent = JSONEvent(
-            pubKey: keyPair.publicKeyHex,
-            kind: .like,
-            tags: tags,
-            content: "+"
-        )
-        
-        do {
-            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
-        } catch {
-            Log.info("Error creating event for like")
-        }
-    }
-    
     func repostNote() async {
         guard let keyPair = currentUser.keyPair else {
             return

@@ -24,8 +24,7 @@ struct CompactNoteView: View {
     @State private var truncatedSize = CGSize.zero
     @State private var noteContent = LoadingContent<AttributedString>.loading
     @State private var contentLinks = [URL]()
-    @State private var loadLinks = true
-    // the loadLinks doesn't work... not sure why, need help.
+    private var loadLinks: Bool
     
     @EnvironmentObject var router: Router
     @Dependency(\.persistenceController) private var persistenceController
@@ -162,6 +161,7 @@ struct CompactNoteView_Previews: PreviewProvider {
             CompactNoteView(note: previewData.longNote)
             CompactNoteView(note: previewData.longFormNote)
             CompactNoteView(note: previewData.doubleImageNote)
+            CompactNoteView(note: previewData.doubleImageNote, loadLinks: false)
         }
         .padding()
         .background(Color.cardBackground)

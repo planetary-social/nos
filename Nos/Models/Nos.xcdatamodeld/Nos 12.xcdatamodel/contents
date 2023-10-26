@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22225" systemVersion="23A344" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22G74" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Author" representedClassName=".Author" syncable="YES">
         <attribute name="about" optional="YES" attributeType="String"/>
         <attribute name="displayName" optional="YES" attributeType="String"/>
@@ -40,7 +40,6 @@
         <attribute name="receivedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="sendAttempts" optional="YES" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="signature" optional="YES" attributeType="String"/>
-        <attribute name="viewedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="events" inverseEntity="Author"/>
         <relationship name="authorReferences" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="AuthorReference" inverseName="event" inverseEntity="AuthorReference"/>
         <relationship name="deletedOn" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="deletedEvents" inverseEntity="Relay"/>

@@ -36,7 +36,7 @@ struct ReportCategory: Identifiable, Equatable {
                 if category.code == code {
                     return category
                 } else if let subCategories = category.subCategories,
-                          let subCategory = searchForCategoryByCode?(code, subCategories) {
+                    let subCategory = searchForCategoryByCode?(code, subCategories) {
                     return subCategory
                 }
             }

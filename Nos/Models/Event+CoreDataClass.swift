@@ -462,6 +462,17 @@ public class Event: NosManagedObject {
         }
 
         return nil
+    }    
+    
+    func reportsRequest() -> NSFetchRequest<Event> {
+        let request = NSFetchRequest<Event>(entityName: "Event")
+        request.predicate = NSPredicate(
+            format: "kind = %i AND ANY eventReferences.referencedEvent = %@", 
+            EventKind.report.rawValue,
+            self
+        )
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.identifier, ascending: true)]
+        return request
     }
     
     // MARK: - Creating
@@ -1022,6 +1033,8 @@ public class Event: NosManagedObject {
         return events
     }
     
+    /// Returns a list of reports for this event from authors followed by the given user.
+    /// This isn't very performant so use sparingly.
     @MainActor
     func reports(followedBy currentUser: CurrentUser) -> [Event] {
         let reportEvents = referencingEvents
@@ -1030,18 +1043,6 @@ public class Event: NosManagedObject {
                 let isReportEvent = event.kind == EventKind.report.rawValue
                 let isFollowed = currentUser.socialGraph.follows(event.author?.hexadecimalPublicKey ?? "")
                 return isReportEvent && isFollowed
-            }
-        return reportEvents
-    }
-    
-    @MainActor
-    func reports(referencingAuthor author: Author, followedBy currentUser: CurrentUser) -> [Event] {
-        let reportEvents = referencingEvents
-            .compactMap { $0.referencingEvent }
-            .filter { event in
-                event.kind == EventKind.report.rawValue
-                && event.author == author
-                && currentUser.socialGraph.follows(author.hexadecimalPublicKey)
             }
         return reportEvents
     }

@@ -242,6 +242,20 @@ public class Author: NosManagedObject {
             self
         )
         return fetchRequest
+    }    
+    
+    func reportsReferencingFetchRequest() -> NSFetchRequest<Event> {
+        guard let hexadecimalPublicKey else {
+            return Event.emptyRequest()
+        }
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "(kind = %i) AND ANY authorReferences.pubkey = %@", 
+            EventKind.report.rawValue,
+            hexadecimalPublicKey
+        )
+        return fetchRequest
     }
     
     @nonobjc func authoredReportsRequest() -> NSFetchRequest<Event> {
@@ -257,13 +271,7 @@ public class Author: NosManagedObject {
          // commenting out becuase i need help finding current user in async
 //    @nonobjc func lookupReportsOnAuthor(context: NSManagedObjectContext, followedBy currentUser: CurrentUser?) async -> [Event] {
     @nonobjc func lookupReportsOnAuthor(context: NSManagedObjectContext)  -> [Event] {
-        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-
-        let publicKey = self.hexadecimalPublicKey ?? ""
-        let eventPredicate = NSPredicate(format: "(kind == 1984 OR kind == 1985) AND SUBQUERY(authorReferences, $tag, $tag.pubkey == %@).@count > 0", publicKey)
-        fetchRequest.predicate = eventPredicate
-
+        let fetchRequest = reportsReferencingFetchRequest()
         var events: [Event] = []
         do {
             events = try context.fetch(fetchRequest)

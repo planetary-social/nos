@@ -12,7 +12,7 @@ import SwiftUI
 struct ActionButton: View {
     
     var title: Localized
-    var font: Font = .clarity
+    var font: Font = .clarityBold
     var image: Image?
     var textColor = Color.white
     var depthEffectColor = Color(hex: "#A04651")
@@ -48,14 +48,13 @@ struct ActionButton: View {
         .lineLimit(nil)
         .foregroundColor(.black)
         .buttonStyle(ActionButtonStyle(
-            textShadow: textShadow, borderColor: depthEffectColor
+            depthEffectColor: depthEffectColor,
+            backgroundGradient: backgroundGradient,
+            textShadow: textShadow
         ))
         .disabled(disabled)
     }
 }
-
-// TODO:    The coloring of these butttons need to not be hard coded
-//          so that they're displayed correctly in both light and dark mode.
 
 struct SecondaryActionButton: View {
     var title: Localized
@@ -83,17 +82,17 @@ struct ActionButtonStyle: ButtonStyle {
     @SwiftUI.Environment(\.isEnabled) private var isEnabled
     
     let cornerRadius: CGFloat = 17
+    let depthEffectColor: Color
+    let backgroundGradient: LinearGradient
     var textShadow: Bool
-    var borderColor: Color
     
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             ZStack {
-                Color.clear
+                depthEffectColor
             }
-            .cornerRadius(cornerRadius)
-            .overlay(RoundedRectangle(cornerRadius: cornerRadius)
-                .stroke(borderColor, lineWidth: 2))
+            .cornerRadius(16)
+            .offset(y: 1)
 
             // Text container
             configuration.label
@@ -108,6 +107,22 @@ struct ActionButtonStyle: ButtonStyle {
                     y: 2
                 )
                 .opacity(isEnabled ? 1 : 0.5)
+                .background(
+                    ZStack {
+                        LinearGradient(
+                            colors: [
+                                Color(red: 1, green: 1, blue: 1, opacity: 0.2),
+                                Color(red: 1, green: 1, blue: 1, opacity: 1.0),
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                        .blendMode(.softLight)
+                        
+                        backgroundGradient.blendMode(.normal)
+                    }
+                )
+                .cornerRadius(cornerRadius)
                 .offset(y: configuration.isPressed ? 2 : 0)
         }
         .fixedSize(horizontal: true, vertical: true)
