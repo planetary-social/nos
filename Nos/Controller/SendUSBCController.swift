@@ -105,6 +105,15 @@ class SendUSBCController: ObservableObject {
         updateStep()
     }
     
+    func reconnect() async {
+        do {
+            try await walletConnectSessionManager.clearSessions()
+        } catch {
+            state = .error(error)
+        }
+        state = .pair
+    }
+    
     func initiateConnectionToWC() async throws {
         let wcDeeplink = try await walletConnectSessionManager.initiateConnectionRequest()
         let globalIDDeeplink = "\(globalIDURLScheme)wc?uri=\(wcDeeplink)"
