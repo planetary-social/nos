@@ -840,9 +840,11 @@ public class Event: NosManagedObject {
                 Log.unexpected(.incorrectValue, "markNoteAsRead couldn't find event \(noteID)")
                 return
             }
+            
             event.isRead = true
             do {
                 try context.save()
+
                 Log.debug("markNoteAsRead marked \(noteID) as read")
             } catch {
                 Log.debug("markNoteAsRead error \(error.localizedDescription)")

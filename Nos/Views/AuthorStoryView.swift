@@ -158,7 +158,9 @@ struct AuthorStoryView: View {
             guard selectedNote == nil else {
                 return
             }
-            if let firstNote = notes.first {
+            if let firstUnreadNote = notes.first(where: { !$0.isRead }) {
+                selectedNote = firstUnreadNote
+            } else if let firstNote = notes.first {
                 selectedNote = firstNote
             } else {
                 // Notes shouldn't be empty here, but if they are, just advance to the next author

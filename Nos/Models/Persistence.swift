@@ -165,7 +165,9 @@ class PersistenceController {
         guard let authorKey = currentUser.author?.hexadecimalPublicKey else {
             return
         }
-        
+
+        return
+
         cleanupTask = Task {
             defer { self.cleanupTask = nil }
             let context = backgroundViewContext

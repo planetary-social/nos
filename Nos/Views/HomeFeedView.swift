@@ -91,10 +91,7 @@ struct HomeFeedView: View {
                                             selectedStoryAuthor = author
                                         }
                                     } label: {
-                                        AuthorStoryAvatarView(
-                                            author: author,
-                                            cutoffDate: $storiesCutoffDate
-                                        )
+                                        StoryAvatarView(author: author)
                                     }
                                 }
                             }
@@ -209,39 +206,16 @@ struct HomeFeedView: View {
     }
 }
 
-fileprivate struct AuthorStoryAvatarView: View {
+fileprivate struct StoryAvatarView: View {
     var author: Author
-    @Binding var cutoffDate: Date
-
-    @State private var hasUnreadStories = false
-
-    @Dependency(\.persistenceController) private var persistenceController
-
     var body: some View {
         AvatarView(imageUrl: author.profilePhotoURL, size: 54)
             .padding(.vertical, 10)
             .background(
                 Circle()
-                    .stroke(hasUnreadStories ? LinearGradient.diagonalAccent : LinearGradient.solidBlack, lineWidth: 3)
+                    .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
                     .frame(width: 58, height: 58)
             )
-            .onAppear {
-                Task {
-                    guard let hex = author.publicKey?.hex else {
-                        return
-                    }
-                    let context = persistenceController.newBackgroundContext()
-                    do {
-                        try await context.perform {
-                            let stories = try context.fetch(Author.unreadAuthorStories(pubkey: hex, since: cutoffDate))
-                            print("HomeFeedView author \(author.safeName) has \(stories.count) unread stories")
-                            hasUnreadStories = !stories.isEmpty
-                        }
-                    } catch {
-                        
-                    }
-                }
-            }
     }
 }
 

@@ -35,7 +35,7 @@
         <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="expirationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="identifier" attributeType="String"/>
-        <attribute name="isRead" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isRead" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="isVerified" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="kind" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="receivedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
