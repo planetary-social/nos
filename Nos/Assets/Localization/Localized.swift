@@ -89,6 +89,11 @@ enum Localized: String, Localizable, CaseIterable {
     case failedToExportLogs = "Failed to export logs."
     case appVersion = "App Version:"
     case allPublishedEvents = "All published events"
+    case feedSettings = "Feed Settings"
+    case useReportsFromFollows = "Use reports from my follows"
+    case useReportsFromFollowsDescription = "When someone you follow reports a note or user, we'll add a content warning to their notes."
+    case showOutOfNetworkWarnings = "Show Out of Network warnings"
+    case showOutOfNetworkWarningsDescription = "Hide notes from users outside my friends of friends circle behind a content warning."
     
     case privateKey = "Private Key"
     case logout = "Logout"
@@ -97,6 +102,7 @@ enum Localized: String, Localizable, CaseIterable {
     
     case post = "Post" // (verb form)
     case newNote = "New Note"
+    case new = "New"
     case newNotePlaceholder = "Type your post here..."
     case cancel = "Cancel"
     case confirm = "Confirm"
@@ -157,6 +163,14 @@ enum Localized: String, Localizable, CaseIterable {
     case followedByOneAndMore = "Followed by **{{ one }}** and **{{ count }} others**"
     case followedByTwo = "Followed by **{{ one }}** and **{{ two }}**"
     case followedByTwoAndMore = "Followed by **{{ one }}**, **{{ two }}** and **{{ count }} others**"
+    case userHasBeen = "This user has been"
+    case noteHasBeen = "This note has been"
+    case reportedBy = "reported by"
+    case reportedByOne = "reported by **{{ one }}**"
+    case reportedByOneAndMore = "reported by **{{ one }}** and **{{ count }} others**"
+    case reportedByTwo = "reported by **{{ one }}** and **{{ two }}**"
+    case reportedByTwoAndMore = "reported by **{{ one }}**, **{{ two }}** and **{{ count }} others**"
+    case reportedFor = "for {{reason}}"
     case unfollow = "Unfollow"
     case universalName = "Universal name"
     case nip05 = "NIP-05"
@@ -165,6 +179,7 @@ enum Localized: String, Localizable, CaseIterable {
     case readMore = "Read more"
     case thread = "Thread"
     case show = "Show" // verb form
+    case viewThisPostAnyway = "View this post anyway" // verb form
     case bio = "Bio"
     case displayName = "Display name"
     case name = "Name"
@@ -220,6 +235,10 @@ enum Localized: String, Localizable, CaseIterable {
     case note = "note"
     case unmuteUser = "Un-Mute"
     case outsideNetwork = "This user is outside your network."
+    case outsideNetworkExplanation = "This note originates from someone beyond your 'friends of friends' network. Nos hides these by default. You can change this in the settings menu."
+    case contentWarningExplanation = """
+    Nos is committed to fostering safe and respectful community. To achieve this we display content warnings when someone you follow reports a note. You can change this in teh settings menu.
+    """
     case allMyRelays = "All My Relays"
     case about = "About"
     case contactUs = "Contact Us"
@@ -243,7 +262,7 @@ enum Localized: String, Localizable, CaseIterable {
     case registration = "Registration"
     case registrationDescription = "Enter your phone number so we can send you an SMS code."
     case verification = "Verification"
-    case verificationDescription = "Enter the 4-digit code we sent to {{ phone_number }}"
+    case verificationDescription = "Enter the 6-digit code we sent to {{ phone_number }}"
     case unsLearnMore = "Learn more about UNS."
     case verifyYourIdentity = "Verify your identity"
     case enterCode = "Enter Code"
@@ -271,7 +290,7 @@ enum Localized: String, Localizable, CaseIterable {
     case eventSource = "Raw Event"
     case loading = "Loading..."
     case viewSource = "View Source"
-    case reportEventContent = "This content has been reported for {{ report_category }} using NIP-69 vocabulary https://github.com/nostr-protocol/nips/pull/457"
+    case reportEventContent = "This content has been reported for {{ report_category }}."
     case select = "Select"
     case linkToNote = "🔗 Link to note"
 }

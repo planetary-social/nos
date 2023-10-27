@@ -69,6 +69,9 @@
 		C905B0752A619367009B8A78 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = C905B0742A619367009B8A78 /* DequeModule */; };
 		C905B0772A619E99009B8A78 /* LinkPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C905B0762A619E99009B8A78 /* LinkPreview.swift */; };
 		C90862BE29E9804B00C35A71 /* NosPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90862BD29E9804B00C35A71 /* NosPerformanceTests.swift */; };
+		C913DA0A2AEAF52B003BDD6D /* NoteWarningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C913DA092AEAF52B003BDD6D /* NoteWarningController.swift */; };
+		C913DA0C2AEB2EBF003BDD6D /* FetchRequestPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C913DA0B2AEB2EBF003BDD6D /* FetchRequestPublisher.swift */; };
+		C913DA0E2AEB3265003BDD6D /* WarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C913DA0D2AEB3265003BDD6D /* WarningView.swift */; };
 		C92DF80529C25DE900400561 /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92DF80429C25DE900400561 /* URL+Extensions.swift */; };
 		C92DF80629C25DE900400561 /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92DF80429C25DE900400561 /* URL+Extensions.swift */; };
 		C92DF80829C25FA900400561 /* SquareImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92DF80729C25FA900400561 /* SquareImage.swift */; };
@@ -110,6 +113,7 @@
 		C94C4CF32AD993CA00F801CA /* UNSErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94C4CF22AD993CA00F801CA /* UNSErrorView.swift */; };
 		C94D14812A12B3F70014C906 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D14802A12B3F70014C906 /* SearchBar.swift */; };
 		C94D59AC2AE711A400295AE8 /* WalletConnectErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D59AB2AE711A400295AE8 /* WalletConnectErrorView.swift */; };
+		C94D59AE2AE7286E00295AE8 /* ReportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D59AD2AE7286E00295AE8 /* ReportTests.swift */; };
 		C94D6D5C2AC5D14400F0F11E /* WizardTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D6D5B2AC5D14400F0F11E /* WizardTextField.swift */; };
 		C94D855C2991479900749478 /* NewNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D855B2991479900749478 /* NewNoteView.swift */; };
 		C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = C94D855E29914D2300749478 /* SwiftUINavigation */; };
@@ -477,6 +481,9 @@
 		C905EA342A3360FE006F1E99 /* StagingSecrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = StagingSecrets.xcconfig; path = Nos/Assets/StagingSecrets.xcconfig; sourceTree = SOURCE_ROOT; };
 		C90862BB29E9804B00C35A71 /* NosPerformanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NosPerformanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C90862BD29E9804B00C35A71 /* NosPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosPerformanceTests.swift; sourceTree = "<group>"; };
+		C913DA092AEAF52B003BDD6D /* NoteWarningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteWarningController.swift; sourceTree = "<group>"; };
+		C913DA0B2AEB2EBF003BDD6D /* FetchRequestPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchRequestPublisher.swift; sourceTree = "<group>"; };
+		C913DA0D2AEB3265003BDD6D /* WarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarningView.swift; sourceTree = "<group>"; };
 		C92A04DD2A58B02B00C844B8 /* Nos 11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 11.xcdatamodel"; sourceTree = "<group>"; };
 		C92DF80129BFAF9300400561 /* ProductionSecrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ProductionSecrets.xcconfig; sourceTree = "<group>"; };
 		C92DF80429C25DE900400561 /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
@@ -510,6 +517,7 @@
 		C94D39212ABDDDFE0019C4D5 /* Secrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		C94D39242ABDDFB60019C4D5 /* EmptySecrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = EmptySecrets.xcconfig; sourceTree = "<group>"; };
 		C94D59AB2AE711A400295AE8 /* WalletConnectErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectErrorView.swift; sourceTree = "<group>"; };
+		C94D59AD2AE7286E00295AE8 /* ReportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportTests.swift; sourceTree = "<group>"; };
 		C94D6D5B2AC5D14400F0F11E /* WizardTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WizardTextField.swift; sourceTree = "<group>"; };
 		C94D855B2991479900749478 /* NewNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNoteView.swift; sourceTree = "<group>"; };
 		C94FE5A629F8441200C27119 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Generated.strings"; sourceTree = "<group>"; };
@@ -933,7 +941,6 @@
 				C9DEBFDC298941020078B43A /* Nos.entitlements */,
 				C9DEBFD1298941000078B43A /* NosApp.swift */,
 				3F170C77299D816200BC8F8B /* AppController.swift */,
-				DC4AB2F52A4475B800D1478A /* AppDelegate.swift */,
 				CD09A74729A51EFC0063464F /* Router.swift */,
 				C9DFA974299C30CA006929C1 /* Assets */,
 				C9DEC001298944FC0078B43A /* Extensions */,
@@ -966,6 +973,7 @@
 				C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */,
 				5B88051B2A21046C00E21F06 /* SHA256KeyTests.swift */,
 				5B88051E2A21056E00E21F06 /* TLVTests.swift */,
+				C94D59AD2AE7286E00295AE8 /* ReportTests.swift */,
 			);
 			path = NosTests;
 			sourceTree = "<group>";
@@ -1005,6 +1013,7 @@
 				C92DF80429C25DE900400561 /* URL+Extensions.swift */,
 				C9F204622ADEDB910029A858 /* Web3Utils.swift */,
 				C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */,
+				C913DA0B2AEB2EBF003BDD6D /* FetchRequestPublisher.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1072,6 +1081,7 @@
 				C92DF80129BFAF9300400561 /* ProductionSecrets.xcconfig */,
 				C905EA342A3360FE006F1E99 /* StagingSecrets.xcconfig */,
 				C94D39242ABDDFB60019C4D5 /* EmptySecrets.xcconfig */,
+				DC4AB2F52A4475B800D1478A /* AppDelegate.swift */,
 				C94D39212ABDDDFE0019C4D5 /* Secrets.xcconfig */,
 				C9A0DAEC29C6A66C00466635 /* Launch Screen.storyboard */,
 			);
@@ -1081,11 +1091,11 @@
 		C9DFA977299C3189006929C1 /* Localization */ = {
 			isa = PBXGroup;
 			children = (
+				5B46612029CCB894008B8E8C /* Generated.strings */,
 				C9DFA975299C30F0006929C1 /* Localized.swift */,
 				C9DFA978299C31A7006929C1 /* Localizable.swift */,
 				5B46611929CCB6DF008B8E8C /* ExportStrings.sh */,
 				5B46611B29CCB725008B8E8C /* ExportStrings.swift */,
-				5B46612029CCB894008B8E8C /* Generated.strings */,
 			);
 			path = Localization;
 			sourceTree = "<group>";
@@ -1097,6 +1107,7 @@
 				C97A1C8A29E45B4E009D9E8D /* RawEventController.swift */,
 				C9A6C7402AD837AD001F9500 /* UNSWizardController.swift */,
 				C9A2FCA32AE701510020A5C6 /* SendUSBCController.swift */,
+				C913DA092AEAF52B003BDD6D /* NoteWarningController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1131,7 +1142,6 @@
 			isa = PBXGroup;
 			children = (
 				2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */,
-				2D4010A12AD87DF300F93AD4 /* AuthorCardKnowFollowersView.swift */,
 				C9A0DADF29C697A100466635 /* AboutView.swift */,
 				C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */,
 				C987F81929BA4D0E00B44E7A /* ActionButton.swift */,
@@ -1220,6 +1230,7 @@
 				C9DEBFDD298941020078B43A /* Preview Content */,
 				C905EA362A33620A006F1E99 /* UNS */,
 				C9F2046E2ADEDDCA0029A858 /* USBC */,
+				C913DA0D2AEB3265003BDD6D /* WarningView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1582,6 +1593,7 @@
 				C9A0DAF829C92F4500466635 /* UNSAPI.swift in Sources */,
 				5BFF66B62A58A8A000AA79DD /* MutesView.swift in Sources */,
 				C9F2045F2ADED8F70029A858 /* WalletConnectSessionManager.swift in Sources */,
+				C913DA0A2AEAF52B003BDD6D /* NoteWarningController.swift in Sources */,
 				3F30020929C23895003D4F8B /* OnboardingNotOldEnoughView.swift in Sources */,
 				C973AB612A323167002AED16 /* Author+CoreDataProperties.swift in Sources */,
 				C9B678E129EEC41000303F33 /* SocialGraphCache.swift in Sources */,
@@ -1624,6 +1636,7 @@
 				C942566929B66A2800C4202C /* Date+Elapsed.swift in Sources */,
 				C9A2FCA22AE6FF360020A5C6 /* USBCBalanceBarButtonItem.swift in Sources */,
 				5B8C96B029DB2E1100B73AEC /* SearchTextFieldObserver.swift in Sources */,
+				C913DA0E2AEB3265003BDD6D /* WarningView.swift in Sources */,
 				C9ADB13829928CC30075E7F8 /* String+Hex.swift in Sources */,
 				C97141EE2AE95F07001A5DD0 /* USBCAddress.swift in Sources */,
 				C9F75AD22A02D41E005BBE45 /* ComposerActionBar.swift in Sources */,
@@ -1635,6 +1648,7 @@
 				C9646EAE29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */,
 				C94D59AC2AE711A400295AE8 /* WalletConnectErrorView.swift in Sources */,
 				C92F015B2AC4D74E00972489 /* NosTextEditor.swift in Sources */,
+				C913DA0C2AEB2EBF003BDD6D /* FetchRequestPublisher.swift in Sources */,
 				C973AB5D2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */,
 				C95D68A3299E6D9000429F86 /* SelectableText.swift in Sources */,
 				C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */,
@@ -1823,6 +1837,7 @@
 				C9DEC0642989541F0078B43A /* Bundle+Current.swift in Sources */,
 				C9ADB13629928AF00075E7F8 /* KeyPair.swift in Sources */,
 				3FFB1D9729A6BBEC002A755D /* Collection+SafeSubscript.swift in Sources */,
+				C94D59AE2AE7286E00295AE8 /* ReportTests.swift in Sources */,
 				C9A6C7422AD837AD001F9500 /* UNSWizardController.swift in Sources */,
 				C9B678DC29EEBF3B00303F33 /* DependencyInjection.swift in Sources */,
 				C9F0BB6D29A503D9000547FC /* Int+Bool.swift in Sources */,
