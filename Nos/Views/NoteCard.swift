@@ -79,7 +79,7 @@ struct NoteCard: View {
         VStack(alignment: .leading, spacing: 0) {
             switch style {
             case .compact:
-                VStack {
+                VStack(spacing: 0) {
                     HStack(alignment: .center, spacing: 0) {
                         if !warningController.showWarning, let author = note.author {
                             Button {

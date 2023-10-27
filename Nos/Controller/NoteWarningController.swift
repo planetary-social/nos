@@ -49,8 +49,8 @@ class NoteWarningController: NSObject, ObservableObject {
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var objectContext: NSManagedObjectContext!
     
-    // swiftlint:disable:next function_body_length
     // This function is too long, I should break it up into nicely named functions.
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     override init() {
         super.init()
         self.objectContext = persistenceController.viewContext

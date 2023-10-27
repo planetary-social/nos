@@ -268,38 +268,13 @@ public class Author: NosManagedObject {
         )
         return fetchRequest
     }
-         // commenting out becuase i need help finding current user in async
-//    @nonobjc func lookupReportsOnAuthor(context: NSManagedObjectContext, followedBy currentUser: CurrentUser?) async -> [Event] {
-    @nonobjc func lookupReportsOnAuthor(context: NSManagedObjectContext)  -> [Event] {
-        let fetchRequest = reportsReferencingFetchRequest()
-        var events: [Event] = []
-        do {
-            events = try context.fetch(fetchRequest)
-        } catch {
-            print("Failed to fetch events. Error: \(error.localizedDescription)")
-        }
 
-        // Filter out events authored by people you don't follow, only if currentUser is not nil
-//        if let currentUser = currentUser {
-//            var filteredEvents: [Event] = []
-//            for event in events {
-//                let authorPublicKey = event.author?.hexadecimalPublicKey ?? ""
-//                if await currentUser.socialGraph.follows(authorPublicKey) {
-//                    filteredEvents.append(event)
-//                }
-//            }
-//            events = filteredEvents
-//        }
-
-        return events
-    }
     @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: true)]
         fetchRequest.predicate = NSPredicate.false
         return fetchRequest
     }
-    
     
     class func all(context: NSManagedObjectContext) -> [Author] {
         let allRequest = Author.allAuthorsRequest()

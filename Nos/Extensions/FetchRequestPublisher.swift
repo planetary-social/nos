@@ -14,35 +14,38 @@ import CoreData
 /// publishers.
 /// source: https://gist.github.com/josephlord/0d6a9d0871bd2e1b3a3bdbf20c184f88
 /// 
-final public class FetchedResultsControllerPublisher<FetchType> where FetchType : NSFetchRequestResult {
+final class FetchedResultsControllerPublisher<FetchType> where FetchType: NSFetchRequestResult {
     
     private let internalFRCP: FetchedResultsControllerPublisherInternal<FetchType>
     
     /// Pass in a configured fetchResults controller and this class will provide a choice of publishers
     /// for you depending on how you like your errors
-    public init(fetchedResultsController: NSFetchedResultsController<FetchType>,
-                performFetchNotRequired: Bool = false) {
+    init(
+        fetchedResultsController: NSFetchedResultsController<FetchType>, 
+        performFetchNotRequired: Bool = false
+    ) {
         self.internalFRCP = FetchedResultsControllerPublisherInternal(
             fetchedResultsController: fetchedResultsController,
-            performFetch: !performFetchNotRequired)
+            performFetch: !performFetchNotRequired
+        )
     }
     
-    public lazy var publisherWithErrors: AnyPublisher<[FetchType], Error> = {
-        return self.internalFRCP.publisher.eraseToAnyPublisher()
+    lazy var publisherWithErrors: AnyPublisher<[FetchType], Error> = {
+        self.internalFRCP.publisher.eraseToAnyPublisher()
     }()
-    public lazy var publisher: AnyPublisher<[FetchType], Never> = {
-        return self.internalFRCP.publisher.replaceError(with: []).eraseToAnyPublisher()
+    
+    lazy var publisher: AnyPublisher<[FetchType], Never> = {
+        self.internalFRCP.publisher.replaceError(with: []).eraseToAnyPublisher()
     }()
 }
 
-final private class FetchedResultsControllerPublisherInternal<FetchType>
-: NSObject, NSFetchedResultsControllerDelegate
-where FetchType : NSFetchRequestResult {
+// swiftlint:disable:next type_name
+private final class FetchedResultsControllerPublisherInternal<FetchType>: NSObject, NSFetchedResultsControllerDelegate
+    where FetchType: NSFetchRequestResult {
     
     let publisher: PassthroughSubject<[FetchType], Error>
     let fetchedResultsController: NSFetchedResultsController<FetchType>
-    init(fetchedResultsController: NSFetchedResultsController<FetchType>,
-         performFetch: Bool) {
+    init(fetchedResultsController: NSFetchedResultsController<FetchType>, performFetch: Bool) {
         self.fetchedResultsController = fetchedResultsController
         publisher = PassthroughSubject<[FetchType], Error>()
         super.init()

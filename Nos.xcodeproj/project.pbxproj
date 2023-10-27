@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* AuthorCardKnowFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* AuthorCardKnowFollowersView.swift */; };
-		2D8DD2DF2AE2642F00C258CB /* NewPostFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8DD2DE2AE2642F00C258CB /* NewPostFlag.swift */; };
 		3F170C78299D816200BC8F8B /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F170C77299D816200BC8F8B /* AppController.swift */; };
 		3F30020529C1FDD9003D4F8B /* OnboardingStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F30020429C1FDD9003D4F8B /* OnboardingStartView.swift */; };
 		3F30020729C237AB003D4F8B /* OnboardingAgeVerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F30020629C237AB003D4F8B /* OnboardingAgeVerificationView.swift */; };
@@ -427,7 +426,6 @@
 /* Begin PBXFileReference section */
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* AuthorCardKnowFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorCardKnowFollowersView.swift; sourceTree = "<group>"; };
-		2D8DD2DE2AE2642F00C258CB /* NewPostFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostFlag.swift; sourceTree = "<group>"; };
 		3F170C77299D816200BC8F8B /* AppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppController.swift; sourceTree = "<group>"; };
 		3F30020429C1FDD9003D4F8B /* OnboardingStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStartView.swift; sourceTree = "<group>"; };
 		3F30020629C237AB003D4F8B /* OnboardingAgeVerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingAgeVerificationView.swift; sourceTree = "<group>"; };
@@ -1184,7 +1182,6 @@
 				CD2CF38F299E68BE00332116 /* NoteButton.swift */,
 				C9DFA964299BEB96006929C1 /* NoteCard.swift */,
 				C974652D2A3B86600031226F /* NoteCardHeader.swift */,
-				2D8DD2DE2AE2642F00C258CB /* NewPostFlag.swift */,
 				CD76864F29B6503500085358 /* NoteOptionsButton.swift */,
 				C9B708BA2A13BE41006C613A /* NoteTextEditor.swift */,
 				C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */,
@@ -1670,7 +1667,6 @@
 				C94C4CF32AD993CA00F801CA /* UNSErrorView.swift in Sources */,
 				C9A2FCA42AE701510020A5C6 /* SendUSBCController.swift in Sources */,
 				5B0D99032A94090A0039F0C5 /* DoubleTapToPopModifier.swift in Sources */,
-				2D8DD2DF2AE2642F00C258CB /* NewPostFlag.swift in Sources */,
 				5BFF66B42A58853D00AA79DD /* PublishedEventsView.swift in Sources */,
 				C987F85B29BA9ED800B44E7A /* Font.swift in Sources */,
 				C94D6D5C2AC5D14400F0F11E /* WizardTextField.swift in Sources */,

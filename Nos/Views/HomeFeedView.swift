@@ -58,7 +58,7 @@ struct HomeFeedView: View {
             let textFilter = Filter(
                 authorKeys: followedKeys, 
                 kinds: [.text, .delete, .repost, .longFormContent, .report], 
-                limit: 50, 
+                limit: 100, 
                 since: nil
             )
             let textSub = await relayService.openSubscription(with: textFilter)

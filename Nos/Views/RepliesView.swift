@@ -96,14 +96,6 @@ struct RepliesView: View {
             }
             let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
             subscriptionIDs.append(await relayService.openSubscription(with: reportFilter))
-            
-            // places we should do this
-            // - do it here in the RepliesView for all the others whose replies we are showing (I only did it for the root note)
-            // - home feed view
-            // - discover view
-            // - profile
-            // - notifications
-            // - stories view
         }
     }
     

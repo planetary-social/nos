@@ -27,8 +27,8 @@ struct OutOfNetworkView: View {
     
     @ObservedObject var controller: NoteWarningController
     
-    @State private var isTextBoxShown: Bool = false
-    @State private var isOverlayHelpTextBoxShown: Bool = false
+    @State private var isTextBoxShown = false
+    @State private var isOverlayHelpTextBoxShown = false
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -91,8 +91,8 @@ struct OverlayContentReportView: View {
     
     @ObservedObject var controller: NoteWarningController
     
-    @State private var isTextBoxShown: Bool = false
-    @State var isOverlayHelpTextBoxShown: Bool = false
+    @State private var isTextBoxShown = false
+    @State var isOverlayHelpTextBoxShown = false
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -209,8 +209,7 @@ struct ContentWarningMessage: View {
                     if let reportCategory = ReportCategory.findCategory(from: codeSuffix) {
                         reason = reportCategory.displayName
                     }
-                }
-                else if tag[0] == "report" {
+                } else if tag[0] == "report" {
                     reasons.append(reason)
                 } else if tag.count == 3 && !reasonCode.hasPrefix("MOD>") {
                     reasons.append(tag[2])
@@ -264,4 +263,3 @@ struct ContentWarningMessage: View {
             }
     }
 }
-
