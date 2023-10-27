@@ -25,7 +25,7 @@ extension Publisher {
     }
 }
 
-class NoteWarningController: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
+class NoteWarningController: NSObject, ObservableObject {
     
     @Published var showWarning = false
     @Published var userHidWarning = false
@@ -33,17 +33,24 @@ class NoteWarningController: NSObject, ObservableObject, NSFetchedResultsControl
     
     @Published var note: Event?
     @Published var shouldHideOutOfNetwork = true
+    @Published private var showReportWarnings = true
+    @Published private var showOutOfNetworkWarning = true
     
     @Dependency(\.currentUser) var currentUser
     @Dependency(\.persistenceController) var persistenceController
+    @Dependency(\.userDefaults) var userDefaults
     
     @Published var noteReports = [Event]()
     @Published var authorReports = [Event]()
     private var cancellables = [AnyCancellable]()
     private var noteReportsWatcher: NSFetchedResultsController<Event>?
     private var authorReportsWatcher: NSFetchedResultsController<Event>?
+    
+    // swiftlint:disable:next implicitly_unwrapped_optional
     private var objectContext: NSManagedObjectContext!
     
+    // swiftlint:disable:next function_body_length
+    // This function is too long, I should break it up into nicely named functions.
     override init() {
         super.init()
         self.objectContext = persistenceController.viewContext
@@ -135,15 +142,36 @@ class NoteWarningController: NSObject, ObservableObject, NSFetchedResultsControl
             .combineLatest($noteReports, $authorReports, $outOfNetwork)
             .sink { [weak self] (combined) in
                 let (userHidWarning, noteReports, authorReports, outOfNetwork) = combined
+                
                 guard let self else {
                     return 
                 }
-                self.showWarning = !userHidWarning && (!noteReports.isEmpty || !authorReports.isEmpty || outOfNetwork)
+                
+                if userHidWarning {
+                    self.showWarning = false
+                } else if showReportWarnings && !(noteReports.isEmpty || !authorReports.isEmpty) {
+                    self.showWarning = true
+                } else if shouldHideOutOfNetwork && showOutOfNetworkWarning && outOfNetwork {
+                    self.showWarning = true
+                } else {
+                    self.showWarning = false
+                }
             }
             .store(in: &cancellables)
-    }
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        // no-op
+        
+        // Read latest user preferences from user defaults
+        showReportWarnings = userDefaults.object(forKey: showReportWarningsKey) as? Bool ?? true
+        showOutOfNetworkWarning = userDefaults.object(forKey: showOutOfNetworkWarningKey) as? Bool ?? true
+        NotificationCenter.default
+            .publisher(for: UserDefaults.didChangeNotification)
+            .sink { [weak self] _ in
+                guard let self else {
+                    return
+                }
+                
+                showReportWarnings = userDefaults.object(forKey: showReportWarningsKey) as? Bool ?? true
+                showOutOfNetworkWarning = userDefaults.object(forKey: showOutOfNetworkWarningKey) as? Bool ?? true
+            }
+            .store(in: &cancellables)
     }
 }

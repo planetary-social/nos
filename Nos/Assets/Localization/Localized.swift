@@ -89,6 +89,11 @@ enum Localized: String, Localizable, CaseIterable {
     case failedToExportLogs = "Failed to export logs."
     case appVersion = "App Version:"
     case allPublishedEvents = "All published events"
+    case feedSettings = "Feed Settings"
+    case useReportsFromFollows = "Use reports from my follows"
+    case useReportsFromFollowsDescription = "When someone you follow reports a note or user, we'll add a content warning to their notes."
+    case showOutOfNetworkWarnings = "Show Out of Network warnings"
+    case showOutOfNetworkWarningsDescription = "Hide notes from users outside my friends of friends circle behind a content warning."
     
     case privateKey = "Private Key"
     case logout = "Logout"

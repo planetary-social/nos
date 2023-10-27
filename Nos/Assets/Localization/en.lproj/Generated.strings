@@ -33,6 +33,11 @@
 "Localized.failedToExportLogs" = "Failed to export logs.";
 "Localized.appVersion" = "App Version:";
 "Localized.allPublishedEvents" = "All published events";
+"Localized.feedSettings" = "Feed Settings";
+"Localized.useReportsFromFollows" = "Use reports from my follows";
+"Localized.useReportsFromFollowsDescription" = "When someone you follow reports a note or user, we'll add a content warning to their notes.";
+"Localized.showOutOfNetworkWarnings" = "Show Out of Network warnings";
+"Localized.showOutOfNetworkWarningsDescription" = "Hide notes from users outside my friends of friends circle behind a content warning.";
 "Localized.privateKey" = "Private Key";
 "Localized.logout" = "Logout";
 "Localized.myKeyIsBackedUp" = "My key is backed up";
