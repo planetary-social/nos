@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (88)] - 2023-10-27Z
+
 - Added a content warning when a user you follow has reported the content
 - Added toggles to the settings screen to disable report-based and network-based content warnings
 
