@@ -122,9 +122,7 @@ struct NoteCard: View {
                                 }
                             }
                             Spacer()
-                            RepostButton(note: note) {
-                                await repostNote()
-                            }
+                            RepostButton(note: note) 
                             LikeButton(note: note)
                             ReplyButton(note: note, replyAction: replyAction)
                         }
@@ -182,33 +180,6 @@ struct NoteCard: View {
         }
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
-    }
-
-    func repostNote() async {
-        guard let keyPair = currentUser.keyPair else {
-            return
-        }
-        
-        var tags: [[String]] = []
-        if let id = note.identifier {
-            tags.append(["e", id] + note.seenOnRelayURLs)
-        }
-        if let pubKey = note.author?.publicKey?.hex {
-            tags.append(["p", pubKey])
-        }
-        
-        let jsonEvent = JSONEvent(
-            pubKey: keyPair.publicKeyHex,
-            kind: .repost,
-            tags: tags,
-            content: note.jsonString ?? ""
-        )
-        
-        do {
-            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
-        } catch {
-            Log.info("Error creating event for like")
-        }
     }
 
     var cornerRadius: CGFloat {
