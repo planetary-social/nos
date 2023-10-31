@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (90)] - 2023-10-31Z
+
 - Fixed a crash related to content reports.
 
 ## [0.1 (89)] - 2023-10-31Z
