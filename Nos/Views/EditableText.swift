@@ -49,6 +49,7 @@ struct EditableText: UIViewRepresentable {
         view.textContainer.maximumNumberOfLines = 0
         view.textContainer.lineBreakMode = .byWordWrapping
         view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        view.autocorrectionType = .no // temporary fix to work around mac bug
 
         context.coordinator.observer = NotificationCenter.default.addObserver(
             forName: .mentionAddedNotification,
