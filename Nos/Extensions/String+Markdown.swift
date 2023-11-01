@@ -58,7 +58,7 @@ extension String {
         
         replaceOccurrences(of: "^\\s*", with: "", in: mutableString)
         replaceOccurrences(of: "\\s*$", with: "", in: mutableString)
-        replaceOccurrences(of: "\\n{2,}", with: "\n", in: mutableString)
+        replaceOccurrences(of: "\\n{3,}", with: "\n\n", in: mutableString)
         
         return (mutableString as String, urls)
     }
