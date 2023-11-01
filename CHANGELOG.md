@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fix a bug where linking a Universal Name would overwrite your existing NIP-05.
+
 ## [0.1 (90)] - 2023-10-31Z
 
 - Fixed a crash related to content reports.
