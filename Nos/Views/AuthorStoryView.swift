@@ -47,7 +47,7 @@ struct AuthorStoryView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 Group {
                     if let selectedNote {
-                        StoryNoteView(note: selectedNote, minHeight: geometry.size.height)
+                        StoryNoteView(note: selectedNote, minHeight: geometry.size.height - 40)
                     } else {
                         EmptyView()
                     }
@@ -69,7 +69,7 @@ struct AuthorStoryView: View {
             } label: {
                 Color.red.opacity(0)
             }
-            .frame(maxWidth: 100, maxHeight: .infinity)
+            .frame(maxWidth: 60, maxHeight: .infinity)
         }
         .overlay(alignment: .trailing) {
             Button {
@@ -85,7 +85,7 @@ struct AuthorStoryView: View {
             } label: {
                 Color.green.opacity(0)
             }
-            .frame(maxWidth: 100, maxHeight: .infinity)
+            .frame(maxWidth: 60, maxHeight: .infinity)
         }
         .overlay(alignment: .topLeading) {
             VStack {
@@ -147,7 +147,7 @@ struct AuthorStoryView: View {
             }
         }
         .overlay(alignment: .bottomLeading) {
-            if let selectedNote {
+            if let selectedNote, selectedNote.kind != EventKind.repost.rawValue {
                 BottomOverlay(note: selectedNote)
             } else {
                 EmptyView()
