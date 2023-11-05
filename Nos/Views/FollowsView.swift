@@ -22,7 +22,7 @@ struct FollowersDestination: Hashable {
 struct FollowsView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject var router: Router
+    @Environment(Router.self) var router
 
     /// Screen title
     var title: Localized

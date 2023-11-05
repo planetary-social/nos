@@ -13,7 +13,7 @@ struct ThreadView: View {
 
     var thread: [Event] = []
     
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
     
     /// Takes a root `Event`, and an array of all replies to the parent note of this thread,
     /// and builds the longest possible thread from that array of all replies.
@@ -156,7 +156,7 @@ struct ThreadView_Previews: PreviewProvider {
         ThreadView(root: rootNote, allReplies: [replyNote, secondReply])
             .environment(\.managedObjectContext, emptyPreviewContext)
             .environmentObject(emptyRelayService)
-            .environmentObject(router)
-            .environmentObject(currentUser)
+            .environment(router)
+            .environment(currentUser)
     }
 }

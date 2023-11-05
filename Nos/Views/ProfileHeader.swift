@@ -14,7 +14,7 @@ struct ProfileHeader: View {
     @ObservedObject var author: Author
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
 
     @State private var subscriptionId: String = ""
     
@@ -35,7 +35,7 @@ struct ProfileHeader: View {
         followersResult.map { $0 }
     }
     
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
     
     init(author: Author) {
         self.author = author

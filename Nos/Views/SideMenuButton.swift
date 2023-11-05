@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SideMenuButton: View {
     
-    @EnvironmentObject var router: Router
+    @Environment(Router.self) var router
     
     var body: some View {
         Button {

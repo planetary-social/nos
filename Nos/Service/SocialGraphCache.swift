@@ -12,13 +12,13 @@ import Logger
 /// A representation of the people a given user follows and the people they follow designed to cache this data in 
 /// memory and make it cheap to access. This class watches the database for changes to the social graph and updates 
 /// itself accordingly.
-@MainActor class SocialGraphCache: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
+@MainActor @Observable class SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: Public interface 
     
-    @Published var inNetworkKeys = [HexadecimalString]()
+    var inNetworkKeys = [HexadecimalString]()
     
-    @Published var followedKeys = [HexadecimalString]()  
+    var followedKeys = [HexadecimalString]()  
     
     func contains(_ key: HexadecimalString?) -> Bool {
         guard let key, let userKey else {

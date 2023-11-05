@@ -11,12 +11,12 @@ import SwiftUI
 /// A version of the ProfileView that is displayed in the main tab bar
 struct ProfileTab: View {
     
-    @EnvironmentObject var currentUser: CurrentUser
+    @Environment(CurrentUser.self) var currentUser
     @ObservedObject var author: Author
     
     @Binding var path: NavigationPath
     
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
 
     var body: some View {
         NavigationStack(path: $path) {
