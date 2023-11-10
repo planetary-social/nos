@@ -33,6 +33,10 @@ class PersistenceController {
         container.viewContext
     }
     
+    var creationContext: NSManagedObjectContext {
+        newBackgroundContext()
+    }
+    
     lazy var backgroundViewContext = {
         newBackgroundContext()
     }()
@@ -124,7 +128,7 @@ class PersistenceController {
         let follows = try context.fetch(Follow.followsRequest(sources: authors))
         
         if let publicKey = currentUser.publicKeyHex {
-            let currentAuthor = try Author.findOrCreate(by: publicKey, context: context)
+            let currentAuthor = try Author().findOrCreate(by: publicKey, context: context)
             currentAuthor.follows = Set(follows)
         }
     }
@@ -240,7 +244,7 @@ class PersistenceController {
                         Log.error("Found an EventReference with no eventID")
                         continue
                     }
-                    let referencedEvent = try Event.findOrCreateStubBy(id: eventID, context: context)
+                    let referencedEvent = try Event().findOrCreateStubBy(id: eventID, context: context)
                     eventReference.referencedEvent = referencedEvent
                 }
                 

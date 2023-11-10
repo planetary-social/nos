@@ -19,7 +19,7 @@ public class NosNotification: NSManagedObject {
         authorKey: HexadecimalString, 
         in context: NSManagedObjectContext
     ) throws -> NosNotification? {
-        let author = try Author.findOrCreate(by: authorKey, context: context)
+        let author = try Author().findOrCreate(by: authorKey, context: context)
         if try NosNotification.find(by: eventID, in: context) != nil {
             return nil
         } else {

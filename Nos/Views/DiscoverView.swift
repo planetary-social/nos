@@ -228,7 +228,7 @@ struct DiscoverView: View {
         guard let publicKey = PublicKey(npub: strippedString) ?? PublicKey(hex: strippedString) else {
             return nil
         }
-        guard let author = try? Author.findOrCreate(by: publicKey.hex, context: viewContext) else {
+        guard let author = try? Author().findOrCreate(by: publicKey.hex, context: viewContext) else {
             return nil
         }
         try? viewContext.saveIfNeeded()
