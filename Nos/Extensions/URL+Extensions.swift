@@ -21,4 +21,20 @@ extension URL {
         }
         return string
     }
+    
+    var truncatedMarkdownLink: String {
+        guard var host = host() else {
+            return "[\(absoluteString)](\(absoluteString))"
+        }
+        
+        if host.hasPrefix("www.") {
+            host = String(host.dropFirst(4))
+        }
+        
+        if path().isEmpty {
+            return "[\(host)](\(absoluteString))"
+        } else {
+            return "[\(host)/...](\(absoluteString))"
+        }
+    }
 }
