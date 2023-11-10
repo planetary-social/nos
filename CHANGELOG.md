@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed incorrect ellipsis applied to long notes.
 - Changed note rendering to retain more newlines. 
 - Show reposts in stories.
+- Show truncated URLs in notes instead of hiding them completely.
 
 ## [0.1 (86)] - 2023-10-25Z
 
