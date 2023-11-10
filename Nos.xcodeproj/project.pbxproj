@@ -70,6 +70,7 @@
 		C905B0772A619E99009B8A78 /* LinkPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C905B0762A619E99009B8A78 /* LinkPreview.swift */; };
 		C90862BE29E9804B00C35A71 /* NosPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90862BD29E9804B00C35A71 /* NosPerformanceTests.swift */; };
 		C913DA0A2AEAF52B003BDD6D /* NoteWarningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C913DA092AEAF52B003BDD6D /* NoteWarningController.swift */; };
+		C90B16B82AFED96300CB4B85 /* URLExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90B16B72AFED96300CB4B85 /* URLExtensionTests.swift */; };
 		C913DA0C2AEB2EBF003BDD6D /* FetchRequestPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C913DA0B2AEB2EBF003BDD6D /* FetchRequestPublisher.swift */; };
 		C913DA0E2AEB3265003BDD6D /* WarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C913DA0D2AEB3265003BDD6D /* WarningView.swift */; };
 		C92DF80529C25DE900400561 /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92DF80429C25DE900400561 /* URL+Extensions.swift */; };
@@ -484,6 +485,7 @@
 		C90862BB29E9804B00C35A71 /* NosPerformanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NosPerformanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C90862BD29E9804B00C35A71 /* NosPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosPerformanceTests.swift; sourceTree = "<group>"; };
 		C913DA092AEAF52B003BDD6D /* NoteWarningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteWarningController.swift; sourceTree = "<group>"; };
+		C90B16B72AFED96300CB4B85 /* URLExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLExtensionTests.swift; sourceTree = "<group>"; };
 		C913DA0B2AEB2EBF003BDD6D /* FetchRequestPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchRequestPublisher.swift; sourceTree = "<group>"; };
 		C913DA0D2AEB3265003BDD6D /* WarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarningView.swift; sourceTree = "<group>"; };
 		C92A04DD2A58B02B00C844B8 /* Nos 11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 11.xcdatamodel"; sourceTree = "<group>"; };
@@ -1028,6 +1030,7 @@
 				CD27177529A7C8B200AE8888 /* sample_replies.json */,
 				C9DEC005298947900078B43A /* sample_data.json */,
 				C9ADB134299288230075E7F8 /* KeyFixture.swift */,
+				C90B16B72AFED96300CB4B85 /* URLExtensionTests.swift */,
 			);
 			path = Fixtures;
 			sourceTree = "<group>";
@@ -1821,6 +1824,7 @@
 				C936B4632A4CB01C00DF1EB9 /* PushNotificationService.swift in Sources */,
 				C9C5475A2A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift in Sources */,
 				CD09A74929A521210063464F /* Router.swift in Sources */,
+				C90B16B82AFED96300CB4B85 /* URLExtensionTests.swift in Sources */,
 				C93EC2F829C351470012EE2A /* Optional+Unwrap.swift in Sources */,
 				C9C5475C2A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift in Sources */,
 				C9B678DF29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */,
