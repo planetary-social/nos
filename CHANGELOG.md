@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added a confirmation before reposting a note.
+- Added the ability to delete your reposts by tapping the repost button again.
+- Fixed some cases where deleted notes were still being displayed.
+
 ## [0.1 (92)] - 2023-11-02Z
 
 - Show reposts in stories.
