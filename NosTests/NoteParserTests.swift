@@ -52,7 +52,7 @@ final class NoteNoteParserTests: XCTestCase {
         let expectedContent = "hello @\(name)"
         let tags = [["p", hex]]
         let context = try XCTUnwrap(context)
-        let author = try Author.findOrCreate(by: hex, context: context)
+        let author = try Author().findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
@@ -132,7 +132,7 @@ final class NoteNoteParserTests: XCTestCase {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags = [["p", hex]]
         let context = try XCTUnwrap(context)
-        let author = try Author.findOrCreate(by: hex, context: context)
+        let author = try Author().findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
@@ -163,7 +163,7 @@ final class NoteNoteParserTests: XCTestCase {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags = [["p", hex]]
         let context = try XCTUnwrap(context)
-        let author = try Author.findOrCreate(by: hex, context: context)
+        let author = try Author().findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
@@ -179,7 +179,7 @@ final class NoteNoteParserTests: XCTestCase {
         let hex = "0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6"
         let tags = [["p", hex]]
         let context = try XCTUnwrap(context)
-        let author = try Author.findOrCreate(by: hex, context: context)
+        let author = try Author().findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)

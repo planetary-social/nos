@@ -23,7 +23,7 @@ final class SocialGraphTests: XCTestCase {
 
     func testEmpty() async throws {
         // Arrange
-        _ = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        _ = try Author().findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
         
         // Act
         let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
@@ -36,8 +36,8 @@ final class SocialGraphTests: XCTestCase {
     
     func testOneFollower() async throws {
         // Arrange
-        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
-        let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
+        let alice = try Author().findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        let bob = try Author().findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
         let follow = try Follow.findOrCreate(
             source: alice,
             destination: bob,
@@ -61,8 +61,8 @@ final class SocialGraphTests: XCTestCase {
     
     func testFollow() async throws {
         // Arrange
-        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
-        let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
+        let alice = try Author().findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        let bob = try Author().findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
         
         // Act
         let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
@@ -86,9 +86,9 @@ final class SocialGraphTests: XCTestCase {
     
     func testTwoFollows() async throws {
         // Arrange
-        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
-        let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
-        let eve = try Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: testContext)
+        let alice = try Author().findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        let bob = try Author().findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
+        let eve = try Author().findOrCreate(by: KeyFixture.eve.publicKeyHex, context: testContext)
         
         // Act
         let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)

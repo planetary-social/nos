@@ -100,7 +100,7 @@ public class Follow: NosManagedObject {
         
         follow.source = author
 
-        let followedAuthor = try Author.findOrCreate(by: followedKey, context: context)
+        let followedAuthor = try Author().findOrCreate(by: followedKey, context: context)
         follow.destination = followedAuthor
         
         if jsonTag.count > 2, !jsonTag[2].isEmpty {

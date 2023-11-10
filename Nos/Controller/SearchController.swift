@@ -82,7 +82,7 @@ class SearchController: ObservableObject {
                 try Task.checkCancellation()
                 try await self.context.perform {
                     for pubKey in pubKeys {
-                        let author = try Author.findOrCreate(by: pubKey, context: self.context)
+                        let author = try Author().findOrCreate(by: pubKey, context: self.context)
                         author.uns = query
                     }
                 }
