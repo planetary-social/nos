@@ -132,7 +132,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     
     @MainActor func setUp() {
         if let keyPair {
-            author = try? Author().findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+            author = try? Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
             authorWatcher = NSFetchedResultsController(
                 fetchRequest: Author.request(by: keyPair.publicKeyHex),
                 managedObjectContext: viewContext,
@@ -165,7 +165,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     
     @MainActor func createAccount() async throws {
         let keyPair = KeyPair()!
-        let author = try Author().findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+        let author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
         try viewContext.save()
 
         await setKeyPair(keyPair)
@@ -244,7 +244,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             }
             
             let followData = await self?.backgroundContext.perform {
-                let follows = try? Author().findOrCreate(
+                let follows = try? Author.findOrCreate(
                     by: publicKeyHex,
                     context: backgroundContext
                 ).follows

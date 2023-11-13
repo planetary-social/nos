@@ -33,22 +33,25 @@ class PersistenceController {
         container.viewContext
     }
     
-    var creationContext: NSManagedObjectContext {
+    lazy var creationContext = {
         newBackgroundContext()
-    }
+    }()
     
     lazy var backgroundViewContext = {
         newBackgroundContext()
     }()
     
     var container: NSPersistentContainer
+    var model: NSManagedObjectModel
 
     init(inMemory: Bool = false) {
         let modelURL = Bundle.current.url(forResource: "Nos", withExtension: "momd")!
-        container = NSPersistentContainer(
-            name: "Nos",
-            managedObjectModel: NSManagedObjectModel(contentsOf: modelURL)!
-        )
+        model = NSManagedObjectModel(contentsOf: modelURL)!
+        container = NSPersistentContainer(name: "Nos", managedObjectModel: model)
+        setUp(inMemory: inMemory)
+    }
+    
+    func setUp(inMemory: Bool) {
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
@@ -59,6 +62,15 @@ class PersistenceController {
         let mergeType = NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType
         container.viewContext.mergePolicy = NSMergePolicy(merge: mergeType)
     }
+    
+    #if DEBUG
+    func resetForTesting() {
+        container = NSPersistentContainer(name: "Nos", managedObjectModel: model)
+        setUp(inMemory: true)
+        creationContext = newBackgroundContext()
+        backgroundViewContext = newBackgroundContext()
+    }
+    #endif
     
     private func loadPersistentStores(from container: NSPersistentContainer) {
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
@@ -128,7 +140,7 @@ class PersistenceController {
         let follows = try context.fetch(Follow.followsRequest(sources: authors))
         
         if let publicKey = currentUser.publicKeyHex {
-            let currentAuthor = try Author().findOrCreate(by: publicKey, context: context)
+            let currentAuthor = try Author.findOrCreate(by: publicKey, context: context)
             currentAuthor.follows = Set(follows)
         }
     }
@@ -244,7 +256,7 @@ class PersistenceController {
                         Log.error("Found an EventReference with no eventID")
                         continue
                     }
-                    let referencedEvent = try Event().findOrCreateStubBy(id: eventID, context: context)
+                    let referencedEvent = try Event.findOrCreateStubBy(id: eventID, context: context)
                     eventReference.referencedEvent = referencedEvent
                 }
                 

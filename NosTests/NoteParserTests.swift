@@ -15,21 +15,13 @@ final class NoteNoteParserTests: XCTestCase {
 
     @Dependency(\.persistenceController) private var persistenceController
     var context: NSManagedObjectContext?
+    var continuation: DependencyValues.Continuation?
 
     override func setUp() async throws {
-        try await super.setUp()
-        let managedObjectModel = persistenceController.container.managedObjectModel
-        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
-        do {
-            try coordinator.addPersistentStore(ofType: NSInMemoryStoreType, configurationName: nil, at: nil)
-        } catch {
-            XCTFail("Couldn't create in memory store")
-        }
-        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        context.persistentStoreCoordinator = coordinator
-        self.context = context
+        persistenceController.resetForTesting()
+        context = persistenceController.viewContext
     }
-
+    
     /// Example taken from [NIP-27](https://github.com/nostr-protocol/nips/blob/master/27.md)
     func testMentionWithNPub() throws {
         let mention = "@mattn"
@@ -52,7 +44,7 @@ final class NoteNoteParserTests: XCTestCase {
         let expectedContent = "hello @\(name)"
         let tags = [["p", hex]]
         let context = try XCTUnwrap(context)
-        let author = try Author().findOrCreate(by: hex, context: context)
+        let author = try Author.findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
@@ -64,13 +56,13 @@ final class NoteNoteParserTests: XCTestCase {
         XCTAssertEqual(links.first?.value, URL(string: "@\(hex)"))
     }
 
-    func testContentWithNIP08MentionToUnknownAuthor() throws {
+    func testContentWithNIP08MentionToUnknownAuthor() async throws {
         let content = "hello #[0]"
         let displayName = "npub1937vv..."
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let expectedContent = "hello @\(displayName)"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(context)
+        let context = persistenceController.viewContext
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
@@ -132,7 +124,7 @@ final class NoteNoteParserTests: XCTestCase {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags = [["p", hex]]
         let context = try XCTUnwrap(context)
-        let author = try Author().findOrCreate(by: hex, context: context)
+        let author = try Author.findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
@@ -163,7 +155,7 @@ final class NoteNoteParserTests: XCTestCase {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags = [["p", hex]]
         let context = try XCTUnwrap(context)
-        let author = try Author().findOrCreate(by: hex, context: context)
+        let author = try Author.findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
@@ -179,7 +171,7 @@ final class NoteNoteParserTests: XCTestCase {
         let hex = "0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6"
         let tags = [["p", hex]]
         let context = try XCTUnwrap(context)
-        let author = try Author().findOrCreate(by: hex, context: context)
+        let author = try Author.findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)

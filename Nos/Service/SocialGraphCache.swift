@@ -53,42 +53,37 @@ import Logger
             super.init()
             return
         }
+        
+        super.init()
 
-        let user: Author
         do {
-            user = try context.performAndWait {
-                let author = try Author().findOrCreate(by: userKey, context: context)
-                try? context.saveIfNeeded()
-                return author
+            try context.performAndWait {
+                let user = try Author.findOrCreate(by: userKey, context: context)
+                followedKeys.append(userKey)
+                userWatcher = NSFetchedResultsController(
+                    fetchRequest: Author.request(by: userKey),
+                    managedObjectContext: context,
+                    sectionNameKeyPath: nil,
+                    cacheName: "SocialGraphCache.userWatcher"
+                )
+                oneHopWatcher = NSFetchedResultsController(
+                    fetchRequest: Author.oneHopRequest(for: user),
+                    managedObjectContext: context,
+                    sectionNameKeyPath: nil,
+                    cacheName: "SocialGraphCache.oneHopWatcher"
+                )
             }
         } catch {
             Log.error(error.localizedDescription)
-            super.init()
             return
         }
-        
-        super.init()
-        
-        followedKeys.append(userKey)
-        userWatcher = NSFetchedResultsController(
-            fetchRequest: Author.request(by: userKey),
-            managedObjectContext: context,
-            sectionNameKeyPath: nil,
-            cacheName: "SocialGraphCache.userWatcher"
-        )
-        oneHopWatcher = NSFetchedResultsController(
-            fetchRequest: Author.oneHopRequest(for: user),
-            managedObjectContext: context,
-            sectionNameKeyPath: nil,
-            cacheName: "SocialGraphCache.oneHopWatcher"
-        )
         
         userWatcher?.delegate = self
         oneHopWatcher?.delegate = self
         do {
-            try context.performAndWait {
-                try self.userWatcher?.performFetch()
-                try self.oneHopWatcher?.performFetch()
+            try self.userWatcher?.performFetch()
+            try self.oneHopWatcher?.performFetch()
+            context.performAndWait {
                 self.oneHopWatcher?.fetchedObjects?.forEach { author in
                     guard let followedKey = author.hexadecimalPublicKey else {
                         return

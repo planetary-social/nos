@@ -70,7 +70,7 @@ enum NoteParser {
             }
             let findAndReplaceAuthorReference: (String) -> String = { hex in
                 context.performAndWait {
-                    if let author = try? Author().findOrCreate(by: hex, context: context) {
+                    if let author = try? Author.findOrCreate(by: hex, context: context) {
                         return "\(prefix)[@\(author.safeName)](@\(hex))"
                     } else {
                         return "\(prefix)[@\(hex)](@\(hex))"
@@ -79,7 +79,7 @@ enum NoteParser {
             }
             let findAndReplaceEventReference: (String) -> String = { hex in
                 context.performAndWait {
-                    if let event = try? Event().findOrCreateStubBy(id: hex, context: context),
+                    if let event = try? Event.findOrCreateStubBy(id: hex, context: context),
                         let bech32NoteID = event.bech32NoteID {
                         return "\(prefix)[@\(bech32NoteID)](%\(hex))"
                     } else {

@@ -44,7 +44,7 @@ struct PreviewData {
     }()
     
     lazy var alice: Author = {
-        let author = try! Author().findOrCreate(by: KeyFixture.alice.publicKeyHex, context: previewContext)
+        let author = try! Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: previewContext)
         author.name = "Alice"
         author.nip05 = "alice@nos.social"
         author.profilePhotoURL = URL(string: "https://github.com/planetary-social/nos/assets/1165004/07f83f00-4555-4db3-85fc-f1a05b1908a2")
@@ -64,7 +64,7 @@ struct PreviewData {
     }()
     
     lazy var eve: Author = {
-        let author = try! Author().findOrCreate(by: KeyFixture.eve.publicKeyHex, context: previewContext)
+        let author = try! Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: previewContext)
         author.name = "Eve"
         author.uns = "eve"
         author.nip05 = "eve@nos.social"

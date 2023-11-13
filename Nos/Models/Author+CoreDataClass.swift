@@ -19,8 +19,6 @@ enum AuthorError: Error {
 public class Author: NosManagedObject {
     
     @Dependency(\.currentUser) var currentUser
-    @Dependency(\.crashReporting) private var crashReporting
-    @Dependency(\.persistenceController) private var persistenceController
     
     var npubString: String? {
         publicKey?.npub
@@ -105,7 +103,10 @@ public class Author: NosManagedObject {
     }
     
     @discardableResult
-    func findOrCreate(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author {
+    class func findOrCreate(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author {
+        @Dependency(\.persistenceController) var persistenceController
+        @Dependency(\.crashReporting) var crashReporting
+        
         if let author = try? Author.find(by: pubKey, context: context) {
             return author
         } else {
