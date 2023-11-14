@@ -88,7 +88,7 @@ struct NotificationCard: View {
                 await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
                     noteID: viewModel.id,
                     using: relayService,
-                    in: backgroundContext
+                    in: persistenceController.parseContext
                 )
             }
         }
@@ -99,7 +99,7 @@ struct NotificationCard: View {
             }
         }
         .task(priority: .userInitiated) {
-            self.content = await viewModel.loadContent(in: viewContext)
+            self.content = await viewModel.loadContent(in: persistenceController.parseContext)
         }
     }
 }

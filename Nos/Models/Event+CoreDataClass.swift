@@ -76,6 +76,7 @@ extension FetchedResults where Element == Event {
 public class Event: NosManagedObject {
     
     @Dependency(\.currentUser) private var currentUser
+    @Dependency(\.persistenceController) private var persistenceController
     
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"

@@ -33,12 +33,19 @@ class PersistenceController {
         container.viewContext
     }
     
+    /// A context to synchronize creation of Events and Authors so we don't end up with duplicates.
     lazy var creationContext = {
         newBackgroundContext()
     }()
     
+    /// A context for parsing Nostr events from relays.
+    lazy var parseContext = {
+        self.newBackgroundContext()
+    }()
+    
+    /// A context for Views to do expensive queries that we want to keep off the viewContext.
     lazy var backgroundViewContext = {
-        newBackgroundContext()
+        self.newBackgroundContext()
     }()
     
     private(set) var container: NSPersistentContainer
@@ -80,6 +87,7 @@ class PersistenceController {
         setUp()
         creationContext = newBackgroundContext()
         backgroundViewContext = newBackgroundContext()
+        parseContext = newBackgroundContext()
     }
     #endif
     
@@ -183,6 +191,7 @@ class PersistenceController {
     /// - delete any other models that are orphaned by the previous deletions
     /// - fix EventReferences whose referencedEvent was deleted by createing a stubbed Event
     @MainActor func cleanupEntities() {
+        return
         // this function was written in a hurry and probably should be refactored and tested thorougly.
         guard cleanupTask == nil else {
             Log.info("Core Data cleanup task already running. Aborting.")
@@ -195,7 +204,7 @@ class PersistenceController {
         
         cleanupTask = Task {
             defer { self.cleanupTask = nil }
-            let context = backgroundViewContext
+            let context = parseContext
             let startTime = Date.now
             Log.info("Starting Core Data cleanup...")
             

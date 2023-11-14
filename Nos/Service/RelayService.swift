@@ -34,7 +34,7 @@ final class RelayService: ObservableObject {
         self.subscriptions = RelaySubscriptionManager()
         @Dependency(\.persistenceController) var persistenceController
         self.backgroundContext = persistenceController.newBackgroundContext()
-        self.parseContext = persistenceController.newBackgroundContext()
+        self.parseContext = persistenceController.parseContext
         parseContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         
         self.eventProcessingLoop = Task(priority: .userInitiated) { [weak self] in

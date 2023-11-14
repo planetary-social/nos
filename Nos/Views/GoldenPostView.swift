@@ -76,7 +76,7 @@ struct GoldenPostView: View {
             let backgroundContext = persistenceController.backgroundViewContext
             let parsedAttributedContent = await Event.attributedContent(
                 noteID: note.identifier,
-                context: backgroundContext
+                context: persistenceController.parseContext
             ) 
             withAnimation(.easeIn(duration: 0.1)) {
                 self.noteContent = .loaded(parsedAttributedContent)
