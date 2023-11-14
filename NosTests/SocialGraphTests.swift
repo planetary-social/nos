@@ -13,13 +13,19 @@ import Dependencies
 
 final class SocialGraphTests: XCTestCase {
     
-    @Dependency(\.persistenceController) var persistenceController
     var testContext: NSManagedObjectContext!
     
-    override func setUp() async throws {
-        try await super.setUp()
-        persistenceController.resetForTesting()
-        testContext = persistenceController.newBackgroundContext()
+    override func invokeTest() {
+        // For some reason that I can't figure out using an in-memory persistent store causes these tests to take
+        // several minutes instead of seconds, so we are using an on-disk store for these tests instead.
+        withDependencies { dependencies in
+            let persistenceController = PersistenceController(containerName: "NosTests")
+            persistenceController.resetForTesting()
+            dependencies.persistenceController = persistenceController
+            self.testContext = persistenceController.viewContext
+        } operation: {
+            super.invokeTest()
+        }
     }
 
     func testEmpty() async throws {

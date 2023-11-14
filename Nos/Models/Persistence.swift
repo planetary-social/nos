@@ -41,17 +41,19 @@ class PersistenceController {
         newBackgroundContext()
     }()
     
-    var container: NSPersistentContainer
-    var model: NSManagedObjectModel
+    private(set) var container: NSPersistentContainer
+    private var model: NSManagedObjectModel
+    private var inMemory: Bool
 
-    init(inMemory: Bool = false) {
+    init(containerName: String = "Nos", inMemory: Bool = false) {
+        self.inMemory = inMemory
         let modelURL = Bundle.current.url(forResource: "Nos", withExtension: "momd")!
         model = NSManagedObjectModel(contentsOf: modelURL)!
-        container = NSPersistentContainer(name: "Nos", managedObjectModel: model)
-        setUp(inMemory: inMemory)
+        container = NSPersistentContainer(name: containerName, managedObjectModel: model)
+        setUp()
     }
     
-    func setUp(inMemory: Bool) {
+    func setUp() {
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
@@ -66,7 +68,16 @@ class PersistenceController {
     #if DEBUG
     func resetForTesting() {
         container = NSPersistentContainer(name: "Nos", managedObjectModel: model)
-        setUp(inMemory: true)
+        if !inMemory {
+            container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+                guard let storeURL = storeDescription.url else {
+                    Log.error("Could not get store URL")
+                    return
+                }
+                Self.clearCoreData(store: storeURL, in: self.container)
+            })
+        }
+        setUp()
         creationContext = newBackgroundContext()
         backgroundViewContext = newBackgroundContext()
     }
