@@ -74,7 +74,6 @@ import Logger
             }
         } catch {
             Log.error(error.localizedDescription)
-            return
         }
         
         userWatcher?.delegate = self

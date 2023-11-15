@@ -85,6 +85,7 @@ class PersistenceController {
             })
         }
         setUp()
+        viewContext.reset()
         creationContext = newBackgroundContext()
         backgroundViewContext = newBackgroundContext()
         parseContext = newBackgroundContext()

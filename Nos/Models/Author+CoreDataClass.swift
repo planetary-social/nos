@@ -233,7 +233,7 @@ public class Author: NosManagedObject {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.lastUpdatedContactList, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: "hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey",
+            format: "ANY followers.source = %@",
             author
         )
         return fetchRequest
