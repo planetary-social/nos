@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a content warning when a user you follow has reported the content
 - Added toggles to the settings screen to disable report-based and network-based content warnings
+- Fixed incorrect ellipsis applied to long notes.
+- Changed note rendering to retain more newlines. 
+- Show reposts in stories.
 
 ## [0.1 (86)] - 2023-10-25Z
 

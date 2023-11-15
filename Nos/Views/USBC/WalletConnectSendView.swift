@@ -114,7 +114,9 @@ struct WalletConnectSendView: View {
             
             HStack {
                 Spacer()
-                Button(action: { controller.state = .pair }, label: {
+                Button(action: { 
+                    Task { await controller.reconnect() }
+                }, label: {
                     HighlightedText(
                         text: .reconnectWallet, 
                         highlightedWord: Localized.reconnectWallet.string, 

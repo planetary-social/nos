@@ -24,7 +24,7 @@ struct SendUSBCWizard: View {
             LinearGradient.diagonalAccent
             
             // Background color
-            Color.menuBorderColor
+            Color.appBg
                 .cornerRadius(cornerRadius, corners: inDrawer ? [.topLeft, .topRight] : [.allCorners])
                 .padding(.top, borderWidth)
                 .padding(.horizontal, borderWidth)
@@ -43,7 +43,6 @@ struct SendUSBCWizard: View {
                     WalletConnectErrorView(controller: controller, error: error)
                 }
             }
-            .background(Color.appBg)
             .padding(.top, borderWidth)
             .padding(.horizontal, borderWidth)
             .padding(.bottom, inDrawer ? 0 : borderWidth)

@@ -387,9 +387,20 @@ final class NoteNoteParserTests: XCTestCase {
         XCTAssertEqual(actualURLs, expectedURLs)
     }
     
-    func testExtractURLsRemovesDuplicateNewlines() throws {
+    func testExtractURLsRetainsUpToTwoDuplicateNewlines() throws {
         let string = "Hello!\n\nWorld!"
-        let expectedString = "Hello!\nWorld!"
+        let expectedString = "Hello!\n\nWorld!"
+        let expectedURLs: [URL] = []
+
+        // Act
+        let (actualString, actualURLs) = string.extractURLs()
+        XCTAssertEqual(actualString, expectedString)
+        XCTAssertEqual(actualURLs, expectedURLs)
+    }
+    
+    func testExtractURLsReducesTooManyDuplicateNewlinesToTwo() throws {
+        let string = "Hello!\n\n\nWorld!"
+        let expectedString = "Hello!\n\nWorld!"
         let expectedURLs: [URL] = []
 
         // Act

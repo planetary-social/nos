@@ -95,18 +95,37 @@ struct StoryNoteView: View {
                 if shouldShowSpacing {
                     Spacer(minLength: 85)
                 }
-                if note.kind == EventKind.text.rawValue, !contentLinks.isEmpty {
-                    TabView {
-                        ForEach(contentLinks, id: \.self.absoluteURL) { url in
-                            LinkPreview(url: url)
-                                .padding(.horizontal, 15)
-                                .padding(.vertical, 0)
-                        }
+                if note.kind == EventKind.repost.rawValue, let repostedNote = note.referencedNote() {
+                    Button {
+                        router.push(repostedNote)
+                    } label: {
+                        NoteCard(
+                            note: repostedNote,
+                            style: .compact,
+                            showFullMessage: false,
+                            hideOutOfNetwork: true,
+                            showReplyCount: true,
+                            replyAction: nil
+                        )
                     }
-                    .tabViewStyle(.page)
-                    .frame(height: 320)
+                    .buttonStyle(CardButtonStyle(style: .compact))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal)
+                    .readabilityPadding()
+                } else {
+                    if note.kind == EventKind.text.rawValue, !contentLinks.isEmpty {
+                        TabView {
+                            ForEach(contentLinks, id: \.self.absoluteURL) { url in
+                                LinkPreview(url: url)
+                                    .padding(.horizontal, 15)
+                                    .padding(.vertical, 0)
+                            }
+                        }
+                        .tabViewStyle(.page)
+                        .frame(height: 320)
+                    }
+                    formattedText
                 }
-                formattedText
                 if shouldShowSpacing {
                     Spacer(minLength: 55)
                 }

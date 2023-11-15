@@ -67,6 +67,7 @@ struct CompactNoteView: View {
         VStack(alignment: .leading, spacing: 0) {
             if showFullMessage {
                 formattedText
+                    .fixedSize(horizontal: false, vertical: true)
             } else {
                 formattedText
                     .lineLimit(12)
