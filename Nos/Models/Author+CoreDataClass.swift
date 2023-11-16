@@ -172,9 +172,7 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc func followedWithNewNotes(since: Date) -> NSFetchRequest<Author> {
-        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+    @nonobjc func followedWithNewNotesPredicate(since: Date) -> NSPredicate {
         let onlyFollowedAuthorsClause = "ANY followers.source = %@"
         let onlyUnreadStoriesClause = "$event.isRead != 1"
         let onlyPostsClause = "($event.kind = 1 OR $event.kind = 6 OR $event.kind = 30023)"
@@ -188,12 +186,17 @@ public class Author: NosManagedObject {
             "AND \(onlyUnreadStoriesClause) " +
             "AND \(onlyRecentStoriesClause) " +
             "AND \(onlyRootPostsClause)).@count > 0"
-
-        fetchRequest.predicate = NSPredicate(
+        return NSPredicate(
             format: "\(onlyFollowedAuthorsClause) AND \(onlyAuthorsWithStoriesClause)",
             self,
             since as CVarArg
         )
+    }
+
+    @nonobjc func followedWithNewNotes(since: Date) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+        fetchRequest.predicate = followedWithNewNotesPredicate(since: since)
         fetchRequest.fetchLimit = 50
         return fetchRequest
     }

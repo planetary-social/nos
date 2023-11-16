@@ -176,6 +176,9 @@ struct HomeFeedView: View {
         }
         .onChange(of: date) { newDate in
             events.nsPredicate = Event.homeFeedPredicate(for: user, before: newDate)
+            authors.nsPredicate = user.followedWithNewNotesPredicate(
+                since: Calendar.current.date(byAdding: .day, value: -2, to: newDate)!
+            )
             Task { await subscribeToNewEvents() }
         }
         .onAppear { 
