@@ -27,7 +27,7 @@ enum EventProcessor {
         in parseContext: NSManagedObjectContext,
         skipVerification: Bool = false
     ) throws -> Event? {
-        if let event = try Event.createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
+        if let event = try Event().createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
             relay.unwrap {
                 do {
                     try event.trackDelete(on: $0, context: parseContext)

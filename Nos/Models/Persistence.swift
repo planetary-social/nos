@@ -33,18 +33,27 @@ class PersistenceController {
         container.viewContext
     }
     
+    lazy var creationContext = {
+        newBackgroundContext()
+    }()
+    
     lazy var backgroundViewContext = {
         newBackgroundContext()
     }()
     
-    var container: NSPersistentContainer
+    private(set) var container: NSPersistentContainer
+    private var model: NSManagedObjectModel
+    private var inMemory: Bool
 
-    init(inMemory: Bool = false) {
+    init(containerName: String = "Nos", inMemory: Bool = false) {
+        self.inMemory = inMemory
         let modelURL = Bundle.current.url(forResource: "Nos", withExtension: "momd")!
-        container = NSPersistentContainer(
-            name: "Nos",
-            managedObjectModel: NSManagedObjectModel(contentsOf: modelURL)!
-        )
+        model = NSManagedObjectModel(contentsOf: modelURL)!
+        container = NSPersistentContainer(name: containerName, managedObjectModel: model)
+        setUp()
+    }
+    
+    func setUp() {
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
@@ -55,6 +64,24 @@ class PersistenceController {
         let mergeType = NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType
         container.viewContext.mergePolicy = NSMergePolicy(merge: mergeType)
     }
+    
+    #if DEBUG
+    func resetForTesting() {
+        container = NSPersistentContainer(name: "Nos", managedObjectModel: model)
+        if !inMemory {
+            container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+                guard let storeURL = storeDescription.url else {
+                    Log.error("Could not get store URL")
+                    return
+                }
+                Self.clearCoreData(store: storeURL, in: self.container)
+            })
+        }
+        setUp()
+        creationContext = newBackgroundContext()
+        backgroundViewContext = newBackgroundContext()
+    }
+    #endif
     
     private func loadPersistentStores(from container: NSPersistentContainer) {
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
