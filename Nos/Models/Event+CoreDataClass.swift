@@ -882,10 +882,8 @@ public class Event: NosManagedObject {
             event.isRead = true
             do {
                 try context.save()
-
-                Log.debug("markNoteAsRead marked \(noteID) as read")
             } catch {
-                Log.debug("markNoteAsRead error \(error.localizedDescription)")
+                Log.error("markNoteAsRead error \(error.localizedDescription)")
             }
         }
     }

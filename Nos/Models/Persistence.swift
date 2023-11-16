@@ -69,7 +69,7 @@ class PersistenceController {
     func resetForTesting() {
         container = NSPersistentContainer(name: "Nos", managedObjectModel: model)
         if !inMemory {
-            container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            container.loadPersistentStores(completionHandler: { (storeDescription, _) in
                 guard let storeURL = storeDescription.url else {
                     Log.error("Could not get store URL")
                     return
@@ -225,8 +225,11 @@ class PersistenceController {
                 // Delete events older than `deleteBefore`
                 let oldEventsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
                 oldEventsRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
+                let oldEventClause = "(receivedAt <= %@ OR receivedAt == nil)"
+                let notOwnEventClause = "(author.hexadecimalPublicKey != %@)"
+                let readStoryClause = "(isRead = 1 AND receivedAt > %@)"
                 oldEventsRequest.predicate = NSPredicate(
-                    format: "(receivedAt <= %@ OR receivedAt == nil) AND (author.hexadecimalPublicKey != %@) AND NOT (isRead = 1 AND receivedAt > %@)",
+                    format: "\(oldEventClause) AND \(notOwnEventClause) AND NOT \(readStoryClause)",
                     deleteBefore as CVarArg,
                     authorKey,
                     oldStoryCutoff as CVarArg
