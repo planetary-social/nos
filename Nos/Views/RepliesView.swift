@@ -87,15 +87,15 @@ struct RepliesView: View {
             
             let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
             let filter = Filter(kinds: [.text, .like, .delete, .repost, .report, .label], eTags: eTags)
-            let subID = await relayService.openSubscription(with: filter)
-            subscriptionIDs.append(subID)
+            let subIDs = await relayService.openSubscriptions(with: filter)
+            subscriptionIDs.append(contentsOf: subIDs)
             
             // download reports for this user
             guard let authorKey = note.author?.hexadecimalPublicKey else {
                 return
             }
             let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
-            subscriptionIDs.append(await relayService.openSubscription(with: reportFilter))
+            subscriptionIDs.append(contentsOf: await relayService.openSubscriptions(with: reportFilter))
         }
     }
     

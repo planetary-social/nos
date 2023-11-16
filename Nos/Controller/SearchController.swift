@@ -71,7 +71,7 @@ class SearchController: ObservableObject {
     func searchRelays(for query: String) {
         Task {
             let searchFilter = Filter(kinds: [.metaData], search: query, limit: 100)
-            self.searchSubscriptions.append(await self.relayService.openSubscription(with: searchFilter))
+            self.searchSubscriptions += await self.relayService.openSubscriptions(with: searchFilter)
         }
     }
     
@@ -89,9 +89,7 @@ class SearchController: ObservableObject {
                 try self.context.saveIfNeeded()
                 for pubKey in pubKeys {
                     try Task.checkCancellation()
-                    if let subscriptionID = await relayService.requestMetadata(for: pubKey, since: nil) {
-                        searchSubscriptions.append(subscriptionID)
-                    }
+                    searchSubscriptions += await relayService.requestMetadata(for: pubKey, since: nil)
                 }
             } catch {
                 Log.optional(error)

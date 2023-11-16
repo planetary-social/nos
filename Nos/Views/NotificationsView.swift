@@ -50,8 +50,8 @@ struct NotificationsView: View {
             pTags: [currentUserKey], 
             limit: 100
         )
-        let subscription = await relayService.openSubscription(with: filter)
-        subscriptionIDs.append(subscription)
+        let subscriptions = await relayService.openSubscriptions(with: filter)
+        subscriptionIDs.append(contentsOf: subscriptions)
     }
     
     func cancelSubscriptions() async {

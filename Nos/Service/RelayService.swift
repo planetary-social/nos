@@ -127,7 +127,7 @@ extension RelayService {
     
     private func sendCloseToAll(for subscription: RelaySubscription.ID) async {
         await subscriptions.sockets.forEach { self.sendClose(from: $0, subscription: subscription) }
-        Task { await processSubscriptionQueue(overrideRelays: nil) }
+        Task { await processSubscriptionQueue() }
     }
     
     func closeConnection(to relayAddress: String?) async {
@@ -145,18 +145,36 @@ extension RelayService {
 // MARK: Events
 extension RelayService {
     
-    func openSubscription(with filter: Filter, to overrideRelays: [URL]? = nil) async -> RelaySubscription.ID {
-        let subscriptionID = await subscriptions.queueSubscription(with: filter, to: overrideRelays)
+    func openSubscriptions(with filter: Filter, to specificRelays: [URL]? = nil) async -> [RelaySubscription.ID] {
+        var relayAddresses: [URL]
+        if let specificRelays {
+            relayAddresses = specificRelays
+        } else {
+            relayAddresses = await self.relayAddresses(for: currentUser)
+        }
+        var subscriptionIDs = [RelaySubscription.ID]()
+        for relay in relayAddresses {
+            subscriptionIDs.append(await subscriptions.queueSubscription(with: filter, to: relay))
+        }
         
         // Fire off REQs in the background
-        Task { await self.processSubscriptionQueue(overrideRelays: overrideRelays) }
+        Task { await self.processSubscriptionQueue() }
         
-        return subscriptionID
+        return subscriptionIDs
     }
     
-    func requestMetadata(for authorKey: HexadecimalString?, since: Date?) async -> RelaySubscription.ID? {
+//    func openPagedSubscription(with filter: Filter, to overrideRelays: [URL]? = nil) async -> PagedRelaySubscription {
+//        let subscriptionID = await subscriptions.queueSubscription(with: filter, to: overrideRelays)
+//        
+//        // Fire off REQs in the background
+//        Task { await self.processSubscriptionQueue(overrideRelays: overrideRelays) }
+//        
+//        return subscriptionID
+//    }
+    
+    func requestMetadata(for authorKey: HexadecimalString?, since: Date?) async -> [RelaySubscription.ID] {
         guard let authorKey else {
-            return nil
+            return []
         }
         
         let metaFilter = Filter(
@@ -165,12 +183,12 @@ extension RelayService {
             limit: 1, 
             since: since
         )
-        return await openSubscription(with: metaFilter)
+        return await openSubscriptions(with: metaFilter)
     }
     
-    func requestContactList(for authorKey: HexadecimalString?, since: Date?) async -> RelaySubscription.ID? {
+    func requestContactList(for authorKey: HexadecimalString?, since: Date?) async -> [RelaySubscription.ID] {
         guard let authorKey else {
-            return nil
+            return []
         }
         
         let contactFilter = Filter(
@@ -179,7 +197,7 @@ extension RelayService {
             limit: 1,
             since: since
         )
-        return await openSubscription(with: contactFilter)
+        return await openSubscriptions(with: contactFilter)
     }
     
     func requestProfileData(
@@ -192,30 +210,28 @@ extension RelayService {
             return subscriptions
         }
         
-        if let metadataSubscriptionID = await requestMetadata(for: authorKey, since: lastUpdateMetadata) {
-            subscriptions.append(metadataSubscriptionID)
-        }
-        if let contactListSubscriptionID = await requestContactList(for: authorKey, since: lastUpdatedContactList) {
-            subscriptions.append(contactListSubscriptionID)
-        }
+        let metadataSubscriptionIDs = await requestMetadata(for: authorKey, since: lastUpdateMetadata)
+        subscriptions.append(contentsOf: metadataSubscriptionIDs)
+        let contactListSubscriptionIDs = await requestContactList(for: authorKey, since: lastUpdatedContactList)
+        subscriptions.append(contentsOf: contactListSubscriptionIDs)
         
         return subscriptions
     }
     
     /// Requests a single event from all relays
-    func requestEvent(with eventID: String?) async -> RelaySubscription.ID? {
+    func requestEvent(with eventID: String?) async -> [RelaySubscription.ID] {
         guard let eventID = eventID else {
-            return nil
+            return []
         }
         
-        return await openSubscription(with: Filter(eventIDs: [eventID], limit: 1))
+        return await openSubscriptions(with: Filter(eventIDs: [eventID], limit: 1))
     }
     
-    private func processSubscriptionQueue(overrideRelays: [URL]? = nil) async {
-        let relays = await openSockets(overrideRelays: overrideRelays)
+    private func processSubscriptionQueue() async {
+        _ = await openSockets()
         await clearStaleSubscriptions()
         
-        await subscriptions.processSubscriptionQueue(relays: relays)
+        await subscriptions.processSubscriptionQueue()
         
         let socketsCount = await subscriptions.sockets.count
         Task { @MainActor in
@@ -367,6 +383,7 @@ extension RelayService {
             case "EVENT":
                 await queueEventForParsing(responseArray, socket)
             case "NOTICE":
+                Log.debug("from \(socket.host): \(response)")
                 if responseArray[safe: 1] as? String == "rate limited" {
                     analytics.rateLimited(by: socket)
                 }
@@ -572,7 +589,7 @@ extension RelayService {
         if let overrideRelays {
             relayAddresses = overrideRelays
         } else {
-            relayAddresses = await relays(for: self.currentUser)
+            relayAddresses = await self.relayAddresses(for: self.currentUser)
         }
         
         for relayAddress in relayAddresses {
@@ -594,7 +611,7 @@ extension RelayService {
         return relayAddresses
     }
 
-    func relays(for user: CurrentUser) async -> [URL] {
+    func relayAddresses(for user: CurrentUser) async -> [URL] {
         await backgroundContext.perform { () -> [URL] in
             if let currentUserPubKey = user.publicKeyHex,
                 let currentUser = try? Author.find(by: currentUserPubKey, context: self.backgroundContext) {
@@ -657,7 +674,9 @@ extension RelayService {
         }
         
         for subscription in await subscriptions.active {
-            await subscriptions.requestEvents(from: client, subscription: subscription)
+            if subscription.relayAddress == client.url {
+                await subscriptions.requestEvents(from: client, subscription: subscription)
+            }
         }
     }
 }

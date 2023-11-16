@@ -208,7 +208,7 @@ enum CurrentUserError: Error {
         // Subscribe to our own events of all kinds.
         let latestRecievedEvent = try? viewContext.fetch(Event.lastReceived(for: author)).first
         let allEventsFilter = Filter(authorKeys: [key], since: latestRecievedEvent?.receivedAt)
-        subscriptions.append(await relayService.openSubscription(with: allEventsFilter))
+        subscriptions += await relayService.openSubscriptions(with: allEventsFilter)
         
         // Always make a one time request for the latest contact list
         let contactFilter = Filter(
@@ -217,7 +217,7 @@ enum CurrentUserError: Error {
             limit: 1,
             since: author.lastUpdatedContactList
         )
-        subscriptions.append(await relayService.openSubscription(with: contactFilter, to: overrideRelays))
+        subscriptions += await relayService.openSubscriptions(with: contactFilter, to: overrideRelays)
         
         // Listen for notifications
         await pushNotificationService.listen(for: self)
@@ -263,7 +263,7 @@ enum CurrentUserError: Error {
                     limit: 1,
                     since: lastUpdatedMetadata
                 )
-                _ = await self?.relayService.openSubscription(with: metaFilter)
+                _ = await self?.relayService.openSubscriptions(with: metaFilter)
                 
                 let contactFilter = Filter(
                     authorKeys: [followedKey],
@@ -271,7 +271,7 @@ enum CurrentUserError: Error {
                     limit: 1,
                     since: lastUpdatedContactList
                 )
-                _ = await self?.relayService.openSubscription(with: contactFilter)
+                _ = await self?.relayService.openSubscriptions(with: contactFilter)
                 
                 // Do this slowly so we don't get rate limited
                 try await Task.sleep(for: .seconds(5))

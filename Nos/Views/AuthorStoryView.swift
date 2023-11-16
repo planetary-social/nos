@@ -179,8 +179,8 @@ struct AuthorStoryView: View {
         }
         let eTags = notes.compactMap { $0.identifier }
         let filter = Filter(kinds: [.text, .like, .delete, .repost], eTags: eTags)
-        let subID = await relayService.openSubscription(with: filter)
-        subscriptionIDs.append(subID)
+        let subIDs = await relayService.openSubscriptions(with: filter)
+        subscriptionIDs.append(contentsOf: subIDs)
     }
 }
 

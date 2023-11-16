@@ -61,8 +61,8 @@ struct HomeFeedView: View {
                 limit: 100, 
                 since: nil
             )
-            let textSub = await relayService.openSubscription(with: textFilter)
-            subscriptionIDs.append(textSub)
+            let textSubs = await relayService.openSubscriptions(with: textFilter)
+            subscriptionIDs.append(contentsOf: textSubs)
         }
     }
     

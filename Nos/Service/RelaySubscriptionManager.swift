@@ -81,7 +81,7 @@ actor RelaySubscriptionManager {
             }
         }
         for subscription in staleSubscriptions {
-            forceCloseSubscriptionCount(for: subscription.subscriptionID)
+            forceCloseSubscriptionCount(for: subscription.id)
         }
         return staleSubscriptions
     }
@@ -130,56 +130,38 @@ actor RelaySubscriptionManager {
     private let subscriptionLimit = 10
     private let minimimumOneTimeSubscriptions = 1
     
-    func processSubscriptionQueue(relays: [URL]) async {
+    func processSubscriptionQueue() async {
         
-        // TODO: Make sure active subscriptions are open on all relays
-        
-        // Strategy: we have two types of subscriptions: long and one time. We can only have a certain number of
-        // subscriptions open at once. We want to:
-        // - Open as many long running subsriptions as we can, leaving room for `minimumOneTimeSubscriptions`
-        // - fill remaining slots with one time filters
         let waitingLongSubscriptions = all.filter { !$0.isOneTime && !$0.isActive }
         let waitingOneTimeSubscriptions = all.filter { $0.isOneTime && !$0.isActive }
-        let openSlots = subscriptionLimit - active.count
-        let openLongSlots = max(0, openSlots - minimimumOneTimeSubscriptions)
         
-        for subscription in waitingLongSubscriptions.prefix(openLongSlots) {
-            start(subscription: subscription, relays: relays)
-        }
-        
-        let openOneTimeSlots = max(0, subscriptionLimit - active.count)
-        
-        for subscription in waitingOneTimeSubscriptions.prefix(openOneTimeSlots) {
-            start(subscription: subscription, relays: relays)
-        }
+        waitingOneTimeSubscriptions.forEach { start(subscription: $0) }
+        waitingLongSubscriptions.forEach { start(subscription: $0) }
         
         Log.debug("\(active.count) active subscriptions. \(all.count - active.count) subscriptions waiting in queue.")
     }
     
-    func queueSubscription(with filter: Filter, to overrideRelays: [URL]? = nil) async -> RelaySubscription.ID {
-        var subscription: RelaySubscription
+    func queueSubscription(with filter: Filter, to relayAddress: URL) async -> RelaySubscription.ID {
+        var subscription = RelaySubscription(filter: filter, relayAddress: relayAddress)
         
-        if let existingSubscription = self.subscription(from: filter.id) {
+        if let existingSubscription = self.subscription(from: subscription.id) {
             // dedup
             subscription = existingSubscription
-        } else {
-            subscription = RelaySubscription(filter: filter)
         }
+        
         subscription.referenceCount += 1
         updateSubscriptions(with: subscription)
         
         return subscription.id
     }
     
-    private func start(subscription: RelaySubscription, relays: [URL]) {
+    private func start(subscription: RelaySubscription) {
         var subscription = subscription
         subscription.subscriptionStartDate = .now
         updateSubscriptions(with: subscription)
         Log.debug("starting subscription: \(subscription.id), filter: \(subscription.filter)")
-        relays.forEach { relayURL in
-            if let socket = socket(for: relayURL) {
-                requestEvents(from: socket, subscription: subscription)
-            }
+        if let socket = socket(for: subscription.relayAddress) {
+            requestEvents(from: socket, subscription: subscription)
         }
     }
     

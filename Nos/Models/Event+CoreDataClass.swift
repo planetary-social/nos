@@ -1008,7 +1008,7 @@ public class Event: NosManagedObject {
         for requestDatum in requestData {
             let authorKey = requestDatum.0
             let sinceDate = requestDatum.1
-            await relayService.requestMetadata(for: authorKey, since: sinceDate).unwrap { subscriptionIDs.append($0) }
+            subscriptionIDs += await relayService.requestMetadata(for: authorKey, since: sinceDate)
         }
         return subscriptionIDs
     }

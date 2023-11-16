@@ -62,10 +62,7 @@ struct DiscoverView: View {
                 limit: 100
             )
             
-            subscriptionIDs.append(
-                // TODO: I don't think the override relays will be honored when opening new sockets
-                await relayService.openSubscription(with: singleRelayFilter, to: [relayAddress])
-            )
+            subscriptionIDs += await relayService.openSubscriptions(with: singleRelayFilter, to: [relayAddress])
         } else {
             
             var fetchSinceDate: Date?
@@ -89,7 +86,7 @@ struct DiscoverView: View {
                 since: fetchSinceDate
             )
             
-            subscriptionIDs.append(await relayService.openSubscription(with: featuredFilter))
+            subscriptionIDs += await relayService.openSubscriptions(with: featuredFilter)
             
             // this filter just requests everything for now, because I think requesting all the authors within
             // two hops is too large of a request and causes the websocket to close.
@@ -100,7 +97,7 @@ struct DiscoverView: View {
                 since: fetchSinceDate
             )
             
-            subscriptionIDs.append(await relayService.openSubscription(with: twoHopsFilter))
+            subscriptionIDs += await relayService.openSubscriptions(with: twoHopsFilter)
         }
     }
     
