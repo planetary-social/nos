@@ -17,9 +17,13 @@ struct NosForm<Content: View>: View {
     }
     
     var body: some View {
-        ScrollView {
-            content
+        VStack {
+            ScrollView {
+                content
+                    .readabilityPadding()
+            }
         }
+        .frame(maxWidth: .infinity)
         .background(Color.appBg)
     }
 }

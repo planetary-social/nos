@@ -47,10 +47,10 @@ public class Author: NosManagedObject {
     
     var webLink: String {
         if let publicKey {
-            return "https://iris.to/\(publicKey.npub)"
+            return "https://njump.me/\(publicKey.npub)"
         } else {
             Log.error("Coudln't find public key when creating weblink")
-            return "https://iris.to/"
+            return "https://njump.me/"
         }
     }
 

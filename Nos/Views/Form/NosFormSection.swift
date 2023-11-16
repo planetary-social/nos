@@ -51,7 +51,6 @@ struct NosFormSection<Content: View>: View {
                 }
                 .background(LinearGradient.cardGradient)
                 .cornerRadius(20)
-                .readabilityPadding()
             }
         }
         .padding(.horizontal, 13)

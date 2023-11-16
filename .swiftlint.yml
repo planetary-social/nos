@@ -77,6 +77,7 @@ opt_in_rules: # some rules are turned off by default, so you need to opt-in
 included: # paths to include during linting. `--path` is ignored if present.
 excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Architecture/
+  - StarscreamOld/
   - "**/.build"
 analyzer_rules: # Rules run by `swiftlint analyze` (experimental)
   - explicit_self
@@ -106,6 +107,7 @@ type_name:
   excluded: 
     - Tag
     - TLV
+    - Wei
   allowed_symbols: ["_"] # these are allowed in type names
 identifier_name:
   min_length: # only min_length
@@ -147,6 +149,8 @@ identifier_name:
     - uns
     - idx
     - dsn
+    - wei
+    - gas
 number_separator:
   minimum_length: 5
 cyclomatic_complexity:

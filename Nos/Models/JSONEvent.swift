@@ -127,7 +127,7 @@ struct MetadataEventJSON: Codable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case displayName = "display_name", name, nip05, uns, about, website, picture
+        case displayName = "display_name", name, nip05, uns = "uns_name", about, website, picture
     }
     
     var dictionary: [String: String] {

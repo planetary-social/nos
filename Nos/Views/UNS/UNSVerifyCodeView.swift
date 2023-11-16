@@ -44,6 +44,7 @@ struct UNSVerifyCodeView: View {
                         font: .clarityMedium,
                         link: nil
                     )
+                    .fixedSize(horizontal: false, vertical: true)
                     .multilineTextAlignment(.center)
                     .padding(.vertical, 17)
                     .padding(.horizontal, 20)
