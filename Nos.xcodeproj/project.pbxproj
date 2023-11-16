@@ -222,6 +222,8 @@
 		C98A32282A05795E00E3FA13 /* Task+Timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98A32262A05795E00E3FA13 /* Task+Timeout.swift */; };
 		C98B8B4029FBF83B009789C8 /* NotificationCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */; };
 		C98DC9BB2A795CAD004E5F0F /* ActionBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */; };
+		C99721CB2AEBED26004EBEAB /* String+Empty.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99721CA2AEBED26004EBEAB /* String+Empty.swift */; };
+		C99721CC2AEBED26004EBEAB /* String+Empty.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99721CA2AEBED26004EBEAB /* String+Empty.swift */; };
 		C99D053C2AE6E5F50053D472 /* WalletConnectSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99D053B2AE6E5F50053D472 /* WalletConnectSendView.swift */; };
 		C99DBF7E2A9E81CF00F7068F /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C99DBF7D2A9E81CF00F7068F /* SDWebImageSwiftUI */; };
 		C99DBF802A9E8BCF00F7068F /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C99DBF7F2A9E8BCF00F7068F /* SDWebImageSwiftUI */; };
@@ -580,6 +582,7 @@
 		C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCard.swift; sourceTree = "<group>"; };
 		C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionBanner.swift; sourceTree = "<group>"; };
 		C99507332AB9EE40005B1096 /* Nos 12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 12.xcdatamodel"; sourceTree = "<group>"; };
+		C99721CA2AEBED26004EBEAB /* String+Empty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Empty.swift"; sourceTree = "<group>"; };
 		C99D053B2AE6E5F50053D472 /* WalletConnectSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSendView.swift; sourceTree = "<group>"; };
 		C9A0DAD929C685E500466635 /* SideMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuButton.swift; sourceTree = "<group>"; };
 		C9A0DADC29C689C900466635 /* NosNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosNavigationBar.swift; sourceTree = "<group>"; };
@@ -1007,6 +1010,7 @@
 				C92DF80429C25DE900400561 /* URL+Extensions.swift */,
 				C9F204622ADEDB910029A858 /* Web3Utils.swift */,
 				C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */,
+				C99721CA2AEBED26004EBEAB /* String+Empty.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1716,6 +1720,7 @@
 				C9BAB09B2996FBA10003A84E /* EventProcessor.swift in Sources */,
 				C960C57129F3236200929990 /* LikeButton.swift in Sources */,
 				C97797B9298AA19A0046BD25 /* RelayService.swift in Sources */,
+				C99721CB2AEBED26004EBEAB /* String+Empty.swift in Sources */,
 				C93CA0C329AE3A1E00921183 /* JSONEvent.swift in Sources */,
 				3FFB1D89299FF37C002A755D /* AvatarView.swift in Sources */,
 				C97A1C8829E45B3C009D9E8D /* RawEventView.swift in Sources */,
@@ -1816,6 +1821,7 @@
 				C97141EF2AE95F07001A5DD0 /* USBCAddress.swift in Sources */,
 				5B80BE9E29F9864000A363E4 /* Bech32Tests.swift in Sources */,
 				C942566A29B66A2800C4202C /* Date+Elapsed.swift in Sources */,
+				C99721CC2AEBED26004EBEAB /* String+Empty.swift in Sources */,
 				C93CA0C429AE3A1E00921183 /* JSONEvent.swift in Sources */,
 				C9DEC04629894BED0078B43A /* Event+CoreDataClass.swift in Sources */,
 				A32B6C7129A672BC00653FF5 /* CurrentUser.swift in Sources */,

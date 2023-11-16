@@ -133,7 +133,9 @@ class UNSWizardController: ObservableObject {
             throw UNSError.noUser
         }
         author.uns = name
-        author.nip05 = nip05
+        if author.nip05.isEmptyOrNil {
+            author.nip05 = nip05
+        }
         try context.save()
         await currentUser.publishMetaData()
         state = .success
