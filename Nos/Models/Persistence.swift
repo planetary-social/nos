@@ -193,8 +193,6 @@ class PersistenceController {
             return
         }
 
-        return
-
         cleanupTask = Task {
             defer { self.cleanupTask = nil }
             let context = backgroundViewContext
@@ -221,14 +219,17 @@ class PersistenceController {
                     let receivedAt = firstEventToDelete.receivedAt {
                     deleteBefore = receivedAt
                 }
-                   
+
+                let oldStoryCutoff = Calendar.current.date(byAdding: .day, value: -2, to: .now) ?? .now
+
                 // Delete events older than `deleteBefore`
                 let oldEventsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
                 oldEventsRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
                 oldEventsRequest.predicate = NSPredicate(
-                    format: "(receivedAt <= %@ OR receivedAt == nil) AND (author.hexadecimalPublicKey != %@)", 
+                    format: "(receivedAt <= %@ OR receivedAt == nil) AND (author.hexadecimalPublicKey != %@) AND NOT (isRead = 1 AND receivedAt > %@)",
                     deleteBefore as CVarArg,
-                    authorKey
+                    authorKey,
+                    oldStoryCutoff as CVarArg
                 )
                 
                 let deleteRequests: [NSPersistentStoreRequest] = [
