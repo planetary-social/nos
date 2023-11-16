@@ -8,10 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fix a bug where linking a Universal Name would overwrite your existing NIP-05.
 - Fixed incorrect ellipsis applied to long notes.
 - Changed note rendering to retain more newlines. 
 - Show reposts in stories.
 - Fixed a bug where notes, reposts, and author profiles could fail to load.
+- Show truncated URLs in notes instead of hiding them completely.
+- Keep track of read stories.
 
 ## [0.1 (86)] - 2023-10-25Z
 
