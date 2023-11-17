@@ -81,6 +81,7 @@ struct NotificationsView: View {
                     ForEach(events.unmuted) { event in
                         if let user {
                             NotificationCard(viewModel: NotificationViewModel(note: event, user: user))
+                                .padding(.horizontal)
                                 .readabilityPadding()
                         }
                     }
@@ -137,31 +138,16 @@ struct NotificationsView: View {
 struct NotificationsView_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
-    static var persistenceController = PersistenceController.preview
     
-    static var previewContext = persistenceController.container.viewContext
-    static var relayService = previewData.relayService
+    static var previewContext = previewData.previewContext
     
-    static var emptyPersistenceController = PersistenceController.empty
-    static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = previewData.relayService
+    static var alice: Author {
+        previewData.alice
+    }
     
-    static var router = Router()
-    
-    static var alice: Author = {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
-        author.name = "Alice"
-        return author
-    }()
-    
-    static var bob: Author = {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.bob.publicKeyHex
-        author.name = "Bob"
-        
-        return author
-    }()
+    static var bob: Author {
+        previewData.bob
+    }
     
     static func createTestData(in context: NSManagedObjectContext) {
         let mentionNote = Event(context: context)
@@ -199,9 +185,7 @@ struct NotificationsView_Previews: PreviewProvider {
         NavigationView {
             NotificationsView(user: bob)
         }
-        .environment(\.managedObjectContext, previewContext)
-        .environmentObject(relayService)
-        .environment(router)
+        .inject(previewData: previewData)
         .onAppear { createTestData(in: previewContext) }
     }
 }
