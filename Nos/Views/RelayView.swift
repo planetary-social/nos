@@ -18,12 +18,12 @@ struct RelaysDestination: Hashable {
 struct RelayView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     @ObservedObject var author: Author
     
     @State var newRelayAddress: String = ""
     
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
     
     @State private var alert: AlertState<Never>?
     

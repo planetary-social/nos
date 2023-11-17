@@ -14,8 +14,8 @@ struct DiscoverView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject var router: Router
-    @EnvironmentObject var currentUser: CurrentUser
+    @Environment(Router.self) var router
+    @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
     @State private var lastRequestDate: Date?
 
@@ -112,6 +112,7 @@ struct DiscoverView: View {
     }
     
     var body: some View {
+        @Bindable var router = router
         NavigationStack(path: $router.discoverPath) {
             ZStack {
                 if performingInitialLoad {
@@ -228,7 +229,7 @@ struct DiscoverView: View {
         guard let publicKey = PublicKey(npub: strippedString) ?? PublicKey(hex: strippedString) else {
             return nil
         }
-        guard let author = try? Author().findOrCreate(by: publicKey.hex, context: viewContext) else {
+        guard let author = try? Author.findOrCreate(by: publicKey.hex, context: viewContext) else {
             return nil
         }
         try? viewContext.saveIfNeeded()
@@ -309,15 +310,15 @@ struct DiscoverView_Previews: PreviewProvider {
             DiscoverView(featuredAuthors: [publicKey.npub])
                 .environment(\.managedObjectContext, previewContext)
                 .environmentObject(relayService)
-                .environmentObject(router)
-                .environmentObject(currentUser)
+                .environment(router)
+                .environment(currentUser)
                 .onAppear { createTestData(in: previewContext) }
 
             DiscoverView(featuredAuthors: [publicKey.npub])
                 .environment(\.managedObjectContext, previewContext)
                 .environmentObject(relayService)
-                .environmentObject(router)
-                .environmentObject(currentUser)
+                .environment(router)
+                .environment(currentUser)
                 .onAppear { createTestData(in: previewContext) }
                 .previewDevice("iPad Air (5th generation)")
         } else {

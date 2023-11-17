@@ -26,7 +26,7 @@ struct NoteButton: View {
     private let tapAction: ((Event) -> Void)?
 
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
     @EnvironmentObject private var relayService: RelayService
     @Dependency(\.persistenceController) private var persistenceController
     
@@ -87,7 +87,7 @@ struct NoteButton: View {
                             await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
                                 noteID: note.identifier,
                                 using: relayService,
-                                in: persistenceController.backgroundViewContext
+                                in: persistenceController.parseContext
                             )
                         }
                     }

@@ -7,23 +7,29 @@
 
 import XCTest
 import CoreData
+import Dependencies
 
 // swiftlint:disable implicitly_unwrapped_optional
 
 final class SocialGraphTests: XCTestCase {
     
-    var persistenceController: PersistenceController!
     var testContext: NSManagedObjectContext!
     
-    override func setUp() async throws {
-        try await super.setUp()
-        persistenceController = PersistenceController(inMemory: true)
-        testContext = persistenceController.container.viewContext
+    override func invokeTest() {
+        // For some reason that I can't figure out using an in-memory persistent store causes these tests to take
+        // several minutes instead of seconds, so we are using an on-disk store for these tests instead.
+        withDependencies { dependencies in
+            let persistenceController = PersistenceController(containerName: "NosTests", inMemory: true)
+            testContext = persistenceController.viewContext
+            dependencies.persistenceController = persistenceController
+        } operation: {
+            super.invokeTest()
+        }
     }
 
     func testEmpty() async throws {
         // Arrange
-        _ = try Author().findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        _ = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
         
         // Act
         let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
@@ -36,8 +42,8 @@ final class SocialGraphTests: XCTestCase {
     
     func testOneFollower() async throws {
         // Arrange
-        let alice = try Author().findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
-        let bob = try Author().findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
+        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
         let follow = try Follow.findOrCreate(
             source: alice,
             destination: bob,
@@ -61,8 +67,8 @@ final class SocialGraphTests: XCTestCase {
     
     func testFollow() async throws {
         // Arrange
-        let alice = try Author().findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
-        let bob = try Author().findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
+        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
         
         // Act
         let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
@@ -86,9 +92,9 @@ final class SocialGraphTests: XCTestCase {
     
     func testTwoFollows() async throws {
         // Arrange
-        let alice = try Author().findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
-        let bob = try Author().findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
-        let eve = try Author().findOrCreate(by: KeyFixture.eve.publicKeyHex, context: testContext)
+        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
+        let eve = try Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: testContext)
         
         // Act
         let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)

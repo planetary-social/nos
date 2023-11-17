@@ -9,16 +9,18 @@ import SwiftUI
 import Combine
 import CoreData
 import Logger
+import Dependencies
 
 // Manages the app's navigation state.
-@MainActor class Router: ObservableObject {
+@MainActor @Observable class Router {
     
-    @Published var homeFeedPath = NavigationPath()
-    @Published var discoverPath = NavigationPath()
-    @Published var notificationsPath = NavigationPath()
-    @Published var profilePath = NavigationPath()
-    @Published var sideMenuPath = NavigationPath()
-    @Published var selectedTab = AppDestination.home
+    var homeFeedPath = NavigationPath()
+    var discoverPath = NavigationPath()
+    var notificationsPath = NavigationPath()
+    var profilePath = NavigationPath()
+    var sideMenuPath = NavigationPath()
+    var selectedTab = AppDestination.home
+    @Dependency(\.persistenceController) @ObservationIgnored private var persistenceController
     
     var currentPath: Binding<NavigationPath> {
         if sideMenuOpened {
@@ -28,9 +30,9 @@ import Logger
         return path(for: selectedTab)
     }
     
-    @Published var userNpubPublicKey = ""
+    var userNpubPublicKey = ""
     
-    @Published private(set) var sideMenuOpened = false
+    private(set) var sideMenuOpened = false
 
     func toggleSideMenu() {
         withAnimation(.easeIn(duration: 0.2)) {
@@ -62,20 +64,6 @@ import Logger
         selectedTab = .newNote(contents)
     }
 
-    func consecutiveTaps(on tab: AppDestination) -> AnyPublisher<Void, Never> {
-        $selectedTab
-            .scan((previous: nil, current: selectedTab)) { previousPair, current in
-                (previous: previousPair.current, current: current)
-            }
-            .filter {
-                $0.previous == $0.current
-            }
-            .compactMap {
-                $0.current == tab ? Void() : nil
-            }
-            .eraseToAnyPublisher()
-    }
-
     func path(for destination: AppDestination) -> Binding<NavigationPath> {
         switch destination {
         case .home:
@@ -94,23 +82,26 @@ import Logger
 
 extension Router {
     
-    func open(url: URL, with context: NSManagedObjectContext) {
+    nonisolated func open(url: URL, with context: NSManagedObjectContext) {
         let link = url.absoluteString
         let identifier = String(link[link.index(after: link.startIndex)...])
-        // handle mentions. mention link will be prefixed with "@" followed by
-        // the hex format pubkey of the mentioned author
-        do {
-            if link.hasPrefix("@") {
-                push(try Author().findOrCreate(by: identifier, context: context))
-            } else if link.hasPrefix("%") {
-                push(try Event().findOrCreateStubBy(id: identifier, context: context))
-            } else if url.scheme == "http" || url.scheme == "https" {
-                push(url)
-            } else {
-                UIApplication.shared.open(url)
-            }
-        } catch {
-            Log.optional(error)
+        
+        Task { @MainActor in
+            do {
+                // handle mentions. mention link will be prefixed with "@" followed by
+                // the hex format pubkey of the mentioned author
+                if link.hasPrefix("@") {
+                    push(try Author.findOrCreate(by: identifier, context: context))
+                } else if link.hasPrefix("%") {
+                    push(try Event.findOrCreateStubBy(id: identifier, context: context))
+                } else if url.scheme == "http" || url.scheme == "https" {
+                    push(url)
+                } else {
+                    UIApplication.shared.open(url)
+                }
+            } catch {
+                Log.optional(error)
+            } 
         }
     }
 }

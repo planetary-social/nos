@@ -7,12 +7,6 @@
 
 import Foundation
 
-extension String {
-    var isNotEmpty: Bool {
-        !isEmpty
-    } 
-}
-
 extension Optional<String> {
     var isEmptyOrNil: Bool {
         self == nil || self?.isEmpty == true

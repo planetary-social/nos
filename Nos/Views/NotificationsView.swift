@@ -16,7 +16,7 @@ struct NotificationsView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) var router
     @Dependency(\.analytics) private var analytics
     @Dependency(\.pushNotificationService) private var pushNotificationService
     @Dependency(\.persistenceController) private var persistenceController
@@ -74,6 +74,7 @@ struct NotificationsView: View {
     }
     
     var body: some View {
+        @Bindable var router = router
         NavigationStack(path: $router.notificationsPath) {
             ScrollView(.vertical) {
                 LazyVStack {
@@ -200,7 +201,7 @@ struct NotificationsView_Previews: PreviewProvider {
         }
         .environment(\.managedObjectContext, previewContext)
         .environmentObject(relayService)
-        .environmentObject(router)
+        .environment(router)
         .onAppear { createTestData(in: previewContext) }
     }
 }

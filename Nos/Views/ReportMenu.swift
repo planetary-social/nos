@@ -27,7 +27,7 @@ struct ReportMenuModifier: ViewModifier {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics: Analytics
     
     // swiftlint:disable function_body_length

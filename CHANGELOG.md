@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1 (90)] - 2023-10-31Z
 
-- Fixed a crash related to content reports.
+- Fixed a bug where notes, reposts, and author profiles could fail to load.
 
 ## [0.1 (89)] - 2023-10-31Z
 

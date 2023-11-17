@@ -44,6 +44,7 @@
 "Localized.confirm" = "تایید";
 "Localized.clear" = "پاک کردن";
 "Localized.done" = "انجام شد";
+"Localized.send" = "ارسال";
 "Localized.editProfile" = "ویرایش نمایه";
 "Localized.completeProfileMessage" = "نمایه خود را تکمیل کنید تا مردم بتوانند شما را بیابند.";
 "Localized.completeProfileButton" = "تکمیل نمایه";
@@ -55,14 +56,18 @@
 "Localized.expirationDate" = "تاريخ انقضاء";
 "Localized.minuteAbbreviated" = "دقیقه";
 "Localized.hourAbbreviated" = "ساعت";
+"Localized.hoursAbbreviated" = "ساعت";
 "Localized.dayAbbreviated" = "روز";
 "Localized.daysAbbreviated" = "روز";
-"Localized.sendCode" = "ارسال کد";
+"Localized.sendCode" = "ارسال کد پیامکی";
 "Localized.submit" = "ثبت";
+"Localized.next" = "بعدی";
 "Localized.setUpUNS" = "نام خود را رزرو کنید";
+"Localized.createNewName" = "ایجاد نام جدید";
 "Localized.goBack" = "بازگشت";
+"Localized.start" = "شروع";
 "Localized.startOver" = "شروع دوباره";
-"Localized.setUpUniversalName" = "نام جهانی خود را تنظیم کنید";
+"Localized.manageUniversalName" = "نام جهانی خود را مدیریت کنید";
 "Localized.dismiss" = "رد کردن";
 "Localized.relays" = "رله";
 "Localized.noRelaysMessage" = "هنوز هیچ رله ای نیست! برای شروع یکی این پایین اضافه کنید";
@@ -92,18 +97,36 @@
 "Localized.followedByTwo" = "دنبال شده توسط **{{ one }}** و **{{ two }}**";
 "Localized.followedByTwoAndMore" = "دنبال شده توسط **{{ one }}**، **{{ two }}** و **{{ count }}** نفر دیگر";
 "Localized.unfollow" = "لغو دنبال کردن";
-"Localized.uns" = "UNS";
+"Localized.universalName" = "نام جهانی";
 "Localized.nip05" = "NIP-05";
+"Localized.nip05LearnMore" = "درباره تایید نام NIP-05 بیشتر بدانید.";
+"Localized.learnMore" = "بیشتر بیاموزید";
 "Localized.readMore" = "بیشتر بخوانید";
 "Localized.thread" = "رشته";
 "Localized.show" = "نشان دادن";
 "Localized.bio" = "معرفی کوتاه";
 "Localized.displayName" = "نام نمایشی";
 "Localized.name" = "نام";
-"Localized.picUrl" = "آدرس عکس نمایه";
+"Localized.profilePicture" = "تصویر نمایه";
+"Localized.identityVerification" = "تایید هویت";
+"Localized.chooseNameOrRegister" = "از بین نام های موجود خود انتخاب کنید، یا یک جدید بسازید:";
+"Localized.chooseYourNameDescription" = "این نام جهانی شما خواهد بود. می توانید بعدا نام های دیگری ثبت کنید. نام ها معتبر ";
+"Localized.url" = "آدرس اینترنتی URL";
 "Localized.noEventsOnProfile" = "ما هیچ یادداشتی از این نمایه نمی بینیم، ولی به گشتن ادامه می دهیم!";
+"Localized.uploadProfilePicInstructions" = "به nostr.build بروید تا تصاویر خود را بارگذاری کنید، URL ارائه شده را کپی کرده و اینجا بچسبانید.";
 "Localized.basicInfo" = "اطللاعات پایه";
+"Localized.website" = "وب‎سایت";
 "Localized.edit" = "ویرایش";
+"Localized.connectWallet" = "اتصال کیف پول";
+"Localized.connectGlobalIDTitle" = "برای ارسال USBC کیف پول GlobaliD خود را متصل کنید";
+"Localized.scanTheWalletConnectQR" = "کد QR را اسکن کنید یا اپلیکیشن Global ID را بارگیری کنید تا USBC به دوستانتان بفرستید!";
+"Localized.copyQRLink" = "لینک QR را کپی کنید";
+"Localized.connectGlobalID" = "اتصال اپلیکیشن GlobaliD";
+"Localized.sendUSBC" = "ارسال USBC";
+"Localized.sendTo" = "ارسال به";
+"Localized.amount" = "مبلغ";
+"Localized.reconnectWallet" = "اتصال دوباره کیف پول";
+"Localized.somethingWentWrong" = "مشکلی پیش آمد.";
 "Localized.mention" = "اشاره";
 "Localized.debug" = "اشکال زدايي";
 "Localized.loadSampleData" = "بارگیری داده نمونه";
@@ -139,16 +162,32 @@
 "Localized.yourProfile" = "نمایه شما";
 "Localized.unsTagline" = "فضای نامگذاری جهانی (Universal Name Space) امکان تایید هویتی را که می توانید به آن اعتماد کنید ارائه می کند.";
 "Localized.unsDescription" = "\"فضای نامگذاری جهانی\" یک نام به شما می دهد که می توانید همه جا استفاده کنید. نامی جهانی ثبت کنید و به نمایه ناستر خود متصل کنید. بیشتر بدانید.";
-"Localized.unsLearnMore" = "بیشتر بیاموزید.";
+"Localized.unsRegister" = "نام جهانی خود را ثبت کنید";
+"Localized.unsRegisterDescription" = "فضای نام جهانی Universal Name Space نامی به شما می دهد که می توانید همه جا استفاده کنید.\n        \n هویت خود را تایید کنید و حساب کاربری اجتماعی و شناسه دولتی و کیف پولتان و غیره را متصل کنید.";
+"Localized.premiumName" = "این یک نام ویژه است";
+"Localized.premiumNameDescription" = "به وب سایت UNS ارجاع می شوید تا بتوانید یک نام ویژه ثبت کنید.";
+"Localized.returnToChooseName" = "به مرحله انتخاب نام برگردید و نامی که ثبت کردید انتخاب کنید.";
+"Localized.goBackAndRegister" = "ممکن است بخواهید برگردید و نام دیگری ثبت کنید";
+"Localized.registerADifferentName" = "نام دیگری ثبت کنید";
+"Localized.registerPremiumName" = "نام ویژه ای ثبت کنید";
+"Localized.registration" = "ثبت";
+"Localized.registrationDescription" = "شماره تلفن خود را وارد کنید تا بتوانیم کد پیامکی بفرستیم.";
+"Localized.verification" = "تأیید";
+"Localized.verificationDescription" = "کد چهار رقمی که به {{ phone_number }} فرستادیم";
+"Localized.unsLearnMore" = "درباره UNS بیشتر بیاموزید.";
 "Localized.verifyYourIdentity" = "هویت خود را تایید کنید";
 "Localized.enterCode" = "کد را وارد کنید";
 "Localized.nameLower" = "نام";
 "Localized.chooseYourName" = "نام خود را انتخاب کنید";
 "Localized.oops" = "اوه!";
 "Localized.thatNameIsTaken" = "این نام قبلا گرفته شده است.";
+"Localized.tryAnotherName" = "لطفا نام دیگری امتحان کنید.";
+"Localized.tryAgainOrContactSupport" = "لطفا دوباره امتحان کنید یا با پشتیبانی تماس بگیرید.";
 "Localized.success" = "موفقیت!";
+"Localized.unsSuccessDescription" = "شما با موفقیت نام جهانی خود را به نمایه ناسترتان وصل کردید.";
 "Localized.yourNewUNMessage" = "\"نام جهانی\" شماست.\n\nما اتصالی بین نمایه ناستر و نام جهانی شما برقرار کرده و نام جهانی تان را در بخش نام کاربری نمایه پر کردیم.";
 "Localized.anErrorOccurred" = "خطایی رخ داده است.";
+"Localized.stories" = "داستان ها";
 "Localized.relayAddressPlaceholder" = "wss://yourrelay.com";
 "Localized.someone" = "کسی";
 "Localized.aboutNos" = "نوس یک اپ جدید رسانه اجتماعی است که توسط همان تیمی که پلنتری را ساخته بود، روی پروتکل ناستر بنا شده است. نوس برای انسان ها طراحی شده است، نه الگوریتم ها. در Nos.social بیشتر بیاموزید.";
@@ -163,6 +202,7 @@
 "Localized.reportEventContent" = "این حساب کاربری با استفاده از لغات NIP-69 بابت {{ report_category }} گزارش شده است.
 https://github.com/nostr-protocol/nips/pull/457";
 "Localized.select" = "انتخاب";
+"Localized.linkToNote" = "🔗 لینک به یادداشت";
 
 "Reply.one" = "{{ count }} پاسخ";
 "Reply.many" = "{{ count }} پاسخ";

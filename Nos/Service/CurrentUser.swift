@@ -22,14 +22,14 @@ enum CurrentUserError: Error {
 }
 
 // swiftlint:disable type_body_length superfluous_disable_command
-class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
+@Observable class CurrentUser: NSObject, NSFetchedResultsControllerDelegate {
     
-    @Dependency(\.analytics) private var analytics
-    @Dependency(\.crashReporting) private var crashReporting
-    @Dependency(\.persistenceController) private var persistenceController
-    @Dependency(\.pushNotificationService) private var pushNotificationService
-    @Dependency(\.relayService) private var relayService
-    @Dependency(\.unsAPI) private var unsAPI
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
+    @ObservationIgnored @Dependency(\.crashReporting) private var crashReporting
+    @ObservationIgnored @Dependency(\.persistenceController) private var persistenceController
+    @ObservationIgnored @Dependency(\.pushNotificationService) private var pushNotificationService
+    @ObservationIgnored @Dependency(\.relayService) private var relayService
+    @ObservationIgnored @Dependency(\.unsAPI) private var unsAPI
     
     // TODO: it's time to cache this
     var keyPair: KeyPair? {
@@ -49,7 +49,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         _privateKeyHex
     }
     
-    @Published var usbcAddress: USBCAddress? 
+    var usbcAddress: USBCAddress? 
 
     @MainActor func setPrivateKeyHex(_ newValue: String?) async {
         guard let privateKeyHex = newValue else {
@@ -84,7 +84,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     // swiftlint:disable implicitly_unwrapped_optional
     @MainActor var viewContext: NSManagedObjectContext!
     var backgroundContext: NSManagedObjectContext!
-    @Published var socialGraph: SocialGraphCache!
+    var socialGraph: SocialGraphCache!
     // swiftlint:enable implicitly_unwrapped_optional
     
     var subscriptions: [String] = []
@@ -94,9 +94,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     var onboardingRelays: [Relay] = []
 
     // TODO: prevent this from being accessed from contexts other than the view context. Or maybe just get rid of it.
-    @MainActor @Published var author: Author?
-    
-    @MainActor @Published var inNetworkAuthors = [Author]()
+    @MainActor var author: Author?
     
     private var authorWatcher: NSFetchedResultsController<Author>?
 
@@ -126,13 +124,12 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         onboardingRelays = []
         Task { await relayService.decrementSubscriptionCount(for: subscriptions) }
         subscriptions = []
-        inNetworkAuthors = []
         setUp()
     }
     
     @MainActor func setUp() {
         if let keyPair {
-            author = try? Author().findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+            author = try? Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
             authorWatcher = NSFetchedResultsController(
                 fetchRequest: Author.request(by: keyPair.publicKeyHex),
                 managedObjectContext: viewContext,
@@ -165,7 +162,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     
     @MainActor func createAccount() async throws {
         let keyPair = KeyPair()!
-        let author = try Author().findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+        let author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
         try viewContext.save()
 
         await setKeyPair(keyPair)
@@ -244,7 +241,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
             }
             
             let followData = await self?.backgroundContext.perform {
-                let follows = try? Author().findOrCreate(
+                let follows = try? Author.findOrCreate(
                     by: publicKeyHex,
                     context: backgroundContext
                 ).follows

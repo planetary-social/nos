@@ -76,7 +76,6 @@ extension FetchedResults where Element == Event {
 public class Event: NosManagedObject {
     
     @Dependency(\.currentUser) private var currentUser
-    @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.persistenceController) private var persistenceController
     
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
@@ -500,6 +499,9 @@ public class Event: NosManagedObject {
             }
             return existingEvent
         } else {
+            @Dependency(\.crashReporting) var crashReporting
+            @Dependency(\.persistenceController) var persistenceController
+
             /// Always create events in the creationContext first to make sure we never end up with two identical
             /// Events in different contexts with the same objectID, because this messes up SwiftUI's observation
             /// of changes.
@@ -529,10 +531,13 @@ public class Event: NosManagedObject {
     /// - Parameters:
     ///   - id: The hexadecimal Nostr ID of the event.
     /// - Returns: The Event model with the given ID.
-    func findOrCreateStubBy(id: HexadecimalString, context: NSManagedObjectContext) throws -> Event {
+    class func findOrCreateStubBy(id: HexadecimalString, context: NSManagedObjectContext) throws -> Event {
         if let existingEvent = try context.fetch(Event.event(by: id)).first {
             return existingEvent
         } else {
+            @Dependency(\.crashReporting) var crashReporting
+            @Dependency(\.persistenceController) var persistenceController
+
             /// Always create events in the creationContext first to make sure we never end up with two identical
             /// Events in different contexts with the same objectID, because this messes up SwiftUI's observation
             /// of changes.
@@ -549,16 +554,6 @@ public class Event: NosManagedObject {
                 throw error
             }
             return fetchedEvent
-        }
-    }
-    
-    class func findOrCreateStubBy(id: String, context: NSManagedObjectContext) throws -> Event {
-        if let existingEvent = try context.fetch(Event.event(by: id)).first {
-            return existingEvent
-        } else {
-            let event = Event(context: context)
-            event.identifier = id
-            return event
         }
     }
     
@@ -609,7 +604,7 @@ public class Event: NosManagedObject {
         }
         
         // Author
-        guard let newAuthor = try? Author().findOrCreate(by: jsonEvent.pubKey, context: context) else {
+        guard let newAuthor = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context) else {
             throw EventError.missingAuthor
         }
         
@@ -876,7 +871,7 @@ public class Event: NosManagedObject {
         }
         
         return await context.perform {
-            guard let note = try? Event().findOrCreateStubBy(id: noteID, context: context),
+            guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
                 let content = note.content else {
                 return AttributedString()
             }
@@ -895,7 +890,7 @@ public class Event: NosManagedObject {
         }
         
         return await context.perform {
-            guard let note = try? Event().findOrCreateStubBy(id: noteID, context: context),
+            guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
                 let content = note.content else {
                 return nil
             }
@@ -1023,14 +1018,14 @@ public class Event: NosManagedObject {
         }
         
         let requestData: [(HexadecimalString?, Date?)] = await context.perform {
-            guard let note = try? Event().findOrCreateStubBy(id: noteID, context: context),
+            guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
                 let authorKey = note.author?.hexadecimalPublicKey else {
                 return []
             }
         
             var requestData = [(HexadecimalString?, Date?)]()
             
-            guard let author = try? Author().findOrCreate(by: authorKey, context: context) else {
+            guard let author = try? Author.findOrCreate(by: authorKey, context: context) else {
                 Log.debug("Author not found when requesting metadata of a note's author")
                 return []
             }
@@ -1042,7 +1037,7 @@ public class Event: NosManagedObject {
             note.authorReferences.forEach { reference in
                 if let reference = reference as? AuthorReference,
                     let pubKey = reference.pubkey,
-                    let author = try? Author().findOrCreate(by: pubKey, context: context),
+                    let author = try? Author.findOrCreate(by: pubKey, context: context),
                     author.needsMetadata {
                     requestData.append((author.hexadecimalPublicKey, author.lastUpdatedMetadata))
                 }

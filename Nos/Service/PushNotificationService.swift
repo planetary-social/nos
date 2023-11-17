@@ -217,7 +217,7 @@ import Combine
         if let viewModel {
             // Leave an hour of margin on the notificationcutoff to allow for events arriving slightly out of order.
             notificationCutoff = viewModel.date.addingTimeInterval(-60 * 60)
-            await viewModel.loadContent(in: self.modelContext)
+            await viewModel.loadContent(in: self.persistenceController.parseContext)
             
             do {
                 try await UNUserNotificationCenter.current().add(viewModel.notificationCenterRequest)

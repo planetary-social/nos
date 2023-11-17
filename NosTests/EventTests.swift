@@ -9,9 +9,12 @@ import XCTest
 import CoreData
 import secp256k1
 import secp256k1_bindings
+import Dependencies
 
 /// Tests for the Event model.
 final class EventTests: XCTestCase {
+    
+    @Dependency(\.persistenceController) private var persistenceController
     
     // swiftlint:disable line_length
     // swiftlint:disable indentation_width
@@ -62,6 +65,10 @@ final class EventTests: XCTestCase {
     
     let sampleContactListSignature = "a01fa191a0236ffe5ee1fbd9401cd7b1da7daad5e19a25962eb7ea4c9335522478bdff255f1de40ca6c98cdf8cf26aa1f5f1b6c263c5004b0b6dcdc12573cfd7"
     
+    override func setUp() async throws {
+        persistenceController.resetForTesting()
+    }
+    
     // swiftlint:enable line_length
 
     func testParseSampleData() throws {
@@ -73,7 +80,7 @@ final class EventTests: XCTestCase {
         let events = try EventProcessor.parse(
             jsonData: sampleData,
             from: nil,
-            in: PersistenceController(inMemory: true)
+            in: persistenceController
         )
         let sampleEvent = try XCTUnwrap(events.first(where: { $0.identifier == sampleEventID }))
         
@@ -90,7 +97,6 @@ final class EventTests: XCTestCase {
         // Arrange
         let sampleData = try Data(contentsOf: Bundle.current.url(forResource: "sample_replies", withExtension: "json")!)
         let sampleEventID = "57b994eb5903d37ee11d507872611eec843098d24eb5d21a1678983dffd92b86"
-        let persistenceController = PersistenceController(inMemory: true)
         let testContext = persistenceController.container.viewContext
         
         // Act
@@ -107,7 +113,6 @@ final class EventTests: XCTestCase {
     
     func testSerializedEventForSigning() throws {
         // Arrange
-        let persistenceController = PersistenceController(inMemory: true)
         let testContext = persistenceController.container.viewContext
         let event = try createTestEvent(in: testContext)
         // swiftlint:disable line_length
@@ -126,7 +131,6 @@ final class EventTests: XCTestCase {
     
     func testIdentifierCalculation() throws {
         // Arrange
-        let persistenceController = PersistenceController(inMemory: true)
         let testContext = persistenceController.container.viewContext
         let event = try createTestEvent(in: testContext)
         
@@ -139,7 +143,6 @@ final class EventTests: XCTestCase {
     
     func testIdentifierCalculationWithNoTags() throws {
         // Arrange
-        let persistenceController = PersistenceController(inMemory: true)
         let testContext = persistenceController.container.viewContext
         let event = try createTestEventWithNoTags(in: testContext)
         // Act
@@ -157,7 +160,7 @@ final class EventTests: XCTestCase {
         }
 
         let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
-        let context = PersistenceController(inMemory: true).container.viewContext
+        let context = persistenceController.viewContext
 
         // Act
         let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)!
@@ -189,7 +192,7 @@ final class EventTests: XCTestCase {
         
         var jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
         jsonEvent.tags = [["expiration", "2378572992"]]
-        let context = PersistenceController(inMemory: true).container.viewContext
+        let context = persistenceController.viewContext
         
         // Act
         let parsedEvent = try EventProcessor.parse(
@@ -212,7 +215,7 @@ final class EventTests: XCTestCase {
         
         var jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
         jsonEvent.tags = [["expiration", "2378572992.123"]]
-        let context = PersistenceController(inMemory: true).container.viewContext
+        let context = persistenceController.viewContext
         
         // Act
         let parsedEvent = try EventProcessor.parse(
@@ -235,7 +238,7 @@ final class EventTests: XCTestCase {
         
         var jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
         jsonEvent.tags = [["expiration", "1"]]
-        let context = PersistenceController(inMemory: true).container.viewContext
+        let context = persistenceController.viewContext
         
         // Act & Assert
         XCTAssertThrowsError(try EventProcessor.parse(
@@ -248,7 +251,6 @@ final class EventTests: XCTestCase {
     
     /// Verifies that when we see an event we already have in Core Data as a stub it is updated correctly.
     func testParsingEventStub() throws {
-        let persistenceController = PersistenceController(inMemory: true)
         let testContext = persistenceController.container.viewContext
         let referencingJSONEvent = JSONEvent(
             id: "1",
@@ -305,7 +307,6 @@ final class EventTests: XCTestCase {
     /// does is verify that we are internally consistent in our signature logic.
     func testSigningAndVerification() throws {
         // Arrange
-        let persistenceController = PersistenceController(inMemory: true)
         let testContext = persistenceController.container.viewContext
         let event = try createTestEvent(in: testContext)
         
@@ -318,7 +319,6 @@ final class EventTests: XCTestCase {
     
     func testVerificationOnBadId() throws {
         // Arrange
-        let persistenceController = PersistenceController(inMemory: true)
         let testContext = persistenceController.container.viewContext
         let event = try createTestEvent(in: testContext)
         
@@ -332,7 +332,6 @@ final class EventTests: XCTestCase {
     
     func testVerificationOnBadSignature() throws {
         // Arrange
-        let persistenceController = PersistenceController(inMemory: true)
         let testContext = persistenceController.container.viewContext
         let event = try createTestEvent(in: testContext)
         event.identifier = try event.calculateIdentifier()
@@ -346,7 +345,6 @@ final class EventTests: XCTestCase {
     }
 
     func testFetchEventByIDPerformance() throws {
-        let persistenceController = PersistenceController()
         let testContext = persistenceController.container.viewContext
         let testEvent = try createTestEvent(in: testContext)
         testEvent.identifier = try testEvent.calculateIdentifier()

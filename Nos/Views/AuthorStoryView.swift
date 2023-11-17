@@ -26,7 +26,7 @@ struct AuthorStoryView: View {
 
     @State private var subscriptionIDs = [String]()
 
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
     @EnvironmentObject private var relayService: RelayService
     
     init(
@@ -190,7 +190,7 @@ fileprivate struct BottomOverlay: View {
 
     @Dependency(\.persistenceController) private var persistenceController
 
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
 
     @State private var replyCount = 0
     @State private var replyAvatarURLs = [URL]()

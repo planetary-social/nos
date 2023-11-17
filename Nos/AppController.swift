@@ -10,18 +10,18 @@ import Dependencies
 import SwiftUI
 import Logger
 
-class AppController: ObservableObject {
+@Observable class AppController {
     
     enum CurrentState {
         case onboarding
         case loggedIn
     }
     
-    @Published private(set) var currentState: CurrentState?
+    private(set) var currentState: CurrentState?
     
-    @Dependency(\.analytics) private var analytics
-    @Dependency(\.router) private var router
-    @Dependency(\.currentUser) private var currentUser
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
+    @ObservationIgnored @Dependency(\.router) private var router
+    @ObservationIgnored @Dependency(\.currentUser) private var currentUser
     
     init() {
         Log.info("App Version: \(Bundle.current.versionAndBuild)")

@@ -12,8 +12,8 @@ struct AuthorCard: View {
    
     @ObservedObject var author: Author 
     
-    @EnvironmentObject private var router: Router
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(Router.self) private var router
+    @Environment(CurrentUser.self) private var currentUser
     
     var followersRequest: FetchRequest<Follow>
     var followersResult: FetchedResults<Follow> { followersRequest.wrappedValue }

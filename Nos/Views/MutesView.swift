@@ -12,7 +12,7 @@ struct MutesDestination: Hashable { }
 struct MutesView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject var router: Router
+    @Environment(Router.self) var router
 
     @FetchRequest
     private var authors: FetchedResults<Author>

@@ -18,8 +18,8 @@ struct FollowCard: View {
    
     var style = CardStyle.compact
 
-    @EnvironmentObject private var router: Router
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(Router.self) private var router
+    @Environment(CurrentUser.self) private var currentUser
     @EnvironmentObject private var relayService: RelayService
     
     @State private var subscriptions = [RelaySubscription.ID]()

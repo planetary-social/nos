@@ -14,8 +14,8 @@ struct HomeFeedView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject var router: Router
-    @EnvironmentObject var currentUser: CurrentUser
+    @Environment(Router.self) var router
+    @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
     
     @FetchRequest var events: FetchedResults<Event>
@@ -264,12 +264,12 @@ struct ContentView_Previews: PreviewProvider {
         HomeFeedView(user: user)
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
-            .environmentObject(router)
-            .environmentObject(currentUser)
+            .environment(router)
+            .environment(currentUser)
         
         HomeFeedView(user: user)
             .environment(\.managedObjectContext, emptyPreviewContext)
             .environmentObject(emptyRelayService)
-            .environmentObject(router)
+            .environment(router)
     }
 }
