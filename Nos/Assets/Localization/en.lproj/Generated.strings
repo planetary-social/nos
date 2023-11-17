@@ -33,12 +33,18 @@
 "Localized.failedToExportLogs" = "Failed to export logs.";
 "Localized.appVersion" = "App Version:";
 "Localized.allPublishedEvents" = "All published events";
+"Localized.feedSettings" = "Feed Settings";
+"Localized.useReportsFromFollows" = "Use reports from my follows";
+"Localized.useReportsFromFollowsDescription" = "When someone you follow reports a note or user, we'll add a content warning to their notes.";
+"Localized.showOutOfNetworkWarnings" = "Show Out of Network warnings";
+"Localized.showOutOfNetworkWarningsDescription" = "Hide notes from users outside my friends of friends circle behind a content warning.";
 "Localized.privateKey" = "Private Key";
 "Localized.logout" = "Logout";
 "Localized.myKeyIsBackedUp" = "My key is backed up";
 "Localized.backUpYourKeyWarning" = "Logging out will delete your private key (nsec) from the app. Make sure you have your private key backed up before you do this or you will lose access to your account!";
 "Localized.post" = "Post";
 "Localized.newNote" = "New Note";
+"Localized.new" = "New";
 "Localized.newNotePlaceholder" = "Type your post here...";
 "Localized.cancel" = "Cancel";
 "Localized.confirm" = "Confirm";
@@ -96,6 +102,14 @@
 "Localized.followedByOneAndMore" = "Followed by **{{ one }}** and **{{ count }} others**";
 "Localized.followedByTwo" = "Followed by **{{ one }}** and **{{ two }}**";
 "Localized.followedByTwoAndMore" = "Followed by **{{ one }}**, **{{ two }}** and **{{ count }} others**";
+"Localized.userHasBeen" = "This user has been";
+"Localized.noteHasBeen" = "This note has been";
+"Localized.reportedBy" = "reported by";
+"Localized.reportedByOne" = "reported by **{{ one }}**";
+"Localized.reportedByOneAndMore" = "reported by **{{ one }}** and **{{ count }} others**";
+"Localized.reportedByTwo" = "reported by **{{ one }}** and **{{ two }}**";
+"Localized.reportedByTwoAndMore" = "reported by **{{ one }}**, **{{ two }}** and **{{ count }} others**";
+"Localized.reportedFor" = "for {{reason}}";
 "Localized.unfollow" = "Unfollow";
 "Localized.universalName" = "Universal name";
 "Localized.nip05" = "NIP-05";
@@ -104,6 +118,7 @@
 "Localized.readMore" = "Read more";
 "Localized.thread" = "Thread";
 "Localized.show" = "Show";
+"Localized.viewThisPostAnyway" = "View this post anyway";
 "Localized.bio" = "Bio";
 "Localized.displayName" = "Display name";
 "Localized.name" = "Name";
@@ -155,6 +170,8 @@
 "Localized.note" = "note";
 "Localized.unmuteUser" = "Un-Mute";
 "Localized.outsideNetwork" = "This user is outside your network.";
+"Localized.outsideNetworkExplanation" = "This note originates from someone beyond your 'friends of friends' network. Nos hides these by default. You can change this in the settings menu.";
+"Localized.contentWarningExplanation" = "Nos is committed to fostering safe and respectful community. To achieve this we display content warnings when someone you follow reports a note. You can change this in teh settings menu.";
 "Localized.allMyRelays" = "All My Relays";
 "Localized.about" = "About";
 "Localized.contactUs" = "Contact Us";
@@ -173,7 +190,7 @@
 "Localized.registration" = "Registration";
 "Localized.registrationDescription" = "Enter your phone number so we can send you an SMS code.";
 "Localized.verification" = "Verification";
-"Localized.verificationDescription" = "Enter the 4-digit code we sent to {{ phone_number }}";
+"Localized.verificationDescription" = "Enter the 6-digit code we sent to {{ phone_number }}";
 "Localized.unsLearnMore" = "Learn more about UNS.";
 "Localized.verifyYourIdentity" = "Verify your identity";
 "Localized.enterCode" = "Enter Code";
@@ -199,7 +216,7 @@
 "Localized.eventSource" = "Raw Event";
 "Localized.loading" = "Loading...";
 "Localized.viewSource" = "View Source";
-"Localized.reportEventContent" = "This content has been reported for {{ report_category }} using NIP-69 vocabulary https://github.com/nostr-protocol/nips/pull/457";
+"Localized.reportEventContent" = "This content has been reported for {{ report_category }}.";
 "Localized.select" = "Select";
 "Localized.linkToNote" = "🔗 Link to note";
 

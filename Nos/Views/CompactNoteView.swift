@@ -24,13 +24,15 @@ struct CompactNoteView: View {
     @State private var truncatedSize = CGSize.zero
     @State private var noteContent = LoadingContent<AttributedString>.loading
     @State private var contentLinks = [URL]()
+    private var loadLinks: Bool
     
     @EnvironmentObject var router: Router
     @Dependency(\.persistenceController) private var persistenceController
     
-    internal init(note: Event, showFullMessage: Bool = false) {
+    internal init(note: Event, showFullMessage: Bool = false, loadLinks: Bool = true) {
         _showFullMessage = .init(initialValue: showFullMessage)
         self.note = note
+        self.loadLinks = loadLinks
     }
     
     func updateShouldShowReadMore() {
@@ -101,7 +103,6 @@ struct CompactNoteView: View {
                     }
             }
             if shouldShowReadMore && !showFullMessage {
-                
                 ZStack(alignment: .center) {
                     Button {
                         withAnimation {
@@ -119,7 +120,7 @@ struct CompactNoteView: View {
                 .frame(maxWidth: .infinity)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
-            if note.kind == EventKind.text.rawValue, !contentLinks.isEmpty {
+            if note.kind == EventKind.text.rawValue, loadLinks, !contentLinks.isEmpty {
                 LinkPreviewCarousel(links: contentLinks)
             }
         }
@@ -161,6 +162,7 @@ struct CompactNoteView_Previews: PreviewProvider {
             CompactNoteView(note: previewData.longNote)
             CompactNoteView(note: previewData.longFormNote)
             CompactNoteView(note: previewData.doubleImageNote)
+            CompactNoteView(note: previewData.doubleImageNote, loadLinks: false)
         }
         .padding()
         .background(Color.cardBackground)

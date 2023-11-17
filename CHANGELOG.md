@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added a content warning when a user you follow has reported the content
 - Fix a bug where linking a Universal Name would overwrite your existing NIP-05.
+- Added toggles to the settings screen to disable report-based and network-based content warnings
 - Fixed incorrect ellipsis applied to long notes.
 - Changed note rendering to retain more newlines. 
 - Show reposts in stories.

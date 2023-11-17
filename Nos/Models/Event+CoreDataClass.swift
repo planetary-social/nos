@@ -464,6 +464,17 @@ public class Event: NosManagedObject {
         }
 
         return nil
+    }    
+    
+    func reportsRequest() -> NSFetchRequest<Event> {
+        let request = NSFetchRequest<Event>(entityName: "Event")
+        request.predicate = NSPredicate(
+            format: "kind = %i AND ANY eventReferences.referencedEvent = %@", 
+            EventKind.report.rawValue,
+            self
+        )
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.identifier, ascending: true)]
+        return request
     }
     
     // MARK: - Creating
@@ -1048,6 +1059,31 @@ public class Event: NosManagedObject {
             Log.error("Couldn't find a bech32note key when generating web link")
             return "https://njump.me"
         }
+    }
+    
+    /// Returns a list of the authors this event was reported by if any of them are followed by the given user.
+    /// This isn't very performant so use sparingly.
+    @MainActor func reportingAuthors(followedBy currentUser: CurrentUser) -> [Author] {
+        let events = referencingEvents
+            .compactMap { $0.referencingEvent }
+            .filter { (event: Event) in event.kind == EventKind.report.rawValue }
+            .compactMap { $0.author }
+            .filter { currentUser.socialGraph.follows($0.hexadecimalPublicKey) }
+        return events
+    }
+    
+    /// Returns a list of reports for this event from authors followed by the given user.
+    /// This isn't very performant so use sparingly.
+    @MainActor
+    func reports(followedBy currentUser: CurrentUser) -> [Event] {
+        let reportEvents = referencingEvents
+            .compactMap { $0.referencingEvent }
+            .filter { event in
+                let isReportEvent = event.kind == EventKind.report.rawValue
+                let isFollowed = currentUser.socialGraph.follows(event.author?.hexadecimalPublicKey ?? "")
+                return isReportEvent && isFollowed
+            }
+        return reportEvents
     }
 }
 // swiftlint:enable type_body_length
