@@ -16,7 +16,7 @@ final class URLExtensionTests: XCTestCase {
     
     func testTruncatedMarkdownLink_withNonEmptyPathExtension() {
         let url = URL(string: "https://example.com/image.png")!
-        XCTAssertEqual(url.truncatedMarkdownLink, "[example.com/...](https://example.com/image.png)")
+        XCTAssertEqual(url.truncatedMarkdownLink, "[example.com...](https://example.com/image.png)")
     }
     
     func testTruncatedMarkdownLink_withNilHost() {
@@ -31,6 +31,6 @@ final class URLExtensionTests: XCTestCase {
     
     func testTruncatedMarkdownLink_withShortPath() {
         let url = URL(string: "https://nips.be/1")!
-        XCTAssertEqual(url.truncatedMarkdownLink, "[nips.be/...](https://nips.be/1)")
+        XCTAssertEqual(url.truncatedMarkdownLink, "[nips.be...](https://nips.be/1)")
     }
 }
