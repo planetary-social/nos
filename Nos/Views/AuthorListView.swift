@@ -32,10 +32,12 @@ struct AuthorListView: View {
             LazyVStack {
                 if let authors = filteredAuthors {
                     ForEach(authors) { author in
-                        AuthorRow(author: author) {
+                        AuthorCard(author: author) {
                             didSelectGesture?(author)
                         }
-                        .padding(.horizontal)
+                        .padding(.horizontal, 13)
+                        .padding(.top, 5)
+                        .readabilityPadding()
                     }
                 } else {
                     ProgressView()

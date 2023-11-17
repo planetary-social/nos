@@ -769,16 +769,6 @@ extension RelayService {
         )
     }
 
-    func identifierToShow(_ identifier: String) -> String {
-        let localPart = identifier.components(separatedBy: "@")[safe: 0]
-        let domain = identifier.components(separatedBy: "@")[safe: 1]
-        if localPart == "_" {
-            // The identifier _@domain is the "root" identifier, and is displayed as: <domain>
-            return domain ?? ""
-        }
-        return identifier
-    }
-    
     func domain(from identifier: String) -> String {
         identifier.components(separatedBy: "@")[safe: 1] ?? ""
     }
