@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Removed trailing slash from truncated URLs.
+- Fixed a hang on startup.
+- Fixed an issue where links couldn't be opened from the Home tab.
+
 ## [0.1 (93)] - 2023-11-10Z
 
 - Added a confirmation before reposting a note.

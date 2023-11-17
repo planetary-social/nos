@@ -90,17 +90,17 @@ extension Router {
             do {
                 // handle mentions. mention link will be prefixed with "@" followed by
                 // the hex format pubkey of the mentioned author
-                if link.hasPrefix("@") {
-                    push(try Author.findOrCreate(by: identifier, context: context))
-                } else if link.hasPrefix("%") {
-                    push(try Event.findOrCreateStubBy(id: identifier, context: context))
-                } else if url.scheme == "http" || url.scheme == "https" {
-                    push(url)
-                } else {
-                    UIApplication.shared.open(url)
-                }
-            } catch {
-                Log.optional(error)
+            if link.hasPrefix("@") {
+                push(try Author.findOrCreate(by: identifier, context: persistenceController.viewContext))
+            } else if link.hasPrefix("%") {
+                push(try Event.findOrCreateStubBy(id: identifier, context: persistenceController.viewContext))
+            } else if url.scheme == "http" || url.scheme == "https" {
+                push(url)
+            } else {
+                UIApplication.shared.open(url)
+            }
+        } catch {
+            Log.optional(error)
             } 
         }
     }
