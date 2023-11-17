@@ -9,6 +9,7 @@ import SwiftUI
 import Combine
 import CoreData
 import Logger
+import Dependencies
 
 // Manages the app's navigation state.
 @MainActor class Router: ObservableObject {
@@ -19,6 +20,7 @@ import Logger
     @Published var profilePath = NavigationPath()
     @Published var sideMenuPath = NavigationPath()
     @Published var selectedTab = AppDestination.home
+    @Dependency(\.persistenceController) private var persistenceController
     
     var currentPath: Binding<NavigationPath> {
         if sideMenuOpened {
@@ -101,9 +103,9 @@ extension Router {
         // the hex format pubkey of the mentioned author
         do {
             if link.hasPrefix("@") {
-                push(try Author.findOrCreate(by: identifier, context: context))
+                push(try Author.findOrCreate(by: identifier, context: persistenceController.parseContext))
             } else if link.hasPrefix("%") {
-                push(try Event.findOrCreateStubBy(id: identifier, context: context))
+                push(try Event.findOrCreateStubBy(id: identifier, context: persistenceController.parseContext))
             } else if url.scheme == "http" || url.scheme == "https" {
                 push(url)
             } else {

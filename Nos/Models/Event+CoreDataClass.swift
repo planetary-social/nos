@@ -23,6 +23,7 @@ enum EventError: Error {
     case invalidETag([String])
     case invalidSignature(Event)
     case expiredEvent
+    case coreData
     
     var description: String? {
         switch self {
@@ -37,7 +38,7 @@ enum EventError: Error {
         case .expiredEvent:
             return "This event has expired"
         default:
-            return ""
+            return "An unkown error occurred."
         }
 	}
 }
@@ -75,6 +76,7 @@ extension FetchedResults where Element == Event {
 public class Event: NosManagedObject {
     
     @Dependency(\.currentUser) private var currentUser
+    @Dependency(\.persistenceController) private var persistenceController
     
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"
@@ -477,7 +479,7 @@ public class Event: NosManagedObject {
     
     // MARK: - Creating
 
-    class func createIfNecessary(
+    func createIfNecessary(
         jsonEvent: JSONEvent, 
         relay: Relay?, 
         context: NSManagedObjectContext
@@ -492,28 +494,65 @@ public class Event: NosManagedObject {
                 try existingEvent.hydrate(from: jsonEvent, relay: relay, in: context)
             }
             return existingEvent
+        } else {
+            @Dependency(\.crashReporting) var crashReporting
+            @Dependency(\.persistenceController) var persistenceController
+
+            /// Always create events in the creationContext first to make sure we never end up with two identical
+            /// Events in different contexts with the same objectID, because this messes up SwiftUI's observation
+            /// of changes.
+            let creationContext = persistenceController.creationContext
+            let objectID = try creationContext.performAndWait {
+                let event = Event(context: creationContext)
+                event.identifier = jsonEvent.id
+                try creationContext.save()
+                return event.objectID
+            }
+            guard let fetchedEvent = context.object(with: objectID) as? Event else {
+                let error = EventError.coreData
+                crashReporting.report(error)
+                throw error
+            }
+            
+            fetchedEvent.receivedAt = .now
+            try fetchedEvent.hydrate(from: jsonEvent, relay: relay, in: context)
+            return fetchedEvent
         }
-        
-        return try Event(context: context, jsonEvent: jsonEvent, relay: relay)
     }
     
-    class func findOrCreateStubBy(id: String, context: NSManagedObjectContext) throws -> Event {
+    /// Fetches the event with the given ID out of the database, and otherwise creates a stubbed Event.
+    /// A stubbed event only has an `identifier` - we know an event with this identifier exists but we don't
+    /// have its content or tags yet.
+    ///  
+    /// - Parameters:
+    ///   - id: The hexadecimal Nostr ID of the event.
+    /// - Returns: The Event model with the given ID.
+    class func findOrCreateStubBy(id: HexadecimalString, context: NSManagedObjectContext) throws -> Event {
         if let existingEvent = try context.fetch(Event.event(by: id)).first {
             return existingEvent
         } else {
-            let event = Event(context: context)
-            event.identifier = id
-            return event
+            @Dependency(\.crashReporting) var crashReporting
+            @Dependency(\.persistenceController) var persistenceController
+
+            /// Always create events in the creationContext first to make sure we never end up with two identical
+            /// Events in different contexts with the same objectID, because this messes up SwiftUI's observation
+            /// of changes.
+            let creationContext = persistenceController.creationContext
+            let objectID = try creationContext.performAndWait {
+                let event = Event(context: creationContext)
+                event.identifier = id
+                try creationContext.save()
+                return event.objectID
+            }
+            guard let fetchedEvent = context.object(with: objectID) as? Event else {
+                let error = EventError.coreData
+                crashReporting.report(error)
+                throw error
+            }
+            return fetchedEvent
         }
     }
     
-    convenience init(context: NSManagedObjectContext, jsonEvent: JSONEvent, relay: Relay?) throws {
-        self.init(context: context)
-        identifier = jsonEvent.id
-        receivedAt = .now
-        try hydrate(from: jsonEvent, relay: relay, in: context)
-    }
-
     func deleteEvents(identifiers: [String], context: NSManagedObjectContext) async {
         print("Deleting: \(identifiers)")
         let deleteRequest = Event.deletePostsRequest(for: identifiers)

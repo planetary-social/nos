@@ -33,18 +33,34 @@ class PersistenceController {
         container.viewContext
     }
     
-    lazy var backgroundViewContext = {
+    /// A context to synchronize creation of Events and Authors so we don't end up with duplicates.
+    lazy var creationContext = {
         newBackgroundContext()
     }()
     
-    var container: NSPersistentContainer
+    /// A context for parsing Nostr events from relays.
+    lazy var parseContext = {
+        self.newBackgroundContext()
+    }()
+    
+    /// A context for Views to do expensive queries that we want to keep off the viewContext.
+    lazy var backgroundViewContext = {
+        self.newBackgroundContext()
+    }()
+    
+    private(set) var container: NSPersistentContainer
+    private var model: NSManagedObjectModel
+    private var inMemory: Bool
 
-    init(inMemory: Bool = false) {
+    init(containerName: String = "Nos", inMemory: Bool = false) {
+        self.inMemory = inMemory
         let modelURL = Bundle.current.url(forResource: "Nos", withExtension: "momd")!
-        container = NSPersistentContainer(
-            name: "Nos",
-            managedObjectModel: NSManagedObjectModel(contentsOf: modelURL)!
-        )
+        model = NSManagedObjectModel(contentsOf: modelURL)!
+        container = NSPersistentContainer(name: containerName, managedObjectModel: model)
+        setUp()
+    }
+    
+    func setUp() {
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
@@ -55,6 +71,26 @@ class PersistenceController {
         let mergeType = NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType
         container.viewContext.mergePolicy = NSMergePolicy(merge: mergeType)
     }
+    
+    #if DEBUG
+    func resetForTesting() {
+        container = NSPersistentContainer(name: "Nos", managedObjectModel: model)
+        if !inMemory {
+            container.loadPersistentStores(completionHandler: { (storeDescription, _) in
+                guard let storeURL = storeDescription.url else {
+                    Log.error("Could not get store URL")
+                    return
+                }
+                Self.clearCoreData(store: storeURL, in: self.container)
+            })
+        }
+        setUp()
+        viewContext.reset()
+        creationContext = newBackgroundContext()
+        backgroundViewContext = newBackgroundContext()
+        parseContext = newBackgroundContext()
+    }
+    #endif
     
     private func loadPersistentStores(from container: NSPersistentContainer) {
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
@@ -168,7 +204,7 @@ class PersistenceController {
         
         cleanupTask = Task {
             defer { self.cleanupTask = nil }
-            let context = backgroundViewContext
+            let context = parseContext
             let startTime = Date.now
             Log.info("Starting Core Data cleanup...")
             
