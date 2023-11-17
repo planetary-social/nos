@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed the 3d card effect on the Notifications tab.
+
 ## [0.1 (93)] - 2023-11-10Z
 
 - Added a confirmation before reposting a note.
