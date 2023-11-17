@@ -108,7 +108,7 @@ struct NotificationCard: View {
 #Preview {
     var previewData = PreviewData()
     
-    var previewContext = previewData.previewContext
+    let previewContext = previewData.previewContext
     
     var alice: Author {
         previewData.alice
@@ -118,7 +118,7 @@ struct NotificationCard: View {
         previewData.bob
     }
     
-    var note: Event = {
+    let note: Event = {
         let mentionNote = Event(context: previewContext)
         mentionNote.content = "Hello, bob!"
         mentionNote.kind = 1

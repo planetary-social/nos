@@ -43,7 +43,6 @@ struct CardButtonStyle: ButtonStyle {
     VStack {
         Spacer()
         Button { 
-            
         } label: { 
             VStack {
                 Text("hello world")
