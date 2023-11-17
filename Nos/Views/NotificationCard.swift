@@ -88,7 +88,7 @@ struct NotificationCard: View {
                 await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
                     noteID: viewModel.id,
                     using: relayService,
-                    in: persistenceController.parseContext
+                    in: backgroundContext
                 )
             }
         }
