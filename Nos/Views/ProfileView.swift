@@ -78,6 +78,10 @@ struct ProfileView: View {
                 lastUpdatedContactList: author.lastUpdatedContactList
             )
         )
+        
+        // reports
+        let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
+        subscriptionIds.append(await relayService.openSubscription(with: reportFilter))
     }
     
     func loadUSBCBalance() async {

@@ -86,9 +86,16 @@ struct RepliesView: View {
             }
             
             let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
-            let filter = Filter(kinds: [.text, .like, .delete, .repost], eTags: eTags)
+            let filter = Filter(kinds: [.text, .like, .delete, .repost, .report, .label], eTags: eTags)
             let subID = await relayService.openSubscription(with: filter)
             subscriptionIDs.append(subID)
+            
+            // download reports for this user
+            guard let authorKey = note.author?.hexadecimalPublicKey else {
+                return
+            }
+            let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
+            subscriptionIDs.append(await relayService.openSubscription(with: reportFilter))
         }
     }
     
@@ -108,8 +115,8 @@ struct RepliesView: View {
                         )
                         .padding(.top, 15)
                         
-                        ForEach(directReplies) { event in
-                            ThreadView(root: event, allReplies: Array(replies))
+                        ForEach(directReplies.reversed()) { event in
+                            ThreadView(root: event, allReplies: replies.reversed())
                         }
                     }
                     .padding(.bottom)
