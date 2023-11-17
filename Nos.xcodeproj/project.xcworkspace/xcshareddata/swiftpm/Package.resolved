@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CocoaLumberjack/CocoaLumberjack.git",
       "state" : {
-        "revision" : "67ec5818a757aba4d7c534e21a905d878d128dbf",
-        "version" : "3.8.1"
+        "revision" : "363ed23d19a931809ea834a7d722da830353806a",
+        "version" : "3.8.2"
       }
     },
     {
@@ -203,8 +203,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
-        "revision" : "54c85cb26308b89846d4671f23954dce088da2b0",
-        "version" : "2.60.0"
+        "revision" : "702cd7c56d5d44eeba73fdf83918339b26dc855c",
+        "version" : "2.62.0"
       }
     },
     {
@@ -284,8 +284,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/WalletConnect/WalletConnectSwiftV2",
       "state" : {
-        "revision" : "f7ffc7910871b1cc3e4194e5bf1c7f9b5bd65e03",
-        "version" : "1.9.1"
+        "revision" : "99e12a7ac5c9c466d4a1c093acaac0f453dce5d2",
+        "version" : "1.9.0"
       }
     },
     {
