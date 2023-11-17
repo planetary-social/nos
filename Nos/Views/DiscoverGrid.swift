@@ -10,7 +10,7 @@ import SwiftUI
 struct DiscoverGrid: View {
     
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
     @FetchRequest(fetchRequest: Event.emptyDiscoverRequest()) var events: FetchedResults<Event>
     @ObservedObject var searchController: SearchController
     
