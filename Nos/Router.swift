@@ -64,7 +64,6 @@ import Dependencies
         selectedTab = .newNote(contents)
     }
 
-
     func path(for destination: AppDestination) -> Binding<NavigationPath> {
         switch destination {
         case .home:

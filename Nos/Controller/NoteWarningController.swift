@@ -67,7 +67,7 @@ extension Publisher {
     private var objectContext: NSManagedObjectContext!
     
     // This function is too long, I should break it up into nicely named functions.
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    // swiftlint:disable:next function_body_length
     init() {
         self.objectContext = persistenceController.viewContext
         
