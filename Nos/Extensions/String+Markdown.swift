@@ -49,7 +49,13 @@ extension String {
             for match in matches {
                 if let range = Range(match.range(at: 2), in: self), let url = URL(string: String(self[range])) {
                     urls.append(url)
-                    regex.replaceMatches(in: mutableString, options: [], range: match.range, withTemplate: "")
+                    let prettyURL = url.truncatedMarkdownLink
+                    regex.replaceMatches(
+                        in: mutableString, 
+                        options: [], 
+                        range: match.range, 
+                        withTemplate: "$1\(prettyURL)"
+                    )
                 }
             }
         } catch {
