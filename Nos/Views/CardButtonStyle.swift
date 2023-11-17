@@ -42,8 +42,7 @@ struct CardButtonStyle: ButtonStyle {
 #Preview {
     VStack {
         Spacer()
-        Button { 
-            
+        Button {
         } label: { 
             VStack {
                 Text("hello world")

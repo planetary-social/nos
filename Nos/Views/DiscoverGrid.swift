@@ -10,6 +10,7 @@ import SwiftUI
 struct DiscoverGrid: View {
     
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var router: Router
     @FetchRequest(fetchRequest: Event.emptyDiscoverRequest()) var events: FetchedResults<Event>
     @ObservedObject var searchController: SearchController
     
@@ -45,9 +46,18 @@ struct DiscoverGrid: View {
                         }
                     } else {
                         // Search results
-                        StaggeredGrid(list: searchController.authorSuggestions, columns: columns) { author in
-                            AuthorCard(author: author)
-                                .matchedGeometryEffect(id: author.hexadecimalPublicKey, in: animation)
+                        ScrollView {
+                            LazyVStack {
+                                ForEach(searchController.authorSuggestions) { author in
+                                    AuthorCard(author: author) { 
+                                        router.push(author)
+                                    }
+                                    .padding(.horizontal, 13)
+                                    .padding(.top, 5)
+                                    .readabilityPadding()
+                                }
+                            }
+                            .padding(.top, 5)
                         }
                     }
                 }
