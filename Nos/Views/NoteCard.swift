@@ -160,7 +160,7 @@ struct NoteCard: View {
                 await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
                     noteID: note.identifier,
                     using: relayService,
-                    in: persistenceController.backgroundViewContext
+                    in: persistenceController.parseContext
                 )
             }
         }

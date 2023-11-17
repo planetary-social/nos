@@ -99,7 +99,7 @@ struct NotificationCard: View {
             }
         }
         .task(priority: .userInitiated) {
-            self.content = await viewModel.loadContent(in: viewContext)
+            self.content = await viewModel.loadContent(in: persistenceController.parseContext)
         }
     }
 }
