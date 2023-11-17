@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add a loading indicator to search results.
+- Fix delay in results immediately after opening the discover tab.
+
 ## [0.1 (93)] - 2023-11-10Z
 
 - Added a confirmation before reposting a note.
