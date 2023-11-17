@@ -33,7 +33,7 @@ enum OnboardingStep {
 }
 
 struct OnboardingView: View {
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
 
     @StateObject var state = OnboardingState()
     

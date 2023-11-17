@@ -11,7 +11,7 @@ struct ReplyButton: View {
     var note: Event
     var replyAction: ((Event) -> Void)?
 
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
     
     var body: some View {
         Button(action: {

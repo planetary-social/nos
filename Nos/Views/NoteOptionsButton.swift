@@ -11,7 +11,7 @@ import Dependencies
 
 struct NoteOptionsButton: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     
     @Dependency(\.analytics) private var analytics
     @Dependency(\.persistenceController) private var persistenceController
@@ -142,6 +142,6 @@ struct NoteOptionsView_Previews: PreviewProvider {
         }
         .padding()
         .background(Color.cardBackground)
-        .environmentObject(currentUser)
+        .environment(currentUser)
     }
 }
