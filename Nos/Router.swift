@@ -9,6 +9,7 @@ import SwiftUI
 import Combine
 import CoreData
 import Logger
+import Dependencies
 
 // Manages the app's navigation state.
 @MainActor @Observable class Router {
@@ -19,6 +20,7 @@ import Logger
     var profilePath = NavigationPath()
     var sideMenuPath = NavigationPath()
     var selectedTab = AppDestination.home
+    @Dependency(\.persistenceController) private var persistenceController
     
     var currentPath: Binding<NavigationPath> {
         if sideMenuOpened {

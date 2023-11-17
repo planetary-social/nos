@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (93)] - 2023-11-10Z
+
+- Added a confirmation before reposting a note.
+- Added the ability to delete your reposts by tapping the repost button again.
+- Fixed some cases where deleted notes were still being displayed.
+- Fixed a bug where notes, reposts, and author profiles could fail to load.
+- Show truncated URLs in notes instead of hiding them completely.
+
 ## [0.1 (92)] - 2023-11-02Z
 
 - Show reposts in stories.
@@ -21,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1 (90)] - 2023-10-31Z
 
-- Fixed a crash related to content reports.
+- Fixed a bug where notes, reposts, and author profiles could fail to load.
 
 ## [0.1 (89)] - 2023-10-31Z
 
