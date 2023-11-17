@@ -14,7 +14,6 @@ struct RepostButton: View {
     var note: Event
     
     @FetchRequest private var reposts: FetchedResults<Event>
-    @EnvironmentObject private var currentUser: CurrentUser
     @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext

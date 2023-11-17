@@ -20,7 +20,7 @@ import Dependencies
     var profilePath = NavigationPath()
     var sideMenuPath = NavigationPath()
     var selectedTab = AppDestination.home
-    @Dependency(\.persistenceController) private var persistenceController
+    @Dependency(\.persistenceController) @ObservationIgnored private var persistenceController
     
     var currentPath: Binding<NavigationPath> {
         if sideMenuOpened {
