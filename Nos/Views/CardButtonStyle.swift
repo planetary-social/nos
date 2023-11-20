@@ -38,3 +38,24 @@ struct CardButtonStyle: ButtonStyle {
         }
     }
 }
+
+extension View {
+
+    func mimicCardButtonStyle() -> some View {
+        ZStack {
+            ZStack {
+                Color.card3d
+            }
+            .cornerRadius(20)
+            .offset(y: 4.5)
+            .shadow(
+                color: .cardShadowBottom,
+                radius: 5,
+                x: 0,
+                y: 4
+            )
+            self
+                .offset(y: 0)
+        }
+    }
+}
