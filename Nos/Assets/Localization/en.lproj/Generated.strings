@@ -94,6 +94,7 @@
 "Localized.version" = "Version";
 "Localized.profileTitle" = "Profile";
 "Localized.profile" = "profile";
+"Localized.seeProfile" = "See profile";
 "Localized.follow" = "Follow";
 "Localized.follows" = "Follows";
 "Localized.following" = "Following";

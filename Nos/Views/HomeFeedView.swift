@@ -98,6 +98,13 @@ struct HomeFeedView: View {
                                                     .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
                                                     .frame(width: 58, height: 58)
                                             )
+                                            .contextMenu {
+                                                Button {
+                                                    router.push(author)
+                                                } label: {
+                                                    Localized.seeProfile.view
+                                                }
+                                            }
                                     }
                                 }
                             }

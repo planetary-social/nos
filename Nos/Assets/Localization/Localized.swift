@@ -155,6 +155,7 @@ enum Localized: String, Localizable, CaseIterable {
     
     case profileTitle = "Profile"
     case profile = "profile"
+    case seeProfile = "See profile"
     case follow = "Follow"
     case follows = "Follows"
     case following = "Following"
