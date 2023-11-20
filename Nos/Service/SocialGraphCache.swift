@@ -28,6 +28,14 @@ import Logger
         return twoHopKeys.contains(key) || oneHopKeys.contains(key) || userKey == key
     }
     
+    func follows(_ key: HexadecimalString?) -> Bool {
+        guard let key, let userKey else {
+            return false
+        }
+        
+        return oneHopKeys.contains(key) || userKey == key
+    }
+    
     // MARK: - Private properties
     
     private let userKey: HexadecimalString?
@@ -74,7 +82,6 @@ import Logger
             }
         } catch {
             Log.error(error.localizedDescription)
-            return
         }
         
         userWatcher?.delegate = self

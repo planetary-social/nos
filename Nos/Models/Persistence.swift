@@ -33,12 +33,19 @@ class PersistenceController {
         container.viewContext
     }
     
+    /// A context to synchronize creation of Events and Authors so we don't end up with duplicates.
     lazy var creationContext = {
         newBackgroundContext()
     }()
     
+    /// A context for parsing Nostr events from relays.
+    lazy var parseContext = {
+        self.newBackgroundContext()
+    }()
+    
+    /// A context for Views to do expensive queries that we want to keep off the viewContext.
     lazy var backgroundViewContext = {
-        newBackgroundContext()
+        self.newBackgroundContext()
     }()
     
     private(set) var container: NSPersistentContainer
@@ -78,8 +85,10 @@ class PersistenceController {
             })
         }
         setUp()
+        viewContext.reset()
         creationContext = newBackgroundContext()
         backgroundViewContext = newBackgroundContext()
+        parseContext = newBackgroundContext()
     }
     #endif
     
@@ -195,7 +204,7 @@ class PersistenceController {
 
         cleanupTask = Task {
             defer { self.cleanupTask = nil }
-            let context = backgroundViewContext
+            let context = parseContext
             let startTime = Date.now
             Log.info("Starting Core Data cleanup...")
             

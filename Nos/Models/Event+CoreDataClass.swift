@@ -76,6 +76,7 @@ extension FetchedResults where Element == Event {
 public class Event: NosManagedObject {
     
     @Dependency(\.currentUser) private var currentUser
+    @Dependency(\.persistenceController) private var persistenceController
     
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"
@@ -168,7 +169,7 @@ public class Event: NosManagedObject {
         let featuredPredicate = NSPredicate(
             format: "kind IN %@ AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@ " +
                 "AND NOT author IN %@.follows.destination AND NOT author = %@ AND receivedAt <= %@ AND " +
-                "author.muted = false",
+                "author.muted = false AND deletedOn.@count = 0",
             discoverKinds.map { $0.rawValue },
             featuredAuthors.compactMap {
                 PublicKey(npub: $0)?.hex
@@ -181,7 +182,7 @@ public class Event: NosManagedObject {
         let twoHopsPredicate = NSPredicate(
             format: "kind IN %@ AND eventReferences.@count = 0 AND author.muted = false " +
                 "AND ANY author.followers.source IN %@.follows.destination AND NOT author IN %@.follows.destination " +
-                "AND receivedAt <= %@",
+                "AND receivedAt <= %@ AND deletedOn.@count = 0",
             discoverKinds.map { $0.rawValue },
             currentUser,
             currentUser,
@@ -221,7 +222,7 @@ public class Event: NosManagedObject {
         }
         
         return NSPredicate(
-            format: "kind = %i AND ANY authorReferences.pubkey = %@",
+            format: "kind = %i AND ANY authorReferences.pubkey = %@ AND deletedOn.@count = 0",
             EventKind.text.rawValue,
             publicKey
         )
@@ -233,14 +234,18 @@ public class Event: NosManagedObject {
         fetchRequest.predicate = NSPredicate(
             format: "author.hexadecimalPublicKey = %@ AND " +
             "SUBQUERY(shouldBePublishedTo, $relay, TRUEPREDICATE).@count != " +
-            "SUBQUERY(seenOnRelays, $relay, TRUEPREDICATE).@count",
+            "SUBQUERY(seenOnRelays, $relay, TRUEPREDICATE).@count AND " +
+            "deletedOn.@count = 0",
             user.hexadecimalPublicKey ?? ""
         )
         return fetchRequest
     }
     
     @nonobjc public class func allRepliesPredicate(for user: Author) -> NSPredicate {
-        NSPredicate(format: "kind = 1 AND ANY eventReferences.referencedEvent.author = %@", user)
+        NSPredicate(
+            format: "kind = 1 AND ANY eventReferences.referencedEvent.author = %@ AND deletedOn.@count = 0", 
+            user
+        )
     }
     
     @nonobjc public class func all(notifying user: Author, since: Date? = nil) -> NSFetchRequest<Event> {
@@ -322,7 +327,7 @@ public class Event: NosManagedObject {
     @nonobjc public class func homeFeedPredicate(for user: Author, before: Date) -> NSPredicate {
         NSPredicate(
             // swiftlint:disable line_length
-            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND (receivedAt == nil OR receivedAt <= %@)",
+            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND (receivedAt == nil OR receivedAt <= %@ AND deletedOn.@count = 0)",
             // swiftlint:enable line_length
             user,
             user,
@@ -344,7 +349,7 @@ public class Event: NosManagedObject {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let noteIsLikedByUserPredicate = NSPredicate(
             // swiftlint:disable line_length
-            format: "kind = \(String(EventKind.like.rawValue)) AND author.hexadecimalPublicKey = %@ AND SUBQUERY(eventReferences, $reference, $reference.eventId = %@).@count > 0",
+            format: "kind = \(String(EventKind.like.rawValue)) AND author.hexadecimalPublicKey = %@ AND SUBQUERY(eventReferences, $reference, $reference.eventId = %@).@count > 0  AND deletedOn.@count = 0",
             // swiftlint:enable line_length
             userPubKey,
             noteId
@@ -371,7 +376,7 @@ public class Event: NosManagedObject {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let noteIsLikedByUserPredicate = NSPredicate(
             // swiftlint:disable line_length
-            format: "kind = \(String(EventKind.repost.rawValue)) AND SUBQUERY(eventReferences, $reference, $reference.eventId = %@).@count > 0",
+            format: "kind = \(String(EventKind.repost.rawValue)) AND SUBQUERY(eventReferences, $reference, $reference.eventId = %@).@count > 0 AND deletedOn.@count = 0",
             // swiftlint:enable line_length
             noteID
         )
@@ -463,6 +468,17 @@ public class Event: NosManagedObject {
         }
 
         return nil
+    }    
+    
+    func reportsRequest() -> NSFetchRequest<Event> {
+        let request = NSFetchRequest<Event>(entityName: "Event")
+        request.predicate = NSPredicate(
+            format: "kind = %i AND ANY eventReferences.referencedEvent = %@ AND deletedOn.@count = 0", 
+            EventKind.report.rawValue,
+            self
+        )
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.identifier, ascending: true)]
+        return request
     }
     
     // MARK: - Creating
@@ -1070,6 +1086,31 @@ public class Event: NosManagedObject {
             Log.error("Couldn't find a bech32note key when generating web link")
             return "https://njump.me"
         }
+    }
+    
+    /// Returns a list of the authors this event was reported by if any of them are followed by the given user.
+    /// This isn't very performant so use sparingly.
+    @MainActor func reportingAuthors(followedBy currentUser: CurrentUser) -> [Author] {
+        let events = referencingEvents
+            .compactMap { $0.referencingEvent }
+            .filter { (event: Event) in event.kind == EventKind.report.rawValue }
+            .compactMap { $0.author }
+            .filter { currentUser.socialGraph.follows($0.hexadecimalPublicKey) }
+        return events
+    }
+    
+    /// Returns a list of reports for this event from authors followed by the given user.
+    /// This isn't very performant so use sparingly.
+    @MainActor
+    func reports(followedBy currentUser: CurrentUser) -> [Event] {
+        let reportEvents = referencingEvents
+            .compactMap { $0.referencingEvent }
+            .filter { event in
+                let isReportEvent = event.kind == EventKind.report.rawValue
+                let isFollowed = currentUser.socialGraph.follows(event.author?.hexadecimalPublicKey ?? "")
+                return isReportEvent && isFollowed
+            }
+        return reportEvents
     }
 }
 // swiftlint:enable type_body_length

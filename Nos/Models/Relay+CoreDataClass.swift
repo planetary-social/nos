@@ -27,6 +27,7 @@ public class Relay: NosManagedObject {
         "wss://relay.nos.social",
         "wss://relayable.org",
         "wss://relay.snort.social",
+        "wss://relay.causes.com",
         ]
     }
     
@@ -48,6 +49,7 @@ public class Relay: NosManagedObject {
         "wss://soloco.nl",
         "wss://relayable.org",
         "wss://relay.nos.social",
+        "wss://relay.causes.com",
         ]
     }
     

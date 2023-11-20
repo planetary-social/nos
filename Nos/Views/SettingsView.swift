@@ -9,12 +9,16 @@ import SwiftUI
 import Dependencies
 import SwiftUINavigation
 
+let showReportWarningsKey = "com.verse.nos.settings.showReportWarnings"
+let showOutOfNetworkWarningKey = "com.verse.nos.settings.showOutOfNetworkWarning"
+    
 struct SettingsView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.unsAPI) var unsAPI
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.persistenceController) private var persistenceController
+    @Dependency(\.userDefaults) private var userDefaults
     @EnvironmentObject private var appController: AppController
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var currentUser: CurrentUser
@@ -22,6 +26,8 @@ struct SettingsView: View {
     @State private var privateKeyString = ""
     @State private var alert: AlertState<AlertAction>?
     @State private var logFileURL: URL?
+    @State private var showReportWarnings = true
+    @State private var showOutOfNetworkWarning = true
     
     func importKey(_ keyPair: KeyPair) async {
         await currentUser.setKeyPair(keyPair)
@@ -94,6 +100,58 @@ struct SettingsView: View {
                 startPoint: .top,
                 endPoint: .bottom
             ))
+            
+            Section {
+                VStack {
+                    Toggle(isOn: $showReportWarnings) { 
+                        Text(.useReportsFromFollows)
+                            .foregroundColor(.primaryTxt)
+                    }
+                    .onChange(of: showReportWarnings) { newValue in
+                        userDefaults.set(newValue, forKey: showReportWarningsKey)
+                    }
+                    
+                    HStack {
+                        PlainText(.useReportsFromFollowsDescription)
+                            .foregroundColor(.secondaryText)
+                            .font(.clarityCallout)
+                        Spacer()
+                    }
+                }
+                
+                VStack {
+                    Toggle(isOn: $showOutOfNetworkWarning) { 
+                        Text(.showOutOfNetworkWarnings)
+                            .foregroundColor(.primaryTxt)
+                    }
+                    .onChange(of: showOutOfNetworkWarning) { newValue in
+                        userDefaults.set(newValue, forKey: showOutOfNetworkWarningKey)
+                    }
+                    
+                    HStack {
+                        PlainText(.showOutOfNetworkWarningsDescription)
+                            .foregroundColor(.secondaryText)
+                            .font(.clarityCallout)
+                        Spacer()
+                    }
+                }
+            } header: {
+                Localized.feedSettings.view
+                    .foregroundColor(.primaryTxt)
+                    .fontWeight(.heavy)
+                    .bold()
+                    .textCase(nil)
+                    .padding(.vertical, 15)
+            }
+            .listRowBackground(LinearGradient(
+                colors: [Color.cardBgTop, Color.cardBgBottom],
+                startPoint: .top,
+                endPoint: .bottom
+            ))
+            .task {
+                showReportWarnings = userDefaults.object(forKey: showReportWarningsKey) as? Bool ?? true
+                showOutOfNetworkWarning = userDefaults.object(forKey: showOutOfNetworkWarningKey) as? Bool ?? true
+            }
             
             Section {
                 HStack {
@@ -183,11 +241,11 @@ struct SettingsView: View {
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
+#Preview {
+    let previewData = PreviewData()
     
-    static var previews: some View {
-        NavigationStack {
-            SettingsView()
-        }
+    return NavigationStack {
+        SettingsView()
     }
+    .inject(previewData: previewData)
 }

@@ -19,10 +19,9 @@ final class SocialGraphTests: XCTestCase {
         // For some reason that I can't figure out using an in-memory persistent store causes these tests to take
         // several minutes instead of seconds, so we are using an on-disk store for these tests instead.
         withDependencies { dependencies in
-            let persistenceController = PersistenceController(containerName: "NosTests")
-            persistenceController.resetForTesting()
+            let persistenceController = PersistenceController(containerName: "NosTests", inMemory: true)
+            testContext = persistenceController.viewContext
             dependencies.persistenceController = persistenceController
-            self.testContext = persistenceController.viewContext
         } operation: {
             super.invokeTest()
         }

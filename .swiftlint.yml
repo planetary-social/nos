@@ -11,6 +11,7 @@ disabled_rules: # rule identifiers turned on by default to exclude from running
   - force_cast
   - todo
   - legacy_objc_type
+  - type_body_length
 opt_in_rules: # some rules are turned off by default, so you need to opt-in
   - attributes
   - closure_end_indentation
@@ -90,9 +91,9 @@ analyzer_rules: # Rules run by `swiftlint analyze` (experimental)
 # implicitly
 line_length: 120
 # they can set both implicitly with an array
-type_body_length:
-  - 300 # warning
-  - 400 # error
+#type_body_length:
+#  - 300 # warning
+#  - 400 # error
 # or they can set both explicitly
 file_length:
   warning: 500
