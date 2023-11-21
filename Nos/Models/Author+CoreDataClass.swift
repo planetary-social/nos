@@ -197,7 +197,6 @@ public class Author: NosManagedObject {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
         fetchRequest.predicate = followedWithNewNotesPredicate(since: since)
-        fetchRequest.fetchLimit = 50
         return fetchRequest
     }
 
