@@ -75,60 +75,67 @@ struct NotificationsView: View {
     
     var body: some View {
         NavigationStack(path: $router.notificationsPath) {
-            ScrollView(.vertical) {
-                LazyVStack {
-                    ForEach(events.unmuted) { event in
-                        if let user {
-                            NotificationCard(viewModel: NotificationViewModel(note: event, user: user))
-                                .readabilityPadding()
+            ScrollViewReader { proxy in
+                ScrollView(.vertical) {
+                    LazyVStack {
+                        ForEach(events.unmuted) { event in
+                            if let user {
+                                NotificationCard(viewModel: NotificationViewModel(note: event, user: user))
+                                    .readabilityPadding()
+                                    .id(event.id)
+                            }
                         }
                     }
+                    .padding(.top, 10)
                 }
-                .padding(.top, 10)
-            }
-            .overlay(Group {
-                if events.isEmpty {
-                    Localized.noNotifications.view
-                }
-            })
-            .background(Color.appBg)
-            .padding(.top, 1)
-            .nosNavigationBar(title: .notifications)
-            .navigationBarItems(leading: SideMenuButton())
-            .navigationDestination(for: Event.self) { note in
-                RepliesView(note: note)
-            }
-            .navigationDestination(for: URL.self) { url in URLView(url: url) }
-            .navigationDestination(for: ReplyToNavigationDestination.self) { destination in 
-                RepliesView(note: destination.note, showKeyboard: true)
-            }
-            .navigationDestination(for: Author.self) { author in
-                ProfileView(author: author)
-            }
-            .refreshable {
-                await subscribeToNewEvents()
-            }
-            .doubleTapToPop(tab: .notifications)
-            .onAppear {
-                if router.selectedTab == .notifications {
-                    isVisible = true
-                }
-                pushNotificationService.requestNotificationPermissionsFromUser()
-            }
-            .onDisappear {
-                isVisible = false
-            }
-            .onChange(of: isVisible, perform: { isVisible in
-                Task { await markAllNotificationsRead() }
-                if isVisible {
-                    analytics.showedNotifications()
-                    Task { 
-                        await subscribeToNewEvents() 
+                .overlay(Group {
+                    if events.isEmpty {
+                        Localized.noNotifications.view
                     }
-                } else {
-                    Task { await cancelSubscriptions() }
+                })
+                .background(Color.appBg)
+                .padding(.top, 1)
+                .nosNavigationBar(title: .notifications)
+                .navigationBarItems(leading: SideMenuButton())
+                .navigationDestination(for: Event.self) { note in
+                    RepliesView(note: note)
                 }
-            })
+                .navigationDestination(for: URL.self) { url in URLView(url: url) }
+                .navigationDestination(for: ReplyToNavigationDestination.self) { destination in
+                    RepliesView(note: destination.note, showKeyboard: true)
+                }
+                .navigationDestination(for: Author.self) { author in
+                    ProfileView(author: author)
+                }
+                .refreshable {
+                    await subscribeToNewEvents()
+                }
+                .doubleTapToPop(tab: .notifications) {
+                    if let firstEvent = events.first {
+                        proxy.scrollTo(firstEvent.id)
+                    }
+                }
+                .onAppear {
+                    if router.selectedTab == .notifications {
+                        isVisible = true
+                    }
+                    pushNotificationService.requestNotificationPermissionsFromUser()
+                }
+                .onDisappear {
+                    isVisible = false
+                }
+                .onChange(of: isVisible, perform: { isVisible in
+                    Task { await markAllNotificationsRead() }
+                    if isVisible {
+                        analytics.showedNotifications()
+                        Task {
+                            await subscribeToNewEvents()
+                        }
+                    } else {
+                        Task { await cancelSubscriptions() }
+                    }
+                })
+            }
         }
     }
 }

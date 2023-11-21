@@ -20,7 +20,7 @@ struct ProfileTab: View {
 
     var body: some View {
         NavigationStack(path: $path) {
-            ProfileView(author: author)
+            ProfileView(author: author, addDoubleTapToPop: true)
                 .navigationBarItems(leading: SideMenuButton())
                 .navigationDestination(for: Author.self) { profile in
                     if profile == currentUser.author, currentUser.editing {
@@ -29,7 +29,6 @@ struct ProfileTab: View {
                         ProfileView(author: profile)
                     }
                 }
-                .doubleTapToPop(tab: .profile)
         }
     }
 }

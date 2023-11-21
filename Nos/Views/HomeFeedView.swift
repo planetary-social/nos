@@ -82,38 +82,49 @@ struct HomeFeedView: View {
                 )
             } else {
                 ZStack {
-                    ScrollView(.vertical, showsIndicators: false) {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 15) {
-                                ForEach(authors) { author in
-                                    Button {
-                                        withAnimation {
-                                            selectedStoryAuthor = author
+                    ScrollViewReader { proxy in
+                        ScrollView(.vertical, showsIndicators: false) {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 15) {
+                                    ForEach(authors) { author in
+                                        Button {
+                                            withAnimation {
+                                                selectedStoryAuthor = author
+                                            }
+                                        } label: {
+                                            AvatarView(imageUrl: author.profilePhotoURL, size: 54)
+                                                .padding(.vertical, 10)
+                                                .background(
+                                                    Circle()
+                                                        .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
+                                                        .frame(width: 58, height: 58)
+                                                )
                                         }
-                                    } label: {
-                                        AvatarView(imageUrl: author.profilePhotoURL, size: 54)
-                                            .padding(.vertical, 10)
-                                            .background(
-                                                Circle()
-                                                    .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
-                                                    .frame(width: 58, height: 58)
-                                            )
                                     }
                                 }
+                                .padding(.horizontal, 15)
                             }
-                            .padding(.horizontal, 15)
+                            .padding(.top, 15)
+                            .readabilityPadding()
+                            .id(user.id)
+
+                            LazyVStack {
+                                ForEach(events) { event in
+                                    NoteButton(note: event, hideOutOfNetwork: false)
+                                        .padding(.bottom, 15)
+                                }
+                            }
+                            .padding(.vertical, 15)
                         }
-                        .padding(.top, 15)
-                        .readabilityPadding()
-                        LazyVStack {
-                            ForEach(events) { event in
-                                NoteButton(note: event, hideOutOfNetwork: false)
-                                    .padding(.bottom, 15)
+                        .doubleTapToPop(tab: .home) {
+                            if isShowingStories {
+                                selectedStoryAuthor = nil
+                            } else {
+                                proxy.scrollTo(user.id)
                             }
                         }
-                        .padding(.vertical, 15)
+                        .accessibilityIdentifier("home feed")
                     }
-                    .accessibilityIdentifier("home feed")
 
                     StoriesView(
                         cutoffDate: $storiesCutoffDate,
@@ -198,11 +209,6 @@ struct HomeFeedView: View {
                 Task { await cancelSubscriptions() }
             }
         })
-        .doubleTapToPop(tab: .home) {
-            if isShowingStories {
-                selectedStoryAuthor = nil
-            }
-        }
         .task {
             currentUser.socialGraph.followedKeys.publisher
                 .removeDuplicates()

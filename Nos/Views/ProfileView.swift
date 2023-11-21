@@ -14,7 +14,8 @@ import Logger
 struct ProfileView: View {
     
     @ObservedObject var author: Author
-    
+    var addDoubleTapToPop = false
+
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var currentUser: CurrentUser
@@ -51,8 +52,9 @@ struct ProfileView: View {
         author.hexadecimalPublicKey == currentUser.publicKeyHex
     }
     
-    init(author: Author) {
+    init(author: Author, addDoubleTapToPop: Bool = false) {
         self.author = author
+        self.addDoubleTapToPop = addDoubleTapToPop
         _events = FetchRequest(fetchRequest: author.allPostsRequest())
     }
     
@@ -110,27 +112,33 @@ struct ProfileView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView(.vertical, showsIndicators: false) {
-                ProfileHeader(author: author)
-                    .compositingGroup()
-                    .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
-                
-                LazyVStack {
-                    if unmutedEvents.isEmpty {
-                        Localized.noEventsOnProfile.view
-                            .padding()
-                    } else {
-                        ForEach(unmutedEvents) { event in
-                            VStack {
-                                NoteButton(note: event, hideOutOfNetwork: false, displayRootMessage: true)
-                                .padding(.bottom, 15)
+            ScrollViewReader { proxy in
+                ScrollView(.vertical, showsIndicators: false) {
+                    ProfileHeader(author: author)
+                        .compositingGroup()
+                        .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
+                        .id(author.id)
+
+                    LazyVStack {
+                        if unmutedEvents.isEmpty {
+                            Localized.noEventsOnProfile.view
+                                .padding()
+                        } else {
+                            ForEach(unmutedEvents) { event in
+                                VStack {
+                                    NoteButton(note: event, hideOutOfNetwork: false, displayRootMessage: true)
+                                    .padding(.bottom, 15)
+                                }
                             }
                         }
                     }
+                    .padding(.top, 10)
                 }
-                .padding(.top, 10)
+                .background(Color.appBg)
+                .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) {
+                    proxy.scrollTo(author.id)
+                }
             }
-            .background(Color.appBg)
         }
         .nosNavigationBar(title: .profileTitle)
         .navigationDestination(for: Event.self) { note in

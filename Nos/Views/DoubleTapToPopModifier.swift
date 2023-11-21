@@ -37,7 +37,15 @@ struct DoubleTapToPopModifier: ViewModifier {
 }
 
 extension View {
-    func doubleTapToPop(tab: AppDestination, onRoot: (@MainActor () -> Void)? = nil) -> some View {
-        self.modifier(DoubleTapToPopModifier(tab: tab, onRoot: onRoot))
+    @ViewBuilder func doubleTapToPop(
+        tab: AppDestination,
+        enabled: Bool = true,
+        onRoot: (@MainActor () -> Void)? = nil
+    ) -> some View {
+        if enabled {
+            self.modifier(DoubleTapToPopModifier(tab: tab, onRoot: onRoot))
+        } else {
+            self
+        }
     }
 }

@@ -39,16 +39,33 @@ struct DiscoverGrid: View {
             GeometryReader { geometry in
                 Group {
                     if searchController.query.isEmpty {
-                        StaggeredGrid(list: events, columns: columns) { note in
-                            NoteButton(note: note, style: .golden)
-                                .matchedGeometryEffect(id: note.identifier, in: animation)
+                        ScrollViewReader { proxy in
+                            StaggeredGrid(list: events, columns: columns) { note in
+                                NoteButton(note: note, style: .golden)
+                                    .matchedGeometryEffect(id: note.identifier, in: animation)
+                                    .id(note.id)
+                            }
+                            .doubleTapToPop(tab: .discover) {
+                                if let firstNote = events.first {
+                                    proxy.scrollTo(firstNote.id)
+                                }
+                            }
                         }
                     } else {
                         // Search results
-                        StaggeredGrid(list: searchController.authorSuggestions, columns: columns) { author in
-                            AuthorCard(author: author)
-                                .matchedGeometryEffect(id: author.hexadecimalPublicKey, in: animation)
+                        ScrollViewReader { proxy in
+                            StaggeredGrid(list: searchController.authorSuggestions, columns: columns) { author in
+                                AuthorCard(author: author)
+                                    .matchedGeometryEffect(id: author.hexadecimalPublicKey, in: animation)
+                                    .id(author.id)
+                            }
+                            .doubleTapToPop(tab: .discover) {
+                                if let firstAuthor = searchController.authorSuggestions.first {
+                                    proxy.scrollTo(firstAuthor.id)
+                                }
+                            }
                         }
+
                     }
                 }
                 .preference(key: SizePreferenceKey.self, value: geometry.size)
