@@ -69,6 +69,7 @@ struct NotificationCard: View {
                         .font(.body)
                         .foregroundColor(.secondaryText)
                 }
+                .fixedSize()
             }
             .padding(10)
             .background(
@@ -79,7 +80,6 @@ struct NotificationCard: View {
                 )
             )
             .cornerRadius(20)
-            .padding(.horizontal, 15)
         }
         .buttonStyle(CardButtonStyle(style: .compact))
         .onAppear {
@@ -102,4 +102,39 @@ struct NotificationCard: View {
             self.content = await viewModel.loadContent(in: persistenceController.parseContext)
         }
     }
+}
+
+#Preview {
+    var previewData = PreviewData()
+    
+    let previewContext = previewData.previewContext
+    
+    var alice: Author {
+        previewData.alice
+    }
+    
+    var bob: Author {
+        previewData.bob
+    }
+    
+    let note: Event = {
+        let mentionNote = Event(context: previewContext)
+        mentionNote.content = "Hello, bob!"
+        mentionNote.kind = 1
+        mentionNote.createdAt = .now
+        mentionNote.author = alice
+        let authorRef = AuthorReference(context: previewContext)
+        authorRef.pubkey = bob.hexadecimalPublicKey
+        mentionNote.authorReferences = NSMutableOrderedSet(array: [authorRef])
+        try? mentionNote.sign(withKey: KeyFixture.alice)
+        try? previewContext.save()
+        return mentionNote
+    }()
+        
+    return VStack {
+        Spacer()
+        NotificationCard(viewModel: NotificationViewModel(note: note, user: bob))
+        Spacer()
+    }
+    .inject(previewData: previewData)
 }
