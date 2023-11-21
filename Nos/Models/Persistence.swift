@@ -204,7 +204,7 @@ class PersistenceController {
         
         cleanupTask = Task {
             defer { self.cleanupTask = nil }
-            let context = parseContext
+            let context = newBackgroundContext()
             let startTime = Date.now
             Log.info("Starting Core Data cleanup...")
             
