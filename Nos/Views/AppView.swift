@@ -121,7 +121,7 @@ struct AppView: View {
                             .tag(AppDestination.profile)
                     }
                 }
-                .onChange(of: router.selectedTab) { newTab in
+                .onChange(of: router.selectedTab) { _, newTab in
                     if case let AppDestination.newNote(contents) = newTab {
                         newPostContents = contents
                         showNewPost = true
