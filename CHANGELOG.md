@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added the option to copy the text content while browsing a note.
+
 ## [0.1 (93)] - 2023-11-10Z
 
 - Added a confirmation before reposting a note.
