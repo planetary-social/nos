@@ -31,6 +31,7 @@ struct HomeFeedView: View {
 
     @ObservedObject var user: Author
 
+    @State private var stories: [Author] = []
     @State private var selectedStoryAuthor: Author?
     @State private var storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now)!
 
@@ -85,7 +86,7 @@ struct HomeFeedView: View {
                     ScrollView(.vertical, showsIndicators: false) {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 15) {
-                                ForEach(authors) { author in
+                                ForEach(stories) { author in
                                     Button {
                                         withAnimation {
                                             selectedStoryAuthor = author
@@ -111,7 +112,7 @@ struct HomeFeedView: View {
 
                     StoriesView(
                         cutoffDate: $storiesCutoffDate,
-                        authors: authors,
+                        authors: stories,
                         selectedAuthor: $selectedStoryAuthor
                     )
                     .scaleEffect(isShowingStories ? 1 : 0.5)
@@ -181,9 +182,17 @@ struct HomeFeedView: View {
             )
             Task { await subscribeToNewEvents() }
         }
-        .onAppear { 
+        .onAppear {
             if router.selectedTab == .home {
                 isVisible = true 
+            }
+            if !isShowingStories {
+                stories = authors.map { $0 }
+            }
+        }
+        .onChange(of: isShowingStories) { newValue in
+            if !newValue {
+                stories = authors.map { $0 }
             }
         }
         .onDisappear { isVisible = false }
