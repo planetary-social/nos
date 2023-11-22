@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Keep track of read stories.
+- Removed trailing slash from truncated URLs.
+- Fixed a hang on startup.
+- Fixed an issue where links couldn't be opened from the Home tab.
+- Change the "Followed by" label on the profile screen to "Followers you know"
+- Fixed an issue where the Profile view would always show "Following 0" for people you didn't follow.
+- Fixed the 3d card effect on the Notifications tab.
 
 ## [0.1 (93)] - 2023-11-10Z
 

@@ -43,7 +43,7 @@ struct ProfileSocialStatsView: View {
                         )
                     )
                 } label: {
-                    tab(label: .followedBy, value: author.followers.count)
+                    tab(label: .followersYouKnow, value: author.followers.count)
                 }
                 Spacer(minLength: 0)
             }
