@@ -18,7 +18,7 @@ struct Filter: Hashable, Identifiable {
     let search: String?
     let inNetwork: Bool
     let limit: Int?
-    let since: Date?
+    var since: Date?
     
     init(
         authorKeys: [HexadecimalString] = [],
