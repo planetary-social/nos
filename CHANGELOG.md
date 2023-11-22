@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change the "Followed by" label on the profile screen to "Followers you know"
 - Fixed a hang on startup.
 - Fixed an issue where links couldn't be opened from the Home tab.
+- Change the "Followed by" label on the profile screen to "Followers you know"
 - Fixed an issue where the Profile view would always show "Following 0" for people you didn't follow.
 - Fix delay in results immediately after opening the discover tab.
 - Fixed the 3d card effect on the Notifications tab.
