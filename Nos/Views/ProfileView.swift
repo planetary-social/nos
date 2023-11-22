@@ -56,34 +56,6 @@ struct ProfileView: View {
         _events = FetchRequest(fetchRequest: author.allPostsRequest())
     }
     
-    func refreshProfileFeed() async {
-        // Close out stale requests
-        if !subscriptionIds.isEmpty {
-            await relayService.decrementSubscriptionCount(for: subscriptionIds)
-            subscriptionIds.removeAll()
-        }
-        
-        guard let authorKey = author.hexadecimalPublicKey else {
-            return
-        }
-        
-        let authors = [authorKey]
-        let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete, .repost, .longFormContent], limit: 50)
-        async let textSubs = relayService.openSubscriptions(with: textFilter)
-        subscriptionIds.append(contentsOf: await textSubs)
-        subscriptionIds.append(
-            contentsOf: await relayService.requestProfileData(
-                for: authorKey, 
-                lastUpdateMetadata: author.lastUpdatedMetadata, 
-                lastUpdatedContactList: nil // always grab contact list because we purge follows aggressively
-            )
-        )
-        
-        // reports
-        let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
-        subscriptionIds.append(contentsOf: await relayService.openSubscriptions(with: reportFilter))
-    }
-    
     func loadUSBCBalance() async {
         guard let unsName = author.uns, !unsName.isEmpty else {
             usbcAddress = nil
@@ -119,7 +91,7 @@ struct ProfileView: View {
                     Localized.noEventsOnProfile.view
                         .padding()
                 } else {
-                    NoteListView(fetchRequest: author.allPostsRequest(), context: viewContext)
+                    NoteListView(fetchRequest: author.allPostsRequest(), context: viewContext, author: author)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 Spacer()
@@ -228,9 +200,6 @@ struct ProfileView: View {
         )
         .reportMenu($showingReportMenu, reportedObject: .author(author))
         .task {
-            await refreshProfileFeed()
-        }
-        .task {
             await computeUnmutedEvents()
         }
         .onChange(of: author.uns) { _ in
@@ -244,7 +213,6 @@ struct ProfileView: View {
             analytics.showedProfile()
         }
         .refreshable {
-            await refreshProfileFeed()
             await computeUnmutedEvents()
         }
         .onChange(of: author.muted) { _ in

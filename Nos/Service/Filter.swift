@@ -19,6 +19,7 @@ struct Filter: Hashable, Identifiable {
     let inNetwork: Bool
     let limit: Int?
     var since: Date?
+    var until: Date?
     
     init(
         authorKeys: [HexadecimalString] = [],
@@ -29,7 +30,8 @@ struct Filter: Hashable, Identifiable {
         search: String? = nil,
         inNetwork: Bool = false,
         limit: Int? = nil,
-        since: Date? = nil
+        since: Date? = nil,
+        until: Date? = nil
     ) {
         self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
         self.eventIDs = eventIDs
@@ -40,6 +42,7 @@ struct Filter: Hashable, Identifiable {
         self.inNetwork = inNetwork
         self.limit = limit
         self.since = since
+        self.until = until
     }
     
     var dictionary: [String: Any] {
@@ -76,6 +79,10 @@ struct Filter: Hashable, Identifiable {
         if let since {
             filterDict["since"] = Int(since.timeIntervalSince1970)
         }
+        
+        if let until {
+            filterDict["until"] = Int(until.timeIntervalSince1970)
+        }
 
         return filterDict
     }
@@ -91,7 +98,9 @@ struct Filter: Hashable, Identifiable {
         hasher.combine(limit)
         hasher.combine(eTags)
         hasher.combine(pTags)
+        hasher.combine(search)
         hasher.combine(since)
+        hasher.combine(until)
         hasher.combine(inNetwork)
     }
     
@@ -103,7 +112,9 @@ struct Filter: Hashable, Identifiable {
             limit?.description ?? "nil",
             eTags.joined(separator: ","),
             pTags.joined(separator: ","),
+            search ?? "nil",
             since?.timeIntervalSince1970.description ?? "nil",
+            until?.timeIntervalSince1970.description ?? "nil",
             inNetwork.description,
         ]
         

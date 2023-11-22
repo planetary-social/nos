@@ -142,6 +142,50 @@ extension RelayService {
     }
 }
 
+class PagedRelaySubscription {
+    var startDate: Date
+    let filter: Filter
+    
+    private var subscriptionManager: RelaySubscriptionManager
+    private var subscriptionIDs = [RelaySubscription.ID]()
+    
+    init(startDate: Date, filter: Filter, subscriptionManager: RelaySubscriptionManager, relayAddresses: [URL]) {
+        self.startDate = startDate
+        self.filter = filter
+        self.subscriptionManager = subscriptionManager
+        Task {
+            var newEventsFilter = filter
+            newEventsFilter.until = startDate
+            for relayAddress in relayAddresses {
+                subscriptionIDs.append(
+                    await subscriptionManager.queueSubscription(with: newEventsFilter, to: relayAddress)
+                )
+            }
+        }
+    }
+    
+    func loadMore() {
+        Task { [self] in
+            var newUntilDates = [URL: Date]()
+            
+            for subscriptionID in subscriptionIDs {
+                if let subscription = await subscriptionManager.subscription(from: subscriptionID),
+                    let newDate = subscription.oldestEventCreationDate {
+                    newUntilDates[subscription.relayAddress] = newDate
+                    await subscriptionManager.decrementSubscriptionCount(for: subscriptionID)
+                    Log.debug("Oldest event from \(subscriptionID) is \(newDate)")
+                }
+            }
+            
+            for (relayAddress, until) in newUntilDates {
+                var newEventsFilter = self.filter
+                newEventsFilter.until = until
+                subscriptionIDs.append(await subscriptionManager.queueSubscription(with: newEventsFilter, to: relayAddress))
+            }
+        }
+    }
+}
+
 // MARK: Events
 extension RelayService {
     
@@ -163,14 +207,14 @@ extension RelayService {
         return subscriptionIDs
     }
     
-//    func openPagedSubscription(with filter: Filter, to overrideRelays: [URL]? = nil) async -> PagedRelaySubscription {
-//        let subscriptionID = await subscriptions.queueSubscription(with: filter, to: overrideRelays)
-//        
-//        // Fire off REQs in the background
-//        Task { await self.processSubscriptionQueue(overrideRelays: overrideRelays) }
-//        
-//        return subscriptionID
-//    }
+    func openPagedSubscription(with filter: Filter) async -> PagedRelaySubscription {
+        return PagedRelaySubscription(
+            startDate: .now, 
+            filter: filter, 
+            subscriptionManager: subscriptions, 
+            relayAddresses: await self.relayAddresses(for: currentUser)
+        )
+    }
     
     func requestMetadata(for authorKey: HexadecimalString?, since: Date?) async -> [RelaySubscription.ID] {
         guard let authorKey else {
@@ -294,6 +338,9 @@ extension RelayService {
             if var subscription = await subscriptions.subscription(from: subscriptionID) {
                 if let oldestSeen = subscription.oldestEventCreationDate,
                    jsonEvent.createdDate < oldestSeen {
+                    subscription.oldestEventCreationDate = jsonEvent.createdDate
+                    await subscriptions.updateSubscriptions(with: subscription)
+                } else {
                     subscription.oldestEventCreationDate = jsonEvent.createdDate
                     await subscriptions.updateSubscriptions(with: subscription)
                 }

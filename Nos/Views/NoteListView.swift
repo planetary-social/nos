@@ -7,11 +7,13 @@
 
 import SwiftUI
 import CoreData
+import Dependencies
 
 struct NoteListView: UIViewRepresentable {
     
     let fetchRequest: NSFetchRequest<Event>
     let context: NSManagedObjectContext
+    let author: Author
     
     func makeCoordinator() -> Coordinator {
         Coordinator()
@@ -38,6 +40,7 @@ struct NoteListView: UIViewRepresentable {
         collectionView.layoutMargins = .zero
         let dataSource = context.coordinator.diffableDataSource(
             fetchRequest: fetchRequest, 
+            author: author,
             collectionView: collectionView, 
             context: self.context
         )
@@ -55,6 +58,7 @@ struct NoteListView: UIViewRepresentable {
         
         func diffableDataSource(
             fetchRequest: NSFetchRequest<Event>, 
+            author: Author,
             collectionView: UICollectionView,
             context: NSManagedObjectContext
         ) -> NoteDiffableDataSource {
@@ -64,6 +68,7 @@ struct NoteListView: UIViewRepresentable {
             
             let dataSource = NoteDiffableDataSource(
                 fetchRequest: fetchRequest, 
+                author: author,
                 collectionView: collectionView, 
                 context: context
             )
@@ -73,18 +78,69 @@ struct NoteListView: UIViewRepresentable {
     }
 }
 
+class RelayPager {
+    
+    @Dependency(\.relayService) private var relayService: RelayService
+    private var subscriptionIDs: [RelaySubscription.ID] = []
+    private var author: Author
+    private var pager: PagedRelaySubscription?
+    let pageSize = 10
+    
+    init(author: Author) {
+        self.author = author
+        
+        Task {
+            // Close out stale requests
+            if !subscriptionIDs.isEmpty {
+                await relayService.decrementSubscriptionCount(for: subscriptionIDs)
+                subscriptionIDs.removeAll()
+            }
+            
+            guard let authorKey = author.hexadecimalPublicKey else {
+                return
+            }
+            
+            // Posts
+            let authors = [authorKey]
+            let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete, .repost, .longFormContent], limit: pageSize)
+            self.pager = await relayService.openPagedSubscription(with: textFilter)
+            
+            // Profile data
+            subscriptionIDs.append(
+                contentsOf: await relayService.requestProfileData(
+                    for: authorKey, 
+                    lastUpdateMetadata: author.lastUpdatedMetadata, 
+                    lastUpdatedContactList: nil // always grab contact list because we purge follows aggressively
+                )
+            )
+            
+            // reports
+            let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
+            subscriptionIDs.append(contentsOf: await relayService.openSubscriptions(with: reportFilter)) 
+        }
+    }
+    
+    func prefetch(indexPath: IndexPath) {
+        if indexPath.row % pageSize == 0 {
+            pager?.loadMore()
+        }
+    }
+}
+
 class NoteDiffableDataSource: UICollectionViewDiffableDataSource<Int, NSManagedObjectID>, 
     NSFetchedResultsControllerDelegate, UICollectionViewDataSourcePrefetching {
     
     let fetchedResultsController: NSFetchedResultsController<Event>
+    var relayPager: RelayPager
     
-    init(fetchRequest: NSFetchRequest<Event>, collectionView: UICollectionView, context: NSManagedObjectContext) {
+    init(fetchRequest: NSFetchRequest<Event>, author: Author, collectionView: UICollectionView, context: NSManagedObjectContext) {
         self.fetchedResultsController = NSFetchedResultsController<Event>(
             fetchRequest: fetchRequest,
             managedObjectContext: context,
             sectionNameKeyPath: nil,
             cacheName: nil
         )
+        self.relayPager = RelayPager(author: author)
         super.init(collectionView: collectionView) { (collectionView, indexPath, objectID) in
             guard let note = try? context.existingObject(with: objectID) as? Event else {
                 return UICollectionViewCell()
@@ -100,6 +156,11 @@ class NoteDiffableDataSource: UICollectionViewDiffableDataSource<Int, NSManagedO
         self.fetchedResultsController.delegate = self
         
         try! self.fetchedResultsController.performFetch()
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        relayPager.prefetch(indexPath: indexPath)
+        return super.collectionView(collectionView, cellForItemAt: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
@@ -122,7 +183,7 @@ class NoteDiffableDataSource: UICollectionViewDiffableDataSource<Int, NSManagedO
 #Preview {
     var previewData = PreviewData()
     
-    return NoteListView(fetchRequest: previewData.alice.allPostsRequest(), context: previewData.previewContext)
+    return NoteListView(fetchRequest: previewData.alice.allPostsRequest(), context: previewData.previewContext, author: previewData.alice)
         .background(Color.appBg)
         .inject(previewData: previewData)
         .onAppear {
