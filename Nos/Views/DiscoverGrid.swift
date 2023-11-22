@@ -45,9 +45,13 @@ struct DiscoverGrid: View {
                         }
                     } else {
                         // Search results
-                        StaggeredGrid(list: searchController.authorSuggestions, columns: columns) { author in
-                            AuthorCard(author: author)
-                                .matchedGeometryEffect(id: author.hexadecimalPublicKey, in: animation)
+                        if searchController.authorSuggestions.isEmpty {
+                            FullscreenProgressView(isPresented: .constant(true))
+                        } else {
+                            StaggeredGrid(list: searchController.authorSuggestions, columns: columns) { author in
+                                AuthorCard(author: author)
+                                    .matchedGeometryEffect(id: author.hexadecimalPublicKey, in: animation)
+                            }
                         }
                     }
                 }

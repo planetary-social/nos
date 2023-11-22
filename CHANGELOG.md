@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add a loading indicator to search results.
+- Fix delay in results immediately after opening the discover tab.
 - Keep track of read stories.
 - Removed trailing slash from truncated URLs.
 - Fixed a hang on startup.
