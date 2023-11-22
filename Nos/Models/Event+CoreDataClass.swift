@@ -976,6 +976,7 @@ public class Event: NosManagedObject {
         }
         
         if let lastReference = eventReferences.lastObject as? EventReference,
+            lastReference.marker == nil,
             let referencedNote = lastReference.referencedEvent {
             return referencedNote
         }
