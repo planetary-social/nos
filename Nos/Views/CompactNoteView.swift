@@ -22,8 +22,6 @@ struct CompactNoteView: View {
     @State var showFullMessage: Bool
     @State private var intrinsicSize = CGSize.zero
     @State private var truncatedSize = CGSize.zero
-    @State private var noteContent = LoadingContent<AttributedString>.loading
-    @State private var contentLinks = [URL]()
     private var loadLinks: Bool
     
     @Environment(Router.self) var router
@@ -53,7 +51,7 @@ struct CompactNoteView: View {
     
     var noteText: some View {
         Group {
-            switch noteContent {
+            switch note.attributedContent {
             case .loading:
                 Text(note.content ?? "")
                     .redacted(reason: .placeholder)
@@ -120,22 +118,14 @@ struct CompactNoteView: View {
                 .frame(maxWidth: .infinity)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
-            if note.kind == EventKind.text.rawValue, loadLinks, !contentLinks.isEmpty {
-                LinkPreviewCarousel(links: contentLinks)
+            if note.kind == EventKind.text.rawValue, loadLinks, !note.contentLinks.isEmpty {
+                LinkPreviewCarousel(links: note.contentLinks)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .task {
-            let backgroundContext = persistenceController.backgroundViewContext
-            if let parsedAttributedContent = await Event.attributedContentAndURLs(
-                noteID: note.identifier,
-                context: backgroundContext
-            ) {
-                withAnimation(.easeIn(duration: 0.1)) {
-                    let (attributedString, contentLinks) = parsedAttributedContent
-                    self.noteContent = .loaded(attributedString)
-                    self.contentLinks = contentLinks
-                }
+            if !note.loadingViewData {
+                await note.loadViewData()
             }
         }
     }

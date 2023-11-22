@@ -10,167 +10,6 @@ import CoreData
 import Dependencies
 import SwiftUINavigation
 import Logger
-import Algorithms
-
-@MainActor @Observable class ProfileController: NSObject, NSFetchedResultsControllerDelegate {
-
-    var lastRefreshDate = Date()
-    var notes = [[Event]]()
-    let pageSize = 10
-    var page = 0
-    var isLoadingMore = false
-        
-    var author: Author? {
-        didSet { 
-            if oldValue != author {
-                refresh()
-            }
-        }
-    }
-    
-    var context: NSManagedObjectContext? {
-        didSet { 
-            if oldValue != context {
-                refresh()
-            }
-        }
-    }
-    
-    @Dependency(\.persistenceController) @ObservationIgnored private var persistenceController
-    @Dependency(\.relayService) @ObservationIgnored private var relayService
-    private var fetchRequest: NSFetchRequest<Event>?
-    private var subscriptionIDs: [RelaySubscription.ID] = []
-    private var relatedEventSubscriptions: [RelaySubscription.ID] = []
-    private var fetchedResultsController: NSFetchedResultsController<Event>?
-    
-    func refresh() {
-        guard let author, let context else {
-            return
-        }
-        
-        isLoadingMore = true
-        lastRefreshDate = .now
-        page = 0
-        let fetchRequest = author.allPostsRequest(since: lastRefreshDate)
-        fetchRequest.fetchOffset = 0
-        fetchRequest.fetchLimit = pageSize
-        self.fetchRequest = fetchRequest
-        fetchedResultsController = NSFetchedResultsController(
-            fetchRequest: fetchRequest, 
-            managedObjectContext: context, 
-            sectionNameKeyPath: nil, 
-            cacheName: "ProfileController"
-        )
-//        fetchedResultsController?.delegate = self
-//        try! fetchedResultsController?.performFetch()
-        
-        Task {
-            await subscribe()
-            let noteIDs = await context.perform {
-                let newNotes = try! context.fetch(fetchRequest)
-                self.notes = [newNotes]
-                return newNotes.compactMap { $0.identifier }
-            }
-            await subscribeToEvents(relatedTo: noteIDs)
-            isLoadingMore = false
-        }
-    }
-    
-    func subscribe() async {
-        // Close out stale requests
-        if !subscriptionIDs.isEmpty {
-            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-            subscriptionIDs.removeAll()
-            await relayService.decrementSubscriptionCount(for: relatedEventSubscriptions)
-            relatedEventSubscriptions.removeAll()
-        }
-        
-        guard let author, let authorKey = author.hexadecimalPublicKey else {
-            return
-        }
-        
-        let authors = [authorKey]
-        let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete, .repost, .longFormContent], limit: 50)
-        async let textSubs = relayService.openSubscriptions(with: textFilter)
-        subscriptionIDs += await textSubs
-        subscriptionIDs.append(
-            contentsOf: await relayService.requestProfileData(
-                for: authorKey, 
-                lastUpdateMetadata: author.lastUpdatedMetadata, 
-                lastUpdatedContactList: nil
-            )
-        )
-        
-        // reports
-        let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
-        subscriptionIDs += await relayService.openSubscriptions(with: reportFilter)
-    }
-    
-    func subscribeToEvents(relatedTo eventIDs: [HexadecimalString]) async {
-        let filter = Filter(kinds: [.text, .like, .delete, .repost, .report], eTags: eventIDs)
-        let subIDs = await relayService.openSubscriptions(with: filter)
-        subscriptionIDs.append(contentsOf: subIDs)
-        // TODO: cancel these
-        // TODO: observation
-    }
-    
-    func loadMore() async {
-        guard !isLoadingMore, let fetchRequest, let context else {
-            return
-        }
-        
-        isLoadingMore = true
-        page += 1
-        fetchRequest.fetchOffset = page * pageSize
-        let noteIDs = await context.perform {
-            let newNotes = try! context.fetch(fetchRequest)
-            self.notes[0].append(contentsOf: newNotes)
-            return newNotes.compactMap { $0.identifier }
-        }
-        await subscribeToEvents(relatedTo: noteIDs)
-        self.isLoadingMore = false
-    }
-    
-    func onDisappear() {
-        Task(priority: .userInitiated) {
-            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-            subscriptionIDs.removeAll()
-        }
-    }
-    
-    nonisolated func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, 
-                    didChange anObject: Any, 
-                    at indexPath: IndexPath?, 
-                    for type: NSFetchedResultsChangeType, 
-                    newIndexPath: IndexPath?) {
-        
-        guard let anObject = anObject as? Event else { return }
-        
-        Task { @MainActor in 
-            switch type {
-            case .insert:
-                if let newIndexPath = newIndexPath {
-                    notes[0].insert(anObject, at: newIndexPath.row)
-                }
-            case .delete:
-                if let indexPath = indexPath {
-                    notes[0].remove(at: indexPath.row)
-                }
-            case .update:
-                if let indexPath = indexPath {
-                    notes[0][indexPath.row] = anObject
-                }
-            case .move:
-                if let indexPath = indexPath, let newIndexPath = newIndexPath {
-                    let movedObject = notes[0].remove(at: indexPath.row)
-                    notes[0].insert(movedObject, at: newIndexPath.row)
-                }
-            @unknown default:
-                fatalError("NSFetchedResultsControllerChangeType case not handled.")
-            }
-        }
-    }
-}
 
 struct ProfileView: View {
     
@@ -179,16 +18,17 @@ struct ProfileView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(CurrentUser.self) private var currentUser
     @Environment(Router.self) private var router
+    @Dependency(\.relayService) private var relayService: RelayService
     @Dependency(\.analytics) private var analytics
     @Dependency(\.unsAPI) private var unsAPI
     
-    @State private var controller = ProfileController()
     @State private var showingOptions = false
     @State private var showingReportMenu = false
     @State private var usbcAddress: USBCAddress?
     @State private var usbcBalance: Double?
     @State private var usbcBalanceTimer: Timer?
     
+    @State private var subscriptionIds: [String] = []
 
     @State private var alert: AlertState<Never>?
     
@@ -217,7 +57,31 @@ struct ProfileView: View {
     }
     
     func refreshProfileFeed() async {
-        controller.refresh()
+        // Close out stale requests
+        if !subscriptionIds.isEmpty {
+            await relayService.decrementSubscriptionCount(for: subscriptionIds)
+            subscriptionIds.removeAll()
+        }
+        
+        guard let authorKey = author.hexadecimalPublicKey else {
+            return
+        }
+        
+        let authors = [authorKey]
+        let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete, .repost, .longFormContent], limit: 50)
+        async let textSubs = relayService.openSubscriptions(with: textFilter)
+        subscriptionIds.append(contentsOf: await textSubs)
+        subscriptionIds.append(
+            contentsOf: await relayService.requestProfileData(
+                for: authorKey, 
+                lastUpdateMetadata: author.lastUpdatedMetadata, 
+                lastUpdatedContactList: nil // always grab contact list because we purge follows aggressively
+            )
+        )
+        
+        // reports
+        let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
+        subscriptionIds.append(contentsOf: await relayService.openSubscriptions(with: reportFilter))
     }
     
     func loadUSBCBalance() async {
@@ -246,37 +110,21 @@ struct ProfileView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-                ProfileHeader(author: author)
-                    .compositingGroup()
-                    .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
-                
-                VStack {
-                    if unmutedEvents.isEmpty {
-                        Localized.noEventsOnProfile.view
-                            .padding()
-                    } else {
-                        NoteList(fetchRequest: author.allPostsRequest(), context: viewContext)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                        ForEach(controller.notes, id: \.self) { page in
-//                            VStack {
-//                                ForEach(page) { note in 
-//                                    NoteButton(note: note, hideOutOfNetwork: false, displayRootMessage: true)
-//                                        .padding(.bottom, 15)
-//                                }
-//                            }
-//                            .onAppear {
-//                                if controller.notes.last == page {
-//                                    Task { await controller.loadMore() }
-//                                }
-//                            }
-//                        }
-//                        if controller.isLoadingMore {
-//                            ProgressView()
-//                        }
-                    }
-                    Spacer()
+            ProfileHeader(author: author)
+                .compositingGroup()
+                .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
+            
+            VStack {
+                if unmutedEvents.isEmpty {
+                    Localized.noEventsOnProfile.view
+                        .padding()
+                } else {
+                    NoteListView(fetchRequest: author.allPostsRequest(), context: viewContext)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .padding(.top, 10)
+                Spacer()
+            }
+            .padding(.top, 10)
         }
             .background(Color.appBg)
         .nosNavigationBar(title: .profileTitle)
@@ -380,8 +228,7 @@ struct ProfileView: View {
         )
         .reportMenu($showingReportMenu, reportedObject: .author(author))
         .task {
-            controller.context = viewContext
-            controller.author = author 
+            await refreshProfileFeed()
         }
         .task {
             await computeUnmutedEvents()
@@ -411,7 +258,10 @@ struct ProfileView: View {
             }
         }
         .onDisappear {
-            controller.onDisappear()
+            Task(priority: .userInitiated) {
+                await relayService.decrementSubscriptionCount(for: subscriptionIds)
+                subscriptionIds.removeAll()
+            }
         }
     }
 }

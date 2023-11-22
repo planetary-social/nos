@@ -291,11 +291,17 @@ extension RelayService {
             let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
             await self.parseQueue.push(jsonEvent, from: socket)
             
-            if let subscription = await subscriptions.subscription(from: subscriptionID),
-                subscription.isOneTime {
-                Log.debug("detected subscription with id \(subscription.id) has been fulfilled. Closing.")
-                await subscriptions.forceCloseSubscriptionCount(for: subscription.id)
-                await sendCloseToAll(for: subscription.id)
+            if var subscription = await subscriptions.subscription(from: subscriptionID) {
+                if let oldestSeen = subscription.oldestEventCreationDate,
+                   jsonEvent.createdDate < oldestSeen {
+                    subscription.oldestEventCreationDate = jsonEvent.createdDate
+                    await subscriptions.updateSubscriptions(with: subscription)
+                }
+                if subscription.isOneTime {
+                    Log.debug("detected subscription with id \(subscription.id) has been fulfilled. Closing.")
+                    await subscriptions.forceCloseSubscriptionCount(for: subscription.id)
+                    await sendCloseToAll(for: subscription.id)
+                }
             }
         } catch {
             print("Error: parsing event from relay (\(socket.request.url?.absoluteString ?? "")): " +

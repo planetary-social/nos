@@ -73,10 +73,11 @@ extension FetchedResults where Element == Event {
 
 // swiftlint:disable type_body_length
 @objc(Event)
+@Observable
 public class Event: NosManagedObject {
     
-    @Dependency(\.currentUser) private var currentUser
-    @Dependency(\.persistenceController) private var persistenceController
+    @Dependency(\.currentUser) @ObservationIgnored private var currentUser
+    @Dependency(\.persistenceController) @ObservationIgnored private var persistenceController
     
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"
@@ -769,6 +770,28 @@ public class Event: NosManagedObject {
             currentUser.author?.muted = false
         }
     }
+    
+    // MARK: - Preloading and Caching
+    // Probably should refactor this stuff into a view model
+    
+    @MainActor func loadViewData() async {
+        loadingViewData = true // TODO: synchronize this
+        @Dependency(\.persistenceController) var persistenceController
+        let backgroundContext = persistenceController.backgroundViewContext
+        
+        if let parsedAttributedContent = await Event.attributedContentAndURLs(
+            noteID: identifier,
+            context: backgroundContext
+        ) {
+            let (attributedString, contentLinks) = parsedAttributedContent
+            self.attributedContent = .loaded(attributedString)
+            self.contentLinks = contentLinks
+        }  
+    }
+    
+    var loadingViewData = false
+    var attributedContent = LoadingContent<AttributedString>.loading
+    var contentLinks = [URL]()
     
     // MARK: - Helpers
     

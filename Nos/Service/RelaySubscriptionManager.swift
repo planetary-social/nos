@@ -36,7 +36,7 @@ actor RelaySubscriptionManager {
         }
     }
     
-    private func updateSubscriptions(with newValue: RelaySubscription) {
+    func updateSubscriptions(with newValue: RelaySubscription) {
         if let subscriptionIndex = self.all.firstIndex(where: { $0.id == newValue.id }) {
             all[subscriptionIndex] = newValue
         } else {
