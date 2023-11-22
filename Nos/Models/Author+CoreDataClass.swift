@@ -11,6 +11,10 @@ import CoreData
 import Dependencies
 import Logger
 
+enum AuthorError: Error {
+    case coreData
+}
+
 @objc(Author)
 public class Author: NosManagedObject {
     
@@ -38,6 +42,25 @@ public class Author: NosManagedObject {
         }
         
         return PublicKey(hex: hex)
+    }
+    
+    var formattedNIP05: String? {
+        guard let nip05 else {
+            return nil
+        }
+        
+        let parts = nip05.split(separator: "@")
+        
+        guard let username = parts[safe: 0],
+            let domain = parts[safe: 1] else {
+            return nip05
+        }
+        
+        if username == "_" {
+            return String(domain)
+        } else {
+            return nip05 
+        }
     }
     
     var needsMetadata: Bool {
@@ -100,13 +123,29 @@ public class Author: NosManagedObject {
     
     @discardableResult
     class func findOrCreate(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author {
+        @Dependency(\.persistenceController) var persistenceController
+        @Dependency(\.crashReporting) var crashReporting
+        
         if let author = try? Author.find(by: pubKey, context: context) {
             return author
         } else {
-            let author = Author(context: context)
-            author.hexadecimalPublicKey = pubKey
-            author.muted = false
-            return author
+            /// Always create authors in the creationContext first to make sure we never end up with two identical
+            /// Authors in different contexts with the same objectID, because this messes up SwiftUI's observation
+            /// of changes.
+            let creationContext = persistenceController.creationContext
+            let objectID = try creationContext.performAndWait {
+                let author = Author(context: creationContext)
+                author.hexadecimalPublicKey = pubKey
+                author.muted = false
+                try creationContext.save()
+                return author.objectID
+            }
+            guard let fetchedAuthor = context.object(with: objectID) as? Author else {
+                let error = AuthorError.coreData
+                crashReporting.report(error)
+                throw error
+            }
+            return fetchedAuthor
         }
     }
     
@@ -213,7 +252,7 @@ public class Author: NosManagedObject {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.lastUpdatedContactList, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: "hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey",
+            format: "ANY followers.source = %@",
             author
         )
         return fetchRequest

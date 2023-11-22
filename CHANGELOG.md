@@ -8,6 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (94)] - 2023-11-17Z
+
+- Removed trailing slash from truncated URLs.
+- Add a loading indicator to search results.
+- Change the "Followed by" label on the profile screen to "Followers you know"
+- Fixed a hang on startup.
+- Fixed an issue where links couldn't be opened from the Home tab.
+- Change the "Followed by" label on the profile screen to "Followers you know"
+- Fixed an issue where the Profile view would always show "Following 0" for people you didn't follow.
+- Fix delay in results immediately after opening the discover tab.
+- Fixed the 3d card effect on the Notifications tab.
+- Updated layout for search results and mention autocomplete cards.
+
+## [0.1 (93)] - 2023-11-10Z
+
+- Added a confirmation before reposting a note.
+- Added the ability to delete your reposts by tapping the repost button again.
+- Fixed some cases where deleted notes were still being displayed.
+- Fixed a bug where notes, reposts, and author profiles could fail to load.
+- Show truncated URLs in notes instead of hiding them completely.
+
 ## [0.1 (92)] - 2023-11-02Z
 
 - Show reposts in stories.
@@ -21,7 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1 (90)] - 2023-10-31Z
 
-- Fixed a crash related to content reports.
+- Fixed a bug where notes, reposts, and author profiles could fail to load.
 
 ## [0.1 (89)] - 2023-10-31Z
 

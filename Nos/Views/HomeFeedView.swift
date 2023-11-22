@@ -168,7 +168,6 @@ struct HomeFeedView: View {
                 }
             }
         }
-        .background(Color.appBg)
         .padding(.top, 1)
         .overlay(Group {
             if !events.contains(where: { !$0.author!.muted }) {
@@ -180,7 +179,7 @@ struct HomeFeedView: View {
         .refreshable {
             date = .now
         }
-        .onChange(of: date) { newDate in
+        .onChange(of: date) { _, newDate in
             events.nsPredicate = Event.homeFeedPredicate(for: user, before: newDate)
             Task { await subscribeToNewEvents() }
         }
@@ -190,14 +189,14 @@ struct HomeFeedView: View {
             }
         }
         .onDisappear { isVisible = false }
-        .onChange(of: isVisible, perform: { isVisible in
+        .onChange(of: isVisible) { 
             if isVisible {
                 analytics.showedHome()
                 Task { await subscribeToNewEvents() }
             } else {
                 Task { await cancelSubscriptions() }
             }
-        })
+        }
         .doubleTapToPop(tab: .home) {
             if isShowingStories {
                 selectedStoryAuthor = nil

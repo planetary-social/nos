@@ -60,7 +60,7 @@ struct NewNoteView: View {
                         author: author,
                         isPresented: $showRelayPicker
                     )
-                    .onChange(of: selectedRelay) { _ in
+                    .onChange(of: selectedRelay) { _, _ in
                         withAnimation {
                             showRelayPicker = false
                         }
