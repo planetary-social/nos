@@ -880,7 +880,30 @@ public class Event: NosManagedObject {
             return NoteParser.parse(content: content, tags: tags, context: context)
         }
     }
-    
+   
+    class func markNoteAsRead(
+        noteID: String?,
+        context: NSManagedObjectContext
+    ) async {
+        guard let noteID else {
+            Log.unexpected(.missingValue, "markNoteAsRead called without noteID")
+            return
+        }
+        await context.perform {
+            guard let event = Event.find(by: noteID, context: context) else {
+                Log.unexpected(.incorrectValue, "markNoteAsRead couldn't find event \(noteID)")
+                return
+            }
+            
+            event.isRead = true
+            do {
+                try context.save()
+            } catch {
+                Log.error("markNoteAsRead error \(error.localizedDescription)")
+            }
+        }
+    }
+
     class func attributedContentAndURLs(
         noteID: String?, 
         context: NSManagedObjectContext

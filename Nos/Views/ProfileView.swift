@@ -75,7 +75,7 @@ struct ProfileView: View {
             contentsOf: await relayService.requestProfileData(
                 for: authorKey, 
                 lastUpdateMetadata: author.lastUpdatedMetadata, 
-                lastUpdatedContactList: author.lastUpdatedContactList
+                lastUpdatedContactList: nil // always grab contact list because we purge follows aggressively
             )
         )
         
@@ -147,7 +147,7 @@ struct ProfileView: View {
             FollowsView(title: Localized.follows, authors: destination.follows)
         }
         .navigationDestination(for: FollowersDestination.self) { destination in
-            FollowsView(title: Localized.followedBy, authors: destination.followers)
+            FollowsView(title: Localized.followers, authors: destination.followers)
         }
         .navigationDestination(for: RelaysDestination.self) { destination in
             RelayView(author: destination.author, editable: false)

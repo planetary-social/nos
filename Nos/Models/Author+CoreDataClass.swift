@@ -172,10 +172,9 @@ public class Author: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc func followedWithNewNotes(since: Date) -> NSFetchRequest<Author> {
-        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+    @nonobjc func followedWithNewNotesPredicate(since: Date) -> NSPredicate {
         let onlyFollowedAuthorsClause = "ANY followers.source = %@"
+        let onlyUnreadStoriesClause = "$event.isRead != 1"
         let onlyPostsClause = "($event.kind = 1 OR $event.kind = 6 OR $event.kind = 30023)"
         let onlyRecentStoriesClause = "$event.createdAt > %@"
         let onlyRootPostsClause = "SUBQUERY(" +
@@ -184,15 +183,20 @@ public class Author: NosManagedObject {
             "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
         ").@count = 0"
         let onlyAuthorsWithStoriesClause = "SUBQUERY(events, $event, \(onlyPostsClause) " +
+            "AND \(onlyUnreadStoriesClause) " +
             "AND \(onlyRecentStoriesClause) " +
             "AND \(onlyRootPostsClause)).@count > 0"
-
-        fetchRequest.predicate = NSPredicate(
+        return NSPredicate(
             format: "\(onlyFollowedAuthorsClause) AND \(onlyAuthorsWithStoriesClause)",
             self,
             since as CVarArg
         )
-        fetchRequest.fetchLimit = 50
+    }
+
+    @nonobjc func followedWithNewNotes(since: Date) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+        fetchRequest.predicate = followedWithNewNotesPredicate(since: since)
         return fetchRequest
     }
 
@@ -238,7 +242,7 @@ public class Author: NosManagedObject {
         )
         return fetchRequest
     }
-    
+
     /// Fetches all the authors who are further than 2 hops away on the social graph for the given `author`.
     static func outOfNetwork(for author: Author) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")

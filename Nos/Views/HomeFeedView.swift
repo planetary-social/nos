@@ -31,6 +31,7 @@ struct HomeFeedView: View {
 
     @ObservedObject var user: Author
 
+    @State private var stories: [Author] = []
     @State private var selectedStoryAuthor: Author?
     @State private var storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now)!
 
@@ -85,19 +86,13 @@ struct HomeFeedView: View {
                     ScrollView(.vertical, showsIndicators: false) {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 15) {
-                                ForEach(authors) { author in
+                                ForEach(stories) { author in
                                     Button {
                                         withAnimation {
                                             selectedStoryAuthor = author
                                         }
                                     } label: {
-                                        AvatarView(imageUrl: author.profilePhotoURL, size: 54)
-                                            .padding(.vertical, 10)
-                                            .background(
-                                                Circle()
-                                                    .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
-                                                    .frame(width: 58, height: 58)
-                                            )
+                                        StoryAvatarView(author: author)
                                     }
                                 }
                             }
@@ -117,7 +112,7 @@ struct HomeFeedView: View {
 
                     StoriesView(
                         cutoffDate: $storiesCutoffDate,
-                        authors: authors,
+                        authors: stories,
                         selectedAuthor: $selectedStoryAuthor
                     )
                     .scaleEffect(isShowingStories ? 1 : 0.5)
@@ -182,11 +177,22 @@ struct HomeFeedView: View {
         }
         .onChange(of: date) { newDate in
             events.nsPredicate = Event.homeFeedPredicate(for: user, before: newDate)
+            authors.nsPredicate = user.followedWithNewNotesPredicate(
+                since: Calendar.current.date(byAdding: .day, value: -2, to: newDate)!
+            )
             Task { await subscribeToNewEvents() }
         }
-        .onAppear { 
+        .onAppear {
             if router.selectedTab == .home {
                 isVisible = true 
+            }
+            if !isShowingStories {
+                stories = authors.map { $0 }
+            }
+        }
+        .onChange(of: isShowingStories) { newValue in
+            if !newValue {
+                stories = authors.map { $0 }
             }
         }
         .onDisappear { isVisible = false }
@@ -213,6 +219,19 @@ struct HomeFeedView: View {
                 })
                 .store(in: &cancellables)
         }
+    }
+}
+
+fileprivate struct StoryAvatarView: View {
+    var author: Author
+    var body: some View {
+        AvatarView(imageUrl: author.profilePhotoURL, size: 54)
+            .padding(.vertical, 10)
+            .background(
+                Circle()
+                    .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
+                    .frame(width: 58, height: 58)
+            )
     }
 }
 

@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add a loading indicator to search results.
 - Fix delay in results immediately after opening the discover tab.
+- Keep track of read stories.
+- Removed trailing slash from truncated URLs.
+- Fixed a hang on startup.
+- Fixed an issue where links couldn't be opened from the Home tab.
+- Change the "Followed by" label on the profile screen to "Followers you know"
+- Fixed an issue where the Profile view would always show "Following 0" for people you didn't follow.
 - Fixed the 3d card effect on the Notifications tab.
 
 ## [0.1 (93)] - 2023-11-10Z
@@ -29,6 +35,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix a bug where linking a Universal Name would overwrite your existing NIP-05.
 - Fixed incorrect ellipsis applied to long notes.
 - Changed note rendering to retain more newlines. 
+- Show reposts in stories.
+- Fixed a bug where notes, reposts, and author profiles could fail to load.
+- Show truncated URLs in notes instead of hiding them completely.
+- Keep track of read stories.
 - Fixed a bug with autocorrect on Mac
 
 ## [0.1 (90)] - 2023-10-31Z

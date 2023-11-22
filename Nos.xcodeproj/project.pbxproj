@@ -443,6 +443,7 @@
 		3FFB1D9529A6BBEC002A755D /* Collection+SafeSubscript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Collection+SafeSubscript.swift"; sourceTree = "<group>"; };
 		3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackedAvatarsView.swift; sourceTree = "<group>"; };
 		5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleTapToPopModifier.swift; sourceTree = "<group>"; };
+		5B2F5CC12AE7443700A92B52 /* Nos 13.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 13.xcdatamodel"; sourceTree = "<group>"; };
 		5B46611929CCB6DF008B8E8C /* ExportStrings.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ExportStrings.sh; sourceTree = "<group>"; };
 		5B46611B29CCB725008B8E8C /* ExportStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportStrings.swift; sourceTree = "<group>"; };
 		5B46611F29CCB894008B8E8C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Generated.strings; sourceTree = "<group>"; };
@@ -2620,12 +2621,13 @@
 		C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				5B2F5CC12AE7443700A92B52 /* Nos 13.xcdatamodel */,
 				C99507332AB9EE40005B1096 /* Nos 12.xcdatamodel */,
 				C92A04DD2A58B02B00C844B8 /* Nos 11.xcdatamodel */,
 				C9C547562A4F1D1A006B0741 /* Nos 9.xcdatamodel */,
 				5BFF66AF2A4B55FC00AA79DD /* Nos 10.xcdatamodel */,
 			);
-			currentVersion = C99507332AB9EE40005B1096 /* Nos 12.xcdatamodel */;
+			currentVersion = 5B2F5CC12AE7443700A92B52 /* Nos 13.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
