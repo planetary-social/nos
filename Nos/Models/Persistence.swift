@@ -192,6 +192,8 @@ class PersistenceController {
     /// - delete any other models that are orphaned by the previous deletions
     /// - fix EventReferences whose referencedEvent was deleted by createing a stubbed Event
     @MainActor func cleanupEntities() {
+        return() 
+        
         // this function was written in a hurry and probably should be refactored and tested thorougly.
         guard cleanupTask == nil else {
             Log.info("Core Data cleanup task already running. Aborting.")
