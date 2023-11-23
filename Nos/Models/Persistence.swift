@@ -14,7 +14,7 @@ class PersistenceController {
     @Dependency(\.currentUser) var currentUser
     
     /// Increment this to delete core data on update
-    static let version = 3
+    static let version = 4
     static let versionKey = "NosPersistenceControllerVersion"
 
     static var preview: PersistenceController = {
