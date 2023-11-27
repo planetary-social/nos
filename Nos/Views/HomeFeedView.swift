@@ -14,8 +14,8 @@ struct HomeFeedView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject var router: Router
-    @EnvironmentObject var currentUser: CurrentUser
+    @Environment(Router.self) var router
+    @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
     
     @FetchRequest var events: FetchedResults<Event>
@@ -163,7 +163,6 @@ struct HomeFeedView: View {
                 }
             }
         }
-        .background(Color.appBg)
         .padding(.top, 1)
         .overlay(Group {
             if !events.contains(where: { !$0.author!.muted }) {
@@ -175,7 +174,7 @@ struct HomeFeedView: View {
         .refreshable {
             date = .now
         }
-        .onChange(of: date) { newDate in
+        .onChange(of: date) { _, newDate in
             events.nsPredicate = Event.homeFeedPredicate(for: user, before: newDate)
             authors.nsPredicate = user.followedWithNewNotesPredicate(
                 since: Calendar.current.date(byAdding: .day, value: -2, to: newDate)!
@@ -196,14 +195,14 @@ struct HomeFeedView: View {
             }
         }
         .onDisappear { isVisible = false }
-        .onChange(of: isVisible, perform: { isVisible in
+        .onChange(of: isVisible) { 
             if isVisible {
                 analytics.showedHome()
                 Task { await subscribeToNewEvents() }
             } else {
                 Task { await cancelSubscriptions() }
             }
-        })
+        }
         .doubleTapToPop(tab: .home) {
             if isShowingStories {
                 selectedStoryAuthor = nil
@@ -283,12 +282,12 @@ struct ContentView_Previews: PreviewProvider {
         HomeFeedView(user: user)
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
-            .environmentObject(router)
-            .environmentObject(currentUser)
+            .environment(router)
+            .environment(currentUser)
         
         HomeFeedView(user: user)
             .environment(\.managedObjectContext, emptyPreviewContext)
             .environmentObject(emptyRelayService)
-            .environmentObject(router)
+            .environment(router)
     }
 }

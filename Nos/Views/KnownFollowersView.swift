@@ -13,7 +13,7 @@ import SwiftUI
 struct KnownFollowersView: View {
     
     @ObservedObject var author: Author
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     
     var followersRequest: FetchRequest<Follow>
     var followersResult: FetchedResults<Follow> { followersRequest.wrappedValue }

@@ -1150,7 +1150,6 @@
 		C9F84C24298DC7C100C6714D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */,
 				C9A0DADF29C697A100466635 /* AboutView.swift */,
 				C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */,
 				C987F81929BA4D0E00B44E7A /* ActionButton.swift */,
@@ -1219,18 +1218,20 @@
 				C94D14802A12B3F70014C906 /* SearchBar.swift */,
 				5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */,
 				C95D68A2299E6D9000429F86 /* SelectableText.swift */,
+				C9DF76272AE1D11F000134DF /* SendUSBCBarButtonItem.swift */,
 				C9F84C22298DC7B900C6714D /* SettingsView.swift */,
 				CD09A74329A50F1D0063464F /* SideMenu.swift */,
 				C9A0DAD929C685E500466635 /* SideMenuButton.swift */,
 				CD09A74529A50F750063464F /* SideMenuContent.swift */,
-				5BE281BD2AE2CCAE00880466 /* StoriesView.swift */,
-				5BE281C02AE2CCB400880466 /* StoryNoteView.swift */,
 				C92DF80729C25FA900400561 /* SquareImage.swift */,
 				3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */,
 				C931517C29B915AF00934506 /* StaggeredGrid.swift */,
+				5BE281BD2AE2CCAE00880466 /* StoriesView.swift */,
+				5BE281C02AE2CCB400880466 /* StoryNoteView.swift */,
+				2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */,
 				3F60F42829B27D3E000D62C4 /* ThreadView.swift */,
-				C9DF76272AE1D11F000134DF /* SendUSBCBarButtonItem.swift */,
 				C9A2FCA12AE6FF360020A5C6 /* USBCBalanceBarButtonItem.swift */,
+				C913DA0D2AEB3265003BDD6D /* WarningView.swift */,
 				C9CE5B132A0172CF008E198C /* WebView.swift */,
 				C92F01502AC4D67B00972489 /* Form */,
 				C9CFF6D02AB241EB00D4B368 /* Modifiers */,
@@ -1951,7 +1952,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 93;
+				CURRENT_PROJECT_VERSION = 94;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1972,7 +1973,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 93;
+				CURRENT_PROJECT_VERSION = 94;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
@@ -2041,7 +2042,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -2099,7 +2100,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -2119,7 +2120,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 93;
+				CURRENT_PROJECT_VERSION = 94;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nos/Views/Preview Content\"";
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
@@ -2141,7 +2142,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
@@ -2170,7 +2171,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 93;
+				CURRENT_PROJECT_VERSION = 94;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nos/Views/Preview Content\"";
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
@@ -2191,7 +2192,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
@@ -2213,14 +2214,14 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 93;
+				CURRENT_PROJECT_VERSION = 94;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = NosTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.NosTests;
@@ -2239,13 +2240,13 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 93;
+				CURRENT_PROJECT_VERSION = 94;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = NosTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.NosTests;
@@ -2263,7 +2264,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 93;
+				CURRENT_PROJECT_VERSION = 94;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2288,7 +2289,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 93;
+				CURRENT_PROJECT_VERSION = 94;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;

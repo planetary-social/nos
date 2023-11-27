@@ -46,7 +46,7 @@ struct AuthorListView: View {
         }
         .background(Color.appBg)
         .nosNavigationBar(title: .mention)
-        .onChange(of: searchTextObserver.debouncedText) { newValue in
+        .onChange(of: searchTextObserver.debouncedText) { _, newValue in
             search(for: newValue)
         }
         .onAppear {

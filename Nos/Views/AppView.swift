@@ -13,19 +13,19 @@ struct AppView: View {
     @State var showNewPost = false
     @State var newPostContents: String? 
 
-    @EnvironmentObject private var appController: AppController
-    @EnvironmentObject var router: Router
+    @Environment(AppController.self) var appController
+    @Environment(Router.self) var router
     @EnvironmentObject var pushNotificationService: PushNotificationService
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
-    @EnvironmentObject var currentUser: CurrentUser
+    @Environment(CurrentUser.self) var currentUser
     
     @State private var showingOptions = false
     @State private var lastSelectedTab = AppDestination.home
     
     var body: some View {
-        
+        @Bindable var router = router
         ZStack {
             if appController.currentState == .onboarding {
                 OnboardingView(completion: appController.completeOnboarding)
@@ -121,7 +121,7 @@ struct AppView: View {
                             .tag(AppDestination.profile)
                     }
                 }
-                .onChange(of: router.selectedTab) { newTab in
+                .onChange(of: router.selectedTab) { _, newTab in
                     if case let AppDestination.newNote(contents) = newTab {
                         newPostContents = contents
                         showNewPost = true
@@ -176,19 +176,19 @@ struct AppView_Previews: PreviewProvider {
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
-            .environmentObject(router)
-            .environmentObject(loggedInAppController)
+            .environment(router)
+            .environment(loggedInAppController)
         
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
-            .environmentObject(router)
-            .environmentObject(AppController())
+            .environment(router)
+            .environment(AppController())
         
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
-            .environmentObject(routerWithSideMenuOpened)
-            .environmentObject(AppController())
+            .environment(routerWithSideMenuOpened)
+            .environment(AppController())
     }
 }
