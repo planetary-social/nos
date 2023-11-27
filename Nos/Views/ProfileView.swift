@@ -27,8 +27,7 @@ struct ProfileView: View {
     @State private var usbcAddress: USBCAddress?
     @State private var usbcBalance: Double?
     @State private var usbcBalanceTimer: Timer?
-    
-    @State private var subscriptionIds: [String] = []
+    @State private var subscriptionIDs: [String] = []
 
     @State private var alert: AlertState<Never>?
     
@@ -80,6 +79,28 @@ struct ProfileView: View {
         }
     }
     
+    func downloadAuthorData() async {
+        await relayService.decrementSubscriptionCount(for: subscriptionIDs)
+        subscriptionIDs.removeAll()
+        
+        guard let authorKey = author.hexadecimalPublicKey else {
+            return
+        }
+        
+        // Profile data
+        subscriptionIDs.append(
+            contentsOf: await relayService.requestProfileData(
+                for: authorKey, 
+                lastUpdateMetadata: author.lastUpdatedMetadata, 
+                lastUpdatedContactList: nil // always grab contact list because we purge follows aggressively
+            )
+        )
+        
+        // reports
+        let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
+        subscriptionIDs.append(contentsOf: await relayService.openSubscriptions(with: reportFilter)) 
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             ProfileHeader(author: author)
@@ -91,8 +112,17 @@ struct ProfileView: View {
                     Localized.noEventsOnProfile.view
                         .padding()
                 } else {
-                    NoteListView(fetchRequest: author.allPostsRequest(), context: viewContext, author: author)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    let profileNotesFilter = Filter(
+                        authorKeys: [author.hexadecimalPublicKey ?? "error"],
+                        kinds: [.text, .delete, .repost, .longFormContent]
+                    )
+
+                    PagedNoteListView(
+                        databaseFilter: author.allPostsRequest(), 
+                        relayFilter: profileNotesFilter,
+                        context: viewContext
+                    )
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 Spacer()
             }
@@ -209,10 +239,20 @@ struct ProfileView: View {
         }
         .alert(unwrapping: $alert)
         .onAppear {
-            Task { await loadUSBCBalance() }
+            Task { 
+                await downloadAuthorData()
+                await loadUSBCBalance() 
+            }
             analytics.showedProfile()
         }
+        .onDisappear {
+            Task(priority: .userInitiated) {
+                await relayService.decrementSubscriptionCount(for: subscriptionIDs)
+                subscriptionIDs.removeAll()
+            }
+        }
         .refreshable {
+            await downloadAuthorData()
             await computeUnmutedEvents()
         }
         .onChange(of: author.muted) { _ in
@@ -223,12 +263,6 @@ struct ProfileView: View {
         .onChange(of: author.events.count) { _ in
             Task {
                 await computeUnmutedEvents()
-            }
-        }
-        .onDisappear {
-            Task(priority: .userInitiated) {
-                await relayService.decrementSubscriptionCount(for: subscriptionIds)
-                subscriptionIds.removeAll()
             }
         }
     }

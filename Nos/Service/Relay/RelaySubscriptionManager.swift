@@ -56,6 +56,7 @@ actor RelaySubscriptionManager {
         removeSubscription(with: subscriptionID)
     }
     
+    @discardableResult
     func decrementSubscriptionCount(for subscriptionID: RelaySubscription.ID) async -> Bool {
         if var subscription = subscription(from: subscriptionID) {
             if subscription.referenceCount == 1 {

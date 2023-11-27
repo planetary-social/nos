@@ -35,7 +35,13 @@ struct RelaySubscription: Identifiable {
         filter.limit == 1
     }
     
-    internal init(filter: Filter, relayAddress: URL, subscriptionStartDate: Date? = nil, oldestEventCreationDate: Date? = nil, referenceCount: Int = 0) {
+    internal init(
+        filter: Filter, 
+        relayAddress: URL, 
+        subscriptionStartDate: Date? = nil, 
+        oldestEventCreationDate: Date? = nil, 
+        referenceCount: Int = 0
+    ) {
         self.filter = filter
         self.relayAddress = relayAddress
         self.id = (filter.id + "-" + relayAddress.absoluteString).sha256()

@@ -17,7 +17,7 @@ struct Filter: Hashable, Identifiable {
     let pTags: [HexadecimalString]
     let search: String?
     let inNetwork: Bool
-    let limit: Int?
+    var limit: Int?
     var since: Date?
     var until: Date?
     

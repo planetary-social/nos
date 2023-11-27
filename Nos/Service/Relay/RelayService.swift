@@ -142,50 +142,6 @@ extension RelayService {
     }
 }
 
-class PagedRelaySubscription {
-    var startDate: Date
-    let filter: Filter
-    
-    private var subscriptionManager: RelaySubscriptionManager
-    private var subscriptionIDs = [RelaySubscription.ID]()
-    
-    init(startDate: Date, filter: Filter, subscriptionManager: RelaySubscriptionManager, relayAddresses: [URL]) {
-        self.startDate = startDate
-        self.filter = filter
-        self.subscriptionManager = subscriptionManager
-        Task {
-            var newEventsFilter = filter
-            newEventsFilter.until = startDate
-            for relayAddress in relayAddresses {
-                subscriptionIDs.append(
-                    await subscriptionManager.queueSubscription(with: newEventsFilter, to: relayAddress)
-                )
-            }
-        }
-    }
-    
-    func loadMore() {
-        Task { [self] in
-            var newUntilDates = [URL: Date]()
-            
-            for subscriptionID in subscriptionIDs {
-                if let subscription = await subscriptionManager.subscription(from: subscriptionID),
-                    let newDate = subscription.oldestEventCreationDate {
-                    newUntilDates[subscription.relayAddress] = newDate
-                    await subscriptionManager.decrementSubscriptionCount(for: subscriptionID)
-                    Log.debug("Oldest event from \(subscriptionID) is \(newDate)")
-                }
-            }
-            
-            for (relayAddress, until) in newUntilDates {
-                var newEventsFilter = self.filter
-                newEventsFilter.until = until
-                subscriptionIDs.append(await subscriptionManager.queueSubscription(with: newEventsFilter, to: relayAddress))
-            }
-        }
-    }
-}
-
 // MARK: Events
 extension RelayService {
     
@@ -208,7 +164,7 @@ extension RelayService {
     }
     
     func openPagedSubscription(with filter: Filter) async -> PagedRelaySubscription {
-        return PagedRelaySubscription(
+        PagedRelaySubscription(
             startDate: .now, 
             filter: filter, 
             subscriptionManager: subscriptions, 
@@ -337,7 +293,7 @@ extension RelayService {
             
             if var subscription = await subscriptions.subscription(from: subscriptionID) {
                 if let oldestSeen = subscription.oldestEventCreationDate,
-                   jsonEvent.createdDate < oldestSeen {
+                    jsonEvent.createdDate < oldestSeen {
                     subscription.oldestEventCreationDate = jsonEvent.createdDate
                     await subscriptions.updateSubscriptions(with: subscription)
                 } else {
@@ -726,10 +682,8 @@ extension RelayService {
             Log.error("websocket connected with unknown host")
         }
         
-        for subscription in await subscriptions.active {
-            if subscription.relayAddress == client.url {
-                await subscriptions.requestEvents(from: client, subscription: subscription)
-            }
+        for subscription in await subscriptions.active where subscription.relayAddress == client.url {
+            await subscriptions.requestEvents(from: client, subscription: subscription)
         }
     }
 }
