@@ -238,7 +238,7 @@ struct ProfileView: View {
         .task {
             await computeUnmutedEvents()
         }
-        .onChange(of: author.uns) { _ in
+        .onChange(of: author.uns) { 
             Task {
                 await loadUSBCBalance()
             }
@@ -252,12 +252,12 @@ struct ProfileView: View {
             await refreshProfileFeed()
             await computeUnmutedEvents()
         }
-        .onChange(of: author.muted) { _ in
+        .onChange(of: author.muted) { 
             Task {
                 await computeUnmutedEvents()
             }
         }
-        .onChange(of: author.events.count) { _ in
+        .onChange(of: author.events.count) { 
             Task {
                 await computeUnmutedEvents()
             }
