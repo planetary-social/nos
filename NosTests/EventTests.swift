@@ -356,6 +356,21 @@ final class EventTests: XCTestCase {
             }
         }
     }
+    
+    // MARK: - Replies
+    
+    func testReferencedNoteGivenMentionMarker() throws {
+        let testContext = persistenceController.container.viewContext
+        let testEvent = try createTestEvent(in: testContext)
+        
+        let mention = try EventReference(
+            jsonTag: ["e", "646daa2f5d2d990dc98fb50a6ce8de65d77419cee689d7153c912175e85ca95d", "", "mention"], 
+            context: testContext
+        )
+        testEvent.addToEventReferences(mention)
+        
+        XCTAssertNil(testEvent.referencedNote())
+    }
 
     // MARK: - Helpers
     
