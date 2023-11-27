@@ -19,7 +19,7 @@ struct RepliesView: View {
     
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
 
     @State private var reply = EditableNoteText()
@@ -301,7 +301,7 @@ struct RepliesView_Previews: PreviewProvider {
         .environment(\.managedObjectContext, previewContext)
         .environmentObject(emptyRelayService)
         .environmentObject(router)
-        .environmentObject(currentUser)
+        .environment(currentUser)
         .padding()
         .background(Color.cardBackground)
     }

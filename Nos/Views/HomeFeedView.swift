@@ -14,8 +14,8 @@ struct HomeFeedView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject var router: Router
-    @EnvironmentObject var currentUser: CurrentUser
+    @EnvironmentObject private var router: Router
+    @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
     
     @FetchRequest var events: FetchedResults<Event>
@@ -31,6 +31,7 @@ struct HomeFeedView: View {
 
     @ObservedObject var user: Author
 
+    @State private var stories: [Author] = []
     @State private var selectedStoryAuthor: Author?
     @State private var storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now)!
 
@@ -82,58 +83,51 @@ struct HomeFeedView: View {
                 )
             } else {
                 ZStack {
-                    ScrollViewReader { proxy in
-                        ScrollView(.vertical, showsIndicators: false) {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 15) {
-                                    ForEach(authors) { author in
-                                        Button {
-                                            withAnimation {
-                                                selectedStoryAuthor = author
-                                            }
-                                        } label: {
-                                            AvatarView(imageUrl: author.profilePhotoURL, size: 54)
-                                                .padding(.vertical, 10)
-                                                .background(
-                                                    Circle()
-                                                        .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
-                                                        .frame(width: 58, height: 58)
-                                                )
+                    ScrollView(.vertical, showsIndicators: false) {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 15) {
+                                ForEach(stories) { author in
+                                    Button {
+                                        withAnimation {
+                                            selectedStoryAuthor = author
                                         }
+                                    } label: {
+                                        StoryAvatarView(author: author)
                                     }
                                 }
-                                .padding(.horizontal, 15)
-                            }
-                            .padding(.top, 15)
-                            .readabilityPadding()
-                            .id(user.id)
 
-                            LazyVStack {
-                                ForEach(events) { event in
-                                    NoteButton(note: event, hideOutOfNetwork: false)
-                                        .padding(.bottom, 15)
-                                }
                             }
-                            .padding(.vertical, 15)
+                            .padding(.horizontal, 15)
                         }
-                        .doubleTapToPop(tab: .home) {
-                            if isShowingStories {
-                                selectedStoryAuthor = nil
-                            } else {
-                                proxy.scrollTo(user.id)
+                        .padding(.top, 15)
+                        .readabilityPadding()
+                        .id(user.id)
+
+                        LazyVStack {
+                            ForEach(events) { event in
+                                NoteButton(note: event, hideOutOfNetwork: false)
+                                    .padding(.bottom, 15)
                             }
                         }
-                        .accessibilityIdentifier("home feed")
+                        .padding(.vertical, 15)
                     }
+                    .accessibilityIdentifier("home feed")
 
                     StoriesView(
                         cutoffDate: $storiesCutoffDate,
-                        authors: authors,
+                        authors: stories,
                         selectedAuthor: $selectedStoryAuthor
                     )
                     .scaleEffect(isShowingStories ? 1 : 0.5)
                     .opacity(isShowingStories ? 1 : 0)
                     .animation(.default, value: selectedStoryAuthor)
+                }
+                .doubleTapToPop(tab: .home) { proxy in
+                    if isShowingStories {
+                        selectedStoryAuthor = nil
+                    } else {
+                        proxy.scrollTo(user.id)
+                    }
                 }
             }
         }
@@ -179,7 +173,6 @@ struct HomeFeedView: View {
                 }
             }
         }
-        .background(Color.appBg)
         .padding(.top, 1)
         .overlay(Group {
             if !events.contains(where: { !$0.author!.muted }) {
@@ -191,24 +184,35 @@ struct HomeFeedView: View {
         .refreshable {
             date = .now
         }
-        .onChange(of: date) { newDate in
+        .onChange(of: date) { _, newDate in
             events.nsPredicate = Event.homeFeedPredicate(for: user, before: newDate)
+            authors.nsPredicate = user.followedWithNewNotesPredicate(
+                since: Calendar.current.date(byAdding: .day, value: -2, to: newDate)!
+            )
             Task { await subscribeToNewEvents() }
         }
-        .onAppear { 
+        .onAppear {
             if router.selectedTab == .home {
                 isVisible = true 
             }
+            if !isShowingStories {
+                stories = authors.map { $0 }
+            }
+        }
+        .onChange(of: isShowingStories) { newValue in
+            if !newValue {
+                stories = authors.map { $0 }
+            }
         }
         .onDisappear { isVisible = false }
-        .onChange(of: isVisible, perform: { isVisible in
+        .onChange(of: isVisible) { 
             if isVisible {
                 analytics.showedHome()
                 Task { await subscribeToNewEvents() }
             } else {
                 Task { await cancelSubscriptions() }
             }
-        })
+        }
         .task {
             currentUser.socialGraph.followedKeys.publisher
                 .removeDuplicates()
@@ -219,6 +223,19 @@ struct HomeFeedView: View {
                 })
                 .store(in: &cancellables)
         }
+    }
+}
+
+fileprivate struct StoryAvatarView: View {
+    var author: Author
+    var body: some View {
+        AvatarView(imageUrl: author.profilePhotoURL, size: 54)
+            .padding(.vertical, 10)
+            .background(
+                Circle()
+                    .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
+                    .frame(width: 58, height: 58)
+            )
     }
 }
 
@@ -271,7 +288,7 @@ struct ContentView_Previews: PreviewProvider {
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
-            .environmentObject(currentUser)
+            .environment(currentUser)
         
         HomeFeedView(user: user)
             .environment(\.managedObjectContext, emptyPreviewContext)

@@ -19,7 +19,7 @@ struct UNSWizard: View {
     }
     
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) var analytics
     
     @State private var flow: Flow?

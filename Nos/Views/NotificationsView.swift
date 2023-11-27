@@ -75,66 +75,65 @@ struct NotificationsView: View {
     
     var body: some View {
         NavigationStack(path: $router.notificationsPath) {
-            ScrollViewReader { proxy in
-                ScrollView(.vertical) {
-                    LazyVStack {
-                        ForEach(events.unmuted) { event in
-                            if let user {
-                                NotificationCard(viewModel: NotificationViewModel(note: event, user: user))
-                                    .readabilityPadding()
-                                    .id(event.id)
-                            }
+            ScrollView(.vertical) {
+                LazyVStack {
+                    ForEach(events.unmuted) { event in
+                        if let user {
+                            NotificationCard(viewModel: NotificationViewModel(note: event, user: user))
+                                .padding(.horizontal, 15)
+                                .readabilityPadding()
+                                .id(event.id)
                         }
                     }
-                    .padding(.top, 10)
                 }
-                .overlay(Group {
-                    if events.isEmpty {
-                        Localized.noNotifications.view
+                .padding(.top, 10)
+            }
+            .overlay(Group {
+                if events.isEmpty {
+                    Localized.noNotifications.view
+                }
+            })
+            .background(Color.appBg)
+            .padding(.top, 1)
+            .nosNavigationBar(title: .notifications)
+            .navigationBarItems(leading: SideMenuButton())
+            .navigationDestination(for: Event.self) { note in
+                RepliesView(note: note)
+            }
+            .navigationDestination(for: URL.self) { url in URLView(url: url) }
+            .navigationDestination(for: ReplyToNavigationDestination.self) { destination in
+                RepliesView(note: destination.note, showKeyboard: true)
+            }
+            .navigationDestination(for: Author.self) { author in
+                ProfileView(author: author)
+            }
+            .refreshable {
+                await subscribeToNewEvents()
+            }
+            .onAppear {
+                if router.selectedTab == .notifications {
+                    isVisible = true
+                }
+                pushNotificationService.requestNotificationPermissionsFromUser()
+            }
+            .onDisappear {
+                isVisible = false
+            }
+            .onChange(of: isVisible, perform: { isVisible in
+                Task { await markAllNotificationsRead() }
+                if isVisible {
+                    analytics.showedNotifications()
+                    Task {
+                        await subscribeToNewEvents()
                     }
-                })
-                .background(Color.appBg)
-                .padding(.top, 1)
-                .nosNavigationBar(title: .notifications)
-                .navigationBarItems(leading: SideMenuButton())
-                .navigationDestination(for: Event.self) { note in
-                    RepliesView(note: note)
+                } else {
+                    Task { await cancelSubscriptions() }
                 }
-                .navigationDestination(for: URL.self) { url in URLView(url: url) }
-                .navigationDestination(for: ReplyToNavigationDestination.self) { destination in
-                    RepliesView(note: destination.note, showKeyboard: true)
+            })
+            .doubleTapToPop(tab: .notifications) { proxy in
+                if let firstEvent = events.first {
+                    proxy.scrollTo(firstEvent.id)
                 }
-                .navigationDestination(for: Author.self) { author in
-                    ProfileView(author: author)
-                }
-                .refreshable {
-                    await subscribeToNewEvents()
-                }
-                .doubleTapToPop(tab: .notifications) {
-                    if let firstEvent = events.first {
-                        proxy.scrollTo(firstEvent.id)
-                    }
-                }
-                .onAppear {
-                    if router.selectedTab == .notifications {
-                        isVisible = true
-                    }
-                    pushNotificationService.requestNotificationPermissionsFromUser()
-                }
-                .onDisappear {
-                    isVisible = false
-                }
-                .onChange(of: isVisible, perform: { isVisible in
-                    Task { await markAllNotificationsRead() }
-                    if isVisible {
-                        analytics.showedNotifications()
-                        Task {
-                            await subscribeToNewEvents()
-                        }
-                    } else {
-                        Task { await cancelSubscriptions() }
-                    }
-                })
             }
         }
     }
@@ -143,31 +142,16 @@ struct NotificationsView: View {
 struct NotificationsView_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
-    static var persistenceController = PersistenceController.preview
     
-    static var previewContext = persistenceController.container.viewContext
-    static var relayService = previewData.relayService
+    static var previewContext = previewData.previewContext
     
-    static var emptyPersistenceController = PersistenceController.empty
-    static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = previewData.relayService
+    static var alice: Author {
+        previewData.alice
+    }
     
-    static var router = Router()
-    
-    static var alice: Author = {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
-        author.name = "Alice"
-        return author
-    }()
-    
-    static var bob: Author = {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.bob.publicKeyHex
-        author.name = "Bob"
-        
-        return author
-    }()
+    static var bob: Author {
+        previewData.bob
+    }
     
     static func createTestData(in context: NSManagedObjectContext) {
         let mentionNote = Event(context: context)
@@ -205,9 +189,7 @@ struct NotificationsView_Previews: PreviewProvider {
         NavigationView {
             NotificationsView(user: bob)
         }
-        .environment(\.managedObjectContext, previewContext)
-        .environmentObject(relayService)
-        .environmentObject(router)
+        .inject(previewData: previewData)
         .onAppear { createTestData(in: previewContext) }
     }
 }

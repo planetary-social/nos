@@ -15,7 +15,7 @@ struct LikeButton: View {
     /// We use this to give instant feedback when the button is tapped, even though the action it performs is async.
     @State private var tapped = false
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
     
     internal init(note: Event) {

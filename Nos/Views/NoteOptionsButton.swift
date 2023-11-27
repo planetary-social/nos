@@ -11,7 +11,7 @@ import Dependencies
 
 struct NoteOptionsButton: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     
     @Dependency(\.analytics) private var analytics
     @Dependency(\.persistenceController) private var persistenceController
@@ -103,7 +103,7 @@ struct NoteOptionsButton: View {
             // TODO: put links back in
             let attrString = await Event.attributedContent(
                 noteID: note.identifier, 
-                context: persistenceController.parseContext
+                context: persistenceController.viewContext
             ) 
             UIPasteboard.general.string = String(attrString.characters)
         }
@@ -142,6 +142,6 @@ struct NoteOptionsView_Previews: PreviewProvider {
         }
         .padding()
         .background(Color.cardBackground)
-        .environmentObject(currentUser)
+        .environment(currentUser)
     }
 }

@@ -14,8 +14,8 @@ struct DiscoverView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject var router: Router
-    @EnvironmentObject var currentUser: CurrentUser
+    @EnvironmentObject private var router: Router
+    @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
     @State private var lastRequestDate: Date?
 
@@ -114,7 +114,7 @@ struct DiscoverView: View {
     var body: some View {
         NavigationStack(path: $router.discoverPath) {
             ZStack {
-                if performingInitialLoad {
+                if performingInitialLoad && searchController.query.isEmpty {
                     FullscreenProgressView(
                         isPresented: $performingInitialLoad, 
                         hideAfter: .now() + .seconds(Self.initialLoadTime)
@@ -238,9 +238,12 @@ struct DiscoverView: View {
         if searchController.query.contains("@") {
             Task(priority: .userInitiated) {
                 if let publicKeyHex =
-                    await relayService.retrievePublicKeyFromUsername(searchController.query.lowercased()),
-                    let author = author(fromPublicKey: publicKeyHex) {
-                    router.push(author)
+                    await relayService.retrievePublicKeyFromUsername(searchController.query.lowercased()) {
+                    Task { @MainActor in
+                        if let author = author(fromPublicKey: publicKeyHex) {
+                            router.push(author)
+                        }
+                    }
                 }
             }
         } else {
@@ -309,14 +312,14 @@ struct DiscoverView_Previews: PreviewProvider {
                 .environment(\.managedObjectContext, previewContext)
                 .environmentObject(relayService)
                 .environmentObject(router)
-                .environmentObject(currentUser)
+                .environment(currentUser)
                 .onAppear { createTestData(in: previewContext) }
 
             DiscoverView(featuredAuthors: [publicKey.npub])
                 .environment(\.managedObjectContext, previewContext)
                 .environmentObject(relayService)
                 .environmentObject(router)
-                .environmentObject(currentUser)
+                .environment(currentUser)
                 .onAppear { createTestData(in: previewContext) }
                 .previewDevice("iPad Air (5th generation)")
         } else {

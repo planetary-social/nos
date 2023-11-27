@@ -157,6 +157,6 @@ struct ThreadView_Previews: PreviewProvider {
             .environment(\.managedObjectContext, emptyPreviewContext)
             .environmentObject(emptyRelayService)
             .environmentObject(router)
-            .environmentObject(currentUser)
+            .environment(currentUser)
     }
 }

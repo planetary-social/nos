@@ -13,15 +13,15 @@ let showReportWarningsKey = "com.verse.nos.settings.showReportWarnings"
 let showOutOfNetworkWarningKey = "com.verse.nos.settings.showOutOfNetworkWarning"
     
 struct SettingsView: View {
-    @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.unsAPI) var unsAPI
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.userDefaults) private var userDefaults
-    @EnvironmentObject private var appController: AppController
+    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(AppController.self) var appController
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
 
     @State private var privateKeyString = ""
     @State private var alert: AlertState<AlertAction>?

@@ -10,7 +10,7 @@ import SwiftUI
 /// A view that puts a note behind a content warning if appropriate.
 struct WarningView: View {
     
-    @ObservedObject var controller: NoteWarningController
+    @Bindable var controller: NoteWarningController
     
     var body: some View {
         if !controller.showWarning {
@@ -25,7 +25,7 @@ struct WarningView: View {
 
 struct OutOfNetworkView: View {
     
-    @ObservedObject var controller: NoteWarningController
+    @Bindable var controller: NoteWarningController
     
     @State private var isTextBoxShown = false
     @State private var isOverlayHelpTextBoxShown = false
@@ -89,7 +89,7 @@ struct OutOfNetworkView: View {
 
 struct OverlayContentReportView: View {
     
-    @ObservedObject var controller: NoteWarningController
+    @Bindable var controller: NoteWarningController
     
     @State private var isTextBoxShown = false
     @State var isOverlayHelpTextBoxShown = false

@@ -116,7 +116,7 @@ struct ComposerActionBar: View {
         }
         .animation(.easeInOut(duration: 0.2), value: subMenu)
         .transition(.move(edge: .leading))
-        .onChange(of: expirationTime) { _ in
+        .onChange(of: expirationTime) { _, _ in
             subMenu = .none
         }
         .alert(unwrapping: $alert) { (_: AlertAction?) in

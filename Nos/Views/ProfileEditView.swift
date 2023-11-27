@@ -12,7 +12,7 @@ struct ProfileEditView: View {
     
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
 
     @Dependency(\.crashReporting) private var crashReporting

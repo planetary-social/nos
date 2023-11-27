@@ -18,7 +18,7 @@ struct ProfileView: View {
 
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
     @Dependency(\.unsAPI) private var unsAPI
@@ -77,7 +77,7 @@ struct ProfileView: View {
             contentsOf: await relayService.requestProfileData(
                 for: authorKey, 
                 lastUpdateMetadata: author.lastUpdatedMetadata, 
-                lastUpdatedContactList: author.lastUpdatedContactList
+                lastUpdatedContactList: nil // always grab contact list because we purge follows aggressively
             )
         )
         
@@ -112,32 +112,30 @@ struct ProfileView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            ScrollViewReader { proxy in
-                ScrollView(.vertical, showsIndicators: false) {
-                    ProfileHeader(author: author)
-                        .compositingGroup()
-                        .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
-                        .id(author.id)
+            ScrollView(.vertical, showsIndicators: false) {
+                ProfileHeader(author: author)
+                    .compositingGroup()
+                    .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
+                    .id(author.id)
 
-                    LazyVStack {
-                        if unmutedEvents.isEmpty {
-                            Localized.noEventsOnProfile.view
-                                .padding()
-                        } else {
-                            ForEach(unmutedEvents) { event in
-                                VStack {
-                                    NoteButton(note: event, hideOutOfNetwork: false, displayRootMessage: true)
-                                    .padding(.bottom, 15)
-                                }
+                LazyVStack {
+                    if unmutedEvents.isEmpty {
+                        Localized.noEventsOnProfile.view
+                            .padding()
+                    } else {
+                        ForEach(unmutedEvents) { event in
+                            VStack {
+                                NoteButton(note: event, hideOutOfNetwork: false, displayRootMessage: true)
+                                .padding(.bottom, 15)
                             }
                         }
                     }
-                    .padding(.top, 10)
                 }
-                .background(Color.appBg)
-                .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) {
-                    proxy.scrollTo(author.id)
-                }
+                .padding(.top, 10)
+            }
+            .background(Color.appBg)
+            .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { proxy in
+                proxy.scrollTo(author.id)
             }
         }
         .nosNavigationBar(title: .profileTitle)
@@ -155,7 +153,7 @@ struct ProfileView: View {
             FollowsView(title: Localized.follows, authors: destination.follows)
         }
         .navigationDestination(for: FollowersDestination.self) { destination in
-            FollowsView(title: Localized.followedBy, authors: destination.followers)
+            FollowsView(title: Localized.followers, authors: destination.followers)
         }
         .navigationDestination(for: RelaysDestination.self) { destination in
             RelayView(author: destination.author, editable: false)
