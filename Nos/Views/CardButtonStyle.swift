@@ -13,27 +13,35 @@ struct CardButtonStyle: ButtonStyle {
     
     @State private var configurationSize: CGSize = .zero
     
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label.mimicCardButtonStyle(style: style, isPressed: configuration.isPressed)
+    }
+}
+
+fileprivate extension CardStyle {
     var cornerRadius: CGFloat {
-        switch style {
+        switch self {
         case .golden:
             return 16
         case .compact:
             return 21
         }
-    } 
-    
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .offset(y: configuration.isPressed ? 3 : 0)
+    }
+}
+
+extension View {
+    func mimicCardButtonStyle(style: CardStyle = .compact, isPressed: Bool = false) -> some View {
+        self
+            .offset(y: isPressed ? 3 : 0)
             .background(
                 Color.card3d
-                    .cornerRadius(cornerRadius)
+                    .cornerRadius(style.cornerRadius)
                     .offset(y: 4.5)
                     .shadow(
-                        color: .cardShadowBottom,
-                        radius: configuration.isPressed ? 2 : 5,
+                        color: Color.cardShadowBottom,
+                        radius: isPressed ? 2 : 5,
                         x: 0,
-                        y: configuration.isPressed ? 1 : 4
+                        y: isPressed ? 1 : 4
                     )
             )
     }
@@ -42,7 +50,7 @@ struct CardButtonStyle: ButtonStyle {
 #Preview {
     VStack {
         Spacer()
-        Button { 
+        Button {
         } label: { 
             VStack {
                 Text("hello world")

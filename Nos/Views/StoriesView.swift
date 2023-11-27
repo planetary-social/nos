@@ -11,7 +11,7 @@ import SwiftUI
 struct StoriesView: View {
 
     /// Authors to display
-    private var authors: FetchedResults<Author>
+    private var authors: [Author]
 
     /// Author tapped in the Home Feed
     ///
@@ -28,7 +28,7 @@ struct StoriesView: View {
     
     init(
         cutoffDate: Binding<Date>,
-        authors: FetchedResults<Author>,
+        authors: [Author],
         selectedAuthor: Binding<Author?>
     ) {
         self._cutoffDate = cutoffDate
@@ -68,7 +68,7 @@ struct StoriesView: View {
         }
     }
     
-    func showNextAuthor(from authors: FetchedResults<Author>) {
+    func showNextAuthor(from authors: [Author]) {
         guard let selectedAuthorIndex = authors.firstIndex(of: selectedAuthor) else {
             return
         }
@@ -85,7 +85,7 @@ struct StoriesView: View {
         }
     }
     
-    func showPreviousAuthor(from authors: FetchedResults<Author>) {
+    func showPreviousAuthor(from authors: [Author]) {
         guard let selectedAuthorIndex = authors.firstIndex(of: selectedAuthor) else {
             return
         }

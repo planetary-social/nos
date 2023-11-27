@@ -17,8 +17,8 @@ struct ProfileView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject private var currentUser: CurrentUser
-    @EnvironmentObject private var router: Router
+    @Environment(CurrentUser.self) private var currentUser
+    @Environment(Router.self) private var router
     @Dependency(\.analytics) private var analytics
     @Dependency(\.unsAPI) private var unsAPI
     
@@ -238,7 +238,7 @@ struct ProfileView: View {
         .task {
             await computeUnmutedEvents()
         }
-        .onChange(of: author.uns) { _ in
+        .onChange(of: author.uns) { 
             Task {
                 await loadUSBCBalance()
             }
@@ -252,12 +252,12 @@ struct ProfileView: View {
             await refreshProfileFeed()
             await computeUnmutedEvents()
         }
-        .onChange(of: author.muted) { _ in
+        .onChange(of: author.muted) { 
             Task {
                 await computeUnmutedEvents()
             }
         }
-        .onChange(of: author.events.count) { _ in
+        .onChange(of: author.events.count) { 
             Task {
                 await computeUnmutedEvents()
             }

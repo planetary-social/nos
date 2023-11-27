@@ -15,8 +15,8 @@ struct NewNoteView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject var currentUser: CurrentUser
-    @EnvironmentObject private var router: Router
+    @Environment(CurrentUser.self) var currentUser
+    @Environment(Router.self) private var router
     @Dependency(\.analytics) private var analytics
 
     /// State holding the text the user is typing
@@ -60,7 +60,7 @@ struct NewNoteView: View {
                         author: author,
                         isPresented: $showRelayPicker
                     )
-                    .onChange(of: selectedRelay) { _ in
+                    .onChange(of: selectedRelay) { _, _ in
                         withAnimation {
                             showRelayPicker = false
                         }

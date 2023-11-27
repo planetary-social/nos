@@ -14,8 +14,8 @@ struct DiscoverView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject var router: Router
-    @EnvironmentObject var currentUser: CurrentUser
+    @Environment(Router.self) var router
+    @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
     @State private var lastRequestDate: Date?
 
@@ -112,9 +112,10 @@ struct DiscoverView: View {
     }
     
     var body: some View {
+        @Bindable var router = router
         NavigationStack(path: $router.discoverPath) {
             ZStack {
-                if performingInitialLoad {
+                if performingInitialLoad && searchController.query.isEmpty {
                     FullscreenProgressView(
                         isPresented: $performingInitialLoad, 
                         hideAfter: .now() + .seconds(Self.initialLoadTime)
@@ -175,14 +176,14 @@ struct DiscoverView: View {
             .refreshable {
                 date = .now
             }
-            .onChange(of: relayFilter) { _ in
+            .onChange(of: relayFilter) { 
                 withAnimation {
                     showRelayPicker = false
                 }
                 updatePredicate()
                 Task { await subscribeToNewEvents() }
             }
-            .onChange(of: date) { _ in
+            .onChange(of: date) { 
                 updatePredicate()
             }
             .refreshable {
@@ -196,14 +197,14 @@ struct DiscoverView: View {
             .onDisappear {
                 isVisible = false
             }
-            .onChange(of: isVisible, perform: { isVisible in
+            .onChange(of: isVisible) { 
                 if isVisible {
                     analytics.showedDiscover()
                     Task { await subscribeToNewEvents() }
                 } else {
                     Task { await cancelSubscriptions() }
                 }
-            })
+            }
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
@@ -239,9 +240,12 @@ struct DiscoverView: View {
         if searchController.query.contains("@") {
             Task(priority: .userInitiated) {
                 if let publicKeyHex =
-                    await relayService.retrievePublicKeyFromUsername(searchController.query.lowercased()),
-                    let author = author(fromPublicKey: publicKeyHex) {
-                    router.push(author)
+                    await relayService.retrievePublicKeyFromUsername(searchController.query.lowercased()) {
+                    Task { @MainActor in
+                        if let author = author(fromPublicKey: publicKeyHex) {
+                            router.push(author)
+                        }
+                    }
                 }
             }
         } else {
@@ -309,15 +313,15 @@ struct DiscoverView_Previews: PreviewProvider {
             DiscoverView(featuredAuthors: [publicKey.npub])
                 .environment(\.managedObjectContext, previewContext)
                 .environmentObject(relayService)
-                .environmentObject(router)
-                .environmentObject(currentUser)
+                .environment(router)
+                .environment(currentUser)
                 .onAppear { createTestData(in: previewContext) }
 
             DiscoverView(featuredAuthors: [publicKey.npub])
                 .environment(\.managedObjectContext, previewContext)
                 .environmentObject(relayService)
-                .environmentObject(router)
-                .environmentObject(currentUser)
+                .environment(router)
+                .environment(currentUser)
                 .onAppear { createTestData(in: previewContext) }
                 .previewDevice("iPad Air (5th generation)")
         } else {

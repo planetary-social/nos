@@ -22,11 +22,12 @@ struct NoteButton: View {
     var hideOutOfNetwork = true
     var showReplyCount = true
     var displayRootMessage = false
+    var isTapEnabled = true
     private let replyAction: ((Event) -> Void)?
     private let tapAction: ((Event) -> Void)?
 
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
     @EnvironmentObject private var relayService: RelayService
     @Dependency(\.persistenceController) private var persistenceController
     
@@ -39,6 +40,7 @@ struct NoteButton: View {
         hideOutOfNetwork: Bool = true, 
         showReplyCount: Bool = true, 
         displayRootMessage: Bool = false,
+        isTapEnabled: Bool = true,
         replyAction: ((Event) -> Void)? = nil,
         tapAction: ((Event) -> Void)? = nil
     ) {
@@ -48,6 +50,7 @@ struct NoteButton: View {
         self.hideOutOfNetwork = hideOutOfNetwork
         self.showReplyCount = showReplyCount
         self.displayRootMessage = displayRootMessage
+        self.isTapEnabled = isTapEnabled
         self.replyAction = replyAction
         self.tapAction = tapAction
     }
@@ -100,6 +103,15 @@ struct NoteButton: View {
                 })
             }
             
+            let buttonLabel = NoteCard(
+                note: displayedNote,
+                style: style,
+                showFullMessage: showFullMessage,
+                hideOutOfNetwork: hideOutOfNetwork,
+                showReplyCount: showReplyCount,
+                replyAction: replyAction
+            )
+
             let button = Button {
                 if let tapAction {
                     tapAction(displayedNote)
@@ -111,20 +123,22 @@ struct NoteButton: View {
                     }
                 }
             } label: {
-                NoteCard(
-                    note: displayedNote,
-                    style: style,
-                    showFullMessage: showFullMessage,
-                    hideOutOfNetwork: hideOutOfNetwork,
-                    showReplyCount: showReplyCount,
-                    replyAction: replyAction
-                )
+                buttonLabel
             }
             .buttonStyle(CardButtonStyle(style: style))
-            
+
+            let buttonOrLabel = Group {
+                if isTapEnabled {
+                    button
+                } else {
+                    buttonLabel
+                        .mimicCardButtonStyle()
+                }
+            }
+
             switch style {
             case .compact:
-                let compactButton = button
+                let compactButtonOrLabel = buttonOrLabel
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal)
                     .readabilityPadding()
@@ -136,13 +150,13 @@ struct NoteButton: View {
                     ThreadRootView(
                         root: root, 
                         tapAction: { root in router.push(root) },
-                        reply: { compactButton }
+                        reply: { compactButtonOrLabel }
                     )
                 } else {
-                    compactButton
+                    compactButtonOrLabel
                 }
             case .golden:
-                button
+                buttonOrLabel
             }
         }
     }

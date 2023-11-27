@@ -31,15 +31,15 @@ struct NosApp: App {
             AppView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .environmentObject(relayService)
-                .environmentObject(router)
-                .environmentObject(appController)
-                .environmentObject(currentUser)
+                .environment(router)
+                .environment(appController)
+                .environment(currentUser)
                 .environmentObject(pushNotificationService)
                 .onOpenURL { DeepLinkService.handle($0, router: router) }
                 .task {
                     persistenceController.cleanupEntities()
                 }
-                .onChange(of: scenePhase) { newPhase in
+                .onChange(of: scenePhase) { _, newPhase in
                     // TODO: save all contexts, not just the view and background.
                     if newPhase == .inactive {
                         Log.info("Scene change: inactive")

@@ -85,11 +85,6 @@ class SendUSBCController: ObservableObject {
             }
             await updateStep()
         }
-        
-        currentUser.$usbcAddress.sink { [weak self] newAddress in
-            self?.fromAddress = newAddress
-        }
-        .store(in: &cancellables)
     }
     
     @MainActor func updateStep() {

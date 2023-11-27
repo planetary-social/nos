@@ -26,7 +26,7 @@ struct AuthorStoryView: View {
 
     @State private var subscriptionIDs = [String]()
 
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
     @EnvironmentObject private var relayService: RelayService
     
     init(
@@ -158,7 +158,9 @@ struct AuthorStoryView: View {
             guard selectedNote == nil else {
                 return
             }
-            if let firstNote = notes.first {
+            if let firstUnreadNote = notes.first(where: { !$0.isRead }) {
+                selectedNote = firstUnreadNote
+            } else if let firstNote = notes.first {
                 selectedNote = firstNote
             } else {
                 // Notes shouldn't be empty here, but if they are, just advance to the next author
@@ -190,7 +192,7 @@ fileprivate struct BottomOverlay: View {
 
     @Dependency(\.persistenceController) private var persistenceController
 
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
 
     @State private var replyCount = 0
     @State private var replyAvatarURLs = [URL]()

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProfileSocialStatsView: View {
 
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
 
     var author: Author
 
