@@ -21,27 +21,14 @@ struct CardButtonStyle: ButtonStyle {
     } 
     
     func makeBody(configuration: Configuration) -> some View {
-        ZStack {
-            ZStack {
-                Color.card3d
-            }
-            .cornerRadius(20)
-            .offset(y: 4.5)
-            .shadow(
-                color: .cardShadowBottom,
-                radius: configuration.isPressed ? 2 : 5,
-                x: 0,
-                y: configuration.isPressed ? 1 : 4
-            )
-            configuration.label
-                .offset(y: configuration.isPressed ? 3 : 0)
-        }
+        configuration.label
+            .mimicCardButtonStyle(isPressed: configuration.isPressed)
     }
 }
 
 extension View {
 
-    func mimicCardButtonStyle() -> some View {
+    func mimicCardButtonStyle(isPressed: Bool = false) -> some View {
         ZStack {
             ZStack {
                 Color.card3d
@@ -50,12 +37,12 @@ extension View {
             .offset(y: 4.5)
             .shadow(
                 color: .cardShadowBottom,
-                radius: 5,
+                radius: isPressed ? 2 : 5,
                 x: 0,
-                y: 4
+                y: isPressed ? 1 : 4
             )
             self
-                .offset(y: 0)
+                .offset(y: isPressed ? 3 : 0)
         }
     }
 }
