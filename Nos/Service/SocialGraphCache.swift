@@ -16,9 +16,11 @@ import Logger
     
     // MARK: Public interface 
     
-    var inNetworkKeys = [HexadecimalString]()
-    
-    var followedKeys = [HexadecimalString]()  
+    var followedKeys: Set<HexadecimalString> {
+        get {
+            oneHopKeys
+        }
+    }
     
     func contains(_ key: HexadecimalString?) -> Bool {
         guard let key, let userKey else {
@@ -66,7 +68,7 @@ import Logger
         do {
             try context.performAndWait {
                 let user = try Author.findOrCreate(by: userKey, context: context)
-                followedKeys.append(userKey)
+                oneHopKeys.insert(userKey)
                 userWatcher = NSFetchedResultsController(
                     fetchRequest: Author.request(by: userKey),
                     managedObjectContext: context,
@@ -116,6 +118,7 @@ import Logger
         followed followedKey: HexadecimalString, 
         whoFollows follows: [HexadecimalString]
     ) {
+        Log.debug("\(user) followed \(followedKey) whoFollows \(follows.count)")
         let oneHopKeysCount = oneHopKeys.count
         let twoHopKeysCount = twoHopKeys.count
         
@@ -125,14 +128,6 @@ import Logger
             var referenceCount = twoHopReferences[followedKey] ?? 0
             referenceCount += 1
             twoHopReferences[followedKey] = referenceCount
-        }
-        
-        let defaultArray = [user]
-        if oneHopKeysCount != oneHopKeys.count {
-            followedKeys = defaultArray + Array(oneHopKeys) 
-            inNetworkKeys = defaultArray + Array(oneHopKeys) + Array(twoHopKeys)
-        } else if twoHopKeysCount != twoHopKeys.count {
-            inNetworkKeys = defaultArray + Array(oneHopKeys) + Array(twoHopKeys)
         }
     }
     
@@ -147,6 +142,7 @@ import Logger
         unfollowed unfollowedKey: HexadecimalString, 
         whoFollows follows: [HexadecimalString]
     ) {
+        Log.debug("\(user) unfollowed \(unfollowedKey) whoFollows \(follows.count)")
         let oneHopKeysCount = oneHopKeys.count
         let twoHopKeysCount = twoHopKeys.count
         
@@ -157,14 +153,6 @@ import Logger
                 twoHopKeys.remove(followedKey)
                 twoHopReferences.removeValue(forKey: followedKey)
             }
-        }
-        
-        let defaultArray = [user]
-        if oneHopKeysCount != oneHopKeys.count {
-            followedKeys = defaultArray + Array(oneHopKeys) 
-            inNetworkKeys = defaultArray + Array(oneHopKeys) + Array(twoHopKeys)
-        } else if twoHopKeysCount != twoHopKeys.count {
-            inNetworkKeys = defaultArray + Array(oneHopKeys) + Array(twoHopKeys)
         }
     }
     
@@ -192,8 +180,9 @@ import Logger
                 case .delete:
                     self.process(user: userKey, unfollowed: authorKey, whoFollows: twoHopsKeys)
                 case .update:
-                    self.process(user: userKey, unfollowed: authorKey, whoFollows: twoHopsKeys)
-                    self.process(user: userKey, followed: authorKey, whoFollows: twoHopsKeys)
+                    //self.process(user: userKey, unfollowed: authorKey, whoFollows: twoHopsKeys)
+                    //self.process(user: userKey, followed: authorKey, whoFollows: twoHopsKeys)
+                    return
                 case .move:
                     return
                 @unknown default:

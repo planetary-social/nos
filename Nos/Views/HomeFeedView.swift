@@ -52,7 +52,7 @@ struct HomeFeedView: View {
     func subscribeToNewEvents() async {
         await cancelSubscriptions()
         
-        let followedKeys = currentUser.socialGraph.followedKeys 
+        let followedKeys = Array(currentUser.socialGraph.followedKeys)
             
         if !followedKeys.isEmpty {
             // TODO: we could miss events with this since filter
