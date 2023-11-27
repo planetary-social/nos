@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (95)] - 2023-11-27Z
+
 - Fixed a bug where a root note could be rendered as a reply
 - Added the option to copy the text content while browsing a note.
 - Fixed UI bugs when displaying the root note of replies.
