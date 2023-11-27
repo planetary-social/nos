@@ -18,8 +18,8 @@ struct RepliesView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject private var router: Router
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(Router.self) private var router
+    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
 
     @State private var reply = EditableNoteText()
@@ -177,7 +177,7 @@ struct RepliesView: View {
             .task {
                 await computeDirectReplies()
             }
-            .onChange(of: replies.count) { _ in
+            .onChange(of: replies.count) { 
                 Task {
                     await computeDirectReplies()
                 }
@@ -300,8 +300,8 @@ struct RepliesView_Previews: PreviewProvider {
         }
         .environment(\.managedObjectContext, previewContext)
         .environmentObject(emptyRelayService)
-        .environmentObject(router)
-        .environmentObject(currentUser)
+        .environment(router)
+        .environment(currentUser)
         .padding()
         .background(Color.cardBackground)
     }

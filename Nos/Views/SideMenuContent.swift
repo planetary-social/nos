@@ -12,8 +12,8 @@ import Dependencies
 struct SideMenuContent: View {
     
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject var router: Router
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(Router.self) var router
+    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
     
     @State private var isShowingReportABugMailView = false
@@ -23,7 +23,7 @@ struct SideMenuContent: View {
     
     let closeMenu: @MainActor () -> Void
     
-    var profileHeader: some View {
+    @MainActor var profileHeader: some View {
         Group {
             if let author = currentUser.author, author.needsMetadata == true {
                 ActionBanner(
@@ -66,6 +66,7 @@ struct SideMenuContent: View {
     }
     
     var body: some View {
+        @Bindable var router = router
         NavigationStack(path: $router.sideMenuPath) {
             VStack(alignment: .leading, spacing: 0) {
                 profileHeader
@@ -127,7 +128,7 @@ struct SideMenuRow: View {
     var destination: SideMenu.Destination?
     var action: (() -> Void)?
     
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
     
     var body: some View {
         Button {

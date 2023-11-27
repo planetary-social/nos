@@ -34,7 +34,7 @@ extension URL {
         if path().isEmpty {
             return "[\(host)](\(absoluteString))"
         } else {
-            return "[\(host)/...](\(absoluteString))"
+            return "[\(host)...](\(absoluteString))"
         }
     }
 }

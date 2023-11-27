@@ -159,7 +159,7 @@ import Combine
         }
         
         self.badgeCount = badgeCount
-        UIApplication.shared.applicationIconBadgeNumber = badgeCount
+        try? await UNUserNotificationCenter.current().setBadgeCount(badgeCount)
     }
     
     // MARK: - Internal
@@ -217,7 +217,7 @@ import Combine
         if let viewModel {
             // Leave an hour of margin on the notificationcutoff to allow for events arriving slightly out of order.
             notificationCutoff = viewModel.date.addingTimeInterval(-60 * 60)
-            await viewModel.loadContent(in: self.persistenceController.parseContext)
+            await viewModel.loadContent(in: self.persistenceController.backgroundViewContext)
             
             do {
                 try await UNUserNotificationCenter.current().add(viewModel.notificationCenterRequest)

@@ -26,12 +26,12 @@ struct NoteCard: View {
     @State private var replyAvatarURLs = [URL]()
     @State private var reportingAuthors = [Author]()
     @State private var reports = [Event]()
-    @StateObject private var warningController = NoteWarningController()
+    @State private var warningController = NoteWarningController()
     
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.persistenceController) var persistenceController
     
     private var showFullMessage: Bool
@@ -157,7 +157,7 @@ struct NoteCard: View {
                 await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
                     noteID: note.identifier,
                     using: relayService,
-                    in: persistenceController.parseContext
+                    in: persistenceController.backgroundViewContext
                 )
             }
         }
@@ -213,8 +213,8 @@ struct NoteCard_Previews: PreviewProvider {
         }
         .environment(\.managedObjectContext, previewData.previewContext)
         .environmentObject(previewData.relayService)
-        .environmentObject(previewData.router)
-        .environmentObject(previewData.currentUser)
+        .environment(previewData.router)
+        .environment(previewData.currentUser)
         .padding()
         .background(Color.appBg)
     }

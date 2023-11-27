@@ -13,15 +13,15 @@ let showReportWarningsKey = "com.verse.nos.settings.showReportWarnings"
 let showOutOfNetworkWarningKey = "com.verse.nos.settings.showOutOfNetworkWarning"
     
 struct SettingsView: View {
-    @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.unsAPI) var unsAPI
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.userDefaults) private var userDefaults
-    @EnvironmentObject private var appController: AppController
-    @EnvironmentObject private var router: Router
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(AppController.self) var appController
+    @Environment(Router.self) private var router
+    @Environment(CurrentUser.self) private var currentUser
 
     @State private var privateKeyString = ""
     @State private var alert: AlertState<AlertAction>?
@@ -107,7 +107,7 @@ struct SettingsView: View {
                         Text(.useReportsFromFollows)
                             .foregroundColor(.primaryTxt)
                     }
-                    .onChange(of: showReportWarnings) { newValue in
+                    .onChange(of: showReportWarnings) { _, newValue in
                         userDefaults.set(newValue, forKey: showReportWarningsKey)
                     }
                     
@@ -124,7 +124,7 @@ struct SettingsView: View {
                         Text(.showOutOfNetworkWarnings)
                             .foregroundColor(.primaryTxt)
                     }
-                    .onChange(of: showOutOfNetworkWarning) { newValue in
+                    .onChange(of: showOutOfNetworkWarning) { _, newValue in
                         userDefaults.set(newValue, forKey: showOutOfNetworkWarningKey)
                     }
                     

@@ -25,38 +25,54 @@ extension Publisher {
     }
 }
 
-class NoteWarningController: NSObject, ObservableObject {
+@Observable class NoteWarningController {
     
-    @Published var showWarning = false
-    @Published var userHidWarning = false
-    @Published var outOfNetwork = false
+    var showWarning = false
+    var userHidWarning = false {
+        didSet {
+            computeShowWarning()
+        }
+    }
+    var outOfNetwork = false
     
-    @Published var note: Event?
-    @Published var shouldHideOutOfNetwork = true
-    @Published private var showReportWarnings = true
-    @Published private var showOutOfNetworkWarning = true
+    var note: Event? {
+        didSet { 
+            notePublisher.send(note)
+        }
+    }
+    var shouldHideOutOfNetwork = true
+    private var showReportWarnings = true
+    private var showOutOfNetworkWarning = true
     
-    @Dependency(\.currentUser) var currentUser
-    @Dependency(\.persistenceController) var persistenceController
-    @Dependency(\.userDefaults) var userDefaults
+    @ObservationIgnored @Dependency(\.currentUser) var currentUser
+    @ObservationIgnored @Dependency(\.persistenceController) var persistenceController
+    @ObservationIgnored @Dependency(\.userDefaults) var userDefaults
     
-    @Published var noteReports = [Event]()
-    @Published var authorReports = [Event]()
+    var noteReports = [Event]() {
+        didSet {
+            computeShowWarning()
+        }
+    }
+    var authorReports = [Event]() {
+        didSet {
+            computeShowWarning()
+        }
+    }
     private var cancellables = [AnyCancellable]()
     private var noteReportsWatcher: NSFetchedResultsController<Event>?
     private var authorReportsWatcher: NSFetchedResultsController<Event>?
+    private var notePublisher = CurrentValueSubject<Event?, Never>(nil)
     
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var objectContext: NSManagedObjectContext!
     
     // This function is too long, I should break it up into nicely named functions.
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
-    override init() {
-        super.init()
+    // swiftlint:disable:next function_body_length
+    init() {
         self.objectContext = persistenceController.viewContext
         
         /// Watch for new reports when the note is set
-        $note
+        notePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] note in
                 guard let self else {
@@ -125,7 +141,7 @@ class NoteWarningController: NSObject, ObservableObject {
             }
             .store(in: &cancellables)
         
-        $note
+        notePublisher
             .sink { note in
                 Task { @MainActor in 
                     if let authorKey = note?.author?.hexadecimalPublicKey {
@@ -133,28 +149,6 @@ class NoteWarningController: NSObject, ObservableObject {
                     } else {
                         self.outOfNetwork = false
                     }
-                }
-            }
-            .store(in: &cancellables)
-        
-        /// Update the `showWarning` property when any of the inputs change
-        $userHidWarning
-            .combineLatest($noteReports, $authorReports, $outOfNetwork)
-            .sink { [weak self] (combined) in
-                let (userHidWarning, noteReports, authorReports, outOfNetwork) = combined
-                
-                guard let self else {
-                    return 
-                }
-                
-                if userHidWarning {
-                    self.showWarning = false
-                } else if showReportWarnings && !(noteReports.isEmpty || !authorReports.isEmpty) {
-                    self.showWarning = true
-                } else if shouldHideOutOfNetwork && showOutOfNetworkWarning && outOfNetwork {
-                    self.showWarning = true
-                } else {
-                    self.showWarning = false
                 }
             }
             .store(in: &cancellables)
@@ -174,5 +168,17 @@ class NoteWarningController: NSObject, ObservableObject {
                 showOutOfNetworkWarning = userDefaults.object(forKey: showOutOfNetworkWarningKey) as? Bool ?? true
             }
             .store(in: &cancellables)
+    }
+    
+    func computeShowWarning() {
+        if userHidWarning {
+            self.showWarning = false
+        } else if showReportWarnings && !(noteReports.isEmpty || !authorReports.isEmpty) {
+            self.showWarning = true
+        } else if shouldHideOutOfNetwork && showOutOfNetworkWarning && outOfNetwork {
+            self.showWarning = true
+        } else {
+            self.showWarning = false
+        }
     }
 }

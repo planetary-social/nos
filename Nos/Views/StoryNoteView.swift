@@ -27,7 +27,7 @@ struct StoryNoteView: View {
     /// Used to store the current height of the view
     @State private var intrinsicSize = CGSize.zero
 
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.persistenceController) private var persistenceController
 
@@ -146,6 +146,7 @@ struct StoryNoteView: View {
         }
         .task {
             let backgroundContext = persistenceController.backgroundViewContext
+            await Event.markNoteAsRead(noteID: note.identifier, context: backgroundContext)
             if let parsedAttributedContent = await Event.attributedContentAndURLs(
                 noteID: note.identifier,
                 context: backgroundContext
