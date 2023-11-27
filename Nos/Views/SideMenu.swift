@@ -24,7 +24,7 @@ struct SideMenu: View {
     let toggleMenu: @MainActor () -> Void
     let closeMenu: @MainActor () -> Void
     
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
     @Dependency(\.analytics) private var analytics
     
     var body: some View {

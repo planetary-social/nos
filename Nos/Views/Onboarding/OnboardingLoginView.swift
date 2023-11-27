@@ -13,14 +13,14 @@ struct OnboardingLoginView: View {
     let completion: @MainActor () -> Void
     
     @Dependency(\.analytics) private var analytics
-    @EnvironmentObject var currentUser: CurrentUser
+    @Environment(CurrentUser.self) var currentUser
     
     @Environment(\.managedObjectContext) private var viewContext
     
     @State var privateKeyString = ""
     @State var showError = false
     
-    func importKey(_ keyPair: KeyPair) async {
+    @MainActor func importKey(_ keyPair: KeyPair) async {
         await currentUser.setKeyPair(keyPair)
         analytics.importedKey()
 

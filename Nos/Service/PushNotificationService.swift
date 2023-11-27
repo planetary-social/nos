@@ -159,7 +159,7 @@ import Combine
         }
         
         self.badgeCount = badgeCount
-        UIApplication.shared.applicationIconBadgeNumber = badgeCount
+        try? await UNUserNotificationCenter.current().setBadgeCount(badgeCount)
     }
     
     // MARK: - Internal

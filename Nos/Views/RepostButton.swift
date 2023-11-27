@@ -14,8 +14,8 @@ struct RepostButton: View {
     var note: Event
     
     @FetchRequest private var reposts: FetchedResults<Event>
-    @EnvironmentObject private var currentUser: CurrentUser
     @EnvironmentObject private var relayService: RelayService
+    @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
     
     /// We use this to give instant feedback when the button is tapped, even though the action it performs is async.

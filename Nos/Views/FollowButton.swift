@@ -13,7 +13,7 @@ struct FollowButton: View {
     @ObservedObject var currentUserAuthor: Author
     @ObservedObject var author: Author
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject var currentUser: CurrentUser
+    @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
     

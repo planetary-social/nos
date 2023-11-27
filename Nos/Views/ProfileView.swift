@@ -17,8 +17,8 @@ struct ProfileView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject private var currentUser: CurrentUser
-    @EnvironmentObject private var router: Router
+    @Environment(CurrentUser.self) private var currentUser
+    @Environment(Router.self) private var router
     @Dependency(\.analytics) private var analytics
     @Dependency(\.unsAPI) private var unsAPI
     

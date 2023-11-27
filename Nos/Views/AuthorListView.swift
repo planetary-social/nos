@@ -32,10 +32,12 @@ struct AuthorListView: View {
             LazyVStack {
                 if let authors = filteredAuthors {
                     ForEach(authors) { author in
-                        AuthorRow(author: author) {
+                        AuthorCard(author: author) {
                             didSelectGesture?(author)
                         }
-                        .padding(.horizontal)
+                        .padding(.horizontal, 13)
+                        .padding(.top, 5)
+                        .readabilityPadding()
                     }
                 } else {
                     ProgressView()
@@ -44,7 +46,7 @@ struct AuthorListView: View {
         }
         .background(Color.appBg)
         .nosNavigationBar(title: .mention)
-        .onChange(of: searchTextObserver.debouncedText) { newValue in
+        .onChange(of: searchTextObserver.debouncedText) { _, newValue in
             search(for: newValue)
         }
         .onAppear {

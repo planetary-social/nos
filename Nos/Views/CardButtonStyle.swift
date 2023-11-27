@@ -50,7 +50,7 @@ extension View {
 #Preview {
     VStack {
         Spacer()
-        Button { 
+        Button {
         } label: { 
             VStack {
                 Text("hello world")

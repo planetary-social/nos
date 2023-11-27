@@ -10,7 +10,7 @@ import SwiftUI
 
 struct OnboardingTermsOfServiceView: View {
     @EnvironmentObject var state: OnboardingState
-    @EnvironmentObject var currentUser: CurrentUser
+    @Environment(CurrentUser.self) var currentUser
 
     @Dependency(\.crashReporting) private var crashReporting
     

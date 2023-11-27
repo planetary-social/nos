@@ -14,25 +14,23 @@ struct DoubleTapToPopModifier: ViewModifier {
     var tab: AppDestination
     var onRoot: (@MainActor () -> Void)?
 
-    @EnvironmentObject private var router: Router
+    @Environment(Router.self) private var router
     @State private var cancellable: AnyCancellable?
 
     func body(content: Content) -> some View {
-        content.task {
-            if cancellable == nil {
-                cancellable = router.consecutiveTaps(on: tab)
-                    .sink {
-                        let path = router.path(for: tab)
-                        if path.wrappedValue.isEmpty {
-                            if let onRoot {
-                                onRoot()
-                            }
-                        } else {
-                            path.wrappedValue.removeLast(path.wrappedValue.count)
+        content
+            .onChange(of: router.selectedTab, { oldValue, newValue in
+                if oldValue != newValue {
+                    let path = router.path(for: tab)
+                    if path.wrappedValue.isEmpty {
+                        if let onRoot {
+                            onRoot()
                         }
+                    } else {
+                        router.currentPath.wrappedValue.removeLast(router.currentPath.wrappedValue.count)
                     }
-            }
-        }
+                }
+            })
     }
 }
 
