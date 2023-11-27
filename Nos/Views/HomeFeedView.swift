@@ -189,7 +189,7 @@ struct HomeFeedView: View {
                 stories = authors.map { $0 }
             }
         }
-        .onChange(of: isShowingStories) { newValue in
+        .onChange(of: isShowingStories) { _, newValue in
             if !newValue {
                 stories = authors.map { $0 }
             }

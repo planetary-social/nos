@@ -173,14 +173,14 @@ struct DiscoverView: View {
             .refreshable {
                 date = .now
             }
-            .onChange(of: relayFilter) { _ in
+            .onChange(of: relayFilter) { 
                 withAnimation {
                     showRelayPicker = false
                 }
                 updatePredicate()
                 Task { await subscribeToNewEvents() }
             }
-            .onChange(of: date) { _ in
+            .onChange(of: date) { 
                 updatePredicate()
             }
             .refreshable {
@@ -194,14 +194,14 @@ struct DiscoverView: View {
             .onDisappear {
                 isVisible = false
             }
-            .onChange(of: isVisible, perform: { isVisible in
+            .onChange(of: isVisible) { 
                 if isVisible {
                     analytics.showedDiscover()
                     Task { await subscribeToNewEvents() }
                 } else {
                     Task { await cancelSubscriptions() }
                 }
-            })
+            }
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
