@@ -10,7 +10,7 @@ import Foundation
 import Logger
 import Dependencies
 
-typealias JSONObject = [String: Any]
+typealias JSONObject = [String: Any?]
 typealias UNSNameID = String
 
 struct UNSNameRecord: Identifiable, Equatable {

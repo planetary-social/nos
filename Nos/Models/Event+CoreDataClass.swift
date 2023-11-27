@@ -627,6 +627,9 @@ public class Event: NosManagedObject {
         case .mute:
             hydrateMuteList(from: jsonEvent, context: context)
             
+        case .repost:
+            parseContent(from: jsonEvent, context: context)
+            
         default:
             hydrateDefault(from: jsonEvent, context: context)
         }
@@ -768,6 +771,22 @@ public class Event: NosManagedObject {
         Task { @MainActor in
             currentUser.author?.muted = false
         }
+    }
+    
+    /// Tries to parse a new event out of the given jsonEvent's `content` field.
+    @discardableResult
+    func parseContent(from jsonEvent: JSONEvent, context: NSManagedObjectContext) -> Event? {
+        do {
+            if let contentData = jsonEvent.content.data(using: .utf8) {
+                let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: contentData)
+                return try Event().createIfNecessary(jsonEvent: jsonEvent, relay: nil, context: context)
+            }
+        } catch {
+            Log.error("Could not parse content for jsonEvent: \(jsonEvent)")
+            return nil
+        }
+        
+        return nil
     }
     
     // MARK: - Helpers
@@ -1015,6 +1034,23 @@ public class Event: NosManagedObject {
         if let rootReference, let rootNote = rootReference.referencedEvent {
             return rootNote
         }
+        return nil
+    }
+    
+    /// Returns the event this note is directly replying to, or nil if there isn't one.
+    func repostedNote() -> Event? {
+        if let reference = eventReferences.firstObject as? EventReference,
+            let repostedNote = reference.referencedEvent {
+            
+            if repostedNote.kind == EventKind.repost.rawValue {
+                // This is a repost of a repost. It's not valid according to NIP-18, but people are doing it so we 
+                // are supporting it.
+                return repostedNote.repostedNote()
+            } 
+            
+            return repostedNote
+        }
+        
         return nil
     }
     
