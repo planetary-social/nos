@@ -39,6 +39,9 @@ extension Font {
             forTextStyle: .title3
         ).pointSize)
     
+    static var clarityHeadline = Font
+        .custom("ClarityCity-Bold", size: UIFont.preferredFont(forTextStyle: .headline).pointSize)
+    
     static var clarityCaption = Font
         .custom("ClarityCity-Regular", size: UIFont.preferredFont(
             forTextStyle: .caption1

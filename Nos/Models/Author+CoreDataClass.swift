@@ -44,6 +44,25 @@ public class Author: NosManagedObject {
         return PublicKey(hex: hex)
     }
     
+    var formattedNIP05: String? {
+        guard let nip05 else {
+            return nil
+        }
+        
+        let parts = nip05.split(separator: "@")
+        
+        guard let username = parts[safe: 0],
+            let domain = parts[safe: 1] else {
+            return nip05
+        }
+        
+        if username == "_" {
+            return String(domain)
+        } else {
+            return nip05 
+        }
+    }
+    
     var needsMetadata: Bool {
         // TODO: consider checking lastUpdated time as an optimization.
         about == nil && name == nil && displayName == nil && profilePhotoURL == nil
