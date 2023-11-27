@@ -178,7 +178,7 @@ struct RepliesView: View {
             .task {
                 await computeDirectReplies()
             }
-            .onChange(of: replies.count) { _ in
+            .onChange(of: replies.count) { 
                 Task {
                     await computeDirectReplies()
                 }
