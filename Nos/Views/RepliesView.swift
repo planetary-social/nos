@@ -110,6 +110,7 @@ struct RepliesView: View {
                             hideOutOfNetwork: false,
                             showReplyCount: false,
                             displayRootMessage: true,
+                            isTapEnabled: false,
                             replyAction: { _ in self.focusTextView = true },
                             tapAction: { tappedEvent in tappedEvent.referencedNote().unwrap { router.push($0) } }
                         )
