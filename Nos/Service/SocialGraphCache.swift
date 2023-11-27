@@ -12,7 +12,7 @@ import Logger
 /// A representation of the people a given user follows and the people they follow designed to cache this data in 
 /// memory and make it cheap to access. This class watches the database for changes to the social graph and updates 
 /// itself accordingly.
-@MainActor @Observable class SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
+@Observable class SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: Public interface 
     
@@ -65,44 +65,50 @@ import Logger
         
         super.init()
 
-        do {
-            try context.performAndWait {
-                let user = try Author.findOrCreate(by: userKey, context: context)
-                oneHopKeys.insert(userKey)
-                userWatcher = NSFetchedResultsController(
-                    fetchRequest: Author.request(by: userKey),
-                    managedObjectContext: context,
-                    sectionNameKeyPath: nil,
-                    cacheName: "SocialGraphCache.userWatcher"
-                )
-                oneHopWatcher = NSFetchedResultsController(
-                    fetchRequest: Author.oneHopRequest(for: user),
-                    managedObjectContext: context,
-                    sectionNameKeyPath: nil,
-                    cacheName: "SocialGraphCache.oneHopWatcher"
-                )
-            }
-        } catch {
-            Log.error(error.localizedDescription)
-        }
-        
-        userWatcher?.delegate = self
-        oneHopWatcher?.delegate = self
-        do {
-            try self.userWatcher?.performFetch()
-            try self.oneHopWatcher?.performFetch()
-            context.performAndWait {
-                self.oneHopWatcher?.fetchedObjects?.forEach { author in
-                    guard let followedKey = author.hexadecimalPublicKey else {
-                        return
-                    }
-                    let twoHopsKeys = author.followedKeys
-                    self.process(user: userKey, followed: followedKey, whoFollows: twoHopsKeys)
+        let startDate = Date.now
+        Task(priority: .utility) {
+            do {
+                try await context.perform {
+                    let user = try Author.findOrCreate(by: userKey, context: context)
+                    self.oneHopKeys.insert(userKey)
+                    self.userWatcher = NSFetchedResultsController(
+                        fetchRequest: Author.request(by: userKey),
+                        managedObjectContext: context,
+                        sectionNameKeyPath: nil,
+                        cacheName: "SocialGraphCache.userWatcher"
+                    )
+                    self.oneHopWatcher = NSFetchedResultsController(
+                        fetchRequest: Author.oneHopRequest(for: user),
+                        managedObjectContext: context,
+                        sectionNameKeyPath: nil,
+                        cacheName: "SocialGraphCache.oneHopWatcher"
+                    )
                 }
+            } catch {
+                Log.error(error.localizedDescription)
             }
-        } catch {
-            Log.error(error.localizedDescription)
-            return
+            
+            userWatcher?.delegate = self
+            oneHopWatcher?.delegate = self
+            do {
+                try self.userWatcher?.performFetch()
+                try self.oneHopWatcher?.performFetch()
+                await context.perform {
+                    self.oneHopWatcher?.fetchedObjects?.forEach { author in
+                        guard let followedKey = author.hexadecimalPublicKey else {
+                            return
+                        }
+                        let twoHopsKeys = author.followedKeys
+                        self.process(user: userKey, followed: followedKey, whoFollows: twoHopsKeys)
+                    }
+                }
+            } catch {
+                Log.error(error.localizedDescription)
+                return
+            }
+            
+            let elapsedTime = Date.now.timeIntervalSince1970 - startDate.timeIntervalSince1970 
+            Log.info("Finished SocialGraphCache init in \(elapsedTime) seconds.")
         }
     }
     
@@ -129,6 +135,7 @@ import Logger
             referenceCount += 1
             twoHopReferences[followedKey] = referenceCount
         }
+        Log.debug("\(oneHopKeys.count) one hop keys and \(twoHopKeys.count) two hop keys in cache")
     }
     
     /// Takes an author that the `user` has unfollowed and updates our cache of one-hop and two-hop 
@@ -172,26 +179,24 @@ import Logger
         }
         let twoHopsKeys = changedAuthor.followedKeys
         
-        Task { @MainActor in
-            if controller === self.oneHopWatcher {
-                switch type {
-                case .insert:
-                    self.process(user: userKey, followed: authorKey, whoFollows: twoHopsKeys)
-                case .delete:
-                    self.process(user: userKey, unfollowed: authorKey, whoFollows: twoHopsKeys)
-                case .update:
-                    //self.process(user: userKey, unfollowed: authorKey, whoFollows: twoHopsKeys)
-                    //self.process(user: userKey, followed: authorKey, whoFollows: twoHopsKeys)
-                    return
-                case .move:
-                    return
-                @unknown default:
-                    return
-                }
-            } else if controller === self.userWatcher {
-                twoHopsKeys.forEach {
-                    self.process(user: authorKey, followed: $0, whoFollows: [])
-                }
+        if controller === self.oneHopWatcher {
+            switch type {
+            case .insert:
+                self.process(user: userKey, followed: authorKey, whoFollows: twoHopsKeys)
+            case .delete:
+                self.process(user: userKey, unfollowed: authorKey, whoFollows: twoHopsKeys)
+            case .update:
+                //self.process(user: userKey, unfollowed: authorKey, whoFollows: twoHopsKeys)
+                //self.process(user: userKey, followed: authorKey, whoFollows: twoHopsKeys)
+                return
+            case .move:
+                return
+            @unknown default:
+                return
+            }
+        } else if controller === self.userWatcher {
+            twoHopsKeys.forEach {
+                self.process(user: authorKey, followed: $0, whoFollows: [])
             }
         }
     }

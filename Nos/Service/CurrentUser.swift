@@ -102,7 +102,7 @@ enum CurrentUserError: Error {
         super.init()
         self.viewContext = persistenceController.viewContext
         self.backgroundContext = persistenceController.newBackgroundContext()
-        self.socialGraph = SocialGraphCache(userKey: nil, context: backgroundContext)
+        self.socialGraph = SocialGraphCache(userKey: nil, context: persistenceController.newBackgroundContext())
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             Log.info("CurrentUser loaded a private key from keychain")
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
