@@ -60,8 +60,8 @@ struct DiscoverGrid: View {
                                         .readabilityPadding()
                                     }
                                 }
+                                .padding(.top, 5)
                             }
-                            .padding(.top, 5)
                         }
                     }
                 }

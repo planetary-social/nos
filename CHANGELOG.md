@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Keep track of read stories.
+
 ## [0.1 (94)] - 2023-11-17Z
 
 - Removed trailing slash from truncated URLs.
@@ -38,6 +40,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix a bug where linking a Universal Name would overwrite your existing NIP-05.
 - Fixed incorrect ellipsis applied to long notes.
 - Changed note rendering to retain more newlines. 
+- Show reposts in stories.
+- Fixed a bug where notes, reposts, and author profiles could fail to load.
+- Show truncated URLs in notes instead of hiding them completely.
+- Keep track of read stories.
 - Fixed a bug with autocorrect on Mac
 
 ## [0.1 (90)] - 2023-10-31Z

@@ -146,6 +146,7 @@ struct StoryNoteView: View {
         }
         .task {
             let backgroundContext = persistenceController.backgroundViewContext
+            await Event.markNoteAsRead(noteID: note.identifier, context: backgroundContext)
             if let parsedAttributedContent = await Event.attributedContentAndURLs(
                 noteID: note.identifier,
                 context: backgroundContext
