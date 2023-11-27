@@ -90,9 +90,9 @@ final class RelayService: ObservableObject {
     
     private func handleError(_ error: Error?, from socket: WebSocketClient) {
         if let error {
-            Log.info("websocket error: \(error) from: \(socket.host)")
+            Log.debug("websocket error: \(error) from: \(socket.host)")
         } else {
-            Log.info("unknown websocket error from: \(socket.host)")
+            Log.debug("unknown websocket error from: \(socket.host)")
         }
     }
 }

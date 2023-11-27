@@ -80,7 +80,7 @@ struct NotificationsView: View {
                     ForEach(events.unmuted) { event in
                         if let user {
                             NotificationCard(viewModel: NotificationViewModel(note: event, user: user))
-                                .padding(.horizontal)
+                                .padding(.horizontal, 15)
                                 .readabilityPadding()
                         }
                     }

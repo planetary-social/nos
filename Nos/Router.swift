@@ -103,9 +103,9 @@ extension Router {
         // the hex format pubkey of the mentioned author
         do {
             if link.hasPrefix("@") {
-                push(try Author.findOrCreate(by: identifier, context: persistenceController.parseContext))
+                push(try Author.findOrCreate(by: identifier, context: persistenceController.viewContext))
             } else if link.hasPrefix("%") {
-                push(try Event.findOrCreateStubBy(id: identifier, context: persistenceController.parseContext))
+                push(try Event.findOrCreateStubBy(id: identifier, context: persistenceController.viewContext))
             } else if url.scheme == "http" || url.scheme == "https" {
                 push(url)
             } else {

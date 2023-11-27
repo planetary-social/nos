@@ -46,18 +46,22 @@ struct DiscoverGrid: View {
                         }
                     } else {
                         // Search results
-                        ScrollView {
-                            LazyVStack {
-                                ForEach(searchController.authorSuggestions) { author in
-                                    AuthorCard(author: author) { 
-                                        router.push(author)
+                        if searchController.authorSuggestions.isEmpty {
+                            FullscreenProgressView(isPresented: .constant(true))
+                        } else {
+                            ScrollView {
+                                LazyVStack {
+                                    ForEach(searchController.authorSuggestions) { author in
+                                        AuthorCard(author: author) { 
+                                            router.push(author)
+                                        }
+                                        .padding(.horizontal, 13)
+                                        .padding(.top, 5)
+                                        .readabilityPadding()
                                     }
-                                    .padding(.horizontal, 13)
-                                    .padding(.top, 5)
-                                    .readabilityPadding()
                                 }
+                                .padding(.top, 5)
                             }
-                            .padding(.top, 5)
                         }
                     }
                 }

@@ -114,7 +114,7 @@ struct DiscoverView: View {
     var body: some View {
         NavigationStack(path: $router.discoverPath) {
             ZStack {
-                if performingInitialLoad {
+                if performingInitialLoad && searchController.query.isEmpty {
                     FullscreenProgressView(
                         isPresented: $performingInitialLoad, 
                         hideAfter: .now() + .seconds(Self.initialLoadTime)
