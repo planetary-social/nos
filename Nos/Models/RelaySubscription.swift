@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CryptoSwift
 
 /// Models a request to a relay for Nostr Events. 
 struct RelaySubscription: Identifiable {
