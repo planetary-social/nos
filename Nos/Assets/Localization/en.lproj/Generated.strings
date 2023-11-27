@@ -95,9 +95,10 @@
 "Localized.profileTitle" = "Profile";
 "Localized.profile" = "profile";
 "Localized.follow" = "Follow";
+"Localized.followers" = "Followers";
 "Localized.follows" = "Follows";
 "Localized.following" = "Following";
-"Localized.followedBy" = "Followed by";
+"Localized.followersYouKnow" = "Followers you know";
 "Localized.followedByOne" = "Followed by **{{ one }}**";
 "Localized.followedByOneAndMore" = "Followed by **{{ one }}** and **{{ count }} others**";
 "Localized.followedByTwo" = "Followed by **{{ one }}** and **{{ two }}**";
