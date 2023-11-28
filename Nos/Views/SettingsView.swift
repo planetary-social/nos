@@ -107,7 +107,7 @@ struct SettingsView: View {
                         Text(.useReportsFromFollows)
                             .foregroundColor(.primaryTxt)
                     }
-                    .onChange(of: showReportWarnings) { newValue in
+                    .onChange(of: showReportWarnings) { _, newValue in
                         userDefaults.set(newValue, forKey: showReportWarningsKey)
                     }
                     
@@ -124,7 +124,7 @@ struct SettingsView: View {
                         Text(.showOutOfNetworkWarnings)
                             .foregroundColor(.primaryTxt)
                     }
-                    .onChange(of: showOutOfNetworkWarning) { newValue in
+                    .onChange(of: showOutOfNetworkWarning) { _, newValue in
                         userDefaults.set(newValue, forKey: showOutOfNetworkWarningKey)
                     }
                     

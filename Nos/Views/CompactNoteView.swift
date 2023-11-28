@@ -45,6 +45,7 @@ struct CompactNoteView: View {
             .foregroundColor(.primaryTxt)
             .tint(.accent) 
             .padding(15)
+            .textSelection(.enabled)
             .environment(\.openURL, OpenURLAction { url in
                 router.open(url: url, with: viewContext)
                 return .handled

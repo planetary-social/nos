@@ -76,7 +76,7 @@ struct ReportMenuModifier: ViewModifier {
                     }
                 }
             ) 
-            .onChange(of: isPresented) { shouldPresent in
+            .onChange(of: isPresented) { _, shouldPresent in
                 if shouldPresent {
                     confirmationDialog = ConfirmationDialogState(
                         title: Localized.reportContent.textState, 
@@ -86,7 +86,7 @@ struct ReportMenuModifier: ViewModifier {
                     confirmationDialog = nil
                 }
             }
-            .onChange(of: confirmationDialog) { newValue in
+            .onChange(of: confirmationDialog) { _, newValue in
                 if newValue == nil {
                     isPresented = false
                 }

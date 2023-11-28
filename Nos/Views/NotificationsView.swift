@@ -119,7 +119,7 @@ struct NotificationsView: View {
             .onDisappear {
                 isVisible = false
             }
-            .onChange(of: isVisible, perform: { isVisible in
+            .onChange(of: isVisible) { 
                 Task { await markAllNotificationsRead() }
                 if isVisible {
                     analytics.showedNotifications()
@@ -129,7 +129,7 @@ struct NotificationsView: View {
                 } else {
                     Task { await cancelSubscriptions() }
                 }
-            })
+            }
             .doubleTapToPop(tab: .notifications) { proxy in
                 if let firstEvent = events.first {
                     proxy.scrollTo(firstEvent.id)
