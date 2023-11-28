@@ -14,7 +14,7 @@ struct ThreadRootView<Reply: View>: View {
     
     var thread: [Event] = []
     
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
     
     init(root: Event, tapAction: ((Event) -> Void)?, @ViewBuilder reply: () -> Reply) {
         self.root = root

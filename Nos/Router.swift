@@ -12,16 +12,16 @@ import Logger
 import Dependencies
 
 // Manages the app's navigation state.
-@MainActor @Observable class Router {
-    
-    var homeFeedPath = NavigationPath()
-    var discoverPath = NavigationPath()
-    var notificationsPath = NavigationPath()
-    var profilePath = NavigationPath()
-    var sideMenuPath = NavigationPath()
-    var selectedTab = AppDestination.home
-    @Dependency(\.persistenceController) @ObservationIgnored private var persistenceController
-    
+@MainActor class Router: ObservableObject {
+
+    @Published var homeFeedPath = NavigationPath()
+    @Published var discoverPath = NavigationPath()
+    @Published var notificationsPath = NavigationPath()
+    @Published var profilePath = NavigationPath()
+    @Published var sideMenuPath = NavigationPath()
+    @Published var selectedTab = AppDestination.home
+    @Dependency(\.persistenceController) private var persistenceController
+
     var currentPath: Binding<NavigationPath> {
         if sideMenuOpened {
             return Binding(get: { self.sideMenuPath }, set: { self.sideMenuPath = $0 })
@@ -29,39 +29,53 @@ import Dependencies
 
         return path(for: selectedTab)
     }
-    
-    var userNpubPublicKey = ""
-    
-    private(set) var sideMenuOpened = false
+
+    @Published var userNpubPublicKey = ""
+
+    @Published private(set) var sideMenuOpened = false
 
     func toggleSideMenu() {
         withAnimation(.easeIn(duration: 0.2)) {
             sideMenuOpened.toggle()
         }
     }
-    
+
     func closeSideMenu() {
         withAnimation(.easeIn(duration: 0.2)) {
             sideMenuOpened = false
         }
     }
-    
+
     /// Pushes the given destination item onto the current NavigationPath.
     func push<D: Hashable>(_ destination: D) {
         currentPath.wrappedValue.append(destination)
     }
-    
+
     func pop() {
         currentPath.wrappedValue.removeLast()
     }
-    
+
     func openOSSettings() {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
-    
+
     func showNewNoteView(contents: String?) {
         selectedTab = .newNote(contents)
+    }
+
+    func consecutiveTaps(on tab: AppDestination) -> AnyPublisher<Void, Never> {
+        $selectedTab
+            .scan((previous: nil, current: selectedTab)) { previousPair, current in
+                (previous: previousPair.current, current: current)
+            }
+            .filter {
+                $0.previous == $0.current
+            }
+            .compactMap {
+                $0.current == tab ? Void() : nil
+            }
+            .eraseToAnyPublisher()
     }
 
     func path(for destination: AppDestination) -> Binding<NavigationPath> {
@@ -81,11 +95,11 @@ import Dependencies
 }
 
 extension Router {
-    
+
     nonisolated func open(url: URL, with context: NSManagedObjectContext) {
         let link = url.absoluteString
         let identifier = String(link[link.index(after: link.startIndex)...])
-        
+
         Task { @MainActor in
             do {
                 // handle mentions. mention link will be prefixed with "@" followed by
@@ -101,7 +115,7 @@ extension Router {
             }
         } catch {
             Log.optional(error)
-            } 
+            }
         }
     }
 }
