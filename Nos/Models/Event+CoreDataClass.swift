@@ -131,14 +131,18 @@ public class Event: NosManagedObject {
         "npub12hcytyr8fumy3axde8wgeced523gyp6v6zczqktwuqeaztfc2xzsz3rdp4": ["NoGood"],
         "npub1l9kr6ajfwp6vfjp60vuzxwqwwlw884dff98a9cznujs520shsf9s35xfwh": ["Karine"],
         "npub1rfdkj37rhymcrr5jk9jjaae5c3yj8l24jtr8a27q0chh2y2aq42snhh53u": ["eolaí"],
-        "npub17amtesfzwxl8nlr3ke2l8jl7kw52z60n8msnxh7vps3g9xgpmf9qx5nldk": ["Malos10"],
         "npub1uch5rxswzes8h9hlzrktqqjf4a75k6w86ys7fvzpxrrpejvccvhq4sl7fj": ["muneomi"],
         "npub1p458ltjfrxmcymk4j3plsmsksaqsf62cggdqvhv9cphk0wdglzts80t20a": ["Adhhafi"],
         "npub19mduaf5569jx9xz555jcx3v06mvktvtpu0zgk47n4lcpjsz43zzqhj6vzk": ["Nostr Report"],
         "npub15c7vxfun6g3450qpvx4pt68mf90t3fc08rd3nc5ldhfz6af60m5qftlahr": ["Matt Cengia"],
         "npub1erhg86xl307d46pla66aycr6sjpy9esnrffysr98l5pjvt2fdgeq8wru26": ["farfallica"],
         "npub12h5xc0usentknjnldce6a80tq0m475u6ucgwhlk2zsfqax3x94fsmx0rvt": ["Weisheiten"],
-        "npub166l9t9ckan9yh6j8pku0stszkekt0s8uhqwvddz4qr92r9w0wxcs59u7c3": ["taylan"]
+        "npub166l9t9ckan9yh6j8pku0stszkekt0s8uhqwvddz4qr92r9w0wxcs59u7c3": ["taylan"],
+        "npub1pmwz736ys3mfhjdld4r36xqwfc5qkz7dwxdkmfu3qqd7kucvludsrm4nu6": ["lizsweig"],
+        "npub1zwulrffp23wle3tl25dt0jr2q376k0k8vhe9xzjl5jnxnag5tc2sr2hjds": ["Love of Nature"],
+        "npub1ylccvgzdlan2vyh4snx9u8kjpk8580tm2ecxmvv72mzem3xevt9qw0z7ks": ["Elon Musk's Jet"],
+        "npub1lunaq893u4hmtpvqxpk8hfmtkqmm7ggutdtnc4hyuux2skr4ttcqr827lj": ["Stuart Bowman"],
+        "npub1c878wu04lfqcl5avfy3p5x83ndpvedaxv0dg7pxthakq3jqdyzcs2n8avm": ["Ben Arc"],
     ]
     
     // MARK: - Fetching
@@ -166,7 +170,7 @@ public class Event: NosManagedObject {
         guard let currentUser = currentUser.author else {
             return NSPredicate.false
         }
-        let featuredPredicate = NSPredicate(
+        return NSPredicate(
             format: "kind IN %@ AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@ " +
                 "AND NOT author IN %@.follows.destination AND NOT author = %@ AND receivedAt <= %@ AND " +
                 "author.muted = false AND deletedOn.@count = 0",
@@ -178,21 +182,6 @@ public class Event: NosManagedObject {
             currentUser,
             before as CVarArg
         )
-        
-        let twoHopsPredicate = NSPredicate(
-            format: "kind IN %@ AND eventReferences.@count = 0 AND author.muted = false " +
-                "AND ANY author.followers.source IN %@.follows.destination AND NOT author IN %@.follows.destination " +
-                "AND receivedAt <= %@ AND deletedOn.@count = 0",
-            discoverKinds.map { $0.rawValue },
-            currentUser,
-            currentUser,
-            before as CVarArg
-        )
-
-        return NSCompoundPredicate(orPredicateWithSubpredicates: [
-            featuredPredicate,
-            twoHopsPredicate
-        ])
     }
     
     @nonobjc public class func seen(on relay: Relay, before: Date, exceptFrom author: Author?) -> NSPredicate {
