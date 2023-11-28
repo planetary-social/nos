@@ -26,7 +26,7 @@ struct CompactNoteView: View {
     @State private var contentLinks = [URL]()
     private var loadLinks: Bool
     
-    @Environment(Router.self) var router
+    @EnvironmentObject private var router: Router
     @Dependency(\.persistenceController) private var persistenceController
     
     internal init(note: Event, showFullMessage: Bool = false, loadLinks: Bool = true) {

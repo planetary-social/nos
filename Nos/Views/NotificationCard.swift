@@ -12,7 +12,7 @@ import Dependencies
 struct NotificationCard: View {
     
     @Environment(\.managedObjectContext) private var viewContext
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
     @Dependency(\.persistenceController) private var persistenceController
     

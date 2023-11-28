@@ -19,7 +19,7 @@ struct GoldenPostView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
     
     @State private var noteContent = LoadingContent<AttributedString>.loading
     @State private var contentLinks = [URL]()

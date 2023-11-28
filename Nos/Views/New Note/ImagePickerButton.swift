@@ -22,7 +22,7 @@ struct ImagePickerButton<Label>: View where Label: View {
     
     @Dependency(\.analytics) private var analytics
     
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
 
     private var showImagePicker: Binding<Bool> {
         Binding {
