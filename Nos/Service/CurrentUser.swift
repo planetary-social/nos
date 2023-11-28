@@ -421,7 +421,7 @@ enum CurrentUserError: Error {
 
         Log.debug("Following \(followKey)")
 
-        var followKeys = Array(socialGraph.followedKeys)
+        var followKeys = await Array(socialGraph.followedKeys)
         followKeys.append(followKey)
         
         // Update author to add the new follow
@@ -449,7 +449,7 @@ enum CurrentUserError: Error {
 
         Log.debug("Unfollowing \(unfollowedKey)")
         
-        let stillFollowingKeys = Array(socialGraph.followedKeys)
+        let stillFollowingKeys = await Array(socialGraph.followedKeys)
             .filter { $0 != unfollowedKey }
         
         // Update author to only follow those still following
