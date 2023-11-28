@@ -95,7 +95,6 @@ struct HomeFeedView: View {
                                         StoryAvatarView(author: author)
                                     }
                                 }
-
                             }
                             .padding(.horizontal, 15)
                         }

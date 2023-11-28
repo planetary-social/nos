@@ -74,7 +74,6 @@ struct DiscoverGrid: View {
                                 }
                             }
                         }
-
                     }
                 }
                 .preference(key: SizePreferenceKey.self, value: geometry.size)
