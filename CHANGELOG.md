@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed some performance issues for users who follow a large number of accounts.
+
 ## [0.1 (95)] - 2023-11-27Z
 
 - Fixed a bug where a root note could be rendered as a reply
