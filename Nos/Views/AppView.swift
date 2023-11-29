@@ -14,7 +14,7 @@ struct AppView: View {
     @State var newPostContents: String? 
 
     @Environment(AppController.self) var appController
-    @Environment(Router.self) var router
+    @EnvironmentObject private var router: Router
     @EnvironmentObject var pushNotificationService: PushNotificationService
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) private var analytics
@@ -25,7 +25,6 @@ struct AppView: View {
     @State private var lastSelectedTab = AppDestination.home
     
     var body: some View {
-        @Bindable var router = router
         ZStack {
             if appController.currentState == .onboarding {
                 OnboardingView(completion: appController.completeOnboarding)
@@ -176,19 +175,19 @@ struct AppView_Previews: PreviewProvider {
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
-            .environment(router)
+            .environmentObject(router)
             .environment(loggedInAppController)
         
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
-            .environment(router)
+            .environmentObject(router)
             .environment(AppController())
         
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
-            .environment(routerWithSideMenuOpened)
+            .environmentObject(routerWithSideMenuOpened)
             .environment(AppController())
     }
 }

@@ -14,7 +14,7 @@ struct HomeFeedView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @Environment(Router.self) var router
+    @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
     
@@ -100,6 +100,8 @@ struct HomeFeedView: View {
                         }
                         .padding(.top, 15)
                         .readabilityPadding()
+                        .id(user.id)
+
                         LazyVStack {
                             ForEach(events) { event in
                                 NoteButton(note: event, hideOutOfNetwork: false)
@@ -118,6 +120,13 @@ struct HomeFeedView: View {
                     .scaleEffect(isShowingStories ? 1 : 0.5)
                     .opacity(isShowingStories ? 1 : 0)
                     .animation(.default, value: selectedStoryAuthor)
+                }
+                .doubleTapToPop(tab: .home) { proxy in
+                    if isShowingStories {
+                        selectedStoryAuthor = nil
+                    } else {
+                        proxy.scrollTo(user.id)
+                    }
                 }
             }
         }
@@ -203,11 +212,6 @@ struct HomeFeedView: View {
                 Task { await cancelSubscriptions() }
             }
         }
-        .doubleTapToPop(tab: .home) {
-            if isShowingStories {
-                selectedStoryAuthor = nil
-            }
-        }
     }
 }
 
@@ -272,12 +276,12 @@ struct ContentView_Previews: PreviewProvider {
         HomeFeedView(user: user)
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
-            .environment(router)
+            .environmentObject(router)
             .environment(currentUser)
         
         HomeFeedView(user: user)
             .environment(\.managedObjectContext, emptyPreviewContext)
             .environmentObject(emptyRelayService)
-            .environment(router)
+            .environmentObject(router)
     }
 }
