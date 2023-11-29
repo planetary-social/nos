@@ -32,12 +32,11 @@ final class SocialGraphTests: XCTestCase {
         _ = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
         
         // Act
-        let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
+        let sut = SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
         try testContext.save()
         
         // Assert
-        let followedKeys = await sut.followedKeys
-        XCTAssertEqual(followedKeys, [KeyFixture.alice.publicKeyHex])
+        try await eventually { await sut.followedKeys == Set([KeyFixture.alice.publicKeyHex]) }
     }
     
     func testOneFollower() async throws {
@@ -52,17 +51,14 @@ final class SocialGraphTests: XCTestCase {
         
         // Add to the current user's follows
         alice.follows.insert(follow)
-        
-        // Add from the current user to the author's followers
-        bob.followers.insert(follow)
-        
-        // Act
-        let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
         try testContext.save()
         
+        // Act
+        let sut = SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
+        
         // Assert
-        let followedKeys = await sut.followedKeys
-        XCTAssertEqual(followedKeys, [KeyFixture.alice.publicKeyHex, KeyFixture.bob.publicKeyHex])
+        let expectedKeys = Set([KeyFixture.alice.publicKeyHex, KeyFixture.bob.publicKeyHex])
+        try await eventually { return await sut.followedKeys == expectedKeys }
     }
     
     func testFollow() async throws {
@@ -71,7 +67,7 @@ final class SocialGraphTests: XCTestCase {
         let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
         
         // Act
-        let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
+        let sut = SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
         try testContext.save()
         
         // Assert
@@ -85,9 +81,8 @@ final class SocialGraphTests: XCTestCase {
         try testContext.save()
         
         // Reassert
-        try await eventually { await sut.followedKeys.count == 2 }
-        let newFollowedKeys = await sut.followedKeys
-        XCTAssertEqual(newFollowedKeys, [KeyFixture.alice.publicKeyHex, KeyFixture.bob.publicKeyHex])
+        let expectedKeys = Set([KeyFixture.alice.publicKeyHex, KeyFixture.bob.publicKeyHex])
+        try await eventually { await sut.followedKeys == expectedKeys }
     }
     
     func testTwoFollows() async throws {
@@ -116,14 +111,13 @@ final class SocialGraphTests: XCTestCase {
         try testContext.save()
         
         // Reassert
-        try await eventually { await sut.followedKeys.count == 3 }
-        let newFollowedKeys = await sut.followedKeys.sorted()
-        let expected = [
+        
+        let expectedKeys = Set([
             KeyFixture.alice.publicKeyHex,
             KeyFixture.eve.publicKeyHex,
             KeyFixture.bob.publicKeyHex
-        ].sorted()
-        XCTAssertEqual(newFollowedKeys, expected)
+        ])
+        try await eventually { await sut.followedKeys == expectedKeys }
     }
 }
 // swiftlint:enable implicitly_unwrapped_optional

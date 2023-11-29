@@ -125,6 +125,7 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
             return
         }
         let startDate = Date.now
+        followedKeys.insert(userKey)
         
         await context.perform {
             let authorRequest = Author.request(by: userKey) 
@@ -140,6 +141,9 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
         userWatcher?.delegate = self
         do {
             try self.userWatcher?.performFetch()
+            if let author = self.userWatcher?.fetchedObjects?.first {
+                process(user: userKey, followed: Set(author.followedKeys))
+            }
         } catch {
             Log.error(error.localizedDescription)
             return
@@ -163,6 +167,7 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
             clearCache()
         }
         followedKeys = newFollowedKeys
+        followedKeys.insert(user)
         outOfNetworkKeys = outOfNetworkKeys.subtracting(newFollowedKeys)
     }
     
