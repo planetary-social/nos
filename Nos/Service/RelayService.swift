@@ -236,7 +236,7 @@ extension RelayService {
 
 // MARK: Parsing
 extension RelayService {
-    private func parseEOSE(from socket: WebSocketClient, responseArray: NSArray) async {
+    private func parseEOSE(from socket: WebSocketClient, responseArray: [Any]) async {
         guard responseArray.count > 1 else {
             return
         }
@@ -250,14 +250,14 @@ extension RelayService {
         }
     }
     
-    private func queueEventForParsing(_ responseArray: NSArray, _ socket: WebSocket) async {
+    private func queueEventForParsing(_ responseArray: [Any], _ socket: WebSocket) async {
         guard responseArray.count >= 3 else {
             Log.error("Error: invalid EVENT response: \(responseArray)")
             return
         }
         
-        guard let eventJSON = responseArray.object(at: 2) as? [String: Any],
-            let subscriptionID = responseArray.object(at: 1) as? RelaySubscription.ID else {
+        guard let eventJSON = responseArray[safe: 2] as? [String: Any],
+            let subscriptionID = responseArray[safe: 1] as? RelaySubscription.ID else {
             Log.error("Error: invalid EVENT JSON: \(responseArray)")
             return
         }
@@ -304,7 +304,7 @@ extension RelayService {
         }
     }
 
-    private func parseOK(_ responseArray: NSArray, _ socket: WebSocket) async {
+    private func parseOK(_ responseArray: [Any], _ socket: WebSocket) async {
         guard responseArray.count > 2 else {
             return
         }
@@ -357,8 +357,8 @@ extension RelayService {
                 throw EventError.utf8Encoding
             }
             let jsonResponse = try JSONSerialization.jsonObject(with: responseData)
-            guard let responseArray = jsonResponse as? NSArray,
-                let responseType = responseArray.firstObject as? String else {
+            guard let responseArray = jsonResponse as? [Any],
+                let responseType = responseArray.first as? String else {
                 print("Error: got unparseable response: \(response)")
                 return
             }
@@ -367,7 +367,7 @@ extension RelayService {
             case "EVENT":
                 await queueEventForParsing(responseArray, socket)
             case "NOTICE":
-                if responseArray.object(at: 1) as? String == "rate limited" {
+                if responseArray[safe: 1] as? String == "rate limited" {
                     analytics.rateLimited(by: socket)
                 }
             case "EOSE":
@@ -382,9 +382,9 @@ extension RelayService {
         }
     }
      
-    func shouldParseEvent(responseArray: NSArray, json eventJSON: [String: Any]) async -> Bool {
+    func shouldParseEvent(responseArray: [Any], json eventJSON: [String: Any]) async -> Bool {
         // Drop out of network subscriptions if the filter has inNetwork == true
-        if let subscriptionID = responseArray.object(at: 1) as? RelaySubscription.ID,
+        if let subscriptionID = responseArray[safe: 1] as? RelaySubscription.ID,
             let authorKey = eventJSON[JSONEvent.CodingKeys.pubKey.rawValue] as? HexadecimalString,
             let subscription = await subscriptions.subscription(from: subscriptionID) {
             if subscription.filter.inNetwork {
