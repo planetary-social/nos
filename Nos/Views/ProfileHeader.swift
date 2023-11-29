@@ -32,7 +32,7 @@ struct ProfileHeader: View {
         followersResult.map { $0 }
     }
     
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
     
     init(author: Author) {
         self.author = author

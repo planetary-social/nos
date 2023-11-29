@@ -18,7 +18,7 @@ struct RepliesView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var relayService: RelayService
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
 
@@ -110,6 +110,7 @@ struct RepliesView: View {
                             hideOutOfNetwork: false,
                             showReplyCount: false,
                             displayRootMessage: true,
+                            isTapEnabled: false,
                             replyAction: { _ in self.focusTextView = true },
                             tapAction: { tappedEvent in tappedEvent.referencedNote().unwrap { router.push($0) } }
                         )
@@ -300,7 +301,7 @@ struct RepliesView_Previews: PreviewProvider {
         }
         .environment(\.managedObjectContext, previewContext)
         .environmentObject(emptyRelayService)
-        .environment(router)
+        .environmentObject(router)
         .environment(currentUser)
         .padding()
         .background(Color.cardBackground)

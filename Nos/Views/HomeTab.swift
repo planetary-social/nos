@@ -12,11 +12,10 @@ struct HomeTab: View {
     
     @ObservedObject var user: Author
     
-    @Environment(Router.self) var router
+    @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) var currentUser
     
     var body: some View {
-        @Bindable var router = router
         NavigationStack(path: $router.homeFeedPath) {
             HomeFeedView(user: user)
                 .navigationDestination(for: Event.self) { note in

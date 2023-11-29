@@ -11,7 +11,7 @@ import SwiftUI
 struct ProfileEditView: View {
     
     @EnvironmentObject private var relayService: RelayService
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
 

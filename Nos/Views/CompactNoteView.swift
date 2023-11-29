@@ -24,7 +24,7 @@ struct CompactNoteView: View {
     @State private var truncatedSize = CGSize.zero
     private var loadLinks: Bool
     
-    @Environment(Router.self) var router
+    @EnvironmentObject private var router: Router
     @Dependency(\.persistenceController) private var persistenceController
     
     internal init(note: Event, showFullMessage: Bool = false, loadLinks: Bool = true) {
@@ -43,6 +43,7 @@ struct CompactNoteView: View {
             .foregroundColor(.primaryTxt)
             .tint(.accent) 
             .padding(15)
+            .textSelection(.enabled)
             .environment(\.openURL, OpenURLAction { url in
                 router.open(url: url, with: viewContext)
                 return .handled

@@ -29,7 +29,7 @@ struct NoteCard: View {
     @State private var warningController = NoteWarningController()
     
     @Environment(\.managedObjectContext) private var viewContext
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.persistenceController) var persistenceController
@@ -213,7 +213,7 @@ struct NoteCard_Previews: PreviewProvider {
         }
         .environment(\.managedObjectContext, previewData.previewContext)
         .environmentObject(previewData.relayService)
-        .environment(previewData.router)
+        .environmentObject(previewData.router)
         .environment(previewData.currentUser)
         .padding()
         .background(Color.appBg)

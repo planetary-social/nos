@@ -14,10 +14,11 @@ import Logger
 struct ProfileView: View {
     
     @ObservedObject var author: Author
-    
+    var addDoubleTapToPop = false
+
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(CurrentUser.self) private var currentUser
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
     @Dependency(\.relayService) private var relayService: RelayService
     @Dependency(\.analytics) private var analytics
     @Dependency(\.unsAPI) private var unsAPI
@@ -50,8 +51,9 @@ struct ProfileView: View {
         author.hexadecimalPublicKey == currentUser.publicKeyHex
     }
     
-    init(author: Author) {
+    init(author: Author, addDoubleTapToPop: Bool = false) {
         self.author = author
+        self.addDoubleTapToPop = addDoubleTapToPop
         _events = FetchRequest(fetchRequest: author.allPostsRequest())
     }
     
@@ -106,6 +108,8 @@ struct ProfileView: View {
             ProfileHeader(author: author)
                 .compositingGroup()
                 .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
+                .id(author.id)
+
             
             VStack {
                 if unmutedEvents.isEmpty {
@@ -126,9 +130,12 @@ struct ProfileView: View {
                 }
                 Spacer()
             }
+            .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { proxy in
+                proxy.scrollTo(author.id)
+            }
             .padding(.top, 10)
         }
-            .background(Color.appBg)
+        .background(Color.appBg)
         .nosNavigationBar(title: .profileTitle)
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)

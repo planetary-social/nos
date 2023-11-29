@@ -14,7 +14,7 @@ struct ThreadRootView<Reply: View>: View {
     
     var thread: [Event] = []
     
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
     
     init(root: Event, tapAction: ((Event) -> Void)?, @ViewBuilder reply: () -> Reply) {
         self.root = root
@@ -23,34 +23,18 @@ struct ThreadRootView<Reply: View>: View {
     }
     
     var body: some View {
-        ZStack {
-            VStack {
-                NoteButton(note: root, hideOutOfNetwork: false, tapAction: tapAction)
-                    .scaleEffect(0.9) // Make the button 80% of its original size.
-                    .frame(maxHeight: 500, alignment: .top)
-                    .clipped()
-                Spacer()
-            }
-            
-            VStack(spacing: 0) {
-                LinearGradient(
-                    gradient: Gradient(stops: [
-                        .init(color: Color.clear, location: 0),
-                        .init(color: Color.appBg.opacity(0.7), location: 1)
-                    ]),
-                    startPoint: .center,
-                    endPoint: .bottom
+        ZStack(alignment: .top) {
+            NoteButton(note: root, showFullMessage: false, hideOutOfNetwork: false, tapAction: tapAction)
+                .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+                .opacity(0.7)
+                .frame(height: 100, alignment: .top)
+                .clipped()
+
+            reply
+                .offset(y: 100)
+                .padding(
+                    EdgeInsets(top: 0, leading: 0, bottom: 100, trailing: 0)
                 )
-                .frame(minHeight: 150)
-                .onTapGesture {
-                    tapAction?(root)
-                }
-                
-                ZStack {
-                    Color.appBg.opacity(0.7) // hide the weird white strip above when the reply is tapped.
-                    reply
-                }
-            }
         }
     }
 }

@@ -16,7 +16,7 @@ struct NotificationsView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @Environment(Router.self) var router
+    @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
     @Dependency(\.pushNotificationService) private var pushNotificationService
     @Dependency(\.persistenceController) private var persistenceController
@@ -74,7 +74,6 @@ struct NotificationsView: View {
     }
     
     var body: some View {
-        @Bindable var router = router
         NavigationStack(path: $router.notificationsPath) {
             ScrollView(.vertical) {
                 LazyVStack {
@@ -83,6 +82,7 @@ struct NotificationsView: View {
                             NotificationCard(viewModel: NotificationViewModel(note: event, user: user))
                                 .padding(.horizontal, 15)
                                 .readabilityPadding()
+                                .id(event.id)
                         }
                     }
                 }
@@ -101,7 +101,7 @@ struct NotificationsView: View {
                 RepliesView(note: note)
             }
             .navigationDestination(for: URL.self) { url in URLView(url: url) }
-            .navigationDestination(for: ReplyToNavigationDestination.self) { destination in 
+            .navigationDestination(for: ReplyToNavigationDestination.self) { destination in
                 RepliesView(note: destination.note, showKeyboard: true)
             }
             .navigationDestination(for: Author.self) { author in
@@ -110,7 +110,6 @@ struct NotificationsView: View {
             .refreshable {
                 await subscribeToNewEvents()
             }
-            .doubleTapToPop(tab: .notifications)
             .onAppear {
                 if router.selectedTab == .notifications {
                     isVisible = true
@@ -124,11 +123,16 @@ struct NotificationsView: View {
                 Task { await markAllNotificationsRead() }
                 if isVisible {
                     analytics.showedNotifications()
-                    Task { 
-                        await subscribeToNewEvents() 
+                    Task {
+                        await subscribeToNewEvents()
                     }
                 } else {
                     Task { await cancelSubscriptions() }
+                }
+            }
+            .doubleTapToPop(tab: .notifications) { proxy in
+                if let firstEvent = events.first {
+                    proxy.scrollTo(firstEvent.id)
                 }
             }
         }
