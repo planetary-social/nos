@@ -12,30 +12,42 @@ import SwiftUI
 struct DoubleTapToPopModifier: ViewModifier {
 
     var tab: AppDestination
-    var onRoot: (@MainActor () -> Void)?
+    var onRoot: (@MainActor (ScrollViewProxy) -> Void)?
 
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
     @State private var cancellable: AnyCancellable?
 
     func body(content: Content) -> some View {
-        content
-            .onChange(of: router.selectedTab, { oldValue, newValue in
-                if oldValue != newValue {
-                    let path = router.path(for: tab)
-                    if path.wrappedValue.isEmpty {
-                        if let onRoot {
-                            onRoot()
+        ScrollViewReader { proxy in
+            content.task {
+                if cancellable == nil {
+                    cancellable = router.consecutiveTaps(on: tab)
+                        .sink {
+                            let path = router.path(for: tab)
+                            if path.wrappedValue.isEmpty {
+                                if let onRoot {
+                                    onRoot(proxy)
+                                }
+                            } else {
+                                path.wrappedValue.removeLast(path.wrappedValue.count)
+                            }
                         }
-                    } else {
-                        router.currentPath.wrappedValue.removeLast(router.currentPath.wrappedValue.count)
-                    }
                 }
-            })
+            }
+        }
     }
 }
 
 extension View {
-    func doubleTapToPop(tab: AppDestination, onRoot: (@MainActor () -> Void)? = nil) -> some View {
-        self.modifier(DoubleTapToPopModifier(tab: tab, onRoot: onRoot))
+    @ViewBuilder func doubleTapToPop(
+        tab: AppDestination,
+        enabled: Bool = true,
+        onRoot: (@MainActor (ScrollViewProxy) -> Void)? = nil
+    ) -> some View {
+        if enabled {
+            self.modifier(DoubleTapToPopModifier(tab: tab, onRoot: onRoot))
+        } else {
+            self
+        }
     }
 }

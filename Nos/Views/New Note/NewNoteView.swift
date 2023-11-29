@@ -16,7 +16,7 @@ struct NewNoteView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) var currentUser
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
 
     /// State holding the text the user is typing

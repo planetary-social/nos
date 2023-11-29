@@ -12,7 +12,7 @@ import Dependencies
 struct SideMenuContent: View {
     
     @Environment(\.managedObjectContext) private var viewContext
-    @Environment(Router.self) var router
+    @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
     
@@ -66,7 +66,6 @@ struct SideMenuContent: View {
     }
     
     var body: some View {
-        @Bindable var router = router
         NavigationStack(path: $router.sideMenuPath) {
             VStack(alignment: .leading, spacing: 0) {
                 profileHeader
@@ -128,7 +127,7 @@ struct SideMenuRow: View {
     var destination: SideMenu.Destination?
     var action: (() -> Void)?
     
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
     
     var body: some View {
         Button {

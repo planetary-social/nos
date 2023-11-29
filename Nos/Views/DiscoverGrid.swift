@@ -10,7 +10,7 @@ import SwiftUI
 struct DiscoverGrid: View {
     
     @Environment(\.managedObjectContext) private var viewContext
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
     @FetchRequest(fetchRequest: Event.emptyDiscoverRequest()) var events: FetchedResults<Event>
     @ObservedObject var searchController: SearchController
     
@@ -43,6 +43,12 @@ struct DiscoverGrid: View {
                         StaggeredGrid(list: events, columns: columns) { note in
                             NoteButton(note: note, style: .golden)
                                 .matchedGeometryEffect(id: note.identifier, in: animation)
+                                .id(note.id)
+                        }
+                        .doubleTapToPop(tab: .discover) { proxy in
+                            if let firstNote = events.first {
+                                proxy.scrollTo(firstNote.id)
+                            }
                         }
                     } else {
                         // Search results
@@ -61,6 +67,11 @@ struct DiscoverGrid: View {
                                     }
                                 }
                                 .padding(.top, 5)
+                            }
+                            .doubleTapToPop(tab: .discover) { proxy in
+                                if let firstAuthor = searchController.authorSuggestions.first {
+                                    proxy.scrollTo(firstAuthor.id)
+                                }
                             }
                         }
                     }

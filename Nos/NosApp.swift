@@ -31,7 +31,7 @@ struct NosApp: App {
             AppView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .environmentObject(relayService)
-                .environment(router)
+                .environmentObject(router)
                 .environment(appController)
                 .environment(currentUser)
                 .environmentObject(pushNotificationService)
