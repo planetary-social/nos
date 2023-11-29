@@ -279,7 +279,7 @@ extension RelayService {
         }
         
         #if DEBUG
-        Log.debug("from \(socket.host): EVENT type: \(eventJSON["kind"] ?? "nil") subID: \(subscriptionID)")
+        // Log.debug("from \(socket.host): EVENT type: \(eventJSON["kind"] ?? "nil") subID: \(subscriptionID)")
         #endif
 
         if await !shouldParseEvent(responseArray: responseArray, json: eventJSON) {
@@ -318,11 +318,21 @@ extension RelayService {
         if eventData.isEmpty {
             return false
         } else {
+            let remainingEventCount = await parseQueue.count
             try await self.parseContext.perform {
+                var savedEvents = 0
                 for (event, socket) in eventData {
                     let relay = self.relay(from: socket, in: self.parseContext)
-                    _ = try EventProcessor.parse(jsonEvent: event, from: relay, in: self.parseContext) 
+                    if let event = try EventProcessor.parse(jsonEvent: event, from: relay, in: self.parseContext) {
+                        savedEvents += 1
+                    }
                 }
+                #if DEBUG
+                Log.debug(
+                    "Parsed \(eventData.count) events and saved \(savedEvents) to database. " +
+                    "\(remainingEventCount) events left in parse queue."
+                )
+                #endif
                 try self.parseContext.saveIfNeeded()
             }                
             return true

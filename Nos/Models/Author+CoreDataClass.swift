@@ -133,13 +133,13 @@ public class Author: NosManagedObject {
             /// Authors in different contexts with the same objectID, because this messes up SwiftUI's observation
             /// of changes.
             let creationContext = persistenceController.creationContext
-            let objectID = try creationContext.performAndWait {
+            let objectID = creationContext.performAndWait {
                 let author = Author(context: creationContext)
                 author.hexadecimalPublicKey = pubKey
                 author.muted = false
-                try creationContext.save()
                 return author.objectID
             }
+            try creationContext.save()
             guard let fetchedAuthor = context.object(with: objectID) as? Author else {
                 let error = AuthorError.coreData
                 crashReporting.report(error)

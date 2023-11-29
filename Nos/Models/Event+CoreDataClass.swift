@@ -543,12 +543,12 @@ public class Event: NosManagedObject {
             /// Events in different contexts with the same objectID, because this messes up SwiftUI's observation
             /// of changes.
             let creationContext = persistenceController.creationContext
-            let objectID = try creationContext.performAndWait {
+            let objectID = creationContext.performAndWait {
                 let event = Event(context: creationContext)
                 event.identifier = id
-                try creationContext.save()
                 return event.objectID
             }
+            try creationContext.save()
             guard let fetchedEvent = context.object(with: objectID) as? Event else {
                 let error = EventError.coreData
                 crashReporting.report(error)
