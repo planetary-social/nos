@@ -58,7 +58,7 @@ final class SocialGraphTests: XCTestCase {
         
         // Assert
         let expectedKeys = Set([KeyFixture.alice.publicKeyHex, KeyFixture.bob.publicKeyHex])
-        try await eventually { return await sut.followedKeys == expectedKeys }
+        try await eventually { await sut.followedKeys == expectedKeys }
     }
     
     func testFollow() async throws {
@@ -92,7 +92,7 @@ final class SocialGraphTests: XCTestCase {
         let eve = try Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: testContext)
         
         // Act
-        let sut = await SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
+        let sut = SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
         try testContext.save()
         
         // Assert
