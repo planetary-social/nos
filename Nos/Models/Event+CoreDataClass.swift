@@ -628,6 +628,7 @@ public class Event: NosManagedObject {
             hydrateMuteList(from: jsonEvent, context: context)
             
         case .repost:
+            hydrateDefault(from: jsonEvent, context: context)
             parseContent(from: jsonEvent, context: context)
             
         default:
@@ -1037,17 +1038,14 @@ public class Event: NosManagedObject {
         return nil
     }
     
-    /// Returns the event this note is directly replying to, or nil if there isn't one.
+    /// Returns the event this note is reposting, if this note is a kind 6 repost.
     func repostedNote() -> Event? {
+        guard kind == EventKind.repost.rawValue else {
+            return nil
+        }
+        
         if let reference = eventReferences.firstObject as? EventReference,
             let repostedNote = reference.referencedEvent {
-            
-            if repostedNote.kind == EventKind.repost.rawValue {
-                // This is a repost of a repost. It's not valid according to NIP-18, but people are doing it so we 
-                // are supporting it.
-                return repostedNote.repostedNote()
-            } 
-            
             return repostedNote
         }
         

@@ -358,7 +358,7 @@ extension RelayService {
             }
             let jsonResponse = try JSONSerialization.jsonObject(with: responseData)
             guard let responseArray = jsonResponse as? NSArray,
-                let responseType = responseArray.first as? String else {
+                let responseType = responseArray.firstObject as? String else {
                 print("Error: got unparseable response: \(response)")
                 return
             }
