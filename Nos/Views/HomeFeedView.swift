@@ -202,7 +202,7 @@ struct HomeFeedView: View {
             if newValue {
                 analytics.enteredStories()
             } else {
-                analytics.closedStories(
+                analytics.closedStories()
                 stories = authors.map { $0 }
             }
         }
