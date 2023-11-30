@@ -11,7 +11,7 @@ import Dependencies
 import Logger
 
 /// Works with PagesNoteListView to paginate a reverse-chronological events from CoreData and relays simultaneously.
-class PagedNoteDataSource: UICollectionViewDiffableDataSource<Int, NSManagedObjectID>, 
+class PagedNoteDataSource<Header: View>: UICollectionViewDiffableDataSource<Int, NSManagedObjectID>, 
     NSFetchedResultsControllerDelegate, UICollectionViewDataSourcePrefetching {
     
     var fetchedResultsController: NSFetchedResultsController<Event>
@@ -21,13 +21,15 @@ class PagedNoteDataSource: UICollectionViewDiffableDataSource<Int, NSManagedObje
     private var relayFilter: Filter
     private var pager: PagedRelaySubscription?
     private var context: NSManagedObjectContext
+    private var header: () -> Header
     let pageSize = 10
     
     init(
         databaseFilter: NSFetchRequest<Event>, 
         relayFilter: Filter, 
         collectionView: UICollectionView, 
-        context: NSManagedObjectContext
+        context: NSManagedObjectContext,
+        @ViewBuilder header: @escaping () -> Header
     ) {
         self.fetchedResultsController = NSFetchedResultsController<Event>(
             fetchRequest: databaseFilter,
@@ -37,6 +39,7 @@ class PagedNoteDataSource: UICollectionViewDiffableDataSource<Int, NSManagedObje
         )
         self.context = context
         self.relayFilter = relayFilter
+        self.header = header
         
         super.init(collectionView: collectionView) { (collectionView, indexPath, objectID) in
             guard let note = try? context.existingObject(with: objectID) as? Event else {
@@ -49,6 +52,19 @@ class PagedNoteDataSource: UICollectionViewDiffableDataSource<Int, NSManagedObje
             .margins(.horizontal, 0)
             
             return cell
+        }
+        supplementaryViewProvider = { (collectionView, kind, indexPath) in
+            guard kind == UICollectionView.elementKindSectionHeader else {
+                return UICollectionViewCell()
+            }
+            
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as? UICollectionViewCell
+            header?.contentConfiguration = UIHostingConfiguration { 
+                self.header()
+            }
+            .margins(.horizontal, 0)
+            
+            return header
         }
         
         self.fetchedResultsController.delegate = self

@@ -34,7 +34,7 @@ struct CompactNoteView: View {
     }
     
     func updateShouldShowReadMore() {
-        shouldShowReadMore = intrinsicSize.height > truncatedSize.height 
+        shouldShowReadMore = intrinsicSize.height > truncatedSize.height + 30
     }
     
     var formattedText: some View {

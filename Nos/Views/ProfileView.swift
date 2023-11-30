@@ -105,11 +105,6 @@ struct ProfileView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            ProfileHeader(author: author)
-                .compositingGroup()
-                .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
-                .id(author.id)
-
             VStack {
                 if unmutedEvents.isEmpty {
                     Localized.noEventsOnProfile.view
@@ -123,18 +118,26 @@ struct ProfileView: View {
                     PagedNoteListView(
                         databaseFilter: author.allPostsRequest(), 
                         relayFilter: profileNotesFilter,
-                        context: viewContext
-                    ) {
-                        author.allPostsRequest(since: .now)
-                    }
+                        context: viewContext,
+                        header: {
+                            ProfileHeader(author: author)
+                                .compositingGroup()
+                                .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
+                                .id(author.id)
+                        },
+                        onRefresh: {
+                            author.allPostsRequest(since: .now)
+                        }
+                    )
+                    .padding(0)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 Spacer()
             }
+            .id(author.id)
             .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { proxy in
                 proxy.scrollTo(author.id)
             }
-            .padding(.top, 10)
         }
         .background(Color.appBg)
         .nosNavigationBar(title: .profileTitle)
