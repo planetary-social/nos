@@ -803,7 +803,11 @@ public class Event: NosManagedObject {
     }
     
     @MainActor func loadReferencedNote() async {
-        await referencedNote()?.loadViewData()
+        if let referencedNote = referencedNote() {
+            await referencedNote.loadViewData()
+        } else {
+            await rootNote()?.loadViewData()
+        }
     }
     
     @MainActor func loadAttributedContent() async {
