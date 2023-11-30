@@ -81,12 +81,15 @@ struct NoteCard: View {
             case .compact:
                 VStack(spacing: 0) {
                     HStack(alignment: .center, spacing: 0) {
-                        if !warningController.showWarning, let author = note.author {
-                            Button {
-                                router.currentPath.wrappedValue.append(author)
-                            } label: {
-                                NoteCardHeader(note: note, author: author)
+                        if !warningController.showWarning {
+                            if let author = note.author {
+                                Button {
+                                    router.currentPath.wrappedValue.append(author)
+                                } label: {
+                                    NoteCardHeader(note: note, author: author)
+                                }
                             }
+                            Spacer()
                             NoteOptionsButton(note: note)
                         } else {
                             Spacer()
