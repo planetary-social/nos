@@ -124,7 +124,9 @@ struct ProfileView: View {
                         databaseFilter: author.allPostsRequest(), 
                         relayFilter: profileNotesFilter,
                         context: viewContext
-                    )
+                    ) {
+                        author.allPostsRequest(since: .now)
+                    }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 Spacer()
@@ -256,10 +258,6 @@ struct ProfileView: View {
                 await relayService.decrementSubscriptionCount(for: subscriptionIDs)
                 subscriptionIDs.removeAll()
             }
-        }
-        .refreshable {
-            await downloadAuthorData()
-            await computeUnmutedEvents()
         }
         .onChange(of: author.muted) { 
             Task {

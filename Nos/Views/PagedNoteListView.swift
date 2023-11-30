@@ -31,6 +31,8 @@ struct PagedNoteListView: UIViewRepresentable {
     
     let context: NSManagedObjectContext
     
+    let onRefresh: () -> NSFetchRequest<Event> 
+    
     func makeCoordinator() -> Coordinator {
         Coordinator()
     }
@@ -58,11 +60,21 @@ struct PagedNoteListView: UIViewRepresentable {
             databaseFilter: databaseFilter, 
             relayFilter: relayFilter,
             collectionView: collectionView, 
-            context: self.context
+            context: self.context,
+            onRefresh: onRefresh
         )
         collectionView.dataSource = dataSource
         collectionView.prefetchDataSource = dataSource
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "NoteButtonCell")
+        
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(
+            context.coordinator, 
+            action: #selector(Coordinator.refreshData(_:)), 
+            for: .valueChanged
+        )
+        collectionView.refreshControl = refreshControl
+        
         return collectionView
     }
     
@@ -71,16 +83,21 @@ struct PagedNoteListView: UIViewRepresentable {
     class Coordinator {
         
         var dataSource: PagedNoteDataSource?
+        var collectionView: UICollectionView?
+        var onRefresh: (() -> NSFetchRequest<Event>)? 
         
         func dataSource(
             databaseFilter: NSFetchRequest<Event>, 
             relayFilter: Filter,
             collectionView: UICollectionView,
-            context: NSManagedObjectContext
+            context: NSManagedObjectContext,
+            onRefresh: @escaping () -> NSFetchRequest<Event>
         ) -> PagedNoteDataSource {
             if let dataSource {
                 return dataSource 
             } 
+            self.collectionView = collectionView
+            self.onRefresh = onRefresh
             
             let dataSource = PagedNoteDataSource(
                 databaseFilter: databaseFilter, 
@@ -90,6 +107,20 @@ struct PagedNoteListView: UIViewRepresentable {
             )
             self.dataSource = dataSource
             return dataSource
+        }
+    
+        @objc func refreshData(_ sender: Any) {
+            if let onRefresh {
+                dataSource?.updateFetchRequest(onRefresh())
+                collectionView?.reloadData()
+            }
+            
+            if let refreshControl = sender as? UIRefreshControl {
+                // Dismiss the refresh control
+                DispatchQueue.main.async {
+                    refreshControl.endRefreshing()
+                }
+            }
         }
     }
 }
@@ -101,7 +132,9 @@ struct PagedNoteListView: UIViewRepresentable {
         databaseFilter: previewData.alice.allPostsRequest(), 
         relayFilter: Filter(),
         context: previewData.previewContext
-    )
+    ) {
+        previewData.alice.allPostsRequest()
+    }
     .background(Color.appBg)
     .inject(previewData: previewData)
     .onAppear {

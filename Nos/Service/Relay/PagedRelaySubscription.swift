@@ -11,23 +11,43 @@ import Logger
 /// This class manages a Filter and fetches events in reverse-chronological order as `loadMore()` is called. This
 /// can be used to paginate a list of events. 
 class PagedRelaySubscription {
-    var startDate: Date
+    let startDate: Date
     let filter: Filter
     
     private var subscriptionManager: RelaySubscriptionManager
-    private var subscriptionIDs = [RelaySubscription.ID]()
+    private var pagedSubscriptionIDs = [RelaySubscription.ID]()
+    private var newEventsSubscriptionIDs = [RelaySubscription.ID]()
     
     init(startDate: Date, filter: Filter, subscriptionManager: RelaySubscriptionManager, relayAddresses: [URL]) {
         self.startDate = startDate
         self.filter = filter
         self.subscriptionManager = subscriptionManager
         Task {
+            // We have two types of subscriptions. The new events
+            var pagedEventsFilter = filter
+            pagedEventsFilter.until = startDate
             var newEventsFilter = filter
-            newEventsFilter.until = startDate
+            newEventsFilter.since = startDate
             for relayAddress in relayAddresses {
-                subscriptionIDs.append(
-                    await subscriptionManager.queueSubscription(with: newEventsFilter, to: relayAddress)
+                newEventsSubscriptionIDs.append(
+                    await subscriptionManager.queueSubscription(with: filter, to: relayAddress)
                 )
+                pagedSubscriptionIDs.append(
+                    await subscriptionManager.queueSubscription(with: pagedEventsFilter, to: relayAddress)
+                )
+            }
+        }
+    }
+    
+    deinit {
+        Task {
+            // TODO: are these subscriptions being fully closed? I think we aren't sending a CLOSE message
+            for subscriptionID in newEventsSubscriptionIDs {
+                await subscriptionManager.decrementSubscriptionCount(for: subscriptionID)
+            }
+            
+            for subscriptionID in pagedSubscriptionIDs {
+                await subscriptionManager.decrementSubscriptionCount(for: subscriptionID)
             }
         }
     }
@@ -38,7 +58,7 @@ class PagedRelaySubscription {
         Task { [self] in
             var newUntilDates = [URL: Date]()
             
-            for subscriptionID in subscriptionIDs {
+            for subscriptionID in pagedSubscriptionIDs {
                 if let subscription = await subscriptionManager.subscription(from: subscriptionID),
                     let newDate = subscription.oldestEventCreationDate {
                     newUntilDates[subscription.relayAddress] = newDate
@@ -50,7 +70,7 @@ class PagedRelaySubscription {
             for (relayAddress, until) in newUntilDates {
                 var newEventsFilter = self.filter
                 newEventsFilter.until = until
-                subscriptionIDs.append(
+                pagedSubscriptionIDs.append(
                     await subscriptionManager.queueSubscription(with: newEventsFilter, to: relayAddress)
                 )
             }

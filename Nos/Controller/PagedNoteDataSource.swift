@@ -14,12 +14,13 @@ import Logger
 class PagedNoteDataSource: UICollectionViewDiffableDataSource<Int, NSManagedObjectID>, 
     NSFetchedResultsControllerDelegate, UICollectionViewDataSourcePrefetching {
     
-    let fetchedResultsController: NSFetchedResultsController<Event>
+    var fetchedResultsController: NSFetchedResultsController<Event>
     
     @Dependency(\.relayService) private var relayService: RelayService
     private var subscriptionIDs: [RelaySubscription.ID] = []
     private var relayFilter: Filter
     private var pager: PagedRelaySubscription?
+    private var context: NSManagedObjectContext
     let pageSize = 10
     
     init(
@@ -34,6 +35,7 @@ class PagedNoteDataSource: UICollectionViewDiffableDataSource<Int, NSManagedObje
             sectionNameKeyPath: nil,
             cacheName: nil
         )
+        self.context = context
         self.relayFilter = relayFilter
         
         super.init(collectionView: collectionView) { (collectionView, indexPath, objectID) in
@@ -48,6 +50,7 @@ class PagedNoteDataSource: UICollectionViewDiffableDataSource<Int, NSManagedObje
             
             return cell
         }
+        
         self.fetchedResultsController.delegate = self
         
         do {
@@ -65,7 +68,22 @@ class PagedNoteDataSource: UICollectionViewDiffableDataSource<Int, NSManagedObje
         }
     }
     
+    func updateFetchRequest(_ fetchRequest: NSFetchRequest<Event>) {
+        self.fetchedResultsController = NSFetchedResultsController<Event>(
+            fetchRequest: fetchRequest,
+            managedObjectContext: context,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        self.fetchedResultsController.delegate = self
+        try? self.fetchedResultsController.performFetch()
+    }
+    
     // MARK: - UICollectionViewDataSource
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        fetchedResultsController.fetchedObjects?.count ?? 0
+    }
     
     override func collectionView(
         _ collectionView: UICollectionView, 
