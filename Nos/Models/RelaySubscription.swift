@@ -21,7 +21,11 @@ struct RelaySubscription: Identifiable {
     /// The date this Filter was opened as a subscription on relays. Used to close stale subscriptions
     var subscriptionStartDate: Date?
     
+    /// The oldest creation date on an event processed by this filter. Used for pagination.
     var oldestEventCreationDate: Date?
+    
+    /// The number of events that have been returned for this subscription
+    var receivedEventCount = 0
     
     /// The number of objects using this filter. This is incremented and decremented by the RelayService to determine
     /// when a filter can be closed.

@@ -124,10 +124,8 @@ struct CompactNoteView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .task {
-            if !note.loadingViewData {
-                await note.loadViewData()
-            }
+        .onChange(of: note.attributedContent) {
+            updateShouldShowReadMore()
         }
     }
 }

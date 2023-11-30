@@ -110,7 +110,6 @@ struct ProfileView: View {
                 .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 .id(author.id)
 
-            
             VStack {
                 if unmutedEvents.isEmpty {
                     Localized.noEventsOnProfile.view

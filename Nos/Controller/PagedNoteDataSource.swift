@@ -80,9 +80,7 @@ class PagedNoteDataSource: UICollectionViewDiffableDataSource<Int, NSManagedObje
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             let note = fetchedResultsController.object(at: indexPath)
-            if !note.loadingViewData {
-                Task { await note.loadViewData() }
-            }
+            Task { await note.loadViewData() }
         }
     }
     

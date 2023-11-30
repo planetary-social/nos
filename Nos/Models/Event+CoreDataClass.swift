@@ -543,12 +543,12 @@ public class Event: NosManagedObject {
             /// Events in different contexts with the same objectID, because this messes up SwiftUI's observation
             /// of changes.
             let creationContext = persistenceController.creationContext
-            let objectID = creationContext.performAndWait {
+            let objectID = try creationContext.performAndWait {
                 let event = Event(context: creationContext)
                 event.identifier = id
+                try creationContext.save()
                 return event.objectID
             }
-            try creationContext.save()
             guard let fetchedEvent = context.object(with: objectID) as? Event else {
                 let error = EventError.coreData
                 crashReporting.report(error)
@@ -774,11 +774,41 @@ public class Event: NosManagedObject {
     // MARK: - Preloading and Caching
     // Probably should refactor this stuff into a view model
     
+    @MainActor var loadingViewData = false
+    @MainActor var attributedContent = LoadingContent<AttributedString>.loading
+    @MainActor var contentLinks = [URL]()
+    
     @MainActor func loadViewData() async {
-        loadingViewData = true // TODO: synchronize this
+        guard !loadingViewData else {
+            return
+        }
+        loadingViewData = true 
+        
+        await loadContentIfStub()
+        Task { await loadReferencedNote() }
+        Task { await loadAuthorMetadata() }
+        Task { await loadAttributedContent() }
+    }
+    
+    @MainActor func loadContentIfStub() async {
+        @Dependency(\.relayService) var relayService
+        _ = await relayService.requestEvent(with: identifier)
+    }
+    
+    @MainActor func loadAuthorMetadata() async {
+        @Dependency(\.relayService) var relayService
         @Dependency(\.persistenceController) var persistenceController
         let backgroundContext = persistenceController.backgroundViewContext
-        
+        _ = await Event.requestAuthorsMetadataIfNeeded(noteID: identifier, using: relayService, in: backgroundContext)
+    }
+    
+    @MainActor func loadReferencedNote() async {
+        await referencedNote()?.loadViewData()
+    }
+    
+    @MainActor func loadAttributedContent() async {
+        @Dependency(\.persistenceController) var persistenceController
+        let backgroundContext = persistenceController.backgroundViewContext
         if let parsedAttributedContent = await Event.attributedContentAndURLs(
             noteID: identifier,
             context: backgroundContext
@@ -786,12 +816,10 @@ public class Event: NosManagedObject {
             let (attributedString, contentLinks) = parsedAttributedContent
             self.attributedContent = .loaded(attributedString)
             self.contentLinks = contentLinks
-        }  
+        } else {
+            self.attributedContent = .loaded(AttributedString(content ?? "")) 
+        }
     }
-    
-    var loadingViewData = false
-    var attributedContent = LoadingContent<AttributedString>.loading
-    var contentLinks = [URL]()
     
     // MARK: - Helpers
     

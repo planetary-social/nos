@@ -16,7 +16,7 @@ import Dependencies
 /// Use this view inside MessageButton to have nice borders.
 struct NoteCard: View {
     
-    @ObservedObject var note: Event
+    var note: Event
     
     var style = CardStyle.compact
     
@@ -149,20 +149,14 @@ struct NoteCard: View {
             warningController.shouldHideOutOfNetwork = hideOutOfNetwork
         }
         .task {
-            if note.isStub {
-                _ = await relayService.requestEvent(with: note.identifier)
-            } 
             self.reportingAuthors = note.reportingAuthors(followedBy: currentUser)
             // print(self.reportingAuthors)
         }
-        .onAppear {
-            Task(priority: .userInitiated) {
-                await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
-                    noteID: note.identifier,
-                    using: relayService,
-                    in: persistenceController.backgroundViewContext
-                )
-            }
+        .task {
+            await note.loadViewData()
+        }
+        .onChange(of: note.content) { oldValue, newValue in
+            Task { await note.loadAttributedContent() }
         }
         .onDisappear {
             Task(priority: .userInitiated) {

@@ -295,9 +295,11 @@ extension RelayService {
                 if let oldestSeen = subscription.oldestEventCreationDate,
                     jsonEvent.createdDate < oldestSeen {
                     subscription.oldestEventCreationDate = jsonEvent.createdDate
+                    subscription.receivedEventCount += 1
                     await subscriptions.updateSubscriptions(with: subscription)
                 } else {
                     subscription.oldestEventCreationDate = jsonEvent.createdDate
+                    subscription.receivedEventCount += 1
                     await subscriptions.updateSubscriptions(with: subscription)
                 }
                 if subscription.isOneTime {
@@ -305,6 +307,7 @@ extension RelayService {
                     await subscriptions.forceCloseSubscriptionCount(for: subscription.id)
                     await sendCloseToAll(for: subscription.id)
                 }
+                Log.debug("subscription \(subscriptionID) has received \(subscription.receivedEventCount) events.")
             }
         } catch {
             print("Error: parsing event from relay (\(socket.request.url?.absoluteString ?? "")): " +
@@ -323,8 +326,12 @@ extension RelayService {
                 var savedEvents = 0
                 for (event, socket) in eventData {
                     let relay = self.relay(from: socket, in: self.parseContext)
-                    if let event = try EventProcessor.parse(jsonEvent: event, from: relay, in: self.parseContext) {
-                        savedEvents += 1
+                    do {
+                        if try EventProcessor.parse(jsonEvent: event, from: relay, in: self.parseContext) != nil {
+                            savedEvents += 1
+                        }
+                    } catch {
+                        Log.error("RelayService: Error parsing event \(event.id): \(error.localizedDescription)")
                     }
                 }
                 #if DEBUG
