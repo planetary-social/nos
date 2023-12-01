@@ -215,11 +215,6 @@ struct HomeFeedView: View {
                 Task { await cancelSubscriptions() }
             }
         }
-        .doubleTapToPop(tab: .home) {
-            if isShowingStories {
-                selectedStoryAuthor = nil
-            }
-        }
     }
 }
 

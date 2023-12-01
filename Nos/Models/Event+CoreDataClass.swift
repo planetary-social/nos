@@ -142,7 +142,6 @@ public class Event: NosManagedObject {
         "npub105em547c5m5gdxslr4fp2f29jav54sxml6cpk6gda7xyvxuzmv6s84a642": ["Travel Telly"],
         "npub1mhrdsyurcmnva5783cuwmvp2k6kqc7er47lh56z5zr48ha5fhgesf5028h": ["BeatingUpwind"],
         "npub1zwulrffp23wle3tl25dt0jr2q376k0k8vhe9xzjl5jnxnag5tc2sr2hjds": ["Love of Nature"],
-        "npub1zwulrffp23wle3tl25dt0jr2q376k0k8vhe9xzjl5jnxnag5tc2sr2hjds": ["Discover Nature"],
         "npub1sur5gd3mrfvcd4nh8dtsdh0ztrqrnaknff0lcfcfz5pn56n8eqkqv9sm0l": ["Animals"],
         "npub1v60thnx0gz0wq3n6xdnq46y069l9x70xgmjp6lprdl6fv0eux6mqgjj4rp": ["Goats!"],
         "npub1tvw3h5xqnuc2aq5zelxp3dy58sz7x9u8e6enkxywmrz70cg2j2zqjes44n": ["Tech Priest"],
