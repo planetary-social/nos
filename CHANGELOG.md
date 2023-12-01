@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1 (96)] - 2023-11-28Z
 
+- Tapping on a tab bar icon can let you scroll to top.
 - Fixed some performance issues for users who follow a large number of accounts.
 
 ## [0.1 (95)] - 2023-11-27Z

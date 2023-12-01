@@ -14,7 +14,7 @@ struct DiscoverView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @Environment(Router.self) var router
+    @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
 
@@ -86,7 +86,6 @@ struct DiscoverView: View {
     }
     
     var body: some View {
-        @Bindable var router = router
         NavigationStack(path: $router.discoverPath) {
             ZStack {
                 if performingInitialLoad && searchController.query.isEmpty {
@@ -143,7 +142,6 @@ struct DiscoverView: View {
                 }
             }
             .animation(.easeInOut, value: columns)
-            .doubleTapToPop(tab: .discover)
             .task { 
                 updatePredicate()
             }
@@ -287,14 +285,14 @@ struct DiscoverView_Previews: PreviewProvider {
             DiscoverView(featuredAuthors: [publicKey.npub])
                 .environment(\.managedObjectContext, previewContext)
                 .environmentObject(relayService)
-                .environment(router)
+                .environmentObject(router)
                 .environment(currentUser)
                 .onAppear { createTestData(in: previewContext) }
 
             DiscoverView(featuredAuthors: [publicKey.npub])
                 .environment(\.managedObjectContext, previewContext)
                 .environmentObject(relayService)
-                .environment(router)
+                .environmentObject(router)
                 .environment(currentUser)
                 .onAppear { createTestData(in: previewContext) }
                 .previewDevice("iPad Air (5th generation)")

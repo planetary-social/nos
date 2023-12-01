@@ -16,11 +16,11 @@ struct ProfileTab: View {
     
     @Binding var path: NavigationPath
     
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
 
     var body: some View {
         NavigationStack(path: $path) {
-            ProfileView(author: author)
+            ProfileView(author: author, addDoubleTapToPop: true)
                 .navigationBarItems(leading: SideMenuButton())
                 .navigationDestination(for: Author.self) { profile in
                     if profile == currentUser.author, currentUser.editing {
@@ -29,7 +29,6 @@ struct ProfileTab: View {
                         ProfileView(author: profile)
                     }
                 }
-                .doubleTapToPop(tab: .profile)
         }
     }
 }

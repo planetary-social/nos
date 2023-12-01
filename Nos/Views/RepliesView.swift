@@ -18,7 +18,7 @@ struct RepliesView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @EnvironmentObject private var relayService: RelayService
-    @Environment(Router.self) private var router
+    @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
 
@@ -301,7 +301,7 @@ struct RepliesView_Previews: PreviewProvider {
         }
         .environment(\.managedObjectContext, previewContext)
         .environmentObject(emptyRelayService)
-        .environment(router)
+        .environmentObject(router)
         .environment(currentUser)
         .padding()
         .background(Color.cardBackground)

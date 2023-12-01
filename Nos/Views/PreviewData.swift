@@ -274,7 +274,7 @@ struct InjectPreviewData: ViewModifier {
     func body(content: Content) -> some View {
         content
             .environment(\.managedObjectContext, previewData.persistenceController.viewContext)
-            .environment(previewData.router)
+            .environmentObject(previewData.router)
             .environmentObject(previewData.relayService)
             .environment(previewData.currentUser)
     }
