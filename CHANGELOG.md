@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added the option to copy the NIP-05 identifier when browsing a profile.
 - Tapping on a tab bar icon can let you scroll to top.
 
 ## [0.1 (96)] - 2023-11-28Z
