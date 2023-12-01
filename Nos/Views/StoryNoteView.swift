@@ -30,6 +30,7 @@ struct StoryNoteView: View {
     @EnvironmentObject private var router: Router
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.persistenceController) private var persistenceController
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
 
     internal init(note: Event, minHeight: CGFloat) {
         self.note = note
@@ -90,6 +91,7 @@ struct StoryNoteView: View {
                 .contentShape(Rectangle())
                 .onTapGesture {
                     router.push(note)
+                    analytics.openedNoteFromStories()
                 }
             VStack {
                 if shouldShowSpacing {

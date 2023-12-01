@@ -16,8 +16,8 @@ struct HomeFeedView: View {
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) var currentUser
-    @Dependency(\.analytics) private var analytics
-    
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
+
     @FetchRequest var events: FetchedResults<Event>
     @FetchRequest private var authors: FetchedResults<Author>
     
@@ -199,7 +199,10 @@ struct HomeFeedView: View {
             }
         }
         .onChange(of: isShowingStories) { _, newValue in
-            if !newValue {
+            if newValue {
+                analytics.enteredStories()
+            } else {
+                analytics.closedStories()
                 stories = authors.map { $0 }
             }
         }
