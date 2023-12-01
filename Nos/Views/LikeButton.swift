@@ -5,6 +5,7 @@
 //  Created by Matthew Lorentz on 4/21/23.
 //
 
+import Dependencies
 import Logger
 import SwiftUI
 
@@ -17,7 +18,8 @@ struct LikeButton: View {
     @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
-    
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
+
     internal init(note: Event) {
         self.note = note
         if let noteID = note.identifier {
@@ -111,6 +113,7 @@ struct LikeButton: View {
 
         do {
             try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
+            analytics.likedNote()
         } catch {
             Log.info("Error creating event for like")
         }
