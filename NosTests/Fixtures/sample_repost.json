@@ -1,0 +1,28 @@
+[
+    {
+      "id" : "f41e430f632b1e747da7efbb0ce11616876851e2fa3bbac440101c1b8a091152",
+      "content" : "{\"sig\":\"c33f8ee08b47a862c159f09f75794369041b2d982b2e79762b9ed79fbb24e2801b9668b0bf60e7f8b01f9c514989e5e26ae2b205097f62b37aab838cb3783b8c\",\"pubkey\":\"76c71aae3a491f1d9eec47cba17e229cda4113a0bbb6e6ae1776d7643e29cafa\",\"kind\":1,\"id\":\"f82507f7c770a39d0eabf276ced34fbd6a172be869bd3a3231c9c0272f405008\",\"tags\":[[\"imeta\",\"url https:\\\/\\\/v.nostr.build\\\/lx7e.mp4\",\"blurhash eL2RZYkVVukUi|kBfjayfjfjQDaLoyafbtbXe:jbfQfRptkBV[f*jH\",\"dim 720x1280\"],[\"t\",\"kraftwerk\"],[\"r\",\"https:\\\/\\\/v.nostr.build\\\/lx7e.mp4\"]],\"content\":\"#kraftwerk https:\\\/\\\/v.nostr.build\\\/lx7e.mp4 \",\"created_at\":1701245356}",
+      "kind" : 6,
+      "tags" : [
+        [
+          "e",
+          "f82507f7c770a39d0eabf276ced34fbd6a172be869bd3a3231c9c0272f405008",
+          "wss:\/\/nostr.oxtr.dev",
+          "wss:\/\/nos.lol",
+          "wss:\/\/relay.damus.io",
+          "wss:\/\/relay.nostr.band",
+          "wss:\/\/relay.current.fyi",
+          "wss:\/\/relay.nostr.bg",
+          "wss:\/\/e.nos.lol",
+          "wss:\/\/nostr.fmt.wiz.biz"
+        ],
+        [
+          "p",
+          "76c71aae3a491f1d9eec47cba17e229cda4113a0bbb6e6ae1776d7643e29cafa"
+        ]
+      ],
+      "sig" : "f9c1af62ad567c72a692a9881799724c4c94df0955c0ec1ae6322fc9f7468821390d5c45a73e544d79513ccc541d7f430fd4d29aa28426471f40895afcf46614",
+      "created_at" : 1701258681,
+      "pubkey" : "e731ca427c18059d66636ddfaeeeb15012bc2db3cdd27b9e4cade5057a6e82ed"
+    }
+]
