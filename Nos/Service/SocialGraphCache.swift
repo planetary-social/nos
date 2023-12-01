@@ -45,9 +45,8 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
                 }
                 let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
                 fetchRequest.predicate = NSPredicate(
-                    format: "ANY %@.follows.destination.follows = %@",
-                    currentUser,
-                    author
+                    format: "ANY followers.source IN %@.follows.destination",
+                    currentUser
                 )
                 return try context.count(for: fetchRequest) > 0
             }
@@ -79,6 +78,7 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
     private let context: NSManagedObjectContext
     
     private var userWatcher: NSFetchedResultsController<Author>?
+    private var oneHopWatcher: NSFetchedResultsController<Author>?
     private var twoHopKeys = Set<HexadecimalString>()
     private var outOfNetworkKeys = Set<HexadecimalString>()
     
@@ -125,21 +125,35 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
             return
         }
         let startDate = Date.now
+        followedKeys.insert(userKey)
         
-        await context.perform {
-            let authorRequest = Author.request(by: userKey) 
-            authorRequest.relationshipKeyPathsForPrefetching = ["follows.destination.hexadecimalPublicKey"]
-            self.userWatcher = NSFetchedResultsController(
-                fetchRequest: authorRequest,
-                managedObjectContext: self.context,
-                sectionNameKeyPath: nil,
-                cacheName: "SocialGraphCache.userWatcher"
-            )
-        }
-        
-        userWatcher?.delegate = self
         do {
+            try await context.perform {
+                let authorRequest = Author.request(by: userKey) 
+                authorRequest.relationshipKeyPathsForPrefetching = ["follows.destination.hexadecimalPublicKey"]
+                self.userWatcher = NSFetchedResultsController(
+                    fetchRequest: authorRequest,
+                    managedObjectContext: self.context,
+                    sectionNameKeyPath: nil,
+                    cacheName: "SocialGraphCache.userWatcher"
+                )
+                if let user = try Author.find(by: userKey, context: self.context) {
+                    self.oneHopWatcher = NSFetchedResultsController(
+                        fetchRequest: Author.oneHopRequest(for: user),
+                        managedObjectContext: self.context,
+                        sectionNameKeyPath: nil,
+                        cacheName: "SocialGraphCache.oneHopWatcher"
+                    )
+                }
+            }
+            
+            userWatcher?.delegate = self
+            oneHopWatcher?.delegate = self
             try self.userWatcher?.performFetch()
+            try self.oneHopWatcher?.performFetch()
+            if let author = self.userWatcher?.fetchedObjects?.first {
+                process(user: userKey, followed: Set(author.followedKeys))
+            }
         } catch {
             Log.error(error.localizedDescription)
             return
@@ -163,7 +177,16 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
             clearCache()
         }
         followedKeys = newFollowedKeys
+        followedKeys.insert(user)
         outOfNetworkKeys = outOfNetworkKeys.subtracting(newFollowedKeys)
+    }
+    
+    private func process(
+        followedAuthor: HexadecimalString,
+        followed newFollowedKeys: Set<HexadecimalString>
+    ) async {
+        outOfNetworkKeys.subtract(newFollowedKeys)
+        twoHopKeys.formUnion(newFollowedKeys)
     }
     
     // MARK: - NSFetchedResultsControllerDelegate
@@ -175,12 +198,19 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
         for type: NSFetchedResultsChangeType, 
         newIndexPath: IndexPath?
     ) {
-        guard let userKey, let changedAuthor = anObject as? Author else {
+        guard let userKey, 
+            let changedAuthor = anObject as? Author, 
+            let changedAuthorKey = changedAuthor.hexadecimalPublicKey else {
             return
         }
         let newFollowedKeys = Set(changedAuthor.followedKeys)
+        
         Task {
-            await process(user: userKey, followed: newFollowedKeys)
+            if await controller === self.oneHopWatcher {
+                await process(followedAuthor: changedAuthorKey, followed: newFollowedKeys)
+            } else if await controller === self.userWatcher {
+                await process(user: userKey, followed: newFollowedKeys)
+            }
         }
     }
 }
