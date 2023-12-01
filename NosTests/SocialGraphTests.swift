@@ -119,5 +119,42 @@ final class SocialGraphTests: XCTestCase {
         ])
         try await eventually { await sut.followedKeys == expectedKeys }
     }
+    
+    func testTwoHops() async throws {
+        // Arrange
+        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
+        let eve = try Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: testContext)
+        
+        // Act
+        let sut = SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
+        try testContext.save()
+        
+        // Rearrange
+        // alice follows bob
+        let follow1 = try Follow.findOrCreate(source: alice, destination: bob, context: testContext)
+        alice.addToFollows(follow1)
+        try testContext.save()
+        
+        var expectedKeys = Set([
+            KeyFixture.alice.publicKeyHex,
+            KeyFixture.bob.publicKeyHex
+        ])
+        try await eventually { await sut.followedKeys == expectedKeys }
+        try await eventually { await !sut.isInNetwork(KeyFixture.eve.publicKeyHex) }
+        
+        // bob follows eve
+        let follow2 = try Follow.findOrCreate(source: bob, destination: eve, context: testContext)
+        bob.addToFollows(follow2)
+        try testContext.save()
+        
+        // Reassert
+        expectedKeys = Set([
+            KeyFixture.alice.publicKeyHex,
+            KeyFixture.bob.publicKeyHex
+        ])
+        try await eventually { await sut.followedKeys == expectedKeys }
+        try await eventually { await sut.isInNetwork(KeyFixture.eve.publicKeyHex) }
+    }
 }
 // swiftlint:enable implicitly_unwrapped_optional
