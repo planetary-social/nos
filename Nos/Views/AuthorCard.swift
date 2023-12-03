@@ -9,7 +9,7 @@ import SwiftUI
 
 /// This view displays the information we have for an author suitable for being used in a list.
 struct AuthorCard: View {
-
+    @Environment(CurrentUser.self) var currentUser
     @ObservedObject var author: Author
 
     @Environment(\.managedObjectContext) private var viewContext
@@ -42,6 +42,11 @@ struct AuthorCard: View {
                                 Text(Localized.muted.string)
                                     .font(.subheadline)
                                     .foregroundColor(Color.secondaryText)
+                            }
+                            Spacer()
+                            if let currentUser = currentUser.author {
+                                FollowButton(currentUserAuthor: currentUser, author: author)
+                                    .padding(10)
                             }
                         }
                         

@@ -34,7 +34,7 @@ struct FollowsView: View {
         ScrollView(.vertical) {
             LazyVStack {
                 ForEach(authors) { author in
-                    FollowCard(author: author)
+                    AuthorCard(author: author)
                         .padding(.horizontal)
                         .readabilityPadding()
                 }
