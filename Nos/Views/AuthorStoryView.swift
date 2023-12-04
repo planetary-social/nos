@@ -182,6 +182,10 @@ struct AuthorStoryView: View {
             subscriptionIDs.removeAll()
         }
         let eTags = notes.compactMap { $0.identifier }
+        guard !eTags.isEmpty else {
+            return
+        }
+        
         let filter = Filter(kinds: [.text, .like, .delete, .repost], eTags: eTags)
         let subID = await relayService.openSubscription(with: filter)
         subscriptionIDs.append(subID)
