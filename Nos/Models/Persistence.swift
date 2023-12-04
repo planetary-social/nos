@@ -33,11 +33,6 @@ class PersistenceController {
         container.viewContext
     }
     
-    /// A context to synchronize creation of Events and Authors so we don't end up with duplicates.
-    lazy var creationContext = {
-        newBackgroundContext()
-    }()
-    
     /// A context for parsing Nostr events from relays.
     lazy var parseContext = {
         self.newBackgroundContext()
@@ -86,7 +81,6 @@ class PersistenceController {
         }
         setUp()
         viewContext.reset()
-        creationContext = newBackgroundContext()
         backgroundViewContext = newBackgroundContext()
         parseContext = newBackgroundContext()
     }

@@ -58,7 +58,7 @@ struct NoteButton: View {
     /// The note displayed in the note card. Could be different from `note` i.e. in the case of a repost.
     var displayedNote: Event {
         if note.kind == EventKind.repost.rawValue,
-            let repostedNote = note.referencedNote() {
+            let repostedNote = note.repostedNote() {
             return repostedNote
         } else {
             return note

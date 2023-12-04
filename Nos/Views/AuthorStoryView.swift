@@ -28,7 +28,8 @@ struct AuthorStoryView: View {
 
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
-    
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
+
     init(
         author: Author,
         cutoffDate: Binding<Date>,
@@ -106,6 +107,7 @@ struct AuthorStoryView: View {
                 .padding(.horizontal, 10)
                 Button {
                     router.push(author)
+                    analytics.openedProfileFromStories()
                 } label: {
                     HStack(alignment: .center) {
                         AuthorLabel(author: author)

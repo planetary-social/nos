@@ -102,7 +102,7 @@ enum CurrentUserError: Error {
         super.init()
         self.viewContext = persistenceController.viewContext
         self.backgroundContext = persistenceController.newBackgroundContext()
-        self.socialGraph = SocialGraphCache(userKey: nil, context: backgroundContext)
+        self.socialGraph = SocialGraphCache(userKey: nil, context: persistenceController.newBackgroundContext())
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             Log.info("CurrentUser loaded a private key from keychain")
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
@@ -421,7 +421,7 @@ enum CurrentUserError: Error {
 
         Log.debug("Following \(followKey)")
 
-        var followKeys = socialGraph.followedKeys
+        var followKeys = await Array(socialGraph.followedKeys)
         followKeys.append(followKey)
         
         // Update author to add the new follow
@@ -449,7 +449,7 @@ enum CurrentUserError: Error {
 
         Log.debug("Unfollowing \(unfollowedKey)")
         
-        let stillFollowingKeys = socialGraph.followedKeys
+        let stillFollowingKeys = await Array(socialGraph.followedKeys)
             .filter { $0 != unfollowedKey }
         
         // Update author to only follow those still following
