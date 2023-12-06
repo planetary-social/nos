@@ -28,7 +28,8 @@ struct AuthorStoryView: View {
 
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
-    
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
+
     init(
         author: Author,
         cutoffDate: Binding<Date>,
@@ -106,6 +107,7 @@ struct AuthorStoryView: View {
                 .padding(.horizontal, 10)
                 Button {
                     router.push(author)
+                    analytics.openedProfileFromStories()
                 } label: {
                     HStack(alignment: .center) {
                         AuthorLabel(author: author)
@@ -180,6 +182,10 @@ struct AuthorStoryView: View {
             subscriptionIDs.removeAll()
         }
         let eTags = notes.compactMap { $0.identifier }
+        guard !eTags.isEmpty else {
+            return
+        }
+        
         let filter = Filter(kinds: [.text, .like, .delete, .repost], eTags: eTags)
         let subID = await relayService.openSubscription(with: filter)
         subscriptionIDs.append(subID)
