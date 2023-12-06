@@ -201,7 +201,7 @@ enum CurrentUserError: Error {
         let contactFilter = Filter(
             authorKeys: [key],
             kinds: [.contactList],
-            limit: 2,
+            limit: 2, // small hack to make sure this filter doesn't get closed for being stale
             since: author.lastUpdatedContactList
         )
         subscriptions.append(await relayService.openSubscription(with: contactFilter))
