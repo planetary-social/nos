@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fix profile pictures not loading after creating a new account.
+
 ## [0.1 (98)] - 2023-12-04Z
 
 - Fixed a bug where the app could become unresponsive.

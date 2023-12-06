@@ -185,20 +185,7 @@ enum CurrentUserError: Error {
         guard let key = publicKeyHex, let author else {
             return
         }
-        
-        let overrideRelays: [URL]?
-        let userRelays = author.relays 
-        if userRelays.isEmpty {
-            overrideRelays = Relay.allKnown
-                .compactMap {
-                    try? Relay.findOrCreate(by: $0, context: viewContext)
-                }
-                .compactMap { $0.addressURL }
-            try? viewContext.saveIfNeeded()
-        } else {
-            overrideRelays = nil
-        }
-        
+       
         // Close out stale requests
         if !subscriptions.isEmpty {
             await relayService.decrementSubscriptionCount(for: subscriptions)
@@ -214,10 +201,10 @@ enum CurrentUserError: Error {
         let contactFilter = Filter(
             authorKeys: [key],
             kinds: [.contactList],
-            limit: 1,
+            limit: 2,
             since: author.lastUpdatedContactList
         )
-        subscriptions.append(await relayService.openSubscription(with: contactFilter, to: overrideRelays))
+        subscriptions.append(await relayService.openSubscription(with: contactFilter))
         
         // Listen for notifications
         await pushNotificationService.listen(for: self)
