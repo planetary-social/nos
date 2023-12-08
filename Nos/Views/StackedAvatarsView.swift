@@ -85,6 +85,6 @@ struct StackedAvatarsView_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
         }
         .padding()
-        .background(Color.cardBackground)
+        .background(Color.previewBg)
     }
 }

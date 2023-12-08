@@ -16,7 +16,7 @@ struct WizardTextField: View {
     var body: some View {
         PlainTextField(text: text) {
             PlainText(placeholder)
-                .foregroundColor(.secondaryText)
+                .foregroundColor(.secondaryTxt)
         }
         .font(.clarityTitle2)
         .foregroundColor(.primaryTxt)
@@ -24,7 +24,7 @@ struct WizardTextField: View {
         .padding(19)
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(Color.secondaryAction, lineWidth: 2)
+                .stroke(Color.secondaryTxt, lineWidth: 2)
                 .background(Color.textFieldBg)
         )
         .toolbar {

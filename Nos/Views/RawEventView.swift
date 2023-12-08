@@ -18,14 +18,14 @@ struct RawEventView<ViewModel>: View where ViewModel: RawEventViewModel {
             if showProgress, let loadingMessage = viewModel.loadingMessage {
                 VStack {
                     ProgressView()
-                        .foregroundColor(.primaryTxt)
+                        .foregroundColor(.secondaryTxt)
                         .background(Color.appBg)
                     Text(loadingMessage)
-                        .foregroundColor(.mainText)
+                        .foregroundColor(.secondaryTxt)
                 }
                 .padding(16)
                 .cornerRadius(8)
-                .background(Color.cardBackground.cornerRadius(8))
+                .background(Color.appBg.cornerRadius(8))
             } else {
                 EmptyView()
             }
@@ -63,7 +63,7 @@ struct RawEventView<ViewModel>: View where ViewModel: RawEventViewModel {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(Color.cardBackground)
+        .background(Color.appBg)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {

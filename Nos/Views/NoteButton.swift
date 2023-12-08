@@ -79,7 +79,7 @@ struct NoteButton: View {
                             Text(elapsedTime)
                                 .lineLimit(1)
                                 .font(.body)
-                                .foregroundColor(.secondaryText)
+                                .foregroundColor(.secondaryTxt)
                         }
                         Spacer()
                     }

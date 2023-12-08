@@ -81,6 +81,7 @@ struct NotificationsView: View {
                         if let user {
                             NotificationCard(viewModel: NotificationViewModel(note: event, user: user))
                                 .padding(.horizontal, 15)
+                                .padding(.bottom, 10)
                                 .readabilityPadding()
                                 .id(event.id)
                         }

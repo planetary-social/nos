@@ -67,7 +67,7 @@ struct NotificationCard: View {
                     Text(viewModel.date.distanceFromNowString())
                         .lineLimit(1)
                         .font(.body)
-                        .foregroundColor(.secondaryText)
+                        .foregroundColor(.secondaryTxt)
                 }
                 .fixedSize()
             }

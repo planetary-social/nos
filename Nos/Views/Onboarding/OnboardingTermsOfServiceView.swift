@@ -36,7 +36,7 @@ struct OnboardingTermsOfServiceView: View {
                 .padding(.bottom, 60)
             ScrollView {
                 Text(termsOfService)
-                    .foregroundColor(.secondaryText)
+                    .foregroundColor(.secondaryTxt)
                 Rectangle().fill(Color.clear)
                     .frame(height: 100)
             }

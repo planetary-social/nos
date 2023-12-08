@@ -112,7 +112,7 @@ struct CompactNoteView: View {
                     } label: {
                         PlainText(Localized.readMore.string.uppercased())
                             .font(.caption)
-                            .foregroundColor(.secondaryText)
+                            .foregroundColor(.secondaryTxt)
                             .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
                             .background(Color.hashtagBg)
                             .cornerRadius(4)
@@ -166,7 +166,7 @@ struct CompactNoteView_Previews: PreviewProvider {
             CompactNoteView(note: previewData.doubleImageNote, loadLinks: false)
         }
         .padding()
-        .background(Color.cardBackground)
+        .background(Color.previewBg)
         .inject(previewData: PreviewData())
     }
 }

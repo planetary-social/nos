@@ -304,6 +304,6 @@ struct RepliesView_Previews: PreviewProvider {
         .environmentObject(router)
         .environment(currentUser)
         .padding()
-        .background(Color.cardBackground)
+        .background(Color.previewBg)
     }
 }
