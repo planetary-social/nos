@@ -35,7 +35,11 @@ class PersistenceController {
     
     /// A context for parsing Nostr events from relays.
     lazy var parseContext = {
-        self.newBackgroundContext()
+        let context = NSManagedObjectContext(.privateQueue)
+        context.parent = viewContext
+        context.automaticallyMergesChangesFromParent = true
+        context.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+        return context
     }()
     
     /// A context for Views to do expensive queries that we want to keep off the viewContext.

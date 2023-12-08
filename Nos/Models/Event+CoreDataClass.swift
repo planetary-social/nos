@@ -942,21 +942,16 @@ public class Event: NosManagedObject {
     }
 
     class func attributedContentAndURLs(
-        noteID: String?, 
+        note: Event, 
         context: NSManagedObjectContext
     ) async -> (AttributedString, [URL])? {
-        guard let noteID else {
+        guard let content = note.content else {
             return nil
         }
+        let tags = note.allTags as? [[String]] ?? []
         
         return await context.perform {
-            guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
-                let content = note.content else {
-                return nil
-            }
-            try? context.saveIfNeeded()
-            let tags = note.allTags as? [[String]] ?? []
-            return NoteParser.parse(content: content, tags: tags, context: context)
+            NoteParser.parse(content: content, tags: tags, context: context)
         }
     }
     

@@ -11,6 +11,8 @@ import SwiftUI
 import ViewInspector
 import Combine
         
+// This is a bit of instrumentation recommended by the ViewInspector package to set up views for asynchronous inspection
+// see https://github.com/nalexn/ViewInspector/blob/0.9.10/guide.md#approach-2
 internal final class Inspection<V> {
     
     let notice = PassthroughSubject<UInt, Never>()
@@ -48,7 +50,7 @@ final class EventObservationTests: XCTestCase {
     func testDuplicateEventMerging() throws {
         // Arrange
         @Dependency(\.persistenceController) var persistenceController
-        let viewContext = persistenceController.viewContext
+        let viewContext = persistenceController.backgroundViewContext
         let parseContext = persistenceController.parseContext
         
         let eventID = "123456"
