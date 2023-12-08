@@ -58,7 +58,11 @@ class PagedNoteDataSource<Header: View>: UICollectionViewDiffableDataSource<Int,
                 return UICollectionViewCell()
             }
             
-            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as? UICollectionViewCell
+            let header = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind, 
+                withReuseIdentifier: "Header", 
+                for: indexPath
+            ) as? UICollectionViewCell
             header?.contentConfiguration = UIHostingConfiguration { 
                 self.header()
             }

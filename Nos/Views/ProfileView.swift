@@ -35,18 +35,6 @@ struct ProfileView: View {
     @FetchRequest
     private var events: FetchedResults<Event>
 
-    @State private var unmutedEvents: [Event] = []
-
-    private func computeUnmutedEvents() async {
-        unmutedEvents = events.filter {
-            if let author = $0.author {
-                let notDeleted = $0.deletedOn.count == 0
-                return !author.muted && notDeleted
-            }
-            return false
-        }
-    }
-    
     var isShowingLoggedInUser: Bool {
         author.hexadecimalPublicKey == currentUser.publicKeyHex
     }
@@ -106,33 +94,27 @@ struct ProfileView: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack {
-                if unmutedEvents.isEmpty {
-                    Localized.noEventsOnProfile.view
-                        .padding()
-                } else {
-                    let profileNotesFilter = Filter(
-                        authorKeys: [author.hexadecimalPublicKey ?? "error"],
-                        kinds: [.text, .delete, .repost, .longFormContent]
-                    )
-
-                    PagedNoteListView(
-                        databaseFilter: author.allPostsRequest(), 
-                        relayFilter: profileNotesFilter,
-                        context: viewContext,
-                        header: {
-                            ProfileHeader(author: author)
-                                .compositingGroup()
-                                .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
-                                .id(author.id)
-                        },
-                        onRefresh: {
-                            author.allPostsRequest(since: .now)
-                        }
-                    )
-                    .padding(0)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-                Spacer()
+                let profileNotesFilter = Filter(
+                    authorKeys: [author.hexadecimalPublicKey ?? "error"],
+                    kinds: [.text, .delete, .repost, .longFormContent]
+                )
+                
+                PagedNoteListView(
+                    databaseFilter: author.allPostsRequest(), 
+                    relayFilter: profileNotesFilter,
+                    context: viewContext,
+                    header: {
+                        ProfileHeader(author: author)
+                            .compositingGroup()
+                            .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
+                            .id(author.id)
+                    },
+                    onRefresh: {
+                        author.allPostsRequest(since: .now)
+                    }
+                )
+                .padding(0)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .id(author.id)
             .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { proxy in
@@ -240,9 +222,6 @@ struct ProfileView: View {
                 }
         )
         .reportMenu($showingReportMenu, reportedObject: .author(author))
-        .task {
-            await computeUnmutedEvents()
-        }
         .onChange(of: author.uns) { 
             Task {
                 await loadUSBCBalance()
@@ -260,16 +239,6 @@ struct ProfileView: View {
             Task(priority: .userInitiated) {
                 await relayService.decrementSubscriptionCount(for: subscriptionIDs)
                 subscriptionIDs.removeAll()
-            }
-        }
-        .onChange(of: author.muted) { 
-            Task {
-                await computeUnmutedEvents()
-            }
-        }
-        .onChange(of: author.events.count) { 
-            Task {
-                await computeUnmutedEvents()
             }
         }
     }

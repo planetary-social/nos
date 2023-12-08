@@ -820,11 +820,16 @@ public class Event: NosManagedObject {
             return
         }
         loadingViewData = true 
+        Log.debug("\(identifier ?? "null") loading view data")
         
-        await loadContentIfStub()
-        Task { await loadReferencedNote() }
-        Task { await loadAuthorMetadata() }
-        Task { await loadAttributedContent() }
+        if isStub {
+            await loadContentIfStub()
+            loadingViewData = false
+        } else {
+            Task { await loadReferencedNote() }
+            Task { await loadAuthorMetadata() }
+            Task { await loadAttributedContent() }
+        }
     }
     
     @MainActor func loadContentIfStub() async {

@@ -155,7 +155,7 @@ enum AuthorError: Error {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@ AND createdAt <= %@", 
+            format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@ AND author.muted = 0 AND createdAt <= %@", 
             EventKind.text.rawValue, 
             EventKind.repost.rawValue, 
             EventKind.longFormContent.rawValue, 
