@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed some cases where a note's contents would never load.
+
 ## [0.1 (99)] - 2023-12-07Z
 
 - Fix profile pictures not loading after creating a new account.
