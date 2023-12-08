@@ -39,7 +39,7 @@ struct NoteTextEditor: View {
                 .placeholder(when: text.isEmpty, placeholder: {
                     VStack {
                         placeholder.view
-                            .foregroundColor(.secondaryText)
+                            .foregroundColor(.secondaryTxt)
                             .padding(.top, 10)
                             .padding(.leading, 6)
                         Spacer()

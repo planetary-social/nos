@@ -23,7 +23,7 @@ struct NosFormField<Control: View>: View {
         VStack {
             HStack {
                 Text(label)
-                    .foregroundColor(.secondaryText)
+                    .foregroundColor(.secondaryTxt)
                     .fontWeight(.medium)
                     .font(.clarityFootnote)
                 Spacer()

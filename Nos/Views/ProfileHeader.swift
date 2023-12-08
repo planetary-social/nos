@@ -92,7 +92,7 @@ struct ProfileHeader: View {
                                 if author.muted {
                                     Text(Localized.muted.string)
                                         .font(.subheadline)
-                                        .foregroundColor(Color.secondaryText)
+                                        .foregroundColor(Color.secondaryTxt)
                                 }
                             }
                             .padding(.top, 3)
@@ -161,7 +161,7 @@ struct ProfileHeader: View {
         ProfileHeader(author: previewData.previewAuthor)
             .inject(previewData: previewData)
             .padding()
-            .background(Color.cardBackground)
+            .background(Color.previewBg)
     }
 }
 
@@ -203,7 +203,7 @@ struct ProfileHeader: View {
     .inject(previewData: previewData)
     .previewDevice("iPhone SE (2nd generation)")
     .padding()
-    .background(Color.cardBackground)
+    .background(Color.previewBg)
 }
 
 #Preview("UNS") {
@@ -213,6 +213,6 @@ struct ProfileHeader: View {
         ProfileHeader(author: previewData.unsAuthor)
             .inject(previewData: previewData)
             .padding()
-            .background(Color.cardBackground)
+            .background(Color.previewBg)
     }
 }

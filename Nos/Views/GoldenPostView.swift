@@ -63,7 +63,7 @@ struct GoldenPostView: View {
                     Text(author.safeName)
                         .lineLimit(1)
                         .font(.subheadline)
-                        .foregroundColor(Color.secondaryText)
+                        .foregroundColor(Color.secondaryTxt)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     // }
@@ -179,7 +179,7 @@ struct GoldenPostView_Previews: PreviewProvider {
                     GoldenPostView(author: previewAuthor, note: veryWideImageNote)
                     GoldenPostView(author: previewAuthor, note: longNote)
                 }
-                .background(Color.cardBackground)
+                .background(Color.previewBg)
             }
             VStack {
                 GoldenPostView(author: previewAuthor, note: shortNote)
