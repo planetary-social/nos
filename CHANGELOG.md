@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed some cases where a note's contents would never load.
+
+## [0.1 (99)] - 2023-12-07Z
+
+- Fix profile pictures not loading after creating a new account.
+
+## [0.1 (98)] - 2023-12-04Z
+
+- Fixed a bug where the app could become unresponsive.
+
 ## [0.1 (97)] - 2023-12-01Z
 
 - Added the option to copy the NIP-05 identifier when browsing a profile.

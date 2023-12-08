@@ -150,7 +150,7 @@ struct StoryNoteView: View {
             let backgroundContext = persistenceController.backgroundViewContext
             await Event.markNoteAsRead(noteID: note.identifier, context: backgroundContext)
             if let parsedAttributedContent = await Event.attributedContentAndURLs(
-                noteID: note.identifier,
+                note: note,
                 context: backgroundContext
             ) {
                 withAnimation(.easeIn(duration: 0.1)) {

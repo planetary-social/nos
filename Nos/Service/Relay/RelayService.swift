@@ -35,7 +35,6 @@ final class RelayService: ObservableObject {
         @Dependency(\.persistenceController) var persistenceController
         self.backgroundContext = persistenceController.newBackgroundContext()
         self.parseContext = persistenceController.parseContext
-        parseContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         
         self.eventProcessingLoop = Task(priority: .userInitiated) { [weak self] in
             try Task.checkCancellation()
@@ -337,6 +336,7 @@ extension RelayService {
                 )
                 #endif
                 try self.parseContext.saveIfNeeded()
+                try self.persistenceController.viewContext.saveIfNeeded()
             }                
             return true
         }
@@ -589,11 +589,14 @@ extension RelayService {
     }
     
     @discardableResult @MainActor private func openSockets(overrideRelays: [URL]? = nil) async -> [URL] {
-        let relayAddresses: [URL]
+        var relayAddresses: [URL]
         if let overrideRelays {
             relayAddresses = overrideRelays
         } else {
             relayAddresses = await self.relayAddresses(for: self.currentUser)
+            if relayAddresses.isEmpty {
+                relayAddresses = Relay.allKnown.compactMap { URL(string: $0) }
+            }
         }
         
         for relayAddress in relayAddresses {
