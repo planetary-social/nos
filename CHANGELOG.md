@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Update the color palette.
 - Fixed a bug where the app could become unresponsive.
 - Added the option to copy the NIP-05 identifier when browsing a profile.
 - Tapping on a tab bar icon can let you scroll to top.
