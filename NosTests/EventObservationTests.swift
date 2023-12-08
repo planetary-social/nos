@@ -50,7 +50,7 @@ final class EventObservationTests: XCTestCase {
     func testDuplicateEventMerging() throws {
         // Arrange
         @Dependency(\.persistenceController) var persistenceController
-        let viewContext = persistenceController.backgroundViewContext
+        let viewContext = persistenceController.viewContext
         let parseContext = persistenceController.parseContext
         
         let eventID = "123456"
@@ -58,9 +58,7 @@ final class EventObservationTests: XCTestCase {
         
         // Act
         let eventStub = try Event.findOrCreateStubBy(id: eventID, context: viewContext)
-        let eventStubObjectID = eventStub.objectID
         let fullEvent = try Event.findOrCreateStubBy(id: eventID, context: parseContext)
-        let fullEventObjectID = fullEvent.objectID
         fullEvent.content = eventContent
         
         let view = EventObservationTestView()
