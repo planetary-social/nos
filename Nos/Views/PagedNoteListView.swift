@@ -49,7 +49,7 @@ struct PagedNoteListView<Header: View>: UIViewRepresentable {
 
         let section = NSCollectionLayoutSection(group: group)
         section.contentInsets = .zero
-        section.interGroupSpacing = 0
+        section.interGroupSpacing = 16
         
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(300))
         let headerItem = NSCollectionLayoutBoundarySupplementaryItem(

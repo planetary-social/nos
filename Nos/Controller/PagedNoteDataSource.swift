@@ -63,6 +63,7 @@ class PagedNoteDataSource<Header: View>: UICollectionViewDiffableDataSource<Int,
                 self.header()
             }
             .margins(.horizontal, 0)
+            .margins(.top, 0)
             
             return header
         }
