@@ -391,6 +391,7 @@ final class EventTests: XCTestCase {
         XCTAssertNil(testEvent.referencedNote())
     }
     
+<<<<<<< Updated upstream
     func testRepostedNote() throws {
         let testContext = persistenceController.container.viewContext
         let testEvent = try createTestEvent(in: testContext)
@@ -420,6 +421,31 @@ final class EventTests: XCTestCase {
         testEvent.addToEventReferences(mention)
         
         XCTAssertEqual(testEvent.repostedNote()?.identifier, nil)
+=======
+    // MARK: - Context merging
+    
+    func testDuplicateEventMerging() throws {
+        // Arrange
+        let viewContext = persistenceController.viewContext
+        let parseContext = persistenceController.parseContext
+        
+        let eventID = "123456"
+        let eventContent = "foo bar"
+        
+        // Act
+        let eventStub = try Event.findOrCreateStubBy(id: eventID, context: viewContext)
+        let eventStubObjectID = eventStub.objectID
+        let fullEvent = try Event.findOrCreateStubBy(id: eventID, context: parseContext)
+        let fullEventObjectID = fullEvent.objectID
+        fullEvent.content = eventContent
+        XCTAssertNotEqual(eventStubObjectID, fullEventObjectID) // sanity check
+        
+        try parseContext.save()
+        try viewContext.save()
+        
+        XCTAssertEqual(eventStub.objectID, fullEventObjectID)
+        XCTAssertEqual(eventStub.objectID, fullEvent.objectID)
+>>>>>>> Stashed changes
     }
 
     // MARK: - Helpers
