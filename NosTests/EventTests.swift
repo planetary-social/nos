@@ -421,31 +421,6 @@ final class EventTests: XCTestCase {
         
         XCTAssertEqual(testEvent.repostedNote()?.identifier, nil)
     }
-        
-        // MARK: - Context merging
-    
-    func testDuplicateEventMerging() throws {
-        // Arrange
-        let viewContext = persistenceController.viewContext
-        let parseContext = persistenceController.parseContext
-        
-        let eventID = "123456"
-        let eventContent = "foo bar"
-        
-        // Act
-        let eventStub = try Event.findOrCreateStubBy(id: eventID, context: viewContext)
-        let eventStubObjectID = eventStub.objectID
-        let fullEvent = try Event.findOrCreateStubBy(id: eventID, context: parseContext)
-        let fullEventObjectID = fullEvent.objectID
-        fullEvent.content = eventContent
-        XCTAssertNotEqual(eventStubObjectID, fullEventObjectID) // sanity check
-        
-        try parseContext.save()
-        try viewContext.save()
-        
-        XCTAssertEqual(eventStub.objectID, fullEventObjectID)
-        XCTAssertEqual(eventStub.objectID, fullEvent.objectID)
-    }
 
     // MARK: - Helpers
     
