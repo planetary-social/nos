@@ -8,8 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1 (100)] - 2023-12-09Z
+
 - Fixed some cases where a note's contents would never load.
 - Update the color palette.
+- Fix crash on Mac when opening new note view.
 
 ## [0.1 (99)] - 2023-12-07Z
 
