@@ -156,5 +156,28 @@ final class SocialGraphTests: XCTestCase {
         try await eventually { await sut.followedKeys == expectedKeys }
         try await eventually { await sut.isInNetwork(KeyFixture.eve.publicKeyHex) }
     }
+    
+    func testOutOfNetwork() async throws {
+        // Arrange
+        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
+        let eve = try Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: testContext)
+        
+        // Act
+        let sut = SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
+        try testContext.save()
+        
+        // Assert
+        // assert twice for each key - first time hits db, second time hits cache
+        var isInNetwwork = await sut.isInNetwork(KeyFixture.eve.publicKeyHex)
+        XCTAssertFalse(isInNetwwork)
+        isInNetwwork = await sut.isInNetwork(KeyFixture.eve.publicKeyHex)
+        XCTAssertFalse(isInNetwwork)
+        
+        isInNetwwork = await sut.isInNetwork(KeyFixture.bob.publicKeyHex)
+        XCTAssertFalse(isInNetwwork)
+        isInNetwwork = await sut.isInNetwork(KeyFixture.bob.publicKeyHex)
+        XCTAssertFalse(isInNetwwork)
+    }
 }
 // swiftlint:enable implicitly_unwrapped_optional
