@@ -83,6 +83,7 @@
 		C930055F2A6AF8320098CA9E /* LoadingContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C930055E2A6AF8320098CA9E /* LoadingContent.swift */; };
 		C93005602A6AF8320098CA9E /* LoadingContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C930055E2A6AF8320098CA9E /* LoadingContent.swift */; };
 		C931517D29B915AF00934506 /* StaggeredGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = C931517C29B915AF00934506 /* StaggeredGrid.swift */; };
+		C9332C632ADECFA700AD7B0E /* StarscreamOld in Frameworks */ = {isa = PBXBuildFile; productRef = C9332C622ADECFA700AD7B0E /* StarscreamOld */; };
 		C9332C662ADED0D700AD7B0E /* StarscreamOld in Frameworks */ = {isa = PBXBuildFile; productRef = C9332C652ADED0D700AD7B0E /* StarscreamOld */; };
 		C936B4592A4C7B7C00DF1EB9 /* Nos.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */; };
 		C936B45A2A4C7B7C00DF1EB9 /* Nos.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */; };
@@ -109,6 +110,7 @@
 		C94A5E162A716A6D00B6EC5D /* EditableNoteText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A5E142A716A6D00B6EC5D /* EditableNoteText.swift */; };
 		C94A5E182A72C84200B6EC5D /* ReportCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A5E172A72C84200B6EC5D /* ReportCategory.swift */; };
 		C94A5E192A72C84200B6EC5D /* ReportCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A5E172A72C84200B6EC5D /* ReportCategory.swift */; };
+		C94B2D182B17F5EC002104B6 /* sample_repost.json in Resources */ = {isa = PBXBuildFile; fileRef = C94B2D172B17F5EC002104B6 /* sample_repost.json */; };
 		C94C4CF32AD993CA00F801CA /* UNSErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94C4CF22AD993CA00F801CA /* UNSErrorView.swift */; };
 		C94D14812A12B3F70014C906 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D14802A12B3F70014C906 /* SearchBar.swift */; };
 		C94D59AC2AE711A400295AE8 /* WalletConnectErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D59AB2AE711A400295AE8 /* WalletConnectErrorView.swift */; };
@@ -270,11 +272,6 @@
 		C9B678E229EEC41000303F33 /* SocialGraphCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E029EEC41000303F33 /* SocialGraphCache.swift */; };
 		C9B678E429EED2DC00303F33 /* SocialGraphTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */; };
 		C9B678E729F01A8500303F33 /* FullscreenProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */; };
-		C9B6AC412B14F07800C72EED /* Web3Wallet in Frameworks */ = {isa = PBXBuildFile; productRef = C9B6AC402B14F07800C72EED /* Web3Wallet */; };
-		C9B6AC432B14F07E00C72EED /* Web3 in Frameworks */ = {isa = PBXBuildFile; productRef = C9B6AC422B14F07E00C72EED /* Web3 */; };
-		C9B6AC452B14F08700C72EED /* WalletConnectModal in Frameworks */ = {isa = PBXBuildFile; productRef = C9B6AC442B14F08700C72EED /* WalletConnectModal */; };
-		C9B6AC472B14F1A200C72EED /* WalletConnect in Frameworks */ = {isa = PBXBuildFile; productRef = C9B6AC462B14F1A200C72EED /* WalletConnect */; };
-		C9B6AC492B14F1F400C72EED /* StarscreamOld in Frameworks */ = {isa = PBXBuildFile; productRef = C9B6AC482B14F1F400C72EED /* StarscreamOld */; };
 		C9B708BB2A13BE41006C613A /* NoteTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B708BA2A13BE41006C613A /* NoteTextEditor.swift */; };
 		C9B71DBE2A8E9BAD0031ED9F /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = C9B71DBD2A8E9BAD0031ED9F /* Sentry */; };
 		C9B71DC02A8E9BAD0031ED9F /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C9B71DBF2A8E9BAD0031ED9F /* SentrySwiftUI */; };
@@ -520,6 +517,7 @@
 		C94437E529B0DB83004D8C86 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		C94A5E142A716A6D00B6EC5D /* EditableNoteText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableNoteText.swift; sourceTree = "<group>"; };
 		C94A5E172A72C84200B6EC5D /* ReportCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportCategory.swift; sourceTree = "<group>"; };
+		C94B2D172B17F5EC002104B6 /* sample_repost.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample_repost.json; sourceTree = "<group>"; };
 		C94BC09A2A0AC74A0098F6F1 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		C94C4CF22AD993CA00F801CA /* UNSErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNSErrorView.swift; sourceTree = "<group>"; };
 		C94D14802A12B3F70014C906 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
@@ -739,6 +737,7 @@
 				C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */,
 				C9AA1BB42ABA3D5C00E8BD6D /* Web3Wallet in Frameworks */,
 				C9B71DBE2A8E9BAD0031ED9F /* Sentry in Frameworks */,
+				C9332C632ADECFA700AD7B0E /* StarscreamOld in Frameworks */,
 				C9646E9A29B79E04007239A4 /* Logger in Frameworks */,
 				C9646EA729B7A3DD007239A4 /* Dependencies in Frameworks */,
 				C9AA1BBC2ABB6E8900E8BD6D /* WalletConnectModal in Frameworks */,
@@ -754,16 +753,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9B6AC432B14F07E00C72EED /* Web3 in Frameworks */,
 				C99DBF802A9E8BCF00F7068F /* SDWebImageSwiftUI in Frameworks */,
 				C97797BF298ABE060046BD25 /* secp256k1 in Frameworks */,
-				C9B6AC412B14F07800C72EED /* Web3Wallet in Frameworks */,
 				CDDA1F7B29A527650047ACD8 /* Starscream in Frameworks */,
 				C9B71DC52A9008300031ED9F /* Sentry in Frameworks */,
-				C9B6AC452B14F08700C72EED /* WalletConnectModal in Frameworks */,
 				C9646EA929B7A4F2007239A4 /* PostHog in Frameworks */,
-				C9B6AC472B14F1A200C72EED /* WalletConnect in Frameworks */,
-				C9B6AC492B14F1F400C72EED /* StarscreamOld in Frameworks */,
 				C9646EAC29B7A520007239A4 /* Dependencies in Frameworks */,
 				C905B0752A619367009B8A78 /* DequeModule in Frameworks */,
 				C9646E9C29B79E4D007239A4 /* Logger in Frameworks */,
@@ -1037,6 +1031,7 @@
 		C9DEC0042989477A0078B43A /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				C94B2D172B17F5EC002104B6 /* sample_repost.json */,
 				CD27177529A7C8B200AE8888 /* sample_replies.json */,
 				C9DEC005298947900078B43A /* sample_data.json */,
 				C9ADB134299288230075E7F8 /* KeyFixture.swift */,
@@ -1308,6 +1303,7 @@
 				C9AA1BB32ABA3D5C00E8BD6D /* Web3Wallet */,
 				C9AA1BB92ABB62EB00E8BD6D /* Web3 */,
 				C9AA1BBB2ABB6E8900E8BD6D /* WalletConnectModal */,
+				C9332C622ADECFA700AD7B0E /* StarscreamOld */,
 				C9332C652ADED0D700AD7B0E /* StarscreamOld */,
 			);
 			productName = Nos;
@@ -1339,11 +1335,6 @@
 				C905B0742A619367009B8A78 /* DequeModule */,
 				C9B71DC42A9008300031ED9F /* Sentry */,
 				C99DBF7F2A9E8BCF00F7068F /* SDWebImageSwiftUI */,
-				C9B6AC402B14F07800C72EED /* Web3Wallet */,
-				C9B6AC422B14F07E00C72EED /* Web3 */,
-				C9B6AC442B14F08700C72EED /* WalletConnectModal */,
-				C9B6AC462B14F1A200C72EED /* WalletConnect */,
-				C9B6AC482B14F1F400C72EED /* StarscreamOld */,
 			);
 			productName = NosTests;
 			productReference = C9DEBFE4298941020078B43A /* NosTests.xctest */;
@@ -1505,6 +1496,7 @@
 				C987F85529BA951E00B44E7A /* ClarityCity-Thin.otf in Resources */,
 				C987F83F29BA951E00B44E7A /* ClarityCity-SemiBold.otf in Resources */,
 				C9DEC006298947900078B43A /* sample_data.json in Resources */,
+				C94B2D182B17F5EC002104B6 /* sample_repost.json in Resources */,
 				C987F84929BA951E00B44E7A /* ClarityCity-BlackItalic.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1963,7 +1955,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 95;
+				CURRENT_PROJECT_VERSION = 94;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1984,7 +1976,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 95;
+				CURRENT_PROJECT_VERSION = 94;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
@@ -2131,7 +2123,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 95;
+				CURRENT_PROJECT_VERSION = 94;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nos/Views/Preview Content\"";
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
@@ -2182,7 +2174,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 95;
+				CURRENT_PROJECT_VERSION = 94;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nos/Views/Preview Content\"";
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
@@ -2225,7 +2217,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 95;
+				CURRENT_PROJECT_VERSION = 94;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2251,7 +2243,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 95;
+				CURRENT_PROJECT_VERSION = 94;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2275,7 +2267,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 95;
+				CURRENT_PROJECT_VERSION = 94;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2300,7 +2292,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 95;
+				CURRENT_PROJECT_VERSION = 94;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2496,6 +2488,10 @@
 			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = DequeModule;
 		};
+		C9332C622ADECFA700AD7B0E /* StarscreamOld */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StarscreamOld;
+		};
 		C9332C652ADED0D700AD7B0E /* StarscreamOld */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StarscreamOld;
@@ -2589,31 +2585,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C95F0AC82ABA379700A0D9CE /* XCRemoteSwiftPackageReference "WalletConnectSwiftV2" */;
 			productName = WalletConnectModal;
-		};
-		C9B6AC402B14F07800C72EED /* Web3Wallet */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C95F0AC82ABA379700A0D9CE /* XCRemoteSwiftPackageReference "WalletConnectSwiftV2" */;
-			productName = Web3Wallet;
-		};
-		C9B6AC422B14F07E00C72EED /* Web3 */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3" */;
-			productName = Web3;
-		};
-		C9B6AC442B14F08700C72EED /* WalletConnectModal */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C95F0AC82ABA379700A0D9CE /* XCRemoteSwiftPackageReference "WalletConnectSwiftV2" */;
-			productName = WalletConnectModal;
-		};
-		C9B6AC462B14F1A200C72EED /* WalletConnect */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C95F0AC82ABA379700A0D9CE /* XCRemoteSwiftPackageReference "WalletConnectSwiftV2" */;
-			productName = WalletConnect;
-		};
-		C9B6AC482B14F1F400C72EED /* StarscreamOld */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9332C642ADED0D700AD7B0E /* XCLocalSwiftPackageReference "StarscreamOld" */;
-			productName = StarscreamOld;
 		};
 		C9B71DBD2A8E9BAD0031ED9F /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;

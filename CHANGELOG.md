@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a bug where the app could become unresponsive.
 - Fixed some performance issues for users who follow a large number of accounts.
+- Added the option to copy the NIP-05 identifier when browsing a profile.
 - Tapping on a tab bar icon can let you scroll to top.
 
 ## [0.1 (95)] - 2023-11-27Z
@@ -17,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the option to copy the text content while browsing a note.
 - Fixed UI bugs when displaying the root note of replies.
 - Keep track of read stories.
+- Fix an issue where reposts were not displaying correctly.
 
 ## [0.1 (94)] - 2023-11-17Z
 

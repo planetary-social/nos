@@ -41,6 +41,17 @@ struct NIP05View: View {
                 }
                 .font(.claritySubheadline)
                 .multilineTextAlignment(.leading)
+                .contextMenu {
+                    Button {
+                        UIPasteboard.general.string = formattedNIP05
+                    } label: {
+                        Localized.copy.view
+                    }
+                } preview: {
+                    PlainText(formattedNIP05)
+                        .foregroundColor(.primaryTxt)
+                        .padding()
+                }
                 .task(priority: .userInitiated) {
                     if let nip05Identifier = author.nip05,
                         let publicKey = author.publicKey?.hex {

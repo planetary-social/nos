@@ -92,11 +92,9 @@ public class Event: NosManagedObject {
     static let discoverTabUserIdToInfo: [String: [String]] = [
         "npub1sg6plzptd64u62a878hep2kev88swjh3tw00gjsfl8f237lmu63q0uf63m": ["Jack Dorsey"],
         "npub1g53mukxnjkcmr94fhryzkqutdz2ukq4ks0gvy5af25rgmwsl4ngq43drvk": ["Martti Malmi/sirius"],
-        "npub19mun7qwdyjf7qs3456u8kyxncjn5u2n7klpu4utgy68k4aenzj6synjnft": ["Unclebobmartin"],
         "npub1qlkwmzmrhzpuak7c2g9akvcrh7wzkd7zc7fpefw9najwpau662nqealf5y": ["Katie"],
         "npub176ar97pxz4t0t5twdv8psw0xa45d207elwauu5p93an0rfs709js4600cg": ["arjwright"],
         "npub1nstrcu63lzpjkz94djajuz2evrgu2psd66cwgc0gz0c0qazezx0q9urg5l": ["nostrica"],
-        "npub1pez4lttr28mhfdzx3047wt4j7qzgkh2asjuxa6626rzdrkk39ggqe0xdvg": ["Daniel Onren Latorre"],
         "npub14ps5krdd2wezq4kytmzv3t5rt6p4hl5tx6ecqfdxt5y0kchm5rtsva57gc": ["Martin"],
         "npub1uaajg6r8hfgh9c3vpzm2m5w8mcgynh5e0tf0um4q5dfpx8u6p6dqmj87z6": ["Chardot"],
         "npub1uucu5snurqze6enrdh06am432qftctdnehf8h8jv4hjs27nwstkshxatty": ["boreq"],
@@ -117,7 +115,6 @@ public class Event: NosManagedObject {
         "npub1k7cnst4fh4ajgg8w6ndcmqen4fnyc7ahhm3zpp255vdxqarrtekq5rrg96": ["Bigmarh"],
         "npub1gk6ufj53zcc07dt8vrnwwslr3zqs2z398808z9gaw0pl2znmacrqp5y8se": ["Andressa Muntro"],
         "npub188dexxxmyqhj2r9yte0eq08kfrxtgdmer6gz0ljnzq06edc5fttsjtt409": ["Mary Yar"],
-        "npub150stez8ze3qauexuwrtx0tkkxuuvv022nv0lg3dsq6ejk9n6psestaz9xu": ["Evan Prodromou"],
         "npub1a32cg8ntvpcq0gqk00t73kzywptxjvm2aatysk6g7nfc750976xsm2ea5z": ["Johannes Ernst"],
         "npub1gvy07gxw6uu8rd57mz72mg4q2x7r5ptpp5gc832dv768e58hqd0q5nyn0t": ["Ferret"],
         "npub17nd4yu9anyd3004pumgrtazaacujjxwzj36thtqsxskjy0r5urgqf6950x": ["isoabellaart"],
@@ -139,10 +136,74 @@ public class Event: NosManagedObject {
         "npub12h5xc0usentknjnldce6a80tq0m475u6ucgwhlk2zsfqax3x94fsmx0rvt": ["Weisheiten"],
         "npub166l9t9ckan9yh6j8pku0stszkekt0s8uhqwvddz4qr92r9w0wxcs59u7c3": ["taylan"],
         "npub1pmwz736ys3mfhjdld4r36xqwfc5qkz7dwxdkmfu3qqd7kucvludsrm4nu6": ["lizsweig"],
+        "npub1q50ex3alz6jz9p9pc6yler38wru0sf6ge7kjsfks08ewj90jumfq0euvf3": ["Urzeitshop"],
+        "npub1kwdcaq7e9pluu0f9s7rdlj7sqscf37ty6rv7fl92k4nqcr3ezfts8enny4": ["The Free Quaker"],
+        "npub1qcxmjzt90y8g3kwych8r8x4wf0s6chm4z27ftgglxqcr4e7mhf5svwxq0z": ["Domingos Faria"],
+        "npub105em547c5m5gdxslr4fp2f29jav54sxml6cpk6gda7xyvxuzmv6s84a642": ["Travel Telly"],
+        "npub1mhrdsyurcmnva5783cuwmvp2k6kqc7er47lh56z5zr48ha5fhgesf5028h": ["BeatingUpwind"],
         "npub1zwulrffp23wle3tl25dt0jr2q376k0k8vhe9xzjl5jnxnag5tc2sr2hjds": ["Love of Nature"],
+        "npub1sur5gd3mrfvcd4nh8dtsdh0ztrqrnaknff0lcfcfz5pn56n8eqkqv9sm0l": ["Animals"],
+        "npub1v60thnx0gz0wq3n6xdnq46y069l9x70xgmjp6lprdl6fv0eux6mqgjj4rp": ["Goats!"],
+        "npub1tvw3h5xqnuc2aq5zelxp3dy58sz7x9u8e6enkxywmrz70cg2j2zqjes44n": ["Tech Priest"],
+        "npub1zumnu05rrr7fg608gereh7a2v0prtea4dc9m4wzgkxut965ru8qqf4j3xg": ["Nostalgia"],
+        "npub19fwwstv5dg8qsmuj9rmgf98nt9lfz5gvv67jqx6y9jtgekpcz5pqpgulzp": ["Pro Publica"],
+        "npub12zwrghc9rr9pggd6nun2nzkxkzm03p93sa8dnssryr75z9vrz0jqvyuequ": ["Ars Technica"],
+        "npub1mdpmt8tyugp2n45yasutja0hqhd2r3ue7cx6qdtcaed7yfu7j05sqpg3tt": ["J.L. Westover"],
+        "npub144g96mhz52cetf9xfhajtk5qxzh9689mhge73g8h8tz6hjf5eeuqvhljnp": ["War and Peas"],
+        "npub18gz3mp59zawrfs5y50ej9m9ja7sty69lccmwemcxjz8qyfgquegq59hsf0": ["Flipboard"],
+        "npub1dp2pmvv7gzp6dfmhpwn88emdtr55t7nrmplhmcj80cpu053parwsv25lx7": ["Lisa Melton"],
+        "npub1su03jcgka9t76zqsdky4t0lt5x48ml5qwsfkqs5ztrrejk8qq7yq0eaazr": ["We Built This City"],
+        "npub19pcmh42v2yjdh5y8e5p9y2kpfhzk894xgk4yqr9ktczrn5jr776smqmf48": ["Anthony Dean"],
+        "npub1mljsj4htqa6hzfzy85476777tc07nxtvd6gpjl8h2d5fp0usw02se6r47k": ["Charles Johnson"],
+        "npub1f4xayf53h3kvrzz9824ymsq5acl6gw09jrjczpxt50y6j0ahakhqkfx76m": ["Taras Grescoe"],
+        "npub1d7ggne0xsy8e2999q8cyh9zxda688axm07cwncufjeku0nahvfgsyz6qzr": ["Matt Blaze"],
+        "npub1l93rswuh9fewt2ks4p9pu93llzadglx0znp5uwwvhj6ywuetalwqa7mzuz": ["Matt Hodges"],
+        "npub1cva9dqhte2zplzwsn2f23g0p2c67xvue4m9m25qsmwfjclqmq8lspfghm6": ["David AUgust"],
+        "npub133yzwsqfgvsuxd4clvkgupshzhjn52v837dlud6gjk4tu2c7grqq3sxavt": ["Maddest Max"],
+        "npub18xhl0f2tsessutc3x5d8e7jda7kfuzgutkktd532sjttvz6fnxls337cq3": ["Keith Whyte"],
+        "npub1qlxf6s2pl2djx3x4j7ccz0mucqakvdcavanfud6xjhkrr7g3vdqsh90zvf": ["Magess"],
+        "npub1tqkzr6ndytnufcrrztme4d0m2ql77988sz7w8euzn3acntzphlzqa08tap": ["James Vasile"],
+        "npub1mkpyfxkpnvdautfwd6jq2kantpx54kam7hlzq0nn0vu5vavtutqsxvyr60": ["Max Hertzberg"],
+        "npub1mjcn8x74pdvg4swnfxhn0ljkjx29dgkszknctlmuu2kfzg034amqycg03p": ["Robin Berjon"],
+        "npub1me4dmfx38938e68eeuz77f78e5w7nz2nv0jlxqmx0amphmp3sutq6s0ues": ["Christian Selig"],
+        "npub1hhun74sfzza54h7ryv2zyyl5p4qlwsm4urtp9ywq6fyvg39ax3fq78ypr9": ["John Philpin"],
+        "npub1r8mgrcp5ap7dhn6rgmlx3jswv9jnuv9cxvdga38x896xj3arnm2stjjz5n": ["vruz"],
+        "npub1gh4q2xa2n2ar7nzgpydfykh733xdynuslz3heardn99auzkv2zcstqlqd5": ["Brian Cantrill"],
+        "npub16xfqjdlukvd5y92fm7qwyqerluqkhcl3xxgumty5wezk9zpud4gswxe0sv": ["Shoq"],
+        "npub1vgp7udg8u8u4pep06a7y30l3s87kt6quzyqu7vaf82el6rnm2cmqwgtcn8": ["Christine Lemmber Webber"],
+        "npub1ztkzuu8cl5rfeah0k26yxvylvchkg9xzmw7l5jvekkc9263sjnrs9258pt": ["ItsGoingDown"],
+        "npub1ly9r02zq97hysrxncxhlexu9rjgf2mre0k28tcn98n9k4s40m2lql36jpu": ["Matt K"],
+        "npub1txfduepxzvrg6q0hwkh2hfwsawjm9cqtyqa26v0takgggxggzj6sz5rxdr": ["Calvin Bell"],
+        "npub1wyr8y0rdeaqvwdvqtkm8pzyrrqsy9c3pc5pa27xxl5u0twyt602stny2wn": ["Galen"],
+        "npub1q3erhydshlxz7xgmhcdvy2euy4ah2tvnt5pk2wgefyrrv8agh5wq4edfpk": ["Alan McConchie"],
+        "npub18tyt95ke27wqdhppnr677ahkar86etv840rqlfyfhkhuwv30zmesawwfrd": ["Blim Antogonist"],
+        "npub17sn2jzhqzccn9j7h6vhywec2zr6lzw5p2d5z7lnplsxwqvrs4duqv6jgfe": ["Georage Takei"],
+        "npub1uhzmveltn3t8klxm5ltz5l8hw0cp0t6ss9h5whma825hfzgqrfysskezz4": ["Neil Gaiman"],
+        "npub1dzkq7f7q23fh0mrw03wwd23ddmu258k6m34gctl6ark6qlex4l7qskqcce": ["Robert Reich"],
+        "npub1hhhum4hrc5alsfgl4u248nqduf4lsmvca5kew4hmaezuzqctgx9sa6ppg2": ["Jan Bohemeramann"],
+        "npub1d9nndmy3lx6f00cysrmn2v9t6hz280uwycw0kgcfdhvg99azry8sududfv": ["Taylor Lorenz"],
+        "npub1z04g44eclq892f8zn7xvw83cyzfcmw3aqaxv82e6lhpwkfaypaws8aw6eg": ["Stux"],
+        "npub1m2tcxd9nhm4l5uk775qs4ggv4yj70yw49zus29nrk9sd2zk7xmvqkcgvf2": ["Popehat"],
+        "npub18n3yh0g4u9k0jlp2ux38cyatg7300s40z4g9vsvg7at6lneau5usalwg29": ["Der Postillon"],
+        "npub1dkpwe7v5tnq59q5f57ay3qxcfknm7r4yr765tl8kttxr8judnrxs790xl8": ["Greta Thunberg"],
+        "npub18mmgvu4457x8yrsr3djhhnfp8uhp5swj6fed6jyrd3cpu0vwfcfs3mwg7n": ["European Commission"],
+        "npub1ux9ze4ccwnevdsy8k62l6tp3jecm8m3ha5q948ukcjcfv8lp6rgsadufmc": ["Auschwitz Memorial"],
+        "npub17fjpccfwjdsklnauh2x6cs0rkqmppdpjjgh5q0963q4yjn9qnkxqm9gh0n": ["Mark Ruffalo"],
+        "npub1y8av7a5337erepxphjf50c9p4w5ghu6zu56fjqklpw0n06d7wvgqwh5cy0": ["Tor Project"],
+        "npub1hjugp75htg9zx2xhkk0h2zen47yfx9de3mkade4g4q7m9tn56atqwhq06v": ["Digital Courage"],
+        "npub1dt25tmqsqh6xp9v6ewcgwm4q3cp93n9atenac69v7h2kw0fa8l0qx2z3ug": ["Stray Cat Observer"],
+        "npub1yegarmnp85dj05k7292mhm0m4jhv7yr7znq2tncsnthtshsn5xns283nns": ["JF Martin"],
         "npub1ylccvgzdlan2vyh4snx9u8kjpk8580tm2ecxmvv72mzem3xevt9qw0z7ks": ["Elon Musk's Jet"],
+        "npub1c8jd3qucegcz4qtrztvfj5vhag9c57q23dsvne07yz2l6x2h87ssham228": ["Guido Kühn"],
+        "npub1z3mkez22qs9j4nve8dg08m8wxave66yc2q8zrmmxjm9f3pt5wfmqslfm29": ["Yogthos"],
+        "npub1ym3ynkrv78fet2l3d83n6vek0lkjcjd6mz93ksx2zuz7jlnh53rsr67jpq": ["Laszlo"],
         "npub1lunaq893u4hmtpvqxpk8hfmtkqmm7ggutdtnc4hyuux2skr4ttcqr827lj": ["Stuart Bowman"],
+        "npub1qhldxsy0v533gd64fge20cw9y7mtyevhrelh9nusddqfwyw4euvsrt66cz": ["Andreas Schneider"],
+        "npub1nwwtpxvzgjtspmyeuqsxlmk5rum8zgmlcsum8t55dggsaytm0kdqs2etu5": ["Kalou"],
         "npub1c878wu04lfqcl5avfy3p5x83ndpvedaxv0dg7pxthakq3jqdyzcs2n8avm": ["Ben Arc"],
+        "npub1xz5g8uqpmg3mqvezjhfnev660m0h476wk3rssra44fn87gwgequqwra02a": ["Lahmienwski Lab"],
+        "npub1plx4lff553p6kryg2vkrf47h82lcsvjespfdcv5zmzmn03429psst9hnwk": ["Dylan"],
+        "npub1cl3098w2krckyfyyzcnnefltuggvj0ke32p3kag88v3wsx5j4y8q5e69y2": ["Leaa"]
     ]
     
     // MARK: - Fetching
@@ -615,6 +676,10 @@ public class Event: NosManagedObject {
             
         case .mute:
             hydrateMuteList(from: jsonEvent, context: context)
+        case .repost:
+            
+            hydrateDefault(from: jsonEvent, context: context)
+            parseContent(from: jsonEvent, context: context)
             
         default:
             hydrateDefault(from: jsonEvent, context: context)
@@ -757,6 +822,22 @@ public class Event: NosManagedObject {
         Task { @MainActor in
             currentUser.author?.muted = false
         }
+    }
+    
+    /// Tries to parse a new event out of the given jsonEvent's `content` field.
+    @discardableResult
+    func parseContent(from jsonEvent: JSONEvent, context: NSManagedObjectContext) -> Event? {
+        do {
+            if let contentData = jsonEvent.content.data(using: .utf8) {
+                let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: contentData)
+                return try Event().createIfNecessary(jsonEvent: jsonEvent, relay: nil, context: context)
+            }
+        } catch {
+            Log.error("Could not parse content for jsonEvent: \(jsonEvent)")
+            return nil
+        }
+        
+        return nil
     }
     
     // MARK: - Helpers
@@ -1004,6 +1085,20 @@ public class Event: NosManagedObject {
         if let rootReference, let rootNote = rootReference.referencedEvent {
             return rootNote
         }
+        return nil
+    }
+    
+    /// Returns the event this note is reposting, if this note is a kind 6 repost.
+    func repostedNote() -> Event? {
+        guard kind == EventKind.repost.rawValue else {
+            return nil
+        }
+        
+        if let reference = eventReferences.firstObject as? EventReference,
+            let repostedNote = reference.referencedEvent {
+            return repostedNote
+        }
+        
         return nil
     }
     
