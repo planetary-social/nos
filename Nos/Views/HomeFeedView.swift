@@ -52,7 +52,7 @@ struct HomeFeedView: View {
     func subscribeToNewEvents() async {
         await cancelSubscriptions()
         
-        let followedKeys = currentUser.socialGraph.followedKeys 
+        let followedKeys = await Array(currentUser.socialGraph.followedKeys)
             
         if !followedKeys.isEmpty {
             // TODO: we could miss events with this since filter
@@ -214,16 +214,6 @@ struct HomeFeedView: View {
             } else {
                 Task { await cancelSubscriptions() }
             }
-        }
-        .task {
-            currentUser.socialGraph.followedKeys.publisher
-                .removeDuplicates()
-                .debounce(for: 0.2, scheduler: RunLoop.main)
-                .filter { _ in self.isVisible == true }
-                .sink(receiveValue: { _ in
-                    Task { await subscribeToNewEvents() }
-                })
-                .store(in: &cancellables)
         }
     }
 }

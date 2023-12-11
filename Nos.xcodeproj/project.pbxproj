@@ -1005,6 +1005,7 @@
 				C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */,
 				C9F84C1B298DBBF400C6714D /* Data+Sha.swift */,
 				C942566829B66A2800C4202C /* Date+Elapsed.swift */,
+				C913DA0B2AEB2EBF003BDD6D /* FetchRequestPublisher.swift */,
 				C987F85729BA981800B44E7A /* Font.swift */,
 				C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */,
 				C9F0BB6829A5039D000547FC /* Int+Bool.swift */,
@@ -1013,6 +1014,7 @@
 				C97A1C8D29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift */,
 				C93EC2F329C34C860012EE2A /* NSPredicate+Bool.swift */,
 				C93EC2F629C351470012EE2A /* Optional+Unwrap.swift */,
+				C99721CA2AEBED26004EBEAB /* String+Empty.swift */,
 				C9F204662ADEDBA80029A858 /* String+Extra.swift */,
 				C9ADB13729928CC30075E7F8 /* String+Hex.swift */,
 				C9DEC002298945150078B43A /* String+Lorem.swift */,
@@ -1022,8 +1024,6 @@
 				C92DF80429C25DE900400561 /* URL+Extensions.swift */,
 				C9F204622ADEDB910029A858 /* Web3Utils.swift */,
 				C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */,
-				C913DA0B2AEB2EBF003BDD6D /* FetchRequestPublisher.swift */,
-				C99721CA2AEBED26004EBEAB /* String+Empty.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";

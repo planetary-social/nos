@@ -24,7 +24,6 @@ struct NoteCard: View {
     @State private var userTappedShowOutOfNetwork = false
     @State private var replyCount = 0
     @State private var replyAvatarURLs = [URL]()
-    @State private var reportingAuthors = [Author]()
     @State private var reports = [Event]()
     @State private var warningController = NoteWarningController()
     
@@ -149,8 +148,6 @@ struct NoteCard: View {
             if note.isStub {
                 _ = await relayService.requestEvent(with: note.identifier)
             } 
-            self.reportingAuthors = note.reportingAuthors(followedBy: currentUser)
-            // print(self.reportingAuthors)
         }
         .onAppear {
             Task(priority: .userInitiated) {

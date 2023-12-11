@@ -16,9 +16,9 @@ enum AuthorError: Error {
 }
 
 @objc(Author)
-public class Author: NosManagedObject {
+@Observable public class Author: NosManagedObject {
     
-    @Dependency(\.currentUser) var currentUser
+    @Dependency(\.currentUser) @ObservationIgnored var currentUser
     
     var npubString: String? {
         publicKey?.npub

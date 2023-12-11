@@ -266,10 +266,6 @@ extension RelayService {
         Log.debug("from \(socket.host): EVENT type: \(eventJSON["kind"] ?? "nil") subID: \(subscriptionID)")
         #endif
 
-        if await !shouldParseEvent(responseArray: responseArray, json: eventJSON) {
-            return
-        }
-        
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: eventJSON)
             let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
@@ -380,24 +376,6 @@ extension RelayService {
         } catch {
             print("error parsing response: \(response)\nerror: \(error.localizedDescription)")
         }
-    }
-     
-    func shouldParseEvent(responseArray: [Any], json eventJSON: [String: Any]) async -> Bool {
-        // Drop out of network subscriptions if the filter has inNetwork == true
-        if let subscriptionID = responseArray[safe: 1] as? RelaySubscription.ID,
-            let authorKey = eventJSON[JSONEvent.CodingKeys.pubKey.rawValue] as? HexadecimalString,
-            let subscription = await subscriptions.subscription(from: subscriptionID) {
-            if subscription.filter.inNetwork {
-                let eventInNetwork = await currentUser.socialGraph.contains(authorKey) 
-                if !eventInNetwork {
-                    let eventID = eventJSON[JSONEvent.CodingKeys.id.rawValue] ?? "nil"
-                    Log.debug("Dropping out of network event \(eventID).")
-                    return false
-                }
-            }
-        }
-        
-        return true
     }
 }
 
