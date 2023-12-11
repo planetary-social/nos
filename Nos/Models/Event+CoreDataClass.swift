@@ -689,6 +689,10 @@ public class Event: NosManagedObject {
         case .mute:
             hydrateMuteList(from: jsonEvent, context: context)
             
+        case .repost:
+            hydrateDefault(from: jsonEvent, context: context)
+            parseContent(from: jsonEvent, context: context)
+            
         default:
             hydrateDefault(from: jsonEvent, context: context)
         }
@@ -830,6 +834,22 @@ public class Event: NosManagedObject {
         Task { @MainActor in
             currentUser.author?.muted = false
         }
+    }
+    
+    /// Tries to parse a new event out of the given jsonEvent's `content` field.
+    @discardableResult
+    func parseContent(from jsonEvent: JSONEvent, context: NSManagedObjectContext) -> Event? {
+        do {
+            if let contentData = jsonEvent.content.data(using: .utf8) {
+                let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: contentData)
+                return try Event().createIfNecessary(jsonEvent: jsonEvent, relay: nil, context: context)
+            }
+        } catch {
+            Log.error("Could not parse content for jsonEvent: \(jsonEvent)")
+            return nil
+        }
+        
+        return nil
     }
     
     // MARK: - Helpers
@@ -1077,6 +1097,20 @@ public class Event: NosManagedObject {
         if let rootReference, let rootNote = rootReference.referencedEvent {
             return rootNote
         }
+        return nil
+    }
+    
+    /// Returns the event this note is reposting, if this note is a kind 6 repost.
+    func repostedNote() -> Event? {
+        guard kind == EventKind.repost.rawValue else {
+            return nil
+        }
+        
+        if let reference = eventReferences.firstObject as? EventReference,
+            let repostedNote = reference.referencedEvent {
+            return repostedNote
+        }
+        
         return nil
     }
     

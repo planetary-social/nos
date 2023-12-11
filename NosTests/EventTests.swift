@@ -111,6 +111,25 @@ final class EventTests: XCTestCase {
         XCTAssertEqual(replies?.count, 2)
     }
     
+    func testParseRepost() throws {
+        // Arrange
+        let sampleData = try Data(contentsOf: Bundle.current.url(forResource: "sample_repost", withExtension: "json")!)
+        let sampleEventID = "f41e430f632b1e747da7efbb0ce11616876851e2fa3bbac440101c1b8a091152"
+        let repostedEventID = "f82507f7c770a39d0eabf276ced34fbd6a172be869bd3a3231c9c0272f405008"
+        let repostedEventContents = "#kraftwerk https://v.nostr.build/lx7e.mp4 "
+        let testContext = persistenceController.container.viewContext
+        
+        // Act
+        let events = try EventProcessor.parse(jsonData: sampleData, from: nil, in: persistenceController)
+        let sampleEvent = try XCTUnwrap(events.first(where: { $0.identifier == sampleEventID }))
+        
+        // Assert
+        XCTAssertEqual(sampleEvent.identifier, sampleEventID)
+        let repostedEvent = try XCTUnwrap(sampleEvent.repostedNote())
+        XCTAssertEqual(repostedEvent.identifier, repostedEventID)
+        XCTAssertEqual(repostedEvent.content, repostedEventContents)
+    }
+    
     func testSerializedEventForSigning() throws {
         // Arrange
         let testContext = persistenceController.container.viewContext
@@ -370,6 +389,37 @@ final class EventTests: XCTestCase {
         testEvent.addToEventReferences(mention)
         
         XCTAssertNil(testEvent.referencedNote())
+    }
+    
+    func testRepostedNote() throws {
+        let testContext = persistenceController.container.viewContext
+        let testEvent = try createTestEvent(in: testContext)
+        testEvent.kind = 6
+        
+        let mention = try EventReference(
+            jsonTag: ["e", "646daa2f5d2d990dc98fb50a6ce8de65d77419cee689d7153c912175e85ca95d"], 
+            context: testContext
+        )
+        testEvent.addToEventReferences(mention)
+        
+        XCTAssertEqual(
+            testEvent.repostedNote()?.identifier, 
+            "646daa2f5d2d990dc98fb50a6ce8de65d77419cee689d7153c912175e85ca95d"
+        )
+    }
+    
+    func testRepostedNoteGivenNonRepost() throws {
+        let testContext = persistenceController.container.viewContext
+        let testEvent = try createTestEvent(in: testContext)
+        testEvent.kind = 1
+        
+        let mention = try EventReference(
+            jsonTag: ["e", "646daa2f5d2d990dc98fb50a6ce8de65d77419cee689d7153c912175e85ca95d"], 
+            context: testContext
+        )
+        testEvent.addToEventReferences(mention)
+        
+        XCTAssertEqual(testEvent.repostedNote()?.identifier, nil)
     }
 
     // MARK: - Helpers
