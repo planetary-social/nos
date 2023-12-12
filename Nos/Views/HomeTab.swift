@@ -12,8 +12,8 @@ struct HomeTab: View {
     
     @ObservedObject var user: Author
     
-    @EnvironmentObject var router: Router
-    @EnvironmentObject var currentUser: CurrentUser
+    @EnvironmentObject private var router: Router
+    @Environment(CurrentUser.self) var currentUser
     
     var body: some View {
         NavigationStack(path: $router.homeFeedPath) {
@@ -35,6 +35,7 @@ struct HomeTab: View {
                 .navigationDestination(for: ReplyToNavigationDestination.self) { destination in
                     RepliesView(note: destination.note, showKeyboard: true)
                 }
+                .navigationDestination(for: URL.self) { url in URLView(url: url) }
         }
     }
 }

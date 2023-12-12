@@ -31,9 +31,6 @@ struct StackedAvatarsView: View {
             width: avatarUrls.isEmpty ? 0 : totalSize + CGFloat(Int(totalSize) / 2 * (avatarUrls.count - 1)),
             height: totalSize
         )
-        .background(
-            Color.hashtagBg.cornerRadius(99)
-        )
     }
 
     private var totalSize: CGFloat {
@@ -88,6 +85,6 @@ struct StackedAvatarsView_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
         }
         .padding()
-        .background(Color.cardBackground)
+        .background(Color.previewBg)
     }
 }

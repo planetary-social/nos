@@ -25,38 +25,52 @@ extension Publisher {
     }
 }
 
-class NoteWarningController: NSObject, ObservableObject {
+@Observable @MainActor class NoteWarningController {
     
-    @Published var showWarning = false
-    @Published var userHidWarning = false
-    @Published var outOfNetwork = false
+    var showWarning: Bool {
+        if userHidWarning {
+            return false
+        } else if showReportWarnings && !(noteReports.isEmpty || !authorReports.isEmpty) {
+            return true
+        } else if shouldHideOutOfNetwork && showOutOfNetworkWarning && outOfNetwork {
+            return true
+        } else {
+            return false
+        }
+    }
+    var userHidWarning = false 
+    var outOfNetwork = false
     
-    @Published var note: Event?
-    @Published var shouldHideOutOfNetwork = true
-    @Published private var showReportWarnings = true
-    @Published private var showOutOfNetworkWarning = true
+    var note: Event? {
+        didSet { 
+            notePublisher.send(note)
+        }
+    }
+    var shouldHideOutOfNetwork = true
+    private var showReportWarnings = true
+    private var showOutOfNetworkWarning = true
     
-    @Dependency(\.currentUser) var currentUser
-    @Dependency(\.persistenceController) var persistenceController
-    @Dependency(\.userDefaults) var userDefaults
+    @ObservationIgnored @Dependency(\.currentUser) var currentUser
+    @ObservationIgnored @Dependency(\.persistenceController) var persistenceController
+    @ObservationIgnored @Dependency(\.userDefaults) var userDefaults
     
-    @Published var noteReports = [Event]()
-    @Published var authorReports = [Event]()
+    var noteReports = [Event]() 
+    var authorReports = [Event]() 
     private var cancellables = [AnyCancellable]()
     private var noteReportsWatcher: NSFetchedResultsController<Event>?
     private var authorReportsWatcher: NSFetchedResultsController<Event>?
+    private var notePublisher = CurrentValueSubject<Event?, Never>(nil)
     
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var objectContext: NSManagedObjectContext!
     
     // This function is too long, I should break it up into nicely named functions.
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
-    override init() {
-        super.init()
+    // swiftlint:disable:next function_body_length
+    init() {
         self.objectContext = persistenceController.viewContext
         
         /// Watch for new reports when the note is set
-        $note
+        notePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] note in
                 guard let self else {
@@ -80,14 +94,12 @@ class NoteWarningController: NSObject, ObservableObject {
                 FetchedResultsControllerPublisher(fetchedResultsController: noteReportsWatcher)
                     .publisher
                     .asyncMap { (events: [Event]?) -> [Event] in
-                        await MainActor.run {
-                            var eventsFromFollowedAuthors = [Event]()
-                            for event in events ?? [] where
-                                self.currentUser.socialGraph.follows(event.author?.hexadecimalPublicKey) {
-                                    eventsFromFollowedAuthors.append(event)
-                            }
-                            return eventsFromFollowedAuthors
+                        var eventsFromFollowedAuthors = [Event]()
+                        for event in events ?? [] where
+                        await self.currentUser.socialGraph.follows(event.author?.hexadecimalPublicKey) {
+                            eventsFromFollowedAuthors.append(event)
                         }
+                        return eventsFromFollowedAuthors
                     } 
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] followedReports in
@@ -107,14 +119,12 @@ class NoteWarningController: NSObject, ObservableObject {
                     FetchedResultsControllerPublisher(fetchedResultsController: authorReportsWatcher)
                         .publisher
                         .asyncMap { (events: [Event]?) -> [Event] in
-                            await MainActor.run {
-                                var eventsFromFollowedAuthors = [Event]()
-                                for event in events ?? [] where 
-                                self.currentUser.socialGraph.follows(event.author?.hexadecimalPublicKey) {
-                                    eventsFromFollowedAuthors.append(event)
-                                }
-                                return eventsFromFollowedAuthors
+                            var eventsFromFollowedAuthors = [Event]()
+                            for event in events ?? [] where 
+                            await self.currentUser.socialGraph.follows(event.author?.hexadecimalPublicKey) {
+                                eventsFromFollowedAuthors.append(event)
                             }
+                            return eventsFromFollowedAuthors
                         } 
                         .receive(on: DispatchQueue.main)
                         .sink(receiveValue: { [weak self] followedReports in
@@ -125,36 +135,14 @@ class NoteWarningController: NSObject, ObservableObject {
             }
             .store(in: &cancellables)
         
-        $note
+        notePublisher
             .sink { note in
                 Task { @MainActor in 
                     if let authorKey = note?.author?.hexadecimalPublicKey {
-                        self.outOfNetwork = !self.currentUser.socialGraph.contains(authorKey)
+                        self.outOfNetwork = await !self.currentUser.socialGraph.isInNetwork(authorKey)
                     } else {
                         self.outOfNetwork = false
                     }
-                }
-            }
-            .store(in: &cancellables)
-        
-        /// Update the `showWarning` property when any of the inputs change
-        $userHidWarning
-            .combineLatest($noteReports, $authorReports, $outOfNetwork)
-            .sink { [weak self] (combined) in
-                let (userHidWarning, noteReports, authorReports, outOfNetwork) = combined
-                
-                guard let self else {
-                    return 
-                }
-                
-                if userHidWarning {
-                    self.showWarning = false
-                } else if showReportWarnings && !(noteReports.isEmpty || !authorReports.isEmpty) {
-                    self.showWarning = true
-                } else if shouldHideOutOfNetwork && showOutOfNetworkWarning && outOfNetwork {
-                    self.showWarning = true
-                } else {
-                    self.showWarning = false
                 }
             }
             .store(in: &cancellables)

@@ -18,7 +18,7 @@ struct RelaysDestination: Hashable {
 struct RelayView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     @ObservedObject var author: Author
     
     @State var newRelayAddress: String = ""
@@ -172,7 +172,7 @@ struct RelayView: View {
     }
     
     func publishChanges() async {
-        let followKeys = currentUser.socialGraph.followedKeys 
+        let followKeys = await Array(currentUser.socialGraph.followedKeys)
         await currentUser.publishContactList(tags: followKeys.pTags)
     }
 

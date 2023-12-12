@@ -13,7 +13,7 @@ import Dependencies
 
 // Manages the app's navigation state.
 @MainActor class Router: ObservableObject {
-    
+
     @Published var homeFeedPath = NavigationPath()
     @Published var discoverPath = NavigationPath()
     @Published var notificationsPath = NavigationPath()
@@ -21,7 +21,7 @@ import Dependencies
     @Published var sideMenuPath = NavigationPath()
     @Published var selectedTab = AppDestination.home
     @Dependency(\.persistenceController) private var persistenceController
-    
+
     var currentPath: Binding<NavigationPath> {
         if sideMenuOpened {
             return Binding(get: { self.sideMenuPath }, set: { self.sideMenuPath = $0 })
@@ -29,9 +29,9 @@ import Dependencies
 
         return path(for: selectedTab)
     }
-    
+
     @Published var userNpubPublicKey = ""
-    
+
     @Published private(set) var sideMenuOpened = false
 
     func toggleSideMenu() {
@@ -39,27 +39,27 @@ import Dependencies
             sideMenuOpened.toggle()
         }
     }
-    
+
     func closeSideMenu() {
         withAnimation(.easeIn(duration: 0.2)) {
             sideMenuOpened = false
         }
     }
-    
+
     /// Pushes the given destination item onto the current NavigationPath.
     func push<D: Hashable>(_ destination: D) {
         currentPath.wrappedValue.append(destination)
     }
-    
+
     func pop() {
         currentPath.wrappedValue.removeLast()
     }
-    
+
     func openOSSettings() {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
-    
+
     func showNewNoteView(contents: String?) {
         selectedTab = .newNote(contents)
     }
@@ -95,17 +95,19 @@ import Dependencies
 }
 
 extension Router {
-    
-    func open(url: URL, with context: NSManagedObjectContext) {
+
+    nonisolated func open(url: URL, with context: NSManagedObjectContext) {
         let link = url.absoluteString
         let identifier = String(link[link.index(after: link.startIndex)...])
-        // handle mentions. mention link will be prefixed with "@" followed by
-        // the hex format pubkey of the mentioned author
-        do {
+
+        Task { @MainActor in
+            do {
+                // handle mentions. mention link will be prefixed with "@" followed by
+                // the hex format pubkey of the mentioned author
             if link.hasPrefix("@") {
-                push(try Author.findOrCreate(by: identifier, context: persistenceController.parseContext))
+                push(try Author.findOrCreate(by: identifier, context: persistenceController.viewContext))
             } else if link.hasPrefix("%") {
-                push(try Event.findOrCreateStubBy(id: identifier, context: persistenceController.parseContext))
+                push(try Event.findOrCreateStubBy(id: identifier, context: persistenceController.viewContext))
             } else if url.scheme == "http" || url.scheme == "https" {
                 push(url)
             } else {
@@ -113,6 +115,7 @@ extension Router {
             }
         } catch {
             Log.optional(error)
+            }
         }
     }
 }

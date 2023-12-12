@@ -19,7 +19,7 @@ struct RepliesView: View {
     
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
 
     @State private var reply = EditableNoteText()
@@ -110,6 +110,7 @@ struct RepliesView: View {
                             hideOutOfNetwork: false,
                             showReplyCount: false,
                             displayRootMessage: true,
+                            isTapEnabled: false,
                             replyAction: { _ in self.focusTextView = true },
                             tapAction: { tappedEvent in tappedEvent.referencedNote().unwrap { router.push($0) } }
                         )
@@ -177,7 +178,7 @@ struct RepliesView: View {
             .task {
                 await computeDirectReplies()
             }
-            .onChange(of: replies.count) { _ in
+            .onChange(of: replies.count) { 
                 Task {
                     await computeDirectReplies()
                 }
@@ -301,8 +302,8 @@ struct RepliesView_Previews: PreviewProvider {
         .environment(\.managedObjectContext, previewContext)
         .environmentObject(emptyRelayService)
         .environmentObject(router)
-        .environmentObject(currentUser)
+        .environment(currentUser)
         .padding()
-        .background(Color.cardBackground)
+        .background(Color.previewBg)
     }
 }

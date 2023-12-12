@@ -22,11 +22,6 @@ struct NoteTextEditor: View {
     /// When we detect the user typed a '@', we save the position of that character here and open a screen
     /// that lets the user select someone to mention, then we can replace this character with the full mention.
     @State private var mentionOffset: Int?
-
-    /// State containing the very last state before `text` changes
-    ///
-    /// We need this so that we can compare and decide what has changed.
-    @State private var oldText = EditableNoteText()
     
     /// Setting this to true will pop up the mention list to select an author to mention in the text editor.
     private var showAvailableMentions: Binding<Bool> {
@@ -44,7 +39,7 @@ struct NoteTextEditor: View {
                 .placeholder(when: text.isEmpty, placeholder: {
                     VStack {
                         placeholder.view
-                            .foregroundColor(.secondaryText)
+                            .foregroundColor(.secondaryTxt)
                             .padding(.top, 10)
                             .padding(.leading, 6)
                         Spacer()
@@ -55,11 +50,9 @@ struct NoteTextEditor: View {
         }
         .frame(maxWidth: .infinity)
         .background { Color.appBg }
-        .onChange(of: text) { newValue in
-            let newText = newValue
+        .onChange(of: text) { oldText, newText in
             let difference = newText.difference(from: oldText)
             guard difference.count == 1, let change = difference.first else {
-                oldText = newText
                 return
             }
             switch change {
@@ -73,7 +66,6 @@ struct NoteTextEditor: View {
             default:
                 break
             }
-            oldText = newText
         }
         .sheet(isPresented: showAvailableMentions) {
             NavigationStack {
@@ -94,7 +86,6 @@ struct NoteTextEditor: View {
             object: nil,
             userInfo: ["author": author, "guid": guid]
         )
-        oldText = text
         mentionOffset = nil
     }
 }

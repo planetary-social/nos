@@ -22,14 +22,14 @@ enum CurrentUserError: Error {
 }
 
 // swiftlint:disable type_body_length superfluous_disable_command
-class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
+@Observable class CurrentUser: NSObject, NSFetchedResultsControllerDelegate {
     
-    @Dependency(\.analytics) private var analytics
-    @Dependency(\.crashReporting) private var crashReporting
-    @Dependency(\.persistenceController) private var persistenceController
-    @Dependency(\.pushNotificationService) private var pushNotificationService
-    @Dependency(\.relayService) private var relayService
-    @Dependency(\.unsAPI) private var unsAPI
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
+    @ObservationIgnored @Dependency(\.crashReporting) private var crashReporting
+    @ObservationIgnored @Dependency(\.persistenceController) private var persistenceController
+    @ObservationIgnored @Dependency(\.pushNotificationService) private var pushNotificationService
+    @ObservationIgnored @Dependency(\.relayService) private var relayService
+    @ObservationIgnored @Dependency(\.unsAPI) private var unsAPI
     
     // TODO: it's time to cache this
     var keyPair: KeyPair? {
@@ -49,7 +49,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         _privateKeyHex
     }
     
-    @Published var usbcAddress: USBCAddress? 
+    var usbcAddress: USBCAddress? 
 
     @MainActor func setPrivateKeyHex(_ newValue: String?) async {
         guard let privateKeyHex = newValue else {
@@ -84,7 +84,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     // swiftlint:disable implicitly_unwrapped_optional
     @MainActor var viewContext: NSManagedObjectContext!
     var backgroundContext: NSManagedObjectContext!
-    @Published var socialGraph: SocialGraphCache!
+    var socialGraph: SocialGraphCache!
     // swiftlint:enable implicitly_unwrapped_optional
     
     var subscriptions: [String] = []
@@ -94,9 +94,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
     var onboardingRelays: [Relay] = []
 
     // TODO: prevent this from being accessed from contexts other than the view context. Or maybe just get rid of it.
-    @MainActor @Published var author: Author?
-    
-    @MainActor @Published var inNetworkAuthors = [Author]()
+    @MainActor var author: Author?
     
     private var authorWatcher: NSFetchedResultsController<Author>?
 
@@ -104,7 +102,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         super.init()
         self.viewContext = persistenceController.viewContext
         self.backgroundContext = persistenceController.newBackgroundContext()
-        self.socialGraph = SocialGraphCache(userKey: nil, context: backgroundContext)
+        self.socialGraph = SocialGraphCache(userKey: nil, context: persistenceController.newBackgroundContext())
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             Log.info("CurrentUser loaded a private key from keychain")
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
@@ -126,7 +124,6 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
         onboardingRelays = []
         Task { await relayService.decrementSubscriptionCount(for: subscriptions) }
         subscriptions = []
-        inNetworkAuthors = []
         setUp()
     }
     
@@ -424,7 +421,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
 
         Log.debug("Following \(followKey)")
 
-        var followKeys = socialGraph.followedKeys
+        var followKeys = await Array(socialGraph.followedKeys)
         followKeys.append(followKey)
         
         // Update author to add the new follow
@@ -452,7 +449,7 @@ class CurrentUser: NSObject, ObservableObject, NSFetchedResultsControllerDelegat
 
         Log.debug("Unfollowing \(unfollowedKey)")
         
-        let stillFollowingKeys = socialGraph.followedKeys
+        let stillFollowingKeys = await Array(socialGraph.followedKeys)
             .filter { $0 != unfollowedKey }
         
         // Update author to only follow those still following

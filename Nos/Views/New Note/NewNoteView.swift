@@ -15,7 +15,7 @@ struct NewNoteView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject var currentUser: CurrentUser
+    @Environment(CurrentUser.self) var currentUser
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
 
@@ -60,7 +60,7 @@ struct NewNoteView: View {
                         author: author,
                         isPresented: $showRelayPicker
                     )
-                    .onChange(of: selectedRelay) { _ in
+                    .onChange(of: selectedRelay) { _, _ in
                         withAnimation {
                             showRelayPicker = false
                         }
@@ -88,7 +88,7 @@ struct NewNoteView: View {
                 }
                 label: {
                     Localized.cancel.view
-                        .foregroundColor(.secondaryText)
+                        .foregroundColor(.secondaryTxt)
                 },
                 trailing: ActionButton(title: Localized.post, action: postAction)
                     .frame(height: 22)

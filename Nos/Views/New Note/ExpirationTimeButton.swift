@@ -23,7 +23,7 @@ struct ExpirationTimeButton: View {
                         .foregroundColor(.primaryTxt)
                         .bold()
                     PlainText(model.unit)
-                        .foregroundColor(.secondaryText)
+                        .foregroundColor(.secondaryTxt)
                         .font(.clarityCaption2)
                 }
                 
@@ -31,14 +31,14 @@ struct ExpirationTimeButton: View {
                     Image(systemName: "xmark")
                         .font(.callout)
                         .fontWeight(.heavy)
-                        .foregroundColor(.secondaryAction)
+                        .foregroundColor(.primaryTxt)
                 }
             }
             .padding(.horizontal, showClearButton ? 6 : 4)
             .padding(.vertical, 6)
             .frame(minWidth: minSize?.wrappedValue?.width, minHeight: minSize?.wrappedValue?.height)
             .cornerRadius(5)
-            .background(Color.appBg)
+            .background(Color.buttonBevelBg)
             
             if isSelected {
                 textLayer

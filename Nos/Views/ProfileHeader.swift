@@ -14,12 +14,9 @@ struct ProfileHeader: View {
     @ObservedObject var author: Author
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
 
     @State private var subscriptionId: String = ""
-    
-    @State private var nip05Identifier: String = ""
-    @State private var verifiedNip05Identifier: Bool?
     
     var followsRequest: FetchRequest<Follow>
     var followsResult: FetchedResults<Follow> { followsRequest.wrappedValue }
@@ -83,56 +80,19 @@ struct ProfileHeader: View {
                             .foregroundColor(Color.primaryTxt)
                         
                         // NIP-05
-                        if let nip05Identifier = author.nip05, !nip05Identifier.isEmpty {
-                            Button {
-                                let domain = relayService.domain(from: nip05Identifier)
-                                let urlString = "https://\(domain)"
-                                guard let url = URL(string: urlString) else { return }
-                                UIApplication.shared.open(url)
-                            } label: {
-                                Group {
-                                    if verifiedNip05Identifier == true {
-                                        PlainText("\(relayService.identifierToShow(nip05Identifier))")
-                                            .foregroundColor(.primaryTxt)
-                                    } else if verifiedNip05Identifier == false {
-                                        PlainText(nip05Identifier)
-                                            .strikethrough()
-                                            .foregroundColor(.secondaryText)
-                                    } else {
-                                        PlainText("\(relayService.identifierToShow(nip05Identifier))")
-                                            .foregroundColor(.secondaryText)
-                                    }
-                                }
-                                .font(.claritySubheadline)
-                                .multilineTextAlignment(.leading)
-                            }
+                        NIP05View(author: author)
                             .padding(.top, 3)
-                        }
                         
                         // Universal name
-                        if !(author.uns ?? "").isEmpty {
-                            Button {
-                                if let url = relayService.unsURL(from: author.uns ?? "") {
-                                    UIApplication.shared.open(url)
-                                }
-                            } label: {
-                                HStack(spacing: 3) {
-                                    Image.unsLogoLight
-                                    PlainText(author.uns ?? "")
-                                        .foregroundColor(.secondaryText)
-                                        .font(.claritySubheadline)
-                                        .multilineTextAlignment(.leading)
-                                }
-                            }
-                        }
-
+                        UNSNameView(author: author)
+                            
                         if author != currentUser.author, let currentUser = currentUser.author {
                             HStack {
                                 FollowButton(currentUserAuthor: currentUser, author: author)
                                 if author.muted {
                                     Text(Localized.muted.string)
                                         .font(.subheadline)
-                                        .foregroundColor(Color.secondaryText)
+                                        .foregroundColor(Color.secondaryTxt)
                                 }
                             }
                             .padding(.top, 3)
@@ -184,18 +144,6 @@ struct ProfileHeader: View {
                 endPoint: .bottom
             )
         )
-        .task(priority: .userInitiated) {
-            if let nip05Identifier = author.nip05,
-                let publicKey = author.publicKey?.hex {
-                let verifiedNip05Identifier = await relayService.verifyNIP05(
-                    identifier: nip05Identifier,
-                    userPublicKey: publicKey
-                )
-                withAnimation {
-                    self.verifiedNip05Identifier = verifiedNip05Identifier
-                }
-            }
-        }
         .onDisappear {
             Task(priority: .userInitiated) {
                 await relayService.decrementSubscriptionCount(for: subscriptionId)
@@ -213,7 +161,7 @@ struct ProfileHeader: View {
         ProfileHeader(author: previewData.previewAuthor)
             .inject(previewData: previewData)
             .padding()
-            .background(Color.cardBackground)
+            .background(Color.previewBg)
     }
 }
 
@@ -255,7 +203,7 @@ struct ProfileHeader: View {
     .inject(previewData: previewData)
     .previewDevice("iPhone SE (2nd generation)")
     .padding()
-    .background(Color.cardBackground)
+    .background(Color.previewBg)
 }
 
 #Preview("UNS") {
@@ -265,6 +213,6 @@ struct ProfileHeader: View {
         ProfileHeader(author: previewData.unsAuthor)
             .inject(previewData: previewData)
             .padding()
-            .background(Color.cardBackground)
+            .background(Color.previewBg)
     }
 }

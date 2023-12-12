@@ -33,7 +33,7 @@ struct WalletConnectErrorView: View {
             HStack {
                 PlainText("\(error.localizedDescription). \(Localized.tryAgainOrContactSupport.string)")
                     .font(.callout)
-                    .foregroundColor(.secondaryText)
+                    .foregroundColor(.secondaryTxt)
                 Spacer()
             }
             

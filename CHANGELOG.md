@@ -9,6 +9,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Added a context menu for the stories in the Home Feed to open the Profile.
+- Update the color palette.
+- Fixed a bug where the app could become unresponsive.
+- Fixed some performance issues for users who follow a large number of accounts.
+- Added the option to copy the NIP-05 identifier when browsing a profile.
+- Tapping on a tab bar icon can let you scroll to top.
+
+## [0.1 (95)] - 2023-11-27Z
+
+- Fixed a bug where a root note could be rendered as a reply
+- Added the option to copy the text content while browsing a note.
+- Fixed UI bugs when displaying the root note of replies.
+- Keep track of read stories.
+- Fix an issue where reposts were not displaying correctly.
+
+## [0.1 (94)] - 2023-11-17Z
+
+- Removed trailing slash from truncated URLs.
+- Add a loading indicator to search results.
+- Change the "Followed by" label on the profile screen to "Followers you know"
+- Fixed a hang on startup.
+- Fixed an issue where links couldn't be opened from the Home tab.
+- Change the "Followed by" label on the profile screen to "Followers you know"
+- Fixed an issue where the Profile view would always show "Following 0" for people you didn't follow.
+- Fix delay in results immediately after opening the discover tab.
+- Fixed the 3d card effect on the Notifications tab.
+- Updated layout for search results and mention autocomplete cards.
 
 ## [0.1 (93)] - 2023-11-10Z
 
@@ -27,6 +53,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix a bug where linking a Universal Name would overwrite your existing NIP-05.
 - Fixed incorrect ellipsis applied to long notes.
 - Changed note rendering to retain more newlines. 
+- Show reposts in stories.
+- Fixed a bug where notes, reposts, and author profiles could fail to load.
+- Show truncated URLs in notes instead of hiding them completely.
+- Keep track of read stories.
 - Fixed a bug with autocorrect on Mac
 
 ## [0.1 (90)] - 2023-10-31Z

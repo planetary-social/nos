@@ -14,10 +14,11 @@ import Logger
 struct ProfileView: View {
     
     @ObservedObject var author: Author
-    
+    var addDoubleTapToPop = false
+
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
     @Dependency(\.unsAPI) private var unsAPI
@@ -51,8 +52,9 @@ struct ProfileView: View {
         author.hexadecimalPublicKey == currentUser.publicKeyHex
     }
     
-    init(author: Author) {
+    init(author: Author, addDoubleTapToPop: Bool = false) {
         self.author = author
+        self.addDoubleTapToPop = addDoubleTapToPop
         _events = FetchRequest(fetchRequest: author.allPostsRequest())
     }
     
@@ -75,7 +77,7 @@ struct ProfileView: View {
             contentsOf: await relayService.requestProfileData(
                 for: authorKey, 
                 lastUpdateMetadata: author.lastUpdatedMetadata, 
-                lastUpdatedContactList: author.lastUpdatedContactList
+                lastUpdatedContactList: nil // always grab contact list because we purge follows aggressively
             )
         )
         
@@ -114,7 +116,8 @@ struct ProfileView: View {
                 ProfileHeader(author: author)
                     .compositingGroup()
                     .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
-                
+                    .id(author.id)
+
                 LazyVStack {
                     if unmutedEvents.isEmpty {
                         Localized.noEventsOnProfile.view
@@ -131,6 +134,9 @@ struct ProfileView: View {
                 .padding(.top, 10)
             }
             .background(Color.appBg)
+            .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { proxy in
+                proxy.scrollTo(author.id)
+            }
         }
         .nosNavigationBar(title: .profileTitle)
         .navigationDestination(for: Event.self) { note in
@@ -147,7 +153,7 @@ struct ProfileView: View {
             FollowsView(title: Localized.follows, authors: destination.follows)
         }
         .navigationDestination(for: FollowersDestination.self) { destination in
-            FollowsView(title: Localized.followedBy, authors: destination.followers)
+            FollowsView(title: Localized.followers, authors: destination.followers)
         }
         .navigationDestination(for: RelaysDestination.self) { destination in
             RelayView(author: destination.author, editable: false)
@@ -238,7 +244,7 @@ struct ProfileView: View {
         .task {
             await computeUnmutedEvents()
         }
-        .onChange(of: author.uns) { _ in
+        .onChange(of: author.uns) { 
             Task {
                 await loadUSBCBalance()
             }
@@ -252,12 +258,12 @@ struct ProfileView: View {
             await refreshProfileFeed()
             await computeUnmutedEvents()
         }
-        .onChange(of: author.muted) { _ in
+        .onChange(of: author.muted) { 
             Task {
                 await computeUnmutedEvents()
             }
         }
-        .onChange(of: author.events.count) { _ in
+        .onChange(of: author.events.count) { 
             Task {
                 await computeUnmutedEvents()
             }

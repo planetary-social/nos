@@ -10,6 +10,7 @@ import SwiftUI
 struct DiscoverGrid: View {
     
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var router: Router
     @FetchRequest(fetchRequest: Event.emptyDiscoverRequest()) var events: FetchedResults<Event>
     @ObservedObject var searchController: SearchController
     
@@ -39,15 +40,40 @@ struct DiscoverGrid: View {
             GeometryReader { geometry in
                 Group {
                     if searchController.query.isEmpty {
-                        StaggeredGrid(list: events, columns: columns) { note in
+                        StaggeredGrid(list: events, columns: columns, spacing: 15) { note in
                             NoteButton(note: note, style: .golden)
+                                .padding(.bottom, 5)
                                 .matchedGeometryEffect(id: note.identifier, in: animation)
+                                .id(note.id)
+                        }
+                        .doubleTapToPop(tab: .discover) { proxy in
+                            if let firstNote = events.first {
+                                proxy.scrollTo(firstNote.id)
+                            }
                         }
                     } else {
                         // Search results
-                        StaggeredGrid(list: searchController.authorSuggestions, columns: columns) { author in
-                            AuthorCard(author: author)
-                                .matchedGeometryEffect(id: author.hexadecimalPublicKey, in: animation)
+                        if searchController.authorSuggestions.isEmpty {
+                            FullscreenProgressView(isPresented: .constant(true))
+                        } else {
+                            ScrollView {
+                                LazyVStack {
+                                    ForEach(searchController.authorSuggestions) { author in
+                                        AuthorCard(author: author) { 
+                                            router.push(author)
+                                        }
+                                        .padding(.horizontal, 15)
+                                        .padding(.top, 10)
+                                        .readabilityPadding()
+                                    }
+                                }
+                                .padding(.top, 5)
+                            }
+                            .doubleTapToPop(tab: .discover) { proxy in
+                                if let firstAuthor = searchController.authorSuggestions.first {
+                                    proxy.scrollTo(firstAuthor.id)
+                                }
+                            }
                         }
                     }
                 }

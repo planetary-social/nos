@@ -10,7 +10,7 @@ import SwiftUI
 /// A view that puts a note behind a content warning if appropriate.
 struct WarningView: View {
     
-    @ObservedObject var controller: NoteWarningController
+    @Bindable var controller: NoteWarningController
     
     var body: some View {
         if !controller.showWarning {
@@ -25,7 +25,7 @@ struct WarningView: View {
 
 struct OutOfNetworkView: View {
     
-    @ObservedObject var controller: NoteWarningController
+    @Bindable var controller: NoteWarningController
     
     @State private var isTextBoxShown = false
     @State private var isOverlayHelpTextBoxShown = false
@@ -53,21 +53,13 @@ struct OutOfNetworkView: View {
                 if self.isOverlayHelpTextBoxShown {
                     Localized.outsideNetworkExplanation.view
                         .font(.body)
-                        .foregroundColor(.secondaryText)
-                        .background {
-                            Color.cardBackground
-                                .blur(radius: 8, opaque: false)
-                        }
+                        .foregroundColor(.primaryTxt)
                         .padding(.horizontal, 24)
                         .fixedSize(horizontal: false, vertical: true)
                 } else {
                     Localized.outsideNetwork.view
                         .font(.body)
-                        .foregroundColor(.secondaryText)
-                        .background {
-                            Color.cardBackground
-                                .blur(radius: 8, opaque: false)
-                        }
+                        .foregroundColor(.primaryTxt)
                         .padding(.horizontal, 24)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -89,7 +81,7 @@ struct OutOfNetworkView: View {
 
 struct OverlayContentReportView: View {
     
-    @ObservedObject var controller: NoteWarningController
+    @Bindable var controller: NoteWarningController
     
     @State private var isTextBoxShown = false
     @State var isOverlayHelpTextBoxShown = false
@@ -120,7 +112,7 @@ struct OverlayContentReportView: View {
                 if self.isOverlayHelpTextBoxShown {
                     Localized.contentWarningExplanation.view
                         .font(.body)
-                        .foregroundColor(.secondaryText)
+                        .foregroundColor(.secondaryTxt)
                         .padding(.horizontal, 24)
                         .fixedSize(horizontal: false, vertical: true)
                         .layoutPriority(1)
@@ -223,19 +215,11 @@ struct ContentWarningMessage: View {
         if type == "author" {
             Text( Localized.userHasBeen )
                 .font(.body)
-                .foregroundColor(.secondaryText)
-                .background {
-                    Color.cardBackground
-                        .blur(radius: 8, opaque: false)
-                }
+                .foregroundColor(.primaryTxt)
         } else if type == "note" {
             Text( Localized.noteHasBeen )
                 .font(.body)
-                .foregroundColor(.secondaryText)
-                .background {
-                    Color.cardBackground
-                        .blur(radius: 8, opaque: false)
-                }
+                .foregroundColor(.primaryTxt)
         }
         if authorNames.count > 1 {
             Text(Localized.reportedByOneAndMore.localizedMarkdown([
@@ -250,16 +234,12 @@ struct ContentWarningMessage: View {
                 "one": firstAuthorSafeName
             ]))
             .font(.body)  // Adjust font and style as needed
-            .foregroundColor(.secondaryText)
+            .foregroundColor(.secondaryTxt)
             .padding(.leading, 25)  // Adjust padding as needed
         }
         
         Text( Localized.reportedFor.localizedMarkdown(["reason": reason]) )
             .font(.body)
-            .foregroundColor(.secondaryText)
-            .background {
-                Color.cardBackground
-                    .blur(radius: 8, opaque: false)
-            }
+            .foregroundColor(.primaryTxt)
     }
 }

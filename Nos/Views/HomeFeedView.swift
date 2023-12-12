@@ -14,10 +14,10 @@ struct HomeFeedView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject var router: Router
-    @EnvironmentObject var currentUser: CurrentUser
-    @Dependency(\.analytics) private var analytics
-    
+    @EnvironmentObject private var router: Router
+    @Environment(CurrentUser.self) var currentUser
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
+
     @FetchRequest var events: FetchedResults<Event>
     @FetchRequest private var authors: FetchedResults<Author>
     
@@ -31,6 +31,7 @@ struct HomeFeedView: View {
 
     @ObservedObject var user: Author
 
+    @State private var stories: [Author] = []
     @State private var selectedStoryAuthor: Author?
     @State private var storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now)!
 
@@ -51,7 +52,7 @@ struct HomeFeedView: View {
     func subscribeToNewEvents() async {
         await cancelSubscriptions()
         
-        let followedKeys = currentUser.socialGraph.followedKeys 
+        let followedKeys = await Array(currentUser.socialGraph.followedKeys)
             
         if !followedKeys.isEmpty {
             // TODO: we could miss events with this since filter
@@ -85,19 +86,13 @@ struct HomeFeedView: View {
                     ScrollView(.vertical, showsIndicators: false) {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 15) {
-                                ForEach(authors) { author in
+                                ForEach(stories) { author in
                                     Button {
                                         withAnimation {
                                             selectedStoryAuthor = author
                                         }
                                     } label: {
-                                        AvatarView(imageUrl: author.profilePhotoURL, size: 54)
-                                            .padding(.vertical, 10)
-                                            .background(
-                                                Circle()
-                                                    .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
-                                                    .frame(width: 58, height: 58)
-                                            )
+                                        StoryAvatarView(author: author)
                                             .contextMenu {
                                                 Button {
                                                     router.push(author)
@@ -109,27 +104,38 @@ struct HomeFeedView: View {
                                 }
                             }
                             .padding(.horizontal, 15)
+                            .padding(.top, 15)
+                            .padding(.bottom, 0)
                         }
-                        .padding(.top, 15)
                         .readabilityPadding()
+                        .id(user.id)
+
                         LazyVStack {
                             ForEach(events) { event in
                                 NoteButton(note: event, hideOutOfNetwork: false)
                                     .padding(.bottom, 15)
                             }
                         }
-                        .padding(.vertical, 15)
+                        .padding(.top, 10)
+                        .padding(.bottom, 15)
                     }
                     .accessibilityIdentifier("home feed")
 
                     StoriesView(
                         cutoffDate: $storiesCutoffDate,
-                        authors: authors,
+                        authors: stories,
                         selectedAuthor: $selectedStoryAuthor
                     )
                     .scaleEffect(isShowingStories ? 1 : 0.5)
                     .opacity(isShowingStories ? 1 : 0)
                     .animation(.default, value: selectedStoryAuthor)
+                }
+                .doubleTapToPop(tab: .home) { proxy in
+                    if isShowingStories {
+                        selectedStoryAuthor = nil
+                    } else {
+                        proxy.scrollTo(user.id)
+                    }
                 }
             }
         }
@@ -175,7 +181,6 @@ struct HomeFeedView: View {
                 }
             }
         }
-        .background(Color.appBg)
         .padding(.top, 1)
         .overlay(Group {
             if !events.contains(where: { !$0.author!.muted }) {
@@ -187,39 +192,53 @@ struct HomeFeedView: View {
         .refreshable {
             date = .now
         }
-        .onChange(of: date) { newDate in
+        .onChange(of: date) { _, newDate in
             events.nsPredicate = Event.homeFeedPredicate(for: user, before: newDate)
+            authors.nsPredicate = user.followedWithNewNotesPredicate(
+                since: Calendar.current.date(byAdding: .day, value: -2, to: newDate)!
+            )
             Task { await subscribeToNewEvents() }
         }
-        .onAppear { 
+        .onAppear {
             if router.selectedTab == .home {
                 isVisible = true 
             }
+            if !isShowingStories {
+                stories = authors.map { $0 }
+            }
+        }
+        .onChange(of: isShowingStories) { _, newValue in
+            if newValue {
+                analytics.enteredStories()
+            } else {
+                analytics.closedStories()
+                stories = authors.map { $0 }
+            }
         }
         .onDisappear { isVisible = false }
-        .onChange(of: isVisible, perform: { isVisible in
+        .onChange(of: isVisible) { 
             if isVisible {
                 analytics.showedHome()
                 Task { await subscribeToNewEvents() }
             } else {
                 Task { await cancelSubscriptions() }
             }
-        })
-        .doubleTapToPop(tab: .home) {
-            if isShowingStories {
-                selectedStoryAuthor = nil
+        }
+    }
+}
+
+fileprivate struct StoryAvatarView: View {
+    var size: CGFloat = 70
+
+    var author: Author
+    var body: some View {
+        AvatarView(imageUrl: author.profilePhotoURL, size: size)
+            .padding(1.5)
+            .overlay(alignment: .center) {
+                Circle()
+                    .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
+                    .frame(width: size, height: size)
             }
-        }
-        .task {
-            currentUser.socialGraph.followedKeys.publisher
-                .removeDuplicates()
-                .debounce(for: 0.2, scheduler: RunLoop.main)
-                .filter { _ in self.isVisible == true }
-                .sink(receiveValue: { _ in
-                    Task { await subscribeToNewEvents() }
-                })
-                .store(in: &cancellables)
-        }
     }
 }
 
@@ -272,7 +291,7 @@ struct ContentView_Previews: PreviewProvider {
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
-            .environmentObject(currentUser)
+            .environment(currentUser)
         
         HomeFeedView(user: user)
             .environment(\.managedObjectContext, emptyPreviewContext)

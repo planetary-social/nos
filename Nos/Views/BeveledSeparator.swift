@@ -9,17 +9,17 @@ import SwiftUI
 
 struct FormSeparator: View {
     var body: some View {
-        Color.cardDivider
+        Color.cardDividerBottom
             .frame(height: 2)
-            .shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 2)
+            .shadow(color: .cardDividerBottomShadow, radius: 0, x: 0, y: 2)
     }
 }
 
 struct BeveledSeparator: View {
     var body: some View {
-        Color.cardDivider
+        Color.cardDividerBottom
             .frame(height: 1)
-            .shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
+            .shadow(color: .cardDividerBottomShadow, radius: 0, x: 0, y: 1)
     }
 }
 

@@ -5,6 +5,7 @@
 //  Created by Matthew Lorentz on 4/21/23.
 //
 
+import Dependencies
 import Logger
 import SwiftUI
 
@@ -15,9 +16,10 @@ struct LikeButton: View {
     /// We use this to give instant feedback when the button is tapped, even though the action it performs is async.
     @State private var tapped = false
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
-    
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
+
     internal init(note: Event) {
         self.note = note
         if let noteID = note.identifier {
@@ -54,7 +56,7 @@ struct LikeButton: View {
             if likeCount > 0 {
                 Text(likeCount.description)
                     .font(.body)
-                    .foregroundColor(.secondaryText)
+                    .foregroundColor(.secondaryTxt)
             }
         }
         .padding(.horizontal, 10)
@@ -111,6 +113,7 @@ struct LikeButton: View {
 
         do {
             try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
+            analytics.likedNote()
         } catch {
             Log.info("Error creating event for like")
         }

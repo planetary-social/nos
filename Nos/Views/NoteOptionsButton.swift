@@ -11,7 +11,7 @@ import Dependencies
 
 struct NoteOptionsButton: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     
     @Dependency(\.analytics) private var analytics
     @Dependency(\.persistenceController) private var persistenceController
@@ -30,7 +30,7 @@ struct NoteOptionsButton: View {
                 showingOptions = true
             } label: {
                 Image(systemName: "ellipsis")
-                    .foregroundColor(.secondaryText)
+                    .foregroundColor(.secondaryTxt)
                     .frame(minWidth: 44, minHeight: 44)
                     // This hack fixes a weird issue where the confirmationDialog wouldn't be shown sometimes. ¯\_(ツ)_/¯
                     .background(showingOptions == true ? .clear : .clear)
@@ -103,7 +103,7 @@ struct NoteOptionsButton: View {
             // TODO: put links back in
             let attrString = await Event.attributedContent(
                 noteID: note.identifier, 
-                context: persistenceController.parseContext
+                context: persistenceController.viewContext
             ) 
             UIPasteboard.general.string = String(attrString.characters)
         }
@@ -141,7 +141,7 @@ struct NoteOptionsView_Previews: PreviewProvider {
                 .preferredColorScheme(.dark)
         }
         .padding()
-        .background(Color.cardBackground)
-        .environmentObject(currentUser)
+        .background(Color.previewBg)
+        .environment(currentUser)
     }
 }

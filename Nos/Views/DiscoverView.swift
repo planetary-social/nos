@@ -14,10 +14,9 @@ struct DiscoverView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject var router: Router
-    @EnvironmentObject var currentUser: CurrentUser
+    @EnvironmentObject private var router: Router
+    @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
-    @State private var lastRequestDate: Date?
 
     @State var showRelayPicker = false
     
@@ -59,7 +58,7 @@ struct DiscoverView: View {
             // TODO: Use a since filter
             let singleRelayFilter = Filter(
                 kinds: [.text, .delete],
-                limit: 100
+                limit: 200
             )
             
             subscriptionIDs.append(
@@ -67,40 +66,15 @@ struct DiscoverView: View {
                 await relayService.openSubscription(with: singleRelayFilter, to: [relayAddress])
             )
         } else {
-            
-            var fetchSinceDate: Date?
-            // Make sure the lastRequestDate was more than a minute ago
-            // to make sure we got all the events from it.
-            if let lastRequestDate {
-                if lastRequestDate.distance(to: .now) > 60 {
-                    fetchSinceDate = lastRequestDate
-                    self.lastRequestDate = Date.now
-                }
-            } else {
-                self.lastRequestDate = Date.now
-            }
-            
             let featuredFilter = Filter(
                 authorKeys: featuredAuthors.compactMap {
                     PublicKey(npub: $0)?.hex
                 },
                 kinds: [.text, .delete],
-                limit: 50,
-                since: fetchSinceDate
+                limit: 200
             )
             
             subscriptionIDs.append(await relayService.openSubscription(with: featuredFilter))
-            
-            // this filter just requests everything for now, because I think requesting all the authors within
-            // two hops is too large of a request and causes the websocket to close.
-            let twoHopsFilter = Filter(
-                kinds: Event.discoverKinds,
-                inNetwork: true,
-                limit: 200,
-                since: fetchSinceDate
-            )
-            
-            subscriptionIDs.append(await relayService.openSubscription(with: twoHopsFilter))
         }
     }
     
@@ -114,7 +88,7 @@ struct DiscoverView: View {
     var body: some View {
         NavigationStack(path: $router.discoverPath) {
             ZStack {
-                if performingInitialLoad {
+                if performingInitialLoad && searchController.query.isEmpty {
                     FullscreenProgressView(
                         isPresented: $performingInitialLoad, 
                         hideAfter: .now() + .seconds(Self.initialLoadTime)
@@ -168,21 +142,20 @@ struct DiscoverView: View {
                 }
             }
             .animation(.easeInOut, value: columns)
-            .doubleTapToPop(tab: .discover)
             .task { 
                 updatePredicate()
             }
             .refreshable {
                 date = .now
             }
-            .onChange(of: relayFilter) { _ in
+            .onChange(of: relayFilter) { 
                 withAnimation {
                     showRelayPicker = false
                 }
                 updatePredicate()
                 Task { await subscribeToNewEvents() }
             }
-            .onChange(of: date) { _ in
+            .onChange(of: date) { 
                 updatePredicate()
             }
             .refreshable {
@@ -196,14 +169,14 @@ struct DiscoverView: View {
             .onDisappear {
                 isVisible = false
             }
-            .onChange(of: isVisible, perform: { isVisible in
+            .onChange(of: isVisible) { 
                 if isVisible {
                     analytics.showedDiscover()
                     Task { await subscribeToNewEvents() }
                 } else {
                     Task { await cancelSubscriptions() }
                 }
-            })
+            }
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)
             }
@@ -239,9 +212,12 @@ struct DiscoverView: View {
         if searchController.query.contains("@") {
             Task(priority: .userInitiated) {
                 if let publicKeyHex =
-                    await relayService.retrievePublicKeyFromUsername(searchController.query.lowercased()),
-                    let author = author(fromPublicKey: publicKeyHex) {
-                    router.push(author)
+                    await relayService.retrievePublicKeyFromUsername(searchController.query.lowercased()) {
+                    Task { @MainActor in
+                        if let author = author(fromPublicKey: publicKeyHex) {
+                            router.push(author)
+                        }
+                    }
                 }
             }
         } else {
@@ -310,14 +286,14 @@ struct DiscoverView_Previews: PreviewProvider {
                 .environment(\.managedObjectContext, previewContext)
                 .environmentObject(relayService)
                 .environmentObject(router)
-                .environmentObject(currentUser)
+                .environment(currentUser)
                 .onAppear { createTestData(in: previewContext) }
 
             DiscoverView(featuredAuthors: [publicKey.npub])
                 .environment(\.managedObjectContext, previewContext)
                 .environmentObject(relayService)
                 .environmentObject(router)
-                .environmentObject(currentUser)
+                .environment(currentUser)
                 .onAppear { createTestData(in: previewContext) }
                 .previewDevice("iPad Air (5th generation)")
         } else {

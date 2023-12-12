@@ -12,7 +12,7 @@ struct ProfileEditView: View {
     
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
 
     @Dependency(\.crashReporting) private var crashReporting
@@ -110,14 +110,14 @@ struct ProfileEditView: View {
         .sheet(isPresented: $showUniversalNameWizard, content: {
             UNSWizard(controller: unsController, isPresented: $showUniversalNameWizard)
         })
-        .onChange(of: showUniversalNameWizard, perform: { newValue in
+        .onChange(of: showUniversalNameWizard) { _, newValue in
             if !newValue {
                 nip05Text = currentUser.author?.nip05 ?? ""
                 unsText = currentUser.author?.uns ?? ""
                 unsController = UNSWizardController(authorKey: author.hexadecimalPublicKey)
                 author.willChangeValue(for: \Author.uns) // Trigger ProfileView to load USBC balance
             }
-        })
+        }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
         .nosNavigationBar(title: .profileTitle)

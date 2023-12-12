@@ -24,14 +24,13 @@ struct NoteCard: View {
     @State private var userTappedShowOutOfNetwork = false
     @State private var replyCount = 0
     @State private var replyAvatarURLs = [URL]()
-    @State private var reportingAuthors = [Author]()
     @State private var reports = [Event]()
-    @StateObject private var warningController = NoteWarningController()
+    @State private var warningController = NoteWarningController()
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.persistenceController) var persistenceController
     
     private var showFullMessage: Bool
@@ -92,7 +91,7 @@ struct NoteCard: View {
                             Spacer()
                         }
                     }
-                    Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
+                    Divider().overlay(Color.cardDividerTop).shadow(color: .cardDividerTopShadow, radius: 0, x: 0, y: 1)
                     Group {
                         if note.isStub {
                             HStack {
@@ -118,7 +117,7 @@ struct NoteCard: View {
                                 if let replies = attributedReplies {
                                     Text(replies)
                                         .font(.subheadline)
-                                        .foregroundColor(Color.secondaryText)
+                                        .foregroundColor(Color.secondaryTxt)
                                 }
                             }
                             Spacer()
@@ -149,15 +148,13 @@ struct NoteCard: View {
             if note.isStub {
                 _ = await relayService.requestEvent(with: note.identifier)
             } 
-            self.reportingAuthors = note.reportingAuthors(followedBy: currentUser)
-            // print(self.reportingAuthors)
         }
         .onAppear {
             Task(priority: .userInitiated) {
                 await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
                     noteID: note.identifier,
                     using: relayService,
-                    in: persistenceController.parseContext
+                    in: persistenceController.backgroundViewContext
                 )
             }
         }
@@ -214,7 +211,7 @@ struct NoteCard_Previews: PreviewProvider {
         .environment(\.managedObjectContext, previewData.previewContext)
         .environmentObject(previewData.relayService)
         .environmentObject(previewData.router)
-        .environmentObject(previewData.currentUser)
+        .environment(previewData.currentUser)
         .padding()
         .background(Color.appBg)
     }

@@ -28,7 +28,8 @@ struct AuthorStoryView: View {
 
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
-    
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
+
     init(
         author: Author,
         cutoffDate: Binding<Date>,
@@ -97,7 +98,7 @@ struct AuthorStoryView: View {
                             RoundedRectangle(cornerRadius: 21)
                                 .frame(maxWidth: .infinity, maxHeight: 3)
                                 .cornerRadius(7)
-                                .foregroundColor(note.isEqual(selectedNote) == true ? .accent : .secondaryText)
+                                .foregroundColor(note.isEqual(selectedNote) == true ? .accent : .secondaryTxt)
                                 .padding(.bottom, 5)
                                 .padding(.top, 15)
                         }
@@ -106,6 +107,7 @@ struct AuthorStoryView: View {
                 .padding(.horizontal, 10)
                 Button {
                     router.push(author)
+                    analytics.openedProfileFromStories()
                 } label: {
                     HStack(alignment: .center) {
                         AuthorLabel(author: author)
@@ -113,17 +115,17 @@ struct AuthorStoryView: View {
                         if let expirationTime = selectedNote?.expirationDate?.distanceFromNowString() {
                             Image.disappearingMessages
                                 .resizable()
-                                .foregroundColor(.secondaryText)
+                                .foregroundColor(.secondaryTxt)
                                 .frame(width: 25, height: 25)
                             Text(expirationTime)
                                 .lineLimit(1)
                                 .font(.body)
-                                .foregroundColor(.secondaryText)
+                                .foregroundColor(.secondaryTxt)
                         } else if let elapsedTime = selectedNote?.createdAt?.distanceFromNowString() {
                             Text(elapsedTime)
                                 .lineLimit(1)
                                 .font(.body)
-                                .foregroundColor(.secondaryText)
+                                .foregroundColor(.secondaryTxt)
                         }
                         Spacer()
                         if let selectedNote {
@@ -158,7 +160,9 @@ struct AuthorStoryView: View {
             guard selectedNote == nil else {
                 return
             }
-            if let firstNote = notes.first {
+            if let firstUnreadNote = notes.first(where: { !$0.isRead }) {
+                selectedNote = firstUnreadNote
+            } else if let firstNote = notes.first {
                 selectedNote = firstNote
             } else {
                 // Notes shouldn't be empty here, but if they are, just advance to the next author
@@ -178,6 +182,10 @@ struct AuthorStoryView: View {
             subscriptionIDs.removeAll()
         }
         let eTags = notes.compactMap { $0.identifier }
+        guard !eTags.isEmpty else {
+            return
+        }
+        
         let filter = Filter(kinds: [.text, .like, .delete, .repost], eTags: eTags)
         let subID = await relayService.openSubscription(with: filter)
         subscriptionIDs.append(subID)
@@ -206,7 +214,7 @@ fileprivate struct BottomOverlay: View {
                 } label: {
                     Text(replies)
                         .font(.subheadline)
-                        .foregroundColor(Color.secondaryText)
+                        .foregroundColor(Color.secondaryTxt)
                 }
             }
 

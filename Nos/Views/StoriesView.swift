@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import Dependencies
 
 /// Shows a list of authors with stories in a carousel
 struct StoriesView: View {
 
     /// Authors to display
-    private var authors: FetchedResults<Author>
+    private var authors: [Author]
 
     /// Author tapped in the Home Feed
     ///
@@ -25,10 +26,12 @@ struct StoriesView: View {
     @State private var selectedAuthor: Author
 
     @Binding private var cutoffDate: Date
-    
+
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
+
     init(
         cutoffDate: Binding<Date>,
-        authors: FetchedResults<Author>,
+        authors: [Author],
         selectedAuthor: Binding<Author?>
     ) {
         self._cutoffDate = cutoffDate
@@ -68,7 +71,7 @@ struct StoriesView: View {
         }
     }
     
-    func showNextAuthor(from authors: FetchedResults<Author>) {
+    func showNextAuthor(from authors: [Author]) {
         guard let selectedAuthorIndex = authors.firstIndex(of: selectedAuthor) else {
             return
         }
@@ -79,13 +82,14 @@ struct StoriesView: View {
         let nextIndex = authors.index(after: selectedAuthorIndex)
         if let nextAuthor = authors[safe: nextIndex] {
             self.selectedAuthor = nextAuthor
+            analytics.storiesSwitchedToNextUser()
         } else {
             selectedAuthorInStories = nil
             return
         }
     }
     
-    func showPreviousAuthor(from authors: FetchedResults<Author>) {
+    func showPreviousAuthor(from authors: [Author]) {
         guard let selectedAuthorIndex = authors.firstIndex(of: selectedAuthor) else {
             return
         }
@@ -96,6 +100,7 @@ struct StoriesView: View {
         let previousIndex = authors.index(before: selectedAuthorIndex)
         if let previousAuthor = authors[safe: previousIndex] {
             selectedAuthor = previousAuthor
+            analytics.storiesSwitchedToNextUser()
         } else {
             selectedAuthorInStories = nil
             return

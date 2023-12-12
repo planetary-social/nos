@@ -19,7 +19,7 @@ struct FollowCard: View {
     var style = CardStyle.compact
 
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var currentUser: CurrentUser
+    @Environment(CurrentUser.self) private var currentUser
     @EnvironmentObject private var relayService: RelayService
     
     @State private var subscriptions = [RelaySubscription.ID]()
@@ -41,7 +41,7 @@ struct FollowCard: View {
                         if author.muted {
                             Text(Localized.muted.string)
                                 .font(.subheadline)
-                                .foregroundColor(Color.secondaryText)
+                                .foregroundColor(Color.secondaryTxt)
                         }
                         Spacer()
                         if let currentUser = currentUser.author {

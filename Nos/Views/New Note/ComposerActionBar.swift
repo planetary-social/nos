@@ -63,7 +63,7 @@ struct ComposerActionBar: View {
                     }
                 } label: {
                     Image.attachMediaButton
-                        .foregroundColor(.secondaryText)
+                        .foregroundColor(.secondaryTxt)
                         .frame(minWidth: 44, minHeight: 44)
                 }
                 .padding(.leading, 8)
@@ -87,7 +87,7 @@ struct ComposerActionBar: View {
                         subMenu = .expirationDate
                     } label: {
                         Image.disappearingMessages
-                            .foregroundColor(.secondaryText)
+                            .foregroundColor(.secondaryTxt)
                             .frame(minWidth: 44, minHeight: 44)
                     }
                 }
@@ -97,7 +97,7 @@ struct ComposerActionBar: View {
                     HStack {
                         PlainText(Localized.noteDisappearsIn.string)
                             .font(.clarityCaption)
-                            .foregroundColor(.secondaryText)
+                            .foregroundColor(.secondaryTxt)
                             .transition(.move(edge: .trailing))
                             .padding(10)
                         
@@ -116,12 +116,24 @@ struct ComposerActionBar: View {
         }
         .animation(.easeInOut(duration: 0.2), value: subMenu)
         .transition(.move(edge: .leading))
-        .onChange(of: expirationTime) { _ in
+        .onChange(of: expirationTime) { _, _ in
             subMenu = .none
         }
         .alert(unwrapping: $alert) { (_: AlertAction?) in
         }
-        .background(Color.actionBar)
+        .background(
+            LinearGradient(
+                colors: [Color.actionBarGradientTop, Color.actionBarGradientBottom],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+        .overlay(
+            Rectangle()
+                .frame(width: nil, height: 1, alignment: .top)
+                .foregroundColor(Color.actionBarBorderTop),
+            alignment: .top
+        )
     }
     
     private func startUploadingImage() {

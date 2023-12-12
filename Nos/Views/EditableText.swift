@@ -42,7 +42,7 @@ struct EditableText: UIViewRepresentable {
         view.isEditable = true
         view.isSelectable = true
         view.tintColor = .accent
-        view.textColor = .secondaryText
+        view.textColor = .secondaryTxt
         view.font = font
         view.backgroundColor = .clear
         view.delegate = context.coordinator
@@ -137,11 +137,10 @@ struct EditableText: UIViewRepresentable {
         
         func textView(
             _ textView: UITextView, 
-            shouldInteractWith URL: URL, 
-            in characterRange: NSRange, 
-            interaction: UITextItemInteraction
-        ) -> Bool {
-            false
+            primaryActionFor textItem: UITextItem, 
+            defaultAction: UIAction
+        ) -> UIAction? {
+            nil
         }
 
         func textView(
@@ -177,15 +176,13 @@ extension Notification.Name {
 struct EditableText_Previews: PreviewProvider {
 
     @State static var attributedString = EditableNoteText(string: "Hello")
-    @State static var oldText = EditableNoteText(string: "Hello")
     @State static var calculatedHeight: CGFloat = 44
 
     static var previews: some View {
         EditableText($attributedString, guid: UUID(), calculatedHeight: $calculatedHeight)
-            .onChange(of: attributedString) { newText in
+            .onChange(of: attributedString) { oldText, newText in
                 let difference = newText.difference(from: oldText)
                 guard difference.count == 1, let change = difference.first else {
-                    oldText = newText
                     return
                 }
                 switch change {
@@ -196,7 +193,6 @@ struct EditableText_Previews: PreviewProvider {
                 default:
                     break
                 }
-                oldText = newText
             }
             .previewLayout(.sizeThatFits)
     }

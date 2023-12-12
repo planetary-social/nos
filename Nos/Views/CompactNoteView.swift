@@ -26,7 +26,7 @@ struct CompactNoteView: View {
     @State private var contentLinks = [URL]()
     private var loadLinks: Bool
     
-    @EnvironmentObject var router: Router
+    @EnvironmentObject private var router: Router
     @Dependency(\.persistenceController) private var persistenceController
     
     internal init(note: Event, showFullMessage: Bool = false, loadLinks: Bool = true) {
@@ -45,6 +45,7 @@ struct CompactNoteView: View {
             .foregroundColor(.primaryTxt)
             .tint(.accent) 
             .padding(15)
+            .textSelection(.enabled)
             .environment(\.openURL, OpenURLAction { url in
                 router.open(url: url, with: viewContext)
                 return .handled
@@ -111,7 +112,7 @@ struct CompactNoteView: View {
                     } label: {
                         PlainText(Localized.readMore.string.uppercased())
                             .font(.caption)
-                            .foregroundColor(.secondaryText)
+                            .foregroundColor(.secondaryTxt)
                             .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
                             .background(Color.hashtagBg)
                             .cornerRadius(4)
@@ -165,7 +166,7 @@ struct CompactNoteView_Previews: PreviewProvider {
             CompactNoteView(note: previewData.doubleImageNote, loadLinks: false)
         }
         .padding()
-        .background(Color.cardBackground)
+        .background(Color.previewBg)
         .inject(previewData: PreviewData())
     }
 }

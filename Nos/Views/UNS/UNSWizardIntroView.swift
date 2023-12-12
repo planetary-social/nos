@@ -28,7 +28,7 @@ struct UNSWizardIntroView: View {
             Text(.unsRegisterDescription)
                 .fontWeight(.medium)
                 .multilineTextAlignment(.center)
-                .foregroundColor(.secondaryText)
+                .foregroundColor(.secondaryTxt)
                 .readabilityPadding()
                 .padding(.vertical, 17)
                 .padding(.horizontal, 20)

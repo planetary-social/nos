@@ -90,9 +90,9 @@ final class RelayService: ObservableObject {
     
     private func handleError(_ error: Error?, from socket: WebSocketClient) {
         if let error {
-            Log.info("websocket error: \(error) from: \(socket.host)")
+            Log.debug("websocket error: \(error) from: \(socket.host)")
         } else {
-            Log.info("unknown websocket error from: \(socket.host)")
+            Log.debug("unknown websocket error from: \(socket.host)")
         }
     }
 }
@@ -266,10 +266,6 @@ extension RelayService {
         Log.debug("from \(socket.host): EVENT type: \(eventJSON["kind"] ?? "nil") subID: \(subscriptionID)")
         #endif
 
-        if await !shouldParseEvent(responseArray: responseArray, json: eventJSON) {
-            return
-        }
-        
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: eventJSON)
             let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
@@ -380,24 +376,6 @@ extension RelayService {
         } catch {
             print("error parsing response: \(response)\nerror: \(error.localizedDescription)")
         }
-    }
-     
-    func shouldParseEvent(responseArray: [Any], json eventJSON: [String: Any]) async -> Bool {
-        // Drop out of network subscriptions if the filter has inNetwork == true
-        if let subscriptionID = responseArray[safe: 1] as? RelaySubscription.ID,
-            let authorKey = eventJSON[JSONEvent.CodingKeys.pubKey.rawValue] as? HexadecimalString,
-            let subscription = await subscriptions.subscription(from: subscriptionID) {
-            if subscription.filter.inNetwork {
-                let eventInNetwork = await currentUser.socialGraph.contains(authorKey) 
-                if !eventInNetwork {
-                    let eventID = eventJSON[JSONEvent.CodingKeys.id.rawValue] ?? "nil"
-                    Log.debug("Dropping out of network event \(eventID).")
-                    return false
-                }
-            }
-        }
-        
-        return true
     }
 }
 
@@ -769,16 +747,6 @@ extension RelayService {
         )
     }
 
-    func identifierToShow(_ identifier: String) -> String {
-        let localPart = identifier.components(separatedBy: "@")[safe: 0]
-        let domain = identifier.components(separatedBy: "@")[safe: 1]
-        if localPart == "_" {
-            // The identifier _@domain is the "root" identifier, and is displayed as: <domain>
-            return domain ?? ""
-        }
-        return identifier
-    }
-    
     func domain(from identifier: String) -> String {
         identifier.components(separatedBy: "@")[safe: 1] ?? ""
     }
