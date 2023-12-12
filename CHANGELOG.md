@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added a context menu for the stories in the Home Feed to open the Profile.
 - Update the color palette.
 - Fixed a bug where the app could become unresponsive.
 - Fixed some performance issues for users who follow a large number of accounts.
