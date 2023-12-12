@@ -79,7 +79,7 @@ struct BioView: View {
                     } label: {
                         PlainText(Localized.readMore.string.uppercased())
                             .font(.clarityCaption)
-                            .foregroundColor(.secondaryText)
+                            .foregroundColor(.secondaryTxt)
                             .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
                             .background(Color.hashtagBg)
                             .cornerRadius(4)
@@ -102,7 +102,7 @@ struct BioView: View {
                     .foregroundColor(.primaryTxt)
                     .nosNavigationBar(title: .bio)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.cardBackground)
+                    .background(Color.appBg)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
@@ -140,6 +140,6 @@ struct BioView_Previews: PreviewProvider {
             BioView(bio: .loremIpsum(3))
         }
         .padding()
-        .background(Color.cardBackground)
+        .background(Color.previewBg)
     }
 }

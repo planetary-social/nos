@@ -33,7 +33,7 @@ struct UNSWizardNeedsPaymentView: View {
             Text(hasOpenedPortal ? .returnToChooseName : .premiumNameDescription)
                 .fontWeight(.medium)
                 .multilineTextAlignment(.center)
-                .foregroundColor(.secondaryText)
+                .foregroundColor(.secondaryTxt)
                 .readabilityPadding()
                 .padding(.vertical, 17)
                 .padding(.horizontal, 20)
@@ -49,7 +49,7 @@ struct UNSWizardNeedsPaymentView: View {
                             text: .goBackAndRegister, 
                             highlightedWord: Localized.registerADifferentName.string, 
                             highlight: LinearGradient(colors: [.primaryTxt], startPoint: .top, endPoint: .bottom), 
-                            textColor: .secondaryText,
+                            textColor: .secondaryTxt,
                             font: .clarityMedium,
                             link: nil
                         )

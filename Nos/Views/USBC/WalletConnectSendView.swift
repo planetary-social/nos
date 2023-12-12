@@ -26,7 +26,7 @@ struct WalletConnectSendView: View {
             HStack {
                 PlainText(.sendTo)
                     .font(.callout)
-                    .foregroundColor(.secondaryText)
+                    .foregroundColor(.secondaryTxt)
                     .padding(.vertical, 8)
                 Spacer()
             }
@@ -46,7 +46,7 @@ struct WalletConnectSendView: View {
                     HStack(spacing: 3) {
                         Image.unsLogoDark
                         Text(controller.destinationAuthor.uns ?? "")
-                            .foregroundColor(.secondaryText)
+                            .foregroundColor(.secondaryTxt)
                         Spacer()
                     }
                 }
@@ -61,7 +61,7 @@ struct WalletConnectSendView: View {
             HStack {
                 PlainText(.amount)
                     .font(.callout)
-                    .foregroundColor(.secondaryText)
+                    .foregroundColor(.secondaryTxt)
                     .padding(.top, 16)
                     .padding(.bottom, 8)
                 Spacer()
@@ -70,7 +70,7 @@ struct WalletConnectSendView: View {
             ZStack {
                 PlainTextField(text: $amount) {
                     PlainText("1,000")
-                        .foregroundColor(.secondaryText)
+                        .foregroundColor(.secondaryTxt)
                 }
                 .keyboardType(.decimalPad)
                 .font(.clarityTitle2)
@@ -80,7 +80,7 @@ struct WalletConnectSendView: View {
                 .padding(.horizontal, 46)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.secondaryAction, lineWidth: 2)
+                        .stroke(Color.secondaryTxt, lineWidth: 2)
                         .background(Color.textFieldBg)
                 )
                 .toolbar {
