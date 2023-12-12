@@ -49,7 +49,7 @@ struct ThreadView: View {
                             path.addLine(to: CGPoint(x: 35, y: 15))
                         }
                         .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                        .fill(Color.secondaryText)
+                        .fill(Color.secondaryTxt)
                         NoteButton(note: event, tapAction: { event in
                             router.push(event)
                         })

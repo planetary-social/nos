@@ -228,7 +228,7 @@ struct HighlightedText_Previews: PreviewProvider {
             )
             .padding()
         }
-        .background(Color.menuBorderColor)
+        .background(Color.previewBg)
         .previewLayout(.sizeThatFits)
         .preferredColorScheme(.dark)
     }

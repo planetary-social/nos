@@ -45,7 +45,8 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
                 }
                 let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
                 fetchRequest.predicate = NSPredicate(
-                    format: "ANY followers.source IN %@.follows.destination",
+                    format: "hexadecimalPublicKey = %@ AND ANY followers.source IN %@.follows.destination",
+                    key,
                     currentUser
                 )
                 return try context.count(for: fetchRequest) > 0

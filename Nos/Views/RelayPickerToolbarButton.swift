@@ -36,7 +36,7 @@ struct RelayPickerToolbarButton: ToolbarContent {
         Image(systemName: imageName)
             .font(.system(size: 10))
             .fontWeight(.black)
-            .foregroundColor(.secondaryText)
+            .foregroundColor(.secondaryTxt)
             .background(
                 Circle()
                     .foregroundColor(.appBg)
@@ -87,7 +87,7 @@ struct RelayPickerToolbarButton_Previews: PreviewProvider {
                             Button {}
                             label: {
                                 Localized.cancel.view
-                                    .foregroundColor(.secondaryText)
+                                    .foregroundColor(.secondaryTxt)
                             }
                         }
                         RelayPickerToolbarButton(

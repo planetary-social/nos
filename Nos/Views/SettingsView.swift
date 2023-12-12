@@ -90,7 +90,7 @@ struct SettingsView: View {
                         .bold()
                     
                     Localized.privateKeyWarning.view
-                        .foregroundColor(.secondaryText)
+                        .foregroundColor(.secondaryTxt)
                 }
                 .textCase(nil)
                 .padding(.vertical, 15)
@@ -113,7 +113,7 @@ struct SettingsView: View {
                     
                     HStack {
                         PlainText(.useReportsFromFollowsDescription)
-                            .foregroundColor(.secondaryText)
+                            .foregroundColor(.secondaryTxt)
                             .font(.clarityCallout)
                         Spacer()
                     }
@@ -130,7 +130,7 @@ struct SettingsView: View {
                     
                     HStack {
                         PlainText(.showOutOfNetworkWarningsDescription)
-                            .foregroundColor(.secondaryText)
+                            .foregroundColor(.secondaryTxt)
                             .font(.clarityCallout)
                         Spacer()
                     }

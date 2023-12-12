@@ -643,8 +643,8 @@ public class Event: NosManagedObject {
             
         case .mute:
             hydrateMuteList(from: jsonEvent, context: context)
-            
         case .repost:
+            
             hydrateDefault(from: jsonEvent, context: context)
             parseContent(from: jsonEvent, context: context)
             

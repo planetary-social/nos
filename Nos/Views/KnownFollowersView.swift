@@ -86,7 +86,7 @@ struct KnownFollowersView: View {
                 Text(followText)
                 Spacer()
             }
-            .foregroundColor(.secondaryText)
+            .foregroundColor(.secondaryTxt)
         } else {
             EmptyView()
         }

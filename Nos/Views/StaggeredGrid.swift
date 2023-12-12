@@ -93,7 +93,7 @@ struct StaggeredGrid<Content: View, T: Identifiable, L: RandomAccessCollection<T
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
-            HStack(alignment: .top) {
+            HStack(alignment: .top, spacing: spacing) {
                 ForEach(setUpList(), id: \.self) { columnsData in
                     LazyVStack(spacing: spacing) {
                         ForEach(columnsData) { model in
@@ -102,7 +102,7 @@ struct StaggeredGrid<Content: View, T: Identifiable, L: RandomAccessCollection<T
                     }
                 }
             }
-            .padding(.top, 10)
+            .padding(.top, 15)
             .padding(.horizontal)
         }
     }

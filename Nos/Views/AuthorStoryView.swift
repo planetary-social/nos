@@ -98,7 +98,7 @@ struct AuthorStoryView: View {
                             RoundedRectangle(cornerRadius: 21)
                                 .frame(maxWidth: .infinity, maxHeight: 3)
                                 .cornerRadius(7)
-                                .foregroundColor(note.isEqual(selectedNote) == true ? .accent : .secondaryText)
+                                .foregroundColor(note.isEqual(selectedNote) == true ? .accent : .secondaryTxt)
                                 .padding(.bottom, 5)
                                 .padding(.top, 15)
                         }
@@ -115,17 +115,17 @@ struct AuthorStoryView: View {
                         if let expirationTime = selectedNote?.expirationDate?.distanceFromNowString() {
                             Image.disappearingMessages
                                 .resizable()
-                                .foregroundColor(.secondaryText)
+                                .foregroundColor(.secondaryTxt)
                                 .frame(width: 25, height: 25)
                             Text(expirationTime)
                                 .lineLimit(1)
                                 .font(.body)
-                                .foregroundColor(.secondaryText)
+                                .foregroundColor(.secondaryTxt)
                         } else if let elapsedTime = selectedNote?.createdAt?.distanceFromNowString() {
                             Text(elapsedTime)
                                 .lineLimit(1)
                                 .font(.body)
-                                .foregroundColor(.secondaryText)
+                                .foregroundColor(.secondaryTxt)
                         }
                         Spacer()
                         if let selectedNote {
@@ -214,7 +214,7 @@ fileprivate struct BottomOverlay: View {
                 } label: {
                     Text(replies)
                         .font(.subheadline)
-                        .foregroundColor(Color.secondaryText)
+                        .foregroundColor(Color.secondaryTxt)
                 }
             }
 

@@ -24,7 +24,7 @@ fileprivate struct PickerRow<Label: View>: View {
                     .frame(width: 16, height: 16)
             } else {
                 Circle()
-                    .stroke(Color.secondaryAction)
+                    .stroke(Color.secondaryTxt)
                     .frame(width: 16, height: 16)
             }
             
@@ -90,8 +90,8 @@ struct UNSNamePicker: View {
             
             Rectangle()
                 .frame(height: 2)
-                .foregroundColor(.secondaryAction)
-            
+                .foregroundColor(.secondaryTxt)
+
             HStack(spacing: 0) {
                 if isTextFieldFocused {
                     Circle()
@@ -99,13 +99,13 @@ struct UNSNamePicker: View {
                         .frame(width: 16, height: 16)
                 } else {
                     Circle()
-                        .stroke(Color.secondaryAction)
+                        .stroke(Color.secondaryTxt)
                         .frame(width: 16, height: 16)
                 }
                 
                 PlainTextField(text: $desiredName) {
                     PlainText(.createNewName)
-                        .foregroundColor(.secondaryText)
+                        .foregroundColor(.secondaryTxt)
                 }
                 .focused($isTextFieldFocused)
                 .font(.clarityTitle2)
@@ -126,7 +126,7 @@ struct UNSNamePicker: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(Color.secondaryAction, lineWidth: 2)
+                .stroke(Color.secondaryTxt, lineWidth: 2)
                 .background(Color.textFieldBg)
         )    
     }
@@ -152,5 +152,5 @@ struct UNSNamePicker: View {
             .background(Color.appBg)
         }
     }
-    return PreviewWrapper()
+    return PreviewWrapper().preferredColorScheme(.dark)
 }
