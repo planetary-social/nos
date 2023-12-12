@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a bug where the reports for authors of replies weren't being considered. 
 - Update the color palette.
 - Fixed a bug where the app could become unresponsive.
 - Fixed some performance issues for users who follow a large number of accounts.
