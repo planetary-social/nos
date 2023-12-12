@@ -42,8 +42,6 @@ struct OnboardingView: View {
     
     @State private var selectedTab: OnboardingStep = .onboardingStart
     
-    @State var flow: OnboardingFlow = .createAccount
-    
     var body: some View {
         NavigationStack(path: $state.path) {
             OnboardingStartView()

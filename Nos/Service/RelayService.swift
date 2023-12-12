@@ -546,11 +546,14 @@ extension RelayService {
     }
     
     @discardableResult @MainActor private func openSockets(overrideRelays: [URL]? = nil) async -> [URL] {
-        let relayAddresses: [URL]
+        var relayAddresses: [URL]
         if let overrideRelays {
             relayAddresses = overrideRelays
         } else {
             relayAddresses = await relays(for: self.currentUser)
+            if relayAddresses.isEmpty {
+                relayAddresses = Relay.allKnown.compactMap { URL(string: $0) }
+            }
         }
         
         for relayAddress in relayAddresses {
