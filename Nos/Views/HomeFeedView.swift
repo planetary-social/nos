@@ -93,6 +93,13 @@ struct HomeFeedView: View {
                                         }
                                     } label: {
                                         StoryAvatarView(author: author)
+                                            .contextMenu {
+                                                Button {
+                                                    router.push(author)
+                                                } label: {
+                                                    Localized.seeProfile.view
+                                                }
+                                            }
                                     }
                                 }
                             }
