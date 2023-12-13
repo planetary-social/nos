@@ -238,7 +238,7 @@ class PersistenceController {
                 let notOwnEventClause = "(author.hexadecimalPublicKey != %@)"
                 let readStoryClause = "(isRead = 1 AND receivedAt > %@)"
                 let userReportClause = "(kind == \(EventKind.report.rawValue) AND " +
-                    "authorReferences.@count > 0 AND authorReferences.@count > 0 AND eventReferences.@count == 0)"
+                    "authorReferences.@count > 0 AND eventReferences.@count == 0)"
                 let clauses = "\(oldEventClause) AND" +
                     "\(notOwnEventClause) AND " +
                     "NOT \(readStoryClause) AND " +
