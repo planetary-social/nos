@@ -549,28 +549,11 @@ public class Event: NosManagedObject {
             }
             return existingEvent
         } else {
-            @Dependency(\.crashReporting) var crashReporting
-            @Dependency(\.persistenceController) var persistenceController
-
-            /// Always create events in the creationContext first to make sure we never end up with two identical
-            /// Events in different contexts with the same objectID, because this messes up SwiftUI's observation
-            /// of changes.
-            let creationContext = persistenceController.creationContext
-            let objectID = try creationContext.performAndWait {
-                let event = Event(context: creationContext)
-                event.identifier = jsonEvent.id
-                try creationContext.save()
-                return event.objectID
-            }
-            guard let fetchedEvent = context.object(with: objectID) as? Event else {
-                let error = EventError.coreData
-                crashReporting.report(error)
-                throw error
-            }
-            
-            fetchedEvent.receivedAt = .now
-            try fetchedEvent.hydrate(from: jsonEvent, relay: relay, in: context)
-            return fetchedEvent
+            let event = Event(context: context)
+            event.identifier = jsonEvent.id
+            event.receivedAt = .now
+            try event.hydrate(from: jsonEvent, relay: relay, in: context)
+            return event
         }
     }
     
@@ -585,25 +568,9 @@ public class Event: NosManagedObject {
         if let existingEvent = try context.fetch(Event.event(by: id)).first {
             return existingEvent
         } else {
-            @Dependency(\.crashReporting) var crashReporting
-            @Dependency(\.persistenceController) var persistenceController
-
-            /// Always create events in the creationContext first to make sure we never end up with two identical
-            /// Events in different contexts with the same objectID, because this messes up SwiftUI's observation
-            /// of changes.
-            let creationContext = persistenceController.creationContext
-            let objectID = try creationContext.performAndWait {
-                let event = Event(context: creationContext)
-                event.identifier = id
-                try creationContext.save()
-                return event.objectID
-            }
-            guard let fetchedEvent = context.object(with: objectID) as? Event else {
-                let error = EventError.coreData
-                crashReporting.report(error)
-                throw error
-            }
-            return fetchedEvent
+            let event = Event(context: context)
+            event.identifier = id
+            return event
         }
     }
     

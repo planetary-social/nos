@@ -123,29 +123,13 @@ enum AuthorError: Error {
     
     @discardableResult
     class func findOrCreate(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author {
-        @Dependency(\.persistenceController) var persistenceController
-        @Dependency(\.crashReporting) var crashReporting
-        
         if let author = try? Author.find(by: pubKey, context: context) {
             return author
         } else {
-            /// Always create authors in the creationContext first to make sure we never end up with two identical
-            /// Authors in different contexts with the same objectID, because this messes up SwiftUI's observation
-            /// of changes.
-            let creationContext = persistenceController.creationContext
-            let objectID = try creationContext.performAndWait {
-                let author = Author(context: creationContext)
-                author.hexadecimalPublicKey = pubKey
-                author.muted = false
-                try creationContext.save()
-                return author.objectID
-            }
-            guard let fetchedAuthor = context.object(with: objectID) as? Author else {
-                let error = AuthorError.coreData
-                crashReporting.report(error)
-                throw error
-            }
-            return fetchedAuthor
+            let author = Author(context: context)
+            author.hexadecimalPublicKey = pubKey
+            author.muted = false
+            return author
         }
     }
     
