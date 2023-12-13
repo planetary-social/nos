@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Localized relative times on note cards.
 - Added a context menu for the stories in the Home Feed to open the Profile.
 - Fixed some cases where a note's contents would never load.
 - Update the color palette.
