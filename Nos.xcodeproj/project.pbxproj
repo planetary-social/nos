@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
+		3AAB61B52B24CD0000717A07 /* Date+ElapsedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAB61B42B24CD0000717A07 /* Date+ElapsedTests.swift */; };
 		3F170C78299D816200BC8F8B /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F170C77299D816200BC8F8B /* AppController.swift */; };
 		3F30020529C1FDD9003D4F8B /* OnboardingStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F30020429C1FDD9003D4F8B /* OnboardingStartView.swift */; };
 		3F30020729C237AB003D4F8B /* OnboardingAgeVerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F30020629C237AB003D4F8B /* OnboardingAgeVerificationView.swift */; };
@@ -429,6 +430,7 @@
 /* Begin PBXFileReference section */
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
+		3AAB61B42B24CD0000717A07 /* Date+ElapsedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+ElapsedTests.swift"; sourceTree = "<group>"; };
 		3F170C77299D816200BC8F8B /* AppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppController.swift; sourceTree = "<group>"; };
 		3F30020429C1FDD9003D4F8B /* OnboardingStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStartView.swift; sourceTree = "<group>"; };
 		3F30020629C237AB003D4F8B /* OnboardingAgeVerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingAgeVerificationView.swift; sourceTree = "<group>"; };
@@ -773,6 +775,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3AAB61B12B24CC8A00717A07 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				3AAB61B42B24CD0000717A07 /* Date+ElapsedTests.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		3FB5E64F299D288E00386527 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
@@ -971,6 +981,7 @@
 			isa = PBXGroup;
 			children = (
 				C98298312ADD7EDB0096C5B5 /* Info.plist */,
+				3AAB61B12B24CC8A00717A07 /* Extensions */,
 				C9C9443A29F6E420002F2C7A /* Test Helpers */,
 				C9DEC0042989477A0078B43A /* Fixtures */,
 				C9DEBFE8298941020078B43A /* EventTests.swift */,
@@ -1805,6 +1816,7 @@
 				C9C2B78029E0731600548B4A /* AsyncTimer.swift in Sources */,
 				5B88051C2A21046C00E21F06 /* SHA256KeyTests.swift in Sources */,
 				C9B678E229EEC41000303F33 /* SocialGraphCache.swift in Sources */,
+				3AAB61B52B24CD0000717A07 /* Date+ElapsedTests.swift in Sources */,
 				C936B45F2A4CAF2B00DF1EB9 /* AppDelegate.swift in Sources */,
 				C9C2B77D29E072E400548B4A /* WebSocket+Nos.swift in Sources */,
 				C973AB642A323167002AED16 /* Relay+CoreDataProperties.swift in Sources */,
