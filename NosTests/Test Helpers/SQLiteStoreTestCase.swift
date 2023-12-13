@@ -9,6 +9,8 @@ import XCTest
 import CoreData
 import Dependencies
 
+// swiftlint:disable implicitly_unwrapped_optional
+
 /// A test case that uses a full core data stack including a SQLite backing store.
 class SQLiteStoreTestCase: XCTestCase {
         
@@ -25,3 +27,5 @@ class SQLiteStoreTestCase: XCTestCase {
         super.tearDown()
     }
 }
+
+// swiftlint:enable implicitly_unwrapped_optional

@@ -57,7 +57,7 @@ final class EventObservationTests: SQLiteStoreTestCase {
         let eventContent = "foo bar"
         
         // Act
-        let eventStub = try Event.findOrCreateStubBy(id: eventID, context: viewContext)
+        _ = try Event.findOrCreateStubBy(id: eventID, context: viewContext)
         let fullEvent = try Event.findOrCreateStubBy(id: eventID, context: parseContext)
         fullEvent.content = eventContent
         

@@ -157,9 +157,9 @@ final class SocialGraphTests: XCTestCase {
     
     func testOutOfNetwork() async throws {
         // Arrange
-        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
-        let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
-        let eve = try Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: testContext)
+        _ = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        _ = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
+        _ = try Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: testContext)
         
         // Act
         let sut = SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
