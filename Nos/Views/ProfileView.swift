@@ -110,7 +110,7 @@ struct ProfileView: View {
                     },
                     emptyPlaceholder: {
                         VStack {
-                            Localized.noEventsOnProfile.view
+                            Text(.localizable.noEventsOnProfile)
                                 .padding()
                                 .readabilityPadding()
                         }
@@ -129,7 +129,7 @@ struct ProfileView: View {
             }
         }
         .background(Color.appBg)
-        .nosNavigationBar(title: .profileTitle)
+        .nosNavigationBar(title: .localizable.profileTitle)
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
         }                  
@@ -141,10 +141,10 @@ struct ProfileView: View {
             MutesView()
         }
         .navigationDestination(for: FollowsDestination.self) { destination in
-            FollowsView(title: Localized.follows, authors: destination.follows)
+            FollowsView(title: .localizable.follows, authors: destination.follows)
         }
         .navigationDestination(for: FollowersDestination.self) { destination in
-            FollowsView(title: Localized.followers, authors: destination.followers)
+            FollowsView(title: .localizable.followers, authors: destination.followers)
         }
         .navigationDestination(for: RelaysDestination.self) { destination in
             RelayView(author: destination.author, editable: false)
@@ -165,12 +165,12 @@ struct ProfileView: View {
                             Image(systemName: "ellipsis")
                         }
                     )
-                    .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
-                        Button(Localized.copyUserIdentifier.string) {
+                    .confirmationDialog(String(localized: .localizable.share), isPresented: $showingOptions) {
+                        Button(String(localized: .localizable.copyUserIdentifier)) {
                             UIPasteboard.general.string = author.publicKey?.npub ?? ""
                         }
-                        Button(Localized.copyLink.string) {
-                            UIPasteboard.general.string = author.webLink 
+                        Button(String(localized: .localizable.copyLink)) {
+                            UIPasteboard.general.string = author.webLink
                         }
                         if isShowingLoggedInUser {
                             Button(
@@ -179,7 +179,7 @@ struct ProfileView: View {
                                     router.push(author)
                                 },
                                 label: {
-                                    Text(Localized.editProfile.string)
+                                    Text(.localizable.editProfile)
                                 }
                             )
                             Button(
@@ -187,18 +187,18 @@ struct ProfileView: View {
                                     router.push(MutesDestination())
                                 },
                                 label: {
-                                    Text(Localized.mutedUsers.string)
+                                    Text(.localizable.mutedUsers)
                                 }
                             )
                         } else {
                             if author.muted {
-                                Button(Localized.unmuteUser.string) {
+                                Button(String(localized: .localizable.unmuteUser)) {
                                     Task {
                                         do {
                                             try await author.unmute(viewContext: viewContext)
                                         } catch {
                                             alert = AlertState(title: {
-                                                TextState(Localized.error.string)
+                                                TextState(String(localized: .localizable.error))
                                             }, message: {
                                                 TextState(error.localizedDescription)
                                             })
@@ -206,13 +206,13 @@ struct ProfileView: View {
                                     }
                                 }
                             } else {
-                                Button(Localized.mute.string) {
+                                Button(String(localized: .localizable.mute)) {
                                     Task { @MainActor in
                                         do {
                                             try await author.mute(viewContext: viewContext)
                                         } catch {
                                             alert = AlertState(title: {
-                                                TextState(Localized.error.string)
+                                                TextState(String(localized: .localizable.error))
                                             }, message: {
                                                 TextState(error.localizedDescription)
                                             })
@@ -221,7 +221,7 @@ struct ProfileView: View {
                                 }
                             }
                             
-                            Button(Localized.reportUser.string, role: .destructive) {
+                            Button(String(localized: .localizable.reportUser), role: .destructive) {
                                 showingReportMenu = true
                             }
                         }

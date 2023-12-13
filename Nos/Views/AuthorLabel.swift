@@ -17,7 +17,7 @@ struct AuthorLabel: View {
         authorName.foregroundColor = .primaryTxt
         authorName.font = Font.clarityBold
         if let note {
-            let postedOrRepliedString = note.isReply ? Localized.Reply.replied.string : Localized.Reply.posted.string
+            let postedOrRepliedString = String(localized: note.isReply ? .reply.replied : .reply.posted)
             var postedOrReplied = AttributedString(" " + postedOrRepliedString)
             postedOrReplied.foregroundColor = .secondaryTxt
             

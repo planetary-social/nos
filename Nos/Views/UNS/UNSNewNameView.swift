@@ -24,14 +24,14 @@ struct UNSNewNameView: View {
                         .padding(20)
                         .padding(.top, 50)
                     
-                    PlainText(.chooseYourName)
+                    PlainText(.localizable.chooseYourName)
                         .font(.clarityTitle)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
                         .padding(20)
                     
-                    Text(.chooseYourNameDescription)
+                    Text(.localizable.chooseYourNameDescription)
                         .fontWeight(.medium)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.secondaryTxt)
@@ -43,7 +43,7 @@ struct UNSNewNameView: View {
                     WizardTextField(text: $name)
                     Spacer()
                     
-                    BigActionButton(title: .next) {
+                    BigActionButton(title: .localizable.next) {
                         await submit()
                     }
                     .padding(.vertical, 31)

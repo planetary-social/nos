@@ -11,7 +11,7 @@ import SwiftUI
 /// A big bright button that is used as the primary call-to-action on a screen.
 struct ActionButton: View {
     
-    var title: Localized
+    var title: LocalizedStringResource
     var font: Font = .clarityBold
     var image: Image?
     var textColor = Color.white
@@ -38,7 +38,7 @@ struct ActionButton: View {
         }, label: {
             HStack {
                 image
-                PlainText(title.string)
+                PlainText(title)
                     .font(font)
                     .transition(.opacity)
                     .font(.headline)
@@ -57,7 +57,7 @@ struct ActionButton: View {
 }
 
 struct SecondaryActionButton: View {
-    var title: Localized
+    var title: LocalizedStringResource
     var action: () async -> Void
     
     var body: some View {
@@ -132,13 +132,13 @@ struct ActionButtonStyle: ButtonStyle {
 struct ActionButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
-            ActionButton(title: Localized.done, action: {})
-            
-            ActionButton(title: Localized.done, action: {})
+            ActionButton(title: .localizable.done, action: {})
+
+            ActionButton(title: .localizable.done, action: {})
                 .disabled(true)
             
             ActionButton(
-                title: Localized.edit, 
+                title: .localizable.edit,
                 font: .clarityMedium,
                 image: Image.editProfile, 
                 textColor: Color(hex: "#f26141"),
@@ -152,10 +152,10 @@ struct ActionButton_Previews: PreviewProvider {
                 action: {}
             )
             
-            SecondaryActionButton(title: Localized.edit, action: {})
-            
+            SecondaryActionButton(title: .localizable.edit, action: {})
+
             // Something that should wrap at larger text sizes
-            SecondaryActionButton(title: Localized.reportConfirmation, action: {})
+            SecondaryActionButton(title: .localizable.reportConfirmation("harassment"), action: {})
         }
     }
 }
