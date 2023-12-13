@@ -51,20 +51,26 @@ class PersistenceController {
     private var model: NSManagedObjectModel
     private var inMemory: Bool
 
-    init(containerName: String = "Nos", inMemory: Bool = false) {
+    init(containerName: String = "Nos", inMemory: Bool = false, erase: Bool = false) {
         self.inMemory = inMemory
         let modelURL = Bundle.current.url(forResource: "Nos", withExtension: "momd")!
         model = NSManagedObjectModel(contentsOf: modelURL)!
         container = NSPersistentContainer(name: containerName, managedObjectModel: model)
-        setUp()
+        setUp(erasingPrevious: erase)
     }
     
-    func setUp() {
+    func tearDown() {
+        for store in container.persistentStoreCoordinator.persistentStores {
+            try? container.persistentStoreCoordinator.remove(store)
+        }
+    }
+    
+    func setUp(erasingPrevious: Bool) {
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
-        }
+        } 
         
-        loadPersistentStores(from: container)
+        loadPersistentStores(from: container, erasingPrevious: erasingPrevious)
         
         container.viewContext.automaticallyMergesChangesFromParent = true
         let mergeType = NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType
@@ -83,25 +89,25 @@ class PersistenceController {
                 Self.clearCoreData(store: storeURL, in: self.container)
             })
         }
-        setUp()
+        setUp(erasingPrevious: true)
         viewContext.reset()
-        backgroundViewContext = newBackgroundContext()
-        parseContext = newBackgroundContext()
+        backgroundViewContext.reset()
+        parseContext.reset() 
     }
     #endif
     
-    private func loadPersistentStores(from container: NSPersistentContainer) {
+    private func loadPersistentStores(from container: NSPersistentContainer, erasingPrevious: Bool) {
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             
             // Drop database if necessary
-            if Self.loadVersionFromDisk() < Self.version {
+            if Self.loadVersionFromDisk() < Self.version || erasingPrevious {
                 guard let storeURL = storeDescription.url else {
                     Log.error("need to delete core data due to version change but could not get store URL")
                     return
                 }
                 Self.clearCoreData(store: storeURL, in: container)
                 Self.saveVersionToDisk(Self.version)
-                self.loadPersistentStores(from: container)
+                self.loadPersistentStores(from: container, erasingPrevious: false)
                 return
             }
             
