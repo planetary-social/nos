@@ -9,6 +9,7 @@ on:
         type: choice
         options:
           - beta
+jobs:
   fastlane-deploy:
     runs-on: macos-latest
     steps:
