@@ -1,0 +1,23 @@
+on:
+  # Enable manual run
+  workflow_dispatch:
+    inputs:
+      lane:
+        description: "Fastlane lane"
+        required: true
+        default: "beta"
+        type: choice
+        options:
+          - beta
+  fastlane-deploy:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+      - uses: nomasystems/action-xcode-select@v0.1
+      - name: Deploy with fastlane
+        run: bundle exec fastlane beta
+        env:
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{Secrets. APP_STORE_CONNECT_API_KEY_CONTENT}}
+          APP_STORE_CONNECT_ISSUER_ID: ${{Secrets. APP_STORE_CONNECT_ISSUER_ID}}
+          APP_STORE_CONNECT_API_KEY_ID: ${{Secrets. APP_STORE_CONNECT_API_KEY_ID}}
