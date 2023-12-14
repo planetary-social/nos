@@ -33,7 +33,11 @@ platform :ios do
       target: "Nos"
     )
     build_number = get_build_number
-    gym(scheme: "Nos", clean: true)
+    gym(
+      scheme: "Nos", 
+      clean: true,
+      xcargs: "-skipPackagePluginValidation"
+    )
     changelog = read_changelog
     upload_to_testflight(changelog: changelog)
     stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
