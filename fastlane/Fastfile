@@ -18,7 +18,7 @@ default_platform(:ios)
 platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
-    xcodes # ensure correct version of xcode is installed and selected
+    #xcodes # ensure correct version of xcode is installed and selected
     asc_key_content = ENV["APP_STORE_CONNECT_API_KEY_CONTENT"]
     asc_issuer_id = ENV["APP_STORE_CONNECT_ISSUER_ID"]
     asc_key_id = ENV["APP_STORE_CONNECT_API_KEY_ID"]
