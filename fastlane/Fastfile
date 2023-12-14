@@ -28,7 +28,10 @@ platform :ios do
       key_content: asc_key_content
     )
     increment_build_number(xcodeproj: "Nos.xcodeproj")
-    version_number = get_version_number
+    version_number = get_version_number(
+      xcodeproj: "Nos.xcodeproj",
+      target: "Nos"
+    )
     build_number = get_build_number
     gym(scheme: "Nos", clean: true)
     changelog = read_changelog
