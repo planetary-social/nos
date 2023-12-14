@@ -16,7 +16,9 @@ jobs:
         uses: actions/checkout@main
       - uses: nomasystems/action-xcode-select@v0.1
       - name: Deploy with fastlane
-        run: bundle exec fastlane beta
+        run: |
+          bundle install
+          bundle exec fastlane beta
         env:
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{Secrets. APP_STORE_CONNECT_API_KEY_CONTENT}}
           APP_STORE_CONNECT_ISSUER_ID: ${{Secrets. APP_STORE_CONNECT_ISSUER_ID}}
