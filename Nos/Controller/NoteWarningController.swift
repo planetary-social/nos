@@ -30,7 +30,7 @@ extension Publisher {
     var showWarning: Bool {
         if userHidWarning {
             return false
-        } else if showReportWarnings && !(noteReports.isEmpty || !authorReports.isEmpty) {
+        } else if showReportWarnings && (!noteReports.isEmpty || !authorReports.isEmpty) {
             return true
         } else if shouldHideOutOfNetwork && showOutOfNetworkWarning && outOfNetwork {
             return true
