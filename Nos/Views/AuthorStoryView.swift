@@ -112,6 +112,9 @@ struct AuthorStoryView: View {
                     HStack(alignment: .center) {
                         AuthorLabel(author: author)
                             .padding(0)
+                        if selectedNote?.kind == EventKind.repost.rawValue {
+                            Image.repostSymbol
+                        } 
                         if let expirationTime = selectedNote?.expirationDate?.distanceString() {
                             Image.disappearingMessages
                                 .resizable()
