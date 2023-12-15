@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed a bug where reposts wouldn't be displayed in the stories.
+- Fixed a bug where the reports for authors of replies weren't being considered. 
 - Localized relative times on note cards.
 - Added a context menu for the stories in the Home Feed to open the Profile.
 - Update the color palette.
