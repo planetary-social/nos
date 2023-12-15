@@ -178,17 +178,16 @@ enum AuthorError: Error {
     @nonobjc func followedWithNewNotesPredicate(since: Date) -> NSPredicate {
         let onlyFollowedAuthorsClause = "ANY followers.source = %@"
         let onlyUnreadStoriesClause = "$event.isRead != 1"
-        let onlyPostsClause = "($event.kind = 1 OR $event.kind = 6 OR $event.kind = 30023)"
         let onlyRecentStoriesClause = "$event.createdAt > %@"
-        let onlyRootPostsClause = "SUBQUERY(" +
+        let onlyRootPostsClause = "($event.kind = 1 AND SUBQUERY(" +
             "$event.eventReferences, " +
             "$reference, " +
             "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
-        ").@count = 0"
-        let onlyAuthorsWithStoriesClause = "SUBQUERY(events, $event, \(onlyPostsClause) " +
-            "AND \(onlyUnreadStoriesClause) " +
-            "AND \(onlyRecentStoriesClause) " +
-            "AND \(onlyRootPostsClause)).@count > 0"
+        ").@count = 0)"
+        let onlyPostsRepostsAndLongFormsClause = "(\(onlyRootPostsClause) OR $event.kind = 6 OR $event.kind = 30023)"
+        let onlyAuthorsWithStoriesClause = "SUBQUERY(events, $event, \(onlyPostsRepostsAndLongFormsClause) " +
+            "AND \(onlyRecentStoriesClause)).@count > 0"
+
         return NSPredicate(
             format: "\(onlyFollowedAuthorsClause) AND \(onlyAuthorsWithStoriesClause)",
             self,
@@ -207,18 +206,19 @@ enum AuthorError: Error {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let onlyStoriesFromTheAuthorClause = "author = %@"
-        let onlyPostsClause = "(kind = 1 OR kind = 6 OR kind = 30023)"
-        let onlyRecentStoriesClause = "createdAt > %@"
-        let onlyRootPostsClause = "SUBQUERY(" +
+
+        let onlyRootPostsClause = "(kind = 1 AND SUBQUERY(" +
             "eventReferences, " +
             "$reference, " +
             "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
-        ").@count = 0"
+        ").@count = 0)"
+        let onlyPostsRepostsAndLongFormsClause = "(\(onlyRootPostsClause) OR kind = 6 OR kind = 30023)"
+
+        let onlyRecentStoriesClause = "createdAt > %@"
         fetchRequest.predicate = NSPredicate(
             format: "\(onlyStoriesFromTheAuthorClause) " +
                 "AND \(onlyRecentStoriesClause) " +
-                "AND \(onlyRootPostsClause) " +
-                "AND \(onlyPostsClause)",
+                "AND \(onlyPostsRepostsAndLongFormsClause)",
             self,
             since as CVarArg
         )
