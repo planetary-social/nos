@@ -19,9 +19,6 @@ platform :ios do
   asc_key_content = ENV["APP_STORE_CONNECT_API_KEY_CONTENT"]
   asc_issuer_id = ENV["APP_STORE_CONNECT_ISSUER_ID"]
   asc_key_id = ENV["APP_STORE_CONNECT_API_KEY_ID"]
-  GIT_AUTHORIZATION = ENV["GIT_AUTHORIZATION"]
-  TEMP_KEYCHAIN_USER = ENV["TEMP_KEYCHAIN_USER"]
-  TEMP_KEYCHAIN_PASSWORD = ENV["TEMP_KEYCHAIN_PASSWORD"]
 
   desc "Push a new beta build to TestFlight"
   lane :beta do

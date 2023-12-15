@@ -19,6 +19,7 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ Secrets.SSH_KEY }}
+          known_hosts: ${{ Secrets.KNOWN_HOSTS }}
       - name: Deploy with fastlane
         run: |
           bundle install
