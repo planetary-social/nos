@@ -220,6 +220,8 @@ fileprivate struct BottomOverlay: View {
 
             Spacer()
 
+            RepostButton(note: note)
+
             LikeButton(note: note)
 
             ReplyButton(note: note)
