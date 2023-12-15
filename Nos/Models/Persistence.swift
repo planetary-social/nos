@@ -33,11 +33,6 @@ class PersistenceController {
         container.viewContext
     }
     
-    /// A context to synchronize creation of Events and Authors so we don't end up with duplicates.
-    lazy var creationContext = {
-        newBackgroundContext()
-    }()
-    
     /// A context for parsing Nostr events from relays.
     lazy var parseContext = {
         self.newBackgroundContext()
@@ -86,7 +81,6 @@ class PersistenceController {
         }
         setUp()
         viewContext.reset()
-        creationContext = newBackgroundContext()
         backgroundViewContext = newBackgroundContext()
         parseContext = newBackgroundContext()
     }
@@ -237,8 +231,14 @@ class PersistenceController {
                 let oldEventClause = "(receivedAt <= %@ OR receivedAt == nil)"
                 let notOwnEventClause = "(author.hexadecimalPublicKey != %@)"
                 let readStoryClause = "(isRead = 1 AND receivedAt > %@)"
+                let userReportClause = "(kind == \(EventKind.report.rawValue) AND " +
+                    "authorReferences.@count > 0 AND eventReferences.@count == 0)"
+                let clauses = "\(oldEventClause) AND" +
+                    "\(notOwnEventClause) AND " +
+                    "NOT \(readStoryClause) AND " +
+                    "NOT \(userReportClause)"
                 oldEventsRequest.predicate = NSPredicate(
-                    format: "\(oldEventClause) AND \(notOwnEventClause) AND NOT \(readStoryClause)",
+                    format: clauses,
                     deleteBefore as CVarArg,
                     authorKey,
                     oldStoryCutoff as CVarArg

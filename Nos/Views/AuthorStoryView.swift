@@ -112,7 +112,7 @@ struct AuthorStoryView: View {
                     HStack(alignment: .center) {
                         AuthorLabel(author: author)
                             .padding(0)
-                        if let expirationTime = selectedNote?.expirationDate?.distanceFromNowString() {
+                        if let expirationTime = selectedNote?.expirationDate?.distanceString() {
                             Image.disappearingMessages
                                 .resizable()
                                 .foregroundColor(.secondaryTxt)
@@ -121,7 +121,7 @@ struct AuthorStoryView: View {
                                 .lineLimit(1)
                                 .font(.body)
                                 .foregroundColor(.secondaryTxt)
-                        } else if let elapsedTime = selectedNote?.createdAt?.distanceFromNowString() {
+                        } else if let elapsedTime = selectedNote?.createdAt?.distanceString() {
                             Text(elapsedTime)
                                 .lineLimit(1)
                                 .font(.body)

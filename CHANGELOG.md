@@ -8,13 +8,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a bug where the reports for authors of replies weren't being considered. 
+- Localized relative times on note cards. (thanks @tyiu!)
 - Added a context menu for the stories in the Home Feed to open the Profile.
 - Update the color palette.
+- Add repost button to stories (thanks @maddiefuzz!)
+
+## [0.1 (99)] - 2023-12-07Z
+
+- Fix profile pictures not loading after creating a new account.
+
+## [0.1 (98)] - 2023-12-04Z
+
 - Fixed a bug where the app could become unresponsive.
-- Fixed some performance issues for users who follow a large number of accounts.
+
+## [0.1 (97)] - 2023-12-01Z
+
 - Added the option to copy the NIP-05 identifier when browsing a profile.
 - Tapping on a tab bar icon can let you scroll to top.
-- Add repost button to stories
+- Fix an issue where reposts were not displaying correctly.
+
+## [0.1 (96)] - 2023-11-28Z
+
+- Fixed some performance issues for users who follow a large number of accounts.
 
 ## [0.1 (95)] - 2023-11-27Z
 

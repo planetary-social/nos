@@ -90,11 +90,12 @@ struct RepliesView: View {
             let subID = await relayService.openSubscription(with: filter)
             subscriptionIDs.append(subID)
             
-            // download reports for this user
+            // download reports for this user and the replies' authors
             guard let authorKey = note.author?.hexadecimalPublicKey else {
                 return
             }
-            let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
+            let pTags = Array(Set([authorKey] + replies.compactMap { $0.author?.hexadecimalPublicKey }))
+            let reportFilter = Filter(kinds: [.report], pTags: pTags)
             subscriptionIDs.append(await relayService.openSubscription(with: reportFilter))
         }
     }
