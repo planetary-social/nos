@@ -16,17 +16,22 @@
 default_platform(:ios)
 
 platform :ios do
+  asc_key_content = ENV["APP_STORE_CONNECT_API_KEY_CONTENT"]
+  asc_issuer_id = ENV["APP_STORE_CONNECT_ISSUER_ID"]
+  asc_key_id = ENV["APP_STORE_CONNECT_API_KEY_ID"]
+  GIT_AUTHORIZATION = ENV["GIT_AUTHORIZATION"]
+  TEMP_KEYCHAIN_USER = ENV["TEMP_KEYCHAIN_USER"]
+  TEMP_KEYCHAIN_PASSWORD = ENV["TEMP_KEYCHAIN_PASSWORD"]
+
   desc "Push a new beta build to TestFlight"
   lane :beta do
     #xcodes # ensure correct version of xcode is installed and selected
-    asc_key_content = ENV["APP_STORE_CONNECT_API_KEY_CONTENT"]
-    asc_issuer_id = ENV["APP_STORE_CONNECT_ISSUER_ID"]
-    asc_key_id = ENV["APP_STORE_CONNECT_API_KEY_ID"]
     app_store_connect_api_key(
       key_id: asc_key_id,
       issuer_id: asc_issuer_id,
       key_content: asc_key_content
     )
+    match(type: "appstore")
     increment_build_number(xcodeproj: "Nos.xcodeproj")
     version_number = get_version_number(
       xcodeproj: "Nos.xcodeproj",
@@ -36,7 +41,7 @@ platform :ios do
     gym(
       scheme: "Nos", 
       clean: true,
-      xcargs: "-skipPackagePluginValidation -allowProvisioningUpdates"
+      xcargs: "-skipPackagePluginValidation"
     )
     changelog = read_changelog
     upload_to_testflight(changelog: changelog)
@@ -56,6 +61,26 @@ platform :ios do
       sound: "Pebble", 
       open: "https://appstoreconnect.apple.com/apps/1670125746/testflight/ios"
     )
+  end
+
+  desc "Refresh certificates in the match repo"
+  lane :certs do
+    app_store_connect_api_key(
+      key_id: asc_key_id,
+      issuer_id: asc_issuer_id,
+      key_content: asc_key_content
+    )
+    match(type: "appstore")
+  end
+
+  desc "Clean App Store Connect of certificates"
+  lane :nuke_certs do
+    app_store_connect_api_key(
+      key_id: asc_key_id,
+      issuer_id: asc_issuer_id,
+      key_content: asc_key_content
+    )
+    match_nuke(type: "appstore")
   end
 end
 

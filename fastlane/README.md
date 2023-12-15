@@ -50,6 +50,22 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Push a new beta build to TestFlight
 
+### ios certs
+
+```sh
+[bundle exec] fastlane ios certs
+```
+
+Refresh certificates in the match repo
+
+### ios nuke_certs
+
+```sh
+[bundle exec] fastlane ios nuke_certs
+```
+
+Clean App Store Connect of certificates
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

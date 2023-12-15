@@ -15,6 +15,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@main
       - uses: nomasystems/action-xcode-select@v0.1
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ Secrets.SSH_KEY }}
       - name: Deploy with fastlane
         run: |
           bundle install
@@ -23,3 +27,4 @@ jobs:
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{Secrets. APP_STORE_CONNECT_API_KEY_CONTENT}}
           APP_STORE_CONNECT_ISSUER_ID: ${{Secrets. APP_STORE_CONNECT_ISSUER_ID}}
           APP_STORE_CONNECT_API_KEY_ID: ${{Secrets. APP_STORE_CONNECT_API_KEY_ID}}
+          MATCH_PASSWORD: ${{ Secrets.MATCH_PASSWORD }}
