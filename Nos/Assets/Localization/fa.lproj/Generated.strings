@@ -33,12 +33,18 @@
 "Localized.failedToExportLogs" = "خطا در خروجی گرفتن از کارنامه داده.";
 "Localized.appVersion" = "نسخه برنامه:";
 "Localized.allPublishedEvents" = "تمام رویدادهای منتشر شده";
+"Localized.feedSettings" = "تنظیمات خبرنامه";
+"Localized.useReportsFromFollows" = "گزارش دنبال شونده های من را استفاده کن";
+"Localized.useReportsFromFollowsDescription" = "هرگاه کسی که دنبال می کنید یادداشت یا شخصی را گزارش کند، یک هشدار محتوا به یادداشت او می افزاییم.";
+"Localized.showOutOfNetworkWarnings" = "اخطارهای خارج از شبکه دوستان را نشان بده";
+"Localized.showOutOfNetworkWarningsDescription" = "یادداشت کاربران خارج از حلقه دوستانم را پشت هشدار محتوا پنهان کن.";
 "Localized.privateKey" = "کلید خصوصی";
 "Localized.logout" = "خروج";
 "Localized.myKeyIsBackedUp" = "کلیدم را ذخیره کردم";
 "Localized.backUpYourKeyWarning" = "خروج از برنامه کلید خصوصی (nsec) شما را از اپ پاک می کند. قبل از این کار مطمئن شوید کلید خصوصی خود را ذخیره کرده اید وگرنه دسترسی به حساب کاربری خود را از دست خواهید داد!";
 "Localized.post" = "ارسال";
 "Localized.newNote" = "یادداشت جدید";
+"Localized.new" = "جدید";
 "Localized.newNotePlaceholder" = "یادداشت خود را اینجا بنویسید...";
 "Localized.cancel" = "انصراف";
 "Localized.confirm" = "تایید";
@@ -88,14 +94,24 @@
 "Localized.version" = "نسخه";
 "Localized.profileTitle" = "نمایه";
 "Localized.profile" = "نمایه";
+"Localized.seeProfile" = "دیدن نمایه";
 "Localized.follow" = "دنبال کردن";
+"Localized.followers" = "دنبال‌کنندگان";
 "Localized.follows" = "دنبال شوندگان";
 "Localized.following" = "دنبال کننده";
-"Localized.followedBy" = "دنبال شده توسط";
+"Localized.followersYouKnow" = "دنبال کنندگانی که می شناسید";
 "Localized.followedByOne" = "دنبال شده توسط **{{ one }}**";
 "Localized.followedByOneAndMore" = "دنبال شده توسط **{{ one }}** و **{{ count }}** نفر دیگر";
 "Localized.followedByTwo" = "دنبال شده توسط **{{ one }}** و **{{ two }}**";
 "Localized.followedByTwoAndMore" = "دنبال شده توسط **{{ one }}**، **{{ two }}** و **{{ count }}** نفر دیگر";
+"Localized.userHasBeen" = "این کاربر گزارش شده است";
+"Localized.noteHasBeen" = "این یادداشت گزارش شده است";
+"Localized.reportedBy" = "گزارش شده توسط";
+"Localized.reportedByOne" = "گزارش شده توسط **{{ one }}**";
+"Localized.reportedByOneAndMore" = "گزارش شده توسط **{{ one }}** و **{{ count }}** نفر دیگر";
+"Localized.reportedByTwo" = "گزارش شده توسط **{{ one }}** و **{{ two }}**";
+"Localized.reportedByTwoAndMore" = "گزارش شده توسط **{{ one }}**، **{{ two }}** و **{{ count }}** نفر دیگر";
+"Localized.reportedFor" = "به دلیل {{reason}}";
 "Localized.unfollow" = "لغو دنبال کردن";
 "Localized.universalName" = "نام جهانی";
 "Localized.nip05" = "NIP-05";
@@ -104,6 +120,7 @@
 "Localized.readMore" = "بیشتر بخوانید";
 "Localized.thread" = "رشته";
 "Localized.show" = "نشان دادن";
+"Localized.viewThisPostAnyway" = "به هر حال این یادداشت را ببینم";
 "Localized.bio" = "معرفی کوتاه";
 "Localized.displayName" = "نام نمایشی";
 "Localized.name" = "نام";
@@ -155,6 +172,8 @@
 "Localized.note" = "یادداشت";
 "Localized.unmuteUser" = "باصدا کردن";
 "Localized.outsideNetwork" = "این کاربر خارج از شبکه شماست.";
+"Localized.outsideNetworkExplanation" = "این یادداشت از کسی خارج از شبکه \"دوستان دوستان\" شما آمده است. Nos به طور پیش فرض این ها را پنهان می کند. می توانید در منوی تنظیمات آن را تغییر دهید.";
+"Localized.contentWarningExplanation" = "به پرورش اجتماعی امن و آرام متعهد است. برای دستیابی به این هدف هرگاه کسی که دنبال می کنید یادداشتی را گزارش می کند، هشدار محتوا نشان می دهیم. می توانید این را در منوی تنظیمات تغییر دهید.";
 "Localized.allMyRelays" = "همه رله های من";
 "Localized.about" = "درباره";
 "Localized.contactUs" = "تماس با ما";
@@ -173,7 +192,7 @@
 "Localized.registration" = "ثبت";
 "Localized.registrationDescription" = "شماره تلفن خود را وارد کنید تا بتوانیم کد پیامکی بفرستیم.";
 "Localized.verification" = "تأیید";
-"Localized.verificationDescription" = "کد چهار رقمی که به {{ phone_number }} فرستادیم";
+"Localized.verificationDescription" = "کد ۶ رقمی ای که به {{ phone_number }} فرستادیم وارد کنید";
 "Localized.unsLearnMore" = "درباره UNS بیشتر بیاموزید.";
 "Localized.verifyYourIdentity" = "هویت خود را تایید کنید";
 "Localized.enterCode" = "کد را وارد کنید";
@@ -199,8 +218,7 @@
 "Localized.eventSource" = "رویدادخام";
 "Localized.loading" = "در حال بارگیری...";
 "Localized.viewSource" = "مشاهده منبع";
-"Localized.reportEventContent" = "این حساب کاربری با استفاده از لغات NIP-69 بابت {{ report_category }} گزارش شده است.
-https://github.com/nostr-protocol/nips/pull/457";
+"Localized.reportEventContent" = "این محتوا به دلیل {{ report_category }} گزارش شده است.";
 "Localized.select" = "انتخاب";
 "Localized.linkToNote" = "🔗 لینک به یادداشت";
 
