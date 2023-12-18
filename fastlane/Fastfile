@@ -57,8 +57,7 @@ platform :ios do
     gym(
       scheme: "Nos", 
       clean: true,
-      xcargs: "-skipPackagePluginValidation",
-      xcodebuild_formatter: ''
+      xcargs: "-skipPackagePluginValidation"
     )
     changelog = read_changelog
     upload_to_testflight(changelog: changelog)
