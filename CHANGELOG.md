@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Discover screen can now search notes by id.
 - Localized relative times on note cards.
 - Added a context menu for the stories in the Home Feed to open the Profile.
 - Update the color palette.
