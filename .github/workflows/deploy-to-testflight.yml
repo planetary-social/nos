@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@main
+        with:
+          ref: ${{ github.ref_name }}
       - uses: nomasystems/action-xcode-select@v0.1
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
