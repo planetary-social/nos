@@ -129,7 +129,7 @@ struct CompactNoteView: View {
         .task {
             let backgroundContext = persistenceController.backgroundViewContext
             if let parsedAttributedContent = await Event.attributedContentAndURLs(
-                noteID: note.identifier,
+                note: note,
                 context: backgroundContext
             ) {
                 withAnimation(.easeIn(duration: 0.1)) {

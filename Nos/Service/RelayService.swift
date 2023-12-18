@@ -35,7 +35,6 @@ final class RelayService: ObservableObject {
         @Dependency(\.persistenceController) var persistenceController
         self.backgroundContext = persistenceController.newBackgroundContext()
         self.parseContext = persistenceController.parseContext
-        parseContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         
         self.eventProcessingLoop = Task(priority: .userInitiated) { [weak self] in
             try Task.checkCancellation()
@@ -295,6 +294,7 @@ extension RelayService {
                     _ = try EventProcessor.parse(jsonEvent: event, from: relay, in: self.parseContext) 
                 }
                 try self.parseContext.saveIfNeeded()
+                try self.persistenceController.viewContext.saveIfNeeded()
             }                
             return true
         }

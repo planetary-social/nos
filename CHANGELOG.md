@@ -10,8 +10,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Discover screen can now search notes by id.
 - Localized relative times on note cards.
+- Fixed contact list hydration bug where unfollows are not removed when follow counts do not change.
+
+## [0.1 (101)] - 2023-12-15Z
+
+- Fixed a bug where reposts wouldn't be displayed in the stories.
+- Fixed a bug where the reports for authors of replies weren't being considered. 
+- Localized relative times on note cards. (thanks @tyiu!)
 - Added a context menu for the stories in the Home Feed to open the Profile.
+- Add repost button to stories (thanks @maddiefuzz!)
+
+## [0.1 (100)] - 2023-12-09Z
+
+- Fixed some cases where a note's contents would never load.
 - Update the color palette.
+- Fix crash on Mac when opening new note view.
 
 ## [0.1 (99)] - 2023-12-07Z
 

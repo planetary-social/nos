@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CocoaLumberjack/CocoaLumberjack.git",
       "state" : {
-        "revision" : "363ed23d19a931809ea834a7d722da830353806a",
-        "version" : "3.8.2"
+        "revision" : "67ec5818a757aba4d7c534e21a905d878d128dbf",
+        "version" : "3.8.1"
       }
     },
     {
@@ -259,6 +259,15 @@
       "state" : {
         "revision" : "270a754308f5440be52fc295242eb7031638bd15",
         "version" : "0.6.1"
+      }
+    },
+    {
+      "identity" : "viewinspector",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nalexn/ViewInspector",
+      "state" : {
+        "revision" : "a1422d4749ccf7f32b1d14a9ec19ec9a0b0fd337",
+        "version" : "0.9.9"
       }
     },
     {
