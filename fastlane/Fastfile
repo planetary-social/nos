@@ -19,18 +19,35 @@ platform :ios do
   asc_key_content = ENV["APP_STORE_CONNECT_API_KEY_CONTENT"]
   asc_issuer_id = ENV["APP_STORE_CONNECT_ISSUER_ID"]
   asc_key_id = ENV["APP_STORE_CONNECT_API_KEY_ID"]
+  keychain_pass = ENV["KEYCHAIN_PASS"]
   is_ci = ENV["CI"]
 
   desc "Push a new beta build to TestFlight"
   lane :beta do
-    #xcodes # ensure correct version of xcode is installed and selected
     app_store_connect_api_key(
       key_id: asc_key_id,
       issuer_id: asc_issuer_id,
       key_content: asc_key_content
-      #key_filepath: "~/.fastlane/AuthKey_4L8Z9W89TJ.p8"
     )
-    match(type: "appstore", readonly: is_ci)
+    if is_ci 
+      # Create a keychain because Github Action machines don't come with one
+      create_keychain(
+          name: "keychain",
+          password: keychain_pass,
+          default_keychain: true,
+          unlock: true,
+          timeout: 3600,
+          lock_when_sleeps: false
+      )
+      match(
+          type: "appstore",  
+	  readonly: true,
+          keychain_name: "keychain",
+          keychain_password: "123456"
+        )
+    else
+      match(type: "appstore", readonly: is_ci)
+    end
     increment_build_number(xcodeproj: "Nos.xcodeproj")
     version_number = get_version_number(
       xcodeproj: "Nos.xcodeproj",
