@@ -16,8 +16,6 @@ final class SocialGraphTests: XCTestCase {
     var testContext: NSManagedObjectContext!
     
     override func invokeTest() {
-        // For some reason that I can't figure out using an in-memory persistent store causes these tests to take
-        // several minutes instead of seconds, so we are using an on-disk store for these tests instead.
         withDependencies { dependencies in
             let persistenceController = PersistenceController(containerName: "NosTests", inMemory: true)
             testContext = persistenceController.viewContext
@@ -159,9 +157,9 @@ final class SocialGraphTests: XCTestCase {
     
     func testOutOfNetwork() async throws {
         // Arrange
-        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
-        let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
-        let eve = try Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: testContext)
+        _ = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        _ = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
+        _ = try Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: testContext)
         
         // Act
         let sut = SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)

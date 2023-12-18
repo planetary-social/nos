@@ -38,8 +38,7 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
         Log.debug("cache miss")
         do {
             let inNetwork = try context.performAndWait {
-                guard let currentUser = try Author.find(by: userKey, context: context),
-                    let author = try Author.find(by: key, context: context) else {
+                guard let currentUser = try Author.find(by: userKey, context: context) else {
                     outOfNetworkKeys.insert(key)
                     return false
                 }

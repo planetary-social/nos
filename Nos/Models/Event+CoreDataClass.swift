@@ -941,22 +941,25 @@ public class Event: NosManagedObject {
         }
     }
 
+    /// This function formats an Event's content for display in the UI. It does things like replacing raw npub links
+    /// with the author's name, and extracting any URLs so that previews can be displayed for them.
+    /// 
+    /// - Parameter note: the note whose content should be processed.
+    /// - Parameter context: the context to use for database queries - this does not need to be the same context that
+    ///     `note` is in.
+    /// - Returns: A tuple where the first object is the note content formatted for display, and the second is a list
+    ///     of HTTP links found in the note's context.  
     class func attributedContentAndURLs(
-        noteID: String?, 
+        note: Event, 
         context: NSManagedObjectContext
     ) async -> (AttributedString, [URL])? {
-        guard let noteID else {
+        guard let content = note.content else {
             return nil
         }
+        let tags = note.allTags as? [[String]] ?? []
         
         return await context.perform {
-            guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
-                let content = note.content else {
-                return nil
-            }
-            try? context.saveIfNeeded()
-            let tags = note.allTags as? [[String]] ?? []
-            return NoteParser.parse(content: content, tags: tags, context: context)
+            NoteParser.parse(content: content, tags: tags, context: context)
         }
     }
     
