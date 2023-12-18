@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fix localization of warning message when a ntoe has been reported. (thanks @L!)
+
 ## [0.1 (101)] - 2023-12-15Z
 
 - Fixed a bug where reposts wouldn't be displayed in the stories.
