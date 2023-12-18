@@ -43,7 +43,7 @@ platform :ios do
           type: "appstore",  
 	  readonly: true,
           keychain_name: "keychain",
-          keychain_password: "123456"
+          keychain_password: keychain_pass
         )
     else
       match(type: "appstore", readonly: is_ci)
