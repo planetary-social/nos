@@ -113,3 +113,8 @@ end
   end
 end
 
+lane :bump_version do
+  increment_build_number(xcodeproj: "Nos.xcodeproj")
+end
+
+

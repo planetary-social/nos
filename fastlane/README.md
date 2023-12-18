@@ -37,6 +37,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 
 
+### bump_version
+
+```sh
+[bundle exec] fastlane bump_version
+```
+
+
+
 ----
 
 
