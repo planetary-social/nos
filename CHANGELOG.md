@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed contact list hydration bug where unfollows are not removed when follow counts do not change.
+
 ## [0.1 (101)] - 2023-12-15Z
 
 - Fixed a bug where reposts wouldn't be displayed in the stories.
