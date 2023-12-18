@@ -65,7 +65,7 @@ platform :ios do
     stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
     git_commit(message: "TestFlight deployment", path: "*")
     add_git_tag(tag: "v#{version_number}-#{build_number}")
-    push_to_git_remote
+    push_to_git_remote(remote_branch: beta)
     sentry_upload_dif(
       org_slug: 'verse',
       project_slug: 'nos-ios',
