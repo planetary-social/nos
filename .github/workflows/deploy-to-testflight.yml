@@ -29,4 +29,5 @@ jobs:
           APP_STORE_CONNECT_ISSUER_ID: ${{Secrets. APP_STORE_CONNECT_ISSUER_ID}}
           APP_STORE_CONNECT_API_KEY_ID: ${{Secrets. APP_STORE_CONNECT_API_KEY_ID}}
           MATCH_PASSWORD: ${{ Secrets.MATCH_PASSWORD }}
+          KEYCHAIN_PASS: ${{ Secrets.KEYCHAIN_PASS }}
           CI: true
