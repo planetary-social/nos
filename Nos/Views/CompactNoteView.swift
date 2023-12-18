@@ -112,7 +112,7 @@ struct CompactNoteView: View {
                     } label: {
                         PlainText(Localized.readMore.string.uppercased())
                             .font(.caption)
-                            .foregroundColor(.secondaryText)
+                            .foregroundColor(.secondaryTxt)
                             .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
                             .background(Color.hashtagBg)
                             .cornerRadius(4)
@@ -129,7 +129,7 @@ struct CompactNoteView: View {
         .task {
             let backgroundContext = persistenceController.backgroundViewContext
             if let parsedAttributedContent = await Event.attributedContentAndURLs(
-                noteID: note.identifier,
+                note: note,
                 context: backgroundContext
             ) {
                 withAnimation(.easeIn(duration: 0.1)) {
@@ -166,7 +166,7 @@ struct CompactNoteView_Previews: PreviewProvider {
             CompactNoteView(note: previewData.doubleImageNote, loadLinks: false)
         }
         .padding()
-        .background(Color.cardBackground)
+        .background(Color.previewBg)
         .inject(previewData: PreviewData())
     }
 }

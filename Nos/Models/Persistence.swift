@@ -33,14 +33,13 @@ class PersistenceController {
         container.viewContext
     }
     
-    /// A context to synchronize creation of Events and Authors so we don't end up with duplicates.
-    lazy var creationContext = {
-        newBackgroundContext()
-    }()
-    
     /// A context for parsing Nostr events from relays.
     lazy var parseContext = {
-        self.newBackgroundContext()
+        let context = NSManagedObjectContext(.privateQueue)
+        context.parent = viewContext
+        context.automaticallyMergesChangesFromParent = true
+        context.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+        return context
     }()
     
     /// A context for Views to do expensive queries that we want to keep off the viewContext.
@@ -52,20 +51,26 @@ class PersistenceController {
     private var model: NSManagedObjectModel
     private var inMemory: Bool
 
-    init(containerName: String = "Nos", inMemory: Bool = false) {
+    init(containerName: String = "Nos", inMemory: Bool = false, erase: Bool = false) {
         self.inMemory = inMemory
         let modelURL = Bundle.current.url(forResource: "Nos", withExtension: "momd")!
         model = NSManagedObjectModel(contentsOf: modelURL)!
         container = NSPersistentContainer(name: containerName, managedObjectModel: model)
-        setUp()
+        setUp(erasingPrevious: erase)
     }
     
-    func setUp() {
+    func tearDown() {
+        for store in container.persistentStoreCoordinator.persistentStores {
+            try? container.persistentStoreCoordinator.remove(store)
+        }
+    }
+    
+    func setUp(erasingPrevious: Bool) {
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
-        }
+        } 
         
-        loadPersistentStores(from: container)
+        loadPersistentStores(from: container, erasingPrevious: erasingPrevious)
         
         container.viewContext.automaticallyMergesChangesFromParent = true
         let mergeType = NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType
@@ -84,26 +89,25 @@ class PersistenceController {
                 Self.clearCoreData(store: storeURL, in: self.container)
             })
         }
-        setUp()
+        setUp(erasingPrevious: true)
         viewContext.reset()
-        creationContext = newBackgroundContext()
-        backgroundViewContext = newBackgroundContext()
-        parseContext = newBackgroundContext()
+        backgroundViewContext.reset()
+        parseContext.reset() 
     }
     #endif
     
-    private func loadPersistentStores(from container: NSPersistentContainer) {
+    private func loadPersistentStores(from container: NSPersistentContainer, erasingPrevious: Bool) {
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             
             // Drop database if necessary
-            if Self.loadVersionFromDisk() < Self.version {
+            if Self.loadVersionFromDisk() < Self.version || erasingPrevious {
                 guard let storeURL = storeDescription.url else {
                     Log.error("need to delete core data due to version change but could not get store URL")
                     return
                 }
                 Self.clearCoreData(store: storeURL, in: container)
                 Self.saveVersionToDisk(Self.version)
-                self.loadPersistentStores(from: container)
+                self.loadPersistentStores(from: container, erasingPrevious: false)
                 return
             }
             
@@ -237,8 +241,14 @@ class PersistenceController {
                 let oldEventClause = "(receivedAt <= %@ OR receivedAt == nil)"
                 let notOwnEventClause = "(author.hexadecimalPublicKey != %@)"
                 let readStoryClause = "(isRead = 1 AND receivedAt > %@)"
+                let userReportClause = "(kind == \(EventKind.report.rawValue) AND " +
+                    "authorReferences.@count > 0 AND eventReferences.@count == 0)"
+                let clauses = "\(oldEventClause) AND" +
+                    "\(notOwnEventClause) AND " +
+                    "NOT \(readStoryClause) AND " +
+                    "NOT \(userReportClause)"
                 oldEventsRequest.predicate = NSPredicate(
-                    format: "\(oldEventClause) AND \(notOwnEventClause) AND NOT \(readStoryClause)",
+                    format: clauses,
                     deleteBefore as CVarArg,
                     authorKey,
                     oldStoryCutoff as CVarArg

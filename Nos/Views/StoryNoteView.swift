@@ -97,7 +97,7 @@ struct StoryNoteView: View {
                 if shouldShowSpacing {
                     Spacer(minLength: 85)
                 }
-                if note.kind == EventKind.repost.rawValue, let repostedNote = note.referencedNote() {
+                if note.kind == EventKind.repost.rawValue, let repostedNote = note.repostedNote() {
                     Button {
                         router.push(repostedNote)
                     } label: {
@@ -150,7 +150,7 @@ struct StoryNoteView: View {
             let backgroundContext = persistenceController.backgroundViewContext
             await Event.markNoteAsRead(noteID: note.identifier, context: backgroundContext)
             if let parsedAttributedContent = await Event.attributedContentAndURLs(
-                noteID: note.identifier,
+                note: note,
                 context: backgroundContext
             ) {
                 withAnimation(.easeIn(duration: 0.1)) {

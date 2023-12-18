@@ -128,7 +128,6 @@ public class Event: NosManagedObject {
         "npub12hcytyr8fumy3axde8wgeced523gyp6v6zczqktwuqeaztfc2xzsz3rdp4": ["NoGood"],
         "npub1l9kr6ajfwp6vfjp60vuzxwqwwlw884dff98a9cznujs520shsf9s35xfwh": ["Karine"],
         "npub1rfdkj37rhymcrr5jk9jjaae5c3yj8l24jtr8a27q0chh2y2aq42snhh53u": ["eolaí"],
-        "npub17amtesfzwxl8nlr3ke2l8jl7kw52z60n8msnxh7vps3g9xgpmf9qx5nldk": ["Malos10"],
         "npub1uch5rxswzes8h9hlzrktqqjf4a75k6w86ys7fvzpxrrpejvccvhq4sl7fj": ["muneomi"],
         "npub1p458ltjfrxmcymk4j3plsmsksaqsf62cggdqvhv9cphk0wdglzts80t20a": ["Adhhafi"],
         "npub19mduaf5569jx9xz555jcx3v06mvktvtpu0zgk47n4lcpjsz43zzqhj6vzk": ["Nostr Report"],
@@ -136,12 +135,13 @@ public class Event: NosManagedObject {
         "npub1erhg86xl307d46pla66aycr6sjpy9esnrffysr98l5pjvt2fdgeq8wru26": ["farfallica"],
         "npub12h5xc0usentknjnldce6a80tq0m475u6ucgwhlk2zsfqax3x94fsmx0rvt": ["Weisheiten"],
         "npub166l9t9ckan9yh6j8pku0stszkekt0s8uhqwvddz4qr92r9w0wxcs59u7c3": ["taylan"],
+        "npub1pmwz736ys3mfhjdld4r36xqwfc5qkz7dwxdkmfu3qqd7kucvludsrm4nu6": ["lizsweig"],
         "npub1q50ex3alz6jz9p9pc6yler38wru0sf6ge7kjsfks08ewj90jumfq0euvf3": ["Urzeitshop"],
         "npub1kwdcaq7e9pluu0f9s7rdlj7sqscf37ty6rv7fl92k4nqcr3ezfts8enny4": ["The Free Quaker"],
         "npub1qcxmjzt90y8g3kwych8r8x4wf0s6chm4z27ftgglxqcr4e7mhf5svwxq0z": ["Domingos Faria"],
         "npub105em547c5m5gdxslr4fp2f29jav54sxml6cpk6gda7xyvxuzmv6s84a642": ["Travel Telly"],
         "npub1mhrdsyurcmnva5783cuwmvp2k6kqc7er47lh56z5zr48ha5fhgesf5028h": ["BeatingUpwind"],
-        "npub1zwulrffp23wle3tl25dt0jr2q376k0k8vhe9xzjl5jnxnag5tc2sr2hjds": ["Discover Nature"],
+        "npub1zwulrffp23wle3tl25dt0jr2q376k0k8vhe9xzjl5jnxnag5tc2sr2hjds": ["Love of Nature"],
         "npub1sur5gd3mrfvcd4nh8dtsdh0ztrqrnaknff0lcfcfz5pn56n8eqkqv9sm0l": ["Animals"],
         "npub1v60thnx0gz0wq3n6xdnq46y069l9x70xgmjp6lprdl6fv0eux6mqgjj4rp": ["Goats!"],
         "npub1tvw3h5xqnuc2aq5zelxp3dy58sz7x9u8e6enkxywmrz70cg2j2zqjes44n": ["Tech Priest"],
@@ -193,11 +193,14 @@ public class Event: NosManagedObject {
         "npub1hjugp75htg9zx2xhkk0h2zen47yfx9de3mkade4g4q7m9tn56atqwhq06v": ["Digital Courage"],
         "npub1dt25tmqsqh6xp9v6ewcgwm4q3cp93n9atenac69v7h2kw0fa8l0qx2z3ug": ["Stray Cat Observer"],
         "npub1yegarmnp85dj05k7292mhm0m4jhv7yr7znq2tncsnthtshsn5xns283nns": ["JF Martin"],
+        "npub1ylccvgzdlan2vyh4snx9u8kjpk8580tm2ecxmvv72mzem3xevt9qw0z7ks": ["Elon Musk's Jet"],
         "npub1c8jd3qucegcz4qtrztvfj5vhag9c57q23dsvne07yz2l6x2h87ssham228": ["Guido Kühn"],
         "npub1z3mkez22qs9j4nve8dg08m8wxave66yc2q8zrmmxjm9f3pt5wfmqslfm29": ["Yogthos"],
         "npub1ym3ynkrv78fet2l3d83n6vek0lkjcjd6mz93ksx2zuz7jlnh53rsr67jpq": ["Laszlo"],
+        "npub1lunaq893u4hmtpvqxpk8hfmtkqmm7ggutdtnc4hyuux2skr4ttcqr827lj": ["Stuart Bowman"],
         "npub1qhldxsy0v533gd64fge20cw9y7mtyevhrelh9nusddqfwyw4euvsrt66cz": ["Andreas Schneider"],
         "npub1nwwtpxvzgjtspmyeuqsxlmk5rum8zgmlcsum8t55dggsaytm0kdqs2etu5": ["Kalou"],
+        "npub1c878wu04lfqcl5avfy3p5x83ndpvedaxv0dg7pxthakq3jqdyzcs2n8avm": ["Ben Arc"],
         "npub1xz5g8uqpmg3mqvezjhfnev660m0h476wk3rssra44fn87gwgequqwra02a": ["Lahmienwski Lab"],
         "npub1plx4lff553p6kryg2vkrf47h82lcsvjespfdcv5zmzmn03429psst9hnwk": ["Dylan"],
         "npub1cl3098w2krckyfyyzcnnefltuggvj0ke32p3kag88v3wsx5j4y8q5e69y2": ["Leaa"]
@@ -228,7 +231,7 @@ public class Event: NosManagedObject {
         guard let currentUser = currentUser.author else {
             return NSPredicate.false
         }
-        let featuredPredicate = NSPredicate(
+        return NSPredicate(
             format: "kind IN %@ AND eventReferences.@count = 0 AND author.hexadecimalPublicKey IN %@ " +
                 "AND NOT author IN %@.follows.destination AND NOT author = %@ AND receivedAt <= %@ AND " +
                 "author.muted = false AND deletedOn.@count = 0",
@@ -240,21 +243,6 @@ public class Event: NosManagedObject {
             currentUser,
             before as CVarArg
         )
-        
-        let twoHopsPredicate = NSPredicate(
-            format: "kind IN %@ AND eventReferences.@count = 0 AND author.muted = false " +
-                "AND ANY author.followers.source IN %@.follows.destination AND NOT author IN %@.follows.destination " +
-                "AND receivedAt <= %@ AND deletedOn.@count = 0",
-            discoverKinds.map { $0.rawValue },
-            currentUser,
-            currentUser,
-            before as CVarArg
-        )
-
-        return NSCompoundPredicate(orPredicateWithSubpredicates: [
-            featuredPredicate,
-            twoHopsPredicate
-        ])
     }
     
     @nonobjc public class func seen(on relay: Relay, before: Date, exceptFrom author: Author?) -> NSPredicate {
@@ -561,28 +549,11 @@ public class Event: NosManagedObject {
             }
             return existingEvent
         } else {
-            @Dependency(\.crashReporting) var crashReporting
-            @Dependency(\.persistenceController) var persistenceController
-
-            /// Always create events in the creationContext first to make sure we never end up with two identical
-            /// Events in different contexts with the same objectID, because this messes up SwiftUI's observation
-            /// of changes.
-            let creationContext = persistenceController.creationContext
-            let objectID = try creationContext.performAndWait {
-                let event = Event(context: creationContext)
-                event.identifier = jsonEvent.id
-                try creationContext.save()
-                return event.objectID
-            }
-            guard let fetchedEvent = context.object(with: objectID) as? Event else {
-                let error = EventError.coreData
-                crashReporting.report(error)
-                throw error
-            }
-            
-            fetchedEvent.receivedAt = .now
-            try fetchedEvent.hydrate(from: jsonEvent, relay: relay, in: context)
-            return fetchedEvent
+            let event = Event(context: context)
+            event.identifier = jsonEvent.id
+            event.receivedAt = .now
+            try event.hydrate(from: jsonEvent, relay: relay, in: context)
+            return event
         }
     }
     
@@ -597,25 +568,9 @@ public class Event: NosManagedObject {
         if let existingEvent = try context.fetch(Event.event(by: id)).first {
             return existingEvent
         } else {
-            @Dependency(\.crashReporting) var crashReporting
-            @Dependency(\.persistenceController) var persistenceController
-
-            /// Always create events in the creationContext first to make sure we never end up with two identical
-            /// Events in different contexts with the same objectID, because this messes up SwiftUI's observation
-            /// of changes.
-            let creationContext = persistenceController.creationContext
-            let objectID = try creationContext.performAndWait {
-                let event = Event(context: creationContext)
-                event.identifier = id
-                try creationContext.save()
-                return event.objectID
-            }
-            guard let fetchedEvent = context.object(with: objectID) as? Event else {
-                let error = EventError.coreData
-                crashReporting.report(error)
-                throw error
-            }
-            return fetchedEvent
+            let event = Event(context: context)
+            event.identifier = id
+            return event
         }
     }
     
@@ -688,6 +643,10 @@ public class Event: NosManagedObject {
             
         case .mute:
             hydrateMuteList(from: jsonEvent, context: context)
+        case .repost:
+            
+            hydrateDefault(from: jsonEvent, context: context)
+            parseContent(from: jsonEvent, context: context)
             
         default:
             hydrateDefault(from: jsonEvent, context: context)
@@ -830,6 +789,22 @@ public class Event: NosManagedObject {
         }
     }
     
+    /// Tries to parse a new event out of the given jsonEvent's `content` field.
+    @discardableResult
+    func parseContent(from jsonEvent: JSONEvent, context: NSManagedObjectContext) -> Event? {
+        do {
+            if let contentData = jsonEvent.content.data(using: .utf8) {
+                let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: contentData)
+                return try Event().createIfNecessary(jsonEvent: jsonEvent, relay: nil, context: context)
+            }
+        } catch {
+            Log.error("Could not parse content for jsonEvent: \(jsonEvent)")
+            return nil
+        }
+        
+        return nil
+    }
+    
     // MARK: - Helpers
     
     var serializedEventForSigning: [Any?] {
@@ -964,22 +939,25 @@ public class Event: NosManagedObject {
         }
     }
 
+    /// This function formats an Event's content for display in the UI. It does things like replacing raw npub links
+    /// with the author's name, and extracting any URLs so that previews can be displayed for them.
+    /// 
+    /// - Parameter note: the note whose content should be processed.
+    /// - Parameter context: the context to use for database queries - this does not need to be the same context that
+    ///     `note` is in.
+    /// - Returns: A tuple where the first object is the note content formatted for display, and the second is a list
+    ///     of HTTP links found in the note's context.  
     class func attributedContentAndURLs(
-        noteID: String?, 
+        note: Event, 
         context: NSManagedObjectContext
     ) async -> (AttributedString, [URL])? {
-        guard let noteID else {
+        guard let content = note.content else {
             return nil
         }
+        let tags = note.allTags as? [[String]] ?? []
         
         return await context.perform {
-            guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
-                let content = note.content else {
-                return nil
-            }
-            try? context.saveIfNeeded()
-            let tags = note.allTags as? [[String]] ?? []
-            return NoteParser.parse(content: content, tags: tags, context: context)
+            NoteParser.parse(content: content, tags: tags, context: context)
         }
     }
     
@@ -1078,6 +1056,20 @@ public class Event: NosManagedObject {
         return nil
     }
     
+    /// Returns the event this note is reposting, if this note is a kind 6 repost.
+    func repostedNote() -> Event? {
+        guard kind == EventKind.repost.rawValue else {
+            return nil
+        }
+        
+        if let reference = eventReferences.firstObject as? EventReference,
+            let repostedNote = reference.referencedEvent {
+            return repostedNote
+        }
+        
+        return nil
+    }
+    
     /// This tracks which relays this event is deleted on. Hide posts with deletedOn.count > 0
     func trackDelete(on relay: Relay, context: NSManagedObjectContext) throws {
         if EventKind(rawValue: kind) == .delete, let eTags = allTags as? [[String]] {
@@ -1151,27 +1143,37 @@ public class Event: NosManagedObject {
     
     /// Returns a list of the authors this event was reported by if any of them are followed by the given user.
     /// This isn't very performant so use sparingly.
-    @MainActor func reportingAuthors(followedBy currentUser: CurrentUser) -> [Author] {
-        let events = referencingEvents
+    @MainActor func reportingAuthors(followedBy currentUser: CurrentUser) async -> [Author] {
+        let allReferencingEvents = referencingEvents
             .compactMap { $0.referencingEvent }
-            .filter { (event: Event) in event.kind == EventKind.report.rawValue }
-            .compactMap { $0.author }
-            .filter { currentUser.socialGraph.follows($0.hexadecimalPublicKey) }
-        return events
+        
+        var reportingAuthors = [Author]()
+        for event in allReferencingEvents {
+            let isReportEvent = event.kind == EventKind.report.rawValue
+            let isFollowed = await currentUser.socialGraph.follows(event.author?.hexadecimalPublicKey ?? "")
+            if isReportEvent && isFollowed, let author = event.author {
+                reportingAuthors.append(author)
+            }
+        }
+        return reportingAuthors
     }
     
     /// Returns a list of reports for this event from authors followed by the given user.
     /// This isn't very performant so use sparingly.
     @MainActor
-    func reports(followedBy currentUser: CurrentUser) -> [Event] {
-        let reportEvents = referencingEvents
+    func reports(followedBy currentUser: CurrentUser) async -> [Event] {
+        let allReferencingEvents = referencingEvents
             .compactMap { $0.referencingEvent }
-            .filter { event in
-                let isReportEvent = event.kind == EventKind.report.rawValue
-                let isFollowed = currentUser.socialGraph.follows(event.author?.hexadecimalPublicKey ?? "")
-                return isReportEvent && isFollowed
+        
+        var followedReportEvents = [Event]()
+        for event in allReferencingEvents {
+            let isReportEvent = event.kind == EventKind.report.rawValue
+            let isFollowed = await currentUser.socialGraph.follows(event.author?.hexadecimalPublicKey ?? "")
+            if isReportEvent && isFollowed {
+                followedReportEvents.append(event)
             }
-        return reportEvents
+        }
+        return followedReportEvents
     }
 }
 // swiftlint:enable type_body_length

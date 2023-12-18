@@ -16,20 +16,20 @@ struct NoteCardHeader: View {
         HStack(alignment: .center) {
             AuthorLabel(author: author, note: note)
             Spacer()
-            if let expirationTime = note.expirationDate?.distanceFromNowString() {
+            if let expirationTime = note.expirationDate?.distanceString() {
                 Image.disappearingMessages
                     .resizable()
-                    .foregroundColor(.secondaryText)
+                    .foregroundColor(.secondaryTxt)
                     .frame(width: 25, height: 25)
                 Text(expirationTime)
                     .lineLimit(1)
                     .font(.body)
-                    .foregroundColor(.secondaryText)
-            } else if let elapsedTime = note.createdAt?.distanceFromNowString() {
+                    .foregroundColor(.secondaryTxt)
+            } else if let elapsedTime = note.createdAt?.distanceString() {
                 Text(elapsedTime)
                     .lineLimit(1)
                     .font(.body)
-                    .foregroundColor(.secondaryText)
+                    .foregroundColor(.secondaryTxt)
             }
         }
         .padding(.leading, 10)

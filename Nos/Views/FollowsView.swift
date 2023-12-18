@@ -32,7 +32,7 @@ struct FollowsView: View {
     
     var body: some View {
         ScrollView(.vertical) {
-            LazyVStack {
+            LazyVStack(spacing: 15) {
                 ForEach(authors) { author in
                     FollowCard(author: author)
                         .padding(.horizontal)

@@ -35,7 +35,6 @@ final class RelayService: ObservableObject {
         @Dependency(\.persistenceController) var persistenceController
         self.backgroundContext = persistenceController.newBackgroundContext()
         self.parseContext = persistenceController.parseContext
-        parseContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         
         self.eventProcessingLoop = Task(priority: .userInitiated) { [weak self] in
             try Task.checkCancellation()
@@ -266,10 +265,6 @@ extension RelayService {
         Log.debug("from \(socket.host): EVENT type: \(eventJSON["kind"] ?? "nil") subID: \(subscriptionID)")
         #endif
 
-        if await !shouldParseEvent(responseArray: responseArray, json: eventJSON) {
-            return
-        }
-        
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: eventJSON)
             let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
@@ -299,6 +294,7 @@ extension RelayService {
                     _ = try EventProcessor.parse(jsonEvent: event, from: relay, in: self.parseContext) 
                 }
                 try self.parseContext.saveIfNeeded()
+                try self.persistenceController.viewContext.saveIfNeeded()
             }                
             return true
         }
@@ -380,24 +376,6 @@ extension RelayService {
         } catch {
             print("error parsing response: \(response)\nerror: \(error.localizedDescription)")
         }
-    }
-     
-    func shouldParseEvent(responseArray: [Any], json eventJSON: [String: Any]) async -> Bool {
-        // Drop out of network subscriptions if the filter has inNetwork == true
-        if let subscriptionID = responseArray[safe: 1] as? RelaySubscription.ID,
-            let authorKey = eventJSON[JSONEvent.CodingKeys.pubKey.rawValue] as? HexadecimalString,
-            let subscription = await subscriptions.subscription(from: subscriptionID) {
-            if subscription.filter.inNetwork {
-                let eventInNetwork = await currentUser.socialGraph.contains(authorKey) 
-                if !eventInNetwork {
-                    let eventID = eventJSON[JSONEvent.CodingKeys.id.rawValue] ?? "nil"
-                    Log.debug("Dropping out of network event \(eventID).")
-                    return false
-                }
-            }
-        }
-        
-        return true
     }
 }
 
@@ -568,11 +546,14 @@ extension RelayService {
     }
     
     @discardableResult @MainActor private func openSockets(overrideRelays: [URL]? = nil) async -> [URL] {
-        let relayAddresses: [URL]
+        var relayAddresses: [URL]
         if let overrideRelays {
             relayAddresses = overrideRelays
         } else {
             relayAddresses = await relays(for: self.currentUser)
+            if relayAddresses.isEmpty {
+                relayAddresses = Relay.allKnown.compactMap { URL(string: $0) }
+            }
         }
         
         for relayAddress in relayAddresses {

@@ -16,9 +16,9 @@ enum AuthorError: Error {
 }
 
 @objc(Author)
-public class Author: NosManagedObject {
+@Observable public class Author: NosManagedObject {
     
-    @Dependency(\.currentUser) var currentUser
+    @Dependency(\.currentUser) @ObservationIgnored var currentUser
     
     var npubString: String? {
         publicKey?.npub
@@ -123,29 +123,13 @@ public class Author: NosManagedObject {
     
     @discardableResult
     class func findOrCreate(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author {
-        @Dependency(\.persistenceController) var persistenceController
-        @Dependency(\.crashReporting) var crashReporting
-        
         if let author = try? Author.find(by: pubKey, context: context) {
             return author
         } else {
-            /// Always create authors in the creationContext first to make sure we never end up with two identical
-            /// Authors in different contexts with the same objectID, because this messes up SwiftUI's observation
-            /// of changes.
-            let creationContext = persistenceController.creationContext
-            let objectID = try creationContext.performAndWait {
-                let author = Author(context: creationContext)
-                author.hexadecimalPublicKey = pubKey
-                author.muted = false
-                try creationContext.save()
-                return author.objectID
-            }
-            guard let fetchedAuthor = context.object(with: objectID) as? Author else {
-                let error = AuthorError.coreData
-                crashReporting.report(error)
-                throw error
-            }
-            return fetchedAuthor
+            let author = Author(context: context)
+            author.hexadecimalPublicKey = pubKey
+            author.muted = false
+            return author
         }
     }
     
@@ -194,17 +178,16 @@ public class Author: NosManagedObject {
     @nonobjc func followedWithNewNotesPredicate(since: Date) -> NSPredicate {
         let onlyFollowedAuthorsClause = "ANY followers.source = %@"
         let onlyUnreadStoriesClause = "$event.isRead != 1"
-        let onlyPostsClause = "($event.kind = 1 OR $event.kind = 6 OR $event.kind = 30023)"
         let onlyRecentStoriesClause = "$event.createdAt > %@"
-        let onlyRootPostsClause = "SUBQUERY(" +
+        let onlyRootPostsClause = "($event.kind = 1 AND SUBQUERY(" +
             "$event.eventReferences, " +
             "$reference, " +
             "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
-        ").@count = 0"
-        let onlyAuthorsWithStoriesClause = "SUBQUERY(events, $event, \(onlyPostsClause) " +
-            "AND \(onlyUnreadStoriesClause) " +
-            "AND \(onlyRecentStoriesClause) " +
-            "AND \(onlyRootPostsClause)).@count > 0"
+        ").@count = 0)"
+        let onlyPostsRepostsAndLongFormsClause = "(\(onlyRootPostsClause) OR $event.kind = 6 OR $event.kind = 30023)"
+        let onlyAuthorsWithStoriesClause = "SUBQUERY(events, $event, \(onlyPostsRepostsAndLongFormsClause) " +
+            "AND \(onlyRecentStoriesClause)).@count > 0"
+
         return NSPredicate(
             format: "\(onlyFollowedAuthorsClause) AND \(onlyAuthorsWithStoriesClause)",
             self,
@@ -223,18 +206,19 @@ public class Author: NosManagedObject {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let onlyStoriesFromTheAuthorClause = "author = %@"
-        let onlyPostsClause = "(kind = 1 OR kind = 6 OR kind = 30023)"
-        let onlyRecentStoriesClause = "createdAt > %@"
-        let onlyRootPostsClause = "SUBQUERY(" +
+
+        let onlyRootPostsClause = "(kind = 1 AND SUBQUERY(" +
             "eventReferences, " +
             "$reference, " +
             "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
-        ").@count = 0"
+        ").@count = 0)"
+        let onlyPostsRepostsAndLongFormsClause = "(\(onlyRootPostsClause) OR kind = 6 OR kind = 30023)"
+
+        let onlyRecentStoriesClause = "createdAt > %@"
         fetchRequest.predicate = NSPredicate(
             format: "\(onlyStoriesFromTheAuthorClause) " +
                 "AND \(onlyRecentStoriesClause) " +
-                "AND \(onlyRootPostsClause) " +
-                "AND \(onlyPostsClause)",
+                "AND \(onlyPostsRepostsAndLongFormsClause)",
             self,
             since as CVarArg
         )

@@ -29,7 +29,7 @@ struct WalletConnectPairingView: View {
             HStack {
                 PlainText(.scanTheWalletConnectQR)
                     .font(.callout)
-                    .foregroundColor(.secondaryText)
+                    .foregroundColor(.secondaryTxt)
                     .padding(.vertical, 8)
                 Spacer()
             }

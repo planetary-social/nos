@@ -9,13 +9,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed contact list hydration bug where unfollows are not removed when follow counts do not change.
+
+## [0.1 (101)] - 2023-12-15Z
+
+- Fixed a bug where reposts wouldn't be displayed in the stories.
+- Fixed a bug where the reports for authors of replies weren't being considered. 
+- Localized relative times on note cards. (thanks @tyiu!)
+- Added a context menu for the stories in the Home Feed to open the Profile.
+- Add repost button to stories (thanks @maddiefuzz!)
+
+## [0.1 (100)] - 2023-12-09Z
+
+- Fixed some cases where a note's contents would never load.
+- Update the color palette.
+- Fix crash on Mac when opening new note view.
+
+## [0.1 (99)] - 2023-12-07Z
+
+- Fix profile pictures not loading after creating a new account.
+
+## [0.1 (98)] - 2023-12-04Z
+
 - Fixed a bug where the app could become unresponsive.
+
+## [0.1 (97)] - 2023-12-01Z
+
 - Added the option to copy the NIP-05 identifier when browsing a profile.
 - Tapping on a tab bar icon can let you scroll to top.
+- Fix an issue where reposts were not displaying correctly.
+
+## [0.1 (96)] - 2023-11-28Z
+
+- Fixed some performance issues for users who follow a large number of accounts.
+
+## [0.1 (95)] - 2023-11-27Z
+
 - Fixed a bug where a root note could be rendered as a reply
 - Added the option to copy the text content while browsing a note.
 - Fixed UI bugs when displaying the root note of replies.
 - Keep track of read stories.
+- Fix an issue where reposts were not displaying correctly.
 
 ## [0.1 (94)] - 2023-11-17Z
 

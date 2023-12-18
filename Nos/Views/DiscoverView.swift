@@ -17,7 +17,6 @@ struct DiscoverView: View {
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
-    @State private var lastRequestDate: Date?
 
     @State var showRelayPicker = false
     
@@ -59,7 +58,7 @@ struct DiscoverView: View {
             // TODO: Use a since filter
             let singleRelayFilter = Filter(
                 kinds: [.text, .delete],
-                limit: 100
+                limit: 200
             )
             
             subscriptionIDs.append(
@@ -67,40 +66,15 @@ struct DiscoverView: View {
                 await relayService.openSubscription(with: singleRelayFilter, to: [relayAddress])
             )
         } else {
-            
-            var fetchSinceDate: Date?
-            // Make sure the lastRequestDate was more than a minute ago
-            // to make sure we got all the events from it.
-            if let lastRequestDate {
-                if lastRequestDate.distance(to: .now) > 60 {
-                    fetchSinceDate = lastRequestDate
-                    self.lastRequestDate = Date.now
-                }
-            } else {
-                self.lastRequestDate = Date.now
-            }
-            
             let featuredFilter = Filter(
                 authorKeys: featuredAuthors.compactMap {
                     PublicKey(npub: $0)?.hex
                 },
                 kinds: [.text, .delete],
-                limit: 50,
-                since: fetchSinceDate
+                limit: 200
             )
             
             subscriptionIDs.append(await relayService.openSubscription(with: featuredFilter))
-            
-            // this filter just requests everything for now, because I think requesting all the authors within
-            // two hops is too large of a request and causes the websocket to close.
-            let twoHopsFilter = Filter(
-                kinds: Event.discoverKinds,
-                inNetwork: true,
-                limit: 200,
-                since: fetchSinceDate
-            )
-            
-            subscriptionIDs.append(await relayService.openSubscription(with: twoHopsFilter))
         }
     }
     

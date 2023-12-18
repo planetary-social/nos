@@ -58,7 +58,7 @@ struct NoteButton: View {
     /// The note displayed in the note card. Could be different from `note` i.e. in the case of a repost.
     var displayedNote: Event {
         if note.kind == EventKind.repost.rawValue,
-            let repostedNote = note.referencedNote() {
+            let repostedNote = note.repostedNote() {
             return repostedNote
         } else {
             return note
@@ -75,11 +75,11 @@ struct NoteButton: View {
                     HStack(alignment: .center) {
                         AuthorLabel(author: author)
                         Image.repostSymbol
-                        if let elapsedTime = repost.createdAt?.distanceFromNowString() {
+                        if let elapsedTime = repost.createdAt?.distanceString() {
                             Text(elapsedTime)
                                 .lineLimit(1)
                                 .font(.body)
-                                .foregroundColor(.secondaryText)
+                                .foregroundColor(.secondaryTxt)
                         }
                         Spacer()
                     }

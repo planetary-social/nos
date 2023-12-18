@@ -33,9 +33,7 @@ struct RelayPicker: View {
                     RelayPickerRow(string: defaultSelection, selection: $selectedRelay)
                     ForEach(relays) { relay in
 
-                        Divider()
-                            .overlay(Color.cardDivider)
-                            .shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
+                        BeveledSeparator()
                             .padding(.horizontal, 20)
                         
                         RelayPickerRow(relay: relay, selection: $selectedRelay)

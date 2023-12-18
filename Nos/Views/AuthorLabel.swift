@@ -19,7 +19,7 @@ struct AuthorLabel: View {
         if let note {
             let postedOrRepliedString = note.isReply ? Localized.Reply.replied.string : Localized.Reply.posted.string
             var postedOrReplied = AttributedString(" " + postedOrRepliedString)
-            postedOrReplied.foregroundColor = .secondaryText
+            postedOrReplied.foregroundColor = .secondaryTxt
             
             authorName.append(postedOrReplied)
         }

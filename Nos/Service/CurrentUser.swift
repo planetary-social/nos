@@ -102,7 +102,7 @@ enum CurrentUserError: Error {
         super.init()
         self.viewContext = persistenceController.viewContext
         self.backgroundContext = persistenceController.newBackgroundContext()
-        self.socialGraph = SocialGraphCache(userKey: nil, context: backgroundContext)
+        self.socialGraph = SocialGraphCache(userKey: nil, context: persistenceController.newBackgroundContext())
         if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
             Log.info("CurrentUser loaded a private key from keychain")
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
@@ -185,20 +185,7 @@ enum CurrentUserError: Error {
         guard let key = publicKeyHex, let author else {
             return
         }
-        
-        let overrideRelays: [URL]?
-        let userRelays = author.relays 
-        if userRelays.isEmpty {
-            overrideRelays = Relay.allKnown
-                .compactMap {
-                    try? Relay.findOrCreate(by: $0, context: viewContext)
-                }
-                .compactMap { $0.addressURL }
-            try? viewContext.saveIfNeeded()
-        } else {
-            overrideRelays = nil
-        }
-        
+       
         // Close out stale requests
         if !subscriptions.isEmpty {
             await relayService.decrementSubscriptionCount(for: subscriptions)
@@ -214,10 +201,10 @@ enum CurrentUserError: Error {
         let contactFilter = Filter(
             authorKeys: [key],
             kinds: [.contactList],
-            limit: 1,
+            limit: 2, // small hack to make sure this filter doesn't get closed for being stale
             since: author.lastUpdatedContactList
         )
-        subscriptions.append(await relayService.openSubscription(with: contactFilter, to: overrideRelays))
+        subscriptions.append(await relayService.openSubscription(with: contactFilter))
         
         // Listen for notifications
         await pushNotificationService.listen(for: self)
@@ -421,7 +408,7 @@ enum CurrentUserError: Error {
 
         Log.debug("Following \(followKey)")
 
-        var followKeys = socialGraph.followedKeys
+        var followKeys = await Array(socialGraph.followedKeys)
         followKeys.append(followKey)
         
         // Update author to add the new follow
@@ -449,7 +436,7 @@ enum CurrentUserError: Error {
 
         Log.debug("Unfollowing \(unfollowedKey)")
         
-        let stillFollowingKeys = socialGraph.followedKeys
+        let stillFollowingKeys = await Array(socialGraph.followedKeys)
             .filter { $0 != unfollowedKey }
         
         // Update author to only follow those still following

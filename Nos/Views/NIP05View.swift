@@ -33,10 +33,10 @@ struct NIP05View: View {
                     } else if verifiedNip05Identifier == false {
                         PlainText(formattedNIP05)
                             .strikethrough()
-                            .foregroundColor(.secondaryText)
+                            .foregroundColor(.secondaryTxt)
                     } else {
                         PlainText("\(formattedNIP05)")
-                            .foregroundColor(.secondaryText)
+                            .foregroundColor(.secondaryTxt)
                     }
                 }
                 .font(.claritySubheadline)

@@ -40,8 +40,9 @@ struct DiscoverGrid: View {
             GeometryReader { geometry in
                 Group {
                     if searchController.query.isEmpty {
-                        StaggeredGrid(list: events, columns: columns) { note in
+                        StaggeredGrid(list: events, columns: columns, spacing: 15) { note in
                             NoteButton(note: note, style: .golden)
+                                .padding(.bottom, 5)
                                 .matchedGeometryEffect(id: note.identifier, in: animation)
                                 .id(note.id)
                         }
@@ -61,8 +62,8 @@ struct DiscoverGrid: View {
                                         AuthorCard(author: author) { 
                                             router.push(author)
                                         }
-                                        .padding(.horizontal, 13)
-                                        .padding(.top, 5)
+                                        .padding(.horizontal, 15)
+                                        .padding(.top, 10)
                                         .readabilityPadding()
                                     }
                                 }

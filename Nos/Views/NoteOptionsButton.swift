@@ -30,7 +30,7 @@ struct NoteOptionsButton: View {
                 showingOptions = true
             } label: {
                 Image(systemName: "ellipsis")
-                    .foregroundColor(.secondaryText)
+                    .foregroundColor(.secondaryTxt)
                     .frame(minWidth: 44, minHeight: 44)
                     // This hack fixes a weird issue where the confirmationDialog wouldn't be shown sometimes. ¯\_(ツ)_/¯
                     .background(showingOptions == true ? .clear : .clear)
@@ -141,7 +141,7 @@ struct NoteOptionsView_Previews: PreviewProvider {
                 .preferredColorScheme(.dark)
         }
         .padding()
-        .background(Color.cardBackground)
+        .background(Color.previewBg)
         .environment(currentUser)
     }
 }

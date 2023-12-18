@@ -42,7 +42,7 @@ struct UNSErrorView: View {
                     Text(.tryAgainOrContactSupport)
                         .fontWeight(.medium)
                         .multilineTextAlignment(.center)
-                        .foregroundColor(.secondaryText)
+                        .foregroundColor(.secondaryTxt)
                         .padding(.vertical, 17)
                         .padding(.horizontal, 20)
                         .shadow(radius: 1, y: 1)

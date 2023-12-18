@@ -35,7 +35,7 @@ struct NosFormSection<Content: View>: View {
             ZStack {
                 // 3d card effect
                 ZStack {
-                    Color.cardBorderBottom
+                    Color.card3d
                 }
                 .cornerRadius(21)
                 .offset(y: 4.5)

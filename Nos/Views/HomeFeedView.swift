@@ -52,7 +52,7 @@ struct HomeFeedView: View {
     func subscribeToNewEvents() async {
         await cancelSubscriptions()
         
-        let followedKeys = currentUser.socialGraph.followedKeys 
+        let followedKeys = await Array(currentUser.socialGraph.followedKeys)
             
         if !followedKeys.isEmpty {
             // TODO: we could miss events with this since filter
@@ -93,12 +93,20 @@ struct HomeFeedView: View {
                                         }
                                     } label: {
                                         StoryAvatarView(author: author)
+                                            .contextMenu {
+                                                Button {
+                                                    router.push(author)
+                                                } label: {
+                                                    Localized.seeProfile.view
+                                                }
+                                            }
                                     }
                                 }
                             }
                             .padding(.horizontal, 15)
+                            .padding(.top, 15)
+                            .padding(.bottom, 0)
                         }
-                        .padding(.top, 15)
                         .readabilityPadding()
                         .id(user.id)
 
@@ -108,7 +116,8 @@ struct HomeFeedView: View {
                                     .padding(.bottom, 15)
                             }
                         }
-                        .padding(.vertical, 15)
+                        .padding(.top, 10)
+                        .padding(.bottom, 15)
                     }
                     .accessibilityIdentifier("home feed")
 
@@ -215,29 +224,21 @@ struct HomeFeedView: View {
                 Task { await cancelSubscriptions() }
             }
         }
-        .task {
-            currentUser.socialGraph.followedKeys.publisher
-                .removeDuplicates()
-                .debounce(for: 0.2, scheduler: RunLoop.main)
-                .filter { _ in self.isVisible == true }
-                .sink(receiveValue: { _ in
-                    Task { await subscribeToNewEvents() }
-                })
-                .store(in: &cancellables)
-        }
     }
 }
 
 fileprivate struct StoryAvatarView: View {
+    var size: CGFloat = 70
+
     var author: Author
     var body: some View {
-        AvatarView(imageUrl: author.profilePhotoURL, size: 54)
-            .padding(.vertical, 10)
-            .background(
+        AvatarView(imageUrl: author.profilePhotoURL, size: size)
+            .padding(1.5)
+            .overlay(alignment: .center) {
                 Circle()
                     .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
-                    .frame(width: 58, height: 58)
-            )
+                    .frame(width: size, height: size)
+            }
     }
 }
 
