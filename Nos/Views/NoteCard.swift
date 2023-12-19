@@ -150,7 +150,7 @@ struct NoteCard: View {
         .task {
             await note.loadViewData()
         }
-        .onChange(of: note.content) { oldValue, newValue in
+        .onChange(of: note.content) { _, _ in
             Task { await note.loadAttributedContent() }
         }
         .onDisappear {

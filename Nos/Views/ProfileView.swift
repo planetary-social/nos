@@ -109,6 +109,14 @@ struct ProfileView: View {
                             .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                             .id(author.id)
                     },
+                    emptyPlaceholder: {
+                        VStack {
+                            Localized.noEventsOnProfile.view
+                                .padding()
+                                .readabilityPadding()
+                        }
+                        .frame(minHeight: 300)
+                    },
                     onRefresh: {
                         author.allPostsRequest(since: .now)
                     }

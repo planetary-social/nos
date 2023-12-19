@@ -18,7 +18,7 @@ import Logger
 /// UICollectionViewDataSourcePrefetching protocol to call Event.loadViewData() on events in advanced of them being 
 /// shown, which allows us to perform expensive tasks like downloading images, calculating attributed text, fetching
 /// author metadata and linked notes, etc. before the view is displayed.
-struct PagedNoteListView<Header: View>: UIViewRepresentable {
+struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresentable {
     
     /// A fetch request that specifies the events that should be shown. The events should be sorted in 
     /// reverse-chronological order and should match the events returned by `relayFilter`.
@@ -31,11 +31,15 @@ struct PagedNoteListView<Header: View>: UIViewRepresentable {
     
     let context: NSManagedObjectContext
     
+    /// A view that will be displayed as the collectionView header.
     let header: () -> Header
+    
+    /// A view that will be displayed below the header when no notes are being shown.
+    let emptyPlaceholder: () -> EmptyPlaceholder
     
     let onRefresh: () -> NSFetchRequest<Event> 
     
-    func makeCoordinator() -> Coordinator<Header> {
+    func makeCoordinator() -> Coordinator<Header, EmptyPlaceholder> {
         Coordinator()
     }
     
@@ -58,7 +62,16 @@ struct PagedNoteListView<Header: View>: UIViewRepresentable {
             alignment: .top
         )
         headerItem.edgeSpacing = .none
-        section.boundarySupplementaryItems = [headerItem]
+        
+        let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(300))
+        let footerItem = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: footerSize, 
+            elementKind: UICollectionView.elementKindSectionFooter, 
+            alignment: .bottom
+        )
+        headerItem.edgeSpacing = .none
+        
+        section.boundarySupplementaryItems = [headerItem, footerItem]
         
         let layout = UICollectionViewCompositionalLayout(section: section)
         
@@ -73,16 +86,11 @@ struct PagedNoteListView<Header: View>: UIViewRepresentable {
             collectionView: collectionView, 
             context: self.context,
             header: header,
+            emptyPlaceholder: emptyPlaceholder,
             onRefresh: onRefresh
         )
         collectionView.dataSource = dataSource
         collectionView.prefetchDataSource = dataSource
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "NoteButtonCell")
-        collectionView.register(
-            UICollectionViewCell.self, 
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, 
-            withReuseIdentifier: "Header"
-        )
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(
@@ -97,9 +105,10 @@ struct PagedNoteListView<Header: View>: UIViewRepresentable {
     
     func updateUIView(_ collectionView: UICollectionView, context: Context) {}
     
-    class Coordinator<CoordinatorHeader: View> {
+    // swiftlint:disable:next generic_type_name
+    class Coordinator<CoordinatorHeader: View, CoordinatorEmptyPlaceholder: View> {
         
-        var dataSource: PagedNoteDataSource<CoordinatorHeader>?
+        var dataSource: PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder>?
         var collectionView: UICollectionView?
         var onRefresh: (() -> NSFetchRequest<Event>)? 
         
@@ -109,8 +118,9 @@ struct PagedNoteListView<Header: View>: UIViewRepresentable {
             collectionView: UICollectionView,
             context: NSManagedObjectContext,
             @ViewBuilder header: @escaping () -> CoordinatorHeader,
+            @ViewBuilder emptyPlaceholder: @escaping () -> CoordinatorEmptyPlaceholder,
             onRefresh: @escaping () -> NSFetchRequest<Event>
-        ) -> PagedNoteDataSource<CoordinatorHeader> {
+        ) -> PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder> {
             if let dataSource {
                 return dataSource 
             } 
@@ -122,7 +132,8 @@ struct PagedNoteListView<Header: View>: UIViewRepresentable {
                 relayFilter: relayFilter,
                 collectionView: collectionView, 
                 context: context,
-                header: header
+                header: header,
+                emptyPlaceholder: emptyPlaceholder
             )
             self.dataSource = dataSource
             return dataSource
@@ -156,6 +167,9 @@ struct PagedNoteListView<Header: View>: UIViewRepresentable {
                 .compositingGroup()
                 .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 .id(previewData.alice.id)
+        },
+        emptyPlaceholder: {
+            Text("empty")
         },
         onRefresh: {
             previewData.alice.allPostsRequest()

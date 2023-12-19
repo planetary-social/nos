@@ -11,10 +11,11 @@ import Dependencies
 import Logger
 
 /// Works with PagesNoteListView to paginate a reverse-chronological events from CoreData and relays simultaneously.
-class PagedNoteDataSource<Header: View>: UICollectionViewDiffableDataSource<Int, NSManagedObjectID>, 
+class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICollectionViewDataSource, 
     NSFetchedResultsControllerDelegate, UICollectionViewDataSourcePrefetching {
     
     var fetchedResultsController: NSFetchedResultsController<Event>
+    var collectionView: UICollectionView
     
     @Dependency(\.relayService) private var relayService: RelayService
     private var subscriptionIDs: [RelaySubscription.ID] = []
@@ -22,14 +23,20 @@ class PagedNoteDataSource<Header: View>: UICollectionViewDiffableDataSource<Int,
     private var pager: PagedRelaySubscription?
     private var context: NSManagedObjectContext
     private var header: () -> Header
+    private var emptyPlaceholder: () -> EmptyPlaceholder
     let pageSize = 10
+    
+    private var cellReuseID = "Cell"
+    private var headerReuseID = "Header"
+    private var footerReuseID = "Footer"
     
     init(
         databaseFilter: NSFetchRequest<Event>, 
         relayFilter: Filter, 
         collectionView: UICollectionView, 
         context: NSManagedObjectContext,
-        @ViewBuilder header: @escaping () -> Header
+        @ViewBuilder header: @escaping () -> Header,
+        @ViewBuilder emptyPlaceholder: @escaping () -> EmptyPlaceholder
     ) {
         self.fetchedResultsController = NSFetchedResultsController<Event>(
             fetchRequest: databaseFilter,
@@ -37,40 +44,25 @@ class PagedNoteDataSource<Header: View>: UICollectionViewDiffableDataSource<Int,
             sectionNameKeyPath: nil,
             cacheName: nil
         )
+        self.collectionView = collectionView
         self.context = context
         self.relayFilter = relayFilter
         self.header = header
+        self.emptyPlaceholder = emptyPlaceholder
         
-        super.init(collectionView: collectionView) { (collectionView, indexPath, objectID) in
-            guard let note = try? context.existingObject(with: objectID) as? Event else {
-                return UICollectionViewCell()
-            }
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "NoteButtonCell", for: indexPath) 
-            cell.contentConfiguration = UIHostingConfiguration { 
-                NoteButton(note: note, hideOutOfNetwork: false, displayRootMessage: true)
-            }
-            .margins(.horizontal, 0)
-            
-            return cell
-        }
-        supplementaryViewProvider = { (collectionView, kind, indexPath) in
-            guard kind == UICollectionView.elementKindSectionHeader else {
-                return UICollectionViewCell()
-            }
-            
-            let header = collectionView.dequeueReusableSupplementaryView(
-                ofKind: kind, 
-                withReuseIdentifier: "Header", 
-                for: indexPath
-            ) as? UICollectionViewCell
-            header?.contentConfiguration = UIHostingConfiguration { 
-                self.header()
-            }
-            .margins(.horizontal, 0)
-            .margins(.top, 0)
-            
-            return header
-        }
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellReuseID)
+        collectionView.register(
+            UICollectionViewCell.self, 
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, 
+            withReuseIdentifier: headerReuseID
+        )
+        collectionView.register(
+            UICollectionViewCell.self, 
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, 
+            withReuseIdentifier: footerReuseID
+        )
+
+        super.init()
         
         self.fetchedResultsController.delegate = self
         
@@ -102,18 +94,26 @@ class PagedNoteDataSource<Header: View>: UICollectionViewDiffableDataSource<Int,
     
     // MARK: - UICollectionViewDataSource
     
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         fetchedResultsController.fetchedObjects?.count ?? 0
     }
     
-    override func collectionView(
+    func collectionView(
         _ collectionView: UICollectionView, 
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
         if indexPath.row.isMultiple(of: pageSize) {
             pager?.loadMore()
         }        
-        return super.collectionView(collectionView, cellForItemAt: indexPath)
+        
+        let note = fetchedResultsController.object(at: indexPath) 
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseID, for: indexPath) 
+        cell.contentConfiguration = UIHostingConfiguration { 
+            NoteButton(note: note, hideOutOfNetwork: false, displayRootMessage: true)
+        }
+        .margins(.horizontal, 0)
+        
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
@@ -123,13 +123,87 @@ class PagedNoteDataSource<Header: View>: UICollectionViewDiffableDataSource<Int,
         }
     }
     
+    func collectionView(
+        _ collectionView: UICollectionView, 
+        viewForSupplementaryElementOfKind kind: String, 
+        at indexPath: IndexPath
+    ) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            guard let header = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind, 
+                withReuseIdentifier: headerReuseID, 
+                for: indexPath
+            ) as? UICollectionViewCell else {
+                return UICollectionViewCell()
+            }
+            
+            header.contentConfiguration = UIHostingConfiguration { 
+                self.header()
+            }
+            .margins(.horizontal, 0)
+            .margins(.top, 0)
+        
+            return header
+            
+        case UICollectionView.elementKindSectionFooter:
+            guard let footer = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind, 
+                withReuseIdentifier: footerReuseID, 
+                for: indexPath
+            ) as? UICollectionViewCell else {
+                return UICollectionViewCell()
+            }
+            
+            footer.contentConfiguration = UIHostingConfiguration { 
+                self.emptyPlaceholder()
+            }
+            .margins(.horizontal, 0)
+            .margins(.top, 0)
+            return footer
+        default:
+            return UICollectionViewCell()
+        }
+    }
+    
     // MARK: - NSFetchedResultsControllerDelegate
+    
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        collectionView.performBatchUpdates(nil, completion: nil)
+    }
     
     func controller(
         _ controller: NSFetchedResultsController<NSFetchRequestResult>, 
-        didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference
+        didChange anObject: Any, 
+        at indexPath: IndexPath?, 
+        for type: NSFetchedResultsChangeType, 
+        newIndexPath: IndexPath?
     ) {
-        let snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
-        apply(snapshot, animatingDifferences: false)
+        // Note: I tried using UICollectionViewDiffableDatasource but it didn't seem to work well with SwiftUI views
+        // as it kept reloading cells with animations when nothing was visually changing.
+        switch type {
+        case .insert:
+            if let newIndexPath = newIndexPath {
+                collectionView.insertItems(at: [newIndexPath])
+            }
+        case .delete:
+            if let indexPath = indexPath {
+                collectionView.deleteItems(at: [indexPath])
+            }
+        case .update:
+            // The SwiftUI cells are observing their source Core Data objects already so we don't need to notify
+            // them of updates through the collectionView.
+            return
+        case .move:
+            if let indexPath = indexPath, let newIndexPath = newIndexPath {
+                collectionView.moveItem(at: indexPath, to: newIndexPath)
+            }
+        @unknown default:
+            fatalError("Unexpected NSFetchedResultsChangeType: \(type)")
+        }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        collectionView.performBatchUpdates(nil, completion: nil)
     }
 }
