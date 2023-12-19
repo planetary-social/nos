@@ -660,7 +660,7 @@ public class Event: NosManagedObject {
         
         newAuthor.lastUpdatedContactList = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
 
-        // Put existing follows into a distionary so we can avoid doing a fetch request to look up each one.
+        // Put existing follows into a dictionary so we can avoid doing a fetch request to look up each one.
         var originalFollows = [HexadecimalString: Follow]()
         for follow in newAuthor.follows {
             if let pubKey = follow.destination?.hexadecimalPublicKey {
@@ -684,12 +684,10 @@ public class Event: NosManagedObject {
         }
         
         // Did we unfollow someone? If so, remove them from core data
-        if originalFollows.count > newFollows.count {
-            let removedFollows = Set(originalFollows.values).subtracting(newFollows)
-            if !removedFollows.isEmpty {
-                print("Removing \(removedFollows.count) follows")
-                Follow.deleteFollows(in: removedFollows, context: context)
-            }
+        let removedFollows = Set(originalFollows.values).subtracting(newFollows)
+        if !removedFollows.isEmpty {
+            print("Removing \(removedFollows.count) follows")
+            Follow.deleteFollows(in: removedFollows, context: context)
         }
         
         newAuthor.follows = newFollows
