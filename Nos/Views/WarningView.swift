@@ -211,35 +211,54 @@ struct ContentWarningMessage: View {
         return Set(reasons)
     }
     
-    var body: some View {
+    var message: LocalizedStringKey {
         if type == "author" {
-            Text( Localized.userHasBeen )
-                .font(.body)
-                .foregroundColor(.primaryTxt)
+            if authorNames.count > 1 {
+                return Localized.userReportedByOneAndMore.localizedMarkdown([
+                    "one": firstAuthorSafeName,
+                    "count": "\(authorNames.count - 1)",
+                    "reason": reason
+                ])
+            } else {
+                return Localized.userReportedByOne.localizedMarkdown([
+                    "one": firstAuthorSafeName,
+                    "reason": reason
+                ])
+            }
         } else if type == "note" {
-            Text( Localized.noteHasBeen )
-                .font(.body)
-                .foregroundColor(.primaryTxt)
-        }
-        if authorNames.count > 1 {
-            Text(Localized.reportedByOneAndMore.localizedMarkdown([
-                "one": firstAuthorSafeName,
-                "count": "\(authorNames.count - 1)"
-            ]))
-            .font(.body)  // Adjust font and style as needed
-            .foregroundColor(.primary)
-            .padding(.leading, 25)  // Adjust padding as needed
-        } else {
-            Text(Localized.reportedByOne.localizedMarkdown([
-                "one": firstAuthorSafeName
-            ]))
-            .font(.body)  // Adjust font and style as needed
-            .foregroundColor(.secondaryTxt)
-            .padding(.leading, 25)  // Adjust padding as needed
+            if authorNames.count > 1 {
+                return Localized.noteReportedByOneAndMore.localizedMarkdown([
+                    "one": firstAuthorSafeName,
+                    "count": "\(authorNames.count - 1)",
+                    "reason": reason
+                ])
+            } else {
+                return Localized.noteReportedByOne.localizedMarkdown([
+                    "one": firstAuthorSafeName,
+                    "reason": reason
+                ])
+            }
         }
         
-        Text( Localized.reportedFor.localizedMarkdown(["reason": reason]) )
+        return LocalizedStringKey(Localized.error.string)
+    }
+    
+    var body: some View {
+        Text(message)
             .font(.body)
             .foregroundColor(.primaryTxt)
+            .padding(.horizontal, 25)
     }
+}
+
+#Preview {
+    var previewData = PreviewData()
+    
+    return VStack {
+        ContentWarningMessage(reports: [previewData.shortNoteReportOne], type: "author")
+        ContentWarningMessage(reports: [previewData.shortNoteReportOne, previewData.shortNoteReportTwo], type: "author")
+        ContentWarningMessage(reports: [previewData.shortNoteReportOne], type: "note")
+        ContentWarningMessage(reports: [previewData.shortNoteReportOne, previewData.shortNoteReportTwo], type: "note")
+    }
+    .inject(previewData: previewData)
 }
