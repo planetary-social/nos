@@ -40,7 +40,7 @@ struct UNSVerifyCodeView: View {
                         Localized.verificationDescription.text(["phone_number": phoneString]),
                         highlightedWord: phoneString,
                         highlight: LinearGradient(colors: [.primaryTxt], startPoint: .top, endPoint: .bottom),
-                        textColor: .secondaryText,
+                        textColor: .secondaryTxt,
                         font: .clarityMedium,
                         link: nil
                     )

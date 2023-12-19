@@ -32,7 +32,6 @@ struct ProfileSocialStatsView: View {
                 }
                 Spacer(minLength: 0)
             }
-            Divider.vertical
             Group {
                 Spacer(minLength: 0)
                 Button {
@@ -47,7 +46,6 @@ struct ProfileSocialStatsView: View {
                 }
                 Spacer(minLength: 0)
             }
-            Divider.vertical
             Group {
                 Spacer(minLength: 0)
                 Button {
@@ -75,13 +73,7 @@ struct ProfileSocialStatsView: View {
             PlainText(label.string.lowercased())
                 .font(.subheadline)
                 .dynamicTypeSize(...DynamicTypeSize.xLarge)
-                .foregroundColor(.secondaryText)
+                .foregroundColor(.secondaryTxt)
         }
-    }
-}
-
-fileprivate extension Divider {
-    static var vertical: some View {
-        Divider().overlay(Color("divider")).shadow(color: Color("divider-shadow"), radius: 0, x: -0.5)
     }
 }

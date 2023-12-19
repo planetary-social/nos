@@ -94,7 +94,7 @@ struct NoteCard: View {
                             Spacer()
                         }
                     }
-                    Divider().overlay(Color.cardDivider).shadow(color: .cardDividerShadow, radius: 0, x: 0, y: 1)
+                    Divider().overlay(Color.cardDividerTop).shadow(color: .cardDividerTopShadow, radius: 0, x: 0, y: 1)
                     Group {
                         if note.isStub {
                             HStack {
@@ -120,7 +120,7 @@ struct NoteCard: View {
                                 if let replies = attributedReplies {
                                     Text(replies)
                                         .font(.subheadline)
-                                        .foregroundColor(Color.secondaryText)
+                                        .foregroundColor(Color.secondaryTxt)
                                 }
                             }
                             Spacer()

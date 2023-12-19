@@ -644,8 +644,8 @@ public class Event: NosManagedObject {
             
         case .mute:
             hydrateMuteList(from: jsonEvent, context: context)
-            
         case .repost:
+            
             hydrateDefault(from: jsonEvent, context: context)
             parseContent(from: jsonEvent, context: context)
             
@@ -661,7 +661,7 @@ public class Event: NosManagedObject {
         
         newAuthor.lastUpdatedContactList = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
 
-        // Put existing follows into a distionary so we can avoid doing a fetch request to look up each one.
+        // Put existing follows into a dictionary so we can avoid doing a fetch request to look up each one.
         var originalFollows = [HexadecimalString: Follow]()
         for follow in newAuthor.follows {
             if let pubKey = follow.destination?.hexadecimalPublicKey {
@@ -685,12 +685,10 @@ public class Event: NosManagedObject {
         }
         
         // Did we unfollow someone? If so, remove them from core data
-        if originalFollows.count > newFollows.count {
-            let removedFollows = Set(originalFollows.values).subtracting(newFollows)
-            if !removedFollows.isEmpty {
-                print("Removing \(removedFollows.count) follows")
-                Follow.deleteFollows(in: removedFollows, context: context)
-            }
+        let removedFollows = Set(originalFollows.values).subtracting(newFollows)
+        if !removedFollows.isEmpty {
+            print("Removing \(removedFollows.count) follows")
+            Follow.deleteFollows(in: removedFollows, context: context)
         }
         
         newAuthor.follows = newFollows
@@ -1001,6 +999,14 @@ public class Event: NosManagedObject {
         }
     }
 
+    /// This function formats an Event's content for display in the UI. It does things like replacing raw npub links
+    /// with the author's name, and extracting any URLs so that previews can be displayed for them.
+    /// 
+    /// - Parameter note: the note whose content should be processed.
+    /// - Parameter context: the context to use for database queries - this does not need to be the same context that
+    ///     `note` is in.
+    /// - Returns: A tuple where the first object is the note content formatted for display, and the second is a list
+    ///     of HTTP links found in the note's context.  
     class func attributedContentAndURLs(
         note: Event, 
         context: NSManagedObjectContext

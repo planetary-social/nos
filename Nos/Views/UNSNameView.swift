@@ -24,7 +24,7 @@ struct UNSNameView: View {
                 HStack(spacing: 3) {
                     Image.unsLogoLight
                     PlainText(author.uns ?? "")
-                        .foregroundColor(.secondaryText)
+                        .foregroundColor(.secondaryTxt)
                         .font(.claritySubheadline)
                         .multilineTextAlignment(.leading)
                 }

@@ -16,8 +16,6 @@ final class SocialGraphTests: XCTestCase {
     var testContext: NSManagedObjectContext!
     
     override func invokeTest() {
-        // For some reason that I can't figure out using an in-memory persistent store causes these tests to take
-        // several minutes instead of seconds, so we are using an on-disk store for these tests instead.
         withDependencies { dependencies in
             let persistenceController = PersistenceController(containerName: "NosTests", inMemory: true)
             testContext = persistenceController.viewContext
@@ -155,6 +153,29 @@ final class SocialGraphTests: XCTestCase {
         ])
         try await eventually { await sut.followedKeys == expectedKeys }
         try await eventually { await sut.isInNetwork(KeyFixture.eve.publicKeyHex) }
+    }
+    
+    func testOutOfNetwork() async throws {
+        // Arrange
+        _ = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        _ = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
+        _ = try Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: testContext)
+        
+        // Act
+        let sut = SocialGraphCache(userKey: KeyFixture.alice.publicKeyHex, context: testContext)
+        try testContext.save()
+        
+        // Assert
+        // assert twice for each key - first time hits db, second time hits cache
+        var isInNetwwork = await sut.isInNetwork(KeyFixture.eve.publicKeyHex)
+        XCTAssertFalse(isInNetwwork)
+        isInNetwwork = await sut.isInNetwork(KeyFixture.eve.publicKeyHex)
+        XCTAssertFalse(isInNetwwork)
+        
+        isInNetwwork = await sut.isInNetwork(KeyFixture.bob.publicKeyHex)
+        XCTAssertFalse(isInNetwwork)
+        isInNetwwork = await sut.isInNetwork(KeyFixture.bob.publicKeyHex)
+        XCTAssertFalse(isInNetwwork)
     }
 }
 // swiftlint:enable implicitly_unwrapped_optional

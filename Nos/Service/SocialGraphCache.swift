@@ -38,14 +38,14 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
         Log.debug("cache miss")
         do {
             let inNetwork = try context.performAndWait {
-                guard let currentUser = try Author.find(by: userKey, context: context),
-                    let author = try Author.find(by: key, context: context) else {
+                guard let currentUser = try Author.find(by: userKey, context: context) else {
                     outOfNetworkKeys.insert(key)
                     return false
                 }
                 let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
                 fetchRequest.predicate = NSPredicate(
-                    format: "ANY followers.source IN %@.follows.destination",
+                    format: "hexadecimalPublicKey = %@ AND ANY followers.source IN %@.follows.destination",
+                    key,
                     currentUser
                 )
                 return try context.count(for: fetchRequest) > 0

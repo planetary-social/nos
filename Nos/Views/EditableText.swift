@@ -42,7 +42,7 @@ struct EditableText: UIViewRepresentable {
         view.isEditable = true
         view.isSelectable = true
         view.tintColor = .accent
-        view.textColor = .secondaryText
+        view.textColor = .secondaryTxt
         view.font = font
         view.backgroundColor = .clear
         view.delegate = context.coordinator

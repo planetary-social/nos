@@ -97,7 +97,7 @@ struct StoryNoteView: View {
                 if shouldShowSpacing {
                     Spacer(minLength: 85)
                 }
-                if note.kind == EventKind.repost.rawValue, let repostedNote = note.referencedNote() {
+                if note.kind == EventKind.repost.rawValue, let repostedNote = note.repostedNote() {
                     Button {
                         router.push(repostedNote)
                     } label: {

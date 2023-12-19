@@ -90,11 +90,12 @@ struct RepliesView: View {
             let subIDs = await relayService.openSubscriptions(with: filter)
             subscriptionIDs.append(contentsOf: subIDs)
             
-            // download reports for this user
+            // download reports for this user and the replies' authors
             guard let authorKey = note.author?.hexadecimalPublicKey else {
                 return
             }
-            let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
+            let pTags = Array(Set([authorKey] + replies.compactMap { $0.author?.hexadecimalPublicKey }))
+            let reportFilter = Filter(kinds: [.report], pTags: pTags)
             subscriptionIDs.append(contentsOf: await relayService.openSubscriptions(with: reportFilter))
         }
     }
@@ -304,6 +305,6 @@ struct RepliesView_Previews: PreviewProvider {
         .environmentObject(router)
         .environment(currentUser)
         .padding()
-        .background(Color.cardBackground)
+        .background(Color.previewBg)
     }
 }

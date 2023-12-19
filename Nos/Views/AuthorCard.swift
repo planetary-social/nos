@@ -41,7 +41,7 @@ struct AuthorCard: View {
                             if author.muted {
                                 Text(Localized.muted.string)
                                     .font(.subheadline)
-                                    .foregroundColor(Color.secondaryText)
+                                    .foregroundColor(Color.secondaryTxt)
                             }
                         }
                         
@@ -53,7 +53,7 @@ struct AuthorCard: View {
                         
                         if let bio = author.about {
                             PlainText(bio)
-                                .foregroundColor(.secondaryText)
+                                .foregroundColor(.secondaryTxt)
                                 .font(.claritySubheadline)
                                 .multilineTextAlignment(.leading)
                                 .lineSpacing(5)

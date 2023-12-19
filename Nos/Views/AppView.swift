@@ -40,7 +40,7 @@ struct AppView: View {
                                         text
                                     } else {
                                         Image.tabIconHome
-                                        text.foregroundColor(.secondaryText)
+                                        text.foregroundColor(.secondaryTxt)
                                     }
                                 }
                             }
@@ -66,7 +66,7 @@ struct AppView: View {
                                     text.foregroundColor(.primaryTxt)
                                 } else {
                                     Image.tabIconEveryone
-                                    text.foregroundColor(.secondaryText)
+                                    text.foregroundColor(.secondaryTxt)
                                 }
                             }
                         }
@@ -92,7 +92,7 @@ struct AppView: View {
                                     text.foregroundColor(.primaryTxt)
                                 } else {
                                     Image.tabIconNotifications
-                                    text.foregroundColor(.secondaryText)
+                                    text.foregroundColor(.secondaryTxt)
                                 }
                             }
                         }
@@ -111,7 +111,7 @@ struct AppView: View {
                                         text.foregroundColor(.primaryTxt)
                                     } else {
                                         Image.tabProfile
-                                        text.foregroundColor(.secondaryText)
+                                        text.foregroundColor(.secondaryTxt)
                                     }
                                 }
                             }
@@ -131,6 +131,7 @@ struct AppView: View {
                 }
                 .sheet(isPresented: $showNewPost, content: {
                     NewNoteView(initialContents: newPostContents, isPresented: $showNewPost)
+                        .environment(currentUser)
                 })
                 
                 SideMenu(
@@ -143,7 +144,7 @@ struct AppView: View {
         }
         .onAppear(perform: appController.configureCurrentState)
         .task {
-            UITabBar.appearance().unselectedItemTintColor = .secondaryText
+            UITabBar.appearance().unselectedItemTintColor = .secondaryTxt
             UITabBar.appearance().tintColor = .primaryTxt
         }
         .accentColor(.primaryTxt)
