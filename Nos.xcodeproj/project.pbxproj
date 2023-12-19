@@ -109,6 +109,8 @@
 		C942566929B66A2800C4202C /* Date+Elapsed.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942566829B66A2800C4202C /* Date+Elapsed.swift */; };
 		C942566A29B66A2800C4202C /* Date+Elapsed.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942566829B66A2800C4202C /* Date+Elapsed.swift */; };
 		C94437E629B0DB83004D8C86 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94437E529B0DB83004D8C86 /* NotificationsView.swift */; };
+		C94824482B32364100005B36 /* WalletConnectModal in Frameworks */ = {isa = PBXBuildFile; productRef = C94824472B32364100005B36 /* WalletConnectModal */; };
+		C948244A2B32364900005B36 /* Web3 in Frameworks */ = {isa = PBXBuildFile; productRef = C94824492B32364900005B36 /* Web3 */; };
 		C94A5E152A716A6D00B6EC5D /* EditableNoteText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A5E142A716A6D00B6EC5D /* EditableNoteText.swift */; };
 		C94A5E162A716A6D00B6EC5D /* EditableNoteText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A5E142A716A6D00B6EC5D /* EditableNoteText.swift */; };
 		C94A5E182A72C84200B6EC5D /* ReportCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A5E172A72C84200B6EC5D /* ReportCategory.swift */; };
@@ -788,7 +790,9 @@
 				C905B0752A619367009B8A78 /* DequeModule in Frameworks */,
 				C91565C12B2368FA0068EECA /* ViewInspector in Frameworks */,
 				C9646E9C29B79E4D007239A4 /* Logger in Frameworks */,
+				C948244A2B32364900005B36 /* Web3 in Frameworks */,
 				CDDA1F7D29A527650047ACD8 /* SwiftUINavigation in Frameworks */,
+				C94824482B32364100005B36 /* WalletConnectModal in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1398,6 +1402,8 @@
 				C9B71DC42A9008300031ED9F /* Sentry */,
 				C99DBF7F2A9E8BCF00F7068F /* SDWebImageSwiftUI */,
 				C91565C02B2368FA0068EECA /* ViewInspector */,
+				C94824472B32364100005B36 /* WalletConnectModal */,
+				C94824492B32364900005B36 /* Web3 */,
 			);
 			productName = NosTests;
 			productReference = C9DEBFE4298941020078B43A /* NosTests.xctest */;
@@ -2594,6 +2600,16 @@
 		C9332C652ADED0D700AD7B0E /* StarscreamOld */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StarscreamOld;
+		};
+		C94824472B32364100005B36 /* WalletConnectModal */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C95F0AC82ABA379700A0D9CE /* XCRemoteSwiftPackageReference "WalletConnectSwiftV2" */;
+			productName = WalletConnectModal;
+		};
+		C94824492B32364900005B36 /* Web3 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3" */;
+			productName = Web3;
 		};
 		C94D855E29914D2300749478 /* SwiftUINavigation */ = {
 			isa = XCSwiftPackageProductDependency;
