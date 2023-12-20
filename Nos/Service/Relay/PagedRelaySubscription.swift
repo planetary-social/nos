@@ -41,7 +41,7 @@ class PagedRelaySubscription {
     }
     
     deinit {
-        Task {
+        Task.detached { [newEventsSubscriptionIDs, pagedSubscriptionIDs, subscriptionManager] in
             // TODO: are these subscriptions being fully closed? I think we aren't sending a CLOSE message
             for subscriptionID in newEventsSubscriptionIDs {
                 await subscriptionManager.decrementSubscriptionCount(for: subscriptionID)

@@ -75,7 +75,6 @@ class SubscriptionCancellable {
     }
     
     deinit {
-        print("deinit subscriptionIDs \(subscriptionIDs)")
         cancel()
     }
     
@@ -85,7 +84,6 @@ class SubscriptionCancellable {
     
     func cancel() {
         relayService?.decrementSubscriptionCount(for: subscriptionIDs)
-        print("Cancelled subscriptionIDs \(subscriptionIDs)")
     }
 }
 
