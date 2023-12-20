@@ -172,7 +172,7 @@ struct ContentWarningMessage: View {
     private var reason: String {
         // Extract content from reports and remove empty content
         let contents = reports.compactMap { $0.content }.filter({ !$0.isEmpty })
-
+a
         // Convert set of unique reasons to array and remove any empty reasons
         let reasons = uniqueReasons.filter { !$0.isEmpty }
         
