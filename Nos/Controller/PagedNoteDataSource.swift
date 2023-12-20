@@ -174,10 +174,16 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         collectionView.performBatchUpdates { 
             diff.forEach { change in
                 switch change {
-                case .insert(let index, _, _):
-                    collectionView.insertItems(at: [IndexPath(row: index, section: 0)])
-                case .remove(let index, _, _):
-                    collectionView.deleteItems(at: [IndexPath(row: index, section: 0)])
+                case .insert(let index, _, let associatedIndex):
+                    if associatedIndex != index {
+                        // This is not an update, it is a insert or move
+                        collectionView.insertItems(at: [IndexPath(row: index, section: 0)])
+                    }
+                case .remove(let index, _, let associatedIndex):
+                    if associatedIndex != index {
+                        // This is not an update, it is a delete or move
+                        collectionView.deleteItems(at: [IndexPath(row: index, section: 0)])
+                    }
                 }
             }
         }
