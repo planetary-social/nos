@@ -169,24 +169,54 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     
     // MARK: - NSFetchedResultsControllerDelegate
     
+    private var insertedIndexes = [IndexPath]()
+    private var deletedIndexes = [IndexPath]()
+    private var movedIndexes = [(IndexPath, IndexPath)]()
+    
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        insertedIndexes = [IndexPath]()
+        deletedIndexes = [IndexPath]()
+        movedIndexes = [(IndexPath, IndexPath)]()
+    }
+    
     func controller(
         _ controller: NSFetchedResultsController<NSFetchRequestResult>, 
-        didChangeContentWith diff: CollectionDifference<NSManagedObjectID>
+        didChange anObject: Any, 
+        at indexPath: IndexPath?, 
+        for type: NSFetchedResultsChangeType, 
+        newIndexPath: IndexPath?
     ) {
-        collectionView.performBatchUpdates { 
-            diff.forEach { change in
-                switch change {
-                case .insert(let index, _, let associatedIndex):
-                    if associatedIndex != index {
-                        // This is not an update, it is a insert or move
-                        collectionView.insertItems(at: [IndexPath(row: index, section: 0)])
-                    }
-                case .remove(let index, _, let associatedIndex):
-                    if associatedIndex != index {
-                        // This is not an update, it is a delete or move
-                        collectionView.deleteItems(at: [IndexPath(row: index, section: 0)])
-                    }
-                }
+        // Note: I tried using UICollectionViewDiffableDatasource but it didn't seem to work well with SwiftUI views
+        // as it kept reloading cells with animations when nothing was visually changing.
+        switch type {
+        case .insert:
+            if let newIndexPath = newIndexPath {
+                insertedIndexes.append(newIndexPath)
+            }
+        case .delete:
+            if let indexPath = indexPath {
+                deletedIndexes.append(indexPath)
+            }
+        case .update:
+            // The SwiftUI cells are observing their source Core Data objects already so we don't need to notify
+            // them of updates through the collectionView.
+            return
+        case .move:
+            if let oldIndexPath = indexPath, let newIndexPath = newIndexPath {
+                movedIndexes.append((oldIndexPath, newIndexPath)) 
+            }
+        @unknown default:
+            fatalError("Unexpected NSFetchedResultsChangeType: \(type)")
+        }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        collectionView.performBatchUpdates {
+            collectionView.deleteItems(at: deletedIndexes)
+            collectionView.insertItems(at: insertedIndexes)
+            movedIndexes.forEach { indexPair in 
+                let (oldIndex, newIndex) = indexPair
+                collectionView.moveItem(at: oldIndex, to: newIndex)
             }
         }
     }

@@ -111,8 +111,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         return UICollectionViewCompositionalLayout(section: section)
     }
     
-    // swiftlint:disable:next generic_type_name
     /// The coordinator mainly holds a strong reference to the `dataSource` and proxies pull-to-refresh events.
+    // swiftlint:disable:next generic_type_name
     class Coordinator<CoordinatorHeader: View, CoordinatorEmptyPlaceholder: View> {
         
         var dataSource: PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder>?
