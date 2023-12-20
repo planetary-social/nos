@@ -151,16 +151,33 @@ enum AuthorError: Error {
         return fetchRequest
     }
     
+    @nonobjc func feedPredicate() -> NSPredicate {
+        return NSPredicate(
+            format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@",
+            EventKind.text.rawValue,
+            EventKind.repost.rawValue,
+            EventKind.longFormContent.rawValue,
+            self
+        )
+    }
+
+    @nonobjc func postsPredicate() -> NSPredicate {
+        let onlyRootPostsClause = "(kind = 1 AND SUBQUERY(" +
+            "eventReferences, " +
+            "$reference, " +
+            "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
+        ").@count = 0)"
+        return NSPredicate(
+            format: "(\(onlyRootPostsClause) OR kind = %i) AND author = %@",
+            EventKind.longFormContent.rawValue,
+            self
+        )
+    }
+
     @nonobjc func allPostsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(
-            format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@", 
-            EventKind.text.rawValue, 
-            EventKind.repost.rawValue, 
-            EventKind.longFormContent.rawValue, 
-            self
-        )
+        fetchRequest.predicate = feedPredicate()
         return fetchRequest
     }
 

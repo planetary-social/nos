@@ -16,6 +16,7 @@ struct ProfileHeader: View {
     @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) private var currentUser
 
+    @Binding private var selectedTab: ProfileHeaderTab
     @State private var subscriptionId: String = ""
     
     var followsRequest: FetchRequest<Follow>
@@ -33,11 +34,17 @@ struct ProfileHeader: View {
     }
     
     @EnvironmentObject private var router: Router
-    
-    init(author: Author) {
+
+    enum ProfileHeaderTab {
+        case feed
+        case posts
+    }
+
+    init(author: Author, selectedTab: Binding<ProfileHeaderTab>) {
         self.author = author
         self.followsRequest = FetchRequest(fetchRequest: Follow.followsRequest(sources: [author]))
         self.followersRequest = FetchRequest(fetchRequest: Follow.followsRequest(destination: [author]))
+        _selectedTab = selectedTab
     }
 
     private var shouldShowBio: Bool {
@@ -133,6 +140,40 @@ struct ProfileHeader: View {
                     followsResult: followsResult,
                     followersResult: followersResult
                 )
+                HStack {
+                    Button {
+                        selectedTab = .feed
+                    } label: {
+                        HStack {
+                            Spacer()
+                            let color = selectedTab == .feed ? Color.primaryTxt : .secondaryTxt
+                            Image.profileFeed
+                                .renderingMode(.template)
+                                .foregroundColor(color)
+                            Text("Feed")
+                                .foregroundColor(color)
+                            Spacer()
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+
+                    Button {
+                        selectedTab = .posts
+                    } label: {
+                        HStack {
+                            Spacer()
+                            let color = selectedTab == .posts ? Color.primaryTxt : .secondaryTxt
+                            Image.profilePosts
+                                .renderingMode(.template)
+                                .foregroundColor(color)
+                            Text("Posts")
+                                .foregroundColor(color)
+                            Spacer()
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .padding()
             }
             .frame(maxWidth: 500)
         }
@@ -158,7 +199,7 @@ struct ProfileHeader: View {
     
     return Group {
         // ProfileHeader(author: author)
-        ProfileHeader(author: previewData.previewAuthor)
+        ProfileHeader(author: previewData.previewAuthor, selectedTab: .constant(.feed))
             .inject(previewData: previewData)
             .padding()
             .background(Color.previewBg)
@@ -198,7 +239,7 @@ struct ProfileHeader: View {
     }
     
     return Group {
-        ProfileHeader(author: author)
+        ProfileHeader(author: author, selectedTab: .constant(.feed))
     }
     .inject(previewData: previewData)
     .previewDevice("iPhone SE (2nd generation)")
@@ -210,7 +251,7 @@ struct ProfileHeader: View {
     var previewData = PreviewData()
     
     return Group {
-        ProfileHeader(author: previewData.unsAuthor)
+        ProfileHeader(author: previewData.unsAuthor, selectedTab: .constant(.feed))
             .inject(previewData: previewData)
             .padding()
             .background(Color.previewBg)

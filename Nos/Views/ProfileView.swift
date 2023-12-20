@@ -31,6 +31,8 @@ struct ProfileView: View {
     
     @State private var subscriptionIds: [String] = []
 
+    @State private var selectedTab: ProfileHeader.ProfileHeaderTab = .feed
+
     @State private var alert: AlertState<Never>?
     
     @FetchRequest
@@ -113,7 +115,7 @@ struct ProfileView: View {
     var body: some View {
         VStack(spacing: 0) {
             ScrollView(.vertical, showsIndicators: false) {
-                ProfileHeader(author: author)
+                ProfileHeader(author: author, selectedTab: $selectedTab)
                     .compositingGroup()
                     .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                     .id(author.id)
@@ -264,6 +266,17 @@ struct ProfileView: View {
             }
         }
         .onChange(of: author.events.count) { 
+            Task {
+                await computeUnmutedEvents()
+            }
+        }
+        .onChange(of: selectedTab) { tab in
+            switch tab {
+            case .feed:
+                events.nsPredicate = author.feedPredicate()
+            case .posts:
+                events.nsPredicate = author.postsPredicate()
+            }
             Task {
                 await computeUnmutedEvents()
             }
