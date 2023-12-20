@@ -180,7 +180,7 @@ struct AuthorStoryView: View {
     /// Fetches replies to the list of stories from connected relays (to update reply count to each one)
     private func subscribeToReplies() async {
         // Close out stale requests
-        relaySubscriptions.cancelAll()
+        relaySubscriptions.removeAll()
         let eTags = notes.compactMap { $0.identifier }
         guard !eTags.isEmpty else {
             return

@@ -56,6 +56,8 @@ struct RelaySubscription: Identifiable {
     }
 }
 
+/// A handle that holds references to one or more `RelaySubscription`s and provides the ability to cancel these 
+/// subscriptions. Will auto-cancel them when it is deallocated. Modeled after Combine's `Cancellable`.
 class SubscriptionCancellable {
     private var subscriptionIDs: [RelaySubscription.ID]
     private weak var relayService: RelayService?
@@ -88,9 +90,3 @@ class SubscriptionCancellable {
 }
 
 typealias SubscriptionCancellables = [SubscriptionCancellable]
-
-extension SubscriptionCancellables {
-    func cancelAll() {
-        self.forEach { $0.cancel() }
-    }
-}

@@ -15,16 +15,29 @@ class PagedRelaySubscription {
     let startDate: Date
     let filter: Filter
     
+    private var relayService: RelayService
     private var subscriptionManager: RelaySubscriptionManager
+    
+    /// A set of subscriptions fetching older events.
     private var pagedSubscriptionIDs = [RelaySubscription.ID]()
+    
+    /// A set of subscriptions always listening for new events published after the `startDate`.
     private var newEventsSubscriptionIDs = [RelaySubscription.ID]()
     
-    init(startDate: Date, filter: Filter, subscriptionManager: RelaySubscriptionManager, relayAddresses: [URL]) {
+    init(
+        startDate: Date, 
+        filter: Filter, 
+        relayService: RelayService,
+        subscriptionManager: RelaySubscriptionManager, 
+        relayAddresses: [URL]
+    ) {
         self.startDate = startDate
         self.filter = filter
+        self.relayService = relayService
         self.subscriptionManager = subscriptionManager
         Task {
-            // We have two types of subscriptions. The new events
+            // We keep two sets of subscriptions. One is always listening for new events and the other fetches 
+            // progressively older events as we page down.
             var pagedEventsFilter = filter
             pagedEventsFilter.until = startDate
             var newEventsFilter = filter
@@ -41,15 +54,12 @@ class PagedRelaySubscription {
     }
     
     deinit {
-        Task.detached { [newEventsSubscriptionIDs, pagedSubscriptionIDs, subscriptionManager] in
-            // TODO: are these subscriptions being fully closed? I think we aren't sending a CLOSE message
-            for subscriptionID in newEventsSubscriptionIDs {
-                await subscriptionManager.decrementSubscriptionCount(for: subscriptionID)
-            }
-            
-            for subscriptionID in pagedSubscriptionIDs {
-                await subscriptionManager.decrementSubscriptionCount(for: subscriptionID)
-            }
+        for subscriptionID in newEventsSubscriptionIDs {
+            relayService.decrementSubscriptionCount(for: subscriptionID)
+        }
+        
+        for subscriptionID in pagedSubscriptionIDs {
+            relayService.decrementSubscriptionCount(for: subscriptionID)
         }
     }
     
@@ -64,7 +74,6 @@ class PagedRelaySubscription {
                     let newDate = subscription.oldestEventCreationDate {
                     newUntilDates[subscription.relayAddress] = newDate
                     await subscriptionManager.decrementSubscriptionCount(for: subscriptionID)
-                    Log.debug("Oldest event from \(subscriptionID) is \(newDate)")
                 }
             }
             

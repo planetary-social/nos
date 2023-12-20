@@ -814,6 +814,8 @@ public class Event: NosManagedObject {
     @MainActor var contentLinks = [URL]()
     @MainActor var relaySubscriptions = SubscriptionCancellables()
     
+    /// Instructs this event to load supplementary data like author name and photo, reference events, and produce
+    /// formatted `content` and cache it on this object. Idempotent.
     @MainActor func loadViewData() async {
         guard !loadingViewData else {
             return
@@ -822,7 +824,7 @@ public class Event: NosManagedObject {
         Log.debug("\(identifier ?? "null") loading view data")
         
         if isStub {
-            await loadContentIfStub()
+            await loadContent()
             loadingViewData = false
         } else {
             Task { await loadReferencedNote() }
@@ -831,12 +833,14 @@ public class Event: NosManagedObject {
         }
     }
     
-    @MainActor func loadContentIfStub() async {
+    /// Tries to download this event from relays.
+    @MainActor private func loadContent() async {
         @Dependency(\.relayService) var relayService
         relaySubscriptions.append(await relayService.requestEvent(with: identifier))
     }
     
-    @MainActor func loadAuthorMetadata() async {
+    /// Requests any missing metadata for authors referenced by this note from relays.
+    @MainActor private func loadAuthorMetadata() async {
         @Dependency(\.relayService) var relayService
         @Dependency(\.persistenceController) var persistenceController
         let backgroundContext = persistenceController.backgroundViewContext
@@ -847,7 +851,8 @@ public class Event: NosManagedObject {
         ))
     }
     
-    @MainActor func loadReferencedNote() async {
+    /// Tries to load the note this note is reposting or replying to from relays.
+    @MainActor private func loadReferencedNote() async {
         if let referencedNote = referencedNote() {
             await referencedNote.loadViewData()
         } else {
@@ -855,6 +860,8 @@ public class Event: NosManagedObject {
         }
     }
     
+    /// Processes the note `content` to populate mentions and extract links. The results are saved in 
+    /// `attributedContent` and `contentLinks`.
     @MainActor func loadAttributedContent() async {
         @Dependency(\.persistenceController) var persistenceController
         let backgroundContext = persistenceController.backgroundViewContext

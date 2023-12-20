@@ -10,7 +10,7 @@ import CoreData
 import Dependencies
 import Logger
 
-/// The paged note list view is designed to display an infinite list of notes in reverse-chronological order.
+/// The PagedNoteListView is designed to display an infinite list of notes in reverse-chronological order.
 /// It takes two filters: one to load events from our local database (Core Data) and one to load them from the 
 /// relays. As the user scrolls down we will keep adjusting the relay filter to get older events.
 /// 
@@ -37,6 +37,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// A view that will be displayed below the header when no notes are being shown.
     let emptyPlaceholder: () -> EmptyPlaceholder
     
+    /// A closure that will be called when the user pulls-to-refresh. You probably want to update the `databaseFilter`
+    /// in this closure.
     let onRefresh: () -> NSFetchRequest<Event> 
     
     func makeCoordinator() -> Coordinator<Header, EmptyPlaceholder> {
@@ -44,37 +46,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     }
     
     func makeUIView(context: Context) -> UICollectionView {
-        let size = NSCollectionLayoutSize(
-            widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
-            heightDimension: NSCollectionLayoutDimension.estimated(140)
-        )
-        let item = NSCollectionLayoutItem(layoutSize: size)
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitems: [item])
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = .zero
-        section.interGroupSpacing = 16
-        
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(300))
-        let headerItem = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: headerSize, 
-            elementKind: UICollectionView.elementKindSectionHeader, 
-            alignment: .top
-        )
-        headerItem.edgeSpacing = .none
-        
-        let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(300))
-        let footerItem = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: footerSize, 
-            elementKind: UICollectionView.elementKindSectionFooter, 
-            alignment: .bottom
-        )
-        headerItem.edgeSpacing = .none
-        
-        section.boundarySupplementaryItems = [headerItem, footerItem]
-        
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        
+        let layout = Self.buildLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -105,7 +77,42 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     
     func updateUIView(_ collectionView: UICollectionView, context: Context) {}
     
+    /// Builds a one section, one column layout with dynamic cell sizes and a header and footer view.
+    static func buildLayout() -> UICollectionViewLayout {
+        let size = NSCollectionLayoutSize(
+            widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
+            heightDimension: NSCollectionLayoutDimension.estimated(140)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: size)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitems: [item])
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = .zero
+        section.interGroupSpacing = 16
+        
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(300))
+        let headerItem = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerSize, 
+            elementKind: UICollectionView.elementKindSectionHeader, 
+            alignment: .top
+        )
+        headerItem.edgeSpacing = .none
+        
+        let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(300))
+        let footerItem = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: footerSize, 
+            elementKind: UICollectionView.elementKindSectionFooter, 
+            alignment: .bottom
+        )
+        headerItem.edgeSpacing = .none
+        
+        section.boundarySupplementaryItems = [headerItem, footerItem]
+        
+        return UICollectionViewCompositionalLayout(section: section)
+    }
+    
     // swiftlint:disable:next generic_type_name
+    /// The coordinator mainly holds a strong reference to the `dataSource` and proxies pull-to-refresh events.
     class Coordinator<CoordinatorHeader: View, CoordinatorEmptyPlaceholder: View> {
         
         var dataSource: PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder>?

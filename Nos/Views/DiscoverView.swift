@@ -61,7 +61,9 @@ struct DiscoverView: View {
                 limit: 200
             )
             
-            relaySubscriptions.append(await relayService.subscribeToEvents(matching: singleRelayFilter, from: [relayAddress]))
+            relaySubscriptions.append(
+                await relayService.subscribeToEvents(matching: singleRelayFilter, from: [relayAddress])
+            )
         } else {
             let featuredFilter = Filter(
                 authorKeys: featuredAuthors.compactMap {

@@ -157,7 +157,10 @@ extension RelayService {
     /// - Parameter specificRelays: an optional list of relays you would like to fetch from. The user's preferred relays
     ///     will be used if this is not set.
     /// - Returns: A handle that allows the caller to cancel the subscription when it is no longer needed.     
-    func subscribeToEvents(matching filter: Filter, from specificRelays: [URL]? = nil) async -> SubscriptionCancellable {
+    func subscribeToEvents(
+        matching filter: Filter, 
+        from specificRelays: [URL]? = nil
+    ) async -> SubscriptionCancellable {
         var relayAddresses: [URL]
         if let specificRelays {
             relayAddresses = specificRelays
@@ -182,6 +185,7 @@ extension RelayService {
         PagedRelaySubscription(
             startDate: .now, 
             filter: filter, 
+            relayService: self,
             subscriptionManager: subscriptions, 
             relayAddresses: await self.relayAddresses(for: currentUser)
         )

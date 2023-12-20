@@ -155,7 +155,9 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             }
             
             footer.contentConfiguration = UIHostingConfiguration { 
-                self.emptyPlaceholder()
+                if self.fetchedResultsController.fetchedObjects?.isEmpty == true {
+                    self.emptyPlaceholder()
+                }
             }
             .margins(.horizontal, 0)
             .margins(.top, 0)
