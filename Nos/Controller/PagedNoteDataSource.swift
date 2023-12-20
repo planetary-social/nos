@@ -169,16 +169,17 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     
     func controller(
         _ controller: NSFetchedResultsController<NSFetchRequestResult>, 
-        didChangeContentWithDifference diff: NSOrderedCollectionDifference
+        didChangeContentWith diff: CollectionDifference<NSManagedObjectID>
     ) {
-        
-        collectionView.performBatchUpdates({
-            diff.removals.forEach { change in
-                collectionView.deleteItems(at: [IndexPath(index: change.index)])
+        collectionView.performBatchUpdates { 
+            diff.forEach { change in
+                switch change {
+                case .insert(let index, _, _):
+                    collectionView.insertItems(at: [IndexPath(row: index, section: 0)])
+                case .remove(let index, _, _):
+                    collectionView.deleteItems(at: [IndexPath(row: index, section: 0)])
+                }
             }
-            diff.insertions.forEach { change in
-                collectionView.insertItems(at: [IndexPath(index: change.index)])
-            }
-        }, completion: nil)
+        }
     }
 }
