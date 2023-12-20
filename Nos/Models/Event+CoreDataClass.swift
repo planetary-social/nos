@@ -812,6 +812,7 @@ public class Event: NosManagedObject {
     @MainActor var loadingViewData = false
     @MainActor var attributedContent = LoadingContent<AttributedString>.loading
     @MainActor var contentLinks = [URL]()
+    @MainActor var relaySubscriptions = SubscriptionCancellables()
     
     @MainActor func loadViewData() async {
         guard !loadingViewData else {
@@ -832,14 +833,18 @@ public class Event: NosManagedObject {
     
     @MainActor func loadContentIfStub() async {
         @Dependency(\.relayService) var relayService
-        _ = await relayService.requestEvent(with: identifier)
+        relaySubscriptions.append(await relayService.requestEvent(with: identifier))
     }
     
     @MainActor func loadAuthorMetadata() async {
         @Dependency(\.relayService) var relayService
         @Dependency(\.persistenceController) var persistenceController
         let backgroundContext = persistenceController.backgroundViewContext
-        _ = await Event.requestAuthorsMetadataIfNeeded(noteID: identifier, using: relayService, in: backgroundContext)
+        relaySubscriptions.append(await Event.requestAuthorsMetadataIfNeeded(
+            noteID: identifier, 
+            using: relayService, 
+            in: backgroundContext
+        ))
     }
     
     @MainActor func loadReferencedNote() async {
