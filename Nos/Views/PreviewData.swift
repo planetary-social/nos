@@ -265,6 +265,42 @@ struct PreviewData {
         try? previewContext.save()
         return note
     }()
+    
+    // MARK: Reports
+    
+    lazy var shortNoteReportOne: Event = {
+        let note = Event(context: previewContext)
+        note.identifier = "r1"
+        note.kind = EventKind.report.rawValue
+        note.content = ""
+        note.author = bob
+        note.createdAt = .now
+        
+        let reference = EventReference(context: previewContext)
+        reference.eventId = "1"
+        reference.referencedEvent = shortNote
+        note.insertIntoEventReferences(reference, at: 0)
+        
+        try? previewContext.save()
+        return note
+    }()
+    
+    lazy var shortNoteReportTwo: Event = {
+        let note = Event(context: previewContext)
+        note.identifier = "r2"
+        note.kind = EventKind.report.rawValue
+        note.content = ""
+        note.author = eve
+        note.createdAt = .now
+        
+        let reference = EventReference(context: previewContext)
+        reference.eventId = "1"
+        reference.referencedEvent = shortNote
+        note.insertIntoEventReferences(reference, at: 0)
+        
+        try? previewContext.save()
+        return note
+    }()
 }
 
 struct InjectPreviewData: ViewModifier {
