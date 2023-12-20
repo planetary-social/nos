@@ -22,7 +22,7 @@ struct HomeFeedView: View {
     @FetchRequest private var authors: FetchedResults<Author>
     
     @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
-    @State private var subscriptionIDs = [String]()
+    @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var isVisible = false
     @State private var cancellables = [AnyCancellable]()
     @State private var performingInitialLoad = true
@@ -50,7 +50,7 @@ struct HomeFeedView: View {
     }
     
     func subscribeToNewEvents() async {
-        await cancelSubscriptions()
+        relaySubscriptions.removeAll()
         
         let followedKeys = await Array(currentUser.socialGraph.followedKeys)
             
@@ -62,15 +62,8 @@ struct HomeFeedView: View {
                 limit: 100, 
                 since: nil
             )
-            let textSubs = await relayService.openSubscriptions(with: textFilter)
-            subscriptionIDs.append(contentsOf: textSubs)
-        }
-    }
-    
-    func cancelSubscriptions() async {
-        if !subscriptionIDs.isEmpty {
-            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-            subscriptionIDs.removeAll()
+            let textSubs = await relayService.subscribeToEvents(matching: textFilter)
+            relaySubscriptions.append(textSubs)
         }
     }
 
@@ -221,7 +214,7 @@ struct HomeFeedView: View {
                 analytics.showedHome()
                 Task { await subscribeToNewEvents() }
             } else {
-                Task { await cancelSubscriptions() }
+                relaySubscriptions.removeAll()
             }
         }
     }

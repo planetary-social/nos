@@ -62,7 +62,7 @@ import Combine
     #endif
     
     private var notificationWatcher: NSFetchedResultsController<Event>?
-    private var relaySubscriptions = [RelaySubscription.ID]()
+    private var relaySubscriptions = SubscriptionCancellables()
     private var currentAuthor: Author? 
     private lazy var modelContext: NSManagedObjectContext = {
         persistenceController.newBackgroundContext()
@@ -71,7 +71,7 @@ import Combine
     // MARK: - Setup
     
     func listen(for user: CurrentUser) async {
-        await relayService.decrementSubscriptionCount(for: relaySubscriptions)
+        relaySubscriptions.removeAll()
         
         guard let author = user.author,
             let authorKey = author.hexadecimalPublicKey else {
@@ -99,7 +99,7 @@ import Combine
             pTags: [authorKey], 
             limit: 50
         )
-        relaySubscriptions = await relayService.openSubscriptions(with: userMentionsFilter)
+        relaySubscriptions.append(await relayService.subscribeToEvents(matching: userMentionsFilter))
         
         await updateBadgeCount()
     }

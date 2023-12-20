@@ -28,7 +28,7 @@ struct ProfileView: View {
     @State private var usbcAddress: USBCAddress?
     @State private var usbcBalance: Double?
     @State private var usbcBalanceTimer: Timer?
-    @State private var subscriptionIDs: [String] = []
+    @State private var relaySubscriptions = SubscriptionCancellables()
 
     @State private var alert: AlertState<Never>?
     
@@ -70,16 +70,15 @@ struct ProfileView: View {
     }
     
     func downloadAuthorData() async {
-        await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-        subscriptionIDs.removeAll()
+        relaySubscriptions.removeAll()
         
         guard let authorKey = author.hexadecimalPublicKey else {
             return
         }
         
         // Profile data
-        subscriptionIDs.append(
-            contentsOf: await relayService.requestProfileData(
+        relaySubscriptions.append(
+            await relayService.requestProfileData(
                 for: authorKey, 
                 lastUpdateMetadata: author.lastUpdatedMetadata, 
                 lastUpdatedContactList: nil // always grab contact list because we purge follows aggressively
@@ -88,7 +87,7 @@ struct ProfileView: View {
         
         // reports
         let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
-        subscriptionIDs.append(contentsOf: await relayService.openSubscriptions(with: reportFilter)) 
+        relaySubscriptions.append(await relayService.subscribeToEvents(matching: reportFilter)) 
     }
     
     var body: some View {
@@ -244,10 +243,7 @@ struct ProfileView: View {
             analytics.showedProfile()
         }
         .onDisappear {
-            Task(priority: .userInitiated) {
-                await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-                subscriptionIDs.removeAll()
-            }
+            relaySubscriptions.removeAll()
         }
     }
 }

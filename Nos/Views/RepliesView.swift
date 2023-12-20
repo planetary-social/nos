@@ -26,7 +26,7 @@ struct RepliesView: View {
     
     @State private var alert: AlertState<Never>?
     
-    @State private var subscriptionIDs = [String]()
+    @State private var relaySubscriptions = SubscriptionCancellables()
     
     @FocusState private var focusTextView: Bool
     @State private var showKeyboardOnAppear: Bool
@@ -80,15 +80,12 @@ struct RepliesView: View {
     func subscribeToReplies() {
         Task(priority: .userInitiated) {
             // Close out stale requests
-            if !subscriptionIDs.isEmpty {
-                await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-                subscriptionIDs.removeAll()
-            }
+            relaySubscriptions.removeAll()
             
             let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
             let filter = Filter(kinds: [.text, .like, .delete, .repost, .report, .label], eTags: eTags)
-            let subIDs = await relayService.openSubscriptions(with: filter)
-            subscriptionIDs.append(contentsOf: subIDs)
+            let subIDs = await relayService.subscribeToEvents(matching: filter)
+            relaySubscriptions.append(subIDs)
             
             // download reports for this user and the replies' authors
             guard let authorKey = note.author?.hexadecimalPublicKey else {
@@ -96,7 +93,7 @@ struct RepliesView: View {
             }
             let pTags = Array(Set([authorKey] + replies.compactMap { $0.author?.hexadecimalPublicKey }))
             let reportFilter = Filter(kinds: [.report], pTags: pTags)
-            subscriptionIDs.append(contentsOf: await relayService.openSubscriptions(with: reportFilter))
+            relaySubscriptions.append(await relayService.subscribeToEvents(matching: reportFilter))
         }
     }
     
@@ -132,10 +129,7 @@ struct RepliesView: View {
                     subscribeToReplies()
                 }
                 .onDisappear {
-                    Task(priority: .userInitiated) {
-                        await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-                        subscriptionIDs.removeAll()
-                    }
+                    relaySubscriptions.removeAll()
                 }
                 VStack {
                     Spacer()

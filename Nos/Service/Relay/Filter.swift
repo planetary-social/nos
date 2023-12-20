@@ -7,7 +7,8 @@
 
 import Foundation
 
-/// Describes a set of Nostr Events, usually so we can ask relay servers for them.
+/// Describes a set of Nostr Events, usually so we can ask relay servers for them. 
+/// See [NIP-01](https://github.com/nostr-protocol/nips/blob/master/01.md#communication-between-clients-and-relays).
 struct Filter: Hashable, Identifiable {
     
     let authorKeys: [HexadecimalString]

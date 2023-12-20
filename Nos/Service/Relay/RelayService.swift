@@ -99,16 +99,18 @@ final class RelayService: ObservableObject {
 // MARK: Close subscriptions
 extension RelayService {
     
-    func decrementSubscriptionCount(for subscriptionIDs: [String]) async {
+    func decrementSubscriptionCount(for subscriptionIDs: [String]) {
         for subscriptionID in subscriptionIDs {
-            await self.decrementSubscriptionCount(for: subscriptionID)
+            self.decrementSubscriptionCount(for: subscriptionID)
         }
     }
     
-    func decrementSubscriptionCount(for subscriptionID: String) async {
-        let subscriptionStillActive = await subscriptions.decrementSubscriptionCount(for: subscriptionID)
-        if !subscriptionStillActive {
-            await self.sendCloseToAll(for: subscriptionID)
+    func decrementSubscriptionCount(for subscriptionID: String) {
+        Task {
+            let subscriptionStillActive = await subscriptions.decrementSubscriptionCount(for: subscriptionID)
+            if !subscriptionStillActive {
+                await self.sendCloseToAll(for: subscriptionID)
+            }
         }
     }
 
@@ -144,7 +146,18 @@ extension RelayService {
 // MARK: Events
 extension RelayService {
     
-    func openSubscriptions(with filter: Filter, to specificRelays: [URL]? = nil) async -> [RelaySubscription.ID] {
+    /// Asks the service to start downloading events matching the given `filter` from relays and save them to Core 
+    /// Data. If `specificRelays` are passed then those relays will be requested, otherwise we will use the user's list
+    /// of preferred relays. Subscriptions are internally de-duplicated.
+    /// 
+    /// To close the subscription you can explicitly call `cancel()` on the returned `SubscriptionCancellable` or
+    /// let it be deallocated.
+    /// 
+    /// - Parameter filter: an object describing the set of events you wish to fetch.
+    /// - Parameter specificRelays: an optional list of relays you would like to fetch from. The user's preferred relays
+    ///     will be used if this is not set.
+    /// - Returns: A handle that allows the caller to cancel the subscription when it is no longer needed.     
+    func subscribeToEvents(matching filter: Filter, from specificRelays: [URL]? = nil) async -> SubscriptionCancellable {
         var relayAddresses: [URL]
         if let specificRelays {
             relayAddresses = specificRelays
@@ -159,10 +172,13 @@ extension RelayService {
         // Fire off REQs in the background
         Task { await self.processSubscriptionQueue() }
         
-        return subscriptionIDs
+        return SubscriptionCancellable(subscriptionIDs: subscriptionIDs, relayService: self)
     }
     
-    func openPagedSubscription(with filter: Filter) async -> PagedRelaySubscription {
+    /// Asks the relay to download a page of events matching the given `filter` from relays and save them to Core Data.
+    /// You can cause the service to download the next page by calling `loadMore()` on the returned subscription object.
+    /// The subscription will be cancelled when the returned subscription object is deallocated. 
+    func subscribeToPagedEvents(matching filter: Filter) async -> PagedRelaySubscription {
         PagedRelaySubscription(
             startDate: .now, 
             filter: filter, 
@@ -171,9 +187,9 @@ extension RelayService {
         )
     }
     
-    func requestMetadata(for authorKey: HexadecimalString?, since: Date?) async -> [RelaySubscription.ID] {
+    func requestMetadata(for authorKey: HexadecimalString?, since: Date?) async -> SubscriptionCancellable {
         guard let authorKey else {
-            return []
+            return SubscriptionCancellable.empty()
         }
         
         let metaFilter = Filter(
@@ -182,12 +198,12 @@ extension RelayService {
             limit: 1, 
             since: since
         )
-        return await openSubscriptions(with: metaFilter)
+        return await subscribeToEvents(matching: metaFilter)
     }
     
-    func requestContactList(for authorKey: HexadecimalString?, since: Date?) async -> [RelaySubscription.ID] {
+    func requestContactList(for authorKey: HexadecimalString?, since: Date?) async -> SubscriptionCancellable {
         guard let authorKey else {
-            return []
+            return SubscriptionCancellable.empty()
         }
         
         let contactFilter = Filter(
@@ -196,34 +212,32 @@ extension RelayService {
             limit: 1,
             since: since
         )
-        return await openSubscriptions(with: contactFilter)
+        return await subscribeToEvents(matching: contactFilter)
     }
     
     func requestProfileData(
         for authorKey: HexadecimalString?, 
         lastUpdateMetadata: Date?, 
         lastUpdatedContactList: Date?
-    ) async -> [RelaySubscription.ID] {
-        var subscriptions = [RelaySubscription.ID]()
+    ) async -> SubscriptionCancellable {
+        var subscriptions = SubscriptionCancellables()
         guard let authorKey else {
-            return subscriptions
+            return SubscriptionCancellable.empty()
         }
         
-        let metadataSubscriptionIDs = await requestMetadata(for: authorKey, since: lastUpdateMetadata)
-        subscriptions.append(contentsOf: metadataSubscriptionIDs)
-        let contactListSubscriptionIDs = await requestContactList(for: authorKey, since: lastUpdatedContactList)
-        subscriptions.append(contentsOf: contactListSubscriptionIDs)
+        subscriptions.append(await requestMetadata(for: authorKey, since: lastUpdateMetadata))
+        subscriptions.append(await requestContactList(for: authorKey, since: lastUpdatedContactList))
         
-        return subscriptions
+        return SubscriptionCancellable(cancellables: subscriptions, relayService: self)
     }
     
     /// Requests a single event from all relays
-    func requestEvent(with eventID: String?) async -> [RelaySubscription.ID] {
+    func requestEvent(with eventID: String?) async -> SubscriptionCancellable {
         guard let eventID = eventID else {
-            return []
+            return SubscriptionCancellable.empty()
         }
         
-        return await openSubscriptions(with: Filter(eventIDs: [eventID], limit: 1))
+        return await subscribeToEvents(matching: Filter(eventIDs: [eventID], limit: 1))
     }
     
     private func processSubscriptionQueue() async {

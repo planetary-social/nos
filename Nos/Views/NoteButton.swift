@@ -31,8 +31,6 @@ struct NoteButton: View {
     @EnvironmentObject private var relayService: RelayService
     @Dependency(\.persistenceController) private var persistenceController
     
-    @State private var subscriptionIDs = [RelaySubscription.ID]()
-
     init(
         note: Event, 
         style: CardStyle = CardStyle.compact, 
@@ -85,12 +83,6 @@ struct NoteButton: View {
                     }
                     .padding(.horizontal)
                     .readabilityPadding()
-                    .onDisappear {
-                        Task(priority: .userInitiated) {
-                            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-                            subscriptionIDs.removeAll()
-                        }
-                    }
                 })
             }
             

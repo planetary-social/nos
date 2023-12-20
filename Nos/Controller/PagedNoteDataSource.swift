@@ -18,7 +18,6 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     var collectionView: UICollectionView
     
     @Dependency(\.relayService) private var relayService: RelayService
-    private var subscriptionIDs: [RelaySubscription.ID] = []
     private var relayFilter: Filter
     private var pager: PagedRelaySubscription?
     private var context: NSManagedObjectContext
@@ -77,7 +76,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         Task {
             var limitedFilter = relayFilter
             limitedFilter.limit = pageSize
-            self.pager = await relayService.openPagedSubscription(with: limitedFilter)
+            self.pager = await relayService.subscribeToPagedEvents(matching: limitedFilter)
         }
     }
     

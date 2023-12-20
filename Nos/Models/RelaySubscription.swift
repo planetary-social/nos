@@ -55,3 +55,44 @@ struct RelaySubscription: Identifiable {
         self.referenceCount = referenceCount
     }
 }
+
+class SubscriptionCancellable {
+    private var subscriptionIDs: [RelaySubscription.ID]
+    private weak var relayService: RelayService?
+    
+    init(subscriptionIDs: [RelaySubscription.ID], relayService: RelayService) {
+        self.subscriptionIDs = subscriptionIDs
+        self.relayService = relayService
+    }
+    
+    init(cancellables: [SubscriptionCancellable], relayService: RelayService) {
+        self.subscriptionIDs = cancellables.flatMap { $0.subscriptionIDs }
+        self.relayService = relayService
+    }
+    
+    private init() {
+        self.subscriptionIDs = []
+    }
+    
+    deinit {
+        print("deinit subscriptionIDs \(subscriptionIDs)")
+        cancel()
+    }
+    
+    static func empty() -> SubscriptionCancellable {
+        SubscriptionCancellable()
+    }
+    
+    func cancel() {
+        relayService?.decrementSubscriptionCount(for: subscriptionIDs)
+        print("Cancelled subscriptionIDs \(subscriptionIDs)")
+    }
+}
+
+typealias SubscriptionCancellables = [SubscriptionCancellable]
+
+extension SubscriptionCancellables {
+    func cancelAll() {
+        self.forEach { $0.cancel() }
+    }
+}

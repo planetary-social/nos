@@ -1148,9 +1148,9 @@ public class Event: NosManagedObject {
         noteID: String?,
         using relayService: RelayService,
         in context: NSManagedObjectContext
-    ) async -> [RelaySubscription.ID] {
+    ) async -> SubscriptionCancellable {
         guard let noteID else {
-            return []
+            return SubscriptionCancellable(subscriptionIDs: [], relayService: relayService)
         }
         
         let requestData: [(HexadecimalString?, Date?)] = await context.perform {
@@ -1183,13 +1183,14 @@ public class Event: NosManagedObject {
             return requestData
         }
         
-        var subscriptionIDs = [RelaySubscription.ID]()
+        var cancellables = [SubscriptionCancellable]()
         for requestDatum in requestData {
             let authorKey = requestDatum.0
             let sinceDate = requestDatum.1
-            subscriptionIDs += await relayService.requestMetadata(for: authorKey, since: sinceDate)
+            cancellables.append(await relayService.requestMetadata(for: authorKey, since: sinceDate))
         }
-        return subscriptionIDs
+        
+        return SubscriptionCancellable(cancellables: cancellables, relayService: relayService)
     }
     
     var webLink: String {

@@ -26,7 +26,7 @@ struct DiscoverView: View {
     
     @State private var performingInitialLoad = true
     static let initialLoadTime = 2
-    @State private var subscriptionIDs = [String]()
+    @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var isVisible = false
     private var featuredAuthors: [String]
     
@@ -61,7 +61,7 @@ struct DiscoverView: View {
                 limit: 200
             )
             
-            subscriptionIDs += await relayService.openSubscriptions(with: singleRelayFilter, to: [relayAddress])
+            relaySubscriptions.append(await relayService.subscribeToEvents(matching: singleRelayFilter, from: [relayAddress]))
         } else {
             let featuredFilter = Filter(
                 authorKeys: featuredAuthors.compactMap {
@@ -71,15 +71,12 @@ struct DiscoverView: View {
                 limit: 200
             )
             
-            subscriptionIDs += await relayService.openSubscriptions(with: featuredFilter)
+            relaySubscriptions.append(await relayService.subscribeToEvents(matching: featuredFilter))
         }
     }
     
     func cancelSubscriptions() async {
-        if !subscriptionIDs.isEmpty {
-            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-            subscriptionIDs.removeAll()
-        }
+        relaySubscriptions.removeAll()
     }
     
     var body: some View {

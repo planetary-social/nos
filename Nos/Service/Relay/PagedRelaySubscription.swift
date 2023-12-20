@@ -9,7 +9,8 @@ import Foundation
 import Logger
 
 /// This class manages a Filter and fetches events in reverse-chronological order as `loadMore()` is called. This
-/// can be used to paginate a list of events. 
+/// can be used to paginate a list of events. The underlying relay subscriptions will be deallocated when this object
+/// goes out of scope. 
 class PagedRelaySubscription {
     let startDate: Date
     let filter: Filter

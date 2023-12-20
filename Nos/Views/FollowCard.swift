@@ -22,7 +22,7 @@ struct FollowCard: View {
     @Environment(CurrentUser.self) private var currentUser
     @EnvironmentObject private var relayService: RelayService
     
-    @State private var subscriptions = [RelaySubscription.ID]()
+    @State private var relaySubscriptions = SubscriptionCancellables()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -66,17 +66,15 @@ struct FollowCard: View {
         .cornerRadius(cornerRadius)
         .onAppear {
             Task(priority: .userInitiated) { 
-                let subscriptionIDs = await relayService.requestMetadata(
+                let subscription = await relayService.requestMetadata(
                     for: author.hexadecimalPublicKey, 
                     since: author.lastUpdatedMetadata
                 ) 
-                subscriptions.append(contentsOf: subscriptionIDs) 
+                relaySubscriptions.append(subscription) 
             }
         }
         .onDisappear {
-            subscriptions.forEach { subscriptionID in
-                Task { await relayService.decrementSubscriptionCount(for: subscriptionID) }
-            }
+            relaySubscriptions.removeAll()
         }
     }
 

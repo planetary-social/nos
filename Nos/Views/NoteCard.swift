@@ -20,7 +20,6 @@ struct NoteCard: View {
     
     var style = CardStyle.compact
     
-    @State private var subscriptionIDs = [RelaySubscription.ID]()
     @State private var userTappedShowOutOfNetwork = false
     @State private var replyCount = 0
     @State private var replyAvatarURLs = [URL]()
@@ -152,12 +151,6 @@ struct NoteCard: View {
         }
         .onChange(of: note.content) { _, _ in
             Task { await note.loadAttributedContent() }
-        }
-        .onDisappear {
-            Task(priority: .userInitiated) {
-                await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-                subscriptionIDs.removeAll()
-            }
         }
         .background(LinearGradient.cardBackground)
         .task {
