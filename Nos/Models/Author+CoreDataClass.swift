@@ -152,7 +152,7 @@ enum AuthorError: Error {
     }
     
     @nonobjc func feedPredicate() -> NSPredicate {
-        return NSPredicate(
+        NSPredicate(
             format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@",
             EventKind.text.rawValue,
             EventKind.repost.rawValue,
