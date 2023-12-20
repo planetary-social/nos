@@ -167,42 +167,18 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     
     // MARK: - NSFetchedResultsControllerDelegate
     
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        collectionView.performBatchUpdates(nil, completion: nil)
-    }
-    
     func controller(
         _ controller: NSFetchedResultsController<NSFetchRequestResult>, 
-        didChange anObject: Any, 
-        at indexPath: IndexPath?, 
-        for type: NSFetchedResultsChangeType, 
-        newIndexPath: IndexPath?
+        didChangeContentWithDifference diff: NSOrderedCollectionDifference
     ) {
-        // Note: I tried using UICollectionViewDiffableDatasource but it didn't seem to work well with SwiftUI views
-        // as it kept reloading cells with animations when nothing was visually changing.
-        switch type {
-        case .insert:
-            if let newIndexPath = newIndexPath {
-                collectionView.insertItems(at: [newIndexPath])
+        
+        collectionView.performBatchUpdates({
+            diff.removals.forEach { change in
+                collectionView.deleteItems(at: [IndexPath(index: change.index)])
             }
-        case .delete:
-            if let indexPath = indexPath {
-                collectionView.deleteItems(at: [indexPath])
+            diff.insertions.forEach { change in
+                collectionView.insertItems(at: [IndexPath(index: change.index)])
             }
-        case .update:
-            // The SwiftUI cells are observing their source Core Data objects already so we don't need to notify
-            // them of updates through the collectionView.
-            return
-        case .move:
-            if let indexPath = indexPath, let newIndexPath = newIndexPath {
-                collectionView.moveItem(at: indexPath, to: newIndexPath)
-            }
-        @unknown default:
-            fatalError("Unexpected NSFetchedResultsChangeType: \(type)")
-        }
-    }
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        collectionView.performBatchUpdates(nil, completion: nil)
+        }, completion: nil)
     }
 }
