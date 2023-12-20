@@ -104,14 +104,11 @@
 "Localized.followedByOneAndMore" = "Followed by **{{ one }}** and **{{ count }} others**";
 "Localized.followedByTwo" = "Followed by **{{ one }}** and **{{ two }}**";
 "Localized.followedByTwoAndMore" = "Followed by **{{ one }}**, **{{ two }}** and **{{ count }} others**";
-"Localized.userHasBeen" = "This user has been";
-"Localized.noteHasBeen" = "This note has been";
 "Localized.reportedBy" = "reported by";
-"Localized.reportedByOne" = "reported by **{{ one }}**";
-"Localized.reportedByOneAndMore" = "reported by **{{ one }}** and **{{ count }} others**";
-"Localized.reportedByTwo" = "reported by **{{ one }}** and **{{ two }}**";
-"Localized.reportedByTwoAndMore" = "reported by **{{ one }}**, **{{ two }}** and **{{ count }} others**";
-"Localized.reportedFor" = "for {{reason}}";
+"Localized.userReportedByOne" = "This user has been reported by **{{ one }}** for {{ reason }}.";
+"Localized.userReportedByOneAndMore" = "This user has been reported by **{{ one }}** and **{{ count }} others** for {{ reason }}.";
+"Localized.noteReportedByOne" = "This note has been reported by **{{ one }}** for {{ reason }}.";
+"Localized.noteReportedByOneAndMore" = "This note has been reported by **{{ one }}** and **{{ count }} others** for {{ reason }}.";
 "Localized.unfollow" = "Unfollow";
 "Localized.universalName" = "Universal name";
 "Localized.nip05" = "NIP-05";
@@ -173,7 +170,7 @@
 "Localized.unmuteUser" = "Un-Mute";
 "Localized.outsideNetwork" = "This user is outside your network.";
 "Localized.outsideNetworkExplanation" = "This note originates from someone beyond your 'friends of friends' network. Nos hides these by default. You can change this in the settings menu.";
-"Localized.contentWarningExplanation" = "Nos is committed to fostering safe and respectful community. To achieve this we display content warnings when someone you follow reports a note. You can change this in teh settings menu.";
+"Localized.contentWarningExplanation" = "Nos is committed to fostering safe and respectful community. To achieve this we display content warnings when someone you follow reports a note. You can change this in the settings menu.";
 "Localized.allMyRelays" = "All My Relays";
 "Localized.about" = "About";
 "Localized.contactUs" = "Contact Us";

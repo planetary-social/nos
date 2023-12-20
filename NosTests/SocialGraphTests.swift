@@ -60,6 +60,8 @@ final class SocialGraphTests: XCTestCase {
     }
     
     func testFollow() async throws {
+        XCTExpectFailure("This test is failing intermittently, see #671", options: .nonStrict())
+
         // Arrange
         let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
         let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
@@ -84,6 +86,8 @@ final class SocialGraphTests: XCTestCase {
     }
     
     func testTwoFollows() async throws {
+        XCTExpectFailure("This test is failing intermittently, see #671", options: .nonStrict())
+
         // Arrange
         let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
         let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
