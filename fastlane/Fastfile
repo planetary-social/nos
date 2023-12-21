@@ -23,7 +23,7 @@ platform :ios do
   sentry_auth = ENV["SENTRY_AUTH"]
   is_ci = ENV["CI"]
   app_secrets = ENV["APP_SECRETS"]
-  app_secrets_path = "../Nos/Assets/ProductionSecrets2.xcconfig"
+  app_secrets_path = "../Nos/Assets/ProductionSecrets.xcconfig"
 
   desc "Push a new development build to TestFlight"
   lane :dev do
