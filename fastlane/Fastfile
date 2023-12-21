@@ -16,29 +16,64 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Push a new beta build to TestFlight"
-  lane :beta do
-    xcodes # ensure correct version of xcode is installed and selected
-    api_key = app_store_connect_api_key(
-      key_id: "4L8Z9W89TJ",
-      issuer_id: "8985ca52-aba6-4f7a-91bb-d052a5b030fa",
-      key_filepath: "~/.fastlane/AuthKey_4L8Z9W89TJ.p8"
+  asc_key_content = ENV["APP_STORE_CONNECT_API_KEY_CONTENT"]
+  asc_issuer_id = ENV["APP_STORE_CONNECT_ISSUER_ID"]
+  asc_key_id = ENV["APP_STORE_CONNECT_API_KEY_ID"]
+  keychain_pass = ENV["KEYCHAIN_PASS"]
+  sentry_auth = ENV["SENTRY_AUTH"]
+  is_ci = ENV["CI"]
+
+  desc "Push a new development build to TestFlight"
+  lane :dev do
+    app_store_connect_api_key(
+      key_id: asc_key_id,
+      issuer_id: asc_issuer_id,
+      key_content: asc_key_content
     )
-    increment_build_number(xcodeproj: "Nos.xcodeproj")
-    version_number = get_version_number
-    build_number = get_build_number
-    gym(scheme: "Nos", clean: true)
+    if is_ci 
+      # Create a keychain because Github Action machines don't come with one
+      create_keychain(
+          name: "keychain",
+          password: keychain_pass,
+          default_keychain: true,
+          unlock: true,
+          timeout: 3600,
+          lock_when_sleeps: false
+      )
+      match(
+          type: "appstore",  
+	  readonly: true,
+          keychain_name: "keychain",
+          keychain_password: keychain_pass
+        )
+    else
+      match(type: "appstore", readonly: is_ci)
+    end
+
+    version_number = get_version_number(
+      xcodeproj: "Nos.xcodeproj",
+      target: "Nos"
+    )
+    build_number = latest_testflight_build_number + 1
+    increment_build_number(build_number: build_number)
+    gym(
+      scheme: "Nos", 
+      clean: true,
+      xcargs: "-skipPackagePluginValidation"
+    )
     changelog = read_changelog
-    upload_to_testflight(changelog: changelog)
-    stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
-    git_commit(message: "TestFlight deployment", path: "*")
+    upload_to_testflight(
+      changelog: changelog,
+      skip_waiting_for_build_processing: is_ci
+    )
     add_git_tag(tag: "v#{version_number}-#{build_number}")
-    push_to_git_remote
+    push_git_tags
     sentry_upload_dif(
       org_slug: 'verse',
       project_slug: 'nos-ios',
       include_sources: true, 
-      url: 'https://sentry.nos.social'
+      url: 'https://sentry.nos.social',
+      auth_token: sentry_auth
     )
     notification(
       subtitle: "Build uploaded", 
@@ -46,6 +81,43 @@ platform :ios do
       sound: "Pebble", 
       open: "https://appstoreconnect.apple.com/apps/1670125746/testflight/ios"
     )
+  end
+
+  desc "Mark a deployed commit as a beta"
+  lane :beta do
+    version_number = get_version_number(
+      xcodeproj: "Nos.xcodeproj",
+      target: "Nos"
+    )
+    build_number = latest_testflight_build_number + 1
+    increment_build_number({
+      build_number: build_number
+    })
+    changelog = read_changelog
+    stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
+    git_commit(message: "TestFlight beta deployment", path: "*")
+    push_to_git_remote
+  end
+
+  desc "Refresh certificates in the match repo"
+  lane :certs do
+    app_store_connect_api_key(
+      key_id: asc_key_id,
+      issuer_id: asc_issuer_id,
+      key_content: asc_key_content
+    )
+    match(type: "appstore")
+    match(type: "development")
+  end
+
+  desc "Clean App Store Connect of certificates"
+  lane :nuke_certs do
+    app_store_connect_api_key(
+      key_id: asc_key_id,
+      issuer_id: asc_issuer_id,
+      key_content: asc_key_content
+    )
+    match_nuke(type: "appstore")
   end
 end
 
@@ -59,4 +131,9 @@ end
     increment_version_number_in_xcodeproj(bump_type: part, target: "Nos")
   end
 end
+
+lane :bump_version do
+  increment_build_number(xcodeproj: "Nos.xcodeproj")
+end
+
 

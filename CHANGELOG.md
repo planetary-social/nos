@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Testing automatic Testflight deployment
+
 ## [0.1 (128)] - 2023-12-21Z
 
 - Fixed a crash when opening the note composer.
