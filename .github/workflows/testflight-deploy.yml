@@ -1,4 +1,9 @@
+name: TestFlight dev deployment
 on:
+  push:
+    branches:
+      - main
+
   pull_request:
     # The specific activity types are listed here to include "labeled" and "unlabeled"
     # (which are not included by default for the "pull_request" trigger).
@@ -7,6 +12,10 @@ on:
     types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
   # Enable manual run
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
 
 jobs:
   fastlane-deploy:
