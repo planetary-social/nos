@@ -207,7 +207,21 @@ struct DiscoverView: View {
         try? viewContext.saveIfNeeded()
         return author
     }
-    
+
+    func note(fromPublicKey publicKeyString: String) -> Event? {
+        let strippedString = publicKeyString.trimmingCharacters(
+            in: NSCharacterSet.whitespacesAndNewlines
+        )
+        guard let publicKey = PublicKey(note: strippedString) ?? PublicKey(note: strippedString) else {
+            return nil
+        }
+        guard let note = try? Event.findOrCreateStubBy(id: publicKey.hex, context: viewContext) else {
+            return nil
+        }
+        try? viewContext.saveIfNeeded()
+        return note
+    }
+
     func submitSearch() {
         if searchController.query.contains("@") {
             Task(priority: .userInitiated) {
@@ -223,6 +237,8 @@ struct DiscoverView: View {
         } else {
             if let author = author(fromPublicKey: searchController.query) {
                 router.push(author)
+            } else if let note = note(fromPublicKey: searchController.query) {
+                router.push(note)
             }
         }
     }
