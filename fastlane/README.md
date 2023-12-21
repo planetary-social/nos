@@ -37,10 +37,26 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 
 
+### bump_version
+
+```sh
+[bundle exec] fastlane bump_version
+```
+
+
+
 ----
 
 
 ## iOS
+
+### ios dev
+
+```sh
+[bundle exec] fastlane ios dev
+```
+
+Push a new development build to TestFlight
 
 ### ios beta
 
@@ -48,7 +64,23 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane ios beta
 ```
 
-Push a new beta build to TestFlight
+Mark a deployed commit as a beta
+
+### ios certs
+
+```sh
+[bundle exec] fastlane ios certs
+```
+
+Refresh certificates in the match repo
+
+### ios nuke_certs
+
+```sh
+[bundle exec] fastlane ios nuke_certs
+```
+
+Clean App Store Connect of certificates
 
 ----
 
