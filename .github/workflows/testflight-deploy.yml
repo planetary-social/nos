@@ -40,4 +40,5 @@ jobs:
           MATCH_PASSWORD: ${{ Secrets.MATCH_PASSWORD }}
           KEYCHAIN_PASS: ${{ Secrets.KEYCHAIN_PASS }}
           SENTRY_AUTH: ${{ Secrets.SENTRY_AUTH }}
+          APP_SECRETS: ${{ Secrets.APP_SECRETS }}
           CI: true
