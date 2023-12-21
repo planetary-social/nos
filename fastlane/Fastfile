@@ -48,11 +48,17 @@ platform :ios do
     else
       match(type: "appstore", readonly: is_ci)
     end
-    increment_build_number(xcodeproj: "Nos.xcodeproj")
+
     version_number = get_version_number(
       xcodeproj: "Nos.xcodeproj",
       target: "Nos"
     )
+    target_ref = last_git_commit[:commit_hash]
+    release_branch = "release/#{version_number}"
+    sh("git", "switch", "-c", release_branch)
+    sh("git", "merge", target_ref)
+
+    increment_build_number(xcodeproj: "Nos.xcodeproj")
     build_number = get_build_number
     gym(
       scheme: "Nos", 
@@ -64,7 +70,7 @@ platform :ios do
     stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
     git_commit(message: "TestFlight deployment", path: "*")
     add_git_tag(tag: "v#{version_number}-#{build_number}")
-    push_to_git_remote(remote_branch: beta)
+    push_to_git_remote
     sentry_upload_dif(
       org_slug: 'verse',
       project_slug: 'nos-ios',
