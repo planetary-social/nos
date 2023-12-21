@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Discover screen can now search notes by id.
+- 
+## [0.1 (128)] - 2023-12-21Z
+
+- Fixed a crash when opening the note composer.
 - Fix localization of warning message when a ntoe has been reported. (thanks @L!)
 - Fixed contact list hydration bug where unfollows are not removed when follow counts do not change.
 
