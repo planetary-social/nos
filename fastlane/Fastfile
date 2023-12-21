@@ -22,6 +22,7 @@ platform :ios do
   keychain_pass = ENV["KEYCHAIN_PASS"]
   sentry_auth = ENV["SENTRY_AUTH"]
   is_ci = ENV["CI"]
+  app_secrets_path = "Nos/Assets/ProductionSecrets.xcconfig"
 
   desc "Push a new development build to TestFlight"
   lane :dev do
@@ -46,7 +47,7 @@ platform :ios do
           keychain_name: "keychain",
           keychain_password: keychain_pass
         )
-      sh("echo", "$APP_SECRETS", ">", "Nos/Assets/ProductionSecrets.xcconfig")
+      sh("echo", "$APP_SECRETS", ">", app_secrets_path)
     else
       match(type: "appstore", readonly: is_ci)
     end
@@ -62,6 +63,7 @@ platform :ios do
       clean: true,
       xcargs: "-skipPackagePluginValidation"
     )
+    sh("rm", app_secrets_path)
     changelog = read_changelog
     upload_to_testflight(
       changelog: changelog,
