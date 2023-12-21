@@ -23,11 +23,12 @@ jobs:
       - name: Deploy with fastlane
         run: |
           bundle install
-          bundle exec fastlane beta
+          bundle exec fastlane dev
         env:
-          APP_STORE_CONNECT_API_KEY_CONTENT: ${{Secrets. APP_STORE_CONNECT_API_KEY_CONTENT}}
-          APP_STORE_CONNECT_ISSUER_ID: ${{Secrets. APP_STORE_CONNECT_ISSUER_ID}}
-          APP_STORE_CONNECT_API_KEY_ID: ${{Secrets. APP_STORE_CONNECT_API_KEY_ID}}
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ Secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ Secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ Secrets.APP_STORE_CONNECT_API_KEY_ID }}
           MATCH_PASSWORD: ${{ Secrets.MATCH_PASSWORD }}
           KEYCHAIN_PASS: ${{ Secrets.KEYCHAIN_PASS }}
+          SENTRY_AUTH: ${{ Secrets.SENTRY_AUTH }}
           CI: true

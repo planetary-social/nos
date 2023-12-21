@@ -20,10 +20,11 @@ platform :ios do
   asc_issuer_id = ENV["APP_STORE_CONNECT_ISSUER_ID"]
   asc_key_id = ENV["APP_STORE_CONNECT_API_KEY_ID"]
   keychain_pass = ENV["KEYCHAIN_PASS"]
+  sentry_auth = ENV["SENTRY_AUTH"]
   is_ci = ENV["CI"]
 
-  desc "Push a new beta build to TestFlight"
-  lane :beta do
+  desc "Push a new development build to TestFlight"
+  lane :dev do
     app_store_connect_api_key(
       key_id: asc_key_id,
       issuer_id: asc_issuer_id,
@@ -49,17 +50,10 @@ platform :ios do
       match(type: "appstore", readonly: is_ci)
     end
 
-    version_number = get_version_number(
-      xcodeproj: "Nos.xcodeproj",
-      target: "Nos"
-    )
-    target_ref = last_git_commit[:commit_hash]
-    release_branch = "release/#{version_number}"
-    sh("git", "switch", "-c", release_branch)
-    sh("git", "merge", target_ref)
-
-    increment_build_number(xcodeproj: "Nos.xcodeproj")
-    build_number = get_build_number
+    
+    increment_build_number({
+      build_number: latest_testflight_build_number + 1
+    })
     gym(
       scheme: "Nos", 
       clean: true,
@@ -67,15 +61,14 @@ platform :ios do
     )
     changelog = read_changelog
     upload_to_testflight(changelog: changelog)
-    stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
-    git_commit(message: "TestFlight deployment", path: "*")
     add_git_tag(tag: "v#{version_number}-#{build_number}")
-    push_to_git_remote
+    push_git_tags
     sentry_upload_dif(
       org_slug: 'verse',
       project_slug: 'nos-ios',
       include_sources: true, 
       url: 'https://sentry.nos.social'
+      auth_token: sentry_auth
     )
     notification(
       subtitle: "Build uploaded", 
@@ -83,6 +76,16 @@ platform :ios do
       sound: "Pebble", 
       open: "https://appstoreconnect.apple.com/apps/1670125746/testflight/ios"
     )
+  end
+
+  lane :beta
+    increment_build_number({
+      build_number: latest_testflight_build_number
+    })
+    changelog = read_changelog
+    stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
+    git_commit(message: "TestFlight beta deployment", path: "*")
+    push_to_git_remote
   end
 
   desc "Refresh certificates in the match repo"
@@ -101,7 +104,6 @@ platform :ios do
     app_store_connect_api_key(
       key_id: asc_key_id,
       issuer_id: asc_issuer_id,
-      #key_filepath: "~/.fastlane/AuthKey_4L8Z9W89TJ.p8"
       key_content: asc_key_content
     )
     match_nuke(type: "appstore")
