@@ -46,7 +46,7 @@ platform :ios do
           keychain_name: "keychain",
           keychain_password: keychain_pass
         )
-      sh("echo $APP_SECRETS > Nos/Assets/ProductionSecrets.xcconfig")
+      sh("echo", "$APP_SECRETS", ">", "Nos/Assets/ProductionSecrets.xcconfig")
     else
       match(type: "appstore", readonly: is_ci)
     end
