@@ -50,7 +50,6 @@ platform :ios do
       match(type: "appstore", readonly: is_ci)
     end
 
-    
     increment_build_number({
       build_number: latest_testflight_build_number + 1
     })
@@ -78,7 +77,8 @@ platform :ios do
     )
   end
 
-  lane :beta
+  desc "Mark a deployed commit as a beta"
+  lane :beta do
     increment_build_number({
       build_number: latest_testflight_build_number
     })
