@@ -121,7 +121,6 @@ struct ProfileView: View {
                     }
                 )
                 .padding(0)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .id(author.id)
             .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { proxy in

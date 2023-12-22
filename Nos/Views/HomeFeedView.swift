@@ -49,10 +49,12 @@ struct HomeFeedView: View {
         )
     }
     
+    @State var followedKeys = [HexadecimalString]()
+    
     func subscribeToNewEvents() async {
         relaySubscriptions.removeAll()
         
-        let followedKeys = await Array(currentUser.socialGraph.followedKeys)
+        followedKeys = await Array(currentUser.socialGraph.followedKeys)
             
         if !followedKeys.isEmpty {
             // TODO: we could miss events with this since filter
@@ -62,8 +64,8 @@ struct HomeFeedView: View {
                 limit: 100, 
                 since: nil
             )
-            let textSubs = await relayService.subscribeToEvents(matching: textFilter)
-            relaySubscriptions.append(textSubs)
+//            let textSubs = await relayService.subscribeToEvents(matching: textFilter)
+//            relaySubscriptions.append(textSubs)
         }
     }
 
@@ -76,44 +78,56 @@ struct HomeFeedView: View {
                 )
             } else {
                 ZStack {
-                    ScrollView(.vertical, showsIndicators: false) {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 15) {
-                                ForEach(stories) { author in
-                                    Button {
-                                        withAnimation {
-                                            selectedStoryAuthor = author
-                                        }
-                                    } label: {
-                                        StoryAvatarView(author: author)
-                                            .contextMenu {
-                                                Button {
-                                                    router.push(author)
-                                                } label: {
-                                                    Localized.seeProfile.view
-                                                }
+                    let homeFeedFilter = Filter(
+                        authorKeys: followedKeys, 
+                        kinds: [.text, .delete, .repost, .longFormContent, .report], 
+                        limit: 100, 
+                        since: nil
+                    )
+                    PagedNoteListView(
+                        databaseFilter: Event.homeFeed(for: user, before: Date.now), 
+                        relayFilter: homeFeedFilter,
+                        context: viewContext,
+                        header: {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 15) {
+                                    ForEach(stories) { author in
+                                        Button {
+                                            withAnimation {
+                                                selectedStoryAuthor = author
                                             }
+                                        } label: {
+                                            StoryAvatarView(author: author)
+                                                .contextMenu {
+                                                    Button {
+                                                        router.push(author)
+                                                    } label: {
+                                                        Localized.seeProfile.view
+                                                    }
+                                                }
+                                        }
                                     }
                                 }
+                                .padding(.horizontal, 15)
+                                .padding(.top, 15)
+                                .padding(.bottom, 0)
                             }
-                            .padding(.horizontal, 15)
-                            .padding(.top, 15)
-                            .padding(.bottom, 0)
-                        }
-                        .readabilityPadding()
-                        .id(user.id)
-
-                        LazyVStack {
-                            ForEach(events) { event in
-                                NoteButton(note: event, hideOutOfNetwork: false)
-                                    .padding(.bottom, 15)
+                            .readabilityPadding()
+                            .id(user.id)
+                        },
+                        emptyPlaceholder: {
+                            VStack {
+                                Localized.noEvents.view
+                                    .padding()
                             }
+                            .frame(minHeight: 300)
+                        },
+                        onRefresh: {
+                            Event.homeFeed(for: user, before: Date.now)
                         }
-                        .padding(.top, 10)
-                        .padding(.bottom, 15)
-                    }
-                    .accessibilityIdentifier("home feed")
-
+                    )
+                    .padding(0)
+                    
                     StoriesView(
                         cutoffDate: $storiesCutoffDate,
                         authors: stories,
@@ -133,12 +147,6 @@ struct HomeFeedView: View {
             }
         }
         .background(Color.appBg)
-        .overlay(Group {
-            if events.isEmpty && !performingInitialLoad {
-                Localized.noEvents.view
-                    .padding()
-            }
-        })
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 SideMenuButton()
@@ -259,17 +267,19 @@ struct ContentView_Previews: PreviewProvider {
     
     static var shortNote: Event {
         let note = Event(context: previewContext)
+        note.identifier = "p1"
         note.kind = 1
         note.content = "Hello, world!"
-        note.author = user
+        note.author = currentUser.author
         return note
     }
     
     static var longNote: Event {
         let note = Event(context: previewContext)
+        note.identifier = "p2"
         note.kind = 1
         note.content = .loremIpsum(5)
-        note.author = user
+        note.author = currentUser.author
         return note
     }
     
@@ -281,14 +291,16 @@ struct ContentView_Previews: PreviewProvider {
     
     static var previews: some View {
         HomeFeedView(user: user)
-            .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
-            .environmentObject(router)
-            .environment(currentUser)
+            .inject(previewData: previewData)
+            .onAppear {
+                print(shortNote)
+                print(longNote)
+            }
         
         HomeFeedView(user: user)
             .environment(\.managedObjectContext, emptyPreviewContext)
             .environmentObject(emptyRelayService)
             .environmentObject(router)
+            .environment(currentUser)
     }
 }
