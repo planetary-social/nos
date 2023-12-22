@@ -262,7 +262,7 @@ class PersistenceController {
                     Author.outOfNetwork(for: currentAuthor),
                     Follow.orphanedRequest(),
                     Relay.orphanedRequest(),
-                    // TODO: delete old notifications
+                    NosNotification.oldNotificationsRequest(),
                 ]
                 
                 for request in deleteRequests {

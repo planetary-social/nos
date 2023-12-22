@@ -483,6 +483,7 @@
 		5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextFieldObserver.swift; sourceTree = "<group>"; };
 		5B8C96B129DB313300B73AEC /* AuthorCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorCard.swift; sourceTree = "<group>"; };
 		5B8C96B529DDD3B200B73AEC /* EditableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableText.swift; sourceTree = "<group>"; };
+		5B960D2C2B34B1B900C52C45 /* Nos 14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 14.xcdatamodel"; sourceTree = "<group>"; };
 		5BE281BD2AE2CCAE00880466 /* StoriesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoriesView.swift; sourceTree = "<group>"; };
 		5BE281C02AE2CCB400880466 /* StoryNoteView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryNoteView.swift; sourceTree = "<group>"; };
 		5BE281C32AE2CCC300880466 /* AuthorStoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorStoryView.swift; sourceTree = "<group>"; };
@@ -2774,13 +2775,14 @@
 		C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				5B960D2C2B34B1B900C52C45 /* Nos 14.xcdatamodel */,
 				5B2F5CC12AE7443700A92B52 /* Nos 13.xcdatamodel */,
 				C99507332AB9EE40005B1096 /* Nos 12.xcdatamodel */,
 				C92A04DD2A58B02B00C844B8 /* Nos 11.xcdatamodel */,
 				C9C547562A4F1D1A006B0741 /* Nos 9.xcdatamodel */,
 				5BFF66AF2A4B55FC00AA79DD /* Nos 10.xcdatamodel */,
 			);
-			currentVersion = 5B2F5CC12AE7443700A92B52 /* Nos 13.xcdatamodel */;
+			currentVersion = 5B960D2C2B34B1B900C52C45 /* Nos 14.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

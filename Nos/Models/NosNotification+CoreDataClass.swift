@@ -16,9 +16,13 @@ public class NosNotification: NSManagedObject {
 
     class func createIfNecessary(
         from eventID: HexadecimalString, 
-        authorKey: HexadecimalString, 
+        date: Date?,
+        authorKey: HexadecimalString,
         in context: NSManagedObjectContext
     ) throws -> NosNotification? {
+        guard let date, date > cutoffDate() else {
+            return nil
+        }
         let author = try Author.findOrCreate(by: authorKey, context: context)
         if try NosNotification.find(by: eventID, in: context) != nil {
             return nil
@@ -26,6 +30,7 @@ public class NosNotification: NSManagedObject {
             let notification = NosNotification(context: context)
             notification.eventID = eventID
             notification.user = author
+            notification.createdAt = date
             return notification
         }
     }
@@ -53,17 +58,6 @@ public class NosNotification: NSManagedObject {
         return try context.count(for: fetchRequest)
     }
     
-    class func markRead(eventID: HexadecimalString, in context: NSManagedObjectContext) async {
-        await context.perform {
-            if let notification = try? find(by: eventID, in: context), 
-                !notification.isRead {
-                notification.isRead = true
-            }
-            
-            try? context.saveIfNeeded()
-        }
-    }
-    
     class func markAllAsRead(for user: Author, in context: NSManagedObjectContext) async throws {
         try await context.perform {
             let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
@@ -75,5 +69,16 @@ public class NosNotification: NSManagedObject {
             
             try? context.saveIfNeeded()
         }
+    }
+
+    static func oldNotificationsRequest() -> NSFetchRequest<NosNotification> {
+        let fetchRequest = NSFetchRequest<NosNotification>(entityName: "NosNotification")
+        let since = cutoffDate()
+        fetchRequest.predicate = NSPredicate(format: "createdAt < %@", since as CVarArg)
+        return fetchRequest
+    }
+
+    static func cutoffDate() -> Date {
+        Calendar.current.date(byAdding: .month, value: -1, to: .now) ?? .now
     }
 }

@@ -194,7 +194,8 @@ import Combine
             guard let event = Event.find(by: eventID, context: self.modelContext),
                 let coreDataNotification = try? NosNotification.createIfNecessary(
                     from: eventID, 
-                    authorKey: authorKey, 
+                    date: event.createdAt,
+                    authorKey: authorKey,
                     in: self.modelContext
                 ) else {
                 // We already have a notification for this event.
