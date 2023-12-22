@@ -24,7 +24,7 @@ struct AuthorStoryView: View {
 
     @Binding private var cutoffDate: Date
 
-    @State private var subscriptionIDs = [String]()
+    @State private var relaySubscriptions = SubscriptionCancellables()
 
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
@@ -180,18 +180,14 @@ struct AuthorStoryView: View {
     /// Fetches replies to the list of stories from connected relays (to update reply count to each one)
     private func subscribeToReplies() async {
         // Close out stale requests
-        if !subscriptionIDs.isEmpty {
-            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-            subscriptionIDs.removeAll()
-        }
+        relaySubscriptions.removeAll()
         let eTags = notes.compactMap { $0.identifier }
         guard !eTags.isEmpty else {
             return
         }
         
         let filter = Filter(kinds: [.text, .like, .delete, .repost], eTags: eTags)
-        let subID = await relayService.openSubscription(with: filter)
-        subscriptionIDs.append(subID)
+        relaySubscriptions.append(await relayService.subscribeToEvents(matching: filter))
     }
 }
 

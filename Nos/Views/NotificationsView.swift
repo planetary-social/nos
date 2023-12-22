@@ -23,7 +23,7 @@ struct NotificationsView: View {
 
     private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
     private var events: FetchedResults<Event> { eventRequest.wrappedValue }
-    @State private var subscriptionIDs = [String]()
+    @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var isVisible = false
 
     @State private var concecutiveTapsCancellable: AnyCancellable?
@@ -50,15 +50,12 @@ struct NotificationsView: View {
             pTags: [currentUserKey], 
             limit: 100
         )
-        let subscription = await relayService.openSubscription(with: filter)
-        subscriptionIDs.append(subscription)
+        let subscriptions = await relayService.subscribeToEvents(matching: filter)
+        relaySubscriptions.append(subscriptions)
     }
     
     func cancelSubscriptions() async {
-        if !subscriptionIDs.isEmpty {
-            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-            subscriptionIDs.removeAll()
-        }
+        relaySubscriptions.removeAll()
     }
     
     func markAllNotificationsRead() async {

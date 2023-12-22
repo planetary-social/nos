@@ -16,7 +16,7 @@ struct NoteOptionsButton: View {
     @Dependency(\.analytics) private var analytics
     @Dependency(\.persistenceController) private var persistenceController
     
-    var note: Event
+    @ObservedObject var note: Event
 
     @State private var showingOptions = false
     @State private var showingShare = false
@@ -40,20 +40,22 @@ struct NoteOptionsButton: View {
                     analytics.copiedNoteIdentifier()
                     copyMessageIdentifier()
                 }
-                Button(Localized.copyNoteText.string) {
-                    analytics.copiedNoteText()
-                    copyMessage()
-                }
                 Button(Localized.copyLink.string) {
                     analytics.copiedNoteLink()
                     copyLink()
                 }
-                Button(Localized.viewSource.string) {
-                    analytics.viewedNoteSource()
-                    showingSource = true
-                }
-                Button(Localized.reportNote.string, role: .destructive) {
-                    showingReportMenu = true
+                if !note.isStub {
+                    Button(Localized.copyNoteText.string) {
+                        analytics.copiedNoteText()
+                        copyMessage()
+                    }
+                    Button(Localized.viewSource.string) {
+                        analytics.viewedNoteSource()
+                        showingSource = true
+                    }
+                    Button(Localized.reportNote.string, role: .destructive) {
+                        showingReportMenu = true
+                    }
                 }
                 if note.author == currentUser.author {
                     Button(Localized.deleteNote.string, role: .destructive) {

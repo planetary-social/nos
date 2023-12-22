@@ -100,6 +100,10 @@ struct JSONEvent: Codable, Hashable {
         ]
     }
     
+    var createdDate: Date {
+        Date(timeIntervalSince1970: TimeInterval(createdAt))
+    }
+    
     /// Formats this event as a string that can be sent to a relay over a websocket to publish this event.
     func buildPublishRequest() throws -> String {
         let request: [Any] = ["EVENT", dictionary]

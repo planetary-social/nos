@@ -16,11 +16,10 @@ import Dependencies
 /// Use this view inside MessageButton to have nice borders.
 struct NoteCard: View {
     
-    @ObservedObject var note: Event
+    var note: Event
     
     var style = CardStyle.compact
     
-    @State private var subscriptionIDs = [RelaySubscription.ID]()
     @State private var userTappedShowOutOfNetwork = false
     @State private var replyCount = 0
     @State private var replyAvatarURLs = [URL]()
@@ -80,12 +79,15 @@ struct NoteCard: View {
             case .compact:
                 VStack(spacing: 0) {
                     HStack(alignment: .center, spacing: 0) {
-                        if !warningController.showWarning, let author = note.author {
-                            Button {
-                                router.currentPath.wrappedValue.append(author)
-                            } label: {
-                                NoteCardHeader(note: note, author: author)
+                        if !warningController.showWarning {
+                            if let author = note.author {
+                                Button {
+                                    router.currentPath.wrappedValue.append(author)
+                                } label: {
+                                    NoteCardHeader(note: note, author: author)
+                                }
                             }
+                            Spacer()
                             NoteOptionsButton(note: note)
                         } else {
                             Spacer()
@@ -145,24 +147,10 @@ struct NoteCard: View {
             warningController.shouldHideOutOfNetwork = hideOutOfNetwork
         }
         .task {
-            if note.isStub {
-                _ = await relayService.requestEvent(with: note.identifier)
-            } 
+            await note.loadViewData()
         }
-        .onAppear {
-            Task(priority: .userInitiated) {
-                await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
-                    noteID: note.identifier,
-                    using: relayService,
-                    in: persistenceController.backgroundViewContext
-                )
-            }
-        }
-        .onDisappear {
-            Task(priority: .userInitiated) {
-                await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-                subscriptionIDs.removeAll()
-            }
+        .onChange(of: note.content) { _, _ in
+            Task { await note.loadAttributedContent() }
         }
         .background(LinearGradient.cardBackground)
         .task {

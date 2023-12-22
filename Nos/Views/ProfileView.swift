@@ -17,9 +17,9 @@ struct ProfileView: View {
     var addDoubleTapToPop = false
 
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) private var currentUser
     @EnvironmentObject private var router: Router
+    @Dependency(\.relayService) private var relayService: RelayService
     @Dependency(\.analytics) private var analytics
     @Dependency(\.unsAPI) private var unsAPI
     
@@ -28,26 +28,13 @@ struct ProfileView: View {
     @State private var usbcAddress: USBCAddress?
     @State private var usbcBalance: Double?
     @State private var usbcBalanceTimer: Timer?
-    
-    @State private var subscriptionIds: [String] = []
+    @State private var relaySubscriptions = SubscriptionCancellables()
 
     @State private var alert: AlertState<Never>?
     
     @FetchRequest
     private var events: FetchedResults<Event>
 
-    @State private var unmutedEvents: [Event] = []
-
-    private func computeUnmutedEvents() async {
-        unmutedEvents = events.filter {
-            if let author = $0.author {
-                let notDeleted = $0.deletedOn.count == 0
-                return !author.muted && notDeleted
-            }
-            return false
-        }
-    }
-    
     var isShowingLoggedInUser: Bool {
         author.hexadecimalPublicKey == currentUser.publicKeyHex
     }
@@ -56,34 +43,6 @@ struct ProfileView: View {
         self.author = author
         self.addDoubleTapToPop = addDoubleTapToPop
         _events = FetchRequest(fetchRequest: author.allPostsRequest())
-    }
-    
-    func refreshProfileFeed() async {
-        // Close out stale requests
-        if !subscriptionIds.isEmpty {
-            await relayService.decrementSubscriptionCount(for: subscriptionIds)
-            subscriptionIds.removeAll()
-        }
-        
-        guard let authorKey = author.hexadecimalPublicKey else {
-            return
-        }
-        
-        let authors = [authorKey]
-        let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete, .repost, .longFormContent], limit: 50)
-        async let textSub = relayService.openSubscription(with: textFilter)
-        subscriptionIds.append(await textSub)
-        subscriptionIds.append(
-            contentsOf: await relayService.requestProfileData(
-                for: authorKey, 
-                lastUpdateMetadata: author.lastUpdatedMetadata, 
-                lastUpdatedContactList: nil // always grab contact list because we purge follows aggressively
-            )
-        )
-        
-        // reports
-        let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
-        subscriptionIds.append(await relayService.openSubscription(with: reportFilter))
     }
     
     func loadUSBCBalance() async {
@@ -110,34 +69,66 @@ struct ProfileView: View {
         }
     }
     
+    func downloadAuthorData() async {
+        relaySubscriptions.removeAll()
+        
+        guard let authorKey = author.hexadecimalPublicKey else {
+            return
+        }
+        
+        // Profile data
+        relaySubscriptions.append(
+            await relayService.requestProfileData(
+                for: authorKey, 
+                lastUpdateMetadata: author.lastUpdatedMetadata, 
+                lastUpdatedContactList: nil // always grab contact list because we purge follows aggressively
+            )
+        )
+        
+        // reports
+        let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
+        relaySubscriptions.append(await relayService.subscribeToEvents(matching: reportFilter)) 
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView(.vertical, showsIndicators: false) {
-                ProfileHeader(author: author)
-                    .compositingGroup()
-                    .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
-                    .id(author.id)
-
-                LazyVStack {
-                    if unmutedEvents.isEmpty {
-                        Localized.noEventsOnProfile.view
-                            .padding()
-                    } else {
-                        ForEach(unmutedEvents) { event in
-                            VStack {
-                                NoteButton(note: event, hideOutOfNetwork: false, displayRootMessage: true)
-                                .padding(.bottom, 15)
-                            }
+            VStack {
+                let profileNotesFilter = Filter(
+                    authorKeys: [author.hexadecimalPublicKey ?? "error"],
+                    kinds: [.text, .delete, .repost, .longFormContent]
+                )
+                
+                PagedNoteListView(
+                    databaseFilter: author.allPostsRequest(), 
+                    relayFilter: profileNotesFilter,
+                    context: viewContext,
+                    header: {
+                        ProfileHeader(author: author)
+                            .compositingGroup()
+                            .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
+                            .id(author.id)
+                    },
+                    emptyPlaceholder: {
+                        VStack {
+                            Localized.noEventsOnProfile.view
+                                .padding()
+                                .readabilityPadding()
                         }
+                        .frame(minHeight: 300)
+                    },
+                    onRefresh: {
+                        author.allPostsRequest(before: .now)
                     }
-                }
-                .padding(.top, 10)
+                )
+                .padding(0)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .background(Color.appBg)
+            .id(author.id)
             .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { proxy in
                 proxy.scrollTo(author.id)
             }
         }
+        .background(Color.appBg)
         .nosNavigationBar(title: .profileTitle)
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
@@ -238,12 +229,6 @@ struct ProfileView: View {
                 }
         )
         .reportMenu($showingReportMenu, reportedObject: .author(author))
-        .task {
-            await refreshProfileFeed()
-        }
-        .task {
-            await computeUnmutedEvents()
-        }
         .onChange(of: author.uns) { 
             Task {
                 await loadUSBCBalance()
@@ -251,28 +236,14 @@ struct ProfileView: View {
         }
         .alert(unwrapping: $alert)
         .onAppear {
-            Task { await loadUSBCBalance() }
+            Task { 
+                await downloadAuthorData()
+                await loadUSBCBalance() 
+            }
             analytics.showedProfile()
         }
-        .refreshable {
-            await refreshProfileFeed()
-            await computeUnmutedEvents()
-        }
-        .onChange(of: author.muted) { 
-            Task {
-                await computeUnmutedEvents()
-            }
-        }
-        .onChange(of: author.events.count) { 
-            Task {
-                await computeUnmutedEvents()
-            }
-        }
         .onDisappear {
-            Task(priority: .userInitiated) {
-                await relayService.decrementSubscriptionCount(for: subscriptionIds)
-                subscriptionIds.removeAll()
-            }
+            relaySubscriptions.removeAll()
         }
     }
 }
