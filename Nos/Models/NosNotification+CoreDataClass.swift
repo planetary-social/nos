@@ -74,11 +74,11 @@ public class NosNotification: NSManagedObject {
     static func oldNotificationsRequest() -> NSFetchRequest<NosNotification> {
         let fetchRequest = NSFetchRequest<NosNotification>(entityName: "NosNotification")
         let since = cutoffDate()
-        fetchRequest.predicate = NSPredicate(format: "createdAt < %@", since as CVarArg)
+        fetchRequest.predicate = NSPredicate(format: "createdAt == nil OR createdAt < %@", since as CVarArg)
         return fetchRequest
     }
 
     static func cutoffDate() -> Date {
-        Calendar.current.date(byAdding: .month, value: -1, to: .now) ?? .now
+        Calendar.current.date(byAdding: .month, value: -2, to: .now) ?? .now
     }
 }

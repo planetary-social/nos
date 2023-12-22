@@ -68,7 +68,7 @@
         <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="follows" inverseEntity="Author"/>
     </entity>
     <entity name="NosNotification" representedClassName="NosNotification" syncable="YES">
-        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="eventID" optional="YES" attributeType="String"/>
         <attribute name="isRead" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="notifications" inverseEntity="Author"/>
