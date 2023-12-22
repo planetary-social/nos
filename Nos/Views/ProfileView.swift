@@ -117,7 +117,7 @@ struct ProfileView: View {
                         .frame(minHeight: 300)
                     },
                     onRefresh: {
-                        author.allPostsRequest(since: .now)
+                        author.allPostsRequest(before: .now)
                     }
                 )
                 .padding(0)
