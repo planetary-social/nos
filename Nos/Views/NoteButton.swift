@@ -73,7 +73,7 @@ struct NoteButton: View {
                     HStack(alignment: .center) {
                         AuthorLabel(author: author)
                         Image.repostSymbol
-                        if let elapsedTime = repost.createdAt?.distanceString() {
+                        if let elapsedTime = note.createdAt?.distanceString() {
                             Text(elapsedTime)
                                 .lineLimit(1)
                                 .font(.body)

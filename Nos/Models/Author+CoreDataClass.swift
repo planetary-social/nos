@@ -187,7 +187,7 @@ enum AuthorError: Error {
         ").@count = 0)"
         let onlyPostsRepostsAndLongFormsClause = "(\(onlyRootPostsClause) OR $event.kind = 6 OR $event.kind = 30023)"
         let onlyAuthorsWithStoriesClause = "SUBQUERY(events, $event, \(onlyPostsRepostsAndLongFormsClause) " +
-            "AND \(onlyRecentStoriesClause)).@count > 0"
+            "AND \(onlyRecentStoriesClause) AND \(onlyUnreadStoriesClause)).@count > 0"
 
         return NSPredicate(
             format: "\(onlyFollowedAuthorsClause) AND \(onlyAuthorsWithStoriesClause)",
