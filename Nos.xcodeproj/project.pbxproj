@@ -234,6 +234,8 @@
 		C98CA9072B14FBBF00929141 /* PagedNoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98CA9062B14FBBF00929141 /* PagedNoteDataSource.swift */; };
 		C98CA9082B14FD8600929141 /* PagedRelaySubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98CA9032B14FA3D00929141 /* PagedRelaySubscription.swift */; };
 		C98DC9BB2A795CAD004E5F0F /* ActionBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */; };
+		C992B32A2B3613CC00704A9C /* SubscriptionCancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C992B3292B3613CC00704A9C /* SubscriptionCancellable.swift */; };
+		C992B32B2B3613CC00704A9C /* SubscriptionCancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C992B3292B3613CC00704A9C /* SubscriptionCancellable.swift */; };
 		C99721CB2AEBED26004EBEAB /* String+Empty.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99721CA2AEBED26004EBEAB /* String+Empty.swift */; };
 		C99721CC2AEBED26004EBEAB /* String+Empty.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99721CA2AEBED26004EBEAB /* String+Empty.swift */; };
 		C99D053C2AE6E5F50053D472 /* WalletConnectSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99D053B2AE6E5F50053D472 /* WalletConnectSendView.swift */; };
@@ -620,6 +622,7 @@
 		C98CA9032B14FA3D00929141 /* PagedRelaySubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagedRelaySubscription.swift; sourceTree = "<group>"; };
 		C98CA9062B14FBBF00929141 /* PagedNoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagedNoteDataSource.swift; sourceTree = "<group>"; };
 		C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionBanner.swift; sourceTree = "<group>"; };
+		C992B3292B3613CC00704A9C /* SubscriptionCancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionCancellable.swift; sourceTree = "<group>"; };
 		C99507332AB9EE40005B1096 /* Nos 12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 12.xcdatamodel"; sourceTree = "<group>"; };
 		C99721CA2AEBED26004EBEAB /* String+Empty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Empty.swift"; sourceTree = "<group>"; };
 		C99D053B2AE6E5F50053D472 /* WalletConnectSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSendView.swift; sourceTree = "<group>"; };
@@ -1140,6 +1143,7 @@
 				C9C2B78429E073E300548B4A /* RelaySubscription.swift */,
 				C9E37E142A1E8143003D4B0A /* Report.swift */,
 				C94A5E172A72C84200B6EC5D /* ReportCategory.swift */,
+				C992B3292B3613CC00704A9C /* SubscriptionCancellable.swift */,
 				C97141ED2AE95F07001A5DD0 /* USBCAddress.swift */,
 				C9F204772ADEDE120029A858 /* WalletConnectChain.swift */,
 				C9F204602ADEDB720029A858 /* Wei.swift */,
@@ -1658,6 +1662,7 @@
 				CD09A74429A50F1D0063464F /* SideMenu.swift in Sources */,
 				C9F2046B2ADEDCB80029A858 /* WalletConnectPairingView.swift in Sources */,
 				C9C547512A4F1CC3006B0741 /* SearchController.swift in Sources */,
+				C992B32A2B3613CC00704A9C /* SubscriptionCancellable.swift in Sources */,
 				C9DEC06E2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,
 				C9F64D8C29ED840700563F2B /* LogHelper.swift in Sources */,
 				C9C2B78529E073E300548B4A /* RelaySubscription.swift in Sources */,
@@ -1973,6 +1978,7 @@
 				C9ADB14229951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */,
 				C92DF80629C25DE900400561 /* URL+Extensions.swift in Sources */,
 				C9BAB09C2996FBA10003A84E /* EventProcessor.swift in Sources */,
+				C992B32B2B3613CC00704A9C /* SubscriptionCancellable.swift in Sources */,
 				C9DFA97B299C31EE006929C1 /* Localized.swift in Sources */,
 				C973AB5C2A323167002AED16 /* Follow+CoreDataProperties.swift in Sources */,
 				C93005602A6AF8320098CA9E /* LoadingContent.swift in Sources */,

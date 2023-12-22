@@ -151,7 +151,7 @@ enum AuthorError: Error {
         return fetchRequest
     }
     
-    @nonobjc func allPostsRequest(since: Date = .now) -> NSFetchRequest<Event> {
+    @nonobjc func allPostsRequest(before: Date = .now) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
@@ -160,7 +160,7 @@ enum AuthorError: Error {
             EventKind.repost.rawValue, 
             EventKind.longFormContent.rawValue, 
             self,
-            since as CVarArg
+            before as CVarArg
         )
         return fetchRequest
     }
