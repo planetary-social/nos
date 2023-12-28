@@ -19,30 +19,30 @@ enum AppDestination: Hashable, Equatable {
     var label: some View {
         switch self {
         case .home:
-            return Text(Localized.homeFeed.string)
+            return Text(.localizable.homeFeed)
         case .discover:
-            return Localized.discover.view
+            return Text(.localizable.discover)
         case .notifications:
-            return Localized.notifications.view
+            return Text(.localizable.notifications)
         case .newNote:
-            return Localized.newNote.view
+            return Text(.localizable.newNote)
         case .profile:
-            return Localized.profileTitle.view
+            return Text(.localizable.profileTitle)
         }
     }
     
     var destinationString: String {
         switch self {
         case .home:
-            return Localized.homeFeed.string
+            return String(localized: .localizable.homeFeed)
         case .discover:
-            return Localized.discover.string
+            return String(localized: .localizable.discover)
         case .notifications:
-            return Localized.notifications.string
+            return String(localized: .localizable.notifications)
         case .newNote:
-            return Localized.newNote.string
+            return String(localized: .localizable.newNote)
         case .profile:
-            return Localized.profileTitle.string
+            return String(localized: .localizable.profileTitle)
         }
     }
     

@@ -88,12 +88,12 @@ struct NotificationsView: View {
             }
             .overlay(Group {
                 if events.isEmpty {
-                    Localized.noNotifications.view
+                    Text(.localizable.noNotifications)
                 }
             })
             .background(Color.appBg)
             .padding(.top, 1)
-            .nosNavigationBar(title: .notifications)
+            .nosNavigationBar(title: .localizable.notifications)
             .navigationBarItems(leading: SideMenuButton())
             .navigationDestination(for: Event.self) { note in
                 RepliesView(note: note)

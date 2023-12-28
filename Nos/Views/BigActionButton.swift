@@ -11,7 +11,7 @@ import SwiftUI
 /// A big bright button that is used as the primary call-to-action on a screen.
 struct BigActionButton: View {
     
-    var title: Localized
+    var title: LocalizedStringResource
     var backgroundGradient = LinearGradient(
         colors: [
             Color(hex: "#F06337"),
@@ -31,7 +31,7 @@ struct BigActionButton: View {
                 disabled = false
             }
         }, label: {
-            PlainText(title.string)
+            PlainText(title)
                 .font(.clarityBold)
                 .transition(.opacity)
                 .font(.headline)
@@ -105,10 +105,10 @@ struct BigActionButtonStyle: ButtonStyle {
 struct BigGradientButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
-            BigActionButton(title: Localized.tryIt, action: {})
+            BigActionButton(title: .localizable.tryIt, action: {})
                 .frame(width: 268)
             
-            BigActionButton(title: Localized.tryIt, action: {})
+            BigActionButton(title: .localizable.tryIt, action: {})
                 .disabled(true)
                 .frame(width: 268)
         }

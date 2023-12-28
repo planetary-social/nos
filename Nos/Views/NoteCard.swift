@@ -41,9 +41,7 @@ struct NoteCard: View {
         if replyCount == 0 {
             return nil
         }
-        let replyCount = replyCount
-        let localized = replyCount == 1 ? Localized.Reply.one : Localized.Reply.many
-        let string = localized.text(["count": "**\(replyCount)**"])
+        let string = String(localized: .reply.replies(replyCount))
         do {
             var attributed = try AttributedString(markdown: string)
             if let range = attributed.range(of: "\(replyCount)") {

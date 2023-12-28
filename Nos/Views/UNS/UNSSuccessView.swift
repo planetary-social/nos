@@ -36,14 +36,14 @@ struct UNSSuccessView: View {
                     .padding(20)
                     .padding(.top, 50)
                     
-                    PlainText(.success)
+                    PlainText(.localizable.success)
                         .font(.clarityTitle)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
                         .padding(20)
                     
-                    Text(.unsSuccessDescription)
+                    Text(.localizable.unsSuccessDescription)
                         .fontWeight(.medium)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.secondaryTxt)
@@ -55,7 +55,7 @@ struct UNSSuccessView: View {
                 
                 Spacer()
                 
-                BigActionButton(title: .done) {
+                BigActionButton(title: .localizable.done) {
                     isPresented = false
                 }
                 .padding(.bottom, 41)

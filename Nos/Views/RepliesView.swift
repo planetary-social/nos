@@ -121,7 +121,7 @@ struct RepliesView: View {
                     .padding(.bottom)
                 }
                 .padding(.top, 1)
-                .nosNavigationBar(title: .thread)
+                .nosNavigationBar(title: .localizable.thread)
                 .onAppear {
                     subscribeToReplies()
                 }
@@ -139,7 +139,7 @@ struct RepliesView: View {
                                 AvatarView(imageUrl: author.profilePhotoURL, size: 35)
                             }
                             ExpandingTextFieldAndSubmitButton(
-                                placeholder: Localized.Reply.postAReply,
+                                placeholder: .reply.postAReply,
                                 reply: $reply,
                                 focus: $focusTextView
                             ) {
@@ -164,7 +164,7 @@ struct RepliesView: View {
                         Button(action: {
                             focusTextView = false
                         }, label: {
-                            Localized.cancel.view
+                            Text(.localizable.cancel)
                                 .foregroundColor(.primaryTxt)
                         })
                     }
@@ -200,9 +200,9 @@ struct RepliesView: View {
 
             guard let keyPair = currentUser.keyPair else {
                 alert = AlertState(title: {
-                    TextState(Localized.error.string)
+                    TextState(String(localized: .localizable.error))
                 }, message: {
-                    TextState(Localized.youNeedToEnterAPrivateKeyBeforePosting.string)
+                    TextState(String(localized: .localizable.youNeedToEnterAPrivateKeyBeforePosting))
                 })
                 return
             }
@@ -233,7 +233,7 @@ struct RepliesView: View {
             try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
         } catch {
             alert = AlertState(title: {
-                TextState(Localized.error.string)
+                TextState(String(localized: .localizable.error))
             }, message: {
                 TextState(error.localizedDescription)
             })

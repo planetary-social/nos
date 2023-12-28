@@ -46,7 +46,7 @@ struct HighlightedText: View {
     ///   - highlight: The gradient that will be used to highlight the word.
     ///   - link: A link that the highlighted word will open if tapped. Optional.
     init(
-        text: Localized,
+        text: LocalizedStringResource,
         highlightedWord: String?,
         highlight: LinearGradient,
         textColor: Color = .primaryTxt,
@@ -54,7 +54,7 @@ struct HighlightedText: View {
         link: URL?
     ) {
         self.init(
-            text.string,
+            String(localized: text),
             highlightedWord: highlightedWord,
             highlight: highlight,
             textColor: textColor,

@@ -11,9 +11,9 @@ struct RelayDetailView: View {
 
     var relay: Relay
 
-    func row(title: Localized, value: String) -> some View {
+    func row(title: LocalizedStringResource, value: String) -> some View {
         HStack(alignment: .top) {
-            Text("\(title.string): ")
+            Text("\(String(localized: title)): ")
             Text(value)
                 .textSelection(.enabled)
         }
@@ -21,10 +21,10 @@ struct RelayDetailView: View {
     var body: some View {
         List {
             Section {
-                Text(relay.address ?? Localized.error.string)
+                Text(relay.address ?? String(localized: .localizable.error))
                     .textSelection(.enabled)
             } header: {
-                Localized.address.view
+                Text(.localizable.address)
                     .foregroundColor(.primaryTxt)
                     .fontWeight(.heavy)
             }
@@ -35,34 +35,37 @@ struct RelayDetailView: View {
             ))
             Section {
                 if let name = relay.name {
-                    row(title: .name, value: name)
+                    row(title: .localizable.name, value: name)
                 }
                 if let description = relay.relayDescription {
-                    row(title: .description, value: description)
+                    row(title: .localizable.description, value: description)
                 }
                 if let supportedNIPs = relay.supportedNIPs {
-                    row(title: .supportedNIPs, value: supportedNIPs.map { String($0) }.joined(separator: ", "))
+                    row(
+                        title: .localizable.supportedNIPs,
+                        value: supportedNIPs.map { String($0) }.joined(separator: ", ")
+                    )
                 }
                 if let pubkey = relay.pubkey {
-                    row(title: .pubkey, value: pubkey)
+                    row(title: .localizable.pubkey, value: pubkey)
                 }
                 if let contact = relay.contact {
-                    row(title: .contact, value: contact)
+                    row(title: .localizable.contact, value: contact)
                 }
                 if let software = relay.software {
-                    row(title: .software, value: software)
+                    row(title: .localizable.software, value: software)
                 }
                 if let version = relay.version {
-                    row(title: .version, value: version)
+                    row(title: .localizable.version, value: version)
                 }
             } header: {
-                Localized.metadata.view
+                Text(.localizable.metadata)
                     .foregroundColor(.primaryTxt)
                     .fontWeight(.heavy)
             } footer: {
                 #if DEBUG
                 if let date = relay.metadataFetchedAt {
-                    Text("\(Localized.fetchedAt.string): \(date.distanceString())")
+                    Text("\(String(localized: .localizable.fetchedAt)): \(date.distanceString())")
                 }
                 #endif
             }
@@ -74,7 +77,7 @@ struct RelayDetailView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
-        .nosNavigationBar(title: .relay)
+        .nosNavigationBar(title: .localizable.relay)
     }
 }
 

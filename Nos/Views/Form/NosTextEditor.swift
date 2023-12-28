@@ -10,7 +10,7 @@ import SwiftUINavigation
 
 struct NosTextEditor: View {
     
-    var label: Localized
+    var label: LocalizedStringResource
     @Binding var text: String
     
     var body: some View {
@@ -26,9 +26,9 @@ struct NosTextEditor: View {
 struct NosTextEditor_Previews: PreviewProvider {
     static var previews: some View {
         NosForm {
-            NosFormSection(label: .profilePicture) {
+            NosFormSection(label: .localizable.profilePicture) {
                 WithState(initialValue: "Alice") { text in
-                    NosTextEditor(label: .bio, text: text)
+                    NosTextEditor(label: .localizable.bio, text: text)
                         .scrollContentBackground(.hidden)
                         .frame(maxHeight: 200)
                 }    

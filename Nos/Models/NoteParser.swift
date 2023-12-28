@@ -137,11 +137,11 @@ enum NoteParser {
                 if humanReadablePart == Nostr.publicKeyPrefix, let hex = SHA256Key.decode(base5: checksum) {
                     return "\(prefix)[\(string)](@\(hex))"
                 } else if humanReadablePart == Nostr.notePrefix, let hex = SHA256Key.decode(base5: checksum) {
-                    return "\(prefix)[\(Localized.linkToNote.string)](%\(hex))"
+                    return "\(prefix)[\(String(localized: .localizable.linkToNote))](%\(hex))"
                 } else if humanReadablePart == Nostr.profilePrefix, let hex = TLV.decode(checksum: checksum) {
                     return "\(prefix)[\(string)](@\(hex))"
                 } else if humanReadablePart == Nostr.eventPrefix, let hex = TLV.decode(checksum: checksum) {
-                    return "\(prefix)[\(Localized.linkToNote.string)](%\(hex))"
+                    return "\(prefix)[\(String(localized: .localizable.linkToNote))](%\(hex))"
                 } else {
                     return String(substring)
                 }
