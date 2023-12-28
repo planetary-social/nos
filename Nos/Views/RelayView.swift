@@ -49,11 +49,11 @@ struct RelayView: View {
                             NavigationLink {
                                 RelayDetailView(relay: relay)
                             } label: {
-                                Text(relay.address ?? Localized.error.string)
+                                Text(relay.address ?? String(localized: .localizable.error))
                                     .foregroundColor(.primaryTxt)
                             }
                         } else {
-                            Text(relay.address ?? Localized.error.string)
+                            Text(relay.address ?? String(localized: .localizable.error))
                                 .foregroundColor(.primaryTxt)
                                 .textSelection(.enabled)
                         }
@@ -79,11 +79,11 @@ struct RelayView: View {
                 }
                 
                 if author.relays.count == 0, editable {
-                    Localized.noRelaysMessage.view
+                    Text(.localizable.noRelaysMessage)
                 }
             } header: {
                 if editable {
-                    Localized.relays.view
+                    Text(.localizable.relays)
                         .foregroundColor(.primaryTxt)
                         .fontWeight(.heavy)
                 }
@@ -113,7 +113,7 @@ struct RelayView: View {
                         }
                     }
                 } header: {
-                    Localized.recommendedRelays.view
+                    Text(.localizable.recommendedRelays)
                         .foregroundColor(.primaryTxt)
                         .fontWeight(.heavy)
                 }
@@ -126,14 +126,14 @@ struct RelayView: View {
             
             if editable {
                 Section {
-                    TextField(Localized.relayAddressPlaceholder.string, text: $newRelayAddress)
+                    TextField(String(localized: .localizable.relayAddressPlaceholder), text: $newRelayAddress)
                         .foregroundColor(.primaryTxt)
                         .autocorrectionDisabled()
                         #if os(iOS)
                         .textInputAutocapitalization(.none)
                         .keyboardType(.URL)
                         #endif
-                    Button(Localized.save.string) {
+                    Button(String(localized: .localizable.save)) {
                         addRelay()
                         Task {
                             await currentUser.subscribe()
@@ -141,7 +141,7 @@ struct RelayView: View {
                         }
                     }
                 } header: {
-                    Localized.addRelay.view
+                    Text(.localizable.addRelay)
                         .foregroundColor(.primaryTxt)
                         .fontWeight(.heavy)
                         .bold()
@@ -165,7 +165,7 @@ struct RelayView: View {
                 #endif
             }
         }
-        .nosNavigationBar(title: .relays)
+        .nosNavigationBar(title: .localizable.relays)
         .onAppear {
             analytics.showedRelays()
         }
@@ -188,16 +188,16 @@ struct RelayView: View {
                 analytics.added(relay)
                 newRelayAddress = ""
             } catch {
-                var errorMessage: String
+                var errorMessage: LocalizedStringResource
                 if error as? RelayError == RelayError.invalidAddress {
-                    errorMessage = Localized.invalidURLError.string
+                    errorMessage = .localizable.invalidURLError
                 } else {
-                    errorMessage = Localized.saveRelayError.string
+                    errorMessage = .localizable.saveRelayError
                 }
                 alert = AlertState(title: {
-                    TextState(Localized.error.string)
+                    TextState(String(localized: .localizable.error))
                 }, message: {
-                    TextState(errorMessage)
+                    TextState(String(localized: errorMessage))
                 })
             }
         }

@@ -1,273 +1,0 @@
-// This file is auto-generated at build time and should not be modified by hand
-
-"Localized.nos" = "Nos";
-"Localized.onboardingTitle" = "شبکه انسانی";
-"Localized.logInWithYourKeys" = "با کلیدهایتان وارد شوید";
-"Localized.ageVerificationTitle" = "آیا بزرگتر از 16 ساله هستید؟";
-"Localized.ageVerificationSubtitle" = "به دلایل قانونی باید مطمئن شویم بزرگتر از این سن هستید تا از نوس استفاده کنید";
-"Localized.notOldEnoughTitle" = "متاسفیم، اما نوس هنوز مناسب شما نیست،";
-"Localized.notOldEnoughSubtitle" = "لازم است 16 ساله باشید تا بتوانید از این اپ استفاده کنید.";
-"Localized.notOldEnoughButton" = "(به مدرسه) برگردید";
-"Localized.termsOfServiceTitle" = "شرایط استفاده";
-"Localized.loginWithKey" = "ورود با کلید";
-"Localized.pasteYourSecretKey" = "کلید خصوصی خود را پیست کنید";
-"Localized.login" = "ورود";
-"Localized.yes" = "بله";
-"Localized.no" = "نه";
-"Localized.accept" = "پذیرفتن";
-"Localized.reject" = "رد کردن";
-"Localized.error" = "خطا";
-"Localized.noEvents" = "(هنوز) هیچ یادداشتی نیست! برای شروع سربرگ یافتن را بگردید و چند نفر را دنبال کنید.";
-"Localized.addItem" = "افزودن مورد";
-"Localized.homeFeed" = "خبرنامه";
-"Localized.keys" = "کلیدها";
-"Localized.privateKeyWarning" = "هرگز کلید خصوصی خود را با هیچ کس به اشتراک نگذارید. کلید خصوصی تان را در یک اپ مدیریت پسورد ذخیره کنید تا بتوانید دسترسی تان به داده ها و حساب کاربری را باز یابید.";
-"Localized.privateKeyPlaceholder" = "nsec یا hex...";
-"Localized.save" = "ذخیره";
-"Localized.copy" = "کپی";
-"Localized.settings" = "تنظیمات";
-"Localized.invalidKey" = "کلید نامعتبر";
-"Localized.couldNotReadPrivateKeyMessage" = "نمی توان کلید خصوصی شما را خواند. لطفا بررسی کنید که به شکل nsec یا hex باشد.";
-"Localized.tryIt" = "امتحان کنید";
-"Localized.shareLogs" = "اشتراک کارنامه";
-"Localized.failedToExportLogs" = "خطا در خروجی گرفتن از کارنامه داده.";
-"Localized.appVersion" = "نسخه برنامه:";
-"Localized.allPublishedEvents" = "تمام رویدادهای منتشر شده";
-"Localized.feedSettings" = "تنظیمات خبرنامه";
-"Localized.useReportsFromFollows" = "گزارش دنبال شونده های من را استفاده کن";
-"Localized.useReportsFromFollowsDescription" = "هرگاه کسی که دنبال می کنید یادداشت یا شخصی را گزارش کند، یک هشدار محتوا به یادداشت او می افزاییم.";
-"Localized.showOutOfNetworkWarnings" = "اخطارهای خارج از شبکه دوستان را نشان بده";
-"Localized.showOutOfNetworkWarningsDescription" = "یادداشت کاربران خارج از حلقه دوستانم را پشت هشدار محتوا پنهان کن.";
-"Localized.privateKey" = "کلید خصوصی";
-"Localized.logout" = "خروج";
-"Localized.myKeyIsBackedUp" = "کلیدم را ذخیره کردم";
-"Localized.backUpYourKeyWarning" = "خروج از برنامه کلید خصوصی (nsec) شما را از اپ پاک می کند. قبل از این کار مطمئن شوید کلید خصوصی خود را ذخیره کرده اید وگرنه دسترسی به حساب کاربری خود را از دست خواهید داد!";
-"Localized.post" = "ارسال";
-"Localized.newNote" = "یادداشت جدید";
-"Localized.new" = "جدید";
-"Localized.newNotePlaceholder" = "یادداشت خود را اینجا بنویسید...";
-"Localized.cancel" = "انصراف";
-"Localized.confirm" = "تایید";
-"Localized.clear" = "پاک کردن";
-"Localized.done" = "انجام شد";
-"Localized.send" = "ارسال";
-"Localized.editProfile" = "ویرایش نمایه";
-"Localized.completeProfileMessage" = "نمایه خود را تکمیل کنید تا مردم بتوانند شما را بیابند.";
-"Localized.completeProfileButton" = "تکمیل نمایه";
-"Localized.youNeedToEnterAPrivateKeyBeforePosting" = "پبش از آنکه بتوانید یادداشتی منتشر کنید باید در تنظیمات یک کلید خصوصی وارید کنید.";
-"Localized.relayDoesNotSupportNIP40" = "این رله از پیام های منقضی شونده پشتیبانی نمی کند. لطفا رله دیگری انتخاب کنید.";
-"Localized.anyRelaysSupportingNIP40" = "هیچ کدام از رله های شما از پیام های منقضی شونده پشتیبانی نمی کنند. لطفا یکی اضافه کنید یا دوباره سعی کنید.";
-"Localized.noteDisappearsIn" = "یاداشت تا این مدت ناپدید می شود";
-"Localized.attachMedia" = "پیوست رسانه";
-"Localized.expirationDate" = "تاريخ انقضاء";
-"Localized.minuteAbbreviated" = "دقیقه";
-"Localized.hourAbbreviated" = "ساعت";
-"Localized.hoursAbbreviated" = "ساعت";
-"Localized.dayAbbreviated" = "روز";
-"Localized.daysAbbreviated" = "روز";
-"Localized.sendCode" = "ارسال کد پیامکی";
-"Localized.submit" = "ثبت";
-"Localized.next" = "بعدی";
-"Localized.setUpUNS" = "نام خود را رزرو کنید";
-"Localized.createNewName" = "ایجاد نام جدید";
-"Localized.goBack" = "بازگشت";
-"Localized.start" = "شروع";
-"Localized.startOver" = "شروع دوباره";
-"Localized.manageUniversalName" = "نام جهانی خود را مدیریت کنید";
-"Localized.dismiss" = "رد کردن";
-"Localized.relays" = "رله";
-"Localized.noRelaysMessage" = "هنوز هیچ رله ای نیست! برای شروع یکی این پایین اضافه کنید";
-"Localized.addRelay" = "افزودن رله";
-"Localized.recommendedRelays" = "رله های توصیه شده";
-"Localized.invalidURLError" = "لطفا یک آدرس URL معتبر وارد کنید.";
-"Localized.saveRelayError" = "رله ذخیره نشد.";
-"Localized.ok" = "تایید";
-"Localized.relay" = "رله";
-"Localized.address" = "آدرس";
-"Localized.fetchedAt" = "گرفته شد";
-"Localized.metadata" = "فراداده";
-"Localized.description" = "توضیحات";
-"Localized.supportedNIPs" = "NIP های پشتیبانی شده";
-"Localized.pubkey" = "کلید عمومی";
-"Localized.contact" = "مخاطب";
-"Localized.software" = "نرم افزار";
-"Localized.version" = "نسخه";
-"Localized.profileTitle" = "نمایه";
-"Localized.profile" = "نمایه";
-"Localized.seeProfile" = "دیدن نمایه";
-"Localized.follow" = "دنبال کردن";
-"Localized.followers" = "دنبال‌کنندگان";
-"Localized.follows" = "دنبال شوندگان";
-"Localized.following" = "دنبال کننده";
-"Localized.followersYouKnow" = "دنبال کنندگانی که می شناسید";
-"Localized.followedByOne" = "دنبال شده توسط **{{ one }}**";
-"Localized.followedByOneAndMore" = "دنبال شده توسط **{{ one }}** و **{{ count }}** نفر دیگر";
-"Localized.followedByTwo" = "دنبال شده توسط **{{ one }}** و **{{ two }}**";
-"Localized.followedByTwoAndMore" = "دنبال شده توسط **{{ one }}**، **{{ two }}** و **{{ count }}** نفر دیگر";
-"Localized.userHasBeen" = "این کاربر گزارش شده است";
-"Localized.noteHasBeen" = "این یادداشت گزارش شده است";
-"Localized.reportedBy" = "گزارش شده توسط";
-"Localized.reportedByOne" = "گزارش شده توسط **{{ one }}**";
-"Localized.reportedByOneAndMore" = "گزارش شده توسط **{{ one }}** و **{{ count }}** نفر دیگر";
-"Localized.reportedByTwo" = "گزارش شده توسط **{{ one }}** و **{{ two }}**";
-"Localized.reportedByTwoAndMore" = "گزارش شده توسط **{{ one }}**، **{{ two }}** و **{{ count }}** نفر دیگر";
-"Localized.reportedFor" = "به دلیل {{reason}}";
-"Localized.unfollow" = "لغو دنبال کردن";
-"Localized.universalName" = "نام جهانی";
-"Localized.nip05" = "NIP-05";
-"Localized.nip05LearnMore" = "درباره تایید نام NIP-05 بیشتر بدانید.";
-"Localized.learnMore" = "بیشتر بیاموزید";
-"Localized.readMore" = "بیشتر بخوانید";
-"Localized.thread" = "رشته";
-"Localized.show" = "نشان دادن";
-"Localized.viewThisPostAnyway" = "به هر حال این یادداشت را ببینم";
-"Localized.bio" = "معرفی کوتاه";
-"Localized.displayName" = "نام نمایشی";
-"Localized.name" = "نام";
-"Localized.profilePicture" = "تصویر نمایه";
-"Localized.identityVerification" = "تایید هویت";
-"Localized.chooseNameOrRegister" = "از بین نام های موجود خود انتخاب کنید، یا یک جدید بسازید:";
-"Localized.chooseYourNameDescription" = "این نام جهانی شما خواهد بود. می توانید بعدا نام های دیگری ثبت کنید. نام ها معتبر ";
-"Localized.url" = "آدرس اینترنتی URL";
-"Localized.noEventsOnProfile" = "ما هیچ یادداشتی از این نمایه نمی بینیم، ولی به گشتن ادامه می دهیم!";
-"Localized.uploadProfilePicInstructions" = "به nostr.build بروید تا تصاویر خود را بارگذاری کنید، URL ارائه شده را کپی کرده و اینجا بچسبانید.";
-"Localized.basicInfo" = "اطللاعات پایه";
-"Localized.website" = "وب‎سایت";
-"Localized.edit" = "ویرایش";
-"Localized.connectWallet" = "اتصال کیف پول";
-"Localized.connectGlobalIDTitle" = "برای ارسال USBC کیف پول GlobaliD خود را متصل کنید";
-"Localized.scanTheWalletConnectQR" = "کد QR را اسکن کنید یا اپلیکیشن Global ID را بارگیری کنید تا USBC به دوستانتان بفرستید!";
-"Localized.copyQRLink" = "لینک QR را کپی کنید";
-"Localized.connectGlobalID" = "اتصال اپلیکیشن GlobaliD";
-"Localized.sendUSBC" = "ارسال USBC";
-"Localized.sendTo" = "ارسال به";
-"Localized.amount" = "مبلغ";
-"Localized.reconnectWallet" = "اتصال دوباره کیف پول";
-"Localized.somethingWentWrong" = "مشکلی پیش آمد.";
-"Localized.mention" = "اشاره";
-"Localized.debug" = "اشکال زدايي";
-"Localized.loadSampleData" = "بارگیری داده نمونه";
-"Localized.sampleDataInstructions" = "این تمام رویدادها را حذف کرده و تمام آنها را در sample_data.json بارگیری می کند";
-"Localized.discover" = "یافتن";
-"Localized.searchBar" = "جستجوی کاربران";
-"Localized.notifications" = "اعلان‌ها";
-"Localized.noNotifications" = "(هنوز) اعلانی وجود ندارد!";
-"Localized.copyNoteIdentifier" = "کپی کردن شناسه یادداشت";
-"Localized.copyNoteText" = "کپی کردن متن یادداشت";
-"Localized.copyLink" = "کپی لینک";
-"Localized.copyUserIdentifier" = "کپی شناسه کاربر (npub)";
-"Localized.deleteNote" = "حذف";
-"Localized.deleteNoteConfirmation" = "این از تمام سرورهای رله ها می خواهد تا این یادداشت را برای همیشه حذف کنند. مطمئنید؟";
-"Localized.mute" = "بی‌صدا";
-"Localized.muteUser" = "بی صدا کردن کاربر";
-"Localized.muted" = "بی صدا شده";
-"Localized.mutedUsers" = "کاربران بی صدا شده";
-"Localized.mutePrompt" = "می خواهید {{ user }} را بیصدا کنید؟";
-"Localized.share" = "اشتراک‌گذاری";
-"Localized.reportNote" = "گزارش یادداشت";
-"Localized.reportUser" = "گزارش کاربر";
-"Localized.reportContent" = "گزارش محتوا";
-"Localized.confirmReport" = "تایید گزارش";
-"Localized.reportConfirmation" = "آیا مطمئنید می خواهید این را به عنوان {{ report_type }} گزارش کنید؟ این گزارش عمومی خواهد بود.";
-"Localized.note" = "یادداشت";
-"Localized.unmuteUser" = "باصدا کردن";
-"Localized.outsideNetwork" = "این کاربر خارج از شبکه شماست.";
-"Localized.outsideNetworkExplanation" = "این یادداشت از کسی خارج از شبکه \"دوستان دوستان\" شما آمده است. Nos به طور پیش فرض این ها را پنهان می کند. می توانید در منوی تنظیمات آن را تغییر دهید.";
-"Localized.contentWarningExplanation" = "به پرورش اجتماعی امن و آرام متعهد است. برای دستیابی به این هدف هرگاه کسی که دنبال می کنید یادداشتی را گزارش می کند، هشدار محتوا نشان می دهیم. می توانید این را در منوی تنظیمات تغییر دهید.";
-"Localized.allMyRelays" = "همه رله های من";
-"Localized.about" = "درباره";
-"Localized.contactUs" = "تماس با ما";
-"Localized.shareNos" = "اشتراک گذاری نوس";
-"Localized.yourProfile" = "نمایه شما";
-"Localized.unsTagline" = "فضای نامگذاری جهانی (Universal Name Space) امکان تایید هویتی را که می توانید به آن اعتماد کنید ارائه می کند.";
-"Localized.unsDescription" = "\"فضای نامگذاری جهانی\" یک نام به شما می دهد که می توانید همه جا استفاده کنید. نامی جهانی ثبت کنید و به نمایه ناستر خود متصل کنید. بیشتر بدانید.";
-"Localized.unsRegister" = "نام جهانی خود را ثبت کنید";
-"Localized.unsRegisterDescription" = "فضای نام جهانی Universal Name Space نامی به شما می دهد که می توانید همه جا استفاده کنید.\n        \n هویت خود را تایید کنید و حساب کاربری اجتماعی و شناسه دولتی و کیف پولتان و غیره را متصل کنید.";
-"Localized.premiumName" = "این یک نام ویژه است";
-"Localized.premiumNameDescription" = "به وب سایت UNS ارجاع می شوید تا بتوانید یک نام ویژه ثبت کنید.";
-"Localized.returnToChooseName" = "به مرحله انتخاب نام برگردید و نامی که ثبت کردید انتخاب کنید.";
-"Localized.goBackAndRegister" = "ممکن است بخواهید برگردید و نام دیگری ثبت کنید";
-"Localized.registerADifferentName" = "نام دیگری ثبت کنید";
-"Localized.registerPremiumName" = "نام ویژه ای ثبت کنید";
-"Localized.registration" = "ثبت";
-"Localized.registrationDescription" = "شماره تلفن خود را وارد کنید تا بتوانیم کد پیامکی بفرستیم.";
-"Localized.verification" = "تأیید";
-"Localized.verificationDescription" = "کد ۶ رقمی ای که به {{ phone_number }} فرستادیم وارد کنید";
-"Localized.unsLearnMore" = "درباره UNS بیشتر بیاموزید.";
-"Localized.verifyYourIdentity" = "هویت خود را تایید کنید";
-"Localized.enterCode" = "کد را وارد کنید";
-"Localized.nameLower" = "نام";
-"Localized.chooseYourName" = "نام خود را انتخاب کنید";
-"Localized.oops" = "اوه!";
-"Localized.thatNameIsTaken" = "این نام قبلا گرفته شده است.";
-"Localized.tryAnotherName" = "لطفا نام دیگری امتحان کنید.";
-"Localized.tryAgainOrContactSupport" = "لطفا دوباره امتحان کنید یا با پشتیبانی تماس بگیرید.";
-"Localized.success" = "موفقیت!";
-"Localized.unsSuccessDescription" = "شما با موفقیت نام جهانی خود را به نمایه ناسترتان وصل کردید.";
-"Localized.yourNewUNMessage" = "\"نام جهانی\" شماست.\n\nما اتصالی بین نمایه ناستر و نام جهانی شما برقرار کرده و نام جهانی تان را در بخش نام کاربری نمایه پر کردیم.";
-"Localized.anErrorOccurred" = "خطایی رخ داده است.";
-"Localized.stories" = "داستان ها";
-"Localized.relayAddressPlaceholder" = "wss://yourrelay.com";
-"Localized.someone" = "کسی";
-"Localized.aboutNos" = "نوس یک اپ جدید رسانه اجتماعی است که توسط همان تیمی که پلنتری را ساخته بود، روی پروتکل ناستر بنا شده است. نوس برای انسان ها طراحی شده است، نه الگوریتم ها. در Nos.social بیشتر بیاموزید.";
-"Localized.aboutNosHighlight" = "در Nos.social بیشتر بیاموزید.";
-"Localized.aboutNostr" = "ناستر یک اکوسیستم باز رسانه اجتماعی است که کنترل روابط آنلاین تان را به شما می دهد. نوس تنها یکی از اپ هایی است که به زبان ناستر سخن می گوید، و می توانید سرورهایتان را هم انتخاب کنید. درباره اینکه چرا ناستر عالی است بیشتر بیاموزید.";
-"Localized.aboutNostrHighlight" = "درباره اینکه چرا ناستر عالی است بیشتر بیاموزید.";
-"Localized.nosIsOpenSource" = "نوس منبع باز است! می توانید کد آن را بخوانید، خصوصیات جدید به آن بیافزایید، حتی آن را فورک کنید و کلاینت ناستر خود را بسازید. هیچ الگوریتم مبهم یا قوانین پنهانی در کار نیست. کد را ببنید.";
-"Localized.nosIsOpenSourceHighlight" = "کد را ببینید.";
-"Localized.eventSource" = "رویدادخام";
-"Localized.loading" = "در حال بارگیری...";
-"Localized.viewSource" = "مشاهده منبع";
-"Localized.reportEventContent" = "این محتوا به دلیل {{ report_category }} گزارش شده است.";
-"Localized.select" = "انتخاب";
-"Localized.linkToNote" = "🔗 لینک به یادداشت";
-
-"Reply.one" = "{{ count }} پاسخ";
-"Reply.many" = "{{ count }} پاسخ";
-"Reply.replied" = "پاسخ داد";
-"Reply.posted" = "ارسال شده";
-"Reply.postAReply" = "پاسخی ارسال کنید";
-"Reply.repliedToYourNote" = "به یادداشت شما پاسخ داد:";
-"Reply.mentionedYou" = "به شما اشاره کرده:";
-
-"ImagePicker.camera" = "دوربین";
-"ImagePicker.cameraNotAvailable" = "دوربین در این دستگاه موجود نیست";
-"ImagePicker.openSettingsMessage" = "می توانید مجوز دوربین را در تنظیمات اپ مجاز کنید.";
-"ImagePicker.permissionsRequired" = "برای {{ title }} به مجوز نیاز است";
-"ImagePicker.photoLibrary" = "گالری عکس";
-"ImagePicker.selectFrom" = "انتخاب از گالری عکس";
-"ImagePicker.takePhoto" = "با دوربین عکس بگیرید";
-"ImagePicker.errorUploadingFile" = "خطا در بارگذاری فایل";
-"ImagePicker.errorUploadingFileMessage" = "هنگام بارگذاری فایلی که دادید خطایی رخ داد. لطفا دوباره تلاش کنید.";
-"ImagePicker.uploading" = "در حال بارگذاری...";
-
-"Moderation.CL" = "بدزبانی";
-"Moderation.HC" = "احتمال آسیب";
-"Moderation.HC-fin" = "ضرر مالی";
-"Moderation.HC-bhd" = "صدمه جسمی";
-"Moderation.IH" = "عدم مدارا و نفرت";
-"Moderation.IL" = "غیر قانونی";
-"Moderation.IL-cop" = "نقض حق تکثیر";
-"Moderation.IL-csa" = "سوء استفاده جنسی از کودکان";
-"Moderation.IL-drg" = "جرائم مواد مخدر";
-"Moderation.IL-frd" = "شیادی و کلاهبرداری";
-"Moderation.IL-har" = "مزاحمت یا افشای اطلاعات خصوصی";
-"Moderation.IL-swk" = "تن فروشی";
-"Moderation.IL-idt" = "جعل هویت";
-"Moderation.IL-mal" = "بدافزار";
-"Moderation.NS" = "عریانی و جنسی";
-"Moderation.NS-nud" = "عریانی معمولی";
-"Moderation.NS-ero" = "تحریک آمیز";
-"Moderation.NS-sex" = "سکس";
-"Moderation.PN" = "پورن";
-"Moderation.PN-het" = "پورن جنس مخالف";
-"Moderation.PN-gay" = "پورن مردان";
-"Moderation.PN-les" = "پورن زنان";
-"Moderation.PN-bis" = "پورن دو جنس";
-"Moderation.PN-trn" = "پورن بین جنسی";
-"Moderation.PN-fnb" = "پورن بی جنسیت";
-"Moderation.SP" = "اسپم";
-"Moderation.VI" = "خشونت";
-"Moderation.VI-hum" = "خشونت بر علیه انسان";
-"Moderation.VI-ani" = "خشونت بر علیه حیوان بااحساس";
-"Moderation.NA" = "سایر";

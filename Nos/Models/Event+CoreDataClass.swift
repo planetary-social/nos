@@ -73,10 +73,11 @@ extension FetchedResults where Element == Event {
 
 // swiftlint:disable type_body_length
 @objc(Event)
+@Observable
 public class Event: NosManagedObject {
     
-    @Dependency(\.currentUser) private var currentUser
-    @Dependency(\.persistenceController) private var persistenceController
+    @Dependency(\.currentUser) @ObservationIgnored private var currentUser
+    @Dependency(\.persistenceController) @ObservationIgnored private var persistenceController
     
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"
@@ -660,7 +661,7 @@ public class Event: NosManagedObject {
         
         newAuthor.lastUpdatedContactList = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
 
-        // Put existing follows into a distionary so we can avoid doing a fetch request to look up each one.
+        // Put existing follows into a dictionary so we can avoid doing a fetch request to look up each one.
         var originalFollows = [HexadecimalString: Follow]()
         for follow in newAuthor.follows {
             if let pubKey = follow.destination?.hexadecimalPublicKey {
@@ -684,12 +685,10 @@ public class Event: NosManagedObject {
         }
         
         // Did we unfollow someone? If so, remove them from core data
-        if originalFollows.count > newFollows.count {
-            let removedFollows = Set(originalFollows.values).subtracting(newFollows)
-            if !removedFollows.isEmpty {
-                print("Removing \(removedFollows.count) follows")
-                Follow.deleteFollows(in: removedFollows, context: context)
-            }
+        let removedFollows = Set(originalFollows.values).subtracting(newFollows)
+        if !removedFollows.isEmpty {
+            print("Removing \(removedFollows.count) follows")
+            Follow.deleteFollows(in: removedFollows, context: context)
         }
         
         newAuthor.follows = newFollows
@@ -790,7 +789,7 @@ public class Event: NosManagedObject {
             currentUser.author?.muted = false
         }
     }
-    
+
     /// Tries to parse a new event out of the given jsonEvent's `content` field.
     @discardableResult
     func parseContent(from jsonEvent: JSONEvent, context: NSManagedObjectContext) -> Event? {
@@ -805,6 +804,77 @@ public class Event: NosManagedObject {
         }
         
         return nil
+    }
+    
+    // MARK: - Preloading and Caching
+    // Probably should refactor this stuff into a view model
+    
+    @MainActor var loadingViewData = false
+    @MainActor var attributedContent = LoadingContent<AttributedString>.loading
+    @MainActor var contentLinks = [URL]()
+    @MainActor var relaySubscriptions = SubscriptionCancellables()
+    
+    /// Instructs this event to load supplementary data like author name and photo, reference events, and produce
+    /// formatted `content` and cache it on this object. Idempotent.
+    @MainActor func loadViewData() async {
+        guard !loadingViewData else {
+            return
+        }
+        loadingViewData = true 
+        Log.debug("\(identifier ?? "null") loading view data")
+        
+        if isStub {
+            await loadContent()
+            loadingViewData = false
+        } else {
+            Task { await loadReferencedNote() }
+            Task { await loadAuthorMetadata() }
+            Task { await loadAttributedContent() }
+        }
+    }
+    
+    /// Tries to download this event from relays.
+    @MainActor private func loadContent() async {
+        @Dependency(\.relayService) var relayService
+        relaySubscriptions.append(await relayService.requestEvent(with: identifier))
+    }
+    
+    /// Requests any missing metadata for authors referenced by this note from relays.
+    @MainActor private func loadAuthorMetadata() async {
+        @Dependency(\.relayService) var relayService
+        @Dependency(\.persistenceController) var persistenceController
+        let backgroundContext = persistenceController.backgroundViewContext
+        relaySubscriptions.append(await Event.requestAuthorsMetadataIfNeeded(
+            noteID: identifier, 
+            using: relayService, 
+            in: backgroundContext
+        ))
+    }
+    
+    /// Tries to load the note this note is reposting or replying to from relays.
+    @MainActor private func loadReferencedNote() async {
+        if let referencedNote = referencedNote() {
+            await referencedNote.loadViewData()
+        } else {
+            await rootNote()?.loadViewData()
+        }
+    }
+    
+    /// Processes the note `content` to populate mentions and extract links. The results are saved in 
+    /// `attributedContent` and `contentLinks`.
+    @MainActor func loadAttributedContent() async {
+        @Dependency(\.persistenceController) var persistenceController
+        let backgroundContext = persistenceController.backgroundViewContext
+        if let parsedAttributedContent = await Event.attributedContentAndURLs(
+            note: self,
+            context: backgroundContext
+        ) {
+            let (attributedString, contentLinks) = parsedAttributedContent
+            self.attributedContent = .loaded(attributedString)
+            self.contentLinks = contentLinks
+        } else {
+            self.attributedContent = .loaded(AttributedString(content ?? "")) 
+        }
     }
     
     // MARK: - Helpers
@@ -1090,9 +1160,9 @@ public class Event: NosManagedObject {
         noteID: String?,
         using relayService: RelayService,
         in context: NSManagedObjectContext
-    ) async -> [RelaySubscription.ID] {
+    ) async -> SubscriptionCancellable {
         guard let noteID else {
-            return []
+            return SubscriptionCancellable(subscriptionIDs: [], relayService: relayService)
         }
         
         let requestData: [(HexadecimalString?, Date?)] = await context.perform {
@@ -1125,13 +1195,14 @@ public class Event: NosManagedObject {
             return requestData
         }
         
-        var subscriptionIDs = [RelaySubscription.ID]()
+        var cancellables = [SubscriptionCancellable]()
         for requestDatum in requestData {
             let authorKey = requestDatum.0
             let sinceDate = requestDatum.1
-            await relayService.requestMetadata(for: authorKey, since: sinceDate).unwrap { subscriptionIDs.append($0) }
+            cancellables.append(await relayService.requestMetadata(for: authorKey, since: sinceDate))
         }
-        return subscriptionIDs
+        
+        return SubscriptionCancellable(cancellables: cancellables, relayService: relayService)
     }
     
     var webLink: String {

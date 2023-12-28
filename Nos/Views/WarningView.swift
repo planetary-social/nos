@@ -51,20 +51,20 @@ struct OutOfNetworkView: View {
                 Spacer() // pushes content to the center
                 
                 if self.isOverlayHelpTextBoxShown {
-                    Localized.outsideNetworkExplanation.view
+                    Text(.localizable.outsideNetworkExplanation)
                         .font(.body)
                         .foregroundColor(.primaryTxt)
                         .padding(.horizontal, 24)
                         .fixedSize(horizontal: false, vertical: true)
                 } else {
-                    Localized.outsideNetwork.view
+                    Text(.localizable.outsideNetwork)
                         .font(.body)
                         .foregroundColor(.primaryTxt)
                         .padding(.horizontal, 24)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 
-                SecondaryActionButton(title: Localized.viewThisPostAnyway) {
+                SecondaryActionButton(title: .localizable.viewThisPostAnyway) {
                     withAnimation {
                         controller.userHidWarning = true
                     }
@@ -110,7 +110,7 @@ struct OverlayContentReportView: View {
                 
                 // TextBox or Image based on isTextBoxShown
                 if self.isOverlayHelpTextBoxShown {
-                    Localized.contentWarningExplanation.view
+                    Text(.localizable.contentWarningExplanation)
                         .font(.body)
                         .foregroundColor(.secondaryTxt)
                         .padding(.horizontal, 24)
@@ -128,7 +128,7 @@ struct OverlayContentReportView: View {
                         ContentWarningMessage(reports: controller.noteReports, type: "note")
                     }
                 }
-                SecondaryActionButton(title: Localized.viewThisPostAnyway) {
+                SecondaryActionButton(title: .localizable.viewThisPostAnyway) {
                     withAnimation {
                         controller.userHidWarning = true
                     }
@@ -157,13 +157,13 @@ struct ContentWarningMessage: View {
     // Assuming there's a property or method 'safeName' in 'Author' that safely returns the author's name.
     private var firstAuthorSafeName: String {
         // Getting the safe name of the first author. Adjust according to your actual data structure.
-        reports.first?.author?.safeName ?? "Unknown Author"
+        reports.first?.author?.safeName ?? String(localized: .localizable.unknownAuthor)
     }
     
     private var reason: String {
         // Extract content from reports and remove empty content
-        let contents = reports.compactMap { (($0.content?.isEmpty) != nil) ? nil : $0.content }
-        
+        let contents = reports.compactMap { $0.content }.filter({ !$0.isEmpty })
+
         // Convert set of unique reasons to array and remove any empty reasons
         let reasons = uniqueReasons.filter { !$0.isEmpty }
         
@@ -211,35 +211,56 @@ struct ContentWarningMessage: View {
         return Set(reasons)
     }
     
-    var body: some View {
+    var message: LocalizedStringResource {
         if type == "author" {
-            Text( Localized.userHasBeen )
-                .font(.body)
-                .foregroundColor(.primaryTxt)
+            if authorNames.count > 1 {
+                return .localizable.userReportedByOneAndMore(firstAuthorSafeName, authorNames.count - 1, reason)
+            } else {
+                return .localizable.userReportedByOne(firstAuthorSafeName, reason)
+            }
         } else if type == "note" {
-            Text( Localized.noteHasBeen )
-                .font(.body)
-                .foregroundColor(.primaryTxt)
-        }
-        if authorNames.count > 1 {
-            Text(Localized.reportedByOneAndMore.localizedMarkdown([
-                "one": firstAuthorSafeName,
-                "count": "\(authorNames.count - 1)"
-            ]))
-            .font(.body)  // Adjust font and style as needed
-            .foregroundColor(.primary)
-            .padding(.leading, 25)  // Adjust padding as needed
-        } else {
-            Text(Localized.reportedByOne.localizedMarkdown([
-                "one": firstAuthorSafeName
-            ]))
-            .font(.body)  // Adjust font and style as needed
-            .foregroundColor(.secondaryTxt)
-            .padding(.leading, 25)  // Adjust padding as needed
+            if authorNames.count > 1 {
+                return .localizable.noteReportedByOneAndMore(firstAuthorSafeName, authorNames.count - 1, reason)
+            } else {
+                return .localizable.noteReportedByOne(firstAuthorSafeName, reason)
+            }
         }
         
-        Text( Localized.reportedFor.localizedMarkdown(["reason": reason]) )
+        return .localizable.error
+    }
+    
+    var body: some View {
+        Text(message)
             .font(.body)
             .foregroundColor(.primaryTxt)
+            .padding(.horizontal, 25)
     }
+}
+
+#Preview {
+    var previewData = PreviewData()
+    
+    return VStack {
+        ContentWarningMessage(reports: [previewData.shortNoteReportOne], type: "author")
+        ContentWarningMessage(reports: [previewData.shortNoteReportOne, previewData.shortNoteReportTwo], type: "author")
+        ContentWarningMessage(
+            reports: [
+                previewData.shortNoteReportOne,
+                previewData.shortNoteReportTwo,
+                previewData.shortNoteReportThree
+            ],
+            type: "author"
+        )
+        ContentWarningMessage(reports: [previewData.shortNoteReportOne], type: "note")
+        ContentWarningMessage(reports: [previewData.shortNoteReportOne, previewData.shortNoteReportTwo], type: "note")
+        ContentWarningMessage(
+            reports: [
+                previewData.shortNoteReportOne,
+                previewData.shortNoteReportTwo,
+                previewData.shortNoteReportThree
+            ],
+            type: "note"
+        )
+    }
+    .inject(previewData: previewData)
 }

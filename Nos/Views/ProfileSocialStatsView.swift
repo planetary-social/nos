@@ -28,7 +28,7 @@ struct ProfileSocialStatsView: View {
                         )
                     )
                 } label: {
-                    tab(label: .following, value: author.follows.count)
+                    tab(label: .localizable.following, value: author.follows.count)
                 }
                 Spacer(minLength: 0)
             }
@@ -42,7 +42,7 @@ struct ProfileSocialStatsView: View {
                         )
                     )
                 } label: {
-                    tab(label: .followersYouKnow, value: author.followers.count)
+                    tab(label: .localizable.followersYouKnow, value: author.followers.count)
                 }
                 Spacer(minLength: 0)
             }
@@ -56,7 +56,7 @@ struct ProfileSocialStatsView: View {
                         )
                     )
                 } label: {
-                    tab(label: .relays, value: author.relays.count)
+                    tab(label: .localizable.relays, value: author.relays.count)
                 }
                 Spacer(minLength: 0)
             }
@@ -65,12 +65,12 @@ struct ProfileSocialStatsView: View {
         .padding(.vertical)
     }
 
-    private func tab(label: Localized, value: Int) -> some View {
+    private func tab(label: LocalizedStringResource, value: Int) -> some View {
         VStack {
             PlainText("\(value)")
                 .font(.title)
                 .foregroundColor(.primaryTxt)
-            PlainText(label.string.lowercased())
+            PlainText(String(localized: label).lowercased())
                 .font(.subheadline)
                 .dynamicTypeSize(...DynamicTypeSize.xLarge)
                 .foregroundColor(.secondaryTxt)

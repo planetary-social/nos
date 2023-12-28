@@ -24,7 +24,7 @@ struct UNSErrorView: View {
                         .padding(40)
                         .padding(.top, 50)
                     
-                    PlainText(.oops)
+                    PlainText(.localizable.oops)
                         .font(.clarityTitle)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
@@ -32,14 +32,14 @@ struct UNSErrorView: View {
                         .padding(.top, 20)
                         .padding(.bottom, 3)
                     
-                    PlainText(.anErrorOccurred)
+                    PlainText(.localizable.anErrorOccurred)
                         .font(.clarityTitle)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
                         .padding(.bottom, 20)
                     
-                    Text(.tryAgainOrContactSupport)
+                    Text(.localizable.tryAgainOrContactSupport)
                         .fontWeight(.medium)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.secondaryTxt)
@@ -51,7 +51,7 @@ struct UNSErrorView: View {
                 
                 Spacer()
                 
-                BigActionButton(title: .goBack) {
+                BigActionButton(title: .localizable.goBack) {
                     if api.accessToken != nil {
                         do { 
                             try await controller.navigateToChooseOrRegisterName()

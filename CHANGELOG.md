@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Migrate to Apple-native string catalog and codegen LocalizedStringResources with xcstrings-tool-plugin.
+- Discover screen can now search notes by id.
+- Added pagination to Profile screens.
+
+## [0.1 (128)] - 2023-12-21Z
+
+- Fixed a crash when opening the note composer.
+- Fix localization of warning message when a note has been reported. (thanks @L!)
+- Fixed contact list hydration bug where unfollows are not removed when follow counts do not change.
+
 ## [0.1 (101)] - 2023-12-15Z
 
 - Fixed a bug where reposts wouldn't be displayed in the stories.

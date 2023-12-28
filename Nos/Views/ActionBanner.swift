@@ -10,9 +10,9 @@ import SwiftUI
 /// A large colorful banner with a message and action button.
 struct ActionBanner: View {
     
-    var messageText: Localized
-    var buttonText: Localized
-    var buttonImage: Image? 
+    var messageText: LocalizedStringResource
+    var buttonText: LocalizedStringResource
+    var buttonImage: Image?
     var inForm = false
     var action: () -> Void
     
@@ -32,7 +32,7 @@ struct ActionBanner: View {
             
             VStack {
                 HStack {
-                    messageText.view
+                    Text(messageText)
                         .padding(.top, 8)
                         .padding(.bottom, 12)
                         .foregroundColor(.white)
@@ -92,8 +92,8 @@ struct ActionBanner_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             ActionBanner(
-                messageText: .completeProfileMessage, 
-                buttonText: .completeProfileButton
+                messageText: .localizable.completeProfileMessage,
+                buttonText: .localizable.completeProfileButton
             ) {}
                 .padding(20)
         }

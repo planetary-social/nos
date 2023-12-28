@@ -151,15 +151,17 @@ enum AuthorError: Error {
         return fetchRequest
     }
     
-    @nonobjc func allPostsRequest() -> NSFetchRequest<Event> {
+    @nonobjc func allPostsRequest(before: Date = .now) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@", 
+            format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@ AND author.muted = 0 AND " +
+                "deletedOn.@count = 0 AND createdAt <= %@", 
             EventKind.text.rawValue, 
             EventKind.repost.rawValue, 
             EventKind.longFormContent.rawValue, 
-            self
+            self,
+            before as CVarArg
         )
         return fetchRequest
     }
@@ -186,7 +188,7 @@ enum AuthorError: Error {
         ").@count = 0)"
         let onlyPostsRepostsAndLongFormsClause = "(\(onlyRootPostsClause) OR $event.kind = 6 OR $event.kind = 30023)"
         let onlyAuthorsWithStoriesClause = "SUBQUERY(events, $event, \(onlyPostsRepostsAndLongFormsClause) " +
-            "AND \(onlyRecentStoriesClause)).@count > 0"
+            "AND \(onlyRecentStoriesClause) AND \(onlyUnreadStoriesClause)).@count > 0"
 
         return NSPredicate(
             format: "\(onlyFollowedAuthorsClause) AND \(onlyAuthorsWithStoriesClause)",
