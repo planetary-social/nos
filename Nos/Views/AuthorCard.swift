@@ -39,7 +39,7 @@ struct AuthorCard: View {
                                 .multilineTextAlignment(.leading)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             if author.muted {
-                                Text(Localized.muted.string)
+                                Text(.localizable.muted)
                                     .font(.subheadline)
                                     .foregroundColor(Color.secondaryTxt)
                             }

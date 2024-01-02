@@ -16,7 +16,7 @@ import Dependencies
 /// The button opens the ThreadView for the note when tapped.
 struct NoteButton: View {
 
-    @ObservedObject var note: Event
+    var note: Event
     var style = CardStyle.compact
     var showFullMessage = false
     var hideOutOfNetwork = true
@@ -31,8 +31,6 @@ struct NoteButton: View {
     @EnvironmentObject private var relayService: RelayService
     @Dependency(\.persistenceController) private var persistenceController
     
-    @State private var subscriptionIDs = [RelaySubscription.ID]()
-
     init(
         note: Event, 
         style: CardStyle = CardStyle.compact, 
@@ -75,7 +73,7 @@ struct NoteButton: View {
                     HStack(alignment: .center) {
                         AuthorLabel(author: author)
                         Image.repostSymbol
-                        if let elapsedTime = repost.createdAt?.distanceString() {
+                        if let elapsedTime = note.createdAt?.distanceString() {
                             Text(elapsedTime)
                                 .lineLimit(1)
                                 .font(.body)
@@ -85,21 +83,6 @@ struct NoteButton: View {
                     }
                     .padding(.horizontal)
                     .readabilityPadding()
-                    .onAppear {
-                        Task(priority: .userInitiated) {
-                            await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
-                                noteID: note.identifier,
-                                using: relayService,
-                                in: persistenceController.backgroundViewContext
-                            )
-                        }
-                    }
-                    .onDisappear {
-                        Task(priority: .userInitiated) {
-                            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-                            subscriptionIDs.removeAll()
-                        }
-                    }
                 })
             }
             

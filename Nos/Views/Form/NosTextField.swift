@@ -10,7 +10,7 @@ import SwiftUINavigation
 
 struct NosTextField: View {
     
-    var label: Localized
+    var label: LocalizedStringResource
     @Binding var text: String
     @FocusState private var focus: Bool
     
@@ -27,9 +27,9 @@ struct NosTextField: View {
 struct NosTextField_Previews: PreviewProvider {
     static var previews: some View {
         NosForm {
-            NosFormSection(label: .profilePicture) {
+            NosFormSection(label: .localizable.profilePicture) {
                 WithState(initialValue: "Alice") { text in
-                    NosTextField(label: .url, text: text)
+                    NosTextField(label: .localizable.url, text: text)
                 }    
             }   
         }

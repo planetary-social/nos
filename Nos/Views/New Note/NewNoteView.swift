@@ -45,7 +45,7 @@ struct NewNoteView: View {
                 VStack {
                     NoteTextEditor(
                         text: $text, 
-                        placeholder: Localized.newNotePlaceholder, 
+                        placeholder: .localizable.newNotePlaceholder,
                         focus: $isTextEditorInFocus
                     )
                     .padding(10)
@@ -56,7 +56,7 @@ struct NewNoteView: View {
                 if showRelayPicker, let author = currentUser.author {
                     RelayPicker(
                         selectedRelay: $selectedRelay,
-                        defaultSelection: Localized.allMyRelays.string,
+                        defaultSelection: String(localized: .localizable.allMyRelays),
                         author: author,
                         isPresented: $showRelayPicker
                     )
@@ -68,14 +68,14 @@ struct NewNoteView: View {
                 }
             }
             .background(Color.appBg)
-            .navigationBarTitle(Localized.newNote.string, displayMode: .inline)
+            .navigationBarTitle(String(localized: .localizable.newNote), displayMode: .inline)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
             .toolbar {
                 RelayPickerToolbarButton(
                     selectedRelay: $selectedRelay,
                     isPresenting: $showRelayPicker,
-                    defaultSelection: Localized.allMyRelays
+                    defaultSelection: .localizable.allMyRelays
                 ) {
                     withAnimation {
                         showRelayPicker.toggle()
@@ -87,10 +87,10 @@ struct NewNoteView: View {
                     isPresented = false
                 }
                 label: {
-                    Localized.cancel.view
+                    Text(.localizable.cancel)
                         .foregroundColor(.secondaryTxt)
                 },
-                trailing: ActionButton(title: Localized.post, action: postAction)
+                trailing: ActionButton(title: .localizable.post, action: postAction)
                     .frame(height: 22)
                     .disabled(text.string.isEmpty)
                     .padding(.bottom, 3)
@@ -109,18 +109,18 @@ struct NewNoteView: View {
     private func postAction() async {
         guard currentUser.keyPair != nil, let author = currentUser.author else {
             alert = AlertState(title: {
-                TextState(Localized.error.string)
+                TextState(String(localized: .localizable.error))
             }, message: {
-                TextState(Localized.youNeedToEnterAPrivateKeyBeforePosting.string)
+                TextState(String(localized: .localizable.youNeedToEnterAPrivateKeyBeforePosting))
             })
             return
         }
         if let relay = selectedRelay {
             guard expirationTime == nil || relay.supportedNIPs?.contains(40) == true else {
                 alert = AlertState(title: {
-                    TextState(Localized.error.string)
+                    TextState(String(localized: .localizable.error))
                 }, message: {
-                    TextState(Localized.relayDoesNotSupportNIP40.string)
+                    TextState(String(localized: .localizable.relayDoesNotSupportNIP40))
                 })
                 return
             }
@@ -129,15 +129,15 @@ struct NewNoteView: View {
                 let relays = try await Relay.find(supporting: 40, for: author, context: viewContext)
                 if relays.isEmpty {
                     alert = AlertState(title: {
-                        TextState(Localized.error.string)
+                        TextState(String(localized: .localizable.error))
                     }, message: {
-                        TextState(Localized.anyRelaysSupportingNIP40.string)
+                        TextState(String(localized: .localizable.anyRelaysSupportingNIP40))
                     })
                     return
                 }
             } catch {
                 alert = AlertState(title: {
-                    TextState(Localized.error.string)
+                    TextState(String(localized: .localizable.error))
                 }, message: {
                     TextState(error.localizedDescription)
                 })

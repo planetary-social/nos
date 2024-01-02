@@ -15,7 +15,7 @@ struct WalletConnectSendView: View {
     var body: some View {
         VStack {
             HStack {
-                PlainText(.sendUSBC)
+                PlainText(.localizable.sendUSBC)
                     .font(.clarityTitle)
                     .foregroundColor(.primaryTxt)
                     .multilineTextAlignment(.leading)
@@ -24,7 +24,7 @@ struct WalletConnectSendView: View {
             }
             
             HStack {
-                PlainText(.sendTo)
+                PlainText(.localizable.sendTo)
                     .font(.callout)
                     .foregroundColor(.secondaryTxt)
                     .padding(.vertical, 8)
@@ -59,7 +59,7 @@ struct WalletConnectSendView: View {
             )
             
             HStack {
-                PlainText(.amount)
+                PlainText(.localizable.amount)
                     .font(.callout)
                     .foregroundColor(.secondaryTxt)
                     .padding(.top, 16)
@@ -86,7 +86,7 @@ struct WalletConnectSendView: View {
                 .toolbar {
                     ToolbarItemGroup(placement: .keyboard) {
                         Spacer()
-                        Button(Localized.done.string) {
+                        Button(String(localized: .localizable.done)) {
                             hideKeyboard()
                         }
                     }
@@ -108,7 +108,7 @@ struct WalletConnectSendView: View {
             
             Spacer()
             
-            BigActionButton(title: .sendUSBC) { 
+            BigActionButton(title: .localizable.sendUSBC) { 
                 await submit()
             }
             
@@ -118,9 +118,9 @@ struct WalletConnectSendView: View {
                     Task { await controller.reconnect() }
                 }, label: {
                     HighlightedText(
-                        text: .reconnectWallet, 
-                        highlightedWord: Localized.reconnectWallet.string, 
-                        highlight: .verticalAccent, 
+                        text: .localizable.reconnectWallet, 
+                        highlightedWord: String(localized: .localizable.reconnectWallet),
+                        highlight: .verticalAccent,
                         link: nil
                     )
                 })

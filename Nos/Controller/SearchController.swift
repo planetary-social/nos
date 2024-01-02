@@ -25,7 +25,7 @@ class SearchController: ObservableObject {
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.unsAPI) var unsAPI
     private var cancellables = [AnyCancellable]()
-    private var searchSubscriptions = [RelaySubscription.ID]()
+    private var searchSubscriptions = SubscriptionCancellables()
     private lazy var context: NSManagedObjectContext = {
         persistenceController.viewContext
     }()
@@ -47,8 +47,7 @@ class SearchController: ObservableObject {
                 // These functions search other systems for the given query and add relevant authors to the database. 
                 // The database then generates a notification which is listened to above and resulst are reloaded.
                 Task { 
-                    await self.relayService.decrementSubscriptionCount(for: self.searchSubscriptions)
-                    self.searchSubscriptions = []
+                    self.searchSubscriptions.removeAll()
                     self.searchRelays(for: query)
                     self.searchUNS(for: query)
                 }
@@ -71,7 +70,7 @@ class SearchController: ObservableObject {
     func searchRelays(for query: String) {
         Task {
             let searchFilter = Filter(kinds: [.metaData], search: query, limit: 100)
-            self.searchSubscriptions.append(await self.relayService.openSubscription(with: searchFilter))
+            self.searchSubscriptions.append(await self.relayService.subscribeToEvents(matching: searchFilter))
         }
     }
     
@@ -89,9 +88,7 @@ class SearchController: ObservableObject {
                 try self.context.saveIfNeeded()
                 for pubKey in pubKeys {
                     try Task.checkCancellation()
-                    if let subscriptionID = await relayService.requestMetadata(for: pubKey, since: nil) {
-                        searchSubscriptions.append(subscriptionID)
-                    }
+                    searchSubscriptions.append(await relayService.requestMetadata(for: pubKey, since: nil))
                 }
             } catch {
                 Log.optional(error)

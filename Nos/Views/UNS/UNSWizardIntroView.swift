@@ -18,14 +18,14 @@ struct UNSWizardIntroView: View {
                 .padding(40)
                 .padding(.top, 50)
             
-            PlainText(.unsRegister)
+            PlainText(.localizable.unsRegister)
                 .font(.clarityTitle)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.primaryTxt)
                 .readabilityPadding()
                 .shadow(radius: 1, y: 1)
             
-            Text(.unsRegisterDescription)
+            Text(.localizable.unsRegisterDescription)
                 .fontWeight(.medium)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondaryTxt)
@@ -37,7 +37,7 @@ struct UNSWizardIntroView: View {
             Button { 
                 UIApplication.shared.open(URL(string: "https://universalname.space")!)
             } label: { 
-                Text(.unsLearnMore)
+                Text(.localizable.unsLearnMore)
                     .foregroundStyle(LinearGradient.horizontalAccent)
                     .fontWeight(.medium)
                     .multilineTextAlignment(.center)
@@ -46,7 +46,7 @@ struct UNSWizardIntroView: View {
             
             Spacer()
             
-            BigActionButton(title: .start) {
+            BigActionButton(title: .localizable.start) {
                 controller.state = .enterPhone
             }
             .padding(.bottom, 41)

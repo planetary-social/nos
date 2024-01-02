@@ -45,7 +45,7 @@ struct AuthorListView: View {
             }
         }
         .background(Color.appBg)
-        .nosNavigationBar(title: .mention)
+        .nosNavigationBar(title: .localizable.mention)
         .onChange(of: searchTextObserver.debouncedText) { _, newValue in
             search(for: newValue)
         }
@@ -61,7 +61,7 @@ struct AuthorListView: View {
                 Button(action: {
                     isPresented = false
                 }, label: {
-                    Localized.cancel.view
+                    Text(.localizable.cancel)
                         .foregroundColor(.primaryTxt)
                 })
             }

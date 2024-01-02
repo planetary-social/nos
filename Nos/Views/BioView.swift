@@ -77,7 +77,7 @@ struct BioView: View {
                     Button {
                         showingBio = true
                     } label: {
-                        PlainText(Localized.readMore.string.uppercased())
+                        PlainText(String(localized: .localizable.readMore).uppercased())
                             .font(.clarityCaption)
                             .foregroundColor(.secondaryTxt)
                             .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
@@ -100,7 +100,7 @@ struct BioView: View {
             NavigationView {
                 SelectableText(bio ?? "")
                     .foregroundColor(.primaryTxt)
-                    .nosNavigationBar(title: .bio)
+                    .nosNavigationBar(title: .localizable.bio)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.appBg)
                     .toolbar {

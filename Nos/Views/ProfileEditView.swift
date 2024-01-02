@@ -46,8 +46,8 @@ struct ProfileEditView: View {
                 .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
                 .padding(.top, 16)
             
-            NosFormSection(label: .profilePicture) {
-                NosTextField(label: .url, text: $avatarText)
+            NosFormSection(label: .localizable.profilePicture) {
+                NosTextField(label: .localizable.url, text: $avatarText)
                     #if os(iOS)
                     .keyboardType(.URL)
                     #endif
@@ -55,8 +55,8 @@ struct ProfileEditView: View {
             
             HStack {
                 HighlightedText(
-                    text: .uploadProfilePicInstructions,
-                    highlightedWord: "nostr.build", 
+                    text: .localizable.uploadProfilePicInstructions,
+                    highlightedWord: "nostr.build",
                     highlight: .diagonalAccent, 
                     font: .clarityCaption,
                     link: URL(string: "https://nostr.build")!
@@ -65,17 +65,17 @@ struct ProfileEditView: View {
             }
             .padding(13)
             
-            NosFormSection(label: .basicInfo) { 
-                NosTextField(label: .name, text: $nameText)
+            NosFormSection(label: .localizable.basicInfo) {
+                NosTextField(label: .localizable.name, text: $nameText)
                 FormSeparator()
-                NosTextEditor(label: .bio, text: $bioText)
+                NosTextEditor(label: .localizable.bio, text: $bioText)
                     .frame(maxHeight: 200)
                 FormSeparator()
-                NosTextField(label: .website, text: $website)
+                NosTextField(label: .localizable.website, text: $website)
             }
             
             HStack {
-                Text(.identityVerification)
+                Text(.localizable.identityVerification)
                     .font(.clarityTitle3)
                     .fontWeight(.bold)
                     .foregroundColor(.primaryTxt)
@@ -91,14 +91,14 @@ struct ProfileEditView: View {
             .padding(13)
             
             NosFormSection(label: nil) { 
-                NosTextField(label: .universalName, text: $unsText)
-                NosTextField(label: .nip05, text: $nip05Text)
+                NosTextField(label: .localizable.universalName, text: $unsText)
+                NosTextField(label: .localizable.nip05, text: $nip05Text)
             }
             
             HStack {
                 HighlightedText(
-                    text: .nip05LearnMore,
-                    highlightedWord: Localized.learnMore.string, 
+                    text: .localizable.nip05LearnMore,
+                    highlightedWord: String(localized: .localizable.learnMore), 
                     highlight: .diagonalAccent, 
                     font: .clarityCaption,
                     link: URL(string: "https://nostr.how/en/guides/get-verified")!
@@ -120,15 +120,15 @@ struct ProfileEditView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
-        .nosNavigationBar(title: .profileTitle)
+        .nosNavigationBar(title: .localizable.profileTitle)
         .navigationBarBackButtonHidden()
         .navigationBarItems(
-            leading: Button(Localized.cancel.string, action: { 
+            leading: Button(String(localized: .localizable.cancel), action: { 
                 router.pop()
             }),
             trailing:
-                ActionButton(title: .done) {
-                    await save() 
+                ActionButton(title: .localizable.done) {
+                    await save()
                     // Go back to profile page
                     router.pop()
                 }

@@ -19,7 +19,7 @@ struct FollowButton: View {
     
     var body: some View {
         let following = currentUser.isFollowing(author: author)
-        ActionButton(title: following ? .unfollow : .follow) {
+        ActionButton(title: following ? .localizable.unfollow : .localizable.follow) {
             do {
                 if following {
                     try await currentUser.unfollow(author: author)
