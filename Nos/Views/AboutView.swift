@@ -17,7 +17,7 @@ struct AboutView: View {
                     .frame(width: 235.45, height: 67.1)
                     .padding(.top, 155)
                     .padding(.bottom, 10)
-                PlainText(Localized.onboardingTitle.string)
+                PlainText(.localizable.onboardingTitle)
                     .font(.custom("ClarityCity-Bold", size: 25.21))
                     .fontWeight(.heavy)
                     .foregroundStyle(
@@ -34,22 +34,22 @@ struct AboutView: View {
                 
                 VStack {
                     HighlightedText(
-                        Localized.aboutNos.string,
-                        highlightedWord: Localized.aboutNosHighlight.string,
+                        String(localized: .localizable.aboutNos),
+                        highlightedWord: String(localized: .localizable.aboutNosHighlight),
                         highlight: .diagonalAccent,
                         link: URL(string: "https://nos.social")
                     )
                     .padding(.vertical, 10)
                     HighlightedText(
-                        Localized.aboutNostr.string,
-                        highlightedWord: Localized.aboutNostrHighlight.string,
+                        String(localized: .localizable.aboutNostr),
+                        highlightedWord: String(localized: .localizable.aboutNostrHighlight),
                         highlight: .diagonalAccent,
                         link: URL(string: "https://nostr.how")
                     )
                     .padding(.vertical, 10)
                     HighlightedText(
-                        Localized.nosIsOpenSource.string,
-                        highlightedWord: Localized.nosIsOpenSourceHighlight.string,
+                        String(localized: .localizable.nosIsOpenSource),
+                        highlightedWord: String(localized: .localizable.nosIsOpenSourceHighlight),
                         highlight: .diagonalAccent,
                         link: URL(string: "https://github.com/planetary-social/nos")
                     )
@@ -63,7 +63,7 @@ struct AboutView: View {
             .padding(.horizontal, 20)
             .frame(maxWidth: .infinity)
         }
-        .nosNavigationBar(title: .about)
+        .nosNavigationBar(title: .localizable.about)
         .background(Color.appBg)
     }
 }

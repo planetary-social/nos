@@ -9,14 +9,14 @@ import SwiftUI
 
 struct NosNavigationBarModifier: ViewModifier {
     
-    var title: Localized
-    
+    var title: LocalizedStringResource
+
     func body(content: Content) -> some View {
         content
-            .navigationBarTitle(title.string, displayMode: .inline)
+            .navigationBarTitle(String(localized: title), displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    PlainText(title.string)
+                    PlainText(title)
                         .font(.clarityTitle3)
                         .foregroundColor(.primaryTxt)
                         .padding(.leading, 14)
@@ -28,7 +28,7 @@ struct NosNavigationBarModifier: ViewModifier {
 }
 
 extension View {
-    func nosNavigationBar(title: Localized) -> some View {
+    func nosNavigationBar(title: LocalizedStringResource) -> some View {
         self.modifier(NosNavigationBarModifier(title: title))
     }
 }
@@ -44,7 +44,7 @@ struct NosNavigationBar_Previews: PreviewProvider {
             }
             .frame(maxWidth: .infinity)
             .background(Color.appBg)
-            .nosNavigationBar(title: .homeFeed)
+            .nosNavigationBar(title: .localizable.homeFeed)
         }
     }
 }

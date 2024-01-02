@@ -87,7 +87,7 @@ enum CurrentUserError: Error {
     var socialGraph: SocialGraphCache!
     // swiftlint:enable implicitly_unwrapped_optional
     
-    var subscriptions: [String] = []
+    var subscriptions = SubscriptionCancellables()
 
     var editing = false
 
@@ -122,7 +122,6 @@ enum CurrentUserError: Error {
     // Reset CurrentUser state
     @MainActor func reset() {
         onboardingRelays = []
-        Task { await relayService.decrementSubscriptionCount(for: subscriptions) }
         subscriptions = []
         setUp()
     }
@@ -187,15 +186,12 @@ enum CurrentUserError: Error {
         }
        
         // Close out stale requests
-        if !subscriptions.isEmpty {
-            await relayService.decrementSubscriptionCount(for: subscriptions)
-            subscriptions.removeAll()
-        }
+        subscriptions.removeAll()
         
         // Subscribe to our own events of all kinds.
         let latestRecievedEvent = try? viewContext.fetch(Event.lastReceived(for: author)).first
         let allEventsFilter = Filter(authorKeys: [key], since: latestRecievedEvent?.receivedAt)
-        subscriptions.append(await relayService.openSubscription(with: allEventsFilter))
+        subscriptions.append(await relayService.subscribeToEvents(matching: allEventsFilter))
         
         // Always make a one time request for the latest contact list
         let contactFilter = Filter(
@@ -204,7 +200,7 @@ enum CurrentUserError: Error {
             limit: 2, // small hack to make sure this filter doesn't get closed for being stale
             since: author.lastUpdatedContactList
         )
-        subscriptions.append(await relayService.openSubscription(with: contactFilter))
+        subscriptions.append(await relayService.subscribeToEvents(matching: contactFilter))
         
         // Listen for notifications
         await pushNotificationService.listen(for: self)
@@ -250,7 +246,7 @@ enum CurrentUserError: Error {
                     limit: 1,
                     since: lastUpdatedMetadata
                 )
-                _ = await self?.relayService.openSubscription(with: metaFilter)
+                _ = await self?.relayService.subscribeToEvents(matching: metaFilter)
                 
                 let contactFilter = Filter(
                     authorKeys: [followedKey],
@@ -258,7 +254,7 @@ enum CurrentUserError: Error {
                     limit: 1,
                     since: lastUpdatedContactList
                 )
-                _ = await self?.relayService.openSubscription(with: contactFilter)
+                _ = await self?.relayService.subscribeToEvents(matching: contactFilter)
                 
                 // Do this slowly so we don't get rate limited
                 try await Task.sleep(for: .seconds(5))

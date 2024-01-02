@@ -73,12 +73,12 @@ struct RawEventView<ViewModel>: View where ViewModel: RawEventViewModel {
                 }
             }
         }
-        .nosNavigationBar(title: .eventSource)
+        .nosNavigationBar(title: .localizable.eventSource)
         .disabled(showProgress)
         .overlay(loadingIndicator)
         .alert(isPresented: showAlert) {
             Alert(
-                title: Localized.error.view,
+                title: Text(.localizable.error),
                 message: Text(viewModel.errorMessage ?? "")
             )
         }

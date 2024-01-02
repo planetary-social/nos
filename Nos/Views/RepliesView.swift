@@ -26,7 +26,7 @@ struct RepliesView: View {
     
     @State private var alert: AlertState<Never>?
     
-    @State private var subscriptionIDs = [String]()
+    @State private var relaySubscriptions = SubscriptionCancellables()
     
     @FocusState private var focusTextView: Bool
     @State private var showKeyboardOnAppear: Bool
@@ -80,15 +80,12 @@ struct RepliesView: View {
     func subscribeToReplies() {
         Task(priority: .userInitiated) {
             // Close out stale requests
-            if !subscriptionIDs.isEmpty {
-                await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-                subscriptionIDs.removeAll()
-            }
+            relaySubscriptions.removeAll()
             
             let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
             let filter = Filter(kinds: [.text, .like, .delete, .repost, .report, .label], eTags: eTags)
-            let subID = await relayService.openSubscription(with: filter)
-            subscriptionIDs.append(subID)
+            let subIDs = await relayService.subscribeToEvents(matching: filter)
+            relaySubscriptions.append(subIDs)
             
             // download reports for this user and the replies' authors
             guard let authorKey = note.author?.hexadecimalPublicKey else {
@@ -96,7 +93,7 @@ struct RepliesView: View {
             }
             let pTags = Array(Set([authorKey] + replies.compactMap { $0.author?.hexadecimalPublicKey }))
             let reportFilter = Filter(kinds: [.report], pTags: pTags)
-            subscriptionIDs.append(await relayService.openSubscription(with: reportFilter))
+            relaySubscriptions.append(await relayService.subscribeToEvents(matching: reportFilter))
         }
     }
     
@@ -124,7 +121,7 @@ struct RepliesView: View {
                     .padding(.bottom)
                 }
                 .padding(.top, 1)
-                .nosNavigationBar(title: .thread)
+                .nosNavigationBar(title: .localizable.thread)
                 .onAppear {
                     subscribeToReplies()
                 }
@@ -132,10 +129,7 @@ struct RepliesView: View {
                     subscribeToReplies()
                 }
                 .onDisappear {
-                    Task(priority: .userInitiated) {
-                        await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-                        subscriptionIDs.removeAll()
-                    }
+                    relaySubscriptions.removeAll()
                 }
                 VStack {
                     Spacer()
@@ -145,7 +139,7 @@ struct RepliesView: View {
                                 AvatarView(imageUrl: author.profilePhotoURL, size: 35)
                             }
                             ExpandingTextFieldAndSubmitButton(
-                                placeholder: Localized.Reply.postAReply,
+                                placeholder: .reply.postAReply,
                                 reply: $reply,
                                 focus: $focusTextView
                             ) {
@@ -170,7 +164,7 @@ struct RepliesView: View {
                         Button(action: {
                             focusTextView = false
                         }, label: {
-                            Localized.cancel.view
+                            Text(.localizable.cancel)
                                 .foregroundColor(.primaryTxt)
                         })
                     }
@@ -206,9 +200,9 @@ struct RepliesView: View {
 
             guard let keyPair = currentUser.keyPair else {
                 alert = AlertState(title: {
-                    TextState(Localized.error.string)
+                    TextState(String(localized: .localizable.error))
                 }, message: {
-                    TextState(Localized.youNeedToEnterAPrivateKeyBeforePosting.string)
+                    TextState(String(localized: .localizable.youNeedToEnterAPrivateKeyBeforePosting))
                 })
                 return
             }
@@ -239,7 +233,7 @@ struct RepliesView: View {
             try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
         } catch {
             alert = AlertState(title: {
-                TextState(Localized.error.string)
+                TextState(String(localized: .localizable.error))
             }, message: {
                 TextState(error.localizedDescription)
             })

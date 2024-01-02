@@ -22,4 +22,8 @@ actor ParseQueue {
         events.removeFirst(min(events.count, count))
         return poppedEvents
     }
+    
+    var count: Int {
+        events.count
+    }
 }

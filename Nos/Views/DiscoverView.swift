@@ -26,7 +26,7 @@ struct DiscoverView: View {
     
     @State private var performingInitialLoad = true
     static let initialLoadTime = 2
-    @State private var subscriptionIDs = [String]()
+    @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var isVisible = false
     private var featuredAuthors: [String]
     
@@ -61,9 +61,8 @@ struct DiscoverView: View {
                 limit: 200
             )
             
-            subscriptionIDs.append(
-                // TODO: I don't think the override relays will be honored when opening new sockets
-                await relayService.openSubscription(with: singleRelayFilter, to: [relayAddress])
+            relaySubscriptions.append(
+                await relayService.subscribeToEvents(matching: singleRelayFilter, from: [relayAddress])
             )
         } else {
             let featuredFilter = Filter(
@@ -74,15 +73,12 @@ struct DiscoverView: View {
                 limit: 200
             )
             
-            subscriptionIDs.append(await relayService.openSubscription(with: featuredFilter))
+            relaySubscriptions.append(await relayService.subscribeToEvents(matching: featuredFilter))
         }
     }
     
     func cancelSubscriptions() async {
-        if !subscriptionIDs.isEmpty {
-            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-            subscriptionIDs.removeAll()
-        }
+        relaySubscriptions.removeAll()
     }
     
     var body: some View {
@@ -99,7 +95,7 @@ struct DiscoverView: View {
                     if showRelayPicker, let author = currentUser.author {
                         RelayPicker(
                             selectedRelay: $relayFilter,
-                            defaultSelection: Localized.allMyRelays.string,
+                            defaultSelection: String(localized: .localizable.allMyRelays),
                             author: author,
                             isPresented: $showRelayPicker
                         )
@@ -109,7 +105,7 @@ struct DiscoverView: View {
             .searchable(
                 text: $searchController.query, 
                 placement: .toolbar, 
-                prompt: PlainText(Localized.searchBar.string)
+                prompt: PlainText(.localizable.searchBar)
             )
             .autocorrectionDisabled()
             .onSubmit(of: .search) {
@@ -120,7 +116,7 @@ struct DiscoverView: View {
                 RelayPickerToolbarButton(
                     selectedRelay: $relayFilter,
                     isPresenting: $showRelayPicker,
-                    defaultSelection: Localized.allMyRelays
+                    defaultSelection: .localizable.allMyRelays
                 ) {
                     withAnimation {
                         showRelayPicker.toggle()
@@ -187,7 +183,7 @@ struct DiscoverView: View {
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
             }
-            .navigationBarTitle(Localized.discover.string, displayMode: .inline)
+            .navigationBarTitle(String(localized: .localizable.discover), displayMode: .inline)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
             .navigationBarItems(leading: SideMenuButton())
@@ -207,7 +203,21 @@ struct DiscoverView: View {
         try? viewContext.saveIfNeeded()
         return author
     }
-    
+
+    func note(fromPublicKey publicKeyString: String) -> Event? {
+        let strippedString = publicKeyString.trimmingCharacters(
+            in: NSCharacterSet.whitespacesAndNewlines
+        )
+        guard let publicKey = PublicKey(note: strippedString) ?? PublicKey(note: strippedString) else {
+            return nil
+        }
+        guard let note = try? Event.findOrCreateStubBy(id: publicKey.hex, context: viewContext) else {
+            return nil
+        }
+        try? viewContext.saveIfNeeded()
+        return note
+    }
+
     func submitSearch() {
         if searchController.query.contains("@") {
             Task(priority: .userInitiated) {
@@ -223,6 +233,8 @@ struct DiscoverView: View {
         } else {
             if let author = author(fromPublicKey: searchController.query) {
                 router.push(author)
+            } else if let note = note(fromPublicKey: searchController.query) {
+                router.push(note)
             }
         }
     }

@@ -8,6 +8,6 @@
 
 import Foundation
 
-enum LoadingContent<Content> {
+enum LoadingContent<Content: Equatable>: Equatable {
     case loading, loaded(Content)
 }

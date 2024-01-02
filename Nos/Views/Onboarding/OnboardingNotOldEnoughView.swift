@@ -12,7 +12,7 @@ struct OnboardingNotOldEnoughView: View {
     
     var body: some View {
         VStack {
-            PlainText(Localized.notOldEnoughTitle.string)
+            PlainText(.localizable.notOldEnoughTitle)
                 .font(.custom("ClarityCity-Bold", size: 34, relativeTo: .largeTitle))
                 .foregroundStyle(
                     LinearGradient(
@@ -29,12 +29,12 @@ struct OnboardingNotOldEnoughView: View {
                 .padding(.top, 92)
                 .padding(.bottom, 20)
                 .padding(.horizontal, 45)
-            Text(Localized.notOldEnoughSubtitle.string)
+            Text(.localizable.notOldEnoughSubtitle)
                 .foregroundColor(.secondaryTxt)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 45)
             Spacer()
-            BigActionButton(title: .notOldEnoughButton) {
+            BigActionButton(title: .localizable.notOldEnoughButton) {
                 state.step = .onboardingStart
             }
             .padding(.horizontal, 24)

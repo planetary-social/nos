@@ -55,9 +55,9 @@ struct ComposerActionBar: View {
                             print("error uploading: \(error)")
                             
                             alert = AlertState(title: {
-                                Localized.ImagePicker.errorUploadingFile.textState
+                                TextState(String(localized: .imagePicker.errorUploadingFile))
                             }, message: {
-                                Localized.ImagePicker.errorUploadingFileMessage.textState
+                                TextState(String(localized: .imagePicker.errorUploadingFileMessage))
                             })
                         }
                     }
@@ -67,7 +67,7 @@ struct ComposerActionBar: View {
                         .frame(minWidth: 44, minHeight: 44)
                 }
                 .padding(.leading, 8)
-                .accessibilityLabel(Localized.attachMedia.view)
+                .accessibilityLabel(Text(.localizable.attachMedia))
                 
                 // Expiration Time
                 if let expirationTime, let option = ExpirationTimeOption(rawValue: expirationTime) {
@@ -80,7 +80,7 @@ struct ComposerActionBar: View {
                             self.expirationTime = $0 ? option.timeInterval : nil
                         })
                     )
-                    .accessibilityLabel(Localized.expirationDate.view)
+                    .accessibilityLabel(Text(.localizable.expirationDate))
                     .padding(12)
                 } else {
                     Button {
@@ -95,7 +95,7 @@ struct ComposerActionBar: View {
                 backArrow
                 ScrollView(.horizontal) {
                     HStack {
-                        PlainText(Localized.noteDisappearsIn.string)
+                        PlainText(.localizable.noteDisappearsIn)
                             .font(.clarityCaption)
                             .foregroundColor(.secondaryTxt)
                             .transition(.move(edge: .trailing))
@@ -111,7 +111,7 @@ struct ComposerActionBar: View {
         .sheet(isPresented: $uploadingImage) {
             FullscreenProgressView(
                 isPresented: .constant(true), 
-                text: Localized.ImagePicker.uploading.string
+                text: String(localized: .imagePicker.uploading)
             )
         }
         .animation(.easeInOut(duration: 0.2), value: subMenu)

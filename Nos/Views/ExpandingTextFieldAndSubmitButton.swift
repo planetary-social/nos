@@ -12,7 +12,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
 
     @Environment(\.managedObjectContext) private var viewContext
 
-    var placeholder: any Localizable
+    var placeholder: LocalizedStringResource
     @Binding var reply: EditableNoteText
     var focus: FocusState<Bool>.Binding
     var action: () async -> Void
@@ -40,7 +40,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
                         }
                     },
                     label: {
-                        Localized.post.view
+                        Text(.localizable.post)
                     }
                 )
                 .disabled(disabled)
@@ -67,8 +67,8 @@ struct ExpandingTextFieldAndSubmitButton_Previews: PreviewProvider {
             VStack {
                 HStack(spacing: 10) {
                     ExpandingTextFieldAndSubmitButton(
-                        placeholder: Localized.Reply.postAReply, 
-                        reply: $reply, 
+                        placeholder: .reply.postAReply,
+                        reply: $reply,
                         focus: $isFocused,
                         action: {}
                     )

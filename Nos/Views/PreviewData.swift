@@ -55,7 +55,7 @@ struct PreviewData {
     }()
     
     lazy var bob: Author = {
-        let author = Author(context: previewContext)
+        let author = try! Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.bob.publicKeyHex
         author.name = "Bob"
         author.profilePhotoURL = URL(string: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.r1ZOH5E3M6WiK6aw5GRdlAHaEK%26pid%3DApi&f=1&ipt=42ae9de7730da3bda152c5980cd64b14ccef37d8f55b8791e41b4667fc38ddf1&ipo=images")
@@ -272,7 +272,7 @@ struct PreviewData {
         let note = Event(context: previewContext)
         note.identifier = "r1"
         note.kind = EventKind.report.rawValue
-        note.content = ""
+        note.content = "impersonation"
         note.author = bob
         note.createdAt = .now
         
@@ -289,7 +289,7 @@ struct PreviewData {
         let note = Event(context: previewContext)
         note.identifier = "r2"
         note.kind = EventKind.report.rawValue
-        note.content = ""
+        note.content = "harrassment"
         note.author = eve
         note.createdAt = .now
         
@@ -298,6 +298,23 @@ struct PreviewData {
         reference.referencedEvent = shortNote
         note.insertIntoEventReferences(reference, at: 0)
         
+        try? previewContext.save()
+        return note
+    }()
+
+    lazy var shortNoteReportThree: Event = {
+        let note = Event(context: previewContext)
+        note.identifier = "r3"
+        note.kind = EventKind.report.rawValue
+        note.content = "spam"
+        note.author = alice
+        note.createdAt = .now
+
+        let reference = EventReference(context: previewContext)
+        reference.eventId = "1"
+        reference.referencedEvent = shortNote
+        note.insertIntoEventReferences(reference, at: 0)
+
         try? previewContext.save()
         return note
     }()
