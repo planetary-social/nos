@@ -66,7 +66,6 @@ struct NoteButton: View {
     var body: some View {
         VStack {
             if note.kind == EventKind.repost.rawValue, let author = note.author {
-                let repost = note
                 Button(action: { 
                     router.push(author)
                 }, label: { 
