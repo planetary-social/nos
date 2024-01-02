@@ -92,6 +92,11 @@ platform :ios do
 
   desc "Mark a deployed commit as a beta"
   lane :beta do
+    app_store_connect_api_key(
+      key_id: asc_key_id,
+      issuer_id: asc_issuer_id,
+      key_content: asc_key_content
+    )
     version_number = get_version_number(
       xcodeproj: "Nos.xcodeproj",
       target: "Nos"
