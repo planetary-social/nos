@@ -107,6 +107,7 @@ platform :ios do
     })
     changelog = read_changelog
     stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
+    add_git_tag(tag: "v#{version_number}-#{build_number}")
     git_commit(message: "TestFlight beta deployment", path: "*")
     push_to_git_remote
   end
