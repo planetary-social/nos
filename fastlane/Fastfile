@@ -92,22 +92,9 @@ platform :ios do
 
   desc "Mark a deployed commit as a beta"
   lane :beta do
-    app_store_connect_api_key(
-      key_id: asc_key_id,
-      issuer_id: asc_issuer_id,
-      key_content: asc_key_content
-    )
-    version_number = get_version_number(
-      xcodeproj: "Nos.xcodeproj",
-      target: "Nos"
-    )
-    build_number = latest_testflight_build_number + 1
-    increment_build_number({
-      build_number: build_number
-    })
     changelog = read_changelog
     stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
-    add_git_tag(tag: "v#{version_number}-#{build_number}")
+    dev
     git_commit(message: "TestFlight beta deployment", path: "*")
     push_to_git_remote
   end
