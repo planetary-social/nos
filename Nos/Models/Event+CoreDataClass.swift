@@ -284,8 +284,8 @@ public class Event: NosManagedObject {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
             format: "author.hexadecimalPublicKey = %@ AND " +
-            "SUBQUERY(shouldBePublishedTo, $relay, TRUEPREDICATE).@count != " +
-            "SUBQUERY(seenOnRelays, $relay, TRUEPREDICATE).@count AND " +
+            "SUBQUERY(shouldBePublishedTo, $relay, TRUEPREDICATE).@count > " +
+            "SUBQUERY(publishedTo, $relay, TRUEPREDICATE).@count AND " +
             "deletedOn.@count = 0",
             user.hexadecimalPublicKey ?? ""
         )
