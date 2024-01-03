@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a bug that prevented notes that failed to be published to be re-published again.
 - Migrate to Apple-native string catalog and codegen LocalizedStringResources with xcstrings-tool-plugin.
 - Discover screen can now search notes by id.
 - Added pagination to Profile screens.
