@@ -12506,25 +12506,31 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Dieser Benutzer wurde von **%1$@** für %2$@ gemeldet."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This user has been reported by **%1$@** for %2$@."
+            "value" : "**%1$@** has been reported by **%2$@** for %3$@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**%2$@** publiqué un reportaje sobre **%1$@** por %3$@."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "此用户因 %2$@ 被 **%1$@** 举报。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "此用戶因 %2$@ 被 **%1$@** 舉報。"
           }
         }
@@ -12544,7 +12550,7 @@
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "translated",
+                  "state" : "needs_review",
                   "value" : "Dieser Benutzer wurde von **%1$@** und **%2$lld anderen** für %3$@ gemeldet."
                 }
               }
@@ -12557,13 +12563,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "This user has been reported by **%1$@** and **%2$lld other** for %3$@."
+                  "value" : "**%1$@** has been reported by **%2$@** and **%3$lld other** for %4$@."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "This user has been reported by **%1$@** and **%2$lld others** for %3$@."
+                  "value" : "**%1$@** has been reported by **%2$@** and **%3$lld others** for %4$@."
                 }
               }
             }
@@ -12574,7 +12580,7 @@
             "plural" : {
               "other" : {
                 "stringUnit" : {
-                  "state" : "translated",
+                  "state" : "needs_review",
                   "value" : "此用户因 %3$@ 被 **%1$@** 和 **%2$lld 个其他用户** 举报。"
                 }
               }
@@ -12586,7 +12592,7 @@
             "plural" : {
               "other" : {
                 "stringUnit" : {
-                  "state" : "translated",
+                  "state" : "needs_review",
                   "value" : "此用戶因 %3$@ 被 **%1$@** 和 **%2$lld 個其他用戶** 舉報。"
                 }
               }

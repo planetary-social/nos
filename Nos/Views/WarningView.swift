@@ -123,7 +123,11 @@ struct OverlayContentReportView: View {
                         .frame(width: 48, height: 48) // Set the width and height to 48
                         .padding(.bottom, 20)
                     if controller.authorReports.count > 0 {
-                        ContentWarningMessage(reports: controller.authorReports, type: "author")
+                        ContentWarningMessage(
+                            reports: controller.authorReports,
+                            type: "author",
+                            target: controller.note?.author
+                        )
                     } else if controller.noteReports.count > 0 {
                         ContentWarningMessage(reports: controller.noteReports, type: "note")
                     }
@@ -147,6 +151,7 @@ struct OverlayContentReportView: View {
 struct ContentWarningMessage: View {
     var reports: [Event]
     var type: String
+    var target: Author?
     
     // Assuming each 'Event' has an 'Author' and we can get an array of 'Author' names
     private var authorNames: [String] {
@@ -158,6 +163,10 @@ struct ContentWarningMessage: View {
     private var firstAuthorSafeName: String {
         // Getting the safe name of the first author. Adjust according to your actual data structure.
         reports.first?.author?.safeName ?? String(localized: .localizable.unknownAuthor)
+    }
+    
+    private var targetSafeName: String {
+        target?.safeName ?? ""
     }
     
     private var reason: String {
@@ -214,9 +223,9 @@ struct ContentWarningMessage: View {
     var message: LocalizedStringResource {
         if type == "author" {
             if authorNames.count > 1 {
-                return .localizable.userReportedByOneAndMore(firstAuthorSafeName, authorNames.count - 1, reason)
+                return .localizable.userReportedByOneAndMore(targetSafeName, firstAuthorSafeName, authorNames.count - 1, reason)
             } else {
-                return .localizable.userReportedByOne(firstAuthorSafeName, reason)
+                return .localizable.userReportedByOne(targetSafeName, firstAuthorSafeName, reason)
             }
         } else if type == "note" {
             if authorNames.count > 1 {
