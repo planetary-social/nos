@@ -17,28 +17,16 @@ struct ProfileKnownFollowersView: View {
             if let second = knownFollowers[safe: 1]?.source {
                 StackedAvatarsView(avatarUrls: [first.profilePhotoURL, second.profilePhotoURL])
                 if followers.count > 2 {
-                    Text(Localized.followedByTwoAndMore.localizedMarkdown([
-                        "one": first.safeName,
-                        "two": second.safeName,
-                        "count": "\(followers.count - 2)"
-                    ]))
+                    Text(.localizable.followedByTwoAndMore(first.safeName, second.safeName, followers.count - 2))
                 } else {
-                    Text(Localized.followedByTwo.localizedMarkdown([
-                        "one": first.safeName,
-                        "two": second.safeName
-                    ]))
+                    Text(.localizable.followedByTwo(first.safeName, second.safeName))
                 }
             } else {
                 StackedAvatarsView(avatarUrls: [first.profilePhotoURL])
                 if followers.count > 1 {
-                    Text(Localized.followedByOneAndMore.localizedMarkdown([
-                        "one": first.safeName,
-                        "count": "\(followers.count - 1)"
-                    ]))
+                    Text(.localizable.followedByOneAndMore(first.safeName, followers.count - 1))
                 } else {
-                    Text(Localized.followedByOne.localizedMarkdown([
-                        "one": first.safeName
-                    ]))
+                    Text(.localizable.followedByOne(first.safeName))
                 }
             }
         }

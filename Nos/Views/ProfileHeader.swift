@@ -16,8 +16,6 @@ struct ProfileHeader: View {
     @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) private var currentUser
 
-    @State private var subscriptionId: String = ""
-    
     var followsRequest: FetchRequest<Follow>
     var followsResult: FetchedResults<Follow> { followsRequest.wrappedValue }
 
@@ -90,7 +88,7 @@ struct ProfileHeader: View {
                             HStack {
                                 FollowButton(currentUserAuthor: currentUser, author: author)
                                 if author.muted {
-                                    Text(Localized.muted.string)
+                                    Text(.localizable.muted)
                                         .font(.subheadline)
                                         .foregroundColor(Color.secondaryTxt)
                                 }
@@ -144,12 +142,6 @@ struct ProfileHeader: View {
                 endPoint: .bottom
             )
         )
-        .onDisappear {
-            Task(priority: .userInitiated) {
-                await relayService.decrementSubscriptionCount(for: subscriptionId)
-                subscriptionId = ""
-            }
-        }
     }
 }
 

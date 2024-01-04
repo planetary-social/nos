@@ -43,13 +43,12 @@ enum EventProcessor {
             if skipVerification == false {
                 guard try publicKey.verifySignature(on: event) else {
                     parseContext.delete(event)
-                    Log.info("Invalid signature on event: \(jsonEvent)")
+                    Log.info("Invalid signature on event: \(jsonEvent) from \(relay?.address ?? "error")")
                     throw EventError.invalidSignature(event)
                 }
                 event.isVerified = true
             }
             
-            Log.debug("EventProcessor: parsed a new event")
             return event
             
         // Verify that this event has been marked seen on the given relay.
@@ -58,11 +57,9 @@ enum EventProcessor {
             let event = Event.find(by: jsonEvent.id, context: parseContext) {
             event.markSeen(on: relay)
             try event.trackDelete(on: relay, context: parseContext)
-            Log.debug("EventProcessor: marked an existing event seen")
-            return event
+            return nil
         }
         
-        Log.debug("EventProcessor: skipping a duplicate event")
         return nil
     }
     

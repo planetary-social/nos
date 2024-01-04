@@ -36,9 +36,9 @@ enum ReportTarget {
     var displayString: String {
         switch self {
         case .note:
-            return Localized.note.string
+            return String(localized: .localizable.note)
         case .author:
-            return Localized.profile.string
+            return String(localized: .localizable.profile)
         }
     }
     

@@ -69,9 +69,9 @@ struct RelayPickerRow: View {
     
     var title: String {
         if let relay {
-            return relay.host ?? Localized.error.string
+            return relay.host ?? String(localized: .localizable.error)
         } else {
-            return defaultSelection ?? Localized.error.string
+            return defaultSelection ?? String(localized: .localizable.error)
         }
     }
     
@@ -140,7 +140,7 @@ struct RelayPicker_Previews: PreviewProvider {
     static var previews: some View {
         RelayPicker(
             selectedRelay: $selectedRelay,
-            defaultSelection: Localized.allMyRelays.string,
+            defaultSelection: String(localized: .localizable.allMyRelays),
             author: user,
             isPresented: .constant(true)
         )

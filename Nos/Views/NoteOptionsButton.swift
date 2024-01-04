@@ -16,7 +16,7 @@ struct NoteOptionsButton: View {
     @Dependency(\.analytics) private var analytics
     @Dependency(\.persistenceController) private var persistenceController
     
-    var note: Event
+    @ObservedObject var note: Event
 
     @State private var showingOptions = false
     @State private var showingShare = false
@@ -35,47 +35,49 @@ struct NoteOptionsButton: View {
                     // This hack fixes a weird issue where the confirmationDialog wouldn't be shown sometimes. ¯\_(ツ)_/¯
                     .background(showingOptions == true ? .clear : .clear)
             }
-            .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
-                Button(Localized.copyNoteIdentifier.string) {
+            .confirmationDialog(String(localized: .localizable.share), isPresented: $showingOptions) {
+                Button(String(localized: .localizable.copyNoteIdentifier)) {
                     analytics.copiedNoteIdentifier()
                     copyMessageIdentifier()
                 }
-                Button(Localized.copyNoteText.string) {
-                    analytics.copiedNoteText()
-                    copyMessage()
-                }
-                Button(Localized.copyLink.string) {
+                Button(String(localized: .localizable.copyLink)) {
                     analytics.copiedNoteLink()
                     copyLink()
                 }
-                Button(Localized.viewSource.string) {
-                    analytics.viewedNoteSource()
-                    showingSource = true
-                }
-                Button(Localized.reportNote.string, role: .destructive) {
-                    showingReportMenu = true
+                if !note.isStub {
+                    Button(String(localized: .localizable.copyNoteText)) {
+                        analytics.copiedNoteText()
+                        copyMessage()
+                    }
+                    Button(String(localized: .localizable.viewSource)) {
+                        analytics.viewedNoteSource()
+                        showingSource = true
+                    }
+                    Button(String(localized: .localizable.reportNote), role: .destructive) {
+                        showingReportMenu = true
+                    }
                 }
                 if note.author == currentUser.author {
-                    Button(Localized.deleteNote.string, role: .destructive) {
+                    Button(String(localized: .localizable.deleteNote), role: .destructive) {
                         confirmDelete = true
                     }
                 }
             }
             .reportMenu($showingReportMenu, reportedObject: .note(note))
             .alert(
-                Localized.confirmReport.string,
+                String(localized: .localizable.confirmReport),
                 isPresented: $confirmDelete,
                 actions: {
-                    Button(Localized.confirm.string, role: .destructive) {
+                    Button(String(localized: .localizable.confirm), role: .destructive) {
                         analytics.deletedNote()
                         Task { await deletePost() }
                     }
-                    Button(Localized.cancel.string, role: .cancel) {
+                    Button(String(localized: .localizable.cancel), role: .cancel) {
                         confirmDelete = false
                     }
                 },
                 message: {
-                    Localized.deleteNoteConfirmation.view
+                    Text(.localizable.deleteNoteConfirmation)
                 }
             )
             .sheet(isPresented: $showingSource) {

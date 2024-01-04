@@ -56,7 +56,7 @@ struct StoriesView: View {
             .tabViewStyle(.page(indexDisplayMode: .never))
         }
         .background(LinearGradient.storiesBackground)
-        .nosNavigationBar(title: .stories)
+        .nosNavigationBar(title: .localizable.stories)
         .readabilityPadding()
         .task(id: selectedAuthorInStories) {
             guard previousSelectedAuthorInStories != selectedAuthorInStories else {

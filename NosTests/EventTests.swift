@@ -117,7 +117,6 @@ final class EventTests: XCTestCase {
         let sampleEventID = "f41e430f632b1e747da7efbb0ce11616876851e2fa3bbac440101c1b8a091152"
         let repostedEventID = "f82507f7c770a39d0eabf276ced34fbd6a172be869bd3a3231c9c0272f405008"
         let repostedEventContents = "#kraftwerk https://v.nostr.build/lx7e.mp4 "
-        let testContext = persistenceController.container.viewContext
         
         // Act
         let events = try EventProcessor.parse(jsonData: sampleData, from: nil, in: persistenceController)

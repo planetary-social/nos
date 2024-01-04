@@ -22,7 +22,7 @@ struct WalletConnectErrorView: View {
             }
             
             HStack {
-                PlainText(.somethingWentWrong)
+                PlainText(.localizable.somethingWentWrong)
                     .font(.clarityTitle)
                     .foregroundColor(.primaryTxt)
                     .multilineTextAlignment(.leading)
@@ -31,7 +31,7 @@ struct WalletConnectErrorView: View {
             }
             
             HStack {
-                PlainText("\(error.localizedDescription). \(Localized.tryAgainOrContactSupport.string)")
+                PlainText("\(error.localizedDescription). \(String(localized: .localizable.tryAgainOrContactSupport))")
                     .font(.callout)
                     .foregroundColor(.secondaryTxt)
                 Spacer()
@@ -39,7 +39,7 @@ struct WalletConnectErrorView: View {
             
             Spacer()
             
-            BigActionButton(title: .startOver) { 
+            BigActionButton(title: .localizable.startOver) { 
                 controller.startOver()
             }
         }

@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CocoaLumberjack/CocoaLumberjack.git",
       "state" : {
-        "revision" : "67ec5818a757aba4d7c534e21a905d878d128dbf",
-        "version" : "3.8.1"
+        "revision" : "363ed23d19a931809ea834a7d722da830353806a",
+        "version" : "3.8.2"
       }
     },
     {
@@ -295,6 +295,15 @@
       "state" : {
         "revision" : "53fe0639a98903858d0196b699720decb42aee7b",
         "version" : "2.14.0"
+      }
+    },
+    {
+      "identity" : "xcstrings-tool-plugin",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/liamnichols/xcstrings-tool-plugin.git",
+      "state" : {
+        "revision" : "cc6bd92b9f1a76d380327ea7c555cab9e7867a8c",
+        "version" : "0.1.1"
       }
     },
     {

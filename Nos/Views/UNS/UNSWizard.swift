@@ -68,7 +68,7 @@ struct UNSWizard: View {
             }
         }
         .background(Color.appBg)
-        .nosNavigationBar(title: .setUpUNS)
+        .nosNavigationBar(title: .localizable.setUpUNS)
     }
 }
 

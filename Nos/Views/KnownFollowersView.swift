@@ -44,29 +44,28 @@ struct KnownFollowersView: View {
             guard let name = knownFollowers[safe: 0]?.source?.safeName else {
                 fallthrough
             }
-            return Localized.followedByOne.localizedMarkdown([
-                "one": "*\(name)*"
-            ])
+            return LocalizedStringKey(String(localized: LocalizedStringResource.localizable.followedByOne(name)))
         case 2:
             guard let firstName = knownFollowers[safe: 0]?.source?.safeName,
                 let secondName = knownFollowers[safe: 1]?.source?.safeName else {
                 fallthrough
             }
-            return Localized.followedByTwo.localizedMarkdown([
-                "one": "*\(firstName)*",
-                "two": "*\(secondName)*"
-            ])
+            return LocalizedStringKey(
+                String(localized: LocalizedStringResource.localizable.followedByTwo(firstName, secondName))
+            )
         case 3:
             guard let firstName = knownFollowers[safe: 0]?.source?.safeName,
                 let secondName = knownFollowers[safe: 1]?.source?.safeName else {
                 fallthrough
             }
-            return Localized.followedByTwoAndMore.localizedMarkdown([
-                "one": "\(firstName)",
-                "two": "\(secondName)",
-                "count": "\(followers.count - 2)"
-            ])
-        default: 
+            return LocalizedStringKey(
+                String(
+                    localized: LocalizedStringResource.localizable.followedByTwoAndMore(
+                        firstName, secondName, followers.count - 2
+                    )
+                )
+            )
+        default:
             return ""
         }
     }

@@ -67,7 +67,7 @@ import Logger
     }
 
     private func loadRawMessage() {
-        loadingMessage = Localized.loading.string
+        loadingMessage = String(localized: .localizable.loading)
         Task { [note, weak self] in
             var rawMessage: String
             let errorMessage = note.content ?? "error"

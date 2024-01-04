@@ -25,7 +25,7 @@ struct FollowsView: View {
     @EnvironmentObject var router: Router
 
     /// Screen title
-    var title: Localized
+    var title: LocalizedStringResource
 
     /// Sorted list of authors to display in the list
     var authors: [Author]

@@ -17,7 +17,7 @@ struct NotificationCard: View {
     @Dependency(\.persistenceController) private var persistenceController
     
     @ObservedObject private var viewModel: NotificationViewModel
-    @State private var subscriptionIDs = [RelaySubscription.ID]()
+    @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var content: AttributedString?
     
     init(viewModel: NotificationViewModel) {
@@ -85,19 +85,14 @@ struct NotificationCard: View {
         .onAppear {
             Task(priority: .userInitiated) {
                 let backgroundContext = persistenceController.backgroundViewContext
-                await subscriptionIDs += Event.requestAuthorsMetadataIfNeeded(
+                await relaySubscriptions.append(Event.requestAuthorsMetadataIfNeeded(
                     noteID: viewModel.id,
                     using: relayService,
                     in: backgroundContext
-                )
+                ))
             }
         }
-        .onDisappear {
-            Task(priority: .userInitiated) {
-                await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-                subscriptionIDs.removeAll()
-            }
-        }
+        .onDisappear { relaySubscriptions.removeAll() }
         .task(priority: .userInitiated) {
             self.content = await viewModel.loadContent(in: persistenceController.viewContext)
         }
