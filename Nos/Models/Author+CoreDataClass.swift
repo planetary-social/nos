@@ -151,7 +151,6 @@ enum AuthorError: Error {
         return fetchRequest
     }
     
-
     @nonobjc func feedPredicate(before: Date) -> NSPredicate {
         NSPredicate(
             format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@ AND author.muted = 0 AND " +
