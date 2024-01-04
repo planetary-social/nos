@@ -29,8 +29,14 @@ import Combine
     
     /// The number of unread notifications that should be displayed as a badge
     @Published var badgeCount = 0
-    
+
     private let notificationCutoffKey = "PushNotificationService.notificationCutoff"
+
+    /// Used to limit which notifications are displayed to the user as push notifications.
+    /// 
+    /// When the user first opens the app it is initialized to Date.now.
+    /// This is to prevent us showing tons of push notifications on first login.
+    /// Then after that it is set to the date of the last notification that we showed.
     var notificationCutoff: Date {
         get {
             let unixTimestamp = userDefaults.double(forKey: notificationCutoffKey)
@@ -190,9 +196,10 @@ import Combine
         
         let viewModel: NotificationViewModel? = await modelContext.perform { () -> NotificationViewModel? in
             guard let event = Event.find(by: eventID, context: self.modelContext),
-                let coreDataNotification = try? NosNotification.createIfNecessary(
-                    from: eventID, 
-                    date: event.createdAt,
+                  let eventCreated = event.createdAt,
+                  let coreDataNotification = try? NosNotification.createIfNecessary(
+                    from: eventID,
+                    date: eventCreated,
                     authorKey: authorKey,
                     in: self.modelContext
                 ) else {

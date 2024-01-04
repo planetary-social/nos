@@ -15,12 +15,12 @@ import CoreData
 public class NosNotification: NSManagedObject {
 
     class func createIfNecessary(
-        from eventID: HexadecimalString, 
-        date: Date?,
+        from eventID: HexadecimalString,
+        date: Date,
         authorKey: HexadecimalString,
         in context: NSManagedObjectContext
     ) throws -> NosNotification? {
-        guard let date, date > cutoffDate() else {
+        guard date > cutoffDate() else {
             return nil
         }
         let author = try Author.findOrCreate(by: authorKey, context: context)
@@ -73,12 +73,13 @@ public class NosNotification: NSManagedObject {
 
     static func oldNotificationsRequest() -> NSFetchRequest<NosNotification> {
         let fetchRequest = NSFetchRequest<NosNotification>(entityName: "NosNotification")
-        let since = cutoffDate()
+        let since = staleNotificationCutoff()
         fetchRequest.predicate = NSPredicate(format: "createdAt == nil OR createdAt < %@", since as CVarArg)
         return fetchRequest
     }
 
-    static func cutoffDate() -> Date {
+    /// Two months before Date.now, and is used to delete old notifications from the db.
+    static func staleNotificationCutoff() -> Date {
         Calendar.current.date(byAdding: .month, value: -2, to: .now) ?? .now
     }
 }
