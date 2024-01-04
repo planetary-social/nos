@@ -19,7 +19,7 @@ struct OnboardingTermsOfServiceView: View {
     
     var body: some View {
         VStack {
-            PlainText(Localized.termsOfServiceTitle.string)
+            PlainText(.localizable.termsOfServiceTitle)
                 .font(.custom("ClarityCity-Bold", size: 34, relativeTo: .largeTitle))
                 .foregroundStyle(
                     LinearGradient(
@@ -52,11 +52,11 @@ struct OnboardingTermsOfServiceView: View {
             )
             .padding(.horizontal, 44.5)
             HStack {
-                BigActionButton(title: Localized.reject) {
+                BigActionButton(title: .localizable.reject) {
                     state.step = .onboardingStart
                 }
                 Spacer(minLength: 15)
-                BigActionButton(title: Localized.accept) {
+                BigActionButton(title: .localizable.accept) {
                     switch state.flow {
                     case .createAccount:
                         do {

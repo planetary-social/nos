@@ -23,14 +23,14 @@ struct UNSWizardNeedsPaymentView: View {
                 .padding(40)
                 .padding(.top, 50)
             
-            PlainText(.premiumName)
+            PlainText(.localizable.premiumName)
                 .font(.clarityTitle)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.primaryTxt)
                 .readabilityPadding()
                 .shadow(radius: 1, y: 1)
             
-            Text(hasOpenedPortal ? .returnToChooseName : .premiumNameDescription)
+            Text(hasOpenedPortal ? .localizable.returnToChooseName : .localizable.premiumNameDescription)
                 .fontWeight(.medium)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondaryTxt)
@@ -46,8 +46,8 @@ struct UNSWizardNeedsPaymentView: View {
                         controller.state = .chooseName
                     } label: { 
                         HighlightedText(
-                            text: .goBackAndRegister, 
-                            highlightedWord: Localized.registerADifferentName.string, 
+                            text: .localizable.goBackAndRegister, 
+                            highlightedWord: String(localized: .localizable.registerADifferentName), 
                             highlight: LinearGradient(colors: [.primaryTxt], startPoint: .top, endPoint: .bottom), 
                             textColor: .secondaryTxt,
                             font: .clarityMedium,
@@ -58,14 +58,14 @@ struct UNSWizardNeedsPaymentView: View {
                     }
                     .padding(.vertical, 20)
                     
-                    BigActionButton(title: .registerPremiumName, backgroundGradient: .gold) {
+                    BigActionButton(title: .localizable.registerPremiumName, backgroundGradient: .gold) {
                         await UIApplication.shared.open(url)
                         hasOpenedPortal = true
                     }
                     .padding(.bottom, 41)
                 }
             } else {
-                BigActionButton(title: .next) {
+                BigActionButton(title: .localizable.next) {
                     do {
                         try await controller.navigateToChooseOrRegisterName()
                     } catch {

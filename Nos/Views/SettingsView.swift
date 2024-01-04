@@ -44,10 +44,10 @@ struct SettingsView: View {
         Form {
             Section {
                 HStack {
-                    SecureField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
+                    SecureField(String(localized: .localizable.privateKeyPlaceholder), text: $privateKeyString)
                         .foregroundColor(.primaryTxt)
                     
-                    SecondaryActionButton(title: Localized.save) {
+                    SecondaryActionButton(title: .localizable.save) {
                         if privateKeyString.isEmpty {
                             await logout()
                         } else if let keyPair = KeyPair(nsec: privateKeyString) {
@@ -57,39 +57,39 @@ struct SettingsView: View {
                         } else {
                             await currentUser.setKeyPair(nil)
                             alert = AlertState(title: {
-                                Localized.invalidKey.textState
+                                TextState(String(localized: .localizable.invalidKey))
                             }, message: {
-                                Localized.couldNotReadPrivateKeyMessage.textState
+                                TextState(String(localized: .localizable.couldNotReadPrivateKeyMessage))
                             })
                         }
                     }
                     .padding(.vertical, 5)
 
-                    SecondaryActionButton(title: Localized.copy) {
+                    SecondaryActionButton(title: .localizable.copy) {
                         UIPasteboard.general.string = privateKeyString
                     }
                     .padding(.vertical, 5)
                 }
                 
-                ActionButton(title: Localized.logout) {
+                ActionButton(title: .localizable.logout) {
                     alert = AlertState(
-                        title: { Localized.logout.textState }, 
+                        title: { TextState(String(localized: .localizable.logout)) },
                         actions: {
                             ButtonState(role: .destructive, action: .send(.logout)) {
-                                Localized.myKeyIsBackedUp.textState
+                                TextState(String(localized: .localizable.myKeyIsBackedUp))
                             }
                         },
-                        message: { Localized.backUpYourKeyWarning.textState }
+                        message: { TextState(String(localized: .localizable.backUpYourKeyWarning)) }
                     )
                 }        
                 .padding(.vertical, 5)
             } header: {
                 VStack(alignment: .leading, spacing: 10) {
-                    Localized.privateKey.view
+                    Text(.localizable.privateKey)
                         .foregroundColor(.primaryTxt)
                         .bold()
                     
-                    Localized.privateKeyWarning.view
+                    Text(.localizable.privateKeyWarning)
                         .foregroundColor(.secondaryTxt)
                 }
                 .textCase(nil)
@@ -104,7 +104,7 @@ struct SettingsView: View {
             Section {
                 VStack {
                     Toggle(isOn: $showReportWarnings) { 
-                        Text(.useReportsFromFollows)
+                        Text(.localizable.useReportsFromFollows)
                             .foregroundColor(.primaryTxt)
                     }
                     .onChange(of: showReportWarnings) { _, newValue in
@@ -112,7 +112,7 @@ struct SettingsView: View {
                     }
                     
                     HStack {
-                        PlainText(.useReportsFromFollowsDescription)
+                        PlainText(.localizable.useReportsFromFollowsDescription)
                             .foregroundColor(.secondaryTxt)
                             .font(.clarityCallout)
                         Spacer()
@@ -121,7 +121,7 @@ struct SettingsView: View {
                 
                 VStack {
                     Toggle(isOn: $showOutOfNetworkWarning) { 
-                        Text(.showOutOfNetworkWarnings)
+                        Text(.localizable.showOutOfNetworkWarnings)
                             .foregroundColor(.primaryTxt)
                     }
                     .onChange(of: showOutOfNetworkWarning) { _, newValue in
@@ -129,14 +129,14 @@ struct SettingsView: View {
                     }
                     
                     HStack {
-                        PlainText(.showOutOfNetworkWarningsDescription)
+                        PlainText(.localizable.showOutOfNetworkWarningsDescription)
                             .foregroundColor(.secondaryTxt)
                             .font(.clarityCallout)
                         Spacer()
                     }
                 }
             } header: {
-                Localized.feedSettings.view
+                Text(.localizable.feedSettings)
                     .foregroundColor(.primaryTxt)
                     .fontWeight(.heavy)
                     .bold()
@@ -155,18 +155,18 @@ struct SettingsView: View {
             
             Section {
                 HStack {
-                    Text("\(Localized.appVersion.string) \(Bundle.current.versionAndBuild)")
+                    Text("\(String(localized: .localizable.appVersion)) \(Bundle.current.versionAndBuild)")
                         .foregroundColor(.primaryTxt)
                     Spacer()
-                    SecondaryActionButton(title: Localized.shareLogs) {
+                    SecondaryActionButton(title: .localizable.shareLogs) {
                         Task {
                             do {
                                 logFileURL = try await LogHelper.zipLogs()
                             } catch {
                                 alert = AlertState(title: {
-                                    Localized.error.textState
+                                    TextState(String(localized: .localizable.error))
                                 }, message: {
-                                    Localized.failedToExportLogs.textState
+                                    TextState(String(localized: .localizable.failedToExportLogs))
                                 })
                             }
                         }
@@ -178,9 +178,9 @@ struct SettingsView: View {
                 }
 
                 #if DEBUG
-                Text(Localized.sampleDataInstructions.string)
+                Text(.localizable.sampleDataInstructions)
                     .foregroundColor(.primaryTxt)
-                Button(Localized.loadSampleData.string) {
+                Button(String(localized: .localizable.loadSampleData)) {
                     Task {
                         do {
                             try await persistenceController.loadSampleData(context: viewContext)
@@ -193,12 +193,12 @@ struct SettingsView: View {
                     NavigationLink {
                         PublishedEventsView(author: author)
                     } label: {
-                        Localized.allPublishedEvents.view
+                        Text(.localizable.allPublishedEvents)
                     }
                 }
                 #endif
             } header: {
-                Localized.debug.view
+                Text(.localizable.debug)
                     .foregroundColor(.primaryTxt)
                     .fontWeight(.heavy)
                     .bold()
@@ -213,7 +213,7 @@ struct SettingsView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
-        .nosNavigationBar(title: .settings)
+        .nosNavigationBar(title: .localizable.settings)
         .alert(unwrapping: $alert) { (action: AlertAction?) in
             if let action {
                 await alertButtonTapped(action)

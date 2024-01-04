@@ -17,8 +17,7 @@ struct ProfileHeader: View {
     @Environment(CurrentUser.self) private var currentUser
 
     @Binding private var selectedTab: ProfileHeaderTab
-    @State private var subscriptionId: String = ""
-    
+
     var followsRequest: FetchRequest<Follow>
     var followsResult: FetchedResults<Follow> { followsRequest.wrappedValue }
 
@@ -38,6 +37,9 @@ struct ProfileHeader: View {
     enum ProfileHeaderTab {
         case feed
         case posts
+        func request(author: Author) -> NSFetchRequest<Event> {
+            author.allPostsRequest(onlyRootPosts: self == .posts)
+        }
     }
 
     init(author: Author, selectedTab: Binding<ProfileHeaderTab>) {
@@ -97,7 +99,7 @@ struct ProfileHeader: View {
                             HStack {
                                 FollowButton(currentUserAuthor: currentUser, author: author)
                                 if author.muted {
-                                    Text(Localized.muted.string)
+                                    Text(.localizable.muted)
                                         .font(.subheadline)
                                         .foregroundColor(Color.secondaryTxt)
                                 }
@@ -142,22 +144,6 @@ struct ProfileHeader: View {
                 )
                 HStack {
                     Button {
-                        selectedTab = .feed
-                    } label: {
-                        HStack {
-                            Spacer()
-                            let color = selectedTab == .feed ? Color.primaryTxt : .secondaryTxt
-                            Image.profileFeed
-                                .renderingMode(.template)
-                                .foregroundColor(color)
-                            Text("Feed")
-                                .foregroundColor(color)
-                            Spacer()
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
-
-                    Button {
                         selectedTab = .posts
                     } label: {
                         HStack {
@@ -166,7 +152,23 @@ struct ProfileHeader: View {
                             Image.profilePosts
                                 .renderingMode(.template)
                                 .foregroundColor(color)
-                            Text("Posts")
+                            Text(.localizable.posts)
+                                .foregroundColor(color)
+                            Spacer()
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+
+                    Button {
+                        selectedTab = .feed
+                    } label: {
+                        HStack {
+                            Spacer()
+                            let color = selectedTab == .feed ? Color.primaryTxt : .secondaryTxt
+                            Image.profileFeed
+                                .renderingMode(.template)
+                                .foregroundColor(color)
+                            Text(.localizable.activity)
                                 .foregroundColor(color)
                             Spacer()
                         }
@@ -185,12 +187,6 @@ struct ProfileHeader: View {
                 endPoint: .bottom
             )
         )
-        .onDisappear {
-            Task(priority: .userInitiated) {
-                await relayService.decrementSubscriptionCount(for: subscriptionId)
-                subscriptionId = ""
-            }
-        }
     }
 }
 

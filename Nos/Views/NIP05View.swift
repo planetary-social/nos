@@ -45,7 +45,7 @@ struct NIP05View: View {
                     Button {
                         UIPasteboard.general.string = formattedNIP05
                     } label: {
-                        Localized.copy.view
+                        Text(.localizable.copy)
                     }
                 } preview: {
                     PlainText(formattedNIP05)

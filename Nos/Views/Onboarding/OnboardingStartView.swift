@@ -19,7 +19,7 @@ struct OnboardingStartView: View {
                 .frame(width: 235.45, height: 67.1)
                 .padding(.top, 155)
                 .padding(.bottom, 10)
-            PlainText(Localized.onboardingTitle.string)
+            PlainText(.localizable.onboardingTitle)
                 .font(.custom("ClarityCity-Bold", size: 25.21))
                 .fontWeight(.heavy)
                 .foregroundStyle(
@@ -34,13 +34,13 @@ struct OnboardingStartView: View {
                     .blendMode(.normal)
                 )
             Spacer()
-            BigActionButton(title: .tryIt) {
+            BigActionButton(title: .localizable.tryIt) {
                 state.flow = .createAccount
                 state.step = .ageVerification
             }
             .padding(.horizontal, 24)
             .padding(.bottom)
-            Button(Localized.loginWithKey.string) {
+            Button(String(localized: .localizable.loginWithKey)) {
                 state.flow = .loginToExistingAccount
                 state.step = .ageVerification
             }

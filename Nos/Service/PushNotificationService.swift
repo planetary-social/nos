@@ -62,7 +62,7 @@ import Combine
     #endif
     
     private var notificationWatcher: NSFetchedResultsController<Event>?
-    private var relaySubscription: RelaySubscription.ID?
+    private var relaySubscription: SubscriptionCancellable?
     private var currentAuthor: Author? 
     private lazy var modelContext: NSManagedObjectContext = {
         persistenceController.newBackgroundContext()
@@ -71,9 +71,7 @@ import Combine
     // MARK: - Setup
     
     func listen(for user: CurrentUser) async {
-        if let relaySubscription {
-            await relayService.decrementSubscriptionCount(for: relaySubscription)
-        }
+        relaySubscription = nil
         
         guard let author = user.author,
             let authorKey = author.hexadecimalPublicKey else {
@@ -101,7 +99,7 @@ import Combine
             pTags: [authorKey], 
             limit: 50
         )
-        relaySubscription = await relayService.openSubscription(with: userMentionsFilter)
+        relaySubscription = await relayService.subscribeToEvents(matching: userMentionsFilter)
         
         await updateBadgeCount()
     }
@@ -169,7 +167,7 @@ import Combine
         guard let publicKeyHex = currentUser.publicKeyHex else {
             throw PushNotificationError.unexpected
         }
-        let relays: [RegistrationRelayAddress] = await relayService.relays(for: user).map {
+        let relays: [RegistrationRelayAddress] = await relayService.relayAddresses(for: user).map {
             RegistrationRelayAddress(address: $0.absoluteString)
         }
         let content = Registration(

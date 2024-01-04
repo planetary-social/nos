@@ -26,7 +26,7 @@ struct SetUpUNSBanner: View {
                 .offset(y: 2)
             VStack {
                 HStack {
-                    Localized.unsTagline.view
+                    Text(.localizable.unsTagline)
                         .padding(.top, 8)
                         .padding(.bottom, 12)
                         .padding(.leading, 4)
@@ -38,7 +38,7 @@ struct SetUpUNSBanner: View {
                 
                 HStack {
                     ActionButton(
-                        title: .manageUniversalName,
+                        title: .localizable.manageUniversalName,
                         textColor: Color(hex: "#f26141"),
                         depthEffectColor: Color(hex: "#f8d4b6"),
                         backgroundGradient: LinearGradient(

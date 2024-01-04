@@ -104,7 +104,7 @@ struct UNSNamePicker: View {
                 }
                 
                 PlainTextField(text: $desiredName) {
-                    PlainText(.createNewName)
+                    PlainText(.localizable.createNewName)
                         .foregroundColor(.secondaryTxt)
                 }
                 .focused($isTextFieldFocused)

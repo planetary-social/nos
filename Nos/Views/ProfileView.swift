@@ -17,9 +17,9 @@ struct ProfileView: View {
     var addDoubleTapToPop = false
 
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) private var currentUser
     @EnvironmentObject private var router: Router
+    @Dependency(\.relayService) private var relayService: RelayService
     @Dependency(\.analytics) private var analytics
     @Dependency(\.unsAPI) private var unsAPI
     
@@ -28,64 +28,19 @@ struct ProfileView: View {
     @State private var usbcAddress: USBCAddress?
     @State private var usbcBalance: Double?
     @State private var usbcBalanceTimer: Timer?
-    
-    @State private var subscriptionIds: [String] = []
+    @State private var relaySubscriptions = SubscriptionCancellables()
 
-    @State private var selectedTab: ProfileHeader.ProfileHeaderTab = .feed
+    @State private var selectedTab: ProfileHeader.ProfileHeaderTab = .posts
 
     @State private var alert: AlertState<Never>?
-    
-    @FetchRequest
-    private var events: FetchedResults<Event>
 
-    @State private var unmutedEvents: [Event] = []
-
-    private func computeUnmutedEvents() async {
-        unmutedEvents = events.filter {
-            if let author = $0.author {
-                let notDeleted = $0.deletedOn.count == 0
-                return !author.muted && notDeleted
-            }
-            return false
-        }
-    }
-    
     var isShowingLoggedInUser: Bool {
         author.hexadecimalPublicKey == currentUser.publicKeyHex
     }
-    
+
     init(author: Author, addDoubleTapToPop: Bool = false) {
         self.author = author
         self.addDoubleTapToPop = addDoubleTapToPop
-        _events = FetchRequest(fetchRequest: author.allPostsRequest())
-    }
-    
-    func refreshProfileFeed() async {
-        // Close out stale requests
-        if !subscriptionIds.isEmpty {
-            await relayService.decrementSubscriptionCount(for: subscriptionIds)
-            subscriptionIds.removeAll()
-        }
-        
-        guard let authorKey = author.hexadecimalPublicKey else {
-            return
-        }
-        
-        let authors = [authorKey]
-        let textFilter = Filter(authorKeys: authors, kinds: [.text, .delete, .repost, .longFormContent], limit: 50)
-        async let textSub = relayService.openSubscription(with: textFilter)
-        subscriptionIds.append(await textSub)
-        subscriptionIds.append(
-            contentsOf: await relayService.requestProfileData(
-                for: authorKey, 
-                lastUpdateMetadata: author.lastUpdatedMetadata, 
-                lastUpdatedContactList: nil // always grab contact list because we purge follows aggressively
-            )
-        )
-        
-        // reports
-        let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
-        subscriptionIds.append(await relayService.openSubscription(with: reportFilter))
     }
     
     func loadUSBCBalance() async {
@@ -112,35 +67,68 @@ struct ProfileView: View {
         }
     }
     
+    func downloadAuthorData() async {
+        relaySubscriptions.removeAll()
+        
+        guard let authorKey = author.hexadecimalPublicKey else {
+            return
+        }
+        
+        // Profile data
+        relaySubscriptions.append(
+            await relayService.requestProfileData(
+                for: authorKey, 
+                lastUpdateMetadata: author.lastUpdatedMetadata, 
+                lastUpdatedContactList: nil // always grab contact list because we purge follows aggressively
+            )
+        )
+        
+        // reports
+        let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
+        relaySubscriptions.append(await relayService.subscribeToEvents(matching: reportFilter)) 
+    }
+
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView(.vertical, showsIndicators: false) {
-                ProfileHeader(author: author, selectedTab: $selectedTab)
-                    .compositingGroup()
-                    .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
-                    .id(author.id)
-
-                LazyVStack {
-                    if unmutedEvents.isEmpty {
-                        Localized.noEventsOnProfile.view
-                            .padding()
-                    } else {
-                        ForEach(unmutedEvents) { event in
-                            VStack {
-                                NoteButton(note: event, hideOutOfNetwork: false, displayRootMessage: true)
-                                .padding(.bottom, 15)
-                            }
+            VStack {
+                let profileNotesFilter = Filter(
+                    authorKeys: [author.hexadecimalPublicKey ?? "error"],
+                    kinds: [.text, .delete, .repost, .longFormContent]
+                )
+                
+                PagedNoteListView(
+                    databaseFilter: selectedTab.request(author: author),
+                    relayFilter: profileNotesFilter,
+                    context: viewContext,
+                    header: {
+                        ProfileHeader(author: author, selectedTab: $selectedTab)
+                            .compositingGroup()
+                            .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
+                            .id(author.id)
+                    },
+                    emptyPlaceholder: {
+                        VStack {
+                            Text(.localizable.noEventsOnProfile)
+                                .padding()
+                                .readabilityPadding()
                         }
+                        .frame(minHeight: 300)
+                    },
+                    onRefresh: {
+                        selectedTab.request(author: author)
                     }
-                }
-                .padding(.top, 10)
+                )
+                .padding(0)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .id(selectedTab)
             }
-            .background(Color.appBg)
+            .id(author.id)
             .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { proxy in
                 proxy.scrollTo(author.id)
             }
         }
-        .nosNavigationBar(title: .profileTitle)
+        .background(Color.appBg)
+        .nosNavigationBar(title: .localizable.profileTitle)
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
         }                  
@@ -152,10 +140,10 @@ struct ProfileView: View {
             MutesView()
         }
         .navigationDestination(for: FollowsDestination.self) { destination in
-            FollowsView(title: Localized.follows, authors: destination.follows)
+            FollowsView(title: .localizable.follows, authors: destination.follows)
         }
         .navigationDestination(for: FollowersDestination.self) { destination in
-            FollowsView(title: Localized.followers, authors: destination.followers)
+            FollowsView(title: .localizable.followers, authors: destination.followers)
         }
         .navigationDestination(for: RelaysDestination.self) { destination in
             RelayView(author: destination.author, editable: false)
@@ -176,12 +164,12 @@ struct ProfileView: View {
                             Image(systemName: "ellipsis")
                         }
                     )
-                    .confirmationDialog(Localized.share.string, isPresented: $showingOptions) {
-                        Button(Localized.copyUserIdentifier.string) {
+                    .confirmationDialog(String(localized: .localizable.share), isPresented: $showingOptions) {
+                        Button(String(localized: .localizable.copyUserIdentifier)) {
                             UIPasteboard.general.string = author.publicKey?.npub ?? ""
                         }
-                        Button(Localized.copyLink.string) {
-                            UIPasteboard.general.string = author.webLink 
+                        Button(String(localized: .localizable.copyLink)) {
+                            UIPasteboard.general.string = author.webLink
                         }
                         if isShowingLoggedInUser {
                             Button(
@@ -190,7 +178,7 @@ struct ProfileView: View {
                                     router.push(author)
                                 },
                                 label: {
-                                    Text(Localized.editProfile.string)
+                                    Text(.localizable.editProfile)
                                 }
                             )
                             Button(
@@ -198,18 +186,18 @@ struct ProfileView: View {
                                     router.push(MutesDestination())
                                 },
                                 label: {
-                                    Text(Localized.mutedUsers.string)
+                                    Text(.localizable.mutedUsers)
                                 }
                             )
                         } else {
                             if author.muted {
-                                Button(Localized.unmuteUser.string) {
+                                Button(String(localized: .localizable.unmuteUser)) {
                                     Task {
                                         do {
                                             try await author.unmute(viewContext: viewContext)
                                         } catch {
                                             alert = AlertState(title: {
-                                                TextState(Localized.error.string)
+                                                TextState(String(localized: .localizable.error))
                                             }, message: {
                                                 TextState(error.localizedDescription)
                                             })
@@ -217,13 +205,13 @@ struct ProfileView: View {
                                     }
                                 }
                             } else {
-                                Button(Localized.mute.string) {
+                                Button(String(localized: .localizable.mute)) {
                                     Task { @MainActor in
                                         do {
                                             try await author.mute(viewContext: viewContext)
                                         } catch {
                                             alert = AlertState(title: {
-                                                TextState(Localized.error.string)
+                                                TextState(String(localized: .localizable.error))
                                             }, message: {
                                                 TextState(error.localizedDescription)
                                             })
@@ -232,7 +220,7 @@ struct ProfileView: View {
                                 }
                             }
                             
-                            Button(Localized.reportUser.string, role: .destructive) {
+                            Button(String(localized: .localizable.reportUser), role: .destructive) {
                                 showingReportMenu = true
                             }
                         }
@@ -240,12 +228,6 @@ struct ProfileView: View {
                 }
         )
         .reportMenu($showingReportMenu, reportedObject: .author(author))
-        .task {
-            await refreshProfileFeed()
-        }
-        .task {
-            await computeUnmutedEvents()
-        }
         .onChange(of: author.uns) { 
             Task {
                 await loadUSBCBalance()
@@ -253,39 +235,14 @@ struct ProfileView: View {
         }
         .alert(unwrapping: $alert)
         .onAppear {
-            Task { await loadUSBCBalance() }
+            Task { 
+                await downloadAuthorData()
+                await loadUSBCBalance() 
+            }
             analytics.showedProfile()
         }
-        .refreshable {
-            await refreshProfileFeed()
-            await computeUnmutedEvents()
-        }
-        .onChange(of: author.muted) { 
-            Task {
-                await computeUnmutedEvents()
-            }
-        }
-        .onChange(of: author.events.count) { 
-            Task {
-                await computeUnmutedEvents()
-            }
-        }
-        .onChange(of: selectedTab) { tab in
-            switch tab {
-            case .feed:
-                events.nsPredicate = author.feedPredicate()
-            case .posts:
-                events.nsPredicate = author.postsPredicate()
-            }
-            Task {
-                await computeUnmutedEvents()
-            }
-        }
         .onDisappear {
-            Task(priority: .userInitiated) {
-                await relayService.decrementSubscriptionCount(for: subscriptionIds)
-                subscriptionIds.removeAll()
-            }
+            relaySubscriptions.removeAll()
         }
     }
 }

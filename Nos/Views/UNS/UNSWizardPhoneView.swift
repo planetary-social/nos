@@ -29,13 +29,13 @@ struct UNSWizardPhoneView: View {
                         .padding(40)
                         .padding(.top, 50)
                     
-                    PlainText(.registration)
+                    PlainText(.localizable.registration)
                         .font(.clarityTitle)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
                     
-                    Text(.registrationDescription)
+                    Text(.localizable.registrationDescription)
                         .fontWeight(.medium)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.secondaryTxt)
@@ -50,7 +50,7 @@ struct UNSWizardPhoneView: View {
                     
                     Spacer()
                     
-                    BigActionButton(title: .sendCode) {
+                    BigActionButton(title: .localizable.sendCode) {
                         await submit()
                     }
                     .padding(.bottom, 41)

@@ -11,7 +11,7 @@ import SwiftUI
 struct NoteTextEditor: View {
     
     @Binding var text: EditableNoteText
-    var placeholder: any Localizable
+    var placeholder: LocalizedStringResource
     var focus: FocusState<Bool>.Binding
     
     @State private var calculatedHeight: CGFloat = 44
@@ -38,7 +38,7 @@ struct NoteTextEditor: View {
                 .frame(height: calculatedHeight)
                 .placeholder(when: text.isEmpty, placeholder: {
                     VStack {
-                        placeholder.view
+                        Text(placeholder)
                             .foregroundColor(.secondaryTxt)
                             .padding(.top, 10)
                             .padding(.leading, 6)
@@ -93,7 +93,7 @@ struct NoteTextEditor: View {
 struct NoteTextEditor_Previews: PreviewProvider {
     
     @State static var text = EditableNoteText()
-    static var placeholder = Localized.newNotePlaceholder
+    static var placeholder: LocalizedStringResource = .localizable.newNotePlaceholder
     @FocusState static var isFocused: Bool
     
     static var previews: some View {

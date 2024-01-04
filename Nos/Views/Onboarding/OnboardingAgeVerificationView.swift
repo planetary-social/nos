@@ -12,7 +12,7 @@ struct OnboardingAgeVerificationView: View {
     
     var body: some View {
         VStack {
-            PlainText(Localized.ageVerificationTitle.string)
+            PlainText(.localizable.ageVerificationTitle)
                 .multilineTextAlignment(.center)
                 .padding(.top, 92)
                 .padding(.bottom, 20)
@@ -29,17 +29,17 @@ struct OnboardingAgeVerificationView: View {
                     )
                     .blendMode(.normal)
                 )
-            Text(Localized.ageVerificationSubtitle.string)
+            Text(.localizable.ageVerificationSubtitle)
                 .foregroundColor(.secondaryTxt)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 44.5)
             Spacer()
             HStack {
-                BigActionButton(title: .no) {
+                BigActionButton(title: .localizable.no) {
                     state.step = .notOldEnough
                 }
                 Spacer(minLength: 15)
-                BigActionButton(title: .yes) {
+                BigActionButton(title: .localizable.yes) {
                     state.step = .termsOfService
                 }
             }

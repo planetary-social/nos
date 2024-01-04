@@ -22,7 +22,7 @@ struct HomeFeedView: View {
     @FetchRequest private var authors: FetchedResults<Author>
     
     @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
-    @State private var subscriptionIDs = [String]()
+    @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var isVisible = false
     @State private var cancellables = [AnyCancellable]()
     @State private var performingInitialLoad = true
@@ -50,7 +50,7 @@ struct HomeFeedView: View {
     }
     
     func subscribeToNewEvents() async {
-        await cancelSubscriptions()
+        relaySubscriptions.removeAll()
         
         let followedKeys = await Array(currentUser.socialGraph.followedKeys)
             
@@ -62,15 +62,8 @@ struct HomeFeedView: View {
                 limit: 100, 
                 since: nil
             )
-            let textSub = await relayService.openSubscription(with: textFilter)
-            subscriptionIDs.append(textSub)
-        }
-    }
-    
-    func cancelSubscriptions() async {
-        if !subscriptionIDs.isEmpty {
-            await relayService.decrementSubscriptionCount(for: subscriptionIDs)
-            subscriptionIDs.removeAll()
+            let textSubs = await relayService.subscribeToEvents(matching: textFilter)
+            relaySubscriptions.append(textSubs)
         }
     }
 
@@ -97,7 +90,7 @@ struct HomeFeedView: View {
                                                 Button {
                                                     router.push(author)
                                                 } label: {
-                                                    Localized.seeProfile.view
+                                                    Text(.localizable.seeProfile)
                                                 }
                                             }
                                     }
@@ -142,7 +135,7 @@ struct HomeFeedView: View {
         .background(Color.appBg)
         .overlay(Group {
             if events.isEmpty && !performingInitialLoad {
-                Localized.noEvents.view
+                Text(.localizable.noEvents)
                     .padding()
             }
         })
@@ -184,11 +177,11 @@ struct HomeFeedView: View {
         .padding(.top, 1)
         .overlay(Group {
             if !events.contains(where: { !$0.author!.muted }) {
-                Localized.noEvents.view
+                Text(.localizable.noEvents)
                     .padding()
             }
         })
-        .nosNavigationBar(title: isShowingStories ? Localized.stories : Localized.homeFeed)
+        .nosNavigationBar(title: isShowingStories ? .localizable.stories : .localizable.homeFeed)
         .refreshable {
             date = .now
         }
@@ -221,7 +214,7 @@ struct HomeFeedView: View {
                 analytics.showedHome()
                 Task { await subscribeToNewEvents() }
             } else {
-                Task { await cancelSubscriptions() }
+                relaySubscriptions.removeAll()
             }
         }
     }
