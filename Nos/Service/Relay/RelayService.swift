@@ -66,7 +66,7 @@ final class RelayService: ObservableObject {
         
         Task { @MainActor in
             currentUser.viewContext = persistenceController.container.viewContext
-            _ = await openSockets()
+            await openSockets()
         }
         
         NotificationCenter.default.addObserver(
@@ -167,6 +167,10 @@ extension RelayService {
         } else {
             relayAddresses = await self.relayAddresses(for: currentUser)
         }
+        if relayAddresses.isEmpty {
+            // Fall back to a large list of relays if we don't have any for this user (like on first login)
+            relayAddresses = Relay.allKnown.compactMap { URL(string: $0) }
+        }
         var subscriptionIDs = [RelaySubscription.ID]()
         for relay in relayAddresses {
             subscriptionIDs.append(await subscriptions.queueSubscription(with: filter, to: relay))
@@ -245,7 +249,7 @@ extension RelayService {
     }
     
     private func processSubscriptionQueue() async {
-        _ = await openSockets()
+        await openSockets()
         await clearStaleSubscriptions()
         
         await subscriptions.processSubscriptionQueue()
@@ -478,7 +482,7 @@ extension RelayService {
     }
 
     func publishToAll(event: JSONEvent, signingKey: KeyPair, context: NSManagedObjectContext) async throws {
-        _ = await self.openSockets()
+        await self.openSockets()
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
         for socket in await subscriptions.sockets {
             try await publish(from: socket, jsonEvent: signedEvent)
@@ -606,16 +610,9 @@ extension RelayService {
         }
     }
     
-    @discardableResult @MainActor private func openSockets(overrideRelays: [URL]? = nil) async -> [URL] {
-        var relayAddresses: [URL]
-        if let overrideRelays {
-            relayAddresses = overrideRelays
-        } else {
-            relayAddresses = await self.relayAddresses(for: self.currentUser)
-            if relayAddresses.isEmpty {
-                relayAddresses = Relay.allKnown.compactMap { URL(string: $0) }
-            }
-        }
+    /// Opens sockets to all the relays that we have an open subscription for.
+    @MainActor private func openSockets() async {
+        var relayAddresses = Set(await subscriptions.all.map { $0.relayAddress })
         
         for relayAddress in relayAddresses {
             guard let socket = await subscriptions.addSocket(for: relayAddress) else {
@@ -632,8 +629,6 @@ extension RelayService {
                 }
             }
         }
-
-        return relayAddresses
     }
 
     func relayAddresses(for user: CurrentUser) async -> [URL] {
