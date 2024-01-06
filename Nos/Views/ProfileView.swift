@@ -30,7 +30,7 @@ struct ProfileView: View {
     @State private var usbcBalanceTimer: Timer?
     @State private var relaySubscriptions = SubscriptionCancellables()
 
-    @State private var selectedTab: ProfileHeader.ProfileHeaderTab = .posts
+    @State private var selectedTab: ProfileHeader.ProfileHeaderTab = .notes
 
     @State private var alert: AlertState<Never>?
 

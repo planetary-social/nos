@@ -171,7 +171,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         relayFilter: Filter(),
         context: previewData.previewContext,
         header: {
-            ProfileHeader(author: previewData.alice, selectedTab: .constant(.feed))
+            ProfileHeader(author: previewData.alice, selectedTab: .constant(.activity))
                 .compositingGroup()
                 .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 .id(previewData.alice.id)

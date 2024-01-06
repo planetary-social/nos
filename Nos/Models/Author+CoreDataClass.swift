@@ -151,7 +151,12 @@ enum AuthorError: Error {
         return fetchRequest
     }
     
-    @nonobjc func feedPredicate(before: Date) -> NSPredicate {
+    /// Builds a predicate that queries for all notes (root or replies), reposts and long forms for a
+    /// given profile
+    ///
+    ///
+    /// It doesn't return events if the profile is muted
+    @nonobjc func activityPredicate(before: Date) -> NSPredicate {
         NSPredicate(
             format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@ AND author.muted = 0 AND " +
                 "deletedOn.@count = 0 AND createdAt <= %@",
@@ -183,7 +188,7 @@ enum AuthorError: Error {
         if onlyRootPosts {
             fetchRequest.predicate = postsPredicate(before: before)
         } else {
-            fetchRequest.predicate = feedPredicate(before: before)
+            fetchRequest.predicate = activityPredicate(before: before)
         }
         return fetchRequest
     }

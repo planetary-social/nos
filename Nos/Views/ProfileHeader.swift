@@ -35,10 +35,10 @@ struct ProfileHeader: View {
     @EnvironmentObject private var router: Router
 
     enum ProfileHeaderTab {
-        case feed
-        case posts
+        case activity
+        case notes
         func request(author: Author) -> NSFetchRequest<Event> {
-            author.allPostsRequest(onlyRootPosts: self == .posts)
+            author.allPostsRequest(onlyRootPosts: self == .notes)
         }
     }
 
@@ -142,40 +142,8 @@ struct ProfileHeader: View {
                     followsResult: followsResult,
                     followersResult: followersResult
                 )
-                HStack {
-                    Button {
-                        selectedTab = .posts
-                    } label: {
-                        HStack {
-                            Spacer()
-                            let color = selectedTab == .posts ? Color.primaryTxt : .secondaryTxt
-                            Image.profilePosts
-                                .renderingMode(.template)
-                                .foregroundColor(color)
-                            Text(.localizable.posts)
-                                .foregroundColor(color)
-                            Spacer()
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
 
-                    Button {
-                        selectedTab = .feed
-                    } label: {
-                        HStack {
-                            Spacer()
-                            let color = selectedTab == .feed ? Color.primaryTxt : .secondaryTxt
-                            Image.profileFeed
-                                .renderingMode(.template)
-                                .foregroundColor(color)
-                            Text(.localizable.activity)
-                                .foregroundColor(color)
-                            Spacer()
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
-                }
-                .padding()
+                profileHeaderTab
             }
             .frame(maxWidth: 500)
         }
@@ -188,6 +156,43 @@ struct ProfileHeader: View {
             )
         )
     }
+
+    private var profileHeaderTab: some View {
+        HStack {
+            Button {
+                selectedTab = .notes
+            } label: {
+                HStack {
+                    Spacer()
+                    let color = selectedTab == .notes ? Color.primaryTxt : .secondaryTxt
+                    Image.profilePosts
+                        .renderingMode(.template)
+                        .foregroundColor(color)
+                    Text(.localizable.notes)
+                        .foregroundColor(color)
+                    Spacer()
+                }
+            }
+            .frame(maxWidth: .infinity)
+
+            Button {
+                selectedTab = .activity
+            } label: {
+                HStack {
+                    Spacer()
+                    let color = selectedTab == .activity ? Color.primaryTxt : .secondaryTxt
+                    Image.profileFeed
+                        .renderingMode(.template)
+                        .foregroundColor(color)
+                    Text(.localizable.activity)
+                        .foregroundColor(color)
+                    Spacer()
+                }
+            }
+            .frame(maxWidth: .infinity)
+        }
+        .padding()
+    }
 }
 
 #Preview {
@@ -195,7 +200,7 @@ struct ProfileHeader: View {
     
     return Group {
         // ProfileHeader(author: author)
-        ProfileHeader(author: previewData.previewAuthor, selectedTab: .constant(.feed))
+        ProfileHeader(author: previewData.previewAuthor, selectedTab: .constant(.activity))
             .inject(previewData: previewData)
             .padding()
             .background(Color.previewBg)
@@ -235,7 +240,7 @@ struct ProfileHeader: View {
     }
     
     return Group {
-        ProfileHeader(author: author, selectedTab: .constant(.feed))
+        ProfileHeader(author: author, selectedTab: .constant(.activity))
     }
     .inject(previewData: previewData)
     .previewDevice("iPhone SE (2nd generation)")
@@ -247,7 +252,7 @@ struct ProfileHeader: View {
     var previewData = PreviewData()
     
     return Group {
-        ProfileHeader(author: previewData.unsAuthor, selectedTab: .constant(.feed))
+        ProfileHeader(author: previewData.unsAuthor, selectedTab: .constant(.activity))
             .inject(previewData: previewData)
             .padding()
             .background(Color.previewBg)
