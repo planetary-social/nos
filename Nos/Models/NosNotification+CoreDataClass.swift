@@ -20,7 +20,7 @@ public class NosNotification: NSManagedObject {
         authorKey: HexadecimalString,
         in context: NSManagedObjectContext
     ) throws -> NosNotification? {
-        guard date > cutoffDate() else {
+        guard date > staleNotificationCutoff() else {
             return nil
         }
         let author = try Author.findOrCreate(by: authorKey, context: context)

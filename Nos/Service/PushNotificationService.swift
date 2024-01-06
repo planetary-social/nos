@@ -196,8 +196,8 @@ import Combine
         
         let viewModel: NotificationViewModel? = await modelContext.perform { () -> NotificationViewModel? in
             guard let event = Event.find(by: eventID, context: self.modelContext),
-                  let eventCreated = event.createdAt,
-                  let coreDataNotification = try? NosNotification.createIfNecessary(
+                let eventCreated = event.createdAt,
+                let coreDataNotification = try? NosNotification.createIfNecessary(
                     from: eventID,
                     date: eventCreated,
                     authorKey: authorKey,
