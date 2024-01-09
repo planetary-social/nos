@@ -119,7 +119,6 @@ extension RelayService {
             let request: [Any] = ["CLOSE", subscription]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
-            Log.debug("\(requestString) sent to \(client.host)")
             client.write(string: requestString)
         } catch {
             Log.error("Error: Could not send close \(error.localizedDescription)")

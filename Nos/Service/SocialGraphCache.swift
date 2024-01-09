@@ -128,7 +128,7 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
         followedKeys.insert(userKey)
         
         do {
-            try await context.perform {
+            try await context.perform { [self] in
                 let authorRequest = Author.request(by: userKey) 
                 authorRequest.relationshipKeyPathsForPrefetching = ["follows.destination.hexadecimalPublicKey"]
                 self.userWatcher = NSFetchedResultsController(
@@ -145,14 +145,13 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
                         cacheName: "SocialGraphCache.oneHopWatcher"
                     )
                 }
-            }
-            
-            userWatcher?.delegate = self
-            oneHopWatcher?.delegate = self
-            try self.userWatcher?.performFetch()
-            try self.oneHopWatcher?.performFetch()
-            if let author = self.userWatcher?.fetchedObjects?.first {
-                process(user: userKey, followed: Set(author.followedKeys))
+                self.userWatcher?.delegate = self
+                self.oneHopWatcher?.delegate = self
+                try self.userWatcher?.performFetch()
+                try self.oneHopWatcher?.performFetch()
+                if let author = self.userWatcher?.fetchedObjects?.first {
+                    process(user: userKey, followed: Set(author.followedKeys))
+                }
             }
         } catch {
             Log.error(error.localizedDescription)
