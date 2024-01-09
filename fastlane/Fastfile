@@ -94,7 +94,6 @@ platform :ios do
   lane :stamp_release do
     changelog = read_changelog
     stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
-    bump_patch
     git_commit(message: "Stamping beta deployment", path: "*")
     push_to_git_remote
   end
