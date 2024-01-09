@@ -174,6 +174,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     private var movedIndexes = [(IndexPath, IndexPath)]()
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        Log.debug("Started batch updates")
         insertedIndexes = [IndexPath]()
         deletedIndexes = [IndexPath]()
         movedIndexes = [(IndexPath, IndexPath)]()
@@ -188,12 +189,16 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     ) {
         // Note: I tried using UICollectionViewDiffableDatasource but it didn't seem to work well with SwiftUI views
         // as it kept reloading cells with animations when nothing was visually changing.
+        Log.debug("handling update type: \(type) indexPath: \(String(describing: indexPath))")
+        
         switch type {
         case .insert:
+            Log.debug("queuing index path for insertion: \(String(describing: indexPath))")
             if let newIndexPath = newIndexPath {
                 insertedIndexes.append(newIndexPath)
             }
         case .delete:
+            Log.debug("queuing index path for deletion: \(String(describing: indexPath))")
             if let indexPath = indexPath {
                 deletedIndexes.append(indexPath)
             }
@@ -202,7 +207,8 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             // them of updates through the collectionView.
             return
         case .move:
-            if let oldIndexPath = indexPath, let newIndexPath = newIndexPath {
+            if let oldIndexPath = indexPath, let newIndexPath {
+                Log.debug("queuing index path \(oldIndexPath) for move to \(newIndexPath)")
                 movedIndexes.append((oldIndexPath, newIndexPath)) 
             }
         @unknown default:
@@ -212,12 +218,16 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         collectionView.performBatchUpdates {
+            Log.debug("deleting indexPaths: \(deletedIndexes)")
             collectionView.deleteItems(at: deletedIndexes)
+            Log.debug("inserting indexPaths: \(insertedIndexes)")
             collectionView.insertItems(at: insertedIndexes)
+            Log.debug("moving indexes: \(movedIndexes)")
             movedIndexes.forEach { indexPair in 
                 let (oldIndex, newIndex) = indexPair
                 collectionView.moveItem(at: oldIndex, to: newIndex)
             }
+            Log.debug("Finished performing batch updates")
         }
     }
 }
