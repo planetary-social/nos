@@ -18,11 +18,11 @@ struct HomeFeedView: View {
     @Environment(CurrentUser.self) var currentUser
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
-    @FetchRequest var events: FetchedResults<Event>
     @FetchRequest private var authors: FetchedResults<Author>
     
-    @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
-    @State private var relaySubscriptions = SubscriptionCancellables()
+    @State private var lastRefreshDate = Date(
+        timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime)
+    )
     @State private var isVisible = false
     @State private var cancellables = [AnyCancellable]()
     @State private var performingInitialLoad = true
@@ -41,7 +41,6 @@ struct HomeFeedView: View {
     
     init(user: Author) {
         self.user = user
-        _events = FetchRequest(fetchRequest: Event.homeFeed(for: user, before: Date.now))
         _authors = FetchRequest(
             fetchRequest: user.followedWithNewNotes(
                 since: Calendar.current.date(byAdding: .day, value: -2, to: .now)!
@@ -50,24 +49,6 @@ struct HomeFeedView: View {
     }
     
     @State var followedKeys = [HexadecimalString]()
-    
-    func subscribeToNewEvents() async {
-        relaySubscriptions.removeAll()
-        
-        followedKeys = await Array(currentUser.socialGraph.followedKeys)
-            
-        if !followedKeys.isEmpty {
-            // TODO: we could miss events with this since filter
-            let textFilter = Filter(
-                authorKeys: followedKeys, 
-                kinds: [.text, .delete, .repost, .longFormContent, .report], 
-                limit: 100, 
-                since: nil
-            )
-//            let textSubs = await relayService.subscribeToEvents(matching: textFilter)
-//            relaySubscriptions.append(textSubs)
-        }
-    }
 
     var body: some View {
         Group {
@@ -79,60 +60,36 @@ struct HomeFeedView: View {
             } else {
                 ZStack {
                     let homeFeedFilter = Filter(
-                        authorKeys: followedKeys, 
+                        authorKeys: user.followedKeys, 
                         kinds: [.text, .delete, .repost, .longFormContent, .report], 
                         limit: 100, 
                         since: nil
                     )
                     PagedNoteListView(
-                        databaseFilter: Event.homeFeed(for: user, before: Date.now), 
+                        databaseFilter: Event.homeFeed(for: user, before: lastRefreshDate), 
                         relayFilter: homeFeedFilter,
                         context: viewContext,
                         header: {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 15) {
-                                    ForEach(stories) { author in
-                                        Button {
-                                            withAnimation {
-                                                selectedStoryAuthor = author
-                                        }
-                                    } label: {
-                                        StoryAvatarView(author: author)
-                                            .contextMenu {
-                                                Button {
-                                                    router.push(author)
-                                                } label: {
-                                                    Text(.localizable.seeProfile)
-                                                }
-                                            }
-                                        } label: {
-                                            StoryAvatarView(author: author)
-                                                .contextMenu {
-                                                    Button {
-                                                        router.push(author)
-                                                    } label: {
-                                                        Localized.seeProfile.view
-                                                    }
-                                                }
-                                        }
-                                    }
-                                }
-                                .padding(.horizontal, 15)
-                                .padding(.top, 15)
-                                .padding(.bottom, 0)
-                            }
-                            .readabilityPadding()
+                            AuthorStoryCarousel(
+                                authors: $stories, 
+                                selectedStoryAuthor: $selectedStoryAuthor
+                            )
                             .id(user.id)
                         },
                         emptyPlaceholder: {
                             VStack {
-                                Localized.noEvents.view
+                                Text(.localizable.noEvents)
                                     .padding()
                             }
                             .frame(minHeight: 300)
                         },
                         onRefresh: {
-                            Event.homeFeed(for: user, before: Date.now)
+                            lastRefreshDate = .now
+                            storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: lastRefreshDate)!
+                            authors.nsPredicate = user.followedWithNewNotesPredicate(
+                                since: storiesCutoffDate
+                            )
+                            return Event.homeFeed(for: user, before: lastRefreshDate)
                         }
                     )
                     .padding(0)
@@ -192,23 +149,7 @@ struct HomeFeedView: View {
             }
         }
         .padding(.top, 1)
-        .overlay(Group {
-            if !events.contains(where: { !$0.author!.muted }) {
-                Text(.localizable.noEvents)
-                    .padding()
-            }
-        })
         .nosNavigationBar(title: isShowingStories ? .localizable.stories : .localizable.homeFeed)
-        .refreshable {
-            date = .now
-        }
-        .onChange(of: date) { _, newDate in
-            events.nsPredicate = Event.homeFeedPredicate(for: user, before: newDate)
-            authors.nsPredicate = user.followedWithNewNotesPredicate(
-                since: Calendar.current.date(byAdding: .day, value: -2, to: newDate)!
-            )
-            Task { await subscribeToNewEvents() }
-        }
         .onAppear {
             if router.selectedTab == .home {
                 isVisible = true 
@@ -229,28 +170,11 @@ struct HomeFeedView: View {
         .onChange(of: isVisible) { 
             if isVisible {
                 analytics.showedHome()
-                Task { await subscribeToNewEvents() }
-            } else {
-                relaySubscriptions.removeAll()
             }
         }
     }
 }
 
-fileprivate struct StoryAvatarView: View {
-    var size: CGFloat = 70
-
-    var author: Author
-    var body: some View {
-        AvatarView(imageUrl: author.profilePhotoURL, size: size)
-            .padding(1.5)
-            .overlay(alignment: .center) {
-                Circle()
-                    .stroke(LinearGradient.diagonalAccent, lineWidth: 3)
-                    .frame(width: size, height: size)
-            }
-    }
-}
 
 private let itemFormatter: DateFormatter = {
     let formatter = DateFormatter()
