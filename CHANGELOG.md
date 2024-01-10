@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a crash when opening the note composer.
 - Fix localization of warning message when a note has been reported. (thanks @L!)
 - Fixed contact list hydration bug where unfollows are not removed when follow counts do not change.
+- Erase old notifications from the databse to keep disk usage low.
 
 ## [0.1 (101)] - 2023-12-15Z
 

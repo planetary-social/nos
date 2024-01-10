@@ -611,7 +611,7 @@ extension RelayService {
     
     /// Opens sockets to all the relays that we have an open subscription for.
     @MainActor private func openSockets() async {
-        var relayAddresses = Set(await subscriptions.all.map { $0.relayAddress })
+        let relayAddresses = Set(await subscriptions.all.map { $0.relayAddress })
         
         for relayAddress in relayAddresses {
             guard let socket = await subscriptions.addSocket(for: relayAddress) else {
