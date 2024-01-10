@@ -11,16 +11,16 @@ struct RelayPickerToolbarButton: ToolbarContent {
     
     @Binding var selectedRelay: Relay?
     @Binding var isPresenting: Bool
-    var defaultSelection: Localized
+    var defaultSelection: LocalizedStringResource
     var action: () -> Void
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
     var title: String {
         if let selectedRelay {
-            return selectedRelay.host ?? Localized.error.string
+            return selectedRelay.host ?? String(localized: .localizable.error)
         } else {
-            return defaultSelection.string
+            return String(localized: defaultSelection)
         }
     }
     
@@ -86,22 +86,22 @@ struct RelayPickerToolbarButton_Previews: PreviewProvider {
                         ToolbarItem(placement: .navigationBarLeading) {
                             Button {}
                             label: {
-                                Localized.cancel.view
+                                Text(.localizable.cancel)
                                     .foregroundColor(.secondaryTxt)
                             }
                         }
                         RelayPickerToolbarButton(
                             selectedRelay: selectedRelay, 
                             isPresenting: isPresented, 
-                            defaultSelection: .allMyRelays
+                            defaultSelection: .localizable.allMyRelays
                         ) {}
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            ActionButton(title: Localized.post, action: {})
+                            ActionButton(title: .localizable.post, action: {})
                                 .frame(height: 22)
                                 .padding(.bottom, 3)
                         }
                     }
-                    .navigationBarTitle(Localized.discover.string, displayMode: .inline)
+                    .navigationBarTitle(String(localized: .localizable.discover), displayMode: .inline)
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
                 }

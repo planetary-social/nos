@@ -51,20 +51,20 @@ struct OutOfNetworkView: View {
                 Spacer() // pushes content to the center
                 
                 if self.isOverlayHelpTextBoxShown {
-                    Localized.outsideNetworkExplanation.view
+                    Text(.localizable.outsideNetworkExplanation)
                         .font(.body)
                         .foregroundColor(.primaryTxt)
                         .padding(.horizontal, 24)
                         .fixedSize(horizontal: false, vertical: true)
                 } else {
-                    Localized.outsideNetwork.view
+                    Text(.localizable.outsideNetwork)
                         .font(.body)
                         .foregroundColor(.primaryTxt)
                         .padding(.horizontal, 24)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 
-                SecondaryActionButton(title: Localized.viewThisPostAnyway) {
+                SecondaryActionButton(title: .localizable.viewThisPostAnyway) {
                     withAnimation {
                         controller.userHidWarning = true
                     }
@@ -110,7 +110,7 @@ struct OverlayContentReportView: View {
                 
                 // TextBox or Image based on isTextBoxShown
                 if self.isOverlayHelpTextBoxShown {
-                    Localized.contentWarningExplanation.view
+                    Text(.localizable.contentWarningExplanation)
                         .font(.body)
                         .foregroundColor(.secondaryTxt)
                         .padding(.horizontal, 24)
@@ -128,7 +128,7 @@ struct OverlayContentReportView: View {
                         ContentWarningMessage(reports: controller.noteReports, type: "note")
                     }
                 }
-                SecondaryActionButton(title: Localized.viewThisPostAnyway) {
+                SecondaryActionButton(title: .localizable.viewThisPostAnyway) {
                     withAnimation {
                         controller.userHidWarning = true
                     }
@@ -157,13 +157,13 @@ struct ContentWarningMessage: View {
     // Assuming there's a property or method 'safeName' in 'Author' that safely returns the author's name.
     private var firstAuthorSafeName: String {
         // Getting the safe name of the first author. Adjust according to your actual data structure.
-        reports.first?.author?.safeName ?? "Unknown Author"
+        reports.first?.author?.safeName ?? String(localized: .localizable.unknownAuthor)
     }
     
     private var reason: String {
         // Extract content from reports and remove empty content
-        let contents = reports.compactMap { (($0.content?.isEmpty) != nil) ? nil : $0.content }
-        
+        let contents = reports.compactMap { $0.content }.filter({ !$0.isEmpty })
+
         // Convert set of unique reasons to array and remove any empty reasons
         let reasons = uniqueReasons.filter { !$0.isEmpty }
         
@@ -211,36 +211,22 @@ struct ContentWarningMessage: View {
         return Set(reasons)
     }
     
-    var message: LocalizedStringKey {
+    var message: LocalizedStringResource {
         if type == "author" {
             if authorNames.count > 1 {
-                return Localized.userReportedByOneAndMore.localizedMarkdown([
-                    "one": firstAuthorSafeName,
-                    "count": "\(authorNames.count - 1)",
-                    "reason": reason
-                ])
+                return .localizable.userReportedByOneAndMore(firstAuthorSafeName, authorNames.count - 1, reason)
             } else {
-                return Localized.userReportedByOne.localizedMarkdown([
-                    "one": firstAuthorSafeName,
-                    "reason": reason
-                ])
+                return .localizable.userReportedByOne(firstAuthorSafeName, reason)
             }
         } else if type == "note" {
             if authorNames.count > 1 {
-                return Localized.noteReportedByOneAndMore.localizedMarkdown([
-                    "one": firstAuthorSafeName,
-                    "count": "\(authorNames.count - 1)",
-                    "reason": reason
-                ])
+                return .localizable.noteReportedByOneAndMore(firstAuthorSafeName, authorNames.count - 1, reason)
             } else {
-                return Localized.noteReportedByOne.localizedMarkdown([
-                    "one": firstAuthorSafeName,
-                    "reason": reason
-                ])
+                return .localizable.noteReportedByOne(firstAuthorSafeName, reason)
             }
         }
         
-        return LocalizedStringKey(Localized.error.string)
+        return .localizable.error
     }
     
     var body: some View {
@@ -257,8 +243,24 @@ struct ContentWarningMessage: View {
     return VStack {
         ContentWarningMessage(reports: [previewData.shortNoteReportOne], type: "author")
         ContentWarningMessage(reports: [previewData.shortNoteReportOne, previewData.shortNoteReportTwo], type: "author")
+        ContentWarningMessage(
+            reports: [
+                previewData.shortNoteReportOne,
+                previewData.shortNoteReportTwo,
+                previewData.shortNoteReportThree
+            ],
+            type: "author"
+        )
         ContentWarningMessage(reports: [previewData.shortNoteReportOne], type: "note")
         ContentWarningMessage(reports: [previewData.shortNoteReportOne, previewData.shortNoteReportTwo], type: "note")
+        ContentWarningMessage(
+            reports: [
+                previewData.shortNoteReportOne,
+                previewData.shortNoteReportTwo,
+                previewData.shortNoteReportThree
+            ],
+            type: "note"
+        )
     }
     .inject(previewData: previewData)
 }

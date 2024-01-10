@@ -95,6 +95,15 @@ struct HomeFeedView: View {
                                         Button {
                                             withAnimation {
                                                 selectedStoryAuthor = author
+                                        }
+                                    } label: {
+                                        StoryAvatarView(author: author)
+                                            .contextMenu {
+                                                Button {
+                                                    router.push(author)
+                                                } label: {
+                                                    Text(.localizable.seeProfile)
+                                                }
                                             }
                                         } label: {
                                             StoryAvatarView(author: author)
@@ -185,11 +194,11 @@ struct HomeFeedView: View {
         .padding(.top, 1)
         .overlay(Group {
             if !events.contains(where: { !$0.author!.muted }) {
-                Localized.noEvents.view
+                Text(.localizable.noEvents)
                     .padding()
             }
         })
-        .nosNavigationBar(title: isShowingStories ? Localized.stories : Localized.homeFeed)
+        .nosNavigationBar(title: isShowingStories ? .localizable.stories : .localizable.homeFeed)
         .refreshable {
             date = .now
         }

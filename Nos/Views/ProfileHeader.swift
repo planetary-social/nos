@@ -88,7 +88,7 @@ struct ProfileHeader: View {
                             HStack {
                                 FollowButton(currentUserAuthor: currentUser, author: author)
                                 if author.muted {
-                                    Text(Localized.muted.string)
+                                    Text(.localizable.muted)
                                         .font(.subheadline)
                                         .foregroundColor(Color.secondaryTxt)
                                 }

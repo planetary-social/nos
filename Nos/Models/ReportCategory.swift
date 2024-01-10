@@ -12,12 +12,11 @@ struct ReportCategory: Identifiable, Equatable {
 
     /// A localized human readable description of the reason/category. Should be short enough to fit in an action menu.
     var displayName: String {
-        string
+        String(localized: name)
     }    
-    
-    /// An english translation of the category name that should not be shown to the user.
-    var debugName: String 
-    
+
+    var name: LocalizedStringResource
+
     /// The machine-readable code corresponding to this category. 
     var code: String 
     
@@ -48,95 +47,70 @@ struct ReportCategory: Identifiable, Equatable {
     }  
 }
 
-extension ReportCategory: Localizable {
-    var template: String {
-        debugName
-    }
-    
-    static func flatten(category: ReportCategory) -> [ReportCategory] {
-        var flatList = [category]
-        if let subCategories = category.subCategories {
-            flatList.append(contentsOf: subCategories.flatMap { flatten(category: $0) })
-        }
-        return flatList
-    }
-    
-    static func exportForStringsFile() -> String {
-        topLevelCategories
-            .flatMap { flatten(category: $0) }
-            .map { "\"\($0.key)\" = \"\($0.debugName)\";" }
-            .joined(separator: "\n")
-    }
-    
-    var key: String {
-        "Moderation.\(code)"
-    }
-}
-
 enum NIP56Code: String {
     case nudity, profanity, illegal, spam, impersonation, other
 }
 
 /// Vocabulary from [NIP-69](https://github.com/nostr-protocol/nips/pull/457).
 let topLevelCategories = [
-    ReportCategory(debugName: "Coarse Language", code: "CL", nip56Code: .profanity),
+    ReportCategory(name: .moderation.coarseLanguage, code: "CL", nip56Code: .profanity),
     ReportCategory(
-        debugName: "Likely to cause harm", 
+        name: .moderation.likelyToCauseHarm,
         code: "HC",
         nip56Code: .other,
         subCategories: [
-            ReportCategory(debugName: "Financial Harm", code: "HC-fin", nip56Code: .other),
-            ReportCategory(debugName: "Bodily Harm", code: "HC-bhd", nip56Code: .other),
+            ReportCategory(name: .moderation.financialHarm, code: "HC-fin", nip56Code: .other),
+            ReportCategory(name: .moderation.bodilyHarm, code: "HC-bhd", nip56Code: .other),
         ]
     ),
-    ReportCategory(debugName: "Intolerance & Hate", code: "IH", nip56Code: .other),
+    ReportCategory(name: .moderation.intoleranceAndHate, code: "IH", nip56Code: .other),
     ReportCategory(
-        debugName: "Illegal", 
+        name: .moderation.illegal,
         code: "IL",
         nip56Code: .illegal,
         subCategories: [
-            ReportCategory(debugName: "Copyright Violation", code: "IL-cop", nip56Code: .illegal),
-            ReportCategory(debugName: "Child Sexual Abuse", code: "IL-csa", nip56Code: .illegal),
-            ReportCategory(debugName: "Drug-related crime", code: "IL-drg", nip56Code: .illegal),
-            ReportCategory(debugName: "Fraud & Scams", code: "IL-frd", nip56Code: .illegal),
-            ReportCategory(debugName: "Harassment, Stalking, or Doxxing", code: "IL-har", nip56Code: .illegal),
-            ReportCategory(debugName: "Prostitution", code: "IL-swk", nip56Code: .illegal),
-            ReportCategory(debugName: "Impersonation", code: "IL-idt", nip56Code: .illegal),
-            ReportCategory(debugName: "Malware", code: "IL-mal", nip56Code: .illegal),
+            ReportCategory(name: .moderation.copyrightViolation, code: "IL-cop", nip56Code: .illegal),
+            ReportCategory(name: .moderation.childSexualAbuse, code: "IL-csa", nip56Code: .illegal),
+            ReportCategory(name: .moderation.drugRelatedCrime, code: "IL-drg", nip56Code: .illegal),
+            ReportCategory(name: .moderation.fraudAndScams, code: "IL-frd", nip56Code: .illegal),
+            ReportCategory(name: .moderation.harassmentStalkingOrDoxxing, code: "IL-har", nip56Code: .illegal),
+            ReportCategory(name: .moderation.prostitution, code: "IL-swk", nip56Code: .illegal),
+            ReportCategory(name: .moderation.impersonation, code: "IL-idt", nip56Code: .illegal),
+            ReportCategory(name: .moderation.malware, code: "IL-mal", nip56Code: .illegal),
         ]
     ),
     ReportCategory(
-        debugName: "Nudity & Sex", 
+        name: .moderation.nudityAndSex,
         code: "NS",
         nip56Code: .nudity,
         subCategories: [
-            ReportCategory(debugName: "Casual nudity", code: "NS-nud", nip56Code: .nudity),
-            ReportCategory(debugName: "Erotica", code: "NS-ero", nip56Code: .nudity),
-            ReportCategory(debugName: "Sex", code: "NS-sex", nip56Code: .nudity),
+            ReportCategory(name: .moderation.casualNudity, code: "NS-nud", nip56Code: .nudity),
+            ReportCategory(name: .moderation.erotica, code: "NS-ero", nip56Code: .nudity),
+            ReportCategory(name: .moderation.sex, code: "NS-sex", nip56Code: .nudity),
         ]
     ),
     ReportCategory(
-        debugName: "Pornography", 
+        name: .moderation.pornography,
         code: "PN",
         nip56Code: .nudity,
         subCategories: [
-            ReportCategory(debugName: "Heterosexual Porn", code: "PN-het", nip56Code: .nudity),
-            ReportCategory(debugName: "Gay male pron", code: "PN-gay", nip56Code: .nudity),
-            ReportCategory(debugName: "Lesbian porn", code: "PN-les", nip56Code: .nudity),
-            ReportCategory(debugName: "Bisexual porn", code: "PN-bis", nip56Code: .nudity),
-            ReportCategory(debugName: "Transsexual porn", code: "PN-trn", nip56Code: .nudity),
-            ReportCategory(debugName: "Gender-fluid / non-binary porn", code: "PN-fnb", nip56Code: .nudity),
+            ReportCategory(name: .moderation.heterosexualPorn, code: "PN-het", nip56Code: .nudity),
+            ReportCategory(name: .moderation.gayMalePorn, code: "PN-gay", nip56Code: .nudity),
+            ReportCategory(name: .moderation.lesbianPorn, code: "PN-les", nip56Code: .nudity),
+            ReportCategory(name: .moderation.bisexualPorn, code: "PN-bis", nip56Code: .nudity),
+            ReportCategory(name: .moderation.transsexualPorn, code: "PN-trn", nip56Code: .nudity),
+            ReportCategory(name: .moderation.genderFluidNonBinaryPorn, code: "PN-fnb", nip56Code: .nudity),
         ]
     ),
-    ReportCategory(debugName: "Spam", code: "SP", nip56Code: .spam),
+    ReportCategory(name: .moderation.spam, code: "SP", nip56Code: .spam),
     ReportCategory(
-        debugName: "Violence", 
+        name: .moderation.violence,
         code: "VI",
         nip56Code: .other,
         subCategories: [
-            ReportCategory(debugName: "Violence towards a human being", code: "VI-hum", nip56Code: .other),
-            ReportCategory(debugName: "Violence towards a sentient animal", code: "VI-ani", nip56Code: .other),
+            ReportCategory(name: .moderation.violenceTowardsAHumanBeing, code: "VI-hum", nip56Code: .other),
+            ReportCategory(name: .moderation.violenceTowardsASentientAnimal, code: "VI-ani", nip56Code: .other),
         ]
     ),
-    ReportCategory(debugName: "Other", code: "NA", nip56Code: .other),
+    ReportCategory(name: .moderation.other, code: "NA", nip56Code: .other),
 ]

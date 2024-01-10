@@ -60,14 +60,14 @@ class NotificationViewModel: ObservableObject, Identifiable {
 
         // Compute action text
         var actionText: AttributedString
-        var authorName = AttributedString("\(note.author?.safeName ?? Localized.someone.string) ")
+        var authorName = AttributedString("\(note.author?.safeName ?? String(localized: .localizable.someone)) ")
         var range = Range(uncheckedBounds: (authorName.startIndex, authorName.endIndex))
         authorName[range].font = .boldSystemFont(ofSize: 17)
         
         if note.isReply(to: user) {
-            actionText = authorName + AttributedString(Localized.Reply.repliedToYourNote.string)
+            actionText = authorName + AttributedString(String(localized: .reply.repliedToYourNote))
         } else if note.references(author: user) {
-            actionText = authorName + AttributedString(Localized.Reply.mentionedYou.string)
+            actionText = authorName + AttributedString(String(localized: .reply.mentionedYou))
         } else {
             actionText = AttributedString()
         }

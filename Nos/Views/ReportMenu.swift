@@ -37,49 +37,51 @@ struct ReportMenuModifier: ViewModifier {
             .confirmationDialog(unwrapping: $confirmationDialog, action: userSelectedCategory)
             // Report confirmation menu
             .alert(
-                Localized.confirmReport.string, 
+                String(localized: .localizable.confirmReport),
                 isPresented: $confirmReport,
                 actions: { 
-                    Button(Localized.confirm.string) { 
+                    Button(String(localized: .localizable.confirm)) {
                         publishReport()
                         if let author = reportedObject.author, !author.muted {
                             showMuteDialog = true
                         }
                     }
-                    Button(Localized.cancel.string, role: .cancel) { 
+                    Button(String(localized: .localizable.cancel), role: .cancel) {
                         selectedCategory = nil
                     }
                 },
                 message: {
-                    Localized.reportConfirmation.view(
-                        ["report_type": selectedCategory?.displayName ?? Localized.error.string]
+                    Text(
+                        .localizable.reportConfirmation(
+                            selectedCategory?.displayName ?? String(localized: .localizable.error)
+                        )
                     )
                 }
             ) 
             // Mute user menu
             .alert(
-                Localized.muteUser.string, 
+                String(localized: .localizable.muteUser),
                 isPresented: $showMuteDialog,
                 actions: { 
                     if let author = reportedObject.author {
-                        Button(Localized.yes.string) { 
+                        Button(String(localized: .localizable.yes)) {
                             mute(author: author)
                         }
-                        Button(Localized.no.string) {}
+                        Button(String(localized: .localizable.no)) {}
                     }
                 },
                 message: {
                     if let author = reportedObject.author {
-                        Localized.mutePrompt.view(["user": author.safeName])
+                        Text(.localizable.mutePrompt(author.safeName))
                     } else {
-                        Localized.error.view
+                        Text(.localizable.error)
                     }
                 }
             ) 
             .onChange(of: isPresented) { _, shouldPresent in
                 if shouldPresent {
                     confirmationDialog = ConfirmationDialogState(
-                        title: Localized.reportContent.textState, 
+                        title: TextState(String(localized: .localizable.reportContent)),
                         buttons: subCategoryButtons(for: topLevelCategories)
                     )
                 } else {
@@ -106,7 +108,7 @@ struct ReportMenuModifier: ViewModifier {
         } else {
             Task {
                 confirmationDialog = ConfirmationDialogState(
-                    title: Localized.reportContent.textState, 
+                    title: TextState(String(localized: .localizable.reportContent)),
                     buttons: subCategoryButtons(for: category.subCategories ?? [])
                 )
             }
@@ -146,7 +148,7 @@ struct ReportMenuModifier: ViewModifier {
                 ["L", "MOD"],
                 ["l", "MOD>\(selectedCategory.code)", "MOD"]
             ], 
-            content: Localized.reportEventContent.text(["report_category": selectedCategory.displayName]) 
+            content: String(localized: .localizable.reportEventContent(selectedCategory.displayName))
         )
         
         var targetTag = reportedObject.tag

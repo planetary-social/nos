@@ -38,13 +38,13 @@ enum ExpirationTimeOption: Double, Identifiable, CaseIterable {
     var unit: String {
         switch self {
         case .oneHour:
-            return Localized.hourAbbreviated.string
+            return String(localized: .localizable.hourAbbreviated)
         case .oneDay:
-            return Localized.hoursAbbreviated.string
+            return String(localized: .localizable.hoursAbbreviated)
         case .sevenDays:
-            return Localized.daysAbbreviated.string
+            return String(localized: .localizable.daysAbbreviated)
         case .oneYear:
-            return Localized.daysAbbreviated.string
+            return String(localized: .localizable.daysAbbreviated)
         }
     }
     

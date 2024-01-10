@@ -18,7 +18,7 @@ struct WalletConnectPairingView: View {
     var body: some View {
         VStack {
             HStack {
-                PlainText(.connectGlobalIDTitle)
+                PlainText(.localizable.connectGlobalIDTitle)
                     .font(.clarityTitle)
                     .foregroundColor(.primaryTxt)
                     .multilineTextAlignment(.leading)
@@ -27,7 +27,7 @@ struct WalletConnectPairingView: View {
             }
             
             HStack {
-                PlainText(.scanTheWalletConnectQR)
+                PlainText(.localizable.scanTheWalletConnectQR)
                     .font(.callout)
                     .foregroundColor(.secondaryTxt)
                     .padding(.vertical, 8)
@@ -56,8 +56,8 @@ struct WalletConnectPairingView: View {
                 Spacer()
                 Button(action: { viewModel.copyLinkPressed() }, label: {
                     HighlightedText(
-                        text: .copyQRLink, 
-                        highlightedWord: Localized.copyQRLink.string, 
+                        text: .localizable.copyQRLink,
+                        highlightedWord: String(localized: .localizable.copyQRLink), 
                         highlight: .verticalAccent, 
                         link: nil
                     )
@@ -66,7 +66,7 @@ struct WalletConnectPairingView: View {
             }
             .padding(13)
             
-            BigActionButton(title: .connectGlobalID) { 
+            BigActionButton(title: .localizable.connectGlobalID) { 
                 viewModel.connectPressed()
             }
         }

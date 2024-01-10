@@ -33,7 +33,11 @@ struct ImagePickerButton<Label>: View where Label: View {
     }
 
     private var settingsAlertTitle: String {
-        Localized.ImagePicker.permissionsRequired.text(["title": Localized.ImagePicker.camera.string])
+        String(
+            localized: .imagePicker.permissionsRequired(
+                String(localized: LocalizedStringResource.imagePicker.camera)
+            )
+        )
     }
 
     var body: some View {
@@ -42,8 +46,12 @@ struct ImagePickerButton<Label>: View where Label: View {
         } label: {
             label()
         }
-        .confirmationDialog(Localized.select.string, isPresented: $showConfirmationDialog, titleVisibility: .hidden) {
-            Button(Localized.ImagePicker.takePhoto.string) {
+        .confirmationDialog(
+            String(localized: .localizable.select),
+            isPresented: $showConfirmationDialog,
+            titleVisibility: .hidden
+        ) {
+            Button(String(localized: .imagePicker.takePhoto)) {
                 analytics.selectedUploadFromCamera()
                 // Check permissions
 
@@ -75,11 +83,11 @@ struct ImagePickerButton<Label>: View where Label: View {
                     imagePickerSource = .camera
                 }
             }
-            Button(Localized.ImagePicker.selectFrom.string) {
+            Button(String(localized: .imagePicker.selectFrom)) {
                 analytics.selectedUploadFromPhotoLibrary()
                 imagePickerSource = .photoLibrary
             }
-            Button(Localized.cancel.string, role: .cancel) {
+            Button(String(localized: .localizable.cancel), role: .cancel) {
                 analytics.cancelledUploadSourceSelection()
                 showConfirmationDialog = false
             }
@@ -88,20 +96,22 @@ struct ImagePickerButton<Label>: View where Label: View {
             settingsAlertTitle,
             isPresented: $showSettingsAlert,
             actions: {
-                Button(Localized.settings.string) {
+                Button(String(localized: .localizable.settings)) {
                     showSettingsAlert = false
                     self.router.openOSSettings()
                 }
-                Button(Localized.cancel.string) {
+                Button(String(localized: .localizable.cancel)) {
                     showSettingsAlert = false
                 }
             },
             message: {
-                Text(Localized.ImagePicker.openSettingsMessage.string)
+                Text(.imagePicker.openSettingsMessage)
             }
         )
         .sheet(isPresented: showImagePicker) {
-            ImagePicker(sourceType: imagePickerSource ?? .photoLibrary, cameraDevice: .rear) { imagePicked in
+            ImagePickerUIViewController(
+                sourceType: imagePickerSource ?? .photoLibrary, cameraDevice: .rear
+            ) { imagePicked in
                 if let image = imagePicked {
                     analytics.selectedImage()
                     onCompletion(image)
