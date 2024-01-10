@@ -1491,7 +1491,7 @@
 				C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3.swift" */,
 				C9332C642ADED0D700AD7B0E /* XCLocalSwiftPackageReference "StarscreamOld" */,
 				C91565BF2B2368FA0068EECA /* XCRemoteSwiftPackageReference "ViewInspector" */,
-				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */,
+				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -1965,11 +1965,11 @@
 /* Begin PBXTargetDependency section */
 		3AD3185D2B294E9000026B07 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 3AD3185C2B294E9000026B07 /* XCStringsToolPlugin */;
+			productRef = 3AD3185C2B294E9000026B07 /* plugin:XCStringsToolPlugin */;
 		};
 		3AEABEF32B2BF806001BC933 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 3AEABEF22B2BF806001BC933 /* XCStringsToolPlugin */;
+			productRef = 3AEABEF22B2BF806001BC933 /* plugin:XCStringsToolPlugin */;
 		};
 		C90862C229E9804B00C35A71 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2196,7 +2196,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.1;
+				MARKETING_VERSION = 0.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.Nos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2250,7 +2250,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.1;
+				MARKETING_VERSION = 0.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.Nos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2425,20 +2425,20 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/liamnichols/xcstrings-tool-plugin.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.1;
+			};
+		};
 		C91565BF2B2368FA0068EECA /* XCRemoteSwiftPackageReference "ViewInspector" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nalexn/ViewInspector";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.9.9;
-			};
-		};
-		3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/liamnichols/xcstrings-tool-plugin.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.1;
 			};
 		};
 		C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */ = {
@@ -2556,14 +2556,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3AD3185C2B294E9000026B07 /* XCStringsToolPlugin */ = {
+		3AD3185C2B294E9000026B07 /* plugin:XCStringsToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
+			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */;
 			productName = "plugin:XCStringsToolPlugin";
 		};
-		3AEABEF22B2BF806001BC933 /* XCStringsToolPlugin */ = {
+		3AEABEF22B2BF806001BC933 /* plugin:XCStringsToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
+			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */;
 			productName = "plugin:XCStringsToolPlugin";
 		};
 		C905B0742A619367009B8A78 /* DequeModule */ = {
@@ -2591,7 +2591,7 @@
 		};
 		C94824492B32364900005B36 /* Web3 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3" */;
+			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3.swift" */;
 			productName = Web3;
 		};
 		C94D855E29914D2300749478 /* SwiftUINavigation */ = {
