@@ -221,7 +221,8 @@ import Combine
         }
         
         if let viewModel {
-            // Leave an hour of margin on the showPushNotificationsAfter to allow for events arriving slightly out of order.
+            // Leave an hour of margin on the showPushNotificationsAfter date to allow for events arriving slightly 
+            // out of order.
             showPushNotificationsAfter = viewModel.date.addingTimeInterval(-60 * 60)
             await viewModel.loadContent(in: self.persistenceController.backgroundViewContext)
             
