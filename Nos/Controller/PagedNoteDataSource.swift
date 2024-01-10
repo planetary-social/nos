@@ -23,7 +23,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     private var context: NSManagedObjectContext
     private var header: () -> Header
     private var emptyPlaceholder: () -> EmptyPlaceholder
-    let pageSize = 10
+    let pageSize = 30
     
     private var cellReuseID = "Cell"
     private var headerReuseID = "Header"
