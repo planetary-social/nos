@@ -14,11 +14,15 @@ import CoreData
 @objc(NosNotification)
 public class NosNotification: NSManagedObject {
 
-    class func createIfNecessary(
-        from eventID: HexadecimalString, 
-        authorKey: HexadecimalString, 
+    static func createIfNecessary(
+        from eventID: HexadecimalString,
+        date: Date,
+        authorKey: HexadecimalString,
         in context: NSManagedObjectContext
     ) throws -> NosNotification? {
+        guard date > staleNotificationCutoff() else {
+            return nil
+        }
         let author = try Author.findOrCreate(by: authorKey, context: context)
         if try NosNotification.find(by: eventID, in: context) != nil {
             return nil
@@ -26,11 +30,12 @@ public class NosNotification: NSManagedObject {
             let notification = NosNotification(context: context)
             notification.eventID = eventID
             notification.user = author
+            notification.createdAt = date
             return notification
         }
     }
     
-    class func find(by eventID: HexadecimalString, in context: NSManagedObjectContext) throws -> NosNotification? {
+    static func find(by eventID: HexadecimalString, in context: NSManagedObjectContext) throws -> NosNotification? {
         let fetchRequest = request(by: eventID)
         if let notification = try context.fetch(fetchRequest).first {
             return notification
@@ -39,7 +44,7 @@ public class NosNotification: NSManagedObject {
         return nil
     }
     
-    class func request(by eventID: HexadecimalString) -> NSFetchRequest<NosNotification> {
+    static func request(by eventID: HexadecimalString) -> NSFetchRequest<NosNotification> {
         let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
         fetchRequest.predicate = NSPredicate(format: "eventID = %@", eventID)
         fetchRequest.fetchLimit = 1
@@ -47,24 +52,13 @@ public class NosNotification: NSManagedObject {
         return fetchRequest
     }
     
-    class func unreadCount(for user: Author, in context: NSManagedObjectContext) throws -> Int {
+    static func unreadCount(for user: Author, in context: NSManagedObjectContext) throws -> Int {
         let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
         fetchRequest.predicate = NSPredicate(format: "isRead != 1")
         return try context.count(for: fetchRequest)
     }
     
-    class func markRead(eventID: HexadecimalString, in context: NSManagedObjectContext) async {
-        await context.perform {
-            if let notification = try? find(by: eventID, in: context), 
-                !notification.isRead {
-                notification.isRead = true
-            }
-            
-            try? context.saveIfNeeded()
-        }
-    }
-    
-    class func markAllAsRead(for user: Author, in context: NSManagedObjectContext) async throws {
+    static func markAllAsRead(for user: Author, in context: NSManagedObjectContext) async throws {
         try await context.perform {
             let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
             fetchRequest.predicate = NSPredicate(format: "isRead != 1")
@@ -75,5 +69,17 @@ public class NosNotification: NSManagedObject {
             
             try? context.saveIfNeeded()
         }
+    }
+
+    static func oldNotificationsRequest() -> NSFetchRequest<NosNotification> {
+        let fetchRequest = NSFetchRequest<NosNotification>(entityName: "NosNotification")
+        let since = staleNotificationCutoff()
+        fetchRequest.predicate = NSPredicate(format: "createdAt == nil OR createdAt < %@", since as CVarArg)
+        return fetchRequest
+    }
+
+    /// Two months before Date.now, and is used to delete old notifications from the db.
+    static func staleNotificationCutoff() -> Date {
+        Calendar.current.date(byAdding: .month, value: -2, to: .now) ?? .now
     }
 }
