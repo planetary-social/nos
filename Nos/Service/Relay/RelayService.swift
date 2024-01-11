@@ -323,7 +323,6 @@ extension RelayService {
                     await subscriptions.forceCloseSubscriptionCount(for: subscription.id)
                     await sendCloseToAll(for: subscription.id)
                 }
-                Log.debug("subscription \(subscriptionID) has received \(subscription.receivedEventCount) events.")
             }
         } catch {
             print("Error: parsing event from relay (\(socket.request.url?.absoluteString ?? "")): " +
