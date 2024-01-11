@@ -48,8 +48,6 @@ struct HomeFeedView: View {
         )
     }
     
-    @State var followedKeys = [HexadecimalString]()
-
     var body: some View {
         Group {
             if performingInitialLoad {
