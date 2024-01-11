@@ -100,7 +100,7 @@ platform :ios do
     build_number = get_build_number(
       xcodeproj: "Nos.xcodeproj"
     )
-    stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
+    stamp_changelog(section_identifier: "#{version_number}")
     git_commit(message: "Stamping beta deployment", path: "*")
     push_to_git_remote
   end
