@@ -90,12 +90,11 @@ platform :ios do
     )
   end
 
-  desc "Mark a deployed commit as a beta"
-  lane :beta do
+  desc "Mark a deployed commit as having been deployed to our public beta testers"
+  lane :stamp_release do
     changelog = read_changelog
     stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
-    dev
-    git_commit(message: "TestFlight beta deployment", path: "*")
+    git_commit(message: "Stamping beta deployment", path: "*")
     push_to_git_remote
   end
 
