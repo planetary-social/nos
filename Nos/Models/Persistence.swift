@@ -36,12 +36,7 @@ class PersistenceController {
     
     /// A context for parsing Nostr events from relays.
     lazy var parseContext = {
-        return newBackgroundContext()
-//        let context = NSManagedObjectContext(.privateQueue)
-//        context.parent = viewContext
-//        context.automaticallyMergesChangesFromParent = true
-//        context.mergePolicy = NSMergePolicy.mergeByPropertyStoreTrump
-//        return context
+        newBackgroundContext()
     }()
     
     /// A context for Views to do expensive queries that we want to keep off the viewContext.
@@ -172,19 +167,10 @@ class PersistenceController {
     }
     
     func newBackgroundContext() -> NSManagedObjectContext {
-//        return DispatchQueue(label: "com.example.mySerialQueue").sync {
-            let context = container.newBackgroundContext()
-//            let context = NSManagedObjectContext(.privateQueue)
-//            context.parent = viewContext
-            context.automaticallyMergesChangesFromParent = true
-            context.mergePolicy = NSMergePolicy.mergeByPropertyStoreTrump
-            return context
-//        }
-//        let context = container.newBackgroundContext()
-//        context.automaticallyMergesChangesFromParent = true
-//        let mergeType = NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType
-//        context.mergePolicy = NSMergePolicy(merge: mergeType)
-//        return context
+        let context = container.newBackgroundContext()
+        context.automaticallyMergesChangesFromParent = true
+        context.mergePolicy = NSMergePolicy.mergeByPropertyStoreTrump
+        return context
     }
     
     static func loadVersionFromDisk() -> Int {
