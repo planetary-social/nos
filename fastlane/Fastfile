@@ -93,6 +93,13 @@ platform :ios do
   desc "Mark a deployed commit as having been deployed to our public beta testers"
   lane :stamp_release do
     changelog = read_changelog
+    version_number = get_version_number(
+      xcodeproj: "Nos.xcodeproj",
+      target: "Nos"
+    )
+    build_number = get_build_number(
+      xcodeproj: "Nos.xcodeproj"
+    )
     stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
     git_commit(message: "Stamping beta deployment", path: "*")
     push_to_git_remote
