@@ -44,22 +44,35 @@ struct EventObservationTestView: View {
 }
 
 /// Testing that our SwiftUI Views can successfully observe Event changes from Core Data
-final class EventObservationTests: SQLiteStoreTestCase {
+final class EventObservationTests: XCTestCase {
+    
+    private var persistenceController: PersistenceController!
+    
+    override func invokeTest() {
+        withDependencies { dependencies in
+            let persistenceController = PersistenceController(containerName: "NosTests", inMemory: true)
+            self.persistenceController = persistenceController
+            dependencies.persistenceController = persistenceController
+        } operation: {
+            super.invokeTest()
+        }
+    }
     
     /// This tests that the same event created in two separate contexts will update correctly in the view when both
     /// contexts are saved. This test exhibits bug https://github.com/planetary-social/nos/issues/697.  
     func testDuplicateEventMergingGivenViewContextSavesFirst() throws {
-        XCTExpectFailure("This test is failing intermittently, see #703", options: .nonStrict())
         // Arrange
         let viewContext = persistenceController.viewContext
-        let parseContext = persistenceController.parseContext
+        let parseContext = persistenceController.backgroundViewContext
         
         let eventID = "123456"
         let eventContent = "foo bar"
         
         // Act
-        _ = try Event.findOrCreateStubBy(id: eventID, context: viewContext)
+        let stubbedEvent = try Event.findOrCreateStubBy(id: eventID, context: viewContext)
+//        try viewContext.obtainPermanentIDs(for: [stubbedEvent])
         let fullEvent = try Event.findOrCreateStubBy(id: eventID, context: parseContext)
+//        try parseContext.obtainPermanentIDs(for: [fullEvent])
         fullEvent.content = eventContent
         
         let view = EventObservationTestView()
@@ -70,13 +83,99 @@ final class EventObservationTests: SQLiteStoreTestCase {
         }
         wait(for: [expectNullContent], timeout: 0.1)
         
-        try viewContext.save()
+//        XCTAssertEqual(stubbedEvent.objectID, fullEvent.objectID)
+        
         try parseContext.save()
+        try viewContext.save()
+        
+//        XCTAssertEqual(stubbedEvent.objectID, fullEvent.objectID)
         
         let expectContent = view.inspection.inspect { view in
             let eventContentInView = try view.find(ViewType.Text.self).string()
             XCTAssertEqual(eventContentInView, eventContent)
         }
         wait(for: [expectContent], timeout: 0.1)
+    }
+    
+    /// This tests that the same event created in two separate contexts will update correctly in the view when both
+    /// contexts are saved. This test exhibits bug https://github.com/planetary-social/nos/issues/697.  
+    func testDuplicateEventMergingGivenParseContextSavesFirst() throws {
+        // Arrange
+        let viewContext = persistenceController.viewContext
+        let parseContext = persistenceController.parseContext
+        
+        let eventID = "123456"
+        let eventContent = "foo bar"
+        
+        // Act
+        let stubbedEvent = try Event.findOrCreateStubBy(id: eventID, context: viewContext)
+        try viewContext.obtainPermanentIDs(for: [stubbedEvent])
+        let fullEvent = try Event.findOrCreateStubBy(id: eventID, context: parseContext)
+        try parseContext.obtainPermanentIDs(for: [fullEvent])
+        fullEvent.content = eventContent
+        
+        let view = EventObservationTestView()
+        ViewHosting.host(view: view.environment(\.managedObjectContext, persistenceController.container.viewContext))
+        let expectNullContent = view.inspection.inspect { view in
+            let eventContentInView = try view.find(ViewType.Text.self).string()
+            XCTAssertEqual(eventContentInView, "null")
+        }
+        wait(for: [expectNullContent], timeout: 0.1)
+        
+        try parseContext.save()
+        try viewContext.save()
+        
+        let expectContent = view.inspection.inspect { view in
+            let eventContentInView = try view.find(ViewType.Text.self).string()
+            XCTAssertEqual(eventContentInView, eventContent)
+        }
+        wait(for: [expectContent], timeout: 0.1)
+    }
+    
+    func _testObjectIDsSavingViewContextFirst() throws {
+        // Arrange
+        let viewContext = persistenceController.viewContext
+        let parseContext = persistenceController.parseContext
+        
+        let eventID = "123456"
+        let eventContent = "foo bar"
+        
+        // Act
+        let stubbedEvent = try Event.findOrCreateStubBy(id: eventID, context: viewContext)
+        let viewContextObjectID = stubbedEvent.objectID
+        try viewContext.obtainPermanentIDs(for: [stubbedEvent])
+        let fullEvent = try Event.findOrCreateStubBy(id: eventID, context: parseContext)
+        let fullEventObjectID = fullEvent.objectID
+        fullEvent.content = eventContent
+        
+        try viewContext.save()
+        try parseContext.save()
+        
+        print(fullEventObjectID)
+        XCTAssertEqual(fullEvent.objectID, viewContextObjectID) 
+        XCTAssertEqual(stubbedEvent.objectID, viewContextObjectID) // why did stubbed event's object ID change but full event did not?
+        XCTAssertEqual((try viewContext.existingObject(with: viewContextObjectID) as! Event).content, eventContent)
+    }
+    
+    func _testObjectIDsSavingParseContextFirst() throws {
+        // Arrange
+        let viewContext = persistenceController.viewContext
+        let parseContext = persistenceController.parseContext
+        
+        let eventID = "123456"
+        let eventContent = "foo bar"
+        
+        // Act
+        let stubbedEvent = try Event.findOrCreateStubBy(id: eventID, context: viewContext)
+        let viewContextObjectID = stubbedEvent.objectID
+        let fullEvent = try Event.findOrCreateStubBy(id: eventID, context: parseContext)
+        let fullEventObjectID = fullEvent.objectID
+        fullEvent.content = eventContent
+        
+        try parseContext.save()
+        try viewContext.save()
+        
+        XCTAssertEqual(fullEvent.objectID, viewContextObjectID)
+        XCTAssertEqual(stubbedEvent.objectID, viewContextObjectID)
     }
 }

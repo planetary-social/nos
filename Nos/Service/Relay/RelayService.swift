@@ -357,7 +357,6 @@ extension RelayService {
                 )
                 #endif
                 try self.parseContext.saveIfNeeded()
-                try self.persistenceController.viewContext.saveIfNeeded()
             }                
             return true
         }
