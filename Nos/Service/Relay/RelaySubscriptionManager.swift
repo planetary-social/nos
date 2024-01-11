@@ -77,7 +77,7 @@ actor RelaySubscriptionManager {
         for subscription in active {
             if subscription.isOneTime, 
                 let filterStartedAt = subscription.subscriptionStartDate,
-                filterStartedAt.distance(to: .now) > 5 {
+                filterStartedAt.distance(to: .now) > 10 {
                 staleSubscriptions.append(subscription)
             }
         }

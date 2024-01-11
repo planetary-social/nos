@@ -826,6 +826,7 @@ public class Event: NosManagedObject {
         if isStub {
             await loadContent()
             loadingViewData = false
+            // TODO: how do we load details for the event again after we hydrate the stub?
         } else {
             Task { await loadReferencedNote() }
             Task { await loadAuthorMetadata() }

@@ -12,6 +12,7 @@ import Dependencies
 class PersistenceController {
     
     @Dependency(\.currentUser) var currentUser
+    @Dependency(\.analytics) var analytics
     
     /// Increment this to delete core data on update
     static let version = 3
@@ -35,11 +36,7 @@ class PersistenceController {
     
     /// A context for parsing Nostr events from relays.
     lazy var parseContext = {
-        let context = NSManagedObjectContext(.privateQueue)
-        context.parent = viewContext
-        context.automaticallyMergesChangesFromParent = true
-        context.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
-        return context
+        newBackgroundContext()
     }()
     
     /// A context for Views to do expensive queries that we want to keep off the viewContext.
@@ -172,8 +169,7 @@ class PersistenceController {
     func newBackgroundContext() -> NSManagedObjectContext {
         let context = container.newBackgroundContext()
         context.automaticallyMergesChangesFromParent = true
-        let mergeType = NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType
-        context.mergePolicy = NSMergePolicy(merge: mergeType)
+        context.mergePolicy = NSMergePolicy.mergeByPropertyStoreTrump
         return context
     }
     
@@ -212,7 +208,7 @@ class PersistenceController {
             let startTime = Date.now
             Log.info("Starting Core Data cleanup...")
             
-            Log.info("Database statistics: \(try databaseStatistics(from: context).sorted(by: { $0.key < $1.key }))")
+            Log.info("Database statistics: \(try await Self.databaseStatistics(from: context))")
             
             // Delete all but the most recent n events
             let eventsToKeep = 1000
@@ -300,7 +296,9 @@ class PersistenceController {
                 context.refreshAllObjects()
             }
             
-            Log.info("Database statistics: \(try databaseStatistics(from: context).sorted(by: { $0.key < $1.key }))")
+            let newStatistics = try await Self.databaseStatistics(from: context)
+            Log.info("Database statistics: \(newStatistics)")
+            analytics.databaseStatistics(newStatistics)
             
             let elapsedTime = Date.now.timeIntervalSince1970 - startTime.timeIntervalSince1970 
             Log.info("Finished Core Data cleanup in \(elapsedTime) seconds.")
@@ -308,20 +306,22 @@ class PersistenceController {
     }
     // swiftlint:enable function_body_length 
     
-    func databaseStatistics(from context: NSManagedObjectContext) throws -> [String: Int] {
-        var statistics = [String: Int]()
-        if let managedObjectModel = context.persistentStoreCoordinator?.managedObjectModel {
-            let entitiesByName = managedObjectModel.entitiesByName
-            
-            for entityName in entitiesByName.keys {
-                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-                let count = try context.performAndWait {
-                    try context.count(for: fetchRequest)
+    static func databaseStatistics(from context: NSManagedObjectContext) async throws -> [(String, Int)] {
+        try await context.perform { 
+            var statistics = [String: Int]()
+            if let managedObjectModel = context.persistentStoreCoordinator?.managedObjectModel {
+                let entitiesByName = managedObjectModel.entitiesByName
+                
+                for entityName in entitiesByName.keys {
+                    let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+                    let count = try context.performAndWait {
+                        try context.count(for: fetchRequest)
+                    }
+                    statistics[entityName] = count
                 }
-                statistics[entityName] = count
             }
+            
+            return statistics.sorted(by: { $0.key < $1.key })
         }
-        
-        return statistics
     }
 }

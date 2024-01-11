@@ -147,8 +147,9 @@ class Analytics {
         postHog?.identify(keyPair.npub)
     }
     
-    func databaseStatistics(_ statistics: [String: Any]) {
-        track("Database Statistics", properties: statistics)
+    func databaseStatistics(_ statistics: [(String, Int)]) {
+        let properties = Dictionary(uniqueKeysWithValues: statistics)
+        track("Database Statistics", properties: properties)
     }
     
     func logout() {
