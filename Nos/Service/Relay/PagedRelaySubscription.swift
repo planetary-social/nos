@@ -72,6 +72,12 @@ class PagedRelaySubscription {
             for subscriptionID in pagedSubscriptionIDs {
                 if let subscription = await subscriptionManager.subscription(from: subscriptionID),
                     let newDate = subscription.oldestEventCreationDate {
+                    
+                    guard newDate != subscription.filter.until else {
+                        // Optimization. Don't close and reopen an identical filter.
+                        continue
+                    }
+                          
                     newUntilDates[subscription.relayAddress] = newDate
                     await subscriptionManager.decrementSubscriptionCount(for: subscriptionID)
                 }
