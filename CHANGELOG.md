@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2 (144)] - 2024-01-11Z
+
 - Fixed a crash that sometimes occured when opening the profile view.
 - Fixed a crash that sometimes occured when viewing a note.
 - Migrate to Apple-native string catalog and codegen LocalizedStringResources with xcstrings-tool-plugin.
