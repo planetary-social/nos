@@ -158,6 +158,8 @@
 		C9680AD12ACC5251006C8C93 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9680AD02ACC5251006C8C93 /* Either.swift */; };
 		C9680AD22ACC5251006C8C93 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9680AD02ACC5251006C8C93 /* Either.swift */; };
 		C9680AD42ACDF57D006C8C93 /* UNSWizardNeedsPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9680AD32ACDF57D006C8C93 /* UNSWizardNeedsPaymentView.swift */; };
+		C96877B92B4EDD110051ED2F /* AuthorStoryCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96877B82B4EDD110051ED2F /* AuthorStoryCarousel.swift */; };
+		C96877BB2B4EDE510051ED2F /* StoryAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96877BA2B4EDE510051ED2F /* StoryAvatarView.swift */; };
 		C96CB98C2A6040C500498C4E /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = C96CB98B2A6040C500498C4E /* DequeModule */; };
 		C97141EE2AE95F07001A5DD0 /* USBCAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97141ED2AE95F07001A5DD0 /* USBCAddress.swift */; };
 		C97141EF2AE95F07001A5DD0 /* USBCAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97141ED2AE95F07001A5DD0 /* USBCAddress.swift */; };
@@ -476,6 +478,7 @@
 		5B6EB48D29EDBE0E006E750C /* NoteParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParser.swift; sourceTree = "<group>"; };
 		5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParserTests.swift; sourceTree = "<group>"; };
 		5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bech32Tests.swift; sourceTree = "<group>"; };
+		5B810DD62B55BA44008FE8A9 /* Nos 15.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 15.xcdatamodel"; sourceTree = "<group>"; };
 		5B834F662A83FB5C000C1432 /* ProfileKnownFollowersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileKnownFollowersView.swift; sourceTree = "<group>"; };
 		5B834F682A83FC7F000C1432 /* ProfileSocialStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSocialStatsView.swift; sourceTree = "<group>"; };
 		5B8805192A21027C00E21F06 /* SHA256Key.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SHA256Key.swift; sourceTree = "<group>"; };
@@ -486,6 +489,7 @@
 		5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextFieldObserver.swift; sourceTree = "<group>"; };
 		5B8C96B129DB313300B73AEC /* AuthorCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorCard.swift; sourceTree = "<group>"; };
 		5B8C96B529DDD3B200B73AEC /* EditableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableText.swift; sourceTree = "<group>"; };
+		5B960D2C2B34B1B900C52C45 /* Nos 14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 14.xcdatamodel"; sourceTree = "<group>"; };
 		5BE281BD2AE2CCAE00880466 /* StoriesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoriesView.swift; sourceTree = "<group>"; };
 		5BE281C02AE2CCB400880466 /* StoryNoteView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryNoteView.swift; sourceTree = "<group>"; };
 		5BE281C32AE2CCC300880466 /* AuthorStoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorStoryView.swift; sourceTree = "<group>"; };
@@ -565,6 +569,8 @@
 		C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Encoding.swift"; sourceTree = "<group>"; };
 		C9680AD02ACC5251006C8C93 /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		C9680AD32ACDF57D006C8C93 /* UNSWizardNeedsPaymentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UNSWizardNeedsPaymentView.swift; sourceTree = "<group>"; };
+		C96877B82B4EDD110051ED2F /* AuthorStoryCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorStoryCarousel.swift; sourceTree = "<group>"; };
+		C96877BA2B4EDE510051ED2F /* StoryAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryAvatarView.swift; sourceTree = "<group>"; };
 		C97141ED2AE95F07001A5DD0 /* USBCAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBCAddress.swift; sourceTree = "<group>"; };
 		C973364E2A7968220012D8B8 /* SetUpUNSBanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetUpUNSBanner.swift; sourceTree = "<group>"; };
 		C973AB552A323167002AED16 /* Follow+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Follow+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -869,6 +875,19 @@
 				C92F01572AC4D6F700972489 /* NosTextField.swift */,
 			);
 			path = Form;
+			sourceTree = "<group>";
+		};
+		C96877B32B4EDCCF0051ED2F /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				C9DEBFD8298941000078B43A /* HomeFeedView.swift */,
+				5BE281C92AE2CCEB00880466 /* HomeTab.swift */,
+				5BE281BD2AE2CCAE00880466 /* StoriesView.swift */,
+				5BE281C02AE2CCB400880466 /* StoryNoteView.swift */,
+				C96877B82B4EDD110051ED2F /* AuthorStoryCarousel.swift */,
+				C96877BA2B4EDE510051ED2F /* StoryAvatarView.swift */,
+			);
+			path = Home;
 			sourceTree = "<group>";
 		};
 		C97797B7298AA1600046BD25 /* Service */ = {
@@ -1211,10 +1230,9 @@
 				C987F81929BA4D0E00B44E7A /* ActionButton.swift */,
 				C9A0DAE929C6A34200466635 /* ActivityView.swift */,
 				C9F84C20298DC36800C6714D /* AppView.swift */,
-				2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */,
+				5B8C96B129DB313300B73AEC /* AuthorCard.swift */,
 				C97465302A3B89140031226F /* AuthorLabel.swift */,
 				5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */,
-				5B8C96B129DB313300B73AEC /* AuthorCard.swift */,
 				5BE281C32AE2CCC300880466 /* AuthorStoryView.swift */,
 				3FFB1D88299FF37C002A755D /* AvatarView.swift */,
 				C92F01542AC4D6CF00972489 /* BeveledSeparator.swift */,
@@ -1230,17 +1248,16 @@
 				5B8C96B529DDD3B200B73AEC /* EditableText.swift */,
 				CD76864B29B12F7E00085358 /* ExpandingTextFieldAndSubmitButton.swift */,
 				A303AF8229A9153A005DC8FC /* FollowButton.swift */,
-				C9E8C1142B081EBE002D46B0 /* NIP05View.swift */,
 				A32B6C7729A6C99200653FF5 /* FollowCard.swift */,
 				A32B6C7229A6BE9B00653FF5 /* FollowsView.swift */,
 				C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */,
 				C9CDBBA329A8FA2900C555C7 /* GoldenPostView.swift */,
 				C9A0DAE329C69F0C00466635 /* HighlightedText.swift */,
-				C9DEBFD8298941000078B43A /* HomeFeedView.swift */,
-				5BE281C92AE2CCEB00880466 /* HomeTab.swift */,
+				2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */,
 				C960C57029F3236200929990 /* LikeButton.swift */,
 				C905B0762A619E99009B8A78 /* LinkPreview.swift */,
 				5BFF66B52A58A8A000AA79DD /* MutesView.swift */,
+				C9E8C1142B081EBE002D46B0 /* NIP05View.swift */,
 				C9A0DADC29C689C900466635 /* NosNavigationBar.swift */,
 				CD2CF38F299E68BE00332116 /* NoteButton.swift */,
 				C9DFA964299BEB96006929C1 /* NoteCard.swift */,
@@ -1249,6 +1266,7 @@
 				C9B708BA2A13BE41006C613A /* NoteTextEditor.swift */,
 				C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */,
 				C94437E529B0DB83004D8C86 /* NotificationsView.swift */,
+				C986510F2B0BD49200597B68 /* PagedNoteListView.swift */,
 				C95D68A4299E6E1E00429F86 /* PlaceholderModifier.swift */,
 				C9E37E112A1E7EC5003D4B0A /* PreviewContainer.swift */,
 				C94BC09A2A0AC74A0098F6F1 /* PreviewData.swift */,
@@ -1258,7 +1276,6 @@
 				5B834F682A83FC7F000C1432 /* ProfileSocialStatsView.swift */,
 				C987F81C29BA6D9A00B44E7A /* ProfileTab.swift */,
 				C95D68AC299E721700429F86 /* ProfileView.swift */,
-				C986510F2B0BD49200597B68 /* PagedNoteListView.swift */,
 				5BFF66B32A58853D00AA79DD /* PublishedEventsView.swift */,
 				C97A1C8729E45B3C009D9E8D /* RawEventView.swift */,
 				C9A25B3C29F174D200B39534 /* ReadabilityPadding.swift */,
@@ -1282,21 +1299,20 @@
 				C92DF80729C25FA900400561 /* SquareImage.swift */,
 				3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */,
 				C931517C29B915AF00934506 /* StaggeredGrid.swift */,
-				5BE281BD2AE2CCAE00880466 /* StoriesView.swift */,
-				5BE281C02AE2CCB400880466 /* StoryNoteView.swift */,
 				2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */,
 				3F60F42829B27D3E000D62C4 /* ThreadView.swift */,
+				C9E8C1122B081E9C002D46B0 /* UNSNameView.swift */,
 				C9A2FCA12AE6FF360020A5C6 /* USBCBalanceBarButtonItem.swift */,
+				C913DA0D2AEB3265003BDD6D /* WarningView.swift */,
 				C9CE5B132A0172CF008E198C /* WebView.swift */,
 				C92F01502AC4D67B00972489 /* Form */,
+				C96877B32B4EDCCF0051ED2F /* Home */,
 				C9CFF6D02AB241EB00D4B368 /* Modifiers */,
 				C9EE3E652A053CF1008A7491 /* New Note */,
 				3FB5E64F299D288E00386527 /* Onboarding */,
 				C9DEBFDD298941020078B43A /* Preview Content */,
 				C905EA362A33620A006F1E99 /* UNS */,
 				C9F2046E2ADEDDCA0029A858 /* USBC */,
-				C913DA0D2AEB3265003BDD6D /* WarningView.swift */,
-				C9E8C1122B081E9C002D46B0 /* UNSNameView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1439,7 +1455,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1510;
 				TargetAttributes = {
 					C90862BA29E9804B00C35A71 = {
 						CreatedOnToolsVersion = 14.2;
@@ -1721,6 +1737,7 @@
 				C92F015B2AC4D74E00972489 /* NosTextEditor.swift in Sources */,
 				C913DA0C2AEB2EBF003BDD6D /* FetchRequestPublisher.swift in Sources */,
 				C973AB5D2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */,
+				C96877BB2B4EDE510051ED2F /* StoryAvatarView.swift in Sources */,
 				C95D68A3299E6D9000429F86 /* SelectableText.swift in Sources */,
 				C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */,
 				5B8C96B629DDD3B200B73AEC /* EditableText.swift in Sources */,
@@ -1838,6 +1855,7 @@
 				C98CA9072B14FBBF00929141 /* PagedNoteDataSource.swift in Sources */,
 				C9A0DAEA29C6A34200466635 /* ActivityView.swift in Sources */,
 				CD2CF390299E68BE00332116 /* NoteButton.swift in Sources */,
+				C96877B92B4EDD110051ED2F /* AuthorStoryCarousel.swift in Sources */,
 				C93F48932AC5C9CE00900CEC /* UNSWizardIntroView.swift in Sources */,
 				5BE281C42AE2CCC300880466 /* AuthorStoryView.swift in Sources */,
 				C9DEC04D29894BED0078B43A /* Author+CoreDataClass.swift in Sources */,
@@ -2000,7 +2018,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 135;
+				CURRENT_PROJECT_VERSION = 144;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2021,7 +2039,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 135;
+				CURRENT_PROJECT_VERSION = 144;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
@@ -2167,7 +2185,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nos/Nos.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 135;
+				CURRENT_PROJECT_VERSION = 144;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nos/Views/Preview Content\"";
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
@@ -2195,7 +2213,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 0.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.Nos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2221,7 +2239,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution: Verse Communications, Inc. (GZCZBKH7MY)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: Verse Communications, Inc. (GZCZBKH7MY)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 135;
+				CURRENT_PROJECT_VERSION = 144;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nos/Views/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
@@ -2249,7 +2267,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 0.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.Nos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2269,7 +2287,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 135;
+				CURRENT_PROJECT_VERSION = 144;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2297,7 +2315,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 135;
+				CURRENT_PROJECT_VERSION = 144;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2323,7 +2341,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 135;
+				CURRENT_PROJECT_VERSION = 144;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2348,7 +2366,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 135;
+				CURRENT_PROJECT_VERSION = 144;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2794,13 +2812,15 @@
 		C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				5B810DD62B55BA44008FE8A9 /* Nos 15.xcdatamodel */,
+				5B960D2C2B34B1B900C52C45 /* Nos 14.xcdatamodel */,
 				5B2F5CC12AE7443700A92B52 /* Nos 13.xcdatamodel */,
 				C99507332AB9EE40005B1096 /* Nos 12.xcdatamodel */,
 				C92A04DD2A58B02B00C844B8 /* Nos 11.xcdatamodel */,
 				C9C547562A4F1D1A006B0741 /* Nos 9.xcdatamodel */,
 				5BFF66AF2A4B55FC00AA79DD /* Nos 10.xcdatamodel */,
 			);
-			currentVersion = 5B2F5CC12AE7443700A92B52 /* Nos 13.xcdatamodel */;
+			currentVersion = 5B810DD62B55BA44008FE8A9 /* Nos 15.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

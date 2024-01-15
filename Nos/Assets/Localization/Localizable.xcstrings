@@ -4126,13 +4126,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "new",
-                  "value" : "Followed by **%@** and **%lld other**"
+                  "value" : "Followed by **%1@** and **%2ld other**"
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Gefolgt von **%@** und **%lld anderen**"
+                  "state" : "needs_review",
+                  "value" : "Gefolgt von **%1@** und **%2ld anderen**"
                 }
               }
             }
@@ -4144,13 +4144,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Followed by **%@** and **%lld other**"
+                  "value" : "Followed by **%1@** and **%2ld other**"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Followed by **%@** and **%lld others**"
+                  "value" : "Followed by **%1@** and **%2ld others**"
                 }
               }
             }
@@ -4167,7 +4167,7 @@
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "translated",
+                  "state" : "needs_review",
                   "value" : "دنبال شده توسط **%@** و **%lld** نفر دیگر"
                 }
               }
@@ -4185,7 +4185,7 @@
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "translated",
+                  "state" : "needs_review",
                   "value" : "Följs av **%@** och **%lld andra**"
                 }
               }
@@ -4197,7 +4197,7 @@
             "plural" : {
               "other" : {
                 "stringUnit" : {
-                  "state" : "translated",
+                  "state" : "needs_review",
                   "value" : "被**%@**和**%lld个其他用户**关注"
                 }
               }
@@ -4209,7 +4209,7 @@
             "plural" : {
               "other" : {
                 "stringUnit" : {
-                  "state" : "translated",
+                  "state" : "needs_review",
                   "value" : "被**%@**和**%lld個其他用戶**關注"
                 }
               }
