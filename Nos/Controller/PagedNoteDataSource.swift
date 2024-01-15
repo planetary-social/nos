@@ -197,7 +197,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         // as it kept reloading cells with animations when nothing was visually changing.
         switch type {
         case .insert:
-            Log.debug("queuing index path for insertion: \(String(describing: indexPath))")
+            Log.debug("queuing index path for insertion: \(String(describing: newIndexPath))")
             if let newIndexPath = newIndexPath {
                 insertedIndexes.append(newIndexPath)
             }
