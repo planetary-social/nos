@@ -119,7 +119,6 @@ struct ProfileView: View {
                     }
                 )
                 .padding(0)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .id(selectedTab)
             }
             .id(author.id)

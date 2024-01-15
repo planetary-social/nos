@@ -11,6 +11,7 @@ import Foundation
 /// subscriptions. Will auto-cancel them when it is deallocated. Modeled after Combine's `Cancellable`.
 class SubscriptionCancellable {
     private var subscriptionIDs: [RelaySubscription.ID]
+    private var subscriptionCancellables = [SubscriptionCancellable]()
     private weak var relayService: RelayService?
     
     init(subscriptionIDs: [RelaySubscription.ID], relayService: RelayService) {
@@ -19,7 +20,8 @@ class SubscriptionCancellable {
     }
     
     init(cancellables: [SubscriptionCancellable], relayService: RelayService) {
-        self.subscriptionIDs = cancellables.flatMap { $0.subscriptionIDs }
+        self.subscriptionCancellables = cancellables
+        self.subscriptionIDs = []
         self.relayService = relayService
     }
     

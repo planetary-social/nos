@@ -174,9 +174,14 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     private var movedIndexes = [(IndexPath, IndexPath)]()
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        insertedIndexes = [IndexPath]()
-        deletedIndexes = [IndexPath]()
-        movedIndexes = [(IndexPath, IndexPath)]()
+        collectionView.performBatchUpdates({
+            Log.debug("Started batch updates")
+            insertedIndexes = [IndexPath]()
+            deletedIndexes = [IndexPath]()
+            movedIndexes = [(IndexPath, IndexPath)]()
+        }, completion: { (success) in
+            Log.debug("Completed batch updates with \(success))")
+        })
     }
     
     func controller(
@@ -186,14 +191,18 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         for type: NSFetchedResultsChangeType, 
         newIndexPath: IndexPath?
     ) {
+        Log.debug("handling update type: \(type) indexPath: \(String(describing: indexPath))")
+
         // Note: I tried using UICollectionViewDiffableDatasource but it didn't seem to work well with SwiftUI views
         // as it kept reloading cells with animations when nothing was visually changing.
         switch type {
         case .insert:
+            Log.debug("queuing index path for insertion: \(String(describing: indexPath))")
             if let newIndexPath = newIndexPath {
                 insertedIndexes.append(newIndexPath)
             }
         case .delete:
+            Log.debug("queuing index path for deletion: \(String(describing: indexPath))")
             if let indexPath = indexPath {
                 deletedIndexes.append(indexPath)
             }
@@ -202,7 +211,8 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             // them of updates through the collectionView.
             return
         case .move:
-            if let oldIndexPath = indexPath, let newIndexPath = newIndexPath {
+            if let oldIndexPath = indexPath, let newIndexPath {
+                Log.debug("queuing index path \(oldIndexPath) for move to \(newIndexPath)")
                 movedIndexes.append((oldIndexPath, newIndexPath)) 
             }
         @unknown default:
@@ -211,13 +221,22 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        collectionView.performBatchUpdates {
+        Log.debug("controllerDidChangeContent started.")
+        if !deletedIndexes.isEmpty { // it doesn't seem like this check should be necessary but it crashes otherwise
+            Log.debug("deleting indexPaths: \(deletedIndexes)")
             collectionView.deleteItems(at: deletedIndexes)
-            collectionView.insertItems(at: insertedIndexes)
-            movedIndexes.forEach { indexPair in 
-                let (oldIndex, newIndex) = indexPair
-                collectionView.moveItem(at: oldIndex, to: newIndex)
-            }
         }
+        if !insertedIndexes.isEmpty {
+            Log.debug("inserting indexPaths: \(insertedIndexes)")
+            collectionView.insertItems(at: insertedIndexes)
+        }
+        
+        Log.debug("moving indexes: \(movedIndexes)")
+        movedIndexes.forEach { indexPair in 
+            let (oldIndex, newIndex) = indexPair
+            collectionView.moveItem(at: oldIndex, to: newIndex)
+        }
+        
+        Log.debug("controllerDidChangeContent finished.")
     }
 }

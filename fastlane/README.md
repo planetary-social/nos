@@ -58,13 +58,13 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Push a new development build to TestFlight
 
-### ios beta
+### ios stamp_release
 
 ```sh
-[bundle exec] fastlane ios beta
+[bundle exec] fastlane ios stamp_release
 ```
 
-Mark a deployed commit as a beta
+Mark a deployed commit as having been deployed to our public beta testers
 
 ### ios certs
 

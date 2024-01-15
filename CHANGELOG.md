@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Added tabs to Profiles to filter posts.
+- Added pagination to the home feed.
+- Fixed a bug that prevented reposted notes from loading sometimes.
+- Fixed a bug that prevented profile photoes and names from being downloaded.
+
+## [0.1.2 (153)] - 2024-01-11Z
+
+- Fixed a crash that sometimes occured when opening the profile view.
+- Fixed a crash that sometimes occured when viewing a note.
 - Migrate to Apple-native string catalog and codegen LocalizedStringResources with xcstrings-tool-plugin.
 - Discover screen can now search notes by id.
 - Added pagination to Profile screens.
@@ -18,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a crash when opening the note composer.
 - Fix localization of warning message when a note has been reported. (thanks @L!)
 - Fixed contact list hydration bug where unfollows are not removed when follow counts do not change.
+- Erase old notifications from the databse to keep disk usage low.
 
 ## [0.1 (101)] - 2023-12-15Z
 

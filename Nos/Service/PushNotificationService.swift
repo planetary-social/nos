@@ -29,20 +29,26 @@ import Combine
     
     /// The number of unread notifications that should be displayed as a badge
     @Published var badgeCount = 0
-    
-    private let notificationCutoffKey = "PushNotificationService.notificationCutoff"
-    var notificationCutoff: Date {
+
+    private let showPushNotificationsAfterKey = "PushNotificationService.notificationCutoff"
+
+    /// Used to limit which notifications are displayed to the user as push notifications.
+    /// 
+    /// When the user first opens the app it is initialized to Date.now.
+    /// This is to prevent us showing tons of push notifications on first login.
+    /// Then after that it is set to the date of the last notification that we showed.
+    var showPushNotificationsAfter: Date {
         get {
-            let unixTimestamp = userDefaults.double(forKey: notificationCutoffKey)
+            let unixTimestamp = userDefaults.double(forKey: showPushNotificationsAfterKey)
             if unixTimestamp == 0 {
-                userDefaults.set(Date.now.timeIntervalSince1970, forKey: notificationCutoffKey)
+                userDefaults.set(Date.now.timeIntervalSince1970, forKey: showPushNotificationsAfterKey)
                 return .now
             } else {
                 return Date(timeIntervalSince1970: unixTimestamp)
             }
         }
         set {
-            userDefaults.set(newValue.timeIntervalSince1970, forKey: notificationCutoffKey)
+            userDefaults.set(newValue.timeIntervalSince1970, forKey: showPushNotificationsAfterKey)
         }
     }
     
@@ -86,7 +92,7 @@ import Combine
         
         currentAuthor = author
         notificationWatcher = NSFetchedResultsController(
-            fetchRequest: Event.all(notifying: author, since: notificationCutoff), 
+            fetchRequest: Event.all(notifying: author, since: showPushNotificationsAfter), 
             managedObjectContext: modelContext,
             sectionNameKeyPath: nil,
             cacheName: nil
@@ -190,9 +196,11 @@ import Combine
         
         let viewModel: NotificationViewModel? = await modelContext.perform { () -> NotificationViewModel? in
             guard let event = Event.find(by: eventID, context: self.modelContext),
+                let eventCreated = event.createdAt,
                 let coreDataNotification = try? NosNotification.createIfNecessary(
-                    from: eventID, 
-                    authorKey: authorKey, 
+                    from: eventID,
+                    date: eventCreated,
+                    authorKey: authorKey,
                     in: self.modelContext
                 ) else {
                 // We already have a notification for this event.
@@ -203,7 +211,7 @@ import Combine
             
             // Don't alert for old notifications or muted authors
             guard let eventCreated = event.createdAt, 
-                eventCreated > self.notificationCutoff,
+                eventCreated > self.showPushNotificationsAfter,
                 event.author?.muted == false else { 
                 coreDataNotification.isRead = true
                 return nil
@@ -213,8 +221,9 @@ import Combine
         }
         
         if let viewModel {
-            // Leave an hour of margin on the notificationcutoff to allow for events arriving slightly out of order.
-            notificationCutoff = viewModel.date.addingTimeInterval(-60 * 60)
+            // Leave an hour of margin on the showPushNotificationsAfter date to allow for events arriving slightly 
+            // out of order.
+            showPushNotificationsAfter = viewModel.date.addingTimeInterval(-60 * 60)
             await viewModel.loadContent(in: self.persistenceController.backgroundViewContext)
             
             do {
