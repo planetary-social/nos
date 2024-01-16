@@ -147,13 +147,6 @@ enum CurrentUserError: Error {
                     usbcAddress = try await unsAPI.usbcAddress(for: unsName)
                 }
             }
-            
-            Task(priority: .background) {
-                let dbStatistics = try await backgroundContext.perform {
-                    try self.persistenceController.databaseStatistics(from: self.backgroundContext)
-                }
-                analytics.databaseStatistics(dbStatistics)
-            }
         } else {
             author = nil
         }

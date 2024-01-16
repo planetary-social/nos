@@ -284,8 +284,8 @@ public class Event: NosManagedObject {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
             format: "author.hexadecimalPublicKey = %@ AND " +
-            "SUBQUERY(shouldBePublishedTo, $relay, TRUEPREDICATE).@count != " +
-            "SUBQUERY(seenOnRelays, $relay, TRUEPREDICATE).@count AND " +
+            "SUBQUERY(shouldBePublishedTo, $relay, TRUEPREDICATE).@count > " +
+            "SUBQUERY(publishedTo, $relay, TRUEPREDICATE).@count AND " +
             "deletedOn.@count = 0",
             user.hexadecimalPublicKey ?? ""
         )
@@ -378,7 +378,7 @@ public class Event: NosManagedObject {
     @nonobjc public class func homeFeedPredicate(for user: Author, before: Date) -> NSPredicate {
         NSPredicate(
             // swiftlint:disable line_length
-            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND (receivedAt == nil OR receivedAt <= %@ AND deletedOn.@count = 0)",
+            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND createdAt <= %@ AND deletedOn.@count = 0",
             // swiftlint:enable line_length
             user,
             user,
@@ -826,6 +826,7 @@ public class Event: NosManagedObject {
         if isStub {
             await loadContent()
             loadingViewData = false
+            // TODO: how do we load details for the event again after we hydrate the stub?
         } else {
             Task { await loadReferencedNote() }
             Task { await loadAuthorMetadata() }
@@ -1013,13 +1014,15 @@ public class Event: NosManagedObject {
 
     /// This function formats an Event's content for display in the UI. It does things like replacing raw npub links
     /// with the author's name, and extracting any URLs so that previews can be displayed for them.
+    ///
+    /// The given note should be initialized in a main queue NSManagedObjectContext (probably viewContext).
     /// 
     /// - Parameter note: the note whose content should be processed.
     /// - Parameter context: the context to use for database queries - this does not need to be the same context that
     ///     `note` is in.
     /// - Returns: A tuple where the first object is the note content formatted for display, and the second is a list
     ///     of HTTP links found in the note's context.  
-    class func attributedContentAndURLs(
+    @MainActor class func attributedContentAndURLs(
         note: Event, 
         context: NSManagedObjectContext
     ) async -> (AttributedString, [URL])? {
