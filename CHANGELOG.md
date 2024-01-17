@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Show the profile view when a search matches a valid User ID (npub).
 - Fixed a bug that prevented notes that failed to be published to be re-published again.
 - Added pagination to the home feed.
 - Fixed a bug that prevented reposted notes from loading sometimes.
