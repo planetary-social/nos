@@ -336,7 +336,7 @@
 		C9CF23182A38A58B00EBEC31 /* ParseQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */; };
 		C9D573492AB24B7300E06BB4 /* custom-xcassets.stencil in Resources */ = {isa = PBXBuildFile; fileRef = C9D573482AB24B7300E06BB4 /* custom-xcassets.stencil */; };
 		C9DEBFD2298941000078B43A /* NosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD1298941000078B43A /* NosApp.swift */; };
-		C9DEBFD4298941000078B43A /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD3298941000078B43A /* Persistence.swift */; };
+		C9DEBFD4298941000078B43A /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD3298941000078B43A /* PersistenceController.swift */; };
 		C9DEBFD9298941000078B43A /* HomeFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD8298941000078B43A /* HomeFeedView.swift */; };
 		C9DEBFDB298941020078B43A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9DEBFDA298941020078B43A /* Assets.xcassets */; };
 		C9DEBFDF298941020078B43A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9DEBFDE298941020078B43A /* Preview Assets.xcassets */; };
@@ -349,7 +349,7 @@
 		C9DEC04629894BED0078B43A /* Event+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEC03F29894BED0078B43A /* Event+CoreDataClass.swift */; };
 		C9DEC04D29894BED0078B43A /* Author+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEC04329894BED0078B43A /* Author+CoreDataClass.swift */; };
 		C9DEC04E29894BED0078B43A /* Author+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEC04329894BED0078B43A /* Author+CoreDataClass.swift */; };
-		C9DEC05A2989509B0078B43A /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD3298941000078B43A /* Persistence.swift */; };
+		C9DEC05A2989509B0078B43A /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD3298941000078B43A /* PersistenceController.swift */; };
 		C9DEC05B298950A90078B43A /* String+Lorem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEC002298945150078B43A /* String+Lorem.swift */; };
 		C9DEC0632989541F0078B43A /* Bundle+Current.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEC0622989541F0078B43A /* Bundle+Current.swift */; };
 		C9DEC0642989541F0078B43A /* Bundle+Current.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEC0622989541F0078B43A /* Bundle+Current.swift */; };
@@ -673,7 +673,7 @@
 		C9D573482AB24B7300E06BB4 /* custom-xcassets.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; name = "custom-xcassets.stencil"; path = "Nos/Assets/SwiftGen Stencils/custom-xcassets.stencil"; sourceTree = SOURCE_ROOT; };
 		C9DEBFCE298941000078B43A /* Nos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9DEBFD1298941000078B43A /* NosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosApp.swift; sourceTree = "<group>"; };
-		C9DEBFD3298941000078B43A /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		C9DEBFD3298941000078B43A /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		C9DEBFD8298941000078B43A /* HomeFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedView.swift; sourceTree = "<group>"; };
 		C9DEBFDA298941020078B43A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C9DEBFDC298941020078B43A /* Nos.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Nos.entitlements; sourceTree = "<group>"; };
@@ -815,6 +815,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		030742C32B4769F90073839D /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				C9DEC04329894BED0078B43A /* Author+CoreDataClass.swift */,
+				C973AB582A323167002AED16 /* Author+CoreDataProperties.swift */,
+				3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */,
+				C973AB572A323167002AED16 /* AuthorReference+CoreDataProperties.swift */,
+				C9DEC03F29894BED0078B43A /* Event+CoreDataClass.swift */,
+				C973AB562A323167002AED16 /* Event+CoreDataProperties.swift */,
+				3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */,
+				C973AB5A2A323167002AED16 /* EventReference+CoreDataProperties.swift */,
+				A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */,
+				C973AB552A323167002AED16 /* Follow+CoreDataProperties.swift */,
+				C9C547572A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift */,
+				C9C547582A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift */,
+				C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */,
+				C973AB592A323167002AED16 /* Relay+CoreDataProperties.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		3AAB61B12B24CC8A00717A07 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -840,18 +861,18 @@
 			isa = PBXGroup;
 			children = (
 				C973364E2A7968220012D8B8 /* SetUpUNSBanner.swift */,
-				C936B45B2A4C7D6B00DF1EB9 /* UNSWizard.swift */,
 				C94C4CF22AD993CA00F801CA /* UNSErrorView.swift */,
+				C9A6C7462AD84263001F9500 /* UNSNamePicker.swift */,
 				C9A6C74C2AD98E2A001F9500 /* UNSNameTakenView.swift */,
 				C9A6C7482AD86271001F9500 /* UNSNewNameView.swift */,
-				C9A6C74A2AD866A7001F9500 /* UNSSuccessView.swift */,
 				C981E2DC2AC610D600FBF4F6 /* UNSStepImage.swift */,
-				C9BCF1C02AC72020009BDE06 /* UNSWizardChooseNameView.swift */,
-				C9A6C7462AD84263001F9500 /* UNSNamePicker.swift */,
-				C93F48922AC5C9CE00900CEC /* UNSWizardIntroView.swift */,
+				C9A6C74A2AD866A7001F9500 /* UNSSuccessView.swift */,
 				C981E2DA2AC6088900FBF4F6 /* UNSVerifyCodeView.swift */,
-				C93F488F2AC5C9C400900CEC /* UNSWizardPhoneView.swift */,
+				C936B45B2A4C7D6B00DF1EB9 /* UNSWizard.swift */,
+				C9BCF1C02AC72020009BDE06 /* UNSWizardChooseNameView.swift */,
+				C93F48922AC5C9CE00900CEC /* UNSWizardIntroView.swift */,
 				C9680AD32ACDF57D006C8C93 /* UNSWizardNeedsPaymentView.swift */,
+				C93F488F2AC5C9C400900CEC /* UNSWizardPhoneView.swift */,
 				C94D6D5B2AC5D14400F0F11E /* WizardTextField.swift */,
 			);
 			path = UNS;
@@ -1115,34 +1136,19 @@
 			isa = PBXGroup;
 			children = (
 				C9F2047F2AE029D90029A858 /* AppDestination.swift */,
-				C9DEC04329894BED0078B43A /* Author+CoreDataClass.swift */,
-				C973AB582A323167002AED16 /* Author+CoreDataProperties.swift */,
-				3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */,
-				C973AB572A323167002AED16 /* AuthorReference+CoreDataProperties.swift */,
 				C9F204642ADEDB9A0029A858 /* BigDecimal.swift */,
 				C94A5E142A716A6D00B6EC5D /* EditableNoteText.swift */,
 				C9680AD02ACC5251006C8C93 /* Either.swift */,
-				C9DEC03F29894BED0078B43A /* Event+CoreDataClass.swift */,
-				C973AB562A323167002AED16 /* Event+CoreDataProperties.swift */,
-				3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */,
-				C973AB5A2A323167002AED16 /* EventReference+CoreDataProperties.swift */,
 				C9EE3E622A053910008A7491 /* ExpirationTimeOption.swift */,
-				A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */,
-				C973AB552A323167002AED16 /* Follow+CoreDataProperties.swift */,
 				C93CA0C229AE3A1E00921183 /* JSONEvent.swift */,
 				5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */,
 				C9F84C26298DC98800C6714D /* KeyPair.swift */,
 				C930055E2A6AF8320098CA9E /* LoadingContent.swift */,
-				C9C547572A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift */,
-				C9C547582A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift */,
 				C9F0BB6E29A50437000547FC /* NostrConstants.swift */,
 				5B6EB48D29EDBE0E006E750C /* NoteParser.swift */,
 				C9AC31AC2A55E0BD00A94E5A /* NotificationViewModel.swift */,
 				C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */,
-				C9DEBFD3298941000078B43A /* Persistence.swift */,
 				C9F0BB6A29A503D6000547FC /* PublicKey.swift */,
-				C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */,
-				C973AB592A323167002AED16 /* Relay+CoreDataProperties.swift */,
 				C9C2B78429E073E300548B4A /* RelaySubscription.swift */,
 				C9E37E142A1E8143003D4B0A /* Report.swift */,
 				C94A5E172A72C84200B6EC5D /* ReportCategory.swift */,
@@ -1150,6 +1156,7 @@
 				C97141ED2AE95F07001A5DD0 /* USBCAddress.swift */,
 				C9F204772ADEDE120029A858 /* WalletConnectChain.swift */,
 				C9F204602ADEDB720029A858 /* Wei.swift */,
+				030742C32B4769F90073839D /* CoreData */,
 				C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */,
 			);
 			path = Models;
@@ -1186,12 +1193,13 @@
 		C9EB171929E5976700A15ABB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				C9C547502A4F1CC3006B0741 /* SearchController.swift */,
-				C97A1C8A29E45B4E009D9E8D /* RawEventController.swift */,
-				C9A6C7402AD837AD001F9500 /* UNSWizardController.swift */,
-				C9A2FCA32AE701510020A5C6 /* SendUSBCController.swift */,
 				C913DA092AEAF52B003BDD6D /* NoteWarningController.swift */,
 				C98CA9062B14FBBF00929141 /* PagedNoteDataSource.swift */,
+				C9DEBFD3298941000078B43A /* PersistenceController.swift */,
+				C97A1C8A29E45B4E009D9E8D /* RawEventController.swift */,
+				C9C547502A4F1CC3006B0741 /* SearchController.swift */,
+				C9A2FCA32AE701510020A5C6 /* SendUSBCController.swift */,
+				C9A6C7402AD837AD001F9500 /* UNSWizardController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1213,11 +1221,11 @@
 		C9F2046E2ADEDDCA0029A858 /* USBC */ = {
 			isa = PBXGroup;
 			children = (
-				C9F2046A2ADEDCB80029A858 /* WalletConnectPairingView.swift */,
-				C9F204852AE067130029A858 /* SendUSBCWizard.swift */,
 				C9F204822AE03A8D0029A858 /* bignumber.js */,
-				C99D053B2AE6E5F50053D472 /* WalletConnectSendView.swift */,
+				C9F204852AE067130029A858 /* SendUSBCWizard.swift */,
 				C94D59AB2AE711A400295AE8 /* WalletConnectErrorView.swift */,
+				C9F2046A2ADEDCB80029A858 /* WalletConnectPairingView.swift */,
+				C99D053B2AE6E5F50053D472 /* WalletConnectSendView.swift */,
 			);
 			path = USBC;
 			sourceTree = "<group>";
@@ -1826,7 +1834,7 @@
 				C9DFA966299BEB96006929C1 /* NoteCard.swift in Sources */,
 				C98651102B0BD49200597B68 /* PagedNoteListView.swift in Sources */,
 				C9E37E152A1E8143003D4B0A /* Report.swift in Sources */,
-				C9DEBFD4298941000078B43A /* Persistence.swift in Sources */,
+				C9DEBFD4298941000078B43A /* PersistenceController.swift in Sources */,
 				CD76864C29B12F7E00085358 /* ExpandingTextFieldAndSubmitButton.swift in Sources */,
 				5B834F692A83FC7F000C1432 /* ProfileSocialStatsView.swift in Sources */,
 				CD09A74629A50F750063464F /* SideMenuContent.swift in Sources */,
@@ -1912,7 +1920,7 @@
 				C9C45E162B23741E00F523DA /* EventObservationTests.swift in Sources */,
 				A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */,
 				C9ADB13E29929EEF0075E7F8 /* Bech32.swift in Sources */,
-				C9DEC05A2989509B0078B43A /* Persistence.swift in Sources */,
+				C9DEC05A2989509B0078B43A /* PersistenceController.swift in Sources */,
 				C9C2B78629E073E300548B4A /* RelaySubscription.swift in Sources */,
 				C973AB662A323167002AED16 /* EventReference+CoreDataProperties.swift in Sources */,
 				C97141EF2AE95F07001A5DD0 /* USBCAddress.swift in Sources */,
