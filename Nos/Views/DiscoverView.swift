@@ -208,7 +208,7 @@ struct DiscoverView: View {
         let strippedString = publicKeyString.trimmingCharacters(
             in: NSCharacterSet.whitespacesAndNewlines
         )
-        guard let publicKey = PublicKey(note: strippedString) ?? PublicKey(note: strippedString) else {
+        guard let publicKey = PublicKey(note: strippedString) else {
             return nil
         }
         guard let note = try? Event.findOrCreateStubBy(id: publicKey.hex, context: viewContext) else {

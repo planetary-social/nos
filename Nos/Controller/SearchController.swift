@@ -43,7 +43,7 @@ class SearchController: ObservableObject {
                 // SIDE EFFECT WARNING
                 // These functions search other systems for the given query and add relevant authors to the database. 
                 // The database then generates a notification which is listened to above and results are reloaded.
-                Task { 
+                Task {
                     self.searchSubscriptions.removeAll()
                     self.searchRelays(for: query)
                     self.searchUNS(for: query)
@@ -58,7 +58,7 @@ class SearchController: ObservableObject {
     
     func authors(named name: String) -> [Author] {
         if let publicKey = PublicKey(npub: name),
-            let author = try? Author.find(by: publicKey.hex, context: context) {
+            let author = try? Author.findOrCreate(by: publicKey.hex, context: context) {
             Task { @MainActor in
                 router.push(author)
             }
