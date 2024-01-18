@@ -76,7 +76,10 @@ struct NotificationsView: View {
         NavigationStack(path: $router.notificationsPath) {
             ScrollView(.vertical) {
                 LazyVStack {
-                    ForEach(0..<maxNotificationsToShow) { index in
+                    /// The fetch request for events has a `fetchLimit` set but it doesn't work, so we limit the
+                    /// number of views displayed here and that appears to prevent @FetchRequest from loading all the
+                    /// records into memory.
+                    ForEach(0..<maxNotificationsToShow, id: \.self) { index in
                         if let event = events[safe: index], let user {
                             NotificationCard(viewModel: NotificationViewModel(note: event, user: user))
                                 .padding(.horizontal, 15)
