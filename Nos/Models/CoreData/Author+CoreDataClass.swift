@@ -151,18 +151,45 @@ enum AuthorError: Error {
         return fetchRequest
     }
     
-    @nonobjc func allPostsRequest(before: Date = .now) -> NSFetchRequest<Event> {
-        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(
+    /// Builds a predicate that queries for all notes (root or replies), reposts and long forms for a
+    /// given profile
+    ///
+    ///
+    /// It doesn't return events if the profile is muted
+    @nonobjc func activityPredicate(before: Date) -> NSPredicate {
+        NSPredicate(
             format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@ AND author.muted = 0 AND " +
-                "deletedOn.@count = 0 AND createdAt <= %@", 
-            EventKind.text.rawValue, 
-            EventKind.repost.rawValue, 
-            EventKind.longFormContent.rawValue, 
+                "deletedOn.@count = 0 AND createdAt <= %@",
+            EventKind.text.rawValue,
+            EventKind.repost.rawValue,
+            EventKind.longFormContent.rawValue,
             self,
             before as CVarArg
         )
+    }
+
+    @nonobjc func postsPredicate(before: Date) -> NSPredicate {
+        let onlyRootPostsClause = "(kind = 1 AND SUBQUERY(" +
+            "eventReferences, " +
+            "$reference, " +
+            "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
+        ").@count = 0)"
+        return NSPredicate(
+            format: "(\(onlyRootPostsClause) OR kind = %i) AND author = %@ AND createdAt <= %@",
+            EventKind.longFormContent.rawValue,
+            self,
+            before as CVarArg
+        )
+    }
+
+    @nonobjc func allPostsRequest(before: Date = .now, onlyRootPosts: Bool) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        if onlyRootPosts {
+            fetchRequest.predicate = postsPredicate(before: before)
+        } else {
+            fetchRequest.predicate = activityPredicate(before: before)
+        }
         return fetchRequest
     }
 

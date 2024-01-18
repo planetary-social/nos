@@ -30,19 +30,17 @@ struct ProfileView: View {
     @State private var usbcBalanceTimer: Timer?
     @State private var relaySubscriptions = SubscriptionCancellables()
 
+    @State private var selectedTab: ProfileHeader.ProfileHeaderTab = .notes
+
     @State private var alert: AlertState<Never>?
-    
-    @FetchRequest
-    private var events: FetchedResults<Event>
 
     var isShowingLoggedInUser: Bool {
         author.hexadecimalPublicKey == currentUser.publicKeyHex
     }
-    
+
     init(author: Author, addDoubleTapToPop: Bool = false) {
         self.author = author
         self.addDoubleTapToPop = addDoubleTapToPop
-        _events = FetchRequest(fetchRequest: author.allPostsRequest())
     }
     
     func loadUSBCBalance() async {
@@ -89,7 +87,7 @@ struct ProfileView: View {
         let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
         relaySubscriptions.append(await relayService.subscribeToEvents(matching: reportFilter)) 
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             VStack {
@@ -99,11 +97,11 @@ struct ProfileView: View {
                 )
                 
                 PagedNoteListView(
-                    databaseFilter: author.allPostsRequest(), 
+                    databaseFilter: selectedTab.request(author: author),
                     relayFilter: profileNotesFilter,
                     context: viewContext,
                     header: {
-                        ProfileHeader(author: author)
+                        ProfileHeader(author: author, selectedTab: $selectedTab)
                             .compositingGroup()
                             .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                             .id(author.id)
@@ -117,10 +115,11 @@ struct ProfileView: View {
                         .frame(minHeight: 300)
                     },
                     onRefresh: {
-                        author.allPostsRequest(before: .now)
+                        selectedTab.request(author: author)
                     }
                 )
                 .padding(0)
+                .id(selectedTab)
             }
             .id(author.id)
             .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { proxy in

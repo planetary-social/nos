@@ -433,6 +433,23 @@
         }
       }
     },
+    "activity" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activity"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actividad"
+          }
+        }
+      }
+    },
     "addItem" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -7292,6 +7309,12 @@
             "value" : "note"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "nota"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7479,6 +7502,23 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "notes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Notas"
           }
         }
       }
