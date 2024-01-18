@@ -16,6 +16,8 @@ struct ProfileHeader: View {
     @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) private var currentUser
 
+    @Binding private var selectedTab: ProfileHeaderTab
+
     var followsRequest: FetchRequest<Follow>
     var followsResult: FetchedResults<Follow> { followsRequest.wrappedValue }
 
@@ -31,11 +33,20 @@ struct ProfileHeader: View {
     }
     
     @EnvironmentObject private var router: Router
-    
-    init(author: Author) {
+
+    enum ProfileHeaderTab {
+        case activity
+        case notes
+        func request(author: Author) -> NSFetchRequest<Event> {
+            author.allPostsRequest(onlyRootPosts: self == .notes)
+        }
+    }
+
+    init(author: Author, selectedTab: Binding<ProfileHeaderTab>) {
         self.author = author
         self.followsRequest = FetchRequest(fetchRequest: Follow.followsRequest(sources: [author]))
         self.followersRequest = FetchRequest(fetchRequest: Follow.followsRequest(destination: [author]))
+        _selectedTab = selectedTab
     }
 
     private var shouldShowBio: Bool {
@@ -131,6 +142,8 @@ struct ProfileHeader: View {
                     followsResult: followsResult,
                     followersResult: followersResult
                 )
+
+                profileHeaderTab
             }
             .frame(maxWidth: 500)
         }
@@ -143,6 +156,43 @@ struct ProfileHeader: View {
             )
         )
     }
+
+    private var profileHeaderTab: some View {
+        HStack {
+            Button {
+                selectedTab = .notes
+            } label: {
+                HStack {
+                    Spacer()
+                    let color = selectedTab == .notes ? Color.primaryTxt : .secondaryTxt
+                    Image.profilePosts
+                        .renderingMode(.template)
+                        .foregroundColor(color)
+                    Text(.localizable.notes)
+                        .foregroundColor(color)
+                    Spacer()
+                }
+            }
+            .frame(maxWidth: .infinity)
+
+            Button {
+                selectedTab = .activity
+            } label: {
+                HStack {
+                    Spacer()
+                    let color = selectedTab == .activity ? Color.primaryTxt : .secondaryTxt
+                    Image.profileFeed
+                        .renderingMode(.template)
+                        .foregroundColor(color)
+                    Text(.localizable.activity)
+                        .foregroundColor(color)
+                    Spacer()
+                }
+            }
+            .frame(maxWidth: .infinity)
+        }
+        .padding()
+    }
 }
 
 #Preview {
@@ -150,7 +200,7 @@ struct ProfileHeader: View {
     
     return Group {
         // ProfileHeader(author: author)
-        ProfileHeader(author: previewData.previewAuthor)
+        ProfileHeader(author: previewData.previewAuthor, selectedTab: .constant(.activity))
             .inject(previewData: previewData)
             .padding()
             .background(Color.previewBg)
@@ -190,7 +240,7 @@ struct ProfileHeader: View {
     }
     
     return Group {
-        ProfileHeader(author: author)
+        ProfileHeader(author: author, selectedTab: .constant(.activity))
     }
     .inject(previewData: previewData)
     .previewDevice("iPhone SE (2nd generation)")
@@ -202,7 +252,7 @@ struct ProfileHeader: View {
     var previewData = PreviewData()
     
     return Group {
-        ProfileHeader(author: previewData.unsAuthor)
+        ProfileHeader(author: previewData.unsAuthor, selectedTab: .constant(.activity))
             .inject(previewData: previewData)
             .padding()
             .background(Color.previewBg)
