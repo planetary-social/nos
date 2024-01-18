@@ -105,7 +105,7 @@ struct StoryNoteView: View {
                             note: repostedNote,
                             style: .compact,
                             showFullMessage: false,
-                            hideOutOfNetwork: true,
+                            hideOutOfNetwork: false,
                             showReplyCount: true,
                             replyAction: nil
                         )
