@@ -167,11 +167,11 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     var previewData = PreviewData()
     
     return PagedNoteListView(
-        databaseFilter: previewData.alice.allPostsRequest(), 
+        databaseFilter: previewData.alice.allPostsRequest(onlyRootPosts: false),
         relayFilter: Filter(),
         context: previewData.previewContext,
         header: {
-            ProfileHeader(author: previewData.alice)
+            ProfileHeader(author: previewData.alice, selectedTab: .constant(.activity))
                 .compositingGroup()
                 .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 .id(previewData.alice.id)
@@ -180,7 +180,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             Text("empty")
         },
         onRefresh: {
-            previewData.alice.allPostsRequest()
+            previewData.alice.allPostsRequest(onlyRootPosts: false)
         }
     )
     .background(Color.appBg)
