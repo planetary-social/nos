@@ -28,7 +28,7 @@ Without branch protections, it’s too easy to merge PRs to the `main` branch wi
 
 ### Protect the `main` branch
 
-To do this, we propose add the following rules [in GitHub](https://github.com/planetary-social/nos/settings/rules):
+To do this, we propose adding the following branch protection rules [in GitHub](https://github.com/planetary-social/nos/settings/branches):
 
 - Restrict deletions. Only allow users with bypass permissions to delete matching refs.
 - Require a pull request before merging. Require all commits be made to a non-target branch and submitted via a pull request before they can be merged.
