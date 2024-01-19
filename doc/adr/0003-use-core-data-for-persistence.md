@@ -12,7 +12,7 @@ Accepted
 
 We are prototyping a new Nostr app, and we need a database. All Nostr data exists on relays, so this database is mostly a cache, although we will probably want to store other data to i.e. retry publishing events that failed to publish.
 
-Since SwiftUI is our default choice for building screens we want something that integrates well with it's observation features. We anticipate fetching objects in complex ways and supporting various feed algoritms like we do in Planetary, so a relational database seems like a good choice.
+Since SwiftUI is our default choice for building screens we want something that integrates well with its observation features. We anticipate fetching objects in complex ways and supporting various feed algorithms like we do in Planetary, so a relational database seems like a good choice.
 
 ## Considered Options
 
