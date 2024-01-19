@@ -59,18 +59,6 @@ public enum EventKind: Int64, CaseIterable, Hashable {
     case notificationServiceRegistration = 6666
 }
 
-extension FetchedResults where Element == Event {
-    var unmuted: [Event] {
-        filter {
-            if let author = $0.author {
-                let notDeleted = $0.deletedOn.count == 0
-                return !author.muted && notDeleted
-            }
-            return false
-        }
-    }
-}
-
 // swiftlint:disable type_body_length
 @objc(Event)
 @Observable
@@ -298,9 +286,22 @@ public class Event: NosManagedObject {
         )
     }
     
-    @nonobjc public class func all(notifying user: Author, since: Date? = nil) -> NSFetchRequest<Event> {
+    /// A request for all events that the given user should receive a notification for.
+    /// - Parameters:
+    ///   - user: the author you want to view notifications for.
+    ///   - since: a date that will be used as a lower bound for the request.
+    ///   - limit: a max number of events to fetch.
+    /// - Returns: A fetch request for the events described.
+    @nonobjc public class func all(
+        notifying user: Author, 
+        since: Date? = nil, 
+        limit: Int? = nil
+    ) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        if let limit {
+            fetchRequest.fetchLimit = limit
+        }
         
         let mentionsPredicate = allMentionsPredicate(for: user)
         let repliesPredicate = allRepliesPredicate(for: user)
