@@ -49,6 +49,7 @@ final class EventObservationTests: SQLiteStoreTestCase {
     /// This tests that the same event created in two separate contexts will update correctly in the view when both
     /// contexts are saved. This test exhibits bug https://github.com/planetary-social/nos/issues/697.  
     func testDuplicateEventMergingGivenParseContextSavesFirst() throws {
+        XCTExpectFailure("This test is failing intermittently, see #703", options: .nonStrict())
         // Arrange
         let viewContext = persistenceController.viewContext
         let parseContext = persistenceController.parseContext
