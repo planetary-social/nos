@@ -1,4 +1,4 @@
-# 5. Enable GitHub merge queue
+# 6. Enable GitHub merge queue
 
 Date: 2024-01-19
 
