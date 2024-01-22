@@ -7,7 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
- 
+
+- Optimized loading of the Notifications tab
 - Updated suggested users for discovery tab.
 - Show the profile view when a search matches a valid User ID (npub).
 - Added tabs to Profiles to filter posts.
