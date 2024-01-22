@@ -1,4 +1,4 @@
-# 4. Protect main branch
+# 5. Protect main branch
 
 Date: 2024-01-18
 
