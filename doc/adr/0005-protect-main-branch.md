@@ -34,10 +34,10 @@ To do this, we propose adding the following branch protection rules [in GitHub](
 - Require a pull request before merging. Require all commits be made to a non-target branch and submitted via a pull request before they can be merged.
 - Required approvals: 1. The number of approving reviews that are required before a pull request can be merged.
 - Require status checks to pass:
-	- Unit tests
-	- swift_lint
-	- Check CHANGELOG
-	- license/cla
+    - Unit tests
+    - swift_lint
+    - Check CHANGELOG
+    - license/cla
 - Block force pushes. Prevent users with push access from force pushing to refs.
 
 We’d use the Rulesets feature rather than the Branch protection rules for the benefits [outlined by GitHub](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets#about-rulesets-protected-branches-and-protected-tags). Specifically: “Anyone with read access to a repository can view the active rulesets for the repository. This means a developer can understand why they have hit a rule, or an auditor can check the security constraints for the repository, without requiring admin access to the repository.”
