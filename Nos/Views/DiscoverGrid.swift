@@ -53,12 +53,12 @@ struct DiscoverGrid: View {
                         }
                     } else {
                         // Search results
-                        if searchController.authorSuggestions.isEmpty {
+                        if searchController.authorResults.isEmpty {
                             FullscreenProgressView(isPresented: .constant(true))
                         } else {
                             ScrollView {
                                 LazyVStack {
-                                    ForEach(searchController.authorSuggestions) { author in
+                                    ForEach(searchController.authorResults) { author in
                                         AuthorCard(author: author) { 
                                             router.push(author)
                                         }
@@ -70,7 +70,7 @@ struct DiscoverGrid: View {
                                 .padding(.top, 5)
                             }
                             .doubleTapToPop(tab: .discover) { proxy in
-                                if let firstAuthor = searchController.authorSuggestions.first {
+                                if let firstAuthor = searchController.authorResults.first {
                                     proxy.scrollTo(firstAuthor.id)
                                 }
                             }

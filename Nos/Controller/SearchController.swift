@@ -13,22 +13,32 @@ import Logger
 
 /// Manages a search query and list of results.
 class SearchController: ObservableObject {
+    
+    // MARK: - Properties
+    
+    /// The search query string.
     @Published var query: String = ""
-    @Published var namedAuthors = [Author]()
-    @Published var authorSuggestions = [Author]()
+    
+    /// Any and all authors in the search results. As of this writing, _only_ authors appear in search results,
+    /// so this contains all search results, period.
+    @Published var authorResults = [Author]()
 
     @Dependency(\.router) private var router
     @Dependency(\.relayService) private var relayService
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.unsAPI) var unsAPI
+    
     private var cancellables = [AnyCancellable]()
     private var searchSubscriptions = SubscriptionCancellables()
     private lazy var context: NSManagedObjectContext = {
         persistenceController.viewContext
     }()
     
+    // MARK: - Init
+    
     init() {
         $query
+            .removeDuplicates() // only do the work below when the query has changed
             .combineLatest(
                 // listen for new objects, as this is how we get search results from relays
                 NotificationCenter.default.publisher(
@@ -50,10 +60,26 @@ class SearchController: ObservableObject {
                 }
                 return query
             }
-            .map { self.authors(named: $0) }
+            .map { self.authors(named: $0) } // this and below need to run every time the context changes
             .map { $0.sorted(by: { $0.followers.count > $1.followers.count }) }
-            .sink(receiveValue: { self.authorSuggestions = $0 })
+            .sink(receiveValue: { self.authorResults = $0 })
             .store(in: &cancellables)
+    }
+    
+    // MARK: - Internal
+    
+    func author(fromPublicKey publicKeyString: String) -> Author? {
+        let strippedString = publicKeyString.trimmingCharacters(
+            in: NSCharacterSet.whitespacesAndNewlines
+        )
+        guard let publicKey = PublicKey(npub: strippedString) ?? PublicKey(hex: strippedString) else {
+            return nil
+        }
+        guard let author = try? Author.findOrCreate(by: publicKey.hex, context: context) else {
+            return nil
+        }
+        try? context.saveIfNeeded()
+        return author
     }
     
     func authors(named name: String) -> [Author] {
@@ -72,6 +98,25 @@ class SearchController: ObservableObject {
         return authors
     }
     
+    func clear() {
+        query = ""
+        authorResults = []
+    }
+    
+    func note(fromPublicKey publicKeyString: String) -> Event? {
+        let strippedString = publicKeyString.trimmingCharacters(
+            in: NSCharacterSet.whitespacesAndNewlines
+        )
+        guard let publicKey = PublicKey(note: strippedString) else {
+            return nil
+        }
+        guard let note = try? Event.findOrCreateStubBy(id: publicKey.hex, context: context) else {
+            return nil
+        }
+        try? context.saveIfNeeded()
+        return note
+    }
+
     func searchRelays(for query: String) {
         Task {
             let searchFilter = Filter(kinds: [.metaData], search: query, limit: 100)
@@ -101,8 +146,28 @@ class SearchController: ObservableObject {
         }
     }
     
-    func clear() {
-        query = ""
-        authorSuggestions = []
+    func submitSearch() { // rename to seeIfThisIsSomeSortOfIdentifier (or maybe put this all into .map)
+        if query.contains("@") {
+            Task(priority: .userInitiated) {
+                if let publicKeyHex =
+                    await relayService.retrievePublicKeyFromUsername(query.lowercased()) {
+                    Task { @MainActor in
+                        if let author = author(fromPublicKey: publicKeyHex) {
+                            router.push(author)
+                        }
+                    }
+                }
+            }
+        } else {
+            if let author = author(fromPublicKey: query) {
+                Task { @MainActor in
+                    router.push(author)
+                }
+            } else if let note = note(fromPublicKey: query) {
+                Task { @MainActor in
+                    router.push(note)
+                }
+            }
+        }
     }
 }
