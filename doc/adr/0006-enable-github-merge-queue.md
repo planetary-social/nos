@@ -7,7 +7,7 @@ Authors: Josh Brown
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context & Problem Statement
 
