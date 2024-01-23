@@ -21,8 +21,7 @@ struct NotificationsView: View {
     @Dependency(\.pushNotificationService) private var pushNotificationService
     @Dependency(\.persistenceController) private var persistenceController
 
-    private var eventRequest: FetchRequest<Event> = FetchRequest(fetchRequest: Event.emptyRequest())
-    private var events: FetchedResults<Event> { eventRequest.wrappedValue }
+    @FetchRequest private var events: FetchedResults<Event>
     @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var isVisible = false
 
@@ -30,11 +29,14 @@ struct NotificationsView: View {
     
     // Probably the logged in user should be in the @Environment eventually
     private var user: Author?
+    private let maxNotificationsToShow = 100
     
     init(user: Author?) {
         self.user = user
         if let user {
-            eventRequest = FetchRequest(fetchRequest: Event.all(notifying: user))
+            _events = FetchRequest(fetchRequest: Event.all(notifying: user, limit: maxNotificationsToShow))
+        } else {
+            _events = FetchRequest(fetchRequest: Event.emptyRequest())
         }
     }    
     
@@ -74,8 +76,11 @@ struct NotificationsView: View {
         NavigationStack(path: $router.notificationsPath) {
             ScrollView(.vertical) {
                 LazyVStack {
-                    ForEach(events.unmuted) { event in
-                        if let user {
+                    /// The fetch request for events has a `fetchLimit` set but it doesn't work, so we limit the
+                    /// number of views displayed here and that appears to prevent @FetchRequest from loading all the
+                    /// records into memory.
+                    ForEach(0..<maxNotificationsToShow, id: \.self) { index in
+                        if let event = events[safe: index], let user {
                             NotificationCard(viewModel: NotificationViewModel(note: event, user: user))
                                 .padding(.horizontal, 15)
                                 .padding(.bottom, 10)

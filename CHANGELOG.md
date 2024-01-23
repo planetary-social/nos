@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Optimized loading of the Notifications tab
+- Updated suggested users for discovery tab.
+- Show the profile view when a search matches a valid User ID (npub).
+- Added tabs to Profiles to filter posts.
+- Fixed a bug that could cause the out of network warning to be shown on reposts in the stories view.
 - Fixed a bug that prevented notes that failed to be published to be re-published again.
 - Added pagination to the home feed.
 - Fixed a bug that prevented reposted notes from loading sometimes.

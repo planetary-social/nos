@@ -24,7 +24,7 @@ struct HomeFeedView: View {
         timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime)
     )
     @State private var isVisible = false
-    @State private var cancellables = [AnyCancellable]()
+    @State private var relaySubscriptions = [SubscriptionCancellable]()
     @State private var performingInitialLoad = true
     @State private var isShowingRelayList = false
     static let initialLoadTime = 2
@@ -46,6 +46,23 @@ struct HomeFeedView: View {
                 since: Calendar.current.date(byAdding: .day, value: -2, to: .now)!
             )
         )
+    }
+    
+    /// Downloads the data we need to show stories. 
+    func downloadStories() async {
+        relaySubscriptions.removeAll()
+        
+        let followedKeys = await Array(currentUser.socialGraph.followedKeys)
+        
+        if !followedKeys.isEmpty {
+            let textFilter = Filter(
+                authorKeys: followedKeys, 
+                kinds: [.text, .delete, .repost, .longFormContent, .report], 
+                since: storiesCutoffDate
+            )
+            let textSubs = await relayService.subscribeToEvents(matching: textFilter)
+            relaySubscriptions.append(textSubs)
+        }
     }
     
     var body: some View {
@@ -148,6 +165,9 @@ struct HomeFeedView: View {
         }
         .padding(.top, 1)
         .nosNavigationBar(title: isShowingStories ? .localizable.stories : .localizable.homeFeed)
+        .task {
+            await downloadStories()
+        }
         .onAppear {
             if router.selectedTab == .home {
                 isVisible = true 

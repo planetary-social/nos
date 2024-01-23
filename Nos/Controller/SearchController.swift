@@ -16,11 +16,8 @@ class SearchController: ObservableObject {
     @Published var query: String = ""
     @Published var namedAuthors = [Author]()
     @Published var authorSuggestions = [Author]()
-    
-    var isSearching: Bool {
-        query.isEmpty
-    }
-    
+
+    @Dependency(\.router) private var router
     @Dependency(\.relayService) private var relayService
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.unsAPI) var unsAPI
@@ -45,8 +42,8 @@ class SearchController: ObservableObject {
             .map { query in
                 // SIDE EFFECT WARNING
                 // These functions search other systems for the given query and add relevant authors to the database. 
-                // The database then generates a notification which is listened to above and resulst are reloaded.
-                Task { 
+                // The database then generates a notification which is listened to above and results are reloaded.
+                Task {
                     self.searchSubscriptions.removeAll()
                     self.searchRelays(for: query)
                     self.searchUNS(for: query)
@@ -60,6 +57,14 @@ class SearchController: ObservableObject {
     }
     
     func authors(named name: String) -> [Author] {
+        if let publicKey = PublicKey(npub: name),
+            let author = try? Author.findOrCreate(by: publicKey.hex, context: context) {
+            Task { @MainActor in
+                router.push(author)
+            }
+            clear()
+            return []
+        }
         guard let authors = try? Author.find(named: name, context: context) else {
             return []
         }
