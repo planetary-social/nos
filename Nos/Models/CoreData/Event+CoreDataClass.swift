@@ -390,8 +390,6 @@ public class Event: NosManagedObject {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = homeFeedPredicate(for: user, before: before)
-        fetchRequest.includesPendingChanges = false
-        fetchRequest.fetchLimit = 1000
         return fetchRequest
     }
     
