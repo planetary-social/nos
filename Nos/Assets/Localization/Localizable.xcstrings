@@ -7523,6 +7523,17 @@
         }
       }
     },
+    "notFindingResults" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We are not finding results in our immediate network for your search. You can continue waiting or try another search term."
+          }
+        }
+      }
+    },
     "notifications" : {
       "extractionState" : "manual",
       "localizations" : {

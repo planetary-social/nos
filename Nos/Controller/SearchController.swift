@@ -23,6 +23,9 @@ class SearchController: ObservableObject {
     /// so this contains all search results, period.
     @Published var authorResults = [Author]()
 
+    /// Whether we're finding results or not, so we can show a message if not.
+    @Published var isNotFindingResults = false
+
     @Dependency(\.router) private var router
     @Dependency(\.relayService) private var relayService
     @Dependency(\.persistenceController) private var persistenceController
@@ -30,6 +33,9 @@ class SearchController: ObservableObject {
     
     private var cancellables = [AnyCancellable]()
     private var searchSubscriptions = SubscriptionCancellables()
+//    private var timerCancellables = [AnyCancellable]()
+    private var timer: Timer?
+
     private lazy var context: NSManagedObjectContext = {
         persistenceController.viewContext
     }()
@@ -62,7 +68,25 @@ class SearchController: ObservableObject {
             }
             .map { self.authors(named: $0) } // this and below need to run every time the context changes
             .map { $0.sorted(by: { $0.followers.count > $1.followers.count }) }
-            .sink(receiveValue: { self.authorResults = $0 })
+            .sink(receiveValue: { results in
+                if !results.isEmpty {
+                    self.isNotFindingResults = false
+                }
+                self.authorResults = results
+            })
+            .store(in: &cancellables)
+
+        $query
+            .removeDuplicates()
+            .sink { query in
+                if query.isEmpty {
+                    self.isNotFindingResults = false
+                    self.timer?.invalidate()
+//                    self.timerCancellables.removeAll()
+                } else {
+                    self.startSearchTimer()
+                }
+            }
             .store(in: &cancellables)
     }
     
@@ -101,6 +125,9 @@ class SearchController: ObservableObject {
     func clear() {
         query = ""
         authorResults = []
+        isNotFindingResults = false
+//        timerCancellables.removeAll()
+        timer?.invalidate()
     }
     
     func note(fromPublicKey publicKeyString: String) -> Event? {
@@ -145,7 +172,31 @@ class SearchController: ObservableObject {
             }
         }
     }
-    
+
+    func startSearchTimer() {
+        isNotFindingResults = false
+//        timerCancellables.removeAll()
+        timer?.invalidate()
+
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { _ in
+            if !self.query.isEmpty && self.authorResults.isEmpty {
+                self.isNotFindingResults = true
+//                self.timerCancellables.removeAll()
+            }
+        }
+
+
+//        Timer.publish(every: 10, on: .main, in: .common)
+//            .autoconnect()
+//            .sink { _ in
+//                if !self.query.isEmpty && self.authorResults.isEmpty {
+//                    self.isNotFindingResults = true
+//                    self.timerCancellables.removeAll()
+//                }
+//            }
+//            .store(in: &timerCancellables)
+    }
+
     func submitSearch() { // rename to seeIfThisIsSomeSortOfIdentifier (or maybe put this all into .map)
         if query.contains("@") {
             Task(priority: .userInitiated) {
