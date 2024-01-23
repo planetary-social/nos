@@ -181,10 +181,8 @@ class SearchController: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { _ in
             if !self.query.isEmpty && self.authorResults.isEmpty {
                 self.isNotFindingResults = true
-//                self.timerCancellables.removeAll()
             }
         }
-
 
 //        Timer.publish(every: 10, on: .main, in: .common)
 //            .autoconnect()
