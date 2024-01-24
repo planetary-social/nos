@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue where bad data in the contact list could break the home feed.
 - Optimized loading of the Notifications tab
 - Updated suggested users for discovery tab.
 - Show the profile view when a search matches a valid User ID (npub).
