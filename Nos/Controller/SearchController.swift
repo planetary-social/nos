@@ -33,7 +33,8 @@ class SearchController: ObservableObject {
     
     private var cancellables = [AnyCancellable]()
     private var searchSubscriptions = SubscriptionCancellables()
-//    private var timerCancellables = [AnyCancellable]()
+
+    /// The timer for showing the "not finding results" view. Resets any time the query is changed.
     private var timer: Timer?
 
     private lazy var context: NSManagedObjectContext = {
@@ -82,7 +83,6 @@ class SearchController: ObservableObject {
                 if query.isEmpty {
                     self.isNotFindingResults = false
                     self.timer?.invalidate()
-//                    self.timerCancellables.removeAll()
                 } else {
                     self.startSearchTimer()
                 }
@@ -126,7 +126,6 @@ class SearchController: ObservableObject {
         query = ""
         authorResults = []
         isNotFindingResults = false
-//        timerCancellables.removeAll()
         timer?.invalidate()
     }
     
@@ -175,24 +174,13 @@ class SearchController: ObservableObject {
 
     func startSearchTimer() {
         isNotFindingResults = false
-//        timerCancellables.removeAll()
         timer?.invalidate()
 
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { _ in
             if !self.query.isEmpty && self.authorResults.isEmpty {
                 self.isNotFindingResults = true
             }
         }
-
-//        Timer.publish(every: 10, on: .main, in: .common)
-//            .autoconnect()
-//            .sink { _ in
-//                if !self.query.isEmpty && self.authorResults.isEmpty {
-//                    self.isNotFindingResults = true
-//                    self.timerCancellables.removeAll()
-//                }
-//            }
-//            .store(in: &timerCancellables)
     }
 
     func submitSearch() { // rename to seeIfThisIsSomeSortOfIdentifier (or maybe put this all into .map)
