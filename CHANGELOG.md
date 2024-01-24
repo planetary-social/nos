@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a date localization issue.
 - Optimized loading of the Notifications tab
 - Updated suggested users for discovery tab.
 - Show the profile view when a search matches a valid User ID (npub).
