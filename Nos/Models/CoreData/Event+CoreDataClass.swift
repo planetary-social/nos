@@ -669,12 +669,8 @@ public class Event: NosManagedObject {
         
         var newFollows = Set<Follow>()
         for jsonTag in jsonEvent.tags {
-            guard let followedKey = jsonTag[safe: 1],
-                followedKey.isValid else {
-                continue
-            }
-            
-            if let existingFollow = originalFollows[followedKey] {
+            if let followedKey = jsonTag[safe: 1], 
+                let existingFollow = originalFollows[followedKey] {
                 // We already have a Core Data Follow model for this user
                 newFollows.insert(existingFollow)
             } else {
