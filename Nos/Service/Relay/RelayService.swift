@@ -407,6 +407,18 @@ extension RelayService {
         }
     }
     
+    private func parseNotice(from socket: WebSocket, responseArray: [Any]) {
+        let response = responseArray.description 
+        Log.debug("Notice from \(socket.host): \(response)")
+        if let notice = responseArray[safe: 1] as? String {
+            if notice == "rate limited" {
+                analytics.rateLimited(by: socket)
+            } else if notice.contains("bad req:") {
+                analytics.badRequest(from: socket, message: response)
+            }
+        }
+    }
+    
     private func parseResponse(_ response: String, _ socket: WebSocket) async {
         
         do {
@@ -424,10 +436,7 @@ extension RelayService {
             case "EVENT":
                 await queueEventForParsing(responseArray, socket)
             case "NOTICE":
-                Log.debug("from \(socket.host): \(response)")
-                if responseArray[safe: 1] as? String == "rate limited" {
-                    analytics.rateLimited(by: socket)
-                }
+                parseNotice(from: socket, responseArray: responseArray)
             case "EOSE":
                 await parseEOSE(from: socket, responseArray: responseArray)
             case "OK":
