@@ -51,7 +51,7 @@ extension Date {
         if let week = components.weekOfMonth, week >= 1 {
             let dateFormatter = DateFormatter()
             dateFormatter.timeStyle = .none
-            dateFormatter.setLocalizedDateFormatFromTemplate("MMMMd")
+            dateFormatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "MMMMd", options: 0, locale: calendar.locale)
             dateFormatter.calendar = calendar
             dateFormatter.locale = calendar.locale
             dateFormatter.timeZone = calendar.timeZone
