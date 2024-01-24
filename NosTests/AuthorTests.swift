@@ -17,11 +17,12 @@ final class AuthorTests: CoreDataTestCase {
         let author = try Author.findOrCreate(by: "test", context: context)
         var expectedFollowedKeys = [String]()
         for i in 0..<700 {
-            let followee = try Author.findOrCreate(by: "\(i)", context: context)
+            let key = RawNostrID.random
+            let followee = try Author.findOrCreate(by: "\(key)", context: context)
             let follow = Follow(context: context)
             follow.source = author
             follow.destination = followee
-            expectedFollowedKeys.append("\(i)")
+            expectedFollowedKeys.append("\(key)")
         }
         XCTAssertEqual(author.follows.count, 700)
         XCTAssertEqual(Set(author.followedKeys), Set(expectedFollowedKeys))

@@ -88,7 +88,9 @@ enum AuthorError: Error {
     }
     
     var followedKeys: [RawAuthorID] {
-        follows.compactMap({ $0.destination?.hexadecimalPublicKey }) 
+        follows
+            .compactMap({ $0.destination?.hexadecimalPublicKey }) 
+            .filter { $0.isValid }
     }
 
     var hasHumanFriendlyName: Bool {
