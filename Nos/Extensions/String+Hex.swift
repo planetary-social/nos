@@ -27,4 +27,9 @@ extension String {
         }
         return data
     }
+    
+    var isValidHexadecimal: Bool {
+        let regex = "^[0-9a-fA-F]+$"
+        return range(of: regex, options: .regularExpression) != nil
+    }
 }

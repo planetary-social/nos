@@ -17,7 +17,7 @@ extension Author {
 
     @NSManaged public var about: String?
     @NSManaged public var displayName: String?
-    @NSManaged public var hexadecimalPublicKey: String?
+    @NSManaged public var hexadecimalPublicKey: RawAuthorID?
     @NSManaged public var lastUpdatedContactList: Date?
     @NSManaged public var lastUpdatedMetadata: Date?
     @NSManaged public var muted: Bool

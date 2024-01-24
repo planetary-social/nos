@@ -87,7 +87,7 @@ enum AuthorError: Error {
         return nil
     }
     
-    var followedKeys: [HexadecimalString] {
+    var followedKeys: [RawAuthorID] {
         follows.compactMap({ $0.destination?.hexadecimalPublicKey }) 
     }
 
@@ -95,7 +95,7 @@ enum AuthorError: Error {
         name?.isEmpty == false || displayName?.isEmpty == false
     }
     
-    class func request(by pubKey: HexadecimalString) -> NSFetchRequest<Author> {
+    class func request(by pubKey: RawAuthorID) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey = %@", pubKey)
         fetchRequest.fetchLimit = 1
@@ -103,7 +103,7 @@ enum AuthorError: Error {
         return fetchRequest
     }
     
-    class func find(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author? {
+    class func find(by pubKey: RawAuthorID, context: NSManagedObjectContext) throws -> Author? {
         let fetchRequest = request(by: pubKey)
         if let author = try context.fetch(fetchRequest).first {
             return author
@@ -122,7 +122,7 @@ enum AuthorError: Error {
     }
     
     @discardableResult
-    class func findOrCreate(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author {
+    class func findOrCreate(by pubKey: RawAuthorID, context: NSManagedObjectContext) throws -> Author {
         if let author = try? Author.find(by: pubKey, context: context) {
             return author
         } else {

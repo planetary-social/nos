@@ -9,22 +9,8 @@ import XCTest
 import CoreData
 import Dependencies
 
-// swiftlint:disable implicitly_unwrapped_optional
-
-final class SocialGraphTests: XCTestCase {
+final class SocialGraphTests: CoreDataTestCase {
     
-    var testContext: NSManagedObjectContext!
-    
-    override func invokeTest() {
-        withDependencies { dependencies in
-            let persistenceController = PersistenceController(containerName: "NosTests", inMemory: true)
-            testContext = persistenceController.viewContext
-            dependencies.persistenceController = persistenceController
-        } operation: {
-            super.invokeTest()
-        }
-    }
-
     func testEmpty() async throws {
         // Arrange
         _ = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
@@ -182,4 +168,3 @@ final class SocialGraphTests: XCTestCase {
         XCTAssertFalse(isInNetwwork)
     }
 }
-// swiftlint:enable implicitly_unwrapped_optional
