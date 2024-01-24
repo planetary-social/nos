@@ -13,7 +13,7 @@ struct SetUpUNSBanner: View {
     
     private var backgroundGradient: LinearGradient {
         LinearGradient(
-            colors: [Color(hex: "#F08508"), Color(hex: "#F43F75")],
+            colors: [.unsGradientLeading, .unsGradientTrailing],
             startPoint: .leading,
             endPoint: .trailing
         )
@@ -21,7 +21,7 @@ struct SetUpUNSBanner: View {
     
     var body: some View {
         ZStack {
-            Color(hex: "#923c2c")
+            Color.unsBackground
                 .cornerRadius(21)
                 .offset(y: 2)
             VStack {
@@ -39,10 +39,10 @@ struct SetUpUNSBanner: View {
                 HStack {
                     ActionButton(
                         title: .localizable.manageUniversalName,
-                        textColor: Color(hex: "#f26141"),
-                        depthEffectColor: Color(hex: "#f8d4b6"),
+                        textColor: .unsButtonText,
+                        depthEffectColor: .unsButtonEffect,
                         backgroundGradient: LinearGradient(
-                            colors: [Color(hex: "#FFF8F7"), Color(hex: "#FDF6F5")],
+                            colors: [.unsButtonGradientLeading, .unsButtonGradientTrailing],
                             startPoint: .leading,
                             endPoint: .trailing
                         ),
@@ -62,7 +62,7 @@ struct SetUpUNSBanner: View {
                     Image(systemName: "checkmark.seal.fill")
                         .resizable()
                         .aspectRatio(1, contentMode: .fit)
-                        .foregroundColor(Color(hex: "#F95795"))
+                        .foregroundColor(.unsCheckmark)
                 }
                     .offset(x: 28)
             )
