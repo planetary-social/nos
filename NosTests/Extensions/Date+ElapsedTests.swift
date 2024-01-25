@@ -131,18 +131,18 @@ final class Date_ElapsedTests: XCTestCase {
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .weekOfMonth, value: -1, to: date))
                 .distanceString(date, calendar: calendar),
-            "décembre 2"
+            "2 décembre"
         )
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .month, value: -1, to: date))
                 .distanceString(date, calendar: calendar),
-            "novembre 9"
+            "9 novembre"
         )
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .year, value: -1, to: date))
                 .addingTimeInterval(1)
                 .distanceString(date, calendar: calendar),
-            "décembre 9"
+            "9 décembre"
         )
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .year, value: -1, to: date))
