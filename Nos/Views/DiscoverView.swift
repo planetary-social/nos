@@ -110,8 +110,6 @@ struct DiscoverView: View {
                     }
                 }
             }
-            .blur(radius: searchController.isNotFindingResults ? 6 : 0)
-            .opacity(searchController.isNotFindingResults ? 0.3 : 1)
             .overlay(searchController.isNotFindingResults ? notFindingResultsView : nil)
             .searchable(
                 text: $searchController.query, 
