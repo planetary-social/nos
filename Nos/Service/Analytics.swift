@@ -35,7 +35,11 @@ class Analytics {
     func published(note: JSONEvent) {
         track("Published Note", properties: ["length": note.content.count])
     }
-    
+
+    func published(reply: JSONEvent) {
+        track("Published Reply", properties: ["length": reply.content.count])
+    }
+
     // MARK: - Screens
     
     func startedOnboarding() {
