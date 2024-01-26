@@ -7,25 +7,25 @@
 
 import XCTest
 
-final class RawNostrIDTest: XCTestCase {
+final class RawNostrIDTests: XCTestCase {
 
     func testHexadecimalKeyIsValid() throws {
-        let testKey = RawNostrID("76c71aae3a491f1d9eec47cba17e229cda4113a0bbb6e6ae1776d7643e29cafa")
-        XCTAssertEqual(testKey.isValid, true)
+        let validKey = RawNostrID("76c71aae3a491f1d9eec47cba17e229cda4113a0bbb6e6ae1776d7643e29cafa")
+        XCTAssertEqual(validKey.isValid, true)
     }
     
     func testHexadecimalKeyWithInvalidCharactersIsNotValid() throws {
-        let testKey = RawNostrID("!6c71aae3a491f1d9eec47cba17e229cda4113a0bbb6e6ae1776d7643e29cafa")
-        XCTAssertEqual(testKey.isValid, false)
+        let invalidCharacterKey = RawNostrID("!6c71aae3a491f1d9eec47cba17e229cda4113a0bbb6e6ae1776d7643e29cafa")
+        XCTAssertEqual(invalidCharacterKey.isValid, false)
     }
     
     func testHexadecimalKeyTooShortIsNotValid() throws {
-        let testKey = RawNostrID("6c71aae3a491f1d9eec47cba17e229cda4113a0bbb6e6ae1776d7643e29cafa")
-        XCTAssertEqual(testKey.isValid, false)
+        let invalidShortKey = RawNostrID("6c71aae3a491f1d9eec47cba17e229cda4113a0bbb6e6ae1776d7643e29cafa")
+        XCTAssertEqual(invalidShortKey.isValid, false)
     }
 
     func testHexadecimalKeyTooLongIsNotValid() throws {
-        let testKey = RawNostrID("006c71aae3a491f1d9eec47cba17e229cda4113a0bbb6e6ae1776d7643e29cafa")
-        XCTAssertEqual(testKey.isValid, false)
+        let invalidLongKey = RawNostrID("006c71aae3a491f1d9eec47cba17e229cda4113a0bbb6e6ae1776d7643e29cafa")
+        XCTAssertEqual(invalidLongKey.isValid, false)
     }
 }

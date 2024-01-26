@@ -16,7 +16,7 @@ final class AuthorTests: CoreDataTestCase {
         let context = persistenceController.viewContext
         let author = try Author.findOrCreate(by: "test", context: context)
         var expectedFollowedKeys = [String]()
-        for i in 0..<700 {
+        for _ in 0..<700 {
             let key = RawNostrID.random
             let followee = try Author.findOrCreate(by: "\(key)", context: context)
             let follow = Follow(context: context)
