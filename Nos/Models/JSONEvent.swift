@@ -48,7 +48,7 @@ struct JSONEvent: Codable, Hashable {
     }
     
     internal init(
-        pubKey: HexadecimalString, 
+        pubKey: RawAuthorID, 
         createdAt: Date = .now, 
         kind: EventKind, 
         tags: [[String]], 

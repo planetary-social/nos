@@ -511,7 +511,7 @@ public class Event: NosManagedObject {
         }
     }
     
-    class func find(by identifier: HexadecimalString, context: NSManagedObjectContext) -> Event? {
+    class func find(by identifier: RawEventID, context: NSManagedObjectContext) -> Event? {
         if let existingEvent = try? context.fetch(Event.event(by: identifier)).first {
             return existingEvent
         }
@@ -563,7 +563,7 @@ public class Event: NosManagedObject {
     /// - Parameters:
     ///   - id: The hexadecimal Nostr ID of the event.
     /// - Returns: The Event model with the given ID.
-    class func findOrCreateStubBy(id: HexadecimalString, context: NSManagedObjectContext) throws -> Event {
+    class func findOrCreateStubBy(id: RawEventID, context: NSManagedObjectContext) throws -> Event {
         if let existingEvent = try context.fetch(Event.event(by: id)).first {
             return existingEvent
         } else {
@@ -660,7 +660,7 @@ public class Event: NosManagedObject {
         newAuthor.lastUpdatedContactList = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
 
         // Put existing follows into a dictionary so we can avoid doing a fetch request to look up each one.
-        var originalFollows = [HexadecimalString: Follow]()
+        var originalFollows = [RawAuthorID: Follow]()
         for follow in newAuthor.follows {
             if let pubKey = follow.destination?.hexadecimalPublicKey {
                 originalFollows[pubKey] = follow
@@ -1034,7 +1034,7 @@ public class Event: NosManagedObject {
         }
     }
     
-    class func replyMetadata(for noteID: HexadecimalString?, context: NSManagedObjectContext) async -> (Int, [URL]) {
+    class func replyMetadata(for noteID: RawEventID?, context: NSManagedObjectContext) async -> (Int, [URL]) {
         guard let noteID else {
             return (0, [])
         }
@@ -1158,7 +1158,7 @@ public class Event: NosManagedObject {
     }
     
     class func requestAuthorsMetadataIfNeeded(
-        noteID: String?,
+        noteID: RawEventID?,
         using relayService: RelayService,
         in context: NSManagedObjectContext
     ) async -> SubscriptionCancellable {
@@ -1166,13 +1166,13 @@ public class Event: NosManagedObject {
             return SubscriptionCancellable(subscriptionIDs: [], relayService: relayService)
         }
         
-        let requestData: [(HexadecimalString?, Date?)] = await context.perform {
+        let requestData: [(RawAuthorID?, Date?)] = await context.perform {
             guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
                 let authorKey = note.author?.hexadecimalPublicKey else {
                 return []
             }
         
-            var requestData = [(HexadecimalString?, Date?)]()
+            var requestData = [(RawAuthorID?, Date?)]()
             
             guard let author = try? Author.findOrCreate(by: authorKey, context: context) else {
                 Log.debug("Author not found when requesting metadata of a note's author")

@@ -176,6 +176,16 @@ class Analytics {
         track("Rate Limited", properties: ["relay": socket.request.url?.absoluteString ?? "null"])
     }
     
+    func badRequest(from socket: WebSocket, message: String) {
+        track(
+            "Bad Request to Relay", 
+            properties: [
+                "relay": socket.request.url?.absoluteString ?? "null",
+                "details": message
+            ]
+        )
+    }
+    
     // MARK: - Notifications
     
     func receivedNotification() {

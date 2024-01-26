@@ -1,0 +1,20 @@
+{
+          "kind": 3,
+          "content": "Testing nos #[0]",
+          "tags": [
+            [
+              "p",
+              "this is not a valid hex key",
+              "wss://nostr.lorentz.is/",
+              "Pet Name"
+            ],
+            [
+              "p",
+              "76c71aae3a491f1d9eec47cba17e229cda4113a0bbb6e6ae1776d7643e29cafa"
+            ]
+          ],
+          "created_at": 1675264762,
+          "pubkey": "0701639be7fe1ea6d7af650b915073ccb622d8a1a1daa70eec8a075802ef949e",
+          "id": "182766bdaf82f359da281483e6a518de714d91bb5ff3c95e3584cc479c1639fc",
+          "sig": "376721bf261b21a297e61eeea62c3e0a50a932f07887adb0b29637e6da082ae0d49eba0375008208f3245920a122f56391c8bb254da30e38eaf8b20459451d65"
+}

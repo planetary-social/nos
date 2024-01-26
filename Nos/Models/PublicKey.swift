@@ -23,7 +23,7 @@ enum KeyError: Error {
 /// A model for Ed25519 X-only public keys. In Nostr the public key identifies a single author (although one author
 /// may have multiple public keys) and is used to cryptographically prove that a given Event was signed by the author.
 struct PublicKey {
-    var hex: HexadecimalString
+    var hex: RawAuthorID
     let npub: String
      
     private let underlyingKey: secp256k1.Signing.XonlyKey

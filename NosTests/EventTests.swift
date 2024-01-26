@@ -12,9 +12,7 @@ import secp256k1_bindings
 import Dependencies
 
 /// Tests for the Event model.
-final class EventTests: XCTestCase {
-    
-    @Dependency(\.persistenceController) private var persistenceController
+final class EventTests: CoreDataTestCase {
     
     // swiftlint:disable line_length
     // swiftlint:disable indentation_width
@@ -65,10 +63,6 @@ final class EventTests: XCTestCase {
     
     let sampleContactListSignature = "a01fa191a0236ffe5ee1fbd9401cd7b1da7daad5e19a25962eb7ea4c9335522478bdff255f1de40ca6c98cdf8cf26aa1f5f1b6c263c5004b0b6dcdc12573cfd7"
     
-    override func setUp() async throws {
-        persistenceController.resetForTesting()
-    }
-    
     // swiftlint:enable line_length
 
     func testParseSampleData() throws {
@@ -97,7 +91,6 @@ final class EventTests: XCTestCase {
         // Arrange
         let sampleData = try Data(contentsOf: Bundle.current.url(forResource: "sample_replies", withExtension: "json")!)
         let sampleEventID = "57b994eb5903d37ee11d507872611eec843098d24eb5d21a1678983dffd92b86"
-        let testContext = persistenceController.container.viewContext
         
         // Act
         let events = try EventProcessor.parse(jsonData: sampleData, from: nil, in: persistenceController)
@@ -131,7 +124,6 @@ final class EventTests: XCTestCase {
     
     func testSerializedEventForSigning() throws {
         // Arrange
-        let testContext = persistenceController.container.viewContext
         let event = try createTestEvent(in: testContext)
         // swiftlint:disable line_length
         let expectedString = """
@@ -149,7 +141,6 @@ final class EventTests: XCTestCase {
     
     func testIdentifierCalculation() throws {
         // Arrange
-        let testContext = persistenceController.container.viewContext
         let event = try createTestEvent(in: testContext)
         
         // Act
@@ -161,7 +152,6 @@ final class EventTests: XCTestCase {
     
     func testIdentifierCalculationWithNoTags() throws {
         // Arrange
-        let testContext = persistenceController.container.viewContext
         let event = try createTestEventWithNoTags(in: testContext)
         // Act
         XCTAssertEqual(
@@ -199,6 +189,19 @@ final class EventTests: XCTestCase {
         let relay = parsedEvent.author!.relays.first!
         XCTAssertEqual(relay.address, sampleRelay)
         XCTAssertEqual(follow.petName, sampleName)
+    }
+    
+    func testParseContactListIgnoresInvalidKeys() throws {
+        // Arrange
+        let jsonData = try Data(contentsOf: Bundle.current.url(forResource: "bad_contact_list", withExtension: "json")!)
+        let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
+
+        // Act
+        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: testContext)!
+         
+        // Assert
+        let follows = try XCTUnwrap(parsedEvent.author?.follows)
+        XCTAssertEqual(follows.count, 1)
     }
     
     func testParseExpirationDate() throws {
@@ -269,7 +272,6 @@ final class EventTests: XCTestCase {
     
     /// Verifies that when we see an event we already have in Core Data as a stub it is updated correctly.
     func testParsingEventStub() throws {
-        let testContext = persistenceController.container.viewContext
         let referencingJSONEvent = JSONEvent(
             id: "1",
             pubKey: KeyFixture.alice.publicKeyHex,
@@ -325,7 +327,6 @@ final class EventTests: XCTestCase {
     /// does is verify that we are internally consistent in our signature logic.
     func testSigningAndVerification() throws {
         // Arrange
-        let testContext = persistenceController.container.viewContext
         let event = try createTestEvent(in: testContext)
         
         // Act
@@ -337,7 +338,6 @@ final class EventTests: XCTestCase {
     
     func testVerificationOnBadId() throws {
         // Arrange
-        let testContext = persistenceController.container.viewContext
         let event = try createTestEvent(in: testContext)
         
         // Act
@@ -350,7 +350,6 @@ final class EventTests: XCTestCase {
     
     func testVerificationOnBadSignature() throws {
         // Arrange
-        let testContext = persistenceController.container.viewContext
         let event = try createTestEvent(in: testContext)
         event.identifier = try event.calculateIdentifier()
         
@@ -363,7 +362,6 @@ final class EventTests: XCTestCase {
     }
 
     func testFetchEventByIDPerformance() throws {
-        let testContext = persistenceController.container.viewContext
         let testEvent = try createTestEvent(in: testContext)
         testEvent.identifier = try testEvent.calculateIdentifier()
         let eventID = testEvent.identifier!
@@ -378,7 +376,6 @@ final class EventTests: XCTestCase {
     // MARK: - Replies
     
     func testReferencedNoteGivenMentionMarker() throws {
-        let testContext = persistenceController.container.viewContext
         let testEvent = try createTestEvent(in: testContext)
         
         let mention = try EventReference(
@@ -391,7 +388,6 @@ final class EventTests: XCTestCase {
     }
     
     func testRepostedNote() throws {
-        let testContext = persistenceController.container.viewContext
         let testEvent = try createTestEvent(in: testContext)
         testEvent.kind = 6
         
@@ -408,7 +404,6 @@ final class EventTests: XCTestCase {
     }
     
     func testRepostedNoteGivenNonRepost() throws {
-        let testContext = persistenceController.container.viewContext
         let testEvent = try createTestEvent(in: testContext)
         testEvent.kind = 1
         
@@ -425,7 +420,7 @@ final class EventTests: XCTestCase {
     
     private func createTestEvent(
         in context: NSManagedObjectContext,
-        publicKey: HexadecimalString = KeyFixture.pubKeyHex
+        publicKey: RawAuthorID = KeyFixture.pubKeyHex
     ) throws -> Event {
         let event = Event(context: context)
         event.createdAt = Date(timeIntervalSince1970: TimeInterval(1_675_264_762))
@@ -443,7 +438,7 @@ final class EventTests: XCTestCase {
     
     private func createTestEventWithNoTags(
         in context: NSManagedObjectContext,
-        publicKey: HexadecimalString = KeyFixture.pubKeyHex
+        publicKey: RawAuthorID = KeyFixture.pubKeyHex
     ) throws -> Event {
         let event = Event(context: context)
         event.createdAt = Date(timeIntervalSince1970: TimeInterval(1_675_264_762))

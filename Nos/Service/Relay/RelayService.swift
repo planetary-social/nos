@@ -194,7 +194,7 @@ extension RelayService {
         )
     }
     
-    func requestMetadata(for authorKey: HexadecimalString?, since: Date?) async -> SubscriptionCancellable {
+    func requestMetadata(for authorKey: RawAuthorID?, since: Date?) async -> SubscriptionCancellable {
         guard let authorKey else {
             return SubscriptionCancellable.empty()
         }
@@ -208,7 +208,7 @@ extension RelayService {
         return await subscribeToEvents(matching: metaFilter)
     }
     
-    func requestContactList(for authorKey: HexadecimalString?, since: Date?) async -> SubscriptionCancellable {
+    func requestContactList(for authorKey: RawAuthorID?, since: Date?) async -> SubscriptionCancellable {
         guard let authorKey else {
             return SubscriptionCancellable.empty()
         }
@@ -223,7 +223,7 @@ extension RelayService {
     }
     
     func requestProfileData(
-        for authorKey: HexadecimalString?, 
+        for authorKey: RawAuthorID?, 
         lastUpdateMetadata: Date?, 
         lastUpdatedContactList: Date?
     ) async -> SubscriptionCancellable {
@@ -407,6 +407,18 @@ extension RelayService {
         }
     }
     
+    private func parseNotice(from socket: WebSocket, responseArray: [Any]) {
+        let response = responseArray.description 
+        Log.debug("Notice from \(socket.host): \(response)")
+        if let notice = responseArray[safe: 1] as? String {
+            if notice == "rate limited" {
+                analytics.rateLimited(by: socket)
+            } else if notice.contains("bad req:") {
+                analytics.badRequest(from: socket, message: response)
+            }
+        }
+    }
+    
     private func parseResponse(_ response: String, _ socket: WebSocket) async {
         
         do {
@@ -424,10 +436,7 @@ extension RelayService {
             case "EVENT":
                 await queueEventForParsing(responseArray, socket)
             case "NOTICE":
-                Log.debug("from \(socket.host): \(response)")
-                if responseArray[safe: 1] as? String == "rate limited" {
-                    analytics.rateLimited(by: socket)
-                }
+                parseNotice(from: socket, responseArray: responseArray)
             case "EOSE":
                 await parseEOSE(from: socket, responseArray: responseArray)
             case "OK":
@@ -732,13 +741,13 @@ extension RelayService: WebSocketDelegate {
 // MARK: NIP-05 and UNS Support
 extension RelayService {
     
-    func verifyNIP05(identifier: String, userPublicKey: HexadecimalString) async -> Bool {
+    func verifyNIP05(identifier: String, userPublicKey: RawAuthorID) async -> Bool {
         let internetIdentifierPublicKey = await retrievePublicKeyFromUsername(identifier)
         return internetIdentifierPublicKey == userPublicKey
     }
 
     /// Takes a NIP-05 or Mastodon username and tries to fetch the associated Nostr public key.
-    func retrievePublicKeyFromUsername(_ userName: String) async -> HexadecimalString? {
+    func retrievePublicKeyFromUsername(_ userName: String) async -> RawAuthorID? {
         let count = userName.filter { $0 == "@" }.count
         
         switch count {
@@ -760,7 +769,7 @@ extension RelayService {
         return try await fetchPublicKey(from: urlString, username: localPart)
     }
 
-    func fetchPublicKeyFromMastodonUsername(_ mastodonUsername: String) async throws -> HexadecimalString? {
+    func fetchPublicKeyFromMastodonUsername(_ mastodonUsername: String) async throws -> RawAuthorID? {
         guard let mostrUsername = mostrUsername(from: mastodonUsername) else {
             return nil
         }

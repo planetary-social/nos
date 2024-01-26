@@ -19,7 +19,7 @@ extension Event {
     @NSManaged public var content: String?
     @NSManaged public var createdAt: Date?
     @NSManaged public var expirationDate: Date?
-    @NSManaged public var identifier: String?
+    @NSManaged public var identifier: RawEventID?
     @NSManaged public var isVerified: Bool
     @NSManaged public var kind: Int64
     @NSManaged public var receivedAt: Date?

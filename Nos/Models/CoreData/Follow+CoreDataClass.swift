@@ -61,6 +61,7 @@ struct FollowerComparator: SortComparator {
 @objc(Follow)
 public class Follow: NosManagedObject {
     
+    // swiftlint:disable:next function_body_length
     class func upsert(
         by author: Author,
         jsonTag: [String],
@@ -72,6 +73,15 @@ public class Follow: NosManagedObject {
                 DecodingError.Context(
                     codingPath: [],
                     debugDescription: "Encoded tags did not have a key at position 1"
+                )
+            )
+        }
+        guard followedKey.isValid else {
+            throw DecodingError.valueNotFound(
+                Follow.self,
+                DecodingError.Context(
+                    codingPath: [],
+                    debugDescription: "Tag \(followedKey) is not a valid hexadecimal public key"
                 )
             )
         }
