@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Show a message when we’re not finding search results.
+- Fixed an issue where bad data in the contact list could break the home feed.
+- Fixed a bug where the margins of root notes appeared incorrectly on Mac and iPad.
+- Fixed a date localization issue.
 - Optimized loading of the Notifications tab
 - Updated suggested users for discovery tab.
 - Show the profile view when a search matches a valid User ID (npub).
@@ -17,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug that prevented notes that failed to be published to be re-published again.
 - Added pagination to the home feed.
 - Fixed a bug that prevented reposted notes from loading sometimes.
-- Fixed a bug that prevented profile photoes and names from being downloaded.
+- Fixed a bug that prevented profile photos and names from being downloaded.
 
 ## [0.1.2 (153)] - 2024-01-11Z
 

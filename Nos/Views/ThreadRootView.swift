@@ -26,6 +26,7 @@ struct ThreadRootView<Reply: View>: View {
         ZStack(alignment: .top) {
             NoteButton(note: root, showFullMessage: false, hideOutOfNetwork: false, tapAction: tapAction)
                 .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+                .readabilityPadding()
                 .opacity(0.7)
                 .frame(height: 100, alignment: .top)
                 .clipped()
@@ -48,7 +49,12 @@ struct ThreadRootView_Previews: PreviewProvider {
                 ThreadRootView(
                     root: previewData.longNote, 
                     tapAction: { _ in },
-                    reply: { EmptyView() } 
+                    reply: {
+                        NoteButton(
+                            note: previewData.reply,
+                            hideOutOfNetwork: false
+                        )
+                    }
                 )
             }
         }

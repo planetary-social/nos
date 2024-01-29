@@ -21,10 +21,10 @@ class SQLiteStoreTestCase: XCTestCase {
         persistenceController = PersistenceController(containerName: "NosTests", inMemory: true, erase: true)
     }
     
-    override func tearDown() {
-        persistenceController.tearDown()
+    override func tearDownWithError() throws {
+        try persistenceController.tearDown()
         persistenceController = nil
-        super.tearDown()
+        try super.tearDownWithError()
     }
 }
 

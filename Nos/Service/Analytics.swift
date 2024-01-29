@@ -35,7 +35,11 @@ class Analytics {
     func published(note: JSONEvent) {
         track("Published Note", properties: ["length": note.content.count])
     }
-    
+
+    func published(reply: JSONEvent) {
+        track("Published Reply", properties: ["length": reply.content.count])
+    }
+
     // MARK: - Screens
     
     func startedOnboarding() {
@@ -170,6 +174,16 @@ class Analytics {
     
     func rateLimited(by socket: WebSocket) {
         track("Rate Limited", properties: ["relay": socket.request.url?.absoluteString ?? "null"])
+    }
+    
+    func badRequest(from socket: WebSocket, message: String) {
+        track(
+            "Bad Request to Relay", 
+            properties: [
+                "relay": socket.request.url?.absoluteString ?? "null",
+                "details": message
+            ]
+        )
     }
     
     // MARK: - Notifications

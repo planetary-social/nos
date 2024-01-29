@@ -73,6 +73,7 @@
 		A3B943D5299D514800A15A08 /* Follow+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */; };
 		A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */; };
 		A3B943D8299D758F00A15A08 /* KeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943CE299AE00100A15A08 /* KeyChain.swift */; };
+		C900385F2B6195C60080CC4F /* FollowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C900385E2B6195C60080CC4F /* FollowTests.swift */; };
 		C905B0752A619367009B8A78 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = C905B0742A619367009B8A78 /* DequeModule */; };
 		C905B0772A619E99009B8A78 /* LinkPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C905B0762A619E99009B8A78 /* LinkPreview.swift */; };
 		C90862BE29E9804B00C35A71 /* NosPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90862BD29E9804B00C35A71 /* NosPerformanceTests.swift */; };
@@ -161,6 +162,10 @@
 		C96877B92B4EDD110051ED2F /* AuthorStoryCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96877B82B4EDD110051ED2F /* AuthorStoryCarousel.swift */; };
 		C96877BB2B4EDE510051ED2F /* StoryAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96877BA2B4EDE510051ED2F /* StoryAvatarView.swift */; };
 		C96CB98C2A6040C500498C4E /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = C96CB98B2A6040C500498C4E /* DequeModule */; };
+		C96D391B2B61AFD500D3D0A1 /* RawNostrIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96D391A2B61AFD500D3D0A1 /* RawNostrIDTests.swift */; };
+		C96D39252B61B06200D3D0A1 /* AuthorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96D39242B61B06200D3D0A1 /* AuthorTests.swift */; };
+		C96D39272B61B6D200D3D0A1 /* RawNostrID.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96D39262B61B6D200D3D0A1 /* RawNostrID.swift */; };
+		C96D39282B61B6D200D3D0A1 /* RawNostrID.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96D39262B61B6D200D3D0A1 /* RawNostrID.swift */; };
 		C97141EE2AE95F07001A5DD0 /* USBCAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97141ED2AE95F07001A5DD0 /* USBCAddress.swift */; };
 		C97141EF2AE95F07001A5DD0 /* USBCAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97141ED2AE95F07001A5DD0 /* USBCAddress.swift */; };
 		C973364F2A7968220012D8B8 /* SetUpUNSBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C973364E2A7968220012D8B8 /* SetUpUNSBanner.swift */; };
@@ -313,6 +318,8 @@
 		C9BAB09B2996FBA10003A84E /* EventProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BAB09A2996FBA10003A84E /* EventProcessor.swift */; };
 		C9BAB09C2996FBA10003A84E /* EventProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BAB09A2996FBA10003A84E /* EventProcessor.swift */; };
 		C9BCF1C12AC72020009BDE06 /* UNSWizardChooseNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BCF1C02AC72020009BDE06 /* UNSWizardChooseNameView.swift */; };
+		C9BD91892B61BBEF00FDA083 /* bad_contact_list.json in Resources */ = {isa = PBXBuildFile; fileRef = C9BD91882B61BBEF00FDA083 /* bad_contact_list.json */; };
+		C9BD919B2B61C4FB00FDA083 /* RawNostrID+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BD919A2B61C4FB00FDA083 /* RawNostrID+Random.swift */; };
 		C9C2B77C29E072E400548B4A /* WebSocket+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */; };
 		C9C2B77D29E072E400548B4A /* WebSocket+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */; };
 		C9C2B77F29E0731600548B4A /* AsyncTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C2B77E29E0731600548B4A /* AsyncTimer.swift */; };
@@ -400,6 +407,7 @@
 		C9F84C21298DC36800C6714D /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C20298DC36800C6714D /* AppView.swift */; };
 		C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C22298DC7B900C6714D /* SettingsView.swift */; };
 		C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C26298DC98800C6714D /* KeyPair.swift */; };
+		C9FC1E632B61ACE300A3A6FB /* CoreDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FC1E622B61ACE300A3A6FB /* CoreDataTestCase.swift */; };
 		CD09A74429A50F1D0063464F /* SideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD09A74329A50F1D0063464F /* SideMenu.swift */; };
 		CD09A74629A50F750063464F /* SideMenuContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD09A74529A50F750063464F /* SideMenuContent.swift */; };
 		CD09A74829A51EFC0063464F /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD09A74729A51EFC0063464F /* Router.swift */; };
@@ -507,6 +515,7 @@
 		A351E1A129BA92240009B7F6 /* ProfileEditView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
 		A3B943CE299AE00100A15A08 /* KeyChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChain.swift; sourceTree = "<group>"; };
 		A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Follow+CoreDataClass.swift"; sourceTree = "<group>"; };
+		C900385E2B6195C60080CC4F /* FollowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowTests.swift; sourceTree = "<group>"; };
 		C905B0762A619E99009B8A78 /* LinkPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPreview.swift; sourceTree = "<group>"; };
 		C905EA342A3360FE006F1E99 /* StagingSecrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = StagingSecrets.xcconfig; path = Nos/Assets/StagingSecrets.xcconfig; sourceTree = SOURCE_ROOT; };
 		C90862BB29E9804B00C35A71 /* NosPerformanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NosPerformanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -572,6 +581,9 @@
 		C9680AD32ACDF57D006C8C93 /* UNSWizardNeedsPaymentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UNSWizardNeedsPaymentView.swift; sourceTree = "<group>"; };
 		C96877B82B4EDD110051ED2F /* AuthorStoryCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorStoryCarousel.swift; sourceTree = "<group>"; };
 		C96877BA2B4EDE510051ED2F /* StoryAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryAvatarView.swift; sourceTree = "<group>"; };
+		C96D391A2B61AFD500D3D0A1 /* RawNostrIDTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawNostrIDTests.swift; sourceTree = "<group>"; };
+		C96D39242B61B06200D3D0A1 /* AuthorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorTests.swift; sourceTree = "<group>"; };
+		C96D39262B61B6D200D3D0A1 /* RawNostrID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawNostrID.swift; sourceTree = "<group>"; };
 		C97141ED2AE95F07001A5DD0 /* USBCAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBCAddress.swift; sourceTree = "<group>"; };
 		C973364E2A7968220012D8B8 /* SetUpUNSBanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetUpUNSBanner.swift; sourceTree = "<group>"; };
 		C973AB552A323167002AED16 /* Follow+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Follow+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -657,6 +669,8 @@
 		C9B71DC12A9003670031ED9F /* CrashReporting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashReporting.swift; sourceTree = "<group>"; };
 		C9BAB09A2996FBA10003A84E /* EventProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventProcessor.swift; sourceTree = "<group>"; };
 		C9BCF1C02AC72020009BDE06 /* UNSWizardChooseNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNSWizardChooseNameView.swift; sourceTree = "<group>"; };
+		C9BD91882B61BBEF00FDA083 /* bad_contact_list.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = bad_contact_list.json; sourceTree = "<group>"; };
+		C9BD919A2B61C4FB00FDA083 /* RawNostrID+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RawNostrID+Random.swift"; sourceTree = "<group>"; };
 		C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebSocket+Nos.swift"; sourceTree = "<group>"; };
 		C9C2B77E29E0731600548B4A /* AsyncTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTimer.swift; sourceTree = "<group>"; };
 		C9C2B78129E0735400548B4A /* RelaySubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaySubscriptionManager.swift; sourceTree = "<group>"; };
@@ -724,6 +738,7 @@
 		C9F84C20298DC36800C6714D /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		C9F84C22298DC7B900C6714D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		C9F84C26298DC98800C6714D /* KeyPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPair.swift; sourceTree = "<group>"; };
+		C9FC1E622B61ACE300A3A6FB /* CoreDataTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTestCase.swift; sourceTree = "<group>"; };
 		CD09A74329A50F1D0063464F /* SideMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenu.swift; sourceTree = "<group>"; };
 		CD09A74529A50F750063464F /* SideMenuContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuContent.swift; sourceTree = "<group>"; };
 		CD09A74729A51EFC0063464F /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
@@ -984,8 +999,10 @@
 		C9C9443A29F6E420002F2C7A /* Test Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				C9C9444129F6F0E2002F2C7A /* XCTest+Eventually.swift */,
+				C9FC1E622B61ACE300A3A6FB /* CoreDataTestCase.swift */,
 				C91400232B2A3894009B13B4 /* SQLiteStoreTestCase.swift */,
+				C9C9444129F6F0E2002F2C7A /* XCTest+Eventually.swift */,
+				C9BD919A2B61C4FB00FDA083 /* RawNostrID+Random.swift */,
 			);
 			path = "Test Helpers";
 			sourceTree = "<group>";
@@ -1070,6 +1087,7 @@
 				C9C9443A29F6E420002F2C7A /* Test Helpers */,
 				C9DEC0042989477A0078B43A /* Fixtures */,
 				C9DEBFE8298941020078B43A /* EventTests.swift */,
+				C96D391A2B61AFD500D3D0A1 /* RawNostrIDTests.swift */,
 				C9C45E152B23741E00F523DA /* EventObservationTests.swift */,
 				C9ADB132299287D60075E7F8 /* KeyPairTests.swift */,
 				5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */,
@@ -1078,6 +1096,8 @@
 				5B88051B2A21046C00E21F06 /* SHA256KeyTests.swift */,
 				5B88051E2A21056E00E21F06 /* TLVTests.swift */,
 				C94D59AD2AE7286E00295AE8 /* ReportTests.swift */,
+				C900385E2B6195C60080CC4F /* FollowTests.swift */,
+				C96D39242B61B06200D3D0A1 /* AuthorTests.swift */,
 			);
 			path = NosTests;
 			sourceTree = "<group>";
@@ -1130,6 +1150,7 @@
 				C9DEC005298947900078B43A /* sample_data.json */,
 				C9ADB134299288230075E7F8 /* KeyFixture.swift */,
 				C90B16B72AFED96300CB4B85 /* URLExtensionTests.swift */,
+				C9BD91882B61BBEF00FDA083 /* bad_contact_list.json */,
 			);
 			path = Fixtures;
 			sourceTree = "<group>";
@@ -1160,6 +1181,7 @@
 				C9F204602ADEDB720029A858 /* Wei.swift */,
 				030742C32B4769F90073839D /* CoreData */,
 				C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */,
+				C96D39262B61B6D200D3D0A1 /* RawNostrID.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1501,22 +1523,22 @@
 			);
 			mainGroup = C9DEBFC5298941000078B43A;
 			packageReferences = (
-				C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream.git" */,
-				C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
+				C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */,
+				C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */,
 				C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */,
-				C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32.git" */,
+				C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32" */,
 				C9646E9829B79E04007239A4 /* XCRemoteSwiftPackageReference "logger-ios" */,
-				C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios.git" */,
+				C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */,
 				C9646EA529B7A3DD007239A4 /* XCRemoteSwiftPackageReference "swift-dependencies" */,
-				C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections.git" */,
-				C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */,
+				C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */,
+				C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				C99DBF7C2A9E81CF00F7068F /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */,
 				C95F0AC82ABA379700A0D9CE /* XCRemoteSwiftPackageReference "WalletConnectSwiftV2" */,
-				C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3.swift" */,
+				C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3" */,
 				C9332C642ADED0D700AD7B0E /* XCLocalSwiftPackageReference "StarscreamOld" */,
 				C91565BF2B2368FA0068EECA /* XCRemoteSwiftPackageReference "ViewInspector" */,
-				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */,
+				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -1587,6 +1609,7 @@
 				C987F83D29BA951E00B44E7A /* ClarityCity-Bold.otf in Resources */,
 				C987F84529BA951E00B44E7A /* ClarityCity-ExtraBoldItalic.otf in Resources */,
 				C987F84329BA951E00B44E7A /* ClarityCity-Black.otf in Resources */,
+				C9BD91892B61BBEF00FDA083 /* bad_contact_list.json in Resources */,
 				C987F85329BA951E00B44E7A /* ClarityCity-Regular.otf in Resources */,
 				C987F84729BA951E00B44E7A /* ClarityCity-Light.otf in Resources */,
 				C987F83929BA951E00B44E7A /* ClarityCity-MediumItalic.otf in Resources */,
@@ -1753,6 +1776,7 @@
 				5B8C96B629DDD3B200B73AEC /* EditableText.swift in Sources */,
 				C93EC2F129C337EB0012EE2A /* RelayPicker.swift in Sources */,
 				C9F0BB6F29A50437000547FC /* NostrConstants.swift in Sources */,
+				C96D39272B61B6D200D3D0A1 /* RawNostrID.swift in Sources */,
 				5BFF66B12A573F6400AA79DD /* RelayDetailView.swift in Sources */,
 				C9F204632ADEDB910029A858 /* Web3Utils.swift in Sources */,
 				C9F75AD62A041FF7005BBE45 /* ExpirationTimePicker.swift in Sources */,
@@ -1888,10 +1912,12 @@
 				5B08A1E12A1FDFF700EB8F2E /* TLV.swift in Sources */,
 				C9C2B78329E0735400548B4A /* RelaySubscriptionManager.swift in Sources */,
 				C9C2B78029E0731600548B4A /* AsyncTimer.swift in Sources */,
+				C96D39282B61B6D200D3D0A1 /* RawNostrID.swift in Sources */,
 				5B88051C2A21046C00E21F06 /* SHA256KeyTests.swift in Sources */,
 				C9B678E229EEC41000303F33 /* SocialGraphCache.swift in Sources */,
 				3AAB61B52B24CD0000717A07 /* Date+ElapsedTests.swift in Sources */,
 				C936B45F2A4CAF2B00DF1EB9 /* AppDelegate.swift in Sources */,
+				C96D391B2B61AFD500D3D0A1 /* RawNostrIDTests.swift in Sources */,
 				C9C2B77D29E072E400548B4A /* WebSocket+Nos.swift in Sources */,
 				C973AB642A323167002AED16 /* Relay+CoreDataProperties.swift in Sources */,
 				C9EE3E642A053910008A7491 /* ExpirationTimeOption.swift in Sources */,
@@ -1909,6 +1935,7 @@
 				C936B45A2A4C7B7C00DF1EB9 /* Nos.xcdatamodeld in Sources */,
 				C98CA9082B14FD8600929141 /* PagedRelaySubscription.swift in Sources */,
 				C9F204812AE02D8C0029A858 /* AppDestination.swift in Sources */,
+				C9FC1E632B61ACE300A3A6FB /* CoreDataTestCase.swift in Sources */,
 				C9E37E162A1E8143003D4B0A /* Report.swift in Sources */,
 				C987F86229BABAF800B44E7A /* String+Markdown.swift in Sources */,
 				C94A5E192A72C84200B6EC5D /* ReportCategory.swift in Sources */,
@@ -1943,6 +1970,7 @@
 				C9A6C7422AD837AD001F9500 /* UNSWizardController.swift in Sources */,
 				C9B678DC29EEBF3B00303F33 /* DependencyInjection.swift in Sources */,
 				C9F0BB6D29A503D9000547FC /* Int+Bool.swift in Sources */,
+				C96D39252B61B06200D3D0A1 /* AuthorTests.swift in Sources */,
 				DC08FF812A7969C5009F87D1 /* UIDevice+Simulator.swift in Sources */,
 				C9C9444229F6F0E2002F2C7A /* XCTest+Eventually.swift in Sources */,
 				C9680AD22ACC5251006C8C93 /* Either.swift in Sources */,
@@ -1967,12 +1995,14 @@
 				C9BAB09C2996FBA10003A84E /* EventProcessor.swift in Sources */,
 				C992B32B2B3613CC00704A9C /* SubscriptionCancellable.swift in Sources */,
 				C973AB5C2A323167002AED16 /* Follow+CoreDataProperties.swift in Sources */,
+				C900385F2B6195C60080CC4F /* FollowTests.swift in Sources */,
 				C93005602A6AF8320098CA9E /* LoadingContent.swift in Sources */,
 				C97A1C8F29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift in Sources */,
 				C9ADB135299288230075E7F8 /* KeyFixture.swift in Sources */,
 				C9C547552A4F1CDB006B0741 /* SearchController.swift in Sources */,
 				DC08FF802A796997009F87D1 /* ImagePickerUIViewController.swift in Sources */,
 				3FFB1D9429A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,
+				C9BD919B2B61C4FB00FDA083 /* RawNostrID+Random.swift in Sources */,
 				5B6EB49029EDBEC1006E750C /* NoteParserTests.swift in Sources */,
 				C9A6C7452AD83FB0001F9500 /* NotificationViewModel.swift in Sources */,
 			);
@@ -1992,11 +2022,11 @@
 /* Begin PBXTargetDependency section */
 		3AD3185D2B294E9000026B07 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 3AD3185C2B294E9000026B07 /* plugin:XCStringsToolPlugin */;
+			productRef = 3AD3185C2B294E9000026B07 /* XCStringsToolPlugin */;
 		};
 		3AEABEF32B2BF806001BC933 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 3AEABEF22B2BF806001BC933 /* plugin:XCStringsToolPlugin */;
+			productRef = 3AEABEF22B2BF806001BC933 /* XCStringsToolPlugin */;
 		};
 		C90862C229E9804B00C35A71 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2005,11 +2035,11 @@
 		};
 		C9A6C7442AD83F7A001F9500 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = C9A6C7432AD83F7A001F9500 /* plugin:SwiftGenPlugin */;
+			productRef = C9A6C7432AD83F7A001F9500 /* SwiftGenPlugin */;
 		};
 		C9D573402AB24A3700E06BB4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = C9D5733F2AB24A3700E06BB4 /* plugin:SwiftGenPlugin */;
+			productRef = C9D5733F2AB24A3700E06BB4 /* SwiftGenPlugin */;
 		};
 		C9DEBFE6298941020078B43A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2452,7 +2482,7 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */ = {
+		3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/liamnichols/xcstrings-tool-plugin.git";
 			requirement = {
@@ -2492,7 +2522,7 @@
 				minimumVersion = 1.1.0;
 			};
 		};
-		C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios.git" */ = {
+		C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/PostHog/posthog-ios.git";
 			requirement = {
@@ -2508,7 +2538,7 @@
 				minimumVersion = 0.1.4;
 			};
 		};
-		C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections.git" */ = {
+		C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
 			requirement = {
@@ -2516,7 +2546,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1.swift" */ = {
+		C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GigaBitcoin/secp256k1.swift";
 			requirement = {
@@ -2532,7 +2562,7 @@
 				minimumVersion = 2.0.0;
 			};
 		};
-		C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3.swift" */ = {
+		C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Boilertalk/Web3.swift";
 			requirement = {
@@ -2540,7 +2570,7 @@
 				minimumVersion = 0.8.4;
 			};
 		};
-		C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32.git" */ = {
+		C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/0xdeadp00l/bech32.git";
 			requirement = {
@@ -2548,7 +2578,7 @@
 				kind = branch;
 			};
 		};
-		C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */ = {
+		C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
 			requirement = {
@@ -2572,7 +2602,7 @@
 				minimumVersion = 6.6.2;
 			};
 		};
-		C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream.git" */ = {
+		C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/daltoniam/Starscream.git";
 			requirement = {
@@ -2583,19 +2613,19 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3AD3185C2B294E9000026B07 /* plugin:XCStringsToolPlugin */ = {
+		3AD3185C2B294E9000026B07 /* XCStringsToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */;
+			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
 			productName = "plugin:XCStringsToolPlugin";
 		};
-		3AEABEF22B2BF806001BC933 /* plugin:XCStringsToolPlugin */ = {
+		3AEABEF22B2BF806001BC933 /* XCStringsToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */;
+			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
 			productName = "plugin:XCStringsToolPlugin";
 		};
 		C905B0742A619367009B8A78 /* DequeModule */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections.git" */;
+			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = DequeModule;
 		};
 		C91565C02B2368FA0068EECA /* ViewInspector */ = {
@@ -2618,7 +2648,7 @@
 		};
 		C94824492B32364900005B36 /* Web3 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3.swift" */;
+			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3" */;
 			productName = Web3;
 		};
 		C94D855E29914D2300749478 /* SwiftUINavigation */ = {
@@ -2643,7 +2673,7 @@
 		};
 		C9646EA329B7A24A007239A4 /* PostHog */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios.git" */;
+			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */;
 			productName = PostHog;
 		};
 		C9646EA629B7A3DD007239A4 /* Dependencies */ = {
@@ -2653,7 +2683,7 @@
 		};
 		C9646EA829B7A4F2007239A4 /* PostHog */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios.git" */;
+			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */;
 			productName = PostHog;
 		};
 		C9646EAB29B7A520007239A4 /* Dependencies */ = {
@@ -2663,17 +2693,17 @@
 		};
 		C96CB98B2A6040C500498C4E /* DequeModule */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections.git" */;
+			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = DequeModule;
 		};
 		C97797BB298AB1890046BD25 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1.swift" */;
+			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */;
 			productName = secp256k1;
 		};
 		C97797BE298ABE060046BD25 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1.swift" */;
+			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */;
 			productName = secp256k1;
 		};
 		C99DBF7D2A9E81CF00F7068F /* SDWebImageSwiftUI */ = {
@@ -2691,7 +2721,7 @@
 			package = C99DBF7C2A9E81CF00F7068F /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
 			productName = SDWebImageSwiftUI;
 		};
-		C9A6C7432AD83F7A001F9500 /* plugin:SwiftGenPlugin */ = {
+		C9A6C7432AD83F7A001F9500 /* SwiftGenPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */;
 			productName = "plugin:SwiftGenPlugin";
@@ -2703,7 +2733,7 @@
 		};
 		C9AA1BB92ABB62EB00E8BD6D /* Web3 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3.swift" */;
+			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3" */;
 			productName = Web3;
 		};
 		C9AA1BBB2ABB6E8900E8BD6D /* WalletConnectModal */ = {
@@ -2713,17 +2743,17 @@
 		};
 		C9B71DBD2A8E9BAD0031ED9F /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */;
+			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = Sentry;
 		};
 		C9B71DBF2A8E9BAD0031ED9F /* SentrySwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */;
+			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = SentrySwiftUI;
 		};
 		C9B71DC42A9008300031ED9F /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */;
+			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = Sentry;
 		};
 		C9BA85902B23628300AFC2C3 /* Logger */ = {
@@ -2743,12 +2773,12 @@
 		};
 		C9BA85962B23638700AFC2C3 /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream.git" */;
+			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
 		};
 		C9BA85982B23638700AFC2C3 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1.swift" */;
+			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */;
 			productName = secp256k1;
 		};
 		C9BA859A2B23638700AFC2C3 /* SwiftUINavigation */ = {
@@ -2758,17 +2788,17 @@
 		};
 		C9BA859C2B23638700AFC2C3 /* PostHog */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios.git" */;
+			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */;
 			productName = PostHog;
 		};
 		C9BA859E2B23638700AFC2C3 /* DequeModule */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections.git" */;
+			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = DequeModule;
 		};
 		C9BA85A02B23638700AFC2C3 /* SentrySwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */;
+			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = SentrySwiftUI;
 		};
 		C9BA85A22B23638700AFC2C3 /* WalletConnect */ = {
@@ -2778,7 +2808,7 @@
 		};
 		C9BA85A42B23638700AFC2C3 /* Web3 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3.swift" */;
+			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3" */;
 			productName = Web3;
 		};
 		C9BA85A62B23638700AFC2C3 /* StarscreamOld */ = {
@@ -2793,22 +2823,22 @@
 		};
 		C9BA85AA2B2363CA00AFC2C3 /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */;
+			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = Sentry;
 		};
-		C9D5733F2AB24A3700E06BB4 /* plugin:SwiftGenPlugin */ = {
+		C9D5733F2AB24A3700E06BB4 /* SwiftGenPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9C8450C2AB249DB00654BC1 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */;
 			productName = "plugin:SwiftGenPlugin";
 		};
 		C9DEC067298965270078B43A /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream.git" */;
+			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
 		};
 		CDDA1F7A29A527650047ACD8 /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream.git" */;
+			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
 		};
 		CDDA1F7C29A527650047ACD8 /* SwiftUINavigation */ = {
