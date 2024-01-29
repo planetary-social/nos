@@ -24,7 +24,6 @@ struct FullscreenProgressView: View {
                 Text(text)
                     .padding(.vertical, 10)
                     .padding(.horizontal, 25)
-                    .font(.body)
                     .foregroundColor(.primaryTxt)
             }
             Spacer()
@@ -52,5 +51,6 @@ struct FullscreenProgressView: View {
 #Preview("Long text") {
     FullscreenProgressView(
         isPresented: .constant(true),
-        text: String(localized: .localizable.notFindingResults))
+        text: String(localized: .localizable.notFindingResults)
+    )
 }
