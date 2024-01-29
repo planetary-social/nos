@@ -125,8 +125,6 @@ class SearchController: ObservableObject {
     func clear() {
         query = ""
         authorResults = []
-        isNotFindingResults = false
-        timer?.invalidate()
     }
     
     func note(fromPublicKey publicKeyString: String) -> Event? {

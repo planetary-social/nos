@@ -54,7 +54,11 @@ struct DiscoverGrid: View {
                     } else {
                         // Search results
                         if searchController.authorResults.isEmpty {
-                            FullscreenProgressView(isPresented: .constant(true))
+                            FullscreenProgressView(
+                                isPresented: .constant(true),
+                                text: searchController.isNotFindingResults ?
+                                    String(localized: .localizable.notFindingResults) : nil
+                            )
                         } else {
                             ScrollView {
                                 LazyVStack {

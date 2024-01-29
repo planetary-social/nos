@@ -110,7 +110,6 @@ struct DiscoverView: View {
                     }
                 }
             }
-            .overlay(searchController.isNotFindingResults ? notFindingResultsView : nil)
             .searchable(
                 text: $searchController.query, 
                 placement: .toolbar, 
@@ -197,17 +196,6 @@ struct DiscoverView: View {
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
             .navigationBarItems(leading: SideMenuButton())
         }
-    }
-
-    var notFindingResultsView: some View {
-        VStack(alignment: .center) {
-            Spacer()
-            Text(.localizable.notFindingResults)
-            Spacer()
-        }
-        .font(.body)
-        .foregroundColor(.primaryTxt)
-        .padding(.horizontal, 25)
     }
 }
 
