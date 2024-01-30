@@ -1679,6 +1679,28 @@
         }
       }
     },
+    "claimYourUsernameButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get it now"
+          }
+        }
+      }
+    },
+    "claimYourUsernameText" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claim your @username and stand out on the decentralized world!"
+          }
+        }
+      }
+    },
     "clear" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -12537,6 +12559,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "當你關注的用戶舉報一條筆記或一個用戶時，我們會在它們的筆記中添加一個內容警告"
+          }
+        }
+      }
+    },
+    "username" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Username"
           }
         }
       }

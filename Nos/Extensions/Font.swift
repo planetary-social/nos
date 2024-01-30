@@ -40,8 +40,8 @@ extension Font {
         ).pointSize)
     
     static var clarityHeadline = Font
-        .custom("ClarityCity-Bold", size: UIFont.preferredFont(forTextStyle: .headline).pointSize)
-    
+        .custom("ClarityCity-SemiBold", size: UIFont.preferredFont(forTextStyle: .headline).pointSize)
+
     static var clarityCaption = Font
         .custom("ClarityCity-Regular", size: UIFont.preferredFont(
             forTextStyle: .caption1
@@ -61,7 +61,12 @@ extension Font {
         .custom("ClarityCity-Medium", size: UIFont.preferredFont(
             forTextStyle: .subheadline
         ).pointSize)
-    
+
+    static var claritySemiBoldSubheadline = Font
+        .custom("ClarityCity-SemiBold", size: UIFont.preferredFont(
+            forTextStyle: .subheadline
+        ).pointSize)
+
     static var clarityFootnote = Font
         .custom("ClarityCity-Regular", size: UIFont.preferredFont(
             forTextStyle: .footnote

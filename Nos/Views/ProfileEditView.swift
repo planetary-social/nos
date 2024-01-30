@@ -68,6 +68,15 @@ struct ProfileEditView: View {
             NosFormSection(label: .localizable.basicInfo) {
                 NosTextField(label: .localizable.name, text: $nameText)
                 FormSeparator()
+                NosFormField(label: .localizable.username) {
+                    ActionBanner(
+                        messageText: .localizable.claimYourUsernameText,
+                        messageImage: .atSymbol,
+                        buttonText: .localizable.claimYourUsernameButton
+                    )
+                    .padding(.top, 13)
+                }
+                FormSeparator()
                 NosTextEditor(label: .localizable.bio, text: $bioText)
                     .frame(maxHeight: 200)
                 FormSeparator()
@@ -85,7 +94,10 @@ struct ProfileEditView: View {
             }
             .padding(.horizontal, 13)
             
-            SetUpUNSBanner {
+            SetUpUNSBanner(
+                text: .localizable.unsTagline,
+                button: .localizable.manageUniversalName
+            ) {
                 showUniversalNameWizard = true
             }
             .padding(13)
@@ -158,7 +170,7 @@ struct ProfileEditView: View {
         author.profilePhotoURL = URL(string: avatarText)
         author.website = website
         author.nip05 = nip05Text
-        author.uns = unsText
+        author  .uns = unsText
         do {
             try viewContext.save()
             // Post event
