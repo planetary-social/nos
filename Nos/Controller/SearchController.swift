@@ -11,6 +11,15 @@ import Dependencies
 import CoreData
 import Logger
 
+/// The current state of the search.
+enum SearchState {
+    case noQuery
+    case empty
+    case results
+    case loading
+    case stillLoading
+}
+
 /// Manages a search query and list of results.
 class SearchController: ObservableObject {
     
@@ -23,8 +32,7 @@ class SearchController: ObservableObject {
     /// so this contains all search results, period.
     @Published var authorResults = [Author]()
 
-    /// Whether we're finding results or not, so we can show a message if not.
-    @Published var isNotFindingResults = false
+    @Published var state: SearchState = .noQuery
 
     @Dependency(\.router) private var router
     @Dependency(\.relayService) private var relayService
@@ -55,7 +63,7 @@ class SearchController: ObservableObject {
             )
             .map { $0.0.lowercased() } 
             .debounce(for: 0.2, scheduler: RunLoop.main)
-            .filter { !$0.isEmpty }
+            .filter { $0.count >= 3 || self.state == .loading }
             .map { query in
                 // SIDE EFFECT WARNING
                 // These functions search other systems for the given query and add relevant authors to the database. 
@@ -71,7 +79,7 @@ class SearchController: ObservableObject {
             .map { $0.sorted(by: { $0.followers.count > $1.followers.count }) }
             .sink(receiveValue: { results in
                 if !results.isEmpty {
-                    self.isNotFindingResults = false
+                    self.state = .results
                 }
                 self.authorResults = results
             })
@@ -81,9 +89,12 @@ class SearchController: ObservableObject {
             .removeDuplicates()
             .sink { query in
                 if query.isEmpty {
-                    self.isNotFindingResults = false
+                    self.state = .noQuery
                     self.timer?.invalidate()
+                } else if query.count < 3 {
+                    self.state = .empty
                 } else {
+                    self.state = .loading
                     self.startSearchTimer()
                 }
             }
@@ -171,17 +182,19 @@ class SearchController: ObservableObject {
     }
 
     func startSearchTimer() {
-        isNotFindingResults = false
+        state = .loading
         timer?.invalidate()
 
         timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { _ in
             if !self.query.isEmpty && self.authorResults.isEmpty {
-                self.isNotFindingResults = true
+                self.state = .stillLoading
             }
         }
     }
 
     func submitSearch() { // rename to seeIfThisIsSomeSortOfIdentifier (or maybe put this all into .map)
+        state = .loading // this starts the search, but it may not be the best way to do it
+
         if query.contains("@") {
             Task(priority: .userInitiated) {
                 if let publicKeyHex =
