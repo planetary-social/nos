@@ -92,7 +92,9 @@ class SearchController: ObservableObject {
                     self.state = .noQuery
                     self.timer?.invalidate()
                 } else if query.count < 3 {
-                    self.state = .empty
+                    if self.state == .noQuery {
+                        self.state = .empty
+                    }
                 } else {
                     self.state = .loading
                     self.startSearchTimer()
@@ -182,7 +184,6 @@ class SearchController: ObservableObject {
     }
 
     func startSearchTimer() {
-        state = .loading
         timer?.invalidate()
 
         timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { _ in
