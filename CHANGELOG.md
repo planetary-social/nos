@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Search now starts automatically after entering three characters instead of one.
+
 ## [0.1.4] - 2024-01-31Z
 
 - Show a message when we’re not finding search results.
