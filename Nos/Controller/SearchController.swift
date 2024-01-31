@@ -13,10 +13,19 @@ import Logger
 
 /// The current state of the search.
 enum SearchState {
+    /// There is no text in the search field.
     case noQuery
+
+    /// No search is in progress, and there are no results to display.
     case empty
+
+    /// There are search results to display.
     case results
+
+    /// A search is in progress.
     case loading
+
+    /// A search is still in progress after a specified period of time.
     case stillLoading
 }
 
@@ -48,7 +57,10 @@ class SearchController: ObservableObject {
     private lazy var context: NSManagedObjectContext = {
         persistenceController.viewContext
     }()
-    
+
+    /// The amount of time, in seconds, to remain in the `.loading` state until switching to `.stillLoading`.
+    private let stillLoadingTime: TimeInterval = 10
+
     // MARK: - Init
     
     init() {
@@ -186,7 +198,7 @@ class SearchController: ObservableObject {
     func startSearchTimer() {
         timer?.invalidate()
 
-        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: stillLoadingTime, repeats: false) { _ in
             if !self.query.isEmpty && self.authorResults.isEmpty {
                 self.state = .stillLoading
             }
