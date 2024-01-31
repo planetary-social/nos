@@ -8,12 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.4] - 2024-01-31Z
+
 - Show a message when we’re not finding search results.
 - Fixed an issue where bad data in the contact list could break the home feed.
 - Fixed a bug where the margins of root notes appeared incorrectly on Mac and iPad.
 - Fixed a date localization issue.
 - Optimized loading of the Notifications tab
-- Updated suggested users for discovery tab.
+- Updated suggested users for discovery tab. 
 - Show the profile view when a search matches a valid User ID (npub).
 - Added tabs to Profiles to filter posts.
 - Fixed a bug that could cause the out of network warning to be shown on reposts in the stories view.
