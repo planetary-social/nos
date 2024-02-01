@@ -1679,6 +1679,28 @@
         }
       }
     },
+    "claimUniqueUsernameDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome to Nos, where your voice matters. Begin your journey by securing your unique **@username**.nos.social\n\nStand out in the decentralized world!"
+          }
+        }
+      }
+    },
+    "claimUniqueUsernameTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claim your unique identity on Nostr"
+          }
+        }
+      }
+    },
     "claimYourUsernameButton" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -10561,6 +10583,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "設置"
+          }
+        }
+      }
+    },
+    "setUpMyUsername" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set up my @username"
           }
         }
       }

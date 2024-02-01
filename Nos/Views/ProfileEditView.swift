@@ -25,6 +25,7 @@ struct ProfileEditView: View {
     @State private var unsText: String = ""
     @State private var nip05Text: String = ""
     @State private var website: String = ""
+    @State private var showNIP05Wizard = false
     @State private var showUniversalNameWizard = false
     @State private var unsController = UNSWizardController()
     
@@ -73,7 +74,9 @@ struct ProfileEditView: View {
                         messageText: .localizable.claimYourUsernameText,
                         messageImage: .atSymbol,
                         buttonText: .localizable.claimYourUsernameButton
-                    )
+                    ) {
+                        showNIP05Wizard = true
+                    }
                     .padding(.top, 13)
                 }
                 FormSeparator()
@@ -122,6 +125,10 @@ struct ProfileEditView: View {
         .sheet(isPresented: $showUniversalNameWizard, content: {
             UNSWizard(controller: unsController, isPresented: $showUniversalNameWizard)
         })
+
+        .sheet(isPresented: $showNIP05Wizard) {
+            CreateUsernameSheet()
+        }
         .onChange(of: showUniversalNameWizard) { _, newValue in
             if !newValue {
                 nip05Text = currentUser.author?.nip05 ?? ""
