@@ -11,11 +11,12 @@ import SwiftUINavigation
 struct NosTextField: View {
     
     var label: LocalizedStringResource
+    var footnote: LocalizedStringResource?
     @Binding var text: String
     @FocusState private var focus: Bool
     
     var body: some View {
-        NosFormField(label: label) { 
+        NosFormField(label: label, footnote: footnote) { 
             TextField("", text: $text)
                 .textInputAutocapitalization(.none)
                 .foregroundColor(.primaryTxt)

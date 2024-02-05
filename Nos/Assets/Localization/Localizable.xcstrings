@@ -12607,6 +12607,17 @@
         }
       }
     },
+    "usernameWarningMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changing or removing your handle may cause web links to disconnect from your identity."
+          }
+        }
+      }
+    },
     "userReportedByOne" : {
       "extractionState" : "manual",
       "localizations" : {
