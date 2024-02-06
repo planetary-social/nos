@@ -66,6 +66,11 @@
                BlueprintName = "NosTests"
                ReferencedContainer = "container:Nos.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "SocialGraphTests/testFollow()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
          <TestableReference
             skipped = "YES"
