@@ -84,32 +84,31 @@ struct ProfileEditView: View {
                     NosFormField(
                         label: .localizable.username
                     ) {
-                        HStack {
-                            Text(nip05Text)
-                                .foregroundColor(.primaryTxt)
-                            Spacer()
-                            Button {
-                                nip05Text = ""
-                            } label: {
-                                Image(systemName: "minus.circle.fill")
-                                    .foregroundStyle(
-                                        LinearGradient(colors: [Color(hex: "#E55121"), Color(hex: "#A42509")],
-                                                       startPoint: .top,
-                                                       endPoint: .bottom
-                                                      )
-                                    )
-                                    .shadow(radius: 2, y: 2)
+                        VStack {
+                            HStack {
+                                Text(nip05Text)
+                                    .foregroundColor(.primaryTxt)
+                                Spacer()
+                                Button {
+                                    nip05Text = ""
+                                } label: {
+                                    Image(systemName: "minus.circle.fill")
+                                        .foregroundStyle(
+                                            LinearGradient(colors: [Color(hex: "#E55121"), Color(hex: "#A42509")],
+                                                           startPoint: .top,
+                                                           endPoint: .bottom
+                                                          )
+                                        )
+                                        .shadow(radius: 2, y: 2)
+                                }
                             }
-                        }
-                        .padding(.vertical, 15)
-                        HStack {
+                            .padding(.vertical, 15)
                             (Text(Image(systemName: "exclamationmark.triangle")).foregroundStyle(Color(hex: "#F0A108")) + Text(" ") +
-                            Text(.localizable.usernameWarningMessage)
+                             Text(.localizable.usernameWarningMessage)
                                 .foregroundColor(.secondaryTxt))
-                                .font(.clarityCaption)
-                                .lineSpacing(5)
-                                .shadow(radius: 4, y: 4)
-                            Spacer()
+                            .font(.clarityCaption)
+                            .lineSpacing(5)
+                            .shadow(radius: 4, y: 4)
                         }
                     }
                 }
@@ -131,30 +130,19 @@ struct ProfileEditView: View {
             }
             .padding(.horizontal, 13)
             
-            SetUpUNSBanner(
-                text: .localizable.unsTagline,
-                button: .localizable.manageUniversalName
-            ) {
-                showUniversalNameWizard = true
+            if unsText.isEmpty {
+                SetUpUNSBanner(
+                    text: .localizable.unsTagline,
+                    button: .localizable.manageUniversalName
+                ) {
+                    showUniversalNameWizard = true
+                }
+                .padding(13)
+            } else {
+                NosFormSection(label: nil) {
+                    NosTextField(label: .localizable.universalName, text: $unsText)
+                }
             }
-            .padding(13)
-            
-            NosFormSection(label: nil) { 
-                NosTextField(label: .localizable.universalName, text: $unsText)
-                NosTextField(label: .localizable.nip05, text: $nip05Text)
-            }
-            
-            HStack {
-                HighlightedText(
-                    text: .localizable.nip05LearnMore,
-                    highlightedWord: String(localized: .localizable.learnMore), 
-                    highlight: .diagonalAccent, 
-                    font: .clarityCaption,
-                    link: URL(string: "https://nostr.how/en/guides/get-verified")!
-                )
-                Spacer()
-            }
-            .padding(13)
         }
         .sheet(isPresented: $showUniversalNameWizard, content: {
             UNSWizard(controller: unsController, isPresented: $showUniversalNameWizard)
@@ -211,7 +199,7 @@ struct ProfileEditView: View {
         author.profilePhotoURL = URL(string: avatarText)
         author.website = website
         author.nip05 = nip05Text
-        author  .uns = unsText
+        author.uns = unsText
         do {
             try viewContext.save()
             // Post event
