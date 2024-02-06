@@ -77,7 +77,7 @@ class SearchController: ObservableObject {
                 )
             )
             .filter { _ in self.state != .noQuery && self.state != .empty }
-            .map { self.authors(named: $0.0) }
+            .map { _ in self.authors(named: self.query) }
             .map { $0.sorted(by: { $0.followers.count > $1.followers.count }) }
             .sink(receiveValue: { results in
                 if !results.isEmpty {
@@ -91,8 +91,8 @@ class SearchController: ObservableObject {
             .removeDuplicates()
             .filter { $0.count >= 3 || self.state == .loading }
             .debounce(for: 0.2, scheduler: RunLoop.main)
-            .sink { query in
-                self.search(for: query)
+            .sink { _ in
+                self.submitSearch()
             }
             .store(in: &cancellables)
 
@@ -230,6 +230,8 @@ class SearchController: ObservableObject {
     /// 
     /// Finally, if all previous checks fail, searches the relays and UNS for the given query.
     func submitSearch() {
+        searchSubscriptions.removeAll()
+        
         if query.contains("@") {
             Task(priority: .userInitiated) {
                 if let publicKeyHex =
