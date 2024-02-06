@@ -194,8 +194,7 @@ public class Event: NosManagedObject {
         "npub1zyfv44hl4kezcn2st6de75ejypfwqk5rfq3vlymgm365e2au0w5spdg837": ["Dr. Monali Desai"],
         "npub1r9lucu40595a3qlycc7whv0524664dm6hp7qmah80psvt7zznyzq9vkmz0": ["lynnrose"],
         "npub1qk003dm7f6tqe3ydykawvqrmnze5n444dwql88qxd6hzxczzgv3syh87jz": ["bettyrose"],
-        "npub13mh45wl4u9ur26sxxwcklywgyt640s2dqkn6mvsu55302nwvqymq6xae0f": ["Katrin Theresa"],
-        "npub1curnt7jtq8mhl9fcswnwvuvc9ccm6lvsdv4kzydx75v92kldrvdqh7sq09": ["loveai"]
+        "npub13mh45wl4u9ur26sxxwcklywgyt640s2dqkn6mvsu55302nwvqymq6xae0f": ["Katrin Theresa"]
     ]
     
     // MARK: - Fetching
