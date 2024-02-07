@@ -11,6 +11,24 @@ import Dependencies
 import CoreData
 import Logger
 
+/// The current state of the search.
+enum SearchState {
+    /// There is no text in the search field.
+    case noQuery
+
+    /// No search is in progress, and there are no results to display.
+    case empty
+
+    /// There are search results to display.
+    case results
+
+    /// A search is in progress.
+    case loading
+
+    /// A search is still in progress after a specified period of time.
+    case stillLoading
+}
+
 /// Manages a search query and list of results.
 class SearchController: ObservableObject {
     
@@ -23,8 +41,7 @@ class SearchController: ObservableObject {
     /// so this contains all search results, period.
     @Published var authorResults = [Author]()
 
-    /// Whether we're finding results or not, so we can show a message if not.
-    @Published var isNotFindingResults = false
+    @Published var state: SearchState = .noQuery
 
     @Dependency(\.router) private var router
     @Dependency(\.relayService) private var relayService
@@ -40,12 +57,18 @@ class SearchController: ObservableObject {
     private lazy var context: NSManagedObjectContext = {
         persistenceController.viewContext
     }()
-    
+
+    /// The amount of time, in seconds, to remain in the `.loading` state until switching to `.stillLoading`.
+    private let stillLoadingTime: TimeInterval = 10
+
     // MARK: - Init
     
     init() {
         $query
-            .removeDuplicates() // only do the work below when the query has changed
+            .removeDuplicates()
+            .filter { $0.count >= 3 || self.state == .loading }
+            .map { $0.lowercased() }
+            .debounce(for: 0.2, scheduler: RunLoop.main)
             .combineLatest(
                 // listen for new objects, as this is how we get search results from relays
                 NotificationCenter.default.publisher(
@@ -53,25 +76,12 @@ class SearchController: ObservableObject {
                     object: context
                 )
             )
-            .map { $0.0.lowercased() } 
-            .debounce(for: 0.2, scheduler: RunLoop.main)
-            .filter { !$0.isEmpty }
-            .map { query in
-                // SIDE EFFECT WARNING
-                // These functions search other systems for the given query and add relevant authors to the database. 
-                // The database then generates a notification which is listened to above and results are reloaded.
-                Task {
-                    self.searchSubscriptions.removeAll()
-                    self.searchRelays(for: query)
-                    self.searchUNS(for: query)
-                }
-                return query
-            }
-            .map { self.authors(named: $0) } // this and below need to run every time the context changes
+            .filter { _ in self.state != .noQuery && self.state != .empty }
+            .map { _ in self.authors(named: self.query) }
             .map { $0.sorted(by: { $0.followers.count > $1.followers.count }) }
             .sink(receiveValue: { results in
                 if !results.isEmpty {
-                    self.isNotFindingResults = false
+                    self.state = .results
                 }
                 self.authorResults = results
             })
@@ -79,12 +89,20 @@ class SearchController: ObservableObject {
 
         $query
             .removeDuplicates()
+            .filter { $0.count >= 3 || self.state == .loading }
+            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .sink { _ in
+                self.submitSearch()
+            }
+            .store(in: &cancellables)
+
+        $query
+            .removeDuplicates()
             .sink { query in
                 if query.isEmpty {
-                    self.isNotFindingResults = false
-                    self.timer?.invalidate()
-                } else {
-                    self.startSearchTimer()
+                    self.clear()
+                } else if query.count < 3 {
+                    self.state = .empty
                 }
             }
             .store(in: &cancellables)
@@ -123,6 +141,9 @@ class SearchController: ObservableObject {
     }
     
     func clear() {
+        state = .noQuery
+        searchSubscriptions.removeAll()
+        timer?.invalidate()
         query = ""
         authorResults = []
     }
@@ -139,6 +160,23 @@ class SearchController: ObservableObject {
         }
         try? context.saveIfNeeded()
         return note
+    }
+    
+    /// Searches the relays and UNS for the given query.
+    /// - Parameter query: The string to search for.
+    ///
+    /// - Warning: SIDE EFFECT WARNING:
+    /// These functions search other systems for the given query and add relevant authors to the database.
+    /// The database then generates a notification which is listened to above and results are reloaded.
+    func search(for query: String) {
+        state = .loading
+        startSearchTimer()
+        let searchQuery = query.lowercased() // also consider trimming whitespace
+        Task {
+            self.searchSubscriptions.removeAll()
+            self.searchRelays(for: searchQuery)
+            self.searchUNS(for: searchQuery)
+        }
     }
 
     func searchRelays(for query: String) {
@@ -171,17 +209,29 @@ class SearchController: ObservableObject {
     }
 
     func startSearchTimer() {
-        isNotFindingResults = false
         timer?.invalidate()
 
-        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: stillLoadingTime, repeats: false) { _ in
             if !self.query.isEmpty && self.authorResults.isEmpty {
-                self.isNotFindingResults = true
+                self.state = .stillLoading
             }
         }
     }
-
-    func submitSearch() { // rename to seeIfThisIsSomeSortOfIdentifier (or maybe put this all into .map)
+    
+    /// Searches for the value in `query`. Only needed when the user taps the Search button since typeahead search
+    /// handles other use cases.
+    ///
+    /// First, checks to see if `query` contains the "@" symbol and if so, searches for the username with
+    /// the relay service. If there's a match, shows the author.
+    ///
+    /// Second, checks to see if `query` matches an author's public key and if so, shows the author.
+    /// 
+    /// Third, checks to see if `query` matches a note's public key and if so, shows the note.
+    /// 
+    /// Finally, if all previous checks fail, searches the relays and UNS for the given query.
+    func submitSearch() {
+        searchSubscriptions.removeAll()
+        
         if query.contains("@") {
             Task(priority: .userInitiated) {
                 if let publicKeyHex =
@@ -193,16 +243,16 @@ class SearchController: ObservableObject {
                     }
                 }
             }
-        } else {
-            if let author = author(fromPublicKey: query) {
-                Task { @MainActor in
-                    router.push(author)
-                }
-            } else if let note = note(fromPublicKey: query) {
-                Task { @MainActor in
-                    router.push(note)
-                }
+        } else if let author = author(fromPublicKey: query) {
+            Task { @MainActor in
+                router.push(author)
             }
+        } else if let note = note(fromPublicKey: query) {
+            Task { @MainActor in
+                router.push(note)
+            }
+        } else {
+            search(for: query)
         }
     }
 }
