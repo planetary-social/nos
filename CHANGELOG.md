@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue where scrolling to the top of the Feed did not work after tapping the Feed tab.
+- Fixed an issue where scrolling to the top of the Profile did not work after tapping the Profile tab.
 - Search now starts automatically after entering three characters instead of one.
 
 ## [0.1.4] - 2024-01-31Z

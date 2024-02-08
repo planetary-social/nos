@@ -118,7 +118,7 @@ struct HomeFeedView: View {
                     .opacity(isShowingStories ? 1 : 0)
                     .animation(.default, value: selectedStoryAuthor)
                 }
-                .doubleTapToPop(tab: .home) { proxy in
+                .doubleTapToPop(tab: .home) { _ in
                     if isShowingStories {
                         selectedStoryAuthor = nil
                     } else {

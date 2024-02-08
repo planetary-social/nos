@@ -121,7 +121,7 @@ struct ProfileView: View {
                 .padding(0)
                 .id(selectedTab)
             }
-            .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { proxy in
+            .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { _ in
                 NotificationCenter.default.post(
                     name: .scrollToTop,
                     object: nil,
