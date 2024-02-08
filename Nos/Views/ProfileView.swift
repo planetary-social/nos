@@ -100,11 +100,11 @@ struct ProfileView: View {
                     databaseFilter: selectedTab.request(author: author),
                     relayFilter: profileNotesFilter,
                     context: viewContext,
+                    tab: .profile,
                     header: {
                         ProfileHeader(author: author, selectedTab: $selectedTab)
                             .compositingGroup()
                             .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
-                            .id(author.id)
                     },
                     emptyPlaceholder: {
                         VStack {
@@ -121,9 +121,12 @@ struct ProfileView: View {
                 .padding(0)
                 .id(selectedTab)
             }
-            .id(author.id)
             .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { proxy in
-                proxy.scrollTo(author.id)
+                NotificationCenter.default.post(
+                    name: .scrollToTop,
+                    object: nil,
+                    userInfo: ["tab": AppDestination.profile]
+                )
             }
         }
         .background(Color.appBg)

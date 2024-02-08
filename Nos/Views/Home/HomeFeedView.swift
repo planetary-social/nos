@@ -84,12 +84,12 @@ struct HomeFeedView: View {
                         databaseFilter: Event.homeFeed(for: user, before: lastRefreshDate), 
                         relayFilter: homeFeedFilter,
                         context: viewContext,
+                        tab: .home,
                         header: {
                             AuthorStoryCarousel(
                                 authors: $stories, 
                                 selectedStoryAuthor: $selectedStoryAuthor
                             )
-                            .id(user.id)
                         },
                         emptyPlaceholder: {
                             VStack {
@@ -122,10 +122,10 @@ struct HomeFeedView: View {
                     if isShowingStories {
                         selectedStoryAuthor = nil
                     } else {
-                        proxy.scrollTo(user.id)
                         NotificationCenter.default.post(
                             name: .scrollToTop,
-                            object: nil
+                            object: nil,
+                            userInfo: ["tab": AppDestination.home]
                         )
                     }
                 }
