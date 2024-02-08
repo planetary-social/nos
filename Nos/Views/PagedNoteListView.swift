@@ -71,12 +71,27 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             for: .valueChanged
         )
         collectionView.refreshControl = refreshControl
-        
+
+        context.coordinator.observer = NotificationCenter.default.addObserver(
+            forName: .scrollToTop,
+            object: nil,
+            queue: .main
+        ) { [weak collectionView] _ in
+            // scrolling to CGRect.zero does not work, so this seems to be the best we can do
+            collectionView?.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
+        }
+
         return collectionView
     }
     
     func updateUIView(_ collectionView: UICollectionView, context: Context) {}
-    
+
+//    static func dismantleUIView(_ uiView: UITextView, coordinator: Coordinator<AnyView, AnyView>) {
+//        if let observer = coordinator.observer {
+//            NotificationCenter.default.removeObserver(observer)
+//        }
+//    }
+
     /// Builds a one section, one column layout with dynamic cell sizes and a header and footer view.
     static func buildLayout() -> UICollectionViewLayout {
         let size = NSCollectionLayoutSize(
@@ -118,7 +133,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         
         var dataSource: PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder>?
         var collectionView: UICollectionView?
-        var onRefresh: (() -> NSFetchRequest<Event>)? 
+        var observer: NSObjectProtocol?
+        var onRefresh: (() -> NSFetchRequest<Event>)?
         
         func dataSource(
             databaseFilter: NSFetchRequest<Event>, 
@@ -161,6 +177,10 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             }
         }
     }
+}
+
+extension Notification.Name {
+    public static let scrollToTop = Notification.Name("scrollToTop")
 }
 
 #Preview {

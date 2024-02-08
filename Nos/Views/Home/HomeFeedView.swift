@@ -123,6 +123,10 @@ struct HomeFeedView: View {
                         selectedStoryAuthor = nil
                     } else {
                         proxy.scrollTo(user.id)
+                        NotificationCenter.default.post(
+                            name: .scrollToTop,
+                            object: nil
+                        )
                     }
                 }
             }
