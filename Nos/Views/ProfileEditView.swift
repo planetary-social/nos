@@ -26,6 +26,7 @@ struct ProfileEditView: View {
     @State private var nip05Text: String = ""
     @State private var website: String = ""
     @State private var showNIP05Wizard = false
+    @State private var showNIP05Editor = false
     @State private var showUniversalNameWizard = false
     @State private var unsController = UNSWizardController()
     
@@ -69,18 +70,7 @@ struct ProfileEditView: View {
             NosFormSection(label: .localizable.basicInfo) {
                 NosTextField(label: .localizable.name, text: $nameText)
                 FormSeparator()
-                if nip05Text.isEmpty {
-                    NosFormField(label: .localizable.username) {
-                        ActionBanner(
-                            messageText: .localizable.claimYourUsernameText,
-                            messageImage: .atSymbol,
-                            buttonText: .localizable.claimYourUsernameButton
-                        ) {
-                            showNIP05Wizard = true
-                        }
-                        .padding(.top, 13)
-                    }
-                } else {
+                if author.nip05?.isEmpty == false {
                     NosFormField(
                         label: .localizable.username
                     ) {
@@ -109,6 +99,54 @@ struct ProfileEditView: View {
                             .font(.clarityCaption)
                             .lineSpacing(5)
                             .shadow(radius: 4, y: 4)
+                        }
+                    }
+                } else {
+                    if showNIP05Editor {
+                        NosFormField(label: .localizable.username) {
+                            VStack {
+                                HStack {
+                                    Text("@")
+                                        .foregroundStyle(Color.primaryTxt)
+                                    TextField("", text: $nip05Text)
+                                        .textInputAutocapitalization(.none)
+                                        .foregroundColor(.primaryTxt)
+                                        .autocorrectionDisabled()
+                                    Text(".nos.social")
+                                        .foregroundStyle(Color.secondaryTxt)
+                                    Spacer()
+                                    Button {
+                                        nip05Text = ""
+                                    } label: {
+                                        Image(systemName: "minus.circle.fill")
+                                            .foregroundStyle(
+                                                LinearGradient(colors: [Color(hex: "#E55121"), Color(hex: "#A42509")],
+                                                               startPoint: .top,
+                                                               endPoint: .bottom
+                                                              )
+                                            )
+                                            .shadow(radius: 2, y: 2)
+                                    }
+                                }
+                                .padding(.vertical, 15)
+                                (Text(Image(systemName: "exclamationmark.triangle")).foregroundStyle(Color(hex: "#F0A108")) + Text(" ") +
+                                 Text(.localizable.usernameWarningMessage)
+                                    .foregroundColor(.secondaryTxt))
+                                .font(.clarityCaption)
+                                .lineSpacing(5)
+                                .shadow(radius: 4, y: 4)
+                            }
+                        }
+                    } else {
+                        NosFormField(label: .localizable.username) {
+                            ActionBanner(
+                                messageText: .localizable.claimYourUsernameText,
+                                messageImage: .atSymbol,
+                                buttonText: .localizable.claimYourUsernameButton
+                            ) {
+                                showNIP05Wizard = true
+                            }
+                            .padding(.top, 13)
                         }
                     }
                 }
@@ -149,7 +187,10 @@ struct ProfileEditView: View {
         })
 
         .sheet(isPresented: $showNIP05Wizard) {
-            CreateUsernameSheet()
+            CreateUsernameSheet {
+                showNIP05Wizard = false
+                showNIP05Editor = true
+            }
         }
         .onChange(of: showUniversalNameWizard) { _, newValue in
             if !newValue {

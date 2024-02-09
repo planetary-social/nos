@@ -89,7 +89,6 @@ struct HomeFeedView: View {
                                 authors: $stories, 
                                 selectedStoryAuthor: $selectedStoryAuthor
                             )
-                            .id(user.id)
                         },
                         emptyPlaceholder: {
                             VStack {
@@ -108,7 +107,7 @@ struct HomeFeedView: View {
                         }
                     )
                     .padding(0)
-                    
+
                     StoriesView(
                         cutoffDate: $storiesCutoffDate,
                         authors: stories,

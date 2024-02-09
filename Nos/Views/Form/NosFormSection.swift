@@ -13,7 +13,7 @@ struct NosFormSection<Content: View>: View {
     var label: LocalizedStringResource?
     let content: Content
     
-    init(label: LocalizedStringResource?, @ViewBuilder builder: () -> Content) {
+    init(label: LocalizedStringResource? = nil, @ViewBuilder builder: () -> Content) {
         self.label = label
         self.content = builder()
     }

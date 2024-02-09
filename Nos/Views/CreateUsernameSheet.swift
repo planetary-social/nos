@@ -8,25 +8,14 @@
 import SwiftUI
 
 struct CreateUsernameSheet: View {
-    private let borderWidth: CGFloat = 6
-    private let cornerRadius: CGFloat = 8
-    private let inDrawer = true
+
+    var action: (() -> Void)?
 
     var body: some View {
-        ZStack {
-
-            // Gradient border
-            LinearGradient.diagonalAccent
-
-            // Background color
-            Color.appBg
-                .cornerRadius(cornerRadius, corners: inDrawer ? [.topLeft, .topRight] : [.allCorners])
-                .padding(.top, borderWidth)
-                .padding(.horizontal, borderWidth)
-                .padding(.bottom, inDrawer ? 0 : borderWidth)
-
+        NavigationStack {
             // Content
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 20) {
+                Spacer(minLength: 40)
                 Text("New".uppercased())
                     .padding(5)
                     .font(.clarityCaption)
@@ -35,25 +24,30 @@ struct CreateUsernameSheet: View {
                         Color.secondaryTxt
                             .cornerRadius(4, corners: .allCorners)
                     }
-                    .padding(.leading, 40)
-                    .padding(.bottom, 20)
-                    .padding(.top, 40)
                 Text(.localizable.claimUniqueUsernameTitle)
                     .font(.clarityTitle)
                     .foregroundStyle(Color.primaryTxt)
-                    .padding(.horizontal, 40)
-                    .padding(.bottom, 20)
                 Text(
                     .localizable.claimUniqueUsernameDescription
                 )
                 .font(.clarity)
                 .foregroundStyle(Color.secondaryTxt)
-                .padding(.horizontal, 40)
+
                 Spacer(minLength: 0)
-                BigActionButton(title: .localizable.setUpMyUsername, action: {})
-                    .padding(.horizontal, 40)
-                    .padding(.bottom, 40)
+
+                Button {
+                    action?()
+                } label: {
+                    PlainText(.localizable.getMyHandle)
+                        .font(.clarityBold)
+                        .transition(.opacity)
+                        .font(.headline)
+                }
+                .buttonStyle(BigActionButtonStyle())
+
+                Spacer(minLength: 40)
             }
+            .padding(.horizontal, 40)
             .background {
                 VStack {
                     HStack(alignment: .top) {
@@ -67,16 +61,47 @@ struct CreateUsernameSheet: View {
                     Spacer()
                 }
             }
-            .padding(.top, borderWidth)
-            .padding(.horizontal, borderWidth)
-            .padding(.bottom, inDrawer ? 0 : borderWidth)
-            .clipShape(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-            )
+            .sheetPage()
         }
-        .edgesIgnoringSafeArea(.bottom)
         .frame(idealWidth: 320, idealHeight: 480)
         .presentationDetents([.medium])
+    }
+}
+
+fileprivate struct SheetPageModifier: ViewModifier {
+
+    private let borderWidth: CGFloat = 6
+    private let cornerRadius: CGFloat = 8
+    private let inDrawer = true
+
+    func body(content: Content) -> some View {
+        ZStack {
+            // Gradient border
+            LinearGradient.diagonalAccent
+
+            // Background color
+            Color.appBg
+                .cornerRadius(cornerRadius, corners: inDrawer ? [.topLeft, .topRight] : [.allCorners])
+                .padding(.top, borderWidth)
+                .padding(.horizontal, borderWidth)
+                .padding(.bottom, inDrawer ? 0 : borderWidth)
+
+            content
+                .padding(.top, borderWidth)
+                .padding(.horizontal, borderWidth)
+                .padding(.bottom, inDrawer ? 0 : borderWidth)
+                .clipShape(
+                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                )
+        }
+        .edgesIgnoringSafeArea(.bottom)
+        .navigationBarBackButtonHidden()
+    }
+}
+
+fileprivate extension View {
+    func sheetPage() -> some View {
+        self.modifier(SheetPageModifier())
     }
 }
 

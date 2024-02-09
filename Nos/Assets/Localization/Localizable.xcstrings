@@ -1573,6 +1573,28 @@
         }
       }
     },
+    "chooseYourHandle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose your handle"
+          }
+        }
+      }
+    },
+    "chooseYourHandleDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is how others will see you on Nos, and also a public URL to your profile.\n\nYou can change this later."
+          }
+        }
+      }
+    },
     "chooseYourName" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4641,6 +4663,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "關注"
+          }
+        }
+      }
+    },
+    "getMyHandle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get My Handle"
           }
         }
       }

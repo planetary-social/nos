@@ -57,7 +57,6 @@ struct UNSWizardNeedsPaymentView: View {
                         .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(.vertical, 20)
-                    
                     BigActionButton(title: .localizable.registerPremiumName, backgroundGradient: .gold) {
                         await UIApplication.shared.open(url)
                         hasOpenedPortal = true
