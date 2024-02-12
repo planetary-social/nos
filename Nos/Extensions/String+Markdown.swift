@@ -48,7 +48,7 @@ extension String {
             
             for match in matches {
                 if let range = Range(match.range(at: 2), in: self), let url = URL(string: String(self[range])) {
-                    urls.append(url)
+                    urls.insert(url, at: 0) // maintain original order of links (we're looping in reverse)
                     let prettyURL = url.truncatedMarkdownLink
                     regex.replaceMatches(
                         in: mutableString, 
