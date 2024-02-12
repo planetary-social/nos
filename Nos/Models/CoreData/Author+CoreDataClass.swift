@@ -43,7 +43,19 @@ enum AuthorError: Error {
         
         return PublicKey(hex: hex)
     }
-    
+
+    var hasNosNIP05: Bool {
+        nip05?.hasSuffix("@nos.social") == true
+    }
+
+    var nosNIP05Username: String {
+        let suffix = "@nos.social"
+        if let nip05, nip05.hasSuffix(suffix) {
+            return String(nip05.dropLast(suffix.count))
+        }
+        return ""
+    }
+
     var formattedNIP05: String? {
         guard let nip05 else {
             return nil
