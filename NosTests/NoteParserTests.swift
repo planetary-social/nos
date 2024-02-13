@@ -28,6 +28,23 @@ final class NoteNoteParserTests: CoreDataTestCase {
         XCTAssertEqual(tags, expectedTags)
     }
 
+    /// Example taken from [NIP-27](https://github.com/nostr-protocol/nips/blob/master/27.md)
+    func testMentionWithNPubMissingSpaceAfterNPub() throws {
+        let mention = "@Linda"
+        let npub = "npub1ey39gym4zlppcsvquqhv0cujnsn6uwuu9z9f4sxkzp5vjy8gfa9sprdq23"
+        let hex = "c92254137517c21c4180e02ec7e3929c27ae3b9c288a9ac0d61068c910e84f4b"
+        let link = "nostr:\(npub)"
+        let markdown = """
+        To be clear, this is me communicating the strategy that nostr:npub1ey39gym4zlppcsvquqhv0cujnsn6uwuu9z9f4sxkzp5vjy8gfa9sprdq23is developing coming out of our research talking to users, including folks on nostr, who have tried and left nostr, and those who haven’t yet tried it. More to come.
+        """
+        let attributedString = try AttributedString(markdown: markdown)
+        let (content, tags) = NoteParser.parse(attributedText: attributedString)
+        let expectedContent = """
+        To be clear, this is me communicating the strategy that [@Linda]()is developing coming out of our research talking to users, including folks on nostr, who have tried and left nostr, and those who haven’t yet tried it. More to come.
+        """
+        XCTAssertEqual(content, expectedContent)
+    }
+
     func testContentWithNIP08Mention() throws {
         let name = "mattn"
         let content = "hello #[0]"
