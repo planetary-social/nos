@@ -88,6 +88,10 @@ public class Event: NosManagedObject {
         "npub1wmr34t36fy03m8hvgl96zl3znndyzyaqhwmwdtshwmtkg03fetaqhjg240": ["rabble"],
         "npub16zsllwrkrwt5emz2805vhjewj6nsjrw0ge0latyrn2jv5gxf5k0q5l92l7": ["Matt Lorentz"],
         "npub1lur3ft9rk43fmjd2skwefz0jxlhfj0nyz3zjfkxwe3y8xlf5r6nquat0xg": ["Shaina Dane"],
+        "npub1ey39gym4zlppcsvquqhv0cujnsn6uwuu9z9f4sxkzp5vjy8gfa9sprdq23": ["Linda"],
+        "npub1yl8jc6znttslcpj3p6p8vuq98awu6w0xh4lqtu0lkjr772kpx4ysfqvz34": ["Josh Brown"],
+        "npub1nk5d3lqqckfrju9rmvuqhx5swe60e68dgeulgswpv4v9jdnczf7q0eslc0": ["Causes"],
+        "npub1pu3vqm4vzqpxsnhuc684dp2qaq6z69sf65yte4p39spcucv5lzmqswtfch": ["Nos.Social"],
         "npub1xdtducdnjerex88gkg2qk2atsdlqsyxqaag4h05jmcpyspqt30wscmntxy": ["brugeman"],
         "npub1sn0wdenkukak0d9dfczzeacvhkrgz92ak56egt7vdgzn8pv2wfqqhrjdv9": ["Edward Snowden"],
         "npub1veeqt66jt2j209y9nv4a90w3dej074lavqygq5q0c57dharkgw0qk738wt": ["S3x_jay"],
@@ -190,8 +194,7 @@ public class Event: NosManagedObject {
         "npub1zyfv44hl4kezcn2st6de75ejypfwqk5rfq3vlymgm365e2au0w5spdg837": ["Dr. Monali Desai"],
         "npub1r9lucu40595a3qlycc7whv0524664dm6hp7qmah80psvt7zznyzq9vkmz0": ["lynnrose"],
         "npub1qk003dm7f6tqe3ydykawvqrmnze5n444dwql88qxd6hzxczzgv3syh87jz": ["bettyrose"],
-        "npub13mh45wl4u9ur26sxxwcklywgyt640s2dqkn6mvsu55302nwvqymq6xae0f": ["Katrin Theresa"],
-        "npub1curnt7jtq8mhl9fcswnwvuvc9ccm6lvsdv4kzydx75v92kldrvdqh7sq09": ["loveai"]
+        "npub13mh45wl4u9ur26sxxwcklywgyt640s2dqkn6mvsu55302nwvqymq6xae0f": ["Katrin Theresa"]
     ]
     
     // MARK: - Fetching
@@ -511,7 +514,7 @@ public class Event: NosManagedObject {
         }
     }
     
-    class func find(by identifier: HexadecimalString, context: NSManagedObjectContext) -> Event? {
+    class func find(by identifier: RawEventID, context: NSManagedObjectContext) -> Event? {
         if let existingEvent = try? context.fetch(Event.event(by: identifier)).first {
             return existingEvent
         }
@@ -563,7 +566,7 @@ public class Event: NosManagedObject {
     /// - Parameters:
     ///   - id: The hexadecimal Nostr ID of the event.
     /// - Returns: The Event model with the given ID.
-    class func findOrCreateStubBy(id: HexadecimalString, context: NSManagedObjectContext) throws -> Event {
+    class func findOrCreateStubBy(id: RawEventID, context: NSManagedObjectContext) throws -> Event {
         if let existingEvent = try context.fetch(Event.event(by: id)).first {
             return existingEvent
         } else {
@@ -660,7 +663,7 @@ public class Event: NosManagedObject {
         newAuthor.lastUpdatedContactList = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
 
         // Put existing follows into a dictionary so we can avoid doing a fetch request to look up each one.
-        var originalFollows = [HexadecimalString: Follow]()
+        var originalFollows = [RawAuthorID: Follow]()
         for follow in newAuthor.follows {
             if let pubKey = follow.destination?.hexadecimalPublicKey {
                 originalFollows[pubKey] = follow
@@ -1034,7 +1037,7 @@ public class Event: NosManagedObject {
         }
     }
     
-    class func replyMetadata(for noteID: HexadecimalString?, context: NSManagedObjectContext) async -> (Int, [URL]) {
+    class func replyMetadata(for noteID: RawEventID?, context: NSManagedObjectContext) async -> (Int, [URL]) {
         guard let noteID else {
             return (0, [])
         }
@@ -1158,7 +1161,7 @@ public class Event: NosManagedObject {
     }
     
     class func requestAuthorsMetadataIfNeeded(
-        noteID: String?,
+        noteID: RawEventID?,
         using relayService: RelayService,
         in context: NSManagedObjectContext
     ) async -> SubscriptionCancellable {
@@ -1166,13 +1169,13 @@ public class Event: NosManagedObject {
             return SubscriptionCancellable(subscriptionIDs: [], relayService: relayService)
         }
         
-        let requestData: [(HexadecimalString?, Date?)] = await context.perform {
+        let requestData: [(RawAuthorID?, Date?)] = await context.perform {
             guard let note = try? Event.findOrCreateStubBy(id: noteID, context: context),
                 let authorKey = note.author?.hexadecimalPublicKey else {
                 return []
             }
         
-            var requestData = [(HexadecimalString?, Date?)]()
+            var requestData = [(RawAuthorID?, Date?)]()
             
             guard let author = try? Author.findOrCreate(by: authorKey, context: context) else {
                 Log.debug("Author not found when requesting metadata of a note's author")

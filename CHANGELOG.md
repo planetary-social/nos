@@ -8,10 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed the sort order of gallery media to match the order in the note.
+- While composing a note, a space is now automatically inserted after any mention of a user or note to ensure it’s formatted correctly.
+
+## [0.1.5] - 2024-02-14Z
+
+- Fixed an issue where tapping the Feed tab did not scroll to the top of the Feed.
+- Fixed an issue where tapping the Profile tab did not scroll to the top of the Profile.
+- Search now starts automatically after entering three characters instead of one.
+
+## [0.1.4] - 2024-01-31Z
+
+- Show a message when we’re not finding search results.
+- Fixed an issue where bad data in the contact list could break the home feed.
 - Fixed a bug where the margins of root notes appeared incorrectly on Mac and iPad.
 - Fixed a date localization issue.
 - Optimized loading of the Notifications tab
-- Updated suggested users for discovery tab.
+- Updated suggested users for discovery tab. 
 - Show the profile view when a search matches a valid User ID (npub).
 - Added tabs to Profiles to filter posts.
 - Fixed a bug that could cause the out of network warning to be shown on reposts in the stories view.

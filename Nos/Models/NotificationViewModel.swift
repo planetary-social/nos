@@ -16,13 +16,13 @@ import UIKit
 /// `loadContent()` to populate the `content` variable because it relies on some
 ///  database queries.
 class NotificationViewModel: ObservableObject, Identifiable {
-    let noteID: HexadecimalString
+    let noteID: RawEventID
     let authorProfilePhotoURL: URL?
     let actionText: AttributedString
     @Published var content: AttributedString?
     let date: Date
     
-    var id: HexadecimalString {
+    var id: RawEventID {
         noteID
     }
     

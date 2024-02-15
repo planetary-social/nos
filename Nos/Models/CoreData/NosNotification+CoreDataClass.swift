@@ -15,9 +15,9 @@ import CoreData
 public class NosNotification: NSManagedObject {
 
     static func createIfNecessary(
-        from eventID: HexadecimalString,
+        from eventID: RawEventID,
         date: Date,
-        authorKey: HexadecimalString,
+        authorKey: RawAuthorID,
         in context: NSManagedObjectContext
     ) throws -> NosNotification? {
         guard date > staleNotificationCutoff() else {
@@ -35,7 +35,7 @@ public class NosNotification: NSManagedObject {
         }
     }
     
-    static func find(by eventID: HexadecimalString, in context: NSManagedObjectContext) throws -> NosNotification? {
+    static func find(by eventID: RawEventID, in context: NSManagedObjectContext) throws -> NosNotification? {
         let fetchRequest = request(by: eventID)
         if let notification = try context.fetch(fetchRequest).first {
             return notification
@@ -44,7 +44,7 @@ public class NosNotification: NSManagedObject {
         return nil
     }
     
-    static func request(by eventID: HexadecimalString) -> NSFetchRequest<NosNotification> {
+    static func request(by eventID: RawEventID) -> NSFetchRequest<NosNotification> {
         let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
         fetchRequest.predicate = NSPredicate(format: "eventID = %@", eventID)
         fetchRequest.fetchLimit = 1

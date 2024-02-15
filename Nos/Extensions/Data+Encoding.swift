@@ -7,8 +7,6 @@
 
 import Foundation
 
-typealias HexadecimalString = String
-
 enum DataError: Error {
     case generic
 }

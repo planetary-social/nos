@@ -46,13 +46,7 @@ struct EventObservationTestView: View {
 }
 
 /// Testing that our SwiftUI Views can successfully observe Event changes from Core Data
-final class EventObservationTests: XCTestCase {
-    
-    @Dependency(\.persistenceController) private var persistenceController
-    
-    override func setUp() async throws {
-        persistenceController.resetForTesting()
-    }
+final class EventObservationTests: CoreDataTestCase {
     
     /// This tests that the same event created in two separate contexts will update correctly in the view when both
     /// contexts are saved. This test exhibits bug https://github.com/planetary-social/nos/issues/697.  

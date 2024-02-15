@@ -11,7 +11,7 @@ on:
   push:
     branches: main
 env:
-  SIMULATOR: platform=iOS Simulator,name=iPhone 14,OS=17.0.1
+  SIMULATOR: platform=iOS Simulator,name=iPhone 15,OS=17.2
     
 jobs:
   unit_test:

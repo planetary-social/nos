@@ -19,7 +19,10 @@ import Logger
 /// shown, which allows us to perform expensive tasks like downloading images, calculating attributed text, fetching
 /// author metadata and linked notes, etc. before the view is displayed.
 struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresentable {
-    
+
+    /// Set the UIViewType to make the compiler happy as we implement `dismantleUIView`.
+    typealias UIViewType = UICollectionView
+
     /// A fetch request that specifies the events that should be shown. The events should be sorted in 
     /// reverse-chronological order and should match the events returned by `relayFilter`.
     let databaseFilter: NSFetchRequest<Event>
@@ -30,7 +33,11 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     let relayFilter: Filter
     
     let context: NSManagedObjectContext
-    
+
+    /// The tab in which this PagedNoteListView appears.
+    /// Used to determine whether to scroll this view to the top when the tab is tapped.
+    let tab: AppDestination
+
     /// A view that will be displayed as the collectionView header.
     let header: () -> Header
     
@@ -71,12 +78,32 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             for: .valueChanged
         )
         collectionView.refreshControl = refreshControl
-        
+
+        context.coordinator.observer = NotificationCenter.default.addObserver(
+            forName: .scrollToTop,
+            object: nil,
+            queue: .main
+        ) { [weak collectionView] notification in
+            // if the tab that's selected is the tab in which this `PagedNoteListView` is displayed, scroll to the top
+            guard let selectedTab = notification.userInfo?["tab"] as? AppDestination,
+                selectedTab == tab else {
+                return
+            }
+            // scrolling to CGRect.zero does not work, so this seems to be the best we can do
+            collectionView?.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
+        }
+
         return collectionView
     }
     
     func updateUIView(_ collectionView: UICollectionView, context: Context) {}
-    
+
+    static func dismantleUIView(_ uiView: UITextView, coordinator: Coordinator<Header, EmptyPlaceholder>) {
+        if let observer = coordinator.observer {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+
     /// Builds a one section, one column layout with dynamic cell sizes and a header and footer view.
     static func buildLayout() -> UICollectionViewLayout {
         let size = NSCollectionLayoutSize(
@@ -118,7 +145,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         
         var dataSource: PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder>?
         var collectionView: UICollectionView?
-        var onRefresh: (() -> NSFetchRequest<Event>)? 
+        var observer: NSObjectProtocol?
+        var onRefresh: (() -> NSFetchRequest<Event>)?
         
         func dataSource(
             databaseFilter: NSFetchRequest<Event>, 
@@ -163,6 +191,10 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     }
 }
 
+extension Notification.Name {
+    public static let scrollToTop = Notification.Name("scrollToTop")
+}
+
 #Preview {
     var previewData = PreviewData()
     
@@ -170,6 +202,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         databaseFilter: previewData.alice.allPostsRequest(onlyRootPosts: false),
         relayFilter: Filter(),
         context: previewData.previewContext,
+        tab: .home,
         header: {
             ProfileHeader(author: previewData.alice, selectedTab: .constant(.activity))
                 .compositingGroup()

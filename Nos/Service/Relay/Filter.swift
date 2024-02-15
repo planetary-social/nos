@@ -11,11 +11,11 @@ import Foundation
 /// See [NIP-01](https://github.com/nostr-protocol/nips/blob/master/01.md#communication-between-clients-and-relays).
 struct Filter: Hashable, Identifiable {
     
-    let authorKeys: [HexadecimalString]
-    let eventIDs: [HexadecimalString]
+    let authorKeys: [RawAuthorID]
+    let eventIDs: [RawEventID]
     let kinds: [EventKind]
-    let eTags: [HexadecimalString]
-    let pTags: [HexadecimalString]
+    let eTags: [RawEventID]
+    let pTags: [RawAuthorID]
     let search: String?
     let inNetwork: Bool
     var limit: Int?
@@ -23,11 +23,11 @@ struct Filter: Hashable, Identifiable {
     var until: Date?
     
     init(
-        authorKeys: [HexadecimalString] = [],
-        eventIDs: [HexadecimalString] = [],
+        authorKeys: [RawAuthorID] = [],
+        eventIDs: [RawEventID] = [],
         kinds: [EventKind] = [],
-        eTags: [HexadecimalString] = [],
-        pTags: [HexadecimalString] = [],
+        eTags: [RawEventID] = [],
+        pTags: [RawAuthorID] = [],
         search: String? = nil,
         inNetwork: Bool = false,
         limit: Int? = nil,
