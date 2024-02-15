@@ -40,7 +40,7 @@ extension String {
         let mutableString = NSMutableString(string: self)
         // The following pattern uses rules from the Domain Name System page on Wikipedia:
         // https://en.wikipedia.org/wiki/Domain_Name_System#Domain_name_syntax,_internationalization
-        let regexPattern = "(\\s*)((https?://)?([a-zA-Z0-9][-a-zA-Z0-9]{0,61}[a-zA-Z0-9]\\.){1,127}[a-z]{2,63}[^\\s]*)"
+        let regexPattern = "(\\s*)((https?://)?([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}[^\\s]*)"
 
         do {
             let regex = try NSRegularExpression(pattern: regexPattern, options: [])
