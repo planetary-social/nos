@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed URL detection of raw domain names, such as “nos.social” (without the “http” prefix).
 - Fixed the sort order of gallery media to match the order in the note.
+- While composing a note, a space is now automatically inserted after any mention of a user or note to ensure it’s formatted correctly.
+
+## [0.1.5] - 2024-02-14Z
+
 - Fixed an issue where tapping the Feed tab did not scroll to the top of the Feed.
 - Fixed an issue where tapping the Profile tab did not scroll to the top of the Profile.
 - Search now starts automatically after entering three characters instead of one.
