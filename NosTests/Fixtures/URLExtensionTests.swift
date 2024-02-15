@@ -28,6 +28,16 @@ final class URLExtensionTests: XCTestCase {
         let url = URL(string: "https://www.example.com")!
         XCTAssertEqual(url.truncatedMarkdownLink, "[example.com](https://www.example.com)")
     }
+
+    func testTruncatedMarkdownLink_noScheme_withWWW_removesWWW() {
+        let url = URL(string: "www.nostr.com/get-started")!
+        XCTAssertEqual(url.truncatedMarkdownLink, "[nostr.com...](www.nostr.com/get-started)")
+    }
+    
+    func testTruncatedMarkdownLink_noScheme_withWWW_noPath_doesNotIncludeEllipsis() {
+        let url = URL(string: "www.nos.social")!
+        XCTAssertEqual(url.truncatedMarkdownLink, "[nos.social](www.nos.social)")
+    }
     
     func testTruncatedMarkdownLink_withShortPath() {
         let url = URL(string: "https://nips.be/1")!
