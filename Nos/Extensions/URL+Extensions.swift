@@ -8,7 +8,18 @@
 import Foundation
 
 extension URL {
-    
+
+    /// Returns the URL with the scheme "https" if the URL doesn't have a scheme; othewise, returns self.
+    /// Using a URL with a scheme fixes an issue with opening link previews when there's no scheme.
+    /// - Returns: The URL with the scheme "https" if the URL doesn't have a scheme; otherwise, returns self.
+    func addingSchemeIfNeeded() -> URL {
+        guard scheme == nil else {
+            return self
+        }
+
+        return URL(string: "https://\(absoluteString)") ?? self
+    }
+
     var isImage: Bool {
         let imageExtensions = ["png", "jpg", "jpeg", "gif"]
         return imageExtensions.contains(pathExtension)
@@ -23,34 +34,20 @@ extension URL {
     }
     
     var truncatedMarkdownLink: String {
-        // if there's no scheme, it may be a URL like "www.nostr.com", which we still want to truncate
-        guard scheme != nil else {
-            let truncated: String
-            if absoluteString.hasPrefix("www.") {
-                truncated = String(absoluteString.dropFirst(4))
-            } else {
-                truncated = absoluteString
-            }
-            if truncated.contains(/\//) {
-                let host = truncated.replacing(/\/.*/, with: "")
-                return "[\(host)...](\(absoluteString))"
-            } else {
-                return "[\(truncated)](\(absoluteString))"
-            }
-        }
+        let url = self.addingSchemeIfNeeded()
 
-        guard var host = host() else {
-            return "[\(absoluteString)](\(absoluteString))"
+        guard var host = url.host() else {
+            return "[\(url.absoluteString)](\(url.absoluteString))"
         }
         
         if host.hasPrefix("www.") {
             host = String(host.dropFirst(4))
         }
         
-        if path().isEmpty {
-            return "[\(host)](\(absoluteString))"
+        if url.path().isEmpty {
+            return "[\(host)](\(url.absoluteString))"
         } else {
-            return "[\(host)...](\(absoluteString))"
+            return "[\(host)...](\(url.absoluteString))"
         }
     }
 }

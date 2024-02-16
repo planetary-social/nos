@@ -49,14 +49,14 @@ class String_MarkdownTests: XCTestCase {
         A few links...
 
         [nostr.build...](https://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg)
-        [nos.social](nos.social)
-        [nostr.com...](www.nostr.com/get-started)
+        [nos.social](https://nos.social)
+        [nostr.com...](https://www.nostr.com/get-started)
         """
 
         let expectedURLs = [
             URL(string: "https://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg")!,
-            URL(string: "nos.social")!,
-            URL(string: "www.nostr.com/get-started")
+            URL(string: "https://nos.social")!,
+            URL(string: "https://www.nostr.com/get-started")
         ]
 
         // Act

@@ -43,19 +43,19 @@ extension String {
         let regexPattern = "(\\s*)((https?://)?([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}[^\\s]*)"
 
         do {
-            let regex = try NSRegularExpression(pattern: regexPattern, options: [])
+            let regex = try NSRegularExpression(pattern: regexPattern)
             let range = NSRange(location: 0, length: mutableString.length)
             
-            let matches = regex.matches(in: self, options: [], range: range).reversed()
+            let matches = regex.matches(in: self, range: range).reversed()
             
             for match in matches {
                 if let range = Range(match.range(at: 2), in: self), let url = URL(string: String(self[range])) {
-                    urls.insert(url, at: 0) // maintain original order of links (we're looping in reverse)
+                    // maintain original order of links by inserting at index 0 (we're looping in reverse)
+                    urls.insert(url.addingSchemeIfNeeded(), at: 0)
                     let prettyURL = url.truncatedMarkdownLink
                     regex.replaceMatches(
                         in: mutableString, 
-                        options: [], 
-                        range: match.range, 
+                        range: match.range,
                         withTemplate: "$1\(prettyURL)"
                     )
                 }
