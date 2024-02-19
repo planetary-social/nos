@@ -129,7 +129,6 @@ enum CurrentUserError: Error {
     @MainActor func setUp() {
         if let keyPair {
             author = try? Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
-            author?.nip05 = "martin@nos.social"
             authorWatcher = NSFetchedResultsController(
                 fetchRequest: Author.request(by: keyPair.publicKeyHex),
                 managedObjectContext: viewContext,

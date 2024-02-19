@@ -8327,6 +8327,28 @@
         }
       }
     },
+    "pickYourUsernameDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your @username is your identity in the Nos community. \nChoose a name that reflects you or your organization. Make it memorable and distinct!"
+          }
+        }
+      }
+    },
+    "pickYourUsernameTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick your @username"
+          }
+        }
+      }
+    },
     "post" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -12647,6 +12669,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Username"
+          }
+        }
+      }
+    },
+    "usernameAlreadyClaimed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looks like someone's already claimed that @username."
           }
         }
       }

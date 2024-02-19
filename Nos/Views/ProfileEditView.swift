@@ -190,9 +190,7 @@ struct ProfileEditView: View {
         })
 
         .sheet(isPresented: $showNIP05Wizard) {
-            CreateUsernameSheet {
-                showNIP05Wizard = false
-            }
+            CreateUsernameSheet(isPresented: $showNIP05Wizard)
         }
         .onChange(of: showUniversalNameWizard) { _, newValue in
             if !newValue {
