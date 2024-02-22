@@ -73,6 +73,9 @@
                <Test
                   Identifier = "SocialGraphTests/testFollow()">
                </Test>
+               <Test
+                  Identifier = "SocialGraphTests/testTwoFollows()">
+               </Test>
             </SkippedTests>
          </TestableReference>
          <TestableReference
