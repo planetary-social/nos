@@ -91,7 +91,7 @@ struct BigActionButtonStyle: ButtonStyle {
                 // Text container
                 configuration.label
                     .foregroundColor(.white)
-                    .font(.headline)
+                    .font(.clarity(.bold, textStyle: .title3))
                     .padding(15)
                     .shadow(
                         color: Color(white: 0, opacity: 0.15),

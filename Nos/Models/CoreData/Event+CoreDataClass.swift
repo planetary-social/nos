@@ -57,6 +57,7 @@ public enum EventKind: Int64, CaseIterable, Hashable {
     case mute = 10_000
     case longFormContent = 30_023
     case notificationServiceRegistration = 6666
+    case auth = 27_235
 }
 
 // swiftlint:disable type_body_length

@@ -16,6 +16,7 @@ struct ProfileEditView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @Dependency(\.crashReporting) private var crashReporting
+    @Dependency(\.namesAPI) var namesAPI
 
     @ObservedObject var author: Author
     
@@ -23,18 +24,11 @@ struct ProfileEditView: View {
     @State private var bioText: String = ""
     @State private var avatarText: String = ""
     @State private var unsText: String = ""
-    @State private var nip05Text: String = ""
     @State private var website: String = ""
     @State private var showNIP05Wizard = false
     @State private var showUniversalNameWizard = false
     @State private var unsController = UNSWizardController()
-    
-    var nip05: Binding<String> {
-        Binding<String>(
-            get: { self.nip05Text },
-            set: { self.nip05Text = $0.lowercased() }
-        )
-    }
+    @State private var showConfirmationDialog = false
     
     init(author: Author) {
         self.author = author
@@ -73,44 +67,88 @@ struct ProfileEditView: View {
                     NosFormField(label: .localizable.username) {
                         VStack(alignment: .leading) {
                             HStack(spacing: 0) {
-                                Text("@")
-                                    .foregroundStyle(Color.primaryTxt)
-                                TextField("username", text: $nip05Text)
-                                    .textInputAutocapitalization(.none)
-                                    .foregroundColor(.primaryTxt)
-                                    .autocorrectionDisabled()
-                                    .textInputAutocapitalization(.never)
-                                    .lineLimit(1)
-                                    .fixedSize(horizontal: nip05Text.count < 12, vertical: false)
-                                Text(".nos.social")
-                                    .foregroundStyle(Color.secondaryTxt)
+                                Group {
+                                    PlainText(author.nosNIP05Username)
+                                        .foregroundColor(.primaryTxt)
+                                    PlainText("@.nos.social")
+                                        .foregroundStyle(Color.secondaryTxt)
+                                }
+                                .font(.clarity(.medium, textStyle: .body))
                                 Spacer(minLength: 10)
                                 Button {
-                                    nip05Text = ""
+                                    showConfirmationDialog = true
                                 } label: {
                                     Image(systemName: "minus.circle.fill")
                                         .foregroundStyle(
-                                            LinearGradient(colors: [Color(hex: "#E55121"), Color(hex: "#A42509")],
-                                                           startPoint: .top,
-                                                           endPoint: .bottom
-                                                          )
+                                            LinearGradient(
+                                                colors: [Color(hex: "#E55121"), Color(hex: "#A42509")],
+                                                startPoint: .top,
+                                                endPoint: .bottom
+                                            )
                                         )
+                                        .background {
+                                            Circle().fill(Color.white).padding(3)
+                                        }
                                         .shadow(radius: 2, y: 2)
                                 }
                             }
                             .padding(.vertical, 15)
-                            (Text(Image(systemName: "exclamationmark.triangle")).foregroundStyle(Color(hex: "#F0A108")) + Text(" ") +
-                             Text(.localizable.usernameWarningMessage)
-                                .foregroundColor(.secondaryTxt))
-                            .font(.clarityCaption)
+                            (
+                                Text(Image(systemName: "exclamationmark.triangle"))
+                                    .foregroundStyle(Color(hex: "#F0A108")) +
+                                Text(" ") +
+                                Text(.localizable.usernameWarningMessage)
+                                    .foregroundStyle(Color.secondaryTxt)
+                            )
+                            .font(.clarity(.medium, textStyle: .caption1))
                             .lineSpacing(5)
-                            .shadow(radius: 4, y: 4)
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .fixedSize(horizontal: false, vertical: true)
                         }
                     }
-                } else if author.nip05?.isEmpty == true {
+                } else if let nip05 = author.nip05, !nip05.isEmpty {
+                    NosFormField(
+                        label: .localizable.username
+                    ) {
+                        VStack {
+                            HStack {
+                                Text(nip05)
+                                    .foregroundColor(.primaryTxt)
+                                Spacer()
+                                Button {
+                                    showConfirmationDialog = true
+                                } label: {
+                                    Image(systemName: "minus.circle.fill")
+                                        .foregroundStyle(
+                                            LinearGradient(
+                                                colors: [Color(hex: "#E55121"), Color(hex: "#A42509")],
+                                                startPoint: .top,
+                                                endPoint: .bottom
+                                            )
+                                        )
+                                        .background {
+                                            Circle().fill(Color.white).padding(3)
+                                        }
+                                        .shadow(radius: 2, y: 2)
+                                }
+                            }
+                            .padding(.vertical, 15)
+                            (
+                                Text(Image(systemName: "exclamationmark.triangle"))
+                                    .foregroundStyle(Color(hex: "#F0A108")) +
+                                Text(" ") +
+                                Text(.localizable.usernameWarningMessage)
+                                    .foregroundStyle(Color.secondaryTxt)
+                            )
+                            .font(.clarity(.medium, textStyle: .caption1))
+                            .lineSpacing(5)
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                } else {
                     NosFormField(label: .localizable.username) {
                         ActionBanner(
                             messageText: .localizable.claimYourUsernameText,
@@ -120,37 +158,6 @@ struct ProfileEditView: View {
                             showNIP05Wizard = true
                         }
                         .padding(.top, 13)
-                    }
-                } else {
-                    NosFormField(
-                        label: .localizable.username
-                    ) {
-                        VStack {
-                            HStack {
-                                Text(nip05Text)
-                                    .foregroundColor(.primaryTxt)
-                                Spacer()
-                                Button {
-                                    nip05Text = ""
-                                } label: {
-                                    Image(systemName: "minus.circle.fill")
-                                        .foregroundStyle(
-                                            LinearGradient(colors: [Color(hex: "#E55121"), Color(hex: "#A42509")],
-                                                           startPoint: .top,
-                                                           endPoint: .bottom
-                                                          )
-                                        )
-                                        .shadow(radius: 2, y: 2)
-                                }
-                            }
-                            .padding(.vertical, 15)
-                            (Text(Image(systemName: "exclamationmark.triangle")).foregroundStyle(Color(hex: "#F0A108")) + Text(" ") +
-                             Text(.localizable.usernameWarningMessage)
-                                .foregroundColor(.secondaryTxt))
-                            .font(.clarityCaption)
-                            .lineSpacing(5)
-                            .shadow(radius: 4, y: 4)
-                        }
                     }
                 }
                 FormSeparator()
@@ -192,9 +199,21 @@ struct ProfileEditView: View {
         .sheet(isPresented: $showNIP05Wizard) {
             CreateUsernameSheet(isPresented: $showNIP05Wizard)
         }
+        .confirmationDialog(
+            String(localized: .localizable.deleteUsernameConfirmation),
+            isPresented: $showConfirmationDialog,
+            titleVisibility: .visible
+        ) {
+            Button(role: .destructive) {
+                Task {
+                    await deleteUsername()
+                }
+            } label: {
+                SwiftUI.Text(LocalizedStringResource.localizable.deleteUsername)
+            }
+        }
         .onChange(of: showUniversalNameWizard) { _, newValue in
             if !newValue {
-                nip05Text = currentUser.author?.nip05 ?? ""
                 unsText = currentUser.author?.uns ?? ""
                 unsController = UNSWizardController(authorKey: author.hexadecimalPublicKey)
                 author.willChangeValue(for: \Author.uns) // Trigger ProfileView to load USBC balance
@@ -216,6 +235,7 @@ struct ProfileEditView: View {
                 }
                 .offset(y: -3)
         )
+        .id(author)
         .task {
             populateTextFields()
         }
@@ -223,14 +243,13 @@ struct ProfileEditView: View {
             currentUser.editing = false
         }
     }
-   
+
     func populateTextFields() {
         viewContext.refresh(author, mergeChanges: true)
         nameText = author.name ?? author.displayName ?? ""
         bioText = author.about ?? ""
         avatarText = author.profilePhotoURL?.absoluteString ?? ""
         website = author.website ?? ""
-        nip05Text = author.hasNosNIP05 ? author.nosNIP05Username : author.nip05 ?? ""
         unsText = author.uns ?? ""
     }
     
@@ -239,12 +258,32 @@ struct ProfileEditView: View {
         author.about = bioText
         author.profilePhotoURL = URL(string: avatarText)
         author.website = website
-        author.nip05 = nip05Text
         author.uns = unsText
         do {
             try viewContext.save()
             // Post event
             await currentUser.publishMetaData()
+        } catch {
+            crashReporting.report(error)
+        }
+    }
+
+    private func deleteUsername() async {
+        guard let keyPair = currentUser.keyPair else {
+            return
+        }
+        let username = author.nosNIP05Username
+        let isNosSocialUsername = author.hasNosNIP05
+        author.nip05 = ""
+        do {
+            try viewContext.save()
+            await currentUser.publishMetaData()
+            if isNosSocialUsername {
+                try? await namesAPI.delete(
+                    username: username,
+                    keyPair: keyPair
+                )
+            }
         } catch {
             crashReporting.report(error)
         }

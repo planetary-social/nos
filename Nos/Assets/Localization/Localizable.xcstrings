@@ -3130,6 +3130,28 @@
         }
       }
     },
+    "deleteUsername" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete username"
+          }
+        }
+      }
+    },
+    "deleteUsernameConfirmation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This will remove your current username. Are you sure?"
+          }
+        }
+      }
+    },
     "description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3848,6 +3870,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "原始事件"
+          }
+        }
+      }
+    },
+    "excellentChoice" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excellent choice! 🎉"
           }
         }
       }
@@ -12680,6 +12713,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Looks like someone's already claimed that @username."
+          }
+        }
+      }
+    },
+    "usernameClaimedNotice" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Well done, you've successfully claimed @%1$@! \nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
           }
         }
       }

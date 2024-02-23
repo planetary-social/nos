@@ -5,8 +5,10 @@
 //  Created by Martin Dutra on 31/1/24.
 //
 
-import SwiftUI
 import Combine
+import Dependencies
+import Logger
+import SwiftUI
 
 struct CreateUsernameSheet: View {
 
@@ -50,32 +52,22 @@ fileprivate struct ClaimYourUniqueIdentityPage: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             Spacer(minLength: 40)
-            Text("New".uppercased())
-                .padding(5)
-                .font(.clarityCaption)
+            PlainText(String(localized: LocalizedStringResource.localizable.new).uppercased())
+                .padding(.horizontal, 6)
+                .padding(.vertical, 5)
+                .font(.clarity(.bold, textStyle: .footnote))
                 .foregroundStyle(Color.white)
                 .background {
                     Color.secondaryTxt
                         .cornerRadius(4, corners: .allCorners)
                 }
-            Text(.localizable.claimUniqueUsernameTitle)
-                .font(.clarityTitle)
-                .foregroundStyle(Color.primaryTxt)
-            Text(
-                .localizable.claimUniqueUsernameDescription
-            )
-            .font(.clarity)
-            .foregroundStyle(Color.secondaryTxt)
+            PlainText(.localizable.claimUniqueUsernameTitle).sheetTitle()
+            PlainText(.localizable.claimUniqueUsernameDescription).sheetDescription()
 
             Spacer(minLength: 0)
 
-            NavigationLink {
+            NavigationLink(String(localized: LocalizedStringResource.localizable.setUpMyUsername)) {
                 PickYourUsernamePage(isPresented: $isPresented)
-            } label: {
-                PlainText(.localizable.getMyHandle)
-                    .font(.clarityBold)
-                    .transition(.opacity)
-                    .font(.headline)
             }
             .buttonStyle(BigActionButtonStyle())
 
@@ -91,8 +83,9 @@ fileprivate struct PickYourUsernamePage: View {
     @Binding var isPresented: Bool
     @StateObject private var usernameObserver = UsernameObserver()
     @State private var verified: Bool?
-    @State private var dataTask: URLSessionDataTask?
+    @State private var isVerifying = false
     @FocusState private var usernameFieldIsFocused: Bool
+    @Dependency(\.namesAPI) var namesAPI
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -106,13 +99,8 @@ fileprivate struct PickYourUsernamePage: View {
             }
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
-                    PlainText(.localizable.pickYourUsernameTitle)
-                        .font(.clarity(.bold, textStyle: .title1))
-                        .foregroundStyle(Color.primaryTxt)
-                    PlainText(.localizable.pickYourUsernameDescription)
-                        .font(.clarity(.medium, textStyle: .subheadline))
-                        .lineSpacing(5)
-                        .foregroundStyle(Color.secondaryTxt)
+                    PlainText(.localizable.pickYourUsernameTitle).sheetTitle()
+                    PlainText(.localizable.pickYourUsernameDescription).sheetDescription()
                     HStack {
                         SwiftUI.TextField(
                             text: $usernameObserver.text,
@@ -150,16 +138,20 @@ fileprivate struct PickYourUsernamePage: View {
                             }
                         }
                         .onChange(of: usernameObserver.debouncedText) { _, newValue in
-                            verify(newValue)
+                            Task {
+                                await verify(newValue)
+                            }
                         }
                         .onSubmit {
-                            verify(usernameObserver.text)
+                            Task {
+                                await verify(usernameObserver.text)
+                            }
                         }
                         PlainText(".nos.social")
                             .font(.clarityTitle3)
                             .foregroundStyle(Color.secondaryTxt)
                     }
-                    if  validationFailed {
+                    if validationFailed {
                         usernameAlreadyClaimedText()
                     } else {
                         usernameAlreadyClaimedText()
@@ -167,35 +159,27 @@ fileprivate struct PickYourUsernamePage: View {
                     }
 
                     Spacer(minLength: 0)
-
-
                 }
                 .padding(.horizontal, 40)
 
-                Button {
-
+                NavigationLink {
+                    ExcellentChoicePage(username: usernameObserver.text, isPresented: $isPresented)
                 } label: {
-                    if isValidating {
+                    if isVerifying {
                         ZStack {
                             ProgressView()
                                 .frame(height: .zero)
                                 .tint(Color.white)
                             PlainText(.localizable.next)
-                                .font(.clarityBold)
-                                .transition(.opacity)
-                                .font(.headline)
                                 .hidden()
                         }
                     } else {
                         PlainText(.localizable.next)
-                            .font(.clarityBold)
-                            .transition(.opacity)
-                            .font(.headline)
                     }
                 }
                 .padding(.horizontal, 40)
                 .buttonStyle(BigActionButtonStyle())
-                .disabled(verified != true || dataTask != nil || invalidInput)
+                .disabled(verified != true || isVerifying || invalidInput)
             }
         }
         .sheetPage()
@@ -212,48 +196,133 @@ fileprivate struct PickYourUsernamePage: View {
         usernameObserver.text.count < 3
     }
 
-    private var isValidating: Bool {
-        dataTask != nil
-    }
-
     private var validationFailed: Bool {
         verified == false
     }
 
-    private func verify(_ username: String) {
-        dataTask?.cancel()
-        dataTask = nil
+    private func verify(_ username: String) async {
         verified = nil
 
         guard !username.isEmpty else {
             return
         }
 
-        guard let url = URL(string: "https://nos.social/.well-known/nostr.json?name=\(username.lowercased())") else { fatalError("Missing URL")
+        isVerifying = true
+
+        defer {
+            isVerifying = false
         }
 
-        let urlRequest = URLRequest(url: url)
+        do {
+            verified = try await namesAPI.verify(username: username)
+        } catch {
+            Log.error(error.localizedDescription)
+        }
+    }
+}
 
-        dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-            if let error = error {
-                dataTask = nil
-                return
-            }
+fileprivate struct ExcellentChoicePage: View {
 
-            guard let response = response as? HTTPURLResponse else {
-                dataTask = nil
-                return
-            }
+    var username: String
+    @Binding var isPresented: Bool
+    @State private var isClaiming = false
+    @State private var claimError: ClaimError?
+    @Dependency(\.currentUser) var currentUser
+    @Dependency(\.namesAPI) var namesAPI
 
-            if response.statusCode == 404 {
-                verified = true
+    private var attributedUsername: AttributedString {
+        AttributedString(
+            username,
+            attributes: AttributeContainer([NSAttributedString.Key.foregroundColor: UIColor(Color.primaryTxt)])
+        ) + AttributedString(".nos.social")
+    }
+
+    private var showAlert: Binding<Bool> {
+        Binding {
+            claimError != nil
+        } set: { _ in
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Spacer(minLength: 40)
+            if isClaiming {
+                ProgressView()
+                    .tint(Color.accentColor)
+                    .scaleEffect(1.5)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if let error = claimError {
+                SwiftUI.Text(error.localizedDescription)
+                    .font(.clarity(.regular, textStyle: .callout))
+                    .foregroundStyle(Color.primaryTxt)
             } else {
-                verified = false
+                PlainText(.localizable.excellentChoice).sheetTitle()
+                SwiftUI.Text(attributedUsername)
+                    .font(.clarity(.bold, textStyle: .title3))
+                    .foregroundStyle(Color.secondaryTxt)
+                SwiftUI.Text(
+                    LocalizedStringKey(
+                        String(localized: LocalizedStringResource.localizable.usernameClaimedNotice(username))
+                    )
+                )
+                .sheetDescription()
+
+                Spacer(minLength: 0)
+
+                Button(String(localized: LocalizedStringResource.localizable.done)) {
+                    isPresented = false
+                }
+                .buttonStyle(BigActionButtonStyle())
             }
 
-            dataTask = nil
+            Spacer(minLength: 40)
         }
-        dataTask?.resume()
+        .frame(maxWidth: .infinity)
+        .alert(isPresented: showAlert, error: claimError) {
+            Button {
+                isPresented = false
+            } label: {
+                SwiftUI.Text(.localizable.ok)
+            }
+        }
+        .task {
+            guard !isClaiming, let keyPair = currentUser.keyPair else {
+                claimError = .notLoggedIn
+                return
+            }
+
+            isClaiming = true
+
+            defer {
+                isClaiming = false
+            }
+
+            do {
+                try await namesAPI.register(username: username, keyPair: keyPair)
+                currentUser.author?.nip05 = "\(username)@nos.social"
+                try currentUser.viewContext.saveIfNeeded()
+            } catch {
+                Log.error(error.localizedDescription)
+                claimError = .unableToClaim(error)
+            }
+        }
+        .padding(.horizontal, 40)
+        .sheetPage()
+    }
+
+    enum ClaimError: LocalizedError {
+        case notLoggedIn
+        case unableToClaim(Error)
+
+        var errorDescription: String? {
+            switch self {
+            case .notLoggedIn:
+                return "Not logged in"
+            case .unableToClaim(let error):
+                return error.localizedDescription
+            }
+        }
     }
 }
 
@@ -301,13 +370,38 @@ fileprivate struct SheetPageModifier: ViewModifier {
     }
 }
 
+fileprivate struct SheetTitleModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.clarity(.bold, textStyle: .title1))
+            .foregroundStyle(Color.primaryTxt)
+    }
+}
+
+fileprivate struct SheetDescriptionModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.clarity(.medium, textStyle: .subheadline))
+            .lineSpacing(5)
+            .foregroundStyle(Color.secondaryTxt)
+    }
+}
+
 fileprivate extension View {
     func sheetPage() -> some View {
         self.modifier(SheetPageModifier())
+    }
+    func sheetTitle() -> some View {
+        self.modifier(SheetTitleModifier())
+    }
+    func sheetDescription() -> some View {
+        self.modifier(SheetDescriptionModifier())
     }
 }
 
 #Preview {
     var previewData = PreviewData()
-    return Color.clear.sheet(isPresented: .constant(true)) { CreateUsernameSheet(isPresented: .constant(true)).presentationDetents([.medium]) }
+    return Color.clear.sheet(isPresented: .constant(true)) {
+        ExcellentChoicePage(username: "sebastian", isPresented: .constant(true)).presentationDetents([.medium])
+    }
 }
