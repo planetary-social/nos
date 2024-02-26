@@ -62,7 +62,6 @@
 		5BE281C72AE2CCD800880466 /* ReplyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE281C62AE2CCD800880466 /* ReplyButton.swift */; };
 		5BE281CA2AE2CCEB00880466 /* HomeTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE281C92AE2CCEB00880466 /* HomeTab.swift */; };
 		5BE281CD2AE2CD4700880466 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D88299FF37C002A755D /* AvatarView.swift */; };
-		5BF9B0C42B72ABB200DAED0E /* UpdateUsernameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF9B0C32B72ABB200DAED0E /* UpdateUsernameView.swift */; };
 		5BFF66B12A573F6400AA79DD /* RelayDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF66B02A573F6400AA79DD /* RelayDetailView.swift */; };
 		5BFF66B42A58853D00AA79DD /* PublishedEventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF66B32A58853D00AA79DD /* PublishedEventsView.swift */; };
 		5BFF66B62A58A8A000AA79DD /* MutesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF66B52A58A8A000AA79DD /* MutesView.swift */; };
@@ -510,7 +509,6 @@
 		5BE281C32AE2CCC300880466 /* AuthorStoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorStoryView.swift; sourceTree = "<group>"; };
 		5BE281C62AE2CCD800880466 /* ReplyButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplyButton.swift; sourceTree = "<group>"; };
 		5BE281C92AE2CCEB00880466 /* HomeTab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTab.swift; sourceTree = "<group>"; };
-		5BF9B0C32B72ABB200DAED0E /* UpdateUsernameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateUsernameView.swift; sourceTree = "<group>"; };
 		5BFF66AF2A4B55FC00AA79DD /* Nos 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 10.xcdatamodel"; sourceTree = "<group>"; };
 		5BFF66B02A573F6400AA79DD /* RelayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayDetailView.swift; sourceTree = "<group>"; };
 		5BFF66B32A58853D00AA79DD /* PublishedEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishedEventsView.swift; sourceTree = "<group>"; };
@@ -1356,7 +1354,6 @@
 				C905EA362A33620A006F1E99 /* UNS */,
 				C9F2046E2ADEDDCA0029A858 /* USBC */,
 				5B7C93AF2B6AD52400410ABE /* CreateUsernameSheet.swift */,
-				5BF9B0C32B72ABB200DAED0E /* UpdateUsernameView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1757,7 +1754,6 @@
 				A303AF8329A9153A005DC8FC /* FollowButton.swift in Sources */,
 				C9C2B77F29E0731600548B4A /* AsyncTimer.swift in Sources */,
 				A32B6C7329A6BE9B00653FF5 /* FollowsView.swift in Sources */,
-				5BF9B0C42B72ABB200DAED0E /* UpdateUsernameView.swift in Sources */,
 				3F30020D29C382EB003D4F8B /* OnboardingLoginView.swift in Sources */,
 				C9A25B3D29F174D200B39534 /* ReadabilityPadding.swift in Sources */,
 				C9DFA972299BF9E8006929C1 /* CompactNoteView.swift in Sources */,

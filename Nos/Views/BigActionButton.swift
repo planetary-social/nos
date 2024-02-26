@@ -12,7 +12,7 @@ import SwiftUI
 struct BigActionButton: View {
     
     var title: LocalizedStringResource
-    var backgroundGradient: LinearGradient = LinearGradient.bigAction
+    var backgroundGradient: LinearGradient = .bigAction
     var action: () async -> Void
     @State var disabled = false
     
