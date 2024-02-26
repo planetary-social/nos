@@ -52,6 +52,7 @@ import Dependencies
     }
 
     func pop() {
+        guard !currentPath.wrappedValue.isEmpty else { return }
         currentPath.wrappedValue.removeLast()
     }
 
