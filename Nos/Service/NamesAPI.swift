@@ -12,6 +12,7 @@ class NamesAPI {
     private enum Error: LocalizedError {
         case unexpected
         case usernameNotAvailable
+        
         var errorDescription: String? {
             switch self {
             case .unexpected:
