@@ -28,8 +28,8 @@ class NamesAPI {
         case post = "POST"
     }
 
-    let verificationURL: URL
-    let registrationURL: URL
+    private let verificationURL: URL
+    private let registrationURL: URL
 
     init?(host: String = "nos.social") {
         guard let verificationURL = URL(string: "https://\(host)/.well-known/nostr.json") else {

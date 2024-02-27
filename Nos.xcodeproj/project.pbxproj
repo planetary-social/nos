@@ -41,6 +41,7 @@
 		5B503F622A291A1A0098805A /* JSONRelayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */; };
 		5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
 		5B6EB49029EDBEC1006E750C /* NoteParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */; };
+		5B79F5B82B8E71CC002DA9BE /* NamesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */; };
 		5B7C93B02B6AD52400410ABE /* CreateUsernameSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C93AF2B6AD52400410ABE /* CreateUsernameSheet.swift */; };
 		5B80BE9E29F9864000A363E4 /* Bech32Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */; };
 		5B834F672A83FB5C000C1432 /* ProfileKnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B834F662A83FB5C000C1432 /* ProfileKnownFollowersView.swift */; };
@@ -1945,6 +1946,7 @@
 				5BD08BB22A38E96F00BB926C /* JSONRelayMetadata.swift in Sources */,
 				C936B45A2A4C7B7C00DF1EB9 /* Nos.xcdatamodeld in Sources */,
 				C98CA9082B14FD8600929141 /* PagedRelaySubscription.swift in Sources */,
+				5B79F5B82B8E71CC002DA9BE /* NamesAPI.swift in Sources */,
 				C9F204812AE02D8C0029A858 /* AppDestination.swift in Sources */,
 				C9FC1E632B61ACE300A3A6FB /* CoreDataTestCase.swift in Sources */,
 				C9E37E162A1E8143003D4B0A /* Report.swift in Sources */,
