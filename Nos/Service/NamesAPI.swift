@@ -12,7 +12,7 @@ class NamesAPI {
     private enum Error: LocalizedError {
         case unexpected
         case usernameNotAvailable
-        
+
         var errorDescription: String? {
             switch self {
             case .unexpected:
@@ -21,6 +21,11 @@ class NamesAPI {
                 return String(localized: .localizable.usernameAlreadyClaimed)
             }
         }
+    }
+
+    private enum HTTPMethod: String {
+        case delete = "DELETE"
+        case post = "POST"
     }
 
     let verificationURL: URL
@@ -38,15 +43,15 @@ class NamesAPI {
     }
 
     func delete(username: String, keyPair: KeyPair) async throws {
-        let httpMethod = "DELETE"
+        let httpMethod = HTTPMethod.delete
         let url = registrationURL.appending(path: username)
         let content = ""
-        let tags = [["u", url.absoluteString], ["method", httpMethod]]
+        let tags = [["u", url.absoluteString], ["method", httpMethod.rawValue]]
         var jsonEvent = JSONEvent(pubKey: keyPair.publicKeyHex, kind: .auth, tags: tags, content: content)
         try jsonEvent.sign(withKey: keyPair)
         let requestData = try JSONSerialization.data(withJSONObject: jsonEvent.dictionary)
         var request = URLRequest(url: url)
-        request.httpMethod = httpMethod
+        request.httpMethod = httpMethod.rawValue
         request.setValue("Nostr \(requestData.base64EncodedString())", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONSerialization.data(
@@ -74,14 +79,14 @@ class NamesAPI {
     }
 
     func register(username: String, keyPair: KeyPair) async throws {
-        let httpMethod = "POST"
+        let httpMethod = HTTPMethod.post
         let content = ""
-        let tags = [["u", registrationURL.absoluteString], ["method", httpMethod]]
+        let tags = [["u", registrationURL.absoluteString], ["method", httpMethod.rawValue]]
         var jsonEvent = JSONEvent(pubKey: keyPair.publicKeyHex, kind: .auth, tags: tags, content: content)
         try jsonEvent.sign(withKey: keyPair)
         let requestData = try JSONSerialization.data(withJSONObject: jsonEvent.dictionary)
         var request = URLRequest(url: registrationURL)
-        request.httpMethod = httpMethod
+        request.httpMethod = httpMethod.rawValue
         request.setValue("Nostr \(requestData.base64EncodedString())", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONSerialization.data(
