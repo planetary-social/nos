@@ -104,7 +104,7 @@ fileprivate struct PickYourUsernamePage: View {
                     HStack {
                         SwiftUI.TextField(
                             text: $usernameObserver.text,
-                            prompt: PlainText(.localizable.username).foregroundStyle(Color.primaryTxt)
+                            prompt: PlainText(.localizable.username).foregroundStyle(Color.secondaryTxt)
                         ) {
                             PlainText(.localizable.username)
                                 .foregroundStyle(Color.primaryTxt)
