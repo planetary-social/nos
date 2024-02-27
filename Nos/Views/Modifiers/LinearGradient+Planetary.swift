@@ -59,7 +59,7 @@ extension LinearGradient {
     )
 
     public static let nip05 = LinearGradient(
-        colors: [ Color.nip05BgGradientTop, Color.nip05BgGradientBottom],
+        colors: [Color.nip05BgGradientTop, Color.nip05BgGradientBottom],
         startPoint: .top,
         endPoint: .bottom
     )
