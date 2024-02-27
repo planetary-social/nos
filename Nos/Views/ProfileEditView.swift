@@ -29,7 +29,7 @@ struct ProfileEditView: View {
     @State private var showUniversalNameWizard = false
     @State private var unsController = UNSWizardController()
     @State private var showConfirmationDialog = false
-    
+
     init(author: Author) {
         self.author = author
         self.unsController.authorKey = author.hexadecimalPublicKey
@@ -64,101 +64,19 @@ struct ProfileEditView: View {
                 NosTextField(label: .localizable.name, text: $nameText)
                 FormSeparator()
                 if author.hasNosNIP05 {
-                    NosFormField(label: .localizable.username) {
-                        VStack(alignment: .leading) {
-                            HStack(spacing: 0) {
-                                Group {
-                                    PlainText(author.nosNIP05Username)
-                                        .foregroundColor(.primaryTxt)
-                                    PlainText("@.nos.social")
-                                        .foregroundStyle(Color.secondaryTxt)
-                                }
-                                .font(.clarity(.medium, textStyle: .body))
-                                Spacer(minLength: 10)
-                                Button {
-                                    showConfirmationDialog = true
-                                } label: {
-                                    Image(systemName: "minus.circle.fill")
-                                        .foregroundStyle(
-                                            LinearGradient(
-                                                colors: [Color(hex: "#E55121"), Color(hex: "#A42509")],
-                                                startPoint: .top,
-                                                endPoint: .bottom
-                                            )
-                                        )
-                                        .background {
-                                            Circle().fill(Color.white).padding(3)
-                                        }
-                                        .shadow(radius: 2, y: 2)
-                                }
-                            }
-                            .padding(.vertical, 15)
-                            (
-                                Text(Image(systemName: "exclamationmark.triangle"))
-                                    .foregroundStyle(Color(hex: "#F0A108")) +
-                                Text(" ") +
-                                Text(.localizable.usernameWarningMessage)
-                                    .foregroundStyle(Color.secondaryTxt)
-                            )
-                            .font(.clarity(.medium, textStyle: .caption1))
-                            .lineSpacing(5)
-                            .multilineTextAlignment(.leading)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .fixedSize(horizontal: false, vertical: true)
-                        }
-                    }
+                    NosNIP05Field(
+                        username: author.nosNIP05Username,
+                        showConfirmationDialog: $showConfirmationDialog
+                    )
                 } else if let nip05 = author.nip05, !nip05.isEmpty {
-                    NosFormField(
-                        label: .localizable.username
-                    ) {
-                        VStack {
-                            HStack {
-                                Text(nip05)
-                                    .foregroundColor(.primaryTxt)
-                                Spacer()
-                                Button {
-                                    showConfirmationDialog = true
-                                } label: {
-                                    Image(systemName: "minus.circle.fill")
-                                        .foregroundStyle(
-                                            LinearGradient(
-                                                colors: [Color(hex: "#E55121"), Color(hex: "#A42509")],
-                                                startPoint: .top,
-                                                endPoint: .bottom
-                                            )
-                                        )
-                                        .background {
-                                            Circle().fill(Color.white).padding(3)
-                                        }
-                                        .shadow(radius: 2, y: 2)
-                                }
-                            }
-                            .padding(.vertical, 15)
-                            (
-                                Text(Image(systemName: "exclamationmark.triangle"))
-                                    .foregroundStyle(Color(hex: "#F0A108")) +
-                                Text(" ") +
-                                Text(.localizable.usernameWarningMessage)
-                                    .foregroundStyle(Color.secondaryTxt)
-                            )
-                            .font(.clarity(.medium, textStyle: .caption1))
-                            .lineSpacing(5)
-                            .multilineTextAlignment(.leading)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .fixedSize(horizontal: false, vertical: true)
-                        }
-                    }
+                    NIP05Field(
+                        nip05: nip05, 
+                        showConfirmationDialog: $showConfirmationDialog
+                    )
                 } else {
-                    NosFormField(label: .localizable.username) {
-                        ActionBanner(
-                            messageText: .localizable.claimYourUsernameText,
-                            messageImage: .atSymbol,
-                            buttonText: .localizable.claimYourUsernameButton
-                        ) {
-                            showNIP05Wizard = true
-                        }
-                        .padding(.top, 13)
-                    }
+                    NosNIP05Banner(
+                        showNIP05Wizard: $showNIP05Wizard
+                    )
                 }
                 FormSeparator()
                 NosTextEditor(label: .localizable.bio, text: $bioText)
@@ -195,7 +113,6 @@ struct ProfileEditView: View {
         .sheet(isPresented: $showUniversalNameWizard, content: {
             UNSWizard(controller: unsController, isPresented: $showUniversalNameWizard)
         })
-
         .sheet(isPresented: $showNIP05Wizard) {
             CreateUsernameSheet(isPresented: $showNIP05Wizard)
         }
@@ -286,6 +203,125 @@ struct ProfileEditView: View {
             }
         } catch {
             crashReporting.report(error)
+        }
+    }
+}
+
+fileprivate struct NosNIP05Field: View {
+    
+    var username: String
+    @Binding var showConfirmationDialog: Bool
+
+    var body: some View {
+        NosFormField(label: .localizable.username) {
+            VStack(alignment: .leading) {
+                HStack(spacing: 0) {
+                    Group {
+                        PlainText(username)
+                            .foregroundColor(.primaryTxt)
+                        PlainText("@.nos.social")
+                            .foregroundStyle(Color.secondaryTxt)
+                    }
+                    .font(.clarity(.medium, textStyle: .body))
+                    Spacer(minLength: 10)
+                    Button {
+                        showConfirmationDialog = true
+                    } label: {
+                        Image(systemName: "minus.circle.fill")
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [Color(hex: "#E55121"), Color(hex: "#A42509")],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .background {
+                                Circle().fill(Color.white).padding(3)
+                            }
+                            .shadow(radius: 2, y: 2)
+                    }
+                }
+                .padding(.vertical, 15)
+                (
+                    Text(Image(systemName: "exclamationmark.triangle"))
+                        .foregroundStyle(Color(hex: "#F0A108")) +
+                    Text(" ") +
+                    Text(.localizable.usernameWarningMessage)
+                        .foregroundStyle(Color.secondaryTxt)
+                )
+                .font(.clarity(.medium, textStyle: .caption1))
+                .lineSpacing(5)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+}
+
+fileprivate struct NIP05Field: View {
+
+    var nip05: String
+    @Binding var showConfirmationDialog: Bool
+    
+    var body: some View {
+        NosFormField(
+            label: .localizable.username
+        ) {
+            VStack {
+                HStack {
+                    Text(nip05)
+                        .foregroundColor(.primaryTxt)
+                    Spacer()
+                    Button {
+                        showConfirmationDialog = true
+                    } label: {
+                        Image(systemName: "minus.circle.fill")
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [Color(hex: "#E55121"), Color(hex: "#A42509")],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .background {
+                                Circle().fill(Color.white).padding(3)
+                            }
+                            .shadow(radius: 2, y: 2)
+                    }
+                }
+                .padding(.vertical, 15)
+                (
+                    Text(Image(systemName: "exclamationmark.triangle"))
+                        .foregroundStyle(Color(hex: "#F0A108")) +
+                    Text(" ") +
+                    Text(.localizable.usernameWarningMessage)
+                        .foregroundStyle(Color.secondaryTxt)
+                )
+                .font(.clarity(.medium, textStyle: .caption1))
+                .lineSpacing(5)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+}
+
+fileprivate struct NosNIP05Banner: View {
+
+    @Binding var showNIP05Wizard: Bool
+
+    var body: some View {
+        NosFormField(label: .localizable.username) {
+            ActionBanner(
+                messageText: .localizable.claimYourUsernameText,
+                messageImage: .atSymbol,
+                buttonText: .localizable.claimYourUsernameButton
+            ) {
+                showNIP05Wizard = true
+            }
+            .padding(.top, 13)
         }
     }
 }
