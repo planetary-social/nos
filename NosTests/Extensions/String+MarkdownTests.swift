@@ -77,6 +77,22 @@ class String_MarkdownTests: XCTestCase {
         XCTAssertTrue(actualURLs.isEmpty)
     }
 
+    func testExtractURLsDoesNotIncludeCommasInURLs() throws {
+        // Arrange
+        let string = "Welcome to nos.social, a place for humans"
+        let expectedString = "Welcome to [nos.social](https://nos.social), a place for humans"
+        let expectedURLs = [
+            URL(string: "https://nos.social")!
+        ]
+
+        // Act
+        let (actualString, actualURLs) = string.extractURLs()
+
+        // Assert
+        XCTAssertEqual(actualString, expectedString)
+        XCTAssertEqual(actualURLs, expectedURLs)
+    }
+
     func testExtractURLsWithImage() throws {
         let string = "Hello, world!https://cdn.ymaws.com/footprints.jpg"
         let expectedString = "Hello, world![cdn.ymaws.com...](https://cdn.ymaws.com/footprints.jpg)"

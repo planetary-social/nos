@@ -11,9 +11,8 @@ import Logger
 extension String {
     /// Find all links in a given string and replaces them with markdown formatted links
     func findAndReplaceUnformattedLinks(in string: String) throws -> String {
-        // swiftlint:disable line_length
+        // swiftlint:disable:next line_length
         let regex = "(?:^|\\s)(?<link>((http|https)?:\\/\\/.)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*))"
-        // swiftlint:enable line_length
         let regularExpression = try NSRegularExpression(pattern: regex)
         let wholeRange = NSRange(location: 0, length: string.utf16.count)
         if let match = regularExpression.firstMatch(in: string, range: wholeRange) {
@@ -40,7 +39,8 @@ extension String {
         let mutableString = NSMutableString(string: self)
         // The following pattern uses rules from the Domain Name System page on Wikipedia:
         // https://en.wikipedia.org/wiki/Domain_Name_System#Domain_name_syntax,_internationalization
-        let regexPattern = "(\\s*)((https?://)?([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}[^\\s]*)"
+        // swiftlint:disable:next line_length
+        let regexPattern = "(\\s*)((https?://)?([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&//=]*)"
 
         do {
             let regex = try NSRegularExpression(pattern: regexPattern)
