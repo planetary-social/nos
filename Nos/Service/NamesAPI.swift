@@ -43,19 +43,13 @@ class NamesAPI {
     }
 
     func delete(username: String, keyPair: KeyPair) async throws {
-        let httpMethod = HTTPMethod.delete
-        let url = registrationURL.appending(path: username)
-        let content = ""
-        let tags = [["u", url.absoluteString], ["method", httpMethod.rawValue]]
-        var jsonEvent = JSONEvent(pubKey: keyPair.publicKeyHex, kind: .auth, tags: tags, content: content)
-        try jsonEvent.sign(withKey: keyPair)
-        let requestData = try JSONSerialization.data(withJSONObject: jsonEvent.dictionary)
-        var request = URLRequest(url: url)
-        request.httpMethod = httpMethod.rawValue
-        request.setValue("Nostr \(requestData.base64EncodedString())", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONSerialization.data(
-            withJSONObject: ["name": username, "data": ["pubkey": keyPair.publicKeyHex]]
+        let request = try buildURLRequest(
+            url: registrationURL.appending(path: username),
+            method: .delete,
+            json: try JSONSerialization.data(
+                withJSONObject: ["name": username, "data": ["pubkey": keyPair.publicKeyHex]]
+            ),
+            keyPair: keyPair
         )
         let (_, response) = try await URLSession.shared.data(for: request)
         if let response = response as? HTTPURLResponse {
@@ -79,18 +73,13 @@ class NamesAPI {
     }
 
     func register(username: String, keyPair: KeyPair) async throws {
-        let httpMethod = HTTPMethod.post
-        let content = ""
-        let tags = [["u", registrationURL.absoluteString], ["method", httpMethod.rawValue]]
-        var jsonEvent = JSONEvent(pubKey: keyPair.publicKeyHex, kind: .auth, tags: tags, content: content)
-        try jsonEvent.sign(withKey: keyPair)
-        let requestData = try JSONSerialization.data(withJSONObject: jsonEvent.dictionary)
-        var request = URLRequest(url: registrationURL)
-        request.httpMethod = httpMethod.rawValue
-        request.setValue("Nostr \(requestData.base64EncodedString())", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONSerialization.data(
-            withJSONObject: ["name": username, "data": ["pubkey": keyPair.publicKeyHex]]
+        let request = try buildURLRequest(
+            url: registrationURL,
+            method: .post,
+            json: try JSONSerialization.data(
+                withJSONObject: ["name": username, "data": ["pubkey": keyPair.publicKeyHex]]
+            ),
+            keyPair: keyPair
         )
         let (_, response) = try await URLSession.shared.data(for: request)
         if let response = response as? HTTPURLResponse {
@@ -101,5 +90,21 @@ class NamesAPI {
             }
         }
         throw Error.unexpected
+    }
+
+    private func buildURLRequest(url: URL, method: HTTPMethod, json: Data?, keyPair: KeyPair) throws -> URLRequest {
+        let content = ""
+        let tags = [["u", url.absoluteString], ["method", method.rawValue]]
+        var jsonEvent = JSONEvent(pubKey: keyPair.publicKeyHex, kind: .auth, tags: tags, content: content)
+        try jsonEvent.sign(withKey: keyPair)
+        let requestData = try JSONSerialization.data(withJSONObject: jsonEvent.dictionary)
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        request.setValue("Nostr \(requestData.base64EncodedString())", forHTTPHeaderField: "Authorization")
+        if let json {
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpBody = json
+        }
+        return request
     }
 }
