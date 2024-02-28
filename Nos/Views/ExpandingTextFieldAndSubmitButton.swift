@@ -19,6 +19,7 @@ struct ExpandingTextFieldAndSubmitButton: View {
     
     @State private var showPostButton = false
     @State var disabled = false
+    @State var expirationTime: TimeInterval?
 
     @State private var calculatedHeight: CGFloat = 44
     
@@ -28,6 +29,9 @@ struct ExpandingTextFieldAndSubmitButton: View {
                 .frame(maxHeight: 270)
                 .background(Color.appBg)
                 .cornerRadius(17.5)
+                .padding(10)
+                Spacer()
+                ComposerActionBar(expirationTime: $expirationTime, text: $reply)
             if showPostButton {
                 Button(
                     action: {
