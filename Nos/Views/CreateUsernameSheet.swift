@@ -253,7 +253,7 @@ fileprivate struct ExcellentChoicePage: View {
         case failed(ClaimError)
 
         var hasError: Bool {
-            return error != nil
+            error != nil
         }
 
         var error: ClaimError? {
