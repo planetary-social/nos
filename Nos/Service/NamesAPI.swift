@@ -46,9 +46,7 @@ class NamesAPI {
         let request = try buildURLRequest(
             url: registrationURL.appending(path: username),
             method: .delete,
-            json: try JSONSerialization.data(
-                withJSONObject: ["name": username, "data": ["pubkey": keyPair.publicKeyHex]]
-            ),
+            json: try buildJSON(username: username, keyPair: keyPair),
             keyPair: keyPair
         )
         let (_, response) = try await URLSession.shared.data(for: request)
@@ -76,9 +74,7 @@ class NamesAPI {
         let request = try buildURLRequest(
             url: registrationURL,
             method: .post,
-            json: try JSONSerialization.data(
-                withJSONObject: ["name": username, "data": ["pubkey": keyPair.publicKeyHex]]
-            ),
+            json: try buildJSON(username: username, keyPair: keyPair),
             keyPair: keyPair
         )
         let (_, response) = try await URLSession.shared.data(for: request)
@@ -106,5 +102,11 @@ class NamesAPI {
             request.httpBody = json
         }
         return request
+    }
+
+    private func buildJSON(username: String, keyPair: KeyPair) throws -> Data {
+        try JSONSerialization.data(
+            withJSONObject: ["name": username, "data": ["pubkey": keyPair.publicKeyHex]]
+        )
     }
 }
