@@ -219,7 +219,7 @@ fileprivate struct NosNIP05Field: View {
                     Group {
                         PlainText(username)
                             .foregroundColor(.primaryTxt)
-                        PlainText("@.nos.social")
+                        PlainText("@nos.social")
                             .foregroundStyle(Color.secondaryTxt)
                     }
                     .font(.clarity(.medium, textStyle: .body))
