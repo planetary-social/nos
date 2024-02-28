@@ -105,7 +105,7 @@ struct ProfileEditView: View {
                 }
                 .padding(13)
             } else {
-                NosFormSection(label: nil) {
+                NosFormSection {
                     NosTextField(label: .localizable.universalName, text: $unsText)
                 }
             }
