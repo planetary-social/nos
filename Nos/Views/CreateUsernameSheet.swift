@@ -84,7 +84,6 @@ fileprivate struct PickYourUsernamePage: View {
     @StateObject private var usernameObserver = UsernameObserver()
     @State private var verified: Bool?
     @State private var isVerifying = false
-    @FocusState private var usernameFieldIsFocused: Bool
     @Dependency(\.namesAPI) var namesAPI
 
     var body: some View {
@@ -102,51 +101,17 @@ fileprivate struct PickYourUsernamePage: View {
                     PlainText(.localizable.pickYourUsernameTitle).sheetTitle()
                     PlainText(.localizable.pickYourUsernameDescription).sheetDescription()
                     HStack {
-                        SwiftUI.TextField(
-                            text: $usernameObserver.text,
-                            prompt: PlainText(.localizable.username).foregroundStyle(Color.secondaryTxt)
-                        ) {
-                            PlainText(.localizable.username)
-                                .foregroundStyle(Color.primaryTxt)
-                        }
-                        .focused($usernameFieldIsFocused)
-                        .font(.clarity(.bold, textStyle: .title3))
-                        .textInputAutocapitalization(.never)
-                        .textCase(.lowercase)
-                        .autocorrectionDisabled()
-                        .foregroundStyle(Color.primaryTxt)
-                        .lineLimit(1)
-                        .padding(10)
-                        .cornerRadius(10)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.secondaryTxt, lineWidth: 2)
-                        }
-                        .background {
-                            Color.black.opacity(0.1).cornerRadius(10)
-                        }
-                        .onChange(of: usernameObserver.text) { oldValue, newValue in
-                            let characterset = CharacterSet(
-                                charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-."
-                            )
-                            if newValue.rangeOfCharacter(from: characterset.inverted) != nil {
-                                usernameObserver.text = oldValue
-                            } else if newValue.count > 30 {
-                                usernameObserver.text = oldValue
-                            } else {
-                                usernameObserver.text = newValue.lowercased()
+                        UsernameTextField(usernameObserver: usernameObserver)
+                            .onChange(of: usernameObserver.debouncedText) { _, newValue in
+                                Task {
+                                    await verify(newValue)
+                                }
                             }
-                        }
-                        .onChange(of: usernameObserver.debouncedText) { _, newValue in
-                            Task {
-                                await verify(newValue)
+                            .onSubmit {
+                                Task {
+                                    await verify(usernameObserver.text)
+                                }
                             }
-                        }
-                        .onSubmit {
-                            Task {
-                                await verify(usernameObserver.text)
-                            }
-                        }
                         PlainText(".nos.social")
                             .font(.clarityTitle3)
                             .foregroundStyle(Color.secondaryTxt)
@@ -217,6 +182,50 @@ fileprivate struct PickYourUsernamePage: View {
             verified = try await namesAPI.verify(username: username)
         } catch {
             Log.error(error.localizedDescription)
+        }
+    }
+}
+
+fileprivate struct UsernameTextField: View {
+
+    @StateObject var usernameObserver: UsernameObserver
+    @FocusState private var usernameFieldIsFocused: Bool
+
+    var body: some View {
+        SwiftUI.TextField(
+            text: $usernameObserver.text,
+            prompt: PlainText(.localizable.username).foregroundStyle(Color.secondaryTxt)
+        ) {
+            PlainText(.localizable.username)
+                .foregroundStyle(Color.primaryTxt)
+        }
+        .focused($usernameFieldIsFocused)
+        .font(.clarity(.bold, textStyle: .title3))
+        .textInputAutocapitalization(.never)
+        .textCase(.lowercase)
+        .autocorrectionDisabled()
+        .foregroundStyle(Color.primaryTxt)
+        .lineLimit(1)
+        .padding(10)
+        .cornerRadius(10)
+        .overlay {
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color.secondaryTxt, lineWidth: 2)
+        }
+        .background {
+            Color.black.opacity(0.1).cornerRadius(10)
+        }
+        .onChange(of: usernameObserver.text) { oldValue, newValue in
+            let characterset = CharacterSet(
+                charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-."
+            )
+            if newValue.rangeOfCharacter(from: characterset.inverted) != nil {
+                usernameObserver.text = oldValue
+            } else if newValue.count > 30 {
+                usernameObserver.text = oldValue
+            } else {
+                usernameObserver.text = newValue.lowercased()
+            }
         }
     }
 }
