@@ -19,49 +19,41 @@ struct NIP05View: View {
         if let nip05Identifier = author.nip05,
             !nip05Identifier.isEmpty,
             let formattedNIP05 = author.formattedNIP05 {
-            
-            Button {
-                let domain = relayService.domain(from: nip05Identifier)
-                let urlString = "https://\(domain)"
-                guard let url = URL(string: urlString) else { return }
-                UIApplication.shared.open(url)
-            } label: {
-                Group {
-                    if verifiedNip05Identifier == true {
-                        PlainText("\(formattedNIP05)")
-                            .foregroundColor(.primaryTxt)
-                    } else if verifiedNip05Identifier == false {
-                        PlainText(formattedNIP05)
-                            .strikethrough()
-                            .foregroundColor(.secondaryTxt)
-                    } else {
-                        PlainText("\(formattedNIP05)")
-                            .foregroundColor(.secondaryTxt)
-                    }
-                }
-                .font(.claritySubheadline)
-                .multilineTextAlignment(.leading)
-                .contextMenu {
-                    Button {
-                        UIPasteboard.general.string = formattedNIP05
-                    } label: {
-                        Text(.localizable.copy)
-                    }
-                } preview: {
-                    PlainText(formattedNIP05)
+            Group {
+                if verifiedNip05Identifier == true {
+                    PlainText("\(formattedNIP05)")
                         .foregroundColor(.primaryTxt)
-                        .padding()
+                } else if verifiedNip05Identifier == false {
+                    PlainText(formattedNIP05)
+                        .strikethrough()
+                        .foregroundColor(.secondaryTxt)
+                } else {
+                    PlainText("\(formattedNIP05)")
+                        .foregroundColor(.secondaryTxt)
                 }
-                .task(priority: .userInitiated) {
-                    if let nip05Identifier = author.nip05,
-                        let publicKey = author.publicKey?.hex {
-                        let verifiedNip05Identifier = await relayService.verifyNIP05(
-                            identifier: nip05Identifier,
-                            userPublicKey: publicKey
-                        )
-                        withAnimation {
-                            self.verifiedNip05Identifier = verifiedNip05Identifier
-                        }
+            }
+            .font(.claritySubheadline)
+            .multilineTextAlignment(.leading)
+            .contextMenu {
+                Button {
+                    UIPasteboard.general.string = formattedNIP05
+                } label: {
+                    Text(.localizable.copy)
+                }
+            } preview: {
+                PlainText(formattedNIP05)
+                    .foregroundColor(.primaryTxt)
+                    .padding()
+            }
+            .task(priority: .userInitiated) {
+                if let nip05Identifier = author.nip05,
+                    let publicKey = author.publicKey?.hex {
+                    let verifiedNip05Identifier = await relayService.verifyNIP05(
+                        identifier: nip05Identifier,
+                        userPublicKey: publicKey
+                    )
+                    withAnimation {
+                        self.verifiedNip05Identifier = verifiedNip05Identifier
                     }
                 }
             }
