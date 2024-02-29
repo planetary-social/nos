@@ -105,7 +105,7 @@ struct ProfileEditView: View {
                 }
                 .padding(13)
             } else {
-                NosFormSection(label: nil) {
+                NosFormSection {
                     NosTextField(label: .localizable.universalName, text: $unsText)
                 }
             }
@@ -219,7 +219,7 @@ fileprivate struct NosNIP05Field: View {
                     Group {
                         PlainText(username)
                             .foregroundColor(.primaryTxt)
-                        PlainText("@.nos.social")
+                        PlainText("@nos.social")
                             .foregroundStyle(Color.secondaryTxt)
                     }
                     .font(.clarity(.medium, textStyle: .body))

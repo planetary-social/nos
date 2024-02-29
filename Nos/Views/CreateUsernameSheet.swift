@@ -84,9 +84,8 @@ fileprivate struct PickYourUsernamePage: View {
     @StateObject private var usernameObserver = UsernameObserver()
     @State private var verified: Bool?
     @State private var isVerifying = false
-    @FocusState private var usernameFieldIsFocused: Bool
-    @Dependency(\.currentUser) var currentUser
     @Dependency(\.namesAPI) var namesAPI
+    @Dependency(\.currentUser) var currentUser
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -103,51 +102,17 @@ fileprivate struct PickYourUsernamePage: View {
                     PlainText(.localizable.pickYourUsernameTitle).sheetTitle()
                     PlainText(.localizable.pickYourUsernameDescription).sheetDescription()
                     HStack {
-                        SwiftUI.TextField(
-                            text: $usernameObserver.text,
-                            prompt: PlainText(.localizable.username).foregroundStyle(Color.secondaryTxt)
-                        ) {
-                            PlainText(.localizable.username)
-                                .foregroundStyle(Color.primaryTxt)
-                        }
-                        .focused($usernameFieldIsFocused)
-                        .font(.clarity(.bold, textStyle: .title3))
-                        .textInputAutocapitalization(.never)
-                        .textCase(.lowercase)
-                        .autocorrectionDisabled()
-                        .foregroundStyle(Color.primaryTxt)
-                        .lineLimit(1)
-                        .padding(10)
-                        .cornerRadius(10)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.secondaryTxt, lineWidth: 2)
-                        }
-                        .background {
-                            Color.black.opacity(0.1).cornerRadius(10)
-                        }
-                        .onChange(of: usernameObserver.text) { oldValue, newValue in
-                            let characterset = CharacterSet(
-                                charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-."
-                            )
-                            if newValue.rangeOfCharacter(from: characterset.inverted) != nil {
-                                usernameObserver.text = oldValue
-                            } else if newValue.count > 30 {
-                                usernameObserver.text = oldValue
-                            } else {
-                                usernameObserver.text = newValue.lowercased()
+                        UsernameTextField(usernameObserver: usernameObserver)
+                            .onChange(of: usernameObserver.debouncedText) { _, newValue in
+                                Task {
+                                    await verify(newValue)
+                                }
                             }
-                        }
-                        .onChange(of: usernameObserver.debouncedText) { _, newValue in
-                            Task {
-                                await verify(newValue)
+                            .onSubmit {
+                                Task {
+                                    await verify(usernameObserver.text)
+                                }
                             }
-                        }
-                        .onSubmit {
-                            Task {
-                                await verify(usernameObserver.text)
-                            }
-                        }
                         PlainText(".nos.social")
                             .font(.clarityTitle3)
                             .foregroundStyle(Color.secondaryTxt)
@@ -222,14 +187,94 @@ fileprivate struct PickYourUsernamePage: View {
     }
 }
 
+fileprivate struct UsernameTextField: View {
+
+    @StateObject var usernameObserver: UsernameObserver
+    @FocusState private var usernameFieldIsFocused: Bool
+
+    var body: some View {
+        SwiftUI.TextField(
+            text: $usernameObserver.text,
+            prompt: PlainText(.localizable.username).foregroundStyle(Color.secondaryTxt)
+        ) {
+            PlainText(.localizable.username)
+                .foregroundStyle(Color.primaryTxt)
+        }
+        .focused($usernameFieldIsFocused)
+        .font(.clarity(.bold, textStyle: .title3))
+        .textInputAutocapitalization(.never)
+        .textCase(.lowercase)
+        .autocorrectionDisabled()
+        .foregroundStyle(Color.primaryTxt)
+        .lineLimit(1)
+        .padding(10)
+        .cornerRadius(10)
+        .overlay {
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color.secondaryTxt, lineWidth: 2)
+        }
+        .background {
+            Color.black.opacity(0.1).cornerRadius(10)
+        }
+        .onChange(of: usernameObserver.text) { oldValue, newValue in
+            let characterset = CharacterSet(
+                charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-."
+            )
+            if newValue.rangeOfCharacter(from: characterset.inverted) != nil {
+                usernameObserver.text = oldValue
+            } else if newValue.count > 30 {
+                usernameObserver.text = oldValue
+            } else {
+                usernameObserver.text = newValue.lowercased()
+            }
+        }
+    }
+}
+
 fileprivate struct ExcellentChoicePage: View {
 
     var username: String
     @Binding var isPresented: Bool
-    @State private var isClaiming = false
-    @State private var claimError: ClaimError?
+    @State private var claimState: ClaimState = .idle
     @Dependency(\.currentUser) var currentUser
     @Dependency(\.namesAPI) var namesAPI
+
+    /// The current state of the claim request.
+    private enum ClaimState {
+        /// There is no request in progress yet
+        case idle
+
+        /// The request is in progress
+        case claiming
+
+        /// The request finished successfully
+        case claimed
+
+        /// Something was wrong with the request
+        case failed(ClaimError)
+
+        var hasError: Bool {
+            error != nil
+        }
+
+        var error: ClaimError? {
+            switch self {
+            case .failed(let error):
+                return error
+            default:
+                return nil
+            }
+        }
+
+        var isIdle: Bool {
+            switch self {
+            case .idle:
+                return true
+            default:
+                return false
+            }
+        }
+    }
 
     private var attributedUsername: AttributedString {
         AttributedString(
@@ -240,7 +285,7 @@ fileprivate struct ExcellentChoicePage: View {
 
     private var showAlert: Binding<Bool> {
         Binding {
-            claimError != nil
+            claimState.hasError
         } set: { _ in
         }
     }
@@ -248,16 +293,17 @@ fileprivate struct ExcellentChoicePage: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             Spacer(minLength: 40)
-            if isClaiming {
+            switch claimState {
+            case .idle, .claiming:
                 ProgressView()
                     .tint(Color.accentColor)
                     .scaleEffect(1.5)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else if let error = claimError {
+            case .failed(let error):
                 SwiftUI.Text(error.localizedDescription)
                     .font(.clarity(.regular, textStyle: .callout))
                     .foregroundStyle(Color.primaryTxt)
-            } else {
+            case .claimed:
                 PlainText(.localizable.excellentChoice).sheetTitle()
                 SwiftUI.Text(attributedUsername)
                     .font(.clarity(.bold, textStyle: .title3))
@@ -276,11 +322,10 @@ fileprivate struct ExcellentChoicePage: View {
                 }
                 .buttonStyle(BigActionButtonStyle())
             }
-
             Spacer(minLength: 40)
         }
         .frame(maxWidth: .infinity)
-        .alert(isPresented: showAlert, error: claimError) {
+        .alert(isPresented: showAlert, error: claimState.error) {
             Button {
                 isPresented = false
             } label: {
@@ -288,24 +333,25 @@ fileprivate struct ExcellentChoicePage: View {
             }
         }
         .task {
-            guard !isClaiming, let keyPair = currentUser.keyPair else {
-                claimError = .notLoggedIn
+            guard claimState.isIdle else {
                 return
             }
 
-            isClaiming = true
-
-            defer {
-                isClaiming = false
+            guard let keyPair = currentUser.keyPair else {
+                claimState = .failed(.notLoggedIn)
+                return
             }
+
+            claimState = .claiming
 
             do {
                 try await namesAPI.register(username: username, keyPair: keyPair)
                 currentUser.author?.nip05 = "\(username)@nos.social"
                 try currentUser.viewContext.saveIfNeeded()
+                claimState = .claimed
             } catch {
                 Log.error(error.localizedDescription)
-                claimError = .unableToClaim(error)
+                claimState = .failed(.unableToClaim(error))
             }
         }
         .padding(.horizontal, 40)
