@@ -23,7 +23,8 @@ struct AppView: View {
     
     @State private var showingOptions = false
     @State private var lastSelectedTab = AppDestination.home
-    
+    @State private var showNIP05Wizard = false
+
     var body: some View {
         ZStack {
             if appController.currentState == .onboarding {
@@ -147,7 +148,32 @@ struct AppView: View {
             UITabBar.appearance().unselectedItemTintColor = .secondaryTxt
             UITabBar.appearance().tintColor = .primaryTxt
         }
+        .sheet(isPresented: $showNIP05Wizard) {
+            CreateUsernameSheet(isPresented: $showNIP05Wizard)
+        }
+        .task(presentNIP05SheetIfNeeded)
         .accentColor(.primaryTxt)
+    }
+
+    @Sendable private func presentNIP05SheetIfNeeded() async {
+        try? await Task.sleep(nanoseconds: 5_000_000_000)
+        guard let author = currentUser.author, let npub = author.npubString else {
+            return
+        }
+        // We store the npub for the user we last presented the sheet for so that
+        // the behavior resets if the user creates a new account
+        let key = "AppView_presentedNIP05SheetFor"
+        let didPresentSheetInPast = UserDefaults.standard.string(forKey: key)
+        let shoudShowSheet: Bool
+        if let didPresentSheetInPast {
+            shoudShowSheet = didPresentSheetInPast != npub && author.nip05 == nil
+        } else {
+            shoudShowSheet = true && author.nip05 == nil
+        }
+        if shoudShowSheet {
+            showNIP05Wizard = true
+            UserDefaults.standard.setValue(npub, forKey: key)
+        }
     }
 }
 
