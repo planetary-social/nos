@@ -85,6 +85,7 @@ fileprivate struct PickYourUsernamePage: View {
     @State private var verified: Bool?
     @State private var isVerifying = false
     @Dependency(\.namesAPI) var namesAPI
+    @Dependency(\.currentUser) var currentUser
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -168,7 +169,7 @@ fileprivate struct PickYourUsernamePage: View {
     private func verify(_ username: String) async {
         verified = nil
 
-        guard !username.isEmpty else {
+        guard !username.isEmpty, let keyPair = currentUser.keyPair else {
             return
         }
 
@@ -179,7 +180,7 @@ fileprivate struct PickYourUsernamePage: View {
         }
 
         do {
-            verified = try await namesAPI.verify(username: username)
+            verified = try await namesAPI.verify(username: username, keyPair: keyPair)
         } catch {
             Log.error(error.localizedDescription)
         }

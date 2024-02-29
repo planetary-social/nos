@@ -58,16 +58,22 @@ class NamesAPI {
         throw Error.unexpected
     }
 
-    func verify(username: String) async throws -> Bool {
+    func verify(username: String, keyPair: KeyPair) async throws -> Bool {
         let request = URLRequest(
             url: verificationURL.appending(queryItems: [URLQueryItem(name: "name", value: username)])
         )
-        let (_, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await URLSession.shared.data(for: request)
         if let response = response as? HTTPURLResponse {
-            return response.statusCode == 404
-        } else {
-            return false
+            let statusCode = response.statusCode
+            if statusCode == 404 {
+                return true
+            } else if statusCode == 200, let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                let names = json["names"] as? [String: String]
+                let npub = names?[username]
+                return npub == keyPair.publicKeyHex
+            }
         }
+        return false
     }
 
     func register(username: String, keyPair: KeyPair) async throws {
