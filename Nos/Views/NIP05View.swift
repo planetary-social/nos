@@ -19,8 +19,7 @@ struct NIP05View: View {
         if let nip05Identifier = author.nip05,
             !nip05Identifier.isEmpty,
             let formattedNIP05 = author.formattedNIP05 {
-            
-           Group {
+            Group {
                 if verifiedNip05Identifier == true {
                     PlainText("\(formattedNIP05)")
                         .foregroundColor(.primaryTxt)
@@ -57,7 +56,6 @@ struct NIP05View: View {
                         self.verifiedNip05Identifier = verifiedNip05Identifier
                     }
                 }
-            
             }
         } else {
             EmptyView()
