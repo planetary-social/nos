@@ -16,6 +16,7 @@ struct ProfileEditView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @Dependency(\.crashReporting) private var crashReporting
+    @Dependency(\.namesAPI) var namesAPI
 
     @ObservedObject var author: Author
     
@@ -23,18 +24,12 @@ struct ProfileEditView: View {
     @State private var bioText: String = ""
     @State private var avatarText: String = ""
     @State private var unsText: String = ""
-    @State private var nip05Text: String = ""
     @State private var website: String = ""
+    @State private var showNIP05Wizard = false
     @State private var showUniversalNameWizard = false
     @State private var unsController = UNSWizardController()
-    
-    var nip05: Binding<String> {
-        Binding<String>(
-            get: { self.nip05Text },
-            set: { self.nip05Text = $0.lowercased() }
-        )
-    }
-    
+    @State private var showConfirmationDialog = false
+
     init(author: Author) {
         self.author = author
         self.unsController.authorKey = author.hexadecimalPublicKey
@@ -68,6 +63,22 @@ struct ProfileEditView: View {
             NosFormSection(label: .localizable.basicInfo) {
                 NosTextField(label: .localizable.name, text: $nameText)
                 FormSeparator()
+                if author.hasNosNIP05 {
+                    NosNIP05Field(
+                        username: author.nosNIP05Username,
+                        showConfirmationDialog: $showConfirmationDialog
+                    )
+                } else if let nip05 = author.nip05, !nip05.isEmpty {
+                    NIP05Field(
+                        nip05: nip05, 
+                        showConfirmationDialog: $showConfirmationDialog
+                    )
+                } else {
+                    NosNIP05Banner(
+                        showNIP05Wizard: $showNIP05Wizard
+                    )
+                }
+                FormSeparator()
                 NosTextEditor(label: .localizable.bio, text: $bioText)
                     .frame(maxHeight: 200)
                 FormSeparator()
@@ -85,34 +96,41 @@ struct ProfileEditView: View {
             }
             .padding(.horizontal, 13)
             
-            SetUpUNSBanner {
-                showUniversalNameWizard = true
+            if unsText.isEmpty {
+                SetUpUNSBanner(
+                    text: .localizable.unsTagline,
+                    button: .localizable.manageUniversalName
+                ) {
+                    showUniversalNameWizard = true
+                }
+                .padding(13)
+            } else {
+                NosFormSection {
+                    NosTextField(label: .localizable.universalName, text: $unsText)
+                }
             }
-            .padding(13)
-            
-            NosFormSection(label: nil) { 
-                NosTextField(label: .localizable.universalName, text: $unsText)
-                NosTextField(label: .localizable.nip05, text: $nip05Text)
-            }
-            
-            HStack {
-                HighlightedText(
-                    text: .localizable.nip05LearnMore,
-                    highlightedWord: String(localized: .localizable.learnMore), 
-                    highlight: .diagonalAccent, 
-                    font: .clarityCaption,
-                    link: URL(string: "https://nostr.how/en/guides/get-verified")!
-                )
-                Spacer()
-            }
-            .padding(13)
         }
         .sheet(isPresented: $showUniversalNameWizard, content: {
             UNSWizard(controller: unsController, isPresented: $showUniversalNameWizard)
         })
+        .sheet(isPresented: $showNIP05Wizard) {
+            CreateUsernameSheet(isPresented: $showNIP05Wizard)
+        }
+        .confirmationDialog(
+            String(localized: .localizable.deleteUsernameConfirmation),
+            isPresented: $showConfirmationDialog,
+            titleVisibility: .visible
+        ) {
+            Button(role: .destructive) {
+                Task {
+                    await deleteUsername()
+                }
+            } label: {
+                SwiftUI.Text(LocalizedStringResource.localizable.deleteUsername)
+            }
+        }
         .onChange(of: showUniversalNameWizard) { _, newValue in
             if !newValue {
-                nip05Text = currentUser.author?.nip05 ?? ""
                 unsText = currentUser.author?.uns ?? ""
                 unsController = UNSWizardController(authorKey: author.hexadecimalPublicKey)
                 author.willChangeValue(for: \Author.uns) // Trigger ProfileView to load USBC balance
@@ -134,6 +152,7 @@ struct ProfileEditView: View {
                 }
                 .offset(y: -3)
         )
+        .id(author)
         .task {
             populateTextFields()
         }
@@ -141,14 +160,13 @@ struct ProfileEditView: View {
             currentUser.editing = false
         }
     }
-   
+
     func populateTextFields() {
         viewContext.refresh(author, mergeChanges: true)
         nameText = author.name ?? author.displayName ?? ""
         bioText = author.about ?? ""
         avatarText = author.profilePhotoURL?.absoluteString ?? ""
         website = author.website ?? ""
-        nip05Text = author.nip05 ?? ""
         unsText = author.uns ?? ""
     }
     
@@ -157,7 +175,6 @@ struct ProfileEditView: View {
         author.about = bioText
         author.profilePhotoURL = URL(string: avatarText)
         author.website = website
-        author.nip05 = nip05Text
         author.uns = unsText
         do {
             try viewContext.save()
@@ -165,6 +182,146 @@ struct ProfileEditView: View {
             await currentUser.publishMetaData()
         } catch {
             crashReporting.report(error)
+        }
+    }
+
+    private func deleteUsername() async {
+        guard let keyPair = currentUser.keyPair else {
+            return
+        }
+        let username = author.nosNIP05Username
+        let isNosSocialUsername = author.hasNosNIP05
+        author.nip05 = ""
+        do {
+            try viewContext.save()
+            await currentUser.publishMetaData()
+            if isNosSocialUsername {
+                try? await namesAPI.delete(
+                    username: username,
+                    keyPair: keyPair
+                )
+            }
+        } catch {
+            crashReporting.report(error)
+        }
+    }
+}
+
+fileprivate struct NosNIP05Field: View {
+    
+    var username: String
+    @Binding var showConfirmationDialog: Bool
+
+    var body: some View {
+        NosFormField(label: .localizable.username) {
+            VStack(alignment: .leading) {
+                HStack(spacing: 0) {
+                    Group {
+                        PlainText(username)
+                            .foregroundColor(.primaryTxt)
+                        PlainText("@nos.social")
+                            .foregroundStyle(Color.secondaryTxt)
+                    }
+                    .font(.clarity(.medium, textStyle: .body))
+                    Spacer(minLength: 10)
+                    Button {
+                        showConfirmationDialog = true
+                    } label: {
+                        Image(systemName: "minus.circle.fill")
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [Color(hex: "#E55121"), Color(hex: "#A42509")],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .background {
+                                Circle().fill(Color.white).padding(3)
+                            }
+                            .shadow(radius: 2, y: 2)
+                    }
+                }
+                .padding(.vertical, 15)
+                (
+                    Text(Image(systemName: "exclamationmark.triangle"))
+                        .foregroundStyle(Color(hex: "#F0A108")) +
+                    Text(" ") +
+                    Text(.localizable.usernameWarningMessage)
+                        .foregroundStyle(Color.secondaryTxt)
+                )
+                .font(.clarity(.medium, textStyle: .caption1))
+                .lineSpacing(5)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+}
+
+fileprivate struct NIP05Field: View {
+
+    var nip05: String
+    @Binding var showConfirmationDialog: Bool
+    
+    var body: some View {
+        NosFormField(
+            label: .localizable.username
+        ) {
+            VStack {
+                HStack {
+                    Text(nip05)
+                        .foregroundColor(.primaryTxt)
+                    Spacer()
+                    Button {
+                        showConfirmationDialog = true
+                    } label: {
+                        Image(systemName: "minus.circle.fill")
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [Color(hex: "#E55121"), Color(hex: "#A42509")],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .background {
+                                Circle().fill(Color.white).padding(3)
+                            }
+                            .shadow(radius: 2, y: 2)
+                    }
+                }
+                .padding(.vertical, 15)
+                (
+                    Text(Image(systemName: "exclamationmark.triangle"))
+                        .foregroundStyle(Color(hex: "#F0A108")) +
+                    Text(" ") +
+                    Text(.localizable.usernameWarningMessage)
+                        .foregroundStyle(Color.secondaryTxt)
+                )
+                .font(.clarity(.medium, textStyle: .caption1))
+                .lineSpacing(5)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+}
+
+fileprivate struct NosNIP05Banner: View {
+
+    @Binding var showNIP05Wizard: Bool
+
+    var body: some View {
+        NosFormField(label: .localizable.username) {
+            ActionBanner(
+                messageText: .localizable.claimYourUsernameText,
+                messageImage: .atSymbol,
+                buttonText: .localizable.claimYourUsernameButton
+            ) {
+                showNIP05Wizard = true
+            }
+            .padding(.top, 13)
         }
     }
 }

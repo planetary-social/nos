@@ -42,7 +42,7 @@ struct ProfileView: View {
         self.author = author
         self.addDoubleTapToPop = addDoubleTapToPop
     }
-    
+
     func loadUSBCBalance() async {
         guard let unsName = author.uns, !unsName.isEmpty else {
             usbcAddress = nil
@@ -130,7 +130,7 @@ struct ProfileView: View {
             }
         }
         .background(Color.appBg)
-        .nosNavigationBar(title: .localizable.profileTitle)
+        .nosNavigationBar(title: LocalizedStringResource(stringLiteral: author.safeIdentifier))
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
         }                  

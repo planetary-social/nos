@@ -24,6 +24,15 @@ enum AuthorError: Error {
         publicKey?.npub
     }
     
+    /// Human-friendly identifier suitable for being displayed in the UI
+    var safeIdentifier: String {
+        if let nip05 {
+            return nip05
+        } else {
+            return npubString?.prefix(10).appending("...") ?? hexadecimalPublicKey ?? "error"
+        }
+    }
+
     var safeName: String {
         if let displayName, !displayName.isEmpty {
             return displayName
@@ -43,7 +52,19 @@ enum AuthorError: Error {
         
         return PublicKey(hex: hex)
     }
-    
+
+    var hasNosNIP05: Bool {
+        nip05?.hasSuffix("@nos.social") == true
+    }
+
+    var nosNIP05Username: String {
+        let suffix = "@nos.social"
+        if let nip05, nip05.hasSuffix(suffix) {
+            return String(nip05.dropLast(suffix.count))
+        }
+        return ""
+    }
+
     var formattedNIP05: String? {
         guard let nip05 else {
             return nil

@@ -51,7 +51,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     func makeCoordinator() -> Coordinator<Header, EmptyPlaceholder> {
         Coordinator()
     }
-    
+
     func makeUIView(context: Context) -> UICollectionView {
         let layout = Self.buildLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -70,7 +70,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         )
         collectionView.dataSource = dataSource
         collectionView.prefetchDataSource = dataSource
-        
+
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(
             context.coordinator, 
