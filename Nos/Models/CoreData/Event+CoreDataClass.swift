@@ -415,7 +415,7 @@ public class Event: NosManagedObject {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let noteIsLikedByUserPredicate = NSPredicate(
             // swiftlint:disable line_length
-            format: "kind = \(String(EventKind.like.rawValue)) AND SUBQUERY(eventReferences, $reference, $reference.eventId = %@).@count > 0",
+            format: "kind = \(String(EventKind.like.rawValue)) AND SUBQUERY(eventReferences, $reference, $reference.eventId = %@).@count > 0 AND deletedOn.@count = 0",
             // swiftlint:enable line_length
             noteID
         )

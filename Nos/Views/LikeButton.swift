@@ -65,18 +65,41 @@ struct LikeButton: View {
     
     var body: some View {
         Button {
-            tapped = true
             Task {
-                await action()
+                await buttonPressed()
             }
         } label: {
             buttonLabel
         }                             
-        .disabled(currentUserLikesNote || tapped)
+        .disabled(tapped)
     }
-    
-    private func action() async {
 
+    private func buttonPressed() async {
+        if !tapped && !currentUserLikesNote {
+            tapped = true
+            await publishLike()
+        } else if !tapped && currentUserLikesNote {
+            await deleteLike()
+        }
+    }
+
+    private func deleteLike() async {
+        likes
+            .filter {
+                $0.author?.hexadecimalPublicKey == currentUser.author?.hexadecimalPublicKey
+            }
+            .compactMap { $0.eventReferences.lastObject as? EventReference }
+            .filter { $0.eventId == note.identifier }
+            .compactMap { $0.referencingEvent?.identifier }
+            .forEach { likeIdentifier in
+                Task {
+                    await currentUser.publishDelete(for: [likeIdentifier])
+                }
+            }
+    }
+
+    private func publishLike() async {
+        defer { tapped = false }
         guard let keyPair = currentUser.keyPair else {
             return
         }
