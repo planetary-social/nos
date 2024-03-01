@@ -14,12 +14,17 @@ struct CreateUsernameSheet: View {
 
     @Binding var isPresented: Bool
 
+    @Dependency(\.analytics) private var analytics
+
     var body: some View {
         NavigationStack {
             ClaimYourUniqueIdentityPage(isPresented: $isPresented)
         }
         .frame(idealWidth: 320, idealHeight: 480)
         .presentationDetents([.medium])
+        .onAppear {
+            analytics.showedNIP05Wizard()
+        }
     }
 }
 
@@ -235,9 +240,11 @@ fileprivate struct ExcellentChoicePage: View {
 
     var username: String
     @Binding var isPresented: Bool
+
     @State private var claimState: ClaimState = .idle
-    @Dependency(\.currentUser) var currentUser
-    @Dependency(\.namesAPI) var namesAPI
+    @Dependency(\.currentUser) private var currentUser
+    @Dependency(\.namesAPI) private var namesAPI
+    @Dependency(\.analytics) private var analytics
 
     /// The current state of the claim request.
     private enum ClaimState {
@@ -340,6 +347,7 @@ fileprivate struct ExcellentChoicePage: View {
                 currentUser.author?.nip05 = "\(username)@nos.social"
                 try currentUser.viewContext.saveIfNeeded()
                 claimState = .claimed
+                analytics.registeredNIP05Username()
             } catch {
                 Log.error(error.localizedDescription)
                 claimState = .failed(.unableToClaim(error))
