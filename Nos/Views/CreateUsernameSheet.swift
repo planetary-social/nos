@@ -265,15 +265,6 @@ fileprivate struct ExcellentChoicePage: View {
                 return nil
             }
         }
-
-        var isIdle: Bool {
-            switch self {
-            case .idle:
-                return true
-            default:
-                return false
-            }
-        }
     }
 
     private var attributedUsername: AttributedString {
@@ -333,7 +324,7 @@ fileprivate struct ExcellentChoicePage: View {
             }
         }
         .task {
-            guard claimState.isIdle else {
+            guard case .idle = claimState else {
                 return
             }
 
@@ -447,8 +438,19 @@ fileprivate extension View {
 }
 
 #Preview {
-    var previewData = PreviewData()
-    return Color.clear.sheet(isPresented: .constant(true)) {
-        ExcellentChoicePage(username: "sebastian", isPresented: .constant(true)).presentationDetents([.medium])
+    Color.clear.sheet(isPresented: .constant(true)) {
+        ClaimYourUniqueIdentityPage(isPresented: .constant(true))
+            .presentationDetents([.medium])
+    }
+}
+
+#Preview {
+    PickYourUsernamePage(isPresented: .constant(true))
+}
+
+#Preview {
+    Color.clear.sheet(isPresented: .constant(true)) {
+        ExcellentChoicePage(username: "sebastian", isPresented: .constant(true))
+            .presentationDetents([.medium])
     }
 }
