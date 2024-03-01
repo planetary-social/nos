@@ -28,8 +28,9 @@ struct SideMenuContent: View {
             if let author = currentUser.author, author.needsMetadata == true {
                 ActionBanner(
                     messageText: .localizable.completeProfileMessage,
-                    buttonText: .localizable.completeProfileButton
-                ) { 
+                    buttonText: .localizable.completeProfileButton,
+                    buttonImage: .editProfile
+                ) {
                     if let author = currentUser.author {
                         currentUser.editing = true
                         router.push(author)

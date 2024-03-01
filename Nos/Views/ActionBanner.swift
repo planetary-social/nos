@@ -11,14 +11,14 @@ import SwiftUI
 struct ActionBanner: View {
     
     var messageText: LocalizedStringResource
+    var messageImage: Image?
     var buttonText: LocalizedStringResource
     var buttonImage: Image?
-    var inForm = false
-    var action: () -> Void
-    
+    var action: (() -> Void)?
+
     private var backgroundGradient: LinearGradient {
         LinearGradient(
-            colors: [Color(hex: "#F08508"), Color(hex: "#F43F75")],
+            colors: [.actionBannerBgGradientLeading, .actionBannerBgGradientTrailing],
             startPoint: .leading,
             endPoint: .trailing
         )
@@ -26,44 +26,56 @@ struct ActionBanner: View {
     
     var body: some View {
         ZStack {
-            Color(hex: "#923c2c")
+            Color.actionBannerBg
                 .cornerRadius(21)
                 .offset(y: 2)
             
             VStack {
                 HStack {
                     Text(messageText)
+                        .font(.clarityBold)
+                        .foregroundStyle(Color.white)
+                        .lineSpacing(3)
                         .padding(.top, 8)
                         .padding(.bottom, 12)
-                        .foregroundColor(.white)
-                        .lineSpacing(6)
-                        .bold()
-                        .shadow(radius: 2)
+                        .shadow(radius: 2, y: 1)
                     Spacer()
                 }
-                
                 HStack {
                     ActionButton(
                         title: buttonText,
-                        font: .clarityMedium,
-                        image: Image.editProfile,
-                        textColor: Color(hex: "#f26141"),
-                        depthEffectColor: Color(hex: "#f8d4b6"),
+                        font: .claritySemiBoldSubheadline,
+                        image: buttonImage,
+                        textColor: .actionBannerButtonTxt,
+                        depthEffectColor: .actionBannerButtonEffect,
                         backgroundGradient: LinearGradient(
-                            colors: [Color(hex: "#FFF8F7"), Color(hex: "#FDF6F5")],
+                            colors: [.actionBannerButtonGradientLeading, .actionBannerButtonGradientTrailing],
                             startPoint: .leading,
                             endPoint: .trailing
                         ),
                         textShadow: false
                     ) {
-                        action()
+                        action?()
                     }
                     .frame(minHeight: 40)
                     Spacer()
                 }
             }
-            .padding(.vertical, inForm ? 12 : 24)
-            .padding(.horizontal, inForm ? 4 : 24)
+            .padding(.vertical, 24)
+            .padding(.horizontal, 24)
+            .background {
+                if let image = messageImage {
+                    HStack {
+                        Spacer()
+                        image
+                            .aspectRatio(1, contentMode: .fit)
+                            .blendMode(.softLight)
+                    }
+                    .offset(x: 28)
+                } else {
+                    EmptyView()
+                }
+            }
             .background(
                 ZStack {
                     ZStack {
@@ -93,9 +105,10 @@ struct ActionBanner_Previews: PreviewProvider {
         VStack {
             ActionBanner(
                 messageText: .localizable.completeProfileMessage,
+                messageImage: Image.atSymbol,
                 buttonText: .localizable.completeProfileButton
-            ) {}
-                .padding(20)
+            )
+            .padding(20)
         }
         .background(Color.appBg)
     }

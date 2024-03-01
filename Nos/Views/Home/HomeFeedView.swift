@@ -108,7 +108,7 @@ struct HomeFeedView: View {
                         }
                     )
                     .padding(0)
-                    
+
                     StoriesView(
                         cutoffDate: $storiesCutoffDate,
                         authors: stories,

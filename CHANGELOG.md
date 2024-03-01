@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Tap the Like button on a note you’ve already liked to remove the Like.
+- Display NIP-05 identifier in the Profile screen title bar.
+- Added option to register nos.social usernames.
 - Fixed issue where search results sometimes don’t appear.
 - Disabled link to nip-05 server / url on author cards. 
 - Fixed issue where paste menu did not appear when tapping in the Post Note view.

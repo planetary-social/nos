@@ -1573,6 +1573,28 @@
         }
       }
     },
+    "chooseYourHandle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose your handle"
+          }
+        }
+      }
+    },
+    "chooseYourHandleDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is how others will see you on Nos, and also a public URL to your profile.\n\nYou can change this later."
+          }
+        }
+      }
+    },
     "chooseYourName" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1675,6 +1697,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "這將是你的通用名稱。你可以稍後註冊更多。有效的名稱 "
+          }
+        }
+      }
+    },
+    "claimUniqueUsernameDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome to Nos, where your voice matters. Begin your journey by securing your unique **@username**.nos.social\n\nStand out in the decentralized world!"
+          }
+        }
+      }
+    },
+    "claimUniqueUsernameTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claim your unique identity on Nostr"
+          }
+        }
+      }
+    },
+    "claimYourUsernameButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get it now"
+          }
+        }
+      }
+    },
+    "claimYourUsernameText" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claim your @username and stand out on the decentralized world!"
           }
         }
       }
@@ -3064,6 +3130,28 @@
         }
       }
     },
+    "deleteUsername" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete username"
+          }
+        }
+      }
+    },
+    "deleteUsernameConfirmation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This will remove your current username. Are you sure?"
+          }
+        }
+      }
+    },
     "description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3782,6 +3870,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "原始事件"
+          }
+        }
+      }
+    },
+    "excellentChoice" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excellent choice! 🎉"
           }
         }
       }
@@ -4597,6 +4696,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "關注"
+          }
+        }
+      }
+    },
+    "getMyHandle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get My Handle"
           }
         }
       }
@@ -8250,6 +8360,28 @@
         }
       }
     },
+    "pickYourUsernameDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your @username is your identity in the Nos community. \nChoose a name that reflects you or your organization. Make it memorable and distinct!"
+          }
+        }
+      }
+    },
+    "pickYourUsernameTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick your @username"
+          }
+        }
+      }
+    },
     "post" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -10554,6 +10686,17 @@
         }
       }
     },
+    "setUpMyUsername" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set up my @username"
+          }
+        }
+      }
+    },
     "setUpUNS" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -12548,6 +12691,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "當你關注的用戶舉報一條筆記或一個用戶時，我們會在它們的筆記中添加一個內容警告"
+          }
+        }
+      }
+    },
+    "username" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Username"
+          }
+        }
+      }
+    },
+    "usernameAlreadyClaimed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looks like someone's already claimed that @username."
+          }
+        }
+      }
+    },
+    "usernameClaimedNotice" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Well done, you've successfully claimed @%1$@! \nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
+          }
+        }
+      }
+    },
+    "usernameWarningMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changing or removing your handle may cause web links to disconnect from your identity."
           }
         }
       }
