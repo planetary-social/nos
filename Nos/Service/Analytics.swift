@@ -207,7 +207,7 @@ class Analytics {
     // MARK: NIP-05 Usernames
 
     func showedNIP05Wizard() {
-        track("NIP-05 Showed Wizard")
+        track("Showed NIP-05 Wizard")
     }
 
     func registeredNIP05Username() {
