@@ -16,7 +16,8 @@ struct ProfileEditView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @Dependency(\.crashReporting) private var crashReporting
-    @Dependency(\.namesAPI) var namesAPI
+    @Dependency(\.namesAPI) private var namesAPI
+    @Dependency(\.analytics) private var analytics
 
     @ObservedObject var author: Author
     
@@ -201,6 +202,7 @@ struct ProfileEditView: View {
                     keyPair: keyPair
                 )
             }
+            analytics.deletedNIP05Username()
         } catch {
             crashReporting.report(error)
         }

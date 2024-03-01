@@ -204,6 +204,20 @@ class Analytics {
         track("Push Notification Registration Failed", properties: ["reason": reason])
     }
     
+    // MARK: NIP-05 Usernames
+
+    func showedNIP05Wizard() {
+        track("Showed NIP-05 Wizard")
+    }
+
+    func registeredNIP05Username() {
+        track("Registered NIP-05 Username")
+    }
+
+    func deletedNIP05Username() {
+        track("Deleted NIP-05 Username")
+    }
+
     // MARK: UNS
     
     func showedUNSWizard() {
