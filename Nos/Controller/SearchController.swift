@@ -66,9 +66,20 @@ class SearchController: ObservableObject {
     init() {
         $query
             .removeDuplicates()
+            .map { query in
+                if query.isEmpty {
+                    self.clear()
+                } else if query.count < 3 {
+                    self.state = .empty
+                }
+                return query
+            }
             .filter { $0.count >= 3 || self.state == .loading }
-            .map { $0.lowercased() }
             .debounce(for: 0.2, scheduler: RunLoop.main)
+            .map { query in
+                self.submitSearch(query: query)
+                return query
+            }
             .combineLatest(
                 // listen for new objects, as this is how we get search results from relays
                 NotificationCenter.default.publisher(
@@ -76,8 +87,9 @@ class SearchController: ObservableObject {
                     object: context
                 )
             )
+            .map { $0.0 }
             .filter { _ in self.state != .noQuery && self.state != .empty }
-            .map { _ in self.authors(named: self.query) }
+            .map { self.authors(named: $0) }
             .map { $0.sorted(by: { $0.followers.count > $1.followers.count }) }
             .sink(receiveValue: { results in
                 if !results.isEmpty {
@@ -85,26 +97,6 @@ class SearchController: ObservableObject {
                 }
                 self.authorResults = results
             })
-            .store(in: &cancellables)
-
-        $query
-            .removeDuplicates()
-            .filter { $0.count >= 3 || self.state == .loading }
-            .debounce(for: 0.2, scheduler: RunLoop.main)
-            .sink { _ in
-                self.submitSearch()
-            }
-            .store(in: &cancellables)
-
-        $query
-            .removeDuplicates()
-            .sink { query in
-                if query.isEmpty {
-                    self.clear()
-                } else if query.count < 3 {
-                    self.state = .empty
-                }
-            }
             .store(in: &cancellables)
     }
     
@@ -171,11 +163,10 @@ class SearchController: ObservableObject {
     func search(for query: String) {
         state = .loading
         startSearchTimer()
-        let searchQuery = query.lowercased() // also consider trimming whitespace
         Task {
             self.searchSubscriptions.removeAll()
-            self.searchRelays(for: searchQuery)
-            self.searchUNS(for: searchQuery)
+            self.searchRelays(for: query)
+            self.searchUNS(for: query)
         }
     }
 
@@ -229,13 +220,14 @@ class SearchController: ObservableObject {
     /// Third, checks to see if `query` matches a note's public key and if so, shows the note.
     /// 
     /// Finally, if all previous checks fail, searches the relays and UNS for the given query.
-    func submitSearch() {
+    func submitSearch(query: String) {
         searchSubscriptions.removeAll()
-        
-        if query.contains("@") {
+
+        let trimmedQuery = query.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmedQuery.contains("@") {
             Task(priority: .userInitiated) {
                 if let publicKeyHex =
-                    await relayService.retrievePublicKeyFromUsername(query.lowercased()) {
+                    await relayService.retrievePublicKeyFromUsername(trimmedQuery) {
                     Task { @MainActor in
                         if let author = author(fromPublicKey: publicKeyHex) {
                             router.push(author)
@@ -243,16 +235,16 @@ class SearchController: ObservableObject {
                     }
                 }
             }
-        } else if let author = author(fromPublicKey: query) {
+        } else if let author = author(fromPublicKey: trimmedQuery) {
             Task { @MainActor in
                 router.push(author)
             }
-        } else if let note = note(fromPublicKey: query) {
+        } else if let note = note(fromPublicKey: trimmedQuery) {
             Task { @MainActor in
                 router.push(note)
             }
         } else {
-            search(for: query)
+            search(for: trimmedQuery)
         }
     }
 }

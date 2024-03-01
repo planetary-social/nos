@@ -117,7 +117,7 @@ struct DiscoverView: View {
             )
             .autocorrectionDisabled()
             .onSubmit(of: .search) {
-                searchController.submitSearch()
+                searchController.submitSearch(query: searchController.query)
             }
             .background(Color.appBg)
             .toolbar {
