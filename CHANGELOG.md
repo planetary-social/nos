@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Display NIP-05 identifier in the Profile screen title bar.
 - Added option to register nos.social usernames.
+- Disabled link to nip-05 server / url on author cards. 
 - Fixed issue where paste menu did not appear when tapping in the Post Note view.
 - Fixed intermittent crash when tapping Done after editing your profile.
 - Fixed URL detection of raw domain names, such as “nos.social” (without the “http” prefix).
