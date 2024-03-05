@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Parse links and mentions in Profile's about (or bios)
+- Show “Post a reply” field at the proper height initially, and allow it to expand as more text is entered.
 - Tap the Like button on a note you’ve already liked to remove the Like.
 - Display NIP-05 identifier in the Profile screen title bar.
 - Added option to register nos.social usernames.
