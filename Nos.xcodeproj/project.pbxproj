@@ -42,6 +42,8 @@
 		5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
 		5B6EB49029EDBEC1006E750C /* NoteParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */; };
 		5B79F5B82B8E71CC002DA9BE /* NamesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */; };
+		5B79F5EB2B97B5E9002DA9BE /* DeleteUsernameSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79F5EA2B97B5E9002DA9BE /* DeleteUsernameSheet.swift */; };
+		5B79F5F12B97B66F002DA9BE /* ProfileEditModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79F5F02B97B66F002DA9BE /* ProfileEditModifiers.swift */; };
 		5B7C93B02B6AD52400410ABE /* CreateUsernameSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C93AF2B6AD52400410ABE /* CreateUsernameSheet.swift */; };
 		5B80BE9E29F9864000A363E4 /* Bech32Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */; };
 		5B834F672A83FB5C000C1432 /* ProfileKnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B834F662A83FB5C000C1432 /* ProfileKnownFollowersView.swift */; };
@@ -490,6 +492,8 @@
 		5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONRelayMetadata.swift; sourceTree = "<group>"; };
 		5B6EB48D29EDBE0E006E750C /* NoteParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParser.swift; sourceTree = "<group>"; };
 		5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParserTests.swift; sourceTree = "<group>"; };
+		5B79F5EA2B97B5E9002DA9BE /* DeleteUsernameSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteUsernameSheet.swift; sourceTree = "<group>"; };
+		5B79F5F02B97B66F002DA9BE /* ProfileEditModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditModifiers.swift; sourceTree = "<group>"; };
 		5B7C93AF2B6AD52400410ABE /* CreateUsernameSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUsernameSheet.swift; sourceTree = "<group>"; };
 		5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bech32Tests.swift; sourceTree = "<group>"; };
 		5B810DD62B55BA44008FE8A9 /* Nos 15.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 15.xcdatamodel"; sourceTree = "<group>"; };
@@ -881,6 +885,15 @@
 			path = Onboarding;
 			sourceTree = "<group>";
 		};
+		5B79F5E92B97B5D7002DA9BE /* ProfileEdit */ = {
+			isa = PBXGroup;
+			children = (
+				5B79F5EA2B97B5E9002DA9BE /* DeleteUsernameSheet.swift */,
+				5B79F5F02B97B66F002DA9BE /* ProfileEditModifiers.swift */,
+			);
+			path = ProfileEdit;
+			sourceTree = "<group>";
+		};
 		C905EA362A33620A006F1E99 /* UNS */ = {
 			isa = PBXGroup;
 			children = (
@@ -1266,6 +1279,7 @@
 		C9F84C24298DC7C100C6714D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5B79F5E92B97B5D7002DA9BE /* ProfileEdit */,
 				C9A0DADF29C697A100466635 /* AboutView.swift */,
 				C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */,
 				C987F81929BA4D0E00B44E7A /* ActionButton.swift */,
@@ -1779,6 +1793,7 @@
 				C9A6C74D2AD98E2A001F9500 /* UNSNameTakenView.swift in Sources */,
 				C9646EAE29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */,
 				C94D59AC2AE711A400295AE8 /* WalletConnectErrorView.swift in Sources */,
+				5B79F5F12B97B66F002DA9BE /* ProfileEditModifiers.swift in Sources */,
 				C92F015B2AC4D74E00972489 /* NosTextEditor.swift in Sources */,
 				C913DA0C2AEB2EBF003BDD6D /* FetchRequestPublisher.swift in Sources */,
 				C973AB5D2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */,
@@ -1845,6 +1860,7 @@
 				C9B678E729F01A8500303F33 /* FullscreenProgressView.swift in Sources */,
 				C9F0BB6929A5039D000547FC /* Int+Bool.swift in Sources */,
 				DC5F203F2A6AE24200F8D73F /* ImagePickerButton.swift in Sources */,
+				5B79F5EB2B97B5E9002DA9BE /* DeleteUsernameSheet.swift in Sources */,
 				C981E2DD2AC610D600FBF4F6 /* UNSStepImage.swift in Sources */,
 				C9CDBBA429A8FA2900C555C7 /* GoldenPostView.swift in Sources */,
 				C92F01582AC4D6F700972489 /* NosTextField.swift in Sources */,

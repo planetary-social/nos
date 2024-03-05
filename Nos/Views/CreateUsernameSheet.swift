@@ -66,8 +66,8 @@ fileprivate struct ClaimYourUniqueIdentityPage: View {
                     Color.secondaryTxt
                         .cornerRadius(4, corners: .allCorners)
                 }
-            PlainText(.localizable.claimUniqueUsernameTitle).sheetTitle()
-            PlainText(.localizable.claimUniqueUsernameDescription).sheetDescription()
+            PlainText(.localizable.claimUniqueUsernameTitle).profileEditSheetTitle()
+            PlainText(.localizable.claimUniqueUsernameDescription).profileEditSheetDescription()
 
             Spacer(minLength: 0)
 
@@ -79,7 +79,7 @@ fileprivate struct ClaimYourUniqueIdentityPage: View {
             Spacer(minLength: 40)
         }
         .padding(.horizontal, 40)
-        .sheetPage()
+        .profileEditSheetPage()
     }
 }
 
@@ -104,8 +104,8 @@ fileprivate struct PickYourUsernamePage: View {
             }
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
-                    PlainText(.localizable.pickYourUsernameTitle).sheetTitle()
-                    PlainText(.localizable.pickYourUsernameDescription).sheetDescription()
+                    PlainText(.localizable.pickYourUsernameTitle).profileEditSheetTitle()
+                    PlainText(.localizable.pickYourUsernameDescription).profileEditSheetDescription()
                     HStack {
                         UsernameTextField(usernameObserver: usernameObserver)
                             .onChange(of: usernameObserver.debouncedText) { _, newValue in
@@ -153,7 +153,7 @@ fileprivate struct PickYourUsernamePage: View {
                 .disabled(verified != true || isVerifying || invalidInput)
             }
         }
-        .sheetPage()
+        .profileEditSheetPage()
     }
 
     private func usernameAlreadyClaimedText() -> some View {
@@ -302,7 +302,7 @@ fileprivate struct ExcellentChoicePage: View {
                     .font(.clarity(.regular, textStyle: .callout))
                     .foregroundStyle(Color.primaryTxt)
             case .claimed:
-                PlainText(.localizable.excellentChoice).sheetTitle()
+                PlainText(.localizable.excellentChoice).profileEditSheetTitle()
                 SwiftUI.Text(attributedUsername)
                     .font(.clarity(.bold, textStyle: .title3))
                     .foregroundStyle(Color.secondaryTxt)
@@ -311,7 +311,7 @@ fileprivate struct ExcellentChoicePage: View {
                         String(localized: LocalizedStringResource.localizable.usernameClaimedNotice(username))
                     )
                 )
-                .sheetDescription()
+                .profileEditSheetDescription()
 
                 Spacer(minLength: 0)
 
@@ -354,7 +354,7 @@ fileprivate struct ExcellentChoicePage: View {
             }
         }
         .padding(.horizontal, 40)
-        .sheetPage()
+        .profileEditSheetPage()
     }
 
     enum ClaimError: LocalizedError {
@@ -369,79 +369,6 @@ fileprivate struct ExcellentChoicePage: View {
                 return error.localizedDescription
             }
         }
-    }
-}
-
-fileprivate struct SheetPageModifier: ViewModifier {
-
-    private let borderWidth: CGFloat = 6
-    private let cornerRadius: CGFloat = 8
-    private let inDrawer = true
-
-    func body(content: Content) -> some View {
-        ZStack {
-            // Gradient border
-            LinearGradient.diagonalAccent
-            
-            // Background color
-            LinearGradient.nip05
-                .cornerRadius(cornerRadius, corners: inDrawer ? [.topLeft, .topRight] : [.allCorners])
-                .padding(.top, borderWidth)
-                .padding(.horizontal, borderWidth)
-                .padding(.bottom, inDrawer ? 0 : borderWidth)
-
-            content
-                .background {
-                    VStack {
-                        HStack(alignment: .top) {
-                            Spacer()
-                            Image.atSymbol
-                                .aspectRatio(2, contentMode: .fit)
-                                .blendMode(.softLight)
-                                .scaleEffect(2)
-                        }
-                        .offset(x: 28, y: 20)
-                        Spacer()
-                    }
-                }
-                .padding(.top, borderWidth)
-                .padding(.horizontal, borderWidth)
-                .padding(.bottom, inDrawer ? 0 : borderWidth)
-                .clipShape(
-                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                )
-        }
-        .edgesIgnoringSafeArea(.bottom)
-        .navigationBarBackButtonHidden()
-    }
-}
-
-fileprivate struct SheetTitleModifier: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .font(.clarity(.bold, textStyle: .title1))
-            .foregroundStyle(Color.primaryTxt)
-    }
-}
-
-fileprivate struct SheetDescriptionModifier: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .font(.clarity(.medium, textStyle: .subheadline))
-            .lineSpacing(5)
-            .foregroundStyle(Color.secondaryTxt)
-    }
-}
-
-fileprivate extension View {
-    func sheetPage() -> some View {
-        self.modifier(SheetPageModifier())
-    }
-    func sheetTitle() -> some View {
-        self.modifier(SheetTitleModifier())
-    }
-    func sheetDescription() -> some View {
-        self.modifier(SheetDescriptionModifier())
     }
 }
 
