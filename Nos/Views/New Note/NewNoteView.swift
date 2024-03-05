@@ -21,7 +21,10 @@ struct NewNoteView: View {
 
     /// State holding the text the user is typing
     @State private var text = EditableNoteText()
-    
+
+    /// The calculated height of the NoteTextEditor.
+    @State private var calculatedEditorHeight: CGFloat = 44
+
     @State var expirationTime: TimeInterval?
     
     @State private var alert: AlertState<Never>?
@@ -46,7 +49,8 @@ struct NewNoteView: View {
                     NoteTextEditor(
                         text: $text, 
                         placeholder: .localizable.newNotePlaceholder,
-                        focus: $isTextEditorInFocus
+                        focus: $isTextEditorInFocus,
+                        calculatedHeight: $calculatedEditorHeight
                     )
                     .padding(10)
                     Spacer()
