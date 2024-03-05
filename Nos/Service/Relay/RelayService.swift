@@ -170,6 +170,8 @@ extension RelayService {
             // Fall back to a large list of relays if we don't have any for this user (like on first login)
             relayAddresses = Relay.allKnown.compactMap { URL(string: $0) }
         }
+        relayAddresses = removeRelayableRelays(relayAddresses: relayAddresses)
+
         var subscriptionIDs = [RelaySubscription.ID]()
         for relay in relayAddresses {
             subscriptionIDs.append(await subscriptions.queueSubscription(with: filter, to: relay))
@@ -185,12 +187,15 @@ extension RelayService {
     /// You can cause the service to download the next page by calling `loadMore()` on the returned subscription object.
     /// The subscription will be cancelled when the returned subscription object is deallocated. 
     func subscribeToPagedEvents(matching filter: Filter) async -> PagedRelaySubscription {
-        PagedRelaySubscription(
-            startDate: .now, 
+        let userRelayAddresses = await self.relayAddresses(for: currentUser)
+        let relayAddresses = removeRelayableRelays(relayAddresses: userRelayAddresses)
+
+        return PagedRelaySubscription(
+            startDate: .now,
             filter: filter, 
             relayService: self,
             subscriptionManager: subscriptions, 
-            relayAddresses: await self.relayAddresses(for: currentUser)
+            relayAddresses: relayAddresses
         )
     }
     
@@ -267,6 +272,20 @@ extension RelayService {
             Log.debug("Subscription \(staleSubscription.id) is stale. Closing.")
             await sendCloseToAll(for: staleSubscription.id)
         }
+    }
+
+    /// If the Relayable relay is in the list, removes the relay addresses from the list that relayable streams from.
+    /// Otherwise, returns `relayAddressses` as it was.
+    /// This allows us to de-duplicate events to improve bandwidth use and performance.
+    private func removeRelayableRelays(relayAddresses: [URL]) -> [URL] {
+        let result: [URL]
+        if let relayableURL = URL(string: Relay.relayable),
+            relayAddresses.contains(where: { $0 == relayableURL }) {
+            result = relayAddresses.filter { !Relay.streamedByRelayable.contains($0.absoluteString) }
+        } else {
+            result = relayAddresses
+        }
+        return result
     }
 }
 

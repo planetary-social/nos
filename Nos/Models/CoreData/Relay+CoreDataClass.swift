@@ -52,7 +52,26 @@ public class Relay: NosManagedObject {
         "wss://relay.causes.com",
         ]
     }
-    
+
+    /// The URL string for relayable.org. To be used for de-duplication since Relayable streams from other relays.
+    static var relayable: String {
+        "wss://relayable.org"
+    }
+
+    /// Known relays that relayable.org streams from. To be used for de-duplication.
+    static var streamedByRelayable: [String] {
+        [
+        "wss://relay.damus.io",
+        "wss://purplepag.es",
+        "wss://relay.snort.social",
+        "wss://nostr.wine",
+        "wss://nos.lol",
+        "wss://nostr21.com",
+        "wss://relay.wellorder.net",
+        "wss://nostr.mom",
+        ]
+    }
+
     @nonobjc public class func allRelaysRequest() -> NSFetchRequest<Relay> {
         let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.address, ascending: true)]
