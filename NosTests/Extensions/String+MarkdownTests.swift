@@ -8,20 +8,6 @@
 import XCTest
 
 class String_MarkdownTests: XCTestCase {
-    /// Test this function that's not used anwhere.
-    /// Consider removing it after extracting all value from it. (that regex in it looks great)
-    func testFindAndReplaceUnformattedLinksWithNoURLScheme() throws {
-        // Arrange
-        let string = "One: https://nos.social and two: nostr1.com"
-        let expected = "One: [https://nos.social](https://nos.social) and two: [nostr1.com](https://nostr1.com)"
-
-        // Act
-        let result = try string.findAndReplaceUnformattedLinks(in: string)
-
-        // Assert
-        XCTAssertEqual(result, expected)
-    }
-
     func testExtractURLs() throws {
         // swiftlint:disable line_length
         let string = "Classifieds incoming... 👀\n\nhttps://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg"

@@ -118,6 +118,7 @@ struct ProfileHeader: View {
 
                 if shouldShowBio {
                     BioView(bio: author.about)
+                        .padding(.top, 18)
                 }
 
                 if let first = knownFollowers[safe: 0]?.source {

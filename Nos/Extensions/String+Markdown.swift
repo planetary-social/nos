@@ -9,29 +9,6 @@ import Foundation
 import Logger
 
 extension String {
-    /// Find all links in a given string and replaces them with markdown formatted links
-    func findAndReplaceUnformattedLinks(in string: String) throws -> String {
-        // swiftlint:disable:next line_length
-        let regex = "(?:^|\\s)(?<link>((http|https)?:\\/\\/.)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*))"
-        let regularExpression = try NSRegularExpression(pattern: regex)
-        let wholeRange = NSRange(location: 0, length: string.utf16.count)
-        if let match = regularExpression.firstMatch(in: string, range: wholeRange) {
-            if let range = Range(match.range(withName: "link"), in: string) {
-                let linkDisplayName = "\(string[range])"
-                var link = linkDisplayName
-                if var url = URL(string: link) {
-                    if url.scheme == nil, let httpsURL = URL(string: ("https://\(link)")) {
-                        url = httpsURL
-                    }
-                    link = url.absoluteString
-                }
-                let replacement = "[\(linkDisplayName)](\(link))"
-                return try findAndReplaceUnformattedLinks(in: string.replacingCharacters(in: range, with: replacement))
-            }
-        }
-        return string
-    }
-    
     /// Creates a new string with all URLs and any preceding and trailing whitespace removed and removed duplicate
     /// newlines, and returns the new string and an array of all the URLs.
     func extractURLs() -> (String, [URL]) {
