@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		038985182B7AD6C0009C16CA /* String+MarkdownTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038985172B7AD6BF009C16CA /* String+MarkdownTests.swift */; };
+		039196B52B992905004B38D3 /* RelayServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 039196B42B992905004B38D3 /* RelayServiceTests.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
 		3A1C296F2B2A537C0020B753 /* Moderation.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */; };
@@ -465,6 +466,7 @@
 
 /* Begin PBXFileReference section */
 		038985172B7AD6BF009C16CA /* String+MarkdownTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+MarkdownTests.swift"; sourceTree = "<group>"; };
+		039196B42B992905004B38D3 /* RelayServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayServiceTests.swift; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
 		3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Moderation.xcstrings; sourceTree = "<group>"; };
@@ -859,6 +861,22 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
+		039196B22B9928EE004B38D3 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				039196B32B9928F4004B38D3 /* Relay */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		039196B32B9928F4004B38D3 /* Relay */ = {
+			isa = PBXGroup;
+			children = (
+				039196B42B992905004B38D3 /* RelayServiceTests.swift */,
+			);
+			path = Relay;
+			sourceTree = "<group>";
+		};
 		3AAB61B12B24CC8A00717A07 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1092,21 +1110,22 @@
 			isa = PBXGroup;
 			children = (
 				C98298312ADD7EDB0096C5B5 /* Info.plist */,
-				3AAB61B12B24CC8A00717A07 /* Extensions */,
-				C9C9443A29F6E420002F2C7A /* Test Helpers */,
-				C9DEC0042989477A0078B43A /* Fixtures */,
-				C9DEBFE8298941020078B43A /* EventTests.swift */,
-				C96D391A2B61AFD500D3D0A1 /* RawNostrIDTests.swift */,
+				C96D39242B61B06200D3D0A1 /* AuthorTests.swift */,
+				5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */,
 				C9C45E152B23741E00F523DA /* EventObservationTests.swift */,
+				C9DEBFE8298941020078B43A /* EventTests.swift */,
+				C900385E2B6195C60080CC4F /* FollowTests.swift */,
 				C9ADB132299287D60075E7F8 /* KeyPairTests.swift */,
 				5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */,
-				5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */,
-				C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */,
-				5B88051B2A21046C00E21F06 /* SHA256KeyTests.swift */,
-				5B88051E2A21056E00E21F06 /* TLVTests.swift */,
+				C96D391A2B61AFD500D3D0A1 /* RawNostrIDTests.swift */,
 				C94D59AD2AE7286E00295AE8 /* ReportTests.swift */,
-				C900385E2B6195C60080CC4F /* FollowTests.swift */,
-				C96D39242B61B06200D3D0A1 /* AuthorTests.swift */,
+				5B88051B2A21046C00E21F06 /* SHA256KeyTests.swift */,
+				C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */,
+				5B88051E2A21056E00E21F06 /* TLVTests.swift */,
+				3AAB61B12B24CC8A00717A07 /* Extensions */,
+				C9DEC0042989477A0078B43A /* Fixtures */,
+				039196B22B9928EE004B38D3 /* Service */,
+				C9C9443A29F6E420002F2C7A /* Test Helpers */,
 			);
 			path = NosTests;
 			sourceTree = "<group>";
@@ -1942,6 +1961,7 @@
 				5B88051D2A2104CC00E21F06 /* SHA256Key.swift in Sources */,
 				C9CF23182A38A58B00EBEC31 /* ParseQueue.swift in Sources */,
 				5B39E64429EDBF8100464830 /* NoteParser.swift in Sources */,
+				039196B52B992905004B38D3 /* RelayServiceTests.swift in Sources */,
 				C94A5E162A716A6D00B6EC5D /* EditableNoteText.swift in Sources */,
 				5BD08BB22A38E96F00BB926C /* JSONRelayMetadata.swift in Sources */,
 				C936B45A2A4C7B7C00DF1EB9 /* Nos.xcdatamodeld in Sources */,
