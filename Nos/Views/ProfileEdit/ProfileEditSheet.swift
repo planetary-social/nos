@@ -1,13 +1,59 @@
 //
-//  ProfileEditModifiers.swift
+//  ProfileEditSheet.swift
 //  Nos
 //
-//  Created by Martin Dutra on 5/3/24.
+//  Created by Martin Dutra on 6/3/24.
 //
 
 import SwiftUI
 
-struct ProfileEditSheetPageModifier: ViewModifier {
+protocol ProfileEditSheet: View { }
+
+extension ProfileEditSheet {
+    // swiftlint:disable identifier_name
+    func SheetVStack<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 20, content: content)
+            .padding(.horizontal, 40)
+            .sheetPage()
+    }
+    func TitleText(_ localizedStringResource: LocalizedStringResource) -> some View {
+        SwiftUI.Text(localizedStringResource)
+            .sheetTitle()
+    }
+    func DescriptionText(_ localizedStringResource: LocalizedStringResource) -> some View {
+        SwiftUI.Text(localizedStringResource)
+            .sheetDescription()
+    }
+    func DescriptionText(_ attributedString: AttributedString) -> some View {
+        SwiftUI.Text(
+            attributedString
+                .replacingAttributes(
+                    AttributeContainer(
+                        [.inlinePresentationIntent: InlinePresentationIntent.stronglyEmphasized.rawValue]
+                    ),
+                    with: AttributeContainer(
+                        [.foregroundColor: UIColor.primaryTxt]
+                    )
+                )
+        )
+        .sheetDescription()
+    }
+    // swiftlint:enable identifier_name
+}
+
+fileprivate extension View {
+    func sheetPage() -> some View {
+        self.modifier(ProfileEditSheetPageModifier())
+    }
+    func sheetTitle() -> some View {
+        self.modifier(ProfileEditSheetTitleModifier())
+    }
+    func sheetDescription() -> some View {
+        self.modifier(ProfileEditSheetDescriptionModifier())
+    }
+}
+
+fileprivate struct ProfileEditSheetPageModifier: ViewModifier {
 
     private let borderWidth: CGFloat = 6
     private let cornerRadius: CGFloat = 8
@@ -51,7 +97,7 @@ struct ProfileEditSheetPageModifier: ViewModifier {
     }
 }
 
-struct ProfileEditSheetTitleModifier: ViewModifier {
+fileprivate struct ProfileEditSheetTitleModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.clarity(.bold, textStyle: .title1))
@@ -59,23 +105,11 @@ struct ProfileEditSheetTitleModifier: ViewModifier {
     }
 }
 
-struct ProfileEditSheetDescriptionModifier: ViewModifier {
+fileprivate struct ProfileEditSheetDescriptionModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.clarity(.medium, textStyle: .subheadline))
             .lineSpacing(5)
             .foregroundStyle(Color.secondaryTxt)
-    }
-}
-
-extension View {
-    func profileEditSheetPage() -> some View {
-        self.modifier(ProfileEditSheetPageModifier())
-    }
-    func profileEditSheetTitle() -> some View {
-        self.modifier(ProfileEditSheetTitleModifier())
-    }
-    func profileEditSheetDescription() -> some View {
-        self.modifier(ProfileEditSheetDescriptionModifier())
     }
 }

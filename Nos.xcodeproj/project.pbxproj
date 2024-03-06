@@ -42,9 +42,14 @@
 		5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
 		5B6EB49029EDBEC1006E750C /* NoteParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */; };
 		5B79F5B82B8E71CC002DA9BE /* NamesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */; };
-		5B79F5EB2B97B5E9002DA9BE /* DeleteUsernameSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79F5EA2B97B5E9002DA9BE /* DeleteUsernameSheet.swift */; };
-		5B79F5F12B97B66F002DA9BE /* ProfileEditModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79F5F02B97B66F002DA9BE /* ProfileEditModifiers.swift */; };
-		5B7C93B02B6AD52400410ABE /* CreateUsernameSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C93AF2B6AD52400410ABE /* CreateUsernameSheet.swift */; };
+		5B79F5EB2B97B5E9002DA9BE /* ConfirmUsernameDeletionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79F5EA2B97B5E9002DA9BE /* ConfirmUsernameDeletionSheet.swift */; };
+		5B79F5FF2B98A5F2002DA9BE /* ProfileEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79F5FE2B98A5F2002DA9BE /* ProfileEditSheet.swift */; };
+		5B79F6092B98AC33002DA9BE /* ClaimYourUniqueIdentitySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79F6082B98AC33002DA9BE /* ClaimYourUniqueIdentitySheet.swift */; };
+		5B79F60B2B98ACA0002DA9BE /* PickYourUsernameSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79F60A2B98ACA0002DA9BE /* PickYourUsernameSheet.swift */; };
+		5B79F6112B98AD0A002DA9BE /* ExcellentChoiceSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79F6102B98AD0A002DA9BE /* ExcellentChoiceSheet.swift */; };
+		5B79F6132B98B145002DA9BE /* ProfileEditWizard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79F6122B98B145002DA9BE /* ProfileEditWizard.swift */; };
+		5B79F6192B98B24C002DA9BE /* DeleteUsernameWizard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79F6182B98B24C002DA9BE /* DeleteUsernameWizard.swift */; };
+		5B7C93B02B6AD52400410ABE /* CreateUsernameWizard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C93AF2B6AD52400410ABE /* CreateUsernameWizard.swift */; };
 		5B80BE9E29F9864000A363E4 /* Bech32Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */; };
 		5B834F672A83FB5C000C1432 /* ProfileKnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B834F662A83FB5C000C1432 /* ProfileKnownFollowersView.swift */; };
 		5B834F692A83FC7F000C1432 /* ProfileSocialStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B834F682A83FC7F000C1432 /* ProfileSocialStatsView.swift */; };
@@ -492,9 +497,14 @@
 		5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONRelayMetadata.swift; sourceTree = "<group>"; };
 		5B6EB48D29EDBE0E006E750C /* NoteParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParser.swift; sourceTree = "<group>"; };
 		5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParserTests.swift; sourceTree = "<group>"; };
-		5B79F5EA2B97B5E9002DA9BE /* DeleteUsernameSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteUsernameSheet.swift; sourceTree = "<group>"; };
-		5B79F5F02B97B66F002DA9BE /* ProfileEditModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditModifiers.swift; sourceTree = "<group>"; };
-		5B7C93AF2B6AD52400410ABE /* CreateUsernameSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUsernameSheet.swift; sourceTree = "<group>"; };
+		5B79F5EA2B97B5E9002DA9BE /* ConfirmUsernameDeletionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmUsernameDeletionSheet.swift; sourceTree = "<group>"; };
+		5B79F5FE2B98A5F2002DA9BE /* ProfileEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditSheet.swift; sourceTree = "<group>"; };
+		5B79F6082B98AC33002DA9BE /* ClaimYourUniqueIdentitySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimYourUniqueIdentitySheet.swift; sourceTree = "<group>"; };
+		5B79F60A2B98ACA0002DA9BE /* PickYourUsernameSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickYourUsernameSheet.swift; sourceTree = "<group>"; };
+		5B79F6102B98AD0A002DA9BE /* ExcellentChoiceSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExcellentChoiceSheet.swift; sourceTree = "<group>"; };
+		5B79F6122B98B145002DA9BE /* ProfileEditWizard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditWizard.swift; sourceTree = "<group>"; };
+		5B79F6182B98B24C002DA9BE /* DeleteUsernameWizard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteUsernameWizard.swift; sourceTree = "<group>"; };
+		5B7C93AF2B6AD52400410ABE /* CreateUsernameWizard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUsernameWizard.swift; sourceTree = "<group>"; };
 		5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bech32Tests.swift; sourceTree = "<group>"; };
 		5B810DD62B55BA44008FE8A9 /* Nos 15.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 15.xcdatamodel"; sourceTree = "<group>"; };
 		5B834F662A83FB5C000C1432 /* ProfileKnownFollowersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileKnownFollowersView.swift; sourceTree = "<group>"; };
@@ -888,10 +898,33 @@
 		5B79F5E92B97B5D7002DA9BE /* ProfileEdit */ = {
 			isa = PBXGroup;
 			children = (
-				5B79F5EA2B97B5E9002DA9BE /* DeleteUsernameSheet.swift */,
-				5B79F5F02B97B66F002DA9BE /* ProfileEditModifiers.swift */,
+				5B79F61A2B98B774002DA9BE /* CreateUsernameWizard */,
+				5B79F61F2B98B786002DA9BE /* DeleteUsernameWizard */,
+				5B79F6122B98B145002DA9BE /* ProfileEditWizard.swift */,
+				5B79F5FE2B98A5F2002DA9BE /* ProfileEditSheet.swift */,
+				A351E1A129BA92240009B7F6 /* ProfileEditView.swift */,
 			);
 			path = ProfileEdit;
+			sourceTree = "<group>";
+		};
+		5B79F61A2B98B774002DA9BE /* CreateUsernameWizard */ = {
+			isa = PBXGroup;
+			children = (
+				5B7C93AF2B6AD52400410ABE /* CreateUsernameWizard.swift */,
+				5B79F6082B98AC33002DA9BE /* ClaimYourUniqueIdentitySheet.swift */,
+				5B79F60A2B98ACA0002DA9BE /* PickYourUsernameSheet.swift */,
+				5B79F6102B98AD0A002DA9BE /* ExcellentChoiceSheet.swift */,
+			);
+			path = CreateUsernameWizard;
+			sourceTree = "<group>";
+		};
+		5B79F61F2B98B786002DA9BE /* DeleteUsernameWizard */ = {
+			isa = PBXGroup;
+			children = (
+				5B79F6182B98B24C002DA9BE /* DeleteUsernameWizard.swift */,
+				5B79F5EA2B97B5E9002DA9BE /* ConfirmUsernameDeletionSheet.swift */,
+			);
+			path = DeleteUsernameWizard;
 			sourceTree = "<group>";
 		};
 		C905EA362A33620A006F1E99 /* UNS */ = {
@@ -1325,7 +1358,6 @@
 				C95D68A4299E6E1E00429F86 /* PlaceholderModifier.swift */,
 				C9E37E112A1E7EC5003D4B0A /* PreviewContainer.swift */,
 				C94BC09A2A0AC74A0098F6F1 /* PreviewData.swift */,
-				A351E1A129BA92240009B7F6 /* ProfileEditView.swift */,
 				C95D689E299E6B4100429F86 /* ProfileHeader.swift */,
 				5B834F662A83FB5C000C1432 /* ProfileKnownFollowersView.swift */,
 				5B834F682A83FC7F000C1432 /* ProfileSocialStatsView.swift */,
@@ -1368,7 +1400,6 @@
 				C9DEBFDD298941020078B43A /* Preview Content */,
 				C905EA362A33620A006F1E99 /* UNS */,
 				C9F2046E2ADEDDCA0029A858 /* USBC */,
-				5B7C93AF2B6AD52400410ABE /* CreateUsernameSheet.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1729,7 +1760,7 @@
 				C9CE5B142A0172CF008E198C /* WebView.swift in Sources */,
 				DC5F20432A6ED75C00F8D73F /* FileStorageAPI.swift in Sources */,
 				CD4908D429B92941007443DB /* ReportABugMailView.swift in Sources */,
-				5B7C93B02B6AD52400410ABE /* CreateUsernameSheet.swift in Sources */,
+				5B7C93B02B6AD52400410ABE /* CreateUsernameWizard.swift in Sources */,
 				C9C2B78229E0735400548B4A /* RelaySubscriptionManager.swift in Sources */,
 				3FFB1D9629A6BBEC002A755D /* Collection+SafeSubscript.swift in Sources */,
 				A34E439929A522F20057AFCB /* CurrentUser.swift in Sources */,
@@ -1739,10 +1770,12 @@
 				C987F81A29BA4D0E00B44E7A /* ActionButton.swift in Sources */,
 				C9E37E122A1E7EC5003D4B0A /* PreviewContainer.swift in Sources */,
 				C9A0DAF829C92F4500466635 /* UNSAPI.swift in Sources */,
+				5B79F60B2B98ACA0002DA9BE /* PickYourUsernameSheet.swift in Sources */,
 				5BFF66B62A58A8A000AA79DD /* MutesView.swift in Sources */,
 				C9F2045F2ADED8F70029A858 /* WalletConnectSessionManager.swift in Sources */,
 				C913DA0A2AEAF52B003BDD6D /* NoteWarningController.swift in Sources */,
 				3F30020929C23895003D4F8B /* OnboardingNotOldEnoughView.swift in Sources */,
+				5B79F6112B98AD0A002DA9BE /* ExcellentChoiceSheet.swift in Sources */,
 				C973AB612A323167002AED16 /* Author+CoreDataProperties.swift in Sources */,
 				C9B678E129EEC41000303F33 /* SocialGraphCache.swift in Sources */,
 				C9AA1BB12ABA383F00E8BD6D /* USBCWalletConnectService.swift in Sources */,
@@ -1755,6 +1788,7 @@
 				5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */,
 				C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */,
 				C9F204612ADEDB720029A858 /* Wei.swift in Sources */,
+				5B79F6092B98AC33002DA9BE /* ClaimYourUniqueIdentitySheet.swift in Sources */,
 				C973AB652A323167002AED16 /* EventReference+CoreDataProperties.swift in Sources */,
 				C973AB632A323167002AED16 /* Relay+CoreDataProperties.swift in Sources */,
 				C94FE9F729DB259300019CD3 /* Text+Gradient.swift in Sources */,
@@ -1765,6 +1799,7 @@
 				C94A5E182A72C84200B6EC5D /* ReportCategory.swift in Sources */,
 				C973364F2A7968220012D8B8 /* SetUpUNSBanner.swift in Sources */,
 				C9F0BB6B29A503D6000547FC /* PublicKey.swift in Sources */,
+				5B79F6192B98B24C002DA9BE /* DeleteUsernameWizard.swift in Sources */,
 				C9EE3E602A0538B7008A7491 /* ExpirationTimeButton.swift in Sources */,
 				A303AF8329A9153A005DC8FC /* FollowButton.swift in Sources */,
 				C9C2B77F29E0731600548B4A /* AsyncTimer.swift in Sources */,
@@ -1793,7 +1828,6 @@
 				C9A6C74D2AD98E2A001F9500 /* UNSNameTakenView.swift in Sources */,
 				C9646EAE29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */,
 				C94D59AC2AE711A400295AE8 /* WalletConnectErrorView.swift in Sources */,
-				5B79F5F12B97B66F002DA9BE /* ProfileEditModifiers.swift in Sources */,
 				C92F015B2AC4D74E00972489 /* NosTextEditor.swift in Sources */,
 				C913DA0C2AEB2EBF003BDD6D /* FetchRequestPublisher.swift in Sources */,
 				C973AB5D2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */,
@@ -1838,6 +1872,7 @@
 				C9B678DB29EEBF3B00303F33 /* DependencyInjection.swift in Sources */,
 				C95D68A9299E709900429F86 /* LinearGradient+Planetary.swift in Sources */,
 				C92F01522AC4D6AB00972489 /* NosFormSection.swift in Sources */,
+				5B79F5FF2B98A5F2002DA9BE /* ProfileEditSheet.swift in Sources */,
 				C9BCF1C12AC72020009BDE06 /* UNSWizardChooseNameView.swift in Sources */,
 				C9A6C7412AD837AD001F9500 /* UNSWizardController.swift in Sources */,
 				C9F204862AE067130029A858 /* SendUSBCWizard.swift in Sources */,
@@ -1860,7 +1895,7 @@
 				C9B678E729F01A8500303F33 /* FullscreenProgressView.swift in Sources */,
 				C9F0BB6929A5039D000547FC /* Int+Bool.swift in Sources */,
 				DC5F203F2A6AE24200F8D73F /* ImagePickerButton.swift in Sources */,
-				5B79F5EB2B97B5E9002DA9BE /* DeleteUsernameSheet.swift in Sources */,
+				5B79F5EB2B97B5E9002DA9BE /* ConfirmUsernameDeletionSheet.swift in Sources */,
 				C981E2DD2AC610D600FBF4F6 /* UNSStepImage.swift in Sources */,
 				C9CDBBA429A8FA2900C555C7 /* GoldenPostView.swift in Sources */,
 				C92F01582AC4D6F700972489 /* NosTextField.swift in Sources */,
@@ -1869,6 +1904,7 @@
 				C97A1C8B29E45B4E009D9E8D /* RawEventController.swift in Sources */,
 				C9DEC0632989541F0078B43A /* Bundle+Current.swift in Sources */,
 				C93EC2F429C34C860012EE2A /* NSPredicate+Bool.swift in Sources */,
+				5B79F6132B98B145002DA9BE /* ProfileEditWizard.swift in Sources */,
 				C99D053C2AE6E5F50053D472 /* WalletConnectSendView.swift in Sources */,
 				C9F84C1C298DBBF400C6714D /* Data+Sha.swift in Sources */,
 				5BE281BE2AE2CCAE00880466 /* StoriesView.swift in Sources */,

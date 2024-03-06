@@ -115,10 +115,13 @@ struct ProfileEditView: View {
             UNSWizard(controller: unsController, isPresented: $showUniversalNameWizard)
         })
         .sheet(isPresented: $showNIP05Wizard) {
-            CreateUsernameSheet(isPresented: $showNIP05Wizard)
+            CreateUsernameWizard(isPresented: $showNIP05Wizard)
         }
         .sheet(isPresented: $showConfirmationDialog) {
-            DeleteUsernameSheet(author: author, isPresented: $showConfirmationDialog)
+            DeleteUsernameWizard(
+                author: author,
+                isPresented: $showConfirmationDialog
+            )
         }
         .onChange(of: showUniversalNameWizard) { _, newValue in
             if !newValue {

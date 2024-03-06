@@ -1,5 +1,5 @@
 //
-//  DeleteUsernameSheet.swift
+//  ConfirmUsernameDeletionSheet.swift
 //  Nos
 //
 //  Created by Martin Dutra on 5/3/24.
@@ -8,7 +8,7 @@
 import Dependencies
 import SwiftUI
 
-struct DeleteUsernameSheet: View {
+struct ConfirmUsernameDeletionSheet: ProfileEditSheet {
 
     var author: Author
     @Binding var isPresented: Bool
@@ -37,49 +37,43 @@ struct DeleteUsernameSheet: View {
     }
 
     var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading, spacing: 20) {
-                Spacer(minLength: 40)
-                PlainText(.localizable.deleteUsernameConfirmation).profileEditSheetTitle()
-                PlainText(.localizable.deleteUsernameDescription).profileEditSheetDescription()
+        SheetVStack {
+            Spacer(minLength: 40)
+            TitleText(.localizable.deleteUsernameConfirmation)
+            DescriptionText(AttributedString(localized: .localizable.deleteUsernameDescription))
 
-                Spacer(minLength: 0)
+            Spacer(minLength: 0)
 
-                Button {
-                    Task {
-                        await deleteUsername()
-                    }
-                } label: {
-                    let label = PlainText(.localizable.deleteUsername)
-                    if isDeleting {
-                        ZStack {
-                            ProgressView()
-                                .frame(height: .zero)
-                                .tint(Color.white)
-                            label
-                                .hidden()
-                        }
-                    } else {
+            Button {
+                Task {
+                    await deleteUsername()
+                }
+            } label: {
+                let label = PlainText(.localizable.deleteUsername)
+                if isDeleting {
+                    ZStack {
+                        ProgressView()
+                            .frame(height: .zero)
+                            .tint(Color.white)
                         label
+                            .hidden()
                     }
+                } else {
+                    label
                 }
-                .buttonStyle(BigActionButtonStyle())
-
-
-                Button {
-                    isPresented = false
-                } label: {
-                    SwiftUI.Text(.localizable.cancel)
-                        .font(.clarity(.medium, textStyle: .footnote))
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 10)
-                .disabled(isDeleting)
-
-                Spacer(minLength: 40)
             }
-            .padding(.horizontal, 40)
-            .profileEditSheetPage()
+            .buttonStyle(BigActionButtonStyle())
+            Button {
+                isPresented = false
+            } label: {
+                SwiftUI.Text(.localizable.cancel)
+                    .font(.clarity(.medium, textStyle: .footnote))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 10)
+            .disabled(isDeleting)
+
+            Spacer(minLength: 20)
         }
         .alert(isPresented: showAlert, error: deleteState.error) {
             Button {
@@ -88,8 +82,6 @@ struct DeleteUsernameSheet: View {
                 SwiftUI.Text(.localizable.ok)
             }
         }
-        .frame(idealWidth: 320, idealHeight: 480)
-        .presentationDetents([.medium])
     }
 
     private func deleteUsername() async {
@@ -169,7 +161,10 @@ fileprivate enum DeleteError: LocalizedError {
 #Preview {
     var previewData = PreviewData()
     return Color.clear.sheet(isPresented: .constant(true)) {
-        DeleteUsernameSheet(author: previewData.alice, isPresented: .constant(true))
+        ConfirmUsernameDeletionSheet(
+            author: previewData.alice,
+            isPresented: .constant(true)
+        )
     }
     .inject(previewData: previewData)
 }
