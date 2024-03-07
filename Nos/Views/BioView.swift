@@ -12,6 +12,8 @@ struct BioView: View {
 
     var bio: String?
 
+    @Environment(\.managedObjectContext) private var viewContext
+
     @State
     private var showingBio = false
     
@@ -32,9 +34,26 @@ struct BioView: View {
 
     private let lineLimit: Int = 5
 
+    private var parsedBio: AttributedString {
+        guard let bio else {
+            return AttributedString()
+        }
+        let (content, _) = NoteParser.parse(
+            content: bio,
+            tags: [[]],
+            context: viewContext
+        )
+        return content
+    }
+
+    private var font: Font {
+        .clarity(.medium, textStyle: .subheadline)
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(LocalizedStringKey(bio ?? ""))
+            SwiftUI.Text(parsedBio)
+                .font(font)
                 .foregroundColor(.primaryTxt)
                 .tint(.accent)
                 .lineSpacing(lineSpacing)
@@ -52,7 +71,8 @@ struct BioView: View {
                     }
                 }
                 .background {
-                    Text(LocalizedStringKey(bio ?? ""))
+                    SwiftUI.Text(parsedBio)
+                        .font(font)
                         .lineSpacing(lineSpacing)
                         .padding(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
                         .fixedSize(horizontal: false, vertical: true)
@@ -98,8 +118,8 @@ struct BioView: View {
         }
         .sheet(isPresented: $showingBio) {
             NavigationView {
-                SelectableText(bio ?? "")
-                    .foregroundColor(.primaryTxt)
+                SelectableText(parsedBio)
+                    .font(.clarity(.regular, textStyle: .body))
                     .nosNavigationBar(title: .localizable.bio)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.appBg)
@@ -135,7 +155,7 @@ struct BioView: View {
 struct BioView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            BioView(bio: nil)
+            BioView(bio: "# Heading\n\n*bold*")
             BioView(bio: .loremIpsum(1))
             BioView(bio: .loremIpsum(3))
         }

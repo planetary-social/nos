@@ -20,21 +20,24 @@ struct SelectableText: UIViewRepresentable {
     var attributedText: AttributedString
 
     init(_ attributedText: AttributedString) {
-        self.attributedText = attributedText
+        self.attributedText = attributedText.mergingAttributes(SelectableText.attributes)
     }
     
     init(_ string: String) {
         self.attributedText = AttributedString(string)
+        attributedText.setAttributes(SelectableText.attributes)
+    }
+
+    private static var attributes: AttributeContainer {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 10
-        attributedText.setAttributes(AttributeContainer([
+        return AttributeContainer([
             .font: UIFont.clarity,
             .foregroundColor: UIColor.primaryTxt,
             .paragraphStyle: paragraphStyle
-        ]))
+        ])
     }
 
-    private var font = UIFont.preferredFont(forTextStyle: .body)
     private var insets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
 
     func makeUIView(context: Context) -> UITextView {
