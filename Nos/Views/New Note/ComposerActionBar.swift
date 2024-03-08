@@ -43,7 +43,7 @@ struct ComposerActionBar: View {
             case .none:
                 // Attach Media
                 ImagePickerButton { image in
-                    Task {
+                    Task.detached {
                         do {
                             startUploadingImage()
                             let attachedFile = AttachedFile(image: image)
