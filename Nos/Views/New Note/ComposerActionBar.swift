@@ -23,7 +23,9 @@ struct ComposerActionBar: View {
     @State private var subMenu: SubMenu?
     @State private var uploadingImage = false
     @State private var alert: AlertState<AlertAction>?
-    
+
+    @State private var uiImage: UIImage?
+
     fileprivate enum AlertAction {
     }
     
@@ -43,12 +45,13 @@ struct ComposerActionBar: View {
             case .none:
                 // Attach Media
                 ImagePickerButton { image in
-                    Task.detached {
+                    uiImage = image
+                    Task {
                         do {
                             startUploadingImage()
                             let attachedFile = AttachedFile(image: image)
                             let url = try await fileStorageAPI.upload(file: attachedFile)
-                            text.append(url)
+                            text.append("hello there")
                             endUploadingImage()
                         } catch {
                             endUploadingImage()
@@ -68,7 +71,14 @@ struct ComposerActionBar: View {
                 }
                 .padding(.leading, 8)
                 .accessibilityLabel(Text(.localizable.attachMedia))
-                
+
+                if let uiImage {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 44, height: 44)
+                }
+
                 // Expiration Time
                 if let expirationTime, let option = ExpirationTimeOption(rawValue: expirationTime) {
                     ExpirationTimeButton(
