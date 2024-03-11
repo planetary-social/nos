@@ -169,9 +169,8 @@ struct AppView: View {
         if let didPresentSheetInPast {
             shouldShowSheet = didPresentSheetInPast != npub && author.nip05 == nil
         } else {
-            shouldShowSheet = true && author.nip05 == nil
+            shouldShowSheet = author.nip05 == nil
         }
-        shouldShowSheet = true
         if shouldShowSheet {
             showNIP05Wizard = true
             UserDefaults.standard.setValue(npub, forKey: key)
