@@ -17,6 +17,8 @@ extension Font {
             clarityRegular(textStyle)
         case .medium:
             clarityMedium(textStyle)
+        case .semibold:
+            claritySemibold(textStyle)
         case .bold:
             clarityBold(textStyle)
         default:
@@ -32,6 +34,10 @@ extension Font {
 
     static func clarityMedium(_ textStyle: UIFont.TextStyle) -> Font {
         .custom("ClarityCity-Medium", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+    }
+
+    static func claritySemibold(_ textStyle: UIFont.TextStyle) -> Font {
+        .custom("ClarityCity-SemiBold", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
     }
 
     static var clarityBold = clarityBold(.body)
@@ -156,10 +162,10 @@ func Text(_ content: any StringProtocol) -> SwiftUI.Text {
 }
 
 func TextField(_ titleKey: LocalizedStringKey, text: Binding<String>, axis: Axis = .horizontal) -> some View {
-    SwiftUI.TextField(titleKey, text: text, axis: axis).font(.brand)
+    SwiftUI.TextField(titleKey, text: text, axis: axis).font(.body)
 }
 
 func TextField<Label: View>(text: Binding<String>, prompt: Text? = nil, label: () -> Label) -> some View {
-    SwiftUI.TextField(text: text, prompt: prompt?.font(.brand), label: label).font(.brand)
+    SwiftUI.TextField(text: text, prompt: prompt?.font(.brand), label: label).font(.body)
 }
 // swiftlint:enable identifier_name

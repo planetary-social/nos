@@ -30,8 +30,7 @@ struct NosFormField<Control: View>: View {
             HStack {
                 Text(label)
                     .foregroundColor(.secondaryTxt)
-                    .fontWeight(.medium)
-                    .font(.clarityFootnote)
+                    .font(.clarity(.medium, textStyle: .subheadline))
                 Spacer()
             }
             

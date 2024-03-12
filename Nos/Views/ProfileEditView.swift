@@ -54,7 +54,7 @@ struct ProfileEditView: View {
                     text: .localizable.uploadProfilePicInstructions,
                     highlightedWord: "nostr.build",
                     highlight: .diagonalAccent, 
-                    font: .clarityCaption,
+                    font: .footnote,
                     link: URL(string: "https://nostr.build")!
                 )
                 Spacer()
@@ -88,8 +88,7 @@ struct ProfileEditView: View {
             
             HStack {
                 Text(.localizable.identityVerification)
-                    .font(.clarityTitle3)
-                    .fontWeight(.bold)
+                    .font(.clarity(.semibold, textStyle: .headline))
                     .foregroundColor(.primaryTxt)
                     .padding(.top, 16)
                 
@@ -224,7 +223,6 @@ fileprivate struct NosNIP05Field: View {
                         PlainText("@nos.social")
                             .foregroundStyle(Color.secondaryTxt)
                     }
-                    .font(.clarity(.medium, textStyle: .body))
                     Spacer(minLength: 10)
                     Button {
                         showConfirmationDialog = true
@@ -251,7 +249,7 @@ fileprivate struct NosNIP05Field: View {
                     Text(.localizable.usernameWarningMessage)
                         .foregroundStyle(Color.secondaryTxt)
                 )
-                .font(.clarity(.medium, textStyle: .caption1))
+                .font(.footnote)
                 .lineSpacing(5)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -300,7 +298,7 @@ fileprivate struct NIP05Field: View {
                     Text(.localizable.usernameWarningMessage)
                         .foregroundStyle(Color.secondaryTxt)
                 )
-                .font(.clarity(.medium, textStyle: .caption1))
+                .font(.footnote)
                 .lineSpacing(5)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
