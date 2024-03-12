@@ -114,7 +114,9 @@ struct ImagePickerButton<Label>: View where Label: View {
             ) { imagePicked in
                 if let image = imagePicked {
                     analytics.selectedImage()
-                    onCompletion(image)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                        onCompletion(image)
+                    }
                 } else {
                     analytics.cancelledImageSelection()
                 }
