@@ -1,10 +1,3 @@
-//
-//  FollowsView.swift
-//  Nos
-//
-//  Created by Christopher Jorgensen on 2/22/23.
-//
-
 import Foundation
 import SwiftUI
 

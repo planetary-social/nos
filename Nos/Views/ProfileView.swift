@@ -1,10 +1,3 @@
-//
-//  ProfileView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/16/23.
-//
-
 import SwiftUI
 import CoreData
 import Dependencies

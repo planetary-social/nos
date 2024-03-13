@@ -1,10 +1,3 @@
-//
-//  ReportTests.swift
-//  NosTests
-//
-//  Created by Matthew Lorentz on 10/23/23.
-//
-
 import XCTest
 
 final class ReportTests: XCTestCase {

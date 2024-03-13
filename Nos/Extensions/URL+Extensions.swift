@@ -1,10 +1,3 @@
-//
-//  URL+Extensions.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/15/23.
-//
-
 import Foundation
 
 extension URL {

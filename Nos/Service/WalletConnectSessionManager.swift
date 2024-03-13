@@ -1,10 +1,3 @@
-//
-//  WalletConnectSessionManager.swift
-//  DAppExample
-//
-//  Created by Marcel Salej on 27/09/2023.
-//
-
 import Logger
 import Foundation
 import WalletConnectPairing

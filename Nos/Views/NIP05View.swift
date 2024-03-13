@@ -1,10 +1,3 @@
-//
-//  NIP05View.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 11/17/23.
-//
-
 import SwiftUI
 
 /// Displays a user's NIP-05 and does some verification on it.

@@ -1,10 +1,3 @@
-//
-//  AuthorStoryView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/23/23.
-//
-
 import Dependencies
 import SwiftUI
 import CoreData

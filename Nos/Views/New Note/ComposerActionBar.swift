@@ -1,10 +1,3 @@
-//
-//  ComposerActionBar.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 5/3/23.
-//
-
 import Foundation
 import SwiftUI
 import SwiftUINavigation

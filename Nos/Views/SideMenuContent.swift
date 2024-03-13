@@ -1,10 +1,3 @@
-//
-//  SideMenuContent.swift
-//  Nos
-//
-//  Created by Jason Cheatham on 2/21/23.
-//
-
 import SwiftUI
 import MessageUI
 import Dependencies

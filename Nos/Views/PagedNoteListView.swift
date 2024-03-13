@@ -1,10 +1,3 @@
-//
-//  PagedNoteListView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 11/20/23.
-//
-
 import SwiftUI
 import CoreData
 import Dependencies

@@ -1,10 +1,3 @@
-//
-//  SendUSBCWizard.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 10/18/23.
-//
-
 import SwiftUI
 
 /// A series of views that enables the user to connect a USBC wallet application and send USBC to other users with 

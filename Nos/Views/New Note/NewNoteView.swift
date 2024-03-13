@@ -1,10 +1,3 @@
-//
-//  NewNoteView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/6/23.
-//
-
 import CoreData
 import Dependencies
 import Logger

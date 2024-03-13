@@ -1,10 +1,3 @@
-//
-//  ParseQueue.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 6/13/23.
-//
-
 import Foundation
 import Starscream
 import DequeModule

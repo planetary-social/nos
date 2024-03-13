@@ -1,10 +1,3 @@
-//
-//  AuthorizationView.swift
-//  DAppExample
-//
-//  Created by Marcel Salej on 27/09/2023.
-//
-
 import SwiftUI
 
 struct WalletConnectPairingView: View {

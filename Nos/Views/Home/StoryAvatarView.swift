@@ -1,10 +1,3 @@
-//
-//  StoryAvatarView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 1/10/24.
-//
-
 import SwiftUI
 
 /// Shows the avatar for an author in the StoryAuthorCarousel.

@@ -1,10 +1,3 @@
-//
-//  ProfileEditView.swift
-//  Nos
-//
-//  Created by Christopher Jorgensen on 3/9/23.
-//
-
 import Dependencies
 import SwiftUI
 

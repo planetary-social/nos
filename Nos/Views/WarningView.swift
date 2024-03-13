@@ -1,10 +1,3 @@
-//
-//  WarningView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 10/26/23.
-//
-
 import SwiftUI
 
 /// A view that puts a note behind a content warning if appropriate.

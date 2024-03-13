@@ -1,10 +1,3 @@
-//
-//  ExpirationTimePicker.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 5/4/23.
-//
-
 import SwiftUI
 import Foundation
 

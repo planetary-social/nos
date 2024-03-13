@@ -1,10 +1,3 @@
-//
-//  ProfileTab.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/9/23.
-//
-
 import Combine
 import SwiftUI
 

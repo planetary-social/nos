@@ -1,11 +1,3 @@
-//
-//  RawEventView.swift
-//  Planetary
-//
-//  Created by Martin Dutra on 19/9/22.
-//  Copyright © 2022 Verse Communications Inc. All rights reserved.
-//
-
 import SwiftUI
 
 struct RawEventView<ViewModel>: View where ViewModel: RawEventViewModel {

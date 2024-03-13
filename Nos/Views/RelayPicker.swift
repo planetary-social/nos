@@ -1,10 +1,3 @@
-//
-//  RelayPicker.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/16/23.
-//
-
 import SwiftUI
 import CoreData
 

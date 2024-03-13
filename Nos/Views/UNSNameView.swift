@@ -1,10 +1,3 @@
-//
-//  UNSNameView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 11/17/23.
-//
-
 import SwiftUI
 
 /// Displays a Universal Name with a logo.

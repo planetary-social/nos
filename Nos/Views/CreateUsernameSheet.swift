@@ -1,10 +1,3 @@
-//
-//  CreateUsernameSheet.swift
-//  Nos
-//
-//  Created by Martin Dutra on 31/1/24.
-//
-
 import Combine
 import Dependencies
 import Logger

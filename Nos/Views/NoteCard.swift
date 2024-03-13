@@ -1,11 +1,3 @@
-//
-//  NoteCard.swift
-//  Planetary
-//
-//  Created by Martin Dutra on 25/10/22.
-//  Copyright © 2022 Verse Communications Inc. All rights reserved.
-//
-
 import SwiftUI
 import Logger
 import CoreData

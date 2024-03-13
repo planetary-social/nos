@@ -1,10 +1,3 @@
-//
-//  Filter.swift
-//  Nos
-//
-//  Created by Christopher Jorgensen on 2/17/23.
-//
-
 import Foundation
 
 /// Describes a set of Nostr Events, usually so we can ask relay servers for them. 

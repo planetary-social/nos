@@ -1,10 +1,3 @@
-//
-//  PublishedEventsView.swift
-//  Nos
-//
-//  Created by Martin Dutra on 7/7/23.
-//
-
 import SwiftUI
 
 struct PublishedEventsView: View {

@@ -1,10 +1,3 @@
-//
-//  AppView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/3/23.
-//
-
 import SwiftUI
 import Dependencies
 

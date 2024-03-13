@@ -1,10 +1,3 @@
-//
-//  AuthorStoryCarousel.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 1/10/24.
-//
-
 import SwiftUI
 
 /// Shows a scrollable horizontal feed of authors who have unread stories.

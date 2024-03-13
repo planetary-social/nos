@@ -1,10 +1,3 @@
-//
-//  RelayDetailView.swift
-//  Nos
-//
-//  Created by Martin Dutra on 6/7/23.
-//
-
 import SwiftUI
 
 struct RelayDetailView: View {

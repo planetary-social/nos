@@ -1,10 +1,3 @@
-//
-//  Bech32.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/7/23.
-//
-
 import Foundation
 
 // swiftlint:disable all

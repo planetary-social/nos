@@ -1,10 +1,3 @@
-//
-//  NosUITestsLaunchTests.swift
-//  NosUITests
-//
-//  Created by Matthew Lorentz on 1/31/23.
-//
-
 import XCTest
 
 final class NosUITestsLaunchTests: XCTestCase {

@@ -1,10 +1,3 @@
-//
-//  ProfileKnownFollowersView.swift
-//  Nos
-//
-//  Created by Martin Dutra on 9/8/23.
-//
-
 import SwiftUI
 
 struct ProfileKnownFollowersView: View {

@@ -1,10 +1,3 @@
-//
-//  UNSWizardIntroView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 9/13/23.
-//
-
 import SwiftUI
 
 struct UNSWizardIntroView: View {

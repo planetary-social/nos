@@ -1,10 +1,3 @@
-//
-//  Collection+SafeSubscript.swift
-//  Nos
-//
-//  Created by Shane Bielefeld on 2/22/23.
-//
-
 import Foundation
 
 extension Collection where Indices.Iterator.Element == Index {

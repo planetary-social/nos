@@ -1,10 +1,3 @@
-//
-//  SendUSBCBarButtonItem.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 10/19/23.
-//
-
 import SwiftUI
 
 struct SendUSBCBarButtonItem: View {
