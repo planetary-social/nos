@@ -114,12 +114,6 @@ struct ComposerActionBar: View {
             }
             Spacer()
         }
-        .sheet(isPresented: $isUploadingImage) {
-            FullscreenProgressView(
-                isPresented: .constant(true), 
-                text: String(localized: .imagePicker.uploading)
-            )
-        }
         .animation(.easeInOut(duration: 0.2), value: subMenu)
         .transition(.move(edge: .leading))
         .onChange(of: expirationTime) { _, _ in
@@ -161,9 +155,9 @@ struct ComposerActionBar_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             Spacer()
-            ComposerActionBar(expirationTime: $emptyExpirationTime, text: $postText, uploadingImage: .constant(false))
+            ComposerActionBar(expirationTime: $emptyExpirationTime, isUploadingImage: .constant(false), text: $postText)
             Spacer()
-            ComposerActionBar(expirationTime: $setExpirationTime, text: $postText, uploadingImage: .constant(false))
+            ComposerActionBar(expirationTime: $setExpirationTime, isUploadingImage: .constant(false), text: $postText)
             Spacer()
         }
         .frame(maxWidth: .infinity)
