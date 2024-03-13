@@ -10,7 +10,7 @@ import Dependencies
 import Logger
 import SwiftUI
 
-struct PickYourUsernameSheet: ProfileEditSheet {
+struct PickYourUsernameSheet: View {
 
     @Binding var isPresented: Bool
     @StateObject private var usernameObserver = UsernameObserver()
@@ -20,7 +20,7 @@ struct PickYourUsernameSheet: ProfileEditSheet {
     @Dependency(\.currentUser) private var currentUser
 
     var body: some View {
-        SheetVStack {
+        WizardSheetVStack {
             Button {
                 isPresented = false
             } label: {
@@ -32,12 +32,8 @@ struct PickYourUsernameSheet: ProfileEditSheet {
             }
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
-                    TitleText(.localizable.pickYourUsernameTitle)
-                    DescriptionText(
-                        AttributedString(
-                            localized: .localizable.pickYourUsernameDescription
-                        )
-                    )
+                    WizardSheetTitleText(.localizable.pickYourUsernameTitle)
+                    WizardSheetDescriptionText(markdown: .localizable.pickYourUsernameDescription)
                     HStack {
                         UsernameTextField(usernameObserver: usernameObserver)
                             .onChange(of: usernameObserver.debouncedText) { _, newValue in
