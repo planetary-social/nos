@@ -108,20 +108,13 @@ struct ProfileEditView: View {
             UNSWizard(controller: unsController, isPresented: $showUniversalNameWizard)
         })
         .sheet(isPresented: $showNIP05Wizard) {
-            CreateUsernameSheet(isPresented: $showNIP05Wizard)
+            CreateUsernameWizard(isPresented: $showNIP05Wizard)
         }
-        .confirmationDialog(
-            String(localized: .localizable.deleteUsernameConfirmation),
-            isPresented: $showConfirmationDialog,
-            titleVisibility: .visible
-        ) {
-            Button(role: .destructive) {
-                Task {
-                    await deleteUsername()
-                }
-            } label: {
-                SwiftUI.Text(LocalizedStringResource.localizable.deleteUsername)
-            }
+        .sheet(isPresented: $showConfirmationDialog) {
+            DeleteUsernameWizard(
+                author: author,
+                isPresented: $showConfirmationDialog
+            )
         }
         .onChange(of: showUniversalNameWizard) { _, newValue in
             if !newValue {
@@ -174,28 +167,6 @@ struct ProfileEditView: View {
             try viewContext.save()
             // Post event
             await currentUser.publishMetaData()
-        } catch {
-            crashReporting.report(error)
-        }
-    }
-
-    private func deleteUsername() async {
-        guard let keyPair = currentUser.keyPair else {
-            return
-        }
-        let username = author.nosNIP05Username
-        let isNosSocialUsername = author.hasNosNIP05
-        author.nip05 = ""
-        do {
-            try viewContext.save()
-            await currentUser.publishMetaData()
-            if isNosSocialUsername {
-                try? await namesAPI.delete(
-                    username: username,
-                    keyPair: keyPair
-                )
-            }
-            analytics.deletedNIP05Username()
         } catch {
             crashReporting.report(error)
         }

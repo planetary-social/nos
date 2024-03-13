@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Re-design the confirmation dialog that appears when you delete your NIP-05.
+
 ## [0.1.6] - 2024-03-07Z
 
 - Parse links and mentions in Profile's about (or bios)
