@@ -27,7 +27,7 @@ enum AuthorError: Error {
     /// Human-friendly identifier suitable for being displayed in the UI
     var safeIdentifier: String {
         if let nip05 {
-            return nip05
+            return "[\(nip05)](\(webLink))"
         } else {
             return npubString?.prefix(10).appending("...") ?? hexadecimalPublicKey ?? "error"
         }

@@ -236,6 +236,7 @@ struct ProfileView: View {
             }
         }
         .alert(unwrapping: $alert)
+        .tint(.accent)
         .onAppear {
             Task { 
                 await downloadAuthorData()
