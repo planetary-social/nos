@@ -24,8 +24,10 @@ enum AuthorError: Error {
         publicKey?.npub
     }
     
-    /// Human-friendly identifier suitable for being displayed in the UI
-    var safeIdentifier: String {
+    /// Human-friendly identifier suitable for being displayed in the UI.
+    ///
+    /// It will display a link if the author has a nip05 identifier, otherwise it's just text with the npub.
+    var markdownIdentifier: String {
         if let nip05 {
             return "[\(nip05)](\(webLink))"
         } else {

@@ -40,15 +40,15 @@ final class AuthorTests: CoreDataTestCase {
         XCTAssertEqual(fetchedAuthor?.followedKeys, [])
     }
 
-    func testSafeIdentifier() throws {
+    func testMarkdownIdentifier() throws {
         let context = persistenceController.viewContext
         let key = RawNostrID.random
         let publicKey = try XCTUnwrap(PublicKey(hex: key))
         let truncatedKey = "\(publicKey.npub.prefix(10))..."
         let nip05 = "me@nip05.com"
         let author = try Author.findOrCreate(by: key, context: context)
-        XCTAssertEqual(author.safeIdentifier, truncatedKey)
+        XCTAssertEqual(author.markdownIdentifier, truncatedKey)
         author.nip05 = nip05
-        XCTAssertEqual(author.safeIdentifier, nip05)
+        XCTAssertEqual(author.markdownIdentifier, "[me@nip05.com](https://njump.me/\(publicKey.npub))")
     }
 }
