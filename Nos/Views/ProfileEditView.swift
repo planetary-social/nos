@@ -53,7 +53,8 @@ struct ProfileEditView: View {
                 HighlightedText(
                     text: .localizable.uploadProfilePicInstructions,
                     highlightedWord: "nostr.build",
-                    highlight: .diagonalAccent, 
+                    highlight: .diagonalAccent,
+                    textColor: .secondaryTxt,
                     font: .footnote,
                     link: URL(string: "https://nostr.build")!
                 )
