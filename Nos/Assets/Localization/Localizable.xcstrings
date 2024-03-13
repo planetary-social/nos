@@ -3136,7 +3136,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delete username"
+            "value" : "Yes, delete my NIP-05"
           }
         }
       }
@@ -3147,7 +3147,18 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This will remove your current username. Are you sure?"
+            "value" : "Are you sure you want to delete your NIP-05?"
+          }
+        }
+      }
+    },
+    "deleteUsernameDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changing or removing your handle may cause web links to disconnect from your identity. **Proceed with caution.**"
           }
         }
       }
@@ -8366,7 +8377,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your @username is your identity in the Nos community. \nChoose a name that reflects you or your organization. Make it memorable and distinct!"
+            "value" : "Your **@username** is your identity in the Nos community. \nChoose a name that reflects you or your organization. Make it memorable and distinct!"
           }
         }
       }
@@ -12723,7 +12734,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Well done, you've successfully claimed @%1$@! \nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
+            "value" : "Well done, you've successfully claimed your **@username**! \nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
           }
         }
       }
