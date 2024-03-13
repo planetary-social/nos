@@ -10,14 +10,11 @@ import SwiftUI
 
 struct ProfileEditView: View {
     
-    @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
 
     @Dependency(\.crashReporting) private var crashReporting
-    @Dependency(\.namesAPI) private var namesAPI
-    @Dependency(\.analytics) private var analytics
 
     @ObservedObject var author: Author
     
