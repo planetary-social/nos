@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Update font styles on Edit Profile screen.
+- Re-design the confirmation dialog that appears when you delete your NIP-05.
 
 ## [0.1.6] - 2024-03-07Z
 
