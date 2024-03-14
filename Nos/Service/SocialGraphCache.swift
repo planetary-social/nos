@@ -1,10 +1,3 @@
-//
-//  SocialGraphCache.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 4/18/23.
-//
-
 import Foundation
 import CoreData
 import Logger
@@ -17,9 +10,9 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: Public interface 
     
-    private(set) var followedKeys = Set<HexadecimalString>()
+    private(set) var followedKeys = Set<RawAuthorID>()
     
-    func isInNetwork(_ key: HexadecimalString?) -> Bool {
+    func isInNetwork(_ key: RawAuthorID?) -> Bool {
         guard let key, let userKey else {
             return false
         }
@@ -64,7 +57,7 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
-    func follows(_ key: HexadecimalString?) -> Bool {
+    func follows(_ key: RawAuthorID?) -> Bool {
         guard let key, let userKey else {
             return false
         }
@@ -74,17 +67,17 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: - Private properties
     
-    private let userKey: HexadecimalString?
+    private let userKey: RawAuthorID?
     private let context: NSManagedObjectContext
     
     private var userWatcher: NSFetchedResultsController<Author>?
     private var oneHopWatcher: NSFetchedResultsController<Author>?
-    private var twoHopKeys = Set<HexadecimalString>()
-    private var outOfNetworkKeys = Set<HexadecimalString>()
+    private var twoHopKeys = Set<RawAuthorID>()
+    private var outOfNetworkKeys = Set<RawAuthorID>()
     
     // MARK: - Setup
     
-    init(userKey: HexadecimalString?, context: NSManagedObjectContext) {
+    init(userKey: RawAuthorID?, context: NSManagedObjectContext) {
         self.userKey = userKey
         self.context = context
         super.init()
@@ -168,8 +161,8 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
     ///   - followedKey: the key of the author the user has followed
     ///   - follows: the keys of the authors `followedKey` has followed
     private func process(
-        user: HexadecimalString,
-        followed newFollowedKeys: Set<HexadecimalString>
+        user: RawAuthorID,
+        followed newFollowedKeys: Set<RawAuthorID>
     ) {
         let unfollowedKeys = followedKeys.subtracting(newFollowedKeys)
         if !unfollowedKeys.isEmpty {
@@ -181,8 +174,8 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     private func process(
-        followedAuthor: HexadecimalString,
-        followed newFollowedKeys: Set<HexadecimalString>
+        followedAuthor: RawAuthorID,
+        followed newFollowedKeys: Set<RawAuthorID>
     ) async {
         outOfNetworkKeys.subtract(newFollowedKeys)
         twoHopKeys.formUnion(newFollowedKeys)

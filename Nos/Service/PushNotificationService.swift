@@ -1,10 +1,3 @@
-//
-//  PushNotificationService.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 6/28/23.
-//
-
 import Foundation
 import Logger
 import Dependencies
@@ -189,7 +182,7 @@ import Combine
     
     /// Tells the system to display a notification for the given event if it's appropriate. This will create a 
     /// NosNotification record in the database.
-    @MainActor private func showNotificationIfNecessary(for eventID: HexadecimalString) async {
+    @MainActor private func showNotificationIfNecessary(for eventID: RawEventID) async {
         guard let authorKey = currentAuthor?.hexadecimalPublicKey else {
             return
         }

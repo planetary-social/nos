@@ -1,21 +1,20 @@
-//
-//  NosFormField.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 9/28/23.
-//
-
 import SwiftUI
 import SwiftUINavigation
 
 struct NosFormField<Control: View>: View {
-    
+
     let control: Control
     let label: LocalizedStringResource
+    let footnote: LocalizedStringResource?
     @FocusState private var focus: Bool
-    
-    init(label: LocalizedStringResource, @ViewBuilder builder: () -> Control) {
+
+    init(
+        label: LocalizedStringResource,
+        footnote: LocalizedStringResource? = nil,
+        @ViewBuilder builder: () -> Control
+    ) {
         self.label = label
+        self.footnote = footnote
         self.control = builder()
     }
     
@@ -46,7 +45,10 @@ struct NosFormField_Previews: PreviewProvider {
         NosForm {
             NosFormSection(label: .localizable.profileTitle) {
                 WithState(initialValue: "") { text in
-                    NosFormField(label: .localizable.about) {
+                    NosFormField(
+                        label: .localizable.about,
+                        footnote: .localizable.usernameWarningMessage
+                    ) {
                         TextField("", text: text)
                             .textInputAutocapitalization(.none)
                             .foregroundColor(.primaryTxt)

@@ -1,10 +1,3 @@
-//
-//  TLVTests.swift
-//  NosTests
-//
-//  Created by Martin Dutra on 26/5/23.
-//
-
 import Foundation
 import XCTest
 

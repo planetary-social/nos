@@ -1,10 +1,3 @@
-//
-//  HomeFeedView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 1/31/23.
-//
-
 import SwiftUI
 import CoreData
 import Combine
@@ -84,12 +77,12 @@ struct HomeFeedView: View {
                         databaseFilter: Event.homeFeed(for: user, before: lastRefreshDate), 
                         relayFilter: homeFeedFilter,
                         context: viewContext,
+                        tab: .home,
                         header: {
                             AuthorStoryCarousel(
                                 authors: $stories, 
                                 selectedStoryAuthor: $selectedStoryAuthor
                             )
-                            .id(user.id)
                         },
                         emptyPlaceholder: {
                             VStack {
@@ -108,7 +101,7 @@ struct HomeFeedView: View {
                         }
                     )
                     .padding(0)
-                    
+
                     StoriesView(
                         cutoffDate: $storiesCutoffDate,
                         authors: stories,
@@ -118,11 +111,15 @@ struct HomeFeedView: View {
                     .opacity(isShowingStories ? 1 : 0)
                     .animation(.default, value: selectedStoryAuthor)
                 }
-                .doubleTapToPop(tab: .home) { proxy in
+                .doubleTapToPop(tab: .home) { _ in
                     if isShowingStories {
                         selectedStoryAuthor = nil
                     } else {
-                        proxy.scrollTo(user.id)
+                        NotificationCenter.default.post(
+                            name: .scrollToTop,
+                            object: nil,
+                            userInfo: ["tab": AppDestination.home]
+                        )
                     }
                 }
             }

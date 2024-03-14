@@ -1,10 +1,3 @@
-//
-//  StaggeredGrid.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/8/23.
-//
-
 import SwiftUI
 
 // class StaggeredGridDataSource<E>: RandomAccessCollection {

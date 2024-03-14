@@ -1,11 +1,3 @@
-//
-//  LinearGradient+Planetary.swift
-//  Planetary
-//
-//  Created by Matthew Lorentz on 7/20/22.
-//  Copyright © 2022 Verse Communications Inc. All rights reserved.
-//
-
 import SwiftUI
 
 extension LinearGradient {
@@ -54,6 +46,12 @@ extension LinearGradient {
     
     public static let gold = LinearGradient(
         colors: [Color(hex: "#FFC46B"), Color(hex: "#DE7C21")],
+        startPoint: .top,
+        endPoint: .bottom
+    )
+
+    public static let nip05 = LinearGradient(
+        colors: [Color.nip05BgGradientTop, Color.nip05BgGradientBottom],
         startPoint: .top,
         endPoint: .bottom
     )

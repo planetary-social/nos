@@ -1,11 +1,3 @@
-//
-//  NoteCard.swift
-//  Planetary
-//
-//  Created by Martin Dutra on 25/10/22.
-//  Copyright © 2022 Verse Communications Inc. All rights reserved.
-//
-
 import SwiftUI
 import Logger
 import CoreData
@@ -188,6 +180,7 @@ struct NoteCard_Previews: PreviewProvider {
                     NoteCard(note: previewData.imageNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.expiringNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.verticalImageNote, hideOutOfNetwork: false)
+                    NoteCard(note: previewData.doubleImageNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.veryWideImageNote, hideOutOfNetwork: false)
                     NoteCard(note: previewData.imageNote, style: .golden, hideOutOfNetwork: false)
                     NoteCard(note: previewData.linkNote, hideOutOfNetwork: false)

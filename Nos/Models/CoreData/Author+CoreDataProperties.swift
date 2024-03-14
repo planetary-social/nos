@@ -1,11 +1,3 @@
-//
-//  Author+CoreDataProperties.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 6/8/23.
-//
-//
-
 import Foundation
 import CoreData
 
@@ -17,7 +9,7 @@ extension Author {
 
     @NSManaged public var about: String?
     @NSManaged public var displayName: String?
-    @NSManaged public var hexadecimalPublicKey: String?
+    @NSManaged public var hexadecimalPublicKey: RawAuthorID?
     @NSManaged public var lastUpdatedContactList: Date?
     @NSManaged public var lastUpdatedMetadata: Date?
     @NSManaged public var muted: Bool

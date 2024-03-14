@@ -6,10 +6,12 @@ on:
     # This is needed to allow skipping enforcement of the changelog in PRs with specific labels,
     # as defined in the (optional) "skipLabels" property.
     types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
+  merge_group:
+    types: [checks_requested]
   push:
     branches: main
 env:
-  SIMULATOR: platform=iOS Simulator,name=iPhone 14,OS=17.0.1
+  SIMULATOR: platform=iOS Simulator,name=iPhone 15,OS=17.2
     
 jobs:
   unit_test:

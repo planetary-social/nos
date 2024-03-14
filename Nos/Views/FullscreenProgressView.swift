@@ -1,10 +1,3 @@
-//
-//  FullscreenProgressView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 4/19/23.
-//
-
 import SwiftUI
 import SwiftUINavigation
 
@@ -21,7 +14,10 @@ struct FullscreenProgressView: View {
             ProgressView()
                 .foregroundColor(.primaryTxt)
             if let text {
-                Text(text).padding(10)
+                Text(text)
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 25)
+                    .foregroundColor(.primaryTxt)
             }
             Spacer()
         }
@@ -37,9 +33,17 @@ struct FullscreenProgressView: View {
     }
 }
 
-struct FullscreenProgressView_Previews: PreviewProvider {
-    static var previews: some View {
-        FullscreenProgressView(isPresented: .constant(true))
-        FullscreenProgressView(isPresented: .constant(true), text: "Lorem ipsum...")
-    }
+#Preview("No text") {
+    FullscreenProgressView(isPresented: .constant(true))
+}
+
+#Preview("Short text") {
+    FullscreenProgressView(isPresented: .constant(true), text: "Lorem ipsum...")
+}
+
+#Preview("Long text") {
+    FullscreenProgressView(
+        isPresented: .constant(true),
+        text: String(localized: .localizable.notFindingResults)
+    )
 }

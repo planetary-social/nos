@@ -1,11 +1,3 @@
-//
-//  StackedAvatarsView.swift
-//  Planetary
-//
-//  Created by Martin Dutra on 7/12/22.
-//  Copyright © 2022 Verse Communications Inc. All rights reserved.
-//
-
 import SwiftUI
 
 /// This view displays a stacked list of avatars as we use it in when displaying replies in a post, and a list of

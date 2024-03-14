@@ -1,10 +1,3 @@
-//
-//  Router.swift
-//  Nos
-//
-//  Created by Jason Cheatham on 2/21/23.
-//
-
 import SwiftUI
 import Combine
 import CoreData
@@ -52,6 +45,7 @@ import Dependencies
     }
 
     func pop() {
+        guard !currentPath.wrappedValue.isEmpty else { return }
         currentPath.wrappedValue.removeLast()
     }
 

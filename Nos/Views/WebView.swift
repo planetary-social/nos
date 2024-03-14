@@ -1,10 +1,3 @@
-//
-//  WebView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 5/2/23.
-//
-
 import SwiftUI
 import WebKit
 

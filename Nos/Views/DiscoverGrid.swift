@@ -1,10 +1,3 @@
-//
-//  DiscoverGrid.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/16/23.
-//
-
 import SwiftUI
 
 struct DiscoverGrid: View {
@@ -39,7 +32,8 @@ struct DiscoverGrid: View {
         VStack {
             GeometryReader { geometry in
                 Group {
-                    if searchController.query.isEmpty {
+                    switch searchController.state {
+                    case .noQuery:
                         StaggeredGrid(list: events, columns: columns, spacing: 15) { note in
                             NoteButton(note: note, style: .golden)
                                 .padding(.bottom, 5)
@@ -51,28 +45,31 @@ struct DiscoverGrid: View {
                                 proxy.scrollTo(firstNote.id)
                             }
                         }
-                    } else {
-                        // Search results
-                        if searchController.authorSuggestions.isEmpty {
-                            FullscreenProgressView(isPresented: .constant(true))
-                        } else {
-                            ScrollView {
-                                LazyVStack {
-                                    ForEach(searchController.authorSuggestions) { author in
-                                        AuthorCard(author: author) { 
-                                            router.push(author)
-                                        }
-                                        .padding(.horizontal, 15)
-                                        .padding(.top, 10)
-                                        .readabilityPadding()
+                    case .empty:
+                        EmptyView()
+                    case .loading, .stillLoading:
+                        FullscreenProgressView(
+                            isPresented: .constant(true),
+                            text: searchController.state == .stillLoading ?
+                            String(localized: .localizable.notFindingResults) : nil
+                        )
+                    case .results:
+                        ScrollView {
+                            LazyVStack {
+                                ForEach(searchController.authorResults) { author in
+                                    AuthorCard(author: author) {
+                                        router.push(author)
                                     }
+                                    .padding(.horizontal, 15)
+                                    .padding(.top, 10)
+                                    .readabilityPadding()
                                 }
-                                .padding(.top, 5)
                             }
-                            .doubleTapToPop(tab: .discover) { proxy in
-                                if let firstAuthor = searchController.authorSuggestions.first {
-                                    proxy.scrollTo(firstAuthor.id)
-                                }
+                            .padding(.top, 5)
+                        }
+                        .doubleTapToPop(tab: .discover) { proxy in
+                            if let firstAuthor = searchController.authorResults.first {
+                                proxy.scrollTo(firstAuthor.id)
                             }
                         }
                     }

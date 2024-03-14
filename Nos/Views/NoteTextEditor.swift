@@ -1,10 +1,3 @@
-//
-//  NoteTextEditor.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 5/16/23.
-//
-
 import SwiftUI
 
 /// A text editor for composing Nostr notes. Supports autocomplete of mentions.
@@ -13,8 +6,10 @@ struct NoteTextEditor: View {
     @Binding var text: EditableNoteText
     var placeholder: LocalizedStringResource
     var focus: FocusState<Bool>.Binding
-    
-    @State private var calculatedHeight: CGFloat = 44
+
+    /// The calculated height of this view.
+    @Binding var calculatedHeight: CGFloat
+
     @State private var guid = UUID()
     
     /// State containing the offset (index) of text when the user is mentioning someone
@@ -33,20 +28,22 @@ struct NoteTextEditor: View {
     }
     
     var body: some View {
-        ScrollView(.vertical) {
-            EditableText($text, guid: guid, calculatedHeight: $calculatedHeight)
-                .frame(height: calculatedHeight)
-                .placeholder(when: text.isEmpty, placeholder: {
-                    VStack {
-                        Text(placeholder)
-                            .foregroundColor(.secondaryTxt)
-                            .padding(.top, 10)
-                            .padding(.leading, 6)
-                        Spacer()
-                    }
-                })
-                .focused(focus)
-                .padding(.leading, 6)
+        GeometryReader { reader in
+            ScrollView(.vertical) {
+                EditableText($text, guid: guid, calculatedHeight: $calculatedHeight)
+                    .frame(height: max(reader.size.height, calculatedHeight))
+                    .placeholder(when: text.isEmpty, placeholder: {
+                        VStack {
+                            Text(placeholder)
+                                .foregroundColor(.secondaryTxt)
+                                .padding(.top, 10)
+                                .padding(.leading, 6)
+                            Spacer()
+                        }
+                    })
+                    .focused(focus)
+                    .padding(.leading, 6)
+            }
         }
         .frame(maxWidth: .infinity)
         .background { Color.appBg }
@@ -95,10 +92,16 @@ struct NoteTextEditor_Previews: PreviewProvider {
     @State static var text = EditableNoteText()
     static var placeholder: LocalizedStringResource = .localizable.newNotePlaceholder
     @FocusState static var isFocused: Bool
-    
+    @State static var calculatedHeight: CGFloat = 44
+
     static var previews: some View {
         VStack {
-            NoteTextEditor(text: $text, placeholder: placeholder, focus: $isFocused)
+            NoteTextEditor(
+                text: $text,
+                placeholder: placeholder, 
+                focus: $isFocused,
+                calculatedHeight: $calculatedHeight
+            )
             Spacer()
         }
     }

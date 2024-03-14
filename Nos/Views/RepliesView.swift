@@ -1,10 +1,3 @@
-//
-//  RepliesView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/14/23.
-//
-
 import Logger
 import SwiftUI
 import SwiftUINavigation
@@ -231,6 +224,7 @@ struct RepliesView: View {
                 signature: ""
             )
             try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
+            analytics.published(reply: jsonEvent)
         } catch {
             alert = AlertState(title: {
                 TextState(String(localized: .localizable.error))

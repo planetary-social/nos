@@ -1,10 +1,3 @@
-//
-//  Analytics.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/7/23.
-//
-
 import PostHog
 import Dependencies
 import Logger
@@ -35,7 +28,11 @@ class Analytics {
     func published(note: JSONEvent) {
         track("Published Note", properties: ["length": note.content.count])
     }
-    
+
+    func published(reply: JSONEvent) {
+        track("Published Reply", properties: ["length": reply.content.count])
+    }
+
     // MARK: - Screens
     
     func startedOnboarding() {
@@ -172,6 +169,16 @@ class Analytics {
         track("Rate Limited", properties: ["relay": socket.request.url?.absoluteString ?? "null"])
     }
     
+    func badRequest(from socket: WebSocket, message: String) {
+        track(
+            "Bad Request to Relay", 
+            properties: [
+                "relay": socket.request.url?.absoluteString ?? "null",
+                "details": message
+            ]
+        )
+    }
+    
     // MARK: - Notifications
     
     func receivedNotification() {
@@ -190,6 +197,20 @@ class Analytics {
         track("Push Notification Registration Failed", properties: ["reason": reason])
     }
     
+    // MARK: NIP-05 Usernames
+
+    func showedNIP05Wizard() {
+        track("Showed NIP-05 Wizard")
+    }
+
+    func registeredNIP05Username() {
+        track("Registered NIP-05 Username")
+    }
+
+    func deletedNIP05Username() {
+        track("Deleted NIP-05 Username")
+    }
+
     // MARK: UNS
     
     func showedUNSWizard() {

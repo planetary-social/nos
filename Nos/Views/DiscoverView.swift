@@ -1,16 +1,11 @@
-//
-//  DiscoverView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/24/23.
-//
-
 import SwiftUI
 import Combine
 import CoreData
 import Dependencies
 
 struct DiscoverView: View {
+    
+    // MARK: - Properties
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
@@ -34,21 +29,17 @@ struct DiscoverView: View {
     @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
 
     @State var predicate: NSPredicate = .false
-    
-    func updatePredicate() {
-        if let relayFilter {
-            predicate = Event.seen(on: relayFilter, before: date, exceptFrom: currentUser.author)
-        } else {
-            predicate = Event.extendedNetworkPredicate(
-                currentUser: currentUser, 
-                featuredAuthors: featuredAuthors, 
-                before: date
-            )
-        }
-    }
 
+    // MARK: - Init
+    
     init(featuredAuthors: [String] = Array(Event.discoverTabUserIdToInfo.keys)) {
         self.featuredAuthors = featuredAuthors
+    }
+
+    // MARK: - Internal
+    
+    func cancelSubscriptions() async {
+        relaySubscriptions.removeAll()
     }
     
     func subscribeToNewEvents() async {
@@ -77,9 +68,19 @@ struct DiscoverView: View {
         }
     }
     
-    func cancelSubscriptions() async {
-        relaySubscriptions.removeAll()
+    func updatePredicate() {
+        if let relayFilter {
+            predicate = Event.seen(on: relayFilter, before: date, exceptFrom: currentUser.author)
+        } else {
+            predicate = Event.extendedNetworkPredicate(
+                currentUser: currentUser,
+                featuredAuthors: featuredAuthors,
+                before: date
+            )
+        }
     }
+    
+    // MARK: - View
     
     var body: some View {
         NavigationStack(path: $router.discoverPath) {
@@ -109,7 +110,7 @@ struct DiscoverView: View {
             )
             .autocorrectionDisabled()
             .onSubmit(of: .search) {
-                submitSearch()
+                searchController.submitSearch(query: searchController.query)
             }
             .background(Color.appBg)
             .toolbar {
@@ -187,55 +188,6 @@ struct DiscoverView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
             .navigationBarItems(leading: SideMenuButton())
-        }
-    }
-    
-    func author(fromPublicKey publicKeyString: String) -> Author? {
-        let strippedString = publicKeyString.trimmingCharacters(
-            in: NSCharacterSet.whitespacesAndNewlines
-        )
-        guard let publicKey = PublicKey(npub: strippedString) ?? PublicKey(hex: strippedString) else {
-            return nil
-        }
-        guard let author = try? Author.findOrCreate(by: publicKey.hex, context: viewContext) else {
-            return nil
-        }
-        try? viewContext.saveIfNeeded()
-        return author
-    }
-
-    func note(fromPublicKey publicKeyString: String) -> Event? {
-        let strippedString = publicKeyString.trimmingCharacters(
-            in: NSCharacterSet.whitespacesAndNewlines
-        )
-        guard let publicKey = PublicKey(note: strippedString) else {
-            return nil
-        }
-        guard let note = try? Event.findOrCreateStubBy(id: publicKey.hex, context: viewContext) else {
-            return nil
-        }
-        try? viewContext.saveIfNeeded()
-        return note
-    }
-
-    func submitSearch() {
-        if searchController.query.contains("@") {
-            Task(priority: .userInitiated) {
-                if let publicKeyHex =
-                    await relayService.retrievePublicKeyFromUsername(searchController.query.lowercased()) {
-                    Task { @MainActor in
-                        if let author = author(fromPublicKey: publicKeyHex) {
-                            router.push(author)
-                        }
-                    }
-                }
-            }
-        } else {
-            if let author = author(fromPublicKey: searchController.query) {
-                router.push(author)
-            } else if let note = note(fromPublicKey: searchController.query) {
-                router.push(note)
-            }
         }
     }
 }

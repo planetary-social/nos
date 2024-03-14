@@ -1,10 +1,3 @@
-//
-//  UNSWizardController.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 10/12/23.
-//
-
 import Foundation
 import Dependencies
 
@@ -37,7 +30,7 @@ class UNSWizardController: ObservableObject {
     }
     
     @Published var state: FlowState
-    @Published var authorKey: HexadecimalString?
+    @Published var authorKey: RawAuthorID?
     @Published var textField: String 
     @Published var phoneNumber: String?
     @Published var nameRecord: UNSNameRecord?
@@ -52,7 +45,7 @@ class UNSWizardController: ObservableObject {
     
     internal init(
         state: UNSWizardController.FlowState = .intro, 
-        authorKey: HexadecimalString? = nil, 
+        authorKey: RawAuthorID? = nil, 
         textField: String = "", 
         phoneNumber: String? = nil, 
         nameRecord: UNSNameRecord? = nil, 

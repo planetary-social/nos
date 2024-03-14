@@ -1,10 +1,3 @@
-//
-//  NoteWarningController.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 10/26/23.
-//
-
 import Foundation
 import Dependencies
 import Combine

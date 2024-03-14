@@ -1,10 +1,3 @@
-//
-//  ProfileView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/16/23.
-//
-
 import SwiftUI
 import CoreData
 import Dependencies
@@ -42,7 +35,7 @@ struct ProfileView: View {
         self.author = author
         self.addDoubleTapToPop = addDoubleTapToPop
     }
-    
+
     func loadUSBCBalance() async {
         guard let unsName = author.uns, !unsName.isEmpty else {
             usbcAddress = nil
@@ -100,11 +93,11 @@ struct ProfileView: View {
                     databaseFilter: selectedTab.request(author: author),
                     relayFilter: profileNotesFilter,
                     context: viewContext,
+                    tab: .profile,
                     header: {
                         ProfileHeader(author: author, selectedTab: $selectedTab)
                             .compositingGroup()
                             .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
-                            .id(author.id)
                     },
                     emptyPlaceholder: {
                         VStack {
@@ -121,13 +114,16 @@ struct ProfileView: View {
                 .padding(0)
                 .id(selectedTab)
             }
-            .id(author.id)
-            .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { proxy in
-                proxy.scrollTo(author.id)
+            .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { _ in
+                NotificationCenter.default.post(
+                    name: .scrollToTop,
+                    object: nil,
+                    userInfo: ["tab": AppDestination.profile]
+                )
             }
         }
         .background(Color.appBg)
-        .nosNavigationBar(title: .localizable.profileTitle)
+        .nosNavigationBar(title: LocalizedStringResource(stringLiteral: author.safeIdentifier))
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
         }                  

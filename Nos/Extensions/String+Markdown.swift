@@ -1,59 +1,31 @@
-//
-//  String+Markdown.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/9/23.
-//
-
 import Foundation
 import Logger
 
 extension String {
-    /// Find all links in a given string and replaces them with markdown formatted links
-    func findAndReplaceUnformattedLinks(in string: String) throws -> String {
-        // swiftlint:disable line_length
-        let regex = "(?:^|\\s)(?<link>((http|https)?:\\/\\/.)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*))"
-        // swiftlint:enable line_length
-        let regularExpression = try NSRegularExpression(pattern: regex)
-        let wholeRange = NSRange(location: 0, length: string.utf16.count)
-        if let match = regularExpression.firstMatch(in: string, range: wholeRange) {
-            if let range = Range(match.range(withName: "link"), in: string) {
-                let linkDisplayName = "\(string[range])"
-                var link = linkDisplayName
-                if var url = URL(string: link) {
-                    if url.scheme == nil, let httpsURL = URL(string: ("https://\(link)")) {
-                        url = httpsURL
-                    }
-                    link = url.absoluteString
-                }
-                let replacement = "[\(linkDisplayName)](\(link))"
-                return try findAndReplaceUnformattedLinks(in: string.replacingCharacters(in: range, with: replacement))
-            }
-        }
-        return string
-    }
-    
     /// Creates a new string with all URLs and any preceding and trailing whitespace removed and removed duplicate
     /// newlines, and returns the new string and an array of all the URLs.
     func extractURLs() -> (String, [URL]) {
         var urls: [URL] = []
         let mutableString = NSMutableString(string: self)
-        let regexPattern = "(\\s*)(https?://[^\\s]*)"
-        
+        // The following pattern uses rules from the Domain Name System page on Wikipedia:
+        // https://en.wikipedia.org/wiki/Domain_Name_System#Domain_name_syntax,_internationalization
+        // swiftlint:disable:next line_length
+        let regexPattern = "(\\s*)((https?://)?([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&/=]*)"
+
         do {
-            let regex = try NSRegularExpression(pattern: regexPattern, options: [])
+            let regex = try NSRegularExpression(pattern: regexPattern)
             let range = NSRange(location: 0, length: mutableString.length)
             
-            let matches = regex.matches(in: self, options: [], range: range).reversed()
+            let matches = regex.matches(in: self, range: range).reversed()
             
             for match in matches {
                 if let range = Range(match.range(at: 2), in: self), let url = URL(string: String(self[range])) {
-                    urls.append(url)
+                    // maintain original order of links by inserting at index 0 (we're looping in reverse)
+                    urls.insert(url.addingSchemeIfNeeded(), at: 0)
                     let prettyURL = url.truncatedMarkdownLink
                     regex.replaceMatches(
                         in: mutableString, 
-                        options: [], 
-                        range: match.range, 
+                        range: match.range,
                         withTemplate: "$1\(prettyURL)"
                     )
                 }

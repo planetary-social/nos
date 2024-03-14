@@ -1,10 +1,3 @@
-//
-//  SQLiteStoreTestCase.swift
-//  NosTests
-//
-//  Created by Matthew Lorentz on 12/13/23.
-//
-
 import XCTest
 import CoreData
 import Dependencies
@@ -21,10 +14,10 @@ class SQLiteStoreTestCase: XCTestCase {
         persistenceController = PersistenceController(containerName: "NosTests", inMemory: true, erase: true)
     }
     
-    override func tearDown() {
-        persistenceController.tearDown()
+    override func tearDownWithError() throws {
+        try persistenceController.tearDown()
         persistenceController = nil
-        super.tearDown()
+        try super.tearDownWithError()
     }
 }
 

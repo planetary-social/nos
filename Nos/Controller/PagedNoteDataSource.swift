@@ -1,10 +1,3 @@
-//
-//  PagedNoteDataSource.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 11/27/23.
-//
-
 import SwiftUI
 import CoreData
 import Dependencies
@@ -111,7 +104,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             NoteButton(note: note, hideOutOfNetwork: false, displayRootMessage: true)
         }
         .margins(.horizontal, 0)
-        
+
         return cell
     }
     
@@ -130,19 +123,19 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         switch kind {
         case UICollectionView.elementKindSectionHeader:
             guard let header = collectionView.dequeueReusableSupplementaryView(
-                ofKind: kind, 
-                withReuseIdentifier: headerReuseID, 
+                ofKind: kind,
+                withReuseIdentifier: headerReuseID,
                 for: indexPath
             ) as? UICollectionViewCell else {
                 return UICollectionViewCell()
             }
-            
-            header.contentConfiguration = UIHostingConfiguration { 
+
+            header.contentConfiguration = UIHostingConfiguration {
                 self.header()
             }
             .margins(.horizontal, 0)
             .margins(.top, 0)
-        
+
             return header
             
         case UICollectionView.elementKindSectionFooter:

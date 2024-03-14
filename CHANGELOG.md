@@ -8,15 +8,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fix issue with uploading photos on Mac.
+- Re-design the confirmation dialog that appears when you delete your NIP-05.
+
+## [0.1.6] - 2024-03-07Z
+
+- Parse links and mentions in Profile's about (or bios)
+- Show “Post a reply” field at the proper height initially, and allow it to expand as more text is entered.
+- Tap the Like button on a note you’ve already liked to remove the Like.
+- Display NIP-05 identifier in the Profile screen title bar.
+- Added option to register nos.social usernames.
+- Fixed issue where search results sometimes don’t appear.
+- Disabled link to nip-05 server / url on author cards. 
+- Fixed issue where paste menu did not appear when tapping in the Post Note view.
+- Fixed intermittent crash when tapping Done after editing your profile.
+- Fixed URL detection of raw domain names, such as “nos.social” (without the “http” prefix).
+- Fixed the sort order of gallery media to match the order in the note.
+- While composing a note, a space is now automatically inserted after any mention of a user or note to ensure it’s formatted correctly.
+
+## [0.1.5] - 2024-02-14Z
+
+- Fixed an issue where tapping the Feed tab did not scroll to the top of the Feed.
+- Fixed an issue where tapping the Profile tab did not scroll to the top of the Profile.
+- Search now starts automatically after entering three characters instead of one.
+
+## [0.1.4] - 2024-01-31Z
+
+- Show a message when we’re not finding search results.
+- Fixed an issue where bad data in the contact list could break the home feed.
+- Fixed a bug where the margins of root notes appeared incorrectly on Mac and iPad.
+- Fixed a date localization issue.
 - Optimized loading of the Notifications tab
-- Updated suggested users for discovery tab.
+- Updated suggested users for discovery tab. 
 - Show the profile view when a search matches a valid User ID (npub).
 - Added tabs to Profiles to filter posts.
 - Fixed a bug that could cause the out of network warning to be shown on reposts in the stories view.
 - Fixed a bug that prevented notes that failed to be published to be re-published again.
 - Added pagination to the home feed.
 - Fixed a bug that prevented reposted notes from loading sometimes.
-- Fixed a bug that prevented profile photoes and names from being downloaded.
+- Fixed a bug that prevented profile photos and names from being downloaded.
 
 ## [0.1.2 (153)] - 2024-01-11Z
 

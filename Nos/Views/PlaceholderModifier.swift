@@ -1,11 +1,3 @@
-//
-//  PlaceholderModifier.swift
-//  Planetary
-//
-//  Created by Matthew Lorentz on 8/3/22.
-//  Copyright © 2022 Verse Communications Inc. All rights reserved.
-//
-
 import SwiftUI
 
 // https://stackoverflow.com/a/57715771/982195

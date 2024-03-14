@@ -1,10 +1,3 @@
-//
-//  DependencyInjection.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 4/18/23.
-//
-
 import Dependencies
 import Foundation
 
@@ -55,6 +48,11 @@ extension DependencyValues {
     var unsAPI: UNSAPI {
         get { self[UNSAPIKey.self] }
         set { self[UNSAPIKey.self] = newValue }
+    }
+
+    var namesAPI: NamesAPI {
+        get { self[NamesAPIKey.self] }
+        set { self[NamesAPIKey.self] = newValue }
     }
 }
 
@@ -110,4 +108,9 @@ fileprivate enum CrashReportingKey: DependencyKey {
 
 fileprivate enum UNSAPIKey: DependencyKey {
     static let liveValue = UNSAPI()!
+}
+
+fileprivate enum NamesAPIKey: DependencyKey {
+    static let liveValue = NamesAPI()!
+    static let previewValue = NamesAPI(host: "localhost")!
 }

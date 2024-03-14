@@ -1,10 +1,3 @@
-//
-//  JSONEvent.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/28/23.
-//
-
 import secp256k1
 import Foundation
 import Logger
@@ -48,7 +41,7 @@ struct JSONEvent: Codable, Hashable {
     }
     
     internal init(
-        pubKey: HexadecimalString, 
+        pubKey: RawAuthorID, 
         createdAt: Date = .now, 
         kind: EventKind, 
         tags: [[String]], 

@@ -1,10 +1,3 @@
-//
-//  LikeButton.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 4/21/23.
-//
-
 import Dependencies
 import Logger
 import SwiftUI
@@ -13,8 +6,13 @@ struct LikeButton: View {
     
     var note: Event
     @FetchRequest private var likes: FetchedResults<Event>
-    /// We use this to give instant feedback when the button is tapped, even though the action it performs is async.
-    @State private var tapped = false
+
+    /// Provides instant feedback when the button is tapped, even though the action it performs is async.
+    @State private var isLiked = false
+
+    /// Whether a "like" or "delete like" event is currently being published.
+    @State private var isPublishing = false
+
     @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
@@ -48,7 +46,7 @@ struct LikeButton: View {
     
     var buttonLabel: some View {
         HStack {
-            if currentUserLikesNote || tapped {
+            if currentUserLikesNote || isLiked {
                 Image.buttonLikeActive
             } else {
                 Image.buttonLikeDefault
@@ -65,17 +63,48 @@ struct LikeButton: View {
     
     var body: some View {
         Button {
-            tapped = true
             Task {
-                await action()
+                await buttonPressed()
             }
         } label: {
             buttonLabel
         }                             
-        .disabled(currentUserLikesNote || tapped)
+        .disabled(isPublishing)
     }
-    
-    private func action() async {
+
+    private func buttonPressed() async {
+        guard !isPublishing else { return }
+
+        if currentUserLikesNote {
+            isLiked = false
+            await deleteLike()
+        } else {
+            isLiked = true
+            await publishLike()
+        }
+    }
+
+    private func deleteLike() async {
+        isPublishing = true
+        defer { isPublishing = false }
+
+        likes
+            .filter {
+                $0.author?.hexadecimalPublicKey == currentUser.author?.hexadecimalPublicKey
+            }
+            .compactMap { $0.eventReferences.lastObject as? EventReference }
+            .filter { $0.eventId == note.identifier }
+            .compactMap { $0.referencingEvent?.identifier }
+            .forEach { likeIdentifier in
+                Task {
+                    await currentUser.publishDelete(for: [likeIdentifier])
+                }
+            }
+    }
+
+    private func publishLike() async {
+        isPublishing = true
+        defer { isPublishing = false }
 
         guard let keyPair = currentUser.keyPair else {
             return

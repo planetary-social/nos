@@ -1,10 +1,3 @@
-//
-//  NosForm.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 9/27/23.
-//
-
 import SwiftUI
 import SwiftUINavigation
 

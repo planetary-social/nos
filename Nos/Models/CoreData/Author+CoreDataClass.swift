@@ -1,11 +1,3 @@
-//
-//  Author+CoreDataClass.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 1/31/23.
-//
-//
-
 import Foundation
 import CoreData
 import Dependencies
@@ -24,6 +16,15 @@ enum AuthorError: Error {
         publicKey?.npub
     }
     
+    /// Human-friendly identifier suitable for being displayed in the UI
+    var safeIdentifier: String {
+        if let nip05 {
+            return nip05
+        } else {
+            return npubString?.prefix(10).appending("...") ?? hexadecimalPublicKey ?? "error"
+        }
+    }
+
     var safeName: String {
         if let displayName, !displayName.isEmpty {
             return displayName
@@ -43,7 +44,19 @@ enum AuthorError: Error {
         
         return PublicKey(hex: hex)
     }
-    
+
+    var hasNosNIP05: Bool {
+        nip05?.hasSuffix("@nos.social") == true
+    }
+
+    var nosNIP05Username: String {
+        let suffix = "@nos.social"
+        if let nip05, nip05.hasSuffix(suffix) {
+            return String(nip05.dropLast(suffix.count))
+        }
+        return ""
+    }
+
     var formattedNIP05: String? {
         guard let nip05 else {
             return nil
@@ -87,15 +100,17 @@ enum AuthorError: Error {
         return nil
     }
     
-    var followedKeys: [HexadecimalString] {
-        follows.compactMap({ $0.destination?.hexadecimalPublicKey }) 
+    var followedKeys: [RawAuthorID] {
+        follows
+            .compactMap({ $0.destination?.hexadecimalPublicKey }) 
+            .filter { $0.isValid }
     }
 
     var hasHumanFriendlyName: Bool {
         name?.isEmpty == false || displayName?.isEmpty == false
     }
     
-    class func request(by pubKey: HexadecimalString) -> NSFetchRequest<Author> {
+    class func request(by pubKey: RawAuthorID) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey = %@", pubKey)
         fetchRequest.fetchLimit = 1
@@ -103,7 +118,7 @@ enum AuthorError: Error {
         return fetchRequest
     }
     
-    class func find(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author? {
+    class func find(by pubKey: RawAuthorID, context: NSManagedObjectContext) throws -> Author? {
         let fetchRequest = request(by: pubKey)
         if let author = try context.fetch(fetchRequest).first {
             return author
@@ -122,7 +137,7 @@ enum AuthorError: Error {
     }
     
     @discardableResult
-    class func findOrCreate(by pubKey: HexadecimalString, context: NSManagedObjectContext) throws -> Author {
+    class func findOrCreate(by pubKey: RawAuthorID, context: NSManagedObjectContext) throws -> Author {
         if let author = try? Author.find(by: pubKey, context: context) {
             return author
         } else {

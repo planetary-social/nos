@@ -1,10 +1,3 @@
-//
-//  NSManagedObjectContext+Nos.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 4/11/23.
-//
-
 import Foundation
 import CoreData
 

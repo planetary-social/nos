@@ -1,10 +1,3 @@
-//
-//  UNSStepImage.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 9/28/23.
-//
-
 import SwiftUI
 
 struct UNSStepImage<Content: View>: View {

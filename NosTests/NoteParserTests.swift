@@ -1,27 +1,9 @@
-//
-//  NoteNoteParserTests.swift
-//  NosTests
-//
-//  Created by Martin Dutra on 17/4/23.
-//
-
 import CoreData
 import XCTest
 import Dependencies
 
-// swiftlint:disable type_body_length
+final class NoteNoteParserTests: CoreDataTestCase {
 
-final class NoteNoteParserTests: XCTestCase {
-
-    @Dependency(\.persistenceController) private var persistenceController
-    var context: NSManagedObjectContext?
-    var continuation: DependencyValues.Continuation?
-
-    override func setUp() async throws {
-        persistenceController.resetForTesting()
-        context = persistenceController.viewContext
-    }
-    
     /// Example taken from [NIP-27](https://github.com/nostr-protocol/nips/blob/master/27.md)
     func testMentionWithNPub() throws {
         let mention = "@mattn"
@@ -43,7 +25,7 @@ final class NoteNoteParserTests: XCTestCase {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let expectedContent = "hello @\(name)"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let author = try Author.findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
@@ -78,7 +60,7 @@ final class NoteNoteParserTests: XCTestCase {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let expectedContent = "@\(displayName)"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
@@ -94,7 +76,7 @@ final class NoteNoteParserTests: XCTestCase {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let expectedContent = "Hello\n@\(displayName)"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
@@ -109,7 +91,7 @@ final class NoteNoteParserTests: XCTestCase {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let expectedContent = "hello#[0]"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
@@ -123,7 +105,7 @@ final class NoteNoteParserTests: XCTestCase {
         let content = "hello nostr:npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let author = try Author.findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
@@ -140,7 +122,7 @@ final class NoteNoteParserTests: XCTestCase {
         let content = "hello nostr:npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
@@ -154,7 +136,7 @@ final class NoteNoteParserTests: XCTestCase {
         let content = "hello nostr:nprofile1qqszclxx9f5haga8sfjjrulaxncvkfekj097t6f3pu65f86rvg49ehqj6f9dh"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let author = try Author.findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
@@ -170,7 +152,7 @@ final class NoteNoteParserTests: XCTestCase {
         let content = "Hello nostr:npub1pu3vqm4vzqpxsnhuc684dp2qaq6z69sf65yte4p39spcucv5lzmqswtfch.\n\nBye"
         let hex = "0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let author = try Author.findOrCreate(by: hex, context: context)
         author.displayName = name
         try context.save()
@@ -188,7 +170,7 @@ final class NoteNoteParserTests: XCTestCase {
         let displayName2 = "npub180cvv..."
         let hex2 = "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d"
         let tags = [["p", hex1], ["p", hex2]]
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 2)
@@ -203,7 +185,7 @@ final class NoteNoteParserTests: XCTestCase {
         let npub = "npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags: [[String]] = [[]]
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
@@ -215,7 +197,7 @@ final class NoteNoteParserTests: XCTestCase {
         let content = "Check this note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
         let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [[]]
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
@@ -227,7 +209,7 @@ final class NoteNoteParserTests: XCTestCase {
         let content = "Check this nostr:note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
         let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [[]]
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
@@ -243,7 +225,7 @@ final class NoteNoteParserTests: XCTestCase {
         let profileHex = "0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6"
         let noteHex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [["p", profileHex]]
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 2)
@@ -261,7 +243,7 @@ final class NoteNoteParserTests: XCTestCase {
         let tags: [[String]] = [[]]
         
         let expectedContent = content
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
 
         let parsedContent = String(attributedContent.characters)
@@ -284,7 +266,7 @@ final class NoteNoteParserTests: XCTestCase {
         let tags: [[String]] = [[]]
 
         let expectedContent = "check this 🔗 Link to note"
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
 
         let parsedContent = String(attributedContent.characters)
@@ -307,7 +289,7 @@ final class NoteNoteParserTests: XCTestCase {
         let tags: [[String]] = [[]]
 
         let expectedContent = "check this 🔗 Link to note. Bye!"
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
 
         let parsedContent = String(attributedContent.characters)
@@ -328,7 +310,7 @@ final class NoteNoteParserTests: XCTestCase {
         let tags: [[String]] = [[]]
 
         let expectedContent = content
-        let context = try XCTUnwrap(context)
+        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
 
         let parsedContent = String(attributedContent.characters)
@@ -336,80 +318,6 @@ final class NoteNoteParserTests: XCTestCase {
 
         let links = attributedContent.links
         XCTAssertEqual(links.count, 0)
-    }
-    
-    func testExtractURLsFromNote() throws {
-        // swiftlint:disable line_length
-        let string = "Classifieds incoming... 👀\n\nhttps://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg"
-        let expectedString = "Classifieds incoming... 👀\n\n[nostr.build...](https://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg)"
-        // swiftlint:enable line_length
-        let expectedURLs = [
-            URL(string: "https://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg")!
-        ]
-
-        // Act
-        let (actualString, actualURLs) = string.extractURLs()
-        XCTAssertEqual(actualString, expectedString)
-        XCTAssertEqual(actualURLs, expectedURLs)
-    }
-    
-    func testExtractURLsFromImageNote() throws {
-        let string = "Hello, world!https://cdn.ymaws.com/footprints.jpg"
-        let expectedString = "Hello, world![cdn.ymaws.com...](https://cdn.ymaws.com/footprints.jpg)"
-        let expectedURLs = [
-            URL(string: "https://cdn.ymaws.com/footprints.jpg")!
-        ]
-
-        // Act
-        let (actualString, actualURLs) = string.extractURLs()
-        XCTAssertEqual(actualString, expectedString)
-        XCTAssertEqual(actualURLs, expectedURLs)
-    }
-    
-    func testExtractURLsFromImageNoteWithExtraNewlines() throws {
-        let string = "https://cdn.ymaws.com/footprints.jpg\n\nHello, world!"
-        let expectedString = "[cdn.ymaws.com...](https://cdn.ymaws.com/footprints.jpg)\n\nHello, world!"
-        let expectedURLs = [
-            URL(string: "https://cdn.ymaws.com/footprints.jpg")!
-        ]
-
-        // Act
-        let (actualString, actualURLs) = string.extractURLs()
-        XCTAssertEqual(actualString, expectedString)
-        XCTAssertEqual(actualURLs, expectedURLs)
-    }
-    
-    func testExtractURLsRetainsUpToTwoDuplicateNewlines() throws {
-        let string = "Hello!\n\nWorld!"
-        let expectedString = "Hello!\n\nWorld!"
-        let expectedURLs: [URL] = []
-
-        // Act
-        let (actualString, actualURLs) = string.extractURLs()
-        XCTAssertEqual(actualString, expectedString)
-        XCTAssertEqual(actualURLs, expectedURLs)
-    }
-    
-    func testExtractURLsReducesTooManyDuplicateNewlinesToTwo() throws {
-        let string = "Hello!\n\n\nWorld!"
-        let expectedString = "Hello!\n\nWorld!"
-        let expectedURLs: [URL] = []
-
-        // Act
-        let (actualString, actualURLs) = string.extractURLs()
-        XCTAssertEqual(actualString, expectedString)
-        XCTAssertEqual(actualURLs, expectedURLs)
-    }
-    
-    func testExtractURLsRemovesLeadingAndTrailingWhitespace() throws {
-        let string = "  \n\nHello world!\n\n  "
-        let expectedString = "Hello world!"
-        let expectedURLs: [URL] = []
-
-        // Act
-        let (actualString, actualURLs) = string.extractURLs()
-        XCTAssertEqual(actualString, expectedString)
-        XCTAssertEqual(actualURLs, expectedURLs)
     }
 }
 
@@ -423,5 +331,3 @@ fileprivate extension AttributedString {
         }
     }
 }
-
-// swiftlint:enable type_body_length

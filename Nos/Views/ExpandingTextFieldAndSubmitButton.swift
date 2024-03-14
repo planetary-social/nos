@@ -1,10 +1,3 @@
-//
-//  ExpandingTextFieldAndSubmitButton.swift
-//  Nos
-//
-//  Created by Jason Cheatham on 3/2/23.
-//
-
 import Foundation
 import SwiftUI
 
@@ -20,14 +13,21 @@ struct ExpandingTextFieldAndSubmitButton: View {
     @State private var showPostButton = false
     @State var disabled = false
 
-    @State private var calculatedHeight: CGFloat = 44
-    
+    /// The calculated height of the NoteTextEditor.
+    @State private var calculatedEditorHeight: CGFloat = 44
+
     var body: some View {
         HStack {
-            NoteTextEditor(text: $reply, placeholder: placeholder, focus: focus)
-                .frame(maxHeight: 270)
-                .background(Color.appBg)
-                .cornerRadius(17.5)
+            NoteTextEditor(
+                text: $reply,
+                placeholder: placeholder,
+                focus: focus,
+                calculatedHeight: $calculatedEditorHeight
+            )
+            .frame(minHeight: calculatedEditorHeight, maxHeight: 270)
+            .background(Color.appBg)
+            .cornerRadius(17.5)
+
             if showPostButton {
                 Button(
                     action: {

@@ -1,29 +1,38 @@
-//
-//  Font.swift
-//  Hockey
-//
-//  Created by @yspreen on 11/11/22.
-//
-
 import SwiftUI
 
 // https://stackoverflow.com/a/74416073
 extension Font {
-    static var clarity = Font
-        .custom("ClarityCity-Regular", size: UIFont.preferredFont(
-            forTextStyle: .body
-        ).pointSize)
-    
-    static var clarityMedium = Font
-        .custom("ClarityCity-Medium", size: UIFont.preferredFont(
-            forTextStyle: .body
-        ).pointSize)
-    
-    static var clarityBold = Font
-        .custom("ClarityCity-Bold", size: UIFont.preferredFont(
-            forTextStyle: .body
-        ).pointSize)
-    
+    static var clarity = clarityRegular(.body)
+
+    static func clarity(_ fontWeight: UIFont.Weight, textStyle: UIFont.TextStyle = .body) -> Font {
+        switch fontWeight {
+        case .regular:
+            clarityRegular(textStyle)
+        case .medium:
+            clarityMedium(textStyle)
+        case .bold:
+            clarityBold(textStyle)
+        default:
+            clarity
+        }
+    }
+
+    static func clarityRegular(_ textStyle: UIFont.TextStyle) -> Font {
+        .custom("ClarityCity-Regular", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+    }
+
+    static var clarityMedium = clarityMedium(.body)
+
+    static func clarityMedium(_ textStyle: UIFont.TextStyle) -> Font {
+        .custom("ClarityCity-Medium", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+    }
+
+    static var clarityBold = clarityBold(.body)
+
+    static func clarityBold(_ textStyle: UIFont.TextStyle) -> Font {
+        .custom("ClarityCity-Bold", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+    }
+
     static var clarityTitle = Font
         .custom("ClarityCity-Bold", size: UIFont.preferredFont(
             forTextStyle: .title1
@@ -40,8 +49,8 @@ extension Font {
         ).pointSize)
     
     static var clarityHeadline = Font
-        .custom("ClarityCity-Bold", size: UIFont.preferredFont(forTextStyle: .headline).pointSize)
-    
+        .custom("ClarityCity-SemiBold", size: UIFont.preferredFont(forTextStyle: .headline).pointSize)
+
     static var clarityCaption = Font
         .custom("ClarityCity-Regular", size: UIFont.preferredFont(
             forTextStyle: .caption1
@@ -57,11 +66,13 @@ extension Font {
             forTextStyle: .callout
         ).pointSize)
 
-    static var claritySubheadline = Font
-        .custom("ClarityCity-Medium", size: UIFont.preferredFont(
+    static var claritySubheadline = clarity(.medium, textStyle: .subheadline)
+
+    static var claritySemiBoldSubheadline = Font
+        .custom("ClarityCity-SemiBold", size: UIFont.preferredFont(
             forTextStyle: .subheadline
         ).pointSize)
-    
+
     static var clarityFootnote = Font
         .custom("ClarityCity-Regular", size: UIFont.preferredFont(
             forTextStyle: .footnote

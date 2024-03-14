@@ -1,10 +1,3 @@
-//
-//  NewNoteView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/6/23.
-//
-
 import CoreData
 import Dependencies
 import Logger
@@ -21,13 +14,19 @@ struct NewNoteView: View {
 
     /// State holding the text the user is typing
     @State private var text = EditableNoteText()
-    
+
+    /// The calculated height of the NoteTextEditor.
+    @State private var calculatedEditorHeight: CGFloat = 44
+
     @State var expirationTime: TimeInterval?
     
     @State private var alert: AlertState<Never>?
     
     @State private var showRelayPicker = false
     @State private var selectedRelay: Relay?
+
+    /// Whether we're currently uploading an image or not.
+    @State private var isUploadingImage = false
 
     var initialContents: String?
     @Binding var isPresented: Bool
@@ -42,17 +41,30 @@ struct NewNoteView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                VStack {
-                    NoteTextEditor(
-                        text: $text, 
-                        placeholder: .localizable.newNotePlaceholder,
-                        focus: $isTextEditorInFocus
-                    )
-                    .padding(10)
-                    Spacer()
-                    ComposerActionBar(expirationTime: $expirationTime, text: $text)
+                ZStack {
+                    VStack {
+                        NoteTextEditor(
+                            text: $text,
+                            placeholder: .localizable.newNotePlaceholder,
+                            focus: $isTextEditorInFocus,
+                            calculatedHeight: $calculatedEditorHeight
+                        )
+                        .padding(10)
+                        Spacer()
+                        ComposerActionBar(
+                            expirationTime: $expirationTime,
+                            isUploadingImage: $isUploadingImage,
+                            text: $text
+                        )
+                    }
+                    if isUploadingImage {
+                        FullscreenProgressView(
+                            isPresented: .constant(true),
+                            text: String(localized: .imagePicker.uploading)
+                        )
+                    }
                 }
-                
+
                 if showRelayPicker, let author = currentUser.author {
                     RelayPicker(
                         selectedRelay: $selectedRelay,

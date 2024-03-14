@@ -1,10 +1,3 @@
-//
-//  Bech32Tests.swift
-//  NosTests
-//
-//  Created by Martin Dutra on 26/4/23.
-//
-
 import Foundation
 import XCTest
 

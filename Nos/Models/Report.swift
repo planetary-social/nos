@@ -1,10 +1,3 @@
-//
-//  Report.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 5/24/23.
-//
-
 import Foundation
 
 /// Represents a report of inappropriate content by the user.

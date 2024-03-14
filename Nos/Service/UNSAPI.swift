@@ -1,10 +1,3 @@
-//
-//  UNSAPI.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/20/23.
-//
-
 import secp256k1
 import Foundation
 import Logger
@@ -16,7 +9,7 @@ typealias UNSNameID = String
 struct UNSNameRecord: Identifiable, Equatable {
     var name: UNSName
     var id: UNSNameID
-    var nostrPubKey: HexadecimalString?
+    var nostrPubKey: RawAuthorID?
 }
 
 enum UNSError: Error {
@@ -384,7 +377,7 @@ class UNSAPI {
         }
     }
     
-    func names(matching query: String) async throws -> [HexadecimalString] {
+    func names(matching query: String) async throws -> [RawAuthorID] {
         if let nameRecord = try await nameRecord(for: query) {
             let nostrPubKeys = try await nostrKeys(for: nameRecord)
             return nostrPubKeys
@@ -393,7 +386,7 @@ class UNSAPI {
         }
     }
     
-    private func nostrKeys(for nameRecord: UNSNameRecord) async throws -> [HexadecimalString] {
+    private func nostrKeys(for nameRecord: UNSNameRecord) async throws -> [RawAuthorID] {
         let accessToken = try await checkAccessToken()
         var url = connectionURL.appending(path: "/v1/resolver")
         url = url.appending(queryItems: [
@@ -417,7 +410,7 @@ class UNSAPI {
             throw UNSError.badResponse
         }
         
-        var nostrPubKeys = [HexadecimalString]()
+        var nostrPubKeys = [RawAuthorID]()
         for connection in dataArray {
             if let npub = connection["display_value"] as? String,
                 let pubKey = PublicKey(npub: npub) {

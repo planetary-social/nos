@@ -1,11 +1,3 @@
-//
-//  Date+Elapsed.swift
-//  FBTT
-//
-//  Created by Christoph on 8/6/19.
-//  Copyright © 2019 Verse Communications Inc. All rights reserved.
-//
-
 import Foundation
 
 extension Date {
@@ -51,7 +43,11 @@ extension Date {
         if let week = components.weekOfMonth, week >= 1 {
             let dateFormatter = DateFormatter()
             dateFormatter.timeStyle = .none
-            dateFormatter.setLocalizedDateFormatFromTemplate("MMMMd")
+            dateFormatter.dateFormat = DateFormatter.dateFormat(
+                fromTemplate: "MMMMd",
+                options: 0,
+                locale: calendar.locale
+            )
             dateFormatter.calendar = calendar
             dateFormatter.locale = calendar.locale
             dateFormatter.timeZone = calendar.timeZone

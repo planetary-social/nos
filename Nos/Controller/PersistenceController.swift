@@ -1,10 +1,3 @@
-//
-//  Persistence.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 1/31/23.
-//
-
 import CoreData
 import Logger
 import Dependencies
@@ -56,10 +49,22 @@ class PersistenceController {
         setUp(erasingPrevious: erase)
     }
     
-    func tearDown() {
+    func tearDown() throws {
         for store in container.persistentStoreCoordinator.persistentStores {
-            try? container.persistentStoreCoordinator.remove(store)
+            try container.persistentStoreCoordinator.remove(store)
         }
+        
+        try container.persistentStoreDescriptions.forEach { storeDescription in
+            try container.persistentStoreCoordinator.destroyPersistentStore(
+                at: storeDescription.url!, 
+                ofType: NSSQLiteStoreType, 
+                options: nil
+            )
+        }
+        
+        viewContext.reset()
+        backgroundViewContext.reset()
+        parseContext.reset() 
     }
     
     func setUp(erasingPrevious: Bool) {

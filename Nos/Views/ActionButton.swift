@@ -1,11 +1,3 @@
-//
-//  BigGradientButton.swift
-//  Planetary-scuttle
-//
-//  Created by Matthew Lorentz on 1/17/23.
-//  Copyright © 2023 Verse Communications Inc. All rights reserved.
-//
-
 import SwiftUI
 
 /// A big bright button that is used as the primary call-to-action on a screen.

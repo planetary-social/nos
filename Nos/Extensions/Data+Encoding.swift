@@ -1,13 +1,4 @@
-//
-//  Data+Encoding.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/3/23.
-//
-
 import Foundation
-
-typealias HexadecimalString = String
 
 enum DataError: Error {
     case generic

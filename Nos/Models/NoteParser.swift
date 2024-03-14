@@ -1,10 +1,3 @@
-//
-//  NoteParser.swift
-//  Nos
-//
-//  Created by Martin Dutra on 17/4/23.
-//
-
 import CoreData
 import Foundation
 import RegexBuilder
@@ -33,7 +26,7 @@ enum NoteParser {
         }
     }
 
-    /// Parses the content and tags stored in a note and returns an attributed text and list of URLs that can be used 
+    /// Parses the content and tags stored in a note and returns an attributed string and list of URLs that can be used 
     /// to display the note in the UI.
     static func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> (AttributedString, [URL]) {
         var result = replaceTaggedNostrEntities(in: content, tags: tags, context: context)
