@@ -1,10 +1,3 @@
-//
-//  CreateUsernameWizard.swift
-//  Nos
-//
-//  Created by Martin Dutra on 31/1/24.
-//
-
 import Dependencies
 import SwiftUI
 

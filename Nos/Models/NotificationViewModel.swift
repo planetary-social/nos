@@ -1,10 +1,3 @@
-//
-//  NotificationViewModel.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 7/5/23.
-//
-
 import Foundation
 import CoreData
 import UIKit

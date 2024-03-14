@@ -1,10 +1,3 @@
-//
-//  String+Markdown.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/9/23.
-//
-
 import Foundation
 import Logger
 

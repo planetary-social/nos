@@ -1,10 +1,3 @@
-//
-//  SQLiteStoreTestCase.swift
-//  NosTests
-//
-//  Created by Matthew Lorentz on 12/13/23.
-//
-
 import XCTest
 import CoreData
 import Dependencies

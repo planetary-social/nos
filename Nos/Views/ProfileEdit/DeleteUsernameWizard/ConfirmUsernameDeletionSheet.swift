@@ -1,10 +1,3 @@
-//
-//  ConfirmUsernameDeletionSheet.swift
-//  Nos
-//
-//  Created by Martin Dutra on 5/3/24.
-//
-
 import Dependencies
 import SwiftUI
 

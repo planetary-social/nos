@@ -1,10 +1,3 @@
-//
-//  EventTests.swift
-//  NosTests
-//
-//  Created by Matthew Lorentz on 1/31/23.
-//
-
 import XCTest
 import CoreData
 import secp256k1

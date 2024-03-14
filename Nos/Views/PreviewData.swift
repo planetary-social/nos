@@ -1,10 +1,3 @@
-//
-//  PreviewData.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 5/9/23.
-//
-
 import SwiftUI
 import Foundation
 import Dependencies

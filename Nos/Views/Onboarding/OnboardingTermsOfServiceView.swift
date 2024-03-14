@@ -1,10 +1,3 @@
-//
-//  OnboardingTermsOfServiceView.swift
-//  Nos
-//
-//  Created by Shane Bielefeld on 3/16/23.
-//
-
 import Dependencies
 import SwiftUI
 

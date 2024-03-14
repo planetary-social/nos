@@ -1,10 +1,3 @@
-//
-//  ReportCategory.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 7/27/23.
-//
-
 import Foundation
 
 /// A model for potential reasons why something might be reported.

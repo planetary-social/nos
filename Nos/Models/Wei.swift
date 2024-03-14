@@ -1,10 +1,3 @@
-//
-//  Wei.swift
-//  DAppExample
-//
-//  Created by Marcel Salej on 02/10/2023.
-//
-
 import Foundation
 
 /// Wei is the smallest unit of Ethereum, like a satoshi in Bitcoin.

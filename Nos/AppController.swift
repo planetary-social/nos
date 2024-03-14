@@ -1,10 +1,3 @@
-//
-//  AppController.swift
-//  Nos
-//
-//  Created by Shane Bielefeld on 2/15/23.
-//
-
 import Foundation
 import Dependencies
 import SwiftUI

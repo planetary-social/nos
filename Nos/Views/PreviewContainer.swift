@@ -1,10 +1,3 @@
-//
-//  PreviewContainer.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 5/24/23.
-//
-
 import SwiftUI
 
 /// Allows you to use @State in SwiftUI Previews (see example in preview below)

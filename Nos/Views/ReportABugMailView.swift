@@ -1,9 +1,3 @@
-//
-//  ReportABugMailView.swift
-//  Nos
-//
-//  Created by Jason Cheatham on 3/8/23.
-//
 import MessageUI
 import SwiftUI
 import Logger

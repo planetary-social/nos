@@ -1,10 +1,3 @@
-//
-//  AuthorCard.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 6/5/23.
-//
-
 import SwiftUI
 
 /// This view displays the information we have for an author suitable for being used in a list.

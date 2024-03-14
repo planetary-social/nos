@@ -1,10 +1,3 @@
-//
-//  URLExtensionTests.swift
-//  NosTests
-//
-//  Created by Matthew Lorentz on 11/10/23.
-//
-
 import XCTest
 
 final class URLExtensionTests: XCTestCase {

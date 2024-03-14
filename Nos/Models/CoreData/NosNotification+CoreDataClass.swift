@@ -1,11 +1,3 @@
-//
-//  NosNotification+CoreDataClass.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 6/30/23.
-//
-//
-
 import Foundation
 import CoreData
 

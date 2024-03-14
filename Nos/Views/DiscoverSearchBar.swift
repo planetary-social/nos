@@ -1,10 +1,3 @@
-//
-//  SearchBar.swift
-//  Nos
-//
-//  Created by Jason Cheatham on 3/7/23.
-//
-
 import Foundation
 import SwiftUI
 struct DiscoverSearchBar: View {

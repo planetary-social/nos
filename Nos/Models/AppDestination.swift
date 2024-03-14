@@ -1,10 +1,3 @@
-//
-//  AppDestination.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 10/18/23.
-//
-
 import Foundation
 import SwiftUI
 

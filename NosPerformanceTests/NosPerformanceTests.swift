@@ -1,10 +1,3 @@
-//
-//  NosPerformanceTests.swift
-//  NosPerformanceTests
-//
-//  Created by Matthew Lorentz on 4/14/23.
-//
-
 import XCTest
 import SDWebImageSwiftUI
 

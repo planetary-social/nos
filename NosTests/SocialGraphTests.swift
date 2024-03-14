@@ -1,10 +1,3 @@
-//
-//  SocialGraphTests.swift
-//  NosTests
-//
-//  Created by Matthew Lorentz on 4/18/23.
-//
-
 import XCTest
 import CoreData
 import Dependencies

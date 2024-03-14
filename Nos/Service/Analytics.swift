@@ -1,10 +1,3 @@
-//
-//  Analytics.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/7/23.
-//
-
 import PostHog
 import Dependencies
 import Logger
