@@ -67,7 +67,7 @@ struct UNSWizard: View {
 
 #Preview {
     
-    @State var controller = UNSWizardController(authorKey: KeyFixture.pubKeyHex)
+    @State var controller = UNSWizardController()
     @State var isPresented = true
     @State var previewData = PreviewData()
     

@@ -62,7 +62,6 @@ struct UNSWizardChooseNameView: View {
     var previewData = PreviewData()
     @State var controller = UNSWizardController(
         state: .chooseName, 
-        authorKey: previewData.alice.hexadecimalPublicKey!,
         names: [
             UNSNameRecord(name: "Fred", id: "1"),
             UNSNameRecord(name: "Sally", id: "2"),

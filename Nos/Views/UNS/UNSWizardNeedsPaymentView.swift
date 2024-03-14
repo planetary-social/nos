@@ -79,7 +79,6 @@ struct UNSWizardNeedsPaymentView: View {
     var previewData = PreviewData()
     @State var controller = UNSWizardController(
         state: .needsPayment(URL(string: "https://www.universalname.space/name/frankie")!), 
-        authorKey: previewData.alice.hexadecimalPublicKey!,
         nameRecord: UNSNameRecord(name: "frankie", id: "1")
     )
     

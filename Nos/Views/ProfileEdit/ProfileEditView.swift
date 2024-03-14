@@ -26,7 +26,6 @@ struct ProfileEditView: View {
 
     init(author: Author) {
         self.author = author
-        self.unsController.authorKey = author.hexadecimalPublicKey
     }
     
     var body: some View {
@@ -119,7 +118,7 @@ struct ProfileEditView: View {
         .onChange(of: showUniversalNameWizard) { _, newValue in
             if !newValue {
                 unsText = currentUser.author?.uns ?? ""
-                unsController = UNSWizardController(authorKey: author.hexadecimalPublicKey)
+                unsController = UNSWizardController()
                 author.willChangeValue(for: \Author.uns) // Trigger ProfileView to load USBC balance
             }
         }

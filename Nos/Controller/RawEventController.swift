@@ -53,11 +53,6 @@ import Logger
         self.loadingMessage = nil
     }
 
-    private func updateErrorMessage(_ errorMessage: String) {
-        self.errorMessage = errorMessage
-        self.loadingMessage = nil
-    }
-
     private func loadRawMessage() {
         loadingMessage = String(localized: .localizable.loading)
         Task { [note, weak self] in
