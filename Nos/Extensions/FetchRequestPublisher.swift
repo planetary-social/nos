@@ -23,10 +23,6 @@ final class FetchedResultsControllerPublisher<FetchType> where FetchType: NSFetc
         )
     }
     
-    lazy var publisherWithErrors: AnyPublisher<[FetchType], Error> = {
-        self.internalFRCP.publisher.eraseToAnyPublisher()
-    }()
-    
     lazy var publisher: AnyPublisher<[FetchType], Never> = {
         self.internalFRCP.publisher.replaceError(with: []).eraseToAnyPublisher()
     }()

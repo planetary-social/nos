@@ -18,12 +18,4 @@ extension String {
 
         return Image("")
     }
-
-    func deleting0x() -> String {
-        var string = self
-        if starts(with: "0x") {
-            string.removeFirst(2)
-        }
-        return string
-    }
 }
