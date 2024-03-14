@@ -21,6 +21,7 @@ struct NosNavigationBarModifier: ViewModifier {
                         .foregroundColor(.primaryTxt)
                         .padding(.leading, 14)
                         .tint(.primaryTxt)
+                        .allowsHitTesting(false)
                 }
             }
             .toolbarBackground(.visible, for: .navigationBar)

@@ -130,7 +130,7 @@ struct ProfileView: View {
             }
         }
         .background(Color.appBg)
-        .nosNavigationBar(title: LocalizedStringResource(stringLiteral: author.markdownIdentifier))
+        .nosNavigationBar(title: LocalizedStringResource(stringLiteral: author.humanFriendlyIdentifier))
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
         }                  
