@@ -9,7 +9,7 @@ import Dependencies
 import Logger
 import SwiftUI
 
-struct ExcellentChoiceSheet: ProfileEditSheet {
+struct ExcellentChoiceSheet: View {
 
     var username: String
     @Binding var isPresented: Bool
@@ -62,7 +62,7 @@ struct ExcellentChoiceSheet: ProfileEditSheet {
     }
 
     var body: some View {
-        SheetVStack {
+        WizardSheetVStack {
             Spacer(minLength: 40)
             switch claimState {
             case .idle, .claiming:
@@ -75,15 +75,11 @@ struct ExcellentChoiceSheet: ProfileEditSheet {
                     .font(.clarity(.regular, textStyle: .callout))
                     .foregroundStyle(Color.primaryTxt)
             case .claimed:
-                TitleText(.localizable.excellentChoice)
+                WizardSheetTitleText(.localizable.excellentChoice)
                 SwiftUI.Text(attributedUsername)
                     .font(.clarity(.bold, textStyle: .title3))
                     .foregroundStyle(Color.secondaryTxt)
-                DescriptionText(
-                    AttributedString(
-                        localized: .localizable.usernameClaimedNotice
-                    )
-                )
+                WizardSheetDescriptionText(markdown: .localizable.usernameClaimedNotice)
 
                 Spacer(minLength: 0)
 
@@ -94,7 +90,6 @@ struct ExcellentChoiceSheet: ProfileEditSheet {
             }
             Spacer(minLength: 40)
         }
-        .frame(maxWidth: .infinity)
         .alert(isPresented: showAlert, error: claimState.error) {
             Button {
                 isPresented = false

@@ -7,34 +7,21 @@
 
 import SwiftUI
 
-struct ClaimYourUniqueIdentitySheet: ProfileEditSheet {
+struct ClaimYourUniqueIdentitySheet: View {
 
     @Binding var isPresented: Bool
 
     var body: some View {
-        SheetVStack {
+        WizardSheetVStack {
             Spacer(minLength: 40)
-            PlainText(String(localized: LocalizedStringResource.localizable.new).uppercased())
-                .padding(.horizontal, 6)
-                .padding(.vertical, 5)
-                .font(.clarity(.bold, textStyle: .footnote))
-                .foregroundStyle(Color.white)
-                .background {
-                    Color.secondaryTxt
-                        .cornerRadius(4, corners: .allCorners)
-                }
-            TitleText(.localizable.claimUniqueUsernameTitle)
-            DescriptionText(
-                AttributedString(localized: .localizable.claimUniqueUsernameDescription)
-            )
-
+            WizardSheetBadgeText(.localizable.new)
+            WizardSheetTitleText(.localizable.claimUniqueUsernameTitle)
+            WizardSheetDescriptionText(markdown: .localizable.claimUniqueUsernameDescription)
             Spacer(minLength: 0)
-
             NavigationLink(String(localized: LocalizedStringResource.localizable.setUpMyUsername)) {
                 PickYourUsernameSheet(isPresented: $isPresented)
             }
             .buttonStyle(BigActionButtonStyle())
-
             Spacer(minLength: 40)
         }
     }

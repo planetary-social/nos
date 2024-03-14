@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DeleteUsernameWizard: ProfileEditWizard {
+struct DeleteUsernameWizard: View {
 
     var author: Author
     @Binding var isPresented: Bool

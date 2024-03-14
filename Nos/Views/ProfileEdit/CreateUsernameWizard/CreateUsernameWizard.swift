@@ -8,7 +8,7 @@
 import Dependencies
 import SwiftUI
 
-struct CreateUsernameWizard: ProfileEditWizard {
+struct CreateUsernameWizard: View {
 
     @Binding var isPresented: Bool
 

@@ -8,7 +8,7 @@
 import Dependencies
 import SwiftUI
 
-struct ConfirmUsernameDeletionSheet: ProfileEditSheet {
+struct ConfirmUsernameDeletionSheet: View {
 
     var author: Author
     @Binding var isPresented: Bool
@@ -37,10 +37,10 @@ struct ConfirmUsernameDeletionSheet: ProfileEditSheet {
     }
 
     var body: some View {
-        SheetVStack {
+        WizardSheetVStack {
             Spacer(minLength: 40)
-            TitleText(.localizable.deleteUsernameConfirmation)
-            DescriptionText(AttributedString(localized: .localizable.deleteUsernameDescription))
+            WizardSheetTitleText(.localizable.deleteUsernameConfirmation)
+            WizardSheetDescriptionText(markdown: .localizable.deleteUsernameDescription)
 
             Spacer(minLength: 0)
 
