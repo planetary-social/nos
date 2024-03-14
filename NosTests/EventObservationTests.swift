@@ -1,10 +1,3 @@
-//
-//  EventObservationTests.swift
-//  NosTests
-//
-//  Created by Matthew Lorentz on 12/8/23.
-//
-
 import XCTest
 import Dependencies
 import SwiftUI

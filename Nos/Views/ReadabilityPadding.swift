@@ -1,10 +1,3 @@
-//
-//  ReadabilityPadding.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 4/20/23.
-//
-
 import Foundation
 import SwiftUI
 

@@ -1,10 +1,3 @@
-//
-//  Font.swift
-//  Hockey
-//
-//  Created by @yspreen on 11/11/22.
-//
-
 import SwiftUI
 
 // https://stackoverflow.com/a/74416073

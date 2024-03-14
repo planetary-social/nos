@@ -1,10 +1,3 @@
-//
-//  HomeTab.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/23/23.
-//
-
 import SwiftUI
 import Dependencies
 

@@ -1,10 +1,3 @@
-//
-//  NSManagedObject+Nos.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/9/23.
-//
-
 import CoreData
 import Logger
 

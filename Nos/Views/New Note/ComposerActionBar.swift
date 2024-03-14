@@ -1,10 +1,3 @@
-//
-//  ComposerActionBar.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 5/3/23.
-//
-
 import Foundation
 import SwiftUI
 import SwiftUINavigation
@@ -12,8 +5,15 @@ import SwiftUINavigation
 /// A horizontal bar that gives the user options to customize their message in the message composer.
 struct ComposerActionBar: View {
     
+    /// The expiration time for the note, if any.
     @Binding var expirationTime: TimeInterval?
+
+    /// Whether we're currently uploading an image or not.
+    @Binding var isUploadingImage: Bool
+
+    /// The text in the note.
     @Binding var text: EditableNoteText
+
     @State var fileStorageAPI: FileStorageAPI = NostrBuildFileStorageAPI()
     
     enum SubMenu {
@@ -21,7 +21,6 @@ struct ComposerActionBar: View {
     }
     
     @State private var subMenu: SubMenu?
-    @State private var uploadingImage = false
     @State private var alert: AlertState<AlertAction>?
     
     fileprivate enum AlertAction {
@@ -108,12 +107,6 @@ struct ComposerActionBar: View {
             }
             Spacer()
         }
-        .sheet(isPresented: $uploadingImage) {
-            FullscreenProgressView(
-                isPresented: .constant(true), 
-                text: String(localized: .imagePicker.uploading)
-            )
-        }
         .animation(.easeInOut(duration: 0.2), value: subMenu)
         .transition(.move(edge: .leading))
         .onChange(of: expirationTime) { _, _ in
@@ -137,11 +130,11 @@ struct ComposerActionBar: View {
     }
     
     private func startUploadingImage() {
-        self.uploadingImage = true
+        self.isUploadingImage = true
     }
     
     private func endUploadingImage() {
-        self.uploadingImage = false
+        self.isUploadingImage = false
         self.subMenu = .none
     }
 }
@@ -155,9 +148,9 @@ struct ComposerActionBar_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             Spacer()
-            ComposerActionBar(expirationTime: $emptyExpirationTime, text: $postText)
+            ComposerActionBar(expirationTime: $emptyExpirationTime, isUploadingImage: .constant(false), text: $postText)
             Spacer()
-            ComposerActionBar(expirationTime: $setExpirationTime, text: $postText)
+            ComposerActionBar(expirationTime: $setExpirationTime, isUploadingImage: .constant(false), text: $postText)
             Spacer()
         }
         .frame(maxWidth: .infinity)

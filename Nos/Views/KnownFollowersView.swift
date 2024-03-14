@@ -1,10 +1,3 @@
-//
-//  KnownFollowersView.swift
-//  Nos
-//
-//  Created by Rabble on 10/10/23.
-//
-
 import Foundation
 import SwiftUI
 

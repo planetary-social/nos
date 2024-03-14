@@ -1,10 +1,3 @@
-//
-//  RawNostrID.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 1/24/24.
-//
-
 import Foundation
 
 // swiftlint:disable line_length

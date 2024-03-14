@@ -1,10 +1,3 @@
-//
-//  String+MarkdownTests.swift
-//  NosTests
-//
-//  Created by Josh on 2/12/24.
-//
-
 import XCTest
 
 class String_MarkdownTests: XCTestCase {

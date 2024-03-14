@@ -1,10 +1,3 @@
-//
-//  NotificationsView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/2/23.
-//
-
 import SwiftUI
 import Combine
 import CoreData

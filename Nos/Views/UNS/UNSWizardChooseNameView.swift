@@ -1,10 +1,3 @@
-//
-//  UNSWizardChooseNameView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 9/29/23.
-//
-
 import SwiftUI
 import Dependencies
 import Logger

@@ -1,10 +1,3 @@
-//
-//  CoreDataTestCase.swift
-//  NosTests
-//
-//  Created by Matthew Lorentz on 1/24/24.
-//
-
 import XCTest
 import CoreData
 import Foundation

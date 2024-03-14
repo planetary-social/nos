@@ -30,6 +30,7 @@ opt_in_rules: # some rules are turned off by default, so you need to opt-in
   - empty_string
   - enum_case_associated_values_count
   - fatal_error_message
+  - file_header
   - first_where
   - flatmap_over_map_reduce
   - force_unwrapping
@@ -156,4 +157,6 @@ number_separator:
   minimum_length: 5
 cyclomatic_complexity:
   ignores_case_statements: true
+file_header:
+  forbidden_pattern: ".?"
 reporter: "xcode" # reporter type (xcode, json, csv, checkstyle, codeclimate, junit, html, emoji, sonarqube, markdown, github-actions-logging)

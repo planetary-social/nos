@@ -1,10 +1,3 @@
-//
-//  SubscriptionCancellable.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 12/22/23.
-//
-
 import Foundation
 
 /// A handle that holds references to one or more `RelaySubscription`s and provides the ability to cancel these 
