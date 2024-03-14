@@ -6,17 +6,8 @@ struct UNSWizard: View {
     @ObservedObject var controller: UNSWizardController
     @Binding var isPresented: Bool
     
-    enum Flow {
-        case signUp
-        case login
-    }
-    
-    @Environment(\.managedObjectContext) private var viewContext
-    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) var analytics
-    
-    @State private var flow: Flow?
-    
+
     enum FocusedField {
         case textEditor
     }

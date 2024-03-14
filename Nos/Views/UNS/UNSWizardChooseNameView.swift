@@ -4,7 +4,6 @@ import Logger
 
 struct UNSWizardChooseNameView: View {
     
-    @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) var analytics
     @Dependency(\.unsAPI) var api
     @Dependency(\.currentUser) var currentUser 
@@ -58,8 +57,6 @@ struct UNSWizardChooseNameView: View {
 }
 
 #Preview {
-    
-    var previewData = PreviewData()
     @State var controller = UNSWizardController(
         state: .chooseName, 
         names: [

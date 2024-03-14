@@ -75,8 +75,6 @@ struct UNSWizardNeedsPaymentView: View {
 }
 
 #Preview {
-    
-    var previewData = PreviewData()
     @State var controller = UNSWizardController(
         state: .needsPayment(URL(string: "https://www.universalname.space/name/frankie")!), 
         nameRecord: UNSNameRecord(name: "frankie", id: "1")
