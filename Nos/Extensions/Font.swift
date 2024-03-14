@@ -64,11 +64,6 @@ extension Font {
             forTextStyle: .caption2
         ).pointSize)
     
-    static var clarityCallout = Font
-        .custom("ClarityCity-Regular", size: UIFont.preferredFont(
-            forTextStyle: .callout
-        ).pointSize)
-
     static var claritySubheadline = clarity(.medium, textStyle: .subheadline)
 
     static var claritySemiBoldSubheadline = Font

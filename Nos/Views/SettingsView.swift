@@ -80,10 +80,11 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     Text(.localizable.privateKey)
                         .foregroundColor(.primaryTxt)
-                        .bold()
-                    
+                        .font(.clarity(.semibold, textStyle: .headline))
+
                     Text(.localizable.privateKeyWarning)
                         .foregroundColor(.secondaryTxt)
+                        .font(.footnote)
                 }
                 .textCase(nil)
                 .padding(.vertical, 15)
@@ -107,7 +108,7 @@ struct SettingsView: View {
                     HStack {
                         PlainText(.localizable.useReportsFromFollowsDescription)
                             .foregroundColor(.secondaryTxt)
-                            .font(.clarityCallout)
+                            .font(.footnote)
                         Spacer()
                     }
                 }
@@ -124,15 +125,14 @@ struct SettingsView: View {
                     HStack {
                         PlainText(.localizable.showOutOfNetworkWarningsDescription)
                             .foregroundColor(.secondaryTxt)
-                            .font(.clarityCallout)
+                            .font(.footnote)
                         Spacer()
                     }
                 }
             } header: {
                 Text(.localizable.feedSettings)
                     .foregroundColor(.primaryTxt)
-                    .fontWeight(.heavy)
-                    .bold()
+                    .font(.clarity(.semibold, textStyle: .headline))
                     .textCase(nil)
                     .padding(.vertical, 15)
             }
@@ -193,8 +193,7 @@ struct SettingsView: View {
             } header: {
                 Text(.localizable.debug)
                     .foregroundColor(.primaryTxt)
-                    .fontWeight(.heavy)
-                    .bold()
+                    .font(.clarity(.semibold, textStyle: .headline))
                     .textCase(nil)
                     .padding(.vertical, 15)
             }
