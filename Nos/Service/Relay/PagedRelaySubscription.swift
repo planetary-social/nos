@@ -1,10 +1,3 @@
-//
-//  PagedRelaySubscription.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 11/27/23.
-//
-
 import Foundation
 import Logger
 

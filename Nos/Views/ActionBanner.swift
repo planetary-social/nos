@@ -1,10 +1,3 @@
-//
-//  ActionBanner.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 8/1/23.
-//
-
 import SwiftUI
 
 /// A large colorful banner with a message and action button.

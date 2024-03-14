@@ -1,10 +1,3 @@
-//
-//  CardButtonStyle.swift
-//  Nos
-//
-//  Created by Jason Cheatham on 2/16/23.
-//
-
 import SwiftUI
 
 struct CardButtonStyle: ButtonStyle {

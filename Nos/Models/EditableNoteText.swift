@@ -1,10 +1,3 @@
-//
-//  EditableNoteText.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 7/26/23.
-//
-
 import Foundation
 import UIKit
 

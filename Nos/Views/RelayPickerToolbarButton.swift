@@ -1,10 +1,3 @@
-//
-//  RelayPickerToolbarButton.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 6/16/23.
-//
-
 import SwiftUI
 
 struct RelayPickerToolbarButton: ToolbarContent {

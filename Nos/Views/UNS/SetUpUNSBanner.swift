@@ -1,10 +1,3 @@
-//
-//  SetUpUNSBanner.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 6/9/23.
-//
-
 import SwiftUI
 
 struct SetUpUNSBanner: View {

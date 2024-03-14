@@ -1,10 +1,3 @@
-//
-//  NotificationsCard.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 4/28/23.
-//
-
 import SwiftUI
 import Dependencies
 

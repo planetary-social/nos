@@ -1,10 +1,3 @@
-//
-//  WalletConnect.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 9/19/23.
-//
-
 import Foundation
 import Logger
 import StarscreamOld

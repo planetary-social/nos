@@ -1,10 +1,3 @@
-//
-//  KeyPair.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/3/23.
-//
-
 import Foundation
 import Logger
 import secp256k1

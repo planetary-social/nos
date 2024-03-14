@@ -1,10 +1,3 @@
-//
-//  CurrentUser.swift
-//  Nos
-//
-//  Created by Christopher Jorgensen on 2/21/23.
-//
-
 import Foundation
 import CoreData
 import Logger

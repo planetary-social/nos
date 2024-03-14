@@ -1,10 +1,3 @@
-//
-//  Date+ElapsedTests.swift
-//  NosTests
-//
-//  Created by Terry Yiu on 12/9/23.
-//
-
 import XCTest
 
 final class Date_ElapsedTests: XCTestCase {

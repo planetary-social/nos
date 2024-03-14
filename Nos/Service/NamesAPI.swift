@@ -1,10 +1,3 @@
-//
-//  NamesAPI.swift
-//  Nos
-//
-//  Created by Martin Dutra on 21/2/24.
-//
-
 import Foundation
 
 class NamesAPI {

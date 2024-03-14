@@ -1,10 +1,3 @@
-//
-//  Web3Utils.swift
-//  DAppExample
-//
-//  Created by Marcel Salej on 02/10/2023.
-//
-
 import WebKit
 import JavaScriptCore
 

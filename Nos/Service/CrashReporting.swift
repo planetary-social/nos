@@ -1,10 +1,3 @@
-//
-//  CrashReporting.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 8/18/23.
-//
-
 import Foundation
 import Sentry
 

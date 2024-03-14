@@ -1,10 +1,3 @@
-//
-//  RepostButton.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 4/21/23.
-//
-
 import SwiftUI
 import SwiftUINavigation
 import Logger

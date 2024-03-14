@@ -1,10 +1,3 @@
-//
-//  ThreadRootView.swift
-//  Nos - This is the root note card for threads.
-//
-//  Created by Rabble on 10/16/23.
-//
-
 import SwiftUI
 
 struct ThreadRootView<Reply: View>: View {

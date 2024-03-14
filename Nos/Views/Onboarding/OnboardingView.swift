@@ -1,10 +1,3 @@
-//
-//  OnboardingView.swift
-//  Nos
-//
-//  Created by Shane Bielefeld on 2/14/23.
-//
-
 import SwiftUI
 import Dependencies
 import Logger

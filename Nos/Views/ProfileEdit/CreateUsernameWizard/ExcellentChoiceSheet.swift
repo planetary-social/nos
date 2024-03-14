@@ -1,10 +1,3 @@
-//
-//  ExcellentChoiceSheet.swift
-//  Nos
-//
-//  Created by Martin Dutra on 6/3/24.
-//
-
 import Dependencies
 import Logger
 import SwiftUI

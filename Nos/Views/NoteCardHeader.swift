@@ -1,10 +1,3 @@
-//
-//  NoteCardHeader.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 6/15/23.
-//
-
 import SwiftUI
 
 struct NoteCardHeader: View {

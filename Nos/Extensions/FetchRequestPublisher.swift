@@ -1,10 +1,3 @@
-//
-//  FetchRequestPublisher.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 10/26/23.
-//
-
 import Foundation
 import Combine
 import CoreData

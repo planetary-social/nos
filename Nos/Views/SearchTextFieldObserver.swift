@@ -1,10 +1,3 @@
-//
-//  SearchTextFieldObserver.swift
-//  Nos
-//
-//  Created by Martin Dutra on 3/4/23.
-//
-
 import Combine
 import Foundation
 import SwiftUI

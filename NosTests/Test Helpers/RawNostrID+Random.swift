@@ -1,10 +1,3 @@
-//
-//  RawNostrID+Random.swift
-//  NosTests
-//
-//  Created by Matthew Lorentz on 1/24/24.
-//
-
 import Foundation
 
 extension RawNostrID {

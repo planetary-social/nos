@@ -1,10 +1,3 @@
-//
-//  AuthorReference+CoreDataClass.swift
-//  Nos
-//
-//  Created by Shane Bielefeld on 2/24/23.
-//
-
 import Foundation
 import CoreData
 

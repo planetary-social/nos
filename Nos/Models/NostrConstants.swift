@@ -1,10 +1,3 @@
-//
-//  NostrConstants.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/21/23.
-//
-
 import Foundation
 
 /// A collection of constants used in Nostr.

@@ -1,10 +1,3 @@
-//
-//  AsyncTimer.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 4/7/23.
-//
-
 import Foundation
 
 /// A timer that executes a task on a schedule. Similar to NSTimer but works with Swift Structured Concurrency.
