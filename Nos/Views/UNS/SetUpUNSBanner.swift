@@ -23,7 +23,7 @@ struct SetUpUNSBanner: View {
             VStack {
                 HStack {
                     Text(text)
-                        .font(.clarityBold)
+                        .font(.body)
                         .foregroundStyle(Color.primaryTxt)
                         .lineSpacing(3)
                         .padding(.top, 8)
