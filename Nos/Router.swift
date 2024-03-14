@@ -23,8 +23,6 @@ import Dependencies
         return path(for: selectedTab)
     }
 
-    @Published var userNpubPublicKey = ""
-
     @Published private(set) var sideMenuOpened = false
 
     func toggleSideMenu() {
