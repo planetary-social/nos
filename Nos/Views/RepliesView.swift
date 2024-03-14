@@ -5,6 +5,7 @@
 //  Created by Matthew Lorentz on 2/14/23.
 //
 
+import Foundation
 import Logger
 import SwiftUI
 import SwiftUINavigation
@@ -25,6 +26,7 @@ struct RepliesView: View {
     @State private var reply = EditableNoteText()
     
     @State private var alert: AlertState<Never>?
+    @State var showReplyComposer = false
     
     @State private var relaySubscriptions = SubscriptionCancellables()
     
@@ -109,15 +111,20 @@ struct RepliesView: View {
                             showReplyCount: false,
                             displayRootMessage: true,
                             isTapEnabled: false,
-                            replyAction: { _ in self.focusTextView = true },
+                            replyAction: { _ in self.showReplyComposer = true },
                             tapAction: { tappedEvent in tappedEvent.referencedNote().unwrap { router.push($0) } }
                         )
                         .padding(.top, 15)
+                        .sheet(isPresented: $showReplyComposer, content: {
+                            NewNoteView(replyTo: note, isPresented: $showReplyComposer)
+                                .environment(currentUser)
+                        })
                         
                         ForEach(directReplies.reversed()) { event in
                             ThreadView(root: event, allReplies: replies.reversed())
                         }
                     }
+                    .frame(maxHeight: .infinity)
                     .padding(.bottom)
                 }
                 .padding(.top, 1)
@@ -131,33 +138,18 @@ struct RepliesView: View {
                 .onDisappear {
                     relaySubscriptions.removeAll()
                 }
-                VStack {
-                    Spacer()
-                    VStack {
-                        HStack(spacing: 10) {
-                            if let author = currentUser.author {
-                                AvatarView(imageUrl: author.profilePhotoURL, size: 35)
-                            }
-                            ExpandingTextFieldAndSubmitButton(
-                                placeholder: .reply.postAReply,
-                                reply: $reply,
-                                focus: $focusTextView
-                            ) {
-                                await postReply(reply)
-                            }
-                            .onAppear {
-                                focusTextView = showKeyboardOnAppear
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
-                }
-                .background(Color.cardBgBottom)
-                .fixedSize(horizontal: false, vertical: true)
                 .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                        if showKeyboardOnAppear {
+                            showReplyComposer = true
+                            showKeyboardOnAppear = false
+                        }
+                    }
                     analytics.showedThread()
                 }
+                Spacer()
             }
+            .background(Color.appBg)
             .toolbar {
                 if focusTextView {
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -178,71 +170,6 @@ struct RepliesView: View {
                     await computeDirectReplies()
                 }
             }
-            .background(Color.appBg)
-        }
-    }
-    
-    func postReply(_ replyText: EditableNoteText) async {
-        do {
-            guard !replyText.string.isEmpty else {
-                return
-            }
-
-            guard let authorHex = note.author?.publicKey?.hex else {
-                Log.error("Author public key not found when replying")
-                return
-            }
-
-            guard let noteIdentifier = note.identifier else {
-                Log.error("Note identifier not found when replying")
-                return
-            }
-
-            guard let keyPair = currentUser.keyPair else {
-                alert = AlertState(title: {
-                    TextState(String(localized: .localizable.error))
-                }, message: {
-                    TextState(String(localized: .localizable.youNeedToEnterAPrivateKeyBeforePosting))
-                })
-                return
-            }
-
-            var (content, tags) = NoteParser.parse(attributedText: replyText.attributedString)
-
-            // TODO: Append ptags for all authors involved in the thread
-            tags.append(["p", authorHex])
-
-            // If `note` is a reply to another root, tag that root
-            if let rootNoteIdentifier = note.rootNote()?.identifier, rootNoteIdentifier != noteIdentifier {
-                tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
-                tags.append(["e", noteIdentifier, "", EventReferenceMarker.reply.rawValue])
-            } else {
-                tags.append(["e", noteIdentifier, "", EventReferenceMarker.root.rawValue])
-            }
-            
-            // print("tags: \(tags)")
-            let jsonEvent = JSONEvent(
-                id: "",
-                pubKey: keyPair.publicKeyHex,
-                createdAt: Int64(Date().timeIntervalSince1970),
-                kind: 1,
-                tags: tags,
-                content: content,
-                signature: ""
-            )
-            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
-            analytics.published(reply: jsonEvent)
-        } catch {
-            alert = AlertState(title: {
-                TextState(String(localized: .localizable.error))
-            }, message: {
-                TextState(error.localizedDescription)
-            })
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this
-            // function in a shipping application, although it may be useful during development.
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
 }

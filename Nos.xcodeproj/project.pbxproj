@@ -125,6 +125,7 @@
 		C93EC2F829C351470012EE2A /* Optional+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2F629C351470012EE2A /* Optional+Unwrap.swift */; };
 		C93EC2FA29C370DE0012EE2A /* DiscoverGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */; };
 		C93EC2FD29C3785C0012EE2A /* View+RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */; };
+		C93F045E2B9B7A7000AD5872 /* ReplyPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93F045D2B9B7A7000AD5872 /* ReplyPreview.swift */; };
 		C93F488D2AC5C30C00900CEC /* NosFormField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93F488C2AC5C30C00900CEC /* NosFormField.swift */; };
 		C93F48902AC5C9C400900CEC /* UNSWizardPhoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93F488F2AC5C9C400900CEC /* UNSWizardPhoneView.swift */; };
 		C93F48932AC5C9CE00900CEC /* UNSWizardIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93F48922AC5C9CE00900CEC /* UNSWizardIntroView.swift */; };
@@ -434,7 +435,6 @@
 		CD2CF38E299E67F900332116 /* CardButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2CF38D299E67F900332116 /* CardButtonStyle.swift */; };
 		CD2CF390299E68BE00332116 /* NoteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2CF38F299E68BE00332116 /* NoteButton.swift */; };
 		CD4908D429B92941007443DB /* ReportABugMailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4908D329B92941007443DB /* ReportABugMailView.swift */; };
-		CD76864C29B12F7E00085358 /* ExpandingTextFieldAndSubmitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76864B29B12F7E00085358 /* ExpandingTextFieldAndSubmitButton.swift */; };
 		CD76865029B6503500085358 /* NoteOptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76864F29B6503500085358 /* NoteOptionsButton.swift */; };
 		CD76865329B793F400085358 /* DiscoverSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76865229B793F400085358 /* DiscoverSearchBar.swift */; };
 		CDDA1F7B29A527650047ACD8 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = CDDA1F7A29A527650047ACD8 /* Starscream */; };
@@ -572,6 +572,7 @@
 		C93EC2F629C351470012EE2A /* Optional+Unwrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Unwrap.swift"; sourceTree = "<group>"; };
 		C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverGrid.swift; sourceTree = "<group>"; };
 		C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+RoundedCorner.swift"; sourceTree = "<group>"; };
+		C93F045D2B9B7A7000AD5872 /* ReplyPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyPreview.swift; sourceTree = "<group>"; };
 		C93F488C2AC5C30C00900CEC /* NosFormField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosFormField.swift; sourceTree = "<group>"; };
 		C93F488F2AC5C9C400900CEC /* UNSWizardPhoneView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UNSWizardPhoneView.swift; sourceTree = "<group>"; };
 		C93F48922AC5C9CE00900CEC /* UNSWizardIntroView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UNSWizardIntroView.swift; sourceTree = "<group>"; };
@@ -773,7 +774,6 @@
 		CD2CF38D299E67F900332116 /* CardButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardButtonStyle.swift; sourceTree = "<group>"; };
 		CD2CF38F299E68BE00332116 /* NoteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteButton.swift; sourceTree = "<group>"; };
 		CD4908D329B92941007443DB /* ReportABugMailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportABugMailView.swift; sourceTree = "<group>"; };
-		CD76864B29B12F7E00085358 /* ExpandingTextFieldAndSubmitButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandingTextFieldAndSubmitButton.swift; sourceTree = "<group>"; };
 		CD76864F29B6503500085358 /* NoteOptionsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteOptionsButton.swift; sourceTree = "<group>"; };
 		CD76865229B793F400085358 /* DiscoverSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverSearchBar.swift; sourceTree = "<group>"; };
 		DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Simulator.swift"; sourceTree = "<group>"; };
@@ -1309,6 +1309,7 @@
 				DC5F20402A6AE31000F8D73F /* ImagePickerUIViewController.swift */,
 				DC5F203E2A6AE24200F8D73F /* ImagePickerButton.swift */,
 				DC5F20422A6ED75C00F8D73F /* FileStorageAPI.swift */,
+				C93F045D2B9B7A7000AD5872 /* ReplyPreview.swift */,
 			);
 			path = "New Note";
 			sourceTree = "<group>";
@@ -1351,7 +1352,6 @@
 				C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */,
 				5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */,
 				5B8C96B529DDD3B200B73AEC /* EditableText.swift */,
-				CD76864B29B12F7E00085358 /* ExpandingTextFieldAndSubmitButton.swift */,
 				A303AF8229A9153A005DC8FC /* FollowButton.swift */,
 				A32B6C7729A6C99200653FF5 /* FollowCard.swift */,
 				A32B6C7229A6BE9B00653FF5 /* FollowsView.swift */,
@@ -1909,6 +1909,7 @@
 				C9DEBFD9298941000078B43A /* HomeFeedView.swift in Sources */,
 				3F30020729C237AB003D4F8B /* OnboardingAgeVerificationView.swift in Sources */,
 				C931517D29B915AF00934506 /* StaggeredGrid.swift in Sources */,
+				C93F045E2B9B7A7000AD5872 /* ReplyPreview.swift in Sources */,
 				C97465312A3B89140031226F /* AuthorLabel.swift in Sources */,
 				C9C547592A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift in Sources */,
 				C9B678E729F01A8500303F33 /* FullscreenProgressView.swift in Sources */,
@@ -1944,7 +1945,6 @@
 				C98651102B0BD49200597B68 /* PagedNoteListView.swift in Sources */,
 				C9E37E152A1E8143003D4B0A /* Report.swift in Sources */,
 				C9DEBFD4298941000078B43A /* PersistenceController.swift in Sources */,
-				CD76864C29B12F7E00085358 /* ExpandingTextFieldAndSubmitButton.swift in Sources */,
 				5B834F692A83FC7F000C1432 /* ProfileSocialStatsView.swift in Sources */,
 				CD09A74629A50F750063464F /* SideMenuContent.swift in Sources */,
 				C9DFA971299BF8CD006929C1 /* RepliesView.swift in Sources */,

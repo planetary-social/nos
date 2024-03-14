@@ -34,10 +34,14 @@ struct NewNoteView: View {
 
     var initialContents: String?
     @Binding var isPresented: Bool
+    
+    /// The note that the user is replying to, if any.
+    private var replyTo: Event?
 
-    init(initialContents: String? = nil, isPresented: Binding<Bool>) {
+    init(initialContents: String? = nil, replyTo: Event? = nil, isPresented: Binding<Bool>) {
         _isPresented = isPresented
         self.initialContents = initialContents
+        self.replyTo = replyTo
     }
     
     @FocusState private var isTextEditorInFocus: Bool
@@ -46,13 +50,18 @@ struct NewNoteView: View {
         NavigationStack {
             ZStack {
                 VStack {
-                    NoteTextEditor(
-                        text: $text, 
-                        placeholder: .localizable.newNotePlaceholder,
-                        focus: $isTextEditorInFocus,
-                        calculatedHeight: $calculatedEditorHeight
-                    )
-                    .padding(10)
+                    ScrollView(.vertical) {
+                        if let replyTo {
+                            ReplyPreview(note: replyTo)
+                        }
+                        NoteTextEditor(
+                            text: $text, 
+                            placeholder: .localizable.newNotePlaceholder,
+                            focus: $isTextEditorInFocus
+                        )
+                        .padding(10)
+                    }
+                    .frame(maxHeight: .infinity)
                     Spacer()
                     ComposerActionBar(expirationTime: $expirationTime, text: $text)
                 }
@@ -152,7 +161,6 @@ struct NewNoteView: View {
             await publishPost()
         }
         isPresented = false
-        router.selectedTab = .home
     }
 
     private func publishPost() async {
@@ -166,6 +174,22 @@ struct NewNoteView: View {
             
             if let expirationTime {
                 tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
+            }
+            
+            // Attach the new note to the one it is replying to, if any.
+            if let replyToNote = replyTo, let replyToNoteID = replyToNote.identifier {
+                // TODO: Append ptags for all authors involved in the thread
+                if let replyToAuthor = replyToNote.author?.publicKey?.hex {
+                    tags.append(["p", replyToAuthor])
+                }
+                
+                // If `note` is a reply to another root, tag that root
+                if let rootNoteIdentifier = replyToNote.rootNote()?.identifier, rootNoteIdentifier != replyToNoteID {
+                    tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
+                    tags.append(["e", replyToNoteID, "", EventReferenceMarker.reply.rawValue])
+                } else {
+                    tags.append(["e", replyToNoteID, "", EventReferenceMarker.root.rawValue])
+                }
             }
 
             let jsonEvent = JSONEvent(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
@@ -196,16 +220,16 @@ struct NewNoteView: View {
     }
 }
 
-struct NewPostView_Previews: PreviewProvider {
+#Preview {
+    var previewData = PreviewData()
     
-    static var previewData = PreviewData()
-    static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
-    static var relayService = previewData.relayService
+    return NewNoteView(isPresented: .constant(true))
+        .inject(previewData: previewData)
+}
+
+#Preview {
+    var previewData = PreviewData()
     
-    static var previews: some View {
-        NewNoteView(isPresented: .constant(true))
-            .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
-    }
+    return NewNoteView(replyTo: previewData.longNote, isPresented: .constant(true))
+        .inject(previewData: previewData)
 }

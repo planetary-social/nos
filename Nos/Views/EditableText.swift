@@ -19,7 +19,6 @@ struct EditableText: UIViewRepresentable {
     typealias UIViewType = UITextView
 
     @Binding var text: EditableNoteText
-    @Binding var calculatedHeight: CGFloat
     @State var width: CGFloat
 
     /// An ID for this view. Only .mentionAddedNotifications matching this ID will be processed.
@@ -27,11 +26,10 @@ struct EditableText: UIViewRepresentable {
     private var font = UIFont.preferredFont(forTextStyle: .body)
     private var insets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
 
-    init(_ text: Binding<EditableNoteText>, guid: UUID, calculatedHeight: Binding<CGFloat>) {
+    init(_ text: Binding<EditableNoteText>, guid: UUID) {
         self.guid = guid
         _width = .init(initialValue: 0)
         _text = text
-        _calculatedHeight = calculatedHeight
     }
 
     func makeUIView(context: Context) -> UITextView {
@@ -82,14 +80,12 @@ struct EditableText: UIViewRepresentable {
     func updateUIView(_ uiView: UITextView, context: Context) {
         uiView.attributedText = text.nsAttributedString
         uiView.typingAttributes = text.defaultNSAttributes
-        Self.recalculateHeight(view: uiView, result: $calculatedHeight)
     }
 
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize? {
         if width != uiView.frame.size.width {
             DispatchQueue.main.async { // call in next render cycle.
                 width = uiView.frame.size.width
-                Self.recalculateHeight(view: uiView, result: $calculatedHeight)
             }
         } else if width == 0,
             uiView.frame.size.width == 0, 
@@ -98,18 +94,9 @@ struct EditableText: UIViewRepresentable {
             proposedWidth < CGFloat.infinity {
             DispatchQueue.main.async { // call in next render cycle.
                 uiView.frame.size.width = proposedWidth
-                Self.recalculateHeight(view: uiView, result: $calculatedHeight)
             }
         }
         return nil
-    }
-
-    fileprivate static func recalculateHeight(view: UIView, result: Binding<CGFloat>) {
-        let newSize = view.sizeThatFits(CGSize(width: view.frame.width, height: .greatestFiniteMagnitude))
-        guard result.wrappedValue != newSize.height else { return }
-        DispatchQueue.main.async { // call in next render cycle.
-            result.wrappedValue = newSize.height
-        }
     }
 
     func makeCoordinator() -> Coordinator {
@@ -176,10 +163,9 @@ extension Notification.Name {
 struct EditableText_Previews: PreviewProvider {
 
     @State static var attributedString = EditableNoteText(string: "Hello")
-    @State static var calculatedHeight: CGFloat = 44
 
     static var previews: some View {
-        EditableText($attributedString, guid: UUID(), calculatedHeight: $calculatedHeight)
+        EditableText($attributedString, guid: UUID())
             .onChange(of: attributedString) { oldText, newText in
                 let difference = newText.difference(from: oldText)
                 guard difference.count == 1, let change = difference.first else {
