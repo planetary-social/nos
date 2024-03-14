@@ -39,7 +39,8 @@ struct SettingsView: View {
                 HStack {
                     SecureField(String(localized: .localizable.privateKeyPlaceholder), text: $privateKeyString)
                         .foregroundColor(.primaryTxt)
-                    
+                        .font(.clarity(.regular, textStyle: .body))
+
                     SecondaryActionButton(title: .localizable.save) {
                         if privateKeyString.isEmpty {
                             await logout()
@@ -78,16 +79,18 @@ struct SettingsView: View {
                 .padding(.vertical, 5)
             } header: {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(.localizable.privateKey)
+                    SwiftUI.Text(.localizable.privateKey)
                         .foregroundColor(.primaryTxt)
                         .font(.clarity(.semibold, textStyle: .headline))
 
-                    Text(.localizable.privateKeyWarning)
+                    SwiftUI.Text(.localizable.privateKeyWarning)
                         .foregroundColor(.secondaryTxt)
                         .font(.footnote)
                 }
                 .textCase(nil)
-                .padding(.vertical, 15)
+                .listRowInsets(EdgeInsets())
+                .padding(.top, 30)
+                .padding(.bottom, 20)
             }
             .listRowBackground(LinearGradient(
                 colors: [Color.cardBgTop, Color.cardBgBottom],
@@ -98,7 +101,7 @@ struct SettingsView: View {
             Section {
                 VStack {
                     Toggle(isOn: $showReportWarnings) { 
-                        Text(.localizable.useReportsFromFollows)
+                        SwiftUI.Text(.localizable.useReportsFromFollows)
                             .foregroundColor(.primaryTxt)
                     }
                     .onChange(of: showReportWarnings) { _, newValue in
@@ -106,16 +109,17 @@ struct SettingsView: View {
                     }
                     
                     HStack {
-                        PlainText(.localizable.useReportsFromFollowsDescription)
+                        SwiftUI.Text(.localizable.useReportsFromFollowsDescription)
                             .foregroundColor(.secondaryTxt)
                             .font(.footnote)
                         Spacer()
                     }
                 }
-                
+                .padding(.bottom, 8)
+
                 VStack {
                     Toggle(isOn: $showOutOfNetworkWarning) { 
-                        Text(.localizable.showOutOfNetworkWarnings)
+                        SwiftUI.Text(.localizable.showOutOfNetworkWarnings)
                             .foregroundColor(.primaryTxt)
                     }
                     .onChange(of: showOutOfNetworkWarning) { _, newValue in
@@ -123,17 +127,19 @@ struct SettingsView: View {
                     }
                     
                     HStack {
-                        PlainText(.localizable.showOutOfNetworkWarningsDescription)
+                        SwiftUI.Text(.localizable.showOutOfNetworkWarningsDescription)
                             .foregroundColor(.secondaryTxt)
                             .font(.footnote)
                         Spacer()
                     }
                 }
+                .padding(.bottom, 8)
             } header: {
                 Text(.localizable.feedSettings)
                     .foregroundColor(.primaryTxt)
                     .font(.clarity(.semibold, textStyle: .headline))
                     .textCase(nil)
+                    .listRowInsets(EdgeInsets())
                     .padding(.vertical, 15)
             }
             .listRowBackground(LinearGradient(
@@ -148,7 +154,7 @@ struct SettingsView: View {
             
             Section {
                 HStack {
-                    Text("\(String(localized: .localizable.appVersion)) \(Bundle.current.versionAndBuild)")
+                    SwiftUI.Text("\(String(localized: .localizable.appVersion)) \(Bundle.current.versionAndBuild)")
                         .foregroundColor(.primaryTxt)
                     Spacer()
                     SecondaryActionButton(title: .localizable.shareLogs) {
@@ -171,7 +177,7 @@ struct SettingsView: View {
                 }
 
                 #if DEBUG
-                Text(.localizable.sampleDataInstructions)
+                SwiftUI.Text(.localizable.sampleDataInstructions)
                     .foregroundColor(.primaryTxt)
                 Button(String(localized: .localizable.loadSampleData)) {
                     Task {
@@ -186,15 +192,16 @@ struct SettingsView: View {
                     NavigationLink {
                         PublishedEventsView(author: author)
                     } label: {
-                        Text(.localizable.allPublishedEvents)
+                        SwiftUI.Text(.localizable.allPublishedEvents)
                     }
                 }
                 #endif
             } header: {
-                Text(.localizable.debug)
+                SwiftUI.Text(.localizable.debug)
                     .foregroundColor(.primaryTxt)
                     .font(.clarity(.semibold, textStyle: .headline))
                     .textCase(nil)
+                    .listRowInsets(EdgeInsets())
                     .padding(.vertical, 15)
             }
             .listRowBackground(LinearGradient(
