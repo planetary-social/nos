@@ -40,6 +40,8 @@ If you'd like to contribute code to the main branch of Nos, it's best to check w
 
 We use SwiftLint to enforce many of our style conventions. When it comes to naming conventions we follow the [Swift API Design Guidelines](https://www.swift.org/documentation/api-design-guidelines/).
 
+[Periphery](https://github.com/peripheryapp/periphery) allows us to detect and delete unused code. One great way to contribute to Nos would be to run periphery, delete unused code, test the app, then submit a PR. We'd really appreciate it!
+
 ### Opening a Pull Request
 
 For now `main` is the main branch and code improvements are made in topic branches that get merged into it.
