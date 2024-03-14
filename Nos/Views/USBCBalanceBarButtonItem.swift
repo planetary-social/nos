@@ -1,10 +1,3 @@
-//
-//  USBCBalanceBarButtonItem.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 10/23/23.
-//
-
 import SwiftUI
 
 struct USBCBalanceBarButtonItem: View {

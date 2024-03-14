@@ -1,10 +1,3 @@
-//
-//  String+Extra.swift
-//  DAppExample
-//
-//  Created by Marcel Salej on 27/09/2023.
-//
-
 import Foundation
 import SwiftUI
 import CoreImage.CIFilterBuiltins

@@ -1,11 +1,3 @@
-//
-//  Event+CoreDataClass.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 1/31/23.
-//
-//
-
 // swiftlint:disable file_length
 import secp256k1
 import Foundation

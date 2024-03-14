@@ -1,11 +1,3 @@
-//
-//  Follow+CoreDataProperties.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 6/8/23.
-//
-//
-
 import Foundation
 import CoreData
 

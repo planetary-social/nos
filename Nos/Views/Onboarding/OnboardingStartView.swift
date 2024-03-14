@@ -1,10 +1,3 @@
-//
-//  OnboardingStartView.swift
-//  Nos
-//
-//  Created by Shane Bielefeld on 3/15/23.
-//
-
 import SwiftUI
 import Dependencies
 

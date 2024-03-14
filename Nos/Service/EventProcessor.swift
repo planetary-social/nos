@@ -1,10 +1,3 @@
-//
-//  EventProcessor.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/10/23.
-//
-
 import Foundation
 import CoreData
 import Logger

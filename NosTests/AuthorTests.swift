@@ -1,10 +1,3 @@
-//
-//  AuthorTests.swift
-//  NosTests
-//
-//  Created by Matthew Lorentz on 1/24/24.
-//
-
 import XCTest
 
 /// Tests for the `Author` model.

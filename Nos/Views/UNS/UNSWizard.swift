@@ -1,10 +1,3 @@
-//
-//  UNSWizard.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/20/23.
-//
-
 import SwiftUI
 import Dependencies
 

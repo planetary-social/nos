@@ -1,10 +1,3 @@
-//
-//  KeyPairTests.swift
-//  NosTests
-//
-//  Created by Matthew Lorentz on 2/7/23.
-//
-
 import XCTest
 import secp256k1
 

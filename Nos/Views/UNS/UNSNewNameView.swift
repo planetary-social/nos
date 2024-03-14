@@ -1,10 +1,3 @@
-//
-//  UNSNewNameView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 10/12/23.
-//
-
 import SwiftUI
 import Dependencies
 import Logger

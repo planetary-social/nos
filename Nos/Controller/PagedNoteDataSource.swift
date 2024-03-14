@@ -1,10 +1,3 @@
-//
-//  PagedNoteDataSource.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 11/27/23.
-//
-
 import SwiftUI
 import CoreData
 import Dependencies

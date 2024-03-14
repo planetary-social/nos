@@ -1,10 +1,3 @@
-//
-//  ReportMenu.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 5/24/23.
-//
-
 import SwiftUI
 import Dependencies
 import Logger

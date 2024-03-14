@@ -1,11 +1,3 @@
-//
-//  BigDecimal.swift
-//  GIDNonCustodianWallet
-//
-//  Created by Marcel on 27/10/2023.
-//
-//
-
 import Foundation
 
 /// A wrapper for the BigNumber.js BigNumber representation.

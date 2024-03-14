@@ -1,10 +1,3 @@
-//
-//  LogHelper.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 4/17/23.
-//
-
 import Foundation
 import Logger
 

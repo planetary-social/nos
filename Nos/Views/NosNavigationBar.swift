@@ -1,10 +1,3 @@
-//
-//  NosNavigationBar.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/18/23.
-//
-
 import SwiftUI
 
 struct NosNavigationBarModifier: ViewModifier {

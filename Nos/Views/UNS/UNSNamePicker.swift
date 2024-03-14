@@ -1,10 +1,3 @@
-//
-//  UNSNamePicker.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 10/12/23.
-//
-
 import SwiftUI
 
 fileprivate struct PickerRow<Label: View>: View {

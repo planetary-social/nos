@@ -1,10 +1,3 @@
-//
-//  Follow+CoreDataClass.swift
-//  Nos
-//
-//  Created by Christopher Jorgensen on 2/15/23.
-//
-
 import Foundation
 import CoreData
 

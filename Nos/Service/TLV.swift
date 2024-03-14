@@ -1,10 +1,3 @@
-//
-//  TLV.swift
-//  Nos
-//
-//  Created by Martin Dutra on 25/5/23.
-//
-
 import Foundation
 import secp256k1
 

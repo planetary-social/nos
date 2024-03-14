@@ -1,11 +1,3 @@
-//
-//  Color+Hex.swift
-//  Planetary
-//
-//  Created by Matthew Lorentz on 2/25/22.
-//  Copyright © 2022 Verse Communications Inc. All rights reserved.
-//
-
 import SwiftUI
 
 // https://stackoverflow.com/a/56874327/982195

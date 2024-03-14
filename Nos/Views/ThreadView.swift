@@ -1,10 +1,3 @@
-//
-//  ThreadView.swift
-//  Nos
-//
-//  Created by Shane Bielefeld on 3/3/23.
-//
-
 import SwiftUI
 
 struct ThreadView: View {

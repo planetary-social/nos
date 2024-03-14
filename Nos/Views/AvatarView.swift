@@ -1,10 +1,3 @@
-//
-//  AvatarView.swift
-//  Nos
-//
-//  Created by Shane Bielefeld on 2/17/23.
-//
-
 import SwiftUI
 import SDWebImageSwiftUI
 

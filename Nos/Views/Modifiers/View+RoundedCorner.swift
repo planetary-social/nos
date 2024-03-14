@@ -1,11 +1,3 @@
-//
-//  View+RoundedCorner.swift
-//  Planetary
-//
-//  Created by Matthew Lorentz on 3/3/22.
-//  Copyright © 2022 Verse Communications Inc. All rights reserved.
-//
-
 import SwiftUI
 
 extension View {

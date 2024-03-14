@@ -1,11 +1,3 @@
-//
-//  SelectableText.swift
-//  Planetary
-//
-//  Created by Martin Dutra on 20/9/22.
-//  Copyright © 2022 Verse Communications Inc. All rights reserved.
-//
-
 import Foundation
 import SwiftUI
 import UIKit

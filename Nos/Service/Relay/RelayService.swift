@@ -1,9 +1,3 @@
-//
-//  RelayService.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/1/23.
-//
 import Foundation
 import Starscream
 import CoreData

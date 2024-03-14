@@ -1,10 +1,3 @@
-//
-//  ExpandingTextFieldAndSubmitButton.swift
-//  Nos
-//
-//  Created by Jason Cheatham on 3/2/23.
-//
-
 import Foundation
 import SwiftUI
 

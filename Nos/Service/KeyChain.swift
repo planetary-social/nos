@@ -1,12 +1,3 @@
-//
-//  KeyChain.swift
-//  Nos
-//
-//  Created by Christopher Jorgensen on 2/13/23.
-//
-// Source: https://stackoverflow.com/questions/37539997/save-and-load-from-keychain-swift
-//
-
 import Security
 import UIKit
 
