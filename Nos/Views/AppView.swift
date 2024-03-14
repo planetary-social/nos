@@ -19,6 +19,7 @@ struct AppView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
+    @Dependency(\.userDefaults) private var userDefaults
     @Environment(CurrentUser.self) var currentUser
     
     @State private var showingOptions = false
@@ -163,17 +164,17 @@ struct AppView: View {
         }
         // We store the npub for the user we last presented the sheet for so that
         // the behavior resets if the user creates a new account
-        let key = "AppView_presentedNIP05SheetFor"
-        let didPresentSheetInPast = UserDefaults.standard.string(forKey: key)
-        var shouldShowSheet: Bool
-        if let didPresentSheetInPast {
-            shouldShowSheet = didPresentSheetInPast != npub && author.nip05 == nil
+        let key = "didPresentNIP05SheetForNpub"
+        let didPresentSheetForNpub = userDefaults.string(forKey: key)
+        let shouldShowSheet: Bool
+        if let didPresentSheetForNpub {
+            shouldShowSheet = didPresentSheetForNpub != npub && author.nip05 == nil
         } else {
             shouldShowSheet = author.nip05 == nil
         }
         if shouldShowSheet {
             showNIP05Wizard = true
-            UserDefaults.standard.setValue(npub, forKey: key)
+            userDefaults.setValue(npub, forKey: key)
         }
     }
 }
