@@ -19,38 +19,6 @@ extension Array where Element == String {
     }
 }
 
-struct FollowComparator: SortComparator {
-
-    typealias Compared = Follow
-    var order: SortOrder = .forward
-
-    func compare(_ lhs: Follow, _ rhs: Follow) -> ComparisonResult {
-        if let lhsDestination = lhs.destination {
-            if let rhsDestination = rhs.destination {
-                return lhsDestination.safeName.compare(rhsDestination.safeName)
-            }
-            return order == .forward ? .orderedDescending : .orderedAscending
-        }
-        return order == .forward ? .orderedAscending : .orderedDescending
-    }
-}
-
-struct FollowerComparator: SortComparator {
-
-    typealias Compared = Follow
-    var order: SortOrder = .forward
-
-    func compare(_ lhs: Follow, _ rhs: Follow) -> ComparisonResult {
-        if let lhsSource = lhs.source {
-            if let rhsSource = rhs.source {
-                return lhsSource.safeName.compare(rhsSource.safeName)
-            }
-            return order == .forward ? .orderedDescending : .orderedAscending
-        }
-        return order == .forward ? .orderedAscending : .orderedDescending
-    }
-}
-
 @objc(Follow)
 public class Follow: NosManagedObject {
     

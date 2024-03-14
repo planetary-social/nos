@@ -7,7 +7,6 @@ import Logger
 /// Displays a list of cells that let the user know when other users interact with their notes.
 struct NotificationsView: View {
     
-    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
@@ -17,8 +16,6 @@ struct NotificationsView: View {
     @FetchRequest private var events: FetchedResults<Event>
     @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var isVisible = false
-
-    @State private var concecutiveTapsCancellable: AnyCancellable?
     
     // Probably the logged in user should be in the @Environment eventually
     private var user: Author?
