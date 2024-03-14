@@ -3,14 +3,11 @@ import SwiftUI
 
 struct ProfileEditView: View {
     
-    @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
 
     @Dependency(\.crashReporting) private var crashReporting
-    @Dependency(\.namesAPI) private var namesAPI
-    @Dependency(\.analytics) private var analytics
 
     @ObservedObject var author: Author
     
@@ -45,8 +42,9 @@ struct ProfileEditView: View {
                 HighlightedText(
                     text: .localizable.uploadProfilePicInstructions,
                     highlightedWord: "nostr.build",
-                    highlight: .diagonalAccent, 
-                    font: .clarityCaption,
+                    highlight: .diagonalAccent,
+                    textColor: .secondaryTxt,
+                    font: .footnote,
                     link: URL(string: "https://nostr.build")!
                 )
                 Spacer()
@@ -80,8 +78,7 @@ struct ProfileEditView: View {
             
             HStack {
                 Text(.localizable.identityVerification)
-                    .font(.clarityTitle3)
-                    .fontWeight(.bold)
+                    .font(.clarity(.semibold, textStyle: .headline))
                     .foregroundColor(.primaryTxt)
                     .padding(.top, 16)
                 
@@ -187,7 +184,6 @@ fileprivate struct NosNIP05Field: View {
                         PlainText("@nos.social")
                             .foregroundStyle(Color.secondaryTxt)
                     }
-                    .font(.clarity(.medium, textStyle: .body))
                     Spacer(minLength: 10)
                     Button {
                         showConfirmationDialog = true
@@ -214,8 +210,7 @@ fileprivate struct NosNIP05Field: View {
                     Text(.localizable.usernameWarningMessage)
                         .foregroundStyle(Color.secondaryTxt)
                 )
-                .font(.clarity(.medium, textStyle: .caption1))
-                .lineSpacing(5)
+                .font(.footnote)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
@@ -263,8 +258,7 @@ fileprivate struct NIP05Field: View {
                     Text(.localizable.usernameWarningMessage)
                         .foregroundStyle(Color.secondaryTxt)
                 )
-                .font(.clarity(.medium, textStyle: .caption1))
-                .lineSpacing(5)
+                .font(.footnote)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
