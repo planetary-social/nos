@@ -56,8 +56,7 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 public class Event: NosManagedObject {
     
     @Dependency(\.currentUser) @ObservationIgnored private var currentUser
-    @Dependency(\.persistenceController) @ObservationIgnored private var persistenceController
-    
+
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"
     public static var discoverKinds = [EventKind.text, EventKind.longFormContent]
