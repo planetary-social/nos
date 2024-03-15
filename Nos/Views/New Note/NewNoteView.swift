@@ -45,21 +45,22 @@ struct NewNoteView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                VStack {
-                    ScrollView(.vertical) {
-                        if let replyTo {
-                            ReplyPreview(note: replyTo)
+                VStack(spacing: 0) {
+                    ScrollViewIfNeeded {
+                        VStack(spacing: 0) {
+                            if let replyTo {
+                                ReplyPreview(note: replyTo)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                            NoteTextEditor(
+                                text: $text,
+                                placeholder: .localizable.newNotePlaceholder,
+                                focus: $isTextEditorInFocus
+                            )
+                            .padding(10)
                         }
-                        NoteTextEditor(
-                            text: $text,
-                            placeholder: .localizable.newNotePlaceholder,
-                            focus: $isTextEditorInFocus
-                        )
-                        .padding(10)
                     }
-                    .frame(maxHeight: .infinity)
                     
-                    Spacer()
                     ComposerActionBar(
                         expirationTime: $expirationTime,
                         isUploadingImage: $isUploadingImage,
@@ -229,7 +230,7 @@ struct NewNoteView: View {
 }
 
 #Preview {
-    var previewData = PreviewData()
+    let previewData = PreviewData()
     
     return NewNoteView(isPresented: .constant(true))
         .inject(previewData: previewData)

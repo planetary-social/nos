@@ -1,10 +1,3 @@
-//
-//  ReplyPreview.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/8/24.
-//
-
 import SwiftUI
 
 /// This is a component of `NewNoteView` that displays a preview of the note being replied to. 
