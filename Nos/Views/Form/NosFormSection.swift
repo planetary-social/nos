@@ -1,10 +1,3 @@
-//
-//  NosFormSection.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 9/27/23.
-//
-
 import SwiftUI
 import SwiftUINavigation
 
@@ -23,8 +16,7 @@ struct NosFormSection<Content: View>: View {
             if let label {
                 HStack {
                     Text(label)
-                        .font(.clarityTitle3)
-                        .fontWeight(.bold)
+                        .font(.clarity(.semibold, textStyle: .headline))
                         .foregroundColor(.primaryTxt)
                         .padding(.top, 16)
                     

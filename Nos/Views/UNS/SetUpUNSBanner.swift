@@ -1,10 +1,3 @@
-//
-//  SetUpUNSBanner.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 6/9/23.
-//
-
 import SwiftUI
 
 struct SetUpUNSBanner: View {
@@ -30,7 +23,7 @@ struct SetUpUNSBanner: View {
             VStack {
                 HStack {
                     Text(text)
-                        .font(.clarityBold)
+                        .font(.body)
                         .foregroundStyle(Color.primaryTxt)
                         .lineSpacing(3)
                         .padding(.top, 8)

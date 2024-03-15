@@ -1,10 +1,3 @@
-//
-//  PushNotificationService.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 6/28/23.
-//
-
 import Foundation
 import Logger
 import Dependencies

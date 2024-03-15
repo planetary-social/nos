@@ -1,11 +1,3 @@
-//
-//  ActivityView.swift
-//  Planetary
-//
-//  Created by Martin Dutra on 4/11/22.
-//  Copyright © 2022 Verse Communications Inc. All rights reserved.
-//
-
 import UIKit
 import SwiftUI
 

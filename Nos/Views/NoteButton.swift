@@ -1,10 +1,3 @@
-//
-//  Notebutton.swift
-//  Nos
-//
-//  Created by Jason Cheatham on 2/16/23.
-//
-
 import Foundation
 import SwiftUI
 import CoreData

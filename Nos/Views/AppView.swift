@@ -1,10 +1,3 @@
-//
-//  AppView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/3/23.
-//
-
 import SwiftUI
 import Dependencies
 
@@ -19,11 +12,13 @@ struct AppView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
+    @Dependency(\.userDefaults) private var userDefaults
     @Environment(CurrentUser.self) var currentUser
     
     @State private var showingOptions = false
     @State private var lastSelectedTab = AppDestination.home
-    
+    @State private var showNIP05Wizard = false
+
     var body: some View {
         ZStack {
             if appController.currentState == .onboarding {
@@ -147,7 +142,33 @@ struct AppView: View {
             UITabBar.appearance().unselectedItemTintColor = .secondaryTxt
             UITabBar.appearance().tintColor = .primaryTxt
         }
+        .sheet(isPresented: $showNIP05Wizard) {
+            CreateUsernameWizard(isPresented: $showNIP05Wizard)
+        }
+        .task(presentNIP05SheetIfNeeded)
         .accentColor(.primaryTxt)
+    }
+
+    @Sendable private func presentNIP05SheetIfNeeded() async {
+        // Sleep for half a second
+        try? await Task.sleep(nanoseconds: 500_000_000)
+        guard let author = currentUser.author, let npub = author.npubString else {
+            return
+        }
+        // We store the npub for the user we last presented the sheet for so that
+        // the behavior resets if the user creates a new account
+        let key = "didPresentNIP05SheetForNpub"
+        let didPresentSheetForNpub = userDefaults.string(forKey: key)
+        let shouldShowSheet: Bool
+        if let didPresentSheetForNpub {
+            shouldShowSheet = didPresentSheetForNpub != npub && author.nip05 == nil
+        } else {
+            shouldShowSheet = author.nip05 == nil
+        }
+        if shouldShowSheet {
+            showNIP05Wizard = true
+            userDefaults.setValue(npub, forKey: key)
+        }
     }
 }
 

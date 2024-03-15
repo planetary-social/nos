@@ -1,10 +1,3 @@
-//
-//  FollowButton.swift
-//  Nos
-//
-//  Created by Christopher Jorgensen on 2/24/23.
-//
-
 import SwiftUI
 import Dependencies
 import CoreData

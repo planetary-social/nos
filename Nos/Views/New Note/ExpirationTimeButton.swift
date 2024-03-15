@@ -1,10 +1,3 @@
-//
-//  ExpirationTimeButton.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 5/5/23.
-//
-
 import SwiftUI
 
 /// A button that lets the user select an `ExpirationTimeOption` to specify when an event should be deleted.

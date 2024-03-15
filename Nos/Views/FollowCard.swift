@@ -1,10 +1,3 @@
-//
-//  FollowCard.swift
-//  Nos
-//
-//  Created by Christopher Jorgensen on 2/22/23.
-//
-
 import SwiftUI
 
 /// This view displays the information we have for an message suitable for being used in a list or grid.

@@ -1,10 +1,3 @@
-//
-//  WalletConnectCryptoProvider.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 10/17/23.
-//
-
 import Foundation
 import Web3
 import CryptoSwift

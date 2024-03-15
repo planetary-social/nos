@@ -1,10 +1,3 @@
-//
-//  EditableText.swift
-//  Nos
-//
-//  Created by Martin Dutra on 5/4/23.
-//
-
 import Foundation
 import SwiftUI
 import UIKit

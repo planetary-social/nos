@@ -1,10 +1,3 @@
-//
-//  UNSAPI.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/20/23.
-//
-
 import secp256k1
 import Foundation
 import Logger

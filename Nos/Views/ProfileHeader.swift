@@ -1,11 +1,3 @@
-//
-//  IdentityViewHeader.swift
-//  Planetary
-//
-//  Created by Martin Dutra on 11/11/22.
-//  Copyright © 2022 Verse Communications Inc. All rights reserved.
-//
-
 import SwiftUI
 import CoreData
 import Logger

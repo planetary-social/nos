@@ -1,10 +1,3 @@
-//
-//  DoubleTapToPopModifier.swift
-//  Nos
-//
-//  Created by Martin Dutra on 21/8/23.
-//
-
 import Combine
 import SwiftUI
 

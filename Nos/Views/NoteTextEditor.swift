@@ -1,10 +1,3 @@
-//
-//  NoteTextEditor.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 5/16/23.
-//
-
 import SwiftUI
 
 /// A text editor for composing Nostr notes. Supports autocomplete of mentions.

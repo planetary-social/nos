@@ -1,10 +1,3 @@
-//
-//  SearchController.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 6/5/23.
-//
-
 import Foundation
 import Combine
 import Dependencies

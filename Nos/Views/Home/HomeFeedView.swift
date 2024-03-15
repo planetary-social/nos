@@ -1,10 +1,3 @@
-//
-//  HomeFeedView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 1/31/23.
-//
-
 import SwiftUI
 import CoreData
 import Combine

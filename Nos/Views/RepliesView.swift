@@ -1,10 +1,3 @@
-//
-//  RepliesView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/14/23.
-//
-
 import Foundation
 import Logger
 import SwiftUI

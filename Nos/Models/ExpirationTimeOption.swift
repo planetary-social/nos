@@ -1,10 +1,3 @@
-//
-//  ExpirationTimeOption.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 5/5/23.
-//
-
 import Foundation
 
 /// Options for expiring messages - each of these represents a length of time before a message expires.

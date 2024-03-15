@@ -1,10 +1,3 @@
-//
-//  LinkPreview.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 7/14/23.
-//
-
 import SwiftUI
 import LinkPresentation
 import SDWebImageSwiftUI

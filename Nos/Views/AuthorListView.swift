@@ -1,10 +1,3 @@
-//
-//  AuthorListView.swift
-//  Nos
-//
-//  Created by Martin Dutra on 29/3/23.
-//
-
 import Foundation
 import SwiftUI
 

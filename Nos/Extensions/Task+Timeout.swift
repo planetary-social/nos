@@ -1,10 +1,3 @@
-//
-//  Task+Timeout.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 5/5/23.
-//
-
 import Foundation
 
 // https://gist.github.com/swhitty/9be89dfe97dbb55c6ef0f916273bbb97

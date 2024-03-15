@@ -1,10 +1,3 @@
-//
-//  NoteParser.swift
-//  Nos
-//
-//  Created by Martin Dutra on 17/4/23.
-//
-
 import CoreData
 import Foundation
 import RegexBuilder

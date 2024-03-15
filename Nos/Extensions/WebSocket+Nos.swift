@@ -1,10 +1,3 @@
-//
-//  WebSocket+Nos.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 4/7/23.
-//
-
 import Foundation
 import Starscream
 

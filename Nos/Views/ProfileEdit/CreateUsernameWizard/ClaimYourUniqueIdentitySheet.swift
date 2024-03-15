@@ -1,10 +1,3 @@
-//
-//  ClaimYourUniqueIdentitySheet.swift
-//  Nos
-//
-//  Created by Martin Dutra on 6/3/24.
-//
-
 import SwiftUI
 
 struct ClaimYourUniqueIdentitySheet: View {

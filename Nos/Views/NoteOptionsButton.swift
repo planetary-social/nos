@@ -1,10 +1,3 @@
-//
-//  NoteOptionsButton.swift
-//  Nos
-//
-//  Created by Jason Cheatham on 3/6/23.
-//
-
 import Foundation
 import SwiftUI
 import Dependencies

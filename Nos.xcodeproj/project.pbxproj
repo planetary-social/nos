@@ -169,10 +169,7 @@
 		C9646EA929B7A4F2007239A4 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = C9646EA829B7A4F2007239A4 /* PostHog */; };
 		C9646EAA29B7A506007239A4 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9646EA029B7A22C007239A4 /* Analytics.swift */; };
 		C9646EAC29B7A520007239A4 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = C9646EAB29B7A520007239A4 /* Dependencies */; };
-		C9646EAE29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */; };
 		C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */; };
-		C9680AD12ACC5251006C8C93 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9680AD02ACC5251006C8C93 /* Either.swift */; };
-		C9680AD22ACC5251006C8C93 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9680AD02ACC5251006C8C93 /* Either.swift */; };
 		C9680AD42ACDF57D006C8C93 /* UNSWizardNeedsPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9680AD32ACDF57D006C8C93 /* UNSWizardNeedsPaymentView.swift */; };
 		C96877B92B4EDD110051ED2F /* AuthorStoryCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96877B82B4EDD110051ED2F /* AuthorStoryCarousel.swift */; };
 		C96877BB2B4EDE510051ED2F /* StoryAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96877BA2B4EDE510051ED2F /* StoryAvatarView.swift */; };
@@ -603,9 +600,7 @@
 		C960C57029F3236200929990 /* LikeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeButton.swift; sourceTree = "<group>"; };
 		C960C57329F3251E00929990 /* RepostButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepostButton.swift; sourceTree = "<group>"; };
 		C9646EA029B7A22C007239A4 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
-		C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDidLoadModifier.swift; sourceTree = "<group>"; };
 		C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Encoding.swift"; sourceTree = "<group>"; };
-		C9680AD02ACC5251006C8C93 /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		C9680AD32ACDF57D006C8C93 /* UNSWizardNeedsPaymentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UNSWizardNeedsPaymentView.swift; sourceTree = "<group>"; };
 		C96877B82B4EDD110051ED2F /* AuthorStoryCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorStoryCarousel.swift; sourceTree = "<group>"; };
 		C96877BA2B4EDE510051ED2F /* StoryAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryAvatarView.swift; sourceTree = "<group>"; };
@@ -1084,7 +1079,6 @@
 				C95D68A8299E709800429F86 /* LinearGradient+Planetary.swift */,
 				C9A0DAE629C69FA000466635 /* Text+Gradient.swift */,
 				C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */,
-				C9646EAD29B8D653007239A4 /* ViewDidLoadModifier.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -1232,7 +1226,6 @@
 				C9F2047F2AE029D90029A858 /* AppDestination.swift */,
 				C9F204642ADEDB9A0029A858 /* BigDecimal.swift */,
 				C94A5E142A716A6D00B6EC5D /* EditableNoteText.swift */,
-				C9680AD02ACC5251006C8C93 /* Either.swift */,
 				C9EE3E622A053910008A7491 /* ExpirationTimeOption.swift */,
 				C93CA0C229AE3A1E00921183 /* JSONEvent.swift */,
 				5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */,
@@ -1766,7 +1759,6 @@
 				C9F204802AE029D90029A858 /* AppDestination.swift in Sources */,
 				3F30020B29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift in Sources */,
 				C9C5475B2A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift in Sources */,
-				C9680AD12ACC5251006C8C93 /* Either.swift in Sources */,
 				C98B8B4029FBF83B009789C8 /* NotificationCard.swift in Sources */,
 				5B834F672A83FB5C000C1432 /* ProfileKnownFollowersView.swift in Sources */,
 				C9E8C1152B081EBE002D46B0 /* NIP05View.swift in Sources */,
@@ -1845,7 +1837,6 @@
 				C930055F2A6AF8320098CA9E /* LoadingContent.swift in Sources */,
 				5B79F6462BA11725002DA9BE /* WizardSheetVStack.swift in Sources */,
 				C9A6C74D2AD98E2A001F9500 /* UNSNameTakenView.swift in Sources */,
-				C9646EAE29B8D653007239A4 /* ViewDidLoadModifier.swift in Sources */,
 				C94D59AC2AE711A400295AE8 /* WalletConnectErrorView.swift in Sources */,
 				C92F015B2AC4D74E00972489 /* NosTextEditor.swift in Sources */,
 				C913DA0C2AEB2EBF003BDD6D /* FetchRequestPublisher.swift in Sources */,
@@ -2058,7 +2049,6 @@
 				C96D39252B61B06200D3D0A1 /* AuthorTests.swift in Sources */,
 				DC08FF812A7969C5009F87D1 /* UIDevice+Simulator.swift in Sources */,
 				C9C9444229F6F0E2002F2C7A /* XCTest+Eventually.swift in Sources */,
-				C9680AD22ACC5251006C8C93 /* Either.swift in Sources */,
 				3FFF3BD029A9645F00DD0B72 /* AuthorReference+CoreDataClass.swift in Sources */,
 				C9F0BB6C29A503D6000547FC /* PublicKey.swift in Sources */,
 				C9DEC06F2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,

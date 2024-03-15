@@ -1,10 +1,3 @@
-//
-//  NosFormField.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 9/28/23.
-//
-
 import SwiftUI
 import SwiftUINavigation
 
@@ -30,8 +23,7 @@ struct NosFormField<Control: View>: View {
             HStack {
                 Text(label)
                     .foregroundColor(.secondaryTxt)
-                    .fontWeight(.medium)
-                    .font(.clarityFootnote)
+                    .font(.clarity(.medium, textStyle: .subheadline))
                 Spacer()
             }
             

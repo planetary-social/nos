@@ -1,10 +1,3 @@
-//
-//  SupportedChainType.swift
-//  DAppExample
-//
-//  Created by Marcel Salej on 28/09/2023.
-//
-
 import Foundation
 import WalletConnectUtils
 
