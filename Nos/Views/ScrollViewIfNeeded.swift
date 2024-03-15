@@ -6,10 +6,12 @@ import SwiftUI
 struct ScrollViewIfNeeded<Content>: View where Content: View {
     @ViewBuilder var content: Content
     
+    var axes: Axis.Set = [.vertical]
+    
     var body: some View {
-        ViewThatFits {
+        ViewThatFits(in: axes) {
             content 
-            ScrollView {
+            ScrollView(axes) {
                 content
             }
         } 

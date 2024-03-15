@@ -50,7 +50,6 @@ struct NewNoteView: View {
                         VStack(spacing: 0) {
                             if let replyTo {
                                 ReplyPreview(note: replyTo)
-                                    .fixedSize(horizontal: false, vertical: true)
                             }
                             NoteTextEditor(
                                 text: $text,
