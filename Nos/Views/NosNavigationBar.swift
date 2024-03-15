@@ -32,7 +32,7 @@ struct NosNavigationBar_Previews: PreviewProvider {
         NavigationStack {
             VStack {
                 Spacer()
-                Text("Content")
+                PlainText("Content")
                 Spacer()
             }
             .frame(maxWidth: .infinity)
