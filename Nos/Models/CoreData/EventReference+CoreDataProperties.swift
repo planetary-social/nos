@@ -2,11 +2,6 @@ import Foundation
 import CoreData
 
 extension EventReference {
-
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<EventReference> {
-        NSFetchRequest<EventReference>(entityName: "EventReference")
-    }
-
     @NSManaged public var eventId: String?
     @NSManaged public var marker: String?
     @NSManaged public var recommendedRelayUrl: String?

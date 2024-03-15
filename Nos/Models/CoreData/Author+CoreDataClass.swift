@@ -3,10 +3,6 @@ import CoreData
 import Dependencies
 import Logger
 
-enum AuthorError: Error {
-    case coreData
-}
-
 @objc(Author)
 @Observable public class Author: NosManagedObject {
     
@@ -305,16 +301,6 @@ enum AuthorError: Error {
         return fetchRequest
     }
     
-    @nonobjc func followsRequest() -> NSFetchRequest<Author> {
-        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
-        fetchRequest.predicate = NSPredicate(
-            format: "ANY followers = %@",
-            self
-        )
-        return fetchRequest
-    }    
-    
     func reportsReferencingFetchRequest() -> NSFetchRequest<Event> {
         guard let hexadecimalPublicKey else {
             return Event.emptyRequest()
@@ -328,25 +314,7 @@ enum AuthorError: Error {
         )
         return fetchRequest
     }
-    
-    @nonobjc func authoredReportsRequest() -> NSFetchRequest<Event> {
-        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = NSPredicate(
-            format: "kind = %i AND author = %@",
-            EventKind.report.rawValue,
-            self
-        )
-        return fetchRequest
-    }
 
-    @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {
-        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: true)]
-        fetchRequest.predicate = NSPredicate.false
-        return fetchRequest
-    }
-    
     class func all(context: NSManagedObjectContext) -> [Author] {
         let allRequest = Author.allAuthorsRequest()
         
