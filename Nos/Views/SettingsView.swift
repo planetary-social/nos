@@ -13,7 +13,6 @@ struct SettingsView: View {
     @Dependency(\.userDefaults) private var userDefaults
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(AppController.self) var appController
-    @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
 
     @State private var privateKeyString = ""

@@ -8,8 +8,6 @@ struct ProfileTab: View {
     @ObservedObject var author: Author
     
     @Binding var path: NavigationPath
-    
-    @EnvironmentObject private var router: Router
 
     var body: some View {
         NavigationStack(path: $path) {

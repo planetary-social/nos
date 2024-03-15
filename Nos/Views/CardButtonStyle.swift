@@ -3,9 +3,7 @@ import SwiftUI
 struct CardButtonStyle: ButtonStyle {
     
     var style: CardStyle
-    
-    @State private var configurationSize: CGSize = .zero
-    
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label.mimicCardButtonStyle(style: style, isPressed: configuration.isPressed)
     }

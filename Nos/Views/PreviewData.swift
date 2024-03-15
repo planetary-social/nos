@@ -16,7 +16,7 @@ struct PreviewData {
     @Dependency(\.persistenceController) var persistenceController 
     @Dependency(\.router) var router
     @Dependency(\.relayService) var relayService
-    @Dependency(\.analytics) var analytics
+    
     lazy var previewContext: NSManagedObjectContext = {
         persistenceController.container.viewContext  
     }()
