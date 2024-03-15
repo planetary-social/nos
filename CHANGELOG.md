@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Update font styles on Edit Profile and Settings screens.
+- Update font styles on Thread, Edit Profile, and Settings screens.
 - Fix issue with uploading photos on Mac.
 - Re-design the confirmation dialog that appears when you delete your NIP-05.
 
