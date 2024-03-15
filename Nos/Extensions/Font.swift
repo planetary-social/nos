@@ -64,11 +64,6 @@ extension Font {
             forTextStyle: .caption2
         ).pointSize)
     
-    static var clarityCallout = Font
-        .custom("ClarityCity-Regular", size: UIFont.preferredFont(
-            forTextStyle: .callout
-        ).pointSize)
-
     static var claritySubheadline = clarity(.medium, textStyle: .subheadline)
 
     static var claritySemiBoldSubheadline = Font
@@ -98,15 +93,7 @@ func PlainText(_ localizedStringResource: LocalizedStringResource) -> SwiftUI.Te
     SwiftUI.Text(localizedStringResource)
 }
 
-func PlainTextField<Label: View>(text: Binding<String>, prompt: Text? = nil, label: () -> Label) -> some View {
-    SwiftUI.TextField(text: text, prompt: prompt, label: label)
-}
-
 func Text(_ content: any StringProtocol) -> SwiftUI.Text {
     .init(content).font(.brand)
-}
-
-func TextField(_ titleKey: LocalizedStringKey, text: Binding<String>, axis: Axis = .horizontal) -> some View {
-    SwiftUI.TextField(titleKey, text: text, axis: axis).font(.body)
 }
 // swiftlint:enable identifier_name
