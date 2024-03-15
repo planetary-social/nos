@@ -19,10 +19,7 @@ struct NoteButton: View {
     private let replyAction: ((Event) -> Void)?
     private let tapAction: ((Event) -> Void)?
 
-    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var relayService: RelayService
-    @Dependency(\.persistenceController) private var persistenceController
     
     init(
         note: Event, 
