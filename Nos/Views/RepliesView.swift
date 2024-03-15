@@ -117,9 +117,9 @@ struct RepliesView: View {
                             ThreadView(root: event, allReplies: replies.reversed())
                         }
                     }
-                    .frame(maxHeight: .infinity)
                     .padding(.bottom)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding(.top, 1)
                 .nosNavigationBar(title: .localizable.thread)
                 .onAppear {
