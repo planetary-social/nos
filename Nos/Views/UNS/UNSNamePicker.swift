@@ -96,7 +96,7 @@ struct UNSNamePicker: View {
                         .frame(width: 16, height: 16)
                 }
                 
-                PlainTextField(text: $desiredName) {
+                TextField(text: $desiredName) {
                     PlainText(.localizable.createNewName)
                         .foregroundColor(.secondaryTxt)
                 }

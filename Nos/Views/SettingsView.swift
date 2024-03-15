@@ -79,11 +79,11 @@ struct SettingsView: View {
                 .padding(.vertical, 5)
             } header: {
                 VStack(alignment: .leading, spacing: 10) {
-                    SwiftUI.Text(.localizable.privateKey)
+                    PlainText(.localizable.privateKey)
                         .foregroundColor(.primaryTxt)
                         .font(.clarity(.semibold, textStyle: .headline))
 
-                    SwiftUI.Text(.localizable.privateKeyWarning)
+                    PlainText(.localizable.privateKeyWarning)
                         .foregroundColor(.secondaryTxt)
                         .font(.footnote)
                 }
@@ -101,7 +101,7 @@ struct SettingsView: View {
             Section {
                 VStack {
                     Toggle(isOn: $showReportWarnings) { 
-                        SwiftUI.Text(.localizable.useReportsFromFollows)
+                        PlainText(.localizable.useReportsFromFollows)
                             .foregroundColor(.primaryTxt)
                     }
                     .onChange(of: showReportWarnings) { _, newValue in
@@ -109,7 +109,7 @@ struct SettingsView: View {
                     }
                     
                     HStack {
-                        SwiftUI.Text(.localizable.useReportsFromFollowsDescription)
+                        PlainText(.localizable.useReportsFromFollowsDescription)
                             .foregroundColor(.secondaryTxt)
                             .font(.footnote)
                         Spacer()
@@ -119,7 +119,7 @@ struct SettingsView: View {
 
                 VStack {
                     Toggle(isOn: $showOutOfNetworkWarning) { 
-                        SwiftUI.Text(.localizable.showOutOfNetworkWarnings)
+                        PlainText(.localizable.showOutOfNetworkWarnings)
                             .foregroundColor(.primaryTxt)
                     }
                     .onChange(of: showOutOfNetworkWarning) { _, newValue in
@@ -127,7 +127,7 @@ struct SettingsView: View {
                     }
                     
                     HStack {
-                        SwiftUI.Text(.localizable.showOutOfNetworkWarningsDescription)
+                        PlainText(.localizable.showOutOfNetworkWarningsDescription)
                             .foregroundColor(.secondaryTxt)
                             .font(.footnote)
                         Spacer()
@@ -135,7 +135,7 @@ struct SettingsView: View {
                 }
                 .padding(.bottom, 8)
             } header: {
-                Text(.localizable.feedSettings)
+                PlainText(.localizable.feedSettings)
                     .foregroundColor(.primaryTxt)
                     .font(.clarity(.semibold, textStyle: .headline))
                     .textCase(nil)
@@ -154,7 +154,7 @@ struct SettingsView: View {
             
             Section {
                 HStack {
-                    SwiftUI.Text("\(String(localized: .localizable.appVersion)) \(Bundle.current.versionAndBuild)")
+                    PlainText("\(String(localized: .localizable.appVersion)) \(Bundle.current.versionAndBuild)")
                         .foregroundColor(.primaryTxt)
                     Spacer()
                     SecondaryActionButton(title: .localizable.shareLogs) {
@@ -177,7 +177,7 @@ struct SettingsView: View {
                 }
 
                 #if DEBUG
-                SwiftUI.Text(.localizable.sampleDataInstructions)
+                PlainText(.localizable.sampleDataInstructions)
                     .foregroundColor(.primaryTxt)
                 Button(String(localized: .localizable.loadSampleData)) {
                     Task {
@@ -192,12 +192,12 @@ struct SettingsView: View {
                     NavigationLink {
                         PublishedEventsView(author: author)
                     } label: {
-                        SwiftUI.Text(.localizable.allPublishedEvents)
+                        PlainText(.localizable.allPublishedEvents)
                     }
                 }
                 #endif
             } header: {
-                SwiftUI.Text(.localizable.debug)
+                PlainText(.localizable.debug)
                     .foregroundColor(.primaryTxt)
                     .font(.clarity(.semibold, textStyle: .headline))
                     .textCase(nil)
