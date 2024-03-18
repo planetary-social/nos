@@ -44,7 +44,7 @@ struct BioView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            SwiftUI.Text(parsedBio)
+            Text(parsedBio)
                 .font(font)
                 .foregroundColor(.primaryTxt)
                 .tint(.accent)
@@ -63,7 +63,7 @@ struct BioView: View {
                     }
                 }
                 .background {
-                    SwiftUI.Text(parsedBio)
+                    Text(parsedBio)
                         .font(font)
                         .lineSpacing(lineSpacing)
                         .padding(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))

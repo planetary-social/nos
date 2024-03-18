@@ -46,11 +46,11 @@ struct CompactNoteView: View {
         Group {
             switch note.attributedContent {
             case .loading:
-                SwiftUI.Text(note.content ?? "")
+                Text(note.content ?? "")
                     .font(.clarity(.regular))
                     .redacted(reason: .placeholder)
             case .loaded(let attributedString):
-                SwiftUI.Text(attributedString)
+                Text(attributedString)
             }
         }
     }

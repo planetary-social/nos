@@ -59,7 +59,7 @@ struct ConfirmUsernameDeletionSheet: View {
             Button {
                 isPresented = false
             } label: {
-                SwiftUI.Text(.localizable.cancel)
+                Text(.localizable.cancel)
                     .font(.clarity(.medium, textStyle: .footnote))
             }
             .frame(maxWidth: .infinity)
@@ -72,7 +72,7 @@ struct ConfirmUsernameDeletionSheet: View {
             Button {
                 isPresented = false
             } label: {
-                SwiftUI.Text(.localizable.ok)
+                Text(.localizable.ok)
             }
         }
     }
