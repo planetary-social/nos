@@ -77,7 +77,7 @@ struct ProfileHeader: View {
 
                         PlainText(author.safeName)
                             .lineLimit(1)
-                            .font(.clarityTitle3.weight(.semibold))
+                            .font(.clarity(.bold, textStyle: .title3).weight(.semibold))
                             .foregroundColor(Color.primaryTxt)
                         
                         // NIP-05

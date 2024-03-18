@@ -9,7 +9,7 @@ struct WalletConnectSendView: View {
         VStack {
             HStack {
                 PlainText(.localizable.sendUSBC)
-                    .font(.clarityTitle)
+                    .font(.clarity(.bold, textStyle: .title1))
                     .foregroundColor(.primaryTxt)
                     .multilineTextAlignment(.leading)
                     .padding(0)
@@ -66,7 +66,7 @@ struct WalletConnectSendView: View {
                         .foregroundColor(.secondaryTxt)
                 }
                 .keyboardType(.decimalPad)
-                .font(.clarityTitle2)
+                .font(.clarity(.bold, textStyle: .title2))
                 .foregroundColor(.primaryTxt)
                 .multilineTextAlignment(.center)
                 .padding(19)

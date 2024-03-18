@@ -12,7 +12,7 @@ struct WalletConnectPairingView: View {
         VStack {
             HStack {
                 PlainText(.localizable.connectGlobalIDTitle)
-                    .font(.clarityTitle)
+                    .font(.clarity(.bold, textStyle: .title1))
                     .foregroundColor(.primaryTxt)
                     .multilineTextAlignment(.leading)
                     .padding(0)

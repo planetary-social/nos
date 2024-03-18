@@ -33,21 +33,6 @@ extension Font {
         .custom("ClarityCity-Bold", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
     }
 
-    static var clarityTitle = Font
-        .custom("ClarityCity-Bold", size: UIFont.preferredFont(
-            forTextStyle: .title1
-        ).pointSize)
-    
-    static var clarityTitle2 = Font
-        .custom("ClarityCity-Bold", size: UIFont.preferredFont(
-            forTextStyle: .title2
-        ).pointSize)
-    
-    static var clarityTitle3 = Font
-        .custom("ClarityCity-Bold", size: UIFont.preferredFont(
-            forTextStyle: .title3
-        ).pointSize)
-
     static var clarityCaption = Font
         .custom("ClarityCity-Regular", size: UIFont.preferredFont(
             forTextStyle: .caption1

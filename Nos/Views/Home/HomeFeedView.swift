@@ -145,7 +145,7 @@ struct HomeFeedView: View {
                             Image("relay-left")
                                 .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
                             BrandText("\(relayService.numberOfConnectedRelays)")
-                                .font(.clarityTitle3)
+                                .font(.clarity(.bold, textStyle: .title3))
                                 .fontWeight(.heavy)
                                 .foregroundColor(.primaryTxt)
                             Image("relay-right")

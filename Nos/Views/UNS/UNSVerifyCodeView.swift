@@ -23,7 +23,7 @@ struct UNSVerifyCodeView: View {
                         .padding(.top, 50)
                     
                     PlainText(.localizable.verification)
-                        .font(.clarityTitle)
+                        .font(.clarity(.bold, textStyle: .title1))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)

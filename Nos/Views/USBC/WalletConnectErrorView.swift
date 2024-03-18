@@ -16,7 +16,7 @@ struct WalletConnectErrorView: View {
             
             HStack {
                 PlainText(.localizable.somethingWentWrong)
-                    .font(.clarityTitle)
+                    .font(.clarity(.bold, textStyle: .title1))
                     .foregroundColor(.primaryTxt)
                     .multilineTextAlignment(.leading)
                     .padding(0)

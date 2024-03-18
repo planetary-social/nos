@@ -40,7 +40,7 @@ struct PickYourUsernameSheet: View {
                                 }
                             }
                         PlainText(".nos.social")
-                            .font(.clarityTitle3)
+                            .font(.clarity(.bold, textStyle: .title3))
                             .foregroundStyle(Color.secondaryTxt)
                     }
                     if validationFailed {

@@ -11,7 +11,7 @@ struct WizardTextField: View {
             PlainText(placeholder)
                 .foregroundColor(.secondaryTxt)
         }
-        .font(.clarityTitle2)
+        .font(.clarity(.bold, textStyle: .title2))
         .foregroundColor(.primaryTxt)
         .multilineTextAlignment(.center)
         .padding(19)

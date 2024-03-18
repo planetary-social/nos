@@ -70,7 +70,7 @@ struct UNSNamePicker: View {
                             
                             PickerRow(isSelected: isSelected) {
                                 PlainText(name.name)
-                                    .font(.clarityTitle2)
+                                    .font(.clarity(.bold, textStyle: .title2))
                             }
                         }
                     }
@@ -101,7 +101,7 @@ struct UNSNamePicker: View {
                         .foregroundColor(.secondaryTxt)
                 }
                 .focused($isTextFieldFocused)
-                .font(.clarityTitle2)
+                .font(.clarity(.bold, textStyle: .title2))
                 .foregroundStyle(textFieldForegroundStyle)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.none)
