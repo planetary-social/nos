@@ -18,9 +18,10 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     private var emptyPlaceholder: () -> EmptyPlaceholder
     let pageSize = 10
     
-    private var cellReuseID = "Cell"
-    private var headerReuseID = "Header"
-    private var footerReuseID = "Footer"
+    // We intentionally generate unique IDs for cell reuse to get around 
+    // [this issue](https://github.com/planetary-social/nos/issues/873)
+    lazy var headerReuseID = { "Header-\(self.description)" }()
+    lazy var footerReuseID = { "Footer-\(self.description)" }()
     
     init(
         databaseFilter: NSFetchRequest<Event>, 
@@ -42,7 +43,8 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         self.header = header
         self.emptyPlaceholder = emptyPlaceholder
         
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellReuseID)
+        super.init()
+        
         collectionView.register(
             UICollectionViewCell.self, 
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, 
@@ -53,8 +55,6 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, 
             withReuseIdentifier: footerReuseID
         )
-
-        super.init()
         
         self.fetchedResultsController.delegate = self
         
@@ -99,7 +99,13 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         }        
         
         let note = fetchedResultsController.object(at: indexPath) 
+        
+        // We intentionally generate unique IDs for cell reuse to get around 
+        // [this issue](https://github.com/planetary-social/nos/issues/873)
+        let cellReuseID = note.identifier ?? "error"
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellReuseID)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseID, for: indexPath) 
+        
         cell.contentConfiguration = UIHostingConfiguration { 
             NoteButton(note: note, hideOutOfNetwork: false, displayRootMessage: true)
         }
