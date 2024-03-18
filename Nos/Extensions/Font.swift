@@ -49,8 +49,4 @@ func PlainText(_ content: any StringProtocol) -> SwiftUI.Text {
 func PlainText(_ localizedStringResource: LocalizedStringResource) -> SwiftUI.Text {
     SwiftUI.Text(localizedStringResource)
 }
-
-func BrandText(_ content: any StringProtocol) -> SwiftUI.Text {
-    .init(content).font(.clarity(.regular))
-}
 // swiftlint:enable identifier_name

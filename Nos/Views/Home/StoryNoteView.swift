@@ -68,7 +68,7 @@ struct StoryNoteView: View {
         Group {
             switch noteContent {
             case .loading:
-                BrandText(String.loremIpsum(3))
+                Text(String.loremIpsum(3))
                     .redacted(reason: .placeholder)
             case .loaded(let attributedString):
                 Text(attributedString)

@@ -206,7 +206,7 @@ fileprivate struct NosNIP05Field: View {
                 (
                     Text(Image(systemName: "exclamationmark.triangle"))
                         .foregroundStyle(Color(hex: "#F0A108")) +
-                    BrandText(" ") +
+                    Text(" ") +
                     Text(.localizable.usernameWarningMessage)
                         .foregroundStyle(Color.secondaryTxt)
                 )
@@ -230,7 +230,7 @@ fileprivate struct NIP05Field: View {
         ) {
             VStack {
                 HStack {
-                    BrandText(nip05)
+                    Text(nip05)
                         .foregroundColor(.primaryTxt)
                     Spacer()
                     Button {
@@ -254,7 +254,7 @@ fileprivate struct NIP05Field: View {
                 (
                     Text(Image(systemName: "exclamationmark.triangle"))
                         .foregroundStyle(Color(hex: "#F0A108")) +
-                    BrandText(" ") +
+                    Text(" ") +
                     Text(.localizable.usernameWarningMessage)
                         .foregroundStyle(Color.secondaryTxt)
                 )

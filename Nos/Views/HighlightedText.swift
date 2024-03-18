@@ -171,7 +171,7 @@ struct HighlightedText: View {
         highlightBuilder: (String) -> Text,
         bodyBuilder: (String) -> Text
     ) -> Text {
-        var textView = BrandText("")
+        var textView = Text("")
         for segment in segments {
             // swiftlint:disable shorthand_operator
             switch segment {
@@ -180,7 +180,7 @@ struct HighlightedText: View {
             case .highlighted(let string):
                 textView = textView + highlightBuilder(string)
             case .space:
-                textView = textView + BrandText(" ")
+                textView = textView + Text(" ")
             }
             // swiftlint:enable shorthand_operator
         }

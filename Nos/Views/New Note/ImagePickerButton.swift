@@ -132,7 +132,7 @@ struct ImagePickerCoordinator_Previews: PreviewProvider {
         ImagePickerButton { pickedImage in
             print(pickedImage)
         } label: {
-            BrandText("Hit me")
+            Text("Hit me")
         }
     }
 }

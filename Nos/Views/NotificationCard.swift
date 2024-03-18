@@ -57,9 +57,9 @@ struct NotificationCard: View {
                 
                 VStack {
                     Spacer()
-                    BrandText(viewModel.date.distanceString())
+                    Text(viewModel.date.distanceString())
                         .lineLimit(1)
-                        .font(.body)
+                        .font(.clarity(.regular))
                         .foregroundColor(.secondaryTxt)
                 }
                 .fixedSize()

@@ -81,9 +81,9 @@ struct RelayPickerRow: View {
             selection = relay
         } label: {
             HStack {
-                BrandText(title)
+                Text(title)
                     .foregroundColor(.primaryTxt)
-                    .bold()
+                    .font(.clarity(.bold))
                     .lineLimit(1)
                     .padding(.horizontal, 19)
                     .padding(.vertical, 19)

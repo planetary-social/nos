@@ -102,7 +102,8 @@ struct BioView: View {
             }
         }
         .placeholder(when: isLoading) {
-            BrandText(String.loremIpsum(1))
+            Text(String.loremIpsum(1))
+                .font(.clarity(.regular))
                 .lineSpacing(lineSpacing)
                 .lineLimit(5)
                 .padding(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))

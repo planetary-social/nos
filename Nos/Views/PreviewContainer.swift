@@ -20,7 +20,7 @@ struct PreviewContainer_Previews: PreviewProvider {
     static var previews: some View {
         StatefulPreviewContainer(false) { binding in
             VStack {
-                Toggle(isOn: binding) { BrandText("Toggle me") }
+                Toggle(isOn: binding) { Text("Toggle me") }
             }
             .padding()
         }

@@ -144,9 +144,8 @@ struct HomeFeedView: View {
                         HStack(spacing: 3) {
                             Image("relay-left")
                                 .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
-                            BrandText("\(relayService.numberOfConnectedRelays)")
+                            Text("\(relayService.numberOfConnectedRelays)")
                                 .font(.clarity(.bold, textStyle: .title3))
-                                .fontWeight(.heavy)
                                 .foregroundColor(.primaryTxt)
                             Image("relay-right")
                                 .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)

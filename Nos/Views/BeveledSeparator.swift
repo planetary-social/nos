@@ -19,11 +19,11 @@ struct BeveledSeparator: View {
 struct BeveledSeparator_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            BrandText("hello")
+            Text("hello")
             FormSeparator()
-            BrandText("world")
+            Text("world")
             BeveledSeparator()
-            BrandText("world")
+            Text("world")
         }
         .background(Color.appBg)
     }

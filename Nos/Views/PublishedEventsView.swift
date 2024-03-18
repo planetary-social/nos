@@ -1,5 +1,7 @@
+#if DEBUG
 import SwiftUI
 
+/// Only used for debugging. Settings > All published events.
 struct PublishedEventsView: View {
 
     var author: Author
@@ -15,12 +17,12 @@ struct PublishedEventsView: View {
         List {
             ForEach(events) { event in
                 Section {
-                    BrandText("id: \(event.identifier ?? String(localized: .localizable.error))")
-                    BrandText("kind: \(event.kind)")
-                    BrandText("content: \(event.content ?? String(localized: .localizable.error))")
+                    Text("id: \(event.identifier ?? String(localized: .localizable.error))")
+                    Text("kind: \(event.kind)")
+                    Text("content: \(event.content ?? String(localized: .localizable.error))")
                     if let tags = event.allTags as? [[String]] {
                         ForEach(tags, id: \.self) { tag in
-                            BrandText("tag: \(tag.joined(separator: ", "))")
+                            Text("tag: \(tag.joined(separator: ", "))")
                         }
                     }
                 }
@@ -43,3 +45,4 @@ struct PublishedEventsView_Previews: PreviewProvider {
         PublishedEventsView(author: previewData.previewAuthor)
     }
 }
+#endif

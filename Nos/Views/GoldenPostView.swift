@@ -26,7 +26,7 @@ struct GoldenPostView: View {
         Group {
             switch noteContent {
             case .loading:
-                BrandText(note.content ?? "").redacted(reason: .placeholder)
+                Text(note.content ?? "").redacted(reason: .placeholder)
             case .loaded(let attributedString):
                 Text(attributedString)
             }
