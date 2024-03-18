@@ -10,7 +10,8 @@ struct ReplyPreview: View {
         VStack(spacing: 8) {
             HStack {
                 AvatarView(imageUrl: note.author?.profilePhotoURL, size: 30)
-                Text(note.author?.safeName ?? "")
+                PlainText(note.author?.safeName ?? "")
+                    .font(.clarity(.medium, textStyle: .subheadline))
                     .foregroundColor(.primaryTxt)
                     .bold()
                 Text(note.createdAt?.distanceString() ?? "")

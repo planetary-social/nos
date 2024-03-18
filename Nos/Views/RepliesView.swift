@@ -1,4 +1,3 @@
-import Foundation
 import Logger
 import SwiftUI
 import SwiftUINavigation
@@ -19,7 +18,7 @@ struct RepliesView: View {
     @State private var reply = EditableNoteText()
     
     @State private var alert: AlertState<Never>?
-    @State var showReplyComposer = false
+    @State private var showReplyComposer = false
     
     @State private var relaySubscriptions = SubscriptionCancellables()
     
@@ -132,7 +131,8 @@ struct RepliesView: View {
                     relaySubscriptions.removeAll()
                 }
                 .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                    Task { @MainActor in
+                        try await Task.sleep(for: .milliseconds(300))
                         if showKeyboardOnAppear {
                             showReplyComposer = true
                             showKeyboardOnAppear = false

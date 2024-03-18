@@ -18,7 +18,7 @@ struct CompactNoteView: View {
     /// it will be truncated with a button the user can tap to display the full note.
     @State private var showFullMessage: Bool
 
-    /// If true this view displays truncated text with a "Read more" button to display the full text.
+    /// Whether view displays truncated text with a "Read more" button to display the full text.
     @State private var shouldShowReadMore = false
     
     /// The size of the full note text 
