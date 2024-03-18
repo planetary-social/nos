@@ -12,16 +12,11 @@ struct NoteCard: View {
     
     var style = CardStyle.compact
     
-    @State private var userTappedShowOutOfNetwork = false
     @State private var replyCount = 0
     @State private var replyAvatarURLs = [URL]()
-    @State private var reports = [Event]()
     @State private var warningController = NoteWarningController()
     
-    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var relayService: RelayService
-    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.persistenceController) var persistenceController
     
     private var showFullMessage: Bool
@@ -51,9 +46,7 @@ struct NoteCard: View {
         showFullMessage: Bool = false,
         hideOutOfNetwork: Bool = true,
         showReplyCount: Bool = true,
-        replyAction: ((Event) -> Void)? = nil,
-        reported: Bool = false,
-        labeled: Bool = false
+        replyAction: ((Event) -> Void)? = nil
     ) {
         self.note = note
         self.style = style

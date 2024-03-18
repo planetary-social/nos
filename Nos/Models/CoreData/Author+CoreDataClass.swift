@@ -16,10 +16,10 @@ enum AuthorError: Error {
         publicKey?.npub
     }
     
-    /// Human-friendly identifier suitable for being displayed in the UI
-    var safeIdentifier: String {
-        if let nip05 {
-            return nip05
+    /// Human-friendly identifier suitable for being displayed in the UI.
+    var humanFriendlyIdentifier: String {
+        if let formattedNIP05, !formattedNIP05.isEmpty {
+            return formattedNIP05
         } else {
             return npubString?.prefix(10).appending("...") ?? hexadecimalPublicKey ?? "error"
         }

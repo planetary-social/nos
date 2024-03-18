@@ -123,7 +123,7 @@ struct ProfileView: View {
             }
         }
         .background(Color.appBg)
-        .nosNavigationBar(title: LocalizedStringResource(stringLiteral: author.safeIdentifier))
+        .nosNavigationBar(title: LocalizedStringResource(stringLiteral: author.humanFriendlyIdentifier))
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
         }                  
@@ -229,6 +229,7 @@ struct ProfileView: View {
             }
         }
         .alert(unwrapping: $alert)
+        .tint(.accent)
         .onAppear {
             Task { 
                 await downloadAuthorData()

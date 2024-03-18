@@ -9,21 +9,6 @@ enum AppDestination: Hashable, Equatable {
     case newNote(String?)
     case profile
     
-    var label: some View {
-        switch self {
-        case .home:
-            return Text(.localizable.homeFeed)
-        case .discover:
-            return Text(.localizable.discover)
-        case .notifications:
-            return Text(.localizable.notifications)
-        case .newNote:
-            return Text(.localizable.newNote)
-        case .profile:
-            return Text(.localizable.profileTitle)
-        }
-    }
-    
     var destinationString: String {
         switch self {
         case .home:

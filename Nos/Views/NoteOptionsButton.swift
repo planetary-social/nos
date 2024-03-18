@@ -3,7 +3,6 @@ import SwiftUI
 import Dependencies
 
 struct NoteOptionsButton: View {
-    @Environment(\.managedObjectContext) private var viewContext
     @Environment(CurrentUser.self) private var currentUser
     
     @Dependency(\.analytics) private var analytics
