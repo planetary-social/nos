@@ -11,7 +11,7 @@ struct CompactNoteView: View {
     /// The note whose content will be displayed
     let note: Event
     
-    /// The maximum number of lines to show before truncating (if `showFullMessaage` is false)
+    /// The maximum number of lines to show before truncating (if `showFullMessage` is false)
     let truncationLineLimit: Int
     
     /// If true this view will always display the full text of the note. If false and the note is long 
