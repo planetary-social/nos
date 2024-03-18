@@ -25,7 +25,7 @@ struct FollowCard: View {
                 } label: {
                     HStack(alignment: .center) {
                         AvatarView(imageUrl: author.profilePhotoURL, size: 24)
-                        Text(author.safeName)
+                        BrandText(author.safeName)
                             .lineLimit(1)
                             .font(.subheadline)
                             .foregroundColor(Color.primaryTxt)

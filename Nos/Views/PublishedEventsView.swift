@@ -15,12 +15,12 @@ struct PublishedEventsView: View {
         List {
             ForEach(events) { event in
                 Section {
-                    Text("id: \(event.identifier ?? String(localized: .localizable.error))")
-                    Text("kind: \(event.kind)")
-                    Text("content: \(event.content ?? String(localized: .localizable.error))")
+                    BrandText("id: \(event.identifier ?? String(localized: .localizable.error))")
+                    BrandText("kind: \(event.kind)")
+                    BrandText("content: \(event.content ?? String(localized: .localizable.error))")
                     if let tags = event.allTags as? [[String]] {
                         ForEach(tags, id: \.self) { tag in
-                            Text("tag: \(tag.joined(separator: ", "))")
+                            BrandText("tag: \(tag.joined(separator: ", "))")
                         }
                     }
                 }

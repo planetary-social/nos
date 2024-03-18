@@ -12,7 +12,7 @@ struct RawEventView<ViewModel>: View where ViewModel: RawEventViewModel {
                     ProgressView()
                         .foregroundColor(.secondaryTxt)
                         .background(Color.appBg)
-                    Text(loadingMessage)
+                    BrandText(loadingMessage)
                         .foregroundColor(.secondaryTxt)
                 }
                 .padding(16)
@@ -71,7 +71,7 @@ struct RawEventView<ViewModel>: View where ViewModel: RawEventViewModel {
         .alert(isPresented: showAlert) {
             Alert(
                 title: Text(.localizable.error),
-                message: Text(viewModel.errorMessage ?? "")
+                message: BrandText(viewModel.errorMessage ?? "")
             )
         }
     }

@@ -12,7 +12,7 @@ struct ExpirationTimeButton: View {
         ZStack {
             let textLayer = HStack(spacing: 3) {
                 VStack {
-                    Text(model.topText)
+                    BrandText(model.topText)
                         .foregroundColor(.primaryTxt)
                         .bold()
                     PlainText(model.unit)
@@ -60,7 +60,7 @@ struct ExpirationTimeButton: View {
                     )
             }
         }
-        .accessibilityLabel(Text(model.accessibilityLabel))
+        .accessibilityLabel(BrandText(model.accessibilityLabel))
         .cornerRadius(5)
         .onTapGesture {
             isSelected.toggle() 

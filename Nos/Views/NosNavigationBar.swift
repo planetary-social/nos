@@ -45,7 +45,7 @@ extension View {
     NavigationStack {
         VStack {
             Spacer()
-            Text("Content")
+            BrandText("Content")
             Spacer()
         }
         .frame(maxWidth: .infinity)

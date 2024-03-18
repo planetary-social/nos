@@ -42,11 +42,11 @@ struct RelayView: View {
                             NavigationLink {
                                 RelayDetailView(relay: relay)
                             } label: {
-                                Text(relay.address ?? String(localized: .localizable.error))
+                                BrandText(relay.address ?? String(localized: .localizable.error))
                                     .foregroundColor(.primaryTxt)
                             }
                         } else {
-                            Text(relay.address ?? String(localized: .localizable.error))
+                            BrandText(relay.address ?? String(localized: .localizable.error))
                                 .foregroundColor(.primaryTxt)
                                 .textSelection(.enabled)
                         }

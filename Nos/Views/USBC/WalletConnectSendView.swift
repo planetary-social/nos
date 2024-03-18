@@ -30,7 +30,7 @@ struct WalletConnectSendView: View {
                     .padding(12)
                 VStack(spacing: 1) {
                     HStack {
-                        Text(controller.destinationAuthor.safeName)
+                        BrandText(controller.destinationAuthor.safeName)
                             .foregroundColor(.primaryTxt)
                             .bold()
                             .shadow(radius: 1, y: 1)
@@ -38,7 +38,7 @@ struct WalletConnectSendView: View {
                     }
                     HStack(spacing: 3) {
                         Image.unsLogoDark
-                        Text(controller.destinationAuthor.uns ?? "")
+                        BrandText(controller.destinationAuthor.uns ?? "")
                             .foregroundColor(.secondaryTxt)
                         Spacer()
                     }

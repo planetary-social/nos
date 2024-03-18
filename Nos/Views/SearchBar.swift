@@ -51,7 +51,7 @@ struct SearchBar_Previews: PreviewProvider {
             VStack {
                 SearchBar(text: $emptyText, isSearching: $isSearching)
                 ForEach(0..<5) { _ in 
-                    Text(String.loremIpsum(1))
+                    BrandText(String.loremIpsum(1))
                 }
             }
             .background(Color.appBg)
@@ -61,7 +61,7 @@ struct SearchBar_Previews: PreviewProvider {
             VStack {
                 SearchBar(text: $text, isSearching: $isSearching)
                 ForEach(0..<5) { _ in 
-                    Text(String.loremIpsum(1))
+                    BrandText(String.loremIpsum(1))
                 }
             }
             .background(Color.appBg)

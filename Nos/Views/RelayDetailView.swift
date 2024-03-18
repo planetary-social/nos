@@ -6,15 +6,15 @@ struct RelayDetailView: View {
 
     func row(title: LocalizedStringResource, value: String) -> some View {
         HStack(alignment: .top) {
-            Text("\(String(localized: title)): ")
-            Text(value)
+            BrandText("\(String(localized: title)): ")
+            BrandText(value)
                 .textSelection(.enabled)
         }
     }
     var body: some View {
         List {
             Section {
-                Text(relay.address ?? String(localized: .localizable.error))
+                BrandText(relay.address ?? String(localized: .localizable.error))
                     .textSelection(.enabled)
             } header: {
                 Text(.localizable.address)
@@ -58,7 +58,7 @@ struct RelayDetailView: View {
             } footer: {
                 #if DEBUG
                 if let date = relay.metadataFetchedAt {
-                    Text("\(String(localized: .localizable.fetchedAt)): \(date.distanceString())")
+                    BrandText("\(String(localized: .localizable.fetchedAt)): \(date.distanceString())")
                 }
                 #endif
             }
