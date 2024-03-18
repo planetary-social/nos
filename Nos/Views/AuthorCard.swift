@@ -47,7 +47,7 @@ struct AuthorCard: View {
                         if let bio = author.about {
                             PlainText(bio)
                                 .foregroundColor(.secondaryTxt)
-                                .font(.claritySubheadline)
+                                .font(.clarity(.medium, textStyle: .subheadline))
                                 .multilineTextAlignment(.leading)
                                 .lineSpacing(5)
                                 .lineLimit(2)

@@ -37,7 +37,7 @@ struct ActionBanner: View {
                 HStack {
                     ActionButton(
                         title: buttonText,
-                        font: .claritySemiBoldSubheadline,
+                        font: .clarity(.semibold, textStyle: .subheadline),
                         image: buttonImage,
                         textColor: .actionBannerButtonTxt,
                         depthEffectColor: .actionBannerButtonEffect,

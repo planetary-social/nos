@@ -18,7 +18,7 @@ struct UNSNameView: View {
                     Image.unsLogoLight
                     PlainText(author.uns ?? "")
                         .foregroundColor(.secondaryTxt)
-                        .font(.claritySubheadline)
+                        .font(.clarity(.medium, textStyle: .subheadline))
                         .multilineTextAlignment(.leading)
                 }
             }

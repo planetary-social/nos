@@ -17,7 +17,7 @@ struct ExpirationTimeButton: View {
                         .bold()
                     PlainText(model.unit)
                         .foregroundColor(.secondaryTxt)
-                        .font(.clarityCaption2)
+                        .font(.clarity(.regular, textStyle: .caption2))
                 }
                 
                 if showClearButton {

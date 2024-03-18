@@ -25,7 +25,7 @@ struct NIP05View: View {
                         .foregroundColor(.secondaryTxt)
                 }
             }
-            .font(.claritySubheadline)
+            .font(.clarity(.medium, textStyle: .subheadline))
             .multilineTextAlignment(.leading)
             .contextMenu {
                 Button {

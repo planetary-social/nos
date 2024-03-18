@@ -32,28 +32,6 @@ extension Font {
     static func clarityBold(_ textStyle: UIFont.TextStyle) -> Font {
         .custom("ClarityCity-Bold", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
     }
-
-    static var clarityCaption = Font
-        .custom("ClarityCity-Regular", size: UIFont.preferredFont(
-            forTextStyle: .caption1
-        ).pointSize)
-    
-    static var clarityCaption2 = Font
-        .custom("ClarityCity-Regular", size: UIFont.preferredFont(
-            forTextStyle: .caption2
-        ).pointSize)
-    
-    static var claritySubheadline = clarity(.medium, textStyle: .subheadline)
-
-    static var claritySemiBoldSubheadline = Font
-        .custom("ClarityCity-SemiBold", size: UIFont.preferredFont(
-            forTextStyle: .subheadline
-        ).pointSize)
-
-    static var brand = Font
-        .custom("ClarityCity-Regular", size: UIFont.preferredFont(
-            forTextStyle: .body
-        ).pointSize)
 }
 
 extension UIFont {
@@ -73,6 +51,6 @@ func PlainText(_ localizedStringResource: LocalizedStringResource) -> SwiftUI.Te
 }
 
 func BrandText(_ content: any StringProtocol) -> SwiftUI.Text {
-    .init(content).font(.brand)
+    .init(content).font(.clarity(.regular))
 }
 // swiftlint:enable identifier_name
