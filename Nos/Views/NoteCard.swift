@@ -101,7 +101,7 @@ struct NoteCard: View {
                                     .padding(.trailing, 8)
                                 if let replies = attributedReplies {
                                     Text(replies)
-                                        .font(.subheadline)
+                                        .font(.clarity(.medium, textStyle: .subheadline))
                                         .foregroundColor(Color.secondaryTxt)
                                 }
                             }

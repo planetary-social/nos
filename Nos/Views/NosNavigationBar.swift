@@ -13,6 +13,8 @@ struct NosNavigationBarModifier: ViewModifier {
                         .font(.clarityTitle3)
                         .foregroundColor(.primaryTxt)
                         .padding(.leading, 14)
+                        .tint(.primaryTxt)
+                        .allowsHitTesting(false)
                 }
             }
             .toolbarBackground(.visible, for: .navigationBar)
@@ -26,18 +28,28 @@ extension View {
     }
 }
 
-struct NosNavigationBar_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        NavigationStack {
-            VStack {
-                Spacer()
-                Text("Content")
-                Spacer()
-            }
-            .frame(maxWidth: .infinity)
-            .background(Color.appBg)
-            .nosNavigationBar(title: .localizable.homeFeed)
+#Preview {
+    NavigationStack {
+        VStack {
+            Spacer()
+            PlainText("Content")
+            Spacer()
         }
+        .frame(maxWidth: .infinity)
+        .background(Color.appBg)
+        .nosNavigationBar(title: .localizable.homeFeed)
+    }
+}
+
+#Preview {
+    NavigationStack {
+        VStack {
+            Spacer()
+            Text("Content")
+            Spacer()
+        }
+        .frame(maxWidth: .infinity)
+        .background(Color.appBg)
+        .nosNavigationBar(title: LocalizedStringResource(stringLiteral: "me@nos.social"))
     }
 }
