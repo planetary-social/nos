@@ -26,7 +26,7 @@ struct ActionBanner: View {
             VStack {
                 HStack {
                     Text(messageText)
-                        .font(.clarityBold)
+                        .font(.clarity(.bold))
                         .foregroundStyle(Color.white)
                         .lineSpacing(3)
                         .padding(.top, 8)

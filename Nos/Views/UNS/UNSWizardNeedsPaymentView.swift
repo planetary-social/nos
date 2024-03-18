@@ -43,7 +43,7 @@ struct UNSWizardNeedsPaymentView: View {
                             highlightedWord: String(localized: .localizable.registerADifferentName), 
                             highlight: LinearGradient(colors: [.primaryTxt], startPoint: .top, endPoint: .bottom), 
                             textColor: .secondaryTxt,
-                            font: .clarityMedium,
+                            font: .clarity(.medium),
                             link: nil
                         )
                         .multilineTextAlignment(.center)

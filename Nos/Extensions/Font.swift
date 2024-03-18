@@ -2,8 +2,6 @@ import SwiftUI
 
 // https://stackoverflow.com/a/74416073
 extension Font {
-    static var clarity = clarityRegular(.body)
-
     static func clarity(_ fontWeight: UIFont.Weight, textStyle: UIFont.TextStyle = .body) -> Font {
         switch fontWeight {
         case .regular:
@@ -15,15 +13,13 @@ extension Font {
         case .bold:
             clarityBold(textStyle)
         default:
-            clarity
+            clarityRegular(textStyle)
         }
     }
 
     static func clarityRegular(_ textStyle: UIFont.TextStyle) -> Font {
         .custom("ClarityCity-Regular", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
     }
-
-    static var clarityMedium = clarityMedium(.body)
 
     static func clarityMedium(_ textStyle: UIFont.TextStyle) -> Font {
         .custom("ClarityCity-Medium", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
@@ -32,8 +28,6 @@ extension Font {
     static func claritySemibold(_ textStyle: UIFont.TextStyle) -> Font {
         .custom("ClarityCity-SemiBold", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
     }
-
-    static var clarityBold = clarityBold(.body)
 
     static func clarityBold(_ textStyle: UIFont.TextStyle) -> Font {
         .custom("ClarityCity-Bold", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)

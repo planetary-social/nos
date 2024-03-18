@@ -34,7 +34,7 @@ struct UNSVerifyCodeView: View {
                         highlightedWord: phoneString,
                         highlight: LinearGradient(colors: [.primaryTxt], startPoint: .top, endPoint: .bottom),
                         textColor: .secondaryTxt,
-                        font: .clarityMedium,
+                        font: .clarity(.medium),
                         link: nil
                     )
                     .fixedSize(horizontal: false, vertical: true)

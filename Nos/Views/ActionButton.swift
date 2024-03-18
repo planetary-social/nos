@@ -4,7 +4,7 @@ import SwiftUI
 struct ActionButton: View {
     
     var title: LocalizedStringResource
-    var font: Font = .clarityBold
+    var font: Font = .clarity(.bold)
     var image: Image?
     var textColor = Color.white
     var depthEffectColor = Color(hex: "#A04651")
@@ -131,7 +131,7 @@ struct ActionButton_Previews: PreviewProvider {
             
             ActionButton(
                 title: .localizable.edit,
-                font: .clarityMedium,
+                font: .clarity(.medium),
                 image: Image.editProfile, 
                 textColor: Color(hex: "#f26141"),
                 depthEffectColor: Color(hex: "#f8d4b6"),

@@ -11,7 +11,7 @@ struct SearchBar: View {
                     Image(systemName: "magnifyingglass")
                         .foregroundColor(Color(.systemGray))
                     TextField("Search", text: $text)
-                        .font(.clarity)
+                        .font(.clarity(.regular))
                         .foregroundColor(.primaryTxt)
                         .onTapGesture {
                             isSearching.wrappedValue = true // Set focus to the search bar when tapped
