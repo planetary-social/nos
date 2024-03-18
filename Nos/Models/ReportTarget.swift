@@ -1,16 +1,6 @@
 import Foundation
 
-/// Represents a report of inappropriate content by the user.
-struct Report {
-    
-    /// The object being reported.
-    var target: ReportTarget
-    
-    /// The reason the object is inappropriate.
-    var reasons: [ReportCategory]
-}
-
-/// The types of objects that can be reported. 
+/// The types of objects that can be reported.
 enum ReportTarget {
     
     case note(Event)

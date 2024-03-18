@@ -39,7 +39,8 @@ struct SettingsView: View {
                 HStack {
                     SecureField(String(localized: .localizable.privateKeyPlaceholder), text: $privateKeyString)
                         .foregroundColor(.primaryTxt)
-                    
+                        .font(.clarity(.regular, textStyle: .body))
+
                     SecondaryActionButton(title: .localizable.save) {
                         if privateKeyString.isEmpty {
                             await logout()
@@ -78,15 +79,18 @@ struct SettingsView: View {
                 .padding(.vertical, 5)
             } header: {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(.localizable.privateKey)
+                    PlainText(.localizable.privateKey)
                         .foregroundColor(.primaryTxt)
-                        .bold()
-                    
-                    Text(.localizable.privateKeyWarning)
+                        .font(.clarity(.semibold, textStyle: .headline))
+
+                    PlainText(.localizable.privateKeyWarning)
                         .foregroundColor(.secondaryTxt)
+                        .font(.footnote)
                 }
                 .textCase(nil)
-                .padding(.vertical, 15)
+                .listRowInsets(EdgeInsets())
+                .padding(.top, 30)
+                .padding(.bottom, 20)
             }
             .listRowBackground(LinearGradient(
                 colors: [Color.cardBgTop, Color.cardBgBottom],
@@ -97,7 +101,7 @@ struct SettingsView: View {
             Section {
                 VStack {
                     Toggle(isOn: $showReportWarnings) { 
-                        Text(.localizable.useReportsFromFollows)
+                        PlainText(.localizable.useReportsFromFollows)
                             .foregroundColor(.primaryTxt)
                     }
                     .onChange(of: showReportWarnings) { _, newValue in
@@ -107,14 +111,15 @@ struct SettingsView: View {
                     HStack {
                         PlainText(.localizable.useReportsFromFollowsDescription)
                             .foregroundColor(.secondaryTxt)
-                            .font(.clarityCallout)
+                            .font(.footnote)
                         Spacer()
                     }
                 }
-                
+                .padding(.bottom, 8)
+
                 VStack {
                     Toggle(isOn: $showOutOfNetworkWarning) { 
-                        Text(.localizable.showOutOfNetworkWarnings)
+                        PlainText(.localizable.showOutOfNetworkWarnings)
                             .foregroundColor(.primaryTxt)
                     }
                     .onChange(of: showOutOfNetworkWarning) { _, newValue in
@@ -124,16 +129,17 @@ struct SettingsView: View {
                     HStack {
                         PlainText(.localizable.showOutOfNetworkWarningsDescription)
                             .foregroundColor(.secondaryTxt)
-                            .font(.clarityCallout)
+                            .font(.footnote)
                         Spacer()
                     }
                 }
+                .padding(.bottom, 8)
             } header: {
-                Text(.localizable.feedSettings)
+                PlainText(.localizable.feedSettings)
                     .foregroundColor(.primaryTxt)
-                    .fontWeight(.heavy)
-                    .bold()
+                    .font(.clarity(.semibold, textStyle: .headline))
                     .textCase(nil)
+                    .listRowInsets(EdgeInsets())
                     .padding(.vertical, 15)
             }
             .listRowBackground(LinearGradient(
@@ -148,7 +154,7 @@ struct SettingsView: View {
             
             Section {
                 HStack {
-                    Text("\(String(localized: .localizable.appVersion)) \(Bundle.current.versionAndBuild)")
+                    PlainText("\(String(localized: .localizable.appVersion)) \(Bundle.current.versionAndBuild)")
                         .foregroundColor(.primaryTxt)
                     Spacer()
                     SecondaryActionButton(title: .localizable.shareLogs) {
@@ -171,7 +177,7 @@ struct SettingsView: View {
                 }
 
                 #if DEBUG
-                Text(.localizable.sampleDataInstructions)
+                PlainText(.localizable.sampleDataInstructions)
                     .foregroundColor(.primaryTxt)
                 Button(String(localized: .localizable.loadSampleData)) {
                     Task {
@@ -186,16 +192,16 @@ struct SettingsView: View {
                     NavigationLink {
                         PublishedEventsView(author: author)
                     } label: {
-                        Text(.localizable.allPublishedEvents)
+                        PlainText(.localizable.allPublishedEvents)
                     }
                 }
                 #endif
             } header: {
-                Text(.localizable.debug)
+                PlainText(.localizable.debug)
                     .foregroundColor(.primaryTxt)
-                    .fontWeight(.heavy)
-                    .bold()
+                    .font(.clarity(.semibold, textStyle: .headline))
                     .textCase(nil)
+                    .listRowInsets(EdgeInsets())
                     .padding(.vertical, 15)
             }
             .listRowBackground(LinearGradient(

@@ -7,14 +7,6 @@ struct SetUpUNSBanner: View {
 
     var action: (() -> Void)?
 
-    private var backgroundGradient: LinearGradient {
-        LinearGradient(
-            colors: [.actionBannerBgGradientLeading, .actionBannerBgGradientTrailing],
-            startPoint: .leading,
-            endPoint: .trailing
-        )
-    }
-    
     var body: some View {
         ZStack {
             Color.card3d
@@ -23,7 +15,7 @@ struct SetUpUNSBanner: View {
             VStack {
                 HStack {
                     Text(text)
-                        .font(.clarityBold)
+                        .font(.body)
                         .foregroundStyle(Color.primaryTxt)
                         .lineSpacing(3)
                         .padding(.top, 8)
@@ -66,17 +58,6 @@ struct SetUpUNSBanner: View {
             .cornerRadius(20)
         }
         .fixedSize(horizontal: false, vertical: true)
-    }
-
-    @ViewBuilder private var firstBackground: some View {
-        HStack {
-            Spacer()
-            Image(systemName: "at.circle")
-                .resizable()
-                .aspectRatio(1, contentMode: .fit)
-                .foregroundColor(.unsCheckmark)
-        }
-        .offset(x: 28)
     }
 }
 
