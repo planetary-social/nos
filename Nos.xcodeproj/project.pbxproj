@@ -708,7 +708,7 @@
 		C9CE5B132A0172CF008E198C /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseQueue.swift; sourceTree = "<group>"; };
 		C9D573482AB24B7300E06BB4 /* custom-xcassets.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; name = "custom-xcassets.stencil"; path = "Nos/Assets/SwiftGen Stencils/custom-xcassets.stencil"; sourceTree = SOURCE_ROOT; };
-		C9DEBFCE298941000078B43A /* Nos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nos.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9DEBFCE298941000078B43A /* Nos (dev).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nos (dev).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9DEBFD1298941000078B43A /* NosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosApp.swift; sourceTree = "<group>"; };
 		C9DEBFD3298941000078B43A /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		C9DEBFD8298941000078B43A /* HomeFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedView.swift; sourceTree = "<group>"; };
@@ -1110,7 +1110,7 @@
 		C9DEBFCF298941000078B43A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C9DEBFCE298941000078B43A /* Nos.app */,
+				C9DEBFCE298941000078B43A /* Nos (dev).app */,
 				C9DEBFE4298941020078B43A /* NosTests.xctest */,
 				C9DEBFEE298941020078B43A /* NosUITests.xctest */,
 				C90862BB29E9804B00C35A71 /* NosPerformanceTests.xctest */,
@@ -1473,7 +1473,7 @@
 				C9332C652ADED0D700AD7B0E /* StarscreamOld */,
 			);
 			productName = Nos;
-			productReference = C9DEBFCE298941000078B43A /* Nos.app */;
+			productReference = C9DEBFCE298941000078B43A /* Nos (dev).app */;
 			productType = "com.apple.product-type.application";
 		};
 		C9DEBFE3298941020078B43A /* NosTests */ = {
@@ -2130,7 +2130,7 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		5B7888CB2B5A0FB800B6761F /* Demo */ = {
+		5B7888CB2B5A0FB800B6761F /* Staging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2185,20 +2185,18 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
-			name = Demo;
+			name = Staging;
 		};
-		5B7888CC2B5A0FB800B6761F /* Demo */ = {
+		5B7888CC2B5A0FB800B6761F /* Staging */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C94D39212ABDDDFE0019C4D5 /* Secrets.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon (demo)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon (staging)";
 				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = accent;
 				CODE_SIGN_ENTITLEMENTS = Nos/Nos.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Distribution: Verse Communications, Inc. (GZCZBKH7MY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: Verse Communications, Inc. (GZCZBKH7MY)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 222;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nos/Views/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
@@ -2227,11 +2225,11 @@
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MARKETING_VERSION = 0.1.3;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.verse.Nos-demo";
-				PRODUCT_NAME = "$(TARGET_NAME) (demo)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.verse.Nos-staging";
+				PRODUCT_NAME = "$(TARGET_NAME) (staging)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.verse.Nos";
-				SCHEME_PREFIX = "nos-demo";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development com.verse.Nos-staging";
+				SCHEME_PREFIX = "nos-staging";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -2240,14 +2238,14 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Demo;
+			name = Staging;
 		};
-		5B7888CD2B5A0FB800B6761F /* Demo */ = {
+		5B7888CD2B5A0FB800B6761F /* Staging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 222;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2266,14 +2264,14 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Demo;
+			name = Staging;
 		};
-		5B7888CE2B5A0FB800B6761F /* Demo */ = {
+		5B7888CE2B5A0FB800B6761F /* Staging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 222;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2289,13 +2287,13 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Nos;
 			};
-			name = Demo;
+			name = Staging;
 		};
-		5B7888CF2B5A0FB800B6761F /* Demo */ = {
+		5B7888CF2B5A0FB800B6761F /* Staging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 222;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
@@ -2309,204 +2307,13 @@
 				TEST_TARGET_NAME = Nos;
 				VALIDATE_PRODUCT = YES;
 			};
-			name = Demo;
-		};
-		5BF096662B586174009C4DE2 /* Dev */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-			};
-			name = Dev;
-		};
-		5BF096672B586174009C4DE2 /* Dev */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C94D39212ABDDDFE0019C4D5 /* Secrets.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon (dev)";
-				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = accent;
-				CODE_SIGN_ENTITLEMENTS = Nos/Nos.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"Nos/Views/Preview Content\"";
-				DEVELOPMENT_TEAM = GZCZBKH7MY;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Nos/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Nos can access camera to allow users to post photos directly.";
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
-				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
-				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
-				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.3;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.verse.Nos-dev";
-				PRODUCT_NAME = "$(TARGET_NAME) (dev)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SCHEME_PREFIX = "nos-dev";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Dev;
-		};
-		5BF096682B586174009C4DE2 /* Dev */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = GZCZBKH7MY;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = NosTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
-				MACOSX_DEPLOYMENT_TARGET = 13.1;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.verse.NosTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Dev;
-		};
-		5BF096692B586174009C4DE2 /* Dev */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = GZCZBKH7MY;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MACOSX_DEPLOYMENT_TARGET = 13.1;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.verse.NosUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Nos;
-			};
-			name = Dev;
-		};
-		5BF0966A2B586174009C4DE2 /* Dev */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
-				DEVELOPMENT_TEAM = GZCZBKH7MY;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.verse.NosPerformanceTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Nos;
-			};
-			name = Dev;
+			name = Staging;
 		};
 		C90862C429E9804B00C35A71 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 222;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2527,7 +2334,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 222;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
@@ -2671,12 +2478,12 @@
 				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = accent;
 				CODE_SIGN_ENTITLEMENTS = Nos/Nos.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 222;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nos/Views/Preview Content\"";
-				DEVELOPMENT_TEAM = GZCZBKH7MY;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = GZCZBKH7MY;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -2702,9 +2509,10 @@
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MARKETING_VERSION = 0.1.7;
-				PRODUCT_BUNDLE_IDENTIFIER = com.verse.Nos;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.verse.Nos-dev";
+				PRODUCT_NAME = "$(TARGET_NAME) (dev)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.verse.Nos-dev";
 				SCHEME_PREFIX = nos;
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -2726,9 +2534,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = accent;
 				CODE_SIGN_ENTITLEMENTS = Nos/Nos.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution: Verse Communications, Inc. (GZCZBKH7MY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: Verse Communications, Inc. (GZCZBKH7MY)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 222;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nos/Views/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
@@ -2777,7 +2584,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 222;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2805,7 +2612,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 222;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2831,7 +2638,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 222;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2856,7 +2663,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 222;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GZCZBKH7MY;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2881,9 +2688,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C90862C429E9804B00C35A71 /* Debug */,
-				5BF0966A2B586174009C4DE2 /* Dev */,
 				C90862C529E9804B00C35A71 /* Release */,
-				5B7888CF2B5A0FB800B6761F /* Demo */,
+				5B7888CF2B5A0FB800B6761F /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2892,9 +2698,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C9DEBFF6298941020078B43A /* Debug */,
-				5BF096662B586174009C4DE2 /* Dev */,
 				C9DEBFF7298941020078B43A /* Release */,
-				5B7888CB2B5A0FB800B6761F /* Demo */,
+				5B7888CB2B5A0FB800B6761F /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2903,9 +2708,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C9DEBFF9298941020078B43A /* Debug */,
-				5BF096672B586174009C4DE2 /* Dev */,
 				C9DEBFFA298941020078B43A /* Release */,
-				5B7888CC2B5A0FB800B6761F /* Demo */,
+				5B7888CC2B5A0FB800B6761F /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2914,9 +2718,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C9DEBFFC298941020078B43A /* Debug */,
-				5BF096682B586174009C4DE2 /* Dev */,
 				C9DEBFFD298941020078B43A /* Release */,
-				5B7888CD2B5A0FB800B6761F /* Demo */,
+				5B7888CD2B5A0FB800B6761F /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2925,9 +2728,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C9DEBFFF298941020078B43A /* Debug */,
-				5BF096692B586174009C4DE2 /* Dev */,
 				C9DEC000298941020078B43A /* Release */,
-				5B7888CE2B5A0FB800B6761F /* Demo */,
+				5B7888CE2B5A0FB800B6761F /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

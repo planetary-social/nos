@@ -44,7 +44,7 @@ platform :ios do
       )
       match(
           type: "appstore",  
-	  readonly: true,
+          readonly: true,
           keychain_name: "keychain",
           keychain_password: keychain_pass
         )
@@ -52,7 +52,7 @@ platform :ios do
         file.puts app_secrets
       end
     else
-      match(type: "appstore", readonly: is_ci)
+      match(type: "appstore", readonly: false)
     end
     version_number = get_version_number(
       xcodeproj: "Nos.xcodeproj",
@@ -90,6 +90,87 @@ platform :ios do
     )
   end
 
+  desc "Push a new build to TestFlight"
+  private_lane :push_build do |options|
+    app_store_connect_api_key(
+      key_id: asc_key_id,
+      issuer_id: asc_issuer_id,
+      key_content: asc_key_content
+    )
+    if is_ci 
+      # Create a keychain because Github Action machines don't come with one
+      create_keychain(
+          name: "keychain",
+          password: keychain_pass,
+          default_keychain: true,
+          unlock: true,
+          timeout: 3600,
+          lock_when_sleeps: false
+      )
+      match(
+          type: "appstore",  
+          readonly: true,
+          keychain_name: "keychain",
+          keychain_password: keychain_pass
+        )
+      File.open(app_secrets_path, 'w') do |file|
+        file.puts app_secrets
+      end
+    else
+      match(
+        type: "appstore", 
+        readonly: false,
+        app_identifier: ["com.verse.Nos", "com.verse.Nos-dev", "com.verse.Nos-staging"]
+      )
+    end
+    version_number = get_version_number(
+      xcodeproj: "Nos.xcodeproj",
+      target: "Nos"
+    )
+    build_number = latest_testflight_build_number + 1
+    increment_build_number(build_number: build_number)
+    gym(
+      scheme: options[:scheme], 
+      clean: true,
+      xcargs: "-skipPackagePluginValidation"
+    )
+    if is_ci
+      sh("rm", app_secrets_path)
+    end
+    changelog = read_changelog
+    upload_to_testflight(
+      changelog: changelog,
+      skip_waiting_for_build_processing: is_ci
+    )
+    if options[:tag]
+      add_git_tag(tag: "v#{version_number}-#{build_number}")
+      push_git_tags
+    end
+    sentry_upload_dif(
+      org_slug: 'verse',
+      project_slug: options[:sentry],
+      include_sources: true, 
+      url: 'https://sentry.nos.social',
+      auth_token: sentry_auth
+    )
+    notification(
+      subtitle: "Build uploaded", 
+      message: "tap to open App Store Connect", 
+      sound: "Pebble", 
+      open: options[:appstoreconnect]
+    )
+  end
+
+  desc "Push a new demo build to TestFlight"
+  lane :staging do
+    push_build(
+      scheme: "Nos Staging", 
+      tag: false,
+      sentry: "nos-staging",
+      appstoreconnect: "https://appstoreconnect.apple.com/apps/6479583869/testflight/ios"
+    )
+  end
+
   desc "Mark a deployed commit as having been deployed to our public beta testers"
   lane :stamp_release do
     changelog = read_changelog
@@ -112,8 +193,8 @@ platform :ios do
       issuer_id: asc_issuer_id,
       key_content: asc_key_content
     )
-    match(type: "appstore")
-    match(type: "development")
+    match(type: "appstore", app_identifier: ["com.verse.Nos", "com.verse.Nos-dev", "com.verse.Nos-staging"])
+    match(type: "development", app_identifier: ["com.verse.Nos", "com.verse.Nos-dev", "com.verse.Nos-staging"])
   end
 
   desc "Clean App Store Connect of certificates"
