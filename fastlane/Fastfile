@@ -45,6 +45,7 @@ platform :ios do
       match(
           type: "appstore",  
           readonly: true,
+          app_identifier: options[:appidentifier],
           keychain_name: "keychain",
           keychain_password: keychain_pass
         )
@@ -55,7 +56,7 @@ platform :ios do
       match(
         type: "appstore", 
         readonly: false,
-        app_identifier: ["com.verse.Nos", "com.verse.Nos-dev", "com.verse.Nos-staging"]
+        app_identifier: options[:appidentifier]
       )
     end
     version_number = get_version_number(
@@ -99,7 +100,8 @@ platform :ios do
   desc "Push a new Nos Staging build to TestFlight"
   lane :staging do
     push_build(
-      scheme: "Nos Staging", 
+      scheme: "Nos Staging",
+      appidentifier: "com.verse.Nos-staging",
       tag: false,
       sentry: "nos-staging",
       appstoreconnect: "https://appstoreconnect.apple.com/apps/6479583869/testflight/ios"
@@ -110,6 +112,7 @@ platform :ios do
   lane :release do
     push_build(
       scheme: "Nos",
+      appidentifier: "com.verse.Nos",
       tag: true,
       sentry: "nos-ios",
       appstoreconnect: "https://appstoreconnect.apple.com/apps/6479583869/testflight/ios"
