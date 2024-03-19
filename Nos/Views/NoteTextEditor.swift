@@ -34,7 +34,7 @@ struct NoteTextEditor: View {
                     .frame(height: max(reader.size.height, calculatedHeight))
                     .placeholder(when: text.isEmpty, placeholder: {
                         VStack {
-                            Text(placeholder)
+                            PlainText(placeholder)
                                 .foregroundColor(.secondaryTxt)
                                 .padding(.top, 10)
                                 .padding(.leading, 6)

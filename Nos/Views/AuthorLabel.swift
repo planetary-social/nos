@@ -8,7 +8,7 @@ struct AuthorLabel: View {
     private var attributedAuthor: AttributedString {
         var authorName = AttributedString(author.safeName)
         authorName.foregroundColor = .primaryTxt
-        authorName.font = Font.clarityBold
+        authorName.font = .clarity(.semibold)
         if let note {
             let postedOrRepliedString = String(localized: note.isReply ? .reply.replied : .reply.posted)
             var postedOrReplied = AttributedString(" " + postedOrRepliedString)
@@ -22,9 +22,9 @@ struct AuthorLabel: View {
     var body: some View {
         HStack {
             AvatarView(imageUrl: author.profilePhotoURL, size: 24)
-            Text(attributedAuthor)
+            SwiftUI.Text(attributedAuthor)
                 .lineLimit(1)
-                .font(.brand)
+                .font(.clarity(.medium))
                 .multilineTextAlignment(.leading)
                 .frame(alignment: .leading)
         }
