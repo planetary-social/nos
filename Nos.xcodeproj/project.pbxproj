@@ -2228,7 +2228,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.verse.Nos-staging";
 				PRODUCT_NAME = "$(TARGET_NAME) (staging)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development com.verse.Nos-staging";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.verse.Nos-staging";
 				SCHEME_PREFIX = "nos-staging";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
