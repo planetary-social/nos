@@ -50,6 +50,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
+### ios dev
+
+```sh
+[bundle exec] fastlane ios dev
+```
+
+Push a new Nos Dev build to TestFlight
+
 ### ios staging
 
 ```sh

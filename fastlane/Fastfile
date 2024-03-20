@@ -63,7 +63,7 @@ platform :ios do
       xcodeproj: "Nos.xcodeproj",
       target: "Nos"
     )
-    build_number = latest_testflight_build_number + 1
+    build_number = latest_testflight_build_number(app_identifier: options[:appidentifier]) + 1
     increment_build_number(build_number: build_number)
     gym(
       scheme: options[:scheme], 
@@ -84,7 +84,7 @@ platform :ios do
     end
     sentry_upload_dif(
       org_slug: 'verse',
-      project_slug: options[:sentry],
+      project_slug: 'nos-ios',
       include_sources: true, 
       url: 'https://sentry.nos.social',
       auth_token: sentry_auth
@@ -97,14 +97,23 @@ platform :ios do
     )
   end
 
+  desc "Push a new Nos Dev build to TestFlight"
+  lane :dev do
+    push_build(
+      scheme: "Nos Dev",
+      appidentifier: "com.verse.Nos-dev",
+      tag: false,
+      appstoreconnect: "https://appstoreconnect.apple.com/apps/6479583778/testflight/ios"
+    )
+  end
+
   desc "Push a new Nos Staging build to TestFlight"
   lane :staging do
     push_build(
       scheme: "Nos Staging",
       appidentifier: "com.verse.Nos-staging",
       tag: false,
-      sentry: "nos-staging",
-      appstoreconnect: "https://appstoreconnect.apple.com/apps/6479583869/testflight/ios"
+      appstoreconnect: "https://appstoreconnect.apple.com/apps/6479681443/testflight/ios"
     )
   end
 
@@ -114,7 +123,6 @@ platform :ios do
       scheme: "Nos",
       appidentifier: "com.verse.Nos",
       tag: true,
-      sentry: "nos-ios",
       appstoreconnect: "https://appstoreconnect.apple.com/apps/6479583869/testflight/ios"
     )
   end
