@@ -44,7 +44,7 @@ struct NewNoteView: View {
         NavigationStack {
             ZStack {
                 VStack(spacing: 0) {
-                    ScrollView {
+                    ScrollViewIfNeeded {
                         ScrollViewReader { proxy in
                             VStack(spacing: 0) {
                                 if let replyToNote {
