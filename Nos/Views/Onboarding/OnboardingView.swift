@@ -26,14 +26,10 @@ enum OnboardingStep {
 }
 
 struct OnboardingView: View {
-    @Environment(CurrentUser.self) private var currentUser
-
     @StateObject var state = OnboardingState()
     
     /// Completion to be called when all onboarding steps are complete
     let completion: @MainActor () -> Void
-    
-    @State private var selectedTab: OnboardingStep = .onboardingStart
     
     var body: some View {
         NavigationStack(path: $state.path) {

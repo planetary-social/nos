@@ -5,8 +5,6 @@ struct AuthorCard: View {
 
     @ObservedObject var author: Author
 
-    @Environment(\.managedObjectContext) private var viewContext
-
     var tapAction: (() -> Void)?
  
     init(author: Author, onTap: (() -> Void)? = nil) {

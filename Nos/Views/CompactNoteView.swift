@@ -35,7 +35,6 @@ struct CompactNoteView: View {
     private var allowUserInteraction: Bool
     
     @EnvironmentObject private var router: Router
-    @Dependency(\.persistenceController) private var persistenceController
     
     internal init(
         note: Event, 

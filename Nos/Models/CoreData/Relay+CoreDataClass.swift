@@ -45,12 +45,6 @@ public class Relay: NosManagedObject {
         ]
     }
     
-    @nonobjc public class func allRelaysRequest() -> NSFetchRequest<Relay> {
-        let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.address, ascending: true)]
-        return fetchRequest
-    }
-    
     @nonobjc public class func relay(by address: String) -> NSFetchRequest<Relay> {
         let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
         fetchRequest.predicate = NSPredicate(format: "address = %@", address)
@@ -62,13 +56,6 @@ public class Relay: NosManagedObject {
         let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
         fetchRequest.predicate = NSPredicate(format: "ANY authors = %@", user)
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.address, ascending: true)]
-        return fetchRequest
-    }
-    
-    @nonobjc public class func emptyRequest() -> NSFetchRequest<Relay> {
-        let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.createdAt, ascending: true)]
-        fetchRequest.predicate = NSPredicate.false
         return fetchRequest
     }
     
@@ -119,23 +106,7 @@ public class Relay: NosManagedObject {
         version = jsonMetadata.version
         metadataFetchedAt = Date.now
     }
-    
-    var jsonRepresentation: String? {
-        address
-    }
-    
-    class func all(context: NSManagedObjectContext) -> [Relay] {
-        let allRequest = Relay.allRelaysRequest()
-        
-        do {
-            let results = try context.fetch(allRequest)
-            return results
-        } catch let error as NSError {
-            print("Failed to fetch relays. Error: \(error.description)")
-            return []
-        }
-    }
-    
+
     convenience init(context: NSManagedObjectContext, address: String, author: Author? = nil) throws {
         guard let addressURL = URL(string: address),
             addressURL.scheme == "wss" else {
@@ -164,31 +135,5 @@ public class Relay: NosManagedObject {
 
     var hasMetadata: Bool {
         metadataFetchedAt != nil
-    }
-
-    var metadata: String {
-        var attributes = [String]()
-        if let name {
-            attributes.append("Name: \(name)")
-        }
-        if let relayDescription {
-            attributes.append("Description: \(relayDescription)")
-        }
-        if let supportedNIPs {
-            attributes.append("Supported NIPs: \(supportedNIPs.map { String($0) }.joined(separator: ", "))")
-        }
-        if let pubkey {
-            attributes.append("PubKey: \(pubkey.prefix(7))")
-        }
-        if let contact {
-            attributes.append("Contact: \(contact.prefix(7))")
-        }
-        if let software {
-            attributes.append("Software: \(software)")
-        }
-        if let version {
-            attributes.append("Version: \(version)")
-        }
-        return attributes.joined(separator: "\n")
     }
 }

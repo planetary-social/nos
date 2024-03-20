@@ -15,11 +15,6 @@ struct SelectableText: UIViewRepresentable {
         self.attributedText = attributedText.mergingAttributes(SelectableText.attributes)
     }
     
-    init(_ string: String) {
-        self.attributedText = AttributedString(string)
-        attributedText.setAttributes(SelectableText.attributes)
-    }
-
     private static var attributes: AttributeContainer {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 10
