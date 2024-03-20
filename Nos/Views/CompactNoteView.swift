@@ -12,7 +12,7 @@ struct CompactNoteView: View {
     let note: Event
     
     /// The maximum number of lines to show before truncating (if `showFullMessage` is false)
-    let truncationLineLimit: Int
+    let truncationLineLimit = 12
     
     /// If true this view will always display the full text of the note. If false and the note is long 
     /// it will be truncated with a button the user can tap to display the full note.
@@ -41,12 +41,10 @@ struct CompactNoteView: View {
         note: Event, 
         showFullMessage: Bool = false, 
         showLinkPreviews: Bool = true,
-        truncationLineLimit: Int = 12,
         allowUserInteraction: Bool = true
     ) {
         _showFullMessage = .init(initialValue: showFullMessage)
         self.note = note
-        self.truncationLineLimit = truncationLineLimit
         self.showLinkPreviews = showLinkPreviews
         self.allowUserInteraction = allowUserInteraction
     }
@@ -174,7 +172,6 @@ struct CompactNoteView_Previews: PreviewProvider {
             CompactNoteView(note: previewData.linkNote, allowUserInteraction: false)
             CompactNoteView(note: previewData.shortNote)
             CompactNoteView(note: previewData.longNote)
-            CompactNoteView(note: previewData.longFormNote, truncationLineLimit: 2)
             CompactNoteView(note: previewData.doubleImageNote)
             CompactNoteView(note: previewData.doubleImageNote, showLinkPreviews: false)
         }
