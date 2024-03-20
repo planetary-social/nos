@@ -13,14 +13,19 @@ struct EditableText: UIViewRepresentable {
 
     @Binding var text: EditableNoteText
     @State var width: CGFloat
+    
+    /// Whether we should present the keyboard when this view is shown. Unfortunately we can rely on FocusState as 
+    /// it isn't working on macOS.
+    private var showKeyboard: Bool
 
     /// An ID for this view. Only .mentionAddedNotifications matching this ID will be processed.
     private var guid: UUID
     private var font = UIFont.preferredFont(forTextStyle: .body)
     private var insets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
 
-    init(_ text: Binding<EditableNoteText>, guid: UUID) {
+    init(_ text: Binding<EditableNoteText>, guid: UUID, showKeyboard: Bool = false) {
         self.guid = guid
+        self.showKeyboard = showKeyboard
         _width = .init(initialValue: 0)
         _text = text
     }
@@ -41,7 +46,7 @@ struct EditableText: UIViewRepresentable {
         view.textContainer.lineBreakMode = .byWordWrapping
         view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         view.autocorrectionType = .no // temporary fix to work around mac bug
-
+        
         context.coordinator.observer = NotificationCenter.default.addObserver(
             forName: .mentionAddedNotification,
             object: nil,
@@ -59,6 +64,10 @@ struct EditableText: UIViewRepresentable {
             }
             text.insertMention(of: author, at: range.lowerBound)
             view?.selectedRange.location += (view?.attributedText.length ?? 1) - 1
+        }
+        
+        if showKeyboard {
+            view.becomeFirstResponder()
         }
 
         return view

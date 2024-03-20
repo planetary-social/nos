@@ -5,8 +5,6 @@ struct NoteTextEditor: View {
     
     @Binding var text: EditableNoteText
     var placeholder: LocalizedStringResource
-    var focus: FocusState<Bool>.Binding
-
     @State private var guid = UUID()
     
     /// State containing the offset (index) of text when the user is mentioning someone
@@ -25,7 +23,7 @@ struct NoteTextEditor: View {
     }
     
     var body: some View {
-        EditableText($text, guid: guid)
+        EditableText($text, guid: guid, showKeyboard: true)
             .placeholder(when: text.isEmpty, placeholder: {
                 VStack {
                     PlainText(placeholder)
@@ -35,7 +33,6 @@ struct NoteTextEditor: View {
                     Spacer()
                 }
             })
-            .focused(focus)
             .padding(.leading, 6)
             .frame(maxWidth: .infinity)
             .background { Color.appBg }
@@ -83,15 +80,13 @@ struct NoteTextEditor_Previews: PreviewProvider {
     
     @State static var text = EditableNoteText()
     static var placeholder: LocalizedStringResource = .localizable.newNotePlaceholder
-    @FocusState static var isFocused: Bool
     @State static var calculatedHeight: CGFloat = 44
 
     static var previews: some View {
         VStack {
             NoteTextEditor(
                 text: $text,
-                placeholder: placeholder, 
-                focus: $isFocused
+                placeholder: placeholder
             )
             Spacer()
         }

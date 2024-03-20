@@ -40,8 +40,6 @@ struct NewNoteView: View {
         self.replyToNote = replyTo
     }
     
-    @FocusState private var isTextEditorInFocus: Bool
-
     var body: some View {
         NavigationStack {
             ZStack {
@@ -51,12 +49,8 @@ struct NewNoteView: View {
                             if let replyToNote {
                                 ReplyPreview(note: replyToNote)
                             }
-                            NoteTextEditor(
-                                text: $text,
-                                placeholder: .localizable.newNotePlaceholder,
-                                focus: $isTextEditorInFocus
-                            )
-                            .padding(10)
+                            NoteTextEditor(text: $text, placeholder: .localizable.newNotePlaceholder)
+                                .padding(10)
                         }
                     }
                     
@@ -120,7 +114,6 @@ struct NewNoteView: View {
                 if let initialContents, text.isEmpty {
                     text = EditableNoteText(string: initialContents)
                 }
-                isTextEditorInFocus = true
                 analytics.showedNewNote()
             }
         }
