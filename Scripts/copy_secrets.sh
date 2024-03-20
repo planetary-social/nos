@@ -10,6 +10,9 @@ if [ "$CONFIGURATION" == "Debug" ] && [ -f "$DEBUG_XCCONFIG" ]; then
 elif [ "$CONFIGURATION" == "Release" ] && [ -f "$RELEASE_XCCONFIG" ]; then
     rsync -t $RELEASE_XCCONFIG $DESTINATION
     echo "Copied release config"
+elif [ "$CONFIGURATION" == "Staging" ] && [ -f "$RELEASE_XCCONFIG" ]; then
+    rsync -t $RELEASE_XCCONFIG $DESTINATION
+    echo "Copied release config"
 else
     rsync -t $EMPTY_XCCONFIG $DESTINATION
     echo "Copied empty config"
