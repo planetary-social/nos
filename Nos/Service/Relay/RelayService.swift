@@ -19,8 +19,8 @@ final class RelayService: ObservableObject {
     private var parseContext: NSManagedObjectContext 
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .userInitiated)
     private var parseQueue = ParseQueue()
+
     @Dependency(\.analytics) private var analytics
-    @Dependency(\.persistenceController) private var persistenceController
     @MainActor @Dependency(\.currentUser) private var currentUser
     @Published var numberOfConnectedRelays: Int = 0
     
@@ -590,26 +590,6 @@ extension RelayService {
 
 // MARK: Sockets
 extension RelayService {
-    
-    @MainActor func closeAllConnections(excluding relays: Set<Relay>?) async {
-        let relayAddresses = relays?.map { $0.address } ?? []
-
-        let openUnusedSockets = await subscriptions.sockets.filter({
-            guard let address = $0.request.url?.absoluteString else {
-                return true
-            }
-            return !relayAddresses.contains(address)
-        })
-        
-        if !openUnusedSockets.isEmpty {
-            Log.debug("Closing \(openUnusedSockets.count) unused sockets")
-        }
-
-        for socket in openUnusedSockets {
-            await subscriptions.close(socket: socket)
-        }
-    }
-    
     /// Opens sockets to all the relays that we have an open subscription for.
     @MainActor private func openSockets() async {
         let relayAddresses = Set(await subscriptions.all.map { $0.relayAddress })
@@ -806,10 +786,6 @@ extension RelayService {
         )
     }
 
-    func domain(from identifier: String) -> String {
-        identifier.components(separatedBy: "@")[safe: 1] ?? ""
-    }
-    
     func relay(from socket: WebSocket, in context: NSManagedObjectContext) -> Relay? {
         guard let socketURL = socket.request.url else {
             Log.error("Got socket with no URL: \(socket.request)")

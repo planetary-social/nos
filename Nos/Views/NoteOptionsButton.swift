@@ -3,7 +3,6 @@ import SwiftUI
 import Dependencies
 
 struct NoteOptionsButton: View {
-    @Environment(\.managedObjectContext) private var viewContext
     @Environment(CurrentUser.self) private var currentUser
     
     @Dependency(\.analytics) private var analytics
@@ -24,6 +23,7 @@ struct NoteOptionsButton: View {
             } label: {
                 Image(systemName: "ellipsis")
                     .foregroundColor(.secondaryTxt)
+                    .fontWeight(.bold)
                     .frame(minWidth: 44, minHeight: 44)
                     // This hack fixes a weird issue where the confirmationDialog wouldn't be shown sometimes. ¯\_(ツ)_/¯
                     .background(showingOptions == true ? .clear : .clear)

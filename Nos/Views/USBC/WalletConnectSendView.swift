@@ -61,7 +61,7 @@ struct WalletConnectSendView: View {
             }
             
             ZStack {
-                PlainTextField(text: $amount) {
+                TextField(text: $amount) {
                     PlainText("1,000")
                         .foregroundColor(.secondaryTxt)
                 }

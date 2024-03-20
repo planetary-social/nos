@@ -19,10 +19,7 @@ struct NoteButton: View {
     private let replyAction: ((Event) -> Void)?
     private let tapAction: ((Event) -> Void)?
 
-    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var relayService: RelayService
-    @Dependency(\.persistenceController) private var persistenceController
     
     init(
         note: Event, 
@@ -66,9 +63,9 @@ struct NoteButton: View {
                         AuthorLabel(author: author)
                         Image.repostSymbol
                         if let elapsedTime = note.createdAt?.distanceString() {
-                            Text(elapsedTime)
+                            PlainText(elapsedTime)
                                 .lineLimit(1)
-                                .font(.body)
+                                .font(.clarity(.medium))
                                 .foregroundColor(.secondaryTxt)
                         }
                         Spacer()

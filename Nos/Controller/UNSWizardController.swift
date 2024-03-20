@@ -30,8 +30,6 @@ class UNSWizardController: ObservableObject {
     }
     
     @Published var state: FlowState
-    @Published var authorKey: RawAuthorID?
-    @Published var textField: String 
     @Published var phoneNumber: String?
     @Published var nameRecord: UNSNameRecord?
     
@@ -41,19 +39,14 @@ class UNSWizardController: ObservableObject {
     @Dependency(\.unsAPI) var api
     @Dependency(\.currentUser) var currentUser 
     @Dependency(\.analytics) var analytics
-    @Dependency(\.persistenceController) var persistenceController
-    
+
     internal init(
         state: UNSWizardController.FlowState = .intro, 
-        authorKey: RawAuthorID? = nil, 
-        textField: String = "", 
-        phoneNumber: String? = nil, 
+        phoneNumber: String? = nil,
         nameRecord: UNSNameRecord? = nil, 
         names: [UNSNameRecord]? = nil
     ) {
         self.state = state
-        self.authorKey = authorKey
-        self.textField = textField
         self.phoneNumber = phoneNumber
         self.nameRecord = nameRecord
         self.names = names

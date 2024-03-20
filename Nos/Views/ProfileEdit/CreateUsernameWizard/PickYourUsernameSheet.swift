@@ -139,7 +139,7 @@ fileprivate struct UsernameTextField: View {
     @FocusState private var usernameFieldIsFocused: Bool
 
     var body: some View {
-        SwiftUI.TextField(
+        TextField(
             text: $usernameObserver.text,
             prompt: PlainText(.localizable.username).foregroundStyle(Color.secondaryTxt)
         ) {

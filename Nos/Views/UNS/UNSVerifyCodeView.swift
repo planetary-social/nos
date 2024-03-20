@@ -90,7 +90,6 @@ struct UNSVerifyCodeView_Previews: PreviewProvider {
     static var previewData = PreviewData()
     @State static var controller = UNSWizardController(
         state: .verificationCode, 
-        authorKey: previewData.alice.hexadecimalPublicKey!,
         phoneNumber: "+1768555451"
     )
     

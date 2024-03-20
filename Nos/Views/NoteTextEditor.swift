@@ -28,7 +28,7 @@ struct NoteTextEditor: View {
         EditableText($text, guid: guid)
             .placeholder(when: text.isEmpty, placeholder: {
                 VStack {
-                    Text(placeholder)
+                    PlainText(placeholder)
                         .foregroundColor(.secondaryTxt)
                         .padding(.top, 10)
                         .padding(.leading, 6)

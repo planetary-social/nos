@@ -7,7 +7,7 @@ struct WizardTextField: View {
     var placeholder: String = ""
     
     var body: some View {
-        PlainTextField(text: text) {
+        TextField(text: text) {
             PlainText(placeholder)
                 .foregroundColor(.secondaryTxt)
         }
