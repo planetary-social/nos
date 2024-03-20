@@ -32,12 +32,12 @@ struct NewNoteView: View {
     @Binding var isPresented: Bool
     
     /// The note that the user is replying to, if any.
-    private var replyTo: Event?
+    private var replyToNote: Event?
 
     init(initialContents: String? = nil, replyTo: Event? = nil, isPresented: Binding<Bool>) {
         _isPresented = isPresented
         self.initialContents = initialContents
-        self.replyTo = replyTo
+        self.replyToNote = replyTo
     }
     
     @FocusState private var isTextEditorInFocus: Bool
@@ -48,8 +48,8 @@ struct NewNoteView: View {
                 VStack(spacing: 0) {
                     ScrollViewIfNeeded {
                         VStack(spacing: 0) {
-                            if let replyTo {
-                                ReplyPreview(note: replyTo)
+                            if let replyToNote {
+                                ReplyPreview(note: replyToNote)
                             }
                             NoteTextEditor(
                                 text: $text,
@@ -185,7 +185,7 @@ struct NewNoteView: View {
             }
             
             // Attach the new note to the one it is replying to, if any.
-            if let replyToNote = replyTo, let replyToNoteID = replyToNote.identifier {
+            if let replyToNote = replyToNote, let replyToNoteID = replyToNote.identifier {
                 // TODO: Append ptags for all authors involved in the thread
                 if let replyToAuthor = replyToNote.author?.publicKey?.hex {
                     tags.append(["p", replyToAuthor])
