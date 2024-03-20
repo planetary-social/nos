@@ -53,7 +53,7 @@ struct CompactNoteView: View {
     
     /// Calculates whether the note text is long enough to need truncation given `truncationLineLimit`.
     var noteNeedsTruncation: Bool {
-        intrinsicSize.height > truncatedSize.height + 30 
+        shouldTruncate && intrinsicSize.height > truncatedSize.height + 30 
     }
     
     /// Calculates whether the Read More button should be shown. 
@@ -92,7 +92,7 @@ struct CompactNoteView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            if !isTextTruncated {
+            if !isTextTruncated || !shouldTruncate {
                 formattedText
                     .fixedSize(horizontal: false, vertical: true)
             } else {
