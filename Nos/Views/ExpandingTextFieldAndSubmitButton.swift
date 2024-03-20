@@ -3,8 +3,6 @@ import SwiftUI
 
 struct ExpandingTextFieldAndSubmitButton: View {
 
-    @Environment(\.managedObjectContext) private var viewContext
-
     var placeholder: LocalizedStringResource
     @Binding var reply: EditableNoteText
     var focus: FocusState<Bool>.Binding

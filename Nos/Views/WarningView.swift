@@ -167,18 +167,6 @@ struct ContentWarningMessage: View {
         return combined.joined(separator: ", ")
     }
     
-    private var tags: [[String]] {
-        var allTags = [[String]]()
-        for report in reports {
-            guard let reportTags = report.allTags as? [[String]] else {
-                print("Error: Cannot convert allTags to [[String]]")
-                continue
-            }
-            allTags.append(contentsOf: reportTags)
-        }
-        return allTags
-    }
-    
     private var uniqueReasons: Set<String> {
         var reasons = [String]()
         for report in reports {

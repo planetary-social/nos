@@ -9,13 +9,11 @@ struct AppView: View {
     @Environment(AppController.self) var appController
     @EnvironmentObject private var router: Router
     @EnvironmentObject var pushNotificationService: PushNotificationService
-    @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.userDefaults) private var userDefaults
     @Environment(CurrentUser.self) var currentUser
     
-    @State private var showingOptions = false
     @State private var lastSelectedTab = AppDestination.home
     @State private var showNIP05Wizard = false
 

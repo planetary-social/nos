@@ -8,15 +8,13 @@ import Logger
 import Dependencies
 
 enum EventError: Error {
-	case jsonEncoding
 	case utf8Encoding
 	case unrecognizedKind
     case missingAuthor
     case invalidETag([String])
     case invalidSignature(Event)
     case expiredEvent
-    case coreData
-    
+
     var description: String? {
         switch self {
         case .unrecognizedKind:
@@ -58,8 +56,7 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 public class Event: NosManagedObject {
     
     @Dependency(\.currentUser) @ObservationIgnored private var currentUser
-    @Dependency(\.persistenceController) @ObservationIgnored private var persistenceController
-    
+
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"
     public static var discoverKinds = [EventKind.text, EventKind.longFormContent]
@@ -388,21 +385,7 @@ public class Event: NosManagedObject {
         fetchRequest.predicate = homeFeedPredicate(for: user, before: before)
         return fetchRequest
     }
-    
-    @nonobjc public class func noteIsLikedByUser(for userPubKey: String, noteId: String) -> NSFetchRequest<Event> {
-        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        let noteIsLikedByUserPredicate = NSPredicate(
-            // swiftlint:disable line_length
-            format: "kind = \(String(EventKind.like.rawValue)) AND author.hexadecimalPublicKey = %@ AND SUBQUERY(eventReferences, $reference, $reference.eventId = %@).@count > 0  AND deletedOn.@count = 0",
-            // swiftlint:enable line_length
-            userPubKey,
-            noteId
-        )
-        fetchRequest.predicate = noteIsLikedByUserPredicate
-        return fetchRequest
-    }
-    
+
     @nonobjc public class func likes(noteID: String) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
@@ -429,15 +412,6 @@ public class Event: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func allFollowedPostsRequest(from publicKeys: [String]) -> NSFetchRequest<Event> {
-        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        let kind = EventKind.text.rawValue
-        let predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey IN %@", kind, publicKeys)
-        fetchRequest.predicate = predicate
-        return fetchRequest
-    }
-    
     @nonobjc public class func emptyRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: true)]
@@ -458,29 +432,6 @@ public class Event: NosManagedObject {
         fetchRequest.predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey = %@", kind, key)
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         return deleteRequest
-    }
-    
-    @nonobjc public class func deletePostsRequest(for identifiers: [String]) -> NSBatchDeleteRequest {
-        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Event")
-        fetchRequest.predicate = NSPredicate(format: "identifier IN %@", identifiers)
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-        return deleteRequest
-    }
-    
-    @nonobjc public class func contactListRequest(_ author: Author) -> NSFetchRequest<Event> {
-        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        let kind = EventKind.contactList.rawValue
-        let key = author.hexadecimalPublicKey ?? "notakey"
-        fetchRequest.predicate = NSPredicate(format: "kind = %i AND author.hexadecimalPublicKey = %@", kind, key)
-        return fetchRequest
-    }
-    
-    class func oldest() -> NSFetchRequest<Event> {
-        let request = Event.allEventsRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
-        request.fetchLimit = 1
-        return request
     }
     
     class func all(context: NSManagedObjectContext) -> [Event] {
@@ -566,21 +517,6 @@ public class Event: NosManagedObject {
             let event = Event(context: context)
             event.identifier = id
             return event
-        }
-    }
-    
-    func deleteEvents(identifiers: [String], context: NSManagedObjectContext) async {
-        print("Deleting: \(identifiers)")
-        let deleteRequest = Event.deletePostsRequest(for: identifiers)
-
-        do {
-            try context.execute(deleteRequest)
-        } catch let error as NSError {
-            print("Failed to delete posts in \(identifiers). Error: \(error.description)")
-        }
-        
-        await context.perform {
-            try? context.save()
         }
     }
     
@@ -1209,41 +1145,6 @@ public class Event: NosManagedObject {
             Log.error("Couldn't find a bech32note key when generating web link")
             return "https://njump.me"
         }
-    }
-    
-    /// Returns a list of the authors this event was reported by if any of them are followed by the given user.
-    /// This isn't very performant so use sparingly.
-    @MainActor func reportingAuthors(followedBy currentUser: CurrentUser) async -> [Author] {
-        let allReferencingEvents = referencingEvents
-            .compactMap { $0.referencingEvent }
-        
-        var reportingAuthors = [Author]()
-        for event in allReferencingEvents {
-            let isReportEvent = event.kind == EventKind.report.rawValue
-            let isFollowed = await currentUser.socialGraph.follows(event.author?.hexadecimalPublicKey ?? "")
-            if isReportEvent && isFollowed, let author = event.author {
-                reportingAuthors.append(author)
-            }
-        }
-        return reportingAuthors
-    }
-    
-    /// Returns a list of reports for this event from authors followed by the given user.
-    /// This isn't very performant so use sparingly.
-    @MainActor
-    func reports(followedBy currentUser: CurrentUser) async -> [Event] {
-        let allReferencingEvents = referencingEvents
-            .compactMap { $0.referencingEvent }
-        
-        var followedReportEvents = [Event]()
-        for event in allReferencingEvents {
-            let isReportEvent = event.kind == EventKind.report.rawValue
-            let isFollowed = await currentUser.socialGraph.follows(event.author?.hexadecimalPublicKey ?? "")
-            if isReportEvent && isFollowed {
-                followedReportEvents.append(event)
-            }
-        }
-        return followedReportEvents
     }
 }
 // swiftlint:enable type_body_length
