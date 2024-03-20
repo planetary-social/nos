@@ -22,9 +22,11 @@ class CrashReporting {
         
         sentry.start { options in
             options.dsn = dsn
-#if STAGING
+            #if STAGING
             options.environment = "staging"
-#endif
+            #elseif DEV
+            options.environment = "debug"
+            #endif
             options.enableTracing = true
             options.tracesSampleRate = 0.3 // tracing must be enabled for profiling
             options.profilesSampleRate = 0.3 // see also `profilesSampler` if you need custom sampling logic
