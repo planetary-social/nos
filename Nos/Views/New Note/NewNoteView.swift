@@ -44,25 +44,33 @@ struct NewNoteView: View {
         NavigationStack {
             ZStack {
                 VStack(spacing: 0) {
-                    ScrollViewIfNeeded {
-                        ScrollViewReader { proxy in
-                            VStack(spacing: 0) {
-                                if let replyToNote {
-                                    ReplyPreview(note: replyToNote)
-                                }
-                                NoteTextEditor(text: $text, placeholder: .localizable.newNotePlaceholder)
-                                    .padding(10)
-                                    .frame(minHeight: 100)
-                                    .id(0)
+                    let content = ScrollViewReader { proxy in
+                        VStack(spacing: 0) {
+                            if let replyToNote {
+                                ReplyPreview(note: replyToNote)
                             }
-                            .onAppear {
-                                Task {
-                                    try await Task.sleep(for: .seconds(1))
-                                    withAnimation(.easeInOut(duration: 0.25)) { 
-                                        proxy.scrollTo(0, anchor: .bottom)
-                                    }
+                            NoteTextEditor(text: $text, placeholder: .localizable.newNotePlaceholder)
+                                .padding(10)
+                                .frame(minHeight: 100)
+                                .id(0)
+                        }
+                        .onAppear {
+                            Task {
+                                try await Task.sleep(for: .seconds(0.5))
+                                withAnimation(.easeInOut(duration: 0.25)) { 
+                                    proxy.scrollTo(0, anchor: .bottom)
                                 }
                             }
+                        }
+                    }
+                            
+                    // We do this because editor won't expand to fill available space when it's in a ScrollView.
+                    // and we need it to because people try to tap below the text field bounds to past if it doesn't
+                    // fill the screen.
+                    ViewThatFits {
+                        content
+                        ScrollView {
+                            content
                         }
                     }
                     
