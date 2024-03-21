@@ -1,4 +1,4 @@
-name: TestFlight dev deployment
+name: TestFlight Staging deployment
 on:
   push:
     branches:
