@@ -23,9 +23,11 @@ platform :ios do
   sentry_auth = ENV["SENTRY_AUTH"]
   is_ci = ENV["CI"]
   app_secrets = ENV["APP_SECRETS"]
-  app_secrets_path = "../Nos/Assets/ProductionSecrets.xcconfig"
+  app_production_secrets_path = "../Nos/Assets/ProductionSecrets.xcconfig"
+  app_staging_secrets_path = "../Nos/Assets/StagingSecrets.xcconfig"
+  app_dev_secrets_path = "../Nos/Assets/DevSecrets.xcconfig"
 
-  desc "Push a new build to TestFlight"
+  desc "Push a new build to TestFlight using the provided scheme and identifier"
   private_lane :push_build do |options|
     app_store_connect_api_key(
       key_id: asc_key_id,
@@ -49,7 +51,7 @@ platform :ios do
           keychain_name: "keychain",
           keychain_password: keychain_pass
         )
-      File.open(app_secrets_path, 'w') do |file|
+      File.open(options[:appsecretspath], 'w') do |file|
         file.puts app_secrets
       end
     else
@@ -71,17 +73,15 @@ platform :ios do
       xcargs: "-skipPackagePluginValidation"
     )
     if is_ci
-      sh("rm", app_secrets_path)
+      sh("rm", options[:appsecretspath])
     end
     changelog = read_changelog
     upload_to_testflight(
       changelog: changelog,
       skip_waiting_for_build_processing: is_ci
     )
-    if options[:tag]
-      add_git_tag(tag: "v#{version_number}-#{build_number}")
-      push_git_tags
-    end
+    add_git_tag(tag: "v#{options[:tagprefix]}#{version_number}-#{build_number}")
+    push_git_tags
     sentry_upload_dif(
       org_slug: 'verse',
       project_slug: 'nos-ios',
@@ -100,9 +100,10 @@ platform :ios do
   desc "Push a new Nos Dev build to TestFlight"
   lane :dev do
     push_build(
-      scheme: "Nos Dev",
+      scheme: "NosDev",
       appidentifier: "com.verse.Nos-dev",
-      tag: false,
+      tagprefix: "dev-",
+      appsecretspath: app_dev_secrets_path,
       appstoreconnect: "https://appstoreconnect.apple.com/apps/6479583778/testflight/ios"
     )
   end
@@ -110,19 +111,21 @@ platform :ios do
   desc "Push a new Nos Staging build to TestFlight"
   lane :staging do
     push_build(
-      scheme: "Nos Staging",
+      scheme: "NosStaging",
       appidentifier: "com.verse.Nos-staging",
-      tag: false,
+      tagprefix: "staging-",
+      appsecretspath: app_staging_secrets_path,
       appstoreconnect: "https://appstoreconnect.apple.com/apps/6479681443/testflight/ios"
     )
   end
 
-  desc "Push a new Nos build to TestFlight"
+  desc "Push a new Nos Release build to TestFlight"
   lane :release do
     push_build(
       scheme: "Nos",
       appidentifier: "com.verse.Nos",
-      tag: true,
+      tagprefix: "",
+      appsecretspath: app_production_secrets_path,
       appstoreconnect: "https://appstoreconnect.apple.com/apps/6479583869/testflight/ios"
     )
   end

@@ -72,7 +72,7 @@ Push a new Nos Staging build to TestFlight
 [bundle exec] fastlane ios release
 ```
 
-Push a new Nos build to TestFlight
+Push a new Nos Release build to TestFlight
 
 ### ios stamp_release
 

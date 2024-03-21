@@ -5,6 +5,7 @@
 ## Secrets
 
 Nos/Assets/ProductionSecrets.xcconfig
+Nos/Assets/StagingSecrets.xcconfig
 Nos/Assets/DevSecrets.xcconfig
 Nos/Assets/Secrets.xcconfig
 
