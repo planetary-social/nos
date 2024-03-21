@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Re-design the confirmation dialog that appears when you delete your NIP-05.
 - Fixed a bug where liking a note could cause other notes to appear liked.
 - Added a new UI for replying to messages that allows attaching images and setting an expiration date.
+- Fixed an issue where the "Read more" button could display on notes that didn't need it.
 
 ## [0.1.6] - 2024-03-07Z
 
