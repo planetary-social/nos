@@ -66,7 +66,10 @@ struct EditableText: UIViewRepresentable {
         }
         
         if showKeyboard {
-            view.becomeFirstResponder()
+            Task {
+                try await Task.sleep(for: .milliseconds(200))
+                view.becomeFirstResponder()
+            }
         }
 
         return view
