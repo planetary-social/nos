@@ -6,13 +6,11 @@ import Dependencies
 /// it is too long
 struct CompactNoteView: View {
     
-    @Environment(\.managedObjectContext) private var viewContext
-
     /// The note whose content will be displayed
     private let note: Event
     
     /// The maximum number of lines to show before truncating (if `showFullMessage` is false)
-    private let truncationLineLimit: Int
+    private let truncationLineLimit = 12
     
     /// If true this view will truncate long notes and show a "Read more" button to view the whole thing. If false 
     /// the full note will always be displayed
@@ -34,19 +32,17 @@ struct CompactNoteView: View {
     /// The size of the note text truncated to `truncationLineLimit` lines.
     @State private var truncatedSize = CGSize.zero
     
+    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
-    @Dependency(\.persistenceController) private var persistenceController
     
     internal init(
         note: Event, 
         shouldTruncate: Bool = false, 
         showLinkPreviews: Bool = true,
-        truncationLineLimit: Int = 12,
         allowUserInteraction: Bool = true
     ) {
         self.note = note
         self.shouldTruncate = shouldTruncate
-        self.truncationLineLimit = truncationLineLimit
         self.showLinkPreviews = showLinkPreviews
         self.allowUserInteraction = allowUserInteraction
     }
@@ -178,7 +174,6 @@ struct CompactNoteView_Previews: PreviewProvider {
             CompactNoteView(note: previewData.linkNote, allowUserInteraction: false)
             CompactNoteView(note: previewData.shortNote)
             CompactNoteView(note: previewData.longNote)
-            CompactNoteView(note: previewData.longFormNote, truncationLineLimit: 2)
             CompactNoteView(note: previewData.doubleImageNote)
             CompactNoteView(note: previewData.doubleImageNote, showLinkPreviews: false)
         }

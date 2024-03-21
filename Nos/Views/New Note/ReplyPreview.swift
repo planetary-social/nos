@@ -20,7 +20,7 @@ struct ReplyPreview: View {
             .padding(.horizontal, 24)
             .padding(.top, 24)
             
-            CompactNoteView(note: note, showLinkPreviews: false, truncationLineLimit: 5, allowUserInteraction: false)
+            CompactNoteView(note: note, shouldTruncate: false, showLinkPreviews: false, allowUserInteraction: false)
                 .padding(.horizontal, 9)
             
             HStack {

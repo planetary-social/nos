@@ -45,12 +45,24 @@ struct NewNoteView: View {
             ZStack {
                 VStack(spacing: 0) {
                     ScrollViewIfNeeded {
-                        VStack(spacing: 0) {
-                            if let replyToNote {
-                                ReplyPreview(note: replyToNote)
+                        ScrollViewReader { proxy in
+                            VStack(spacing: 0) {
+                                if let replyToNote {
+                                    ReplyPreview(note: replyToNote)
+                                }
+                                NoteTextEditor(text: $text, placeholder: .localizable.newNotePlaceholder)
+                                    .padding(10)
+                                    .frame(minHeight: 100)
+                                    .id(0)
                             }
-                            NoteTextEditor(text: $text, placeholder: .localizable.newNotePlaceholder)
-                                .padding(10)
+                            .onAppear {
+                                Task {
+                                    try await Task.sleep(for: .seconds(1))
+                                    withAnimation(.easeInOut(duration: 0.25)) { 
+                                        proxy.scrollTo(0, anchor: .bottom)
+                                    }
+                                }
+                            }
                         }
                     }
                     

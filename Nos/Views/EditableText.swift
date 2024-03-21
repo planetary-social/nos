@@ -21,7 +21,6 @@ struct EditableText: UIViewRepresentable {
     /// An ID for this view. Only .mentionAddedNotifications matching this ID will be processed.
     private var guid: UUID
     private var font = UIFont.preferredFont(forTextStyle: .body)
-    private var insets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
 
     init(_ text: Binding<EditableNoteText>, guid: UUID, showKeyboard: Bool = false) {
         self.guid = guid

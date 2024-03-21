@@ -435,7 +435,6 @@
 		CD2CF390299E68BE00332116 /* NoteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2CF38F299E68BE00332116 /* NoteButton.swift */; };
 		CD4908D429B92941007443DB /* ReportABugMailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4908D329B92941007443DB /* ReportABugMailView.swift */; };
 		CD76865029B6503500085358 /* NoteOptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76864F29B6503500085358 /* NoteOptionsButton.swift */; };
-		CD76865329B793F400085358 /* DiscoverSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76865229B793F400085358 /* DiscoverSearchBar.swift */; };
 		CDDA1F7B29A527650047ACD8 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = CDDA1F7A29A527650047ACD8 /* Starscream */; };
 		CDDA1F7D29A527650047ACD8 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = CDDA1F7C29A527650047ACD8 /* SwiftUINavigation */; };
 		DC08FF7E2A7968FF009F87D1 /* FileStorageAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F20422A6ED75C00F8D73F /* FileStorageAPI.swift */; };
@@ -774,7 +773,6 @@
 		CD2CF38F299E68BE00332116 /* NoteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteButton.swift; sourceTree = "<group>"; };
 		CD4908D329B92941007443DB /* ReportABugMailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportABugMailView.swift; sourceTree = "<group>"; };
 		CD76864F29B6503500085358 /* NoteOptionsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteOptionsButton.swift; sourceTree = "<group>"; };
-		CD76865229B793F400085358 /* DiscoverSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverSearchBar.swift; sourceTree = "<group>"; };
 		DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Simulator.swift"; sourceTree = "<group>"; };
 		DC4AB2F52A4475B800D1478A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DC5F203E2A6AE24200F8D73F /* ImagePickerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerButton.swift; sourceTree = "<group>"; };
@@ -861,21 +859,29 @@
 			isa = PBXGroup;
 			children = (
 				C9DEC04329894BED0078B43A /* Author+CoreDataClass.swift */,
-				C973AB582A323167002AED16 /* Author+CoreDataProperties.swift */,
 				3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */,
-				C973AB572A323167002AED16 /* AuthorReference+CoreDataProperties.swift */,
 				C9DEC03F29894BED0078B43A /* Event+CoreDataClass.swift */,
-				C973AB562A323167002AED16 /* Event+CoreDataProperties.swift */,
 				3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */,
-				C973AB5A2A323167002AED16 /* EventReference+CoreDataProperties.swift */,
 				A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */,
-				C973AB552A323167002AED16 /* Follow+CoreDataProperties.swift */,
 				C9C547572A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift */,
-				C9C547582A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift */,
 				C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */,
-				C973AB592A323167002AED16 /* Relay+CoreDataProperties.swift */,
+				037A2C242BA9D75F00FC554B /* Generated */,
 			);
 			path = CoreData;
+			sourceTree = "<group>";
+		};
+		037A2C242BA9D75F00FC554B /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				C973AB582A323167002AED16 /* Author+CoreDataProperties.swift */,
+				C973AB572A323167002AED16 /* AuthorReference+CoreDataProperties.swift */,
+				C973AB562A323167002AED16 /* Event+CoreDataProperties.swift */,
+				C973AB5A2A323167002AED16 /* EventReference+CoreDataProperties.swift */,
+				C973AB552A323167002AED16 /* Follow+CoreDataProperties.swift */,
+				C9C547582A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift */,
+				C973AB592A323167002AED16 /* Relay+CoreDataProperties.swift */,
+			);
+			path = Generated;
 			sourceTree = "<group>";
 		};
 		3AAB61B12B24CC8A00717A07 /* Extensions */ = {
@@ -1345,7 +1351,6 @@
 				C9DFA968299BEC33006929C1 /* CardStyle.swift */,
 				C9DFA96A299BEE2C006929C1 /* CompactNoteView.swift */,
 				C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */,
-				CD76865229B793F400085358 /* DiscoverSearchBar.swift */,
 				C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */,
 				5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */,
 				5B8C96B529DDD3B200B73AEC /* EditableText.swift */,
@@ -1860,7 +1865,6 @@
 				C9F204632ADEDB910029A858 /* Web3Utils.swift in Sources */,
 				C9F75AD62A041FF7005BBE45 /* ExpirationTimePicker.swift in Sources */,
 				C92F015E2AC4D99400972489 /* NosForm.swift in Sources */,
-				CD76865329B793F400085358 /* DiscoverSearchBar.swift in Sources */,
 				5B8C96AC29D52AD200B73AEC /* AuthorListView.swift in Sources */,
 				C94A5E152A716A6D00B6EC5D /* EditableNoteText.swift in Sources */,
 				DC5F20412A6AE31000F8D73F /* ImagePickerUIViewController.swift in Sources */,

@@ -61,10 +61,8 @@ struct AboutView: View {
     }
 }
 
-struct AboutView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            AboutView()
-        }
+#Preview {
+    NavigationStack {
+        AboutView()
     }
 }

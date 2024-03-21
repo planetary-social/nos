@@ -9,12 +9,10 @@ struct ScrollViewIfNeeded<Content>: View where Content: View {
     var axes: Axis.Set = [.vertical]
     
     var body: some View {
-        // Build the content view only once so that the content is not recreated (resetting @State) if it changes size.
-        let subview = content 
         ViewThatFits(in: axes) {
-            subview
+            content
             ScrollView(axes) {
-                subview
+                content
             }
         } 
     }

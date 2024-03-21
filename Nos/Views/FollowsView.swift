@@ -13,10 +13,6 @@ struct FollowersDestination: Hashable {
 
 /// Displays a list of people someone is following.
 struct FollowsView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var relayService: RelayService
-    @EnvironmentObject var router: Router
-
     /// Screen title
     var title: LocalizedStringResource
 
