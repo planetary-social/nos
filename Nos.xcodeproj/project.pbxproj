@@ -529,6 +529,9 @@
 		5BE281C92AE2CCEB00880466 /* HomeTab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTab.swift; sourceTree = "<group>"; };
 		5BE460702BAB2BE1004B83ED /* NosStaging.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NosStaging.entitlements; sourceTree = "<group>"; };
 		5BE460762BAB307A004B83ED /* NosDev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NosDev.entitlements; sourceTree = "<group>"; };
+		5BE4609E2BACAFEE004B83ED /* StagingSecrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = StagingSecrets.xcconfig; sourceTree = "<group>"; };
+		5BE4609F2BACAFEE004B83ED /* DevSecrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DevSecrets.xcconfig; sourceTree = "<group>"; };
+		5BE460A02BACAFEE004B83ED /* ProductionSecrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ProductionSecrets.xcconfig; sourceTree = "<group>"; };
 		5BFF66AF2A4B55FC00AA79DD /* Nos 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 10.xcdatamodel"; sourceTree = "<group>"; };
 		5BFF66B02A573F6400AA79DD /* RelayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayDetailView.swift; sourceTree = "<group>"; };
 		5BFF66B32A58853D00AA79DD /* PublishedEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishedEventsView.swift; sourceTree = "<group>"; };
@@ -1262,6 +1265,9 @@
 				C94D39242ABDDFB60019C4D5 /* EmptySecrets.xcconfig */,
 				DC4AB2F52A4475B800D1478A /* AppDelegate.swift */,
 				C94D39212ABDDDFE0019C4D5 /* Secrets.xcconfig */,
+				5BE4609F2BACAFEE004B83ED /* DevSecrets.xcconfig */,
+				5BE460A02BACAFEE004B83ED /* ProductionSecrets.xcconfig */,
+				5BE4609E2BACAFEE004B83ED /* StagingSecrets.xcconfig */,
 				C9A0DAEC29C6A66C00466635 /* Launch Screen.storyboard */,
 			);
 			path = Assets;

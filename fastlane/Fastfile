@@ -78,6 +78,7 @@ platform :ios do
     changelog = read_changelog
     upload_to_testflight(
       changelog: changelog,
+      app_identifier: options[:app_identifier],
       skip_waiting_for_build_processing: is_ci
     )
     add_git_tag(tag: "v#{options[:tagprefix]}#{version_number}-#{build_number}")
