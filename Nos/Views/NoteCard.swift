@@ -89,7 +89,7 @@ struct NoteCard: View {
                             CompactNoteView(
                                 note: note, 
                                 showFullMessage: showFullMessage, 
-                                loadLinks: !warningController.showWarning
+                                showLinkPreviews: !warningController.showWarning
                             )
                             .blur(radius: warningController.showWarning ? 6 : 0)
                             .frame(maxWidth: .infinity)
