@@ -4,8 +4,6 @@ import Logger
 
 struct ProfileHeader: View {
     @ObservedObject var author: Author
-    @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) private var currentUser
 
     @Binding private var selectedTab: ProfileHeaderTab
@@ -16,10 +14,6 @@ struct ProfileHeader: View {
     var followersRequest: FetchRequest<Follow>
     var followersResult: FetchedResults<Follow> { followersRequest.wrappedValue }
     
-    var follows: Followed {
-        followsResult.map { $0 }
-    }
-
     var followers: Followed {
         followersResult.map { $0 }
     }

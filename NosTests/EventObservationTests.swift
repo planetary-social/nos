@@ -26,9 +26,7 @@ struct EventObservationTestView: View {
         entity: Event.entity(), 
         sortDescriptors: [NSSortDescriptor(keyPath: \Event.createdAt, ascending: true)]
     ) var events
-    
-    @Environment(\.managedObjectContext) private var viewContext
-    
+        
     internal let inspection = Inspection<Self>() 
     var body: some View {
         List(events) { event in 

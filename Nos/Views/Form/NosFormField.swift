@@ -5,16 +5,13 @@ struct NosFormField<Control: View>: View {
 
     let control: Control
     let label: LocalizedStringResource
-    let footnote: LocalizedStringResource?
     @FocusState private var focus: Bool
 
     init(
         label: LocalizedStringResource,
-        footnote: LocalizedStringResource? = nil,
         @ViewBuilder builder: () -> Control
     ) {
         self.label = label
-        self.footnote = footnote
         self.control = builder()
     }
     
@@ -23,8 +20,7 @@ struct NosFormField<Control: View>: View {
             HStack {
                 Text(label)
                     .foregroundColor(.secondaryTxt)
-                    .fontWeight(.medium)
-                    .font(.clarityFootnote)
+                    .font(.clarity(.medium, textStyle: .subheadline))
                 Spacer()
             }
             
@@ -45,10 +41,7 @@ struct NosFormField_Previews: PreviewProvider {
         NosForm {
             NosFormSection(label: .localizable.profileTitle) {
                 WithState(initialValue: "") { text in
-                    NosFormField(
-                        label: .localizable.about,
-                        footnote: .localizable.usernameWarningMessage
-                    ) {
+                    NosFormField(label: .localizable.about) {
                         TextField("", text: text)
                             .textInputAutocapitalization(.none)
                             .foregroundColor(.primaryTxt)

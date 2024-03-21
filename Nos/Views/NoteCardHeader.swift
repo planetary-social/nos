@@ -14,14 +14,14 @@ struct NoteCardHeader: View {
                     .resizable()
                     .foregroundColor(.secondaryTxt)
                     .frame(width: 25, height: 25)
-                Text(expirationTime)
+                PlainText(expirationTime)
                     .lineLimit(1)
-                    .font(.body)
+                    .font(.clarity(.medium))
                     .foregroundColor(.secondaryTxt)
             } else if let elapsedTime = note.createdAt?.distanceString() {
-                Text(elapsedTime)
+                PlainText(elapsedTime)
                     .lineLimit(1)
-                    .font(.body)
+                    .font(.clarity(.medium))
                     .foregroundColor(.secondaryTxt)
             }
         }

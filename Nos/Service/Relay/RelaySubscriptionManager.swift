@@ -17,10 +17,6 @@ actor RelaySubscriptionManager {
     
     // MARK: - Mutating the list of subscriptions
     
-    func subscription(from filter: Filter) -> RelaySubscription? {
-        subscription(from: filter.id)
-    }
-    
     func subscription(from subscriptionID: RelaySubscription.ID) -> RelaySubscription? {
         if let subscriptionIndex = self.all.firstIndex(where: { $0.id == subscriptionID }) {
             return all[subscriptionIndex]
@@ -121,11 +117,7 @@ actor RelaySubscriptionManager {
     
     // MARK: - Talking to Relays
     
-    private let subscriptionLimit = 10
-    private let minimimumOneTimeSubscriptions = 1
-    
     func processSubscriptionQueue() async {
-        
         let waitingLongSubscriptions = all.filter { !$0.isOneTime && !$0.isActive }
         let waitingOneTimeSubscriptions = all.filter { $0.isOneTime && !$0.isActive }
         

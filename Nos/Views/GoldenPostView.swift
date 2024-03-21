@@ -6,7 +6,6 @@ let goldenRatio: CGFloat = 0.618
 struct GoldenPostView: View {
 
     @ObservedObject var author: Author
-
     @ObservedObject var note: Event
     
     @Environment(\.managedObjectContext) private var viewContext
@@ -14,9 +13,9 @@ struct GoldenPostView: View {
     @EnvironmentObject private var router: Router
     
     @State private var noteContent = LoadingContent<AttributedString>.loading
-    @State private var contentLinks = [URL]()
+
     @Dependency(\.persistenceController) private var persistenceController
-    
+
     internal init(author: Author, note: Event) {
         self.author = author
         self.note = note
@@ -52,9 +51,9 @@ struct GoldenPostView: View {
                 HStack(alignment: .center) {
                     AvatarView(imageUrl: author.profilePhotoURL, size: 20)
                     // if !post.isBlobOnly {
-                    Text(author.safeName)
+                    PlainText(author.safeName)
                         .lineLimit(1)
-                        .font(.subheadline)
+                        .font(.clarity(.regular, textStyle: .subheadline))
                         .foregroundColor(Color.secondaryTxt)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)

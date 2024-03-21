@@ -20,12 +20,6 @@ extension LinearGradient {
         endPoint: .bottom
     )
     
-    public static let solidBlack = LinearGradient(
-        colors: [Color.black],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
     public static let cardGradient = LinearGradient(
         colors: [Color.cardBgTop, Color.cardBgBottom],
         startPoint: .top,

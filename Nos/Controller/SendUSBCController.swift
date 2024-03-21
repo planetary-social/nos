@@ -23,8 +23,6 @@ enum SendUSBCError: Error {
 /// A controller to support pairing with a wallet using Wallet Connect 2.0 and sending USBC to another Nostr user with
 /// a universal name. Works with the SendUSBCWizard.
 class SendUSBCController: ObservableObject {
-    @Dependency(\.currentUser) private var currentUser
-    
     @Published var state: SendUSBCWizardState
     @Published var fromAddress: USBCAddress?
     @Published var qrImage: Image?
@@ -32,7 +30,6 @@ class SendUSBCController: ObservableObject {
     var destinationAddress: USBCAddress
     var destinationAuthor: Author
     
-    private var cancellables = [AnyCancellable]()
     private let walletConnectSessionManager = WalletConnectSessionManager.shared
     private var dismissHandler: () -> Void
     

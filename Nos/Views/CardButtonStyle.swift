@@ -3,9 +3,7 @@ import SwiftUI
 struct CardButtonStyle: ButtonStyle {
     
     var style: CardStyle
-    
-    @State private var configurationSize: CGSize = .zero
-    
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label.mimicCardButtonStyle(style: style, isPressed: configuration.isPressed)
     }
@@ -46,7 +44,7 @@ extension View {
         Button {
         } label: { 
             VStack {
-                Text("hello world")
+                PlainText("hello world")
                     .padding()
             }
             .background(Color.cardBgTop.cornerRadius(18))
