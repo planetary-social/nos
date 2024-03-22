@@ -1,5 +1,7 @@
 import Foundation
 
+/// The NamesAPI service is in charge of creating and deleting nos.social usernames and
+/// verifying if a NIP-05 or nos.social username can be associated or not.
 class NamesAPI {
 
     private enum Error: LocalizedError {

@@ -19,7 +19,7 @@ struct ClaimYourUniqueIdentitySheet: View {
                 AlreadyHaveANIP05View(isPresented: $isPresented)
             } label: {
                 SwiftUI.Text(.localizable.alreadyHaveANIP05)
-                    .font(.clarity(.medium, textStyle: .footnote))
+                    .font(.clarity(.medium, textStyle: .subheadline))
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 10)
