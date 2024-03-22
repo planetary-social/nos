@@ -53,8 +53,8 @@ class NamesAPI {
 
     /// Verifies that a given username is free to claim in nos.social
     func verify(username: String, keyPair: KeyPair) async throws -> Bool {
-        return try await verify(
-            username: username, 
+        try await verify(
+            username: username,
             host: verificationURL,
             keyPair: keyPair,
             valueWhenNotFound: true
