@@ -947,6 +947,17 @@
         }
       }
     },
+    "alreadyHaveANIP05" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No, thanks. I already have a NIP-05"
+          }
+        }
+      }
+    },
     "amount" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5365,6 +5376,28 @@
         }
       }
     },
+    "linkYourNIP05Description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter your existing NIP-05 here:"
+          }
+        }
+      }
+    },
+    "linkYourNIP05Title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Already have a NIP-05?"
+          }
+        }
+      }
+    },
     "loading" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -6711,6 +6744,17 @@
         }
       }
     },
+    "niceWork" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nice work!"
+          }
+        }
+      }
+    },
     "nip05" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -6782,6 +6826,28 @@
         }
       }
     },
+    "nip05Connected" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your NIP-05 is now connected to your npub in the Nostr network."
+          }
+        }
+      }
+    },
+    "nip05Example" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "user@server.com"
+          }
+        }
+      }
+    },
     "nip05LearnMore" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -6819,6 +6885,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "瞭解更多關於 NIP-05 名稱驗證的信息。"
+          }
+        }
+      }
+    },
+    "nip05LinkFailed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**The NIP05 entered does not match the records of the NIP-05 provider.**\n\nPlease verify the entry of the NIP-05 and try again. Or reach out to the NIP05 provider directly to verify your NIP05 is live."
           }
         }
       }

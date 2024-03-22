@@ -26,20 +26,26 @@ struct WizardSheetDescriptionText: View {
         self.description = .plainText(localizedStringResource)
     }
 
-    init(_ attributedString: AttributedString) {
+    init(_ attributedString: AttributedString, tint: Color) {
         self.description = .markdown(attributedString
             .replacingAttributes(
                 AttributeContainer(
                     [.inlinePresentationIntent: InlinePresentationIntent.stronglyEmphasized.rawValue]
                 ),
                 with: AttributeContainer(
-                    [.foregroundColor: UIColor.primaryTxt]
+                    [.foregroundColor: UIColor(tint)]
                 )
             ))
     }
 
-    init(markdown localizedStringResource: LocalizedStringResource) {
-        self.init(AttributedString(localized: localizedStringResource))
+    init(
+        markdown localizedStringResource: LocalizedStringResource,
+        tint: Color = .primaryTxt
+    ) {
+        self.init(
+            AttributedString(localized: localizedStringResource),
+            tint: tint
+        )
     }
 
     var body: some View {

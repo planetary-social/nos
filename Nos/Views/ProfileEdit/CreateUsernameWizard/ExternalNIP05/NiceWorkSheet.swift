@@ -2,35 +2,34 @@ import Dependencies
 import Logger
 import SwiftUI
 
-struct ExcellentChoiceSheet: View {
+struct NiceWorkSheet: View {
 
     var username: String
     @Binding var isPresented: Bool
 
-    @State private var claimState: ClaimState = .idle
+    @State private var connectState: ConnectState = .idle
     @Dependency(\.currentUser) private var currentUser
-    @Dependency(\.namesAPI) private var namesAPI
     @Dependency(\.analytics) private var analytics
 
-    /// The current state of the claim request.
-    private enum ClaimState {
+    /// The current state of the connect request.
+    private enum ConnectState {
         /// There is no request in progress yet
         case idle
 
         /// The request is in progress
-        case claiming
+        case connecting
 
         /// The request finished successfully
-        case claimed
+        case connected
 
         /// Something was wrong with the request
-        case failed(ClaimError)
+        case failed(ConnectError)
 
         var hasError: Bool {
             error != nil
         }
 
-        var error: ClaimError? {
+        var error: ConnectError? {
             switch self {
             case .failed(let error):
                 return error
@@ -40,16 +39,9 @@ struct ExcellentChoiceSheet: View {
         }
     }
 
-    private var attributedUsername: AttributedString {
-        AttributedString(
-            username,
-            attributes: AttributeContainer([NSAttributedString.Key.foregroundColor: UIColor(Color.primaryTxt)])
-        ) + AttributedString(".nos.social")
-    }
-
     private var showAlert: Binding<Bool> {
         Binding {
-            claimState.hasError
+            connectState.hasError
         } set: { _ in
         }
     }
@@ -57,8 +49,8 @@ struct ExcellentChoiceSheet: View {
     var body: some View {
         WizardSheetVStack {
             Spacer(minLength: 40)
-            switch claimState {
-            case .idle, .claiming:
+            switch connectState {
+            case .idle, .connecting:
                 ProgressView()
                     .tint(Color.accentColor)
                     .scaleEffect(1.5)
@@ -67,12 +59,9 @@ struct ExcellentChoiceSheet: View {
                 SwiftUI.Text(error.localizedDescription)
                     .font(.clarity(.regular, textStyle: .callout))
                     .foregroundStyle(Color.primaryTxt)
-            case .claimed:
-                WizardSheetTitleText(.localizable.excellentChoice)
-                SwiftUI.Text(attributedUsername)
-                    .font(.clarity(.bold, textStyle: .title3))
-                    .foregroundStyle(Color.secondaryTxt)
-                WizardSheetDescriptionText(markdown: .localizable.usernameClaimedNotice)
+            case .connected:
+                WizardSheetTitleText(.localizable.niceWork)
+                WizardSheetDescriptionText(.localizable.nip05Connected)
 
                 Spacer(minLength: 0)
 
@@ -83,7 +72,7 @@ struct ExcellentChoiceSheet: View {
             }
             Spacer(minLength: 40)
         }
-        .alert(isPresented: showAlert, error: claimState.error) {
+        .alert(isPresented: showAlert, error: connectState.error) {
             Button {
                 isPresented = false
             } label: {
@@ -91,40 +80,39 @@ struct ExcellentChoiceSheet: View {
             }
         }
         .task {
-            guard case .idle = claimState else {
+            guard case .idle = connectState else {
                 return
             }
 
             guard let keyPair = currentUser.keyPair else {
-                claimState = .failed(.notLoggedIn)
+                connectState = .failed(.notLoggedIn)
                 return
             }
 
-            claimState = .claiming
+            connectState = .connecting
 
             do {
-                try await namesAPI.register(username: username, keyPair: keyPair)
-                currentUser.author?.nip05 = "\(username)@nos.social"
+                currentUser.author?.nip05 = "\(username)"
                 try currentUser.viewContext.saveIfNeeded()
                 await currentUser.publishMetaData()
-                claimState = .claimed
-                analytics.registeredNIP05Username()
+                connectState = .connected
+                analytics.linkedNIP05Username()
             } catch {
                 Log.error(error.localizedDescription)
-                claimState = .failed(.unableToClaim(error))
+                connectState = .failed(.unableToConnect(error))
             }
         }
     }
 
-    enum ClaimError: LocalizedError {
+    enum ConnectError: LocalizedError {
         case notLoggedIn
-        case unableToClaim(Error)
+        case unableToConnect(Error)
 
         var errorDescription: String? {
             switch self {
             case .notLoggedIn:
                 return "Not logged in"
-            case .unableToClaim(let error):
+            case .unableToConnect(let error):
                 return error.localizedDescription
             }
         }
@@ -133,7 +121,7 @@ struct ExcellentChoiceSheet: View {
 
 #Preview {
     Color.clear.sheet(isPresented: .constant(true)) {
-        ExcellentChoiceSheet(username: "sebastian", isPresented: .constant(true))
+        NiceWorkSheet(username: "sebastian", isPresented: .constant(true))
             .presentationDetents([.medium])
     }
 }
