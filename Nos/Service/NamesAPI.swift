@@ -51,15 +51,33 @@ class NamesAPI {
         throw Error.unexpected
     }
 
+    /// Verifies that a given username is free to claim in nos.social
     func verify(username: String, keyPair: KeyPair) async throws -> Bool {
+        return try await verify(
+            username: username, 
+            host: verificationURL,
+            keyPair: keyPair,
+            valueWhenNotFound: true
+        )
+    }
+
+    /// Verifies that a given username_at_host NIP-05 can be connected to the keyPair
+    ///
+    /// - Parameter valueWhenNotFound: What to return if the server returns 404
+    func verify(
+        username: String,
+        host: URL,
+        keyPair: KeyPair,
+        valueWhenNotFound: Bool = false
+    ) async throws -> Bool {
         let request = URLRequest(
-            url: verificationURL.appending(queryItems: [URLQueryItem(name: "name", value: username)])
+            url: host.appending(queryItems: [URLQueryItem(name: "name", value: username)])
         )
         let (data, response) = try await URLSession.shared.data(for: request)
         if let response = response as? HTTPURLResponse {
             let statusCode = response.statusCode
             if statusCode == 404 {
-                return true
+                return valueWhenNotFound
             } else if statusCode == 200, let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
                 let names = json["names"] as? [String: String]
                 let npub = names?[username]

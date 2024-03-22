@@ -207,6 +207,10 @@ class Analytics {
         track("Registered NIP-05 Username")
     }
 
+    func linkedNIP05Username() {
+        track("Linked NIP-05 Username")
+    }
+
     func deletedNIP05Username() {
         track("Deleted NIP-05 Username")
     }
