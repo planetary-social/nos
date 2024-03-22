@@ -153,9 +153,10 @@ fileprivate struct UsernameTextField: View {
     var body: some View {
         TextField(
             text: $usernameObserver.text,
-            prompt: PlainText(.localizable.username).foregroundStyle(Color.secondaryTxt)
+            prompt: SwiftUI.Text(verbatim: String(localized: .localizable.nip05Example))
+                .foregroundStyle(Color.secondaryTxt)
         ) {
-            PlainText(.localizable.username)
+            SwiftUI.Text(verbatim: String(localized: .localizable.nip05Example))
                 .foregroundStyle(Color.primaryTxt)
         }
         .focused($usernameFieldIsFocused)
@@ -192,7 +193,7 @@ fileprivate struct UsernameTextField: View {
 
 #Preview {
     Color.clear.sheet(isPresented: .constant(true)) {
-        PickYourUsernameSheet(isPresented: .constant(true))
+        AlreadyHaveANIP05View(isPresented: .constant(true))
             .presentationDetents([.medium])
     }
 }

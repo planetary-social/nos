@@ -6837,6 +6837,17 @@
         }
       }
     },
+    "nip05Example" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "user@server.com"
+          }
+        }
+      }
+    },
     "nip05LearnMore" : {
       "extractionState" : "manual",
       "localizations" : {

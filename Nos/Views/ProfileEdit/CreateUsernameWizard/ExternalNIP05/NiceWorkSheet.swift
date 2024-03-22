@@ -94,6 +94,7 @@ struct NiceWorkSheet: View {
             do {
                 currentUser.author?.nip05 = "\(username)"
                 try currentUser.viewContext.saveIfNeeded()
+                await currentUser.publishMetaData()
                 connectState = .connected
                 analytics.linkedNIP05Username()
             } catch {
