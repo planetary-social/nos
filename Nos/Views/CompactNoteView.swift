@@ -6,26 +6,15 @@ import Dependencies
 /// it is too long
 struct CompactNoteView: View {
     
-    @Environment(\.managedObjectContext) private var viewContext
-
     /// The note whose content will be displayed
-    let note: Event
+    private let note: Event
     
     /// The maximum number of lines to show before truncating (if `showFullMessage` is false)
-    let truncationLineLimit = 12
+    private let truncationLineLimit = 12
     
-    /// If true this view will always display the full text of the note. If false and the note is long 
-    /// it will be truncated with a button the user can tap to display the full note.
-    @State private var showFullMessage: Bool
-
-    /// Whether view displays truncated text with a "Read more" button to display the full text.
-    @State private var shouldShowReadMore = false
-    
-    /// The size of the full note text 
-    @State private var intrinsicSize = CGSize.zero
-    
-    /// The size of the note text truncated to `truncationLineLimit` lines.
-    @State private var truncatedSize = CGSize.zero
+    /// If true this view will truncate long notes and show a "Read more" button to view the whole thing. If false 
+    /// the full note will always be displayed
+    private var shouldTruncate: Bool
     
     /// Whether link previews should be displayed for links found in the note text.
     private var showLinkPreviews: Bool
@@ -34,22 +23,38 @@ struct CompactNoteView: View {
     /// and links will not be tappable.
     private var allowUserInteraction: Bool
     
+    /// Whether this view is currently displayed in a truncated state
+    @State private var isTextTruncated = true
+
+    /// The size of the full note text 
+    @State private var intrinsicSize = CGSize.zero
+    
+    /// The size of the note text truncated to `truncationLineLimit` lines.
+    @State private var truncatedSize = CGSize.zero
+    
+    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
     
     internal init(
         note: Event, 
-        showFullMessage: Bool = false, 
+        shouldTruncate: Bool = false, 
         showLinkPreviews: Bool = true,
         allowUserInteraction: Bool = true
     ) {
-        _showFullMessage = .init(initialValue: showFullMessage)
         self.note = note
+        self.shouldTruncate = shouldTruncate
         self.showLinkPreviews = showLinkPreviews
         self.allowUserInteraction = allowUserInteraction
     }
     
-    func updateShouldShowReadMore() {
-        shouldShowReadMore = intrinsicSize.height > truncatedSize.height + 30
+    /// Calculates whether the note text is long enough to need truncation given `truncationLineLimit`.
+    var noteNeedsTruncation: Bool {
+        shouldTruncate && intrinsicSize.height > truncatedSize.height + 30 
+    }
+    
+    /// Calculates whether the Read More button should be shown. 
+    var showReadMoreButton: Bool {
+        noteNeedsTruncation && isTextTruncated
     }
     
     var formattedText: some View {
@@ -83,7 +88,7 @@ struct CompactNoteView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            if showFullMessage {
+            if !isTextTruncated || !shouldTruncate {
                 formattedText
                     .fixedSize(horizontal: false, vertical: true)
             } else {
@@ -97,11 +102,13 @@ struct CompactNoteView: View {
                     .onPreferenceChange(TruncatedSizePreferenceKey.self) { newSize in
                         if newSize.height > truncatedSize.height {
                             truncatedSize = newSize
-                            updateShouldShowReadMore()
                         }
                     }
                     .background {
-                        noteText
+                        // To calculate whether the text should be truncated we create this hidden view of 
+                        // `formattedText` and record its size. It is compared to `truncatedSize` and used in the 
+                        // calculation of `noteNeedsTruncation`.
+                        formattedText
                             .fixedSize(horizontal: false, vertical: true)
                             .hidden()
                             .background {
@@ -115,16 +122,15 @@ struct CompactNoteView: View {
                             .onPreferenceChange(IntrinsicSizePreferenceKey.self) { newSize in
                                 if newSize.height > intrinsicSize.height {
                                     intrinsicSize = newSize
-                                    updateShouldShowReadMore()
                                 }
                             }
                     }
             }
-            if shouldShowReadMore && !showFullMessage {
+            if showReadMoreButton {
                 ZStack(alignment: .center) {
                     Button {
                         withAnimation {
-                            showFullMessage = true
+                            isTextTruncated = false
                         }
                     } label: {
                         PlainText(String(localized: .localizable.readMore).uppercased())
@@ -143,9 +149,6 @@ struct CompactNoteView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .onChange(of: note.attributedContent) {
-            updateShouldShowReadMore()
-        }
         .task {
             await note.loadViewData()
         }
