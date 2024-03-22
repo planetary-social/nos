@@ -6,7 +6,7 @@ struct ProfileHeader: View {
     @ObservedObject var author: Author
     @Environment(CurrentUser.self) private var currentUser
 
-    @Binding private var selectedTab: ProfileHeaderTab
+    @Binding private var selectedTab: ProfileFeedType
 
     var followsRequest: FetchRequest<Follow>
     var followsResult: FetchedResults<Follow> { followsRequest.wrappedValue }
@@ -20,15 +20,7 @@ struct ProfileHeader: View {
     
     @EnvironmentObject private var router: Router
 
-    enum ProfileHeaderTab {
-        case activity
-        case notes
-        func request(author: Author) -> NSFetchRequest<Event> {
-            author.allPostsRequest(onlyRootPosts: self == .notes)
-        }
-    }
-
-    init(author: Author, selectedTab: Binding<ProfileHeaderTab>) {
+    init(author: Author, selectedTab: Binding<ProfileFeedType>) {
         self.author = author
         self.followsRequest = FetchRequest(fetchRequest: Follow.followsRequest(sources: [author]))
         self.followersRequest = FetchRequest(fetchRequest: Follow.followsRequest(destination: [author]))
