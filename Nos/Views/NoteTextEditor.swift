@@ -5,11 +5,6 @@ struct NoteTextEditor: View {
     
     @Binding var text: EditableNoteText
     var placeholder: LocalizedStringResource
-    var focus: FocusState<Bool>.Binding
-
-    /// The calculated height of this view.
-    @Binding var calculatedHeight: CGFloat
-
     @State private var guid = UUID()
     
     /// State containing the offset (index) of text when the user is mentioning someone
@@ -28,52 +23,46 @@ struct NoteTextEditor: View {
     }
     
     var body: some View {
-        GeometryReader { reader in
-            ScrollView(.vertical) {
-                EditableText($text, guid: guid, calculatedHeight: $calculatedHeight)
-                    .frame(height: max(reader.size.height, calculatedHeight))
-                    .placeholder(when: text.isEmpty, placeholder: {
+        EditableText($text, guid: guid, showKeyboard: true)
+            .placeholder(when: text.isEmpty, placeholder: {
                         VStack {
                             Text(placeholder)
                                 .foregroundColor(.secondaryTxt)
                                 .padding(.top, 10)
                                 .padding(.leading, 6)
                             Spacer()
+                }
+            })
+            .padding(.leading, 6)
+            .frame(maxWidth: .infinity)
+            .background { Color.appBg }
+            .onChange(of: text) { oldText, newText in
+                let difference = newText.difference(from: oldText)
+                guard difference.count == 1, let change = difference.first else {
+                    return
+                }
+                switch change {
+                case .insert(let offset, let element, _):
+                    if element == "@" {
+                        let precedingCharacter = newText.character(before: offset) ?? Character("\n")
+                        if precedingCharacter.isNewline || precedingCharacter.isWhitespace {
+                            mentionOffset = offset
                         }
-                    })
-                    .focused(focus)
-                    .padding(.leading, 6)
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .background { Color.appBg }
-        .onChange(of: text) { oldText, newText in
-            let difference = newText.difference(from: oldText)
-            guard difference.count == 1, let change = difference.first else {
-                return
-            }
-            switch change {
-            case .insert(let offset, let element, _):
-                if element == "@" {
-                    let precedingCharacter = newText.character(before: offset) ?? Character("\n")
-                    if precedingCharacter.isNewline || precedingCharacter.isWhitespace {
-                        mentionOffset = offset
                     }
-                }
-            default:
-                break
-            }
-        }
-        .sheet(isPresented: showAvailableMentions) {
-            NavigationStack {
-                AuthorListView(isPresented: showAvailableMentions) { author in
-                    guard let offset = mentionOffset else {
-                        return
-                    }
-                    insertMention(at: offset, author: author)
+                default:
+                    break
                 }
             }
-        }
+            .sheet(isPresented: showAvailableMentions) {
+                NavigationStack {
+                    AuthorListView(isPresented: showAvailableMentions) { author in
+                        guard let offset = mentionOffset else {
+                            return
+                        }
+                        insertMention(at: offset, author: author)
+                    }
+                }
+            }
     }
     
     private func insertMention(at offset: Int, author: Author) {
@@ -91,16 +80,13 @@ struct NoteTextEditor_Previews: PreviewProvider {
     
     @State static var text = EditableNoteText()
     static var placeholder: LocalizedStringResource = .localizable.newNotePlaceholder
-    @FocusState static var isFocused: Bool
     @State static var calculatedHeight: CGFloat = 44
 
     static var previews: some View {
         VStack {
             NoteTextEditor(
                 text: $text,
-                placeholder: placeholder, 
-                focus: $isFocused,
-                calculatedHeight: $calculatedHeight
+                placeholder: placeholder
             )
             Spacer()
         }

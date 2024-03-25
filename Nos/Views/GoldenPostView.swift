@@ -6,7 +6,6 @@ let goldenRatio: CGFloat = 0.618
 struct GoldenPostView: View {
 
     @ObservedObject var author: Author
-
     @ObservedObject var note: Event
     
     @Environment(\.managedObjectContext) private var viewContext
@@ -14,9 +13,9 @@ struct GoldenPostView: View {
     @EnvironmentObject private var router: Router
     
     @State private var noteContent = LoadingContent<AttributedString>.loading
-    @State private var contentLinks = [URL]()
+
     @Dependency(\.persistenceController) private var persistenceController
-    
+
     internal init(author: Author, note: Event) {
         self.author = author
         self.note = note

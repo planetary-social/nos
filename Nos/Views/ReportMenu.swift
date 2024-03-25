@@ -15,7 +15,6 @@ struct ReportMenuModifier: ViewModifier {
     @State private var selectedCategory: ReportCategory?
     @State private var confirmReport = false
     @State private var showMuteDialog = false
-    @State private var previouslySelectedCategory: ReportCategory?
     @State private var confirmationDialog: ConfirmationDialogState<ReportCategory>? 
     
     @Environment(\.managedObjectContext) private var viewContext

@@ -5,8 +5,7 @@ struct SendUSBCBarButtonItem: View {
     var destinationAddress: USBCAddress
     var destinationAuthor: Author
     @State private var walletConnectIsPresented = false
-    @State private var wizardController: SendUSBCController?
-    
+
     var body: some View {
         Button(
             action: {

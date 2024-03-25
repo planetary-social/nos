@@ -7,8 +7,6 @@ struct FollowCard: View {
 
     @ObservedObject var author: Author
     
-    @Environment(\.managedObjectContext) private var viewContext
-   
     var style = CardStyle.compact
 
     @EnvironmentObject private var router: Router

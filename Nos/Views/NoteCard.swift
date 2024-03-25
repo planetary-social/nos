@@ -19,7 +19,7 @@ struct NoteCard: View {
     @EnvironmentObject private var router: Router
     @Dependency(\.persistenceController) var persistenceController
     
-    private var showFullMessage: Bool
+    private var shouldTruncate: Bool
     private let showReplyCount: Bool
     private var hideOutOfNetwork: Bool
     private var replyAction: ((Event) -> Void)?
@@ -43,14 +43,14 @@ struct NoteCard: View {
     init(
         note: Event,
         style: CardStyle = .compact,
-        showFullMessage: Bool = false,
+        shouldTruncate: Bool = true,
         hideOutOfNetwork: Bool = true,
         showReplyCount: Bool = true,
         replyAction: ((Event) -> Void)? = nil
     ) {
         self.note = note
         self.style = style
-        self.showFullMessage = showFullMessage
+        self.shouldTruncate = shouldTruncate
         self.hideOutOfNetwork = hideOutOfNetwork
         self.showReplyCount = showReplyCount
         self.replyAction = replyAction
@@ -88,8 +88,8 @@ struct NoteCard: View {
                         } else {
                             CompactNoteView(
                                 note: note, 
-                                showFullMessage: showFullMessage, 
-                                loadLinks: !warningController.showWarning
+                                shouldTruncate: shouldTruncate, 
+                                showLinkPreviews: !warningController.showWarning
                             )
                             .blur(radius: warningController.showWarning ? 6 : 0)
                             .frame(maxWidth: .infinity)

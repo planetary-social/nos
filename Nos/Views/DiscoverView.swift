@@ -3,11 +3,9 @@ import Combine
 import CoreData
 import Dependencies
 
-struct DiscoverView: View {
-    
+struct DiscoverView: View {    
     // MARK: - Properties
     
-    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) var currentUser

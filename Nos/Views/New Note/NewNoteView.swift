@@ -30,39 +30,62 @@ struct NewNoteView: View {
 
     var initialContents: String?
     @Binding var isPresented: Bool
+    
+    /// The note that the user is replying to, if any.
+    private var replyToNote: Event?
 
-    init(initialContents: String? = nil, isPresented: Binding<Bool>) {
+    init(initialContents: String? = nil, replyTo: Event? = nil, isPresented: Binding<Bool>) {
         _isPresented = isPresented
         self.initialContents = initialContents
+        self.replyToNote = replyTo
     }
     
-    @FocusState private var isTextEditorInFocus: Bool
-
     var body: some View {
         NavigationStack {
             ZStack {
-                ZStack {
-                    VStack {
-                        NoteTextEditor(
-                            text: $text,
-                            placeholder: .localizable.newNotePlaceholder,
-                            focus: $isTextEditorInFocus,
-                            calculatedHeight: $calculatedEditorHeight
-                        )
-                        .padding(10)
-                        Spacer()
-                        ComposerActionBar(
-                            expirationTime: $expirationTime,
-                            isUploadingImage: $isUploadingImage,
-                            text: $text
-                        )
+                VStack(spacing: 0) {
+                    let content = ScrollViewReader { proxy in
+                        VStack(spacing: 0) {
+                            if let replyToNote {
+                                ReplyPreview(note: replyToNote)
+                            }
+                            NoteTextEditor(text: $text, placeholder: .localizable.newNotePlaceholder)
+                                .padding(10)
+                                .frame(minHeight: 100)
+                                .id(0)
+                        }
+                        .onAppear {
+                            Task {
+                                try await Task.sleep(for: .seconds(0.5))
+                                withAnimation(.easeInOut(duration: 0.25)) { 
+                                    proxy.scrollTo(0, anchor: .bottom)
+                                }
+                            }
+                        }
                     }
-                    if isUploadingImage {
-                        FullscreenProgressView(
-                            isPresented: .constant(true),
-                            text: String(localized: .imagePicker.uploading)
-                        )
+                            
+                    // We do this because editor won't expand to fill available space when it's in a ScrollView.
+                    // and we need it to because people try to tap below the text field bounds to past if it doesn't
+                    // fill the screen.
+                    ViewThatFits {
+                        content
+                        ScrollView {
+                            content
+                        }
                     }
+                    
+                    ComposerActionBar(
+                        expirationTime: $expirationTime,
+                        isUploadingImage: $isUploadingImage,
+                        text: $text
+                    )
+                }
+                
+                if isUploadingImage {
+                    FullscreenProgressView(
+                        isPresented: .constant(true),
+                        text: String(localized: .imagePicker.uploading)
+                    )
                 }
 
                 if showRelayPicker, let author = currentUser.author {
@@ -100,7 +123,7 @@ struct NewNoteView: View {
                 }
                 label: {
                     Text(.localizable.cancel)
-                        .foregroundColor(.secondaryTxt)
+                        .foregroundColor(.primaryTxt)
                 },
                 trailing: ActionButton(title: .localizable.post, action: postAction)
                     .frame(height: 22)
@@ -111,7 +134,6 @@ struct NewNoteView: View {
                 if let initialContents, text.isEmpty {
                     text = EditableNoteText(string: initialContents)
                 }
-                isTextEditorInFocus = true
                 analytics.showedNewNote()
             }
         }
@@ -160,7 +182,6 @@ struct NewNoteView: View {
             await publishPost()
         }
         isPresented = false
-        router.selectedTab = .home
     }
 
     private func publishPost() async {
@@ -174,6 +195,22 @@ struct NewNoteView: View {
             
             if let expirationTime {
                 tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
+            }
+            
+            // Attach the new note to the one it is replying to, if any.
+            if let replyToNote = replyToNote, let replyToNoteID = replyToNote.identifier {
+                // TODO: Append ptags for all authors involved in the thread
+                if let replyToAuthor = replyToNote.author?.publicKey?.hex {
+                    tags.append(["p", replyToAuthor])
+                }
+                
+                // If `note` is a reply to another root, tag that root
+                if let rootNoteIdentifier = replyToNote.rootNote()?.identifier, rootNoteIdentifier != replyToNoteID {
+                    tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
+                    tags.append(["e", replyToNoteID, "", EventReferenceMarker.reply.rawValue])
+                } else {
+                    tags.append(["e", replyToNoteID, "", EventReferenceMarker.root.rawValue])
+                }
             }
 
             let jsonEvent = JSONEvent(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
@@ -204,16 +241,16 @@ struct NewNoteView: View {
     }
 }
 
-struct NewPostView_Previews: PreviewProvider {
+#Preview {
+    let previewData = PreviewData()
     
-    static var previewData = PreviewData()
-    static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
-    static var relayService = previewData.relayService
+    return NewNoteView(isPresented: .constant(true))
+        .inject(previewData: previewData)
+}
+
+#Preview {
+    var previewData = PreviewData()
     
-    static var previews: some View {
-        NewNoteView(isPresented: .constant(true))
-            .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
-    }
+    return NewNoteView(replyTo: previewData.longNote, isPresented: .constant(true))
+        .inject(previewData: previewData)
 }

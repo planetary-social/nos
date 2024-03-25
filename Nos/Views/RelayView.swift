@@ -16,8 +16,6 @@ struct RelayView: View {
     
     @State var newRelayAddress: String = ""
     
-    @EnvironmentObject private var router: Router
-    
     @State private var alert: AlertState<Never>?
     
     @Dependency(\.analytics) private var analytics

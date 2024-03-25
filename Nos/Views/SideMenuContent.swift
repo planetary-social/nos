@@ -4,7 +4,6 @@ import Dependencies
 
 struct SideMenuContent: View {
     
-    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics

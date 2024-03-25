@@ -8,7 +8,6 @@ struct RelayPicker: View {
     
     var defaultSelection: String
     
-    @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest var relays: FetchedResults<Relay>
     
     init(selectedRelay: Binding<Relay?>, defaultSelection: String, author: Author, isPresented: Binding<Bool>) {

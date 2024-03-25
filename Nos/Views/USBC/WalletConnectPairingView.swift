@@ -4,10 +4,6 @@ struct WalletConnectPairingView: View {
     
     @ObservedObject var viewModel: SendUSBCController 
     
-    private let borderWidth: CGFloat = 6
-    private let cornerRadius: CGFloat = 8
-    private let inDrawer = true
-    
     var body: some View {
         VStack {
             HStack {

@@ -107,6 +107,7 @@ struct ComposerActionBar: View {
             }
             Spacer()
         }
+        .frame(minHeight: 56)
         .animation(.easeInOut(duration: 0.2), value: subMenu)
         .transition(.move(edge: .leading))
         .onChange(of: expirationTime) { _, _ in
