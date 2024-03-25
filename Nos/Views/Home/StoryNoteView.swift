@@ -97,7 +97,6 @@ struct StoryNoteView: View {
                         NoteCard(
                             note: repostedNote,
                             style: .compact,
-                            showFullMessage: false,
                             hideOutOfNetwork: false,
                             showReplyCount: true,
                             replyAction: nil
