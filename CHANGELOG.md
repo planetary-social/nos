@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Added a new UI for replying to messages that allows attaching images and setting an expiration date.
+- Updated dark theme colors for card backgrounds, primary text, and secondary text.
 
 ## [0.1.7] - 2024-03-21Z
 
