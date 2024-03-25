@@ -16,7 +16,7 @@ struct UNSWizardNeedsPaymentView: View {
                 .padding(40)
                 .padding(.top, 50)
             
-            PlainText(.localizable.premiumName)
+            Text(.localizable.premiumName)
                 .font(.clarity(.bold, textStyle: .title1))
                 .multilineTextAlignment(.center)
                 .foregroundColor(.primaryTxt)

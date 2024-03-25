@@ -15,7 +15,7 @@ struct ExpirationTimeButton: View {
                     Text(model.topText)
                         .foregroundColor(.primaryTxt)
                         .font(.clarity(.bold))
-                    PlainText(model.unit)
+                    Text(model.unit)
                         .foregroundColor(.secondaryTxt)
                         .font(.clarity(.regular, textStyle: .caption2))
                 }

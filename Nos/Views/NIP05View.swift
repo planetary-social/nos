@@ -14,14 +14,14 @@ struct NIP05View: View {
             let formattedNIP05 = author.formattedNIP05 {
             Group {
                 if verifiedNip05Identifier == true {
-                    PlainText("\(formattedNIP05)")
+                    Text("\(formattedNIP05)")
                         .foregroundColor(.primaryTxt)
                 } else if verifiedNip05Identifier == false {
-                    PlainText(formattedNIP05)
+                    Text(formattedNIP05)
                         .strikethrough()
                         .foregroundColor(.secondaryTxt)
                 } else {
-                    PlainText("\(formattedNIP05)")
+                    Text("\(formattedNIP05)")
                         .foregroundColor(.secondaryTxt)
                 }
             }
@@ -34,7 +34,7 @@ struct NIP05View: View {
                     Text(.localizable.copy)
                 }
             } preview: {
-                PlainText(formattedNIP05)
+                Text(formattedNIP05)
                     .foregroundColor(.primaryTxt)
                     .padding()
             }

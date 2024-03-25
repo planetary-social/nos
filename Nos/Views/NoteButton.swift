@@ -63,7 +63,7 @@ struct NoteButton: View {
                         AuthorLabel(author: author)
                         Image.repostSymbol
                         if let elapsedTime = note.createdAt?.distanceString() {
-                            PlainText(elapsedTime)
+                            Text(elapsedTime)
                                 .lineLimit(1)
                                 .font(.clarity(.medium))
                                 .foregroundColor(.secondaryTxt)

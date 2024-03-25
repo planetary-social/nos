@@ -30,7 +30,7 @@ struct ActionButton: View {
         }, label: {
             HStack {
                 image
-                PlainText(title)
+                Text(title)
                     .font(font)
                     .transition(.opacity)
                     .font(.headline)

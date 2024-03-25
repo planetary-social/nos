@@ -18,7 +18,7 @@ struct UNSSuccessView: View {
                         Image.unsCircle.opacity(colorScheme == .dark ? 0.15 : 1)
                         VStack(spacing: 0) {
                             Image.unsCheck
-                            PlainText(controller.nameRecord?.name ?? "")
+                            Text(controller.nameRecord?.name ?? "")
                                 .font(.clarity(.bold, textStyle: .title1))
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.primaryTxt)
@@ -29,7 +29,7 @@ struct UNSSuccessView: View {
                     .padding(20)
                     .padding(.top, 50)
                     
-                    PlainText(.localizable.success)
+                    Text(.localizable.success)
                         .font(.clarity(.bold, textStyle: .title1))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)

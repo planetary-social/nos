@@ -5,7 +5,7 @@ struct OnboardingNotOldEnoughView: View {
     
     var body: some View {
         VStack {
-            PlainText(.localizable.notOldEnoughTitle)
+            Text(.localizable.notOldEnoughTitle)
                 .font(.custom("ClarityCity-Bold", size: 34, relativeTo: .largeTitle))
                 .foregroundStyle(
                     LinearGradient(

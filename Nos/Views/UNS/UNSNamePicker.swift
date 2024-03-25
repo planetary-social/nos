@@ -69,7 +69,7 @@ struct UNSNamePicker: View {
                             }
                             
                             PickerRow(isSelected: isSelected) {
-                                PlainText(name.name)
+                                Text(name.name)
                                     .font(.clarity(.bold, textStyle: .title2))
                             }
                         }
@@ -97,7 +97,7 @@ struct UNSNamePicker: View {
                 }
                 
                 TextField(text: $desiredName) {
-                    PlainText(.localizable.createNewName)
+                    Text(.localizable.createNewName)
                         .foregroundColor(.secondaryTxt)
                 }
                 .focused($isTextFieldFocused)

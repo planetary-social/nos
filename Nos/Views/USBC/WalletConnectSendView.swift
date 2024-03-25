@@ -8,7 +8,7 @@ struct WalletConnectSendView: View {
     var body: some View {
         VStack {
             HStack {
-                PlainText(.localizable.sendUSBC)
+                Text(.localizable.sendUSBC)
                     .font(.clarity(.bold, textStyle: .title1))
                     .foregroundColor(.primaryTxt)
                     .multilineTextAlignment(.leading)
@@ -17,7 +17,7 @@ struct WalletConnectSendView: View {
             }
             
             HStack {
-                PlainText(.localizable.sendTo)
+                Text(.localizable.sendTo)
                     .font(.callout)
                     .foregroundColor(.secondaryTxt)
                     .padding(.vertical, 8)
@@ -53,7 +53,7 @@ struct WalletConnectSendView: View {
             )
             
             HStack {
-                PlainText(.localizable.amount)
+                Text(.localizable.amount)
                     .font(.callout)
                     .foregroundColor(.secondaryTxt)
                     .padding(.top, 16)
@@ -63,7 +63,7 @@ struct WalletConnectSendView: View {
             
             ZStack {
                 TextField(text: $amount) {
-                    PlainText("1,000")
+                    Text("1,000")
                         .foregroundColor(.secondaryTxt)
                 }
                 .keyboardType(.decimalPad)

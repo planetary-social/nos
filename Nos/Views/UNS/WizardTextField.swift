@@ -8,7 +8,7 @@ struct WizardTextField: View {
     
     var body: some View {
         TextField(text: text) {
-            PlainText(placeholder)
+            Text(placeholder)
                 .foregroundColor(.secondaryTxt)
         }
         .font(.clarity(.bold, textStyle: .title2))

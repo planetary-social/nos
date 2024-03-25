@@ -40,13 +40,3 @@ extension UIFont {
         size: UIFont.preferredFont(forTextStyle: .body).pointSize
     )!
 }
-
-// swiftlint:disable identifier_name
-func PlainText(_ content: any StringProtocol) -> SwiftUI.Text {
-    SwiftUI.Text(content)
-}
-
-func PlainText(_ localizedStringResource: LocalizedStringResource) -> SwiftUI.Text {
-    SwiftUI.Text(localizedStringResource)
-}
-// swiftlint:enable identifier_name

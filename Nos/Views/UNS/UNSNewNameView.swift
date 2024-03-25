@@ -17,7 +17,7 @@ struct UNSNewNameView: View {
                         .padding(20)
                         .padding(.top, 50)
                     
-                    PlainText(.localizable.chooseYourName)
+                    Text(.localizable.chooseYourName)
                         .font(.clarity(.bold, textStyle: .title1))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)

@@ -106,7 +106,7 @@ struct DiscoverView: View {
             .searchable(
                 text: $searchController.query, 
                 placement: .toolbar, 
-                prompt: PlainText(.localizable.searchBar)
+                prompt: Text(.localizable.searchBar)
             )
             .autocorrectionDisabled()
             .onSubmit(of: .search) {

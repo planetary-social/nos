@@ -101,7 +101,7 @@ struct CompactNoteView: View {
                             showFullMessage = true
                         }
                     } label: {
-                        PlainText(String(localized: .localizable.readMore).uppercased())
+                        Text(String(localized: .localizable.readMore).uppercased())
                             .font(.caption)
                             .foregroundColor(.secondaryTxt)
                             .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))

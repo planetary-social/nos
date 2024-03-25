@@ -24,7 +24,7 @@ struct AuthorCard: View {
                         .padding(.trailing, 12)
                     VStack(alignment: .leading, spacing: 6) {
                         HStack {
-                            PlainText(author.safeName)
+                            Text(author.safeName)
                                 .lineLimit(1)
                                 .font(.title3)
                                 .fontWeight(.bold)
@@ -45,7 +45,7 @@ struct AuthorCard: View {
                         }
                         
                         if let bio = author.about {
-                            PlainText(bio)
+                            Text(bio)
                                 .foregroundColor(.secondaryTxt)
                                 .font(.clarity(.medium, textStyle: .subheadline))
                                 .multilineTextAlignment(.leading)

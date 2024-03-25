@@ -42,7 +42,7 @@ struct ConfirmUsernameDeletionSheet: View {
                     await deleteUsername()
                 }
             } label: {
-                let label = PlainText(.localizable.deleteUsername)
+                let label = Text(.localizable.deleteUsername)
                 if isDeleting {
                     ZStack {
                         ProgressView()

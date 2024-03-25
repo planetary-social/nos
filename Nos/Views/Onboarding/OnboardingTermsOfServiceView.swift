@@ -12,7 +12,7 @@ struct OnboardingTermsOfServiceView: View {
     
     var body: some View {
         VStack {
-            PlainText(.localizable.termsOfServiceTitle)
+            Text(.localizable.termsOfServiceTitle)
                 .font(.clarity(.bold, textStyle: .largeTitle))
                 .foregroundStyle(
                     LinearGradient(

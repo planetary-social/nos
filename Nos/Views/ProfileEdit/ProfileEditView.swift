@@ -179,9 +179,9 @@ fileprivate struct NosNIP05Field: View {
             VStack(alignment: .leading) {
                 HStack(spacing: 0) {
                     Group {
-                        PlainText(username)
+                        Text(username)
                             .foregroundColor(.primaryTxt)
-                        PlainText("@nos.social")
+                        Text("@nos.social")
                             .foregroundStyle(Color.secondaryTxt)
                     }
                     Spacer(minLength: 10)

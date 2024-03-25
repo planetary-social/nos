@@ -16,7 +16,7 @@ struct UNSNameView: View {
             } label: {
                 HStack(spacing: 3) {
                     Image.unsLogoLight
-                    PlainText(author.uns ?? "")
+                    Text(author.uns ?? "")
                         .foregroundColor(.secondaryTxt)
                         .font(.clarity(.medium, textStyle: .subheadline))
                         .multilineTextAlignment(.leading)

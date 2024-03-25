@@ -17,7 +17,7 @@ struct UNSErrorView: View {
                         .padding(40)
                         .padding(.top, 50)
                     
-                    PlainText(.localizable.oops)
+                    Text(.localizable.oops)
                         .font(.clarity(.bold, textStyle: .title1))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
@@ -25,7 +25,7 @@ struct UNSErrorView: View {
                         .padding(.top, 20)
                         .padding(.bottom, 3)
                     
-                    PlainText(.localizable.anErrorOccurred)
+                    Text(.localizable.anErrorOccurred)
                         .font(.clarity(.bold, textStyle: .title1))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
