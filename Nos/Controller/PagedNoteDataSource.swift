@@ -169,8 +169,8 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     /// Instructs the pager to load more data if we are getting close to the end of the object in the list.
     /// - Parameter indexPath: the indexPath last loaded by the collection view.
     func loadMoreIfNeeded(for indexPath: IndexPath) {
-        let lastPageIndex = (fetchedResultsController.fetchedObjects?.count ?? 0) - pageSize
-        if indexPath.row > lastPageIndex {
+        let lastPageStartIndex = (fetchedResultsController.fetchedObjects?.count ?? 0) - pageSize
+        if indexPath.row > lastPageStartIndex {
             // we are at the end of the list, load aggressively
             pager?.loadMore()
         } else if indexPath.row.isMultiple(of: pageSize / 2) {
