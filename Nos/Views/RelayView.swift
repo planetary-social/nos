@@ -41,10 +41,12 @@ struct RelayView: View {
                                 RelayDetailView(relay: relay)
                             } label: {
                                 Text(relay.address ?? String(localized: .localizable.error))
+                                    .font(.clarity(.regular))
                                     .foregroundColor(.primaryTxt)
                             }
                         } else {
                             Text(relay.address ?? String(localized: .localizable.error))
+                                .font(.clarity(.regular))
                                 .foregroundColor(.primaryTxt)
                                 .textSelection(.enabled)
                         }
@@ -76,7 +78,7 @@ struct RelayView: View {
                 if editable {
                     Text(.localizable.relays)
                         .foregroundColor(.primaryTxt)
-                        .fontWeight(.heavy)
+                        .font(.clarity(.bold))
                 }
             }
             .deleteDisabled(!editable)
@@ -106,7 +108,7 @@ struct RelayView: View {
                 } header: {
                     Text(.localizable.recommendedRelays)
                         .foregroundColor(.primaryTxt)
-                        .fontWeight(.heavy)
+                        .font(.clarity(.bold))
                 }
                 .listRowBackground(LinearGradient(
                     colors: [Color.cardBgTop, Color.cardBgBottom],
@@ -134,8 +136,7 @@ struct RelayView: View {
                 } header: {
                     Text(.localizable.addRelay)
                         .foregroundColor(.primaryTxt)
-                        .fontWeight(.heavy)
-                        .bold()
+                        .font(.clarity(.bold))
                 }
                 .listRowBackground(LinearGradient(
                     colors: [Color.cardBgTop, Color.cardBgBottom],

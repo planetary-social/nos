@@ -16,8 +16,8 @@ struct UNSWizardNeedsPaymentView: View {
                 .padding(40)
                 .padding(.top, 50)
             
-            PlainText(.localizable.premiumName)
-                .font(.clarityTitle)
+            Text(.localizable.premiumName)
+                .font(.clarity(.bold, textStyle: .title1))
                 .multilineTextAlignment(.center)
                 .foregroundColor(.primaryTxt)
                 .readabilityPadding()
@@ -43,7 +43,7 @@ struct UNSWizardNeedsPaymentView: View {
                             highlightedWord: String(localized: .localizable.registerADifferentName), 
                             highlight: LinearGradient(colors: [.primaryTxt], startPoint: .top, endPoint: .bottom), 
                             textColor: .secondaryTxt,
-                            font: .clarityMedium,
+                            font: .clarity(.medium),
                             link: nil
                         )
                         .multilineTextAlignment(.center)

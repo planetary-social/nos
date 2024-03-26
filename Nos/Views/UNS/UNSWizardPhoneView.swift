@@ -22,8 +22,8 @@ struct UNSWizardPhoneView: View {
                         .padding(40)
                         .padding(.top, 50)
                     
-                    PlainText(.localizable.registration)
-                        .font(.clarityTitle)
+                    Text(.localizable.registration)
+                        .font(.clarity(.bold, textStyle: .title1))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)

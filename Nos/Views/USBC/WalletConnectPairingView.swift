@@ -7,8 +7,8 @@ struct WalletConnectPairingView: View {
     var body: some View {
         VStack {
             HStack {
-                PlainText(.localizable.connectGlobalIDTitle)
-                    .font(.clarityTitle)
+                Text(.localizable.connectGlobalIDTitle)
+                    .font(.clarity(.bold, textStyle: .title1))
                     .foregroundColor(.primaryTxt)
                     .multilineTextAlignment(.leading)
                     .padding(0)
@@ -16,7 +16,7 @@ struct WalletConnectPairingView: View {
             }
             
             HStack {
-                PlainText(.localizable.scanTheWalletConnectQR)
+                Text(.localizable.scanTheWalletConnectQR)
                     .font(.callout)
                     .foregroundColor(.secondaryTxt)
                     .padding(.vertical, 8)

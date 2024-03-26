@@ -5,7 +5,7 @@ struct OnboardingAgeVerificationView: View {
     
     var body: some View {
         VStack {
-            PlainText(.localizable.ageVerificationTitle)
+            Text(.localizable.ageVerificationTitle)
                 .multilineTextAlignment(.center)
                 .padding(.top, 92)
                 .padding(.bottom, 20)

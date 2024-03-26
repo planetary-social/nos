@@ -13,7 +13,7 @@ struct WizardSheetTitleText: View {
     }
 
     var body: some View {
-        SwiftUI.Text(localizedStringResource)
+        Text(localizedStringResource)
             .font(.clarity(.bold, textStyle: .title1))
             .foregroundStyle(Color.primaryTxt)
     }

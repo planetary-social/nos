@@ -19,7 +19,7 @@ struct SendUSBCBarButtonItem: View {
                             .frame(width: 22, height: 22)
                             .background(Circle().foregroundColor(.usbcLogoBackground))
                         
-                        PlainText(.localizable.send)
+                        Text(.localizable.send)
                             .foregroundColor(.primaryTxt)
                             .font(.subheadline)
                             .bold()                        

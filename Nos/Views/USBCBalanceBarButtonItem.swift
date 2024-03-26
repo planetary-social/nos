@@ -32,7 +32,7 @@ struct USBCBalanceBarButtonItem: View {
                             .frame(width: 22, height: 22)
                             .background(Circle().foregroundColor(.usbcLogoBackground))
                         
-                        PlainText(formattedBalance)
+                        Text(formattedBalance)
                             .font(.subheadline)
                             .foregroundColor(.primaryTxt)
                             .bold()

@@ -69,9 +69,9 @@ struct ProfileHeader: View {
                     VStack(alignment: .leading, spacing: 3) {
                         Spacer()
 
-                        PlainText(author.safeName)
+                        Text(author.safeName)
                             .lineLimit(1)
-                            .font(.clarityTitle3.weight(.semibold))
+                            .font(.clarity(.bold, textStyle: .title3).weight(.semibold))
                             .foregroundColor(Color.primaryTxt)
                         
                         // NIP-05

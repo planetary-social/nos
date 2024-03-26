@@ -11,8 +11,8 @@ struct UNSWizardIntroView: View {
                 .padding(40)
                 .padding(.top, 50)
             
-            PlainText(.localizable.unsRegister)
-                .font(.clarityTitle)
+            Text(.localizable.unsRegister)
+                .font(.clarity(.bold, textStyle: .title1))
                 .multilineTextAlignment(.center)
                 .foregroundColor(.primaryTxt)
                 .readabilityPadding()

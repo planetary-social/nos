@@ -28,7 +28,7 @@ struct SetUpUNSBanner: View {
                 HStack {
                     ActionButton(
                         title: button,
-                        font: .claritySemiBoldSubheadline,
+                        font: .clarity(.semibold, textStyle: .subheadline),
                         textColor: .unsBannerButtonTxt,
                         depthEffectColor: .unsBannerButtonEffect,
                         backgroundGradient: LinearGradient(

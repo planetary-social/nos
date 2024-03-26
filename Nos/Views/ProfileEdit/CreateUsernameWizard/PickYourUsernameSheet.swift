@@ -17,7 +17,7 @@ struct PickYourUsernameSheet: View {
             Button {
                 isPresented = false
             } label: {
-                PlainText(.localizable.cancel)
+                Text(.localizable.cancel)
                     .font(.clarity(.medium, textStyle: .body))
                     .foregroundStyle(Color.primaryTxt)
                     .padding(.vertical, 20)
@@ -39,8 +39,8 @@ struct PickYourUsernameSheet: View {
                                     await verify(usernameObserver.text)
                                 }
                             }
-                        PlainText(".nos.social")
-                            .font(.clarityTitle3)
+                        Text(".nos.social")
+                            .font(.clarity(.bold, textStyle: .title3))
                             .foregroundStyle(Color.secondaryTxt)
                     }
                     if validationFailed {
@@ -61,11 +61,11 @@ struct PickYourUsernameSheet: View {
                             ProgressView()
                                 .frame(height: .zero)
                                 .tint(Color.white)
-                            PlainText(.localizable.next)
+                            Text(.localizable.next)
                                 .hidden()
                         }
                     } else {
-                        PlainText(.localizable.next)
+                        Text(.localizable.next)
                     }
                 }
                 .buttonStyle(BigActionButtonStyle())
@@ -76,7 +76,7 @@ struct PickYourUsernameSheet: View {
     }
 
     private func usernameAlreadyClaimedText() -> some View {
-        PlainText(.localizable.usernameAlreadyClaimed)
+        Text(.localizable.usernameAlreadyClaimed)
             .font(.clarity(.medium, textStyle: .subheadline))
             .foregroundStyle(Color.red)
             .lineSpacing(3)
@@ -141,9 +141,9 @@ fileprivate struct UsernameTextField: View {
     var body: some View {
         TextField(
             text: $usernameObserver.text,
-            prompt: PlainText(.localizable.username).foregroundStyle(Color.secondaryTxt)
+            prompt: Text(.localizable.username).foregroundStyle(Color.secondaryTxt)
         ) {
-            PlainText(.localizable.username)
+            Text(.localizable.username)
                 .foregroundStyle(Color.primaryTxt)
         }
         .focused($usernameFieldIsFocused)
