@@ -2,12 +2,12 @@ import Foundation
 import SwiftUI
 import UIKit
 
-/// A ViewRepresentable that wraps a UITextView meant to be used in place of TextEditor when rich text formatting is
+/// A UIViewRepresentable that wraps a UITextView meant to be used in place of TextEditor when rich text formatting is
 /// desirable.
 ///
 /// This view also listens for the .mentionAddedNotification and inserts markdown links 
 /// to nostr objects when it is received.
-struct EditableText: UIViewRepresentable {
+struct NoteTextViewRepresentable: UIViewRepresentable {
 
     typealias UIViewType = UITextView
 
@@ -194,7 +194,7 @@ struct EditableText_Previews: PreviewProvider {
     @State static var intrinsicHeight: CGFloat = 0
 
     static var previews: some View {
-        EditableText($attributedString, guid: UUID(), intrinsicHeight: $intrinsicHeight)
+        NoteTextViewRepresentable($attributedString, guid: UUID(), intrinsicHeight: $intrinsicHeight)
             .onChange(of: attributedString) { oldText, newText in
                 let difference = newText.difference(from: oldText)
                 guard difference.count == 1, let change = difference.first else {

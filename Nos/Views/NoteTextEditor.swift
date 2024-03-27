@@ -30,7 +30,7 @@ struct NoteTextEditor: View {
     }
     
     var body: some View {
-        EditableText($text, guid: guid, intrinsicHeight: $intrinsicHeight, showKeyboard: true)
+        NoteTextViewRepresentable($text, guid: guid, intrinsicHeight: $intrinsicHeight, showKeyboard: true)
             .frame(maxWidth: .infinity)
             .frame(height: max(minHeight, intrinsicHeight, 0))
             .placeholder(when: text.isEmpty, placeholder: {
