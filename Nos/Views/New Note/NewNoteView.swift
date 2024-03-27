@@ -15,8 +15,11 @@ struct NewNoteView: View {
     /// State holding the text the user is typing
     @State private var text = EditableNoteText()
 
-    /// The calculated height of the NoteTextEditor.
-    @State private var calculatedEditorHeight: CGFloat = 44
+    /// The height of the NoteTextEditor that fits all entered text.
+    /// This value will be updated by NoteTextEditor automatically, and should be used to set its frame from SwiftUI. 
+    /// This is done to work around some incompatibilities between UIKit and SwiftUI where the UITextView won't expand 
+    /// properly.
+    @State private var scrollViewHeight: CGFloat = 0
 
     @State var expirationTime: TimeInterval?
     
@@ -40,37 +43,50 @@ struct NewNoteView: View {
         self.replyToNote = replyTo
     }
     
+    // We do this because editor won't expand to fill available space when it's in a ScrollView.
+    // and we need it to because people try to tap below the text field bounds to paste if it doesn't
+    // fill the screen.
+    var minimumEditorHeight: CGFloat {
+        max(scrollViewHeight - 12, 0)
+    }
+    
     var body: some View {
         NavigationStack {
             ZStack {
                 VStack(spacing: 0) {
-                    let content = ScrollViewReader { proxy in
-                        VStack(spacing: 0) {
-                            if let replyToNote {
-                                ReplyPreview(note: replyToNote)
-                            }
-                            NoteTextEditor(text: $text, placeholder: .localizable.newNotePlaceholder)
-                                .padding(10)
-                                .frame(minHeight: 100)
-                                .id(0)
-                        }
-                        .onAppear {
-                            Task {
-                                try await Task.sleep(for: .seconds(0.5))
-                                withAnimation(.easeInOut(duration: 0.25)) { 
-                                    proxy.scrollTo(0, anchor: .bottom)
+                    GeometryReader { geometry in
+                        ScrollView {
+                            ScrollViewReader { proxy in
+                                VStack(spacing: 0) {
+                                    if let replyToNote {
+                                        ReplyPreview(note: replyToNote)
+                                    }
+                                    NoteTextEditor(
+                                        text: $text, 
+                                        minHeight: minimumEditorHeight,
+                                        placeholder: .localizable.newNotePlaceholder
+                                    )
+                                    .padding(10)
+                                    .background {
+                                        // This is a placeholder view that lets us scroll the editor just into view.
+                                        Color.clear
+                                            .frame(height: 1)
+                                            .offset(y: 100)
+                                            .id(0)
+                                    }
+                                }
+                                .onAppear {
+                                    Task {
+                                        try await Task.sleep(for: .seconds(0.5))
+                                        withAnimation(.easeInOut(duration: 0.25)) { 
+                                            proxy.scrollTo(0, anchor: nil)
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
-                            
-                    // We do this because editor won't expand to fill available space when it's in a ScrollView.
-                    // and we need it to because people try to tap below the text field bounds to past if it doesn't
-                    // fill the screen.
-                    ViewThatFits {
-                        content
-                        ScrollView {
-                            content
+                        .onChange(of: geometry.size.height) { _, newValue in
+                            scrollViewHeight = newValue 
                         }
                     }
                     

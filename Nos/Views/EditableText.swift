@@ -12,6 +12,11 @@ struct EditableText: UIViewRepresentable {
     typealias UIViewType = UITextView
 
     @Binding var text: EditableNoteText
+    
+    /// The height that fits all entered text. This value will be updated by EditableText automatically, and should
+    /// be used to set the frame of EditableText from SwiftUI. This is done to work around some incompatibilities 
+    /// between UIKit and SwiftUI where the UITextView won't expand properly.
+    @Binding var intrinsicHeight: CGFloat
     @State var width: CGFloat
     
     /// Whether we should present the keyboard when this view is shown. Unfortunately we can rely on FocusState as 
@@ -22,15 +27,21 @@ struct EditableText: UIViewRepresentable {
     private var guid: UUID
     private var font = UIFont.preferredFont(forTextStyle: .body)
 
-    init(_ text: Binding<EditableNoteText>, guid: UUID, showKeyboard: Bool = false) {
+    init(
+        _ text: Binding<EditableNoteText>, 
+        guid: UUID, 
+        intrinsicHeight: Binding<CGFloat>, 
+        showKeyboard: Bool = false
+    ) {
         self.guid = guid
         self.showKeyboard = showKeyboard
         _width = .init(initialValue: 0)
         _text = text
+        _intrinsicHeight = intrinsicHeight
     }
 
     func makeUIView(context: Context) -> UITextView {
-        let view = UITextView()
+        let view = UITextView(usingTextLayoutManager: false)
         view.attributedText = text.nsAttributedString
         view.isUserInteractionEnabled = true
         view.isScrollEnabled = false
@@ -84,12 +95,14 @@ struct EditableText: UIViewRepresentable {
     func updateUIView(_ uiView: UITextView, context: Context) {
         uiView.attributedText = text.nsAttributedString
         uiView.typingAttributes = text.defaultNSAttributes
+        updateIntrinsicHeight(view: uiView)
     }
 
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize? {
         if width != uiView.frame.size.width {
             DispatchQueue.main.async { // call in next render cycle.
                 width = uiView.frame.size.width
+                updateIntrinsicHeight(view: uiView)
             }
         } else if width == 0,
             uiView.frame.size.width == 0, 
@@ -98,9 +111,20 @@ struct EditableText: UIViewRepresentable {
             proposedWidth < CGFloat.infinity {
             DispatchQueue.main.async { // call in next render cycle.
                 uiView.frame.size.width = proposedWidth
+                updateIntrinsicHeight(view: uiView)
             }
         }
         return nil
+    }
+
+    /// Calculates the height that fits all entered text, and updates $intrinsicHeight with this property. This is 
+    /// done to work around some incompatibilities between UIKit and SwiftUI where the UITextView won't expand properly.
+    fileprivate func updateIntrinsicHeight(view: UIView) {
+        let newSize = view.sizeThatFits(CGSize(width: view.frame.width, height: .greatestFiniteMagnitude))
+        guard intrinsicHeight != newSize.height else { return }
+        DispatchQueue.main.async { // call in next render cycle.
+            intrinsicHeight = newSize.height
+        }
     }
 
     func makeCoordinator() -> Coordinator {
@@ -167,9 +191,10 @@ extension Notification.Name {
 struct EditableText_Previews: PreviewProvider {
 
     @State static var attributedString = EditableNoteText(string: "Hello")
+    @State static var intrinsicHeight: CGFloat = 0
 
     static var previews: some View {
-        EditableText($attributedString, guid: UUID())
+        EditableText($attributedString, guid: UUID(), intrinsicHeight: $intrinsicHeight)
             .onChange(of: attributedString) { oldText, newText in
                 let difference = newText.difference(from: oldText)
                 guard difference.count == 1, let change = difference.first else {

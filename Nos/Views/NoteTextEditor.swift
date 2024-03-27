@@ -4,6 +4,13 @@ import SwiftUI
 struct NoteTextEditor: View {
     
     @Binding var text: EditableNoteText
+    
+    /// The height of the EditableNoteText that fits all entered text.
+    @State var intrinsicHeight: CGFloat = 0
+    
+    /// The smallest size of EditableNoteText
+    var minHeight: CGFloat
+    
     var placeholder: LocalizedStringResource
     @State private var guid = UUID()
     
@@ -23,7 +30,8 @@ struct NoteTextEditor: View {
     }
     
     var body: some View {
-        EditableText($text, guid: guid, showKeyboard: true)
+        EditableText($text, guid: guid, intrinsicHeight: $intrinsicHeight, showKeyboard: true)
+            .frame(maxWidth: .infinity, minHeight: minHeight, idealHeight: max(intrinsicHeight, 0))
             .placeholder(when: text.isEmpty, placeholder: {
                 VStack {
                     Text(placeholder)
@@ -34,7 +42,6 @@ struct NoteTextEditor: View {
                 }
             })
             .padding(.leading, 6)
-            .frame(maxWidth: .infinity)
             .background { Color.appBg }
             .onChange(of: text) { oldText, newText in
                 let difference = newText.difference(from: oldText)
@@ -80,12 +87,12 @@ struct NoteTextEditor_Previews: PreviewProvider {
     
     @State static var text = EditableNoteText()
     static var placeholder: LocalizedStringResource = .localizable.newNotePlaceholder
-    @State static var calculatedHeight: CGFloat = 44
 
     static var previews: some View {
         VStack {
             NoteTextEditor(
-                text: $text,
+                text: $text, 
+                minHeight: 100,
                 placeholder: placeholder
             )
             Spacer()
