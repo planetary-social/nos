@@ -1,5 +1,4 @@
 {
-  "originHash" : "40bb242bc56b844e73512849892f4b9d86705e2c219e31d48ac35f6c67c8aa75",
   "pins" : [
     {
       "identity" : "bech32",
@@ -103,10 +102,10 @@
     {
       "identity" : "secp256k1.swift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Boilertalk/secp256k1.swift.git",
+      "location" : "https://github.com/GigaBitcoin/secp256k1.swift",
       "state" : {
-        "revision" : "cd187c632fb812fd93711a9f7e644adb7e5f97f0",
-        "version" : "0.1.7"
+        "revision" : "48fb20fce4ca3aad89180448a127d5bc16f0e44c",
+        "version" : "0.10.0"
       }
     },
     {
@@ -317,5 +316,5 @@
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }
