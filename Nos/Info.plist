@@ -2,27 +2,25 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.verse.nos</string>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>nos</string>
+				<string>$(SCHEME_PREFIX)</string>
 			</array>
 		</dict>
 	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>POSTHOG_API_KEY</key>
 	<string>$(POSTHOG_API_KEY)</string>
 	<key>SENTRY_DSN</key>
 	<string>$(SENTRY_DSN)</string>
-	<key>WALLET_CONNECT_PROJECT_ID</key>
-	<string>$(WALLET_CONNECT_PROJECT_ID)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>ClarityCity-Black.otf</string>
@@ -60,5 +58,7 @@
 	<string>$(UNS_CONNECTION_URL)</string>
 	<key>UNS_ORG_CODE</key>
 	<string>$(UNS_ORG_CODE)</string>
+	<key>WALLET_CONNECT_PROJECT_ID</key>
+	<string>$(WALLET_CONNECT_PROJECT_ID)</string>
 </dict>
 </plist>

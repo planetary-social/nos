@@ -9,6 +9,7 @@ class CrashReporting {
     init(mock: Bool = false) {
         sentry = SentrySDK.self
         let dsn = Bundle.main.infoDictionary?["SENTRY_DSN"] as? String ?? ""
+
         #if DEBUG
         let debug = true
         #else
@@ -21,11 +22,14 @@ class CrashReporting {
         
         sentry.start { options in
             options.dsn = dsn
-            
+            #if STAGING
+            options.environment = "staging"
+            #elseif DEV
+            options.environment = "debug"
+            #endif
             options.enableTracing = true
             options.tracesSampleRate = 0.3 // tracing must be enabled for profiling
             options.profilesSampleRate = 0.3 // see also `profilesSampler` if you need custom sampling logic
-            
             // Enable all experimental features
             options.attachViewHierarchy = true
             options.enablePreWarmedAppStartTracing = true

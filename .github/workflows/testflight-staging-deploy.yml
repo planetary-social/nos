@@ -1,8 +1,8 @@
-name: TestFlight Release Deployment
+name: TestFlight Staging deployment
 on:
   push:
     branches:
-      - 'release/**'
+      - main
   # Enable manual run
   workflow_dispatch:
 
@@ -25,7 +25,7 @@ jobs:
       - name: Deploy with fastlane
         run: |
           bundle install
-          bundle exec fastlane release
+          bundle exec fastlane staging
         env:
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ Secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ Secrets.APP_STORE_CONNECT_ISSUER_ID }}
