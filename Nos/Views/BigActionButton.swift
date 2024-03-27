@@ -16,8 +16,8 @@ struct BigActionButton: View {
                 disabled = false
             }
         }, label: {
-            PlainText(title)
-                .font(.clarityBold)
+            Text(title)
+                .font(.clarity(.bold))
                 .transition(.opacity)
                 .font(.headline)
         })

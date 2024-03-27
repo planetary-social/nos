@@ -77,11 +77,11 @@ struct CompactNoteView: View {
         Group {
             switch note.attributedContent {
             case .loading:
-                SwiftUI.Text(note.content ?? "")
+                Text(note.content ?? "")
                     .font(.clarity(.regular))
                     .redacted(reason: .placeholder)
             case .loaded(let attributedString):
-                SwiftUI.Text(attributedString)
+                Text(attributedString)
             }
         }
     }
@@ -133,7 +133,7 @@ struct CompactNoteView: View {
                             isTextTruncated = false
                         }
                     } label: {
-                        PlainText(String(localized: .localizable.readMore).uppercased())
+                        Text(String(localized: .localizable.readMore).uppercased())
                             .font(.caption)
                             .foregroundColor(.secondaryTxt)
                             .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))

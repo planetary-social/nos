@@ -64,12 +64,12 @@ struct ExcellentChoiceSheet: View {
                     .scaleEffect(1.5)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             case .failed(let error):
-                SwiftUI.Text(error.localizedDescription)
+                Text(error.localizedDescription)
                     .font(.clarity(.regular, textStyle: .callout))
                     .foregroundStyle(Color.primaryTxt)
             case .claimed:
                 WizardSheetTitleText(.localizable.excellentChoice)
-                SwiftUI.Text(attributedUsername)
+                Text(attributedUsername)
                     .font(.clarity(.bold, textStyle: .title3))
                     .foregroundStyle(Color.secondaryTxt)
                 WizardSheetDescriptionText(markdown: .localizable.usernameClaimedNotice)
@@ -87,7 +87,7 @@ struct ExcellentChoiceSheet: View {
             Button {
                 isPresented = false
             } label: {
-                SwiftUI.Text(.localizable.ok)
+                Text(.localizable.ok)
             }
         }
         .task {

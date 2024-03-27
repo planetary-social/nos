@@ -48,8 +48,8 @@ struct RelayPickerToolbarButton: ToolbarContent {
                     action()
                 } label: {
                     HStack {
-                        PlainText(title)
-                            .font(.clarityTitle3)
+                        Text(title)
+                            .font(.clarity(.bold, textStyle: .title3))
                             .foregroundColor(.primaryTxt)
                             .bold()
                             .padding(.leading, 14)

@@ -7,7 +7,9 @@ struct RelayDetailView: View {
     func row(title: LocalizedStringResource, value: String) -> some View {
         HStack(alignment: .top) {
             Text("\(String(localized: title)): ")
+                .font(.clarity(.regular))
             Text(value)
+                .font(.clarity(.regular))
                 .textSelection(.enabled)
         }
     }
@@ -15,11 +17,12 @@ struct RelayDetailView: View {
         List {
             Section {
                 Text(relay.address ?? String(localized: .localizable.error))
+                    .font(.clarity(.regular))
                     .textSelection(.enabled)
             } header: {
                 Text(.localizable.address)
                     .foregroundColor(.primaryTxt)
-                    .fontWeight(.heavy)
+                    .font(.clarity(.bold))
             }
             .listRowBackground(LinearGradient(
                 colors: [Color.cardBgTop, Color.cardBgBottom],
@@ -54,11 +57,12 @@ struct RelayDetailView: View {
             } header: {
                 Text(.localizable.metadata)
                     .foregroundColor(.primaryTxt)
-                    .fontWeight(.heavy)
+                    .font(.clarity(.bold))
             } footer: {
                 #if DEBUG
                 if let date = relay.metadataFetchedAt {
                     Text("\(String(localized: .localizable.fetchedAt)): \(date.distanceString())")
+                        .font(.clarity(.regular))
                 }
                 #endif
             }

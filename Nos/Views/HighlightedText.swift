@@ -42,7 +42,7 @@ struct HighlightedText: View {
         highlightedWord: String?,
         highlight: LinearGradient,
         textColor: Color = .primaryTxt,
-        font: Font = .clarity,
+        font: Font = .clarity(.regular),
         link: URL?
     ) {
         self.init(
@@ -66,7 +66,7 @@ struct HighlightedText: View {
         highlightedWord: String?,
         highlight: LinearGradient,
         textColor: Color = .primaryTxt,
-        font: Font = .clarity,
+        font: Font = .clarity(.regular),
         link: URL?
     ) {
         self.text = text

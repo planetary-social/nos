@@ -12,8 +12,8 @@ struct OnboardingTermsOfServiceView: View {
     
     var body: some View {
         VStack {
-            PlainText(.localizable.termsOfServiceTitle)
-                .font(.custom("ClarityCity-Bold", size: 34, relativeTo: .largeTitle))
+            Text(.localizable.termsOfServiceTitle)
+                .font(.clarity(.bold, textStyle: .largeTitle))
                 .foregroundStyle(
                     LinearGradient(
                         colors: [
@@ -29,6 +29,7 @@ struct OnboardingTermsOfServiceView: View {
                 .padding(.bottom, 60)
             ScrollView {
                 Text(termsOfService)
+                    .font(.clarity(.regular))
                     .foregroundColor(.secondaryTxt)
                 Rectangle().fill(Color.clear)
                     .frame(height: 100)

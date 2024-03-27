@@ -78,11 +78,11 @@ struct SettingsView: View {
                 .padding(.vertical, 5)
             } header: {
                 VStack(alignment: .leading, spacing: 10) {
-                    PlainText(.localizable.privateKey)
+                    Text(.localizable.privateKey)
                         .foregroundColor(.primaryTxt)
                         .font(.clarity(.semibold, textStyle: .headline))
 
-                    PlainText(.localizable.privateKeyWarning)
+                    Text(.localizable.privateKeyWarning)
                         .foregroundColor(.secondaryTxt)
                         .font(.footnote)
                 }
@@ -100,7 +100,7 @@ struct SettingsView: View {
             Section {
                 VStack {
                     Toggle(isOn: $showReportWarnings) { 
-                        PlainText(.localizable.useReportsFromFollows)
+                        Text(.localizable.useReportsFromFollows)
                             .foregroundColor(.primaryTxt)
                     }
                     .onChange(of: showReportWarnings) { _, newValue in
@@ -108,7 +108,7 @@ struct SettingsView: View {
                     }
                     
                     HStack {
-                        PlainText(.localizable.useReportsFromFollowsDescription)
+                        Text(.localizable.useReportsFromFollowsDescription)
                             .foregroundColor(.secondaryTxt)
                             .font(.footnote)
                         Spacer()
@@ -118,7 +118,7 @@ struct SettingsView: View {
 
                 VStack {
                     Toggle(isOn: $showOutOfNetworkWarning) { 
-                        PlainText(.localizable.showOutOfNetworkWarnings)
+                        Text(.localizable.showOutOfNetworkWarnings)
                             .foregroundColor(.primaryTxt)
                     }
                     .onChange(of: showOutOfNetworkWarning) { _, newValue in
@@ -126,7 +126,7 @@ struct SettingsView: View {
                     }
                     
                     HStack {
-                        PlainText(.localizable.showOutOfNetworkWarningsDescription)
+                        Text(.localizable.showOutOfNetworkWarningsDescription)
                             .foregroundColor(.secondaryTxt)
                             .font(.footnote)
                         Spacer()
@@ -134,7 +134,7 @@ struct SettingsView: View {
                 }
                 .padding(.bottom, 8)
             } header: {
-                PlainText(.localizable.feedSettings)
+                Text(.localizable.feedSettings)
                     .foregroundColor(.primaryTxt)
                     .font(.clarity(.semibold, textStyle: .headline))
                     .textCase(nil)
@@ -153,7 +153,7 @@ struct SettingsView: View {
             
             Section {
                 HStack {
-                    PlainText("\(String(localized: .localizable.appVersion)) \(Bundle.current.versionAndBuild)")
+                    Text("\(String(localized: .localizable.appVersion)) \(Bundle.current.versionAndBuild)")
                         .foregroundColor(.primaryTxt)
                     Spacer()
                     SecondaryActionButton(title: .localizable.shareLogs) {
@@ -176,7 +176,7 @@ struct SettingsView: View {
                 }
 
                 #if DEBUG
-                PlainText(.localizable.sampleDataInstructions)
+                Text(.localizable.sampleDataInstructions)
                     .foregroundColor(.primaryTxt)
                 Button(String(localized: .localizable.loadSampleData)) {
                     Task {
@@ -191,12 +191,12 @@ struct SettingsView: View {
                     NavigationLink {
                         PublishedEventsView(author: author)
                     } label: {
-                        PlainText(.localizable.allPublishedEvents)
+                        Text(.localizable.allPublishedEvents)
                     }
                 }
                 #endif
             } header: {
-                PlainText(.localizable.debug)
+                Text(.localizable.debug)
                     .foregroundColor(.primaryTxt)
                     .font(.clarity(.semibold, textStyle: .headline))
                     .textCase(nil)

@@ -46,9 +46,9 @@ struct SideMenuContent: View {
                             Spacer()
                         }
                         if let name = currentUser.author?.safeName {
-                            PlainText(name)
+                            Text(name)
                                 .foregroundColor(.primaryTxt)
-                                .font(.clarityTitle2)
+                                .font(.clarity(.bold, textStyle: .title2))
                                 .padding(.top, 15)
                         }
                     }
@@ -141,9 +141,9 @@ struct SideMenuRow: View {
         } label: {
             HStack(alignment: .center) {
                 image
-                    .font(.clarityTitle3)
-                PlainText(title)
-                    .font(.clarityTitle3)
+                    .font(.clarity(.bold, textStyle: .title3))
+                Text(title)
+                    .font(.clarity(.bold, textStyle: .title3))
                     .foregroundColor(.primaryTxt)
                 Spacer()
             }

@@ -8,8 +8,8 @@ struct WalletConnectSendView: View {
     var body: some View {
         VStack {
             HStack {
-                PlainText(.localizable.sendUSBC)
-                    .font(.clarityTitle)
+                Text(.localizable.sendUSBC)
+                    .font(.clarity(.bold, textStyle: .title1))
                     .foregroundColor(.primaryTxt)
                     .multilineTextAlignment(.leading)
                     .padding(0)
@@ -17,7 +17,7 @@ struct WalletConnectSendView: View {
             }
             
             HStack {
-                PlainText(.localizable.sendTo)
+                Text(.localizable.sendTo)
                     .font(.callout)
                     .foregroundColor(.secondaryTxt)
                     .padding(.vertical, 8)
@@ -32,7 +32,7 @@ struct WalletConnectSendView: View {
                     HStack {
                         Text(controller.destinationAuthor.safeName)
                             .foregroundColor(.primaryTxt)
-                            .bold()
+                            .font(.clarity(.bold))
                             .shadow(radius: 1, y: 1)
                         Spacer()
                     }
@@ -40,6 +40,7 @@ struct WalletConnectSendView: View {
                         Image.unsLogoDark
                         Text(controller.destinationAuthor.uns ?? "")
                             .foregroundColor(.secondaryTxt)
+                            .font(.clarity(.regular))
                         Spacer()
                     }
                 }
@@ -52,7 +53,7 @@ struct WalletConnectSendView: View {
             )
             
             HStack {
-                PlainText(.localizable.amount)
+                Text(.localizable.amount)
                     .font(.callout)
                     .foregroundColor(.secondaryTxt)
                     .padding(.top, 16)
@@ -62,11 +63,11 @@ struct WalletConnectSendView: View {
             
             ZStack {
                 TextField(text: $amount) {
-                    PlainText("1,000")
+                    Text("1,000")
                         .foregroundColor(.secondaryTxt)
                 }
                 .keyboardType(.decimalPad)
-                .font(.clarityTitle2)
+                .font(.clarity(.bold, textStyle: .title2))
                 .foregroundColor(.primaryTxt)
                 .multilineTextAlignment(.center)
                 .padding(19)

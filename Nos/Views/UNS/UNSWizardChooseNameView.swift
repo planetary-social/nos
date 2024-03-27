@@ -19,8 +19,8 @@ struct UNSWizardChooseNameView: View {
                         .padding(20)
                         .padding(.top, 50)
                     
-                    PlainText(.localizable.chooseNameOrRegister)
-                        .font(.clarityTitle)
+                    Text(.localizable.chooseNameOrRegister)
+                        .font(.clarity(.bold, textStyle: .title1))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)

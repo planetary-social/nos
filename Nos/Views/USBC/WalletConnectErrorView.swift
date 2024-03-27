@@ -9,14 +9,14 @@ struct WalletConnectErrorView: View {
     var body: some View {
         VStack(spacing: 8) {
             HStack {
-                PlainText("😕")
+                Text("😕")
                     .font(.system(size: 50))
                 Spacer()
             }
             
             HStack {
-                PlainText(.localizable.somethingWentWrong)
-                    .font(.clarityTitle)
+                Text(.localizable.somethingWentWrong)
+                    .font(.clarity(.bold, textStyle: .title1))
                     .foregroundColor(.primaryTxt)
                     .multilineTextAlignment(.leading)
                     .padding(0)
@@ -24,7 +24,7 @@ struct WalletConnectErrorView: View {
             }
             
             HStack {
-                PlainText("\(error.localizedDescription). \(String(localized: .localizable.tryAgainOrContactSupport))")
+                Text("\(error.localizedDescription). \(String(localized: .localizable.tryAgainOrContactSupport))")
                     .font(.callout)
                     .foregroundColor(.secondaryTxt)
                 Spacer()
