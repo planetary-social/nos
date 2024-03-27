@@ -43,9 +43,11 @@ struct NewNoteView: View {
         self.replyToNote = replyTo
     }
     
-    // We do this because editor won't expand to fill available space when it's in a ScrollView.
-    // and we need it to because people try to tap below the text field bounds to paste if it doesn't
-    // fill the screen.
+    /// The minimum height of the NoteTextEditor.
+    /// 
+    /// We do this because editor won't expand to fill available space when it's in a ScrollView.
+    /// and we need it to because people try to tap below the text field bounds to paste if it doesn't
+    /// fill the screen.
     var minimumEditorHeight: CGFloat {
         max(scrollViewHeight - 12, 0)
     }
