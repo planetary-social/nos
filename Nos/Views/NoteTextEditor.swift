@@ -31,7 +31,8 @@ struct NoteTextEditor: View {
     
     var body: some View {
         EditableText($text, guid: guid, intrinsicHeight: $intrinsicHeight, showKeyboard: true)
-            .frame(maxWidth: .infinity, minHeight: minHeight, idealHeight: max(intrinsicHeight, 0))
+            .frame(maxWidth: .infinity)
+            .frame(height: max(minHeight, intrinsicHeight, 0))
             .placeholder(when: text.isEmpty, placeholder: {
                 VStack {
                     Text(placeholder)
