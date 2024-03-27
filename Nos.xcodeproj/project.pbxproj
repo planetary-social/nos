@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0378409D2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */; };
 		038985182B7AD6C0009C16CA /* String+MarkdownTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038985172B7AD6BF009C16CA /* String+MarkdownTests.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
@@ -472,6 +473,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		038985172B7AD6BF009C16CA /* String+MarkdownTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+MarkdownTests.swift"; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
@@ -1155,6 +1157,7 @@
 				C97797B7298AA1600046BD25 /* Service */,
 				C9EB171929E5976700A15ABB /* Controller */,
 				C9F84C24298DC7C100C6714D /* Views */,
+				0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Nos;
 			sourceTree = "<group>";
@@ -1654,6 +1657,7 @@
 				C987F83A29BA951E00B44E7A /* ClarityCity-BoldItalic.otf in Resources */,
 				C987F84A29BA951E00B44E7A /* ClarityCity-Medium.otf in Resources */,
 				3A1C296F2B2A537C0020B753 /* Moderation.xcstrings in Resources */,
+				0378409D2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy in Resources */,
 				C9DEBFDF298941020078B43A /* Preview Assets.xcassets in Resources */,
 				C987F84E29BA951E00B44E7A /* ClarityCity-RegularItalic.otf in Resources */,
 				3A67449C2B294712002B8DE0 /* Localizable.xcstrings in Resources */,
