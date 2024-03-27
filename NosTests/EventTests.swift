@@ -1,7 +1,6 @@
 import XCTest
 import CoreData
 import secp256k1
-import secp256k1_bindings
 import Dependencies
 
 /// Tests for the Event model.
