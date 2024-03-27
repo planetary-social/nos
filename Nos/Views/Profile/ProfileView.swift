@@ -23,7 +23,7 @@ struct ProfileView: View {
     @State private var usbcBalanceTimer: Timer?
     @State private var relaySubscriptions = SubscriptionCancellables()
 
-    @State private var selectedTab: ProfileHeader.ProfileHeaderTab = .notes
+    @State private var selectedTab: ProfileFeedType = .notes
 
     @State private var alert: AlertState<Never>?
 
@@ -84,14 +84,9 @@ struct ProfileView: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack {
-                let profileNotesFilter = Filter(
-                    authorKeys: [author.hexadecimalPublicKey ?? "error"],
-                    kinds: [.text, .delete, .repost, .longFormContent]
-                )
-                
                 PagedNoteListView(
-                    databaseFilter: selectedTab.request(author: author),
-                    relayFilter: profileNotesFilter,
+                    databaseFilter: selectedTab.databaseFilter(author: author),
+                    relayFilter: selectedTab.relayFilter(author: author),
                     context: viewContext,
                     tab: .profile,
                     header: {
@@ -108,7 +103,7 @@ struct ProfileView: View {
                         .frame(minHeight: 300)
                     },
                     onRefresh: {
-                        selectedTab.request(author: author)
+                        selectedTab.databaseFilter(author: author)
                     }
                 )
                 .padding(0)
