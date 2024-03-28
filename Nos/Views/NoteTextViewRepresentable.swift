@@ -13,9 +13,9 @@ struct NoteTextViewRepresentable: UIViewRepresentable {
 
     @Binding var text: EditableNoteText
     
-    /// The height that fits all entered text. This value will be updated by NoteTextViewRepresentable automatically, and should
-    /// be used to set the frame of NoteTextViewRepresentable from SwiftUI. This is done to work around some incompatibilities 
-    /// between UIKit and SwiftUI where the UITextView won't expand properly.
+    /// The height that fits all entered text. This value will be updated by NoteTextViewRepresentable automatically, 
+    /// and should be used to set the frame of NoteTextViewRepresentable from SwiftUI. This is done to work around some
+    /// incompatibilities between UIKit and SwiftUI where the UITextView won't expand properly.
     @Binding var intrinsicHeight: CGFloat
     @State var width: CGFloat
     
