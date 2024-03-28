@@ -100,9 +100,7 @@ struct HighlightedText: View {
                     segments.append(.space)
                 }
                 
-                if let string = try? String(afterHighlightedWord) {
-                    segments.append(.body(string))
-                }
+                segments.append(.body(String(afterHighlightedWord)))
             }
         } else {
             // no highlighted word, so we just have one segment.

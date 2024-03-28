@@ -1,4 +1,5 @@
 import SwiftUI
+import Logger
 
 /// A text editor for composing Nostr notes. Supports autocomplete of mentions.
 struct NoteTextEditor: View {
@@ -66,6 +67,7 @@ struct NoteTextEditor: View {
     }
     
     private func insertMention(at offset: Int, author: Author) {
+        Log.error("test")
         // We communicate with the underlying EditableText using NSNotification
         NotificationCenter.default.post(
             name: .mentionAddedNotification,
