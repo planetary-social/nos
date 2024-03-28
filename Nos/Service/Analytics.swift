@@ -1,3 +1,4 @@
+import Foundation
 import PostHog
 import Dependencies
 import Logger
@@ -7,19 +8,19 @@ import Starscream
 /// dependency using the Dependencies library.
 class Analytics {
 
-    private let postHog: PHGPostHog?
+    private let postHog: PostHogSDK?
 
     required init(mock: Bool = false) {
         let apiKey = Bundle.main.infoDictionary?["POSTHOG_API_KEY"] as? String ?? ""
         if !mock && !apiKey.isEmpty {
-            let configuration = PHGPostHogConfiguration(apiKey: apiKey, host: "https://posthog.planetary.tools")
-            
+            let configuration = PostHogConfig(apiKey: apiKey, host: "https://posthog.planetary.tools")
+
             configuration.captureApplicationLifecycleEvents = true
-            configuration.recordScreenViews = true
+            configuration.captureScreenViews = true
             // TODO: write screen views to log
 
-            PHGPostHog.setup(with: configuration)
-            postHog = PHGPostHog.shared()!
+            PostHogSDK.shared.setup(configuration)
+            postHog = PostHogSDK.shared
         } else {
             postHog = nil
         }
