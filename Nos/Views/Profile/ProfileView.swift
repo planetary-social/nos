@@ -18,9 +18,6 @@ struct ProfileView: View {
     
     @State private var showingOptions = false
     @State private var showingReportMenu = false
-    @State private var usbcAddress: USBCAddress?
-    @State private var usbcBalance: Double?
-    @State private var usbcBalanceTimer: Timer?
     @State private var relaySubscriptions = SubscriptionCancellables()
 
     @State private var selectedTab: ProfileFeedType = .notes
@@ -34,30 +31,6 @@ struct ProfileView: View {
     init(author: Author, addDoubleTapToPop: Bool = false) {
         self.author = author
         self.addDoubleTapToPop = addDoubleTapToPop
-    }
-
-    func loadUSBCBalance() async {
-        guard let unsName = author.uns, !unsName.isEmpty else {
-            usbcAddress = nil
-            usbcBalance = nil
-            usbcBalanceTimer?.invalidate()
-            usbcBalanceTimer = nil
-            return
-        }
-        do {
-            usbcAddress = try await unsAPI.usbcAddress(for: unsName)
-            if isShowingLoggedInUser {
-                usbcBalance = try await unsAPI.usbcBalance(for: unsName)
-                currentUser.usbcAddress = usbcAddress
-                usbcBalanceTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
-                    Task { @MainActor in 
-                        usbcBalance = try await unsAPI.usbcBalance(for: unsName) 
-                    }
-                }
-            }
-        } catch {
-            Log.optional(error, "Failed to load USBC balance for \(author.hexadecimalPublicKey ?? "null")")
-        }
     }
     
     func downloadAuthorData() async {
@@ -141,11 +114,6 @@ struct ProfileView: View {
         .navigationBarItems(
             trailing:
                 HStack {
-                    if usbcBalance != nil {
-                        USBCBalanceBarButtonItem(balance: $usbcBalance)
-                    } else if let usbcAddress, !isShowingLoggedInUser {
-                        SendUSBCBarButtonItem(destinationAddress: usbcAddress, destinationAuthor: author)
-                    }
                     Button(
                         action: {
                             showingOptions = true
@@ -218,17 +186,11 @@ struct ProfileView: View {
                 }
         )
         .reportMenu($showingReportMenu, reportedObject: .author(author))
-        .onChange(of: author.uns) { 
-            Task {
-                await loadUSBCBalance()
-            }
-        }
         .alert(unwrapping: $alert)
         .tint(.accent)
         .onAppear {
             Task { 
                 await downloadAuthorData()
-                await loadUSBCBalance() 
             }
             analytics.showedProfile()
         }

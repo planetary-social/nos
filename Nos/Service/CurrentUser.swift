@@ -42,8 +42,6 @@ enum CurrentUserError: Error {
         _privateKeyHex
     }
     
-    var usbcAddress: USBCAddress? 
-
     @MainActor func setPrivateKeyHex(_ newValue: String?) async {
         guard let privateKeyHex = newValue else {
             let publicStatus = KeyChain.delete(key: KeyChain.keychainPrivateKey)
@@ -136,9 +134,6 @@ enum CurrentUserError: Error {
             Task {
                 await subscribe()
                 refreshFriendMetadata()
-                if let unsName = author?.uns {
-                    usbcAddress = try await unsAPI.usbcAddress(for: unsName)
-                }
             }
         } else {
             author = nil

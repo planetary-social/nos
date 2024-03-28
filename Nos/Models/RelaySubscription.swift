@@ -1,5 +1,4 @@
 import Foundation
-import CryptoSwift
 
 /// Models a request to a relay for Nostr Events. 
 struct RelaySubscription: Identifiable {
@@ -42,7 +41,7 @@ struct RelaySubscription: Identifiable {
     ) {
         self.filter = filter
         self.relayAddress = relayAddress
-        self.id = (filter.id + "-" + relayAddress.absoluteString).sha256()
+        self.id = (filter.id + "-" + relayAddress.absoluteString).data(using: .utf8)!.sha256
         self.subscriptionStartDate = subscriptionStartDate
         self.oldestEventCreationDate = oldestEventCreationDate
         self.referenceCount = referenceCount

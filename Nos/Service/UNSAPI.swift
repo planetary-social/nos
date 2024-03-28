@@ -421,30 +421,6 @@ class UNSAPI {
         return nostrPubKeys
     }
     
-    func usbcAddress(for name: UNSName) async throws -> USBCAddress? {
-        let accessToken = try await checkAccessToken()
-        var url = connectionURL.appending(path: "/v1/universal_ledger")
-        url = url.appending(queryItems: [
-            URLQueryItem(name: "name", value: name),
-        ])
-        var request = URLRequest(url: url)
-        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
-        request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpMethod = "GET"
-        let response = try await URLSession.shared.data(for: request)
-        let responseJSON = try jsonDictionary(from: response.0)
-        
-        guard let dataDict = responseJSON["data"] as? JSONObject,
-            let usbcAddress = dataDict["account_address"] as? String? else {
-            logError(response: response)
-            throw UNSError.badResponse
-        }
-        
-        return usbcAddress
-    }
-    
     func usbcBalance(for name: UNSName) async throws -> Double? {
         guard let nameRecord = try await nameRecord(for: name) else {
             return nil
