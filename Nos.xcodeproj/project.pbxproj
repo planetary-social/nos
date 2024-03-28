@@ -65,7 +65,7 @@
 		5B8C96AC29D52AD200B73AEC /* AuthorListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */; };
 		5B8C96B029DB2E1100B73AEC /* SearchTextFieldObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */; };
 		5B8C96B229DB313300B73AEC /* AuthorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B129DB313300B73AEC /* AuthorCard.swift */; };
-		5B8C96B629DDD3B200B73AEC /* EditableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B529DDD3B200B73AEC /* EditableText.swift */; };
+		5B8C96B629DDD3B200B73AEC /* NoteTextViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B529DDD3B200B73AEC /* NoteTextViewRepresentable.swift */; };
 		5BC0D9CC2B867B9D005D6980 /* NamesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */; };
 		5BD08BB22A38E96F00BB926C /* JSONRelayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */; };
 		5BE281BE2AE2CCAE00880466 /* StoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE281BD2AE2CCAE00880466 /* StoriesView.swift */; };
@@ -522,7 +522,7 @@
 		5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorListView.swift; sourceTree = "<group>"; };
 		5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextFieldObserver.swift; sourceTree = "<group>"; };
 		5B8C96B129DB313300B73AEC /* AuthorCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorCard.swift; sourceTree = "<group>"; };
-		5B8C96B529DDD3B200B73AEC /* EditableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableText.swift; sourceTree = "<group>"; };
+		5B8C96B529DDD3B200B73AEC /* NoteTextViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTextViewRepresentable.swift; sourceTree = "<group>"; };
 		5B960D2C2B34B1B900C52C45 /* Nos 14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 14.xcdatamodel"; sourceTree = "<group>"; };
 		5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesAPI.swift; sourceTree = "<group>"; };
 		5BE281BD2AE2CCAE00880466 /* StoriesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoriesView.swift; sourceTree = "<group>"; };
@@ -1367,7 +1367,7 @@
 				C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */,
 				C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */,
 				5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */,
-				5B8C96B529DDD3B200B73AEC /* EditableText.swift */,
+				5B8C96B529DDD3B200B73AEC /* NoteTextViewRepresentable.swift */,
 				A303AF8229A9153A005DC8FC /* FollowButton.swift */,
 				A32B6C7729A6C99200653FF5 /* FollowCard.swift */,
 				A32B6C7229A6BE9B00653FF5 /* FollowsView.swift */,
@@ -1869,7 +1869,7 @@
 				C96877BB2B4EDE510051ED2F /* StoryAvatarView.swift in Sources */,
 				C95D68A3299E6D9000429F86 /* SelectableText.swift in Sources */,
 				C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */,
-				5B8C96B629DDD3B200B73AEC /* EditableText.swift in Sources */,
+				5B8C96B629DDD3B200B73AEC /* NoteTextViewRepresentable.swift in Sources */,
 				C93EC2F129C337EB0012EE2A /* RelayPicker.swift in Sources */,
 				C9F0BB6F29A50437000547FC /* NostrConstants.swift in Sources */,
 				C96D39272B61B6D200D3D0A1 /* RawNostrID.swift in Sources */,
