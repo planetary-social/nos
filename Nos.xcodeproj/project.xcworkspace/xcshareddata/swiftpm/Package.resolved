@@ -1,4 +1,5 @@
 {
+  "originHash" : "f889fc496d00eae428bb86f5344fcd65cbaf9950d7c333d022b463b4753642b0",
   "pins" : [
     {
       "identity" : "bech32",
@@ -59,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/PostHog/posthog-ios.git",
       "state" : {
-        "revision" : "aaacd41c9109af0e56ddec8da1566e98717c92ff",
-        "version" : "2.0.0"
+        "revision" : "d127599034e08f12f340e5e2da13090a894d55d6",
+        "version" : "3.2.4"
       }
     },
     {
@@ -113,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/getsentry/sentry-cocoa.git",
       "state" : {
-        "revision" : "d062d9b31ccabdec706134f2216476d1996caf11",
-        "version" : "8.10.0"
+        "revision" : "bf7bdd75e25556d0f97ad54fb804b4287863e106",
+        "version" : "8.22.4"
       }
     },
     {
@@ -122,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/daltoniam/Starscream.git",
       "state" : {
-        "revision" : "ac6c0fc9da221873e01bd1a0d4818498a71eef33",
-        "version" : "4.0.6"
+        "revision" : "c6bfd1af48efcc9a9ad203665db12375ba6b145a",
+        "version" : "4.0.8"
       }
     },
     {
@@ -316,5 +317,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
