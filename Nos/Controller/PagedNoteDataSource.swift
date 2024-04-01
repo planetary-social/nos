@@ -87,13 +87,16 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     // MARK: - UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        fetchedResultsController.fetchedObjects?.count ?? 0
+        let numberOfItems = fetchedResultsController.fetchedObjects?.count ?? 0
+        Log.debug("Number of items: \(numberOfItems) in section: \(section)")
+        return numberOfItems
     }
     
     func collectionView(
         _ collectionView: UICollectionView, 
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
+        Log.debug("cellForItemAt: \(indexPath)")
         loadMoreIfNeeded(for: indexPath)
         
         let note = fetchedResultsController.object(at: indexPath) 
