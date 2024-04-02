@@ -114,6 +114,7 @@ struct ImagePickerButton<Label>: View where Label: View {
                 cameraDevice: .rear,
                 onCompletion: userPicked
             ) 
+            .edgesIgnoringSafeArea(.bottom)
         }
     }
     

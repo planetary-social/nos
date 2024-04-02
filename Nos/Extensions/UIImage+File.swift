@@ -1,11 +1,5 @@
-//
-//  UIImage+File.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 4/2/24.
-//
-
 import UIKit
+import Logger
 
 extension UIImage {
     
