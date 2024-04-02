@@ -1,21 +1,19 @@
 import Foundation
 import SwiftUI
 
-struct AttachedFile {
-    var image: UIImage
-}
-
 protocol FileStorageAPI {
-    func upload(file: AttachedFile) async throws -> URL
+    func upload(fileAt fileURL: URL) async throws -> URL
 }
 
 class NostrBuildFileStorageAPI: FileStorageAPI {
 
     static let uploadURL = URL(string: "https://nostr.build/api/upload/ios.php")!
-    static let fileName = "file.jpg"
     static let paramName = "fileToUpload"
     
-    func upload(file: AttachedFile) async throws -> URL {
+    func upload(fileAt fileURL: URL) async throws -> URL {
+        var fileName = fileURL.lastPathComponent
+        let fileData = try Data(contentsOf: fileURL)
+        
         let boundary = UUID().uuidString
         var request = URLRequest(url: Self.uploadURL)
         request.httpMethod = "POST"
@@ -23,7 +21,7 @@ class NostrBuildFileStorageAPI: FileStorageAPI {
         
         var header = ""
         header.append("\r\n--\(boundary)\r\n")
-        header.append("Content-Disposition: form-data; name=\"\(Self.paramName)\"; filename=\"\(Self.fileName)\"\r\n")
+        header.append("Content-Disposition: form-data; name=\"\(Self.paramName)\"; filename=\"\(fileName)\"\r\n")
         header.append("Content-Type: image/jpg\r\n\r\n")
         
         var trailer = ""
@@ -33,13 +31,9 @@ class NostrBuildFileStorageAPI: FileStorageAPI {
             throw FileStorageAPIError.errorEncodingHeaderOrFooter
         }
         
-        guard let imageData = file.image.jpegData(compressionQuality: 85) else {
-            throw FileStorageAPIError.errorEncodingImage
-        }
-        
         var data = Data()
         data.append(headerData)
-        data.append(imageData)
+        data.append(fileData)
         data.append(trailerData)
         
         let (responseData, _) = try await URLSession.shared.upload(for: request, from: data)

@@ -41,12 +41,11 @@ struct ComposerActionBar: View {
             switch subMenu {
             case .none:
                 // Attach Media
-                ImagePickerButton { image in
+                ImagePickerButton { imageURL in
                     Task {
                         do {
                             startUploadingImage()
-                            let attachedFile = AttachedFile(image: image)
-                            let url = try await fileStorageAPI.upload(file: attachedFile)
+                            let url = try await fileStorageAPI.upload(fileAt: imageURL)
                             text.append(url)
                             endUploadingImage()
                         } catch {

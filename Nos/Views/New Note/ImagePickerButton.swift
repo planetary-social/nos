@@ -4,7 +4,7 @@ import Dependencies
 
 struct ImagePickerButton<Label>: View where Label: View {
 
-    var onCompletion: ((UIImage) -> Void)
+    var onCompletion: ((URL) -> Void)
 
     var label: () -> Label
 
@@ -110,17 +110,23 @@ struct ImagePickerButton<Label>: View where Label: View {
         )
         .sheet(isPresented: showImagePicker) {
             ImagePickerUIViewController(
-                sourceType: imagePickerSource ?? .photoLibrary, cameraDevice: .rear
-            ) { imagePicked in
-                if let image = imagePicked {
-                    analytics.selectedImage()
-                    onCompletion(image)
-                } else {
-                    analytics.cancelledImageSelection()
-                }
-                imagePickerSource = nil
-            }
+                sourceType: imagePickerSource ?? .photoLibrary, 
+                cameraDevice: .rear,
+                onCompletion: userPicked
+            ) 
         }
+    }
+    
+    /// Called when a user chooses an image or video.
+    /// - Parameter url: The URL of the image or video on disk.
+    func userPicked(url: URL?) {
+        if let url {
+            analytics.selectedImage()
+            onCompletion(url)
+        } else {
+            analytics.cancelledImageSelection()
+        }
+        imagePickerSource = nil
     }
 }
 
