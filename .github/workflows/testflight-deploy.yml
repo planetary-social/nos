@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   fastlane-deploy:
-    runs-on: macOS-14
+    runs-on: macOS-14-large
     steps:
       - name: Checkout
         uses: actions/checkout@main
