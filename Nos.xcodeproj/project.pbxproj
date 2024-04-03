@@ -2222,7 +2222,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "STAGING=1";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nos/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Nos (staging)";
+				INFOPLIST_KEY_CFBundleDisplayName = "Nos Staging";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Nos can access camera to allow users to post photos directly.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -2416,7 +2416,7 @@
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nos/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Nos (dev)";
+				INFOPLIST_KEY_CFBundleDisplayName = "Nos Dev";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Nos can access camera to allow users to post photos directly.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -2437,7 +2437,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MARKETING_VERSION = 0.1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.verse.Nos-dev";
-				PRODUCT_NAME = "$(TARGET_NAME) (dev)";
+				PRODUCT_NAME = "$(TARGET_NAME) Dev";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development com.verse.Nos-dev";
 				SCHEME_PREFIX = "nos-dev";
