@@ -21,8 +21,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@main
       - uses: nomasystems/action-xcode-select@v0.1
-        with:
-          xcode-version: '15.3'
       - name: Build Nos
         run: set -o pipefail && xcodebuild build-for-testing -skipPackagePluginValidation -skipMacroValidation -project Nos.xcodeproj -scheme NosTests -destination "$SIMULATOR" | xcpretty
       - name: Run Tests
