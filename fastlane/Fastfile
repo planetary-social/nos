@@ -101,7 +101,7 @@ platform :ios do
   desc "Push a new Nos Dev build to TestFlight"
   lane :dev do
     push_build(
-      scheme: "NosDev",
+      scheme: "Nos",
       appidentifier: "com.verse.Nos-dev",
       tagprefix: "dev-",
       appsecretspath: app_dev_secrets_path,
@@ -123,7 +123,7 @@ platform :ios do
   desc "Push a new Nos Release build to TestFlight"
   lane :release do
     push_build(
-      scheme: "Nos",
+      scheme: "NosProduction",
       appidentifier: "com.verse.Nos",
       tagprefix: "",
       appsecretspath: app_production_secrets_path,
