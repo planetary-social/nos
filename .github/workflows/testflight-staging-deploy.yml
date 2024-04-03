@@ -17,6 +17,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@main
       - uses: nomasystems/action-xcode-select@v0.1
+        with:
+          xcode-version: '15.3'
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
