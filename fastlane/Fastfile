@@ -23,10 +23,12 @@ platform :ios do
   sentry_auth = ENV["SENTRY_AUTH"]
   is_ci = ENV["CI"]
   app_secrets = ENV["APP_SECRETS"]
-  app_secrets_path = "../Nos/Assets/ProductionSecrets.xcconfig"
+  app_production_secrets_path = "../Nos/Assets/ProductionSecrets.xcconfig"
+  app_staging_secrets_path = "../Nos/Assets/StagingSecrets.xcconfig"
+  app_dev_secrets_path = "../Nos/Assets/DevSecrets.xcconfig"
 
-  desc "Push a new development build to TestFlight"
-  lane :dev do
+  desc "Push a new build to TestFlight using the provided scheme and identifier"
+  private_lane :push_build do |options|
     app_store_connect_api_key(
       key_id: asc_key_id,
       issuer_id: asc_issuer_id,
@@ -44,36 +46,42 @@ platform :ios do
       )
       match(
           type: "appstore",  
-	  readonly: true,
+          readonly: true,
+          app_identifier: options[:appidentifier],
           keychain_name: "keychain",
           keychain_password: keychain_pass
         )
-      File.open(app_secrets_path, 'w') do |file|
+      File.open(options[:appsecretspath], 'w') do |file|
         file.puts app_secrets
       end
     else
-      match(type: "appstore", readonly: is_ci)
+      match(
+        type: "appstore", 
+        readonly: false,
+        app_identifier: options[:appidentifier]
+      )
     end
     version_number = get_version_number(
       xcodeproj: "Nos.xcodeproj",
       target: "Nos"
     )
-    build_number = latest_testflight_build_number + 1
+    build_number = latest_testflight_build_number(app_identifier: options[:appidentifier]) + 1
     increment_build_number(build_number: build_number)
     gym(
-      scheme: "Nos", 
+      scheme: options[:scheme], 
       clean: true,
       xcargs: "-skipPackagePluginValidation"
     )
     if is_ci
-      sh("rm", app_secrets_path)
+      sh("rm", options[:appsecretspath])
     end
     changelog = read_changelog
     upload_to_testflight(
       changelog: changelog,
+      app_identifier: options[:app_identifier],
       skip_waiting_for_build_processing: is_ci
     )
-    add_git_tag(tag: "v#{version_number}-#{build_number}")
+    add_git_tag(tag: "v#{options[:tagprefix]}#{version_number}-#{build_number}")
     push_git_tags
     sentry_upload_dif(
       org_slug: 'verse',
@@ -86,7 +94,40 @@ platform :ios do
       subtitle: "Build uploaded", 
       message: "tap to open App Store Connect", 
       sound: "Pebble", 
-      open: "https://appstoreconnect.apple.com/apps/1670125746/testflight/ios"
+      open: options[:appstoreconnect]
+    )
+  end
+
+  desc "Push a new Nos Dev build to TestFlight"
+  lane :dev do
+    push_build(
+      scheme: "Nos",
+      appidentifier: "com.verse.Nos-dev",
+      tagprefix: "dev-",
+      appsecretspath: app_dev_secrets_path,
+      appstoreconnect: "https://appstoreconnect.apple.com/apps/6479583778/testflight/ios"
+    )
+  end
+
+  desc "Push a new Nos Staging build to TestFlight"
+  lane :staging do
+    push_build(
+      scheme: "NosStaging",
+      appidentifier: "com.verse.Nos-staging",
+      tagprefix: "staging-",
+      appsecretspath: app_staging_secrets_path,
+      appstoreconnect: "https://appstoreconnect.apple.com/apps/6479681443/testflight/ios"
+    )
+  end
+
+  desc "Push a new Nos Release build to TestFlight"
+  lane :release do
+    push_build(
+      scheme: "NosProduction",
+      appidentifier: "com.verse.Nos",
+      tagprefix: "",
+      appsecretspath: app_production_secrets_path,
+      appstoreconnect: "https://appstoreconnect.apple.com/apps/6479583869/testflight/ios"
     )
   end
 
@@ -112,8 +153,8 @@ platform :ios do
       issuer_id: asc_issuer_id,
       key_content: asc_key_content
     )
-    match(type: "appstore")
-    match(type: "development")
+    match(type: "appstore", app_identifier: ["com.verse.Nos", "com.verse.Nos-dev", "com.verse.Nos-staging"])
+    match(type: "development", app_identifier: ["com.verse.Nos", "com.verse.Nos-dev", "com.verse.Nos-staging"])
   end
 
   desc "Clean App Store Connect of certificates"
