@@ -23,7 +23,7 @@ struct WizardNavigationStack<Root>: View where Root: View {
 #Preview {
     Color.clear.sheet(isPresented: .constant(true)) {
         WizardNavigationStack {
-            PlainText("Hello")
+            Text("Hello")
         }
     }
 }

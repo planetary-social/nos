@@ -11,11 +11,11 @@ struct NoteButton: View {
 
     var note: Event
     var style = CardStyle.compact
-    var showFullMessage = false
-    var hideOutOfNetwork = true
-    var showReplyCount = true
-    var displayRootMessage = false
-    var isTapEnabled = true
+    var shouldTruncate: Bool
+    var hideOutOfNetwork: Bool
+    var showReplyCount: Bool
+    var displayRootMessage: Bool 
+    var isTapEnabled: Bool 
     private let replyAction: ((Event) -> Void)?
     private let tapAction: ((Event) -> Void)?
 
@@ -24,7 +24,7 @@ struct NoteButton: View {
     init(
         note: Event, 
         style: CardStyle = CardStyle.compact, 
-        showFullMessage: Bool = false, 
+        shouldTruncate: Bool = true, 
         hideOutOfNetwork: Bool = true, 
         showReplyCount: Bool = true, 
         displayRootMessage: Bool = false,
@@ -34,7 +34,7 @@ struct NoteButton: View {
     ) {
         self.note = note
         self.style = style
-        self.showFullMessage = showFullMessage
+        self.shouldTruncate = shouldTruncate
         self.hideOutOfNetwork = hideOutOfNetwork
         self.showReplyCount = showReplyCount
         self.displayRootMessage = displayRootMessage
@@ -63,7 +63,7 @@ struct NoteButton: View {
                         AuthorLabel(author: author)
                         Image.repostSymbol
                         if let elapsedTime = note.createdAt?.distanceString() {
-                            PlainText(elapsedTime)
+                            Text(elapsedTime)
                                 .lineLimit(1)
                                 .font(.clarity(.medium))
                                 .foregroundColor(.secondaryTxt)
@@ -78,7 +78,7 @@ struct NoteButton: View {
             let buttonLabel = NoteCard(
                 note: displayedNote,
                 style: style,
-                showFullMessage: showFullMessage,
+                shouldTruncate: shouldTruncate,
                 hideOutOfNetwork: hideOutOfNetwork,
                 showReplyCount: showReplyCount,
                 replyAction: replyAction

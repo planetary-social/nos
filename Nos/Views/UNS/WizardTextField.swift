@@ -8,10 +8,10 @@ struct WizardTextField: View {
     
     var body: some View {
         TextField(text: text) {
-            PlainText(placeholder)
+            Text(placeholder)
                 .foregroundColor(.secondaryTxt)
         }
-        .font(.clarityTitle2)
+        .font(.clarity(.bold, textStyle: .title2))
         .foregroundColor(.primaryTxt)
         .multilineTextAlignment(.center)
         .padding(19)

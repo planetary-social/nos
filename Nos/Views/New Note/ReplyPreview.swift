@@ -10,7 +10,7 @@ struct ReplyPreview: View {
         VStack(spacing: 8) {
             HStack {
                 AvatarView(imageUrl: note.author?.profilePhotoURL, size: 30)
-                PlainText(note.author?.safeName ?? "")
+                Text(note.author?.safeName ?? "")
                     .font(.clarity(.bold, textStyle: .subheadline))
                     .foregroundColor(.primaryTxt)
                 Text(note.createdAt?.distanceString() ?? "")
@@ -20,7 +20,7 @@ struct ReplyPreview: View {
             .padding(.horizontal, 24)
             .padding(.top, 24)
             
-            CompactNoteView(note: note, showFullMessage: true, showLinkPreviews: false, allowUserInteraction: false)
+            CompactNoteView(note: note, shouldTruncate: false, showLinkPreviews: false, allowUserInteraction: false)
                 .padding(.horizontal, 9)
             
             HStack {

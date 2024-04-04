@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0378409D2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */; };
 		038985182B7AD6C0009C16CA /* String+MarkdownTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038985172B7AD6BF009C16CA /* String+MarkdownTests.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
@@ -64,7 +65,7 @@
 		5B8C96AC29D52AD200B73AEC /* AuthorListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */; };
 		5B8C96B029DB2E1100B73AEC /* SearchTextFieldObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */; };
 		5B8C96B229DB313300B73AEC /* AuthorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B129DB313300B73AEC /* AuthorCard.swift */; };
-		5B8C96B629DDD3B200B73AEC /* EditableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B529DDD3B200B73AEC /* EditableText.swift */; };
+		5B8C96B629DDD3B200B73AEC /* NoteTextViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B529DDD3B200B73AEC /* NoteTextViewRepresentable.swift */; };
 		5BC0D9CC2B867B9D005D6980 /* NamesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */; };
 		5BD08BB22A38E96F00BB926C /* JSONRelayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */; };
 		5BE281BE2AE2CCAE00880466 /* StoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE281BD2AE2CCAE00880466 /* StoriesView.swift */; };
@@ -88,6 +89,7 @@
 		A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */; };
 		A3B943D8299D758F00A15A08 /* KeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943CE299AE00100A15A08 /* KeyChain.swift */; };
 		C900385F2B6195C60080CC4F /* FollowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C900385E2B6195C60080CC4F /* FollowTests.swift */; };
+		C9032C2E2BAE31ED001F4EC6 /* ProfileFeedType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9032C2D2BAE31ED001F4EC6 /* ProfileFeedType.swift */; };
 		C905B0752A619367009B8A78 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = C905B0742A619367009B8A78 /* DequeModule */; };
 		C905B0772A619E99009B8A78 /* LinkPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C905B0762A619E99009B8A78 /* LinkPreview.swift */; };
 		C90862BE29E9804B00C35A71 /* NosPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90862BD29E9804B00C35A71 /* NosPerformanceTests.swift */; };
@@ -471,6 +473,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		038985172B7AD6BF009C16CA /* String+MarkdownTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+MarkdownTests.swift"; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
@@ -519,7 +522,7 @@
 		5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorListView.swift; sourceTree = "<group>"; };
 		5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextFieldObserver.swift; sourceTree = "<group>"; };
 		5B8C96B129DB313300B73AEC /* AuthorCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorCard.swift; sourceTree = "<group>"; };
-		5B8C96B529DDD3B200B73AEC /* EditableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableText.swift; sourceTree = "<group>"; };
+		5B8C96B529DDD3B200B73AEC /* NoteTextViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTextViewRepresentable.swift; sourceTree = "<group>"; };
 		5B960D2C2B34B1B900C52C45 /* Nos 14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 14.xcdatamodel"; sourceTree = "<group>"; };
 		5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesAPI.swift; sourceTree = "<group>"; };
 		5BE281BD2AE2CCAE00880466 /* StoriesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoriesView.swift; sourceTree = "<group>"; };
@@ -545,6 +548,7 @@
 		A3B943CE299AE00100A15A08 /* KeyChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChain.swift; sourceTree = "<group>"; };
 		A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Follow+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C900385E2B6195C60080CC4F /* FollowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowTests.swift; sourceTree = "<group>"; };
+		C9032C2D2BAE31ED001F4EC6 /* ProfileFeedType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileFeedType.swift; sourceTree = "<group>"; };
 		C905B0762A619E99009B8A78 /* LinkPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPreview.swift; sourceTree = "<group>"; };
 		C90862BB29E9804B00C35A71 /* NosPerformanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NosPerformanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C90862BD29E9804B00C35A71 /* NosPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosPerformanceTests.swift; sourceTree = "<group>"; };
@@ -949,6 +953,19 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		C9032C2C2BAE31DA001F4EC6 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				C95D689E299E6B4100429F86 /* ProfileHeader.swift */,
+				5B834F662A83FB5C000C1432 /* ProfileKnownFollowersView.swift */,
+				5B834F682A83FC7F000C1432 /* ProfileSocialStatsView.swift */,
+				C987F81C29BA6D9A00B44E7A /* ProfileTab.swift */,
+				C95D68AC299E721700429F86 /* ProfileView.swift */,
+				C9032C2D2BAE31ED001F4EC6 /* ProfileFeedType.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
 		C905EA362A33620A006F1E99 /* UNS */ = {
 			isa = PBXGroup;
 			children = (
@@ -1145,6 +1162,7 @@
 				C97797B7298AA1600046BD25 /* Service */,
 				C9EB171929E5976700A15ABB /* Controller */,
 				C9F84C24298DC7C100C6714D /* Views */,
+				0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Nos;
 			sourceTree = "<group>";
@@ -1355,7 +1373,7 @@
 				C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */,
 				C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */,
 				5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */,
-				5B8C96B529DDD3B200B73AEC /* EditableText.swift */,
+				5B8C96B529DDD3B200B73AEC /* NoteTextViewRepresentable.swift */,
 				A303AF8229A9153A005DC8FC /* FollowButton.swift */,
 				A32B6C7729A6C99200653FF5 /* FollowCard.swift */,
 				A32B6C7229A6BE9B00653FF5 /* FollowsView.swift */,
@@ -1380,11 +1398,6 @@
 				C95D68A4299E6E1E00429F86 /* PlaceholderModifier.swift */,
 				C9E37E112A1E7EC5003D4B0A /* PreviewContainer.swift */,
 				C94BC09A2A0AC74A0098F6F1 /* PreviewData.swift */,
-				C95D689E299E6B4100429F86 /* ProfileHeader.swift */,
-				5B834F662A83FB5C000C1432 /* ProfileKnownFollowersView.swift */,
-				5B834F682A83FC7F000C1432 /* ProfileSocialStatsView.swift */,
-				C987F81C29BA6D9A00B44E7A /* ProfileTab.swift */,
-				C95D68AC299E721700429F86 /* ProfileView.swift */,
 				5BFF66B32A58853D00AA79DD /* PublishedEventsView.swift */,
 				C97A1C8729E45B3C009D9E8D /* RawEventView.swift */,
 				C9A25B3C29F174D200B39534 /* ReadabilityPadding.swift */,
@@ -1421,6 +1434,7 @@
 				C9EE3E652A053CF1008A7491 /* New Note */,
 				3FB5E64F299D288E00386527 /* Onboarding */,
 				C9DEBFDD298941020078B43A /* Preview Content */,
+				C9032C2C2BAE31DA001F4EC6 /* Profile */,
 				5B79F5E92B97B5D7002DA9BE /* ProfileEdit */,
 				C905EA362A33620A006F1E99 /* UNS */,
 				C9F2046E2ADEDDCA0029A858 /* USBC */,
@@ -1602,22 +1616,22 @@
 			);
 			mainGroup = C9DEBFC5298941000078B43A;
 			packageReferences = (
-				C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */,
-				C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */,
+				C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream.git" */,
+				C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
 				C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */,
-				C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32" */,
+				C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32.git" */,
 				C9646E9829B79E04007239A4 /* XCRemoteSwiftPackageReference "logger-ios" */,
-				C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */,
+				C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios.git" */,
 				C9646EA529B7A3DD007239A4 /* XCRemoteSwiftPackageReference "swift-dependencies" */,
-				C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */,
-				C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
+				C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections.git" */,
+				C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */,
 				C99DBF7C2A9E81CF00F7068F /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */,
 				C95F0AC82ABA379700A0D9CE /* XCRemoteSwiftPackageReference "WalletConnectSwiftV2" */,
-				C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3" */,
+				C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3.swift" */,
 				C9332C642ADED0D700AD7B0E /* XCLocalSwiftPackageReference "StarscreamOld" */,
 				C91565BF2B2368FA0068EECA /* XCRemoteSwiftPackageReference "ViewInspector" */,
-				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */,
+				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -1649,6 +1663,7 @@
 				C987F83A29BA951E00B44E7A /* ClarityCity-BoldItalic.otf in Resources */,
 				C987F84A29BA951E00B44E7A /* ClarityCity-Medium.otf in Resources */,
 				3A1C296F2B2A537C0020B753 /* Moderation.xcstrings in Resources */,
+				0378409D2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy in Resources */,
 				C9DEBFDF298941020078B43A /* Preview Assets.xcassets in Resources */,
 				C987F84E29BA951E00B44E7A /* ClarityCity-RegularItalic.otf in Resources */,
 				3A67449C2B294712002B8DE0 /* Localizable.xcstrings in Resources */,
@@ -1860,7 +1875,7 @@
 				C96877BB2B4EDE510051ED2F /* StoryAvatarView.swift in Sources */,
 				C95D68A3299E6D9000429F86 /* SelectableText.swift in Sources */,
 				C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */,
-				5B8C96B629DDD3B200B73AEC /* EditableText.swift in Sources */,
+				5B8C96B629DDD3B200B73AEC /* NoteTextViewRepresentable.swift in Sources */,
 				C93EC2F129C337EB0012EE2A /* RelayPicker.swift in Sources */,
 				C9F0BB6F29A50437000547FC /* NostrConstants.swift in Sources */,
 				C96D39272B61B6D200D3D0A1 /* RawNostrID.swift in Sources */,
@@ -1921,6 +1936,7 @@
 				C9F0BB6929A5039D000547FC /* Int+Bool.swift in Sources */,
 				DC5F203F2A6AE24200F8D73F /* ImagePickerButton.swift in Sources */,
 				5B79F5EB2B97B5E9002DA9BE /* ConfirmUsernameDeletionSheet.swift in Sources */,
+				C9032C2E2BAE31ED001F4EC6 /* ProfileFeedType.swift in Sources */,
 				C981E2DD2AC610D600FBF4F6 /* UNSStepImage.swift in Sources */,
 				C9CDBBA429A8FA2900C555C7 /* GoldenPostView.swift in Sources */,
 				C92F01582AC4D6F700972489 /* NosTextField.swift in Sources */,
@@ -2112,11 +2128,11 @@
 /* Begin PBXTargetDependency section */
 		3AD3185D2B294E9000026B07 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 3AD3185C2B294E9000026B07 /* XCStringsToolPlugin */;
+			productRef = 3AD3185C2B294E9000026B07 /* plugin:XCStringsToolPlugin */;
 		};
 		3AEABEF32B2BF806001BC933 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 3AEABEF22B2BF806001BC933 /* XCStringsToolPlugin */;
+			productRef = 3AEABEF22B2BF806001BC933 /* plugin:XCStringsToolPlugin */;
 		};
 		C90862C229E9804B00C35A71 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2125,11 +2141,11 @@
 		};
 		C9A6C7442AD83F7A001F9500 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = C9A6C7432AD83F7A001F9500 /* SwiftGenPlugin */;
+			productRef = C9A6C7432AD83F7A001F9500 /* plugin:SwiftGenPlugin */;
 		};
 		C9D573402AB24A3700E06BB4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = C9D5733F2AB24A3700E06BB4 /* SwiftGenPlugin */;
+			productRef = C9D5733F2AB24A3700E06BB4 /* plugin:SwiftGenPlugin */;
 		};
 		C9DEBFE6298941020078B43A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2723,7 +2739,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.7;
+				MARKETING_VERSION = 0.1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.Nos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development com.verse.Nos";
@@ -2777,7 +2793,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.7;
+				MARKETING_VERSION = 0.1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.Nos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2963,7 +2979,7 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */ = {
+		3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/liamnichols/xcstrings-tool-plugin.git";
 			requirement = {
@@ -3003,12 +3019,12 @@
 				minimumVersion = 1.1.0;
 			};
 		};
-		C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
+		C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/PostHog/posthog-ios.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
+				minimumVersion = 3.0.0;
 			};
 		};
 		C9646EA529B7A3DD007239A4 /* XCRemoteSwiftPackageReference "swift-dependencies" */ = {
@@ -3019,7 +3035,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+		C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
 			requirement = {
@@ -3027,7 +3043,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */ = {
+		C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GigaBitcoin/secp256k1.swift";
 			requirement = {
@@ -3043,7 +3059,7 @@
 				minimumVersion = 2.0.0;
 			};
 		};
-		C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3" */ = {
+		C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Boilertalk/Web3.swift";
 			requirement = {
@@ -3051,7 +3067,7 @@
 				minimumVersion = 0.8.4;
 			};
 		};
-		C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32" */ = {
+		C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/0xdeadp00l/bech32.git";
 			requirement = {
@@ -3059,7 +3075,7 @@
 				kind = branch;
 			};
 		};
-		C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+		C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
 			requirement = {
@@ -3083,7 +3099,7 @@
 				minimumVersion = 6.6.2;
 			};
 		};
-		C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */ = {
+		C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/daltoniam/Starscream.git";
 			requirement = {
@@ -3094,19 +3110,19 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3AD3185C2B294E9000026B07 /* XCStringsToolPlugin */ = {
+		3AD3185C2B294E9000026B07 /* plugin:XCStringsToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
+			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */;
 			productName = "plugin:XCStringsToolPlugin";
 		};
-		3AEABEF22B2BF806001BC933 /* XCStringsToolPlugin */ = {
+		3AEABEF22B2BF806001BC933 /* plugin:XCStringsToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
+			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */;
 			productName = "plugin:XCStringsToolPlugin";
 		};
 		C905B0742A619367009B8A78 /* DequeModule */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
+			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections.git" */;
 			productName = DequeModule;
 		};
 		C91565C02B2368FA0068EECA /* ViewInspector */ = {
@@ -3129,7 +3145,7 @@
 		};
 		C94824492B32364900005B36 /* Web3 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3" */;
+			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3.swift" */;
 			productName = Web3;
 		};
 		C94D855E29914D2300749478 /* SwiftUINavigation */ = {
@@ -3154,7 +3170,7 @@
 		};
 		C9646EA329B7A24A007239A4 /* PostHog */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */;
+			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios.git" */;
 			productName = PostHog;
 		};
 		C9646EA629B7A3DD007239A4 /* Dependencies */ = {
@@ -3164,7 +3180,7 @@
 		};
 		C9646EA829B7A4F2007239A4 /* PostHog */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */;
+			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios.git" */;
 			productName = PostHog;
 		};
 		C9646EAB29B7A520007239A4 /* Dependencies */ = {
@@ -3174,17 +3190,17 @@
 		};
 		C96CB98B2A6040C500498C4E /* DequeModule */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
+			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections.git" */;
 			productName = DequeModule;
 		};
 		C97797BB298AB1890046BD25 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */;
+			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1.swift" */;
 			productName = secp256k1;
 		};
 		C97797BE298ABE060046BD25 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */;
+			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1.swift" */;
 			productName = secp256k1;
 		};
 		C99DBF7D2A9E81CF00F7068F /* SDWebImageSwiftUI */ = {
@@ -3202,7 +3218,7 @@
 			package = C99DBF7C2A9E81CF00F7068F /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
 			productName = SDWebImageSwiftUI;
 		};
-		C9A6C7432AD83F7A001F9500 /* SwiftGenPlugin */ = {
+		C9A6C7432AD83F7A001F9500 /* plugin:SwiftGenPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */;
 			productName = "plugin:SwiftGenPlugin";
@@ -3214,7 +3230,7 @@
 		};
 		C9AA1BB92ABB62EB00E8BD6D /* Web3 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3" */;
+			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3.swift" */;
 			productName = Web3;
 		};
 		C9AA1BBB2ABB6E8900E8BD6D /* WalletConnectModal */ = {
@@ -3224,17 +3240,17 @@
 		};
 		C9B71DBD2A8E9BAD0031ED9F /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */;
 			productName = Sentry;
 		};
 		C9B71DBF2A8E9BAD0031ED9F /* SentrySwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */;
 			productName = SentrySwiftUI;
 		};
 		C9B71DC42A9008300031ED9F /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */;
 			productName = Sentry;
 		};
 		C9BA85902B23628300AFC2C3 /* Logger */ = {
@@ -3254,12 +3270,12 @@
 		};
 		C9BA85962B23638700AFC2C3 /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */;
+			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream.git" */;
 			productName = Starscream;
 		};
 		C9BA85982B23638700AFC2C3 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */;
+			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1.swift" */;
 			productName = secp256k1;
 		};
 		C9BA859A2B23638700AFC2C3 /* SwiftUINavigation */ = {
@@ -3269,17 +3285,17 @@
 		};
 		C9BA859C2B23638700AFC2C3 /* PostHog */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */;
+			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios.git" */;
 			productName = PostHog;
 		};
 		C9BA859E2B23638700AFC2C3 /* DequeModule */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
+			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections.git" */;
 			productName = DequeModule;
 		};
 		C9BA85A02B23638700AFC2C3 /* SentrySwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */;
 			productName = SentrySwiftUI;
 		};
 		C9BA85A22B23638700AFC2C3 /* WalletConnect */ = {
@@ -3289,7 +3305,7 @@
 		};
 		C9BA85A42B23638700AFC2C3 /* Web3 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3" */;
+			package = C9AA1BB82ABB62EB00E8BD6D /* XCRemoteSwiftPackageReference "Web3.swift" */;
 			productName = Web3;
 		};
 		C9BA85A62B23638700AFC2C3 /* StarscreamOld */ = {
@@ -3304,22 +3320,22 @@
 		};
 		C9BA85AA2B2363CA00AFC2C3 /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */;
 			productName = Sentry;
 		};
-		C9D5733F2AB24A3700E06BB4 /* SwiftGenPlugin */ = {
+		C9D5733F2AB24A3700E06BB4 /* plugin:SwiftGenPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9C8450C2AB249DB00654BC1 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */;
 			productName = "plugin:SwiftGenPlugin";
 		};
 		C9DEC067298965270078B43A /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */;
+			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream.git" */;
 			productName = Starscream;
 		};
 		CDDA1F7A29A527650047ACD8 /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */;
+			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream.git" */;
 			productName = Starscream;
 		};
 		CDDA1F7C29A527650047ACD8 /* SwiftUINavigation */ = {

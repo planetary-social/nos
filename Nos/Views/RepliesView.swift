@@ -98,7 +98,7 @@ struct RepliesView: View {
                     VStack {
                         NoteButton(
                             note: note,
-                            showFullMessage: true,
+                            shouldTruncate: false,
                             hideOutOfNetwork: false,
                             showReplyCount: false,
                             displayRootMessage: true,

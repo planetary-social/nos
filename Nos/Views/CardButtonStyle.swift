@@ -44,7 +44,7 @@ extension View {
         Button {
         } label: { 
             VStack {
-                PlainText("hello world")
+                Text("hello world")
                     .padding()
             }
             .background(Color.cardBgTop.cornerRadius(18))

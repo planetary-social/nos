@@ -22,8 +22,8 @@ struct UNSVerifyCodeView: View {
                         .padding(40)
                         .padding(.top, 50)
                     
-                    PlainText(.localizable.verification)
-                        .font(.clarityTitle)
+                    Text(.localizable.verification)
+                        .font(.clarity(.bold, textStyle: .title1))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
@@ -34,7 +34,7 @@ struct UNSVerifyCodeView: View {
                         highlightedWord: phoneString,
                         highlight: LinearGradient(colors: [.primaryTxt], startPoint: .top, endPoint: .bottom),
                         textColor: .secondaryTxt,
-                        font: .clarityMedium,
+                        font: .clarity(.medium),
                         link: nil
                     )
                     .fixedSize(horizontal: false, vertical: true)

@@ -51,7 +51,7 @@ struct GoldenPostView: View {
                 HStack(alignment: .center) {
                     AvatarView(imageUrl: author.profilePhotoURL, size: 20)
                     // if !post.isBlobOnly {
-                    PlainText(author.safeName)
+                    Text(author.safeName)
                         .lineLimit(1)
                         .font(.clarity(.regular, textStyle: .subheadline))
                         .foregroundColor(Color.secondaryTxt)

@@ -12,12 +12,12 @@ struct WizardSheetDescriptionText: View {
         case plainText(LocalizedStringResource)
         case markdown(AttributedString)
         
-        var text: SwiftUI.Text {
+        var text: Text {
             switch self {
             case .plainText(let localizedStringResource):
-                return SwiftUI.Text(localizedStringResource)
+                return Text(localizedStringResource)
             case .markdown(let attributedString):
-                return SwiftUI.Text(attributedString)
+                return Text(attributedString)
             }
         }
     }

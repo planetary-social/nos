@@ -1,5 +1,7 @@
+#if DEBUG
 import SwiftUI
 
+/// Only used for debugging. Settings > All published events.
 struct PublishedEventsView: View {
 
     var author: Author
@@ -43,3 +45,4 @@ struct PublishedEventsView_Previews: PreviewProvider {
         PublishedEventsView(author: previewData.previewAuthor)
     }
 }
+#endif

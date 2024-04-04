@@ -13,7 +13,7 @@ struct WizardSheetBadgeText: View {
     }
 
     var body: some View {
-        SwiftUI.Text(String(localized: localizedStringResource).uppercased())
+        Text(String(localized: localizedStringResource).uppercased())
             .padding(.horizontal, 6)
             .padding(.vertical, 5)
             .font(.clarity(.bold, textStyle: .footnote))

@@ -14,10 +14,10 @@ struct ExpirationTimeButton: View {
                 VStack {
                     Text(model.topText)
                         .foregroundColor(.primaryTxt)
-                        .bold()
-                    PlainText(model.unit)
+                        .font(.clarity(.bold))
+                    Text(model.unit)
                         .foregroundColor(.secondaryTxt)
-                        .font(.clarityCaption2)
+                        .font(.clarity(.regular, textStyle: .caption2))
                 }
                 
                 if showClearButton {
