@@ -1,5 +1,3 @@
-app_identifier("com.verse.Nos") # The bundle identifier of your app
-
 itc_team_id("119631974") # App Store Connect Team ID
 team_id("GZCZBKH7MY") # Developer Portal Team ID
 

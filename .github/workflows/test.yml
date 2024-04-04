@@ -11,18 +11,18 @@ on:
   push:
     branches: main
 env:
-  SIMULATOR: platform=iOS Simulator,name=iPhone 15,OS=17.2
+  SIMULATOR: platform=iOS Simulator,name=iPhone 15,OS=17.4
     
 jobs:
   unit_test:
     name : Unit Tests
-    runs-on: macOS-13
+    runs-on: macOS-14
     steps:
       - name: Checkout
         uses: actions/checkout@main
       - uses: nomasystems/action-xcode-select@v0.1
       - name: Build Nos
-        run: set -o pipefail && xcodebuild build-for-testing -skipPackagePluginValidation -project Nos.xcodeproj -scheme NosTests -destination "$SIMULATOR" | xcpretty
+        run: set -o pipefail && xcodebuild build-for-testing -skipPackagePluginValidation -skipMacroValidation -project Nos.xcodeproj -scheme NosTests -destination "$SIMULATOR" | xcpretty
       - name: Run Tests
         run: set -o pipefail && xcodebuild test-without-building -project Nos.xcodeproj -scheme NosTests -destination "$SIMULATOR"
   changelog:
