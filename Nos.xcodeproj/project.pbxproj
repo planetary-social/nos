@@ -303,7 +303,6 @@
 		C9ADB14129951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB14029951CB10075E7F8 /* NSManagedObject+Nos.swift */; };
 		C9ADB14229951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB14029951CB10075E7F8 /* NSManagedObject+Nos.swift */; };
 		C9B597652BBC8300002EC76A /* ImagePickerUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B597642BBC8300002EC76A /* ImagePickerUIViewController.swift */; };
-		C9B597772BBC8A39002EC76A /* UIImage+File.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B597762BBC8A39002EC76A /* UIImage+File.swift */; };
 		C9B678DB29EEBF3B00303F33 /* DependencyInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */; };
 		C9B678DC29EEBF3B00303F33 /* DependencyInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */; };
 		C9B678DE29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */; };
@@ -689,7 +688,6 @@
 		C9ADB13C29929B540075E7F8 /* Bech32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bech32.swift; sourceTree = "<group>"; };
 		C9ADB14029951CB10075E7F8 /* NSManagedObject+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Nos.swift"; sourceTree = "<group>"; };
 		C9B597642BBC8300002EC76A /* ImagePickerUIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerUIViewController.swift; sourceTree = "<group>"; };
-		C9B597762BBC8A39002EC76A /* UIImage+File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+File.swift"; sourceTree = "<group>"; };
 		C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyInjection.swift; sourceTree = "<group>"; };
 		C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Sendable.swift"; sourceTree = "<group>"; };
 		C9B678E029EEC41000303F33 /* SocialGraphCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialGraphCache.swift; sourceTree = "<group>"; };
@@ -1230,7 +1228,6 @@
 				C92DF80429C25DE900400561 /* URL+Extensions.swift */,
 				C9F204622ADEDB910029A858 /* Web3Utils.swift */,
 				C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */,
-				C9B597762BBC8A39002EC76A /* UIImage+File.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1990,7 +1987,6 @@
 				C9A0DAEA29C6A34200466635 /* ActivityView.swift in Sources */,
 				CD2CF390299E68BE00332116 /* NoteButton.swift in Sources */,
 				C96877B92B4EDD110051ED2F /* AuthorStoryCarousel.swift in Sources */,
-				C9B597772BBC8A39002EC76A /* UIImage+File.swift in Sources */,
 				C93F48932AC5C9CE00900CEC /* UNSWizardIntroView.swift in Sources */,
 				5B79F6552BA123D4002DA9BE /* WizardSheetBadgeText.swift in Sources */,
 				5BE281C42AE2CCC300880466 /* AuthorStoryView.swift in Sources */,
