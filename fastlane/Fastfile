@@ -70,7 +70,7 @@ platform :ios do
     gym(
       scheme: options[:scheme], 
       clean: true,
-      xcargs: "-skipPackagePluginValidation"
+      xcargs: "-skipPackagePluginValidation -skipMacroValidation"
     )
     if is_ci
       sh("rm", options[:appsecretspath])
