@@ -75,7 +75,6 @@ struct NoteTextEditor: View {
     }
     
     private func insertMention(at offset: Int, author: Author) {
-        Log.error("test")
         // We communicate with the underlying NoteTextViewRepresentable using NSNotification
         NotificationCenter.default.post(
             name: .mentionAddedNotification,
