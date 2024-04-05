@@ -16,7 +16,7 @@ struct AlreadyHaveANIP05View: View {
             Button {
                 isPresented = false
             } label: {
-                PlainText(.localizable.cancel)
+                Text(.localizable.cancel)
                     .font(.clarity(.medium, textStyle: .body))
                     .foregroundStyle(Color.primaryTxt)
                     .padding(.vertical, 20)
@@ -57,11 +57,11 @@ struct AlreadyHaveANIP05View: View {
                             ProgressView()
                                 .frame(height: .zero)
                                 .tint(Color.white)
-                            PlainText(.localizable.next)
+                            Text(.localizable.next)
                                 .hidden()
                         }
                     } else {
-                        PlainText(.localizable.next)
+                        Text(.localizable.next)
                     }
                 }
                 .buttonStyle(BigActionButtonStyle())
