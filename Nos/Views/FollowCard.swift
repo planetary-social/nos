@@ -25,7 +25,7 @@ struct FollowCard: View {
                         AvatarView(imageUrl: author.profilePhotoURL, size: 24)
                         Text(author.safeName)
                             .lineLimit(1)
-                            .font(.subheadline)
+                            .font(.clarity(.regular, textStyle: .subheadline))
                             .foregroundColor(Color.primaryTxt)
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)

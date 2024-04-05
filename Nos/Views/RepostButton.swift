@@ -41,7 +41,7 @@ struct RepostButton: View {
                 }
                 
                 if reposts.count > 0 {
-                    PlainText(reposts.count.description)
+                    Text(reposts.count.description)
                         .font(.clarity(.medium, textStyle: .subheadline))
                         .foregroundColor(.secondaryTxt)
                 }

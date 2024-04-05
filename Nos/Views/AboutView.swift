@@ -10,7 +10,7 @@ struct AboutView: View {
                     .frame(width: 235.45, height: 67.1)
                     .padding(.top, 155)
                     .padding(.bottom, 10)
-                PlainText(.localizable.onboardingTitle)
+                Text(.localizable.onboardingTitle)
                     .font(.custom("ClarityCity-Bold", size: 25.21))
                     .fontWeight(.heavy)
                     .foregroundStyle(

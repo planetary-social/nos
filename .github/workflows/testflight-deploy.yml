@@ -1,8 +1,7 @@
-name: TestFlight dev deployment
+name: TestFlight Release Deployment
 on:
   push:
     branches:
-      - main
       - 'release/**'
   # Enable manual run
   workflow_dispatch:
@@ -13,7 +12,7 @@ concurrency:
 
 jobs:
   fastlane-deploy:
-    runs-on: macOS-13
+    runs-on: macOS-14
     steps:
       - name: Checkout
         uses: actions/checkout@main
@@ -26,7 +25,7 @@ jobs:
       - name: Deploy with fastlane
         run: |
           bundle install
-          bundle exec fastlane dev
+          bundle exec fastlane release
         env:
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ Secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ Secrets.APP_STORE_CONNECT_ISSUER_ID }}

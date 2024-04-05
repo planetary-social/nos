@@ -13,7 +13,7 @@ struct ThreadRootView<Reply: View>: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            NoteButton(note: root, showFullMessage: false, hideOutOfNetwork: false, tapAction: tapAction)
+            NoteButton(note: root, shouldTruncate: true, hideOutOfNetwork: false, tapAction: tapAction)
                 .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                 .readabilityPadding()
                 .opacity(0.7)

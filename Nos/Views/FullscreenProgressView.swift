@@ -14,7 +14,7 @@ struct FullscreenProgressView: View {
             ProgressView()
                 .foregroundColor(.primaryTxt)
             if let text {
-                PlainText(text)
+                Text(text)
                     .font(.clarity(.regular))
                     .padding(.vertical, 10)
                     .padding(.horizontal, 25)

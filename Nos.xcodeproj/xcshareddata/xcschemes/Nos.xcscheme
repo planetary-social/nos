@@ -66,17 +66,6 @@
                BlueprintName = "NosTests"
                ReferencedContainer = "container:Nos.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "EventTests/testFetchEventByIDPerformance()">
-               </Test>
-               <Test
-                  Identifier = "SocialGraphTests/testFollow()">
-               </Test>
-               <Test
-                  Identifier = "SocialGraphTests/testTwoFollows()">
-               </Test>
-            </SkippedTests>
          </TestableReference>
          <TestableReference
             skipped = "YES"
@@ -103,7 +92,7 @@
       </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Dev"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -144,7 +133,7 @@
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Dev"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

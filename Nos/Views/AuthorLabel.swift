@@ -22,7 +22,7 @@ struct AuthorLabel: View {
     var body: some View {
         HStack {
             AvatarView(imageUrl: author.profilePhotoURL, size: 24)
-            SwiftUI.Text(attributedAuthor)
+            Text(attributedAuthor)
                 .lineLimit(1)
                 .font(.clarity(.medium))
                 .multilineTextAlignment(.leading)

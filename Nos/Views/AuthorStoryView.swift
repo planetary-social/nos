@@ -115,12 +115,12 @@ struct AuthorStoryView: View {
                                 .frame(width: 25, height: 25)
                             Text(expirationTime)
                                 .lineLimit(1)
-                                .font(.body)
+                                .font(.clarity(.medium))
                                 .foregroundColor(.secondaryTxt)
                         } else if let elapsedTime = selectedNote?.createdAt?.distanceString() {
                             Text(elapsedTime)
                                 .lineLimit(1)
-                                .font(.body)
+                                .font(.clarity(.medium))
                                 .foregroundColor(.secondaryTxt)
                         }
                         Spacer()

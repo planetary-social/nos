@@ -16,7 +16,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     private var context: NSManagedObjectContext
     private var header: () -> Header
     private var emptyPlaceholder: () -> EmptyPlaceholder
-    let pageSize = 10
+    let pageSize = 20
     
     // We intentionally generate unique IDs for cell reuse to get around 
     // [this issue](https://github.com/planetary-social/nos/issues/873)
@@ -87,16 +87,17 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     // MARK: - UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        fetchedResultsController.fetchedObjects?.count ?? 0
+        let numberOfItems = fetchedResultsController.fetchedObjects?.count ?? 0
+        Log.debug("Number of items: \(numberOfItems) in section: \(section)")
+        return numberOfItems
     }
     
     func collectionView(
         _ collectionView: UICollectionView, 
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        if indexPath.row.isMultiple(of: pageSize) {
-            pager?.loadMore()
-        }        
+        Log.debug("cellForItemAt: \(indexPath)")
+        loadMoreIfNeeded(for: indexPath)
         
         let note = fetchedResultsController.object(at: indexPath) 
         
@@ -164,6 +165,20 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         default:
             return UICollectionViewCell()
         }
+    }
+    
+    // MARK: - Loading data
+    
+    /// Instructs the pager to load more data if we are getting close to the end of the object in the list.
+    /// - Parameter indexPath: the indexPath last loaded by the collection view.
+    func loadMoreIfNeeded(for indexPath: IndexPath) {
+        let lastPageStartIndex = (fetchedResultsController.fetchedObjects?.count ?? 0) - pageSize
+        if indexPath.row > lastPageStartIndex {
+            // we are at the end of the list, load aggressively
+            pager?.loadMore()
+        } else if indexPath.row.isMultiple(of: pageSize / 2) {
+            pager?.loadMore()
+        }        
     }
     
     // MARK: - NSFetchedResultsControllerDelegate

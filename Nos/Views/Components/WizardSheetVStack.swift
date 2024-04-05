@@ -57,7 +57,7 @@ struct WizardSheetVStack<Content>: View where Content: View {
 #Preview {
     WizardSheetVStack {
         Spacer(minLength: 40)
-        PlainText("Hello")
+        Text("Hello")
         Spacer()
     }
 }

@@ -9,8 +9,8 @@ struct NosNavigationBarModifier: ViewModifier {
             .navigationBarTitle(String(localized: title), displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    PlainText(title)
-                        .font(.clarityTitle3)
+                    Text(title)
+                        .font(.clarity(.bold, textStyle: .title3))
                         .foregroundColor(.primaryTxt)
                         .padding(.leading, 14)
                         .tint(.primaryTxt)
@@ -32,7 +32,7 @@ extension View {
     NavigationStack {
         VStack {
             Spacer()
-            PlainText("Content")
+            Text("Content")
             Spacer()
         }
         .frame(maxWidth: .infinity)

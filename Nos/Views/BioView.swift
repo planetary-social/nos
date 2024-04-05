@@ -44,7 +44,7 @@ struct BioView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            SwiftUI.Text(parsedBio)
+            Text(parsedBio)
                 .font(font)
                 .foregroundColor(.primaryTxt)
                 .tint(.accent)
@@ -63,7 +63,7 @@ struct BioView: View {
                     }
                 }
                 .background {
-                    SwiftUI.Text(parsedBio)
+                    Text(parsedBio)
                         .font(font)
                         .lineSpacing(lineSpacing)
                         .padding(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
@@ -89,8 +89,8 @@ struct BioView: View {
                     Button {
                         showingBio = true
                     } label: {
-                        PlainText(String(localized: .localizable.readMore).uppercased())
-                            .font(.clarityCaption)
+                        Text(String(localized: .localizable.readMore).uppercased())
+                            .font(.clarity(.regular, textStyle: .caption1))
                             .foregroundColor(.secondaryTxt)
                             .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
                             .background(Color.hashtagBg)
@@ -103,6 +103,7 @@ struct BioView: View {
         }
         .placeholder(when: isLoading) {
             Text(String.loremIpsum(1))
+                .font(.clarity(.regular))
                 .lineSpacing(lineSpacing)
                 .lineLimit(5)
                 .padding(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))

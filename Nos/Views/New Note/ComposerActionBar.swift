@@ -94,8 +94,8 @@ struct ComposerActionBar: View {
                 backArrow
                 ScrollView(.horizontal) {
                     HStack {
-                        PlainText(.localizable.noteDisappearsIn)
-                            .font(.clarityCaption)
+                        Text(.localizable.noteDisappearsIn)
+                            .font(.clarity(.regular, textStyle: .caption1))
                             .foregroundColor(.secondaryTxt)
                             .transition(.move(edge: .trailing))
                             .padding(10)

@@ -60,10 +60,10 @@ struct ProfileSocialStatsView: View {
 
     private func tab(label: LocalizedStringResource, value: Int) -> some View {
         VStack {
-            PlainText("\(value)")
+            Text("\(value)")
                 .font(.title)
                 .foregroundColor(.primaryTxt)
-            PlainText(String(localized: label).lowercased())
+            Text(String(localized: label).lowercased())
                 .font(.subheadline)
                 .dynamicTypeSize(...DynamicTypeSize.xLarge)
                 .foregroundColor(.secondaryTxt)

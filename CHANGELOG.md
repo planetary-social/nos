@@ -9,7 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Added option to connect your existing NIP-05 username.
+
+## [0.1.8] - 2024-04-03Z
+
+- Add PrivacyInfo file to the project to comply with Apple's new requirements.
+- Updated dark theme colors for card backgrounds, primary text, and secondary text.
 - Added a new UI for replying to messages that allows attaching images and setting an expiration date.
+- Fixed an issue where Profile pages could display little or no content.
 
 ## [0.1.7] - 2024-03-21Z
 
@@ -18,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix issue with uploading photos on Mac.
 - Re-design the confirmation dialog that appears when you delete your NIP-05.
 - Fixed a bug where liking a note could cause other notes to appear liked.
+- Added a new UI for replying to messages that allows attaching images and setting an expiration date.
+- Fixed an issue where the "Read more" button could display on notes that didn't need it.
 
 ## [0.1.6] - 2024-03-07Z
 

@@ -203,7 +203,7 @@ extension Notification.Name {
                 .id(previewData.alice.id)
         },
         emptyPlaceholder: {
-            PlainText("empty")
+            Text("empty")
         },
         onRefresh: {
             previewData.alice.allPostsRequest(onlyRootPosts: false)

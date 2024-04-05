@@ -52,7 +52,7 @@ struct LikeButton: View {
                 Image.buttonLikeDefault
             }
             if likeCount > 0 {
-                PlainText(likeCount.description)
+                Text(likeCount.description)
                     .font(.clarity(.medium, textStyle: .subheadline))
                     .foregroundColor(.secondaryTxt)
             }
