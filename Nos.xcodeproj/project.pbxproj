@@ -1180,12 +1180,12 @@
 		C9DEC0042989477A0078B43A /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
-				C94B2D172B17F5EC002104B6 /* sample_repost.json */,
-				CD27177529A7C8B200AE8888 /* sample_replies.json */,
+				C9BD91882B61BBEF00FDA083 /* bad_contact_list.json */,
 				C9DEC005298947900078B43A /* sample_data.json */,
+				CD27177529A7C8B200AE8888 /* sample_replies.json */,
+				C94B2D172B17F5EC002104B6 /* sample_repost.json */,
 				C9ADB134299288230075E7F8 /* KeyFixture.swift */,
 				C90B16B72AFED96300CB4B85 /* URLExtensionTests.swift */,
-				C9BD91882B61BBEF00FDA083 /* bad_contact_list.json */,
 			);
 			path = Fixtures;
 			sourceTree = "<group>";
