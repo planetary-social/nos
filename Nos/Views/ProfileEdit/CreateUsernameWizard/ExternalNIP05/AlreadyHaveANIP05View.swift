@@ -8,6 +8,7 @@ struct AlreadyHaveANIP05View: View {
     @StateObject private var usernameObserver = UsernameObserver()
     @State private var verified: Bool?
     @State private var isVerifying = false
+    @State private var verifyTask: Task<Void, Never>?
     @Dependency(\.namesAPI) private var namesAPI
     @Dependency(\.currentUser) private var currentUser
 
@@ -29,20 +30,30 @@ struct AlreadyHaveANIP05View: View {
                     HStack {
                         UsernameTextField(usernameObserver: usernameObserver)
                             .onChange(of: usernameObserver.debouncedText) { _, newValue in
-                                Task {
-                                    await verify(newValue)
+                                verifyTask?.cancel()
+                                verifyTask = Task {
+                                    do {
+                                        try await verify(newValue)
+                                    } catch {
+                                        Log.debug(error.localizedDescription)
+                                    }
                                 }
                             }
                             .onSubmit {
-                                Task {
-                                    await verify(usernameObserver.text)
+                                verifyTask?.cancel()
+                                verifyTask = Task {
+                                    do {
+                                        try await verify(usernameObserver.text)
+                                    } catch {
+                                        Log.debug(error.localizedDescription)
+                                    }
                                 }
                             }
                     }
                     if linkFailed {
-                        unableToLinkUsernameText()
+                        unableToLinkUsernameText
                     } else {
-                        unableToLinkUsernameText()
+                        unableToLinkUsernameText
                             .hidden()
                     }
 
@@ -50,7 +61,7 @@ struct AlreadyHaveANIP05View: View {
                 }
 
                 NavigationLink {
-                    ExcellentChoiceSheet(username: usernameObserver.text, isPresented: $isPresented)
+                    NiceWorkSheet(username: usernameObserver.text, isPresented: $isPresented)
                 } label: {
                     if isVerifying {
                         ZStack {
@@ -65,13 +76,13 @@ struct AlreadyHaveANIP05View: View {
                     }
                 }
                 .buttonStyle(BigActionButtonStyle())
-                .disabled(verified != true || isVerifying || invalidInput)
+                .disabled(verified != true || isVerifying || !invalidInput)
                 Spacer(minLength: 40)
             }
         }
     }
 
-    private func unableToLinkUsernameText() -> some View {
+    private var unableToLinkUsernameText: some View {
         WizardSheetDescriptionText(markdown: .localizable.nip05LinkFailed, tint: .red)
             .font(.clarity(.medium, textStyle: .subheadline))
             .lineSpacing(3)
@@ -88,7 +99,7 @@ struct AlreadyHaveANIP05View: View {
         verified == false
     }
 
-    private func verify(_ username: String) async {
+    private func verify(_ username: String) async throws {
         verified = nil
 
         guard !username.isEmpty, let keyPair = currentUser.keyPair else {
@@ -110,16 +121,16 @@ struct AlreadyHaveANIP05View: View {
 
         isVerifying = true
 
-        defer {
-            isVerifying = false
-        }
-
+        let result: Bool
         do {
-            verified = try await namesAPI.verify(username: localPart, host: host, keyPair: keyPair)
+            result = try await namesAPI.verify(username: localPart, host: host, keyPair: keyPair)
         } catch {
             Log.error(error.localizedDescription)
-            verified = false
+            result = false
         }
+        try Task.checkCancellation()
+        verified = result
+        isVerifying = false
     }
 }
 
