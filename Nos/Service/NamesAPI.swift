@@ -98,7 +98,6 @@ class NamesAPI {
             publicKey: publicKey
         )
         return result == .match
-
     }
 
     /// Registers a given username at `nos.social`
