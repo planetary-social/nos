@@ -104,7 +104,10 @@ struct PickYourUsernameSheet: View {
         }
 
         do {
-            verified = try await namesAPI.verify(username: username, keyPair: keyPair)
+            verified = try await namesAPI.checkAvailability(
+                username: username,
+                publicKey: keyPair.publicKey
+            )
         } catch {
             Log.error(error.localizedDescription)
         }

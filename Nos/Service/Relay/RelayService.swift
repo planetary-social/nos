@@ -714,11 +714,6 @@ extension RelayService: WebSocketDelegate {
 
 // MARK: NIP-05 and UNS Support
 extension RelayService {
-    
-    func verifyNIP05(identifier: String, userPublicKey: RawAuthorID) async -> Bool {
-        let internetIdentifierPublicKey = await retrievePublicKeyFromUsername(identifier)
-        return internetIdentifierPublicKey == userPublicKey
-    }
 
     /// Takes a NIP-05 or Mastodon username and tries to fetch the associated Nostr public key.
     func retrievePublicKeyFromUsername(_ userName: String) async -> RawAuthorID? {

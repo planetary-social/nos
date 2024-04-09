@@ -23,6 +23,19 @@ class NamesAPI {
         case post = "POST"
     }
 
+    /// Structure that encapsulates the result of requesting the `/.well-known/nostr.json`
+    /// path to a given server.
+    private enum PingResult {
+        /// The npub registered in the server matches with the provided public key
+        case match
+        /// The npub registered in the server doesn't match with the provided public key
+        case mismatch
+        /// The server returned a 404 Not Found response
+        case notFound
+        /// The server returned an unexpected response
+        case unableToPing
+    }
+
     private let verificationURL: URL
     private let registrationURL: URL
 
@@ -37,6 +50,7 @@ class NamesAPI {
         self.registrationURL = registrationURL
     }
 
+    /// Deletes a given username from `nos.social`
     func delete(username: String, keyPair: KeyPair) async throws {
         let request = try buildURLRequest(
             url: registrationURL.appending(path: username),
@@ -54,41 +68,40 @@ class NamesAPI {
     }
 
     /// Verifies that a given username is free to claim in nos.social
-    func verify(username: String, keyPair: KeyPair) async throws -> Bool {
-        try await verify(
+    func checkAvailability(username: String, publicKey: PublicKey) async throws -> Bool {
+        let result = try await ping(
             username: username,
             host: verificationURL,
-            keyPair: keyPair,
-            valueWhenNotFound: true
+            publicKey: publicKey
         )
+        return result == .match || result == .notFound
     }
 
-    /// Verifies that a given username_at_host NIP-05 can be connected to the keyPair
-    ///
-    /// - Parameter valueWhenNotFound: What to return if the server returns 404
-    func verify(
-        username: String,
-        host: URL,
-        keyPair: KeyPair,
-        valueWhenNotFound: Bool = false
-    ) async throws -> Bool {
-        let request = URLRequest(
-            url: host.appending(queryItems: [URLQueryItem(name: "name", value: username)])
-        )
-        let (data, response) = try await URLSession.shared.data(for: request)
-        if let response = response as? HTTPURLResponse {
-            let statusCode = response.statusCode
-            if statusCode == 404 {
-                return valueWhenNotFound
-            } else if statusCode == 200, let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                let names = json["names"] as? [String: String]
-                let npub = names?[username]
-                return npub == keyPair.publicKeyHex
-            }
+    /// Verifies that a given NIP-05 username is properly connected to the public key
+    func verify(username: String, publicKey: PublicKey) async throws -> Bool {
+        let components = username.components(separatedBy: "@")
+
+        guard components.count == 2 else {
+            return false
         }
-        return false
+
+        let localPart = components[0]
+        let domain = components[1]
+
+        guard let host = URL(string: "https://\(domain)/.well-known/nostr.json") else {
+            return false
+        }
+
+        let result = try await ping(
+            username: localPart,
+            host: host,
+            publicKey: publicKey
+        )
+        return result == .match
+
     }
 
+    /// Registers a given username at `nos.social`
     func register(username: String, keyPair: KeyPair) async throws {
         let request = try buildURLRequest(
             url: registrationURL,
@@ -105,6 +118,34 @@ class NamesAPI {
             }
         }
         throw Error.unexpected
+    }
+
+    /// Makes a request to `/.well-known/nostr.json` at the host with the provided
+    /// username and matches the server result with the provided public key.
+    private func ping(
+        username: String,
+        host: URL,
+        publicKey: PublicKey
+    ) async throws -> PingResult {
+        let request = URLRequest(
+            url: host.appending(queryItems: [URLQueryItem(name: "name", value: username)])
+        )
+        let (data, response) = try await URLSession.shared.data(for: request)
+        if let response = response as? HTTPURLResponse {
+            let statusCode = response.statusCode
+            if statusCode == 404 {
+                return .notFound
+            } else if statusCode == 200, let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                let names = json["names"] as? [String: String]
+                let npub = names?[username]
+                if npub == publicKey.hex {
+                    return .match
+                } else {
+                    return .mismatch
+                }
+            }
+        }
+        return .unableToPing
     }
 
     private func buildURLRequest(url: URL, method: HTTPMethod, json: Data?, keyPair: KeyPair) throws -> URLRequest {

@@ -106,24 +106,14 @@ struct AlreadyHaveANIP05View: View {
             return
         }
 
-        let components = username.components(separatedBy: "@")
-
-        guard components.count == 2 else {
-            return
-        }
-
-        let localPart = components[0]
-        let domain = components[1]
-
-        guard let host = URL(string: "https://\(domain)/.well-known/nostr.json") else {
-            return
-        }
-
         isVerifying = true
 
         let result: Bool
         do {
-            result = try await namesAPI.verify(username: localPart, host: host, keyPair: keyPair)
+            result = try await namesAPI.verify(
+                username: username,
+                publicKey: keyPair.publicKey
+            )
         } catch {
             Log.error(error.localizedDescription)
             result = false
