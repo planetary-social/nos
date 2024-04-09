@@ -42,7 +42,7 @@ struct RelaySubscription: Identifiable {
     ) {
         self.filter = filter
         self.relayAddress = relayAddress
-        self.id = filter.id + "-" + relayAddress.absoluteString
+        self.id = (filter.id + "-" + relayAddress.absoluteString).data(using: .utf8)?.sha256 ?? "error"
         self.subscriptionStartDate = subscriptionStartDate
         self.oldestEventCreationDate = oldestEventCreationDate
         self.referenceCount = referenceCount
