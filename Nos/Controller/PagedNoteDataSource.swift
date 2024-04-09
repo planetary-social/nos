@@ -87,9 +87,14 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     // MARK: - UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let numberOfItems = fetchedResultsController.fetchedObjects?.count ?? 0
-        Log.debug("Number of items: \(numberOfItems) in section: \(section)")
-        return numberOfItems
+        let numberOfFetchedObjects = fetchedResultsController.fetchedObjects?.count ?? 0
+        // because we batch updates together to reduce animations but this function is called in between batches we
+        // need to account for the number of items queued for insertion or deletion. FetchedResultsController sees them
+        // but the collectionView doesn't yet.
+        let numberOfItemsInView = numberOfFetchedObjects - insertedIndexes.count + deletedIndexes.count
+        Log.debug("Number of items: \(numberOfFetchedObjects) in fetchedResultsController")
+        Log.debug("Number of items: \(numberOfItemsInView) in section: \(section)")
+        return numberOfItemsInView
     }
     
     func collectionView(
@@ -238,11 +243,15 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         Log.debug("controllerDidChangeContent started.")
         if !deletedIndexes.isEmpty { // it doesn't seem like this check should be necessary but it crashes otherwise
             Log.debug("deleting indexPaths: \(deletedIndexes)")
-            collectionView.deleteItems(at: deletedIndexes)
+            let deletedIndexesCopy = deletedIndexes
+            deletedIndexes = [] // clear indexes so numberOfItemsInSection can calculate the correct number
+            collectionView.deleteItems(at: deletedIndexesCopy)
         }
         if !insertedIndexes.isEmpty {
             Log.debug("inserting indexPaths: \(insertedIndexes)")
-            collectionView.insertItems(at: insertedIndexes)
+            let insertedIndexesCopy = insertedIndexes
+            insertedIndexes = [] // clear indexes so numberOfItemsInSection can calculate the correct number
+            collectionView.insertItems(at: insertedIndexesCopy)
         }
         
         Log.debug("moving indexes: \(movedIndexes)")

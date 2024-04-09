@@ -1,4 +1,5 @@
 import SwiftUI
+import Logger
 
 /// A text editor for composing Nostr notes. Supports autocomplete of mentions.
 struct NoteTextEditor: View {
