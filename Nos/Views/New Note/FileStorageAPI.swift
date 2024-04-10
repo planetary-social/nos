@@ -37,12 +37,12 @@ class NostrBuildFileStorageAPI: FileStorageAPI {
         data.append(trailerData)
         
         let (responseData, _) = try await URLSession.shared.upload(for: request, from: data)
-        let urlString = try JSONSerialization.jsonObject(with: responseData, options: .allowFragments) as? String
-        guard let urlString else {
+        let responseString = try JSONSerialization.jsonObject(with: responseData, options: .allowFragments) as? String
+        guard let responseString else {
             throw FileStorageAPIError.unexpectedOutputType
         }
-        guard let url = URL(string: urlString) else {
-            throw FileStorageAPIError.couldNotParseURL(urlString)
+        guard let url = URL(string: responseString) else {
+            throw FileStorageAPIError.uploadFailed(responseString)
         }
         return url
     }
@@ -50,7 +50,7 @@ class NostrBuildFileStorageAPI: FileStorageAPI {
 
 enum FileStorageAPIError: Error {
     case unexpectedOutputType
-    case couldNotParseURL(String)
+    case uploadFailed(String)
     case errorEncodingHeaderOrFooter
     case errorEncodingImage
 
@@ -58,8 +58,8 @@ enum FileStorageAPIError: Error {
         switch self {
         case .unexpectedOutputType:
             return "unexpected API output type"
-        case .couldNotParseURL(let urlString):
-            return "could not parse the string as url '\(urlString)'"
+        case .uploadFailed(let message):
+            return "upload failed with message: '\(message)'"
         case .errorEncodingHeaderOrFooter:
             return "error encoding multipart header or footer"
         case .errorEncodingImage:

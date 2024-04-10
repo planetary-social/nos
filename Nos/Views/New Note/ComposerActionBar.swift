@@ -55,7 +55,11 @@ struct ComposerActionBar: View {
                             alert = AlertState(title: {
                                 TextState(String(localized: .imagePicker.errorUploadingFile))
                             }, message: {
-                                TextState(String(localized: .imagePicker.errorUploadingFileMessage))
+                                if case let FileStorageAPIError.uploadFailed(message) = error {
+                                    TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
+                                } else {
+                                    TextState(String(localized: .imagePicker.errorUploadingFileMessage))
+                                }
                             })
                         }
                     }
