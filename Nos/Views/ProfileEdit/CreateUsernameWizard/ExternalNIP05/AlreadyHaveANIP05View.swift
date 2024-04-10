@@ -3,12 +3,12 @@ import Dependencies
 import Logger
 import SwiftUI
 
-struct PickYourUsernameSheet: View {
-
+struct AlreadyHaveANIP05View: View {
     @Binding var isPresented: Bool
     @StateObject private var usernameObserver = UsernameObserver()
     @State private var verified: Bool?
     @State private var isVerifying = false
+    @State private var verifyTask: Task<Void, Never>?
     @Dependency(\.namesAPI) private var namesAPI
     @Dependency(\.currentUser) private var currentUser
 
@@ -25,28 +25,35 @@ struct PickYourUsernameSheet: View {
             }
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
-                    WizardSheetTitleText(.localizable.pickYourUsernameTitle)
-                    WizardSheetDescriptionText(markdown: .localizable.pickYourUsernameDescription)
+                    WizardSheetTitleText(.localizable.linkYourNIP05Title)
+                    WizardSheetDescriptionText(markdown: .localizable.linkYourNIP05Description)
                     HStack {
                         UsernameTextField(usernameObserver: usernameObserver)
                             .onChange(of: usernameObserver.debouncedText) { _, newValue in
-                                Task {
-                                    await verify(newValue)
+                                verifyTask?.cancel()
+                                verifyTask = Task {
+                                    do {
+                                        try await verify(newValue)
+                                    } catch {
+                                        Log.debug(error.localizedDescription)
+                                    }
                                 }
                             }
                             .onSubmit {
-                                Task {
-                                    await verify(usernameObserver.text)
+                                verifyTask?.cancel()
+                                verifyTask = Task {
+                                    do {
+                                        try await verify(usernameObserver.text)
+                                    } catch {
+                                        Log.debug(error.localizedDescription)
+                                    }
                                 }
                             }
-                        Text(".nos.social")
-                            .font(.clarity(.bold, textStyle: .title3))
-                            .foregroundStyle(Color.secondaryTxt)
                     }
-                    if validationFailed {
-                        usernameAlreadyClaimedText()
+                    if linkFailed {
+                        unableToLinkUsernameText
                     } else {
-                        usernameAlreadyClaimedText()
+                        unableToLinkUsernameText
                             .hidden()
                     }
 
@@ -54,7 +61,7 @@ struct PickYourUsernameSheet: View {
                 }
 
                 NavigationLink {
-                    ExcellentChoiceSheet(username: usernameObserver.text, isPresented: $isPresented)
+                    NiceWorkSheet(username: usernameObserver.text, isPresented: $isPresented)
                 } label: {
                     if isVerifying {
                         ZStack {
@@ -69,28 +76,30 @@ struct PickYourUsernameSheet: View {
                     }
                 }
                 .buttonStyle(BigActionButtonStyle())
-                .disabled(verified != true || isVerifying || invalidInput)
+                .disabled(verified != true || isVerifying || !invalidInput)
                 Spacer(minLength: 40)
             }
         }
     }
 
-    private func usernameAlreadyClaimedText() -> some View {
-        Text(.localizable.usernameAlreadyClaimed)
+    private var unableToLinkUsernameText: some View {
+        WizardSheetDescriptionText(markdown: .localizable.nip05LinkFailed, tint: .red)
             .font(.clarity(.medium, textStyle: .subheadline))
-            .foregroundStyle(Color.red)
             .lineSpacing(3)
     }
 
     private var invalidInput: Bool {
-        usernameObserver.text.count < 3
+        let input = usernameObserver.text
+        let emailRegEx = "[0-9a-z._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
+        return emailPred.evaluate(with: input)
     }
 
-    private var validationFailed: Bool {
+    private var linkFailed: Bool {
         verified == false
     }
 
-    private func verify(_ username: String) async {
+    private func verify(_ username: String) async throws {
         verified = nil
 
         guard !username.isEmpty, let keyPair = currentUser.keyPair else {
@@ -99,18 +108,19 @@ struct PickYourUsernameSheet: View {
 
         isVerifying = true
 
-        defer {
-            isVerifying = false
-        }
-
+        let result: Bool
         do {
-            verified = try await namesAPI.checkAvailability(
+            result = try await namesAPI.verify(
                 username: username,
                 publicKey: keyPair.publicKey
             )
         } catch {
             Log.error(error.localizedDescription)
+            result = false
         }
+        try Task.checkCancellation()
+        verified = result
+        isVerifying = false
     }
 }
 
@@ -144,9 +154,10 @@ fileprivate struct UsernameTextField: View {
     var body: some View {
         TextField(
             text: $usernameObserver.text,
-            prompt: Text(.localizable.username).foregroundStyle(Color.secondaryTxt)
+            prompt: SwiftUI.Text(verbatim: String(localized: .localizable.nip05Example))
+                .foregroundStyle(Color.secondaryTxt)
         ) {
-            Text(.localizable.username)
+            SwiftUI.Text(verbatim: String(localized: .localizable.nip05Example))
                 .foregroundStyle(Color.primaryTxt)
         }
         .focused($usernameFieldIsFocused)
@@ -168,7 +179,7 @@ fileprivate struct UsernameTextField: View {
         .padding(1)
         .onChange(of: usernameObserver.text) { oldValue, newValue in
             let characterset = CharacterSet(
-                charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-."
+                charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@"
             )
             if newValue.rangeOfCharacter(from: characterset.inverted) != nil {
                 usernameObserver.text = oldValue
@@ -183,7 +194,7 @@ fileprivate struct UsernameTextField: View {
 
 #Preview {
     Color.clear.sheet(isPresented: .constant(true)) {
-        PickYourUsernameSheet(isPresented: .constant(true))
+        AlreadyHaveANIP05View(isPresented: .constant(true))
             .presentationDetents([.medium])
     }
 }

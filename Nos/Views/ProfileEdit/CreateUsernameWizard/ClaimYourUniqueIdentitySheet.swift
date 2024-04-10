@@ -15,7 +15,16 @@ struct ClaimYourUniqueIdentitySheet: View {
                 PickYourUsernameSheet(isPresented: $isPresented)
             }
             .buttonStyle(BigActionButtonStyle())
-            Spacer(minLength: 40)
+            NavigationLink {
+                AlreadyHaveANIP05View(isPresented: $isPresented)
+            } label: {
+                SwiftUI.Text(.localizable.alreadyHaveANIP05)
+                    .font(.clarity(.medium, textStyle: .subheadline))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 10)
+            
+            Spacer(minLength: 20)
         }
     }
 }

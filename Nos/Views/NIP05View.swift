@@ -1,3 +1,5 @@
+import Dependencies
+import Logger
 import SwiftUI
 
 /// Displays a user's NIP-05 and does some verification on it.
@@ -6,8 +8,8 @@ struct NIP05View: View {
     @ObservedObject var author: Author
     
     @State private var verifiedNip05Identifier: Bool?
-    @EnvironmentObject private var relayService: RelayService
-    
+    @Dependency(\.namesAPI) private var namesAPI
+
     var body: some View {
         if let nip05Identifier = author.nip05,
             !nip05Identifier.isEmpty,
@@ -39,14 +41,20 @@ struct NIP05View: View {
                     .padding()
             }
             .task(priority: .userInitiated) {
-                if let nip05Identifier = author.nip05,
-                    let publicKey = author.publicKey?.hex {
-                    let verifiedNip05Identifier = await relayService.verifyNIP05(
-                        identifier: nip05Identifier,
-                        userPublicKey: publicKey
-                    )
+                if let nip05Identifier = author.nip05, let publicKey = author.publicKey {
+
+                    let isVerified: Bool
+                    do {
+                        isVerified = try await namesAPI.verify(
+                            username: nip05Identifier,
+                            publicKey: publicKey
+                        )
+                    } catch {
+                        isVerified = false
+                        Log.debug(error.localizedDescription)
+                    }
                     withAnimation {
-                        self.verifiedNip05Identifier = verifiedNip05Identifier
+                        self.verifiedNip05Identifier = isVerified
                     }
                 }
             }
