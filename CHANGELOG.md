@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed a crash that often occurred after opening the app.
+- In an effort to prioritize critical functionality, we are dropping support for light mode in the near term. If you have concerns about the remaining theme please reach out to us at support@nos.social
 
 ## [0.1.8] - 2024-04-03Z
 
