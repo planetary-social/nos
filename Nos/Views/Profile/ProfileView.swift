@@ -187,7 +187,6 @@ struct ProfileView: View {
         )
         .reportMenu($showingReportMenu, reportedObject: .author(author))
         .alert(unwrapping: $alert)
-        .tint(.accent)
         .onAppear {
             Task { 
                 await downloadAuthorData()
