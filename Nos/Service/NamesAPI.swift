@@ -67,7 +67,8 @@ class NamesAPI {
         throw Error.unexpected
     }
 
-    /// Verifies that a given username is free to claim in nos.social
+    /// Verifies that a given username is free to claim in nos.social, or has
+    /// already been claimed by the given `publicKey`.
     func checkAvailability(username: String, publicKey: PublicKey) async throws -> Bool {
         let result = try await ping(
             username: username,
