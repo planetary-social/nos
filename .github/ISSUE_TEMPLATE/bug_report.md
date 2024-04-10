@@ -25,7 +25,7 @@ If applicable, add screenshots or video to help explain your problem.
 
 **Technical info (please complete the following information):**
  - OS: [e.g. iOS, iPadOS, macOS]
- - App Version [e.g. 22]
+ - App Version: [e.g. 0.1.9 (239)]
 
 **Additional context**
 Add any other context about the problem here.
