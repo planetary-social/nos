@@ -143,9 +143,8 @@ struct ReportMenuModifier: ViewModifier {
             content: String(localized: .localizable.reportEventContent(selectedCategory.displayName))
         )
         
-        var targetTag = reportedObject.tag
-        targetTag.append(selectedCategory.nip56Code.rawValue)
-        event.tags.append(targetTag)
+        let nip56Reason = selectedCategory.nip56Code.rawValue
+        event.tags += reportedObject.tags(for: nip56Reason)
         
         Task {
             do {
