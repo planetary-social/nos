@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue where reports for notes were treated as reports for profiles.
 - Added option to connect your existing NIP-05 username.
 - Fixed a crash that often occurred after opening the app.
 - In an effort to prioritize critical functionality, we are dropping support for light mode in the near term. If you have concerns about the remaining theme please reach out to us at support@nos.social
