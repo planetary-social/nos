@@ -143,11 +143,11 @@ struct AppView: View {
         .sheet(isPresented: $showNIP05Wizard) {
             CreateUsernameWizard(isPresented: $showNIP05Wizard)
         }
-        .task(presentNIP05SheetIfNeeded)
-        .accentColor(.primaryTxt)
+        .task { await presentNIP05SheetIfNeeded() }
+        .tint(.primaryTxt)
     }
 
-    @Sendable private func presentNIP05SheetIfNeeded() async {
+    private func presentNIP05SheetIfNeeded() async {
         // Sleep for half a second
         try? await Task.sleep(nanoseconds: 500_000_000)
         guard let author = currentUser.author, let npub = author.npubString else {

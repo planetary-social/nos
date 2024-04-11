@@ -84,7 +84,7 @@ struct NiceWorkSheet: View {
                 return
             }
 
-            guard let keyPair = currentUser.keyPair else {
+            guard currentUser.keyPair != nil else {
                 connectState = .failed(.notLoggedIn)
                 return
             }
