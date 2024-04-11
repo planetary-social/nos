@@ -26,7 +26,7 @@ struct ReportMenuModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             // ReportCategory menu
-            .confirmationDialog(unwrapping: $confirmationDialog, action: userSelectedCategory)
+            .confirmationDialog($confirmationDialog, action: userSelectedCategory)
             // Report confirmation menu
             .alert(
                 String(localized: .localizable.confirmReport),

@@ -186,7 +186,7 @@ struct ProfileView: View {
                 }
         )
         .reportMenu($showingReportMenu, reportedObject: .author(author))
-        .alert(unwrapping: $alert)
+        .alert($alert)
         .onAppear {
             Task { 
                 await downloadAuthorData()
