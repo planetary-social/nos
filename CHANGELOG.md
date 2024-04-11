@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue where reports for notes were treated as reports for profiles.
 - Fixed the tint color on the Profile screen.
 - Added option to connect your existing NIP-05 username.
 - Fixed a crash that often occurred after opening the app.
