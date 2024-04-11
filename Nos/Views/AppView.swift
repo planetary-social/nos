@@ -144,7 +144,7 @@ struct AppView: View {
             CreateUsernameWizard(isPresented: $showNIP05Wizard)
         }
         .task(presentNIP05SheetIfNeeded)
-        .accentColor(.primaryTxt)
+        .tint(.primaryTxt)
     }
 
     @Sendable private func presentNIP05SheetIfNeeded() async {
