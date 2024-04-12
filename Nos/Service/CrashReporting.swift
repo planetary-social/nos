@@ -26,6 +26,8 @@ class CrashReporting {
             options.environment = "staging"
             #elseif DEV
             options.environment = "debug"
+            #else
+            options.environment = "production"
             #endif
             options.enableTracing = true
             options.tracesSampleRate = 0.3 // tracing must be enabled for profiling
