@@ -2,6 +2,26 @@ import SwiftUI
 import Combine
 import CoreData
 import Dependencies
+import TipKit
+
+struct PopoverTip: Tip {
+    var title: Text {
+        Text("How is Discover populated?")
+            .font(.callout)
+            .bold()
+//            .foregroundStyle(Color.secondaryTxt)
+    }
+
+    var message: Text? {
+        Text("Accounts on this tab are participants in the Nos Residency and Accelerator programs.")
+            .font(.footnote)
+//            .foregroundStyle(Color.secondaryTxt)
+    }
+    
+//    var options: [any TipOption] {
+//        IgnoresDisplayFrequency
+//    }
+}
 
 struct DiscoverView: View {    
     // MARK: - Properties
@@ -12,6 +32,7 @@ struct DiscoverView: View {
     @Dependency(\.analytics) private var analytics
 
     @State var showInfoPopover = false
+    var popoverTip = PopoverTip()
 
     @State var columns: Int = 0
     
@@ -86,6 +107,7 @@ struct DiscoverView: View {
             .background(Color.appBg)
             .toolbar {
                 ToolbarItem {
+//                    TipView(popoverTip, arrowEdge: .top)
                     Button {
                         // TODO: actually show the popover. https://github.com/planetary-social/nos/issues/1025
                         showInfoPopover = true
@@ -93,6 +115,7 @@ struct DiscoverView: View {
                         Image(systemName: "info.circle")
                     }
                     .foregroundColor(.secondaryTxt)
+                    .popoverTip(popoverTip)
                 }
             }
             .animation(.easeInOut, value: columns)

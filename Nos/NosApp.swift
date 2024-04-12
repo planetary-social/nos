@@ -1,6 +1,7 @@
 import SwiftUI
 import Logger
 import Dependencies
+import TipKit
 
 @main
 struct NosApp: App {
@@ -17,6 +18,8 @@ struct NosApp: App {
     
     init() {
         _ = crashReporting // force crash reporting init as early as possible
+        Tips.showAllTipsForTesting()
+        try? Tips.configure()
     }
     
     var body: some Scene {
