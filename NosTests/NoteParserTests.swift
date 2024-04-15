@@ -4,6 +4,67 @@ import Dependencies
 
 final class NoteNoteParserTests: CoreDataTestCase {
 
+    func testMentionPrecededByAt() throws {
+        let name = "nos"
+        let npub = "npub1pu3vqm4vzqpxsnhuc684dp2qaq6z69sf65yte4p39spcucv5lzmqswtfch"
+        let hex = "0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6"
+
+        let content = "Ping @nostr:\(npub)" // The @ symbol before should not break the parsing
+        let expectedContent = "Ping @\(name)"
+        let tags = [
+            ["p", hex],
+            ["p", "8c430bdaadc1a202e4dd11c86c82546bb108d755e374b7918181f533b94e312e"],
+            ["e", "a9788ca56a90bb5b856e89f16f5f3b0da93c28ea625e845c9925a41377152a13", "", "root"],
+            ["e", "3d9503a2d4ad024749b138c041e99934474e2822e2a1c697792dab5b24acc285", "", "reply"]
+        ]
+        let context = try XCTUnwrap(testContext)
+        let author = try Author.findOrCreate(by: hex, context: context)
+        author.displayName = name
+        try context.save()
+        let (attributedContent, _) = NoteParser.parse(
+            content: content,
+            tags: tags,
+            context: context
+        )
+        let parsedContent = String(attributedContent.characters)
+        XCTAssertEqual(parsedContent, expectedContent)
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links.first?.key, "@\(name)")
+        XCTAssertEqual(links.first?.value, URL(string: "@\(hex)"))
+    }
+
+    func testMentionToProfileWithURLInName() throws {
+        let name = "nos.social" // This should not break the parsing
+        let npub = "npub1pu3vqm4vzqpxsnhuc684dp2qaq6z69sf65yte4p39spcucv5lzmqswtfch"
+        let hex = "0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6"
+        
+        let content = "Yep. Something like that. I, of course could implement it " +
+            "in nostr:\(npub) but haven’t yet."
+        let expectedContent = "Yep. Something like that. I, of course could implement it " +
+            "in @\(name) but haven’t yet."
+        let tags = [
+            ["p", hex],
+            ["p", "8c430bdaadc1a202e4dd11c86c82546bb108d755e374b7918181f533b94e312e"],
+            ["e", "a9788ca56a90bb5b856e89f16f5f3b0da93c28ea625e845c9925a41377152a13", "", "root"],
+            ["e", "3d9503a2d4ad024749b138c041e99934474e2822e2a1c697792dab5b24acc285", "", "reply"]
+        ]
+        let context = try XCTUnwrap(testContext)
+        let author = try Author.findOrCreate(by: hex, context: context)
+        author.displayName = name
+        try context.save()
+        let (attributedContent, _) = NoteParser.parse(
+            content: content,
+            tags: tags,
+            context: context
+        )
+        let parsedContent = String(attributedContent.characters)
+        XCTAssertEqual(parsedContent, expectedContent)
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links.first?.key, "@\(name)")
+        XCTAssertEqual(links.first?.value, URL(string: "@\(hex)"))
+    }
     /// Example taken from [NIP-27](https://github.com/nostr-protocol/nips/blob/master/27.md)
     func testMentionWithNPub() throws {
         let mention = "@mattn"

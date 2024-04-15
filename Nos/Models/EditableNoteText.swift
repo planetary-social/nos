@@ -98,8 +98,14 @@ struct EditableNoteText: Equatable {
             )
         )
         mention.append(AttributedString(stringLiteral: " "))
-
-        attributedString.replaceSubrange(range, with: mention)
+        var rangeToReplace = range
+        if range.lowerBound > attributedString.startIndex {
+            let offsetedBound = attributedString.index(range.lowerBound, offsetByCharacters: -1)
+            if let char = attributedString[offsetedBound ..< range.lowerBound].characters.first, char == "@" {
+                rangeToReplace = offsetedBound ..< range.upperBound
+            }
+        }
+        attributedString.replaceSubrange(rangeToReplace, with: mention)
     }
 
     /// Inserts the mention of an author as a link at the given index of the string. The `index` should be the index

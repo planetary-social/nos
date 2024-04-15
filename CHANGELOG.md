@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue where users named with valid urls were unable to be mentioned correctly.
+- Fixed an issue where pasting an npub while composing a note created an invalid mention.
 - Fixed the tint color on the Profile screen.
 - Added option to connect your existing NIP-05 username.
 - Fixed a crash that often occurred after opening the app.
