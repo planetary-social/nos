@@ -1,16 +1,18 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct ImagePickerUIViewController: UIViewControllerRepresentable {
     
     var sourceType: UIImagePickerController.SourceType = .photoLibrary
     var cameraDevice: UIImagePickerController.CameraDevice = .front
-    var onCompletion: ((UIImage?) -> Void)
+    var onCompletion: ((URL?) -> Void)
 
     func makeUIViewController(
         context: UIViewControllerRepresentableContext<ImagePickerUIViewController>
     ) -> UIImagePickerController {
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = sourceType
+        imagePicker.mediaTypes = [UTType.image.identifier, UTType.movie.identifier]
         imagePicker.delegate = context.coordinator
         if sourceType == .camera {
             imagePicker.cameraDevice = cameraDevice
@@ -24,26 +26,31 @@ struct ImagePickerUIViewController: UIViewControllerRepresentable {
     ) { }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+        Coordinator(onCompletion: onCompletion)
     }
 
     final class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-        var parent: ImagePickerUIViewController
-        init(_ parent: ImagePickerUIViewController) {
-            self.parent = parent
+        
+        var onCompletion: ((URL?) -> Void)
+
+        init(onCompletion: @escaping ((URL?) -> Void)) {
+            self.onCompletion = onCompletion
         }
+        
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            parent.onCompletion(nil)
+            onCompletion(nil)
         }
         func imagePickerController(
             _ picker: UIImagePickerController,
             didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
         ) {
-            let rect = (info[UIImagePickerController.InfoKey.cropRect] as? CGRect) ?? CGRect.zero
-            let original = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
-            let edited = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
-            let image = (rect.origin.x != 0 || rect.origin.y != 0) ? edited : original
-            parent.onCompletion(image)
+            if let videoURL = info[.mediaURL] as? URL {
+                onCompletion(videoURL)
+            } else if let imageURL = info[.imageURL] as? URL {
+                onCompletion(imageURL)
+            } else {
+                onCompletion(nil)
+            }
         }
     }
 }
