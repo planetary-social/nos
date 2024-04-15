@@ -62,16 +62,16 @@ fileprivate enum AnalyticsKey: DependencyKey {
     static let previewValue = Analytics(mock: true)
 }
 
-@MainActor private enum CurrentUserKey: DependencyKey {
-    static let liveValue = CurrentUser()
-    static let testValue = CurrentUser()
-    static let previewValue = CurrentUser()
+private enum CurrentUserKey: DependencyKey {
+    @MainActor static let liveValue = CurrentUser()
+    @MainActor static let testValue = CurrentUser()
+    @MainActor static let previewValue = CurrentUser()
 }
 
-@MainActor fileprivate enum RouterKey: DependencyKey {
-    static let liveValue = Router()
-    static let testValue = Router()
-    static let previewValue = Router()
+fileprivate enum RouterKey: DependencyKey {
+    @MainActor static let liveValue = Router()
+    @MainActor static let testValue = Router()
+    @MainActor static let previewValue = Router()
 }
 
 private enum RelayServiceKey: DependencyKey {
@@ -80,12 +80,11 @@ private enum RelayServiceKey: DependencyKey {
     static let previewValue = RelayService()
 }
 
-@MainActor
 fileprivate enum PushNotificationServiceKey: DependencyKey {
     typealias Value = PushNotificationService
-    static let liveValue = PushNotificationService()
-    static let testValue = MockPushNotificationService()
-    static let previewValue = MockPushNotificationService()
+    @MainActor static let liveValue = PushNotificationService()
+    @MainActor static let testValue = MockPushNotificationService()
+    @MainActor static let previewValue = MockPushNotificationService()
 }
 
 fileprivate enum PersistenceControllerKey: DependencyKey {

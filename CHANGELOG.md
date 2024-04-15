@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue where users named with valid urls were unable to be mentioned correctly.
 - Fixed an issue where pasting an npub while composing a note created an invalid mention.
+- Fixed an issue where reports for notes were treated as reports for profiles.
+
+## [0.1.10] - 2024-04-12Z
+
 - Fixed the tint color on the Profile screen.
 - Added option to connect your existing NIP-05 username.
 - Fixed a crash that often occurred after opening the app.
@@ -21,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated dark theme colors for card backgrounds, primary text, and secondary text.
 - Added a new UI for replying to messages that allows attaching images and setting an expiration date.
 - Fixed an issue where Profile pages could display little or no content.
+- Added support for uploading videos when composing a note.
 
 ## [0.1.7] - 2024-03-21Z
 

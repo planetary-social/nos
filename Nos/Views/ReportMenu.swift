@@ -26,7 +26,7 @@ struct ReportMenuModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             // ReportCategory menu
-            .confirmationDialog(unwrapping: $confirmationDialog, action: userSelectedCategory)
+            .confirmationDialog($confirmationDialog, action: userSelectedCategory)
             // Report confirmation menu
             .alert(
                 String(localized: .localizable.confirmReport),
@@ -143,9 +143,8 @@ struct ReportMenuModifier: ViewModifier {
             content: String(localized: .localizable.reportEventContent(selectedCategory.displayName))
         )
         
-        var targetTag = reportedObject.tag
-        targetTag.append(selectedCategory.nip56Code.rawValue)
-        event.tags.append(targetTag)
+        let nip56Reason = selectedCategory.nip56Code.rawValue
+        event.tags += reportedObject.tags(for: nip56Reason)
         
         Task {
             do {

@@ -308,7 +308,7 @@ import Logger
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: "(kind = %i) AND ANY authorReferences.pubkey = %@", 
+            format: "(kind = %i) AND ANY authorReferences.pubkey = %@ AND eventReferences.@count = 0",
             EventKind.report.rawValue,
             hexadecimalPublicKey
         )

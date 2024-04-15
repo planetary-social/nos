@@ -25,19 +25,24 @@ enum ReportTarget {
         }
     }
     
-    /// Creates a tag referencing this target that can be attached to a report event.
-    var tag: [String] {
+    /// Creates tags referencing this target that can be attached to a report event.
+    ///  - Parameter reportType: the NIP-56 report_type (spam, illegal, etc.) 
+    func tags(for reportType: String) -> [[String]] {
+        var tags = [[String]]()
         switch self {
         case .author(let author):
             if let pubKey = author.hexadecimalPublicKey {
-                return ["p", pubKey]
+                tags.append(["p", pubKey, reportType])
             }
         case .note(let note):
             if let eventID = note.identifier {
-                return ["e", eventID]
+                tags.append(["e", eventID, reportType])
+            }
+            if let pubKey = note.author?.hexadecimalPublicKey {
+                tags.append(["p", pubKey])
             }
         }
         
-        return []
+        return tags
     }
 }
