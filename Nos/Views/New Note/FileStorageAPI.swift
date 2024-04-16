@@ -11,7 +11,7 @@ class NostrBuildFileStorageAPI: FileStorageAPI {
     static let paramName = "fileToUpload"
     
     func upload(fileAt fileURL: URL) async throws -> URL {
-        var fileName = fileURL.lastPathComponent
+        let fileName = fileURL.lastPathComponent
         let fileData = try Data(contentsOf: fileURL)
         
         let boundary = UUID().uuidString
