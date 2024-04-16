@@ -394,9 +394,9 @@
 		C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C22298DC7B900C6714D /* SettingsView.swift */; };
 		C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C26298DC98800C6714D /* KeyPair.swift */; };
 		C9FC1E632B61ACE300A3A6FB /* CoreDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FC1E622B61ACE300A3A6FB /* CoreDataTestCase.swift */; };
-		C9FD34E32BCEC53D008F8D95 /* NostrSDK in Frameworks */ = {isa = PBXBuildFile; productRef = C9FD34E22BCEC53D008F8D95 /* NostrSDK */; };
 		C9FD34F62BCEC89C008F8D95 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C9FD34F52BCEC89C008F8D95 /* secp256k1 */; };
 		C9FD34F82BCEC8B5008F8D95 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C9FD34F72BCEC8B5008F8D95 /* secp256k1 */; };
+		C9FD35132BCED5A6008F8D95 /* NostrSDK in Frameworks */ = {isa = PBXBuildFile; productRef = C9FD35122BCED5A6008F8D95 /* NostrSDK */; };
 		CD09A74429A50F1D0063464F /* SideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD09A74329A50F1D0063464F /* SideMenu.swift */; };
 		CD09A74629A50F750063464F /* SideMenuContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD09A74529A50F750063464F /* SideMenuContent.swift */; };
 		CD09A74829A51EFC0063464F /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD09A74729A51EFC0063464F /* Router.swift */; };
@@ -757,10 +757,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9DEC068298965270078B43A /* Starscream in Frameworks */,
+				C9FD35132BCED5A6008F8D95 /* NostrSDK in Frameworks */,
 				C9B71DC02A8E9BAD0031ED9F /* SentrySwiftUI in Frameworks */,
 				C9B71DBE2A8E9BAD0031ED9F /* Sentry in Frameworks */,
 				C9646E9A29B79E04007239A4 /* Logger in Frameworks */,
-				C9FD34E32BCEC53D008F8D95 /* NostrSDK in Frameworks */,
 				C9FD34F62BCEC89C008F8D95 /* secp256k1 in Frameworks */,
 				C9646EA729B7A3DD007239A4 /* Dependencies in Frameworks */,
 				C96CB98C2A6040C500498C4E /* DequeModule in Frameworks */,
@@ -1424,8 +1424,8 @@
 				C9B71DBD2A8E9BAD0031ED9F /* Sentry */,
 				C9B71DBF2A8E9BAD0031ED9F /* SentrySwiftUI */,
 				C99DBF7D2A9E81CF00F7068F /* SDWebImageSwiftUI */,
-				C9FD34E22BCEC53D008F8D95 /* NostrSDK */,
 				C9FD34F52BCEC89C008F8D95 /* secp256k1 */,
+				C9FD35122BCED5A6008F8D95 /* NostrSDK */,
 			);
 			productName = Nos;
 			productReference = C9DEBFCE298941000078B43A /* Nos.app */;
@@ -1548,8 +1548,8 @@
 				C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */,
 				C91565BF2B2368FA0068EECA /* XCRemoteSwiftPackageReference "ViewInspector" */,
 				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */,
-				C9FD34E12BCEC53D008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */,
 				C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */,
+				C9FD35112BCED5A6008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -2986,20 +2986,20 @@
 				minimumVersion = 4.0.0;
 			};
 		};
-		C9FD34E12BCEC53D008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@github.com:nostr-sdk/nostr-sdk-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.0;
-			};
-		};
 		C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GigaBitcoin/secp256k1.swift";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.12.0;
+			};
+		};
+		C9FD35112BCED5A6008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nostr-sdk/nostr-sdk-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -3155,11 +3155,6 @@
 			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
 		};
-		C9FD34E22BCEC53D008F8D95 /* NostrSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9FD34E12BCEC53D008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */;
-			productName = NostrSDK;
-		};
 		C9FD34F52BCEC89C008F8D95 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */;
@@ -3169,6 +3164,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */;
 			productName = secp256k1;
+		};
+		C9FD35122BCED5A6008F8D95 /* NostrSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9FD35112BCED5A6008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */;
+			productName = NostrSDK;
 		};
 		CDDA1F7A29A527650047ACD8 /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;
