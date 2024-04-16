@@ -75,6 +75,7 @@ struct KnownFollowersView: View {
                     StackedAvatarsView(avatarUrls: avatarURLs, border: 4)
                 }
                 .frame(width: 80)
+                .padding(.trailing, 12)
                 Text(followText)
                 Spacer()
             }

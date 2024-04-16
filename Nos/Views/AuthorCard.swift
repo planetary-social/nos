@@ -2,13 +2,22 @@ import SwiftUI
 
 /// This view displays the information we have for an author suitable for being used in a list.
 struct AuthorCard: View {
-
     @ObservedObject var author: Author
+    @Environment(CurrentUser.self) var currentUser
+
+    /// Whether the follow button should be displayed or not.
+    let showsFollowButton: Bool
 
     var tapAction: (() -> Void)?
- 
-    init(author: Author, onTap: (() -> Void)? = nil) {
+    
+    /// Initializes an `AuthorCard` with the given parameters.
+    /// - Parameters:
+    ///   - author: The author to show in the card.
+    ///   - showsFollowButton: Whether the follow button should be displayed or not. Defaults to `true`.
+    ///   - onTap: The action to take when this card is tapped, if any. Defaults to `nil`.
+    init(author: Author, showsFollowButton: Bool = true, onTap: (() -> Void)? = nil) {
         self.author = author
+        self.showsFollowButton = showsFollowButton
         self.tapAction = onTap
     }
 
@@ -18,8 +27,13 @@ struct AuthorCard: View {
         } label: {
             VStack(spacing: 13) {
                 HStack {
-                    AvatarView(imageUrl: author.profilePhotoURL, size: 80)
-                        .padding(.trailing, 12)
+                    ZStack(alignment: .bottomTrailing) {
+                        AvatarView(imageUrl: author.profilePhotoURL, size: 80)
+                            .padding(.trailing, 12)
+                        if showsFollowButton {
+                            CircularFollowButton(author: author)
+                        }
+                    }
                     VStack(alignment: .leading, spacing: 6) {
                         HStack {
                             Text(author.safeName)
@@ -75,9 +89,9 @@ struct AuthorCard: View {
     var previewData = PreviewData()
     
     return VStack {
-        AuthorCard(author: previewData.alice) 
-        AuthorCard(author: previewData.unsAuthor) 
-        AuthorCard(author: previewData.bob) 
+        AuthorCard(author: previewData.alice)
+        AuthorCard(author: previewData.unsAuthor, showsFollowButton: false)
+        AuthorCard(author: previewData.bob)
     }
     .padding()
     .inject(previewData: previewData)
