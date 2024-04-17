@@ -195,8 +195,6 @@
 		C97465312A3B89140031226F /* AuthorLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97465302A3B89140031226F /* AuthorLabel.swift */; };
 		C97465342A3C95FE0031226F /* RelayPickerToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97465332A3C95FE0031226F /* RelayPickerToolbarButton.swift */; };
 		C97797B9298AA19A0046BD25 /* RelayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97797B8298AA19A0046BD25 /* RelayService.swift */; };
-		C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C97797BB298AB1890046BD25 /* secp256k1 */; };
-		C97797BF298ABE060046BD25 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C97797BE298ABE060046BD25 /* secp256k1 */; };
 		C97A1C8829E45B3C009D9E8D /* RawEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97A1C8729E45B3C009D9E8D /* RawEventView.swift */; };
 		C97A1C8B29E45B4E009D9E8D /* RawEventController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97A1C8A29E45B4E009D9E8D /* RawEventController.swift */; };
 		C97A1C8C29E45B4E009D9E8D /* RawEventController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97A1C8A29E45B4E009D9E8D /* RawEventController.swift */; };
@@ -290,6 +288,7 @@
 		C9ADB13F29929F1F0075E7F8 /* String+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB13729928CC30075E7F8 /* String+Hex.swift */; };
 		C9ADB14129951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB14029951CB10075E7F8 /* NSManagedObject+Nos.swift */; };
 		C9ADB14229951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ADB14029951CB10075E7F8 /* NSManagedObject+Nos.swift */; };
+		C9B597652BBC8300002EC76A /* ImagePickerUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B597642BBC8300002EC76A /* ImagePickerUIViewController.swift */; };
 		C9B678DB29EEBF3B00303F33 /* DependencyInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */; };
 		C9B678DC29EEBF3B00303F33 /* DependencyInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */; };
 		C9B678DE29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */; };
@@ -308,7 +307,6 @@
 		C9BA85932B23628B00AFC2C3 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = C9BA85922B23628B00AFC2C3 /* Dependencies */; };
 		C9BA85952B2362C100AFC2C3 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C9BA85942B2362C100AFC2C3 /* SDWebImageSwiftUI */; };
 		C9BA85972B23638700AFC2C3 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = C9BA85962B23638700AFC2C3 /* Starscream */; };
-		C9BA85992B23638700AFC2C3 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C9BA85982B23638700AFC2C3 /* secp256k1 */; };
 		C9BA859B2B23638700AFC2C3 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = C9BA859A2B23638700AFC2C3 /* SwiftUINavigation */; };
 		C9BA859D2B23638700AFC2C3 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = C9BA859C2B23638700AFC2C3 /* PostHog */; };
 		C9BA859F2B23638700AFC2C3 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = C9BA859E2B23638700AFC2C3 /* DequeModule */; };
@@ -397,6 +395,9 @@
 		C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C22298DC7B900C6714D /* SettingsView.swift */; };
 		C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F84C26298DC98800C6714D /* KeyPair.swift */; };
 		C9FC1E632B61ACE300A3A6FB /* CoreDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FC1E622B61ACE300A3A6FB /* CoreDataTestCase.swift */; };
+		C9FD34F62BCEC89C008F8D95 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C9FD34F52BCEC89C008F8D95 /* secp256k1 */; };
+		C9FD34F82BCEC8B5008F8D95 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = C9FD34F72BCEC8B5008F8D95 /* secp256k1 */; };
+		C9FD35132BCED5A6008F8D95 /* NostrSDK in Frameworks */ = {isa = PBXBuildFile; productRef = C9FD35122BCED5A6008F8D95 /* NostrSDK */; };
 		CD09A74429A50F1D0063464F /* SideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD09A74329A50F1D0063464F /* SideMenu.swift */; };
 		CD09A74629A50F750063464F /* SideMenuContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD09A74529A50F750063464F /* SideMenuContent.swift */; };
 		CD09A74829A51EFC0063464F /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD09A74729A51EFC0063464F /* Router.swift */; };
@@ -413,12 +414,10 @@
 		CDDA1F7B29A527650047ACD8 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = CDDA1F7A29A527650047ACD8 /* Starscream */; };
 		CDDA1F7D29A527650047ACD8 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = CDDA1F7C29A527650047ACD8 /* SwiftUINavigation */; };
 		DC08FF7E2A7968FF009F87D1 /* FileStorageAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F20422A6ED75C00F8D73F /* FileStorageAPI.swift */; };
-		DC08FF802A796997009F87D1 /* ImagePickerUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F20402A6AE31000F8D73F /* ImagePickerUIViewController.swift */; };
 		DC08FF812A7969C5009F87D1 /* UIDevice+Simulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */; };
 		DC2E54C82A700F1400C2CAAB /* UIDevice+Simulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */; };
 		DC4AB2F62A4475B800D1478A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AB2F52A4475B800D1478A /* AppDelegate.swift */; };
 		DC5F203F2A6AE24200F8D73F /* ImagePickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F203E2A6AE24200F8D73F /* ImagePickerButton.swift */; };
-		DC5F20412A6AE31000F8D73F /* ImagePickerUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F20402A6AE31000F8D73F /* ImagePickerUIViewController.swift */; };
 		DC5F20432A6ED75C00F8D73F /* FileStorageAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F20422A6ED75C00F8D73F /* FileStorageAPI.swift */; };
 /* End PBXBuildFile section */
 
@@ -662,6 +661,7 @@
 		C9ADB13729928CC30075E7F8 /* String+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hex.swift"; sourceTree = "<group>"; };
 		C9ADB13C29929B540075E7F8 /* Bech32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bech32.swift; sourceTree = "<group>"; };
 		C9ADB14029951CB10075E7F8 /* NSManagedObject+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Nos.swift"; sourceTree = "<group>"; };
+		C9B597642BBC8300002EC76A /* ImagePickerUIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerUIViewController.swift; sourceTree = "<group>"; };
 		C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyInjection.swift; sourceTree = "<group>"; };
 		C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Sendable.swift"; sourceTree = "<group>"; };
 		C9B678E029EEC41000303F33 /* SocialGraphCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialGraphCache.swift; sourceTree = "<group>"; };
@@ -742,7 +742,6 @@
 		DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Simulator.swift"; sourceTree = "<group>"; };
 		DC4AB2F52A4475B800D1478A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DC5F203E2A6AE24200F8D73F /* ImagePickerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerButton.swift; sourceTree = "<group>"; };
-		DC5F20402A6AE31000F8D73F /* ImagePickerUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerUIViewController.swift; sourceTree = "<group>"; };
 		DC5F20422A6ED75C00F8D73F /* FileStorageAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageAPI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -760,10 +759,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9DEC068298965270078B43A /* Starscream in Frameworks */,
+				C9FD35132BCED5A6008F8D95 /* NostrSDK in Frameworks */,
 				C9B71DC02A8E9BAD0031ED9F /* SentrySwiftUI in Frameworks */,
-				C97797BC298AB1890046BD25 /* secp256k1 in Frameworks */,
 				C9B71DBE2A8E9BAD0031ED9F /* Sentry in Frameworks */,
 				C9646E9A29B79E04007239A4 /* Logger in Frameworks */,
+				C9FD34F62BCEC89C008F8D95 /* secp256k1 in Frameworks */,
 				C9646EA729B7A3DD007239A4 /* Dependencies in Frameworks */,
 				C96CB98C2A6040C500498C4E /* DequeModule in Frameworks */,
 				C99DBF7E2A9E81CF00F7068F /* SDWebImageSwiftUI in Frameworks */,
@@ -777,7 +777,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C99DBF802A9E8BCF00F7068F /* SDWebImageSwiftUI in Frameworks */,
-				C97797BF298ABE060046BD25 /* secp256k1 in Frameworks */,
+				C9FD34F82BCEC8B5008F8D95 /* secp256k1 in Frameworks */,
 				CDDA1F7B29A527650047ACD8 /* Starscream in Frameworks */,
 				C9B71DC52A9008300031ED9F /* Sentry in Frameworks */,
 				C9646EA929B7A4F2007239A4 /* PostHog in Frameworks */,
@@ -795,7 +795,6 @@
 			files = (
 				C9BA85952B2362C100AFC2C3 /* SDWebImageSwiftUI in Frameworks */,
 				C9BA85A12B23638700AFC2C3 /* SentrySwiftUI in Frameworks */,
-				C9BA85992B23638700AFC2C3 /* secp256k1 in Frameworks */,
 				C9BA859D2B23638700AFC2C3 /* PostHog in Frameworks */,
 				C9BA85AB2B2363CA00AFC2C3 /* Sentry in Frameworks */,
 				C9BA859B2B23638700AFC2C3 /* SwiftUINavigation in Frameworks */,
@@ -1105,20 +1104,20 @@
 		C9DEBFD0298941000078B43A /* Nos */ = {
 			isa = PBXGroup;
 			children = (
+				C9DEBFDC298941020078B43A /* Nos.entitlements */,
 				5BE460762BAB307A004B83ED /* NosDev.entitlements */,
 				5BE460702BAB2BE1004B83ED /* NosStaging.entitlements */,
 				C987F85629BA96B700B44E7A /* Info.plist */,
-				C9DEBFDC298941020078B43A /* Nos.entitlements */,
-				C9DEBFD1298941000078B43A /* NosApp.swift */,
 				3F170C77299D816200BC8F8B /* AppController.swift */,
+				C9DEBFD1298941000078B43A /* NosApp.swift */,
 				CD09A74729A51EFC0063464F /* Router.swift */,
+				0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */,
 				C9DFA974299C30CA006929C1 /* Assets */,
+				C9EB171929E5976700A15ABB /* Controller */,
 				C9DEC001298944FC0078B43A /* Extensions */,
 				C9DEC02C29894BB20078B43A /* Models */,
 				C97797B7298AA1600046BD25 /* Service */,
-				C9EB171929E5976700A15ABB /* Controller */,
 				C9F84C24298DC7C100C6714D /* Views */,
-				0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Nos;
 			sourceTree = "<group>";
@@ -1281,10 +1280,10 @@
 				C9F75AD12A02D41E005BBE45 /* ComposerActionBar.swift */,
 				C9F75AD52A041FF7005BBE45 /* ExpirationTimePicker.swift */,
 				C9EE3E5F2A0538B7008A7491 /* ExpirationTimeButton.swift */,
-				DC5F20402A6AE31000F8D73F /* ImagePickerUIViewController.swift */,
 				DC5F203E2A6AE24200F8D73F /* ImagePickerButton.swift */,
 				DC5F20422A6ED75C00F8D73F /* FileStorageAPI.swift */,
 				C93F045D2B9B7A7000AD5872 /* ReplyPreview.swift */,
+				C9B597642BBC8300002EC76A /* ImagePickerUIViewController.swift */,
 			);
 			path = "New Note";
 			sourceTree = "<group>";
@@ -1420,7 +1419,6 @@
 			name = Nos;
 			packageProductDependencies = (
 				C9DEC067298965270078B43A /* Starscream */,
-				C97797BB298AB1890046BD25 /* secp256k1 */,
 				C94D855E29914D2300749478 /* SwiftUINavigation */,
 				C9646E9929B79E04007239A4 /* Logger */,
 				C9646EA329B7A24A007239A4 /* PostHog */,
@@ -1429,6 +1427,8 @@
 				C9B71DBD2A8E9BAD0031ED9F /* Sentry */,
 				C9B71DBF2A8E9BAD0031ED9F /* SentrySwiftUI */,
 				C99DBF7D2A9E81CF00F7068F /* SDWebImageSwiftUI */,
+				C9FD34F52BCEC89C008F8D95 /* secp256k1 */,
+				C9FD35122BCED5A6008F8D95 /* NostrSDK */,
 			);
 			productName = Nos;
 			productReference = C9DEBFCE298941000078B43A /* Nos.app */;
@@ -1451,7 +1451,6 @@
 			);
 			name = NosTests;
 			packageProductDependencies = (
-				C97797BE298ABE060046BD25 /* secp256k1 */,
 				CDDA1F7A29A527650047ACD8 /* Starscream */,
 				CDDA1F7C29A527650047ACD8 /* SwiftUINavigation */,
 				C9646E9B29B79E4D007239A4 /* Logger */,
@@ -1461,6 +1460,7 @@
 				C9B71DC42A9008300031ED9F /* Sentry */,
 				C99DBF7F2A9E8BCF00F7068F /* SDWebImageSwiftUI */,
 				C91565C02B2368FA0068EECA /* ViewInspector */,
+				C9FD34F72BCEC8B5008F8D95 /* secp256k1 */,
 			);
 			productName = NosTests;
 			productReference = C9DEBFE4298941020078B43A /* NosTests.xctest */;
@@ -1485,7 +1485,6 @@
 				C9BA85922B23628B00AFC2C3 /* Dependencies */,
 				C9BA85942B2362C100AFC2C3 /* SDWebImageSwiftUI */,
 				C9BA85962B23638700AFC2C3 /* Starscream */,
-				C9BA85982B23638700AFC2C3 /* secp256k1 */,
 				C9BA859A2B23638700AFC2C3 /* SwiftUINavigation */,
 				C9BA859C2B23638700AFC2C3 /* PostHog */,
 				C9BA859E2B23638700AFC2C3 /* DequeModule */,
@@ -1504,7 +1503,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1510;
+				LastUpgradeCheck = 1530;
 				TargetAttributes = {
 					C90862BA29E9804B00C35A71 = {
 						CreatedOnToolsVersion = 14.2;
@@ -1541,7 +1540,6 @@
 			mainGroup = C9DEBFC5298941000078B43A;
 			packageReferences = (
 				C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */,
-				C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */,
 				C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */,
 				C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32" */,
 				C9646E9829B79E04007239A4 /* XCRemoteSwiftPackageReference "logger-ios" */,
@@ -1553,6 +1551,8 @@
 				C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */,
 				C91565BF2B2368FA0068EECA /* XCRemoteSwiftPackageReference "ViewInspector" */,
 				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */,
+				C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */,
+				C9FD35112BCED5A6008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -1797,7 +1797,7 @@
 				C92F015E2AC4D99400972489 /* NosForm.swift in Sources */,
 				5B8C96AC29D52AD200B73AEC /* AuthorListView.swift in Sources */,
 				C94A5E152A716A6D00B6EC5D /* EditableNoteText.swift in Sources */,
-				DC5F20412A6AE31000F8D73F /* ImagePickerUIViewController.swift in Sources */,
+				C9B597652BBC8300002EC76A /* ImagePickerUIViewController.swift in Sources */,
 				C9680AD42ACDF57D006C8C93 /* UNSWizardNeedsPaymentView.swift in Sources */,
 				C94C4CF32AD993CA00F801CA /* UNSErrorView.swift in Sources */,
 				C98CA9042B14FA3D00929141 /* PagedRelaySubscription.swift in Sources */,
@@ -2013,7 +2013,6 @@
 				C97A1C8F29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift in Sources */,
 				C9ADB135299288230075E7F8 /* KeyFixture.swift in Sources */,
 				C9C547552A4F1CDB006B0741 /* SearchController.swift in Sources */,
-				DC08FF802A796997009F87D1 /* ImagePickerUIViewController.swift in Sources */,
 				3FFB1D9429A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,
 				C9BD919B2B61C4FB00FDA083 /* RawNostrID+Random.swift in Sources */,
 				5B6EB49029EDBEC1006E750C /* NoteParserTests.swift in Sources */,
@@ -2071,6 +2070,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -2255,6 +2255,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -2494,6 +2495,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -2557,6 +2559,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -2996,6 +2999,22 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/GigaBitcoin/secp256k1.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.12.0;
+			};
+		};
+		C9FD35112BCED5A6008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nostr-sdk/nostr-sdk-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -3163,6 +3182,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
+		};
+		C9FD34F52BCEC89C008F8D95 /* secp256k1 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */;
+			productName = secp256k1;
+		};
+		C9FD34F72BCEC8B5008F8D95 /* secp256k1 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */;
+			productName = secp256k1;
+		};
+		C9FD35122BCED5A6008F8D95 /* NostrSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9FD35112BCED5A6008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */;
+			productName = NostrSDK;
 		};
 		CDDA1F7A29A527650047ACD8 /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;

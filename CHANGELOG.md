@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated dark theme colors for card backgrounds, primary text, and secondary text.
 - Added a new UI for replying to messages that allows attaching images and setting an expiration date.
 - Fixed an issue where Profile pages could display little or no content.
+- Added support for uploading videos when composing a note.
 
 ## [0.1.7] - 2024-03-21Z
 

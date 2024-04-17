@@ -1,5 +1,5 @@
 {
-  "originHash" : "812c2560c5fa1bb75a8d7ae31204ca358bbd3aca84135c7dc0e53a3078899d0b",
+  "originHash" : "73986e8614e86bc198acf108f9214c158dd0475e95a9469983fe7e59ac1890a1",
   "pins" : [
     {
       "identity" : "bech32",
@@ -29,12 +29,30 @@
       }
     },
     {
+      "identity" : "cryptoswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/krzyzanowskim/CryptoSwift.git",
+      "state" : {
+        "revision" : "c9c3df6ab812de32bae61fc0cd1bf6d45170ebf0",
+        "version" : "1.8.2"
+      }
+    },
+    {
       "identity" : "logger-ios",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/planetary-social/logger-ios",
       "state" : {
         "revision" : "d25fb7d95d76953b8bbbc2ce167b26914bc5264b",
         "version" : "1.1.0"
+      }
+    },
+    {
+      "identity" : "nostr-sdk-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nostr-sdk/nostr-sdk-ios",
+      "state" : {
+        "revision" : "afbfc4b3c347a72f9d467a6e213d22fa66a2f63e",
+        "version" : "0.1.0"
       }
     },
     {
@@ -69,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/GigaBitcoin/secp256k1.swift",
       "state" : {
-        "revision" : "48fb20fce4ca3aad89180448a127d5bc16f0e44c",
-        "version" : "0.10.0"
+        "revision" : "347b84ed2aad2305a7233f2a48d76f41e52062a1",
+        "version" : "0.16.0"
       }
     },
     {

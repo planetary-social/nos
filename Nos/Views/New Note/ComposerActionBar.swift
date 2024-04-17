@@ -41,12 +41,11 @@ struct ComposerActionBar: View {
             switch subMenu {
             case .none:
                 // Attach Media
-                ImagePickerButton { image in
+                ImagePickerButton { imageURL in
                     Task {
                         do {
                             startUploadingImage()
-                            let attachedFile = AttachedFile(image: image)
-                            let url = try await fileStorageAPI.upload(file: attachedFile)
+                            let url = try await fileStorageAPI.upload(fileAt: imageURL)
                             text.append(url)
                             endUploadingImage()
                         } catch {
@@ -56,7 +55,11 @@ struct ComposerActionBar: View {
                             alert = AlertState(title: {
                                 TextState(String(localized: .imagePicker.errorUploadingFile))
                             }, message: {
-                                TextState(String(localized: .imagePicker.errorUploadingFileMessage))
+                                if case let FileStorageAPIError.uploadFailed(message) = error {
+                                    TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
+                                } else {
+                                    TextState(String(localized: .imagePicker.errorUploadingFileMessage))
+                                }
                             })
                         }
                     }
