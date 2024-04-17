@@ -13,29 +13,38 @@ struct NIP05View: View {
     var body: some View {
         if let nip05Identifier = author.nip05,
             !nip05Identifier.isEmpty,
-            let formattedNIP05 = author.formattedNIP05 {
+            let nip05Parts = author.nip05Parts {
             Group {
                 if verifiedNip05Identifier == true {
-                    Text("\(formattedNIP05)")
-                        .foregroundColor(.primaryTxt)
+                    Text(nip05Parts.username)
+                        .foregroundColor(.primaryTxt) +
+                    Text(nip05Parts.atDomain)
+                        .foregroundColor(.secondaryTxt)
                 } else if verifiedNip05Identifier == false {
-                    Text(formattedNIP05)
-                        .strikethrough()
-                        .foregroundColor(.secondaryTxt)
+                    (
+                        Text(nip05Parts.username)
+                            .foregroundColor(.primaryTxt) +
+                        Text(nip05Parts.atDomain)
+                            .foregroundColor(.secondaryTxt)
+                    )
+                    .strikethrough()
                 } else {
-                    Text("\(formattedNIP05)")
-                        .foregroundColor(.secondaryTxt)
+                    (
+                        Text(nip05Parts.username) +
+                        Text(nip05Parts.atDomain)
+                    )
+                    .foregroundColor(.secondaryTxt)
                 }
             }
-            .multilineTextAlignment(.leading)
+            .lineLimit(1)
             .contextMenu {
                 Button {
-                    UIPasteboard.general.string = formattedNIP05
+                    UIPasteboard.general.string = nip05Parts.username + nip05Parts.atDomain
                 } label: {
                     Text(.localizable.copy)
                 }
             } preview: {
-                Text(formattedNIP05)
+                Text(nip05Parts.username + nip05Parts.atDomain)
                     .foregroundColor(.primaryTxt)
                     .padding()
             }

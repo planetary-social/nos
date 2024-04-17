@@ -67,7 +67,7 @@ final class AuthorTests: CoreDataTestCase {
     func test_hasNIP05_true_when_nip05_exists() throws {
         let context = persistenceController.viewContext
         let author = try Author.findOrCreate(by: "test", context: context)
-        author.nip05 = "me@nip05.com"
+        author.nip05 = "iamgroot@nos.social"
 
         XCTAssertTrue(author.hasNIP05)
     }
@@ -94,5 +94,54 @@ final class AuthorTests: CoreDataTestCase {
         author.uns = "me@example.com"
 
         XCTAssertTrue(author.hasUNS)
+    }
+
+    func test_nip05Parts() throws {
+        let context = persistenceController.viewContext
+        let author = try Author.findOrCreate(by: "test", context: context)
+        author.nip05 = "iamgroot@nos.social"
+
+        let parts = try XCTUnwrap(author.nip05Parts)
+        XCTAssertEqual(parts.username, "iamgroot")
+        XCTAssertEqual(parts.atDomain, "@nos.social")
+    }
+
+    func test_formattedNIP05() throws {
+        let nip05 = "iamgroot@nos.social"
+        let context = persistenceController.viewContext
+        let author = try Author.findOrCreate(by: "test", context: context)
+        author.nip05 = nip05
+
+        XCTAssertEqual(author.formattedNIP05, nip05)
+    }
+
+    func test_formattedNIP05_with_underscore_username() throws {
+        let nip05 = "_@nos.social"
+        let expected = "nos.social"
+        let context = persistenceController.viewContext
+        let author = try Author.findOrCreate(by: "test", context: context)
+        author.nip05 = nip05
+
+        XCTAssertEqual(author.formattedNIP05, expected)
+    }
+
+    func test_formattedNIP05_with_nil_nip05() throws {
+        let nip05: String? = nil
+        let expected: String? = nil
+        let context = persistenceController.viewContext
+        let author = try Author.findOrCreate(by: "test", context: context)
+        author.nip05 = nip05
+
+        XCTAssertEqual(author.formattedNIP05, expected)
+    }
+
+    func test_formattedNIP05_with_no_at_symbol() throws {
+        let nip05 = "testing"
+        let expected = "testing"
+        let context = persistenceController.viewContext
+        let author = try Author.findOrCreate(by: "test", context: context)
+        author.nip05 = nip05
+
+        XCTAssertEqual(author.formattedNIP05, expected)
     }
 }

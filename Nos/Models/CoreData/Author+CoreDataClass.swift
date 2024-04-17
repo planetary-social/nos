@@ -61,6 +61,20 @@ import Logger
         }
     }
 
+    var nip05Parts: (username: String, atDomain: String)? {
+        guard let nip05 else {
+            return nil
+        }
+
+        let parts = nip05.split(separator: "@")
+
+        guard let username = parts[safe: 0],
+            let domain = parts[safe: 1] else {
+            return nil
+        }
+        return (String(username), "@\(domain)")
+    }
+
     var nosNIP05Username: String {
         let suffix = "@nos.social"
         if let nip05, nip05.hasSuffix(suffix) {
@@ -74,18 +88,11 @@ import Logger
             return nil
         }
         
-        let parts = nip05.split(separator: "@")
-        
-        guard let username = parts[safe: 0],
-            let domain = parts[safe: 1] else {
+        guard let nip05Parts, nip05Parts.username == "_" else {
             return nip05
         }
-        
-        if username == "_" {
-            return String(domain)
-        } else {
-            return nip05 
-        }
+
+        return String(nip05Parts.atDomain.dropFirst())
     }
     
     var needsMetadata: Bool {
