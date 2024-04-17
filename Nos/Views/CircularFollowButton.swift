@@ -45,7 +45,11 @@ struct CircularFollowButton: View {
                         Circle()
                             .frame(width: diameter)
                             .offset(y: 1)
-                            .foregroundColor(following ? .actionSecondaryBackground : .actionPrimaryBackground)
+                            .foregroundStyle(
+                                following ?
+                                Color.actionSecondaryBackground :
+                                Color.actionPrimaryBackground
+                            )
                     )
                 if following {
                     Image.followingIcon
