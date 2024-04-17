@@ -9,6 +9,8 @@ struct CircularFollowButton: View {
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
 
+    private let diameter: CGFloat = 30
+
     var body: some View {
         let following = currentUser.isFollowing(author: author)
 
@@ -29,7 +31,7 @@ struct CircularFollowButton: View {
         } label: {
             ZStack {
                 Circle()
-                    .frame(width: 30, height: 30)
+                    .frame(width: diameter)
                     .foregroundStyle(
                         LinearGradient(
                             colors: following ?
@@ -38,6 +40,12 @@ struct CircularFollowButton: View {
                             startPoint: .top,
                             endPoint: .bottom
                         )
+                    )
+                    .background(
+                        Circle()
+                            .frame(width: diameter)
+                            .offset(y: 1)
+                            .foregroundColor(following ? .actionSecondaryBackground : .actionPrimaryBackground)
                     )
                 if following {
                     Image.followingIcon
