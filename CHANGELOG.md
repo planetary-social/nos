@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue where registering a NIP-05 username field could fail silently.
 - Fixed an issue where reports for notes were treated as reports for profiles.
 - Updated the Discover tab navigation bar to match new design.
 
