@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue where reports for notes were treated as reports for profiles.
 - Updated the Discover tab navigation bar to match new design.
+- Updated the design of profile cards in search results and mentions search.
 
 ## [0.1.10] - 2024-04-12Z
 
