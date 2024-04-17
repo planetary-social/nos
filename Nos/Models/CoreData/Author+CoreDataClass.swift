@@ -41,8 +41,24 @@ import Logger
         return PublicKey(hex: hex)
     }
 
+    var hasNIP05: Bool {
+        if let nip05, !nip05.isEmpty {
+            return true
+        } else {
+            return false
+        }
+    }
+
     var hasNosNIP05: Bool {
         nip05?.hasSuffix("@nos.social") == true
+    }
+
+    var hasUNS: Bool {
+        if let uns, !uns.isEmpty {
+            return true
+        } else {
+            return false
+        }
     }
 
     var nosNIP05Username: String {

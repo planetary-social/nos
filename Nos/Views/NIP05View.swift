@@ -2,7 +2,7 @@ import Dependencies
 import Logger
 import SwiftUI
 
-/// Displays a user's NIP-05 and does some verification on it.
+/// Displays a user's NIP-05 if they have one and does some verification on it.
 struct NIP05View: View {
     
     @ObservedObject var author: Author
@@ -27,7 +27,6 @@ struct NIP05View: View {
                         .foregroundColor(.secondaryTxt)
                 }
             }
-            .font(.clarity(.medium, textStyle: .subheadline))
             .multilineTextAlignment(.leading)
             .contextMenu {
                 Button {

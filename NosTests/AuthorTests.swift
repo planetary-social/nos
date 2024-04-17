@@ -47,4 +47,52 @@ final class AuthorTests: CoreDataTestCase {
         author.nip05 = nip05WithUnderscore
         XCTAssertEqual(author.humanFriendlyIdentifier, "nip05.com")
     }
+
+    func test_hasNIP05_false_when_nip05_is_nil() throws {
+        let context = persistenceController.viewContext
+        let author = try Author.findOrCreate(by: "test", context: context)
+        author.nip05 = nil
+
+        XCTAssertFalse(author.hasNIP05)
+    }
+
+    func test_hasNIP05_false_when_nip05_is_empty() throws {
+        let context = persistenceController.viewContext
+        let author = try Author.findOrCreate(by: "test", context: context)
+        author.nip05 = ""
+
+        XCTAssertFalse(author.hasNIP05)
+    }
+
+    func test_hasNIP05_true_when_nip05_exists() throws {
+        let context = persistenceController.viewContext
+        let author = try Author.findOrCreate(by: "test", context: context)
+        author.nip05 = "me@nip05.com"
+
+        XCTAssertTrue(author.hasNIP05)
+    }
+
+    func test_hasUNS_false_when_uns_is_nil() throws {
+        let context = persistenceController.viewContext
+        let author = try Author.findOrCreate(by: "test", context: context)
+        author.uns = nil
+
+        XCTAssertFalse(author.hasUNS)
+    }
+
+    func test_hasUNS_false_when_uns_is_empty() throws {
+        let context = persistenceController.viewContext
+        let author = try Author.findOrCreate(by: "test", context: context)
+        author.uns = ""
+
+        XCTAssertFalse(author.hasUNS)
+    }
+
+    func test_hasUNS_true_when_uns_exists() throws {
+        let context = persistenceController.viewContext
+        let author = try Author.findOrCreate(by: "test", context: context)
+        author.uns = "me@example.com"
+
+        XCTAssertTrue(author.hasUNS)
+    }
 }

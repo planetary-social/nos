@@ -26,7 +26,7 @@ struct AuthorCard: View {
             tapAction?()
         } label: {
             VStack(spacing: 13) {
-                HStack {
+                HStack(alignment: .top) {
                     ZStack(alignment: .bottomTrailing) {
                         AvatarView(imageUrl: author.profilePhotoURL, size: 80)
                             .padding(.trailing, 12)
@@ -34,35 +34,39 @@ struct AuthorCard: View {
                             CircularFollowButton(author: author)
                         }
                     }
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 8) {
                         HStack {
-                            Text(author.safeName)
-                                .lineLimit(1)
-                                .font(.title3)
-                                .fontWeight(.bold)
-                                .foregroundColor(Color.primaryTxt)
-                                .multilineTextAlignment(.leading)
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                            if author.hasNIP05 {
+                                NIP05View(author: author)
+                                    .font(.clarity(.semibold, textStyle: .title3))
+                            } else if author.hasUNS {
+                                UNSNameView(author: author)
+                                    .font(.clarity(.semibold, textStyle: .title3))
+                            } else {
+                                Text(author.safeName)
+                                    .lineLimit(1)
+                                    .font(.title3)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.primaryTxt)
+                                    .multilineTextAlignment(.leading)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+
+                            Spacer()
+
                             if author.muted {
                                 Text(.localizable.muted)
                                     .font(.subheadline)
                                     .foregroundColor(Color.secondaryTxt)
                             }
                         }
-                        
-                        if !(author.uns ?? "").isEmpty {
-                            UNSNameView(author: author)
-                        } else {
-                            NIP05View(author: author)
-                        }
-                        
+
                         if let bio = author.about {
                             Text(bio)
-                                .foregroundColor(.secondaryTxt)
-                                .font(.clarity(.medium, textStyle: .subheadline))
+                                .foregroundColor(.primaryTxt)
                                 .multilineTextAlignment(.leading)
                                 .lineSpacing(5)
-                                .lineLimit(2)
+                                .lineLimit(3)
                         }
                     }
                 }
