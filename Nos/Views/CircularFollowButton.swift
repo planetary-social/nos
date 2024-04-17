@@ -27,17 +27,24 @@ struct CircularFollowButton: View {
                 }
             }
         } label: {
-            Circle()
-                .frame(width: 30, height: 30)
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: following ?
-                        [Color.actionSecondaryGradientTop, Color.actionSecondaryGradientBottom] :
-                            [Color.actionPrimaryGradientTop, Color.actionPrimaryGradientBottom],
-                        startPoint: .top,
-                        endPoint: .bottom
+            ZStack {
+                Circle()
+                    .frame(width: 30, height: 30)
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: following ?
+                            [Color.actionSecondaryGradientTop, Color.actionSecondaryGradientBottom] :
+                                [Color.actionPrimaryGradientTop, Color.actionPrimaryGradientBottom],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
                     )
-                )
+                if following {
+                    Image.followingIcon
+                } else {
+                    Image.followIcon
+                }
+            }
         }
     }
 }
