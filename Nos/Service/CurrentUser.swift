@@ -5,11 +5,17 @@ import Dependencies
 
 enum CurrentUserError: Error {
     case authorNotFound
+    case encodingError
+    case errorWhilePublishingToRelays
 
     var description: String? {
         switch self {
         case .authorNotFound:
             return "Current user's author not found"
+        case .encodingError:
+            return "An encoding error happened while saving the user data"
+        case .errorWhilePublishingToRelays:
+            return "An encoding error happened while publishing to relays"
         }
     }
 }
@@ -263,11 +269,24 @@ enum CurrentUserError: Error {
         return followKeys.contains(key)
     }
     
-    @MainActor func publishMetaData() async {
-        guard let pubKey = publicKeyHex, let author = try? Author.find(by: pubKey, context: viewContext) else {
-            Log.debug("Error: no user")
-            return
+    @MainActor func publishMetaData() async throws {
+        guard let pubKey = publicKeyHex else {
+            Log.debug("Error: no publicKeyHex")
+            throw CurrentUserError.authorNotFound
         }
+        guard let pair = keyPair else {
+            Log.debug("Error: no keyPair")
+            throw CurrentUserError.authorNotFound
+        }
+        guard let context = viewContext else {
+            Log.debug("Error: no context")
+            throw CurrentUserError.authorNotFound
+        }
+        guard let author = try Author.find(by: pubKey, context: context) else {
+            Log.debug("Error: no author in DB")
+            throw CurrentUserError.authorNotFound
+        }
+
         self.author = author
         
         var metaEvent = MetadataEventJSON(
@@ -281,32 +300,48 @@ enum CurrentUserError: Error {
         ).dictionary
         
         if let rawData = author.rawMetadata {
-            // Tack on any unsupported fields back onto the dictionary before publish
-            let rawJson = try? JSONSerialization.jsonObject(with: rawData)
-            if let rawJson, let rawDictionary = rawJson as? [String: AnyObject] {
-                for key in rawDictionary.keys {
-                    if metaEvent[key] == nil, let rawValue = rawDictionary[key] as? String {
-                        metaEvent[key] = rawValue
-                        Log.debug("Added \(key) : \(rawValue)")
+            // Tack on any unsupported fields back onto the dictionary before
+            // publish.
+            do {
+                let rawJson = try JSONSerialization.jsonObject(with: rawData)
+                if let rawDictionary = rawJson as? [String: AnyObject] {
+                    for key in rawDictionary.keys {
+                        guard metaEvent[key] == nil else {
+                            continue
+                        }
+                        if let rawValue = rawDictionary[key] as? String {
+                            metaEvent[key] = rawValue
+                            Log.debug("Added \(key) : \(rawValue)")
+                        }
                     }
                 }
-            }
-        }
-
-        let metaData = try? JSONSerialization.data(withJSONObject: metaEvent)
-        guard let metaData, let metaString = String(data: metaData, encoding: .utf8) else {
-            Log.debug("Error: Invalid meta data")
-            return
-        }
-
-        let jsonEvent = JSONEvent(pubKey: pubKey, kind: .metaData, tags: [], content: metaString)
-
-        if let pair = keyPair {
-            do {
-                try await relayService.publishToAll(event: jsonEvent, signingKey: pair, context: viewContext)
             } catch {
-                Log.debug("failed to update Follows \(error.localizedDescription)")
+                Log.debug("Couldn't parse a JSON from the user raw metadata")
+                // Continue with the metaEvent object we built previously
             }
+        }
+
+        let metaData = try JSONSerialization.data(withJSONObject: metaEvent)
+        guard let metaString = String(data: metaData, encoding: .utf8) else {
+            throw CurrentUserError.encodingError
+        }
+
+        let jsonEvent = JSONEvent(
+            pubKey: pubKey,
+            kind: .metaData,
+            tags: [],
+            content: metaString
+        )
+
+        do {
+            try await relayService.publishToAll(
+                event: jsonEvent,
+                signingKey: pair,
+                context: viewContext
+            )
+        } catch {
+            Log.error(error.localizedDescription)
+            throw CurrentUserError.errorWhilePublishingToRelays
         }
     }
     

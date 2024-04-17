@@ -91,14 +91,20 @@ struct NiceWorkSheet: View {
 
             connectState = .connecting
 
+            let oldNIP05 = currentUser.author?.nip05
             do {
                 currentUser.author?.nip05 = "\(username)"
                 try currentUser.viewContext.saveIfNeeded()
-                await currentUser.publishMetaData()
+                try await currentUser.publishMetaData()
                 connectState = .connected
                 analytics.linkedNIP05Username()
             } catch {
                 Log.error(error.localizedDescription)
+
+                // Revert the changes
+                currentUser.author?.nip05 = oldNIP05
+                try? currentUser.viewContext.saveIfNeeded()
+
                 connectState = .failed(.unableToConnect(error))
             }
         }

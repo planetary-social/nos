@@ -1,4 +1,5 @@
 import Dependencies
+import Logger
 import SwiftUI
 
 struct ConfirmUsernameDeletionSheet: View {
@@ -89,21 +90,34 @@ struct ConfirmUsernameDeletionSheet: View {
         deleteState = .deleting
         let username = author.nosNIP05Username
         let isNosSocialUsername = author.hasNosNIP05
-        author.nip05 = ""
+        let oldNIP05 = author.nip05
         do {
+            author.nip05 = ""
             try viewContext.save()
-            await currentUser.publishMetaData()
+            try await currentUser.publishMetaData()
             if isNosSocialUsername {
-                try? await namesAPI.delete(
-                    username: username,
-                    keyPair: keyPair
-                )
+                do {
+                    try await namesAPI.delete(
+                        username: username,
+                        keyPair: keyPair
+                    )
+                } catch {
+                    Log.debug(error.localizedDescription)
+                    // The delete API could fail if the user didn't have
+                    // connection or the server is down. As we can catch these
+                    // unused usernames later, let the user continue anyway.
+                }
             }
             analytics.deletedNIP05Username()
             deleteState = .deleted
             isPresented = false
         } catch {
             crashReporting.report(error)
+
+            // Reverting the changes
+            author.nip05 = oldNIP05
+            try? viewContext.save()
+
             deleteState = .failed(.unableToDelete(error))
         }
     }

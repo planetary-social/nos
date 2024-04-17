@@ -1,4 +1,5 @@
 import Dependencies
+import Logger
 import SwiftUI
 
 struct ProfileEditView: View {
@@ -162,7 +163,9 @@ struct ProfileEditView: View {
         do {
             try viewContext.save()
             // Post event
-            await currentUser.publishMetaData()
+            try await currentUser.publishMetaData()
+        } catch CurrentUserError.errorWhilePublishingToRelays {
+            Log.debug("Error while publishing to relays")
         } catch {
             crashReporting.report(error)
         }

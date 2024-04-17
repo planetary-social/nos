@@ -123,7 +123,7 @@ class UNSWizardController: ObservableObject {
             author.nip05 = nip05
         }
         try context.save()
-        await currentUser.publishMetaData()
+        try await currentUser.publishMetaData()
         state = .success
     }
 }
