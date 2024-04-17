@@ -103,7 +103,7 @@ final class AuthorTests: CoreDataTestCase {
 
         let parts = try XCTUnwrap(author.nip05Parts)
         XCTAssertEqual(parts.username, "iamgroot")
-        XCTAssertEqual(parts.atDomain, "@nos.social")
+        XCTAssertEqual(parts.domain, "nos.social")
     }
 
     func test_formattedNIP05() throws {

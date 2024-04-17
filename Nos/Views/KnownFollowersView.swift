@@ -76,7 +76,10 @@ struct KnownFollowersView: View {
                 }
                 .frame(width: 80)
                 .padding(.trailing, 12)
+                
                 Text(followText)
+                    .font(.footnote)
+
                 Spacer()
             }
             .foregroundColor(.secondaryTxt)

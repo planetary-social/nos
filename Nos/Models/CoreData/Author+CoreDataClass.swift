@@ -61,7 +61,7 @@ import Logger
         }
     }
 
-    var nip05Parts: (username: String, atDomain: String)? {
+    var nip05Parts: (username: String, domain: String)? {
         guard let nip05 else {
             return nil
         }
@@ -72,7 +72,8 @@ import Logger
             let domain = parts[safe: 1] else {
             return nil
         }
-        return (String(username), "@\(domain)")
+        
+        return (String(username), String(domain))
     }
 
     var nosNIP05Username: String {
@@ -92,7 +93,7 @@ import Logger
             return nip05
         }
 
-        return String(nip05Parts.atDomain.dropFirst())
+        return String(nip05Parts.domain)
     }
     
     var needsMetadata: Bool {
