@@ -1102,20 +1102,20 @@
 		C9DEBFD0298941000078B43A /* Nos */ = {
 			isa = PBXGroup;
 			children = (
+				C9DEBFDC298941020078B43A /* Nos.entitlements */,
 				5BE460762BAB307A004B83ED /* NosDev.entitlements */,
 				5BE460702BAB2BE1004B83ED /* NosStaging.entitlements */,
 				C987F85629BA96B700B44E7A /* Info.plist */,
-				C9DEBFDC298941020078B43A /* Nos.entitlements */,
-				C9DEBFD1298941000078B43A /* NosApp.swift */,
 				3F170C77299D816200BC8F8B /* AppController.swift */,
+				C9DEBFD1298941000078B43A /* NosApp.swift */,
 				CD09A74729A51EFC0063464F /* Router.swift */,
+				0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */,
 				C9DFA974299C30CA006929C1 /* Assets */,
+				C9EB171929E5976700A15ABB /* Controller */,
 				C9DEC001298944FC0078B43A /* Extensions */,
 				C9DEC02C29894BB20078B43A /* Models */,
 				C97797B7298AA1600046BD25 /* Service */,
-				C9EB171929E5976700A15ABB /* Controller */,
 				C9F84C24298DC7C100C6714D /* Views */,
-				0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Nos;
 			sourceTree = "<group>";
@@ -2936,6 +2936,15 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.0;
+			};
+		};
+		C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/GigaBitcoin/secp256k1.swift";
+			requirement = {
+				kind = versionRange;
+				maximumVersion = 0.11.0;
+				minimumVersion = 0.9.2;
 			};
 		};
 		C99DBF7C2A9E81CF00F7068F /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
