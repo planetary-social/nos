@@ -269,26 +269,9 @@ enum CurrentUserError: Error {
         return followKeys.contains(key)
     }
     
-    @MainActor func publishMetaData() async throws {
-        guard let pubKey = publicKeyHex else {
-            Log.debug("Error: no publicKeyHex")
-            throw CurrentUserError.authorNotFound
-        }
-        guard let pair = keyPair else {
-            Log.debug("Error: no keyPair")
-            throw CurrentUserError.authorNotFound
-        }
-        guard let context = viewContext else {
-            Log.debug("Error: no context")
-            throw CurrentUserError.authorNotFound
-        }
-        guard let author = try Author.find(by: pubKey, context: context) else {
-            Log.debug("Error: no author in DB")
-            throw CurrentUserError.authorNotFound
-        }
-
-        self.author = author
-        
+    /// Builds a dictionary to be used as content when publishing a kind 0
+    /// event.
+    private func buildMetadataJSONObject(author: Author) -> [String: String] {
         var metaEvent = MetadataEventJSON(
             displayName: author.displayName,
             name: author.name,
@@ -298,7 +281,6 @@ enum CurrentUserError: Error {
             website: author.website,
             picture: author.profilePhotoURL?.absoluteString
         ).dictionary
-        
         if let rawData = author.rawMetadata {
             // Tack on any unsupported fields back onto the dictionary before
             // publish.
@@ -320,9 +302,32 @@ enum CurrentUserError: Error {
                 // Continue with the metaEvent object we built previously
             }
         }
+        return metaEvent
+    }
 
-        let metaData = try JSONSerialization.data(withJSONObject: metaEvent)
-        guard let metaString = String(data: metaData, encoding: .utf8) else {
+    @MainActor func publishMetaData() async throws {
+        guard let pubKey = publicKeyHex else {
+            Log.debug("Error: no publicKeyHex")
+            throw CurrentUserError.authorNotFound
+        }
+        guard let pair = keyPair else {
+            Log.debug("Error: no keyPair")
+            throw CurrentUserError.authorNotFound
+        }
+        guard let context = viewContext else {
+            Log.debug("Error: no context")
+            throw CurrentUserError.authorNotFound
+        }
+        guard let author = try Author.find(by: pubKey, context: context) else {
+            Log.debug("Error: no author in DB")
+            throw CurrentUserError.authorNotFound
+        }
+
+        self.author = author
+        
+        let jsonObject = buildMetadataJSONObject(author: author)
+        let data = try JSONSerialization.data(withJSONObject: jsonObject)
+        guard let content = String(data: data, encoding: .utf8) else {
             throw CurrentUserError.encodingError
         }
 
@@ -330,7 +335,7 @@ enum CurrentUserError: Error {
             pubKey: pubKey,
             kind: .metaData,
             tags: [],
-            content: metaString
+            content: content
         )
 
         do {
