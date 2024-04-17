@@ -45,6 +45,9 @@ public class Relay: NosManagedObject {
         ]
     }
     
+    // swiftline:disable:next force_unwrapping
+    static var nosAddress = URL(string: "wss://relay.nos.social")!
+    
     @nonobjc public class func relay(by address: String) -> NSFetchRequest<Relay> {
         let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
         fetchRequest.predicate = NSPredicate(format: "address = %@", address)

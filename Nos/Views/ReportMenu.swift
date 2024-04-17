@@ -23,15 +23,12 @@ struct ReportMenuModifier: ViewModifier {
     @State private var confirmationDialog: ConfirmationDialogState<ReportCategory>? 
     
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var relayService: RelayService
-    @Environment(CurrentUser.self) private var currentUser
-    @Dependency(\.analytics) private var analytics: Analytics
     
     // swiftlint:disable function_body_length
     func body(content: Content) -> some View {
-        // TODANIEL: this is pretty janky, but each .alert or .confirmationDialog below is a different layer of the menu.
-        // I think we are adding several more menus which will probably make this uglier but I think it's best to follow
-        // this pattern for now?
+        // TODANIEL: this is pretty janky, but each .alert or .confirmationDialog below is a different layer of the 
+        // menu. I think we are adding several more menus which will probably make this uglier but I think it's best 
+        // to follow this pattern for now?
         content
             // ReportCategory menu
             .confirmationDialog($confirmationDialog, action: userSelectedCategory)
@@ -41,7 +38,17 @@ struct ReportMenuModifier: ViewModifier {
                 isPresented: $confirmReport,
                 actions: { 
                     Button(String(localized: .localizable.confirm)) {
-                        publishReport()
+                        guard let selectedCategory else {
+                            Log.error("No selected category, skipping report.")
+                            return
+                        }
+                        
+                        ReportPublisher().publishPublicReport(
+                            for: reportedObject, 
+                            category: selectedCategory, 
+                            context: viewContext
+                        )
+                        
                         if let author = reportedObject.author, !author.muted {
                             showMuteDialog = true
                         }
@@ -131,40 +138,6 @@ struct ReportMenuModifier: ViewModifier {
             ButtonState(action: .send(subCategory)) {
                 TextState(verbatim: subCategory.displayName)
             } 
-        }
-    }
-    
-    /// Publishes a report for the currently selected 
-    func publishReport() {
-        // TODANIEL: this is where we publish the report event. We'll probably want another funciton like this to 
-        // do the encrypted reports. I can stub one out later and point you to example code for encryption and 
-        // gift wrapping.
-        // I might refactor this out of the view also.
-        guard let keyPair = currentUser.keyPair,
-            let selectedCategory else {
-            Log.error("Cannot publish report - No signed in user")
-            return 
-        }
-        var event = JSONEvent(
-            pubKey: keyPair.publicKeyHex, 
-            kind: .report, 
-            tags: [
-                ["L", "MOD"],
-                ["l", "MOD>\(selectedCategory.code)", "MOD"]
-            ], 
-            content: String(localized: .localizable.reportEventContent(selectedCategory.displayName))
-        )
-        
-        let nip56Reason = selectedCategory.nip56Code.rawValue
-        event.tags += reportedObject.tags(for: nip56Reason)
-        
-        Task {
-            do {
-                try await relayService.publishToAll(event: event, signingKey: keyPair, context: viewContext)
-                analytics.reported(reportedObject)
-            } catch {            
-                Log.error("Failed to publish report: \(error.localizedDescription)")
-            }
         }
     }
 }

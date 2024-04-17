@@ -41,7 +41,9 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 	case delete = 5
     case repost = 6
 	case like = 7
+    case seal = 13
     case channelMessage = 42
+    case giftWrap = 1059
     case label = 1985
     case report = 1984
     case mute = 10_000
