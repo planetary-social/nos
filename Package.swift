@@ -7,7 +7,6 @@ import PackageDescription
 let packageName = "Nos" 
 let package = Package(
     name: "",
-    // platforms: [.iOS("9.0")],
     products: [
         .library(name: packageName, targets: [packageName])
     ],
