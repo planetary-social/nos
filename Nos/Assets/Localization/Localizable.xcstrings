@@ -9961,49 +9961,49 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Note melden"
+            "value" : "Inhalt markieren"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Report note"
+            "value" : "Flag This Content"
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "گزارش یادداشت"
+            "value" : "علامت‌گذاری این محتوا"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ノートを報告する"
+            "value" : "このコンテンツをフラグする"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notitie rapporteren"
+            "value" : "Deze inhoud markeren"
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rapportera anteckning"
+            "value" : "Markera detta innehåll"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "举报笔记"
+            "value" : "标记此内容"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "舉報筆記"
+            "value" : "標記此筆記"
           }
         }
       }
