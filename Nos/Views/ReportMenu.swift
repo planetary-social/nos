@@ -32,7 +32,7 @@ struct ReportMenuModifier: ViewModifier {
                 isPresented: $confirmReport,
                 actions: {
                     Button(String(localized: .localizable.confirm)) {
-                        publishReport()
+                        publishReport(userSelection)
                         if let author = reportedObject.author, !author.muted {
                             showMuteDialog = true
                         }
@@ -156,15 +156,13 @@ struct ReportMenuModifier: ViewModifier {
     /// List of the top-level report categories we care about
     /// Out vocabulary is much bigger
     func topLevelButtons() -> [ButtonState<UserSelection>] {
-        // TODO: We need to map this correctly with the text semantics. MUST
-        // correctly match nip-56 to respect the protocol, MAY match with nip-69
         let spam = ("SP", "Spam")
-        let sexual = ("NS", "Sexual Content")
-        let antiSocial = ("HC", "Anti-Social Behavior")
+        let nudity = ("NS", "Nudity or Sexual Content")
+        let harassment = ("CL", "Harassment or Intolerance")
         let illegal = ("VI", "Illegal")
         let other = ("NA", "Other")
         
-        return [spam, sexual, antiSocial, illegal, other].compactMap { (categoryCode, displayName) in
+        return [spam, nudity, harassment, illegal, other].compactMap { (categoryCode, displayName) in
             if let category = ReportCategory.findCategory(from: categoryCode) {
                 let userSelection = UserSelection.selected(category, displayName)
                 
@@ -178,13 +176,14 @@ struct ReportMenuModifier: ViewModifier {
     }
     
     /// Publishes a report for the currently selected
-    func publishReport() {
+    func publishReport(userSelection: UserSelection?) {
         switch userSelection {
         case .sendToNos(let selectedCategory):
             sendToNos(selectedCategory)
         case .flagPublicly(let selectedCategory):
             flagPublicly(selectedCategory)
         case .selected, .none:
+            // This would be a dev error
             Log.error("Invalid user selection")
         }
     }
