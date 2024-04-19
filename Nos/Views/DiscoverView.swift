@@ -90,9 +90,9 @@ struct DiscoverView: View {
                         // TODO: actually show the popover. https://github.com/planetary-social/nos/issues/1025
                         showInfoPopover = true
                     } label: {
-                        Image(systemName: "info.circle")
+                        Image.discoverInfo
                     }
-                    .foregroundColor(.secondaryTxt)
+                    .foregroundStyle(Color.secondaryTxt)
                 }
             }
             .animation(.easeInOut, value: columns)
