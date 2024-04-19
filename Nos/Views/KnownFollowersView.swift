@@ -31,36 +31,42 @@ struct KnownFollowersView: View {
         knownFollowers.prefix(3).map { $0.source?.profilePhotoURL }
     }
     
-    var followText: LocalizedStringKey {
+    var followText: Text {
+        let stringResource: LocalizedStringResource
         switch avatarURLs.count {
         case 1:
             guard let name = knownFollowers[safe: 0]?.source?.safeName else {
                 fallthrough
             }
-            return LocalizedStringKey(String(localized: LocalizedStringResource.localizable.followedByOne(name)))
+            stringResource = LocalizedStringResource.localizable.followedByOne(name)
         case 2:
             guard let firstName = knownFollowers[safe: 0]?.source?.safeName,
                 let secondName = knownFollowers[safe: 1]?.source?.safeName else {
                 fallthrough
             }
-            return LocalizedStringKey(
-                String(localized: LocalizedStringResource.localizable.followedByTwo(firstName, secondName))
-            )
+            stringResource = LocalizedStringResource.localizable.followedByTwo(firstName, secondName)
         case 3:
             guard let firstName = knownFollowers[safe: 0]?.source?.safeName,
                 let secondName = knownFollowers[safe: 1]?.source?.safeName else {
                 fallthrough
             }
-            return LocalizedStringKey(
-                String(
-                    localized: LocalizedStringResource.localizable.followedByTwoAndMore(
-                        firstName, secondName, followers.count - 2
-                    )
-                )
+            stringResource = LocalizedStringResource.localizable.followedByTwoAndMore(
+                firstName, secondName, followers.count - 2
             )
         default:
-            return ""
+            return Text("")
         }
+
+        let attributedString = AttributedString(localized: stringResource)
+            .replacingAttributes(
+                AttributeContainer(
+                    [.inlinePresentationIntent: InlinePresentationIntent.stronglyEmphasized.rawValue]
+                ),
+                with: AttributeContainer(
+                    [.foregroundColor: UIColor(.primaryTxt)]
+                )
+            )
+        return Text(attributedString)
     }
     
     init(author: Author) {
@@ -77,7 +83,7 @@ struct KnownFollowersView: View {
                 .frame(width: 80)
                 .padding(.trailing, 12)
                 
-                Text(followText)
+                followText
                     .font(.footnote)
 
                 Spacer()
