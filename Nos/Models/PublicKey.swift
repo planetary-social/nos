@@ -23,7 +23,7 @@ struct PublicKey {
     
     init?(hex: String) {
         do {
-            let underlyingKey = try secp256k1.Signing.XonlyKey(rawRepresentation: hex.bytes, keyParity: 0)
+            let underlyingKey = try secp256k1.Signing.XonlyKey(dataRepresentation: hex.bytes, keyParity: 0)
             self.init(underlyingKey: underlyingKey)
         } catch {
             print("error creating PublicKey \(error.localizedDescription)")
@@ -50,7 +50,7 @@ struct PublicKey {
                 return nil
             }
 
-            let underlyingKey = secp256k1.Signing.XonlyKey(rawRepresentation: converted, keyParity: 0)
+            let underlyingKey = secp256k1.Signing.XonlyKey(dataRepresentation: converted, keyParity: 0)
             self.init(underlyingKey: underlyingKey)
         } catch {
             print("error creating PublicKey \(error.localizedDescription)")
@@ -72,15 +72,16 @@ struct PublicKey {
         }
         
         let signedBytes = try calculatedIdentifier.bytes
-        let schnorrSignature = try secp256k1.Signing.SchnorrSignature(rawRepresentation: try event.signature!.bytes)
+        let schnorrSignature = try secp256k1.Schnorr.SchnorrSignature(dataRepresentation: try event.signature!.bytes)
         var rawPubKey = secp256k1_xonly_pubkey()
-        guard secp256k1_xonly_pubkey_parse(secp256k1.Context.raw, &rawPubKey, underlyingKey.bytes).boolValue else {
+        let contextPointer = secp256k1.Context.rawRepresentation
+        guard secp256k1_xonly_pubkey_parse(contextPointer, &rawPubKey, underlyingKey.bytes).boolValue else {
             throw KeyError.invalidPubKey
         }
         
         let signatureIsValid = secp256k1_schnorrsig_verify(
-            secp256k1.Context.raw,
-            schnorrSignature.rawRepresentation.bytes,
+            contextPointer,
+            schnorrSignature.dataRepresentation.bytes,
             signedBytes,
             signedBytes.count,
             &rawPubKey
