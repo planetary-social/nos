@@ -46,7 +46,7 @@ struct NoteOptionsButton: View {
                         analytics.viewedNoteSource()
                         showingSource = true
                     }
-                    Button(String(localized: .localizable.reportNote), role: .destructive) {
+                    Button(String(localized: .localizable.reportNote)) {
                         showingReportMenu = true
                     }
                 }
