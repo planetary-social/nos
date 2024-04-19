@@ -10,7 +10,7 @@ extension String {
         // The following pattern uses rules from the Domain Name System page on Wikipedia:
         // https://en.wikipedia.org/wiki/Domain_Name_System#Domain_name_syntax,_internationalization
         // swiftlint:disable:next line_length
-        let regexPattern = "(\\s*)((https?://)?([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&/=]*)"
+        let regexPattern = "(\\s*)(?<url>((https?://){1}|(?<![\\w@]))([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&/=]*)"
 
         do {
             let regex = try NSRegularExpression(pattern: regexPattern)
@@ -19,7 +19,7 @@ extension String {
             let matches = regex.matches(in: self, range: range).reversed()
             
             for match in matches {
-                if let range = Range(match.range(at: 2), in: self), let url = URL(string: String(self[range])) {
+                if let range = Range(match.range(withName: "url"), in: self), let url = URL(string: String(self[range])) {
                     // maintain original order of links by inserting at index 0 (we're looping in reverse)
                     urls.insert(url.addingSchemeIfNeeded(), at: 0)
                     let prettyURL = url.truncatedMarkdownLink

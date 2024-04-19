@@ -4,6 +4,22 @@ import Dependencies
 
 final class NoteNoteParserTests: CoreDataTestCase {
 
+    func testContentWithRawNIP05() throws {
+        let nip05 = "linda@nos.social"
+        let content = "hello \(nip05)"
+        let tags: [[String]] = [[]]
+        let context = try XCTUnwrap(testContext)
+        let (attributedContent, _) = NoteParser.parse(
+            content: content,
+            tags: tags,
+            context: context
+        )
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links[safe: 0]?.key, nip05)
+        XCTAssertEqual(links[safe: 0]?.value, URL(string: nip05))
+    }
+
     /// Example taken from [NIP-27](https://github.com/nostr-protocol/nips/blob/master/27.md)
     func testMentionWithNPub() throws {
         let mention = "@mattn"
