@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Changed "Report note" button to "Flag this content"
 - We are now publishing the relay list when registering a new NIP-05 username so
 that other users can find you more easily.
 
