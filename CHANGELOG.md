@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- We are now publishing the relay list when registering a new NIP-05 username so
+that other users can find you more easily.
+
 ## [0.1.11] - 2024-04-18Z
 
 - Added support for uploading videos when composing a note.
