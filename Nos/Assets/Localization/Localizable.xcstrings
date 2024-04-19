@@ -9773,49 +9773,13 @@
         }
       }
     },
-    "reportConfirmation" : {
+    "reportActionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bist du sicher, dass du dies als %@ melden möchtest? Diese Meldung wird öffentlich sein."
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Are you sure you want to report this as %@? This report will be public."
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "آیا مطمئنید می خواهید این را به عنوان %@ گزارش کنید؟ این گزارش عمومی خواهد بود."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dit zal een rapport publiceren dat openbaar zichtbaar is. Weet je het zeker?"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Är du säker på att du vill rapportera detta som {{ report_type }}? Denna rapport kommer att vara offentlig."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "是否确定要将此内容举报为%@？该报告将是公开的。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "是否確定要將此內容舉報為%@？該報告將是公開的。"
+            "value" : "[ %@ ]\nSend to Nos or Flag Publicly"
           }
         }
       }
@@ -9869,6 +9833,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "舉報內容"
+          }
+        }
+      }
+    },
+    "reportContentMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a content flag for this post that other users in the network can see"
           }
         }
       }
@@ -9955,6 +9930,53 @@
         }
       }
     },
+    "reportFlagPubliclyConfirmation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bist du sicher, dass du dies als %@ melden möchtest? Diese Meldung wird öffentlich sein."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to report this as %@? This report will be public."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "آیا مطمئنید می خواهید این را به عنوان %@ گزارش کنید؟ این گزارش عمومی خواهد بود."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dit zal een rapport publiceren dat openbaar zichtbaar is. Weet je het zeker?"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Är du säker på att du vill rapportera detta som {{ report_type }}? Denna rapport kommer att vara offentlig."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是否确定要将此内容举报为%@？该报告将是公开的。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是否確定要將此內容舉報為%@？該報告將是公開的。"
+          }
+        }
+      }
+    },
     "reportNote" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -10004,6 +10026,17 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "標記此筆記"
+          }
+        }
+      }
+    },
+    "reportSendToNosConfirmation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos will analyze this report for [ %@ ]and if we agree will send the report anonymously"
           }
         }
       }

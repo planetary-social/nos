@@ -12,10 +12,10 @@ struct ReportMenuModifier: ViewModifier {
     
     var reportedObject: ReportTarget
     
-    @State private var selectedCategory: ReportCategory?
+    @State private var userSelection: UserSelection?
     @State private var confirmReport = false
     @State private var showMuteDialog = false
-    @State private var confirmationDialog: ConfirmationDialogState<ReportCategory>? 
+    @State private var confirmationDialogState: ConfirmationDialogState<UserSelection>?
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
@@ -25,13 +25,12 @@ struct ReportMenuModifier: ViewModifier {
     // swiftlint:disable function_body_length
     func body(content: Content) -> some View {
         content
-            // ReportCategory menu
-            .confirmationDialog($confirmationDialog, action: userSelectedCategory)
-            // Report confirmation menu
+        // ReportCategory menu
+            .confirmationDialog($confirmationDialogState, action: processUserSelection)
             .alert(
                 String(localized: .localizable.confirmReport),
                 isPresented: $confirmReport,
-                actions: { 
+                actions: {
                     Button(String(localized: .localizable.confirm)) {
                         publishReport()
                         if let author = reportedObject.author, !author.muted {
@@ -39,22 +38,18 @@ struct ReportMenuModifier: ViewModifier {
                         }
                     }
                     Button(String(localized: .localizable.cancel), role: .cancel) {
-                        selectedCategory = nil
+                        userSelection = nil
                     }
                 },
                 message: {
-                    Text(
-                        .localizable.reportConfirmation(
-                            selectedCategory?.displayName ?? String(localized: .localizable.error)
-                        )
-                    )
+                    Text(userSelection?.confirmationAlertMessage ?? String(localized: .localizable.error))
                 }
-            ) 
-            // Mute user menu
+            )
+        // Mute user menu
             .alert(
                 String(localized: .localizable.muteUser),
                 isPresented: $showMuteDialog,
-                actions: { 
+                actions: {
                     if let author = reportedObject.author {
                         Button(String(localized: .localizable.yes)) {
                             mute(author: author)
@@ -69,18 +64,19 @@ struct ReportMenuModifier: ViewModifier {
                         Text(.localizable.error)
                     }
                 }
-            ) 
+            )
             .onChange(of: isPresented) { _, shouldPresent in
                 if shouldPresent {
-                    confirmationDialog = ConfirmationDialogState(
+                    confirmationDialogState = ConfirmationDialogState(
                         title: TextState(String(localized: .localizable.reportContent)),
-                        buttons: subCategoryButtons(for: topLevelCategories)
+                        message: TextState(String(localized: .localizable.reportContentMessage)),
+                        buttons: topLevelButtons()
                     )
                 } else {
-                    confirmationDialog = nil
+                    confirmationDialogState = nil
                 }
             }
-            .onChange(of: confirmationDialog) { _, newValue in
+            .onChange(of: confirmationDialogState) { _, newValue in
                 if newValue == nil {
                     isPresented = false
                 }
@@ -88,25 +84,35 @@ struct ReportMenuModifier: ViewModifier {
     }
     // swiftlint:enable function_body_length
     
-    func userSelectedCategory(_ category: ReportCategory?) {
-        self.selectedCategory = category
+    func processUserSelection(_ userSelection: UserSelection?) {
+        self.userSelection = userSelection
         
-        guard let category else {
+        guard let userSelection else {
             return
         }
         
-        if category.subCategories?.count ?? 0 == 0 {
-            confirmReport = true
-        } else {
+        switch userSelection {
+        case .selected(let category, let displayName):
             Task {
-                confirmationDialog = ConfirmationDialogState(
-                    title: TextState(String(localized: .localizable.reportContent)),
-                    buttons: subCategoryButtons(for: category.subCategories ?? [])
+                confirmationDialogState = ConfirmationDialogState(
+                    title: TextState(String(localized: .localizable.reportActionTitle(displayName))),
+                    message: TextState(String(localized: .localizable.reportActionTitle(displayName))),
+                    buttons: [
+                        ButtonState(action: .send(.sendToNos(category))) {
+                            TextState("Send to Nos")
+                        },
+                        ButtonState(action: .send(.flagPublicly(category))) {
+                            TextState("Flag Publicly")
+                        }
+                    ]
                 )
             }
+            
+        case .sendToNos, .flagPublicly:
+            confirmReport = true
         }
     }
-
+    
     func mute(author: Author) {
         Task {
             do {
@@ -116,30 +122,92 @@ struct ReportMenuModifier: ViewModifier {
             }
         }
     }
+    
+    typealias TopLevelDisplayName = String
+    /// An enum to simplify the user selection through the sequence of connected
+    /// dialogs
+    enum UserSelection: Equatable {
+        case selected(ReportCategory, TopLevelDisplayName)
+        case sendToNos(ReportCategory)
+        case flagPublicly(ReportCategory)
+        
+        var displayName: String {
+            switch self {
+            case .selected(_, let displayName):
+                return displayName
+            case .sendToNos(let category), .flagPublicly(let category):
+                return category.displayName
+            }
+        }
 
-    /// Generates a series of Buttons for the given report categories.
-    func subCategoryButtons(for categories: [ReportCategory]) -> [ButtonState<ReportCategory>] {
-        categories.map { subCategory in
-            ButtonState(action: .send(subCategory)) {
-                TextState(verbatim: subCategory.displayName)
-            } 
+        var confirmationAlertMessage: String {
+            switch self {
+            case .sendToNos(let category):
+                return String(localized: .localizable.reportSendToNosConfirmation(category.displayName))
+            case .flagPublicly(let category):
+                return String(localized: .localizable.reportFlagPubliclyConfirmation(category.displayName))
+            case .selected(let category, _):
+                Log.error("Invalid .selected variant")
+                return String(localized: .localizable.reportFlagPubliclyConfirmation(category.displayName))
+            }
         }
     }
     
-    /// Publishes a report for the currently selected 
-    func publishReport() {
-        guard let keyPair = currentUser.keyPair,
-            let selectedCategory else {
-            Log.error("Cannot publish report - No signed in user")
-            return 
+    /// List of the top-level report categories we care about
+    /// Out vocabulary is much bigger
+    func topLevelButtons() -> [ButtonState<UserSelection>] {
+        // TODO: We need to map this correctly with the text semantics. MUST
+        // correctly match nip-56 to respect the protocol, MAY match with nip-69
+        let spam = ("SP", "Spam")
+        let sexual = ("NS", "Sexual Content")
+        let antiSocial = ("HC", "Anti-Social Behavior")
+        let illegal = ("VI", "Illegal")
+        let other = ("NA", "Other")
+        
+        return [spam, sexual, antiSocial, illegal, other].compactMap { (categoryCode, displayName) in
+            if let category = ReportCategory.findCategory(from: categoryCode) {
+                let userSelection = UserSelection.selected(category, displayName)
+                
+                return ButtonState(action: .send(userSelection)) {
+                    TextState(verbatim: displayName)
+                }
+            }
+            
+            return nil
         }
+    }
+    
+    /// Publishes a report for the currently selected
+    func publishReport() {
+        switch userSelection {
+        case .sendToNos(let selectedCategory):
+            sendToNos(selectedCategory)
+        case .flagPublicly(let selectedCategory):
+            flagPublicly(selectedCategory)
+        case .selected, .none:
+            Log.error("Invalid user selection")
+        }
+    }
+    
+
+    func sendToNos(_ selectedCategory: ReportCategory) {
+        #warning("Not implemented yet")
+        print("sendToNos not implemented yet for category \(selectedCategory) for target \(reportedObject)")
+    }
+    
+    func flagPublicly(_ selectedCategory: ReportCategory) {
+        guard let keyPair = currentUser.keyPair else {
+            Log.error("Cannot publish report - No signed in user")
+            return
+        }
+        
         var event = JSONEvent(
-            pubKey: keyPair.publicKeyHex, 
-            kind: .report, 
+            pubKey: keyPair.publicKeyHex,
+            kind: .report,
             tags: [
                 ["L", "MOD"],
                 ["l", "MOD>\(selectedCategory.code)", "MOD"]
-            ], 
+            ],
             content: String(localized: .localizable.reportEventContent(selectedCategory.displayName))
         )
         
@@ -150,7 +218,7 @@ struct ReportMenuModifier: ViewModifier {
             do {
                 try await relayService.publishToAll(event: event, signingKey: keyPair, context: viewContext)
                 analytics.reported(reportedObject)
-            } catch {            
+            } catch {
                 Log.error("Failed to publish report: \(error.localizedDescription)")
             }
         }
@@ -158,9 +226,8 @@ struct ReportMenuModifier: ViewModifier {
 }
 
 extension View {
-    
-    /// The report menu can be added to another element and controlled with the `isPresented` variable. When 
-    /// `isPresented` is set to `true` it will walk the user through a series of menus that allows them to report 
+    /// The report menu can be added to another element and controlled with the `isPresented` variable. When
+    /// `isPresented` is set to `true` it will walk the user through a series of menus that allows them to report
     /// content in a given category and optionally mute the respective author.
     func reportMenu(_ show: Binding<Bool>, reportedObject: ReportTarget) -> some View {
         self.modifier(ReportMenuModifier(isPresented: show, reportedObject: reportedObject))
@@ -168,12 +235,11 @@ extension View {
 }
 
 struct ReportMenu_Previews: PreviewProvider {
-    
     static var previewData = PreviewData()
     static var previews: some View {
         StatefulPreviewContainer(false) { binding in
             VStack {
-                Button("Report this") { 
+                Button("Report this") {
                     binding.wrappedValue.toggle()
                 }
                 .reportMenu(binding, reportedObject: .note(previewData.imageNote))
