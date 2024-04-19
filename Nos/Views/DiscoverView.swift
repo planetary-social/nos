@@ -11,10 +11,8 @@ struct DiscoverView: View {
     @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
 
-    @State var showRelayPicker = false
-    
-    @State var relayFilter: Relay?
-    
+    @State var showInfoPopover = false
+
     @State var columns: Int = 0
     
     @State private var performingInitialLoad = true
@@ -43,39 +41,23 @@ struct DiscoverView: View {
     func subscribeToNewEvents() async {
         await cancelSubscriptions()
         
-        if let relayAddress = relayFilter?.addressURL {
-            // TODO: Use a since filter
-            let singleRelayFilter = Filter(
-                kinds: [.text, .delete],
-                limit: 200
-            )
-            
-            relaySubscriptions.append(
-                await relayService.subscribeToEvents(matching: singleRelayFilter, from: [relayAddress])
-            )
-        } else {
-            let featuredFilter = Filter(
-                authorKeys: featuredAuthors.compactMap {
-                    PublicKey(npub: $0)?.hex
-                },
-                kinds: [.text, .delete],
-                limit: 200
-            )
-            
-            relaySubscriptions.append(await relayService.subscribeToEvents(matching: featuredFilter))
-        }
+        let featuredFilter = Filter(
+            authorKeys: featuredAuthors.compactMap {
+                PublicKey(npub: $0)?.hex
+            },
+            kinds: [.text, .delete],
+            limit: 200
+        )
+
+        relaySubscriptions.append(await relayService.subscribeToEvents(matching: featuredFilter))
     }
     
     func updatePredicate() {
-        if let relayFilter {
-            predicate = Event.seen(on: relayFilter, before: date, exceptFrom: currentUser.author)
-        } else {
-            predicate = Event.extendedNetworkPredicate(
-                currentUser: currentUser,
-                featuredAuthors: featuredAuthors,
-                before: date
-            )
-        }
+        predicate = Event.extendedNetworkPredicate(
+            currentUser: currentUser,
+            featuredAuthors: featuredAuthors,
+            before: date
+        )
     }
     
     // MARK: - View
@@ -90,15 +72,6 @@ struct DiscoverView: View {
                     )
                 } else {
                     DiscoverGrid(predicate: predicate, searchController: searchController, columns: $columns)
-                    
-                    if showRelayPicker, let author = currentUser.author {
-                        RelayPicker(
-                            selectedRelay: $relayFilter,
-                            defaultSelection: String(localized: .localizable.allMyRelays),
-                            author: author,
-                            isPresented: $showRelayPicker
-                        )
-                    }
                 }
             }
             .searchable(
@@ -112,28 +85,14 @@ struct DiscoverView: View {
             }
             .background(Color.appBg)
             .toolbar {
-                RelayPickerToolbarButton(
-                    selectedRelay: $relayFilter,
-                    isPresenting: $showRelayPicker,
-                    defaultSelection: .localizable.allMyRelays
-                ) {
-                    withAnimation {
-                        showRelayPicker.toggle()
-                    }
-                }
                 ToolbarItem {
-                    HStack {
-                        Button {
-                            columns = max(columns - 1, 1)
-                        } label: {
-                            Image(systemName: "minus")
-                        }
-                        Button {
-                            columns += 1
-                        } label: {
-                            Image(systemName: "plus")
-                        }
+                    Button {
+                        // TODO: actually show the popover. https://github.com/planetary-social/nos/issues/1025
+                        showInfoPopover = true
+                    } label: {
+                        Image.discoverInfo
                     }
+                    .foregroundStyle(Color.secondaryTxt)
                 }
             }
             .animation(.easeInOut, value: columns)
@@ -143,14 +102,7 @@ struct DiscoverView: View {
             .refreshable {
                 date = .now
             }
-            .onChange(of: relayFilter) { 
-                withAnimation {
-                    showRelayPicker = false
-                }
-                updatePredicate()
-                Task { await subscribeToNewEvents() }
-            }
-            .onChange(of: date) { 
+            .onChange(of: date) {
                 updatePredicate()
             }
             .refreshable {
