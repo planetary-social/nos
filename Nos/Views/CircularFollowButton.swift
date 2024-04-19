@@ -3,9 +3,12 @@ import Dependencies
 import Logger
 import SwiftUI
 
+/// A small, circular follow button that appears in the lower right corner of a user's avatar.
+/// Allows the current user to follow or unfollow the author,
+/// and updates its own appearance based on follow state.
 struct CircularFollowButton: View {
     @ObservedObject var author: Author
-    @Environment(CurrentUser.self) var currentUser
+    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
 
