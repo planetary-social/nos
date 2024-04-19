@@ -28,7 +28,7 @@ struct ReportMenuModifier: ViewModifier {
         // ReportCategory menu
             .confirmationDialog($confirmationDialogState, action: processUserSelection)
             .alert(
-                String(localized: .localizable.confirmReport),
+                String(localized: .localizable.confirmFlag),
                 isPresented: $confirmReport,
                 actions: {
                     Button(String(localized: .localizable.confirm)) {
@@ -176,7 +176,7 @@ struct ReportMenuModifier: ViewModifier {
     }
     
     /// Publishes a report for the currently selected
-    func publishReport(userSelection: UserSelection?) {
+    func publishReport(_ userSelection: UserSelection?) {
         switch userSelection {
         case .sendToNos(let selectedCategory):
             sendToNos(selectedCategory)
@@ -188,7 +188,6 @@ struct ReportMenuModifier: ViewModifier {
         }
     }
     
-
     func sendToNos(_ selectedCategory: ReportCategory) {
         #warning("Not implemented yet")
         print("sendToNos not implemented yet for category \(selectedCategory) for target \(reportedObject)")

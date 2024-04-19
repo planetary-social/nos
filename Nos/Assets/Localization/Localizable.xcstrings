@@ -1956,54 +1956,65 @@
         }
       }
     },
-    "confirmReport" : {
+    "confirmDelete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm Delete"
+          }
+        }
+      }
+    },
+    "confirmFlag" : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Meldung bestätigen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Confirm Report"
+            "value" : "Confirm Flag"
           }
         },
         "fa" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "تایید گزارش"
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "報告を送信する"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Bevestig Rapport"
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Bekräfta rapporten"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "确认举报"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "確認舉報"
           }
         }
@@ -10036,7 +10047,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nos will analyze this report for [ %@ ]and if we agree will send the report anonymously"
+            "value" : "Nos will analyze the note for %@ content and if we agree will label the note anonymously. If the label doesn't match the NIP-56 for the category we may choose a different label or no label at all."
           }
         }
       }

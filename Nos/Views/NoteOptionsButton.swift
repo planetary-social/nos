@@ -58,7 +58,7 @@ struct NoteOptionsButton: View {
             }
             .reportMenu($showingReportMenu, reportedObject: .note(note))
             .alert(
-                String(localized: .localizable.confirmReport),
+                String(localized: .localizable.confirmDelete),
                 isPresented: $confirmDelete,
                 actions: {
                     Button(String(localized: .localizable.confirm), role: .destructive) {
