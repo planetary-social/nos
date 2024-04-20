@@ -41,10 +41,10 @@ struct JSONEvent: Codable, Hashable {
     }
     
     internal init(
-        pubKey: RawAuthorID, 
-        createdAt: Date = .now, 
-        kind: EventKind, 
-        tags: [[String]], 
+        pubKey: RawAuthorID,
+        createdAt: Date = .now,
+        kind: EventKind,
+        tags: [[String]],
         content: String
     ) {
         self.id = ""
@@ -54,6 +54,21 @@ struct JSONEvent: Codable, Hashable {
         self.tags = tags
         self.content = content
         self.signature = ""
+    }
+    
+    static func from(json: String) -> JSONEvent? {
+        guard let jsonData = json.data(using: .utf8) else {
+            return nil
+        }
+        
+        let decoder = JSONDecoder()
+        return try? decoder.decode(JSONEvent.self, from: jsonData)
+    }
+    
+    func toJSON() throws -> String? {
+        let encoder = JSONEncoder()
+        let data = try encoder.encode(self)
+        return String(data: data, encoding: .utf8)
     }
     
     mutating func sign(withKey privateKey: KeyPair) throws {
@@ -122,7 +137,7 @@ struct MetadataEventJSON: Codable {
     var profilePhotoURL: URL? {
         URL(string: picture ?? "")
     }
-
+    
     private enum CodingKeys: String, CodingKey {
         case displayName = "display_name", name, nip05, uns = "uns_name", about, website, picture
     }

@@ -522,6 +522,10 @@ extension RelayService {
         in context: NSManagedObjectContext
     ) async throws -> JSONEvent {
         var jsonEvent = event
+        
+        // Should we throw if the event is already signed? this way we can ensure that we
+        // don't sign events multiple times, it's costly and it would be easy to do it
+        // inadvertently.
         try jsonEvent.sign(withKey: signingKey)
         
         try await context.perform {

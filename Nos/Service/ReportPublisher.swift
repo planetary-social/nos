@@ -17,60 +17,84 @@ class ReportPublisher {
     func publishPublicReport(for target: ReportTarget, category: ReportCategory, context: NSManagedObjectContext) {
         guard let keyPair = currentUser.keyPair else {
             Log.error("Cannot publish report - No signed in user")
-            return 
+            return
         }
         
-        let event = reportEvent(for: target, category: category, pubKey: keyPair.publicKeyHex)
+        let publicReport = createPublicReport(for: target, category: category, pubKey: keyPair.publicKeyHex)
         
         Task {
             do {
-                try await relayService.publishToAll(event: event, signingKey: keyPair, context: context)
+                try await relayService.publishToAll(event: publicReport, signingKey: keyPair, context: context)
                 analytics.reported(target)
-            } catch {            
+            } catch {
                 Log.error("Failed to publish report: \(error.localizedDescription)")
             }
         }
     }
     
     func publishPrivateReport(for target: ReportTarget, category: ReportCategory, context: NSManagedObjectContext) {
-        guard let keyPair = currentUser.keyPair else {
-            Log.error("Cannot publish report - No signed in user")
-            return 
-        }
-        
-        let reportRumor = reportEvent(for: target, category: category, pubKey: keyPair.publicKeyHex)
-        
-        let giftWrappedReport = try! GiftWrapper.wrap(
-            reportRumor, 
-            authorKey: keyPair, 
-            recipient: Reportinator.publicKey.hex
-        )
-        
-        Task {
-            do {
-                try await relayService.publish(
-                    event: giftWrappedReport, 
-                    to: Relay.nosAddress, 
-                    signingKey: keyPair, 
-                    context: context
-                )
-                analytics.reported(target)
-            } catch {            
-                Log.error("Failed to publish report: \(error.localizedDescription)")
+        switch target {
+        case .note(let note):
+            guard let keyPair = currentUser.keyPair else {
+                Log.error("Cannot publish report - No signed in user")
+                return
             }
+            
+            guard let reportRequestDM = createReportRequestDM(note: note, category: category, keyPair: keyPair) else {
+                Log.error("Failed to create gift wrapped report request")
+                return
+            }
+            
+            Task {
+                do {
+                    try await relayService.publish(
+                        event: reportRequestDM,
+                        to: Relay.nosAddress,
+                        signingKey: keyPair,
+                        context: context
+                    )
+                    analytics.reported(target)
+                } catch {
+                    Log.error("Failed to publish report: \(error.localizedDescription)")
+                }
+            }
+        case .author:
+            Log.error("Private reports for people are no implemented yet")
+            return
         }
     }
     
-    // MARK: Helpers 
+    // MARK: Helpers
     
-    private func reportEvent(for target: ReportTarget, category: ReportCategory, pubKey: RawAuthorID) -> JSONEvent {
+    internal struct ReportRequest {
+        let reportedEvent: JSONEvent
+        let reporterPubkey: RawAuthorID
+        let reporterText: String
+        
+        func toJSON() throws -> String {
+            let dictionary: [String: Any] = [
+                "reportedEvent": reportedEvent.dictionary,
+                "reporterPubkey": reporterPubkey,
+                "reporterText": reporterText
+            ]
+            
+            let data = try JSONSerialization.data(withJSONObject: dictionary)
+            return String(data: data, encoding: .utf8)!
+        }
+    }
+    
+    internal func createPublicReport(
+        for target: ReportTarget,
+        category: ReportCategory,
+        pubKey: RawAuthorID
+    ) -> JSONEvent {
         var event = JSONEvent(
-            pubKey: pubKey, 
-            kind: .report, 
+            pubKey: pubKey,
+            kind: .report,
             tags: [
                 ["L", "MOD"],
                 ["l", "MOD>\(category.code)", "MOD"]
-            ], 
+            ],
             content: String(localized: .localizable.reportEventContent(category.displayName))
         )
         
@@ -79,4 +103,29 @@ class ReportPublisher {
         
         return event
     }
-}    
+    
+    internal func createReportRequestDM(note: Event, category: ReportCategory, keyPair: KeyPair) -> JSONEvent? {
+        guard let jsonEvent = note.codable else {
+            Log.error("Could not encode note to JSON")
+            return nil
+        }
+        
+        do {
+            let reportRequestJSON = try ReportRequest(
+                reportedEvent: jsonEvent,
+                reporterPubkey: keyPair.publicKeyHex,
+                reporterText: category.displayName
+            ).toJSON()
+            
+            let reportRequestGifyWrap = try DirectMessageWrapper.wrap(
+                message: reportRequestJSON,
+                senderKeyPair: keyPair,
+                receiverPubkey: Reportinator.publicKey.hex
+            )
+            return reportRequestGifyWrap
+        } catch {
+            Log.error("Failed to wrap report request: \(error.localizedDescription)")
+            return nil
+        }
+    }
+}
