@@ -50,7 +50,7 @@ enum NoteParser {
         context: NSManagedObjectContext
     ) -> String {
         // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma
-        let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)(?:nostr:)(?<npubornprofile>[a-zA-Z0-9]{2,256})/
+        let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)@?(?:nostr:)(?<npubornprofile>[a-zA-Z0-9]{2,256})/
         // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma
         return content.replacing(regex) { match in
             let substring = match.0

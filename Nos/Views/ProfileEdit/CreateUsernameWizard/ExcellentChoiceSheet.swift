@@ -103,7 +103,14 @@ struct ExcellentChoiceSheet: View {
             claimState = .claiming
 
             do {
-                try await namesAPI.register(username: username, keyPair: keyPair)
+                let relays = currentUser.author?.relays.compactMap {
+                    $0.addressURL
+                }
+                try await namesAPI.register(
+                    username: username,
+                    keyPair: keyPair,
+                    relays: relays ?? []
+                )
                 currentUser.author?.nip05 = "\(username)@nos.social"
                 try currentUser.viewContext.saveIfNeeded()
                 await currentUser.publishMetaData()

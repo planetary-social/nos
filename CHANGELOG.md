@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue where users named with valid urls were unable to be mentioned correctly.
+- Fixed an issue where pasting an npub while composing a note created an invalid mention.
+- Changed "Report note" button to "Flag this content"
+- We are now publishing the relay list when registering a new NIP-05 username so
+that other users can find you more easily.
+
+## [0.1.11] - 2024-04-18Z
+
+- Added support for uploading videos when composing a note.
 - Fixed an issue where reports for notes were treated as reports for profiles.
 - Updated the Discover tab navigation bar to match new design.
 
@@ -24,7 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated dark theme colors for card backgrounds, primary text, and secondary text.
 - Added a new UI for replying to messages that allows attaching images and setting an expiration date.
 - Fixed an issue where Profile pages could display little or no content.
-- Added support for uploading videos when composing a note.
 
 ## [0.1.7] - 2024-03-21Z
 
