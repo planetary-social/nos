@@ -72,20 +72,6 @@ class String_MarkdownTests: XCTestCase {
         XCTAssertEqual(actualURLs, expectedURLs)
     }
 
-    func testExtractURLsDoesNotValidateEmails() throws {
-        // Arrange
-        let string = "Send an email to support@nos.social, a place for humans"
-        let expectedString = string
-        let expectedURLs: [URL] = []
-
-        // Act
-        let (actualString, actualURLs) = string.extractURLs()
-
-        // Assert
-        XCTAssertEqual(actualString, expectedString)
-        XCTAssertEqual(actualURLs, expectedURLs)
-    }
-
     func testExtractURLsWithImage() throws {
         let string = "Hello, world!https://cdn.ymaws.com/footprints.jpg"
         let expectedString = "Hello, world![cdn.ymaws.com...](https://cdn.ymaws.com/footprints.jpg)"

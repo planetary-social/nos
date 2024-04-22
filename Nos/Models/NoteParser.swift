@@ -16,7 +16,6 @@ enum NoteParser {
     static func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> AttributedString {
         var result = replaceTaggedNostrEntities(in: content, tags: tags, context: context)
         result = replaceNostrEntities(in: result)
-        result = replaceNIP05Identifiers(in: result)
         do {
             return try AttributedString(
                 markdown: result,
@@ -33,7 +32,6 @@ enum NoteParser {
         let (cleanedString, urls) = content.extractURLs()
         var result = replaceTaggedNostrEntities(in: cleanedString, tags: tags, context: context)
         result = replaceNostrEntities(in: result)
-        result = replaceNIP05Identifiers(in: result)
         do {
             return (try AttributedString(
                 markdown: result,
@@ -143,24 +141,6 @@ enum NoteParser {
             } catch {
                 return String(substring)
             }
-        }
-    }
-
-    private static func replaceNIP05Identifiers(in content: String) -> String {
-        // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
-        let unformattedRegex = /(?:^|\s)(?<mail>([0-9a-z._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}))/
-        // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
-
-        return content.replacing(unformattedRegex) { match in
-            let substring = match.0
-            let nip05 = match.1
-            var prefix = ""
-            let firstCharacter = String(String(substring).prefix(1))
-            if firstCharacter.range(of: #"\s|\r\n|\r|\n"#, options: .regularExpression) != nil {
-                prefix = firstCharacter
-            }
-            let string = String(nip05)
-            return "\(prefix)[\(string)](\(string))"
         }
     }
 

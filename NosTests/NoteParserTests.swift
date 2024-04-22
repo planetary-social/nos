@@ -6,7 +6,9 @@ final class NoteNoteParserTests: CoreDataTestCase {
 
     func testContentWithRawNIP05() throws {
         let nip05 = "linda@nos.social"
+        let webLink = "https://njump.me/linda@nos.social"
         let content = "hello \(nip05)"
+        let expected = "hello [\(nip05)](\(webLink))"
         let tags: [[String]] = [[]]
         let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(
@@ -17,7 +19,25 @@ final class NoteNoteParserTests: CoreDataTestCase {
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
         XCTAssertEqual(links[safe: 0]?.key, nip05)
-        XCTAssertEqual(links[safe: 0]?.value, URL(string: nip05))
+        XCTAssertEqual(links[safe: 0]?.value, URL(string: webLink))
+    }
+
+    func testContentWithRawNIP05AndAtPrepended() throws {
+        let nip05 = "linda@nos.social"
+        let webLink = "https://njump.me/linda@nos.social"
+        let content = "hello @\(nip05)"
+        let expected = "hello [\(nip05)](\(webLink))"
+        let tags: [[String]] = [[]]
+        let context = try XCTUnwrap(testContext)
+        let (attributedContent, _) = NoteParser.parse(
+            content: content,
+            tags: tags,
+            context: context
+        )
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links[safe: 0]?.key, nip05)
+        XCTAssertEqual(links[safe: 0]?.value, URL(string: webLink))
     }
 
     /// Example taken from [NIP-27](https://github.com/nostr-protocol/nips/blob/master/27.md)

@@ -53,7 +53,7 @@ struct NoteOptionsButton: View {
                 if note.author == currentUser.author {
                     Button(String(localized: .localizable.deleteNote), role: .destructive) {
                         confirmDelete = true
-                    }
+                    }  
                 }
             }
             .reportMenu($showingReportMenu, reportedObject: .note(note))
