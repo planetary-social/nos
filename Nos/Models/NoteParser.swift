@@ -111,7 +111,7 @@ enum NoteParser {
     /// Replaces Nostr entities embedded in the note (without a proper tag) with markdown links
     private static func replaceNostrEntities(in content: String) -> String {
         // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
-        let unformattedRegex = /(?:^|\s)(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,255}))/
+        let unformattedRegex = /(?:^|\s)@?(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,255}))/
         // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
 
         return content.replacing(unformattedRegex) { match in

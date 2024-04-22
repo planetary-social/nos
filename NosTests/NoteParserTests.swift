@@ -4,11 +4,15 @@ import Dependencies
 
 final class NoteNoteParserTests: CoreDataTestCase {
 
-    func testContentWithRawNIP05() throws {
-        let nip05 = "linda@nos.social"
-        let webLink = "https://njump.me/linda@nos.social"
-        let content = "hello \(nip05)"
-        let expected = "hello [\(nip05)](\(webLink))"
+    func testContentWithRawNpubPrecededByAt() throws {
+        // Arrange
+        let npub = "npub1pu3vqm4vzqpxsnhuc684dp2qaq6z69sf65yte4p39spcucv5lzmqswtfch"
+        let hex = "0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6"
+        let content = "You can find me at @\(npub)"
+        
+        let expected = "You can find me at \(npub)"
+
+        // Act
         let tags: [[String]] = [[]]
         let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(
@@ -16,6 +20,33 @@ final class NoteNoteParserTests: CoreDataTestCase {
             tags: tags,
             context: context
         )
+
+        // Assert
+        XCTAssertEqual(String(attributedContent.characters), expected)
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links[safe: 0]?.key, npub)
+        XCTAssertEqual(links[safe: 0]?.value, URL(string: "@\(hex)"))
+    }
+
+    func testContentWithRawNIP05() throws {
+        // Arrange
+        let nip05 = "linda@nos.social"
+        let webLink = "https://njump.me/\(nip05)"
+        let content = "hello \(nip05)"
+        let expected = content
+
+        // Act
+        let tags: [[String]] = [[]]
+        let context = try XCTUnwrap(testContext)
+        let (attributedContent, _) = NoteParser.parse(
+            content: content,
+            tags: tags,
+            context: context
+        )
+
+        // Assert
+        XCTAssertEqual(String(attributedContent.characters), expected)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
         XCTAssertEqual(links[safe: 0]?.key, nip05)
@@ -23,10 +54,13 @@ final class NoteNoteParserTests: CoreDataTestCase {
     }
 
     func testContentWithRawNIP05AndAtPrepended() throws {
+        // Arrange
         let nip05 = "linda@nos.social"
-        let webLink = "https://njump.me/linda@nos.social"
+        let webLink = "https://njump.me/\(nip05)"
         let content = "hello @\(nip05)"
-        let expected = "hello [\(nip05)](\(webLink))"
+        let expected = "hello \(nip05)"
+
+        // Act
         let tags: [[String]] = [[]]
         let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = NoteParser.parse(
@@ -34,10 +68,14 @@ final class NoteNoteParserTests: CoreDataTestCase {
             tags: tags,
             context: context
         )
+
+        // Assert
+        XCTAssertEqual(String(attributedContent.characters), expected)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
         XCTAssertEqual(links[safe: 0]?.key, nip05)
-        XCTAssertEqual(links[safe: 0]?.value, URL(string: webLink))    }
+        XCTAssertEqual(links[safe: 0]?.value, URL(string: webLink))
+    }
 
     func testMentionPrecededByAt() throws {
         // Arrange
@@ -300,7 +338,7 @@ final class NoteNoteParserTests: CoreDataTestCase {
         let (attributedContent, _) = NoteParser.parse(content: content, tags: tags, context: context)
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
-        XCTAssertEqual(links[safe: 0]?.key, "\(npub)")
+        XCTAssertEqual(links[safe: 0]?.key, npub)
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "@\(hex)"))
     }
 

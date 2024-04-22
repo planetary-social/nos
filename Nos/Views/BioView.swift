@@ -5,6 +5,7 @@ struct BioView: View {
     var bio: String?
 
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var router: Router
 
     @State
     private var showingBio = false
@@ -51,6 +52,10 @@ struct BioView: View {
                 .lineSpacing(lineSpacing)
                 .lineLimit(lineLimit)
                 .padding(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
+                .environment(\.openURL, OpenURLAction { url in
+                    router.open(url: url, with: viewContext)
+                    return .handled
+                })
                 .background {
                     GeometryReader { geometryProxy in
                         Color.clear.preference(key: TruncatedSizePreferenceKey.self, value: geometryProxy.size)
