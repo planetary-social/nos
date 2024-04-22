@@ -3,7 +3,6 @@ import Dependencies
 import Logger
 import SwiftUINavigation
 
-// TODANIEL: This is the UI where all things reports are kicked off
 /// The report menu can be added to another element and controlled with the `isPresented` variable. When `isPresented`
 /// is set to `true` it will walk the user through a series of menus that allows them to report content in a given
 /// category and optionally mute the respective author.
@@ -11,7 +10,6 @@ struct ReportMenuModifier: ViewModifier {
     
     @Binding var isPresented: Bool
 
-    // TODANIEL: This is what is being reported, a note or author (profile). In the current code the 
     // categories (ReportCategory) are the same for both types. It sounds like we will need to provide different 
     // options now. You probably can do that by splitting the `topLevelCategories` list into two, and creating some
     // branches in this code.
@@ -26,9 +24,6 @@ struct ReportMenuModifier: ViewModifier {
     
     // swiftlint:disable function_body_length
     func body(content: Content) -> some View {
-        // TODANIEL: this is pretty janky, but each .alert or .confirmationDialog below is a different layer of the 
-        // menu. I think we are adding several more menus which will probably make this uglier but I think it's best 
-        // to follow this pattern for now?
         content
             // ReportCategory menu
             .confirmationDialog($confirmationDialog, action: userSelectedCategory)
