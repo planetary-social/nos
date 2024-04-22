@@ -29,12 +29,12 @@ enum NoteParser {
     /// Parses the content and tags stored in a note and returns an attributed string and list of URLs that can be used 
     /// to display the note in the UI.
     static func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> (AttributedString, [URL]) {
-        var result = replaceTaggedNostrEntities(in: content, tags: tags, context: context)
+        let (cleanedString, urls) = content.extractURLs()
+        var result = replaceTaggedNostrEntities(in: cleanedString, tags: tags, context: context)
         result = replaceNostrEntities(in: result)
-        let (cleanedString, urls) = result.extractURLs()
         do {
             return (try AttributedString(
-                markdown: cleanedString,
+                markdown: result,
                 options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
             ), urls)
         } catch {
@@ -50,7 +50,7 @@ enum NoteParser {
         context: NSManagedObjectContext
     ) -> String {
         // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma
-        let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)(?:nostr:)(?<npubornprofile>[a-zA-Z0-9]{2,256})/
+        let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)@?(?:nostr:)(?<npubornprofile>[a-zA-Z0-9]{2,256})/
         // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma
         return content.replacing(regex) { match in
             let substring = match.0
