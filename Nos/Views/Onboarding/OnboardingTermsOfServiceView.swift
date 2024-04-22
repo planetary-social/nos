@@ -14,17 +14,7 @@ struct OnboardingTermsOfServiceView: View {
         VStack {
             Text(.localizable.termsOfServiceTitle)
                 .font(.clarity(.bold, textStyle: .largeTitle))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [
-                            Color(hex: "#F08508"),
-                            Color(hex: "#F43F75")
-                        ],
-                        startPoint: .bottomLeading,
-                        endPoint: .topTrailing
-                    )
-                    .blendMode(.normal)
-                )
+                .foregroundStyle(LinearGradient.diagonalAccent2.blendMode(.normal))
                 .padding(.top, 92)
                 .padding(.bottom, 60)
             ScrollView {
