@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Detect identifiers of the form @npub1... in notes and link them to the associated profiles.
+- Detect NIP-05 identifiers inserted in notes and link them to njump.
 - Fixed an issue where users named with valid urls were unable to be mentioned correctly.
 - Fixed an issue where pasting an npub while composing a note created an invalid mention.
 - Changed "Report note" button to "Flag this content"
