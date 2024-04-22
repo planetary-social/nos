@@ -56,8 +56,7 @@ extension String {
     private func replaceNIP05s(in mutableString: NSMutableString) -> [URL] {
         // The following pattern uses rules from the NIP-05 specification:
         // https://github.com/nostr-protocol/nips/blob/master/05.md
-
-        // swiftlint:disable:next line_length
+        
         let regexPattern = "(\\s*)@?(?<nip05>[0-9a-z._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64})"
 
         // [0-9a-z._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}
