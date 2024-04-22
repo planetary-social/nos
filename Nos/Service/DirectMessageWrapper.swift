@@ -2,7 +2,7 @@ import Foundation
 import NostrSDK
 
 enum DirectMessageWrapper {
-    /// Gift-wrapped direct message JSONEvent (See NIP-17)
+    /// This wraps a Nostr event into an encrypted bundle that is already signed and ready to be published. (See NIP-17)
     static func wrap(
         message: String,
         senderKeyPair: KeyPair,
