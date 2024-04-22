@@ -4,6 +4,7 @@ import CoreData
 enum RelayError: Error {
     case invalidAddress
     case parseError
+    case missingSignatureOrKey
 }
 
 @objc(Relay)

@@ -50,7 +50,6 @@ class ReportPublisher {
                     try await relayService.publish(
                         event: reportRequestDM,
                         to: Relay.nosAddress,
-                        signingKey: keyPair,
                         context: context
                     )
                     analytics.reported(target)
@@ -117,12 +116,12 @@ class ReportPublisher {
                 reporterText: category.displayName
             ).toJSON()
             
-            let reportRequestGifyWrap = try DirectMessageWrapper.wrap(
+            let reportRequestGiftWrap = try DirectMessageWrapper.wrap(
                 message: reportRequestJSON,
                 senderKeyPair: keyPair,
                 receiverPubkey: Reportinator.publicKey.hex
             )
-            return reportRequestGifyWrap
+            return reportRequestGiftWrap
         } catch {
             Log.error("Failed to wrap report request: \(error.localizedDescription)")
             return nil

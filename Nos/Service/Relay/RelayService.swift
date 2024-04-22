@@ -509,10 +509,25 @@ extension RelayService {
     func publish(
         event: JSONEvent,
         to relayURL: URL,
-        signingKey: KeyPair,
+        signingKey: KeyPair? = nil,
         context: NSManagedObjectContext
     ) async throws {
-        let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
+        var signedEvent: JSONEvent
+
+        switch signingKey {
+        case .none:
+            // If you don't provide a key, the event needs to be already signed
+            guard !event.signature.isEmpty else {
+                Log.error("Missing signature and no key provided for event \(event)")
+                throw RelayError.missingSignatureOrKey
+            }
+            
+            signedEvent = event
+
+        case .some(let keyPair):
+            signedEvent = try await signAndSave(event: event, signingKey: keyPair, in: context)
+        }
+
         await openSocket(to: relayURL, andSend: try signedEvent.buildPublishRequest())
     }
     
