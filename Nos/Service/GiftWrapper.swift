@@ -8,7 +8,7 @@ enum GiftWrapperError: Error {
     case signedRumorError
 }
 
-let TWODAYS: TimeInterval = 2 * 24 * 60 * 60
+let twoDays: TimeInterval = 2 * 24 * 60 * 60
 struct NIP44v2Encrypter: NIP44v2Encrypting {}
 
 enum GiftWrapper: NIP44v2Encrypting {
