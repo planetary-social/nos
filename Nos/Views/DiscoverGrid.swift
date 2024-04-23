@@ -4,6 +4,7 @@ struct DiscoverGrid: View {
     
     @EnvironmentObject private var router: Router
     @FetchRequest(fetchRequest: Event.emptyDiscoverRequest()) var events: FetchedResults<Event>
+    @FetchRequest(fetchRequest: Author.fetchRequest()) var authors: FetchedResults<Author>
     @ObservedObject var searchController: SearchController
     
     @Binding var columns: Int
@@ -18,7 +19,9 @@ struct DiscoverGrid: View {
     
     @Namespace private var animation
 
-    init(predicate: NSPredicate, searchController: SearchController, columns: Binding<Int>) {
+    init(featuredAuthors: [String], predicate: NSPredicate, searchController: SearchController, columns: Binding<Int>) {
+        let authorPublicKeys = featuredAuthors.compactMap { PublicKey(npub: $0)?.hex }
+        _authors = FetchRequest(fetchRequest: Author.authors(in: authorPublicKeys))
         let fetchRequest = Event.emptyDiscoverRequest()
         fetchRequest.predicate = predicate
         fetchRequest.fetchLimit = 1000
@@ -33,11 +36,17 @@ struct DiscoverGrid: View {
                 Group {
                     switch searchController.state {
                     case .noQuery:
-                        StaggeredGrid(list: events, columns: columns, spacing: 15) { note in
-                            NoteButton(note: note, style: .golden)
-                                .padding(.bottom, 5)
-                                .matchedGeometryEffect(id: note.identifier, in: animation)
-                                .id(note.id)
+                        ScrollView {
+                            LazyVStack {
+                                ForEach(authors) { author in
+                                    AuthorCard(author: author, showsFollowButton: false) {
+//                                        didSelectGesture?(author)
+                                    }
+                                    .padding(.horizontal, 13)
+                                    .padding(.top, 5)
+                                    .readabilityPadding()
+                                }
+                            }
                         }
                         .doubleTapToPop(tab: .discover) { proxy in
                             if let firstNote = events.first {

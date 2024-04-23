@@ -137,7 +137,15 @@ import Logger
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
         return fetchRequest
     }
-    
+
+    class func authors(in publicKeys: [RawAuthorID]) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
+        fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey in %@", publicKeys)
+        fetchRequest.fetchLimit = 1
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
+        return fetchRequest
+    }
+
     class func find(by pubKey: RawAuthorID, context: NSManagedObjectContext) throws -> Author? {
         let fetchRequest = request(by: pubKey)
         if let author = try context.fetch(fetchRequest).first {
