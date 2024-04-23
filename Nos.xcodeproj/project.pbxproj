@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0300998C2BCEB9C10059EF9A /* CircularFollowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0300997E2BCDCC290059EF9A /* CircularFollowButton.swift */; };
 		0378409D2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */; };
 		038985182B7AD6C0009C16CA /* String+MarkdownTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038985172B7AD6BF009C16CA /* String+MarkdownTests.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
@@ -445,6 +446,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0300997E2BCDCC290059EF9A /* CircularFollowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularFollowButton.swift; sourceTree = "<group>"; };
 		0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		038985172B7AD6BF009C16CA /* String+MarkdownTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+MarkdownTests.swift"; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
@@ -1132,21 +1134,21 @@
 			isa = PBXGroup;
 			children = (
 				C98298312ADD7EDB0096C5B5 /* Info.plist */,
-				3AAB61B12B24CC8A00717A07 /* Extensions */,
-				C9C9443A29F6E420002F2C7A /* Test Helpers */,
-				C9DEC0042989477A0078B43A /* Fixtures */,
-				C9DEBFE8298941020078B43A /* EventTests.swift */,
-				C96D391A2B61AFD500D3D0A1 /* RawNostrIDTests.swift */,
+				C96D39242B61B06200D3D0A1 /* AuthorTests.swift */,
+				5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */,
 				C9C45E152B23741E00F523DA /* EventObservationTests.swift */,
+				C9DEBFE8298941020078B43A /* EventTests.swift */,
+				C900385E2B6195C60080CC4F /* FollowTests.swift */,
 				C9ADB132299287D60075E7F8 /* KeyPairTests.swift */,
 				5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */,
-				5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */,
-				C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */,
-				5B88051B2A21046C00E21F06 /* SHA256KeyTests.swift */,
-				5B88051E2A21056E00E21F06 /* TLVTests.swift */,
+				C96D391A2B61AFD500D3D0A1 /* RawNostrIDTests.swift */,
 				C94D59AD2AE7286E00295AE8 /* ReportTests.swift */,
-				C900385E2B6195C60080CC4F /* FollowTests.swift */,
-				C96D39242B61B06200D3D0A1 /* AuthorTests.swift */,
+				5B88051B2A21046C00E21F06 /* SHA256KeyTests.swift */,
+				C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */,
+				5B88051E2A21056E00E21F06 /* TLVTests.swift */,
+				3AAB61B12B24CC8A00717A07 /* Extensions */,
+				C9DEC0042989477A0078B43A /* Fixtures */,
+				C9C9443A29F6E420002F2C7A /* Test Helpers */,
 			);
 			path = NosTests;
 			sourceTree = "<group>";
@@ -1304,11 +1306,11 @@
 				C95D68A0299E6D3E00429F86 /* BioView.swift */,
 				CD2CF38D299E67F900332116 /* CardButtonStyle.swift */,
 				C9DFA968299BEC33006929C1 /* CardStyle.swift */,
+				0300997E2BCDCC290059EF9A /* CircularFollowButton.swift */,
 				C9DFA96A299BEE2C006929C1 /* CompactNoteView.swift */,
 				C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */,
 				C9CDBBA029A8F14C00C555C7 /* DiscoverView.swift */,
 				5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */,
-				5B8C96B529DDD3B200B73AEC /* NoteTextViewRepresentable.swift */,
 				A303AF8229A9153A005DC8FC /* FollowButton.swift */,
 				A32B6C7729A6C99200653FF5 /* FollowCard.swift */,
 				A32B6C7229A6BE9B00653FF5 /* FollowsView.swift */,
@@ -1327,6 +1329,7 @@
 				C974652D2A3B86600031226F /* NoteCardHeader.swift */,
 				CD76864F29B6503500085358 /* NoteOptionsButton.swift */,
 				C9B708BA2A13BE41006C613A /* NoteTextEditor.swift */,
+				5B8C96B529DDD3B200B73AEC /* NoteTextViewRepresentable.swift */,
 				C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */,
 				C94437E529B0DB83004D8C86 /* NotificationsView.swift */,
 				C986510F2B0BD49200597B68 /* PagedNoteListView.swift */,
@@ -1686,6 +1689,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0300998C2BCEB9C10059EF9A /* CircularFollowButton.swift in Sources */,
 				CD09A74429A50F1D0063464F /* SideMenu.swift in Sources */,
 				C9C547512A4F1CC3006B0741 /* SearchController.swift in Sources */,
 				C992B32A2B3613CC00704A9C /* SubscriptionCancellable.swift in Sources */,
@@ -3065,6 +3069,16 @@
 			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = DequeModule;
 		};
+		C97797BB298AB1890046BD25 /* secp256k1 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */;
+			productName = secp256k1;
+		};
+		C97797BE298ABE060046BD25 /* secp256k1 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */;
+			productName = secp256k1;
+		};
 		C99DBF7D2A9E81CF00F7068F /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C99DBF7C2A9E81CF00F7068F /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
@@ -3119,6 +3133,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
+		};
+		C9BA85982B23638700AFC2C3 /* secp256k1 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */;
+			productName = secp256k1;
 		};
 		C9BA859A2B23638700AFC2C3 /* SwiftUINavigation */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -19,6 +19,7 @@ that other users can find you more easily.
 - Added support for uploading videos when composing a note.
 - Fixed an issue where reports for notes were treated as reports for profiles.
 - Updated the Discover tab navigation bar to match new design.
+- Updated the design of profile cards in search results and mentions search.
 
 ## [0.1.10] - 2024-04-12Z
 

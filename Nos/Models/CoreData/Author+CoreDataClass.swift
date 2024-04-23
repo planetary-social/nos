@@ -41,8 +41,39 @@ import Logger
         return PublicKey(hex: hex)
     }
 
+    var hasNIP05: Bool {
+        if let nip05, !nip05.isEmpty {
+            return true
+        } else {
+            return false
+        }
+    }
+
     var hasNosNIP05: Bool {
         nip05?.hasSuffix("@nos.social") == true
+    }
+
+    var hasUNS: Bool {
+        if let uns, !uns.isEmpty {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    var nip05Parts: (username: String, domain: String)? {
+        guard let nip05 else {
+            return nil
+        }
+
+        let parts = nip05.split(separator: "@")
+
+        guard let username = parts[safe: 0],
+            let domain = parts[safe: 1] else {
+            return nil
+        }
+        
+        return (String(username), String(domain))
     }
 
     var nosNIP05Username: String {
@@ -58,18 +89,11 @@ import Logger
             return nil
         }
         
-        let parts = nip05.split(separator: "@")
-        
-        guard let username = parts[safe: 0],
-            let domain = parts[safe: 1] else {
+        guard let nip05Parts, nip05Parts.username == "_" else {
             return nip05
         }
-        
-        if username == "_" {
-            return String(domain)
-        } else {
-            return nip05 
-        }
+
+        return String(nip05Parts.domain)
     }
     
     var needsMetadata: Bool {
