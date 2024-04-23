@@ -9,5 +9,5 @@ Any testing instruction
 ## Screenshots/Video
 Post screenshots or video showing your changes, ideally showing how the app worked before and after these changes. Delete this section if this PR contains no visual changes.
 
-### Issues covered
+## Issues covered
 Add reference(s) to a related issue in your repository.
