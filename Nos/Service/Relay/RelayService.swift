@@ -464,6 +464,7 @@ extension RelayService {
         // Make sure the socket doesn't stay open too long
         let task = Task(timeout: 10) { socket.disconnect() }
         return await withCheckedContinuation({ continuation in
+        
             var done = false
             socket.onEvent = { (event: WebSocketEvent) in
                 if done {
@@ -484,9 +485,10 @@ extension RelayService {
                     return
                 }
                 
+
+                done = true
                 task.cancel()
                 socket.disconnect()
-                done = true
                 continuation.resume()
             }
 
