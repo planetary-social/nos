@@ -454,29 +454,42 @@ extension RelayService {
         client.write(string: requestString)
     }
     
-    /// Opens a websocket and writes a single message to it. On failure this function will just log the error to the 
-    /// console.
+    /// Opens a websocket and writes a single message to it. On failure this
+    /// function will just log the error to the console.
     private func openSocket(to url: URL, andSend message: String) async {
         var urlRequest = URLRequest(url: url)
         urlRequest.timeoutInterval = 10
         let socket = WebSocket(request: urlRequest, compressionHandler: .none)
         
         // Make sure the socket doesn't stay open too long
-        _ = Task(timeout: 10) { socket.disconnect() }
+        let task = Task(timeout: 10) { socket.disconnect() }
         return await withCheckedContinuation({ continuation in
+            var done = false
             socket.onEvent = { (event: WebSocketEvent) in
+                if done {
+                    // We already cleaned up, we don't want to resume the
+                    // continuation twice and any remaining event can be ignored
+                    // now
+                    return
+                }
+                
                 switch event {
                 case WebSocketEvent.connected:
                     socket.write(string: message)
-                    socket.disconnect()
-                case WebSocketEvent.disconnected:
-                    continuation.resume()
                 case WebSocketEvent.error(let error):
                     Log.optional(error, "failed to send message: \(message) to websocket")
+                case WebSocketEvent.disconnected, WebSocketEvent.cancelled:
+                    break
                 default:
                     return
                 }
+                
+                task.cancel()
+                socket.disconnect()
+                done = true
+                continuation.resume()
             }
+
             socket.connect()
         })
     }
