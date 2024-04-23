@@ -1,4 +1,5 @@
 import SwiftUI
+import Dependencies
 
 struct DiscoverGrid: View {
     
@@ -6,7 +7,11 @@ struct DiscoverGrid: View {
     @FetchRequest(fetchRequest: Event.emptyDiscoverRequest()) var events: FetchedResults<Event>
     @FetchRequest(fetchRequest: Author.fetchRequest()) var authors: FetchedResults<Author>
     @ObservedObject var searchController: SearchController
-    
+    @Dependency(\.relayService) private var relayService
+
+    // TODO: What's a better way to do this?
+    @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
+
     @Binding var columns: Int
     @State private var gridSize: CGSize = .zero {
         didSet {
@@ -20,8 +25,10 @@ struct DiscoverGrid: View {
     @Namespace private var animation
 
     init(featuredAuthors: [String], predicate: NSPredicate, searchController: SearchController, columns: Binding<Int>) {
-        let authorPublicKeys = featuredAuthors.compactMap { PublicKey(npub: $0)?.hex }
-        _authors = FetchRequest(fetchRequest: Author.authors(in: authorPublicKeys))
+        let authorsRequest = Author.request(matchingNpubs: featuredAuthors)
+        authorsRequest.fetchLimit = 1000
+        _authors = FetchRequest(fetchRequest: authorsRequest)
+
         let fetchRequest = Event.emptyDiscoverRequest()
         fetchRequest.predicate = predicate
         fetchRequest.fetchLimit = 1000
@@ -39,12 +46,20 @@ struct DiscoverGrid: View {
                         ScrollView {
                             LazyVStack {
                                 ForEach(authors) { author in
-                                    AuthorCard(author: author, showsFollowButton: false) {
-//                                        didSelectGesture?(author)
+                                    AuthorCard(author: author) {
+                                        router.push(author)
                                     }
                                     .padding(.horizontal, 13)
                                     .padding(.top, 5)
                                     .readabilityPadding()
+                                    .task {
+                                        // TODO: prevent this from happening all the time. Probably only needed once per author.
+                                        subscriptions[author.id] =
+                                            await relayService.requestMetadata(
+                                                for: author.hexadecimalPublicKey,
+                                                since: author.lastUpdatedMetadata
+                                            )
+                                    }
                                 }
                             }
                         }

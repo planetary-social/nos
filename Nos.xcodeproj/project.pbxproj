@@ -10,6 +10,7 @@
 		0300998C2BCEB9C10059EF9A /* CircularFollowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0300997E2BCDCC290059EF9A /* CircularFollowButton.swift */; };
 		0378409D2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */; };
 		038985182B7AD6C0009C16CA /* String+MarkdownTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038985172B7AD6BF009C16CA /* String+MarkdownTests.swift */; };
+		03A053342BD8649600A9B4D7 /* DiscoverTab+FeaturedAuthors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A053332BD8649600A9B4D7 /* DiscoverTab+FeaturedAuthors.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
 		3A1C296F2B2A537C0020B753 /* Moderation.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */; };
@@ -449,6 +450,7 @@
 		0300997E2BCDCC290059EF9A /* CircularFollowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularFollowButton.swift; sourceTree = "<group>"; };
 		0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		038985172B7AD6BF009C16CA /* String+MarkdownTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+MarkdownTests.swift"; sourceTree = "<group>"; };
+		03A053332BD8649600A9B4D7 /* DiscoverTab+FeaturedAuthors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DiscoverTab+FeaturedAuthors.swift"; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
 		3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Moderation.xcstrings; sourceTree = "<group>"; };
@@ -835,6 +837,16 @@
 				C973AB592A323167002AED16 /* Relay+CoreDataProperties.swift */,
 			);
 			path = Generated;
+			sourceTree = "<group>";
+		};
+		03A0532E2BD8643B00A9B4D7 /* Discover */ = {
+			isa = PBXGroup;
+			children = (
+				C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */,
+				C9CDBBA029A8F14C00C555C7 /* DiscoverTab.swift */,
+				03A053332BD8649600A9B4D7 /* DiscoverTab+FeaturedAuthors.swift */,
+			);
+			path = Discover;
 			sourceTree = "<group>";
 		};
 		3AAB61B12B24CC8A00717A07 /* Extensions */ = {
@@ -1308,8 +1320,6 @@
 				C9DFA968299BEC33006929C1 /* CardStyle.swift */,
 				0300997E2BCDCC290059EF9A /* CircularFollowButton.swift */,
 				C9DFA96A299BEE2C006929C1 /* CompactNoteView.swift */,
-				C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */,
-				C9CDBBA029A8F14C00C555C7 /* DiscoverTab.swift */,
 				5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */,
 				A303AF8229A9153A005DC8FC /* FollowButton.swift */,
 				A32B6C7729A6C99200653FF5 /* FollowCard.swift */,
@@ -1364,6 +1374,7 @@
 				C913DA0D2AEB3265003BDD6D /* WarningView.swift */,
 				C9CE5B132A0172CF008E198C /* WebView.swift */,
 				5B79F6402BA11618002DA9BE /* Components */,
+				03A0532E2BD8643B00A9B4D7 /* Discover */,
 				C92F01502AC4D67B00972489 /* Form */,
 				C96877B32B4EDCCF0051ED2F /* Home */,
 				C9CFF6D02AB241EB00D4B368 /* Modifiers */,
@@ -1758,6 +1769,7 @@
 				C9EE3E602A0538B7008A7491 /* ExpirationTimeButton.swift in Sources */,
 				A303AF8329A9153A005DC8FC /* FollowButton.swift in Sources */,
 				C9C2B77F29E0731600548B4A /* AsyncTimer.swift in Sources */,
+				03A053342BD8649600A9B4D7 /* DiscoverTab+FeaturedAuthors.swift in Sources */,
 				A32B6C7329A6BE9B00653FF5 /* FollowsView.swift in Sources */,
 				3F30020D29C382EB003D4F8B /* OnboardingLoginView.swift in Sources */,
 				C9A25B3D29F174D200B39534 /* ReadabilityPadding.swift in Sources */,

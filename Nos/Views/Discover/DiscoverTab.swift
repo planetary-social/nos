@@ -28,7 +28,7 @@ struct DiscoverTab: View {
 
     // MARK: - Init
     
-    init(featuredAuthors: [String] = Array(Event.discoverTabUserIdToInfo.keys)) {
+    init(featuredAuthors: [String] = Array(DiscoverTab.featuredAuthorNpubs.keys)) {
         self.featuredAuthors = featuredAuthors
     }
 

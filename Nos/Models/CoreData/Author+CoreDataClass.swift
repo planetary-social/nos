@@ -138,7 +138,8 @@ import Logger
         return fetchRequest
     }
 
-    class func authors(in publicKeys: [RawAuthorID]) -> NSFetchRequest<Author> {
+    class func request(matchingNpubs npubs: [String]) -> NSFetchRequest<Author> {
+        let publicKeys = npubs.compactMap { PublicKey(npub: $0)?.hex }
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey in %@", publicKeys)
         fetchRequest.fetchLimit = 1
