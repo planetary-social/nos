@@ -14,10 +14,15 @@ struct CircularFollowButton: View {
 
     private let diameter: CGFloat = 30
 
+    @State var disabled = false
+
     var body: some View {
         let following = currentUser.isFollowing(author: author)
 
         Button {
+            disabled = true
+            defer { disabled = false }
+
             Task {
                 do {
                     if following {
@@ -36,22 +41,14 @@ struct CircularFollowButton: View {
                 Circle()
                     .frame(width: diameter)
                     .foregroundStyle(
-                        LinearGradient(
-                            colors: following ?
-                            [Color.actionSecondaryGradientTop, Color.actionSecondaryGradientBottom] :
-                                [Color.actionPrimaryGradientTop, Color.actionPrimaryGradientBottom],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
+                        following ? LinearGradient.verticalAccentSecondary : LinearGradient.verticalAccentPrimary
                     )
                     .background(
                         Circle()
                             .frame(width: diameter)
                             .offset(y: 1)
                             .foregroundStyle(
-                                following ?
-                                Color.actionSecondaryBackground :
-                                Color.actionPrimaryBackground
+                                following ? Color.actionSecondaryBackground : Color.actionPrimaryBackground
                             )
                     )
                 if following {
@@ -61,5 +58,6 @@ struct CircularFollowButton: View {
                 }
             }
         }
+        .disabled(disabled)
     }
 }
