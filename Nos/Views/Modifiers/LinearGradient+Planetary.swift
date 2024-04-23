@@ -20,8 +20,14 @@ extension LinearGradient {
         endPoint: .topTrailing
     )
     
-    public static let verticalAccent = LinearGradient(
-        colors: [ Color.actionPrimaryGradientTop, Color.actionPrimaryGradientBottom],
+    public static let verticalAccentPrimary = LinearGradient(
+        colors: [.actionPrimaryGradientTop, .actionPrimaryGradientBottom],
+        startPoint: .top,
+        endPoint: .bottom
+    )
+    
+    public static let verticalAccentSecondary = LinearGradient(
+        colors: [.actionSecondaryGradientTop, .actionSecondaryGradientBottom],
         startPoint: .top,
         endPoint: .bottom
     )
