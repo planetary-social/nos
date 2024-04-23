@@ -6,7 +6,7 @@ A description of the changes proposed in the pull request. Explain what it does
 2. Tap...
 Any testing instruction
 
-### Screenshots/Video
+## Screenshots/Video
 Skip if this PR contains no visual changes
 
 ### Issues covered
