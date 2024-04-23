@@ -21,9 +21,10 @@ struct CircularFollowButton: View {
 
         Button {
             disabled = true
-            defer { disabled = false }
 
             Task {
+                defer { disabled = false }
+
                 do {
                     if following {
                         try await currentUser.unfollow(author: author)
