@@ -15,7 +15,7 @@ final class GiftWrapperTests: XCTestCase {
         XCTAssertEqual(wrappedDM.tags, [["p", receiverKeyPair.publicKeyHex]])
         XCTAssertGreaterThan(
             Date(timeIntervalSince1970: Double(wrappedDM.createdAt)),
-            Date().addingTimeInterval(-TWODAYS)
+            Date().addingTimeInterval(-twoDays)
         )
         XCTAssertLessThan(Date(timeIntervalSince1970: Double(wrappedDM.createdAt)), Date.now)
         XCTAssertNotEqual(wrappedDM.pubKey, senderKeyPair.publicKeyHex)

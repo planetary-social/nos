@@ -18,7 +18,8 @@ enum GiftWrapper: NIP44v2Encrypting {
         senderKeyPair: KeyPair,
         receiverPubkey: RawAuthorID
     ) throws -> JSONEvent {
-        let validatedRumor = try validateRumor(rumor)
+        let normalizedRumor = try normalizeRumor(rumor)
+        let validatedRumor = try validateRumor(normalizedRumor)
 
         let encryptedRumor = try encryptJSONEvent(
             validatedRumor,
@@ -149,13 +150,17 @@ enum GiftWrapper: NIP44v2Encrypting {
             throw GiftWrapperError.signedRumorError
         }
 
-        if rumor.id.isEmpty {
-            var mutableRumor = rumor
-            mutableRumor.id = try rumor.calculateIdentifier()
-            return mutableRumor
-        }
-        
         return rumor
+    }
+
+    private static func normalizeRumor(_ rumor: JSONEvent) throws -> JSONEvent {
+        guard rumor.id.isEmpty else {
+            return rumor
+        }
+
+        var mutableRumor = rumor
+        mutableRumor.id = try rumor.calculateIdentifier()
+        return mutableRumor
     }
 
     private static func toNostrSDKPrivateKey(keyPair: KeyPair) throws -> PrivateKey {
@@ -175,6 +180,6 @@ enum GiftWrapper: NIP44v2Encrypting {
     }
     
     static func randomTimeUpTo2DaysInThePast() -> Date {
-        Date().addingTimeInterval(-TimeInterval.random(in: 0...TWODAYS))
+        Date().addingTimeInterval(-TimeInterval.random(in: 0...twoDays))
     }
 }

@@ -7,12 +7,8 @@ import SwiftUINavigation
 /// is set to `true` it will walk the user through a series of menus that allows them to report content in a given
 /// category and optionally mute the respective author.
 struct ReportMenuModifier: ViewModifier {
-    
     @Binding var isPresented: Bool
 
-    // categories (ReportCategory) are the same for both types. It sounds like we will need to provide different 
-    // options now. You probably can do that by splitting the `topLevelCategories` list into two, and creating some
-    // branches in this code.
     var reportedObject: ReportTarget
     
     @State private var selectedCategory: ReportCategory?
