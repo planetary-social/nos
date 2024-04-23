@@ -1,5 +1,5 @@
 ## Description
-A description of the changes proposed in the pull request. Explain what it does
+A description of the changes proposed in the pull request. Explain what it does to give the reviewer some context for what they're reviewing.
 
 ## How to test
 1. Navigate to...
