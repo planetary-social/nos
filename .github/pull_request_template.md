@@ -7,7 +7,7 @@ A description of the changes proposed in the pull request. Explain what it does
 Any testing instruction
 
 ## Screenshots/Video
-Skip if this PR contains no visual changes
+Post screenshots or video showing your changes, ideally showing how the app worked before and after these changes. Delete this section if this PR contains no visual changes.
 
 ### Issues covered
 Add reference(s) to a related issue in your repository.
