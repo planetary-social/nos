@@ -3,7 +3,7 @@ import Combine
 import CoreData
 import Dependencies
 
-struct DiscoverView: View {    
+struct DiscoverTab: View {    
     // MARK: - Properties
     
     @EnvironmentObject private var relayService: RelayService
@@ -150,7 +150,7 @@ struct SizePreferenceKey: PreferenceKey {
     }
 }
 
-struct DiscoverView_Previews: PreviewProvider {
+struct DiscoverTab_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
@@ -196,14 +196,14 @@ struct DiscoverView_Previews: PreviewProvider {
     
     static var previews: some View {
         if let publicKey = user.publicKey {
-            DiscoverView(featuredAuthors: [publicKey.npub])
+            DiscoverTab(featuredAuthors: [publicKey.npub])
                 .environment(\.managedObjectContext, previewContext)
                 .environmentObject(relayService)
                 .environmentObject(router)
                 .environment(currentUser)
                 .onAppear { createTestData(in: previewContext) }
 
-            DiscoverView(featuredAuthors: [publicKey.npub])
+            DiscoverTab(featuredAuthors: [publicKey.npub])
                 .environment(\.managedObjectContext, previewContext)
                 .environmentObject(relayService)
                 .environmentObject(router)
