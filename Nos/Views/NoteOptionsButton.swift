@@ -46,8 +46,10 @@ struct NoteOptionsButton: View {
                         analytics.viewedNoteSource()
                         showingSource = true
                     }
-                    Button(String(localized: .localizable.reportNote)) {
-                        showingReportMenu = true
+                    if note.author != currentUser.author {
+                        Button(String(localized: .localizable.reportNote)) {
+                            showingReportMenu = true
+                        }
                     }
                 }
                 if note.author == currentUser.author {

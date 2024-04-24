@@ -72,8 +72,6 @@ struct ReportMenuModifier: ViewModifier {
                         message: TextState(String(localized: .localizable.reportContentMessage)),
                         buttons: topLevelButtons()
                     )
-                } else {
-                    confirmationDialogState = nil
                 }
             }
             .onChange(of: confirmationDialogState) { _, newValue in
