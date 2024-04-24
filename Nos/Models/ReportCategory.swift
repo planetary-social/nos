@@ -115,7 +115,7 @@ let selectableCategories = [
     spam,
     nudity,
     coarseLanguage,
-    violence,
+    illegal,
     other
 ]
 
