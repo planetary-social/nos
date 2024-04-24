@@ -1,3 +1,5 @@
+import Foundation
+
 extension DiscoverTab {
     enum FeaturedAuthorCategory: CaseIterable {
         case all
@@ -9,16 +11,16 @@ extension DiscoverTab {
         case sports
         case music
 
-        var text: String {
+        var text: LocalizedStringResource {
             switch self {
-            case .all: "All"
-            case .new: "New"
-            case .journalists: "Journalists"
-            case .tech: "Tech"
-            case .art: "Art"
-            case .environment: "Environment"
-            case .sports: "Sports"
-            case .music: "Music"
+            case .all: LocalizedStringResource.localizable.featuredAuthorCategoryAll
+            case .new: LocalizedStringResource.localizable.featuredAuthorCategoryNew
+            case .journalists: LocalizedStringResource.localizable.featuredAuthorCategoryJournalists
+            case .tech: LocalizedStringResource.localizable.featuredAuthorCategoryTech
+            case .art: LocalizedStringResource.localizable.featuredAuthorCategoryArt
+            case .environment: LocalizedStringResource.localizable.featuredAuthorCategoryEnvironment
+            case .sports: LocalizedStringResource.localizable.featuredAuthorCategorySports
+            case .music: LocalizedStringResource.localizable.featuredAuthorCategoryMusic
             }
         }
 
