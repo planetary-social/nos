@@ -1,9 +1,9 @@
 extension DiscoverTab {
     enum FeaturedAuthorCategory {
-        case new
+        case new // swiftlint:disable:this identifier_name
         case journalists
         case tech
-        case art
+        case art // swiftlint:disable:this identifier_name
         case environment
         case sports
         case music

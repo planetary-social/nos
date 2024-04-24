@@ -53,7 +53,7 @@ struct DiscoverGrid: View {
                                     .padding(.top, 5)
                                     .readabilityPadding()
                                     .task {
-                                        // TODO: prevent this from happening all the time. Probably only needed once per author.
+                                        // TODO: optimize. Probably only needed once per author.
                                         subscriptions[author.id] =
                                             await relayService.requestMetadata(
                                                 for: author.hexadecimalPublicKey,
@@ -64,8 +64,8 @@ struct DiscoverGrid: View {
                             }
                         }
                         .doubleTapToPop(tab: .discover) { proxy in
-                            if let firstNote = events.first {
-                                proxy.scrollTo(firstNote.id)
+                            if let firstAuthor = authors.first {
+                                proxy.scrollTo(firstAuthor.id)
                             }
                         }
                     case .empty:
