@@ -92,11 +92,11 @@ struct ReportMenuModifier: ViewModifier {
         }
         
         switch userSelection {
-        case .selected(let category, let displayName):
+        case .selected(let category):
             Task {
                 confirmationDialogState = ConfirmationDialogState(
-                    title: TextState(String(localized: .localizable.reportActionTitle(displayName))),
-                    message: TextState(String(localized: .localizable.reportActionTitle(displayName))),
+                    title: TextState(String(localized: .localizable.reportActionTitle(category.displayName))),
+                    message: TextState(String(localized: .localizable.reportActionTitle(category.displayName))),
                     buttons: [
                         ButtonState(action: .send(.sendToNos(category))) {
                             TextState("Send to Nos")
@@ -127,15 +127,13 @@ struct ReportMenuModifier: ViewModifier {
     /// An enum to simplify the user selection through the sequence of connected
     /// dialogs
     enum UserSelection: Equatable {
-        case selected(ReportCategory, TopLevelDisplayName)
+        case selected(ReportCategory)
         case sendToNos(ReportCategory)
         case flagPublicly(ReportCategory)
         
         var displayName: String {
             switch self {
-            case .selected(_, let displayName):
-                return displayName
-            case .sendToNos(let category), .flagPublicly(let category):
+            case .selected(let category), .sendToNos(let category), .flagPublicly(let category):
                 return category.displayName
             }
         }
@@ -146,7 +144,7 @@ struct ReportMenuModifier: ViewModifier {
                 return String(localized: .localizable.reportSendToNosConfirmation(category.displayName))
             case .flagPublicly(let category):
                 return String(localized: .localizable.reportFlagPubliclyConfirmation(category.displayName))
-            case .selected(let category, _):
+            case .selected(let category):
                 Log.error("Invalid .selected variant")
                 return String(localized: .localizable.reportFlagPubliclyConfirmation(category.displayName))
             }
@@ -156,22 +154,12 @@ struct ReportMenuModifier: ViewModifier {
     /// List of the top-level report categories we care about
     /// Out vocabulary is much bigger
     func topLevelButtons() -> [ButtonState<UserSelection>] {
-        let spam = ("SP", "Spam")
-        let nudity = ("NS", "Nudity or Sexual Content")
-        let harassment = ("CL", "Harassment or Intolerance")
-        let illegal = ("VI", "Illegal")
-        let other = ("NA", "Other")
-        
-        return [spam, nudity, harassment, illegal, other].compactMap { (categoryCode, displayName) in
-            if let category = ReportCategory.findCategory(from: categoryCode) {
-                let userSelection = UserSelection.selected(category, displayName)
-                
-                return ButtonState(action: .send(userSelection)) {
-                    TextState(verbatim: displayName)
-                }
-            }
+        return selectableCategories.map { category in
+            let userSelection = UserSelection.selected(category)
             
-            return nil
+            return ButtonState(action: .send(userSelection)) {
+                TextState(verbatim: category.displayName)
+            }
         }
     }
     
