@@ -1,5 +1,6 @@
 extension DiscoverTab {
     enum FeaturedAuthorCategory {
+        case all // swiftlint:disable:this identifier_name
         case new // swiftlint:disable:this identifier_name
         case journalists
         case tech
@@ -7,6 +8,22 @@ extension DiscoverTab {
         case environment
         case sports
         case music
+
+        var text: String {
+            switch self {
+            case .all: "All"
+            case .new: "New"
+            case .journalists: "Journalists"
+            case .tech: "Tech"
+            case .art: "Art"
+            case .environment: "Environment"
+            case .sports: "Sports"
+            case .music: "Music"
+            }
+        }
+
+        static var allValues: [FeaturedAuthorCategory] =
+            [.all, .new, .journalists, .tech, .art, .environment, .sports, .music]
     }
 
     static let featuredAuthorNpubs: [String: [FeaturedAuthorCategory]] = [

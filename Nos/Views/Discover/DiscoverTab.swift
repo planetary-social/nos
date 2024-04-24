@@ -52,11 +52,6 @@ struct DiscoverTab: View {
         relaySubscriptions.append(await relayService.subscribeToEvents(matching: featuredFilter))
     }
 
-    func searchRelays(for query: String) async {
-        let searchFilter = Filter(kinds: [.metaData], search: query, limit: 1)
-        self.relaySubscriptions.append(await self.relayService.subscribeToEvents(matching: searchFilter))
-    }
-
     func updatePredicate() {
         predicate = Event.extendedNetworkPredicate(
             currentUser: currentUser,
@@ -130,7 +125,6 @@ struct DiscoverTab: View {
                 if isVisible {
                     analytics.showedDiscover()
                     Task { await subscribeToNewEvents() }
-                    Task { await searchRelays(for: featuredAuthors.first!) }
                 } else {
                     Task { await cancelSubscriptions() }
                 }

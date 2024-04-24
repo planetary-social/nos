@@ -12,6 +12,23 @@ struct DiscoverGrid: View {
     // TODO: What's a better way to do this?
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
 
+    @State private var pickerSelection = DiscoverTab.FeaturedAuthorCategory.all
+
+    var filteredAuthors: [Author] {
+        if pickerSelection == .all {
+            return Array(authors)
+        }
+        return authors.filter {
+            guard let npub = $0.npubString else {
+                return false
+            }
+            guard let categories = DiscoverTab.featuredAuthorNpubs[npub] else {
+                return false
+            }
+            return categories.contains(pickerSelection)
+        }
+    }
+
     @Binding var columns: Int
     @State private var gridSize: CGSize = .zero {
         didSet {
@@ -45,7 +62,37 @@ struct DiscoverGrid: View {
                     case .noQuery:
                         ScrollView {
                             LazyVStack {
-                                ForEach(authors) { author in
+                                ScrollView(.horizontal) {
+                                    HStack(spacing: 2) {
+                                        ForEach(DiscoverTab.FeaturedAuthorCategory.allValues, id: \.self) { category in
+                                            Button(action: {
+                                                pickerSelection = category
+                                            }, label: {
+                                                Text(category.text)
+                                                    .font(.footnote)
+                                                    .padding(.vertical, 4)
+                                                    .padding(.horizontal, 8)
+                                                    .background(
+                                                        pickerSelection == category ?
+                                                        Color.pickerBackgroundSelected :
+                                                        Color.clear
+                                                    )
+                                                    .foregroundColor(
+                                                        pickerSelection == category ?
+                                                        Color.primaryTxt :
+                                                        Color.secondaryTxt
+                                                    )
+                                                    .cornerRadius(20)
+                                                    .padding(4)
+                                            })
+                                        }
+                                    }
+                                    .padding(.leading, 10)
+                                }
+                                .scrollIndicatorsFlash(onAppear: true)
+                                .background(Color.profileBgTop)
+
+                                ForEach(filteredAuthors) { author in
                                     AuthorCard(author: author) {
                                         router.push(author)
                                     }
@@ -62,6 +109,7 @@ struct DiscoverGrid: View {
                                     }
                                 }
                             }
+                            .padding(.bottom, 12)
                         }
                         .doubleTapToPop(tab: .discover) { proxy in
                             if let firstAuthor = authors.first {
