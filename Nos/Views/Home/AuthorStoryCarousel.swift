@@ -7,6 +7,8 @@ struct AuthorStoryCarousel: View {
     @Binding var selectedStoryAuthor: Author?
     
     @EnvironmentObject private var router: Router
+    @EnvironmentObject private var relayService: RelayService
+    @State private var relaySubscriptions = [SubscriptionCancellable]()
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -25,6 +27,11 @@ struct AuthorStoryCarousel: View {
                                     Text(.localizable.seeProfile)
                                 }
                             }
+                            .onAppear {
+                                Task {
+                                    await fetchMetadata(for: author)
+                                }
+                            }
                     } 
                 }
             }
@@ -33,5 +40,11 @@ struct AuthorStoryCarousel: View {
             .padding(.bottom, 0)
         }
         .readabilityPadding()
+    }
+    
+    func fetchMetadata(for author: Author) async {
+        let subscription = await relayService.requestMetadata(for: author.hexadecimalPublicKey, since: author.lastUpdatedMetadata)   
+        relaySubscriptions.append(subscription)
+        // todo: it seems like this is running correclty but author photos aren't updating right away
     }
 }

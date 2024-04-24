@@ -3,6 +3,78 @@ import CoreData
 import Combine
 import Dependencies
 
+@Observable @MainActor class StoriesController {
+    var authorsWithUnreadStories = [Author]()
+    var authorsInStoryCarousel = [Author]()
+    // TODO: update fetch request when this changes. or maybe just ahve a refresh() 
+    var storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now)!
+    
+    @ObservationIgnored @Dependency(\.persistenceController) var persistenceController
+    
+    // TODO: don't tightly couple to currentUser
+    @ObservationIgnored @Dependency(\.currentUser) var currentUser
+
+    private var cancellables = [AnyCancellable]()
+    private var authorsWithUnreadStoriesWatcher: NSFetchedResultsController<Author>?
+    private var authorsInStoryCarouselWatcher: NSFetchedResultsController<Author>?
+    private var authorsInStoryCarouselIDs = [RawAuthorID]()
+    
+    init() {
+        let objectContext = persistenceController.viewContext
+        
+        let authorsWithUnreadStoriesWatcher = NSFetchedResultsController(
+            fetchRequest: currentUser.author!.followedWithNewNotes(since: storiesCutoffDate), 
+            managedObjectContext: objectContext, 
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        self.authorsWithUnreadStoriesWatcher = authorsWithUnreadStoriesWatcher
+        
+        FetchedResultsControllerPublisher(fetchedResultsController: authorsWithUnreadStoriesWatcher)
+            .publisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] authors in
+                let oldValue = self?.authorsWithUnreadStories ?? []
+                self?.authorsWithUnreadStories = authors
+                if oldValue.isEmpty {
+                    self?.updateDisplayedStories()
+                } 
+            })
+            .store(in: &self.cancellables)
+        
+        
+    }
+    
+    func updateDisplayedStories() {
+        let objectContext = persistenceController.viewContext
+
+        var authorIDs = authorsWithUnreadStories.compactMap({ $0.hexadecimalPublicKey })
+        // don't fetch more than SQLite allows using the IN operator or it will crash.
+        let sqliteFetchLimit = 999 
+        authorIDs = Array(authorIDs.prefix(sqliteFetchLimit))
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey IN %@", authorIDs)
+        
+        let authorsInStoryCarouselWatcher = NSFetchedResultsController(
+            fetchRequest: fetchRequest, 
+            managedObjectContext: objectContext, 
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        self.authorsInStoryCarouselWatcher = authorsInStoryCarouselWatcher
+        
+        FetchedResultsControllerPublisher(fetchedResultsController: authorsInStoryCarouselWatcher)
+            .publisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] authors in
+                self?.authorsInStoryCarousel = authors
+            })
+            .store(in: &self.cancellables)
+        try! authorsInStoryCarouselWatcher.performFetch()
+    }
+}
+
 struct HomeFeedView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
@@ -10,9 +82,9 @@ struct HomeFeedView: View {
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) var currentUser
     @ObservationIgnored @Dependency(\.analytics) private var analytics
-
-    @FetchRequest private var authors: FetchedResults<Author>
     
+    @State var storiesController = StoriesController()
+
     @State private var lastRefreshDate = Date(
         timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime)
     )
@@ -24,7 +96,6 @@ struct HomeFeedView: View {
 
     @ObservedObject var user: Author
 
-    @State private var stories: [Author] = []
     @State private var selectedStoryAuthor: Author?
     @State private var storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now)!
 
@@ -34,11 +105,6 @@ struct HomeFeedView: View {
     
     init(user: Author) {
         self.user = user
-        _authors = FetchRequest(
-            fetchRequest: user.followedWithNewNotes(
-                since: Calendar.current.date(byAdding: .day, value: -2, to: .now)!
-            )
-        )
     }
     
     /// Downloads the data we need to show stories. 
@@ -67,6 +133,12 @@ struct HomeFeedView: View {
                 )
             } else {
                 ZStack {
+                    AuthorStoryCarousel(
+                        authors: $storiesController.authorsInStoryCarousel, 
+                        selectedStoryAuthor: $selectedStoryAuthor
+                    )
+                    .frame(minHeight: 100)
+
                     let homeFeedFilter = Filter(
                         authorKeys: user.followedKeys, 
                         kinds: [.text, .delete, .repost, .longFormContent, .report], 
@@ -80,7 +152,7 @@ struct HomeFeedView: View {
                         tab: .home,
                         header: {
                             AuthorStoryCarousel(
-                                authors: $stories, 
+                                authors: $storiesController.authorsInStoryCarousel, 
                                 selectedStoryAuthor: $selectedStoryAuthor
                             )
                         },
@@ -91,12 +163,11 @@ struct HomeFeedView: View {
                             }
                             .frame(minHeight: 300)
                         },
-                        onRefresh: {
+                        onRefresh: { 
                             lastRefreshDate = .now
-                            storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: lastRefreshDate)!
-                            authors.nsPredicate = user.followedWithNewNotesPredicate(
-                                since: storiesCutoffDate
-                            )
+//                            storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: lastRefreshDate)!
+//                            updateDisplayedStories(withCutoff: storiesCutoffDate)
+                            storiesController.updateDisplayedStories()
                             return Event.homeFeed(for: user, before: lastRefreshDate)
                         }
                     )
@@ -104,7 +175,7 @@ struct HomeFeedView: View {
 
                     StoriesView(
                         cutoffDate: $storiesCutoffDate,
-                        authors: stories,
+                        authors: storiesController.authorsInStoryCarousel,
                         selectedAuthor: $selectedStoryAuthor
                     )
                     .scaleEffect(isShowingStories ? 1 : 0.5)
@@ -168,16 +239,13 @@ struct HomeFeedView: View {
             if router.selectedTab == .home {
                 isVisible = true 
             }
-            if !isShowingStories {
-                stories = authors.map { $0 }
-            }
         }
         .onChange(of: isShowingStories) { _, newValue in
             if newValue {
                 analytics.enteredStories()
             } else {
                 analytics.closedStories()
-                stories = authors.map { $0 }
+                storiesController.updateDisplayedStories()
             }
         }
         .onDisappear { isVisible = false }

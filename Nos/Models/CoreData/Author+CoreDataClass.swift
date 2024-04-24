@@ -168,6 +168,13 @@ import Logger
         }
     }
     
+    @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: true)]
+        fetchRequest.predicate = NSPredicate.false
+        return fetchRequest
+    }
+    
     @nonobjc public class func allAuthorsRequest() -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         return fetchRequest
