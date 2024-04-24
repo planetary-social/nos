@@ -94,7 +94,7 @@ struct ConfirmUsernameDeletionSheet: View {
         do {
             author.nip05 = ""
             try viewContext.save()
-            try await currentUser.publishMetaData()
+            try await currentUser.publishMetadata()
             if isNosSocialUsername {
                 do {
                     try await namesAPI.delete(

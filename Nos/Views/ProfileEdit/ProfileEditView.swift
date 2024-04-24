@@ -21,11 +21,20 @@ struct ProfileEditView: View {
     @State private var showUniversalNameWizard = false
     @State private var unsController = UNSWizardController()
     @State private var showConfirmationDialog = false
+    @State private var saveError: SaveError?
 
     init(author: Author) {
         self.author = author
     }
-    
+
+    private var showAlert: Binding<Bool> {
+        Binding {
+            saveError != nil
+        } set: { _ in
+            saveError = nil
+        }
+    }
+
     var body: some View {
         NosForm {
             AvatarView(imageUrl: URL(string: avatarText), size: 99)
@@ -131,11 +140,24 @@ struct ProfileEditView: View {
             trailing:
                 ActionButton(title: .localizable.done) {
                     await save()
-                    // Go back to profile page
-                    router.pop()
                 }
                 .offset(y: -3)
         )
+        .alert(isPresented: showAlert, error: saveError) {
+            Button {
+                saveError = nil
+                Task {
+                    await save()
+                }
+            } label: {
+                Text(.localizable.retry)
+            }
+            Button {
+                saveError = nil
+            } label: {
+                Text(.localizable.cancel)
+            }
+        }
         .id(author)
         .task {
             populateTextFields()
@@ -154,7 +176,7 @@ struct ProfileEditView: View {
         unsText = author.uns ?? ""
     }
     
-    func save() async {
+    private func save() async {
         author.name = nameText
         author.about = bioText
         author.profilePhotoURL = URL(string: avatarText)
@@ -162,12 +184,29 @@ struct ProfileEditView: View {
         author.uns = unsText
         do {
             try viewContext.save()
-            // Post event
-            try await currentUser.publishMetaData()
+            try await currentUser.publishMetadata()
+
+            // Go back to profile page
+            router.pop()
         } catch CurrentUserError.errorWhilePublishingToRelays {
-            Log.debug("Error while publishing to relays")
+            saveError = SaveError.unableToPublishChanges
         } catch {
             crashReporting.report(error)
+            saveError = SaveError.unexpectedError
+        }
+    }
+
+    enum SaveError: LocalizedError {
+        case unexpectedError
+        case unableToPublishChanges
+
+        var errorDescription: String? {
+            switch self {
+            case .unexpectedError:
+                return "Something unexpected happened"
+            case .unableToPublishChanges:
+                return "We were unable to publish your changes in the network"
+            }
         }
     }
 }

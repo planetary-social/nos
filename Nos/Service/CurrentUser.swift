@@ -305,7 +305,7 @@ enum CurrentUserError: Error {
         return metaEvent
     }
 
-    @MainActor func publishMetaData() async throws {
+    @MainActor func publishMetadata() async throws {
         guard let pubKey = publicKeyHex else {
             Log.debug("Error: no publicKeyHex")
             throw CurrentUserError.authorNotFound

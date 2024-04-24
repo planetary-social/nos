@@ -106,7 +106,7 @@ struct ExcellentChoiceSheet: View {
             do {
                 currentUser.author?.nip05 = "\(username)@nos.social"
                 try currentUser.viewContext.saveIfNeeded()
-                try await currentUser.publishMetaData()
+                try await currentUser.publishMetadata()
 
                 try await namesAPI.register(username: username, keyPair: keyPair)
                 
@@ -118,7 +118,7 @@ struct ExcellentChoiceSheet: View {
                 // Do our best reverting the changes.
                 currentUser.author?.nip05 = oldNIP05
                 try? currentUser.viewContext.saveIfNeeded()
-                try? await currentUser.publishMetaData()
+                try? await currentUser.publishMetadata()
 
                 claimState = .failed(.unableToClaim(error))
             }
