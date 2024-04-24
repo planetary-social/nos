@@ -11,23 +11,9 @@ struct DiscoverGrid: View {
 
     // TODO: What's a better way to do this?
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
-
+    
     @State private var pickerSelection = DiscoverTab.FeaturedAuthorCategory.all
-
-    var filteredAuthors: [Author] {
-        if pickerSelection == .all {
-            return Array(authors)
-        }
-        return authors.filter {
-            guard let npub = $0.npubString else {
-                return false
-            }
-            guard let categories = DiscoverTab.featuredAuthorNpubs[npub] else {
-                return false
-            }
-            return categories.contains(pickerSelection)
-        }
-    }
+    private var cancellables = [AnyCancellable]()
 
     @Binding var columns: Int
     @State private var gridSize: CGSize = .zero {
@@ -42,8 +28,9 @@ struct DiscoverGrid: View {
     @Namespace private var animation
 
     init(featuredAuthors: [String], predicate: NSPredicate, searchController: SearchController, columns: Binding<Int>) {
-        let authorsRequest = Author.request(matchingNpubs: featuredAuthors)
-        authorsRequest.fetchLimit = 1000
+        let authorsRequest = Author.allAuthorsRequest()
+        authorsRequest.fetchLimit = 100
+        authorsRequest.predicate = Author.matchingNpubsPredicate(npubs: featuredAuthors)
         _authors = FetchRequest(fetchRequest: authorsRequest)
 
         let fetchRequest = Event.emptyDiscoverRequest()
@@ -64,7 +51,7 @@ struct DiscoverGrid: View {
                             LazyVStack {
                                 ScrollView(.horizontal) {
                                     HStack(spacing: 2) {
-                                        ForEach(DiscoverTab.FeaturedAuthorCategory.allValues, id: \.self) { category in
+                                        ForEach(DiscoverTab.FeaturedAuthorCategory.allCases, id: \.self) { category in
                                             Button(action: {
                                                 pickerSelection = category
                                             }, label: {
@@ -88,11 +75,14 @@ struct DiscoverGrid: View {
                                         }
                                     }
                                     .padding(.leading, 10)
+                                    .onChange(of: pickerSelection) { _, newValue in
+                                        authors.nsPredicate = Author.matchingNpubsPredicate(npubs: newValue.npubs)
+                                    }
                                 }
                                 .scrollIndicatorsFlash(onAppear: true)
                                 .background(Color.profileBgTop)
 
-                                ForEach(filteredAuthors) { author in
+                                ForEach(authors) { author in
                                     AuthorCard(author: author) {
                                         router.push(author)
                                     }
@@ -109,7 +99,7 @@ struct DiscoverGrid: View {
                                     }
                                 }
                             }
-                            .padding(.bottom, 12)
+                            .padding(.bottom, 16)
                         }
                         .doubleTapToPop(tab: .discover) { proxy in
                             if let firstAuthor = authors.first {

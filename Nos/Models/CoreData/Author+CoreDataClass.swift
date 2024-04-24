@@ -138,13 +138,9 @@ import Logger
         return fetchRequest
     }
 
-    class func request(matchingNpubs npubs: [String]) -> NSFetchRequest<Author> {
+    class func matchingNpubsPredicate(npubs: [String]) -> NSPredicate {
         let publicKeys = npubs.compactMap { PublicKey(npub: $0)?.hex }
-        let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
-        fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey in %@", publicKeys)
-        fetchRequest.fetchLimit = 1
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
-        return fetchRequest
+        return NSPredicate(format: "hexadecimalPublicKey in %@", publicKeys)
     }
 
     class func find(by pubKey: RawAuthorID, context: NSManagedObjectContext) throws -> Author? {
@@ -179,6 +175,7 @@ import Logger
     
     @nonobjc public class func allAuthorsRequest() -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
         return fetchRequest
     }
     
