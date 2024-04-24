@@ -13,7 +13,6 @@ struct DiscoverGrid: View {
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
     
     @State private var pickerSelection = DiscoverTab.FeaturedAuthorCategory.all
-    private var cancellables = [AnyCancellable]()
 
     @Binding var columns: Int
     @State private var gridSize: CGSize = .zero {
@@ -49,38 +48,7 @@ struct DiscoverGrid: View {
                     case .noQuery:
                         ScrollView {
                             LazyVStack {
-                                ScrollView(.horizontal) {
-                                    HStack(spacing: 2) {
-                                        ForEach(DiscoverTab.FeaturedAuthorCategory.allCases, id: \.self) { category in
-                                            Button(action: {
-                                                pickerSelection = category
-                                            }, label: {
-                                                Text(category.text)
-                                                    .font(.footnote)
-                                                    .padding(.vertical, 4)
-                                                    .padding(.horizontal, 8)
-                                                    .background(
-                                                        pickerSelection == category ?
-                                                        Color.pickerBackgroundSelected :
-                                                        Color.clear
-                                                    )
-                                                    .foregroundColor(
-                                                        pickerSelection == category ?
-                                                        Color.primaryTxt :
-                                                        Color.secondaryTxt
-                                                    )
-                                                    .cornerRadius(20)
-                                                    .padding(4)
-                                            })
-                                        }
-                                    }
-                                    .padding(.leading, 10)
-                                    .onChange(of: pickerSelection) { _, newValue in
-                                        authors.nsPredicate = Author.matchingNpubsPredicate(npubs: newValue.npubs)
-                                    }
-                                }
-                                .scrollIndicatorsFlash(onAppear: true)
-                                .background(Color.profileBgTop)
+                                scrollingPicker
 
                                 ForEach(authors) { author in
                                     AuthorCard(author: author) {
@@ -141,5 +109,40 @@ struct DiscoverGrid: View {
                 gridSize = preference
             }
         }
+    }
+
+    var scrollingPicker: some View {
+        ScrollView(.horizontal) {
+            HStack(spacing: 2) {
+                ForEach(DiscoverTab.FeaturedAuthorCategory.allCases, id: \.self) { category in
+                    Button(action: {
+                        pickerSelection = category
+                    }, label: {
+                        Text(category.text)
+                            .font(.footnote)
+                            .padding(.vertical, 4)
+                            .padding(.horizontal, 8)
+                            .background(
+                                pickerSelection == category ?
+                                Color.pickerBackgroundSelected :
+                                Color.clear
+                            )
+                            .foregroundColor(
+                                pickerSelection == category ?
+                                Color.primaryTxt :
+                                Color.secondaryTxt
+                            )
+                            .cornerRadius(20)
+                            .padding(4)
+                    })
+                }
+            }
+            .padding(.leading, 10)
+            .onChange(of: pickerSelection) { _, newValue in
+                authors.nsPredicate = Author.matchingNpubsPredicate(npubs: newValue.npubs)
+            }
+        }
+        .scrollIndicatorsFlash(onAppear: true)
+        .background(Color.profileBgTop)
     }
 }
