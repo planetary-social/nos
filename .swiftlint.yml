@@ -81,6 +81,7 @@ excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Architecture/
   - StarscreamOld/
   - "**/.build"
+  - .git
 analyzer_rules: # Rules run by `swiftlint analyze` (experimental)
   - explicit_self
   - unused_import

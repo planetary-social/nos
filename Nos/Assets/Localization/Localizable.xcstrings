@@ -4282,13 +4282,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Followed by **%1@** and **%2ld other**"
+                  "value" : "Followed by **%1$@** and **%2$lld other**"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Followed by **%1@** and **%2ld others**"
+                  "value" : "Followed by **%1$@** and **%2$lld others**"
                 }
               }
             }
@@ -9960,50 +9960,50 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note melden"
+            "state" : "needs_review",
+            "value" : "Inhalt markieren"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Report note"
+            "value" : "Flag This Content"
           }
         },
         "fa" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "گزارش یادداشت"
+            "state" : "needs_review",
+            "value" : "علامت‌گذاری این محتوا"
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "ノートを報告する"
+            "state" : "needs_review",
+            "value" : "このコンテンツをフラグする"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notitie rapporteren"
+            "state" : "needs_review",
+            "value" : "Deze inhoud markeren"
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rapportera anteckning"
+            "state" : "needs_review",
+            "value" : "Markera detta innehåll"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "举报笔记"
+            "state" : "needs_review",
+            "value" : "标记此内容"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "舉報筆記"
+            "state" : "needs_review",
+            "value" : "標記此筆記"
           }
         }
       }

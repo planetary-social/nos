@@ -11,17 +11,7 @@ struct OnboardingAgeVerificationView: View {
                 .padding(.bottom, 20)
                 .padding(.horizontal, 77.5)
                 .font(.custom("ClarityCity-Bold", size: 34, relativeTo: .largeTitle))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [
-                            Color(hex: "#F08508"),
-                            Color(hex: "#F43F75")
-                        ],
-                        startPoint: .bottomLeading,
-                        endPoint: .topTrailing
-                    )
-                    .blendMode(.normal)
-                )
+                .foregroundStyle(LinearGradient.diagonalAccent2.blendMode(.normal))
             Text(.localizable.ageVerificationSubtitle)
                 .foregroundColor(.secondaryTxt)
                 .multilineTextAlignment(.center)

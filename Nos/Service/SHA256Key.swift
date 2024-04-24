@@ -23,7 +23,7 @@ public enum SHA256Key {
     ///
     /// Check https://github.com/nostr-protocol/nips/blob/master/19.md for more information.
     public static func decode(base8 checksum: Data) -> String {
-        let underlyingKey = secp256k1.Signing.XonlyKey(rawRepresentation: checksum, keyParity: 0)
+        let underlyingKey = secp256k1.Signing.XonlyKey(dataRepresentation: checksum, keyParity: 0)
         return Data(underlyingKey.bytes).hexString
     }
 }
