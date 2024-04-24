@@ -2,9 +2,7 @@ import SwiftUI
 import Dependencies
 
 struct DiscoverGrid: View {
-    
     @EnvironmentObject private var router: Router
-    @FetchRequest(fetchRequest: Event.emptyDiscoverRequest()) var events: FetchedResults<Event>
     @FetchRequest(fetchRequest: Author.fetchRequest()) var authors: FetchedResults<Author>
     @ObservedObject var searchController: SearchController
     @Dependency(\.relayService) private var relayService
@@ -12,31 +10,23 @@ struct DiscoverGrid: View {
     // TODO: What's a better way to do this?
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
     
-    @State private var pickerSelection = DiscoverTab.FeaturedAuthorCategory.all
+    @State private var selectedCategory: FeaturedAuthorCategory = .all
 
-    @Binding var columns: Int
-    @State private var gridSize: CGSize = .zero {
-        didSet {
-            // Initialize columns based on width of the grid
-            if columns == 0, gridSize.width > 0 {
-                columns = Int(floor(gridSize.width / 172))
-            }
-        }
-    }
-    
     @Namespace private var animation
 
-    init(featuredAuthors: [String], predicate: NSPredicate, searchController: SearchController, columns: Binding<Int>) {
+    /// Initializes a DiscoverGrid with the selected category and a search controller.
+    /// - Parameters:
+    ///   - featuredAuthorCategory: The initial category of featured authors to display until
+    ///   the user changes the selection. Defaults to `.all` to show all featured authors.
+    ///   - searchController: The search controller to use for searching.
+    init(featuredAuthorCategory: FeaturedAuthorCategory = .all, searchController: SearchController) {
+        self.selectedCategory = featuredAuthorCategory
+
         let authorsRequest = Author.allAuthorsRequest()
         authorsRequest.fetchLimit = 100
-        authorsRequest.predicate = Author.matchingNpubsPredicate(npubs: featuredAuthors)
+        authorsRequest.predicate = Author.matchingNpubsPredicate(npubs: featuredAuthorCategory.npubs)
         _authors = FetchRequest(fetchRequest: authorsRequest)
 
-        let fetchRequest = Event.emptyDiscoverRequest()
-        fetchRequest.predicate = predicate
-        fetchRequest.fetchLimit = 1000
-        _events = FetchRequest(fetchRequest: fetchRequest)
-        _columns = columns
         self.searchController = searchController
     }
     
@@ -105,30 +95,27 @@ struct DiscoverGrid: View {
                 }
                 .preference(key: SizePreferenceKey.self, value: geometry.size)
             }
-            .onPreferenceChange(SizePreferenceKey.self) { preference in
-                gridSize = preference
-            }
         }
     }
 
     var scrollingPicker: some View {
         ScrollView(.horizontal) {
             HStack(spacing: 2) {
-                ForEach(DiscoverTab.FeaturedAuthorCategory.allCases, id: \.self) { category in
+                ForEach(FeaturedAuthorCategory.allCases, id: \.self) { category in
                     Button(action: {
-                        pickerSelection = category
+                        selectedCategory = category
                     }, label: {
                         Text(category.text)
                             .font(.footnote)
                             .padding(.vertical, 4)
                             .padding(.horizontal, 8)
                             .background(
-                                pickerSelection == category ?
+                                selectedCategory == category ?
                                 Color.pickerBackgroundSelected :
                                 Color.clear
                             )
                             .foregroundColor(
-                                pickerSelection == category ?
+                                selectedCategory == category ?
                                 Color.primaryTxt :
                                 Color.secondaryTxt
                             )
@@ -138,8 +125,8 @@ struct DiscoverGrid: View {
                 }
             }
             .padding(.leading, 10)
-            .onChange(of: pickerSelection) { _, newValue in
-                authors.nsPredicate = Author.matchingNpubsPredicate(npubs: newValue.npubs)
+            .onChange(of: selectedCategory) { _, newCategory in
+                authors.nsPredicate = Author.matchingNpubsPredicate(npubs: newCategory.npubs)
             }
         }
         .scrollIndicatorsFlash(onAppear: true)
