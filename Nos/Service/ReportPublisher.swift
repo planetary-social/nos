@@ -65,7 +65,7 @@ class ReportPublisher {
     
     // MARK: Helpers
     
-    internal struct ReportRequest {
+    struct ReportRequest {
         let reportedEvent: JSONEvent
         let reporterPubkey: RawAuthorID
         let reporterText: String
@@ -82,7 +82,7 @@ class ReportPublisher {
         }
     }
     
-    internal func createPublicReport(
+    func createPublicReport(
         for target: ReportTarget,
         category: ReportCategory,
         pubKey: RawAuthorID
@@ -103,7 +103,7 @@ class ReportPublisher {
         return event
     }
     
-    internal func createReportRequestDM(note: Event, category: ReportCategory, keyPair: KeyPair) -> JSONEvent? {
+    func createReportRequestDM(note: Event, category: ReportCategory, keyPair: KeyPair) -> JSONEvent? {
         guard let jsonEvent = note.codable else {
             Log.error("Could not encode note to JSON")
             return nil

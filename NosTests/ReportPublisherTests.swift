@@ -45,7 +45,7 @@ final class ReportPublisherTests: CoreDataTestCase {
     
     // MARK: Helpers
     
-    private func createTestEvent(
+    func createTestEvent(
         in context: NSManagedObjectContext,
         keyPair: KeyPair
     ) throws -> Event {
