@@ -1,6 +1,6 @@
 extension DiscoverTab {
     enum FeaturedAuthorCategory {
-        case all // swiftlint:disable:this identifier_name
+        case all
         case new // swiftlint:disable:this identifier_name
         case journalists
         case tech
