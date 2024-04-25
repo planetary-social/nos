@@ -1,13 +1,22 @@
+import Logger
 import SwiftUI
 import Dependencies
 
 struct DiscoverGrid: View {
     @EnvironmentObject private var router: Router
-    @FetchRequest(fetchRequest: Author.fetchRequest()) var authors: FetchedResults<Author>
+    
+    @FetchRequest(fetchRequest: Author.matching(npubs: FeaturedAuthorCategory.all.npubs)) var authors
+
+    private var filteredAuthors: [Author] {
+        authors.filter { author in
+            guard let npubString = author.npubString else { return false }
+            return selectedCategory.npubs.contains(npubString)
+        }
+    }
+
     @ObservedObject var searchController: SearchController
     @Dependency(\.relayService) private var relayService
 
-    // TODO: What's a better way to do this?
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
     
     @State private var selectedCategory: FeaturedAuthorCategory = .all
@@ -21,12 +30,6 @@ struct DiscoverGrid: View {
     ///   - searchController: The search controller to use for searching.
     init(featuredAuthorCategory: FeaturedAuthorCategory = .all, searchController: SearchController) {
         self.selectedCategory = featuredAuthorCategory
-
-        let authorsRequest = Author.allAuthorsRequest()
-        authorsRequest.fetchLimit = 100
-        authorsRequest.predicate = Author.matchingNpubsPredicate(npubs: featuredAuthorCategory.npubs)
-        _authors = FetchRequest(fetchRequest: authorsRequest)
-
         self.searchController = searchController
     }
     
@@ -40,7 +43,7 @@ struct DiscoverGrid: View {
                             LazyVStack {
                                 scrollingPicker
 
-                                ForEach(authors) { author in
+                                ForEach(filteredAuthors) { author in
                                     AuthorCard(author: author) {
                                         router.push(author)
                                     }
@@ -48,7 +51,6 @@ struct DiscoverGrid: View {
                                     .padding(.top, 5)
                                     .readabilityPadding()
                                     .task {
-                                        // TODO: optimize. Probably only needed once per author.
                                         subscriptions[author.id] =
                                             await relayService.requestMetadata(
                                                 for: author.hexadecimalPublicKey,
@@ -125,9 +127,6 @@ struct DiscoverGrid: View {
                 }
             }
             .padding(.leading, 10)
-            .onChange(of: selectedCategory) { _, newCategory in
-                authors.nsPredicate = Author.matchingNpubsPredicate(npubs: newCategory.npubs)
-            }
         }
         .scrollIndicatorsFlash(onAppear: true)
         .background(Color.profileBgTop)
