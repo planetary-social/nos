@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Discover tab now features authors in a variety of categories.
+- Fixed an issue where registering a NIP-05 username field could fail silently.
+- Fixed an issue where users named with valid urls were unable to be mentioned correctly.
+- Fixed an issue where pasting an npub while composing a note created an invalid mention.
 - Changed "Report note" button to "Flag this content"
 - We are now publishing the relay list when registering a new NIP-05 username so
 that other users can find you more easily.
@@ -17,6 +21,7 @@ that other users can find you more easily.
 - Added support for uploading videos when composing a note.
 - Fixed an issue where reports for notes were treated as reports for profiles.
 - Updated the Discover tab navigation bar to match new design.
+- Updated the design of profile cards in search results and mentions search.
 
 ## [0.1.10] - 2024-04-12Z
 

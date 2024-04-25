@@ -13,17 +13,7 @@ struct AboutView: View {
                 Text(.localizable.onboardingTitle)
                     .font(.custom("ClarityCity-Bold", size: 25.21))
                     .fontWeight(.heavy)
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [
-                                Color(hex: "#F08508"),
-                                Color(hex: "#F43F75")
-                            ],
-                            startPoint: .bottomLeading,
-                            endPoint: .topTrailing
-                        )
-                        .blendMode(.normal)
-                    )
+                    .foregroundStyle(LinearGradient.diagonalAccent2.blendMode(.normal))
                 
                 VStack {
                     HighlightedText(

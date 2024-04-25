@@ -4,6 +4,7 @@ import CoreData
 enum RelayError: Error {
     case invalidAddress
     case parseError
+    case missingSignatureOrKey
 }
 
 @objc(Relay)
@@ -44,6 +45,9 @@ public class Relay: NosManagedObject {
         "wss://relay.causes.com",
         ]
     }
+    
+    // swiftlint:disable:next force_unwrapping
+    static var nosAddress = URL(string: "wss://relay.nos.social")!
     
     @nonobjc public class func relay(by address: String) -> NSFetchRequest<Relay> {
         let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")

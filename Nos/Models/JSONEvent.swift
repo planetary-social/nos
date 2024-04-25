@@ -2,7 +2,7 @@ import secp256k1
 import Foundation
 import Logger
 
-struct JSONEvent: Codable, Hashable {
+struct JSONEvent: Codable, Hashable, VerifiableEvent {
     
     var id: String
     var pubKey: String
@@ -10,8 +10,9 @@ struct JSONEvent: Codable, Hashable {
     var kind: Int64
     var tags: [[String]]
     var content: String
-    var signature: String
-    
+    var signature: String?
+    var identifier: String? { self.id }
+
     enum CodingKeys: String, CodingKey {
         case id
         case pubKey = "pubkey"
@@ -41,10 +42,10 @@ struct JSONEvent: Codable, Hashable {
     }
     
     internal init(
-        pubKey: RawAuthorID, 
-        createdAt: Date = .now, 
-        kind: EventKind, 
-        tags: [[String]], 
+        pubKey: RawAuthorID,
+        createdAt: Date = .now,
+        kind: EventKind,
+        tags: [[String]],
         content: String
     ) {
         self.id = ""
@@ -54,6 +55,21 @@ struct JSONEvent: Codable, Hashable {
         self.tags = tags
         self.content = content
         self.signature = ""
+    }
+    
+    static func from(json: String) -> JSONEvent? {
+        guard let jsonData = json.data(using: .utf8) else {
+            return nil
+        }
+        
+        let decoder = JSONDecoder()
+        return try? decoder.decode(JSONEvent.self, from: jsonData)
+    }
+    
+    func toJSON() throws -> String? {
+        let encoder = JSONEncoder()
+        let data = try encoder.encode(self)
+        return String(data: data, encoding: .utf8)
     }
     
     mutating func sign(withKey privateKey: KeyPair) throws {
@@ -89,7 +105,7 @@ struct JSONEvent: Codable, Hashable {
             "kind": kind,
             "tags": tags,
             "content": content,
-            "sig": signature,
+            "sig": signature ?? "",
         ]
     }
     
@@ -122,7 +138,7 @@ struct MetadataEventJSON: Codable {
     var profilePhotoURL: URL? {
         URL(string: picture ?? "")
     }
-
+    
     private enum CodingKeys: String, CodingKey {
         case displayName = "display_name", name, nip05, uns = "uns_name", about, website, picture
     }

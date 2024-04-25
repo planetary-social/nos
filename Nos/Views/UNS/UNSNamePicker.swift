@@ -13,7 +13,7 @@ fileprivate struct PickerRow<Label: View>: View {
         HStack {
             if isSelected {
                 Circle()
-                    .foregroundStyle(LinearGradient.verticalAccent)
+                    .foregroundStyle(LinearGradient.verticalAccentPrimary)
                     .frame(width: 16, height: 16)
             } else {
                 Circle()
@@ -22,7 +22,7 @@ fileprivate struct PickerRow<Label: View>: View {
             }
             
             if isSelected {
-                label.foregroundStyle(LinearGradient.verticalAccent) 
+                label.foregroundStyle(LinearGradient.verticalAccentPrimary) 
             } else {
                 label.foregroundStyle(Color.primaryTxt) 
             }
@@ -43,7 +43,7 @@ struct UNSNamePicker: View {
     
     var textFieldForegroundStyle: LinearGradient {
         if isTextFieldFocused {
-            LinearGradient.verticalAccent
+            LinearGradient.verticalAccentPrimary
         } else {
             LinearGradient(colors: [Color.primaryTxt], startPoint: .top, endPoint: .bottom)
         } 
@@ -88,7 +88,7 @@ struct UNSNamePicker: View {
             HStack(spacing: 0) {
                 if isTextFieldFocused {
                     Circle()
-                        .foregroundStyle(LinearGradient.verticalAccent)
+                        .foregroundStyle(LinearGradient.verticalAccentPrimary)
                         .frame(width: 16, height: 16)
                 } else {
                     Circle()

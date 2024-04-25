@@ -10,8 +10,8 @@ struct ActionButton: View {
     var depthEffectColor = Color(hex: "#A04651")
     var backgroundGradient = LinearGradient(
         colors: [
-            Color(hex: "#F08508"),
-            Color(hex: "#F43F75")
+            Color.actionPrimaryGradientTop,
+            Color.actionPrimaryGradientBottom
         ],
         startPoint: .bottomLeading,
         endPoint: .topTrailing

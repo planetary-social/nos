@@ -7,9 +7,8 @@ import SwiftUINavigation
 /// is set to `true` it will walk the user through a series of menus that allows them to report content in a given
 /// category and optionally mute the respective author.
 struct ReportMenuModifier: ViewModifier {
-    
     @Binding var isPresented: Bool
-    
+
     var reportedObject: ReportTarget
     
     @State private var userSelection: UserSelection?
@@ -18,9 +17,6 @@ struct ReportMenuModifier: ViewModifier {
     @State private var confirmationDialogState: ConfirmationDialogState<UserSelection>?
     
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var relayService: RelayService
-    @Environment(CurrentUser.self) private var currentUser
-    @Dependency(\.analytics) private var analytics: Analytics
     
     // swiftlint:disable function_body_length
     func body(content: Content) -> some View {
@@ -33,6 +29,7 @@ struct ReportMenuModifier: ViewModifier {
                 actions: {
                     Button(String(localized: .localizable.confirm)) {
                         publishReport(userSelection)
+                        
                         if let author = reportedObject.author, !author.muted {
                             showMuteDialog = true
                         }
@@ -152,7 +149,7 @@ struct ReportMenuModifier: ViewModifier {
     /// List of the top-level report categories we care about
     /// Out vocabulary is much bigger
     func topLevelButtons() -> [ButtonState<UserSelection>] {
-        return selectableCategories.map { category in
+        selectableCategories.map { category in
             let userSelection = UserSelection.selected(category)
             
             return ButtonState(action: .send(userSelection)) {
@@ -175,37 +172,19 @@ struct ReportMenuModifier: ViewModifier {
     }
     
     func sendToNos(_ selectedCategory: ReportCategory) {
-        #warning("Not implemented yet")
-        print("sendToNos not implemented yet for category \(selectedCategory) for target \(reportedObject)")
+        ReportPublisher().publishPrivateReport(
+            for: reportedObject,
+            category: selectedCategory,
+            context: viewContext
+        )
     }
     
     func flagPublicly(_ selectedCategory: ReportCategory) {
-        guard let keyPair = currentUser.keyPair else {
-            Log.error("Cannot publish report - No signed in user")
-            return
-        }
-        
-        var event = JSONEvent(
-            pubKey: keyPair.publicKeyHex,
-            kind: .report,
-            tags: [
-                ["L", "MOD"],
-                ["l", "MOD>\(selectedCategory.code)", "MOD"]
-            ],
-            content: String(localized: .localizable.reportEventContent(selectedCategory.displayName))
+        ReportPublisher().publishPublicReport(
+            for: reportedObject,
+            category: selectedCategory,
+            context: viewContext
         )
-        
-        let nip56Reason = selectedCategory.nip56Code.rawValue
-        event.tags += reportedObject.tags(for: nip56Reason)
-        
-        Task {
-            do {
-                try await relayService.publishToAll(event: event, signingKey: keyPair, context: viewContext)
-                analytics.reported(reportedObject)
-            } catch {
-                Log.error("Failed to publish report: \(error.localizedDescription)")
-            }
-        }
     }
 }
 

@@ -3,7 +3,7 @@ import Combine
 import CoreData
 import Dependencies
 
-struct DiscoverView: View {    
+struct DiscoverTab: View {    
     // MARK: - Properties
     
     @EnvironmentObject private var relayService: RelayService
@@ -17,49 +17,13 @@ struct DiscoverView: View {
     
     @State private var performingInitialLoad = true
     static let initialLoadTime = 2
-    @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var isVisible = false
-    private var featuredAuthors: [String]
-    
+
     @StateObject private var searchController = SearchController()
     @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
 
     @State var predicate: NSPredicate = .false
 
-    // MARK: - Init
-    
-    init(featuredAuthors: [String] = Array(Event.discoverTabUserIdToInfo.keys)) {
-        self.featuredAuthors = featuredAuthors
-    }
-
-    // MARK: - Internal
-    
-    func cancelSubscriptions() async {
-        relaySubscriptions.removeAll()
-    }
-    
-    func subscribeToNewEvents() async {
-        await cancelSubscriptions()
-        
-        let featuredFilter = Filter(
-            authorKeys: featuredAuthors.compactMap {
-                PublicKey(npub: $0)?.hex
-            },
-            kinds: [.text, .delete],
-            limit: 200
-        )
-
-        relaySubscriptions.append(await relayService.subscribeToEvents(matching: featuredFilter))
-    }
-    
-    func updatePredicate() {
-        predicate = Event.extendedNetworkPredicate(
-            currentUser: currentUser,
-            featuredAuthors: featuredAuthors,
-            before: date
-        )
-    }
-    
     // MARK: - View
     
     var body: some View {
@@ -71,7 +35,10 @@ struct DiscoverView: View {
                         hideAfter: .now() + .seconds(Self.initialLoadTime)
                     )
                 } else {
-                    DiscoverGrid(predicate: predicate, searchController: searchController, columns: $columns)
+                    FeaturedAuthorsView(
+                        featuredAuthorCategory: .all,
+                        searchController: searchController
+                    )
                 }
             }
             .searchable(
@@ -90,24 +57,12 @@ struct DiscoverView: View {
                         // TODO: actually show the popover. https://github.com/planetary-social/nos/issues/1025
                         showInfoPopover = true
                     } label: {
-                        Image(systemName: "info.circle")
+                        Image.discoverInfo
                     }
-                    .foregroundColor(.secondaryTxt)
+                    .foregroundStyle(Color.secondaryTxt)
                 }
             }
             .animation(.easeInOut, value: columns)
-            .task { 
-                updatePredicate()
-            }
-            .refreshable {
-                date = .now
-            }
-            .onChange(of: date) {
-                updatePredicate()
-            }
-            .refreshable {
-                date = .now
-            }
             .onAppear {
                 if router.selectedTab == .discover {
                     isVisible = true
@@ -116,12 +71,9 @@ struct DiscoverView: View {
             .onDisappear {
                 isVisible = false
             }
-            .onChange(of: isVisible) { 
+            .onChange(of: isVisible) {
                 if isVisible {
                     analytics.showedDiscover()
-                    Task { await subscribeToNewEvents() }
-                } else {
-                    Task { await cancelSubscriptions() }
                 }
             }
             .navigationDestination(for: Event.self) { note in
@@ -150,7 +102,7 @@ struct SizePreferenceKey: PreferenceKey {
     }
 }
 
-struct DiscoverView_Previews: PreviewProvider {
+struct DiscoverTab_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
@@ -195,23 +147,19 @@ struct DiscoverView_Previews: PreviewProvider {
     @State static var relayFilter: Relay?
     
     static var previews: some View {
-        if let publicKey = user.publicKey {
-            DiscoverView(featuredAuthors: [publicKey.npub])
-                .environment(\.managedObjectContext, previewContext)
-                .environmentObject(relayService)
-                .environmentObject(router)
-                .environment(currentUser)
-                .onAppear { createTestData(in: previewContext) }
-
-            DiscoverView(featuredAuthors: [publicKey.npub])
-                .environment(\.managedObjectContext, previewContext)
-                .environmentObject(relayService)
-                .environmentObject(router)
-                .environment(currentUser)
-                .onAppear { createTestData(in: previewContext) }
-                .previewDevice("iPad Air (5th generation)")
-        } else {
-            EmptyView()
-        }
+        DiscoverTab()
+            .environment(\.managedObjectContext, previewContext)
+            .environmentObject(relayService)
+            .environmentObject(router)
+            .environment(currentUser)
+            .onAppear { createTestData(in: previewContext) }
+        
+        DiscoverTab()
+            .environment(\.managedObjectContext, previewContext)
+            .environmentObject(relayService)
+            .environmentObject(router)
+            .environment(currentUser)
+            .onAppear { createTestData(in: previewContext) }
+            .previewDevice("iPad Air (5th generation)")
     }
 }

@@ -50,7 +50,7 @@ struct AppView: View {
                             }
                     }
                     
-                    DiscoverView()
+                    DiscoverTab()
                         .tabItem {
                             VStack {
                                 let text = Text(.localizable.discover)

@@ -3,19 +3,31 @@ import SwiftUI
 extension LinearGradient {
     
     public static let horizontalAccent = LinearGradient(
-        colors: [ Color(hex: "#F08508"), Color(hex: "#F43F75")],
+        colors: [ Color.actionPrimaryGradientTop, Color.actionPrimaryGradientBottom],
         startPoint: .leading,
         endPoint: .trailing
     )
     
     public static let diagonalAccent = LinearGradient(
-        colors: [ Color(hex: "#F08508"), Color(hex: "#F43F75")],
+        colors: [ Color.actionPrimaryGradientTop, Color.actionPrimaryGradientBottom],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
     
-    public static let verticalAccent = LinearGradient(
-        colors: [ Color(hex: "#F08508"), Color(hex: "#F43F75")],
+    public static let diagonalAccent2 = LinearGradient(
+        colors: [ Color.actionPrimaryGradientTop, Color.actionPrimaryGradientBottom],
+        startPoint: .bottomLeading,
+        endPoint: .topTrailing
+    )
+    
+    public static let verticalAccentPrimary = LinearGradient(
+        colors: [.actionPrimaryGradientTop, .actionPrimaryGradientBottom],
+        startPoint: .top,
+        endPoint: .bottom
+    )
+    
+    public static let verticalAccentSecondary = LinearGradient(
+        colors: [.actionSecondaryGradientTop, .actionSecondaryGradientBottom],
         startPoint: .top,
         endPoint: .bottom
     )
