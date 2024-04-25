@@ -1,10 +1,3 @@
-//
-//  VerifiableEvent.swift
-//  Nos
-//
-//  Created by Daniel on 24/4/24.
-//
-
 import secp256k1
 import secp256k1_bindings
 
