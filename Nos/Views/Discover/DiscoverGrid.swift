@@ -129,7 +129,6 @@ struct DiscoverGrid: View {
             }
             .padding(.leading, 10)
         }
-        .scrollIndicatorsFlash(onAppear: true)
         .background(Color.profileBgTop)
     }
 }
