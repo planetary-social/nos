@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Detect identifiers of the form @npub1... in notes and link them to the associated profiles.
 - Detect NIP-05 identifiers inserted in notes and link them to njump.
+- Discover tab now features authors in a variety of categories.
 - Fixed an issue where registering a NIP-05 username field could fail silently.
 - Fixed an issue where users named with valid urls were unable to be mentioned correctly.
 - Fixed an issue where pasting an npub while composing a note created an invalid mention.
