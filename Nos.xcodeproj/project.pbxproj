@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0300998C2BCEB9C10059EF9A /* CircularFollowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0300997E2BCDCC290059EF9A /* CircularFollowButton.swift */; };
 		0378409D2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */; };
-		038985182B7AD6C0009C16CA /* String+MarkdownTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038985172B7AD6BF009C16CA /* String+MarkdownTests.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
 		3A1C296F2B2A537C0020B753 /* Moderation.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */; };
@@ -449,7 +448,6 @@
 /* Begin PBXFileReference section */
 		0300997E2BCDCC290059EF9A /* CircularFollowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularFollowButton.swift; sourceTree = "<group>"; };
 		0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		038985172B7AD6BF009C16CA /* String+MarkdownTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+MarkdownTests.swift"; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
 		3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Moderation.xcstrings; sourceTree = "<group>"; };
@@ -843,7 +841,6 @@
 			isa = PBXGroup;
 			children = (
 				3AAB61B42B24CD0000717A07 /* Date+ElapsedTests.swift */,
-				038985172B7AD6BF009C16CA /* String+MarkdownTests.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2002,7 +1999,6 @@
 				A3B943D8299D758F00A15A08 /* KeyChain.swift in Sources */,
 				C9646EAA29B7A506007239A4 /* Analytics.swift in Sources */,
 				5BFBB2952BD9D7EB002E909F /* URLParserTests.swift in Sources */,
-				038985182B7AD6C0009C16CA /* String+MarkdownTests.swift in Sources */,
 				C91400252B2A3ABF009B13B4 /* SQLiteStoreTestCase.swift in Sources */,
 				C9ADB133299287D60075E7F8 /* KeyPairTests.swift in Sources */,
 				C9DEC04E29894BED0078B43A /* Author+CoreDataClass.swift in Sources */,
@@ -3073,16 +3069,6 @@
 			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = DequeModule;
 		};
-		C97797BB298AB1890046BD25 /* secp256k1 */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */;
-			productName = secp256k1;
-		};
-		C97797BE298ABE060046BD25 /* secp256k1 */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */;
-			productName = secp256k1;
-		};
 		C99DBF7D2A9E81CF00F7068F /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C99DBF7C2A9E81CF00F7068F /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
@@ -3137,11 +3123,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
-		};
-		C9BA85982B23638700AFC2C3 /* secp256k1 */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C97797BA298AB1890046BD25 /* XCRemoteSwiftPackageReference "secp256k1" */;
-			productName = secp256k1;
 		};
 		C9BA859A2B23638700AFC2C3 /* SwiftUINavigation */ = {
 			isa = XCSwiftPackageProductDependency;

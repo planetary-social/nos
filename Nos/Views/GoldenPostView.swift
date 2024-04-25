@@ -88,9 +88,8 @@ struct GoldenPostView: View {
         if let content {
             return try? URLParser().findUnformattedURLs(
                 in: content
-            ).first(
-                where: { $0.isImage }
             )
+            .first(where: { $0.isImage })
         } else {
             return nil
         }

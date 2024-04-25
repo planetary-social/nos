@@ -2,8 +2,11 @@ import CoreData
 import XCTest
 import Dependencies
 
+// swiftlint:disable file_length
+
 final class NoteNoteParserTests: CoreDataTestCase {
 
+    // swiftlint:disable:next implicitly_unwrapped_optional
     private var sut: NoteParser!
 
     override func setUp() async throws {

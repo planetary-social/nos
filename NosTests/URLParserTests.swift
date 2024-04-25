@@ -2,6 +2,7 @@ import XCTest
 
 class URLParserTests: XCTestCase {
 
+    // swiftlint:disable:next implicitly_unwrapped_optional
     private var sut: URLParser!
 
     override func setUp() async throws {
