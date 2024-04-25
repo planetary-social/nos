@@ -1,12 +1,20 @@
 import XCTest
 
 final class GiftWrapperTests: XCTestCase {
-    func testDirectMessageWrapper() throws {
+    func testGiftWrappedRumor() throws {
         let senderKeyPair = KeyFixture.alice
         let receiverKeyPair = KeyFixture.bob
         
-        let wrappedDM = try DirectMessageWrapper.wrap(
-            message: "Are you going to the party tonight? 🎉",
+        let rumor = JSONEvent(
+            pubKey: senderKeyPair.publicKeyHex,
+            createdAt: Date(),
+            kind: .directMessageRumor,
+            tags: [["p", receiverKeyPair.publicKeyHex]],
+            content: "Are you going to the party tonight? 🎉"
+        )
+        
+        let wrappedDM = try GiftWrapper.wrap(
+            rumor: rumor,
             senderKeyPair: senderKeyPair,
             receiverPubkey: receiverKeyPair.publicKeyHex
         )

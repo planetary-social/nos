@@ -10,7 +10,7 @@ enum DirectMessageWrapper {
     ) throws -> JSONEvent {
         let directMessageRumor = JSONEvent(
             pubKey: senderKeyPair.publicKeyHex,
-            createdAt: GiftWrapper.randomTimeUpTo2DaysInThePast(),
+            createdAt: Date(),
             kind: .directMessageRumor,
             tags: [["p", receiverPubkey]],
             content: message

@@ -79,7 +79,7 @@ enum GiftWrapper: NIP44v2Encrypting {
             throw GiftWrapperError.serializationError
         }
         
-        guard let sealEvent.verifySignature() else {
+        guard try sealEvent.verifySignature() else {
             throw GiftWrapperError.invalidSealSignature
         }
         
