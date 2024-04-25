@@ -326,7 +326,7 @@ final class EventTests: CoreDataTestCase {
         try event.sign(withKey: KeyFixture.keyPair)
         
         // Assert
-        XCTAssert(try KeyFixture.keyPair.publicKey.verifySignature(on: event))
+        XCTAssert(try event.verifySignature(for: KeyFixture.keyPair.publicKey))
     }
     
     func testVerificationOnBadId() throws {
@@ -338,7 +338,7 @@ final class EventTests: CoreDataTestCase {
         event.identifier = "invalid"
         
         // Assert
-        XCTAssertFalse(try KeyFixture.keyPair.publicKey.verifySignature(on: event))
+        XCTAssertFalse(try event.verifySignature(for: KeyFixture.keyPair.publicKey))
     }
     
     func testVerificationOnBadSignature() throws {
@@ -351,7 +351,7 @@ final class EventTests: CoreDataTestCase {
             "669c1404f364de776a9d9ed31a5d6d32f5662ac77f2dc6b89c7762132d63"
         
         // Assert
-        XCTAssertFalse(try KeyFixture.keyPair.publicKey.verifySignature(on: event))
+        XCTAssertFalse(try event.verifySignature(for: KeyFixture.keyPair.publicKey))
     }
 
     func testFetchEventByIDPerformance() throws {

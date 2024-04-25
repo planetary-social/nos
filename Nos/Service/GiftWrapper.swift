@@ -5,7 +5,8 @@ enum GiftWrapperError: Error {
     case invalidPrivateKey
     case invalidPublicKey
     case serializationError
-    case signedRumorError
+    case signedRumor
+    case invalidSealSignature
 }
 
 let twoDays: TimeInterval = 2 * 24 * 60 * 60
@@ -78,6 +79,10 @@ enum GiftWrapper: NIP44v2Encrypting {
             throw GiftWrapperError.serializationError
         }
         
+        guard let sealEvent.verifySignature() else {
+            throw GiftWrapperError.invalidSealSignature
+        }
+        
         let encryptedRumor = sealEvent.content
 
         let rumor = try decryptCyphertext(
@@ -146,8 +151,8 @@ enum GiftWrapper: NIP44v2Encrypting {
     }
     
     private static func validateRumor(_ rumor: JSONEvent) throws -> JSONEvent {
-        guard rumor.signature.isEmpty else {
-            throw GiftWrapperError.signedRumorError
+        guard rumor.signature.isEmptyOrNil else {
+            throw GiftWrapperError.signedRumor
         }
 
         return rumor

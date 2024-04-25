@@ -56,10 +56,10 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 // swiftlint:disable type_body_length
 @objc(Event)
 @Observable
-public class Event: NosManagedObject {
-    
+public class Event: NosManagedObject, VerifiableEvent {
     @Dependency(\.currentUser) @ObservationIgnored private var currentUser
 
+    var pubKey: String { author?.hexadecimalPublicKey ?? "" }
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"
     public static var discoverKinds = [EventKind.text, EventKind.longFormContent]

@@ -79,6 +79,8 @@
 		5BFF66B12A573F6400AA79DD /* RelayDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF66B02A573F6400AA79DD /* RelayDetailView.swift */; };
 		5BFF66B42A58853D00AA79DD /* PublishedEventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF66B32A58853D00AA79DD /* PublishedEventsView.swift */; };
 		5BFF66B62A58A8A000AA79DD /* MutesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF66B52A58A8A000AA79DD /* MutesView.swift */; };
+		659B27242BD9CB4500BEA6CC /* VerifiableEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659B27232BD9CB4500BEA6CC /* VerifiableEvent.swift */; };
+		659B27312BD9D6FE00BEA6CC /* VerifiableEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659B27232BD9CB4500BEA6CC /* VerifiableEvent.swift */; };
 		65B854172BD6C406005854EF /* ReportPublisherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B854162BD6C406005854EF /* ReportPublisherTests.swift */; };
 		65D066992BD558690011C5CD /* DirectMessageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D066982BD558690011C5CD /* DirectMessageWrapper.swift */; };
 		65D066AA2BD55E160011C5CD /* DirectMessageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D066982BD558690011C5CD /* DirectMessageWrapper.swift */; };
@@ -522,6 +524,7 @@
 		5BFF66B02A573F6400AA79DD /* RelayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayDetailView.swift; sourceTree = "<group>"; };
 		5BFF66B32A58853D00AA79DD /* PublishedEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishedEventsView.swift; sourceTree = "<group>"; };
 		5BFF66B52A58A8A000AA79DD /* MutesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MutesView.swift; sourceTree = "<group>"; };
+		659B27232BD9CB4500BEA6CC /* VerifiableEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifiableEvent.swift; sourceTree = "<group>"; };
 		65B854162BD6C406005854EF /* ReportPublisherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportPublisherTests.swift; sourceTree = "<group>"; };
 		65D066982BD558690011C5CD /* DirectMessageWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectMessageWrapper.swift; sourceTree = "<group>"; };
 		A303AF8229A9153A005DC8FC /* FollowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowButton.swift; sourceTree = "<group>"; };
@@ -1245,6 +1248,7 @@
 				030742C32B4769F90073839D /* CoreData */,
 				C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */,
 				C96D39262B61B6D200D3D0A1 /* RawNostrID.swift */,
+				659B27232BD9CB4500BEA6CC /* VerifiableEvent.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1776,6 +1780,7 @@
 				C9EE3E602A0538B7008A7491 /* ExpirationTimeButton.swift in Sources */,
 				A303AF8329A9153A005DC8FC /* FollowButton.swift in Sources */,
 				65D066992BD558690011C5CD /* DirectMessageWrapper.swift in Sources */,
+				659B27242BD9CB4500BEA6CC /* VerifiableEvent.swift in Sources */,
 				C9C2B77F29E0731600548B4A /* AsyncTimer.swift in Sources */,
 				A32B6C7329A6BE9B00653FF5 /* FollowsView.swift in Sources */,
 				3F30020D29C382EB003D4F8B /* OnboardingLoginView.swift in Sources */,
@@ -2034,6 +2039,7 @@
 				C992B32B2B3613CC00704A9C /* SubscriptionCancellable.swift in Sources */,
 				C973AB5C2A323167002AED16 /* Follow+CoreDataProperties.swift in Sources */,
 				C900385F2B6195C60080CC4F /* FollowTests.swift in Sources */,
+				659B27312BD9D6FE00BEA6CC /* VerifiableEvent.swift in Sources */,
 				C93005602A6AF8320098CA9E /* LoadingContent.swift in Sources */,
 				C97A1C8F29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift in Sources */,
 				C9ADB135299288230075E7F8 /* KeyFixture.swift in Sources */,

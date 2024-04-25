@@ -2,7 +2,7 @@ import secp256k1
 import Foundation
 import Logger
 
-struct JSONEvent: Codable, Hashable {
+struct JSONEvent: Codable, Hashable, VerifiableEvent {
     
     var id: String
     var pubKey: String
@@ -10,8 +10,9 @@ struct JSONEvent: Codable, Hashable {
     var kind: Int64
     var tags: [[String]]
     var content: String
-    var signature: String
-    
+    var signature: String?
+    var identifier: String? { self.id }
+
     enum CodingKeys: String, CodingKey {
         case id
         case pubKey = "pubkey"
@@ -104,7 +105,7 @@ struct JSONEvent: Codable, Hashable {
             "kind": kind,
             "tags": tags,
             "content": content,
-            "sig": signature,
+            "sig": signature ?? "",
         ]
     }
     

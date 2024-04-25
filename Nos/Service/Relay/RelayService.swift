@@ -517,7 +517,7 @@ extension RelayService {
         switch signingKey {
         case .none:
             // If you don't provide a key, the event needs to be already signed
-            guard !event.signature.isEmpty else {
+            guard !event.signature.isEmptyOrNil else {
                 Log.error("Missing signature and no key provided for event \(event)")
                 throw RelayError.missingSignatureOrKey
             }
