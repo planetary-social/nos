@@ -37,6 +37,10 @@
 		3FFB1D9C29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */; };
 		3FFF3BD029A9645F00DD0B72 /* AuthorReference+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */; };
 		5B08A1E12A1FDFF700EB8F2E /* TLV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8B77182A1FDA3C004FC675 /* TLV.swift */; };
+		5B098DBC2BDAF6CB00500A1B /* NoteParserTests+NIP08.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B098DBB2BDAF6CB00500A1B /* NoteParserTests+NIP08.swift */; };
+		5B098DC62BDAF73500500A1B /* AttributedString+Links.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B098DC52BDAF73500500A1B /* AttributedString+Links.swift */; };
+		5B098DC72BDAF77400500A1B /* AttributedString+Links.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B098DC52BDAF73500500A1B /* AttributedString+Links.swift */; };
+		5B098DC92BDAF7CF00500A1B /* NoteParserTests+NIP27.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B098DC82BDAF7CF00500A1B /* NoteParserTests+NIP27.swift */; };
 		5B0D99032A94090A0039F0C5 /* DoubleTapToPopModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */; };
 		5B39E64429EDBF8100464830 /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
 		5B503F622A291A1A0098805A /* JSONRelayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */; };
@@ -468,6 +472,9 @@
 		3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "EventReference+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3FFB1D9529A6BBEC002A755D /* Collection+SafeSubscript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Collection+SafeSubscript.swift"; sourceTree = "<group>"; };
 		3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackedAvatarsView.swift; sourceTree = "<group>"; };
+		5B098DBB2BDAF6CB00500A1B /* NoteParserTests+NIP08.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoteParserTests+NIP08.swift"; sourceTree = "<group>"; };
+		5B098DC52BDAF73500500A1B /* AttributedString+Links.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttributedString+Links.swift"; sourceTree = "<group>"; };
+		5B098DC82BDAF7CF00500A1B /* NoteParserTests+NIP27.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoteParserTests+NIP27.swift"; sourceTree = "<group>"; };
 		5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleTapToPopModifier.swift; sourceTree = "<group>"; };
 		5B2F5CC12AE7443700A92B52 /* Nos 13.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 13.xcdatamodel"; sourceTree = "<group>"; };
 		5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONRelayMetadata.swift; sourceTree = "<group>"; };
@@ -1082,7 +1089,6 @@
 				C92AB3352B599DD0005B3FFB /* doc */,
 				C9DEBFD0298941000078B43A /* Nos */,
 				C9DEBFE7298941020078B43A /* NosTests */,
-				C9DEBFF1298941020078B43A /* NosUITests */,
 				C90862BC29E9804B00C35A71 /* NosPerformanceTests */,
 				C9DEBFCF298941000078B43A /* Products */,
 				C97797BD298ABE060046BD25 /* Frameworks */,
@@ -1140,6 +1146,9 @@
 				C900385E2B6195C60080CC4F /* FollowTests.swift */,
 				C9ADB132299287D60075E7F8 /* KeyPairTests.swift */,
 				5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */,
+				5B098DBB2BDAF6CB00500A1B /* NoteParserTests+NIP08.swift */,
+				5B098DC82BDAF7CF00500A1B /* NoteParserTests+NIP27.swift */,
+				C9DEBFF1298941020078B43A /* NosUITests */,
 				5BFBB2942BD9D7EB002E909F /* URLParserTests.swift */,
 				C96D391A2B61AFD500D3D0A1 /* RawNostrIDTests.swift */,
 				C94D59AD2AE7286E00295AE8 /* ReportTests.swift */,
@@ -1187,6 +1196,7 @@
 				DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */,
 				C92DF80429C25DE900400561 /* URL+Extensions.swift */,
 				C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */,
+				5B098DC52BDAF73500500A1B /* AttributedString+Links.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1821,6 +1831,7 @@
 				5BE281C12AE2CCB400880466 /* StoryNoteView.swift in Sources */,
 				3F60F42929B27D3E000D62C4 /* ThreadView.swift in Sources */,
 				C9B678DB29EEBF3B00303F33 /* DependencyInjection.swift in Sources */,
+				5B098DC62BDAF73500500A1B /* AttributedString+Links.swift in Sources */,
 				C95D68A9299E709900429F86 /* LinearGradient+Planetary.swift in Sources */,
 				C92F01522AC4D6AB00972489 /* NosFormSection.swift in Sources */,
 				C9BCF1C12AC72020009BDE06 /* UNSWizardChooseNameView.swift in Sources */,
@@ -1949,6 +1960,7 @@
 				C98CA9082B14FD8600929141 /* PagedRelaySubscription.swift in Sources */,
 				5B79F5B82B8E71CC002DA9BE /* NamesAPI.swift in Sources */,
 				C9F204812AE02D8C0029A858 /* AppDestination.swift in Sources */,
+				5B098DC72BDAF77400500A1B /* AttributedString+Links.swift in Sources */,
 				C9FC1E632B61ACE300A3A6FB /* CoreDataTestCase.swift in Sources */,
 				C9E37E162A1E8143003D4B0A /* ReportTarget.swift in Sources */,
 				C94A5E192A72C84200B6EC5D /* ReportCategory.swift in Sources */,
@@ -1962,10 +1974,12 @@
 				C9C45E162B23741E00F523DA /* EventObservationTests.swift in Sources */,
 				A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */,
 				C9ADB13E29929EEF0075E7F8 /* Bech32.swift in Sources */,
+				5B098DC92BDAF7CF00500A1B /* NoteParserTests+NIP27.swift in Sources */,
 				C9DEC05A2989509B0078B43A /* PersistenceController.swift in Sources */,
 				C9C2B78629E073E300548B4A /* RelaySubscription.swift in Sources */,
 				C973AB662A323167002AED16 /* EventReference+CoreDataProperties.swift in Sources */,
 				5B80BE9E29F9864000A363E4 /* Bech32Tests.swift in Sources */,
+				5B098DBC2BDAF6CB00500A1B /* NoteParserTests+NIP08.swift in Sources */,
 				C942566A29B66A2800C4202C /* Date+Elapsed.swift in Sources */,
 				C99721CC2AEBED26004EBEAB /* String+Empty.swift in Sources */,
 				C93CA0C429AE3A1E00921183 /* JSONEvent.swift in Sources */,

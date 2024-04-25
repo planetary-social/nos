@@ -15,6 +15,7 @@ struct GoldenPostView: View {
     @State private var noteContent = LoadingContent<AttributedString>.loading
 
     @Dependency(\.persistenceController) private var persistenceController
+    @Dependency(\.urlParser) private var urlParser
 
     internal init(author: Author, note: Event) {
         self.author = author
@@ -77,7 +78,7 @@ struct GoldenPostView: View {
 
     var isTextOnly: Bool {
         if let content = note.content {
-            return (try? URLParser().findUnformattedURLs(in: content).count) == 0
+            return (try? urlParser.findUnformattedURLs(in: content).count) == 0
         } else {
             return true
         }
@@ -86,7 +87,7 @@ struct GoldenPostView: View {
     var firstImageURL: URL? {
         let content = note.content
         if let content {
-            return try? URLParser().findUnformattedURLs(
+            return try? urlParser.findUnformattedURLs(
                 in: content
             )
             .first(where: { $0.isImage })

@@ -54,6 +54,11 @@ extension DependencyValues {
         get { self[NamesAPIKey.self] }
         set { self[NamesAPIKey.self] = newValue }
     }
+
+    var urlParser: URLParser {
+        get { self[URLParserKey.self] }
+        set { self[URLParserKey.self] = newValue }
+    }
 }
 
 fileprivate enum AnalyticsKey: DependencyKey {
@@ -112,4 +117,10 @@ fileprivate enum UNSAPIKey: DependencyKey {
 fileprivate enum NamesAPIKey: DependencyKey {
     static let liveValue = NamesAPI()!
     static let previewValue = NamesAPI(host: "localhost")!
+}
+
+fileprivate enum URLParserKey: DependencyKey {
+    static let liveValue = URLParser()
+    static let testValue = URLParser()
+    static let previewValue = URLParser()
 }
