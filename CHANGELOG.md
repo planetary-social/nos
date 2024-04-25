@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Detect identifiers of the form @npub1... in notes and link them to the associated profiles.
 - Detect NIP-05 identifiers inserted in notes and link them to njump.
+- Fixed an issue where registering a NIP-05 username field could fail silently.
 - Fixed an issue where users named with valid urls were unable to be mentioned correctly.
 - Fixed an issue where pasting an npub while composing a note created an invalid mention.
 - Changed "Report note" button to "Flag this content"
@@ -21,6 +22,7 @@ that other users can find you more easily.
 - Added support for uploading videos when composing a note.
 - Fixed an issue where reports for notes were treated as reports for profiles.
 - Updated the Discover tab navigation bar to match new design.
+- Updated the design of profile cards in search results and mentions search.
 
 ## [0.1.10] - 2024-04-12Z
 

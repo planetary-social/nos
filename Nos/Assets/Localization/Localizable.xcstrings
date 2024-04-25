@@ -4282,13 +4282,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Followed by **%1@** and **%2ld other**"
+                  "value" : "Followed by **%1$@** and **%2$lld other**"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Followed by **%1@** and **%2ld others**"
+                  "value" : "Followed by **%1$@** and **%2$lld others**"
                 }
               }
             }
@@ -10068,6 +10068,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Repost"
+          }
+        }
+      }
+    },
+    "retry" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry"
           }
         }
       }
