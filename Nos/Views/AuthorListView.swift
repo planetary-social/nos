@@ -25,7 +25,7 @@ struct AuthorListView: View {
             LazyVStack {
                 if let authors = filteredAuthors {
                     ForEach(authors) { author in
-                        AuthorCard(author: author) {
+                        AuthorCard(author: author, showsFollowButton: false) {
                             didSelectGesture?(author)
                         }
                         .padding(.horizontal, 13)

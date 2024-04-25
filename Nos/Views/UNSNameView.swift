@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Displays a Universal Name with a logo.
+/// Displays a Universal Name with a logo if the user has one.
 struct UNSNameView: View {
     
     @ObservedObject var author: Author

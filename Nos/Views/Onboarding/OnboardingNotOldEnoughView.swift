@@ -7,17 +7,7 @@ struct OnboardingNotOldEnoughView: View {
         VStack {
             Text(.localizable.notOldEnoughTitle)
                 .font(.custom("ClarityCity-Bold", size: 34, relativeTo: .largeTitle))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [
-                            Color(hex: "#F08508"),
-                            Color(hex: "#F43F75")
-                        ],
-                        startPoint: .bottomLeading,
-                        endPoint: .topTrailing
-                    )
-                    .blendMode(.normal)
-                )
+                .foregroundStyle(LinearGradient.diagonalAccent2.blendMode(.normal))
                 .multilineTextAlignment(.center)
                 .padding(.top, 92)
                 .padding(.bottom, 20)

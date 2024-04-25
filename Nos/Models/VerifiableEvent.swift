@@ -46,7 +46,5 @@ extension VerifiableEvent {
         return try self.verifySignature(for: publicKey)
     }
     
-    func verifySignature() throws -> Bool {
-        return try self.verifySignature(for: self.pubKey)
-    }
+    func verifySignature() throws -> Bool { try self.verifySignature(for: self.pubKey) }
 }
