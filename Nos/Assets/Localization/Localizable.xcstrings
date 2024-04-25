@@ -10160,6 +10160,17 @@
         }
       }
     },
+    "retry" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry"
+          }
+        }
+      }
+    },
     "returnToChooseName" : {
       "extractionState" : "manual",
       "localizations" : {

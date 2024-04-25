@@ -102,7 +102,11 @@ struct ExcellentChoiceSheet: View {
 
             claimState = .claiming
 
+            let oldNIP05 = currentUser.author?.nip05
             do {
+                currentUser.author?.nip05 = "\(username)@nos.social"
+                try currentUser.viewContext.saveIfNeeded()
+                try await currentUser.publishMetadata()
                 let relays = currentUser.author?.relays.compactMap {
                     $0.addressURL
                 }
@@ -111,13 +115,16 @@ struct ExcellentChoiceSheet: View {
                     keyPair: keyPair,
                     relays: relays ?? []
                 )
-                currentUser.author?.nip05 = "\(username)@nos.social"
-                try currentUser.viewContext.saveIfNeeded()
-                await currentUser.publishMetaData()
                 claimState = .claimed
                 analytics.registeredNIP05Username()
             } catch {
                 Log.error(error.localizedDescription)
+                
+                // Do our best reverting the changes.
+                currentUser.author?.nip05 = oldNIP05
+                try? currentUser.viewContext.saveIfNeeded()
+                try? await currentUser.publishMetadata()
+
                 claimState = .failed(.unableToClaim(error))
             }
         }
