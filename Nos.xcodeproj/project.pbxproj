@@ -76,6 +76,9 @@
 		5BE281C72AE2CCD800880466 /* ReplyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE281C62AE2CCD800880466 /* ReplyButton.swift */; };
 		5BE281CA2AE2CCEB00880466 /* HomeTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE281C92AE2CCEB00880466 /* HomeTab.swift */; };
 		5BE281CD2AE2CD4700880466 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D88299FF37C002A755D /* AvatarView.swift */; };
+		5BFBB28B2BD9D79F002E909F /* URLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBB28A2BD9D79F002E909F /* URLParser.swift */; };
+		5BFBB2952BD9D7EB002E909F /* URLParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBB2942BD9D7EB002E909F /* URLParserTests.swift */; };
+		5BFBB2962BD9D824002E909F /* URLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBB28A2BD9D79F002E909F /* URLParser.swift */; };
 		5BFF66B12A573F6400AA79DD /* RelayDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF66B02A573F6400AA79DD /* RelayDetailView.swift */; };
 		5BFF66B42A58853D00AA79DD /* PublishedEventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF66B32A58853D00AA79DD /* PublishedEventsView.swift */; };
 		5BFF66B62A58A8A000AA79DD /* MutesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF66B52A58A8A000AA79DD /* MutesView.swift */; };
@@ -244,8 +247,6 @@
 		C987F85429BA951E00B44E7A /* ClarityCity-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F83129BA951E00B44E7A /* ClarityCity-Thin.otf */; };
 		C987F85529BA951E00B44E7A /* ClarityCity-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = C987F83129BA951E00B44E7A /* ClarityCity-Thin.otf */; };
 		C987F85B29BA9ED800B44E7A /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F85729BA981800B44E7A /* Font.swift */; };
-		C987F86129BABAF800B44E7A /* String+Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F86029BABAF800B44E7A /* String+Markdown.swift */; };
-		C987F86229BABAF800B44E7A /* String+Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F86029BABAF800B44E7A /* String+Markdown.swift */; };
 		C98A32272A05795E00E3FA13 /* Task+Timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98A32262A05795E00E3FA13 /* Task+Timeout.swift */; };
 		C98A32282A05795E00E3FA13 /* Task+Timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98A32262A05795E00E3FA13 /* Task+Timeout.swift */; };
 		C98B8B4029FBF83B009789C8 /* NotificationCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */; };
@@ -509,6 +510,8 @@
 		5BE4609E2BACAFEE004B83ED /* StagingSecrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = StagingSecrets.xcconfig; sourceTree = "<group>"; };
 		5BE4609F2BACAFEE004B83ED /* DevSecrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DevSecrets.xcconfig; sourceTree = "<group>"; };
 		5BE460A02BACAFEE004B83ED /* ProductionSecrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ProductionSecrets.xcconfig; sourceTree = "<group>"; };
+		5BFBB28A2BD9D79F002E909F /* URLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLParser.swift; sourceTree = "<group>"; };
+		5BFBB2942BD9D7EB002E909F /* URLParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLParserTests.swift; sourceTree = "<group>"; };
 		5BFF66AF2A4B55FC00AA79DD /* Nos 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 10.xcdatamodel"; sourceTree = "<group>"; };
 		5BFF66B02A573F6400AA79DD /* RelayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayDetailView.swift; sourceTree = "<group>"; };
 		5BFF66B32A58853D00AA79DD /* PublishedEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishedEventsView.swift; sourceTree = "<group>"; };
@@ -630,7 +633,6 @@
 		C987F83129BA951E00B44E7A /* ClarityCity-Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ClarityCity-Thin.otf"; sourceTree = "<group>"; };
 		C987F85629BA96B700B44E7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C987F85729BA981800B44E7A /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
-		C987F86029BABAF800B44E7A /* String+Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Markdown.swift"; sourceTree = "<group>"; };
 		C98A32262A05795E00E3FA13 /* Task+Timeout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+Timeout.swift"; sourceTree = "<group>"; };
 		C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCard.swift; sourceTree = "<group>"; };
 		C98CA9032B14FA3D00929141 /* PagedRelaySubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagedRelaySubscription.swift; sourceTree = "<group>"; };
@@ -1140,6 +1142,7 @@
 				C9C45E152B23741E00F523DA /* EventObservationTests.swift */,
 				C9ADB132299287D60075E7F8 /* KeyPairTests.swift */,
 				5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */,
+				5BFBB2942BD9D7EB002E909F /* URLParserTests.swift */,
 				5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */,
 				C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */,
 				5B88051B2A21046C00E21F06 /* SHA256KeyTests.swift */,
@@ -1181,7 +1184,6 @@
 				C9F204662ADEDBA80029A858 /* String+Extra.swift */,
 				C9ADB13729928CC30075E7F8 /* String+Hex.swift */,
 				C9DEC002298945150078B43A /* String+Lorem.swift */,
-				C987F86029BABAF800B44E7A /* String+Markdown.swift */,
 				C98A32262A05795E00E3FA13 /* Task+Timeout.swift */,
 				DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */,
 				C92DF80429C25DE900400561 /* URL+Extensions.swift */,
@@ -1215,6 +1217,7 @@
 				C930055E2A6AF8320098CA9E /* LoadingContent.swift */,
 				C9F0BB6E29A50437000547FC /* NostrConstants.swift */,
 				5B6EB48D29EDBE0E006E750C /* NoteParser.swift */,
+				5BFBB28A2BD9D79F002E909F /* URLParser.swift */,
 				C9AC31AC2A55E0BD00A94E5A /* NotificationViewModel.swift */,
 				C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */,
 				C9F0BB6A29A503D6000547FC /* PublicKey.swift */,
@@ -1701,7 +1704,6 @@
 				C9B71DC22A9003670031ED9F /* CrashReporting.swift in Sources */,
 				C987F81729BA4C6A00B44E7A /* BigActionButton.swift in Sources */,
 				C98DC9BB2A795CAD004E5F0F /* ActionBanner.swift in Sources */,
-				C987F86129BABAF800B44E7A /* String+Markdown.swift in Sources */,
 				C9F204802AE029D90029A858 /* AppDestination.swift in Sources */,
 				3F30020B29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift in Sources */,
 				C9C5475B2A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift in Sources */,
@@ -1772,6 +1774,7 @@
 				C9F75AD22A02D41E005BBE45 /* ComposerActionBar.swift in Sources */,
 				2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */,
 				C9DEBFD2298941000078B43A /* NosApp.swift in Sources */,
+				5BFBB28B2BD9D79F002E909F /* URLParser.swift in Sources */,
 				C930055F2A6AF8320098CA9E /* LoadingContent.swift in Sources */,
 				5B79F6462BA11725002DA9BE /* WizardSheetVStack.swift in Sources */,
 				C930E0572BA49DAD002B5776 /* GridPattern.swift in Sources */,
@@ -1947,7 +1950,6 @@
 				C9F204812AE02D8C0029A858 /* AppDestination.swift in Sources */,
 				C9FC1E632B61ACE300A3A6FB /* CoreDataTestCase.swift in Sources */,
 				C9E37E162A1E8143003D4B0A /* ReportTarget.swift in Sources */,
-				C987F86229BABAF800B44E7A /* String+Markdown.swift in Sources */,
 				C94A5E192A72C84200B6EC5D /* ReportCategory.swift in Sources */,
 				C936B4632A4CB01C00DF1EB9 /* PushNotificationService.swift in Sources */,
 				C9C5475A2A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift in Sources */,
@@ -1981,6 +1983,7 @@
 				C9F0BB6D29A503D9000547FC /* Int+Bool.swift in Sources */,
 				C96D39252B61B06200D3D0A1 /* AuthorTests.swift in Sources */,
 				DC08FF812A7969C5009F87D1 /* UIDevice+Simulator.swift in Sources */,
+				5BFBB2962BD9D824002E909F /* URLParser.swift in Sources */,
 				C9C9444229F6F0E2002F2C7A /* XCTest+Eventually.swift in Sources */,
 				3FFF3BD029A9645F00DD0B72 /* AuthorReference+CoreDataClass.swift in Sources */,
 				C9F0BB6C29A503D6000547FC /* PublicKey.swift in Sources */,
@@ -1994,6 +1997,7 @@
 				C9F0BB7029A50437000547FC /* NostrConstants.swift in Sources */,
 				A3B943D8299D758F00A15A08 /* KeyChain.swift in Sources */,
 				C9646EAA29B7A506007239A4 /* Analytics.swift in Sources */,
+				5BFBB2952BD9D7EB002E909F /* URLParserTests.swift in Sources */,
 				038985182B7AD6C0009C16CA /* String+MarkdownTests.swift in Sources */,
 				C91400252B2A3ABF009B13B4 /* SQLiteStoreTestCase.swift in Sources */,
 				C9ADB133299287D60075E7F8 /* KeyPairTests.swift in Sources */,

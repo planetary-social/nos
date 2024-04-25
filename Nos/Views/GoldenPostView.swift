@@ -7,11 +7,11 @@ struct GoldenPostView: View {
 
     @ObservedObject var author: Author
     @ObservedObject var note: Event
-    
+
     @Environment(\.managedObjectContext) private var viewContext
-    
+
     @EnvironmentObject private var router: Router
-    
+
     @State private var noteContent = LoadingContent<AttributedString>.loading
 
     @Dependency(\.persistenceController) private var persistenceController
@@ -20,7 +20,7 @@ struct GoldenPostView: View {
         self.author = author
         self.note = note
     }
-    
+
     var noteText: some View {
         Group {
             switch noteContent {
@@ -68,23 +68,37 @@ struct GoldenPostView: View {
             let parsedAttributedContent = await Event.attributedContent(
                 noteID: note.identifier,
                 context: backgroundContext
-            ) 
+            )
             withAnimation(.easeIn(duration: 0.1)) {
                 self.noteContent = .loaded(parsedAttributedContent)
             }
         }
     }
-    
+
     var isTextOnly: Bool {
-        (try? note.content?.findUnformattedLinks().count ?? 0) == 0
+        if let content = note.content {
+            return (try? URLParser().findUnformattedURLs(in: content).count) == 0
+        } else {
+            return true
+        }
     }
-    
+
+    var firstImageURL: URL? {
+        let content = note.content
+        if let content {
+            return try? URLParser().findUnformattedURLs(
+                in: content
+            ).first(
+                where: { $0.isImage }
+            )
+        } else {
+            return nil
+        }
+    }
+
     var imageView: some View {
         Group {
-            if let url = try? note
-                .content?
-                .findUnformattedLinks()
-                .first(where: { $0.isImage }) {
+            if let url = firstImageURL {
                 SquareImage(url: url)
             }
         }

@@ -209,7 +209,7 @@ struct NewNoteView: View {
         }
         
         do {
-            var (content, tags) = NoteParser.parse(attributedText: text.attributedString)
+            var (content, tags) = NoteParser().parse(attributedText: text.attributedString)
             
             if let expirationTime {
                 tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])

@@ -915,7 +915,11 @@ public class Event: NosManagedObject {
             }
             try? context.saveIfNeeded()
             let tags = note.allTags as? [[String]] ?? []
-            return NoteParser.parse(content: content, tags: tags, context: context)
+            return NoteParser().parse(
+                content: content,
+                tags: tags,
+                context: context
+            )
         }
     }
    
@@ -962,7 +966,7 @@ public class Event: NosManagedObject {
         let tags = note.allTags as? [[String]] ?? []
         
         return await context.perform {
-            NoteParser.parse(content: content, tags: tags, context: context)
+            NoteParser().parse(content: content, tags: tags, context: context)
         }
     }
     

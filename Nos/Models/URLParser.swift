@@ -1,25 +1,56 @@
 import Foundation
 import Logger
 
-extension String {
-    /// Creates a new string with all URLs and any preceding and trailing whitespace removed and removed duplicate
-    /// newlines, and returns the new string and an array of all the URLs.
-    func extractURLs() -> (String, [URL]) {
-        var urls: [URL] = []
-        let mutableString = NSMutableString(string: self)
+/// Parses unformatted urls in a string and replace them with markdown links
+struct URLParser {
+    /// Returns an array with all unformated urls
+    func findUnformattedURLs(in content: String) throws -> [URL] {
+        // swiftlint:disable line_length
+        let regex = "((http|https)?:\\/\\/.)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)"
+        // swiftlint:enable line_length
 
-        urls.append(contentsOf: replaceDomains(in: mutableString))
-        urls.append(contentsOf: replaceNIP05s(in: mutableString))
+        var links = [URL]()
+        let regularExpression = try NSRegularExpression(pattern: regex)
+        let wholeRange = NSRange(location: 0, length: content.utf16.count)
+        for match in regularExpression.matches(in: content, range: wholeRange) {
+            let range = Range(match.range, in: content)
+            if let range, let url = URL(string: String(content[range])) {
+                links.append(url)
+            }
+        }
+        return links
+    }
+
+    /// Creates a new string with all URLs and any preceding and trailing
+    /// whitespace removed and removed duplicate newlines, and returns the new
+    /// string and an array of all the URLs.
+    func replaceUnformattedURLs(
+        in content: String
+    ) -> (String, [URL]) {
+        var urls: [URL] = []
+        let mutableString = NSMutableString(string: content)
+
+        urls.append(
+            contentsOf: replaceRawDomainsWithMarkdownLinks(in: mutableString)
+        )
+        urls.append(
+            contentsOf: replaceRawNIP05IdentifiersWithMarkdownLinks(
+                in: mutableString
+            )
+        )
 
         replaceOccurrences(of: "^\\s*", with: "", in: mutableString)
         replaceOccurrences(of: "\\s*$", with: "", in: mutableString)
         replaceOccurrences(of: "\\n{3,}", with: "\n\n", in: mutableString)
-        
+
         return (mutableString as String, urls)
     }
 
-    private func replaceDomains(in mutableString: NSMutableString) -> [URL] {
-        // The following pattern uses rules from the Domain Name System page on Wikipedia:
+    private func replaceRawDomainsWithMarkdownLinks(
+        in mutableString: NSMutableString
+    ) -> [URL] {
+        // The following pattern uses rules from the Domain Name System page on
+        // Wikipedia:
         // https://en.wikipedia.org/wiki/Domain_Name_System#Domain_name_syntax,_internationalization
 
         // swiftlint:disable:next line_length
@@ -53,10 +84,12 @@ extension String {
         return urls
     }
 
-    private func replaceNIP05s(in mutableString: NSMutableString) -> [URL] {
+    private func replaceRawNIP05IdentifiersWithMarkdownLinks(
+        in mutableString: NSMutableString
+    ) -> [URL] {
         // The following pattern uses rules from the NIP-05 specification:
         // https://github.com/nostr-protocol/nips/blob/master/05.md
-        
+
         let regexPattern = "(\\s*)@?(?<nip05>[0-9a-z._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64})"
 
         // [0-9a-z._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}
@@ -91,28 +124,16 @@ extension String {
         return urls
     }
 
-    private func replaceOccurrences(of target: String, with replacement: String, in mutableString: NSMutableString) {
+    private func replaceOccurrences(
+        of target: String,
+        with replacement: String,
+        in mutableString: NSMutableString
+    ) {
         mutableString.replaceOccurrences(
             of: target,
             with: replacement,
             options: .regularExpression,
             range: NSRange(location: 0, length: mutableString.length)
         )
-    }
-    
-    func findUnformattedLinks() throws -> [URL] {
-        // swiftlint:disable line_length
-        let regex = "((http|https)?:\\/\\/.)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)"
-        // swiftlint:enable line_length
-        
-        var links = [URL]()
-        let regularExpression = try NSRegularExpression(pattern: regex)
-        let wholeRange = NSRange(location: 0, length: self.utf16.count)
-        for match in regularExpression.matches(in: self, range: wholeRange) {
-            if let range = Range(match.range, in: self), let url = URL(string: String(self[range])) {
-                links.append(url)
-            }
-        }
-        return links
     }
 }
