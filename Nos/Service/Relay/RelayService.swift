@@ -469,23 +469,26 @@ extension RelayService {
             socket.onEvent = { (event: WebSocketEvent) in
                 if done {
                     // We already cleaned up, we don't want to resume the
-                    // continuation twice and any remaining event can be ignored
-                    // now
+                    // continuation twice, any remaining event can be ignored
                     return
                 }
                 
                 switch event {
                 case WebSocketEvent.connected:
                     socket.write(string: message)
+                case WebSocketEvent.viabilityChanged(let isViable) where isViable:
+                    socket.write(string: message)
                 case WebSocketEvent.error(let error):
                     Log.optional(error, "failed to send message: \(message) to websocket")
                 case WebSocketEvent.disconnected, WebSocketEvent.cancelled:
                     break
+                    
+                // For all previous cases, we are done, so we cleanup and resume async.
+                // For the rest of the messages, we just ignore and wait
                 default:
                     return
                 }
                 
-
                 done = true
                 task.cancel()
                 socket.disconnect()
