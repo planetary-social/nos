@@ -41,7 +41,7 @@ struct DiscoverGrid: View {
                     case .noQuery:
                         ScrollView {
                             LazyVStack {
-                                scrollingPicker
+                                categoryPicker
 
                                 ForEach(filteredAuthors) { author in
                                     AuthorCard(author: author) {
@@ -100,7 +100,7 @@ struct DiscoverGrid: View {
         }
     }
 
-    var scrollingPicker: some View {
+    var categoryPicker: some View {
         ScrollView(.horizontal) {
             HStack(spacing: 2) {
                 ForEach(FeaturedAuthorCategory.allCases, id: \.self) { category in
@@ -108,7 +108,7 @@ struct DiscoverGrid: View {
                         selectedCategory = category
                     }, label: {
                         Text(category.text)
-                            .font(.footnote)
+                            .font(.callout)
                             .padding(.vertical, 4)
                             .padding(.horizontal, 8)
                             .background(
@@ -123,6 +123,7 @@ struct DiscoverGrid: View {
                             )
                             .cornerRadius(20)
                             .padding(4)
+                            .frame(minWidth: 44, minHeight: 44)
                     })
                 }
             }
