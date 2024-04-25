@@ -2,7 +2,7 @@ import Logger
 import SwiftUI
 import Dependencies
 
-struct DiscoverGrid: View {
+struct FeaturedAuthorsView: View {
     @EnvironmentObject private var router: Router
     
     @FetchRequest(fetchRequest: Author.matching(npubs: FeaturedAuthorCategory.all.npubs)) var authors
@@ -23,7 +23,7 @@ struct DiscoverGrid: View {
 
     @Namespace private var animation
 
-    /// Initializes a DiscoverGrid with the selected category and a search controller.
+    /// Initializes a FeaturedAuthorsView with the selected category and a search controller.
     /// - Parameters:
     ///   - featuredAuthorCategory: The initial category of featured authors to display until
     ///   the user changes the selection. Defaults to `.all` to show all featured authors.

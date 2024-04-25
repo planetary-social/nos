@@ -35,7 +35,7 @@ struct DiscoverTab: View {
                         hideAfter: .now() + .seconds(Self.initialLoadTime)
                     )
                 } else {
-                    DiscoverGrid(
+                    FeaturedAuthorsView(
                         featuredAuthorCategory: .all,
                         searchController: searchController
                     )

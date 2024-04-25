@@ -128,7 +128,7 @@
 		C93EC2F529C34C860012EE2A /* NSPredicate+Bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2F329C34C860012EE2A /* NSPredicate+Bool.swift */; };
 		C93EC2F729C351470012EE2A /* Optional+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2F629C351470012EE2A /* Optional+Unwrap.swift */; };
 		C93EC2F829C351470012EE2A /* Optional+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2F629C351470012EE2A /* Optional+Unwrap.swift */; };
-		C93EC2FA29C370DE0012EE2A /* DiscoverGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */; };
+		C93EC2FA29C370DE0012EE2A /* FeaturedAuthorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2F929C370DE0012EE2A /* FeaturedAuthorsView.swift */; };
 		C93EC2FD29C3785C0012EE2A /* View+RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */; };
 		C93F045E2B9B7A7000AD5872 /* ReplyPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93F045D2B9B7A7000AD5872 /* ReplyPreview.swift */; };
 		C93F488D2AC5C30C00900CEC /* NosFormField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93F488C2AC5C30C00900CEC /* NosFormField.swift */; };
@@ -553,7 +553,7 @@
 		C93EC2F029C337EB0012EE2A /* RelayPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayPicker.swift; sourceTree = "<group>"; };
 		C93EC2F329C34C860012EE2A /* NSPredicate+Bool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPredicate+Bool.swift"; sourceTree = "<group>"; };
 		C93EC2F629C351470012EE2A /* Optional+Unwrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Unwrap.swift"; sourceTree = "<group>"; };
-		C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverGrid.swift; sourceTree = "<group>"; };
+		C93EC2F929C370DE0012EE2A /* FeaturedAuthorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedAuthorsView.swift; sourceTree = "<group>"; };
 		C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+RoundedCorner.swift"; sourceTree = "<group>"; };
 		C93F045D2B9B7A7000AD5872 /* ReplyPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyPreview.swift; sourceTree = "<group>"; };
 		C93F488C2AC5C30C00900CEC /* NosFormField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosFormField.swift; sourceTree = "<group>"; };
@@ -842,9 +842,9 @@
 		03A0532E2BD8643B00A9B4D7 /* Discover */ = {
 			isa = PBXGroup;
 			children = (
-				C93EC2F929C370DE0012EE2A /* DiscoverGrid.swift */,
 				C9CDBBA029A8F14C00C555C7 /* DiscoverTab.swift */,
 				03A053332BD8649600A9B4D7 /* FeaturedAuthorCategory.swift */,
+				C93EC2F929C370DE0012EE2A /* FeaturedAuthorsView.swift */,
 			);
 			path = Discover;
 			sourceTree = "<group>";
@@ -1898,7 +1898,7 @@
 				C95D68A5299E6E1E00429F86 /* PlaceholderModifier.swift in Sources */,
 				C960C57429F3251E00929990 /* RepostButton.swift in Sources */,
 				3FFB1D9329A6BBCE002A755D /* EventReference+CoreDataClass.swift in Sources */,
-				C93EC2FA29C370DE0012EE2A /* DiscoverGrid.swift in Sources */,
+				C93EC2FA29C370DE0012EE2A /* FeaturedAuthorsView.swift in Sources */,
 				C973AB5B2A323167002AED16 /* Follow+CoreDataProperties.swift in Sources */,
 				C92F01552AC4D6CF00972489 /* BeveledSeparator.swift in Sources */,
 				C93EC2FD29C3785C0012EE2A /* View+RoundedCorner.swift in Sources */,
