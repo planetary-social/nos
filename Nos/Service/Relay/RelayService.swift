@@ -509,10 +509,25 @@ extension RelayService {
     func publish(
         event: JSONEvent,
         to relayURL: URL,
-        signingKey: KeyPair,
+        signingKey: KeyPair? = nil,
         context: NSManagedObjectContext
     ) async throws {
-        let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
+        var signedEvent: JSONEvent
+
+        switch signingKey {
+        case .none:
+            // If you don't provide a key, the event needs to be already signed
+            guard !event.signature.isEmptyOrNil else {
+                Log.error("Missing signature and no key provided for event \(event)")
+                throw RelayError.missingSignatureOrKey
+            }
+            
+            signedEvent = event
+
+        case .some(let keyPair):
+            signedEvent = try await signAndSave(event: event, signingKey: keyPair, in: context)
+        }
+
         await openSocket(to: relayURL, andSend: try signedEvent.buildPublishRequest())
     }
     
@@ -522,6 +537,10 @@ extension RelayService {
         in context: NSManagedObjectContext
     ) async throws -> JSONEvent {
         var jsonEvent = event
+        
+        // Should we throw if the event is already signed? this way we can ensure that we
+        // don't sign events multiple times, it's costly and it would be easy to do it
+        // inadvertently.
         try jsonEvent.sign(withKey: signingKey)
         
         try await context.perform {
