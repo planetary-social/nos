@@ -5,6 +5,10 @@ import Dependencies
 import TipKit
 
 struct PopoverTip: Tip {
+    // Define the app state you want to track.
+    @Parameter
+    static var isToggle: Bool = false
+
     var title: Text {
         Text("How is Discover populated?")
             .font(.callout)
@@ -17,10 +21,17 @@ struct PopoverTip: Tip {
             .font(.footnote)
 //            .foregroundStyle(Color.secondaryTxt)
     }
-    
-//    var options: [any TipOption] {
-//        IgnoresDisplayFrequency
-//    }
+
+    var rules: [Rule] {
+        #Rule(Self.$isToggle) { $0 == true }
+    }
+
+    var options: [TipOption] {
+        [
+            Tip.IgnoresDisplayFrequency(true),
+            Tip.MaxDisplayCount(.max)
+        ]
+    }
 }
 
 struct DiscoverView: View {    
@@ -92,7 +103,11 @@ struct DiscoverView: View {
                         hideAfter: .now() + .seconds(Self.initialLoadTime)
                     )
                 } else {
-                    DiscoverGrid(predicate: predicate, searchController: searchController, columns: $columns)
+                    VStack {
+                        TipView(popoverTip)
+                            .padding()
+                        DiscoverGrid(predicate: predicate, searchController: searchController, columns: $columns)
+                    }
                 }
             }
             .searchable(
@@ -107,15 +122,22 @@ struct DiscoverView: View {
             .background(Color.appBg)
             .toolbar {
                 ToolbarItem {
-//                    TipView(popoverTip, arrowEdge: .top)
                     Button {
                         // TODO: actually show the popover. https://github.com/planetary-social/nos/issues/1025
                         showInfoPopover = true
+                        PopoverTip.isToggle = true
                     } label: {
                         Image(systemName: "info.circle")
                     }
                     .foregroundColor(.secondaryTxt)
-                    .popoverTip(popoverTip)
+                    .onChange(of: showInfoPopover) { _, _ in
+                        withAnimation {
+                            showInfoPopover.toggle()
+                            // here we can manipulate the state to satisfy a condition to show the tip.
+                            PopoverTip.isToggle = showInfoPopover
+                        }
+                    }
+//                    .popoverTip(popoverTip)
                 }
             }
             .animation(.easeInOut, value: columns)
