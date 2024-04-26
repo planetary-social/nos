@@ -450,7 +450,6 @@ extension RelayService {
     private func publish(from client: WebSocketClient, jsonEvent: JSONEvent) async throws {
         // Keep track of this so if it fails we can retry N times
         let requestString = try jsonEvent.buildPublishRequest()
-        Log.info("publishing \(requestString)")
         client.write(string: requestString)
     }
     
@@ -462,37 +461,49 @@ extension RelayService {
         let socket = WebSocket(request: urlRequest, compressionHandler: .none)
         
         // Make sure the socket doesn't stay open too long
-        let task = Task(timeout: 10) { socket.disconnect() }
+        let task = Task(timeout: 10) { 
+            Log.info("Socket to \(url.absoluteString) timed out, disconnecting")
+            socket.disconnect()
+        }
         return await withCheckedContinuation({ continuation in
         
-            var done = false
+            var written = false
+            var continued = false
             socket.onEvent = { (event: WebSocketEvent) in
-                if done {
-                    // We already cleaned up, we don't want to resume the
-                    // continuation twice, any remaining event can be ignored
-                    return
-                }
-                
                 switch event {
                 case WebSocketEvent.connected:
-                    socket.write(string: message)
+                    if !written {
+                        socket.write(string: message, completion: {
+                            written = true
+                        })
+                    }
+                case WebSocketEvent.text(let text):
+                    if written {
+                        Log.info("Received \(text) after write, disconnecting")
+                        socket.disconnect()
+                    }
                 case WebSocketEvent.viabilityChanged(let isViable) where isViable:
-                    socket.write(string: message)
+                    if !written {
+                        socket.write(string: message, completion: {
+                            written = true
+                        })
+                    }
                 case WebSocketEvent.error(let error):
                     Log.optional(error, "failed to send message: \(message) to websocket")
+                    socket.disconnect()
                 case WebSocketEvent.disconnected, WebSocketEvent.cancelled:
-                    break
-                    
+                    task.cancel()
+                    if !continued {
+                        continuation.resume()
+                        continued = true
+                    }
+
                 // For all previous cases, we are done, so we cleanup and resume async.
                 // For the rest of the messages, we just ignore and wait
                 default:
                     return
                 }
                 
-                done = true
-                task.cancel()
-                socket.disconnect()
-                continuation.resume()
             }
 
             socket.connect()
