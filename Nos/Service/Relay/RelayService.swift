@@ -693,6 +693,7 @@ extension RelayService {
         }
         
         for subscription in await subscriptions.active where subscription.relayAddress == client.url {
+            Log.info("Running requestEvents for subscription \(subscription)")
             await subscriptions.requestEvents(from: client, subscription: subscription)
         }
     }
@@ -708,8 +709,6 @@ extension RelayService: WebSocketDelegate {
         Task {
             switch event {
             case .connected:
-                await handleConnection(from: client)
-            case .viabilityChanged(let isViable) where isViable:
                 await handleConnection(from: client)
             case .disconnected(let reason, let code):
                 await subscriptions.remove(socket)
