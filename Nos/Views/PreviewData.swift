@@ -278,11 +278,31 @@ struct PreviewData {
         return note
     }()
     
+    lazy var reportBobTwo: Event = {
+        let note = Event(context: previewContext)
+        note.identifier = "r4"
+        note.kind = EventKind.report.rawValue
+        note.content = "harassment"
+        note.author = bob
+        note.createdAt = .now
+        
+        let reference = EventReference(context: previewContext)
+        reference.eventId = "1"
+        reference.referencedEvent = shortNote
+        note.insertIntoEventReferences(reference, at: 0)
+        
+        try? previewContext.save()
+        return note
+    }()
+    
     lazy var shortNoteReportTwo: Event = {
         let note = Event(context: previewContext)
         note.identifier = "r2"
         note.kind = EventKind.report.rawValue
-        note.content = "harrassment"
+        note.content = "harassment"
+        note.allTags = [
+            [ "p", "6b165e83a3b7d333a6e7db1f200dc627e31eb5170285c29ded271be203c5da37", "other"]
+        ] as NSObject
         note.author = eve
         note.createdAt = .now
         
@@ -300,6 +320,12 @@ struct PreviewData {
         note.identifier = "r3"
         note.kind = EventKind.report.rawValue
         note.content = "spam"
+        note.allTags = [
+            [ "p", "6b165e83a3b7d333a6e7db1f200dc627e31eb5170285c29ded271be203c5da37", "other" ],
+            [ "e", "ad0cea87d9c81e3bc5b15ddf561b1a2bbbff3d8318d4ea9ccd4644def9e035b8", "other" ],
+            [ "L", "MOD" ],
+            [ "l", "MOD>SP", "MOD", "{\"confidence\":0.9876784682273865}" ]
+        ] as NSObject
         note.author = alice
         note.createdAt = .now
 
