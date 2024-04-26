@@ -29,7 +29,7 @@ final class ContentWarningControllerTests: CoreDataTestCase {
         // Assert
         XCTAssertEqual(
             String(localized: sut.localizedContentWarning), 
-            "This note has been reported by **Alice** for Spam."
+            "This note has been reported by **Alice** for spam."
         )
     }
     
@@ -51,7 +51,7 @@ final class ContentWarningControllerTests: CoreDataTestCase {
         // Assert
         XCTAssertEqual(
             String(localized: sut.localizedContentWarning), 
-            "This note has been reported by **Alice** for Spam."
+            "This note has been reported by **Alice** for spam."
         )
     }
     

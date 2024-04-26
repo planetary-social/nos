@@ -1088,7 +1088,6 @@ public class Event: NosManagedObject, VerifiableEvent {
                     deletedEvent.deletedOn.insert(relay)
                 }
             }
-            try context.saveIfNeeded()
         }
     }
     

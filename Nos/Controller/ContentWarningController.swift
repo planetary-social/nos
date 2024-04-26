@@ -71,7 +71,7 @@ enum ContentWarningType {
                 reasons.append(reason)
             }
         }
-        return Set(reasons)
+        return Set(reasons.map { $0.lowercased() })
     }
     
     /// Extracts a human readable string explaining the reason for the given report `Event`.

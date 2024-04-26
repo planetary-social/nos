@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed duplicate text in content warnings
 - Discover tab now features authors in a variety of categories.
 - Fixed an issue where registering a NIP-05 username field could fail silently.
 - Fixed an issue where users named with valid urls were unable to be mentioned correctly.

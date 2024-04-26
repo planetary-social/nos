@@ -12329,7 +12329,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unknown Author"
+            "value" : "unknown"
           }
         }
       }
