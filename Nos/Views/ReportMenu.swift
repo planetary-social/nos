@@ -7,9 +7,8 @@ import SwiftUINavigation
 /// is set to `true` it will walk the user through a series of menus that allows them to report content in a given
 /// category and optionally mute the respective author.
 struct ReportMenuModifier: ViewModifier {
-    
     @Binding var isPresented: Bool
-    
+
     var reportedObject: ReportTarget
     
     @State private var selectedCategory: ReportCategory?
@@ -18,9 +17,6 @@ struct ReportMenuModifier: ViewModifier {
     @State private var confirmationDialog: ConfirmationDialogState<ReportCategory>? 
     
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var relayService: RelayService
-    @Environment(CurrentUser.self) private var currentUser
-    @Dependency(\.analytics) private var analytics: Analytics
     
     // swiftlint:disable function_body_length
     func body(content: Content) -> some View {
@@ -33,7 +29,17 @@ struct ReportMenuModifier: ViewModifier {
                 isPresented: $confirmReport,
                 actions: { 
                     Button(String(localized: .localizable.confirm)) {
-                        publishReport()
+                        guard let selectedCategory else {
+                            Log.error("No selected category, skipping report.")
+                            return
+                        }
+                        
+                        ReportPublisher().publishPublicReport(
+                            for: reportedObject, 
+                            category: selectedCategory, 
+                            context: viewContext
+                        )
+                        
                         if let author = reportedObject.author, !author.muted {
                             showMuteDialog = true
                         }
@@ -123,37 +129,6 @@ struct ReportMenuModifier: ViewModifier {
             ButtonState(action: .send(subCategory)) {
                 TextState(verbatim: subCategory.displayName)
             } 
-        }
-    }
-    
-    /// Publishes a report for the currently selected 
-    func publishReport() {
-        guard let keyPair = currentUser.keyPair,
-            let selectedCategory else {
-            Log.error("Cannot publish report - No signed in user")
-            return 
-        }
-        var event = JSONEvent(
-            pubKey: keyPair.publicKeyHex, 
-            kind: .report, 
-            tags: [
-                ["L", "MOD"],
-                ["l", "MOD>\(selectedCategory.code)", "MOD"]
-            ], 
-            content: String(localized: .localizable.reportEventContent(selectedCategory.displayName))
-        )
-        
-        var targetTag = reportedObject.tag
-        targetTag.append(selectedCategory.nip56Code.rawValue)
-        event.tags.append(targetTag)
-        
-        Task {
-            do {
-                try await relayService.publishToAll(event: event, signingKey: keyPair, context: viewContext)
-                analytics.reported(reportedObject)
-            } catch {            
-                Log.error("Failed to publish report: \(error.localizedDescription)")
-            }
         }
     }
 }

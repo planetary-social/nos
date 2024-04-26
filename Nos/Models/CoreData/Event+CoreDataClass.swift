@@ -41,7 +41,10 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 	case delete = 5
     case repost = 6
 	case like = 7
+    case seal = 13
+    case directMessageRumor = 14
     case channelMessage = 42
+    case giftWrap = 1059
     case label = 1985
     case report = 1984
     case mute = 10_000
@@ -53,10 +56,10 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 // swiftlint:disable type_body_length
 @objc(Event)
 @Observable
-public class Event: NosManagedObject {
-    
+public class Event: NosManagedObject, VerifiableEvent {
     @Dependency(\.currentUser) @ObservationIgnored private var currentUser
 
+    var pubKey: String { author?.hexadecimalPublicKey ?? "" }
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"
     public static var discoverKinds = [EventKind.text, EventKind.longFormContent]

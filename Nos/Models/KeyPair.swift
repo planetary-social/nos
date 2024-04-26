@@ -7,15 +7,15 @@ import secp256k1
 struct KeyPair {
     
     var privateKeyHex: String {
-        underlyingKey.rawRepresentation.hexString
+        underlyingKey.dataRepresentation.hexString
     }
     
-    var publicKeyHex: String {
+    var publicKeyHex: RawAuthorID {
         publicKey.hex
     }
     
     var nsec: String {
-        Bech32.encode(Nostr.privateKeyPrefix, baseEightData: underlyingKey.rawRepresentation)
+        Bech32.encode(Nostr.privateKeyPrefix, baseEightData: underlyingKey.dataRepresentation)
     }
     
     var npub: String {
@@ -28,7 +28,7 @@ struct KeyPair {
     init?() {
         do {
             let key = try secp256k1.Signing.PrivateKey()
-            self.init(privateKeyHex: key.rawRepresentation.hexString)
+            self.init(privateKeyHex: key.dataRepresentation.hexString)
         } catch {
             Log.debug("Could not create a secp254k1 key")
             return nil
@@ -42,7 +42,7 @@ struct KeyPair {
         }
         
         do {
-            self.underlyingKey = try .init(rawRepresentation: decoded)
+            self.underlyingKey = try .init(dataRepresentation: decoded)
         } catch {
             print("error creating KeyPair \(error.localizedDescription)")
             return nil
@@ -63,7 +63,7 @@ struct KeyPair {
                 return nil
             }
             
-            self.underlyingKey = try .init(rawRepresentation: converted)
+            self.underlyingKey = try .init(dataRepresentation: converted)
             publicKey = PublicKey(underlyingKey: underlyingKey.publicKey.xonly)
         } catch {
             print("error creating KeyPair \(error.localizedDescription)")
@@ -73,7 +73,7 @@ struct KeyPair {
     
     func sign(bytes: inout [UInt8]) throws -> String {
         let privateKeyBytes = try privateKeyHex.bytes
-        let privateKey = try secp256k1.Signing.PrivateKey(rawRepresentation: privateKeyBytes)
+        let privateKey = try secp256k1.Schnorr.PrivateKey(dataRepresentation: privateKeyBytes)
         
         var randomBytes = [Int8](repeating: 0, count: 64)
         guard
@@ -82,8 +82,8 @@ struct KeyPair {
             fatalError("can't copy secure random data")
         }
         
-        let rawSignature = try privateKey.schnorr.signature(message: &bytes, auxiliaryRand: &randomBytes)
-        return rawSignature.rawRepresentation.hexString
+        let rawSignature = try privateKey.signature(message: &bytes, auxiliaryRand: &randomBytes)
+        return rawSignature.dataRepresentation.hexString
     }
 }
 

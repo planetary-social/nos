@@ -165,6 +165,17 @@
         }
       }
     },
+    "errorUploadingFileWithMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An error was encountered when uploading the file you provided. The message was: \"%@\""
+          }
+        }
+      }
+    },
     "openSettingsMessage" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -334,37 +345,37 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Foto mit Kamera aufnehmen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Take photo with Camera"
+            "value" : "Take photo or video"
           }
         },
         "fa" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "با دوربین عکس بگیرید"
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ta ett foto med kameran"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "使用摄像机拍摄照片"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "使用攝像機拍攝照片"
           }
         }

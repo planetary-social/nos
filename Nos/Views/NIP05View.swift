@@ -2,9 +2,8 @@ import Dependencies
 import Logger
 import SwiftUI
 
-/// Displays a user's NIP-05 and does some verification on it.
+/// Displays a user's NIP-05 if they have one and does some verification on it.
 struct NIP05View: View {
-    
     @ObservedObject var author: Author
     
     @State private var verifiedNip05Identifier: Bool?
@@ -13,31 +12,26 @@ struct NIP05View: View {
     var body: some View {
         if let nip05Identifier = author.nip05,
             !nip05Identifier.isEmpty,
-            let formattedNIP05 = author.formattedNIP05 {
+            let nip05Parts = author.nip05Parts {
             Group {
-                if verifiedNip05Identifier == true {
-                    Text("\(formattedNIP05)")
-                        .foregroundColor(.primaryTxt)
-                } else if verifiedNip05Identifier == false {
-                    Text(formattedNIP05)
-                        .strikethrough()
-                        .foregroundColor(.secondaryTxt)
+                if let verifiedNip05Identifier {
+                    nip05Text(parts: nip05Parts)
+                        .strikethrough(!verifiedNip05Identifier)
                 } else {
-                    Text("\(formattedNIP05)")
-                        .foregroundColor(.secondaryTxt)
+                    nip05Text(parts: nip05Parts)
+                        .foregroundStyle(Color.secondaryTxt)
                 }
             }
-            .font(.clarity(.medium, textStyle: .subheadline))
-            .multilineTextAlignment(.leading)
+            .lineLimit(1)
             .contextMenu {
                 Button {
-                    UIPasteboard.general.string = formattedNIP05
+                    UIPasteboard.general.string = nip05Parts.username + "@" + nip05Parts.domain
                 } label: {
                     Text(.localizable.copy)
                 }
             } preview: {
-                Text(formattedNIP05)
-                    .foregroundColor(.primaryTxt)
+                Text(nip05Parts.username + "@" + nip05Parts.domain)
+                    .foregroundStyle(Color.primaryTxt)
                     .padding()
             }
             .task(priority: .userInitiated) {
@@ -60,6 +54,18 @@ struct NIP05View: View {
             }
         } else {
             EmptyView()
+        }
+    }
+
+    func nip05Text(parts: (username: String, domain: String)) -> some View {
+        if parts.username == "_" {
+            Text(parts.domain)
+                .foregroundStyle(Color.primaryTxt)
+        } else {
+            Text(parts.username)
+                .foregroundStyle(Color.primaryTxt) +
+            Text("@" + parts.domain)
+                .foregroundStyle(Color.secondaryTxt)
         }
     }
 }
