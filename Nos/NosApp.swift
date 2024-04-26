@@ -18,11 +18,9 @@ struct NosApp: App {
     
     init() {
         _ = crashReporting // force crash reporting init as early as possible
-        Tips.showAllTipsForTesting()
-        try? Tips.resetDatastore()
+
         try? Tips.configure([
             .displayFrequency(.immediate),
-            .datastoreLocation(.applicationDefault)
         ])
     }
     

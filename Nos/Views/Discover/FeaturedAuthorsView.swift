@@ -1,6 +1,22 @@
 import Logger
 import SwiftUI
 import Dependencies
+import TipKit
+
+struct FeaturedAuthorsTip: Tip {
+    var title: Text {
+        Text("How is Discover populated?")
+            .font(.headline)
+            .foregroundStyle(Color.primaryTxt)
+            .bold()
+    }
+
+    var message: Text? {
+        Text("Accounts on this tab are participants in the Nos Residency and Accelerator programs.")
+            .font(.callout)
+            .foregroundStyle(Color.primaryTxt)
+    }
+}
 
 struct FeaturedAuthorsView: View {
     @EnvironmentObject private var router: Router
@@ -20,6 +36,8 @@ struct FeaturedAuthorsView: View {
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
     
     @State private var selectedCategory: FeaturedAuthorCategory = .all
+
+    private var featuredAuthorsTip = FeaturedAuthorsTip()
 
     @Namespace private var animation
 
@@ -42,6 +60,10 @@ struct FeaturedAuthorsView: View {
                         ScrollView {
                             LazyVStack {
                                 categoryPicker
+                                TipView(featuredAuthorsTip)
+                                    .padding(.horizontal, 13)
+                                    .padding(.top, 5)
+                                    .tipBackground(LinearGradient.horizontalAccent)
 
                                 ForEach(filteredAuthors) { author in
                                     AuthorCard(author: author) {

@@ -2,37 +2,6 @@ import SwiftUI
 import Combine
 import CoreData
 import Dependencies
-import TipKit
-
-struct PopoverTip: Tip {
-    // Define the app state you want to track.
-    @Parameter
-    static var isToggle: Bool = false
-
-    var title: Text {
-        Text("How is Discover populated?")
-            .font(.callout)
-            .bold()
-//            .foregroundStyle(Color.secondaryTxt)
-    }
-
-    var message: Text? {
-        Text("Accounts on this tab are participants in the Nos Residency and Accelerator programs.")
-            .font(.footnote)
-//            .foregroundStyle(Color.secondaryTxt)
-    }
-
-    var rules: [Rule] {
-        #Rule(Self.$isToggle) { $0 == true }
-    }
-
-    var options: [TipOption] {
-        [
-            Tip.IgnoresDisplayFrequency(true),
-            Tip.MaxDisplayCount(.max)
-        ]
-    }
-}
 
 struct DiscoverTab: View {    
     // MARK: - Properties
@@ -41,9 +10,6 @@ struct DiscoverTab: View {
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
-
-    @State var showInfoPopover = false
-    var popoverTip = PopoverTip()
 
     @State var columns: Int = 0
     
@@ -67,12 +33,9 @@ struct DiscoverTab: View {
                         hideAfter: .now() + .seconds(Self.initialLoadTime)
                     )
                 } else {
-                    VStack {
-                        TipView(popoverTip)
-                            .padding()
-                        FeaturedAuthorsView(
-                            featuredAuthorCategory: .all,
-                            searchController: searchController
+                    FeaturedAuthorsView(
+                        featuredAuthorCategory: .all,
+                        searchController: searchController
                     )
                 }
             }
@@ -86,27 +49,6 @@ struct DiscoverTab: View {
                 searchController.submitSearch(query: searchController.query)
             }
             .background(Color.appBg)
-            .toolbar {
-                ToolbarItem {
-                    Button {
-                        // TODO: actually show the popover. https://github.com/planetary-social/nos/issues/1025
-                        showInfoPopover = true
-                        PopoverTip.isToggle = true
-                    } label: {
-                        Image.discoverInfo
-                    }
-                    .foregroundStyle(Color.secondaryTxt)
-                    .onChange(of: showInfoPopover) { _, _ in
-                        withAnimation {
-                            showInfoPopover.toggle()
-                            // here we can manipulate the state to satisfy a condition to show the tip.
-                            PopoverTip.isToggle = showInfoPopover
-                        }
-                    }
-//                    .popoverTip(popoverTip)
-                }
-            }
-            .animation(.easeInOut, value: columns)
             .onAppear {
                 if router.selectedTab == .discover {
                     isVisible = true
