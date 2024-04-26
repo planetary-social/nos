@@ -47,6 +47,7 @@ class ReportPublisher {
             
             Task {
                 do {
+                    Log.info("Sending report request to NOS for note \(note.id)")
                     try await relayService.publish(
                         event: reportRequestDM,
                         to: Relay.nosAddress,

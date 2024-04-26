@@ -1,25 +1,26 @@
 import Foundation
 
 /// A model for potential reasons why something might be reported.
+/// Vocabulary from [NIP-56] and [NIP-69](https://github.com/nostr-protocol/nips/pull/457).
 struct ReportCategory: Identifiable, Equatable {
     /// A localized human readable description of the reason/category. Should be short enough to fit in an action menu.
     var displayName: String {
         String(localized: name)
     }
-    
+
     var name: LocalizedStringResource
-    
+
     /// The machine-readable code corresponding to this category.
     var code: String
-    
+
     /// A code matching a NIP-56 category, for backwards compatibility
     var nip56Code: NIP56Code
-    
+
     /// A list of all sub-categories that narrow this one down.
     var subCategories: [ReportCategory]?
-    
+
     var id: String { code }
-    
+
     static func findCategory(from code: String) -> ReportCategory? {
         var searchForCategoryByCode: ((String, [ReportCategory]) -> ReportCategory?)?
         searchForCategoryByCode = { (code: String, categories: [ReportCategory]) -> ReportCategory? in
@@ -32,11 +33,11 @@ struct ReportCategory: Identifiable, Equatable {
                     }
                 }
             }
-            
+
             return nil
         }
-        
-        return searchForCategoryByCode?(code, categories)
+
+        return searchForCategoryByCode?(code, allCategories)
     }
 }
 
@@ -50,19 +51,19 @@ enum ReportCategoryType {
         code: "CL",
         nip56Code: .profanity
     )
-    
+
     static let likelyToCauseHarm = ReportCategory(
         name: .moderation.likelyToCauseHarm,
         code: "HC",
         nip56Code: .other
     )
-    
+
     static let intoleranceAndHate = ReportCategory(
         name: .moderation.intoleranceAndHate,
         code: "IH",
         nip56Code: .other
     )
-    
+
     static let illegal = ReportCategory(
         name: .moderation.illegal,
         code: "IL",
@@ -88,7 +89,7 @@ enum ReportCategoryType {
             ReportSubCategoryType.sex,
         ]
     )
-    
+
     static let pornography = ReportCategory(
         name: .moderation.pornography,
         code: "PN",
@@ -121,7 +122,7 @@ enum ReportSubCategoryType {
         code: "IL-cop",
         nip56Code: .illegal
     )
-    
+
     static let childSexualAbuse = ReportCategory(
         name: .moderation.childSexualAbuse,
         code: "IL-csa",
@@ -132,98 +133,98 @@ enum ReportSubCategoryType {
         code: "IL-drg",
         nip56Code: .illegal
     )
-    
+
     static let fraudAndScams = ReportCategory(
         name: .moderation.fraudAndScams,
         code: "IL-frd",
         nip56Code: .illegal
     )
-    
+
     static let harassmentStalkingOrDoxxing = ReportCategory(
         name: .moderation.harassmentStalkingOrDoxxing,
         code: "IL-har",
         nip56Code: .illegal
     )
-    
+
     static let prostitution = ReportCategory(
         name: .moderation.prostitution,
         code: "IL-swk",
         nip56Code: .illegal
     )
-    
+
     static let impersonation = ReportCategory(
         name: .moderation.impersonation,
         code: "IL-idt",
         nip56Code: .illegal
     )
-    
+
     static let malware = ReportCategory(
         name: .moderation.malware,
         code: "IL-mal",
         nip56Code: .illegal
     )
-    
+
     static let casualNudity = ReportCategory(
         name: .moderation.casualNudity,
         code: "NS-nud",
         nip56Code: .nudity
     )
-    
+
     static let erotica = ReportCategory(
         name: .moderation.erotica,
         code: "NS-ero",
         nip56Code: .nudity
     )
-    
+
     // swiftlint:disable:next variable_name
     static let sex = ReportCategory(
         name: .moderation.sex,
         code: "NS-sex",
         nip56Code: .nudity
     )
-    
+
     static let heterosexualPorn = ReportCategory(
         name: .moderation.heterosexualPorn,
         code: "PN-het",
         nip56Code: .nudity
     )
-    
+
     static let gayMalePorn = ReportCategory(
         name: .moderation.gayMalePorn,
         code: "PN-gay",
         nip56Code: .nudity
     )
-    
+
     static let lesbianPorn = ReportCategory(
         name: .moderation.lesbianPorn,
         code: "PN-les",
         nip56Code: .nudity
     )
-    
+
     static let bisexualPorn = ReportCategory(
         name: .moderation.bisexualPorn,
         code: "PN-bis",
         nip56Code: .nudity
     )
-    
+
     static let transsexualPorn = ReportCategory(
         name: .moderation.transsexualPorn,
         code: "PN-trn",
         nip56Code: .nudity
     )
-    
+
     static let genderFluidNonBinaryPorn = ReportCategory(
         name: .moderation.genderFluidNonBinaryPorn,
         code: "PN-fnb",
         nip56Code: .nudity
     )
-    
+
     static let violenceTowardsAHumanBeing = ReportCategory(
         name: .moderation.violenceTowardsAHumanBeing,
         code: "VI-hum",
         nip56Code: .other
     )
-    
+
     static let violenceTowardsASentientAnimal = ReportCategory(
         name: .moderation.violenceTowardsASentientAnimal,
         code: "VI-ani",
@@ -231,9 +232,7 @@ enum ReportSubCategoryType {
     )
 }
 
-/// Vocabulary from [NIP-69](https://github.com/nostr-protocol/nips/pull/457).
-
-let categories = [
+let allCategories = [
     ReportCategoryType.coarseLanguage,
     ReportCategoryType.likelyToCauseHarm,
     ReportCategoryType.intoleranceAndHate,
@@ -245,7 +244,9 @@ let categories = [
     ReportCategoryType.other,
 ]
 
-let selectableCategories = [
+let authorCategories = allCategories
+
+let noteCategories = [
     ReportCategoryType.spam,
     ReportCategoryType.nudity,
     ReportCategoryType.coarseLanguage,
