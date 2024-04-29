@@ -2272,37 +2272,37 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Nos setzt sich dafür ein, eine sichere und respektvolle Gemeinschaft zu fördern. Um dies zu erreichen, zeigen wir Inhaltswarnungen an, wenn jemand, dem du folgst, eine Note meldet. Du kannst dies im Einstellungsmenü ändern."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nos is committed to fostering safe and respectful community. To achieve this we display content warnings when someone you follow reports a note. You can change this in the settings menu."
+            "value" : "Nos is committed to fostering safe and respectful community. To achieve this we display content warnings when someone you follow flags a note. You can change this in the settings menu."
           }
         },
         "fa" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "به پرورش اجتماعی امن و آرام متعهد است. برای دستیابی به این هدف هرگاه کسی که دنبال می کنید یادداشتی را گزارش می کند، هشدار محتوا نشان می دهیم. می توانید این را در منوی تنظیمات تغییر دهید."
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Nos har åtagit sig att främja en trygg och respektfull gemenskap. För att uppnå detta visar vi innehållsvarningar när någon du följer rapporter en anteckning. Du kan ändra detta i menyn Inställningar."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Nos 致力于培养安全和相互尊重的社区。 为了实现这一点，当你关注的用户举报一条笔记时，我们会显示内容警告。你可以在设置菜单中更改此项。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Nos 致力於培養安全和互相尊重的社區。為了實現這一點，當你關注的用戶舉報一條筆記時，我們會顯示內容警告。你可以在設置菜單中更改此項。"
           }
         }
@@ -7714,25 +7714,25 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Diese Note wurde von **%1$@** für %2$@ gemeldet."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This note has been reported by **%1$@** for %2$@."
+            "value" : "This note has been flagged by **%1$@** for %2$@."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "此笔记因 %2$@ 被 **%1$@** 举报。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "此筆記因 %2$@ 被 **%1$@** 舉報。"
           }
         }
@@ -7752,7 +7752,7 @@
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "translated",
+                  "state" : "needs_review",
                   "value" : "Diese Note wurde von **%1$@** und **%2$lld anderen** für %3$@ gemeldet."
                 }
               }
@@ -7765,13 +7765,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "This note has been reported by **%1$@** and **%2$lld other** for %3$@."
+                  "value" : "This note has been flagged by **%1$@** and **%2$lld other** for %3$@."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "This note has been reported by **%1$@** and **%2$lld others** for %3$@."
+                  "value" : "This note has been flagged by **%1$@** and **%2$lld others** for %3$@."
                 }
               }
             }
@@ -7782,7 +7782,7 @@
             "plural" : {
               "other" : {
                 "stringUnit" : {
-                  "state" : "translated",
+                  "state" : "needs_review",
                   "value" : "此笔记因 %3$@ 被 **%1$@** 和 **%2$lld 个其他用户** 举报。"
                 }
               }
@@ -7794,7 +7794,7 @@
             "plural" : {
               "other" : {
                 "stringUnit" : {
-                  "state" : "translated",
+                  "state" : "needs_review",
                   "value" : "此筆記因 %3$@ 被 **%1$@** 和 **%2$lld 個其他用戶** 舉報。"
                 }
               }
@@ -9993,37 +9993,37 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Dieser Inhalt wurde für %@ gemeldet."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This content has been reported for %@."
+            "value" : "This content has been flagged for %@."
           }
         },
         "fa" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "این حساب کاربری با استفاده از لغات NIP-69 بابت %@ گزارش شده است."
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Detta innehåll har rapporterats för %@."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "此内容因 %@ 被举报。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "此內容因 %@ 被舉報。"
           }
         }
@@ -10034,43 +10034,43 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Bist du sicher, dass du dies als %@ melden möchtest? Diese Meldung wird öffentlich sein."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Are you sure you want to report this as %@? This report will be public."
+            "value" : "Are you sure you want to flag this as %@? This flag will be public."
           }
         },
         "fa" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "آیا مطمئنید می خواهید این را به عنوان %@ گزارش کنید؟ این گزارش عمومی خواهد بود."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Dit zal een rapport publiceren dat openbaar zichtbaar is. Weet je het zeker?"
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Är du säker på att du vill rapportera detta som {{ report_type }}? Denna rapport kommer att vara offentlig."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "是否确定要将此内容举报为%@？该报告将是公开的。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "是否確定要將此內容舉報為%@？該報告將是公開的。"
           }
         }
@@ -12901,37 +12901,37 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Wenn jemand eine Note oder einen Benutzer meldet, werden wir eine Inhaltswarnung zu deren Note hinzufügen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "When someone you follow reports a note or user, we'll add a content warning to their notes."
+            "value" : "When someone you follow flags a note or user, we'll add a content warning to their notes."
           }
         },
         "fa" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "هرگاه کسی که دنبال می کنید یادداشت یا شخصی را گزارش کند، یک هشدار محتوا به یادداشت او می افزاییم."
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "När någon du följer rapporterar en anteckning eller användare lägger vi till en varning till deras anteckningar."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "当你关注的用户举报一条笔记或一个用户时，我们会在它们的笔记中添加一个内容警告。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "當你關注的用戶舉報一條筆記或一個用戶時，我們會在它們的筆記中添加一個內容警告"
           }
         }
@@ -12986,25 +12986,25 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Dieser Benutzer wurde von **%1$@** für %2$@ gemeldet."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This user has been reported by **%1$@** for %2$@."
+            "value" : "This user has been flagged by **%1$@** for %2$@."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "此用户因 %2$@ 被 **%1$@** 举报。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "此用戶因 %2$@ 被 **%1$@** 舉報。"
           }
         }

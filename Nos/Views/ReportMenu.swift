@@ -8,16 +8,16 @@ import SwiftUINavigation
 /// category and optionally mute the respective author.
 struct ReportMenuModifier: ViewModifier {
     @Binding var isPresented: Bool
-
+    
     var reportedObject: ReportTarget
-
+    
     @State private var userSelection: UserSelection?
     @State private var confirmReport = false
     @State private var showMuteDialog = false
     @State private var confirmationDialogState: ConfirmationDialogState<UserSelection>?
-
+    
     @Environment(\.managedObjectContext) private var viewContext
-
+    
     // swiftlint:disable function_body_length
     func body(content: Content) -> some View {
         content
@@ -29,7 +29,7 @@ struct ReportMenuModifier: ViewModifier {
                 actions: {
                     Button(String(localized: .localizable.confirm)) {
                         publishReport(userSelection)
-
+                        
                         if let author = reportedObject.author, !author.muted {
                             showMuteDialog = true
                         }
@@ -78,14 +78,14 @@ struct ReportMenuModifier: ViewModifier {
             }
     }
     // swiftlint:enable function_body_length
-
+    
     func processUserSelection(_ userSelection: UserSelection?) {
         self.userSelection = userSelection
-
+        
         guard let userSelection else {
             return
         }
-
+        
         switch userSelection {
         case .noteCategorySelected(let category):
             Task {
@@ -102,19 +102,19 @@ struct ReportMenuModifier: ViewModifier {
                     ]
                 )
             }
-
+            
         case .authorCategorySelected(let category):
             // For the moment, users skip the private vs public report menu and
             // directly go to the public report until we implement user reports
             // for reportinator
             self.userSelection = .flagPublicly(category)
             confirmReport = true
-
+            
         case .sendToNos, .flagPublicly:
             confirmReport = true
         }
     }
-
+    
     func mute(author: Author) {
         Task {
             do {
@@ -124,7 +124,7 @@ struct ReportMenuModifier: ViewModifier {
             }
         }
     }
-
+    
     typealias TopLevelDisplayName = String
     /// An enum to simplify the user selection through the sequence of connected
     /// dialogs
@@ -133,7 +133,7 @@ struct ReportMenuModifier: ViewModifier {
         case authorCategorySelected(ReportCategory)
         case sendToNos(ReportCategory)
         case flagPublicly(ReportCategory)
-
+        
         var displayName: String {
             switch self {
             case .noteCategorySelected(let category),
@@ -143,19 +143,19 @@ struct ReportMenuModifier: ViewModifier {
                 return category.displayName
             }
         }
-
+        
         var confirmationAlertMessage: String {
             switch self {
             case .sendToNos(let category):
                 return String(localized: .localizable.reportSendToNosConfirmation(category.displayName))
             case .flagPublicly(let category):
                 return String(localized: .localizable.reportFlagPubliclyConfirmation(category.displayName))
-            case .noteCategorySelected(let category), .authorCategorySelected(let category): 
+            case .noteCategorySelected(let category), .authorCategorySelected(let category):
                 return String(localized: .localizable.reportFlagPubliclyConfirmation(category.displayName))
             }
         }
     }
-
+    
     /// List of the top-level report categories we care about.
     /// Our vocabulary is much bigger
     func topLevelButtons() -> [ButtonState<UserSelection>] {
@@ -163,7 +163,7 @@ struct ReportMenuModifier: ViewModifier {
         case .note:
             noteCategories.map { category in
                 let userSelection = UserSelection.noteCategorySelected(category)
-
+                
                 return ButtonState(action: .send(userSelection)) {
                     TextState(verbatim: category.displayName)
                 }
@@ -171,14 +171,14 @@ struct ReportMenuModifier: ViewModifier {
         case .author:
             authorCategories.map { category in
                 let userSelection = UserSelection.authorCategorySelected(category)
-
+                
                 return ButtonState(action: .send(userSelection)) {
                     TextState(verbatim: category.displayName)
                 }
             }
         }
     }
-
+    
     /// Publishes a report based on user input
     func publishReport(_ userSelection: UserSelection?) {
         switch userSelection {
@@ -191,7 +191,7 @@ struct ReportMenuModifier: ViewModifier {
             Log.error("Invalid user selection")
         }
     }
-
+    
     func sendToNos(_ selectedCategory: ReportCategory) {
         ReportPublisher().publishPrivateReport(
             for: reportedObject,
@@ -199,7 +199,7 @@ struct ReportMenuModifier: ViewModifier {
             context: viewContext
         )
     }
-
+    
     func flagPublicly(_ selectedCategory: ReportCategory) {
         ReportPublisher().publishPublicReport(
             for: reportedObject,
