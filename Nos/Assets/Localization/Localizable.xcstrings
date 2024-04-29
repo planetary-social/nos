@@ -10135,7 +10135,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nos will analyze the note for %@ content and if we agree will label the note anonymously. If the label doesn't match the NIP-56 for the category we may choose a different label or no label at all."
+            "value" : "The Nos moderation team will analyze the note for %@ content and may publish a report from our own account, concealing your identity."
           }
         }
       }
