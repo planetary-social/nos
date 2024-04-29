@@ -92,8 +92,6 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         // need to account for the number of items queued for insertion or deletion. FetchedResultsController sees them
         // but the collectionView doesn't yet.
         let numberOfItemsInView = numberOfFetchedObjects - insertedIndexes.count + deletedIndexes.count
-        Log.debug("Number of items: \(numberOfFetchedObjects) in fetchedResultsController")
-        Log.debug("Number of items: \(numberOfItemsInView) in section: \(section)")
         return numberOfItemsInView
     }
     
@@ -101,7 +99,6 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         _ collectionView: UICollectionView, 
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        Log.debug("cellForItemAt: \(indexPath)")
         loadMoreIfNeeded(for: indexPath)
         
         let note = fetchedResultsController.object(at: indexPath) 
@@ -194,12 +191,10 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         collectionView.performBatchUpdates({
-            Log.debug("Started batch updates")
             insertedIndexes = [IndexPath]()
             deletedIndexes = [IndexPath]()
             movedIndexes = [(IndexPath, IndexPath)]()
         }, completion: { (success) in
-            Log.debug("Completed batch updates with \(success))")
         })
     }
     
@@ -210,18 +205,15 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         for type: NSFetchedResultsChangeType, 
         newIndexPath: IndexPath?
     ) {
-        Log.debug("handling update type: \(type) indexPath: \(String(describing: indexPath))")
 
         // Note: I tried using UICollectionViewDiffableDatasource but it didn't seem to work well with SwiftUI views
         // as it kept reloading cells with animations when nothing was visually changing.
         switch type {
         case .insert:
-            Log.debug("queuing index path for insertion: \(String(describing: newIndexPath))")
             if let newIndexPath = newIndexPath {
                 insertedIndexes.append(newIndexPath)
             }
         case .delete:
-            Log.debug("queuing index path for deletion: \(String(describing: indexPath))")
             if let indexPath = indexPath {
                 deletedIndexes.append(indexPath)
             }
@@ -231,7 +223,6 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             return
         case .move:
             if let oldIndexPath = indexPath, let newIndexPath {
-                Log.debug("queuing index path \(oldIndexPath) for move to \(newIndexPath)")
                 movedIndexes.append((oldIndexPath, newIndexPath)) 
             }
         @unknown default:
@@ -240,26 +231,20 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        Log.debug("controllerDidChangeContent started.")
         if !deletedIndexes.isEmpty { // it doesn't seem like this check should be necessary but it crashes otherwise
-            Log.debug("deleting indexPaths: \(deletedIndexes)")
             let deletedIndexesCopy = deletedIndexes
             deletedIndexes = [] // clear indexes so numberOfItemsInSection can calculate the correct number
             collectionView.deleteItems(at: deletedIndexesCopy)
         }
         if !insertedIndexes.isEmpty {
-            Log.debug("inserting indexPaths: \(insertedIndexes)")
             let insertedIndexesCopy = insertedIndexes
             insertedIndexes = [] // clear indexes so numberOfItemsInSection can calculate the correct number
             collectionView.insertItems(at: insertedIndexesCopy)
         }
         
-        Log.debug("moving indexes: \(movedIndexes)")
         movedIndexes.forEach { indexPair in 
             let (oldIndex, newIndex) = indexPair
             collectionView.moveItem(at: oldIndex, to: newIndex)
         }
-        
-        Log.debug("controllerDidChangeContent finished.")
     }
 }
