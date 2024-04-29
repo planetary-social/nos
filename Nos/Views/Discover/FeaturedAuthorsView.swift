@@ -4,7 +4,8 @@ import Dependencies
 
 struct FeaturedAuthorsView: View {
     @EnvironmentObject private var router: Router
-    
+    @Environment(\.managedObjectContext) private var context
+
     @FetchRequest(fetchRequest: Author.matching(npubs: FeaturedAuthorCategory.all.npubs)) var authors
 
     private var filteredAuthors: [Author] {
@@ -98,6 +99,9 @@ struct FeaturedAuthorsView: View {
                 .preference(key: SizePreferenceKey.self, value: geometry.size)
             }
         }
+        .task {
+            findOrCreateAuthors()
+        }
     }
 
     var categoryPicker: some View {
@@ -130,5 +134,23 @@ struct FeaturedAuthorsView: View {
             .padding(.leading, 10)
         }
         .background(Color.profileBgTop)
+    }
+
+    private func findOrCreateAuthors() {
+        for featuredAuthorNpub in FeaturedAuthorCategory.all.npubs {
+            do {
+                guard let publicKey = PublicKey(npub: featuredAuthorNpub) else {
+                    Log.error(
+                        "Could create public key for npub: \(featuredAuthorNpub)" +
+                        "The npub in FeaturedAuthorCategory may be invalid."
+                    )
+                    return
+                }
+                try Author.findOrCreate(by: publicKey.hex, context: context)
+                try context.saveIfNeeded()
+            } catch {
+                Log.error("Could not find or create author for npub: \(featuredAuthorNpub)")
+            }
+        }
     }
 }
