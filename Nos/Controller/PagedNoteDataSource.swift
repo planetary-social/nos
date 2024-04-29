@@ -194,7 +194,6 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             insertedIndexes = [IndexPath]()
             deletedIndexes = [IndexPath]()
             movedIndexes = [(IndexPath, IndexPath)]()
-        }, completion: { (success) in
         })
     }
     
