@@ -1,3 +1,4 @@
+import Dependencies
 import SwiftUI
 
 struct BioView: View {
@@ -6,6 +7,8 @@ struct BioView: View {
 
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
+
+    @Dependency(\.noteParser) private var noteParser
 
     @State
     private var showingBio = false

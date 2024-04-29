@@ -85,15 +85,13 @@ struct GoldenPostView: View {
     }
 
     var firstImageURL: URL? {
-        let content = note.content
-        if let content {
-            return try? urlParser.findUnformattedURLs(
-                in: content
-            )
-            .first(where: { $0.isImage })
-        } else {
+        guard let content = note.content else {
             return nil
         }
+        return try? urlParser.findUnformattedURLs(
+            in: content
+        )
+        .first(where: { $0.isImage })
     }
 
     var imageView: some View {

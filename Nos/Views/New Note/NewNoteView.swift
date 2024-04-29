@@ -11,6 +11,7 @@ struct NewNoteView: View {
     @Environment(CurrentUser.self) var currentUser
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.noteParser) private var noteParser
 
     /// State holding the text the user is typing
     @State private var text = EditableNoteText()
@@ -209,7 +210,7 @@ struct NewNoteView: View {
         }
         
         do {
-            var (content, tags) = NoteParser().parse(attributedText: text.attributedString)
+            var (content, tags) = noteParser.parse(attributedText: text.attributedString)
             
             if let expirationTime {
                 tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])

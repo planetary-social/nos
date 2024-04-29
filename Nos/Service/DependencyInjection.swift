@@ -59,6 +59,11 @@ extension DependencyValues {
         get { self[URLParserKey.self] }
         set { self[URLParserKey.self] = newValue }
     }
+
+    var noteParser: NoteParser {
+        get { self[NoteParserKey.self] }
+        set { self[NoteParserKey.self] = newValue }
+    }
 }
 
 fileprivate enum AnalyticsKey: DependencyKey {
@@ -123,4 +128,10 @@ fileprivate enum URLParserKey: DependencyKey {
     static let liveValue = URLParser()
     static let testValue = URLParser()
     static let previewValue = URLParser()
+}
+
+fileprivate enum NoteParserKey: DependencyKey {
+    static let liveValue = NoteParser()
+    static let testValue = NoteParser()
+    static let previewValue = NoteParser()
 }
