@@ -2,6 +2,10 @@ import Dependencies
 import Logger
 import SwiftUI
 
+struct EditProfileDestination: Hashable {
+    let profile: Author
+}
+
 struct ProfileEditView: View {
     
     @EnvironmentObject private var router: Router
@@ -161,9 +165,6 @@ struct ProfileEditView: View {
         .id(author)
         .task {
             populateTextFields()
-        }
-        .onDisappear {
-            currentUser.editing = false
         }
     }
 
