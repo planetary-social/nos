@@ -178,7 +178,7 @@ struct ProfileView: View {
                                 }
                             }
                             
-                            Button(String(localized: .localizable.reportUser), role: .destructive) {
+                            Button(String(localized: .localizable.flagUser)) {
                                 showingReportMenu = true
                             }
                         }
