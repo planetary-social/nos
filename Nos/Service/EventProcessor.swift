@@ -24,7 +24,7 @@ enum EventProcessor {
             }
             
             if skipVerification == false {
-                guard try publicKey.verifySignature(on: event) else {
+                guard try event.verifySignature(for: publicKey) else {
                     parseContext.delete(event)
                     Log.info("Invalid signature on event: \(jsonEvent) from \(relay?.address ?? "error")")
                     throw EventError.invalidSignature(event)

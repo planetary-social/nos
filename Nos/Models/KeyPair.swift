@@ -10,7 +10,7 @@ struct KeyPair {
         underlyingKey.dataRepresentation.hexString
     }
     
-    var publicKeyHex: String {
+    var publicKeyHex: RawAuthorID {
         publicKey.hex
     }
     
