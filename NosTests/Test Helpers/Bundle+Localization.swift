@@ -13,7 +13,7 @@ extension Bundle {
 
 extension Bundle {
     func setPreferredLocalization(_ language: Locale) {
-        guard = path(forResource: language.language.languageCode?.identifier, ofType: "lproj") != nil else { return }
+        guard path(forResource: language.language.languageCode?.identifier, ofType: "lproj") != nil else { return }
         object_setClass(self, MockBundle.self)
         UserDefaults.standard.set([language.language.languageCode!.identifier], forKey: "AppleLanguages")
         UserDefaults.standard.synchronize()
