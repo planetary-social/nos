@@ -46,8 +46,10 @@ struct NoteOptionsButton: View {
                         analytics.viewedNoteSource()
                         showingSource = true
                     }
-                    Button(String(localized: .localizable.reportNote)) {
-                        showingReportMenu = true
+                    if note.author != currentUser.author {
+                        Button(String(localized: .localizable.reportNote)) {
+                            showingReportMenu = true
+                        }
                     }
                 }
                 if note.author == currentUser.author {
@@ -58,7 +60,7 @@ struct NoteOptionsButton: View {
             }
             .reportMenu($showingReportMenu, reportedObject: .note(note))
             .alert(
-                String(localized: .localizable.confirmReport),
+                String(localized: .localizable.confirmDelete),
                 isPresented: $confirmDelete,
                 actions: {
                     Button(String(localized: .localizable.confirm), role: .destructive) {
