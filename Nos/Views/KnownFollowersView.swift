@@ -78,11 +78,11 @@ struct KnownFollowersView: View {
         if knownFollowers.isEmpty == false {
             HStack {
                 HStack {
+                    Spacer()
                     StackedAvatarsView(avatarUrls: avatarURLs, border: 4)
                 }
-                .frame(width: 80)
-                .padding(.trailing, 12)
-                
+                .frame(width: 92)
+
                 followText
                     .font(.footnote)
 
