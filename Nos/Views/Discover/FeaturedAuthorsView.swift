@@ -146,10 +146,10 @@ struct FeaturedAuthorsView: View {
                     continue
                 }
                 try Author.findOrCreate(by: publicKey.hex, context: viewContext)
-                try viewContext.saveIfNeeded()
             } catch {
                 Log.error("Could not find or create author for npub: \(featuredAuthorNpub)")
             }
         }
+        try? viewContext.saveIfNeeded()
     }
 }
