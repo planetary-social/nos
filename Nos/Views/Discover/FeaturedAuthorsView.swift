@@ -4,7 +4,14 @@ import Dependencies
 
 struct FeaturedAuthorsView: View {
     @EnvironmentObject private var router: Router
-    @Environment(\.managedObjectContext) private var viewContext
+
+    @Dependency(\.persistenceController) private var persistenceController
+    @Dependency(\.relayService) private var relayService
+
+    @ObservedObject var searchController: SearchController
+
+    @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
+    @State private var selectedCategory: FeaturedAuthorCategory = .all
 
     @FetchRequest(fetchRequest: Author.matching(npubs: FeaturedAuthorCategory.all.npubs)) var authors
 
@@ -14,15 +21,6 @@ struct FeaturedAuthorsView: View {
             return selectedCategory.npubs.contains(npubString)
         }
     }
-
-    @ObservedObject var searchController: SearchController
-    @Dependency(\.relayService) private var relayService
-
-    @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
-    
-    @State private var selectedCategory: FeaturedAuthorCategory = .all
-
-    @Namespace private var animation
 
     /// Initializes a FeaturedAuthorsView with the selected category and a search controller.
     /// - Parameters:
@@ -146,8 +144,8 @@ struct FeaturedAuthorsView: View {
                     )
                     continue
                 }
-                try Author.findOrCreate(by: publicKey.hex, context: viewContext)
-                try viewContext.saveIfNeeded()
+                try Author.findOrCreate(by: publicKey.hex, context: persistenceController.backgroundViewContext)
+                try persistenceController.saveAll()
             } catch {
                 Log.error("Could not find or create author for npub: \(featuredAuthorNpub)")
             }
