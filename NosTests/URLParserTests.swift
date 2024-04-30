@@ -1,6 +1,15 @@
 import XCTest
 
-class String_MarkdownTests: XCTestCase {
+class URLParserTests: XCTestCase {
+
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    private var sut: URLParser!
+
+    override func setUp() async throws {
+        sut = URLParser()
+        try await super.setUp()
+    }
+
     func testExtractURLs() throws {
         // swiftlint:disable line_length
         let string = "Classifieds incoming... 👀\n\nhttps://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg"
@@ -11,7 +20,7 @@ class String_MarkdownTests: XCTestCase {
         ]
 
         // Act
-        let (actualString, actualURLs) = string.extractURLs()
+        let (actualString, actualURLs) = sut.replaceUnformattedURLs(in: string)
         XCTAssertEqual(actualString, expectedString)
         XCTAssertEqual(actualURLs, expectedURLs)
     }
@@ -39,7 +48,7 @@ class String_MarkdownTests: XCTestCase {
         ]
 
         // Act
-        let (actualString, actualURLs) = string.extractURLs()
+        let (actualString, actualURLs) = sut.replaceUnformattedURLs(in: string)
         XCTAssertEqual(actualString, expectedString)
         XCTAssertEqual(actualURLs, expectedURLs)
     }
@@ -49,7 +58,7 @@ class String_MarkdownTests: XCTestCase {
         let string = "No links...and just some tricks for the extractor..to try to trip it up. ...Ready for It?"
 
         // Act
-        let (actualString, actualURLs) = string.extractURLs()
+        let (actualString, actualURLs) = sut.replaceUnformattedURLs(in: string)
 
         // Assert
         XCTAssertEqual(actualString, string)
@@ -65,7 +74,7 @@ class String_MarkdownTests: XCTestCase {
         ]
 
         // Act
-        let (actualString, actualURLs) = string.extractURLs()
+        let (actualString, actualURLs) = sut.replaceUnformattedURLs(in: string)
 
         // Assert
         XCTAssertEqual(actualString, expectedString)
@@ -80,7 +89,7 @@ class String_MarkdownTests: XCTestCase {
         ]
 
         // Act
-        let (actualString, actualURLs) = string.extractURLs()
+        let (actualString, actualURLs) = sut.replaceUnformattedURLs(in: string)
         XCTAssertEqual(actualString, expectedString)
         XCTAssertEqual(actualURLs, expectedURLs)
     }
@@ -93,7 +102,7 @@ class String_MarkdownTests: XCTestCase {
         ]
 
         // Act
-        let (actualString, actualURLs) = string.extractURLs()
+        let (actualString, actualURLs) = sut.replaceUnformattedURLs(in: string)
         XCTAssertEqual(actualString, expectedString)
         XCTAssertEqual(actualURLs, expectedURLs)
     }
@@ -104,7 +113,7 @@ class String_MarkdownTests: XCTestCase {
         let expectedURLs: [URL] = []
 
         // Act
-        let (actualString, actualURLs) = string.extractURLs()
+        let (actualString, actualURLs) = sut.replaceUnformattedURLs(in: string)
         XCTAssertEqual(actualString, expectedString)
         XCTAssertEqual(actualURLs, expectedURLs)
     }
@@ -115,7 +124,7 @@ class String_MarkdownTests: XCTestCase {
         let expectedURLs: [URL] = []
 
         // Act
-        let (actualString, actualURLs) = string.extractURLs()
+        let (actualString, actualURLs) = sut.replaceUnformattedURLs(in: string)
         XCTAssertEqual(actualString, expectedString)
         XCTAssertEqual(actualURLs, expectedURLs)
     }
@@ -126,7 +135,7 @@ class String_MarkdownTests: XCTestCase {
         let expectedURLs: [URL] = []
 
         // Act
-        let (actualString, actualURLs) = string.extractURLs()
+        let (actualString, actualURLs) = sut.replaceUnformattedURLs(in: string)
         XCTAssertEqual(actualString, expectedString)
         XCTAssertEqual(actualURLs, expectedURLs)
     }

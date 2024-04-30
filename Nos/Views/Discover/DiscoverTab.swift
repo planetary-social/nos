@@ -86,6 +86,9 @@ struct DiscoverTab: View {
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
             }
+            .navigationDestination(for: EditProfileDestination.self) { destination in
+                ProfileEditView(author: destination.profile)
+            }
             .navigationBarTitle(String(localized: .localizable.discover), displayMode: .inline)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)

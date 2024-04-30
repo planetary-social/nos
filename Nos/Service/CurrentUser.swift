@@ -86,8 +86,6 @@ enum CurrentUserError: Error {
     
     var subscriptions = SubscriptionCancellables()
 
-    var editing = false
-
     var onboardingRelays: [Relay] = []
 
     // TODO: prevent this from being accessed from contexts other than the view context. Or maybe just get rid of it.

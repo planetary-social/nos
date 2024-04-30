@@ -14,11 +14,10 @@ struct ProfileTab: View {
             ProfileView(author: author, addDoubleTapToPop: true)
                 .navigationBarItems(leading: SideMenuButton())
                 .navigationDestination(for: Author.self) { profile in
-                    if profile == currentUser.author, currentUser.editing {
-                        ProfileEditView(author: author)
-                    } else {
-                        ProfileView(author: profile)
-                    }
+                    ProfileView(author: profile)
+                }
+                .navigationDestination(for: EditProfileDestination.self) { destination in
+                    ProfileEditView(author: destination.profile)
                 }
         }
     }
