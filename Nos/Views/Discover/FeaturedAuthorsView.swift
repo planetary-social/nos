@@ -4,7 +4,7 @@ import Dependencies
 
 struct FeaturedAuthorsView: View {
     @EnvironmentObject private var router: Router
-    @Environment(\.managedObjectContext) private var context
+    @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(fetchRequest: Author.matching(npubs: FeaturedAuthorCategory.all.npubs)) var authors
 
@@ -140,14 +140,14 @@ struct FeaturedAuthorsView: View {
         for featuredAuthorNpub in FeaturedAuthorCategory.all.npubs {
             do {
                 guard let publicKey = PublicKey(npub: featuredAuthorNpub) else {
-                    Log.error(
-                        "Could create public key for npub: \(featuredAuthorNpub)" +
-                        "The npub in FeaturedAuthorCategory may be invalid."
+                    assertionFailure(
+                        "Could create public key for npub: \(featuredAuthorNpub)\n" +
+                        "Fix this invalid npub in FeaturedAuthorCategory."
                     )
-                    return
+                    continue
                 }
-                try Author.findOrCreate(by: publicKey.hex, context: context)
-                try context.saveIfNeeded()
+                try Author.findOrCreate(by: publicKey.hex, context: viewContext)
+                try viewContext.saveIfNeeded()
             } catch {
                 Log.error("Could not find or create author for npub: \(featuredAuthorNpub)")
             }
