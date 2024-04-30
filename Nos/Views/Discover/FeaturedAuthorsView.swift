@@ -3,17 +3,18 @@ import SwiftUI
 import Dependencies
 
 struct FeaturedAuthorsView: View {
+    @ObservedObject var searchController: SearchController
+
     @EnvironmentObject private var router: Router
 
-    @Dependency(\.persistenceController) private var persistenceController
+    @Environment(\.managedObjectContext) private var viewContext
+
     @Dependency(\.relayService) private var relayService
 
-    @ObservedObject var searchController: SearchController
+    @FetchRequest(fetchRequest: Author.matching(npubs: FeaturedAuthorCategory.all.npubs)) private var authors
 
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
     @State private var selectedCategory: FeaturedAuthorCategory = .all
-
-    @FetchRequest(fetchRequest: Author.matching(npubs: FeaturedAuthorCategory.all.npubs)) var authors
 
     private var filteredAuthors: [Author] {
         authors.filter { author in
@@ -144,8 +145,8 @@ struct FeaturedAuthorsView: View {
                     )
                     continue
                 }
-                try Author.findOrCreate(by: publicKey.hex, context: persistenceController.backgroundViewContext)
-                try persistenceController.saveAll()
+                try Author.findOrCreate(by: publicKey.hex, context: viewContext)
+                try viewContext.saveIfNeeded()
             } catch {
                 Log.error("Could not find or create author for npub: \(featuredAuthorNpub)")
             }
