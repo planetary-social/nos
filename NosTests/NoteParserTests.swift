@@ -39,8 +39,8 @@ final class NoteParserTests: CoreDataTestCase {
     func testContentWithRawNIP05() throws {
         // Arrange
         let nip05 = "linda@nos.social"
-        let webLink = "https://njump.me/\(nip05)"
-        let content = "hello \(nip05)"
+        let webLink = "@linda@nos.social"
+        let content = "hello linda@nos.social"
         let expected = content
 
         // Act
@@ -63,9 +63,9 @@ final class NoteParserTests: CoreDataTestCase {
     func testContentWithRawNIP05AndAtPrepended() throws {
         // Arrange
         let nip05 = "linda@nos.social"
-        let webLink = "https://njump.me/\(nip05)"
-        let content = "hello @\(nip05)"
-        let expected = "hello \(nip05)"
+        let webLink = "@linda@nos.social"
+        let content = "hello @linda@nos.social"
+        let expected = "hello linda@nos.social"
 
         // Act
         let tags: [[String]] = [[]]

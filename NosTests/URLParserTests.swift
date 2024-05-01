@@ -25,6 +25,32 @@ class URLParserTests: XCTestCase {
         XCTAssertEqual(actualURLs, expectedURLs)
     }
 
+    func testExtractNIP05() throws {
+        let string = "Hello bob@example.com"
+        let expectedString = "Hello [bob@example.com](@bob@example.com)"
+        let expectedURLs = [
+            URL(string: "@bob@example.com")!
+        ]
+
+        // Act
+        let (actualString, actualURLs) = sut.replaceUnformattedURLs(in: string)
+        XCTAssertEqual(actualString, expectedString)
+        XCTAssertEqual(actualURLs, expectedURLs)
+    }
+
+    func testExtractNIP05WithUnderscore() throws {
+        let string = "Hello _@bob.example.com"
+        let expectedString = "Hello [_@bob.example.com](@_@bob.example.com)"
+        let expectedURLs = [
+            URL(string: "@_@bob.example.com")!
+        ]
+
+        // Act
+        let (actualString, actualURLs) = sut.replaceUnformattedURLs(in: string)
+        XCTAssertEqual(actualString, expectedString)
+        XCTAssertEqual(actualURLs, expectedURLs)
+    }
+
     func testExtractURLsWithMultipleURLs() throws {
         let string = """
         A few links...

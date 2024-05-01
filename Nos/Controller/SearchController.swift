@@ -99,7 +99,7 @@ class SearchController: ObservableObject {
         let strippedString = publicKeyString.trimmingCharacters(
             in: NSCharacterSet.whitespacesAndNewlines
         )
-        guard let publicKey = PublicKey(npub: strippedString) ?? PublicKey(hex: strippedString) else {
+        guard let publicKey = PublicKey.build(strippedString) else {
             return nil
         }
         guard let author = try? Author.findOrCreate(by: publicKey.hex, context: context) else {

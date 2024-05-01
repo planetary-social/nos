@@ -54,7 +54,7 @@ struct URLParser {
         // https://en.wikipedia.org/wiki/Domain_Name_System#Domain_name_syntax,_internationalization
 
         // swiftlint:disable:next line_length
-        let regexPattern = "(\\s*)(?<url>((https?://){1}|(?<![\\w@]))([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&/=]*)"
+        let regexPattern = "(\\s*)(?<url>((https?://){1}|(?<![\\w@.]))([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&/=]*)"
 
         var urls: [URL] = []
         do {
@@ -90,9 +90,8 @@ struct URLParser {
         // The following pattern uses rules from the NIP-05 specification:
         // https://github.com/nostr-protocol/nips/blob/master/05.md
 
-        let regexPattern = "(\\s*)@?(?<nip05>[0-9a-z._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64})"
+        let regexPattern = "(\\s*)@?(?<nip05>[0-9A-Za-z._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64})"
 
-        // [0-9a-z._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}
         var urls: [URL] = []
         do {
             let string = String(mutableString)
@@ -103,8 +102,8 @@ struct URLParser {
             for match in matches {
                 let nip05Range = Range(match.range(withName: "nip05"), in: string)
                 if let nip05Range {
-                    let nip05 = String(string[nip05Range])
-                    let webLink = "https://njump.me/\(nip05)"
+                    let nip05 = String(string[nip05Range]).lowercased()
+                    let webLink = "@\(nip05)"
                     if let url = URL(string: webLink) {
                         // maintain original order of links by inserting at index 0
                         // (we're looping in reverse)

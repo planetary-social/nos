@@ -13,7 +13,9 @@ import Dependencies
     @Published var profilePath = NavigationPath()
     @Published var sideMenuPath = NavigationPath()
     @Published var selectedTab = AppDestination.home
+    @Published var isLoading = false
     @Dependency(\.persistenceController) private var persistenceController
+    @Dependency(\.relayService) private var relayService
 
     var currentPath: Binding<NavigationPath> {
         if sideMenuOpened {
@@ -97,13 +99,35 @@ extension Router {
                 // handle mentions. mention link will be prefixed with "@" followed by
                 // the hex format pubkey of the mentioned author
             if link.hasPrefix("@") {
-                push(try Author.findOrCreate(by: identifier, context: persistenceController.viewContext))
+                if identifier.isValidHexadecimal {
+                    push(try Author.findOrCreate(by: identifier, context: persistenceController.viewContext))
+                } else {
+                    isLoading = true
+                    let npub = await relayService
+                        .retrievePublicKeyFromUsername(identifier)?
+                        .trimmingCharacters(
+                            in: NSCharacterSet.whitespacesAndNewlines
+                        )
+                    isLoading = false
+                    if let npub, let publicKey = PublicKey.build(npub) {
+                        push(
+                            try Author.findOrCreate(
+                                by: publicKey.hex,
+                                context: persistenceController.viewContext
+                            )
+                        )
+                    } else if let url = URL(string: "mailto:\(identifier)") {
+                        await UIApplication.shared.open(url)
+                    } else {
+                        Log.debug("Couldn't open \(identifier)")
+                    }
+                }
             } else if link.hasPrefix("%") {
                 push(try Event.findOrCreateStubBy(id: identifier, context: persistenceController.viewContext))
             } else if url.scheme == "http" || url.scheme == "https" {
                 push(url)
             } else {
-                UIApplication.shared.open(url)
+                await UIApplication.shared.open(url)
             }
         } catch {
             Log.optional(error)

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Open Profiles when tapping on a NIP-05 username reference in a note.
 - Detect identifiers of the form @npub1... in notes and link them to the associated profiles.
 - Detect NIP-05 identifiers inserted in notes and link them to njump.
 - Added "Send To Nos" private reporting to protect user privacy
