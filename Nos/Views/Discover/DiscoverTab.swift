@@ -51,17 +51,6 @@ struct DiscoverTab: View {
                 searchController.submitSearch(query: searchController.query)
             }
             .background(Color.appBg)
-            .toolbar {
-                ToolbarItem {
-                    Button {
-                        // TODO: actually show the popover. https://github.com/planetary-social/nos/issues/1025
-                        showInfoPopover = true
-                    } label: {
-                        Image.discoverInfo
-                    }
-                    .foregroundStyle(Color.secondaryTxt)
-                }
-            }
             .animation(.easeInOut, value: columns)
             .onAppear {
                 if router.selectedTab == .discover {
