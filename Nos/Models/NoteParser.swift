@@ -1,19 +1,20 @@
 import CoreData
 import Foundation
+import Logger
 import RegexBuilder
 
 /// This struct encapsulates the algorithms that parse notes and the mentions inside the note.
-enum NoteParser {
+struct NoteParser {
 
     /// Parses attributed text generated when composing a note and returns
     /// the content and tags.
-    static func parse(attributedText: AttributedString) -> (String, [[String]]) {
+    func parse(attributedText: AttributedString) -> (String, [[String]]) {
         cleanLinks(in: attributedText)
     }
     
     /// Parses the content and tags stored in a note and returns an attributed text with tagged entities replaced
     /// with readable names.
-    static func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> AttributedString {
+    func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> AttributedString {
         var result = replaceTaggedNostrEntities(in: content, tags: tags, context: context)
         result = replaceNostrEntities(in: result)
         do {
@@ -28,8 +29,10 @@ enum NoteParser {
 
     /// Parses the content and tags stored in a note and returns an attributed string and list of URLs that can be used 
     /// to display the note in the UI.
-    static func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> (AttributedString, [URL]) {
-        let (cleanedString, urls) = content.extractURLs()
+    func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> (AttributedString, [URL]) {
+        let (cleanedString, urls) = URLParser().replaceUnformattedURLs(
+            in: content
+        )
         var result = replaceTaggedNostrEntities(in: cleanedString, tags: tags, context: context)
         result = replaceNostrEntities(in: result)
         do {
@@ -44,7 +47,7 @@ enum NoteParser {
 
     // swiftlint:disable function_body_length superfluous_disable_command
     /// Replaces tagged references like #[0] or nostr:npub1... with markdown links
-    private static func replaceTaggedNostrEntities(
+    private func replaceTaggedNostrEntities(
         in content: String,
         tags: [[String]],
         context: NSManagedObjectContext
@@ -109,9 +112,9 @@ enum NoteParser {
     // swiftlint:enable function_body_length superfluous_disable_command
 
     /// Replaces Nostr entities embedded in the note (without a proper tag) with markdown links
-    private static func replaceNostrEntities(in content: String) -> String {
+    private func replaceNostrEntities(in content: String) -> String {
         // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
-        let unformattedRegex = /(?:^|\s)(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,255}))/
+        let unformattedRegex = /(?:^|\s)@?(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,255}))/
         // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
 
         return content.replacing(unformattedRegex) { match in
@@ -144,7 +147,7 @@ enum NoteParser {
         }
     }
 
-    private static func cleanLinks(
+    private func cleanLinks(
         in attributedString: AttributedString, 
         tags: [[String]] = []
     ) -> (String, [[String]]) {

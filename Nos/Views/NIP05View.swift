@@ -2,7 +2,7 @@ import Dependencies
 import Logger
 import SwiftUI
 
-/// Displays a user's NIP-05 if they have one and does some verification on it.
+/// Displays a user's NIP-05 in multiple colors and does some verification on it.
 struct NIP05View: View {
     @ObservedObject var author: Author
     
@@ -10,27 +10,28 @@ struct NIP05View: View {
     @Dependency(\.namesAPI) private var namesAPI
 
     var body: some View {
-        if let nip05Identifier = author.nip05,
-            !nip05Identifier.isEmpty,
-            let nip05Parts = author.nip05Parts {
+        if let nip05 = author.nip05, !nip05.isEmpty {
             Group {
-                if let verifiedNip05Identifier {
-                    nip05Text(parts: nip05Parts)
-                        .strikethrough(!verifiedNip05Identifier)
+                if let nip05Parts = author.nip05Parts {
+                    if let verifiedNip05Identifier {
+                        nip05Text(parts: nip05Parts)
+                            .strikethrough(!verifiedNip05Identifier)
+                    } else {
+                        nip05Text(parts: nip05Parts)
+                    }
                 } else {
-                    nip05Text(parts: nip05Parts)
-                        .foregroundStyle(Color.secondaryTxt)
+                    invalidNip05Text(nip05: nip05)
                 }
             }
             .lineLimit(1)
             .contextMenu {
                 Button {
-                    UIPasteboard.general.string = nip05Parts.username + "@" + nip05Parts.domain
+                    UIPasteboard.general.string = nip05
                 } label: {
                     Text(.localizable.copy)
                 }
             } preview: {
-                Text(nip05Parts.username + "@" + nip05Parts.domain)
+                Text(nip05)
                     .foregroundStyle(Color.primaryTxt)
                     .padding()
             }
@@ -57,6 +58,7 @@ struct NIP05View: View {
         }
     }
 
+    /// A view that displays the given parts of the NIP-05 in different colors.
     func nip05Text(parts: (username: String, domain: String)) -> some View {
         if parts.username == "_" {
             Text(parts.domain)
@@ -67,5 +69,14 @@ struct NIP05View: View {
             Text("@" + parts.domain)
                 .foregroundStyle(Color.secondaryTxt)
         }
+    }
+
+    /// A view that displays the given `nip05` as text with strikethrough.
+    /// Useful for when a user's NIP-05 is invalid, such as when they enter a raw domain like "example.com"
+    /// for their NIP-05 identifier.
+    func invalidNip05Text(nip05: String) -> some View {
+        Text(nip05)
+            .foregroundStyle(Color.primaryTxt)
+            .strikethrough()
     }
 }
