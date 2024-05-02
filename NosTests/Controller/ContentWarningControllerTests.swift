@@ -8,8 +8,6 @@ final class ContentWarningControllerTests: CoreDataTestCase {
     
     override func setUp() async throws {
         try await super.setUp()
-        let testLocale = Locale(identifier: "en")
-        Bundle.setLanguage(testLocale)
         fixture = PreviewData()
         fixture.previewContext = testContext
     }
