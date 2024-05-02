@@ -96,42 +96,55 @@ extension Router {
 
         Task { @MainActor in
             do {
-                // handle mentions. mention link will be prefixed with "@" followed by
-                // the hex format pubkey of the mentioned author
-            if link.hasPrefix("@") {
-                if identifier.isValidHexadecimal {
-                    push(try Author.findOrCreate(by: identifier, context: persistenceController.viewContext))
-                } else {
-                    isLoading = true
-                    let npub = await relayService
-                        .retrievePublicKeyFromUsername(identifier)?
-                        .trimmingCharacters(
-                            in: NSCharacterSet.whitespacesAndNewlines
-                        )
-                    isLoading = false
-                    if let npub, let publicKey = PublicKey.build(npub) {
-                        push(
-                            try Author.findOrCreate(
-                                by: publicKey.hex,
-                                context: persistenceController.viewContext
-                            )
-                        )
-                    } else if let url = URL(string: "mailto:\(identifier)") {
-                        await UIApplication.shared.open(url)
+                // handle mentions. mention link will be prefixed with "@"
+                // followed by the hex format pubkey of the mentioned author
+                if link.hasPrefix("@") {
+                    if identifier.isValidHexadecimal {
+                        try handleHexadecimalPublicKey(identifier)
                     } else {
-                        Log.debug("Couldn't open \(identifier)")
+                        try await handleNIP05Link(identifier)
                     }
+                } else if link.hasPrefix("%") {
+                    push(try Event.findOrCreateStubBy(id: identifier, context: persistenceController.viewContext))
+                } else if url.scheme == "http" || url.scheme == "https" {
+                    push(url)
+                } else {
+                    await UIApplication.shared.open(url)
                 }
-            } else if link.hasPrefix("%") {
-                push(try Event.findOrCreateStubBy(id: identifier, context: persistenceController.viewContext))
-            } else if url.scheme == "http" || url.scheme == "https" {
-                push(url)
-            } else {
-                await UIApplication.shared.open(url)
+            } catch {
+                Log.optional(error)
             }
-        } catch {
-            Log.optional(error)
-            }
+        }
+    }
+
+    public func handleHexadecimalPublicKey(_ hex: String) throws {
+        push(
+            try Author.findOrCreate(
+                by: hex,
+                context: persistenceController.viewContext
+            )
+        )
+    }
+
+    private func handleNIP05Link(_ link: String) async throws {
+        isLoading = true
+        let npub = await relayService
+            .retrievePublicKeyFromUsername(link)?
+            .trimmingCharacters(
+                in: NSCharacterSet.whitespacesAndNewlines
+            )
+        isLoading = false
+        if let npub, let publicKey = PublicKey.build(npub) {
+            push(
+                try Author.findOrCreate(
+                    by: publicKey.hex,
+                    context: persistenceController.viewContext
+                )
+            )
+        } else if let url = URL(string: "mailto:\(link)") {
+            await UIApplication.shared.open(url)
+        } else {
+            Log.debug("Couldn't open \(link)")
         }
     }
 }
