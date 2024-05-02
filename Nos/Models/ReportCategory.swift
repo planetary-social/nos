@@ -176,7 +176,7 @@ enum ReportSubCategoryType {
         nip56Code: .nudity
     )
     
-    // swiftlint:disable:next variable_name
+    // swiftlint:disable:next identifier_name
     static let sex = ReportCategory(
         name: .moderation.sex,
         code: "NS-sex",

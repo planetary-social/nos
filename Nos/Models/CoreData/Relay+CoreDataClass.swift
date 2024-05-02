@@ -12,7 +12,6 @@ public class Relay: NosManagedObject {
 
     static var recommended: [String] {
         [
-        "wss://relay.nostr.band",
         "wss://relay.damus.io",
         "wss://e.nos.lol",
         "wss://purplepag.es",
@@ -45,6 +44,12 @@ public class Relay: NosManagedObject {
         "wss://relay.causes.com",
         ]
     }
+
+    /// Relays that should be used for NIP-50 search and will be excluded from other requests.
+    /// In the future we should use the kind 10007 search relays list instead of this hardcoded list.
+    static var searchOnly: [URL] = { 
+        ["wss://relay.nostr.band"].compactMap { URL(string: $0) } 
+    }()
     
     // swiftlint:disable:next force_unwrapping
     static var nosAddress = URL(string: "wss://relay.nos.social")!
