@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		030AE4292BE3D63C004DEE02 /* FeaturedAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */; };
 		0378409D2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */; };
-		03A053342BD8649600A9B4D7 /* FeaturedAuthorCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A053332BD8649600A9B4D7 /* FeaturedAuthorCategory.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
 		3A1C296F2B2A537C0020B753 /* Moderation.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */; };
@@ -446,8 +446,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedAuthor.swift; sourceTree = "<group>"; };
 		0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		03A053332BD8649600A9B4D7 /* FeaturedAuthorCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedAuthorCategory.swift; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
 		3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Moderation.xcstrings; sourceTree = "<group>"; };
@@ -908,6 +908,7 @@
 			isa = PBXGroup;
 			children = (
 				65BD8DBE2BDAF2C300802039 /* DiscoverTab.swift */,
+				030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */,
 				65BD8DBF2BDAF2C300802039 /* FeaturedAuthorCategory.swift */,
 				65BD8DC02BDAF2C300802039 /* FeaturedAuthorsView.swift */,
 			);
@@ -1142,7 +1143,6 @@
 				C9C9443A29F6E420002F2C7A /* Test Helpers */,
 				C9DEC0042989477A0078B43A /* Fixtures */,
 				C9DEBFE8298941020078B43A /* EventTests.swift */,
-				C96D391A2B61AFD500D3D0A1 /* RawNostrIDTests.swift */,
 				C9C45E152B23741E00F523DA /* EventObservationTests.swift */,
 				C9ADB132299287D60075E7F8 /* KeyPairTests.swift */,
 				5B6EB48F29EDBEC1006E750C /* NoteParserTests.swift */,
@@ -1150,8 +1150,6 @@
 				5B098DC82BDAF7CF00500A1B /* NoteParserTests+NIP27.swift */,
 				5BFBB2942BD9D7EB002E909F /* URLParserTests.swift */,
 				C96D391A2B61AFD500D3D0A1 /* RawNostrIDTests.swift */,
-				C94D59AD2AE7286E00295AE8 /* ReportTests.swift */,
-				5B88051B2A21046C00E21F06 /* SHA256KeyTests.swift */,
 				5B80BE9D29F9864000A363E4 /* Bech32Tests.swift */,
 				C9B678E329EED2DC00303F33 /* SocialGraphTests.swift */,
 				5B88051B2A21046C00E21F06 /* SHA256KeyTests.swift */,
@@ -1297,8 +1295,6 @@
 		C9F84C24298DC7C100C6714D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				65BD8DC12BDAF2C300802039 /* Discover */,
-				65BD8DB82BDAF28200802039 /* CircularFollowButton.swift */,
 				C9A0DADF29C697A100466635 /* AboutView.swift */,
 				C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */,
 				C987F81929BA4D0E00B44E7A /* ActionButton.swift */,
@@ -1314,9 +1310,9 @@
 				C95D68A0299E6D3E00429F86 /* BioView.swift */,
 				CD2CF38D299E67F900332116 /* CardButtonStyle.swift */,
 				C9DFA968299BEC33006929C1 /* CardStyle.swift */,
+				65BD8DB82BDAF28200802039 /* CircularFollowButton.swift */,
 				C9DFA96A299BEE2C006929C1 /* CompactNoteView.swift */,
 				5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */,
-				5B8C96B529DDD3B200B73AEC /* NoteTextViewRepresentable.swift */,
 				A303AF8229A9153A005DC8FC /* FollowButton.swift */,
 				A32B6C7729A6C99200653FF5 /* FollowCard.swift */,
 				A32B6C7229A6BE9B00653FF5 /* FollowsView.swift */,
@@ -1335,6 +1331,7 @@
 				C974652D2A3B86600031226F /* NoteCardHeader.swift */,
 				CD76864F29B6503500085358 /* NoteOptionsButton.swift */,
 				C9B708BA2A13BE41006C613A /* NoteTextEditor.swift */,
+				5B8C96B529DDD3B200B73AEC /* NoteTextViewRepresentable.swift */,
 				C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */,
 				C94437E529B0DB83004D8C86 /* NotificationsView.swift */,
 				C986510F2B0BD49200597B68 /* PagedNoteListView.swift */,
@@ -1369,6 +1366,7 @@
 				C913DA0D2AEB3265003BDD6D /* WarningView.swift */,
 				C9CE5B132A0172CF008E198C /* WebView.swift */,
 				5B79F6402BA11618002DA9BE /* Components */,
+				65BD8DC12BDAF2C300802039 /* Discover */,
 				C92F01502AC4D67B00972489 /* Form */,
 				C96877B32B4EDCCF0051ED2F /* Home */,
 				C9CFF6D02AB241EB00D4B368 /* Modifiers */,
@@ -1812,6 +1810,7 @@
 				C93F045E2B9B7A7000AD5872 /* ReplyPreview.swift in Sources */,
 				C97465312A3B89140031226F /* AuthorLabel.swift in Sources */,
 				C9C547592A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift in Sources */,
+				030AE4292BE3D63C004DEE02 /* FeaturedAuthor.swift in Sources */,
 				C9B678E729F01A8500303F33 /* FullscreenProgressView.swift in Sources */,
 				C9F0BB6929A5039D000547FC /* Int+Bool.swift in Sources */,
 				DC5F203F2A6AE24200F8D73F /* ImagePickerButton.swift in Sources */,

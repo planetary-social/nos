@@ -4048,6 +4048,17 @@
         }
       }
     },
+    "featuredAuthorCategoryActivists" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activists"
+          }
+        }
+      }
+    },
     "featuredAuthorCategoryAll" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4081,6 +4092,17 @@
         }
       }
     },
+    "featuredAuthorCategoryGaming" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gaming"
+          }
+        }
+      }
+    },
     "featuredAuthorCategoryJournalists" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4110,6 +4132,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "New"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategoryNews" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "News"
           }
         }
       }
