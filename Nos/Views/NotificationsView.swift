@@ -100,6 +100,9 @@ struct NotificationsView: View {
             .navigationDestination(for: Author.self) { author in
                 ProfileView(author: author)
             }
+            .navigationDestination(for: EditProfileDestination.self) { destination in
+                ProfileEditView(author: destination.profile)
+            }
             .refreshable {
                 await subscribeToNewEvents()
             }

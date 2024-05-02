@@ -27,7 +27,7 @@ final class ContentWarningControllerTests: CoreDataTestCase {
         // Assert
         XCTAssertEqual(
             String(localized: sut.localizedContentWarning), 
-            "This note has been reported by **Alice** for spam."
+            "This note has been flagged by **Alice** for spam."
         )
     }
     
@@ -38,7 +38,7 @@ final class ContentWarningControllerTests: CoreDataTestCase {
         // Assert
         XCTAssertEqual(
             String(localized: sut.localizedContentWarning), 
-            "This note has been reported by **Bob** for impersonation."
+            "This note has been flagged by **Bob** for impersonation."
         )
     }
     
@@ -49,7 +49,7 @@ final class ContentWarningControllerTests: CoreDataTestCase {
         // Assert
         XCTAssertEqual(
             String(localized: sut.localizedContentWarning), 
-            "This note has been reported by **Alice** for spam."
+            "This note has been flagged by **Alice** for spam."
         )
     }
     
@@ -60,7 +60,7 @@ final class ContentWarningControllerTests: CoreDataTestCase {
         // Assert
         XCTAssertEqual(
             String(localized: sut.localizedContentWarning), 
-            "This note has been reported by **Bob** for impersonation."
+            "This note has been flagged by **Bob** for impersonation."
         )
     }
     
@@ -74,7 +74,7 @@ final class ContentWarningControllerTests: CoreDataTestCase {
         // Assert
         XCTAssertEqual(
             String(localized: sut.localizedContentWarning), 
-            "This note has been reported by **Bob** for harassment, impersonation."
+            "This note has been flagged by **Bob** for harassment, impersonation."
         )
     }
     
@@ -88,7 +88,7 @@ final class ContentWarningControllerTests: CoreDataTestCase {
         // Assert
         XCTAssertEqual(
             String(localized: sut.localizedContentWarning), 
-            "This note has been reported by **Bob** and **1 other** for harassment, impersonation."
+            "This note has been flagged by **Bob** and **1 other** for harassment, impersonation."
         )
     }
     
@@ -99,7 +99,7 @@ final class ContentWarningControllerTests: CoreDataTestCase {
         // Assert
         XCTAssertEqual(
             String(localized: sut.localizedContentWarning), 
-            "This user has been reported by **Bob** for impersonation."
+            "This user has been flagged by **Bob** for impersonation."
         ) 
     }
     
@@ -113,7 +113,7 @@ final class ContentWarningControllerTests: CoreDataTestCase {
         // Assert
         XCTAssertEqual(
             String(localized: sut.localizedContentWarning), 
-            "This user has been reported by **Bob** and **1 other** for impersonation, other."
+            "This user has been flagged by **Bob** and **1 other** for impersonation, other."
         )
     }
 }

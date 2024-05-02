@@ -3,9 +3,18 @@ import SwiftUI
 import Dependencies
 
 struct FeaturedAuthorsView: View {
+    @ObservedObject var searchController: SearchController
+
     @EnvironmentObject private var router: Router
-    
-    @FetchRequest(fetchRequest: Author.matching(npubs: FeaturedAuthorCategory.all.npubs)) var authors
+
+    @Environment(\.managedObjectContext) private var viewContext
+
+    @Dependency(\.relayService) private var relayService
+
+    @FetchRequest(fetchRequest: Author.matching(npubs: FeaturedAuthorCategory.all.npubs)) private var authors
+
+    @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
+    @State private var selectedCategory: FeaturedAuthorCategory = .all
 
     private var filteredAuthors: [Author] {
         authors.filter { author in
@@ -13,15 +22,6 @@ struct FeaturedAuthorsView: View {
             return selectedCategory.npubs.contains(npubString)
         }
     }
-
-    @ObservedObject var searchController: SearchController
-    @Dependency(\.relayService) private var relayService
-
-    @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
-    
-    @State private var selectedCategory: FeaturedAuthorCategory = .all
-
-    @Namespace private var animation
 
     /// Initializes a FeaturedAuthorsView with the selected category and a search controller.
     /// - Parameters:
@@ -98,6 +98,9 @@ struct FeaturedAuthorsView: View {
                 .preference(key: SizePreferenceKey.self, value: geometry.size)
             }
         }
+        .task {
+            findOrCreateAuthors()
+        }
     }
 
     var categoryPicker: some View {
@@ -130,5 +133,23 @@ struct FeaturedAuthorsView: View {
             .padding(.leading, 10)
         }
         .background(Color.profileBgTop)
+    }
+
+    private func findOrCreateAuthors() {
+        for featuredAuthorNpub in FeaturedAuthorCategory.all.npubs {
+            do {
+                guard let publicKey = PublicKey(npub: featuredAuthorNpub) else {
+                    assertionFailure(
+                        "Could create public key for npub: \(featuredAuthorNpub)\n" +
+                        "Fix this invalid npub in FeaturedAuthorCategory."
+                    )
+                    continue
+                }
+                try Author.findOrCreate(by: publicKey.hex, context: viewContext)
+            } catch {
+                Log.error("Could not find or create author for npub: \(featuredAuthorNpub)")
+            }
+        }
+        try? viewContext.saveIfNeeded()
     }
 }
