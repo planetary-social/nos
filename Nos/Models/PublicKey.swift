@@ -22,7 +22,7 @@ struct PublicKey {
      
     private let underlyingKey: secp256k1.Signing.XonlyKey
 
-    static func build(_ npubOrHex: String) -> PublicKey? {
+    static func build(npubOrHex: String) -> PublicKey? {
         PublicKey(npub: npubOrHex) ?? PublicKey(hex: npubOrHex)
     }
 

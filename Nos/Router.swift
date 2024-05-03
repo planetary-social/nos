@@ -134,7 +134,7 @@ extension Router {
                 in: NSCharacterSet.whitespacesAndNewlines
             )
         isLoading = false
-        if let npub, let publicKey = PublicKey.build(npub) {
+        if let npub, let publicKey = PublicKey.build(npubOrHex: npub) {
             push(
                 try Author.findOrCreate(
                     by: publicKey.hex,
