@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add special treatment for nostr.band when searching on the Discover tab. We are temporarily using nostr.band always and only for search, in addition to the user's normal relay list.
 - Detect identifiers of the form @npub1... in notes and link them to the associated profiles.
 - Detect NIP-05 identifiers inserted in notes and link them to njump.
+- Fixed duplicate text in content warnings
 - Added "Send To Nos" private reporting to protect user privacy
 - Discover tab now features authors in a variety of categories.
 - Fixed an issue on Mac where the Edit Profile screen did not appear in some cases.
