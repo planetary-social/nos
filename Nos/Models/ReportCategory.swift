@@ -60,7 +60,7 @@ enum ReportCategoryType {
 
     static let harassment = ReportCategory(
         name: .moderation.harassment,
-        code: "HR",
+        code: "IL-har",
         nip56Code: .other
     )
 
