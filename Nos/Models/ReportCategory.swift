@@ -37,7 +37,7 @@ struct ReportCategory: Identifiable, Equatable {
             return nil
         }
         
-        return searchForCategoryByCode?(code, allCategories)
+        return searchForCategoryByCode?(code, ReportCategoryType.allCategories)
     }
 }
 
@@ -57,7 +57,13 @@ enum ReportCategoryType {
         code: "HC",
         nip56Code: .other
     )
-    
+
+    static let harassment = ReportCategory(
+        name: .moderation.harassment,
+        code: "HR",
+        nip56Code: .other
+    )
+
     static let intoleranceAndHate = ReportCategory(
         name: .moderation.intoleranceAndHate,
         code: "IH",
@@ -79,6 +85,13 @@ enum ReportCategoryType {
             ReportSubCategoryType.malware,
         ]
     )
+
+    static let nsfw = ReportCategory(
+        name: .moderation.nsfw,
+        code: "NW",
+        nip56Code: .other
+    )
+
     static let nudity = ReportCategory(
         name: .moderation.nudityAndSex,
         code: "NS",
@@ -103,7 +116,9 @@ enum ReportCategoryType {
             ReportSubCategoryType.genderFluidNonBinaryPorn,
         ]
     )
+    
     static let spam = ReportCategory(name: .moderation.spam, code: "SP", nip56Code: .spam)
+
     static let violence = ReportCategory(
         name: .moderation.violence,
         code: "VI",
@@ -113,7 +128,40 @@ enum ReportCategoryType {
             ReportSubCategoryType.violenceTowardsASentientAnimal,
         ]
     )
+
     static let other = ReportCategory(name: .moderation.other, code: "NA", nip56Code: .other)
+}
+
+extension ReportCategoryType {
+    static let allCategories = [
+        ReportCategoryType.coarseLanguage,
+        ReportCategoryType.likelyToCauseHarm,
+        ReportCategoryType.harassment,
+        ReportCategoryType.intoleranceAndHate,
+        ReportCategoryType.illegal,
+        ReportCategoryType.nsfw,
+        ReportCategoryType.nudity,
+        ReportCategoryType.pornography,
+        ReportCategoryType.spam,
+        ReportCategoryType.violence,
+        ReportCategoryType.other,
+    ]
+
+    static let authorCategories = [
+        ReportCategoryType.spam,
+        ReportCategoryType.harassment,
+        ReportCategoryType.nsfw,
+        ReportCategoryType.illegal,
+        ReportCategoryType.other,
+    ]
+
+    static let noteCategories = [
+        ReportCategoryType.spam,
+        ReportCategoryType.nudity,
+        ReportCategoryType.coarseLanguage,
+        ReportCategoryType.illegal,
+        ReportCategoryType.other,
+    ]
 }
 
 enum ReportSubCategoryType {
@@ -231,25 +279,3 @@ enum ReportSubCategoryType {
         nip56Code: .other
     )
 }
-
-let allCategories = [
-    ReportCategoryType.coarseLanguage,
-    ReportCategoryType.likelyToCauseHarm,
-    ReportCategoryType.intoleranceAndHate,
-    ReportCategoryType.illegal,
-    ReportCategoryType.nudity,
-    ReportCategoryType.pornography,
-    ReportCategoryType.spam,
-    ReportCategoryType.violence,
-    ReportCategoryType.other,
-]
-
-let authorCategories = allCategories
-
-let noteCategories = [
-    ReportCategoryType.spam,
-    ReportCategoryType.nudity,
-    ReportCategoryType.coarseLanguage,
-    ReportCategoryType.illegal,
-    ReportCategoryType.other,
-]
