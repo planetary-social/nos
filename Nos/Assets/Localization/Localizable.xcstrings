@@ -10033,47 +10033,6 @@
         }
       }
     },
-    "reportedBy" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "gemeldet von"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "reported by"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "گزارش شده توسط"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "rapporterad av"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "举报人"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "舉報人"
-          }
-        }
-      }
-    },
     "reportEventContent" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -12406,7 +12365,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unknown Author"
+            "value" : "unknown"
           }
         }
       }
@@ -13057,7 +13016,7 @@
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "translated",
+                  "state" : "needs_review",
                   "value" : "Dieser Benutzer wurde von **%1$@** und **%2$lld anderen** für %3$@ gemeldet."
                 }
               }
@@ -13070,13 +13029,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "This user has been reported by **%1$@** and **%2$lld other** for %3$@."
+                  "value" : "This user has been flagged by **%1$@** and **%2$lld other** for %3$@."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "This user has been reported by **%1$@** and **%2$lld others** for %3$@."
+                  "value" : "This user has been flagged by **%1$@** and **%2$lld others** for %3$@."
                 }
               }
             }
@@ -13087,7 +13046,7 @@
             "plural" : {
               "other" : {
                 "stringUnit" : {
-                  "state" : "translated",
+                  "state" : "needs_review",
                   "value" : "此用户因 %3$@ 被 **%1$@** 和 **%2$lld 个其他用户** 举报。"
                 }
               }
@@ -13099,7 +13058,7 @@
             "plural" : {
               "other" : {
                 "stringUnit" : {
-                  "state" : "translated",
+                  "state" : "needs_review",
                   "value" : "此用戶因 %3$@ 被 **%1$@** 和 **%2$lld 個其他用戶** 舉報。"
                 }
               }
