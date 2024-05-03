@@ -54,7 +54,7 @@ struct URLParser {
         // https://en.wikipedia.org/wiki/Domain_Name_System#Domain_name_syntax,_internationalization
 
         // swiftlint:disable:next line_length
-        let regexPattern = "(\\s*)(?<url>((https?://){1}|(?<![\\w@]))([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&/=]*)"
+        let regexPattern = "(\\s*)(?<url>((https?://){1}|(?<![\\w@.]))([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&/=]*)"
 
         var urls: [URL] = []
         do {
@@ -87,34 +87,33 @@ struct URLParser {
     private func replaceRawNIP05IdentifiersWithMarkdownLinks(
         in mutableString: NSMutableString
     ) -> [URL] {
-        // The following pattern uses rules from the NIP-05 specification:
-        // https://github.com/nostr-protocol/nips/blob/master/05.md
-
-        let regexPattern = "(\\s*)@?(?<nip05>[0-9a-z._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64})"
-
-        // [0-9a-z._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}
         var urls: [URL] = []
         do {
             let string = String(mutableString)
-            let regex = try NSRegularExpression(pattern: regexPattern)
+
+            // The following pattern uses rules from the NIP-05 specification:
+            // https://github.com/nostr-protocol/nips/blob/master/05.md
+            let regexPattern = "(\\s*)@?(?<nip05>[0-9A-Za-z._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64})"
+            let regex = try NSRegularExpression(
+                pattern: regexPattern
+            )
             let range = NSRange(location: 0, length: mutableString.length)
             let matches = regex.matches(in: string, range: range).reversed()
 
             for match in matches {
                 let nip05Range = Range(match.range(withName: "nip05"), in: string)
                 if let nip05Range {
-                    let nip05 = String(string[nip05Range])
-                    let webLink = "https://njump.me/\(nip05)"
-                    if let url = URL(string: webLink) {
-                        // maintain original order of links by inserting at index 0
-                        // (we're looping in reverse)
+                    let nip05 = String(string[nip05Range]).lowercased()
+                    let url = replaceNIP05IfNeeded(
+                        nip05,
+                        in: mutableString,
+                        range: match.range,
+                        regex: regex
+                    )
+                    if let url {
+                        // maintain original order of links by inserting at
+                        // index 0 (we're looping in reverse)
                         urls.insert(url, at: 0)
-                        let prettyURL = "[\(nip05)](\(url.absoluteString))"
-                        regex.replaceMatches(
-                            in: mutableString,
-                            range: match.range,
-                            withTemplate: "$1\(prettyURL)"
-                        )
                     }
                 }
             }
@@ -122,6 +121,27 @@ struct URLParser {
             Log.error("Invalid regex pattern")
         }
         return urls
+    }
+
+    /// Replaces a text found inside a NSMutableString, at a specific range and
+    /// found using a specific regex with the provided NIP-05 if it is valid.
+    private func replaceNIP05IfNeeded(
+        _ nip05: String,
+        in mutableString: NSMutableString,
+        range: NSRange,
+        regex: NSRegularExpression
+    ) -> URL? {
+        let webLink = "@\(nip05)"
+        guard let url = URL(string: webLink) else {
+            return nil
+        }
+        let prettyURL = "[\(nip05)](\(url.absoluteString))"
+        regex.replaceMatches(
+            in: mutableString,
+            range: range,
+            withTemplate: "$1\(prettyURL)"
+        )
+        return url
     }
 
     private func replaceOccurrences(

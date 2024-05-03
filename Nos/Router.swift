@@ -13,7 +13,9 @@ import Dependencies
     @Published var profilePath = NavigationPath()
     @Published var sideMenuPath = NavigationPath()
     @Published var selectedTab = AppDestination.home
+    @Published var isLoading = false
     @Dependency(\.persistenceController) private var persistenceController
+    @Dependency(\.relayService) private var relayService
 
     var currentPath: Binding<NavigationPath> {
         if sideMenuOpened {
@@ -94,20 +96,55 @@ extension Router {
 
         Task { @MainActor in
             do {
-                // handle mentions. mention link will be prefixed with "@" followed by
-                // the hex format pubkey of the mentioned author
-            if link.hasPrefix("@") {
-                push(try Author.findOrCreate(by: identifier, context: persistenceController.viewContext))
-            } else if link.hasPrefix("%") {
-                push(try Event.findOrCreateStubBy(id: identifier, context: persistenceController.viewContext))
-            } else if url.scheme == "http" || url.scheme == "https" {
-                push(url)
-            } else {
-                UIApplication.shared.open(url)
+                // handle mentions. mention link will be prefixed with "@"
+                // followed by the hex format pubkey of the mentioned author
+                if link.hasPrefix("@") {
+                    if identifier.isValidHexadecimal {
+                        try handleHexadecimalPublicKey(identifier)
+                    } else {
+                        try await handleNIP05Link(identifier)
+                    }
+                } else if link.hasPrefix("%") {
+                    push(try Event.findOrCreateStubBy(id: identifier, context: persistenceController.viewContext))
+                } else if url.scheme == "http" || url.scheme == "https" {
+                    push(url)
+                } else {
+                    await UIApplication.shared.open(url)
+                }
+            } catch {
+                Log.optional(error)
             }
-        } catch {
-            Log.optional(error)
-            }
+        }
+    }
+
+    public func handleHexadecimalPublicKey(_ hex: String) throws {
+        push(
+            try Author.findOrCreate(
+                by: hex,
+                context: persistenceController.viewContext
+            )
+        )
+    }
+
+    private func handleNIP05Link(_ link: String) async throws {
+        isLoading = true
+        let npub = await relayService
+            .retrievePublicKeyFromUsername(link)?
+            .trimmingCharacters(
+                in: NSCharacterSet.whitespacesAndNewlines
+            )
+        isLoading = false
+        if let npub, let publicKey = PublicKey.build(npubOrHex: npub) {
+            push(
+                try Author.findOrCreate(
+                    by: publicKey.hex,
+                    context: persistenceController.viewContext
+                )
+            )
+        } else if let url = URL(string: "mailto:\(link)") {
+            await UIApplication.shared.open(url)
+        } else {
+            Log.debug("Couldn't open \(link)")
         }
     }
 }

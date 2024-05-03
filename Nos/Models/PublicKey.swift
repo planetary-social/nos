@@ -21,7 +21,11 @@ struct PublicKey {
     let bytes: [UInt8]
      
     private let underlyingKey: secp256k1.Signing.XonlyKey
-    
+
+    static func build(npubOrHex: String) -> PublicKey? {
+        PublicKey(npub: npubOrHex) ?? PublicKey(hex: npubOrHex)
+    }
+
     init?(hex: String) {
         do {
             let underlyingKey = try secp256k1.Signing.XonlyKey(dataRepresentation: hex.bytes, keyParity: 0)
