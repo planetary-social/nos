@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Open Profiles when tapping on a NIP-05 username reference in a note.
+- Add special treatment for nostr.band when searching on the Discover tab. We are temporarily using nostr.band always and only for search, in addition to the user's normal relay list.
 - Detect identifiers of the form @npub1... in notes and link them to the associated profiles.
 - Detect NIP-05 identifiers inserted in notes and link them to njump.
 - Added "Send To Nos" private reporting to protect user privacy

@@ -22,7 +22,7 @@ class PagedRelaySubscription {
         filter: Filter, 
         relayService: RelayService,
         subscriptionManager: RelaySubscriptionManager, 
-        relayAddresses: [URL]
+        relayAddresses: Set<URL>
     ) {
         self.startDate = startDate
         self.filter = filter

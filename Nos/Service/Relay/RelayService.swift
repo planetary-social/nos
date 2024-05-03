@@ -154,15 +154,15 @@ extension RelayService {
         matching filter: Filter,
         from specificRelays: [URL]? = nil
     ) async -> SubscriptionCancellable {
-        var relayAddresses: [URL]
+        var relayAddresses: Set<URL>
         if let specificRelays {
-            relayAddresses = specificRelays
+            relayAddresses = Set(specificRelays)
         } else {
             relayAddresses = await self.relayAddresses(for: currentUser)
         }
         if relayAddresses.isEmpty {
             // Fall back to a large list of relays if we don't have any for this user (like on first login)
-            relayAddresses = Relay.allKnown.compactMap { URL(string: $0) }
+            relayAddresses = Set(Relay.allKnown.compactMap { URL(string: $0) })
         }
         var subscriptionIDs = [RelaySubscription.ID]()
         for relay in relayAddresses {
@@ -657,15 +657,22 @@ extension RelayService {
             }
         }
     }
-    
-    func relayAddresses(for user: CurrentUser) async -> [URL] {
-        await backgroundContext.perform { () -> [URL] in
+
+    func relayAddresses(for user: CurrentUser) async -> Set<URL> {
+        await backgroundContext.perform { () -> Set<URL> in
             if let currentUserPubKey = user.publicKeyHex,
                 let currentUser = try? Author.find(by: currentUserPubKey, context: self.backgroundContext) {
-                let userRelays = currentUser.relays
-                return userRelays.compactMap { $0.addressURL }
+                let userRelays = Set(currentUser.relays.compactMap { $0.addressURL })
+                
+                // Remove search only relays
+                let filteredRelays = userRelays.filter { relayAddress in
+                    guard let host = relayAddress.host(percentEncoded: true) else { return true }
+                    return !host.hasSuffix(".nostr.band")
+                }
+                
+                return filteredRelays
             } else {
-                return []
+                return Set()
             }
         }
     }
