@@ -128,5 +128,15 @@ extension FeaturedAuthor {
             npub: "npub18jvyjwpmm65g8v9azmlvu8knd5m7xlxau08y8vt75n53jtkpz2ys6mqqu3",
             categories: [.art]
         ),
+        FeaturedAuthor(
+            name: "Black in Aquatics",
+            npub: "npub1ee852umhw26afdfwgf90cky9ufaythwyarttqu59lazcrx56z0tsmx3mkz",
+            categories: [.sports]
+        ),
+        FeaturedAuthor(
+            name: "Jacob Gardenswartz",
+            npub: "npub1cjvqtcla069ctrkapc9yhzp3xhph29khhz0x7ype7dgfwljcwc8savma9c",
+            categories: [.news]
+        ),
     ]
 }
