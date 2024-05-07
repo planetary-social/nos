@@ -493,6 +493,17 @@
         }
       }
     },
+    "harassment" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harassment"
+          }
+        }
+      }
+    },
     "harassmentStalkingOrDoxxing" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -817,6 +828,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "惡意軟體"
+          }
+        }
+      }
+    },
+    "nsfw" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NSFW"
           }
         }
       }
