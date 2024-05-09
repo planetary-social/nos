@@ -4339,6 +4339,17 @@
         }
       }
     },
+    "flagUserMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a flag for this user that other users in the network can see."
+          }
+        }
+      }
+    },
     "follow" : {
       "extractionState" : "manual",
       "localizations" : {

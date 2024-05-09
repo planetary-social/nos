@@ -64,9 +64,15 @@ struct ReportMenuModifier: ViewModifier {
             )
             .onChange(of: isPresented) { _, shouldPresent in
                 if shouldPresent {
+                    let message: LocalizedStringResource
+                    if case .noteCategorySelected = userSelection {
+                        message = .localizable.reportContentMessage
+                    } else {
+                        message = .localizable.flagUserMessage
+                    }
                     confirmationDialogState = ConfirmationDialogState(
                         title: TextState(String(localized: .localizable.reportContent)),
-                        message: TextState(String(localized: .localizable.reportContentMessage)),
+                        message: TextState(String(localized: message)),
                         buttons: topLevelButtons()
                     )
                 }
@@ -125,7 +131,6 @@ struct ReportMenuModifier: ViewModifier {
         }
     }
     
-    typealias TopLevelDisplayName = String
     /// An enum to simplify the user selection through the sequence of connected
     /// dialogs
     enum UserSelection: Equatable {
@@ -157,11 +162,10 @@ struct ReportMenuModifier: ViewModifier {
     }
     
     /// List of the top-level report categories we care about.
-    /// Our vocabulary is much bigger
     func topLevelButtons() -> [ButtonState<UserSelection>] {
         switch reportedObject {
         case .note:
-            noteCategories.map { category in
+            ReportCategoryType.noteCategories.map { category in
                 let userSelection = UserSelection.noteCategorySelected(category)
                 
                 return ButtonState(action: .send(userSelection)) {
@@ -169,7 +173,7 @@ struct ReportMenuModifier: ViewModifier {
                 }
             }
         case .author:
-            authorCategories.map { category in
+            ReportCategoryType.authorCategories.map { category in
                 let userSelection = UserSelection.authorCategorySelected(category)
                 
                 return ButtonState(action: .send(userSelection)) {

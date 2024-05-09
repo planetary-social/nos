@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- On the Discover tab, center the category buttons.
+
+## [0.1.12] - 2024-05-07Z
+
 - Open Profiles when tapping on a NIP-05 username reference in a note.
 - Add special treatment for nostr.band when searching on the Discover tab. We are temporarily using nostr.band always and only for search, in addition to the user's normal relay list.
 - Detect identifiers of the form @npub1... in notes and link them to the associated profiles.
@@ -21,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an issue where pasting an npub while composing a note created an invalid mention.
 - Changed "Report note" button to "Flag this content"
 - Changed "Report user" button to "Flag this user"
+- Updated options for "Flag this user"
 - We are now publishing the relay list when registering a new NIP-05 username so
 that other users can find you more easily.
 
