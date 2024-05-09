@@ -23,4 +23,3 @@ struct MastodonBadgeView: View {
 #Preview {
     MastodonBadgeView()
 }
-
