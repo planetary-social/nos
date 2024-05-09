@@ -1,9 +1,9 @@
 import SwiftUI
 
-/// A view that displays one or more lines of read-only text presented as a badge.
+/// A view that displays a badge with a mastodon icon.
 ///
 ///
-/// This Text was implemented to be re-used in the wizards that set-up and delete usernames in EditProfile screen.
+/// This Text was implemented to be re-used in the Profile screen.
 struct MastodonBadgeView: View {
 
     var body: some View {
