@@ -7,6 +7,7 @@ struct ProfileHeader: View {
     @Environment(CurrentUser.self) private var currentUser
 
     @Binding private var selectedTab: ProfileFeedType
+    @State private var showingBio = false
 
     var followsRequest: FetchRequest<Follow>
     var followsResult: FetchedResults<Follow> { followsRequest.wrappedValue }
@@ -61,15 +62,24 @@ struct ProfileHeader: View {
                     VStack(alignment: .leading, spacing: 3) {
                         Spacer()
 
-                        Text(author.safeName)
-                            .lineLimit(1)
-                            .font(.clarity(.bold, textStyle: .title3).weight(.semibold))
-                            .foregroundColor(Color.primaryTxt)
-                        
+                        Button {
+                            showingBio = true
+                        } label: {
+                            Text(author.safeName)
+                                .lineLimit(1)
+                                .font(.clarity(.bold, textStyle: .title3).weight(.semibold))
+                                .foregroundColor(Color.primaryTxt)
+                        }
+
                         // NIP-05
-                        NIP05View(author: author)
-                            .padding(.top, 3)
-                        
+                        Button {
+                            showingBio = true
+                        } label: {
+                            NIP05View(author: author)
+                                .lineLimit(1)
+                        }
+                        .padding(.top, 3)
+
                         // Universal name
                         UNSNameView(author: author)
                             
@@ -95,8 +105,12 @@ struct ProfileHeader: View {
                 .frame(maxWidth: .infinity, alignment: .topLeading)
 
                 if shouldShowBio {
-                    BioView(bio: author.about)
-                        .padding(.top, 18)
+                    Button {
+                        showingBio = true
+                    } label: {
+                        BioView(author: author)
+                    }
+                    .padding(.top, 18)
                 }
 
                 if let first = knownFollowers[safe: 0]?.source {
@@ -134,6 +148,23 @@ struct ProfileHeader: View {
                 endPoint: .bottom
             )
         )
+        .sheet(isPresented: $showingBio) {
+            NavigationView {
+                BioSheet(author: author)
+                    .background(Color.bioBgGradientBottom)
+                    .nosNavigationBar(title: .localizable.profile)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button {
+                                showingBio = false
+                            } label: {
+                                Image.navIconDismiss
+                            }
+                        }
+                    }
+            }
+            .presentationDetents([.medium, .large])
+        }
     }
 
     private var profileHeaderTab: some View {

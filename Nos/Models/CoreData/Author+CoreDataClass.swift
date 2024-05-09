@@ -53,6 +53,10 @@ import Logger
         nip05?.hasSuffix("@nos.social") == true
     }
 
+    var hasMastodonNIP05: Bool {
+        nip05?.hasSuffix("@mostr.pub") == true
+    }
+
     var hasUNS: Bool {
         if let uns, !uns.isEmpty {
             return true

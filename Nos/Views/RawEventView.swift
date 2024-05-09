@@ -49,13 +49,18 @@ struct RawEventView<ViewModel>: View where ViewModel: RawEventViewModel {
     }
     
     var body: some View {
-        ZStack {
+        ScrollView {
             if let source = viewModel.rawMessage {
-                SelectableText(format(source: source))
+                Text(format(source: source))
+                    .font(.body.monospaced())
+                    .foregroundStyle(Color.primaryTxt)
+                    .tint(.accent)
+                    .textSelection(.enabled)
+                    .padding()
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(Color.appBg)
+        .background(LinearGradient.bio)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {

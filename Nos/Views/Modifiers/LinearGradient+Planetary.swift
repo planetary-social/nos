@@ -61,4 +61,10 @@ extension LinearGradient {
         startPoint: .top,
         endPoint: .bottom
     )
+
+    public static let bio = LinearGradient(
+        colors: [Color.bioBgGradientTop, Color.bioBgGradientBottom],
+        startPoint: .top,
+        endPoint: .bottom
+    )
 }
