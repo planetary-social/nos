@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- On the Discover tab, center the category buttons.
+
 ## [0.1.12] - 2024-05-07Z
 
 - Open Profiles when tapping on a NIP-05 username reference in a note.
