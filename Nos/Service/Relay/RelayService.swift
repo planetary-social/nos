@@ -693,7 +693,6 @@ extension RelayService {
         }
         
         for subscription in await subscriptions.active where subscription.relayAddress == client.url {
-            Log.info("Running requestEvents for subscription \(subscription)")
             await subscriptions.requestEvents(from: client, subscription: subscription)
         }
     }
