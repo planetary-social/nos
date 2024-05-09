@@ -212,11 +212,12 @@ struct SettingsView: View {
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
         .nosNavigationBar(title: .localizable.settings)
-        .alert($alert) { (action: AlertAction?) in
-            if let action {
-                await alertButtonTapped(action)
-            }
-        }
+//        .alert(isPresented: $alert) {
+//            alertButtonTapped(.logout)
+////            if let action {
+////                await alertButtonTapped(action)
+////            }
+//        }
         .onAppear {
             privateKeyString = currentUser.keyPair?.nsec ?? ""
             analytics.showedSettings()

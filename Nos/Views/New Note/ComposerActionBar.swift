@@ -116,8 +116,7 @@ struct ComposerActionBar: View {
         .onChange(of: expirationTime) { _, _ in
             subMenu = .none
         }
-        .alert($alert) { (_: AlertAction?) in
-        }
+//        .alert(isPresented: $alert) { }
         .background(
             LinearGradient(
                 colors: [Color.actionBarGradientTop, Color.actionBarGradientBottom],
