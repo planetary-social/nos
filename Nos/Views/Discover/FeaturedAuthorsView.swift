@@ -104,40 +104,45 @@ struct FeaturedAuthorsView: View {
     }
 
     var categoryPicker: some View {
-        GeometryReader { geometry in
+        ViewThatFits {
+            categoriesStack
+
             ScrollView(.horizontal) {
-                HStack(spacing: 2) {
-                    Spacer()
-                    ForEach(FeaturedAuthorCategory.allCases, id: \.self) { category in
-                        Button(action: {
-                            selectedCategory = category
-                        }, label: {
-                            Text(category.text)
-                                .font(.callout)
-                                .padding(.vertical, 4)
-                                .padding(.horizontal, 8)
-                                .background(
-                                    selectedCategory == category ?
-                                    Color.pickerBackgroundSelected :
-                                        Color.clear
-                                )
-                                .foregroundColor(
-                                    selectedCategory == category ?
-                                    Color.primaryTxt :
-                                        Color.secondaryTxt
-                                )
-                                .cornerRadius(20)
-                                .padding(4)
-                                .frame(minWidth: 44, minHeight: 44)
-                        })
-                    }
-                    Spacer()
-                }
-                .frame(width: geometry.size.width)
-//                .padding(.leading, 10)
+                categoriesStack
             }
-            .background(Color.profileBgTop)
         }
+        .background(Color.profileBgTop)
+    }
+
+    var categoriesStack: some View {
+        HStack(spacing: 2) {
+            Spacer()
+            ForEach(FeaturedAuthorCategory.allCases, id: \.self) { category in
+                Button(action: {
+                    selectedCategory = category
+                }, label: {
+                    Text(category.text)
+                        .font(.callout)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 8)
+                        .background(
+                            selectedCategory == category ?
+                            Color.pickerBackgroundSelected :
+                                Color.clear
+                        )
+                        .foregroundColor(
+                            selectedCategory == category ?
+                            Color.primaryTxt :
+                                Color.secondaryTxt
+                        )
+                        .cornerRadius(20)
+                        .padding(4)
+                        .frame(minWidth: 44, minHeight: 44)
+                })
+            }
+            Spacer()
+        }
+        .padding(.leading, 10)
     }
 
     private func findOrCreateAuthors() {
