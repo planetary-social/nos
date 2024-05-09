@@ -110,6 +110,7 @@ struct FeaturedAuthorsView: View {
             ScrollView(.horizontal) {
                 categoriesStack
             }
+            .scrollIndicators(.never)
         }
         .background(Color.profileBgTop)
     }
