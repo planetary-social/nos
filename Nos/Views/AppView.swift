@@ -122,6 +122,14 @@ struct AppView: View {
                         lastSelectedTab = newTab
                     }
                 }
+                .overlay {
+                    if router.isLoading {
+                        ZStack {
+                            Rectangle().fill(.black.opacity(0.4))
+                            ProgressView()
+                        }
+                    }
+                }
                 .sheet(isPresented: $showNewPost, content: {
                     NewNoteView(initialContents: newPostContents, isPresented: $showNewPost)
                         .environment(currentUser)

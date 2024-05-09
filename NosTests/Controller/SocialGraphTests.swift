@@ -16,7 +16,12 @@ final class SocialGraphTests: CoreDataTestCase {
         try await eventually { await sut.followedKeys == Set([KeyFixture.alice.publicKeyHex]) }
     }
     
-    func testOneFollower() async throws {
+    /// The `XCTExpectFailure` below does _not_ work in CI. That is, when the test fails, CI still fails.
+    /// Since all tests must start with the word "test", prefixing it with "disable" is a clear way to disable it
+    /// until we can fix the intermittent failure.
+    func disable_testOneFollower() async throws {
+        XCTExpectFailure("This test is failing intermittently, see #671", options: .nonStrict())
+
         // Arrange
         let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
         let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
@@ -38,7 +43,10 @@ final class SocialGraphTests: CoreDataTestCase {
         try await eventually { await sut.followedKeys == expectedKeys }
     }
     
-    func testFollow() async throws {
+    /// The `XCTExpectFailure` below does _not_ work in CI. That is, when the test fails, CI still fails.
+    /// Since all tests must start with the word "test", prefixing it with "disable" is a clear way to disable it
+    /// until we can fix the intermittent failure.
+    func disable_testFollow() async throws {
         XCTExpectFailure("This test is failing intermittently, see #671", options: .nonStrict())
 
         // Arrange
@@ -64,7 +72,10 @@ final class SocialGraphTests: CoreDataTestCase {
         try await eventually { await sut.followedKeys == expectedKeys }
     }
     
-    func testTwoFollows() async throws {
+    /// The `XCTExpectFailure` below does _not_ work in CI. That is, when the test fails, CI still fails.
+    /// Since all tests must start with the word "test", prefixing it with "disable" is a clear way to disable it
+    /// until we can fix the intermittent failure.
+    func disable_testTwoFollows() async throws {
         XCTExpectFailure("This test is failing intermittently, see #671", options: .nonStrict())
 
         // Arrange

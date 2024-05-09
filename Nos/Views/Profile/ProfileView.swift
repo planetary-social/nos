@@ -111,6 +111,9 @@ struct ProfileView: View {
         .navigationDestination(for: RelaysDestination.self) { destination in
             RelayView(author: destination.author, editable: false)
         }
+        .navigationDestination(for: EditProfileDestination.self) { destination in
+            ProfileEditView(author: destination.profile)
+        }
         .navigationBarItems(
             trailing:
                 HStack {
@@ -132,8 +135,7 @@ struct ProfileView: View {
                         if isShowingLoggedInUser {
                             Button(
                                 action: {
-                                    currentUser.editing = true
-                                    router.push(author)
+                                    router.push(EditProfileDestination(profile: author))
                                 },
                                 label: {
                                     Text(.localizable.editProfile)
@@ -178,7 +180,7 @@ struct ProfileView: View {
                                 }
                             }
                             
-                            Button(String(localized: .localizable.reportUser), role: .destructive) {
+                            Button(String(localized: .localizable.flagUser)) {
                                 showingReportMenu = true
                             }
                         }

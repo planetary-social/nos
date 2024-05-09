@@ -15,15 +15,10 @@ struct HomeTab: View {
                     RepliesView(note: note)
                 }
                 .navigationDestination(for: Author.self) { author in
-                    if router.currentPath.wrappedValue.count == 1 {
-                        ProfileView(author: author)
-                    } else {
-                        if author == currentUser.author, currentUser.editing {
-                            ProfileEditView(author: author)
-                        } else {
-                            ProfileView(author: author)
-                        }
-                    }
+                    ProfileView(author: author)
+                }
+                .navigationDestination(for: EditProfileDestination.self) { destination in
+                    ProfileEditView(author: destination.profile)
                 }
                 .navigationDestination(for: ReplyToNavigationDestination.self) { destination in
                     RepliesView(note: destination.note, showKeyboard: true)

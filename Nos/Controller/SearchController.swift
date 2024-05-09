@@ -40,6 +40,7 @@ class SearchController: ObservableObject {
     @Dependency(\.relayService) private var relayService
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.unsAPI) var unsAPI
+    @Dependency(\.currentUser) var currentUser
     
     private var cancellables = [AnyCancellable]()
     private var searchSubscriptions = SubscriptionCancellables()
@@ -99,7 +100,7 @@ class SearchController: ObservableObject {
         let strippedString = publicKeyString.trimmingCharacters(
             in: NSCharacterSet.whitespacesAndNewlines
         )
-        guard let publicKey = PublicKey(npub: strippedString) ?? PublicKey(hex: strippedString) else {
+        guard let publicKey = PublicKey.build(npubOrHex: strippedString) else {
             return nil
         }
         guard let author = try? Author.findOrCreate(by: publicKey.hex, context: context) else {
@@ -166,7 +167,9 @@ class SearchController: ObservableObject {
     func searchRelays(for query: String) {
         Task {
             let searchFilter = Filter(kinds: [.metaData], search: query, limit: 100)
-            self.searchSubscriptions.append(await self.relayService.subscribeToEvents(matching: searchFilter))
+            let allSearchRelays = await relayService.relayAddresses(for: currentUser) + Relay.searchOnly
+            let subscription = await self.relayService.subscribeToEvents(matching: searchFilter, from: allSearchRelays)
+            self.searchSubscriptions.append(subscription)
         }
     }
     

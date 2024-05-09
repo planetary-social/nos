@@ -115,10 +115,11 @@ struct OverlayContentReportView: View {
                         .scaledToFit()
                         .frame(width: 48, height: 48) // Set the width and height to 48
                         .padding(.bottom, 20)
-                    if controller.authorReports.count > 0 {
-                        ContentWarningMessage(reports: controller.authorReports, type: "author")
-                    } else if controller.noteReports.count > 0 {
-                        ContentWarningMessage(reports: controller.noteReports, type: "note")
+                    
+                    if controller.noteReports.count > 0 {
+                        ContentWarningMessage(reports: controller.noteReports, type: .note)
+                    } else if controller.authorReports.count > 0 {
+                        ContentWarningMessage(reports: controller.authorReports, type: .author)
                     }
                 }
                 SecondaryActionButton(title: .localizable.viewThisPostAnyway) {
@@ -138,83 +139,23 @@ struct OverlayContentReportView: View {
 }
 
 struct ContentWarningMessage: View {
+    
     var reports: [Event]
-    var type: String
+    var type: ContentWarningType
     
-    // Assuming each 'Event' has an 'Author' and we can get an array of 'Author' names
-    private var authorNames: [String] {
-        // Extracting author names. Adjust according to your actual data structure.
-        reports.compactMap { $0.author?.name }
-    }
-    
-    // Assuming there's a property or method 'safeName' in 'Author' that safely returns the author's name.
-    private var firstAuthorSafeName: String {
-        // Getting the safe name of the first author. Adjust according to your actual data structure.
-        reports.first?.author?.safeName ?? String(localized: .localizable.unknownAuthor)
-    }
-    
-    private var reason: String {
-        // Extract content from reports and remove empty content
-        let contents = reports.compactMap { $0.content }.filter({ !$0.isEmpty })
-
-        // Convert set of unique reasons to array and remove any empty reasons
-        let reasons = uniqueReasons.filter { !$0.isEmpty }
-        
-        // Combine both arrays
-        let combined = contents + reasons
-        
-        // Join them with comma separator
-        return combined.joined(separator: ", ")
-    }
-    
-    private var uniqueReasons: Set<String> {
-        var reasons = [String]()
-        for report in reports {
-            guard let reportTags = report.allTags as? [[String]] else {
-                print("Error: Cannot convert allTags to [[String]]")
-                continue
-            }
-            for tag in reportTags where tag.count >= 2 {
-                let reasonCode = tag[1]
-                var reason = reasonCode
-                if reasonCode.hasPrefix("MOD>") {
-                    let codeSuffix = String(reasonCode.dropFirst(4)) // Drop "MOD>" prefix
-                    if let reportCategory = ReportCategory.findCategory(from: codeSuffix) {
-                        reason = reportCategory.displayName
-                    }
-                } else if tag[0] == "report" {
-                    reasons.append(reason)
-                } else if tag.count == 3 && !reasonCode.hasPrefix("MOD>") {
-                    reasons.append(tag[2])
-                }
-            }
-        }
-        return Set(reasons)
-    }
-    
-    var message: LocalizedStringResource {
-        if type == "author" {
-            if authorNames.count > 1 {
-                return .localizable.userReportedByOneAndMore(firstAuthorSafeName, authorNames.count - 1, reason)
-            } else {
-                return .localizable.userReportedByOne(firstAuthorSafeName, reason)
-            }
-        } else if type == "note" {
-            if authorNames.count > 1 {
-                return .localizable.noteReportedByOneAndMore(firstAuthorSafeName, authorNames.count - 1, reason)
-            } else {
-                return .localizable.noteReportedByOne(firstAuthorSafeName, reason)
-            }
-        }
-        
-        return .localizable.error
-    }
+    @State private var controller = ContentWarningController()
     
     var body: some View {
-        Text(message)
+        Text(controller.localizedContentWarning)
             .font(.body)
             .foregroundColor(.primaryTxt)
             .padding(.horizontal, 25)
+            .task {
+                // pass values to the controller
+                // I don't like this pattern
+                controller.reports = reports
+                controller.type = type
+            }
     }
 }
 
@@ -222,25 +163,25 @@ struct ContentWarningMessage: View {
     var previewData = PreviewData()
     
     return VStack {
-        ContentWarningMessage(reports: [previewData.shortNoteReportOne], type: "author")
-        ContentWarningMessage(reports: [previewData.shortNoteReportOne, previewData.shortNoteReportTwo], type: "author")
+        ContentWarningMessage(reports: [previewData.shortNoteReportOne], type: .author)
+        ContentWarningMessage(reports: [previewData.shortNoteReportOne, previewData.shortNoteReportTwo], type: .author)
         ContentWarningMessage(
             reports: [
                 previewData.shortNoteReportOne,
                 previewData.shortNoteReportTwo,
                 previewData.shortNoteReportThree
             ],
-            type: "author"
+            type: .author
         )
-        ContentWarningMessage(reports: [previewData.shortNoteReportOne], type: "note")
-        ContentWarningMessage(reports: [previewData.shortNoteReportOne, previewData.shortNoteReportTwo], type: "note")
+        ContentWarningMessage(reports: [previewData.shortNoteReportOne], type: .note)
+        ContentWarningMessage(reports: [previewData.shortNoteReportOne, previewData.shortNoteReportTwo], type: .note)
         ContentWarningMessage(
             reports: [
                 previewData.shortNoteReportOne,
                 previewData.shortNoteReportTwo,
                 previewData.shortNoteReportThree
             ],
-            type: "note"
+            type: .note
         )
     }
     .inject(previewData: previewData)

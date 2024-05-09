@@ -24,8 +24,7 @@ struct SideMenuContent: View {
                     buttonImage: .editProfile
                 ) {
                     if let author = currentUser.author {
-                        currentUser.editing = true
-                        router.push(author)
+                        router.push(EditProfileDestination(profile: author))
                     }
                 }
                 .padding(.horizontal, 20)
@@ -111,11 +110,10 @@ struct SideMenuContent: View {
                 }
             }
             .navigationDestination(for: Author.self) { profile in
-                if profile == currentUser.author, currentUser.editing {
-                    ProfileEditView(author: profile)
-                } else {
-                    ProfileView(author: profile)
-                }
+                ProfileView(author: profile)
+            }
+            .navigationDestination(for: EditProfileDestination.self) { destination in
+                ProfileEditView(author: destination.profile)
             }
         }
     }

@@ -906,7 +906,11 @@ public class Event: NosManagedObject, VerifiableEvent {
         seenOnRelays.compactMap { $0.addressURL?.absoluteString }
     }
     
-    class func attributedContent(noteID: String?, context: NSManagedObjectContext) async -> AttributedString {
+    class func attributedContent(
+        noteID: String?,
+        noteParser: NoteParser = NoteParser(),
+        context: NSManagedObjectContext
+    ) async -> AttributedString {
         guard let noteID else {
             return AttributedString()
         }
@@ -918,7 +922,11 @@ public class Event: NosManagedObject, VerifiableEvent {
             }
             try? context.saveIfNeeded()
             let tags = note.allTags as? [[String]] ?? []
-            return NoteParser.parse(content: content, tags: tags, context: context)
+            return noteParser.parse(
+                content: content,
+                tags: tags,
+                context: context
+            )
         }
     }
    
@@ -956,7 +964,8 @@ public class Event: NosManagedObject, VerifiableEvent {
     /// - Returns: A tuple where the first object is the note content formatted for display, and the second is a list
     ///     of HTTP links found in the note's context.  
     @MainActor class func attributedContentAndURLs(
-        note: Event, 
+        note: Event,
+        noteParser: NoteParser = NoteParser(),
         context: NSManagedObjectContext
     ) async -> (AttributedString, [URL])? {
         guard let content = note.content else {
@@ -965,7 +974,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         let tags = note.allTags as? [[String]] ?? []
         
         return await context.perform {
-            NoteParser.parse(content: content, tags: tags, context: context)
+            noteParser.parse(content: content, tags: tags, context: context)
         }
     }
     
@@ -1088,7 +1097,6 @@ public class Event: NosManagedObject, VerifiableEvent {
                     deletedEvent.deletedOn.insert(relay)
                 }
             }
-            try context.saveIfNeeded()
         }
     }
     
