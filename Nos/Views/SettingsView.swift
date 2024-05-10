@@ -178,13 +178,19 @@ struct SettingsView: View {
                     }        
                 }
                 .padding(.vertical, 5)
-                .sheet(isPresented: showActivitySheet) {
-                    if let logFileURL {
-                        ActivityViewController(activityItems: [logFileURL])
-                    } else {
-                        EmptyView()
+                .sheet(
+                    isPresented: showActivitySheet,
+                    onDismiss: {
+                        logFileURL = nil
+                    },
+                    content: {
+                        if let logFileURL {
+                            ActivityViewController(activityItems: [logFileURL])
+                        } else {
+                            EmptyView()
+                        }
                     }
-                }
+                )
 
                 #if DEBUG
                 Text(.localizable.sampleDataInstructions)
