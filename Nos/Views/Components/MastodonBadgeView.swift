@@ -9,7 +9,6 @@ struct MastodonBadgeView: View {
     @ObservedObject var author: Author
 
     var fediverseServer: String {
-        // swiftlint:disable:next operator_usage_whitespace
         let regex = /[0-9A-Za-z._-]+_at_(?<fediverse>[0-9A-Za-z._-]+)@mostr\.pub/
         guard let match = author.nip05?.firstMatch(of: regex) else {
             return "mostr.pub"
