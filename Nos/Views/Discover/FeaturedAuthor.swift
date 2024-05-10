@@ -16,62 +16,11 @@ struct FeaturedAuthor {
 
 extension FeaturedAuthor {
     /// All featured authors that should appear on the Discover tab.
-    static let all = cohort0 + cohort1
+    static let all = cohort1
 }
 
 extension FeaturedAuthor {
-    /// The seed cohort of authors to display on the Discover tab.
-    static let cohort0 = [
-        FeaturedAuthor(
-            name: "Teder",
-            npub: "npub1asuq0pxedwfagpqkdf4lrfmcyfaffgptmayel9947j8krad3x58srs20ap",
-            categories: [.music]
-        ),
-        FeaturedAuthor(
-            name: "Taylor Lorenz",
-            npub: "npub1d9nndmy3lx6f00cysrmn2v9t6hz280uwycw0kgcfdhvg99azry8sududfv",
-            categories: [.journalists, .tech]
-        ),
-        FeaturedAuthor(
-            name: "Mike Masnick",
-            npub: "npub1grz7afdguc67jkjly6fu0xmw0r386t8mtxafutu9u34dy207nt9ql335cv",
-            categories: [.journalists, .tech]
-        ),
-        FeaturedAuthor(
-            name: "Cory Doctorow",
-            npub: "npub1yxzkmtuyctjw2pffp6e9uvyrkp29hrqra2tm3xp3z9707z06muxsg75qvv",
-            categories: [.tech]
-        ),
-        FeaturedAuthor(
-            name: "Matt Blaze",
-            npub: "npub1d7ggne0xsy8e2999q8cyh9zxda688axm07cwncufjeku0nahvfgsyz6qzr",
-            categories: [.art]
-        ),
-        FeaturedAuthor(
-            name: "LotteZ",
-            npub: "npub17a49ajzjlwjv4znh85jcfgmk7qq5ck8m5advx66rudz8g0v034kss2hnk3",
-            categories: [.art]
-        ),
-        FeaturedAuthor(
-            name: "Karine Studio",
-            npub: "npub1l9kr6ajfwp6vfjp60vuzxwqwwlw884dff98a9cznujs520shsf9s35xfwh",
-            categories: [.art]
-        ),
-        FeaturedAuthor(
-            name: "Victor",
-            npub: "npub1uh8e4y97tvs5zhsq6srr43qy0u66zk8xfy08xcrhef2803sdfcrslq62el",
-            categories: [.environment]
-        ),
-        FeaturedAuthor(
-            name: "Premier League Scores",
-            npub: "npub1aylzctp5p20yc842qfpu2w9j8q0kpqcfx8q3p42ugnp3t8uxg3xq3k8nn0",
-            categories: [.sports]
-        ),
-    ]
-}
-
-extension FeaturedAuthor {
-    /// The first official cohort of authors to display on the Discover tab.
+    /// The first cohort of authors to display on the Discover tab.
     static let cohort1 = [
         FeaturedAuthor(
             name: "Mark Cubey",

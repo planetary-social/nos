@@ -13,9 +13,6 @@ enum FeaturedAuthorCategory: CaseIterable {
     case art // swiftlint:disable:this identifier_name
     case activists
     case gaming
-    case journalists
-    case tech
-    case environment
     case sports
 
     var text: LocalizedStringResource {
@@ -27,9 +24,6 @@ enum FeaturedAuthorCategory: CaseIterable {
         case .art: LocalizedStringResource.localizable.featuredAuthorCategoryArt
         case .activists: LocalizedStringResource.localizable.featuredAuthorCategoryActivists
         case .gaming: LocalizedStringResource.localizable.featuredAuthorCategoryGaming
-        case .journalists: LocalizedStringResource.localizable.featuredAuthorCategoryJournalists
-        case .tech: LocalizedStringResource.localizable.featuredAuthorCategoryTech
-        case .environment: LocalizedStringResource.localizable.featuredAuthorCategoryEnvironment
         case .sports: LocalizedStringResource.localizable.featuredAuthorCategorySports
         }
     }
