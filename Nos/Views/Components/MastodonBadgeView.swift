@@ -6,8 +6,20 @@ import SwiftUI
 /// This Text was implemented to be re-used in the Profile screen.
 struct MastodonBadgeView: View {
 
+    @ObservedObject var author: Author
+
+    var fediverseServer: String {
+        // swiftlint:disable:next operator_usage_whitespace
+        let regex = /[0-9A-Za-z._-]+_at_(?<fediverse>[0-9A-Za-z._-]+)@mostr\.pub/
+        guard let match = author.nip05?.firstMatch(of: regex) else {
+            return "mostr.pub"
+        }
+        let string = match.output.fediverse
+        return String(string)
+    }
+
     var body: some View {
-        Label(LocalizedStringKey(stringLiteral: "mostr.pub"), image: "mastodon")
+        Label(LocalizedStringKey(stringLiteral: fediverseServer), image: "mastodon")
             .padding(.horizontal, 6)
             .padding(.vertical, 5)
             .font(.clarity(.bold, textStyle: .footnote))
@@ -21,5 +33,9 @@ struct MastodonBadgeView: View {
 }
 
 #Preview {
-    MastodonBadgeView()
+    var previewData = PreviewData()
+
+    return VStack {
+        MastodonBadgeView(author: previewData.alice)
+    }
 }

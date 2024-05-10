@@ -37,7 +37,7 @@ struct BioSheet: View {
                 }
 
                 if author.hasMastodonNIP05 {
-                    MastodonBadgeView()
+                    MastodonBadgeView(author: author)
                 }
 
                 if let bio {
