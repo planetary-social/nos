@@ -744,8 +744,6 @@ extension RelayService: WebSocketDelegate {
             switch event {
             case .connected:
                 await handleConnection(from: client)
-            case .viabilityChanged(let isViable) where isViable:
-                await handleConnection(from: client)
             case .disconnected(let reason, let code):
                 await subscriptions.remove(socket)
                 print("websocket is disconnected: \(reason) with code: \(code)")

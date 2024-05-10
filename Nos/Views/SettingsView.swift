@@ -18,6 +18,13 @@ struct SettingsView: View {
     @State private var privateKeyString = ""
     @State private var alert: AlertState<AlertAction>?
     @State private var logFileURL: URL?
+    private var showActivitySheet: Binding<Bool> {
+        Binding<Bool>(
+            get: { logFileURL != nil },
+            set: { _ in }
+        )
+    }
+
     @State private var showReportWarnings = true
     @State private var showOutOfNetworkWarning = true
     
@@ -171,8 +178,12 @@ struct SettingsView: View {
                     }        
                 }
                 .padding(.vertical, 5)
-                .sheet(unwrapping: $logFileURL) { logFileURL in
-                    ActivityViewController(activityItems: [logFileURL.wrappedValue])
+                .sheet(isPresented: showActivitySheet) {
+                    if let logFileURL {
+                        ActivityViewController(activityItems: [logFileURL])
+                    } else {
+                        EmptyView()
+                    }
                 }
 
                 #if DEBUG
