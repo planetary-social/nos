@@ -1,10 +1,7 @@
 import SwiftUI
 
-/// A view that displays a badge with a mastodon icon.
-///
-///
-/// This Text was implemented to be re-used in the Profile screen.
-struct MastodonBadgeView: View {
+/// A view that displays a badge with an ActivityPub icon.
+struct ActivityPubBadgeView: View {
 
     @ObservedObject var author: Author
 
@@ -18,7 +15,7 @@ struct MastodonBadgeView: View {
     }
 
     var body: some View {
-        Label(LocalizedStringKey(stringLiteral: fediverseServer), image: "mastodon")
+        Label(LocalizedStringKey(stringLiteral: fediverseServer), image: "ActivityPub")
             .padding(.horizontal, 6)
             .padding(.vertical, 5)
             .font(.clarity(.bold, textStyle: .footnote))
@@ -35,6 +32,6 @@ struct MastodonBadgeView: View {
     var previewData = PreviewData()
 
     return VStack {
-        MastodonBadgeView(author: previewData.alice)
+        ActivityPubBadgeView(author: previewData.alice)
     }
 }

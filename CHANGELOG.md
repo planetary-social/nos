@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- On the Profile screen, open an Profile dialog to display the full bio. 
+- On the Profile screen, open a sheet to display the full bio. 
 - On the Discover tab, center the category buttons.
 
 ## [0.1.12] - 2024-05-07Z

@@ -1,8 +1,7 @@
 import Dependencies
 import SwiftUI
 
-/// This View shows the name, nip-05 and bio of a given user in a vertical
-/// stack.
+/// Shows the name, nip-05 and bio of a given user in a vertical stack.
 struct BioSheet: View {
     @ObservedObject var author: Author
 
@@ -36,8 +35,8 @@ struct BioSheet: View {
                         .font(.footnote)
                 }
 
-                if author.hasMastodonNIP05 {
-                    MastodonBadgeView(author: author)
+                if author.hasMostrNIP05 {
+                    ActivityPubBadgeView(author: author)
                 }
 
                 if let bio {
