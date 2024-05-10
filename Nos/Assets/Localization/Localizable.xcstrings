@@ -4081,17 +4081,6 @@
         }
       }
     },
-    "featuredAuthorCategoryEnvironment" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : " Environment"
-          }
-        }
-      }
-    },
     "featuredAuthorCategoryGaming" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4099,17 +4088,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gaming"
-          }
-        }
-      }
-    },
-    "featuredAuthorCategoryJournalists" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Journalists"
           }
         }
       }
@@ -4154,17 +4132,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sports"
-          }
-        }
-      }
-    },
-    "featuredAuthorCategoryTech" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tech"
           }
         }
       }
