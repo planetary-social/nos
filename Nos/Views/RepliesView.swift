@@ -95,7 +95,7 @@ struct RepliesView: View {
         GeometryReader { _ in
             VStack {
                 ScrollView(.vertical) {
-                    VStack {
+                    LazyVStack {
                         NoteButton(
                             note: note,
                             shouldTruncate: false,
