@@ -129,7 +129,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             fetchedResultsController.object(at: $0).identifier
         }
         Task {
-            await prefetchNotesReactions(for: identifiers)
+            await prefetchNotesReactions(noteIdentifiers: identifiers)
         }
     }
     
@@ -196,10 +196,10 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     /// number of reactions: replies, repost and likes. In order to be ready
     /// to show an accurate number, this function eases the prefetch of those
     /// values.
-    private func prefetchNotesReactions(for notes: [RawEventID]) async {
+    private func prefetchNotesReactions(noteIdentifiers: [RawEventID]) async {
         let filter = Filter(
             kinds: [.text, .like, .repost],
-            eTags: identifiers
+            eTags: noteIdentifiers
         )
         let subIDs = await relayService.subscribeToEvents(matching: filter)
         relaySubscriptions.append(subIDs)
