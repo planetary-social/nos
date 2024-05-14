@@ -3,15 +3,12 @@ import SwiftUI
 
 struct BioView: View {
 
-    var bio: String?
+    @ObservedObject var author: Author
 
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
 
     @Dependency(\.noteParser) private var noteParser
-
-    @State
-    private var showingBio = false
     
     @State
     private var shouldShowReadMore = false
@@ -21,6 +18,10 @@ struct BioView: View {
 
     @State
     private var truncatedSize = CGSize.zero
+
+    private var bio: String? {
+        author.about
+    }
 
     private var isLoading: Bool {
         bio == nil
@@ -34,7 +35,7 @@ struct BioView: View {
         guard let bio else {
             return AttributedString()
         }
-        let (content, _) = NoteParser().parse(
+        let (content, _) = noteParser.parse(
             content: bio,
             tags: [[]],
             context: viewContext
@@ -89,21 +90,14 @@ struct BioView: View {
                             }
                         }
                 }
-                .onTapGesture {
-                    showingBio = true
-                }
             if shouldShowReadMore {
                 ZStack(alignment: .center) {
-                    Button {
-                        showingBio = true
-                    } label: {
-                        Text(String(localized: .localizable.readMore).uppercased())
-                            .font(.clarity(.regular, textStyle: .caption1))
-                            .foregroundColor(.secondaryTxt)
-                            .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
-                            .background(Color.hashtagBg)
-                            .cornerRadius(4)
-                    }
+                    Text(String(localized: .localizable.readMore).uppercased())
+                        .font(.clarity(.regular, textStyle: .caption1))
+                        .foregroundColor(.secondaryTxt)
+                        .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
+                        .background(Color.hashtagBg)
+                        .cornerRadius(4)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(EdgeInsets(top: 3, leading: 0, bottom: 1, trailing: 0))
@@ -116,24 +110,6 @@ struct BioView: View {
                 .lineLimit(5)
                 .padding(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
                 .redacted(reason: .placeholder)
-        }
-        .sheet(isPresented: $showingBio) {
-            NavigationView {
-                SelectableText(parsedBio)
-                    .font(.clarity(.regular, textStyle: .body))
-                    .nosNavigationBar(title: .localizable.bio)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.appBg)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button {
-                                showingBio = false
-                            } label: {
-                                Image.navIconDismiss
-                            }
-                        }
-                    }
-            }
         }
         .padding(0)
     }
@@ -154,11 +130,12 @@ struct BioView: View {
 }
 
 struct BioView_Previews: PreviewProvider {
+    static var previewData = PreviewData()
     static var previews: some View {
         Group {
-            BioView(bio: "# Heading\n\n*bold*")
-            BioView(bio: .loremIpsum(1))
-            BioView(bio: .loremIpsum(3))
+            BioView(author: previewData.alice)
+            BioView(author: previewData.alice)
+            BioView(author: previewData.alice)
         }
         .padding()
         .background(Color.previewBg)

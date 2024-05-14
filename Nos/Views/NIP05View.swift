@@ -5,7 +5,7 @@ import SwiftUI
 /// Displays a user's NIP-05 in multiple colors and does some verification on it.
 struct NIP05View: View {
     @ObservedObject var author: Author
-    
+
     @State private var verifiedNip05Identifier: Bool?
     @Dependency(\.namesAPI) private var namesAPI
 
@@ -23,7 +23,6 @@ struct NIP05View: View {
                     invalidNip05Text(nip05: nip05)
                 }
             }
-            .lineLimit(1)
             .contextMenu {
                 Button {
                     UIPasteboard.general.string = nip05
