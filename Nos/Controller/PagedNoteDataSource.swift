@@ -16,6 +16,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     private var context: NSManagedObjectContext
     private var header: () -> Header
     private var emptyPlaceholder: () -> EmptyPlaceholder
+    private var relaySubscriptions = SubscriptionCancellables()
     let pageSize = 20
     
     // We intentionally generate unique IDs for cell reuse to get around 
@@ -120,7 +121,15 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             let note = fetchedResultsController.object(at: indexPath)
-            Task { await note.loadViewData() }
+            Task {
+                await note.loadViewData()
+            }
+        }
+        let identifiers = indexPaths.compactMap {
+            fetchedResultsController.object(at: $0).identifier
+        }
+        Task {
+            await prefetchNotesReactions(for: identifiers)
         }
     }
     
@@ -182,7 +191,20 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             pager?.loadMore()
         }        
     }
-    
+
+    /// When presenting notes in a collection view, we want to show an accurate
+    /// number of reactions: replies, repost and likes. In order to be ready
+    /// to show an accurate number, this function eases the prefetch of those
+    /// values.
+    private func prefetchNotesReactions(for notes: [RawEventID]) async {
+        let filter = Filter(
+            kinds: [.text, .like, .repost],
+            eTags: identifiers
+        )
+        let subIDs = await relayService.subscribeToEvents(matching: filter)
+        relaySubscriptions.append(subIDs)
+    }
+
     // MARK: - NSFetchedResultsControllerDelegate
     
     private var insertedIndexes = [IndexPath]()
