@@ -53,11 +53,6 @@ extension FeaturedAuthor {
             categories: [.sports]
         ),
         FeaturedAuthor(
-            name: "Kimm Topping",
-            npub: "npub1kw97r9hkcd475cdsqemzh70pwk9vn7qq64ggu2gkgrfnz559kcvqygtr6m",
-            categories: [.activists]
-        ),
-        FeaturedAuthor(
             name: "Alicia Stockman",
             npub: "npub1l3y60kjywvrrln5ftse553h2ltg53sm3zy55grvlncd78x3k5uqsmw8dff",
             categories: [.music]
@@ -86,6 +81,16 @@ extension FeaturedAuthor {
             name: "Jacob Gardenswartz",
             npub: "npub1cjvqtcla069ctrkapc9yhzp3xhph29khhz0x7ype7dgfwljcwc8savma9c",
             categories: [.news]
+        ),
+        FeaturedAuthor(
+            name: "Global Sports Central",
+            npub: "npub1qspus6smkn8mcdxg5jflh50s69vdgtwsd5p74gmjpzp2qekn5duqfv5afj",
+            categories: [.news, .sports]
+        ),
+        FeaturedAuthor(
+            name: "Alastair Thompson",
+            npub: "npub157pk8t8njtnldqzankrk2syzmkp6qtrv2ewgq3fnuc4k78dr797shfngev",
+            categories: [.news, .sports]
         ),
     ]
 }
