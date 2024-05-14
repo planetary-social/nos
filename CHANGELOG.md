@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Prefetch reply, like and repost counts while displaying the feeds.
+- On the Profile screen, open a sheet to display the full bio. 
 - Fixed an issue where "Share logs" wasn't working.
 - Discover tab: Center the category buttons.
 - Discover tab: Remove placeholder categories and people.

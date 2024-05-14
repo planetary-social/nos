@@ -39,6 +39,7 @@ struct AuthorCard: View {
                             if author.hasNIP05 {
                                 NIP05View(author: author)
                                     .font(.clarity(.semibold, textStyle: .title3))
+                                    .lineLimit(1)
                             } else if author.hasUNS {
                                 UNSNameView(author: author)
                                     .font(.clarity(.semibold, textStyle: .title3))
