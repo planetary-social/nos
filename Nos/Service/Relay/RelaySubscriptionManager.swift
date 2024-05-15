@@ -81,6 +81,12 @@ actor RelaySubscriptionManager {
             return nil
         }
         
+        if let priorError = errored[relayAddress],
+            priorError.nextRetry > Date.now {
+            // This socket has errored recently and it isn't yet time to retry again.
+            return nil
+        }
+        
         var request = URLRequest(url: relayAddress)
         request.timeoutInterval = 10
         let socket = WebSocket(request: request)
@@ -163,5 +169,51 @@ actor RelaySubscriptionManager {
         } catch {
             Log.error("Error: Could not send request \(error.localizedDescription)")
         }
+    }
+    
+    // MARK: - Error Tracking 
+    
+    /// A map that keeps track of errors we have received from websockets. 
+    private var errored: [URL: WebsocketErrorEvent] = [:]
+    
+    /// This constant is used to calculate the maximum amount of time we will wait before retrying an errored socket.
+    /// We backoff exponentially for 2^x seconds, increasing x by 1 on each consecutive error 
+    /// until x == `maxBackoffPower`.
+    private static let maxBackoffPower = 9
+    
+    /// A function that should be called when a websocket cannot be opened or is closed due to an error.
+    /// The `RelaySubscriptionManager` will use this data to prevent subsequent calls to reopen the socket using an 
+    /// exponential backoff strategy. So instead of retrying to open the socket every second we will wait 1 second, 
+    /// then 2, then 4, then 8, up to 2^`maxBackoffPower`.
+    func trackError(socket: WebSocket) {
+        if let relayAddress = socket.request.url {
+            if var priorError = errored[relayAddress] {
+                priorError.trackRetry()
+                errored[relayAddress] = priorError
+            } else {
+                errored[relayAddress] = WebsocketErrorEvent()
+            }
+        }
+    }
+    
+    /// This should be called when a socket is successfully opened. It will reset the error count for the socket
+    /// if it was above zero.
+    func markHealthy(socket: WebSocket) {
+        if let url = socket.request.url {
+            errored.removeValue(forKey: url)
+        }
+    }
+}
+
+/// A container that tracks how many times we have tried unsuccessfully to open a websocket and the next time we should
+/// try again.
+fileprivate struct WebsocketErrorEvent {
+    var retryCounter: Int = 1
+    var nextRetry: Date = .now
+    
+    mutating func trackRetry() {
+        self.retryCounter += 1
+        let delaySeconds = NSDecimalNumber(decimal: pow(2, min(retryCounter, RelaySubscriptionManager.maxBackoffPower)))
+        self.nextRetry = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + delaySeconds.doubleValue)
     }
 }
