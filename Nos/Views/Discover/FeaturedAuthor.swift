@@ -90,7 +90,7 @@ extension FeaturedAuthor {
         FeaturedAuthor(
             name: "Alastair Thompson",
             npub: "npub157pk8t8njtnldqzankrk2syzmkp6qtrv2ewgq3fnuc4k78dr797shfngev",
-            categories: [.news, .sports]
+            categories: [.news]
         ),
     ]
 }
