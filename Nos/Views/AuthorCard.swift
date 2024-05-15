@@ -36,14 +36,7 @@ struct AuthorCard: View {
                     }
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
-                            if author.hasNIP05 {
-                                NIP05View(author: author)
-                                    .font(.clarity(.semibold, textStyle: .title3))
-                                    .lineLimit(1)
-                            } else if author.hasUNS {
-                                UNSNameView(author: author)
-                                    .font(.clarity(.semibold, textStyle: .title3))
-                            } else {
+                            VStack(alignment: .leading) {
                                 Text(author.safeName)
                                     .lineLimit(1)
                                     .font(.title3)
@@ -51,6 +44,15 @@ struct AuthorCard: View {
                                     .foregroundColor(Color.primaryTxt)
                                     .multilineTextAlignment(.leading)
                                     .frame(maxWidth: .infinity, alignment: .leading)
+
+                                if author.hasNIP05 {
+                                    NIP05View(author: author)
+                                        .font(.clarity(.semibold, textStyle: .title3))
+                                        .lineLimit(1)
+                                } else if author.hasUNS {
+                                    UNSNameView(author: author)
+                                        .font(.clarity(.semibold, textStyle: .title3))
+                                }
                             }
 
                             Spacer()
