@@ -186,22 +186,26 @@ actor RelaySubscriptionManager {
     /// exponential backoff strategy. So instead of retrying to open the socket every second we will wait 1 second, 
     /// then 2, then 4, then 8, up to 2^`maxBackoffPower`.
     func trackError(socket: WebSocket) {
-        if let relayAddress = socket.request.url {
-            if var priorError = errored[relayAddress] {
-                priorError.trackRetry()
-                errored[relayAddress] = priorError
-            } else {
-                errored[relayAddress] = WebsocketErrorEvent()
-            }
+        guard let relayAddress = socket.request.url else {
+            return 
+        }
+        
+        if var priorError = errored[relayAddress] {
+            priorError.trackRetry()
+            errored[relayAddress] = priorError
+        } else {
+            errored[relayAddress] = WebsocketErrorEvent()
         }
     }
     
     /// This should be called when a socket is successfully opened. It will reset the error count for the socket
     /// if it was above zero.
     func markHealthy(socket: WebSocket) {
-        if let url = socket.request.url {
-            errored.removeValue(forKey: url)
+        guard let url = socket.request.url else { 
+            return 
         }
+        
+        errored.removeValue(forKey: url)
     }
 }
 
