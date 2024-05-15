@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.13] - 2024-05-15Z
+
 - On the Profile screen, open a sheet to display the full bio. 
 - Fixed an issue where "Share logs" wasn't working.
 - Discover tab: Center the category buttons.
