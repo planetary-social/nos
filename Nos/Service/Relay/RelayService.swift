@@ -722,6 +722,7 @@ extension RelayService {
     
     private func handleConnection(from client: WebSocketClient) async {
         if let socket = client as? WebSocket {
+            await subscriptions.markHealthy(socket: socket)
             Log.debug("websocket is connected: \(String(describing: socket.request.url?.host))")
         } else {
             Log.error("websocket connected with unknown host")
@@ -754,9 +755,11 @@ extension RelayService: WebSocketDelegate {
             case .ping, .pong, .viabilityChanged, .reconnectSuggested, .peerClosed:
                 break
             case .cancelled:
+                await subscriptions.trackError(socket: socket)
                 await subscriptions.remove(socket)
                 print("websocket is cancelled")
             case .error(let error):
+                await subscriptions.trackError(socket: socket)
                 await subscriptions.remove(socket)
                 handleError(error, from: socket)
             }
