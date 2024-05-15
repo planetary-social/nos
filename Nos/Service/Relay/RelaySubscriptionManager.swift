@@ -179,7 +179,7 @@ actor RelaySubscriptionManager {
     /// This constant is used to calculate the maximum amount of time we will wait before retrying an errored socket.
     /// We backoff exponentially for 2^x seconds, increasing x by 1 on each consecutive error 
     /// until x == `maxBackoffPower`.
-    private static let maxBackoffPower = 9
+    static let maxBackoffPower = 9
     
     /// A function that should be called when a websocket cannot be opened or is closed due to an error.
     /// The `RelaySubscriptionManager` will use this data to prevent subsequent calls to reopen the socket using an 
