@@ -3,7 +3,6 @@ import SwiftUI
 struct NosNavigationBarModifier: ViewModifier {
     
     var title: LocalizedStringResource
-    var leadingPadding: CGFloat
 
     func body(content: Content) -> some View {
         content
@@ -13,7 +12,6 @@ struct NosNavigationBarModifier: ViewModifier {
                     Text(title)
                         .font(.clarity(.bold, textStyle: .title3))
                         .foregroundColor(.primaryTxt)
-                        .padding(.leading, leadingPadding)
                         .tint(.primaryTxt)
                         .allowsHitTesting(false)
                 }
@@ -24,8 +22,8 @@ struct NosNavigationBarModifier: ViewModifier {
 }
 
 extension View {
-    func nosNavigationBar(title: LocalizedStringResource, leadingPadding: CGFloat = 14) -> some View {
-        self.modifier(NosNavigationBarModifier(title: title, leadingPadding: leadingPadding))
+    func nosNavigationBar(title: LocalizedStringResource) -> some View {
+        self.modifier(NosNavigationBarModifier(title: title))
     }
 }
 

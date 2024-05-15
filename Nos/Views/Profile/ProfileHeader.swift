@@ -152,7 +152,7 @@ struct ProfileHeader: View {
             NavigationView {
                 BioSheet(author: author)
                     .background(Color.bioBgGradientBottom)
-                    .nosNavigationBar(title: .localizable.profileTitle, leadingPadding: 0)
+                    .nosNavigationBar(title: .localizable.profileTitle)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
