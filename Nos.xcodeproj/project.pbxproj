@@ -469,6 +469,7 @@
 		035729B62BE416A6005FEE85 /* ReportPublisherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportPublisherTests.swift; sourceTree = "<group>"; };
 		035729BB2BE416BD005FEE85 /* EventObservationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventObservationTests.swift; sourceTree = "<group>"; };
 		0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		03AB2F7D2BF6609500B73DB1 /* Nos.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = Nos.xctestplan; path = NosTests/Nos.xctestplan; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
 		3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Moderation.xcstrings; sourceTree = "<group>"; };
@@ -1137,6 +1138,7 @@
 		C9DEBFC5298941000078B43A = {
 			isa = PBXGroup;
 			children = (
+				03AB2F7D2BF6609500B73DB1 /* Nos.xctestplan */,
 				C95D68AF299ECE0700429F86 /* CHANGELOG.md */,
 				C95D68B1299ECE0700429F86 /* CONTRIBUTING.md */,
 				C95D68B0299ECE0700429F86 /* README.md */,
