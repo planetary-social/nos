@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Added a delay when trying to reopen a websocket that had previously closed with an error.
+- Updated the icon that appears when following a user.
 
 ## [0.1.13] - 2024-05-15Z
 
