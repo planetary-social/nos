@@ -16,7 +16,7 @@ struct WizardNavigationStack<Root>: View where Root: View {
     var body: some View {
         NavigationStack(root: root)
             .frame(idealWidth: 320, idealHeight: 480)
-            .presentationDetents([.medium])
+            .presentationDetents([.height(480)])
     }
 }
 
