@@ -1,5 +1,6 @@
 import SwiftUI
 import XCTest
+@testable import Nos
 
 final class ContentWarningControllerTests: CoreDataTestCase {
     

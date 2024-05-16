@@ -1,5 +1,6 @@
 import XCTest
 import secp256k1
+@testable import Nos
 
 final class KeyPairTests: XCTestCase {
     

@@ -3,6 +3,7 @@ import CoreData
 import secp256k1
 import secp256k1_bindings
 import Dependencies
+@testable import Nos
 
 /// Tests for the Event model.
 final class EventTests: CoreDataTestCase {

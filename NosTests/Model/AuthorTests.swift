@@ -1,4 +1,5 @@
 import XCTest
+@testable import Nos
 
 /// Tests for the `Author` model.
 final class AuthorTests: CoreDataTestCase {

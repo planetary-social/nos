@@ -1,4 +1,5 @@
 import XCTest
+@testable import Nos
 
 /// Tests for the `Follow` model.
 final class FollowTests: CoreDataTestCase {

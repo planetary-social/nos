@@ -1,4 +1,5 @@
 import XCTest
+@testable import Nos
 
 final class GiftWrapperTests: XCTestCase {
     func testGiftWrappedRumor() throws {

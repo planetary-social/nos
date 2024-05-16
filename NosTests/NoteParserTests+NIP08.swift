@@ -1,4 +1,5 @@
 import XCTest
+@testable import Nos
 
 extension NoteParserTests {
     func testContentWithNIP08Mention() throws {

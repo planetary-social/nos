@@ -1,4 +1,5 @@
 import Foundation
+@testable import Nos
 
 extension RawNostrID {
     static var random: RawNostrID {

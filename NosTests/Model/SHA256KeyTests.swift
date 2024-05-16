@@ -1,5 +1,6 @@
 import Foundation
 import XCTest
+@testable import Nos
 
 final class SHA256Tests: XCTestCase {
 

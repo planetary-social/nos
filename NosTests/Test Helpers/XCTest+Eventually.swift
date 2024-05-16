@@ -1,4 +1,5 @@
 import Foundation
+@testable import Nos
 
 /// A function that polls for a given condition to be true. Useful for waiting on async properties to change in XCTests
 /// since XCTestExpectations do not play nice with `async/await`.

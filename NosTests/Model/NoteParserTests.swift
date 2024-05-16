@@ -1,6 +1,7 @@
 import CoreData
 import XCTest
 import Dependencies
+@testable import Nos
 
 final class NoteParserTests: CoreDataTestCase {
 

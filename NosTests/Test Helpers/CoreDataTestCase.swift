@@ -2,6 +2,7 @@ import XCTest
 import CoreData
 import Foundation
 import Dependencies
+@testable import Nos
 
 /// An `XCTestCase` that sets up an in-memory Core Data stack and resets it between test runs.
 class CoreDataTestCase: XCTestCase {

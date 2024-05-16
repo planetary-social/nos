@@ -1,6 +1,7 @@
 import XCTest
 import CoreData
 import Dependencies
+@testable import Nos
 
 // swiftlint:disable implicitly_unwrapped_optional
 

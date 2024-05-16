@@ -4,7 +4,8 @@ import SwiftUI
 import ViewInspector
 import Combine
 import CoreData
-        
+@testable import Nos
+
 // This is a bit of instrumentation recommended by the ViewInspector package to set up views for asynchronous inspection
 // see https://github.com/nalexn/ViewInspector/blob/0.9.10/guide.md#approach-2
 internal final class Inspection<V> {

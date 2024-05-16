@@ -1,4 +1,5 @@
 import XCTest
+@testable import Nos
 
 extension NoteParserTests {
     /// Example taken from [NIP-27](https://github.com/nostr-protocol/nips/blob/master/27.md)

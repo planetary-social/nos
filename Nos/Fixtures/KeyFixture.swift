@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 enum KeyFixture {
@@ -12,3 +13,4 @@ enum KeyFixture {
     static let eve = KeyPair(nsec: "nsec16mw0dqelfjumkq3xxqh0zkfkzpyk06mk37a752x35wts7m30y6lsecl6zr")!
     static let emptyProfile = KeyPair(nsec: "nsec1kqzd5ctfh4j8hqvs3076zgruylz0das00wwfed67dzeevjcqls9s2ate2u")!
 }
+#endif

@@ -27,29 +27,28 @@ struct FollowButton: View {
     }
 }
 
-struct FollowButton_Previews: PreviewProvider {
+#Preview {
+    var persistenceController = PersistenceController.preview
     
-    static var persistenceController = PersistenceController.preview
-    
-    static var previewContext = {
+    var previewContext = {
         let context = persistenceController.viewContext
         return context
     }()
     
-    static var user: Author {
+    var user: Author {
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.pubKeyHex
         return author
     }
     
-    static var alice: Author = {
+    var alice: Author = {
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
         author.name = "Alice"
         return author
     }()
     
-    static var bob: Author = {
+    var bob: Author = {
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.bob.publicKeyHex
         author.name = "Bob"
@@ -57,7 +56,7 @@ struct FollowButton_Previews: PreviewProvider {
         return author
     }()
     
-    static func createTestData(in context: NSManagedObjectContext) {
+    func createTestData(in context: NSManagedObjectContext) {
         let follow = Follow(context: previewContext)
         follow.source = user
         follow.destination = alice
@@ -65,15 +64,13 @@ struct FollowButton_Previews: PreviewProvider {
         try? previewContext.save()
         KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.privateKeyHex.utf8))
     }
-    
-    static var previews: some View {
-        VStack(spacing: 10) {
-            FollowButton(currentUserAuthor: user, author: alice)
-            // FollowButton(currentUserAuthor: user, author: bob)
-        }
-        .onAppear {
-            // I can't get this to work, currentUser.context is always nil
-            createTestData(in: previewContext)
-        }
+
+    return VStack(spacing: 10) {
+        FollowButton(currentUserAuthor: user, author: alice)
+        // FollowButton(currentUserAuthor: user, author: bob)
+    }
+    .onAppear {
+        // I can't get this to work, currentUser.context is always nil
+        createTestData(in: previewContext)
     }
 }

@@ -1,5 +1,6 @@
 import XCTest
 import CoreData
+@testable import Nos
 
 final class ReportPublisherTests: CoreDataTestCase {
     func testCreatePublicReport() throws {
