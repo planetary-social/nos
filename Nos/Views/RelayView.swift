@@ -145,7 +145,7 @@ struct RelayView: View {
                 ))
             }
         }
-        .alert($alert)
+        .alert(unwrapping: $alert)
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
         .toolbar {

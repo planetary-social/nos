@@ -156,7 +156,7 @@ struct NewNoteView: View {
                 analytics.showedNewNote()
             }
         }
-        .alert($alert)
+        .alert(unwrapping: $alert)
     }
 
     private func postAction() async {

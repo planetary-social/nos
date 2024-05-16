@@ -2814,7 +2814,7 @@
 			repositoryURL = "https://github.com/pointfreeco/swiftui-navigation";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 0.6.1;
 			};
 		};
 		C9646E9829B79E04007239A4 /* XCRemoteSwiftPackageReference "logger-ios" */ = {
@@ -2838,7 +2838,7 @@
 			repositoryURL = "https://github.com/pointfreeco/swift-dependencies";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 0.1.4;
 			};
 		};
 		C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */ = {
