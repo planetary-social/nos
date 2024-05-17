@@ -154,11 +154,8 @@ enum CurrentUserError: Error {
         
         // Recommended Relays for new user
         for address in Relay.recommended {
-            _ = try? Relay(
-                context: viewContext,
-                address: address,
-                author: author
-            )
+            let relay = try? Relay.findOrCreate(by: address, context: viewContext)
+            relay?.addToAuthors(author)
         }
         try viewContext.save()
         
