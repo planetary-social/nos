@@ -83,7 +83,7 @@ final class EventTests: CoreDataTestCase {
     
     func testParseSampleRepliesAndFetchReplies() throws {
         // Arrange
-        let sampleData = try Data(contentsOf: Bundle.current.url(forResource: "sample_replies", withExtension: "json")!)
+        let sampleData = try Data(contentsOf: Bundle(for: Self.self).url(forResource: "sample_replies", withExtension: "json")!)
         let sampleEventID = "57b994eb5903d37ee11d507872611eec843098d24eb5d21a1678983dffd92b86"
         
         // Act
@@ -100,7 +100,7 @@ final class EventTests: CoreDataTestCase {
     
     func testParseRepost() throws {
         // Arrange
-        let sampleData = try Data(contentsOf: Bundle.current.url(forResource: "sample_repost", withExtension: "json")!)
+        let sampleData = try Data(contentsOf: Bundle(for: Self.self).url(forResource: "sample_repost", withExtension: "json")!)
         let sampleEventID = "f41e430f632b1e747da7efbb0ce11616876851e2fa3bbac440101c1b8a091152"
         let repostedEventID = "f82507f7c770a39d0eabf276ced34fbd6a172be869bd3a3231c9c0272f405008"
         let repostedEventContents = "#kraftwerk https://v.nostr.build/lx7e.mp4 "
@@ -187,7 +187,7 @@ final class EventTests: CoreDataTestCase {
     
     func testParseContactListIgnoresInvalidKeys() throws {
         // Arrange
-        let jsonData = try Data(contentsOf: Bundle.current.url(forResource: "bad_contact_list", withExtension: "json")!)
+        let jsonData = try Data(contentsOf: Bundle(for: Self.self).url(forResource: "bad_contact_list", withExtension: "json")!)
         let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
 
         // Act
