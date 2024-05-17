@@ -7,7 +7,6 @@ struct ProfileSocialStatsView: View {
     var author: Author
 
     var followsResult: FetchedResults<Follow>
-    var followersResult: FetchedResults<Follow>
 
     var body: some View {
         HStack {
@@ -22,20 +21,6 @@ struct ProfileSocialStatsView: View {
                     )
                 } label: {
                     tab(label: .localizable.following, value: author.follows.count)
-                }
-                Spacer(minLength: 0)
-            }
-            Group {
-                Spacer(minLength: 0)
-                Button {
-                    router.currentPath.wrappedValue.append(
-                        FollowersDestination(
-                            author: author,
-                            followers: followersResult.compactMap { $0.source }
-                        )
-                    )
-                } label: {
-                    tab(label: .localizable.followersYouKnow, value: author.followers.count)
                 }
                 Spacer(minLength: 0)
             }

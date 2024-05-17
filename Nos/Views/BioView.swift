@@ -44,7 +44,7 @@ struct BioView: View {
     }
 
     private var font: Font {
-        .clarity(.medium, textStyle: .subheadline)
+        .subheadline
     }
 
     var body: some View {
@@ -52,6 +52,7 @@ struct BioView: View {
             Text(parsedBio)
                 .font(font)
                 .foregroundColor(.primaryTxt)
+                .multilineTextAlignment(.leading)
                 .tint(.accent)
                 .lineSpacing(lineSpacing)
                 .lineLimit(lineLimit)
