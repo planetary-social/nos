@@ -137,7 +137,7 @@ class Analytics {
     }
     
     func reported(_ reportedObject: ReportTarget) {
-        track("Reported", properties: ["type": reportedObject.displayString])
+        track("Reported", properties: ["type": reportedObject.analyticsString])
     }
     
     func identify(with keyPair: KeyPair) {

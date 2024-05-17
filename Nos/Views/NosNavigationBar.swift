@@ -12,7 +12,6 @@ struct NosNavigationBarModifier: ViewModifier {
                     Text(title)
                         .font(.clarity(.bold, textStyle: .title3))
                         .foregroundColor(.primaryTxt)
-                        .padding(.leading, 14)
                         .tint(.primaryTxt)
                         .allowsHitTesting(false)
                 }
