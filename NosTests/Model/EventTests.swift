@@ -61,7 +61,7 @@ final class EventTests: CoreDataTestCase {
 
     func testParseSampleData() throws {
         // Arrange
-        let sampleData = try Data(contentsOf: Bundle.current.url(forResource: "sample_data", withExtension: "json")!)
+        let sampleData = try Data(contentsOf: Bundle(for: Self.self).url(forResource: "sample_data", withExtension: "json")!)
         let sampleEventID = "afc8a1cf67bddd12595c801bdc8c73ec1e8dfe94920f6c5ae5575c433722840e"
         
         // Act

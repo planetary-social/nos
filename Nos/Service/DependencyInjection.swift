@@ -100,7 +100,7 @@ fileprivate enum PushNotificationServiceKey: DependencyKey {
 fileprivate enum PersistenceControllerKey: DependencyKey {
     static let liveValue = PersistenceController()
     static var testValue = PersistenceController(inMemory: true)
-    static let previewValue = PersistenceController(inMemory: true)
+    static let previewValue = testValue // context needs to be the same for both
 }
 
 fileprivate enum UserDefaultsKey: DependencyKey {

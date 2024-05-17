@@ -129,8 +129,7 @@ final class AuthorTests: CoreDataTestCase {
     func test_formattedNIP05_with_nil_nip05() throws {
         let nip05: String? = nil
         let expected: String? = nil
-        let context = persistenceController.viewContext
-        let author = try Author.findOrCreate(by: "test", context: context)
+        let author = try Author.findOrCreate(by: "test", context: testContext)
         author.nip05 = nip05
 
         XCTAssertEqual(author.formattedNIP05, expected)

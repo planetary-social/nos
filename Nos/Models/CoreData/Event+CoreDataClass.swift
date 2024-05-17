@@ -817,7 +817,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         [
             0,
             author?.hexadecimalPublicKey,
-            Int64(createdAt!.timeIntervalSince1970),
+            (createdAt != nil) ? Int64(createdAt!.timeIntervalSince1970) : nil,
             kind,
             allTags,
             content
