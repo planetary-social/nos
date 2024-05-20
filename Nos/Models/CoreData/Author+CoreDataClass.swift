@@ -366,7 +366,6 @@ import Logger
     
     func add(relay: Relay) {
         relays.insert(relay) 
-        print("Adding \(relay.address ?? "") to \(hexadecimalPublicKey ?? "")")
     }
     
     @MainActor func mute(viewContext context: NSManagedObjectContext) async throws {

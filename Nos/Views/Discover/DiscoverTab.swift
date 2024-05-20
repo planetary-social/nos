@@ -130,7 +130,8 @@ struct DiscoverTab_Previews: PreviewProvider {
     static func createRelayData(in context: NSManagedObjectContext, user: Author) {
         let addresses = ["wss://nostr.band", "wss://nos.social", "wss://a.long.domain.name.to.see.what.happens"]
         addresses.forEach {
-            _ = try? Relay(context: previewContext, address: $0, author: user)
+            let relay = try? Relay.findOrCreate(by: $0, context: previewContext)
+            relay?.addToAuthors(user)
         }
 
         try? previewContext.save()

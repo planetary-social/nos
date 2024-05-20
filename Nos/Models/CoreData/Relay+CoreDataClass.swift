@@ -57,6 +57,7 @@ public class Relay: NosManagedObject {
     @nonobjc public class func relay(by address: String) -> NSFetchRequest<Relay> {
         let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
         fetchRequest.predicate = NSPredicate(format: "address = %@", address)
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.createdAt, ascending: true)]
         fetchRequest.fetchLimit = 1
         return fetchRequest
     }
@@ -116,7 +117,7 @@ public class Relay: NosManagedObject {
         metadataFetchedAt = Date.now
     }
 
-    convenience init(context: NSManagedObjectContext, address: String, author: Author? = nil) throws {
+    private convenience init(context: NSManagedObjectContext, address: String, author: Author? = nil) throws {
         guard let addressURL = URL(string: address),
             addressURL.scheme == "wss" else {
             throw RelayError.invalidAddress

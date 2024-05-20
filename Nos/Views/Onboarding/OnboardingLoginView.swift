@@ -19,11 +19,7 @@ struct OnboardingLoginView: View {
 
         for address in Relay.allKnown {
             do {
-                let relay = try Relay(
-                    context: viewContext,
-                    address: address,
-                    author: currentUser.author
-                )
+                let relay = try Relay.findOrCreate(by: address, context: viewContext)
                 currentUser.onboardingRelays.append(relay)
             } catch {
                 Log.error(error.localizedDescription)
