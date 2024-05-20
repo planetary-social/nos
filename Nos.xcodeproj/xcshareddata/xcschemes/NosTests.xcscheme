@@ -14,7 +14,7 @@
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"
-                     BlueprintIdentifier = "C9DEBFE3298941020078B43A"
+                     BlueprintIdentifier = "03AB2FC52BF6ABDB00B73DB1"
                      BuildableName = "NosTests.xctest"
                      BlueprintName = "NosTests"
                      ReferencedContainer = "container:Nos.xcodeproj">
@@ -29,19 +29,12 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C9DEBFE3298941020078B43A"
-               BuildableName = "NosTests.xctest"
-               BlueprintName = "NosTests"
-               ReferencedContainer = "container:Nos.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:NosTests/Nos.xctestplan"
+            default = "YES">
+         </TestPlanReference>
+      </TestPlans>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
