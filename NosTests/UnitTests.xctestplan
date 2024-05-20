@@ -33,15 +33,6 @@
         "identifier" : "C9DEBFE3298941020078B43A",
         "name" : "NosTests"
       }
-    },
-    {
-      "enabled" : false,
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:Nos.xcodeproj",
-        "identifier" : "C90862BA29E9804B00C35A71",
-        "name" : "NosPerformanceTests"
-      }
     }
   ],
   "version" : 1

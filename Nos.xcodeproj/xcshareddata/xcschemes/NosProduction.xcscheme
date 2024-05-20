@@ -58,8 +58,11 @@
       </CodeCoverageTargets>
       <TestPlans>
          <TestPlanReference
-            reference = "container:NosTests/Nos.xctestplan"
+            reference = "container:NosTests/UnitTests.xctestplan"
             default = "YES">
+         </TestPlanReference>
+         <TestPlanReference
+            reference = "container:NosTests/PerformanceTests.xctestplan">
          </TestPlanReference>
       </TestPlans>
       <Testables>
