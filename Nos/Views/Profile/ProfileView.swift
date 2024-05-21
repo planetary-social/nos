@@ -54,6 +54,20 @@ struct ProfileView: View {
         relaySubscriptions.append(await relayService.subscribeToEvents(matching: reportFilter)) 
     }
 
+    private var title: AttributedString {
+        let prefix = isShowingLoggedInUser ? String(localized: .localizable.yourProfile) : String(localized: .localizable.profile)
+        if author.muted {
+            let suffix = "(\(String(localized: .localizable.muted).lowercased()))"
+            var attributedString = AttributedString("\(prefix) \(suffix)")
+            if let range = attributedString.range(of: suffix) {
+                attributedString[range].foregroundColor = .secondaryTxt
+            }
+            return attributedString
+        } else {
+            return AttributedString(prefix)
+        }
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             VStack {
@@ -91,7 +105,7 @@ struct ProfileView: View {
             }
         }
         .background(Color.appBg)
-        .nosNavigationBar(title: LocalizedStringResource(stringLiteral: author.humanFriendlyIdentifier))
+        .nosNavigationBar(title: title)
         .navigationDestination(for: Event.self) { note in
             RepliesView(note: note)
         }                  

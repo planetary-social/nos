@@ -27,7 +27,7 @@ struct BioView: View {
         bio == nil
     }
 
-    private let lineSpacing: CGFloat = 7
+    private let lineSpacing: CGFloat = 3
 
     private let lineLimit: Int = 5
 
@@ -101,7 +101,7 @@ struct BioView: View {
                         .cornerRadius(4)
                 }
                 .frame(maxWidth: .infinity)
-                .padding(EdgeInsets(top: 3, leading: 0, bottom: 1, trailing: 0))
+                .padding(EdgeInsets(top: 9, leading: 0, bottom: 1, trailing: 0))
             }
         }
         .placeholder(when: isLoading) {

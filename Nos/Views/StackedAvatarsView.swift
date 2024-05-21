@@ -76,7 +76,8 @@ struct StackedAvatarsView_Previews: PreviewProvider {
             }
             .preferredColorScheme(.dark)
         }
-        .padding()
+        .padding(.horizontal)
+        .padding(.vertical, 0)
         .background(Color.previewBg)
     }
 }

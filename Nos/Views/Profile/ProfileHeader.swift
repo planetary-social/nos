@@ -82,6 +82,17 @@ struct ProfileHeader: View {
                                     .font(.footnote)
                             }
                             .padding(.top, 3)
+                        } else if let npub = author.npubString {
+                            Button {
+                                showingBio = true
+                            } label: {
+                                Text("@\(npub.prefix(10).appending("..."))")
+                                    .foregroundStyle(Color.secondaryTxt)
+                                    .font(.footnote)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                    .textSelection(.enabled)
+                            }
                         }
 
                         // ActivityPub
@@ -90,6 +101,7 @@ struct ProfileHeader: View {
                                 showingBio = true
                             } label: {
                                 ActivityPubBadgeView(author: author)
+                                    .padding(.top, 5)
                             }
                         }
 
@@ -115,16 +127,18 @@ struct ProfileHeader: View {
                             .frame(maxWidth: .infinity)
                     }
                     .padding(.top, 18)
+                    .padding(.bottom, 9)
                 }
 
                 Divider()
-                    .overlay(Color.cardDividerBottom)
+                    .overlay(Color.profileDivider)
                     .shadow(
-                        color: .cardDividerBottomShadow,
+                        color: .profileDividerShadow,
                         radius: 0,
                         x: 0,
                         y: 1
                     )
+                    .padding(.top, shouldShowBio ? 0 : 16)
 
                 if let first = knownFollowers[safe: 0]?.source {
                     Button {
@@ -141,32 +155,45 @@ struct ProfileHeader: View {
                             followers: followers
                         )
                     }
+                    .padding(.top, 5)
                 }
 
-                HStack {
-                    if author != currentUser.author, let currentUser = currentUser.author {
-                        HStack {
-                            FollowButton(currentUserAuthor: currentUser, author: author)
-                            if author.muted {
-                                Text(.localizable.muted)
-                                    .font(.subheadline)
-                                    .foregroundColor(Color.secondaryTxt)
+                HStack(spacing: 34) {
+                    if let currentUser = currentUser.author {
+                        if author != currentUser {
+                            FollowButton(
+                                currentUserAuthor: currentUser,
+                                author: author,
+                                shouldDisplayIcon: true,
+                                shouldFixHorizontalSize: false
+                            )
+                        } else {
+                            ActionButton(
+                                title: .localizable.editProfile,
+                                font: .clarity(.bold, textStyle: .subheadline),
+                                depthEffectColor: Color("#4C347B"),
+                                backgroundGradient: LinearGradient.verticalAccentSecondary,
+                                shouldFixHorizontalSize: false
+                            ) {
+                                router.push(EditProfileDestination(profile: author))
                             }
                         }
-                        .padding(.top, 3)
-                        .padding(.horizontal, 18)
                     }
-                    
+
                     ProfileSocialStatsView(
                         author: author,
                         followsResult: followsResult
                     )
+                    .padding(.trailing, 18)
                 }
+                .padding(.horizontal, 18)
+                .padding(.vertical, 0)
+                .frame(maxWidth: .infinity)
 
                 Divider()
-                    .overlay(Color.cardDividerTop)
+                    .overlay(Color.profileDivider)
                     .shadow(
-                        color: .cardDividerTopShadow,
+                        color: .profileDividerShadow,
                         radius: 0,
                         x: 0,
                         y: 1

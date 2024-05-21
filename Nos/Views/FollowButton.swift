@@ -5,13 +5,27 @@ import CoreData
 struct FollowButton: View {
     @ObservedObject var currentUserAuthor: Author
     @ObservedObject var author: Author
-    @Environment(CurrentUser.self) var currentUser
+    var shouldDisplayIcon = false
+    var shouldFixHorizontalSize = true
+    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
     
+    private func image(for following: Bool) -> Image? {
+        guard shouldDisplayIcon else {
+            return nil
+        }
+        return following ? Image.slimFollowingIcon : Image.slimFollowIcon
+    }
+    
     var body: some View {
         let following = currentUser.isFollowing(author: author)
-        ActionButton(title: following ? .localizable.unfollow : .localizable.follow) {
+        ActionButton(
+            title: following ? .localizable.unfollow : .localizable.follow,
+            font: .clarity(.bold, textStyle: .subheadline),
+            image: image(for: following),
+            shouldFixHorizontalSize: shouldFixHorizontalSize
+        ) {
             do {
                 if following {
                     try await currentUser.unfollow(author: author)

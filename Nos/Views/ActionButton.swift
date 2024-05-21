@@ -17,6 +17,7 @@ struct ActionButton: View {
         endPoint: .topTrailing
     )
     var textShadow = true
+    var shouldFixHorizontalSize = true
     var action: () async -> Void
     @State var disabled = false
     
@@ -29,12 +30,19 @@ struct ActionButton: View {
             }
         }, label: {
             HStack {
+                if !shouldFixHorizontalSize {
+                    Spacer(minLength: 0)
+                }
                 image
                 Text(title)
                     .font(font)
                     .transition(.opacity)
                     .font(.headline)
                     .foregroundColor(textColor)
+
+                if !shouldFixHorizontalSize {
+                    Spacer(minLength: 0)
+                }
             }
         })
         .lineLimit(nil)
@@ -42,7 +50,8 @@ struct ActionButton: View {
         .buttonStyle(ActionButtonStyle(
             depthEffectColor: depthEffectColor,
             backgroundGradient: backgroundGradient,
-            textShadow: textShadow
+            textShadow: textShadow,
+            shouldFixHorizontalSize: shouldFixHorizontalSize
         ))
         .disabled(disabled)
     }
@@ -77,7 +86,8 @@ struct ActionButtonStyle: ButtonStyle {
     let depthEffectColor: Color
     let backgroundGradient: LinearGradient
     var textShadow: Bool
-    
+    var shouldFixHorizontalSize = true
+
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             ZStack {
@@ -117,7 +127,7 @@ struct ActionButtonStyle: ButtonStyle {
                 .cornerRadius(cornerRadius)
                 .offset(y: configuration.isPressed ? 2 : 0)
         }
-        .fixedSize(horizontal: true, vertical: true)
+        .fixedSize(horizontal: shouldFixHorizontalSize, vertical: true)
     }
 }
 
