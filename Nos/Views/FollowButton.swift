@@ -5,12 +5,18 @@ import CoreData
 struct FollowButton: View {
     @ObservedObject var currentUserAuthor: Author
     @ObservedObject var author: Author
+    /// A flag used to show a follow or unfollow icon in addition to Follow or
+    /// Unfollow text.
     var shouldDisplayIcon = false
+    /// A flag used to fit the horizontal space to the contents of the action
+    /// button or to fill the available horizontal space (centering the
+    /// contents).
     var shouldFixHorizontalSize = true
     @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
     
+    /// Returns an icon associated to the follow or unfollow state.
     private func image(for following: Bool) -> Image? {
         guard shouldDisplayIcon else {
             return nil

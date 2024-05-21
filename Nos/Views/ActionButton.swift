@@ -17,6 +17,9 @@ struct ActionButton: View {
         endPoint: .topTrailing
     )
     var textShadow = true
+    /// A flag used to fit the horizontal space to the contents of the action
+    /// button or to fill the available horizontal space (centering the
+    /// contents).
     var shouldFixHorizontalSize = true
     var action: () async -> Void
     @State var disabled = false
@@ -31,6 +34,8 @@ struct ActionButton: View {
         }, label: {
             HStack {
                 if !shouldFixHorizontalSize {
+                    // Center the image+text if the button has to fill the
+                    // available space.
                     Spacer(minLength: 0)
                 }
                 image
@@ -39,8 +44,9 @@ struct ActionButton: View {
                     .transition(.opacity)
                     .font(.headline)
                     .foregroundColor(textColor)
-
                 if !shouldFixHorizontalSize {
+                    // Center the image+text if the button has to fill the
+                    // available space.
                     Spacer(minLength: 0)
                 }
             }
@@ -86,6 +92,9 @@ struct ActionButtonStyle: ButtonStyle {
     let depthEffectColor: Color
     let backgroundGradient: LinearGradient
     var textShadow: Bool
+    /// A flag used to fit the horizontal space to the contents of the action
+    /// button or to fill the available horizontal space (centering the
+    /// contents).
     var shouldFixHorizontalSize = true
 
     func makeBody(configuration: Configuration) -> some View {
