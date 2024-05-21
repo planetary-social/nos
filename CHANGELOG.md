@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Redesign the Profile screen.
 - Added a delay when trying to reopen a websocket that had previously closed with an error.
 
 ## [0.1.13] - 2024-05-15Z
