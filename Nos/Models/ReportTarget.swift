@@ -16,12 +16,12 @@ enum ReportTarget {
         }
     }
     
-    var displayString: String {
+    var analyticsString: String {
         switch self {
         case .note:
-            return String(localized: .localizable.note)
+            return "note"
         case .author:
-            return String(localized: .localizable.profile)
+            return "profile"
         }
     }
     

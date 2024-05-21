@@ -25,7 +25,7 @@ struct AuthorCard: View {
         Button {
             tapAction?()
         } label: {
-            VStack(spacing: 13) {
+            VStack(spacing: 0) {
                 HStack(alignment: .top) {
                     ZStack(alignment: .bottomTrailing) {
                         AvatarView(imageUrl: author.profilePhotoURL, size: 80)
@@ -34,16 +34,9 @@ struct AuthorCard: View {
                             CircularFollowButton(author: author)
                         }
                     }
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 12) {
                         HStack {
-                            if author.hasNIP05 {
-                                NIP05View(author: author)
-                                    .font(.clarity(.semibold, textStyle: .title3))
-                                    .lineLimit(1)
-                            } else if author.hasUNS {
-                                UNSNameView(author: author)
-                                    .font(.clarity(.semibold, textStyle: .title3))
-                            } else {
+                            VStack(alignment: .leading, spacing: 4) {
                                 Text(author.safeName)
                                     .lineLimit(1)
                                     .font(.title3)
@@ -51,6 +44,16 @@ struct AuthorCard: View {
                                     .foregroundColor(Color.primaryTxt)
                                     .multilineTextAlignment(.leading)
                                     .frame(maxWidth: .infinity, alignment: .leading)
+
+                                if author.hasNIP05 {
+                                    NIP05View(author: author)
+                                        .font(.clarity(.regular))
+                                        .lineLimit(1)
+                                } else if author.hasUNS {
+                                    UNSNameView(author: author)
+                                        .font(.clarity(.regular))
+                                        .lineLimit(1)
+                                }
                             }
 
                             Spacer()
@@ -71,9 +74,13 @@ struct AuthorCard: View {
                         }
                     }
                 }
+                .padding(.bottom, 12)
+
                 KnownFollowersView(author: author)
+                    .padding(.top, -8)
             }
-            .padding(15)
+            .padding(.top, 20)
+            .padding(.horizontal, 15)
             .background(
                 LinearGradient(
                     colors: [Color.cardBgTop, Color.cardBgBottom],

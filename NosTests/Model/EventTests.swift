@@ -408,6 +408,52 @@ final class EventTests: CoreDataTestCase {
         
         XCTAssertEqual(testEvent.repostedNote()?.identifier, nil)
     }
+    
+    // MARK: - Fetch requests
+    
+    func test_eventByIdentifierSeenOnRelay_givenAlreadySeen() throws {
+        // Arrange
+        let eventID = "foo"
+        let event = try Event.findOrCreateStubBy(id: eventID, context: testContext)
+        let relay = try Relay.findOrCreate(by: "wss://relay.nos.social", context: testContext)
+        event.addToSeenOnRelays(relay)
+        try testContext.saveIfNeeded()
+        
+        // Act
+        let events = try testContext.fetch(Event.event(by: eventID, seenOn: relay))
+        
+        // Assert
+        XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events.first, event)
+    }
+    
+    func test_eventByIdentifierSeenOnRelay_givenNotSeen() throws {
+        // Arrange
+        let eventID = "foo"
+        let event = try Event.findOrCreateStubBy(id: eventID, context: testContext)
+        let relay = try Relay.findOrCreate(by: "wss://relay.nos.social", context: testContext)
+        
+        // Act
+        let events = try testContext.fetch(Event.event(by: eventID, seenOn: relay))
+        
+        // Assert
+        XCTAssertEqual(events.count, 0)
+    }
+    
+    func test_eventByIdentifierSeenOnRelay_givenSeenOnAnother() throws {
+        // Arrange
+        let eventID = "foo"
+        let event = try Event.findOrCreateStubBy(id: eventID, context: testContext)
+        let relayOne = try Relay.findOrCreate(by: "wss://relay.nos.social", context: testContext)
+        event.addToSeenOnRelays(relayOne)
+        let relayTwo = try Relay.findOrCreate(by: "wss://other.relay.com", context: testContext)
+        
+        // Act
+        let events = try testContext.fetch(Event.event(by: eventID, seenOn: relayTwo))
+        
+        // Assert
+        XCTAssertEqual(events.count, 0)
+    }
 
     // MARK: - Helpers
     

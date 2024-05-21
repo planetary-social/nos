@@ -10,7 +10,7 @@ struct AuthorStoryCarousel: View {
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 15) {
+            LazyHStack(spacing: 15) {
                 ForEach(authors) { author in
                     Button {
                         withAnimation {

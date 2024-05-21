@@ -58,6 +58,15 @@
             ReferencedContainer = "container:Nos.xcodeproj">
          </BuildableReference>
       </CodeCoverageTargets>
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:NosTests/UnitTests.xctestplan"
+            default = "YES">
+         </TestPlanReference>
+         <TestPlanReference
+            reference = "container:NosTests/PerformanceTests.xctestplan">
+         </TestPlanReference>
+      </TestPlans>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -66,17 +75,6 @@
                BlueprintIdentifier = "C9DEBFE3298941020078B43A"
                BuildableName = "NosTests.xctest"
                BlueprintName = "NosTests"
-               ReferencedContainer = "container:Nos.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "YES"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C9DEBFED298941020078B43A"
-               BuildableName = "NosUITests.xctest"
-               BlueprintName = "NosUITests"
                ReferencedContainer = "container:Nos.xcodeproj">
             </BuildableReference>
          </TestableReference>

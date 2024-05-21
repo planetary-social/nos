@@ -365,8 +365,17 @@ public class Event: NosManagedObject, VerifiableEvent {
     }
     
     @nonobjc public class func event(by identifier: String, seenOn relay: Relay) -> NSFetchRequest<Event> {
+        guard let relayAddress = relay.address else {
+            return Event.emptyRequest()
+        }
+        
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.predicate = NSPredicate(format: "identifier = %@ AND ANY seenOnRelays = %@", identifier, relay)
+        fetchRequest.predicate = NSPredicate(
+            format: "identifier = %@ AND ANY seenOnRelays.address = %@", 
+            identifier, 
+            relayAddress
+        )
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.createdAt, ascending: true)]
         fetchRequest.fetchLimit = 1
         return fetchRequest
     }
