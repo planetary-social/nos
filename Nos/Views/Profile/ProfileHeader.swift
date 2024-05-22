@@ -172,7 +172,7 @@ struct ProfileHeader: View {
                             ActionButton(
                                 title: .localizable.editProfile,
                                 font: .clarity(.bold, textStyle: .subheadline),
-                                depthEffectColor: Color("#4C347B"),
+                                depthEffectColor: .actionSecondaryDepthEffect,
                                 backgroundGradient: LinearGradient.verticalAccentSecondary,
                                 shouldFillHorizontalSpace: true
                             ) {
