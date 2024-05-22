@@ -253,7 +253,9 @@ fileprivate struct WebsocketErrorEvent {
     
     mutating func trackRetry() {
         self.retryCounter += 1
-        let delaySeconds = NSDecimalNumber(decimal: pow(2, min(retryCounter, RelaySubscriptionManagerActor.maxBackoffPower)))
+        let delaySeconds = NSDecimalNumber(
+            decimal: pow(2, min(retryCounter, RelaySubscriptionManagerActor.maxBackoffPower))
+        )
         self.nextRetry = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + delaySeconds.doubleValue)
     }
 }
