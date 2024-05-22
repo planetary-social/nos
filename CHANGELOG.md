@@ -8,8 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.14] - 2024-05-22Z
-
 - Added the author's name to profile cards on the Discover tab and search results. 
 - Added a delay when trying to reopen a websocket that had previously closed with an error.
 - Updated the icon that appears when following a user.
