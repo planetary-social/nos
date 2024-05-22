@@ -8,53 +8,48 @@ struct KnownFollowersView: View {
     @ObservedObject var author: Author
     @Environment(CurrentUser.self) private var currentUser
     
-    var followersRequest: FetchRequest<Follow>
-    var followersResult: FetchedResults<Follow> { followersRequest.wrappedValue }
+    /// The authors that the `source` author follows who also follow the `author`
+    @FetchRequest private var knownFollowers: FetchedResults<Author>
     
-    var followers: Followed {
-        followersResult.map { $0 }
+    /// The authors that will be featured with profile pictures and names
+    var displayedAuthors: ArraySlice<Author> {
+        knownFollowers
+            .filter { $0.hasHumanFriendlyName }
+            .filter { $0.profilePhotoURL != nil }
+            .prefix(2)
     }
     
-    var knownFollowers: [Follow] {
-        followers.filter {
-            guard let source = $0.source else {
-                return false
-            }
-            return source.hasHumanFriendlyName == true &&
-            source != author &&
-            source != currentUser.author &&
-            currentUser.isFollowing(author: source)
-        }
-    }
-    
+    /// The avatars of the authors that will be featured with profile pictures and names
     var avatarURLs: [URL?] {
-        knownFollowers.prefix(3).map { $0.source?.profilePhotoURL }
+        displayedAuthors.compactMap { $0.profilePhotoURL }
     }
     
+    /// The text that will be displayed alongside the avatars listing some of the displayedAuthor's names
     var followText: Text {
         let stringResource: LocalizedStringResource
-        switch avatarURLs.count {
+        let authors = self.displayedAuthors
+        switch knownFollowers.count {
+        case 0: 
+            return Text("")
         case 1:
-            guard let name = knownFollowers[safe: 0]?.source?.safeName else {
-                fallthrough
+            guard let name = authors[safe: 0]?.safeName else {
+                return Text("")
             }
             stringResource = LocalizedStringResource.localizable.followedByOne(name)
         case 2:
-            guard let firstName = knownFollowers[safe: 0]?.source?.safeName,
-                let secondName = knownFollowers[safe: 1]?.source?.safeName else {
-                fallthrough
+            guard let firstName = authors[safe: 0]?.safeName,
+                let secondName = authors[safe: 1]?.safeName else {
+                return Text("")
             }
             stringResource = LocalizedStringResource.localizable.followedByTwo(firstName, secondName)
-        case 3:
-            guard let firstName = knownFollowers[safe: 0]?.source?.safeName,
-                let secondName = knownFollowers[safe: 1]?.source?.safeName else {
-                fallthrough
+        default:
+            guard let firstName = authors[safe: 0]?.safeName,
+                let secondName = authors[safe: 1]?.safeName else {
+                return Text("")
             }
             stringResource = LocalizedStringResource.localizable.followedByTwoAndMore(
-                firstName, secondName, followers.count - 2
+                firstName, secondName, knownFollowers.count - 2
             )
-        default:
-            return Text("")
         }
 
         let attributedString = AttributedString(localized: stringResource)
@@ -69,9 +64,13 @@ struct KnownFollowersView: View {
         return Text(attributedString)
     }
     
-    init(author: Author) {
-        self.author = author
-        self.followersRequest = FetchRequest(fetchRequest: Follow.followsRequest(destination: [author]))
+    init(source: Author?, destination: Author) {
+        self.author = destination
+        if let source {
+            self._knownFollowers = FetchRequest(fetchRequest: source.knownFollowers(of: destination))
+        } else {
+            self._knownFollowers = FetchRequest(fetchRequest: Author.emptyRequest())
+        } 
     }
     
     var body: some View {
@@ -99,8 +98,9 @@ struct KnownFollowersView: View {
     var previewData = PreviewData()
     
     return VStack {
-        KnownFollowersView(author: previewData.alice)
-        KnownFollowersView(author: previewData.bob) // should display nothing
+        KnownFollowersView(source: previewData.currentUser.author, destination: previewData.alice)
+        // should display nothing
+        KnownFollowersView(source: previewData.currentUser.author, destination: previewData.bob)
     }
     .background(Color.appBg)
     .padding()

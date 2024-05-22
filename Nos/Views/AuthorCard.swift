@@ -76,7 +76,7 @@ struct AuthorCard: View {
                 }
                 .padding(.bottom, 12)
 
-                KnownFollowersView(author: author)
+                KnownFollowersView(source: currentUser.author, destination: author)
                     .padding(.top, -8)
             }
             .padding(.top, 20)
