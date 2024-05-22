@@ -223,7 +223,8 @@ import Logger
             "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
         ").@count = 0)"
         return NSPredicate(
-            format: "(\(onlyRootPostsClause) OR kind = %i) AND author = %@ AND createdAt <= %@",
+            format: "(\(onlyRootPostsClause) OR kind = %i) " +
+                "AND author = %@ AND deletedOn.@count = 0 AND createdAt <= %@",
             EventKind.longFormContent.rawValue,
             self,
             before as CVarArg
