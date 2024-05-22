@@ -69,6 +69,7 @@ struct ProfileHeader: View {
                                 .truncationMode(.tail)
                                 .font(.title3.weight(.bold))
                                 .foregroundColor(Color.primaryTxt)
+                                .padding(.top, 10)
                         }
 
                         // NIP-05
