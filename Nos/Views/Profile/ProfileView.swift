@@ -55,12 +55,16 @@ struct ProfileView: View {
     }
 
     private var title: AttributedString {
-        let prefix = isShowingLoggedInUser ? String(localized: .localizable.yourProfile) : String(localized: .localizable.profile)
+        let prefix = isShowingLoggedInUser ? String(
+            localized: LocalizedStringResource.localizable.yourProfile
+        ) : String(
+            localized: LocalizedStringResource.localizable.profileTitle
+        )
         if author.muted {
             let suffix = "(\(String(localized: .localizable.muted).lowercased()))"
             var attributedString = AttributedString("\(prefix) \(suffix)")
             if let range = attributedString.range(of: suffix) {
-                attributedString[range].foregroundColor = .secondaryTxt
+                attributedString[range].foregroundColor = Color.secondaryTxt
             }
             return attributedString
         } else {

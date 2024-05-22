@@ -17,10 +17,10 @@ struct ActionButton: View {
         endPoint: .topTrailing
     )
     var textShadow = true
-    /// A flag used to fit the horizontal space to the contents of the action
-    /// button or to fill the available horizontal space (centering the
-    /// contents).
-    var shouldFixHorizontalSize = true
+    /// A flag used to fill the available horizontal space (centering the
+    /// contents) or to fit the horizontal space to the contents of the action
+    /// button.
+    var shouldFillHorizontalSpace = false
     var action: () async -> Void
     @State var disabled = false
     
@@ -33,7 +33,7 @@ struct ActionButton: View {
             }
         }, label: {
             HStack {
-                if !shouldFixHorizontalSize {
+                if shouldFillHorizontalSpace {
                     // Center the image+text if the button has to fill the
                     // available space.
                     Spacer(minLength: 0)
@@ -44,7 +44,7 @@ struct ActionButton: View {
                     .transition(.opacity)
                     .font(.headline)
                     .foregroundColor(textColor)
-                if !shouldFixHorizontalSize {
+                if shouldFillHorizontalSpace {
                     // Center the image+text if the button has to fill the
                     // available space.
                     Spacer(minLength: 0)
@@ -57,7 +57,7 @@ struct ActionButton: View {
             depthEffectColor: depthEffectColor,
             backgroundGradient: backgroundGradient,
             textShadow: textShadow,
-            shouldFixHorizontalSize: shouldFixHorizontalSize
+            shouldFillHorizontalSpace: shouldFillHorizontalSpace
         ))
         .disabled(disabled)
     }
@@ -92,10 +92,10 @@ struct ActionButtonStyle: ButtonStyle {
     let depthEffectColor: Color
     let backgroundGradient: LinearGradient
     var textShadow: Bool
-    /// A flag used to fit the horizontal space to the contents of the action
-    /// button or to fill the available horizontal space (centering the
-    /// contents).
-    var shouldFixHorizontalSize = true
+    /// A flag used to fill the available horizontal space (centering the
+    /// contents) or to fit the horizontal space to the contents of the action
+    /// button.
+    var shouldFillHorizontalSpace = false
 
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
@@ -136,7 +136,7 @@ struct ActionButtonStyle: ButtonStyle {
                 .cornerRadius(cornerRadius)
                 .offset(y: configuration.isPressed ? 2 : 0)
         }
-        .fixedSize(horizontal: shouldFixHorizontalSize, vertical: true)
+        .fixedSize(horizontal: !shouldFillHorizontalSpace, vertical: true)
     }
 }
 

@@ -166,7 +166,7 @@ struct ProfileHeader: View {
                                 currentUserAuthor: currentUser,
                                 author: author,
                                 shouldDisplayIcon: true,
-                                shouldFixHorizontalSize: false
+                                shouldFillHorizontalSpace: true
                             )
                         } else {
                             ActionButton(
@@ -174,7 +174,7 @@ struct ProfileHeader: View {
                                 font: .clarity(.bold, textStyle: .subheadline),
                                 depthEffectColor: Color("#4C347B"),
                                 backgroundGradient: LinearGradient.verticalAccentSecondary,
-                                shouldFixHorizontalSize: false
+                                shouldFillHorizontalSpace: true
                             ) {
                                 router.push(EditProfileDestination(profile: author))
                             }
