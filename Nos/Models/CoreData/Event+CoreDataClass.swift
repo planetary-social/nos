@@ -621,7 +621,7 @@ public class Event: NosManagedObject, VerifiableEvent {
                 do {
                     newFollows.insert(try Follow.upsert(by: newAuthor, jsonTag: jsonTag, context: context))
                 } catch {
-                    print("Error: could not parse Follow from: \(jsonEvent)")
+                    Log.error("Error: could not parse Follow from: \(jsonEvent)")
                 }
             }
         }
@@ -629,7 +629,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         // Did we unfollow someone? If so, remove them from core data
         let removedFollows = Set(originalFollows.values).subtracting(newFollows)
         if !removedFollows.isEmpty {
-            print("Removing \(removedFollows.count) follows")
+            Log.info("Removing \(removedFollows.count) follows")
             Follow.deleteFollows(in: removedFollows, context: context)
         }
         

@@ -1,5 +1,6 @@
 import Foundation
 import CoreData
+import Logger
 
 typealias Followed = [Follow]
 
@@ -122,7 +123,7 @@ public class Follow: NosManagedObject {
         do {
             return try context.fetch(fetchRequest)
         } catch let error as NSError {
-            print("Failed to fetch follows. Error: \(error.description)")
+            Log.error("Failed to fetch follows. Error: \(error.description)")
         }
         
         return []

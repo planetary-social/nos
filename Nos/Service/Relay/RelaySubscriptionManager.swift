@@ -2,9 +2,31 @@ import Starscream
 import Foundation
 import Logger
 
+protocol RelaySubscriptionManager {
+    func active() async -> [RelaySubscription]
+    func all() async -> [RelaySubscription]
+    func sockets() async -> [WebSocket]
+
+    func addSocket(for relayAddress: URL) async -> WebSocket?
+    func close(socket: WebSocket) async
+    @discardableResult
+    func decrementSubscriptionCount(for subscriptionID: RelaySubscription.ID) async -> Bool
+    func forceCloseSubscriptionCount(for subscriptionID: RelaySubscription.ID) async
+    func markHealthy(socket: WebSocket) async
+    func processSubscriptionQueue() async
+    func queueSubscription(with filter: Filter, to relayAddress: URL) async -> RelaySubscription.ID
+    func remove(_ socket: WebSocketClient) async
+    func requestEvents(from socket: WebSocketClient, subscription: RelaySubscription) async
+    func socket(for address: String) async -> WebSocket?
+    func socket(for url: URL) async -> WebSocket?
+    func staleSubscriptions() async -> [RelaySubscription]
+    func subscription(from subscriptionID: RelaySubscription.ID) async -> RelaySubscription?
+    func trackError(socket: WebSocket) async
+    func updateSubscriptions(with newValue: RelaySubscription) async
+}
+
 /// An actor that manages state for a `RelayService` including lists of open sockets and subscriptions.
-actor RelaySubscriptionManager {
-    
+actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     // MARK: - Public Properties
     
     var all = [RelaySubscription]()
@@ -14,7 +36,21 @@ actor RelaySubscriptionManager {
     var active: [RelaySubscription] {
         all.filter { $0.isActive }
     }
+
+    // MARK: - Protocol conformance
     
+    func active() async -> [RelaySubscription] {
+        active
+    }
+
+    func all() async -> [RelaySubscription] {
+        all
+    }
+
+    func sockets() async -> [WebSocket] {
+        sockets
+    }
+
     // MARK: - Mutating the list of subscriptions
     
     func subscription(from subscriptionID: RelaySubscription.ID) -> RelaySubscription? {
@@ -217,7 +253,7 @@ fileprivate struct WebsocketErrorEvent {
     
     mutating func trackRetry() {
         self.retryCounter += 1
-        let delaySeconds = NSDecimalNumber(decimal: pow(2, min(retryCounter, RelaySubscriptionManager.maxBackoffPower)))
+        let delaySeconds = NSDecimalNumber(decimal: pow(2, min(retryCounter, RelaySubscriptionManagerActor.maxBackoffPower)))
         self.nextRetry = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + delaySeconds.doubleValue)
     }
 }
