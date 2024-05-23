@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Improved performance in various parts of the app for users with large follow lists.
+
 ## [0.1.14] - 2024-05-22Z
 
 - Added the author's name to profile cards on the Discover tab and search results. 
