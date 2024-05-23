@@ -16,7 +16,7 @@ struct KnownFollowersView: View {
         knownFollowers
             .filter { $0.hasHumanFriendlyName }
             .filter { $0.profilePhotoURL != nil }
-            .prefix(2)
+            .prefix(3)
     }
     
     /// The avatars of the authors that will be featured with profile pictures and names
@@ -28,7 +28,7 @@ struct KnownFollowersView: View {
     var followText: Text {
         let stringResource: LocalizedStringResource
         let authors = self.displayedAuthors
-        switch knownFollowers.count {
+        switch authors.count {
         case 0: 
             return Text("")
         case 1:
