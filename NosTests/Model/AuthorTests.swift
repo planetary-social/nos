@@ -145,6 +145,73 @@ final class AuthorTests: CoreDataTestCase {
 
         XCTAssertEqual(author.formattedNIP05, expected)
     }
+    
+    // MARK: Fetch requests
+    
+    func test_knownFollowers_givenMultipleFollowers() throws {
+        // Arrange
+        let alice = try Author.findOrCreate(by: "alice", context: testContext)
+        let bob   = try Author.findOrCreate(by: "bob", context: testContext)
+        bob.lastUpdatedContactList = Date(timeIntervalSince1970: 1) // for sorting
+        let carl  = try Author.findOrCreate(by: "carl", context: testContext)
+        carl.lastUpdatedContactList = Date(timeIntervalSince1970: 0) // for sorting
+        let eve   = try Author.findOrCreate(by: "eve", context: testContext)
+        
+        // Act
+        // Alice follows bob and carl who both follow eve
+        _ = try Follow.findOrCreate(source: alice, destination: bob, context: testContext)
+        _ = try Follow.findOrCreate(source: alice, destination: carl, context: testContext)
+        _ = try Follow.findOrCreate(source: bob, destination: eve, context: testContext)
+        _ = try Follow.findOrCreate(source: carl, destination: eve, context: testContext)
+        
+        try testContext.saveIfNeeded()
+        
+        // Assert
+        XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: eve)), [bob, carl])
+        XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: bob)), [])
+        XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: carl)), [])
+        XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: alice)), [])
+    }
+    
+    func test_knownFollowers_givenFollowCircle() throws {
+        // Arrange
+        let alice = try Author.findOrCreate(by: "alice", context: testContext)
+        let bob   = try Author.findOrCreate(by: "bob", context: testContext)
+        let carl  = try Author.findOrCreate(by: "carl", context: testContext)
+        let eve   = try Author.findOrCreate(by: "eve", context: testContext)
+        
+        // Act
+        // Create a circle of follows.
+        _ = try Follow.findOrCreate(source: alice, destination: bob, context: testContext)
+        _ = try Follow.findOrCreate(source: bob, destination: carl, context: testContext)
+        _ = try Follow.findOrCreate(source: carl, destination: eve, context: testContext)
+        _ = try Follow.findOrCreate(source: eve, destination: alice, context: testContext)
+        
+        try testContext.saveIfNeeded()
+        
+        // Assert
+        XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: carl)), [bob])
+        XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: eve)), [])
+        XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: bob)), [])
+        XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: alice)), [])
+    }
+    
+    func test_knownFollowers_givenSelfFollow() throws {
+        // Arrange
+        let alice = try Author.findOrCreate(by: "alice", context: testContext)
+        let eve   = try Author.findOrCreate(by: "eve", context: testContext)
+        
+        // Act
+        _ = try Follow.findOrCreate(source: alice, destination: alice, context: testContext)
+        _ = try Follow.findOrCreate(source: alice, destination: eve, context: testContext)
+        _ = try Follow.findOrCreate(source: eve, destination: alice, context: testContext)
+        _ = try Follow.findOrCreate(source: eve, destination: eve, context: testContext)
+        
+        try testContext.saveIfNeeded()
+        
+        // Assert
+        XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: eve)), [])
+    }
 
     func test_allPostsRequest_onlyRootPosts() throws {
         // Arrange
