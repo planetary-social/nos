@@ -151,7 +151,9 @@ final class AuthorTests: CoreDataTestCase {
         // Arrange
         let alice = try Author.findOrCreate(by: "alice", context: testContext)
         let bob   = try Author.findOrCreate(by: "bob", context: testContext)
+        bob.lastUpdatedContactList = Date(timeIntervalSince1970: 1) // for sorting
         let carl  = try Author.findOrCreate(by: "carl", context: testContext)
+        carl.lastUpdatedContactList = Date(timeIntervalSince1970: 0) // for sorting
         let eve   = try Author.findOrCreate(by: "eve", context: testContext)
         
         // Act
