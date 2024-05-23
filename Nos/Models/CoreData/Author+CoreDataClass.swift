@@ -199,6 +199,26 @@ import Logger
         return fetchRequest
     }
     
+    @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.predicate = NSPredicate.false
+        return fetchRequest
+    }
+    
+    /// Returns the authors that this author (self) follows who also follow the given `author`.
+    @nonobjc public func knownFollowers(of author: Author) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.lastUpdatedContactList, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "ANY followers.source = %@ AND ANY follows.destination = %@ AND SELF != %@ AND SELF != %@", 
+            self, 
+            author, 
+            self,
+            author
+        )
+        return fetchRequest
+    }
+    
     /// Builds a predicate that queries for all notes (root or replies), reposts and long forms for a
     /// given profile
     ///
