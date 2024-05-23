@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		030AE4292BE3D63C004DEE02 /* FeaturedAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */; };
+		0320C0FB2BFE43A600C4C080 /* RelayServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0320C0FA2BFE43A600C4C080 /* RelayServiceTests.swift */; };
+		0320C1152BFE63DC00C4C080 /* MockRelaySubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0320C1142BFE63DC00C4C080 /* MockRelaySubscriptionManager.swift */; };
 		0357299B2BE415E5005FEE85 /* ContentWarningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0357299A2BE415E5005FEE85 /* ContentWarningController.swift */; };
 		0357299F2BE41653005FEE85 /* ContentWarningControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0357299C2BE41653005FEE85 /* ContentWarningControllerTests.swift */; };
 		035729A02BE41653005FEE85 /* SocialGraphTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0357299D2BE41653005FEE85 /* SocialGraphTests.swift */; };
@@ -453,6 +455,8 @@
 /* Begin PBXFileReference section */
 		030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedAuthor.swift; sourceTree = "<group>"; };
 		0320C0E42BFBB27E00C4C080 /* PerformanceTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PerformanceTests.xctestplan; sourceTree = "<group>"; };
+		0320C0FA2BFE43A600C4C080 /* RelayServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayServiceTests.swift; sourceTree = "<group>"; };
+		0320C1142BFE63DC00C4C080 /* MockRelaySubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRelaySubscriptionManager.swift; sourceTree = "<group>"; };
 		0357299A2BE415E5005FEE85 /* ContentWarningController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentWarningController.swift; sourceTree = "<group>"; };
 		0357299C2BE41653005FEE85 /* ContentWarningControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentWarningControllerTests.swift; sourceTree = "<group>"; };
 		0357299D2BE41653005FEE85 /* SocialGraphTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocialGraphTests.swift; sourceTree = "<group>"; };
@@ -827,6 +831,15 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
+		0320C0F92BFE439000C4C080 /* Relay */ = {
+			isa = PBXGroup;
+			children = (
+				0320C0FA2BFE43A600C4C080 /* RelayServiceTests.swift */,
+				0320C1142BFE63DC00C4C080 /* MockRelaySubscriptionManager.swift */,
+			);
+			path = Relay;
+			sourceTree = "<group>";
+		};
 		0357299E2BE41653005FEE85 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -858,6 +871,7 @@
 				035729B42BE416A6005FEE85 /* DirectMessageWrapperTests.swift */,
 				035729B52BE416A6005FEE85 /* GiftWrapperTests.swift */,
 				035729B62BE416A6005FEE85 /* ReportPublisherTests.swift */,
+				0320C0F92BFE439000C4C080 /* Relay */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -1935,6 +1949,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0320C1152BFE63DC00C4C080 /* MockRelaySubscriptionManager.swift in Sources */,
 				035729CB2BE41770005FEE85 /* ContentWarningController.swift in Sources */,
 				CD09A76229A5220E0063464F /* AppController.swift in Sources */,
 				C9A0DAF929C92F4500466635 /* UNSAPI.swift in Sources */,
@@ -1977,6 +1992,7 @@
 				C9FC1E632B61ACE300A3A6FB /* CoreDataTestCase.swift in Sources */,
 				C9E37E162A1E8143003D4B0A /* ReportTarget.swift in Sources */,
 				035729BA2BE416A6005FEE85 /* ReportPublisherTests.swift in Sources */,
+				0320C0FB2BFE43A600C4C080 /* RelayServiceTests.swift in Sources */,
 				C94A5E192A72C84200B6EC5D /* ReportCategory.swift in Sources */,
 				035729AC2BE4167E005FEE85 /* Bech32Tests.swift in Sources */,
 				C936B4632A4CB01C00DF1EB9 /* PushNotificationService.swift in Sources */,
@@ -2183,7 +2199,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.14;
+				MARKETING_VERSION = 0.1.15;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.verse.Nos-staging";
 				PRODUCT_NAME = "$(TARGET_NAME) Staging";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2354,7 +2370,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.14;
+				MARKETING_VERSION = 0.1.15;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.verse.Nos-dev";
 				PRODUCT_NAME = "$(TARGET_NAME) Dev";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2622,7 +2638,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.14;
+				MARKETING_VERSION = 0.1.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.Nos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development com.verse.Nos";
@@ -2677,7 +2693,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.14;
+				MARKETING_VERSION = 0.1.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.Nos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
