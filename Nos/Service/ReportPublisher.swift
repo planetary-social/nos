@@ -3,7 +3,7 @@ import Dependencies
 import Logger
 import CoreData
 
-enum TaggerBot {
+enum Tagr {
     // swiftlint:disable:next force_unwrapping
     static var publicKey = PublicKey(npub: "npub12m2t8433p7kmw22t0uzp426xn30lezv3kxcmxvvcrwt2y3hk4ejsvre68j")!
 }
@@ -120,7 +120,7 @@ class ReportPublisher {
             let reportRequestGiftWrap = try DirectMessageWrapper.wrap(
                 message: reportRequestJSON,
                 senderKeyPair: keyPair,
-                receiverPubkey: TaggerBot.publicKey.hex
+                receiverPubkey: Tagr.publicKey.hex
             )
             return reportRequestGiftWrap
         } catch {
