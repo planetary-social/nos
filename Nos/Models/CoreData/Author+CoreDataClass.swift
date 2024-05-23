@@ -210,10 +210,11 @@ import Logger
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.lastUpdatedContactList, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: "ANY followers.source = %@ AND ANY follows.destination = %@ AND SELF != %@", 
+            format: "ANY followers.source = %@ AND ANY follows.destination = %@ AND SELF != %@ AND SELF != %@", 
             self, 
             author, 
-            self
+            self,
+            author
         )
         return fetchRequest
     }

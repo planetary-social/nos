@@ -202,6 +202,7 @@ final class AuthorTests: CoreDataTestCase {
         _ = try Follow.findOrCreate(source: alice, destination: alice, context: testContext)
         _ = try Follow.findOrCreate(source: alice, destination: eve, context: testContext)
         _ = try Follow.findOrCreate(source: eve, destination: alice, context: testContext)
+        _ = try Follow.findOrCreate(source: eve, destination: eve, context: testContext)
         
         try testContext.saveIfNeeded()
         
