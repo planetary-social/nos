@@ -9,13 +9,13 @@ struct ProfileKnownFollowersView: View {
         let attributedString = AttributedString(localized: stringResource)
         let bold = InlinePresentationIntent.stronglyEmphasized.rawValue
         return attributedString.replacingAttributes(
-                AttributeContainer(
-                    [.inlinePresentationIntent: bold]
-                ),
-                with: AttributeContainer(
-                    [.foregroundColor: UIColor(Color.primaryTxt)]
-                )
+            AttributeContainer(
+                [.inlinePresentationIntent: bold]
+            ),
+            with: AttributeContainer(
+                [.foregroundColor: UIColor(Color.primaryTxt)]
             )
+        )
     }
 
     var body: some View {
