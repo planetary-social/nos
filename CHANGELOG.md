@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue where deleted notes still appeared in the Profile’s Notes view.
+
 ## [0.1.14] - 2024-05-22Z
 
 - Added the author's name to profile cards on the Discover tab and search results. 
