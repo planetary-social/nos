@@ -46,6 +46,17 @@ struct ProfileHeader: View {
         }
     }
 
+    private var divider: some View {
+        Divider()
+            .overlay(Color.profileDivider)
+            .shadow(
+                color: .profileDividerShadow,
+                radius: 0,
+                x: 0,
+                y: 1
+            )
+    }
+
     var body: some View {
         ZStack {
             VStack(alignment: .leading) {
@@ -131,14 +142,7 @@ struct ProfileHeader: View {
                     .padding(.bottom, 9)
                 }
 
-                Divider()
-                    .overlay(Color.profileDivider)
-                    .shadow(
-                        color: .profileDividerShadow,
-                        radius: 0,
-                        x: 0,
-                        y: 1
-                    )
+                divider
                     .padding(.top, shouldShowBio ? 0 : 16)
 
                 if let first = knownFollowers[safe: 0]?.source {
@@ -159,7 +163,7 @@ struct ProfileHeader: View {
                     .padding(.top, 5)
                 }
 
-                HStack(spacing: 34) {
+                HStack(spacing: 0) {
                     if let currentUser = currentUser.author {
                         if author != currentUser {
                             FollowButton(
@@ -185,20 +189,12 @@ struct ProfileHeader: View {
                         author: author,
                         followsResult: followsResult
                     )
-                    .padding(.trailing, 18)
                 }
                 .padding(.horizontal, 18)
                 .padding(.vertical, 0)
                 .frame(maxWidth: .infinity)
 
-                Divider()
-                    .overlay(Color.profileDivider)
-                    .shadow(
-                        color: .profileDividerShadow,
-                        radius: 0,
-                        x: 0,
-                        y: 1
-                    )
+                divider
 
                 profileHeaderTab
             }

@@ -8,8 +8,13 @@ struct ProfileSocialStatsView: View {
 
     var followsResult: FetchedResults<Follow>
 
+    private var spacer: some View {
+        Spacer(minLength: 25)
+    }
+
     var body: some View {
-        HStack(spacing: 34) {
+        HStack(spacing: 0) {
+            spacer
             Button {
                 router.currentPath.wrappedValue.append(
                     FollowsDestination(
@@ -20,6 +25,7 @@ struct ProfileSocialStatsView: View {
             } label: {
                 tab(label: .localizable.following, value: author.follows.count)
             }
+            spacer
             Button {
                 router.currentPath.wrappedValue.append(
                     RelaysDestination(
@@ -30,6 +36,7 @@ struct ProfileSocialStatsView: View {
             } label: {
                 tab(label: .localizable.relays, value: author.relays.count)
             }
+            spacer
         }
         .fixedSize(horizontal: false, vertical: true)
         .padding(.vertical, 9)
