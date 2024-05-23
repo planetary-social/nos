@@ -25,7 +25,7 @@ struct AuthorCard: View {
         Button {
             tapAction?()
         } label: {
-            VStack(spacing: 0) {
+            VStack(spacing: 12) {
                 HStack(alignment: .top) {
                     ZStack(alignment: .bottomTrailing) {
                         AvatarView(imageUrl: author.profilePhotoURL, size: 80)
@@ -74,12 +74,11 @@ struct AuthorCard: View {
                         }
                     }
                 }
-                .padding(.bottom, 12)
 
                 KnownFollowersView(source: currentUser.author, destination: author)
-                    .padding(.top, -8)
             }
             .padding(.top, 20)
+            .padding(.bottom, 12)
             .padding(.horizontal, 15)
             .background(
                 LinearGradient(
