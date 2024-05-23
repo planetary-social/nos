@@ -6,6 +6,7 @@ class RelayServiceTests: XCTestCase {
         let expectedFilter = Filter(
             authorKeys: ["test"],
             kinds: [.contactList],
+            limit: 1,
             since: since
         )
         let mockSubscriptionManager = MockRelaySubscriptionManager()

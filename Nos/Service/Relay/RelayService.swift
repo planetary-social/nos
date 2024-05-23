@@ -210,6 +210,7 @@ extension RelayService {
         let contactFilter = Filter(
             authorKeys: [authorKey],
             kinds: [.contactList],
+            limit: 1,
             since: since
         )
         return await subscribeToEvents(matching: contactFilter)
