@@ -2,11 +2,11 @@ import SwiftUI
 
 struct NosNavigationBarModifier: ViewModifier {
     
-    var title: LocalizedStringResource
+    var title: AttributedString
 
     func body(content: Content) -> some View {
         content
-            .navigationBarTitle(String(localized: title), displayMode: .inline)
+            .navigationBarTitle(String(title.characters), displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text(title)
@@ -23,6 +23,9 @@ struct NosNavigationBarModifier: ViewModifier {
 
 extension View {
     func nosNavigationBar(title: LocalizedStringResource) -> some View {
+        self.modifier(NosNavigationBarModifier(title: AttributedString(localized: title)))
+    }
+    func nosNavigationBar(title: AttributedString) -> some View {
         self.modifier(NosNavigationBarModifier(title: title))
     }
 }

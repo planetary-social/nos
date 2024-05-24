@@ -5,13 +5,33 @@ import CoreData
 struct FollowButton: View {
     @ObservedObject var currentUserAuthor: Author
     @ObservedObject var author: Author
-    @Environment(CurrentUser.self) var currentUser
+    /// A flag used to show a follow or unfollow icon in addition to Follow or
+    /// Unfollow text.
+    var shouldDisplayIcon = false
+    /// A flag used to fill the available horizontal space (centering the
+    /// contents) or to fit the horizontal space to the contents of the action
+    /// button.
+    var shouldFillHorizontalSpace = false
+    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
     
+    /// Returns an icon associated to the follow or unfollow state.
+    private func image(for following: Bool) -> Image? {
+        guard shouldDisplayIcon else {
+            return nil
+        }
+        return following ? Image.slimFollowingIcon : Image.slimFollowIcon
+    }
+    
     var body: some View {
         let following = currentUser.isFollowing(author: author)
-        ActionButton(title: following ? .localizable.unfollow : .localizable.follow) {
+        ActionButton(
+            title: following ? .localizable.unfollow : .localizable.follow,
+            font: .clarity(.bold, textStyle: .subheadline),
+            image: image(for: following),
+            shouldFillHorizontalSpace: shouldFillHorizontalSpace
+        ) {
             do {
                 if following {
                     try await currentUser.unfollow(author: author)
