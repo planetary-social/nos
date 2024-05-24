@@ -239,6 +239,7 @@ struct ProfileHeader: View {
                         .renderingMode(.template)
                         .foregroundColor(color)
                     Text(.localizable.notes)
+                        .font(.subheadline.weight(.medium))
                         .foregroundColor(color)
                     Spacer()
                 }
@@ -256,12 +257,14 @@ struct ProfileHeader: View {
                         .foregroundColor(color)
                     Text(.localizable.activity)
                         .foregroundColor(color)
+                        .font(.subheadline.weight(.medium))
                     Spacer()
                 }
             }
             .frame(maxWidth: .infinity)
         }
-        .padding()
+        .padding(.top, 12)
+        .padding(.bottom, 15)
     }
 }
 
