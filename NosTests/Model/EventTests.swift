@@ -430,7 +430,7 @@ final class EventTests: CoreDataTestCase {
     func test_eventByIdentifierSeenOnRelay_givenNotSeen() throws {
         // Arrange
         let eventID = "foo"
-        let event = try Event.findOrCreateStubBy(id: eventID, context: testContext)
+        _ = try Event.findOrCreateStubBy(id: eventID, context: testContext)
         let relay = try Relay.findOrCreate(by: "wss://relay.nos.social", context: testContext)
         
         // Act
