@@ -8,8 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Redesigned the Profile screen.
 - Improved performance in various parts of the app for users with large follow lists.
-- Fixed an issue where following and mute lists could be replaced with older versions.
+- Fixed an issue where deleted notes still appeared in the Profile’s Notes view.
+- Sorted the featured profiles in the Discover tab.
+- Switched from Reportinator to Tagr bot for content labeling.
 
 ## [0.1.14] - 2024-05-22Z
 

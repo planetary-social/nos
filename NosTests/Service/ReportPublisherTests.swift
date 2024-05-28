@@ -39,7 +39,7 @@ final class ReportPublisherTests: CoreDataTestCase {
         XCTAssertNotEqual(reportRequestDM.pubKey, aliceKeyPair.publicKeyHex)
         XCTAssertNotEqual(reportRequestDM.pubKey, bobKeyPair.publicKeyHex)
         XCTAssertEqual(reportRequestDM.tags, [
-            ["p", Reportinator.publicKey.hex]
+            ["p", Tagr.publicKey.hex]
         ])
     }
     

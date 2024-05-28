@@ -46,6 +46,17 @@ struct ProfileHeader: View {
         }
     }
 
+    private var divider: some View {
+        Divider()
+            .overlay(Color.profileDivider)
+            .shadow(
+                color: .profileDividerShadow,
+                radius: 0,
+                x: 0,
+                y: 1
+            )
+    }
+
     var body: some View {
         ZStack {
             VStack(alignment: .leading) {
@@ -60,42 +71,58 @@ struct ProfileHeader: View {
                             )
                     }
                     VStack(alignment: .leading, spacing: 3) {
-                        Spacer()
-
+                        // Name
                         Button {
                             showingBio = true
                         } label: {
                             Text(author.safeName)
                                 .lineLimit(1)
-                                .font(.clarity(.bold, textStyle: .title3).weight(.semibold))
+                                .truncationMode(.tail)
+                                .font(.title3.weight(.bold))
                                 .foregroundColor(Color.primaryTxt)
+                                .padding(.top, 10)
                         }
 
                         // NIP-05
-                        Button {
-                            showingBio = true
-                        } label: {
-                            NIP05View(author: author)
-                                .lineLimit(1)
-                        }
-                        .padding(.top, 3)
-
-                        // Universal name
-                        UNSNameView(author: author)
-                            
-                        if author != currentUser.author, let currentUser = currentUser.author {
-                            HStack {
-                                FollowButton(currentUserAuthor: currentUser, author: author)
-                                if author.muted {
-                                    Text(.localizable.muted)
-                                        .font(.subheadline)
-                                        .foregroundColor(Color.secondaryTxt)
-                                }
+                        if author.hasNIP05 {
+                            Button {
+                                showingBio = true
+                            } label: {
+                                NIP05View(author: author)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                    .font(.footnote)
                             }
                             .padding(.top, 3)
+                        } else if let npub = author.npubString {
+                            Button {
+                                showingBio = true
+                            } label: {
+                                Text("@\(npub.prefix(10).appending("..."))")
+                                    .foregroundStyle(Color.secondaryTxt)
+                                    .font(.footnote)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                    .textSelection(.enabled)
+                            }
                         }
 
-                        Spacer()
+                        // ActivityPub
+                        if author.hasMostrNIP05 {
+                            Button {
+                                showingBio = true
+                            } label: {
+                                ActivityPubBadgeView(author: author)
+                                    .padding(.top, 5)
+                            }
+                        }
+
+                        // Universal name
+                        if author.hasUNS {
+                            UNSNameView(author: author)
+                        }
+
+                        Spacer(minLength: 0)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -109,9 +136,14 @@ struct ProfileHeader: View {
                         showingBio = true
                     } label: {
                         BioView(author: author)
+                            .frame(maxWidth: .infinity)
                     }
                     .padding(.top, 18)
+                    .padding(.bottom, 9)
                 }
+
+                divider
+                    .padding(.top, shouldShowBio ? 0 : 16)
 
                 if let first = knownFollowers[safe: 0]?.source {
                     Button {
@@ -128,13 +160,41 @@ struct ProfileHeader: View {
                             followers: followers
                         )
                     }
+                    .padding(.top, 5)
                 }
 
-                ProfileSocialStatsView(
-                    author: author,
-                    followsResult: followsResult,
-                    followersResult: followersResult
-                )
+                HStack(spacing: 0) {
+                    if let currentUser = currentUser.author {
+                        if author != currentUser {
+                            FollowButton(
+                                currentUserAuthor: currentUser,
+                                author: author,
+                                shouldDisplayIcon: true,
+                                shouldFillHorizontalSpace: true
+                            )
+                        } else {
+                            ActionButton(
+                                title: .localizable.editProfile,
+                                font: .clarity(.bold, textStyle: .subheadline),
+                                depthEffectColor: .actionSecondaryDepthEffect,
+                                backgroundGradient: LinearGradient.verticalAccentSecondary,
+                                shouldFillHorizontalSpace: true
+                            ) {
+                                router.push(EditProfileDestination(profile: author))
+                            }
+                        }
+                    }
+
+                    ProfileSocialStatsView(
+                        author: author,
+                        followsResult: followsResult
+                    )
+                }
+                .padding(.horizontal, 18)
+                .padding(.vertical, 0)
+                .frame(maxWidth: .infinity)
+
+                divider
 
                 profileHeaderTab
             }
@@ -179,6 +239,7 @@ struct ProfileHeader: View {
                         .renderingMode(.template)
                         .foregroundColor(color)
                     Text(.localizable.notes)
+                        .font(.subheadline.weight(.medium))
                         .foregroundColor(color)
                     Spacer()
                 }
@@ -196,12 +257,14 @@ struct ProfileHeader: View {
                         .foregroundColor(color)
                     Text(.localizable.activity)
                         .foregroundColor(color)
+                        .font(.subheadline.weight(.medium))
                     Spacer()
                 }
             }
             .frame(maxWidth: .infinity)
         }
-        .padding()
+        .padding(.top, 12)
+        .padding(.bottom, 15)
     }
 }
 

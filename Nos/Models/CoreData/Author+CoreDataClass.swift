@@ -199,6 +199,26 @@ import Logger
         return fetchRequest
     }
     
+    @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.predicate = NSPredicate.false
+        return fetchRequest
+    }
+    
+    /// Returns the authors that this author (self) follows who also follow the given `author`.
+    @nonobjc public func knownFollowers(of author: Author) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.lastUpdatedContactList, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "ANY followers.source = %@ AND ANY follows.destination = %@ AND SELF != %@ AND SELF != %@", 
+            self, 
+            author, 
+            self,
+            author
+        )
+        return fetchRequest
+    }
+    
     /// Builds a predicate that queries for all notes (root or replies), reposts and long forms for a
     /// given profile
     ///
@@ -223,7 +243,8 @@ import Logger
             "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
         ").@count = 0)"
         return NSPredicate(
-            format: "(\(onlyRootPostsClause) OR kind = %i) AND author = %@ AND createdAt <= %@",
+            format: "(\(onlyRootPostsClause) OR kind = %i) " +
+                "AND author = %@ AND deletedOn.@count = 0 AND createdAt <= %@",
             EventKind.longFormContent.rawValue,
             self,
             before as CVarArg
