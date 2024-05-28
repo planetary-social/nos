@@ -16,17 +16,12 @@ struct FeaturedAuthor {
 
 extension FeaturedAuthor {
     /// All featured authors that should appear on the Discover tab.
-    static let all = cohort1
+    static let all = cohort2 + cohort1
 }
 
 extension FeaturedAuthor {
     /// The first cohort of authors to display on the Discover tab.
     static let cohort1 = [
-        FeaturedAuthor(
-            name: "Mark Cubey",
-            npub: "npub1j9gcqjheu50kyzkjjmh3pq0msknh58sxu6ugsp33hxfwf5a78r3sfx59e7",
-            categories: [.news]
-        ),
         FeaturedAuthor(
             name: "Miguel Almodo",
             npub: "npub1ajt9gp0prf4xrp4j07j9rghlcyukahncs0fw5ywr977jccued9nqrcc0cs",
@@ -63,11 +58,6 @@ extension FeaturedAuthor {
             categories: [.music]
         ),
         FeaturedAuthor(
-            name: "Lou",
-            npub: "npub1rr3678k7ajms2sht0cqqeawy86sdd5ahn6akfj8zex9ng82zuh0sz8nywd",
-            categories: [.gaming]
-        ),
-        FeaturedAuthor(
             name: "Onigirl",
             npub: "npub18jvyjwpmm65g8v9azmlvu8knd5m7xlxau08y8vt75n53jtkpz2ys6mqqu3",
             categories: [.art]
@@ -78,11 +68,6 @@ extension FeaturedAuthor {
             categories: [.sports]
         ),
         FeaturedAuthor(
-            name: "Jacob Gardenswartz",
-            npub: "npub1cjvqtcla069ctrkapc9yhzp3xhph29khhz0x7ype7dgfwljcwc8savma9c",
-            categories: [.news]
-        ),
-        FeaturedAuthor(
             name: "Global Sports Central",
             npub: "npub1qspus6smkn8mcdxg5jflh50s69vdgtwsd5p74gmjpzp2qekn5duqfv5afj",
             categories: [.news, .sports]
@@ -91,6 +76,51 @@ extension FeaturedAuthor {
             name: "Alastair Thompson",
             npub: "npub157pk8t8njtnldqzankrk2syzmkp6qtrv2ewgq3fnuc4k78dr797shfngev",
             categories: [.news]
+        ),
+    ]
+}
+
+extension FeaturedAuthor {
+    static let cohort2 = [
+        FeaturedAuthor(
+            name: "Lou",
+            npub: "npub1rr3678k7ajms2sht0cqqeawy86sdd5ahn6akfj8zex9ng82zuh0sz8nywd",
+            categories: [.gaming]
+        ),
+        FeaturedAuthor(
+            name: "We Distribute",
+            npub: "npub1w9wuqc3s6lr25c4sgj52werj3tngvt43qrccqrher4wvn7tjm32s2ck403",
+            categories: [.news, .tech]
+        ),
+        FeaturedAuthor(
+            name: "Simon Howard",
+            npub: "npub1rt5h26ukmqsqa29ggt0h98tq2skgqr85f3znhwxule4z4pjhhd3qzs5k94",
+            categories: [.music]
+        ),
+        FeaturedAuthor(
+            name: "The 74 Million",
+            npub: "npub1kkk52065zqg85c0auvashalkrqewj6cnlr7c236r2hp5sx9rgzgs46gj84",
+            categories: [.news]
+        ),
+        FeaturedAuthor(
+            name: "BTCPhoto",
+            npub: "npub1vjl6n2llukcc6pe3am2hkwqh8twzh2ymlp7pdrdfq5tlqg08y26sd7ygzx",
+            categories: [.art]
+        ),
+        FeaturedAuthor(
+            name: "Sam Hain",
+            npub: "npub1df47g7a39usamq83aula72zdz23fx9xw5rrfmd0v6p9t20n5u0ss2eqez9",
+            categories: [.art]
+        ),
+        FeaturedAuthor(
+            name: "Joanna",
+            npub: "npub1a2a85jwde32zjsjk02ujasydqc3t2w9rfgfe97amm0r4d9mepfxsxf3fnn",
+            categories: [.activists, .health]
+        ),
+        FeaturedAuthor(
+            name: "Josh Brown",
+            npub: "npub1yl8jc6znttslcpj3p6p8vuq98awu6w0xh4lqtu0lkjr772kpx4ysfqvz34",
+            categories: [.art]
         ),
     ]
 }
