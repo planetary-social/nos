@@ -256,7 +256,7 @@ enum CurrentUserError: Error {
         return followKeys.contains(key)
     }
 
-    // Use this sparingly. It's slow and it blocks the main thread. Try to use an `NSFetchRequest` instead.
+    /// Use this sparingly. It's slow and it blocks the main thread. Try to use an `NSFetchRequest` instead.
     @MainActor func isBeingFollowedBy(author profile: Author) -> Bool {
         let following = profile.follows
         guard let key = author?.hexadecimalPublicKey else {
