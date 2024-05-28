@@ -245,8 +245,8 @@ enum CurrentUserError: Error {
         }
     }
     
-    // You probably shouldn't use this. It's slow and blocks the main thread. Try to use `SocialGraphCache.follows(:)`
-    // instead.
+    /// You probably shouldn't use this. It's slow and blocks the main thread. Try to use `SocialGraphCache.follows(:)`
+    /// instead.
     @MainActor func isFollowing(author profile: Author) -> Bool {
         guard let following = author?.follows as? Set<Follow>, let key = profile.hexadecimalPublicKey else {
             return false
