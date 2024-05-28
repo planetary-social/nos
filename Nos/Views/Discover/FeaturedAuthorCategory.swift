@@ -12,6 +12,8 @@ enum FeaturedAuthorCategory: CaseIterable {
     case news
     case art // swiftlint:disable:this identifier_name
     case activists
+    case tech
+    case health
     case gaming
     case sports
 
@@ -25,6 +27,8 @@ enum FeaturedAuthorCategory: CaseIterable {
         case .activists: LocalizedStringResource.localizable.featuredAuthorCategoryActivists
         case .gaming: LocalizedStringResource.localizable.featuredAuthorCategoryGaming
         case .sports: LocalizedStringResource.localizable.featuredAuthorCategorySports
+        case .tech: LocalizedStringResource.localizable.featuredAuthorCategoryTech
+        case .health: LocalizedStringResource.localizable.featuredAuthorCategoryHealth
         }
     }
 
@@ -33,7 +37,7 @@ enum FeaturedAuthorCategory: CaseIterable {
         case .all:
             FeaturedAuthor.all.map { $0.npub }
         case .new:
-            FeaturedAuthor.cohort1.map { $0.npub }
+            FeaturedAuthor.cohort2.map { $0.npub }
         default:
             FeaturedAuthor.all.filter { $0.categories.contains(self) }
                 .map { $0.npub }
