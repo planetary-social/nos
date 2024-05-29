@@ -11,6 +11,10 @@ enum EventProcessor {
         skipVerification: Bool = false
     ) throws -> Event? {
         if let event = try Event().createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
+            if event.kind == EventKind.contactList.rawValue {
+                Log.debug("contactList event from relay: \(String(describing: relay?.address))\nevent: \(jsonEvent)")
+            }
+
             relay.unwrap {
                 do {
                     try event.trackDelete(on: $0, context: parseContext)
