@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added support for opening njump.me content in Nos.
 - Fixed a crash on logout
 
 ## [0.1.15] - 2024-05-29Z
