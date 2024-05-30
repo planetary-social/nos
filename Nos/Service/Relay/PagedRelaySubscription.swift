@@ -12,10 +12,10 @@ class PagedRelaySubscription {
     private var subscriptionManager: RelaySubscriptionManager
     
     /// A set of subscriptions fetching older events.
-    private var pagedSubscriptionIDs = [RelaySubscription.ID]()
+    private var pagedSubscriptionIDs = Set<RelaySubscription.ID>()
     
     /// A set of subscriptions always listening for new events published after the `startDate`.
-    private var newEventsSubscriptionIDs = [RelaySubscription.ID]()
+    private var newEventsSubscriptionIDs = Set<RelaySubscription.ID>()
     
     init(
         startDate: Date, 
@@ -36,10 +36,10 @@ class PagedRelaySubscription {
             var newEventsFilter = filter
             newEventsFilter.since = startDate
             for relayAddress in relayAddresses {
-                newEventsSubscriptionIDs.append(
+                newEventsSubscriptionIDs.insert(
                     await subscriptionManager.queueSubscription(with: filter, to: relayAddress)
                 )
-                pagedSubscriptionIDs.append(
+                pagedSubscriptionIDs.insert(
                     await subscriptionManager.queueSubscription(with: pagedEventsFilter, to: relayAddress)
                 )
             }
@@ -61,6 +61,7 @@ class PagedRelaySubscription {
     func loadMore() {
         Task { [self] in
             var newUntilDates = [URL: Date]()
+            var subscriptionsToRemove = [RelaySubscription]()
             
             for subscriptionID in pagedSubscriptionIDs {
                 if let subscription = await subscriptionManager.subscription(from: subscriptionID),
@@ -72,14 +73,19 @@ class PagedRelaySubscription {
                     }
                           
                     newUntilDates[subscription.relayAddress] = newDate
-                    await subscriptionManager.decrementSubscriptionCount(for: subscriptionID)
+                    await subscriptionManager.decrementSubscriptionCount(for: subscription.id)
+                    subscriptionsToRemove.append(subscription)
                 }
+            }
+            
+            subscriptionsToRemove.forEach { subscription in
+                pagedSubscriptionIDs.remove(subscription.id)
             }
             
             for (relayAddress, until) in newUntilDates {
                 var newEventsFilter = self.filter
                 newEventsFilter.until = until
-                pagedSubscriptionIDs.append(
+                pagedSubscriptionIDs.insert(
                     await subscriptionManager.queueSubscription(with: newEventsFilter, to: relayAddress)
                 )
             }
