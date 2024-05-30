@@ -33,6 +33,11 @@ struct BioSheet: View {
                 if author.hasNIP05 {
                     NIP05View(author: author)
                         .font(.footnote)
+                } else if let npub = author.npubString {
+                    Text("@\(npub)")
+                        .foregroundStyle(Color.secondaryTxt)
+                        .font(.footnote)
+                        .textSelection(.enabled)
                 }
 
                 if author.hasMostrNIP05 {

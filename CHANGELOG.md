@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a crash on logout
+
+## [0.1.15] - 2024-05-29Z
+
+- Redesigned the Profile screen.
+- Improved performance in various parts of the app for users with large follow lists.
+- Fixed an issue where deleted notes still appeared in the Profile’s Notes view.
+- Sorted the featured profiles in the Discover tab.
+- Switched from Reportinator to Tagr bot for content labeling.
+- Discover tab now features new accounts.
+
+## [0.1.14] - 2024-05-22Z
+
 - Added the author's name to profile cards on the Discover tab and search results. 
 - Added a delay when trying to reopen a websocket that had previously closed with an error.
 - Updated the icon that appears when following a user.

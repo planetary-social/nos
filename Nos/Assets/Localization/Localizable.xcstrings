@@ -4103,6 +4103,17 @@
         }
       }
     },
+    "featuredAuthorCategoryHealth" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Health"
+          }
+        }
+      }
+    },
     "featuredAuthorCategoryMusic" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4143,6 +4154,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sports"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategoryTech" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tech"
           }
         }
       }

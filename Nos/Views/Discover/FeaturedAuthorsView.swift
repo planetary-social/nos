@@ -16,8 +16,19 @@ struct FeaturedAuthorsView: View {
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
     @State private var selectedCategory: FeaturedAuthorCategory = .all
 
+    private var sortedAuthors: [Author] {
+        authors.sorted { authorA, authorB in
+            let allFeatured = FeaturedAuthor.all
+            guard let indexA = allFeatured.firstIndex(where: { $0.npub == authorA.npubString }),
+                let indexB = allFeatured.firstIndex(where: { $0.npub == authorB.npubString }) else {
+                return false
+            }
+            return indexA < indexB
+        }
+    }
+
     private var filteredAuthors: [Author] {
-        authors.filter { author in
+        sortedAuthors.filter { author in
             guard let npubString = author.npubString else { return false }
             return selectedCategory.npubs.contains(npubString)
         }
@@ -62,7 +73,7 @@ struct FeaturedAuthorsView: View {
                             .padding(.bottom, 16)
                         }
                         .doubleTapToPop(tab: .discover) { proxy in
-                            if let firstAuthor = authors.first {
+                            if let firstAuthor = sortedAuthors.first {
                                 proxy.scrollTo(firstAuthor.id)
                             }
                         }
