@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue where photos and videos could not be uploaded.
+
 ## [0.1.15] - 2024-05-29Z
 
 - Redesigned the Profile screen.
