@@ -597,6 +597,7 @@ public class Event: NosManagedObject, VerifiableEvent {
     }
     
     func hydrateContactList(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
+        Log.debug("contactList hydrateContactList: \(jsonEvent)")
         guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
             return
         }

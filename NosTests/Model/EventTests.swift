@@ -153,6 +153,8 @@ final class EventTests: CoreDataTestCase {
         )
     }
 
+    // MARK: - Contact List parsing
+
     func testParseContactList() throws {
         // Arrange
         guard let jsonData = sampleContactListJSONString.data(using: .utf8) else {
@@ -196,7 +198,46 @@ final class EventTests: CoreDataTestCase {
         let follows = try XCTUnwrap(parsedEvent.author?.follows)
         XCTAssertEqual(follows.count, 1)
     }
-    
+
+    /// When we get an old contact list, ignore it.
+    func testParseContactListIgnoresOldList() throws {
+        // Arrange
+        guard let jsonData = sampleContactListJSONString.data(using: .utf8) else {
+            XCTFail("Sample data cannot be parsed")
+            return
+        }
+
+        let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
+
+        let context = persistenceController.viewContext
+
+        _ = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)!
+
+        let oldContactListData = try Data(
+            contentsOf: Bundle.current.url(forResource: "old_contact_list", withExtension: "json")!
+        )
+
+        // Act
+        var oldContactListEvent = try JSONDecoder().decode(JSONEvent.self, from: oldContactListData)
+        try oldContactListEvent.sign(withKey: KeyFixture.keyPair)
+        let result = try EventProcessor.parse(jsonEvent: oldContactListEvent, from: nil, in: context)
+
+        // Assert
+        XCTAssertNil(result)
+    }
+
+    /// When we get a new list, replace the old one.
+    func testParseContactListUsesNewList() {
+
+    }
+
+    /// When we get a duplicate event of any kind, verify that it's marked as seen.
+    func test_parse_event_duplicate_is_marked_seen() {
+
+    }
+
+    // MARK: - Expiration
+
     func testParseExpirationDate() throws {
         // Arrange
         guard let jsonData = sampleEventJSONString.data(using: .utf8) else {
@@ -262,7 +303,9 @@ final class EventTests: CoreDataTestCase {
             skipVerification: true
         ))
     }
-    
+
+    // MARK: - Stub
+
     /// Verifies that when we see an event we already have in Core Data as a stub it is updated correctly.
     func testParsingEventStub() throws {
         let referencingJSONEvent = JSONEvent(
