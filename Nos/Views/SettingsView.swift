@@ -93,7 +93,7 @@ struct SettingsView: View {
 
                         // Copied Button
                         SecondaryActionButton(
-                            title: .localizable.copy,
+                            title: .localizable.copied,
                             shouldFillHorizontalSpace: true
                         )
                         .opacity(copyButtonState == .copied ? 1 : 0)
