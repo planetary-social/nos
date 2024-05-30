@@ -140,9 +140,15 @@ class Analytics {
         track("Reported", properties: ["type": reportedObject.analyticsString])
     }
     
-    func identify(with keyPair: KeyPair) {
+    func identify(with keyPair: KeyPair, nip05: String? = nil) {
         Log.info("Analytics: Identified \(keyPair.npub)")
-        postHog?.identify(keyPair.npub)
+        let userProperties: [String: Any]?
+        if let nip05 {
+            userProperties = ["NIP-05": nip05]
+        } else {
+            userProperties = nil
+        }
+        postHog?.identify(keyPair.npub, userProperties: userProperties)
     }
     
     func databaseStatistics(_ statistics: [(String, Int)]) {
