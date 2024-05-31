@@ -197,8 +197,8 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     /// Takes a RelaySubscription model and makes a websockets request to the given socket
     func requestEvents(from socket: WebSocketClient, subscription: RelaySubscription) {
         do {
-            if subscription.filter.kinds.contains(where: {$0 == .contactList}) {
-                Log.debug("contactList request to relay: \(subscription.relayAddress)\nfor authors: \(subscription.filter.authorKeys.compactMap { PublicKey(hex: $0)?.npub})\n\(subscription.filter)")
+            if subscription.filter.kinds.contains(where: { $0 == .contactList }) {
+                Log.debug("contactList request to relay: \(subscription.relayAddress)\nfor authors: \(subscription.filter.authorKeys.compactMap { PublicKey(hex: $0)?.npub })\n\(subscription.filter)")
             }
             // Track this so we can close requests if needed
             let request: [Any] = ["REQ", subscription.id, subscription.filter.dictionary]

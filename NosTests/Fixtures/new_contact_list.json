@@ -10,12 +10,12 @@
         ],
         [
             "p",
-            "76c71aae3a491f1d9eec47cba17e229cda4113a0bbb6e6ae1776d7643e29cafa",
+            "82341f882b6eabcd2ba7f1ef90aad961cf074af15b9ef44a09f9d2a8fbfbe6a2",
             "wss://nostr.lorentz.is/",
             "Another Test Name"
         ]
     ],
-    "created_at": 1,
+    "created_at": 1677856762,
     "pubkey": "32730e9dfcab797caf8380d096e548d9ef98f3af3000542f9271a91a9e3b0001",
     "id": "abcd1234",
     "sig": "a01fa191a0236ffe5ee1fbd9401cd7b1da7daad5e19a25962eb7ea4c9335522478bdff255f1de40ca6c98cdf8cf26aa1f5f1b6c263c5004b0b6dcdc12573cfd7"
