@@ -10,10 +10,6 @@ enum EventProcessor {
         in parseContext: NSManagedObjectContext,
         skipVerification: Bool = false
     ) throws -> Event? {
-        if jsonEvent.kind == EventKind.contactList.rawValue {
-            Log.debug("contactList event from relay: \(String(describing: relay?.address))\nevent: \(jsonEvent)")
-        }
-
         if let event = try Event().createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
             relay.unwrap {
                 do {

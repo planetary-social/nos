@@ -70,9 +70,21 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
         XCTAssertEqual(repostedEvent.content, repostedEventContents)
     }
 
-    /// When we get a duplicate event of any kind, verify that it's marked as seen.
-    func test_parse_event_duplicate_is_marked_seen() {
+    /// When we get a duplicate event, verify that it's marked as seen.
+    func testParseDuplicateIsMarkedSeen() throws {
+        // Arrange
+        let textData = try jsonData(filename: "text_note")
+        let textEvent = try JSONDecoder().decode(JSONEvent.self, from: textData)
+        let context = persistenceController.viewContext
+        let parsedEvent = try EventProcessor.parse(jsonEvent: textEvent, from: nil, in: context)
 
+        // Act
+        let relay = Relay(context: context)
+        relay.address = "wss://test.example.com"
+        _ = try EventProcessor.parse(jsonEvent: textEvent, from: relay, in: context)
+
+        // Assert
+        XCTAssertTrue(parsedEvent!.seenOnRelays.contains(relay))
     }
 
     // MARK: - Contact List parsing
