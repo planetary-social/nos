@@ -6,10 +6,15 @@ protocol FileStorageAPI {
 }
 
 class NostrBuildFileStorageAPI: FileStorageAPI {
-
-    static let uploadURL = URL(string: "https://nostr.build/api/upload/ios.php")!
+    static let uploadURL = URL(string: "https://nostr.build/api/v2/upload/files")!
     static let paramName = "fileToUpload"
-    
+
+    var decoder: JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
+    }
+
     func upload(fileAt fileURL: URL) async throws -> URL {
         let fileName = fileURL.lastPathComponent
         let fileData = try Data(contentsOf: fileURL)
@@ -37,29 +42,37 @@ class NostrBuildFileStorageAPI: FileStorageAPI {
         data.append(trailerData)
         
         let (responseData, _) = try await URLSession.shared.upload(for: request, from: data)
-        let responseString = try JSONSerialization.jsonObject(with: responseData, options: .allowFragments) as? String
-        guard let responseString else {
-            throw FileStorageAPIError.unexpectedOutputType
+
+        do {
+            let response = try decoder.decode(NostrBuildResponseJSON.self, from: responseData)
+            guard let urlString = response.data?.first?.url else {
+                throw FileStorageAPIError.uploadFailed(response.message ?? String(describing: response))
+            }
+            guard let url = URL(string: urlString) else {
+                throw FileStorageAPIError.invalidResponseURL(urlString)
+            }
+            return url
+        } catch {
+            throw FileStorageAPIError.unexpectedAPIResponse(responseData)
         }
-        guard let url = URL(string: responseString) else {
-            throw FileStorageAPIError.uploadFailed(responseString)
-        }
-        return url
     }
 }
 
 enum FileStorageAPIError: Error {
-    case unexpectedOutputType
+    case invalidResponseURL(String)
+    case unexpectedAPIResponse(Data)
     case uploadFailed(String)
     case errorEncodingHeaderOrFooter
     case errorEncodingImage
 
     var localizedDescription: String {
         switch self {
-        case .unexpectedOutputType:
-            return "unexpected API output type"
+        case .invalidResponseURL(let string):
+            return "invalid URL: \(string)"
+        case .unexpectedAPIResponse(let data):
+            return "unexpected API response:\n\(String(describing: String(data: data, encoding: .utf8)))"
         case .uploadFailed(let message):
-            return "upload failed with message: '\(message)'"
+            return "upload failed: \(message)"
         case .errorEncodingHeaderOrFooter:
             return "error encoding multipart header or footer"
         case .errorEncodingImage:

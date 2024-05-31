@@ -3,9 +3,15 @@ import SwiftUI
 /// A big bright button that is used as the primary call-to-action on a screen.
 struct ActionButton: View {
     
+    enum ImageAlignment {
+        case left
+        case right
+    }
+
     var title: LocalizedStringResource
     var font: Font = .clarity(.bold)
     var image: Image?
+    var imageAlignment: ImageAlignment = .left
     var textColor = Color.white
     var depthEffectColor = Color(hex: "#A04651")
     var backgroundGradient = LinearGradient(
@@ -21,29 +27,34 @@ struct ActionButton: View {
     /// contents) or to fit the horizontal space to the contents of the action
     /// button.
     var shouldFillHorizontalSpace = false
-    var action: () async -> Void
+    var action: (() async -> Void)?
     @State var disabled = false
     
     var body: some View {
         Button(action: {
             disabled = true
             Task {
-                await action()
+                await action?()
                 disabled = false
             }
         }, label: {
-            HStack {
+            HStack(spacing: 4) {
                 if shouldFillHorizontalSpace {
                     // Center the image+text if the button has to fill the
                     // available space.
                     Spacer(minLength: 0)
                 }
-                image
+                if imageAlignment == .left {
+                    image
+                }
                 Text(title)
                     .font(font)
                     .transition(.opacity)
                     .font(.headline)
                     .foregroundColor(textColor)
+                if imageAlignment == .right {
+                    image
+                }
                 if shouldFillHorizontalSpace {
                     // Center the image+text if the button has to fill the
                     // available space.
@@ -65,11 +76,19 @@ struct ActionButton: View {
 
 struct SecondaryActionButton: View {
     var title: LocalizedStringResource
-    var action: () async -> Void
+    var image: Image?
+    var imageAlignment: ActionButton.ImageAlignment = .left
+    /// A flag used to fill the available horizontal space (centering the
+    /// contents) or to fit the horizontal space to the contents of the action
+    /// button.
+    var shouldFillHorizontalSpace = false
+    var action: (() async -> Void)?
     
     var body: some View {
         ActionButton(
             title: title,
+            image: image,
+            imageAlignment: imageAlignment,
             depthEffectColor: Color(hex: "#514964"),
             backgroundGradient: LinearGradient(
                 colors: [
@@ -79,6 +98,7 @@ struct SecondaryActionButton: View {
                 startPoint: .bottomLeading,
                 endPoint: .topTrailing
             ),
+            shouldFillHorizontalSpace: shouldFillHorizontalSpace,
             action: action
         )
     }
