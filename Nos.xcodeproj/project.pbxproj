@@ -1584,18 +1584,18 @@
 			);
 			mainGroup = C9DEBFC5298941000078B43A;
 			packageReferences = (
-				C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream.git" */,
+				C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */,
 				C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */,
-				C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32.git" */,
+				C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32" */,
 				C9646E9829B79E04007239A4 /* XCRemoteSwiftPackageReference "logger-ios" */,
-				C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios.git" */,
+				C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */,
 				C9646EA529B7A3DD007239A4 /* XCRemoteSwiftPackageReference "swift-dependencies" */,
-				C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections.git" */,
-				C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */,
+				C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */,
+				C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				C99DBF7C2A9E81CF00F7068F /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */,
 				C91565BF2B2368FA0068EECA /* XCRemoteSwiftPackageReference "ViewInspector" */,
-				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */,
+				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */,
 				C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
 				C9FD35112BCED5A6008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */,
 			);
@@ -2217,7 +2217,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.16;
+				MARKETING_VERSION = 0.1.17;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.verse.Nos-staging";
 				PRODUCT_NAME = "$(TARGET_NAME) Staging";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2388,7 +2388,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.16;
+				MARKETING_VERSION = 0.1.17;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.verse.Nos-dev";
 				PRODUCT_NAME = "$(TARGET_NAME) Dev";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2656,7 +2656,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.16;
+				MARKETING_VERSION = 0.1.17;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.Nos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development com.verse.Nos";
@@ -2711,7 +2711,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.16;
+				MARKETING_VERSION = 0.1.17;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.Nos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2831,7 +2831,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */ = {
+		3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/liamnichols/xcstrings-tool-plugin.git";
 			requirement = {
@@ -2863,7 +2863,7 @@
 				minimumVersion = 1.1.0;
 			};
 		};
-		C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios.git" */ = {
+		C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/PostHog/posthog-ios.git";
 			requirement = {
@@ -2879,7 +2879,7 @@
 				minimumVersion = 0.1.4;
 			};
 		};
-		C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections.git" */ = {
+		C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
 			requirement = {
@@ -2895,7 +2895,7 @@
 				minimumVersion = 2.0.0;
 			};
 		};
-		C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32.git" */ = {
+		C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/0xdeadp00l/bech32.git";
 			requirement = {
@@ -2903,7 +2903,7 @@
 				kind = branch;
 			};
 		};
-		C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */ = {
+		C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
 			requirement = {
@@ -2927,7 +2927,7 @@
 				minimumVersion = 6.6.2;
 			};
 		};
-		C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream.git" */ = {
+		C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/daltoniam/Starscream.git";
 			requirement = {
@@ -2956,17 +2956,17 @@
 /* Begin XCSwiftPackageProductDependency section */
 		3AD3185C2B294E9000026B07 /* plugin:XCStringsToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */;
+			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
 			productName = "plugin:XCStringsToolPlugin";
 		};
 		3AEABEF22B2BF806001BC933 /* plugin:XCStringsToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin.git" */;
+			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
 			productName = "plugin:XCStringsToolPlugin";
 		};
 		C905B0742A619367009B8A78 /* DequeModule */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections.git" */;
+			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = DequeModule;
 		};
 		C91565C02B2368FA0068EECA /* ViewInspector */ = {
@@ -2995,7 +2995,7 @@
 		};
 		C9646EA329B7A24A007239A4 /* PostHog */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios.git" */;
+			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */;
 			productName = PostHog;
 		};
 		C9646EA629B7A3DD007239A4 /* Dependencies */ = {
@@ -3005,7 +3005,7 @@
 		};
 		C9646EA829B7A4F2007239A4 /* PostHog */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios.git" */;
+			package = C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */;
 			productName = PostHog;
 		};
 		C9646EAB29B7A520007239A4 /* Dependencies */ = {
@@ -3015,7 +3015,7 @@
 		};
 		C96CB98B2A6040C500498C4E /* DequeModule */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections.git" */;
+			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = DequeModule;
 		};
 		C99DBF7D2A9E81CF00F7068F /* SDWebImageSwiftUI */ = {
@@ -3040,17 +3040,17 @@
 		};
 		C9B71DBD2A8E9BAD0031ED9F /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */;
+			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = Sentry;
 		};
 		C9B71DBF2A8E9BAD0031ED9F /* SentrySwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */;
+			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = SentrySwiftUI;
 		};
 		C9B71DC42A9008300031ED9F /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa.git" */;
+			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = Sentry;
 		};
 		C9D5733F2AB24A3700E06BB4 /* plugin:SwiftGenPlugin */ = {
@@ -3060,7 +3060,7 @@
 		};
 		C9DEC067298965270078B43A /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream.git" */;
+			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
 		};
 		C9FD34F52BCEC89C008F8D95 /* secp256k1 */ = {
@@ -3080,7 +3080,7 @@
 		};
 		CDDA1F7A29A527650047ACD8 /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream.git" */;
+			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
 		};
 		CDDA1F7C29A527650047ACD8 /* SwiftUINavigation */ = {
