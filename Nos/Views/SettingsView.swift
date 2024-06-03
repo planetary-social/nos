@@ -27,7 +27,9 @@ struct SettingsView: View {
 
     @State private var showReportWarnings = true
     @State private var showOutOfNetworkWarning = true
-    
+    @State private var copyButtonState: CopyButtonState = .copy
+    @State private var copyButtonWidth: CGFloat = 0
+
     func importKey(_ keyPair: KeyPair) async {
         await currentUser.setKeyPair(keyPair)
         analytics.identify(with: keyPair)
@@ -38,7 +40,12 @@ struct SettingsView: View {
     fileprivate enum AlertAction {
         case logout
     }
-    
+
+    fileprivate enum CopyButtonState {
+        case copy
+        case copied
+    }
+
     var body: some View {
         Form {
             Section {
@@ -65,9 +72,34 @@ struct SettingsView: View {
                     }
                     .padding(.vertical, 5)
 
-                    SecondaryActionButton(title: .localizable.copy) {
-                        UIPasteboard.general.string = privateKeyString
+                    // The ZStack ensures that the copy and copied buttons
+                    // have the same width
+                    ZStack {
+                        // Copy Button
+                        SecondaryActionButton(
+                            title: .localizable.copy,
+                            image: .copyIcon,
+                            imageAlignment: .right,
+                            shouldFillHorizontalSpace: true
+                        ) {
+                            UIPasteboard.general.string = privateKeyString
+                            copyButtonState = .copied
+                            Task { @MainActor in
+                                try await Task.sleep(for: .seconds(10))
+                                copyButtonState = .copy
+                            }
+                        }
+                        .opacity(copyButtonState == .copy ? 1 : 0)
+
+                        // Copied Button
+                        SecondaryActionButton(
+                            title: .localizable.copied,
+                            shouldFillHorizontalSpace: true
+                        )
+                        .opacity(copyButtonState == .copied ? 1 : 0)
+                        .disabled(true)
                     }
+                    .fixedSize(horizontal: true, vertical: false)
                     .padding(.vertical, 5)
                 }
                 
