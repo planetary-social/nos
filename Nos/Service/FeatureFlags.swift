@@ -1,5 +1,9 @@
 import Foundation
 
-enum FeatureFlags {
-    static let newMediaDisplayEnabled = false
+protocol FeatureFlags {
+    var newMediaDisplayEnabled: Bool { get }
+}
+
+struct DefaultFeatureFlags: FeatureFlags {
+    let newMediaDisplayEnabled = false
 }

@@ -40,6 +40,11 @@
 		0373CE8F2C090D4D0027C856 /* NostrBuildResponseJSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0373CE8E2C090D4D0027C856 /* NostrBuildResponseJSONTests.swift */; };
 		0373CE992C0910250027C856 /* XCTestCase+JSONData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0373CE982C0910250027C856 /* XCTestCase+JSONData.swift */; };
 		0378409D2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */; };
+		037975BB2C0E24D200ADDF37 /* CompactNoteViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037975BA2C0E24D200ADDF37 /* CompactNoteViewTests.swift */; };
+		037975BC2C0E258E00ADDF37 /* CompactNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFA96A299BEE2C006929C1 /* CompactNoteView.swift */; };
+		037975BD2C0E25E200ADDF37 /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0350F12C2C0A7EF20024CC15 /* FeatureFlags.swift */; };
+		037975BE2C0E265E00ADDF37 /* LinkPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C905B0762A619E99009B8A78 /* LinkPreview.swift */; };
+		037975C72C0E26FC00ADDF37 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F85729BA981800B44E7A /* Font.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
 		3A1C296F2B2A537C0020B753 /* Moderation.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */; };
@@ -495,6 +500,7 @@
 		0373CE8E2C090D4D0027C856 /* NostrBuildResponseJSONTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrBuildResponseJSONTests.swift; sourceTree = "<group>"; };
 		0373CE982C0910250027C856 /* XCTestCase+JSONData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+JSONData.swift"; sourceTree = "<group>"; };
 		0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		037975BA2C0E24D200ADDF37 /* CompactNoteViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactNoteViewTests.swift; sourceTree = "<group>"; };
 		03AB2F7D2BF6609500B73DB1 /* UnitTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UnitTests.xctestplan; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
@@ -906,12 +912,13 @@
 			path = Service;
 			sourceTree = "<group>";
 		};
-		035729BC2BE416BD005FEE85 /* View */ = {
+		035729BC2BE416BD005FEE85 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				035729BB2BE416BD005FEE85 /* EventObservationTests.swift */,
+				037975BA2C0E24D200ADDF37 /* CompactNoteViewTests.swift */,
 			);
-			path = View;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		037A2C242BA9D75F00FC554B /* Generated */ = {
@@ -1255,7 +1262,7 @@
 				035729AA2BE4167E005FEE85 /* Model */,
 				035729B72BE416A6005FEE85 /* Service */,
 				C9C9443A29F6E420002F2C7A /* Test Helpers */,
-				035729BC2BE416BD005FEE85 /* View */,
+				035729BC2BE416BD005FEE85 /* Views */,
 			);
 			path = NosTests;
 			sourceTree = "<group>";
@@ -1999,6 +2006,7 @@
 				0320C1152BFE63DC00C4C080 /* MockRelaySubscriptionManager.swift in Sources */,
 				035729CB2BE41770005FEE85 /* ContentWarningController.swift in Sources */,
 				CD09A76229A5220E0063464F /* AppController.swift in Sources */,
+				037975BE2C0E265E00ADDF37 /* LinkPreview.swift in Sources */,
 				C9A0DAF929C92F4500466635 /* UNSAPI.swift in Sources */,
 				C97A1C8C29E45B4E009D9E8D /* RawEventController.swift in Sources */,
 				CD09A75F29A521FD0063464F /* RelayService.swift in Sources */,
@@ -2026,11 +2034,13 @@
 				CD09A75929A521D20063464F /* Color+Hex.swift in Sources */,
 				5B88051D2A2104CC00E21F06 /* SHA256Key.swift in Sources */,
 				C9CF23182A38A58B00EBEC31 /* ParseQueue.swift in Sources */,
+				037975C72C0E26FC00ADDF37 /* Font.swift in Sources */,
 				5B39E64429EDBF8100464830 /* NoteParser.swift in Sources */,
 				035729CA2BE4173E005FEE85 /* PreviewData.swift in Sources */,
 				C94A5E162A716A6D00B6EC5D /* EditableNoteText.swift in Sources */,
 				5BD08BB22A38E96F00BB926C /* JSONRelayMetadata.swift in Sources */,
 				C936B45A2A4C7B7C00DF1EB9 /* Nos.xcdatamodeld in Sources */,
+				037975BD2C0E25E200ADDF37 /* FeatureFlags.swift in Sources */,
 				C98CA9082B14FD8600929141 /* PagedRelaySubscription.swift in Sources */,
 				5B79F5B82B8E71CC002DA9BE /* NamesAPI.swift in Sources */,
 				C9F204812AE02D8C0029A858 /* AppDestination.swift in Sources */,
@@ -2063,6 +2073,7 @@
 				C93CA0C429AE3A1E00921183 /* JSONEvent.swift in Sources */,
 				C9DEC04629894BED0078B43A /* Event+CoreDataClass.swift in Sources */,
 				035729A02BE41653005FEE85 /* SocialGraphTests.swift in Sources */,
+				037975BC2C0E258E00ADDF37 /* CompactNoteView.swift in Sources */,
 				A32B6C7129A672BC00653FF5 /* CurrentUser.swift in Sources */,
 				C98A32282A05795E00E3FA13 /* Task+Timeout.swift in Sources */,
 				035729B12BE4167E005FEE85 /* ReportTests.swift in Sources */,
@@ -2107,6 +2118,7 @@
 				C9BAB09C2996FBA10003A84E /* EventProcessor.swift in Sources */,
 				C992B32B2B3613CC00704A9C /* SubscriptionCancellable.swift in Sources */,
 				C973AB5C2A323167002AED16 /* Follow+CoreDataProperties.swift in Sources */,
+				037975BB2C0E24D200ADDF37 /* CompactNoteViewTests.swift in Sources */,
 				659B27312BD9D6FE00BEA6CC /* VerifiableEvent.swift in Sources */,
 				C93005602A6AF8320098CA9E /* LoadingContent.swift in Sources */,
 				C97A1C8F29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift in Sources */,

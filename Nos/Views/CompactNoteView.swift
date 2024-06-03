@@ -22,7 +22,10 @@ struct CompactNoteView: View {
     /// If true links will be highlighted and open when tapped. If false the text will change to a secondary color
     /// and links will not be tappable.
     private var allowUserInteraction: Bool
-    
+
+    /// The feature flags to use to determine what features are enabled.
+    private let featureFlags: FeatureFlags
+
     /// Whether this view is currently displayed in a truncated state
     @State private var isTextTruncated = true
 
@@ -39,12 +42,14 @@ struct CompactNoteView: View {
         note: Event, 
         shouldTruncate: Bool = false, 
         showLinkPreviews: Bool = true,
-        allowUserInteraction: Bool = true
+        allowUserInteraction: Bool = true,
+        featureFlags: FeatureFlags = DefaultFeatureFlags()
     ) {
         self.note = note
         self.shouldTruncate = shouldTruncate
         self.showLinkPreviews = showLinkPreviews
         self.allowUserInteraction = allowUserInteraction
+        self.featureFlags = featureFlags
     }
     
     /// Calculates whether the note text is long enough to need truncation given `truncationLineLimit`.
@@ -145,8 +150,8 @@ struct CompactNoteView: View {
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
             if note.kind == EventKind.text.rawValue, showLinkPreviews, !note.contentLinks.isEmpty {
-                if FeatureFlags.newMediaDisplayEnabled {
-                    LinkPreviewCarousel(links: note.contentLinks)
+                if featureFlags.newMediaDisplayEnabled {
+                    EmptyView()
                 } else {
                     LinkPreviewCarousel(links: note.contentLinks)
                 }
