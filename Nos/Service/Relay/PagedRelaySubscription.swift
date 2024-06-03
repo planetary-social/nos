@@ -61,7 +61,7 @@ class PagedRelaySubscription {
     func loadMore() {
         Task { [self] in
             var newUntilDates = [URL: Date]()
-            var subscriptionsToRemove = [RelaySubscription]()
+            var subscriptionsToRemove = Set<RelaySubscription.ID>()
             
             for subscriptionID in pagedSubscriptionIDs {
                 if let subscription = await subscriptionManager.subscription(from: subscriptionID),
@@ -74,13 +74,11 @@ class PagedRelaySubscription {
                           
                     newUntilDates[subscription.relayAddress] = newDate
                     await subscriptionManager.decrementSubscriptionCount(for: subscriptionID)
-                    subscriptionsToRemove.append(subscription)
+                    subscriptionsToRemove.insert(subscription.id)
                 }
             }
             
-            subscriptionsToRemove.forEach { subscription in
-                pagedSubscriptionIDs.remove(subscription.id)
-            }
+            pagedSubscriptionIDs.subtract(subscriptionsToRemove)            
             
             for (relayAddress, until) in newUntilDates {
                 var newEventsFilter = self.filter
