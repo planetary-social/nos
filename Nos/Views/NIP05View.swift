@@ -43,13 +43,17 @@ struct NIP05View: View {
                             username: nip05Identifier,
                             publicKey: publicKey
                         )
+                    } catch URLError.cancelled {
+                        // Cancelled requests are common in bad networks. We
+                        // should keep things as they were to avoid reproducing
+                        // https://github.com/planetary-social/nos/issues/1161
+                        return
                     } catch {
                         isVerified = false
-                        Log.debug(error.localizedDescription)
+                        let message = error.localizedDescription
+                        Log.debug("Error while verifying a NIP-05: \(message)")
                     }
-                    withAnimation {
-                        self.verifiedNip05Identifier = isVerified
-                    }
+                    self.verifiedNip05Identifier = isVerified
                 }
             }
         } else {
