@@ -81,6 +81,12 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         removeSubscription(with: subscriptionID)
     }
     
+    /// Lets the manager know that there is one less subscriber for the given subscription. If there are no 
+    /// more subscribers this function returns `true`. 
+    /// 
+    /// Note that this does not send a close message on the websocket or close the socket. Right now those actions
+    /// are performed by the RelayService. It's yucky though. Maybe we should make the RelaySubscriptionManager
+    /// do that in the future.
     @discardableResult
     func decrementSubscriptionCount(for subscriptionID: RelaySubscription.ID) async -> Bool {
         if var subscription = subscription(from: subscriptionID) {
