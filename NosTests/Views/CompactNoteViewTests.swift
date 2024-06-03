@@ -26,12 +26,7 @@ final class CompactNoteViewTests: CoreDataTestCase {
         ViewHosting.host(view: subject.environmentObject(DependencyValues().router))
 
         // Assert
-//        let result = try subject.inspect().find(ViewType.EmptyView.self)
         let result = try subject.inspect().find(LinkPreviewCarousel.self)
         XCTAssertNotNil(result)
     }
-}
-
-struct MockFeatureFlags: FeatureFlags {
-    let newMediaDisplayEnabled = false
 }
