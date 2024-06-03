@@ -14,6 +14,7 @@
 		0350F1172C0A47B20024CC15 /* contact_list.json in Resources */ = {isa = PBXBuildFile; fileRef = 0350F1162C0A47B20024CC15 /* contact_list.json */; };
 		0350F1212C0A490E0024CC15 /* EventProcessorIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0350F1202C0A490E0024CC15 /* EventProcessorIntegrationTests.swift */; };
 		0350F12B2C0A49D40024CC15 /* text_note.json in Resources */ = {isa = PBXBuildFile; fileRef = 0350F12A2C0A49D40024CC15 /* text_note.json */; };
+		0350F12D2C0A7EF20024CC15 /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0350F12C2C0A7EF20024CC15 /* FeatureFlags.swift */; };
 		0357299B2BE415E5005FEE85 /* ContentWarningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0357299A2BE415E5005FEE85 /* ContentWarningController.swift */; };
 		0357299F2BE41653005FEE85 /* ContentWarningControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0357299C2BE41653005FEE85 /* ContentWarningControllerTests.swift */; };
 		035729A02BE41653005FEE85 /* SocialGraphTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0357299D2BE41653005FEE85 /* SocialGraphTests.swift */; };
@@ -471,6 +472,7 @@
 		0350F1162C0A47B20024CC15 /* contact_list.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = contact_list.json; sourceTree = "<group>"; };
 		0350F1202C0A490E0024CC15 /* EventProcessorIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventProcessorIntegrationTests.swift; sourceTree = "<group>"; };
 		0350F12A2C0A49D40024CC15 /* text_note.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = text_note.json; sourceTree = "<group>"; };
+		0350F12C2C0A7EF20024CC15 /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlags.swift; sourceTree = "<group>"; };
 		0357299A2BE415E5005FEE85 /* ContentWarningController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentWarningController.swift; sourceTree = "<group>"; };
 		0357299C2BE41653005FEE85 /* ContentWarningControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentWarningControllerTests.swift; sourceTree = "<group>"; };
 		0357299D2BE41653005FEE85 /* SocialGraphTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocialGraphTests.swift; sourceTree = "<group>"; };
@@ -1091,6 +1093,7 @@
 				C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */,
 				65D066982BD558690011C5CD /* DirectMessageWrapper.swift */,
 				C9BAB09A2996FBA10003A84E /* EventProcessor.swift */,
+				0350F12C2C0A7EF20024CC15 /* FeatureFlags.swift */,
 				DC5F20422A6ED75C00F8D73F /* FileStorageAPI.swift */,
 				C959DB752BD01DF4008F3627 /* GiftWrapper.swift */,
 				A3B943CE299AE00100A15A08 /* KeyChain.swift */,
@@ -1760,6 +1763,7 @@
 				C9DEC06E2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,
 				C9F64D8C29ED840700563F2B /* LogHelper.swift in Sources */,
 				C9C2B78529E073E300548B4A /* RelaySubscription.swift in Sources */,
+				0350F12D2C0A7EF20024CC15 /* FeatureFlags.swift in Sources */,
 				3FFB1D9C29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */,
 				C97A1C8E29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift in Sources */,
 				5BBA5E9C2BAE052F00D57D76 /* NiceWorkSheet.swift in Sources */,

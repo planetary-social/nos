@@ -145,7 +145,11 @@ struct CompactNoteView: View {
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
             if note.kind == EventKind.text.rawValue, showLinkPreviews, !note.contentLinks.isEmpty {
-                LinkPreviewCarousel(links: note.contentLinks)
+                if FeatureFlags.newMediaDisplayEnabled {
+                    LinkPreviewCarousel(links: note.contentLinks)
+                } else {
+                    LinkPreviewCarousel(links: note.contentLinks)
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
