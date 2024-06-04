@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for opening njump.me content in Nos.
 - Fixed a crash on logout
+- Fixed an issue where NIP-05 could appear as invalid.
+
+## [0.1.16] - 2024-05-31Z
+
+- Added feedback to the copy button in Settings.
+- Fixed an issue where photos and videos could not be uploaded.
+- Fixed a crash on logout.
 
 ## [0.1.15] - 2024-05-29Z
 

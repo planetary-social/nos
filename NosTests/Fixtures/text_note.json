@@ -1,0 +1,14 @@
+{
+    "kind": 1,
+    "content": "Testing nos #[0]",
+    "tags": [
+        [
+            "p",
+            "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
+        ]
+    ],
+    "created_at": 1675264762,
+    "pubkey": "32730e9dfcab797caf8380d096e548d9ef98f3af3000542f9271a91a9e3b0001",
+    "id": "931b425e55559541451ddb99bd228bd1e0190af6ed21603b6b98544b42ee3317",
+    "sig": "79862bd81b316411c23467632239750c97f3aa974593c01bd61d2ca85eedbcfd9a18886b0dad1c17b2e8ceb231db37add136fc23120b45aa5403d6fd2d693e9b"
+}
