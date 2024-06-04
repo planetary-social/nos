@@ -2,7 +2,7 @@ import Foundation
 import Logger
 
 /// Models a request to a relay for Nostr Events. 
-struct RelaySubscription: Identifiable {
+struct RelaySubscription: Identifiable, Hashable {
     
     var id: String 
     
