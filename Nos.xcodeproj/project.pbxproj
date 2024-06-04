@@ -46,6 +46,7 @@
 		037975BE2C0E265E00ADDF37 /* LinkPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C905B0762A619E99009B8A78 /* LinkPreview.swift */; };
 		037975C72C0E26FC00ADDF37 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F85729BA981800B44E7A /* Font.swift */; };
 		037975D12C0E341500ADDF37 /* MockFeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037975D02C0E341500ADDF37 /* MockFeatureFlags.swift */; };
+		037975EA2C0E695A00ADDF37 /* MockFeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037975D02C0E341500ADDF37 /* MockFeatureFlags.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
 		3A1C296F2B2A537C0020B753 /* Moderation.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */; };
@@ -1827,6 +1828,7 @@
 				3F170C78299D816200BC8F8B /* AppController.swift in Sources */,
 				C9F204672ADEDBA80029A858 /* String+Extra.swift in Sources */,
 				C95D68AB299E710F00429F86 /* Color+Hex.swift in Sources */,
+				037975EA2C0E695A00ADDF37 /* MockFeatureFlags.swift in Sources */,
 				C94A5E182A72C84200B6EC5D /* ReportCategory.swift in Sources */,
 				C9A8015E2BD0177D006E29B2 /* ReportPublisher.swift in Sources */,
 				C973364F2A7968220012D8B8 /* SetUpUNSBanner.swift in Sources */,

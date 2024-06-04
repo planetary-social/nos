@@ -3,7 +3,7 @@ import ViewInspector
 import XCTest
 
 final class CompactNoteViewTests: CoreDataTestCase {
-    @MainActor func testNewMediaDisplayDisabled() throws {
+    @MainActor func testNewMediaDisplayDisabledUsesLinkPreviewCarousel() throws {
         // Arrange
         let viewContext = persistenceController.viewContext
         let parseContext = persistenceController.parseContext
@@ -18,10 +18,7 @@ final class CompactNoteViewTests: CoreDataTestCase {
         fullEvent.kind = 1
         fullEvent.contentLinks = [try XCTUnwrap(URL(string: eventContent))]
 
-        let subject = CompactNoteView(
-            note: fullEvent,
-            featureFlags: MockFeatureFlags()
-        )
+        let subject = CompactNoteView(note: fullEvent)
         ViewHosting.host(view: subject.environment(\.managedObjectContext, persistenceController.container.viewContext))
         ViewHosting.host(view: subject.environmentObject(DependencyValues().router))
 

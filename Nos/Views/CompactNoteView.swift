@@ -24,7 +24,7 @@ struct CompactNoteView: View {
     private var allowUserInteraction: Bool
 
     /// The feature flags to use to determine what features are enabled.
-    private let featureFlags: FeatureFlags
+    @Dependency(\.featureFlags) private var featureFlags
 
     /// Whether this view is currently displayed in a truncated state
     @State private var isTextTruncated = true
@@ -42,14 +42,12 @@ struct CompactNoteView: View {
         note: Event, 
         shouldTruncate: Bool = false, 
         showLinkPreviews: Bool = true,
-        allowUserInteraction: Bool = true,
-        featureFlags: FeatureFlags = DefaultFeatureFlags()
+        allowUserInteraction: Bool = true
     ) {
         self.note = note
         self.shouldTruncate = shouldTruncate
         self.showLinkPreviews = showLinkPreviews
         self.allowUserInteraction = allowUserInteraction
-        self.featureFlags = featureFlags
     }
     
     /// Calculates whether the note text is long enough to need truncation given `truncationLineLimit`.
