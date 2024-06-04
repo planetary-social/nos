@@ -44,9 +44,12 @@ struct NIP05View: View {
                             publicKey: publicKey
                         )
                     } catch URLError.cancelled {
-                        // Cancelled requests are common in bad networks. We
-                        // should keep things as they were to avoid reproducing
-                        // https://github.com/planetary-social/nos/issues/1161
+                        // URLSession cancels the request when the task is
+                        // cancelled. Cancelled requests are common specially in
+                        // bad networks because it is normal that the user
+                        // scrolls past the author before the requests
+                        // completes. Thus, we need to catch .cancelled so we
+                        // don't display a strike-through in those cases.
                         return
                     } catch {
                         isVerified = false
