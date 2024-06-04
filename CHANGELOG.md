@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a bug where some profiles wouldn't load old notes.
+
 ## [0.1.16] - 2024-05-31Z
 
 - Added feedback to the copy button in Settings.
