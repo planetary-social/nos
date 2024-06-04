@@ -142,7 +142,7 @@ fileprivate enum NoteParserKey: DependencyKey {
 }
 
 fileprivate enum FeatureFlagsKey: DependencyKey {
-    static let liveValue: any FeatureFlags = DefaultFeatureFlags()
+    static let liveValue: any FeatureFlags = DefaultFeatureFlags.liveValue
     static let testValue: any FeatureFlags = MockFeatureFlags()
     static let previewValue: any FeatureFlags = MockFeatureFlags()
 }
