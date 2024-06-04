@@ -177,14 +177,12 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     /// - Parameter indexPath: the indexPath last loaded by the collection view.
     func loadMoreIfNeeded(for indexPath: IndexPath) {
         largestLoadedRowIndex = max(largestLoadedRowIndex, indexPath.row)
-        Log.debug("loadingMoreIfNeeded \(indexPath)")
         let lastPageStartIndex = (fetchedResultsController.fetchedObjects?.count ?? 0) - pageSize
         if indexPath.row > lastPageStartIndex {
             // we are on the last page, load aggressively
             startAggressivePaging()
             return
         } else if indexPath.row.isMultiple(of: pageSize / 2) {
-            Log.debug("loading next page")
             pager?.loadMore()
         } 
     }

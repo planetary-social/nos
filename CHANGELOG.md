@@ -8,16 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-<<<<<<< fix-profile-not-loading-notes
 - Fixed a bug where some profiles wouldn't load old notes.
-- Fixed a crash on logout
-=======
+
 ## [0.1.16] - 2024-05-31Z
 
 - Added feedback to the copy button in Settings.
 - Fixed an issue where photos and videos could not be uploaded.
 - Fixed a crash on logout.
->>>>>>> main
 
 ## [0.1.15] - 2024-05-29Z
 
