@@ -38,6 +38,7 @@ enum DeepLinkService {
         } else {
             /// Check for links like nos:nevent123174
             let firstPathComponent = components.path
+            // swiftlint:disable:next opening_brace 
             let unformattedRegex = /(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,255}))/
             do {
                 if let match = try unformattedRegex.firstMatch(in: firstPathComponent) {
