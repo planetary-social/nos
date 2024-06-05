@@ -14,7 +14,12 @@ extension DependencyValues {
         get { self[CurrentUserKey.self] }
         set { self[CurrentUserKey.self] = newValue }
     }
-    
+
+    var fileStorageResponseDecoder: JSONDecoder {
+        get { self[FileStorageResponseDecoderKey.self] }
+        set { self[FileStorageResponseDecoderKey.self] = newValue }
+    }
+
     var router: Router {
         get { self[RouterKey.self] }
         set { self[RouterKey.self] = newValue }
@@ -60,6 +65,11 @@ extension DependencyValues {
         set { self[URLParserKey.self] = newValue }
     }
 
+    var urlSession: URLSessionProtocol {
+        get { self[URLSessionProtocolKey.self] }
+        set { self[URLSessionProtocolKey.self] = newValue }
+    }
+
     var noteParser: NoteParser {
         get { self[NoteParserKey.self] }
         set { self[NoteParserKey.self] = newValue }
@@ -72,10 +82,19 @@ fileprivate enum AnalyticsKey: DependencyKey {
     static let previewValue = Analytics(mock: true)
 }
 
-private enum CurrentUserKey: DependencyKey {
+fileprivate enum CurrentUserKey: DependencyKey {
     @MainActor static let liveValue = CurrentUser()
     @MainActor static let testValue = CurrentUser()
     @MainActor static let previewValue = CurrentUser()
+}
+
+fileprivate enum FileStorageResponseDecoderKey: DependencyKey {
+    static var liveValue: JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
+    }
+    static let testValue = liveValue
 }
 
 fileprivate enum RouterKey: DependencyKey {
@@ -128,6 +147,12 @@ fileprivate enum URLParserKey: DependencyKey {
     static let liveValue = URLParser()
     static let testValue = URLParser()
     static let previewValue = URLParser()
+}
+
+fileprivate enum URLSessionProtocolKey: DependencyKey {
+    static let liveValue: any URLSessionProtocol = URLSession.shared
+    static let testValue: any URLSessionProtocol = MockURLSession()
+    static let previewValue: any URLSessionProtocol = MockURLSession()
 }
 
 fileprivate enum NoteParserKey: DependencyKey {

@@ -1,8 +1,8 @@
 import XCTest
 
 class NostrBuildResponseJSONTests: XCTestCase {
-    /// Verifies that we can properly decode a response frome the nostr.build API.
-    func testDecoding() throws {
+    /// Verifies that we can properly decode a response from the nostr.build API.
+    func test_decode() throws {
         // Arrange
         let jsonData = try jsonData(filename: "nostr_build_response")
         let decoder = JSONDecoder()
