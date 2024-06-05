@@ -14,7 +14,7 @@
 		032634532C10BBAC00E489B5 /* FileStorageAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032634522C10BBAC00E489B5 /* FileStorageAPIRequest.swift */; };
 		032634542C10BBB100E489B5 /* FileStorageAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032634522C10BBAC00E489B5 /* FileStorageAPIRequest.swift */; };
 		032634682C10C0D600E489B5 /* nostr_build_nip96_response.json in Resources */ = {isa = PBXBuildFile; fileRef = 032634672C10C0D600E489B5 /* nostr_build_nip96_response.json */; };
-		0326346B2C10C1D800E489B5 /* FileStorageMetadataResponseJSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326346A2C10C1D800E489B5 /* FileStorageMetadataResponseJSONTests.swift */; };
+		0326346B2C10C1D800E489B5 /* FileStorageServerInfoResponseJSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326346A2C10C1D800E489B5 /* FileStorageServerInfoResponseJSONTests.swift */; };
 		0326346D2C10C2FD00E489B5 /* FileStorageServerInfoResponseJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326346C2C10C2FD00E489B5 /* FileStorageServerInfoResponseJSON.swift */; };
 		0326346E2C10C2FD00E489B5 /* FileStorageServerInfoResponseJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326346C2C10C2FD00E489B5 /* FileStorageServerInfoResponseJSON.swift */; };
 		032634702C10C40B00E489B5 /* NostrBuildAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326346F2C10C40B00E489B5 /* NostrBuildAPIClientTests.swift */; };
@@ -481,7 +481,7 @@
 		0326344F2C10BAF800E489B5 /* FileStorageAPIRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageAPIRequestTests.swift; sourceTree = "<group>"; };
 		032634522C10BBAC00E489B5 /* FileStorageAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageAPIRequest.swift; sourceTree = "<group>"; };
 		032634672C10C0D600E489B5 /* nostr_build_nip96_response.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = nostr_build_nip96_response.json; sourceTree = "<group>"; };
-		0326346A2C10C1D800E489B5 /* FileStorageMetadataResponseJSONTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageMetadataResponseJSONTests.swift; sourceTree = "<group>"; };
+		0326346A2C10C1D800E489B5 /* FileStorageServerInfoResponseJSONTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageServerInfoResponseJSONTests.swift; sourceTree = "<group>"; };
 		0326346C2C10C2FD00E489B5 /* FileStorageServerInfoResponseJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageServerInfoResponseJSON.swift; sourceTree = "<group>"; };
 		0326346F2C10C40B00E489B5 /* NostrBuildAPIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrBuildAPIClientTests.swift; sourceTree = "<group>"; };
 		032634792C10C57A00E489B5 /* FileStorageAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageAPIClient.swift; sourceTree = "<group>"; };
@@ -894,7 +894,7 @@
 			isa = PBXGroup;
 			children = (
 				0326344F2C10BAF800E489B5 /* FileStorageAPIRequestTests.swift */,
-				0326346A2C10C1D800E489B5 /* FileStorageMetadataResponseJSONTests.swift */,
+				0326346A2C10C1D800E489B5 /* FileStorageServerInfoResponseJSONTests.swift */,
 				0326346F2C10C40B00E489B5 /* NostrBuildAPIClientTests.swift */,
 				0373CE8E2C090D4D0027C856 /* NostrBuildResponseJSONTests.swift */,
 				032634692C10C12B00E489B5 /* Fixtures */,
@@ -2127,7 +2127,7 @@
 				0357299F2BE41653005FEE85 /* ContentWarningControllerTests.swift in Sources */,
 				035729B22BE4167E005FEE85 /* SHA256KeyTests.swift in Sources */,
 				0326346E2C10C2FD00E489B5 /* FileStorageServerInfoResponseJSON.swift in Sources */,
-				0326346B2C10C1D800E489B5 /* FileStorageMetadataResponseJSONTests.swift in Sources */,
+				0326346B2C10C1D800E489B5 /* FileStorageServerInfoResponseJSONTests.swift in Sources */,
 				C9A6C7422AD837AD001F9500 /* UNSWizardController.swift in Sources */,
 				0350F1212C0A490E0024CC15 /* EventProcessorIntegrationTests.swift in Sources */,
 				0326347B2C10C57A00E489B5 /* FileStorageAPIClient.swift in Sources */,

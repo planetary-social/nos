@@ -1,6 +1,6 @@
 import XCTest
 
-class FileStorageMetadataResponseJSONTests: XCTestCase {
+class FileStorageServerInfoResponseJSONTests: XCTestCase {
     /// Verifies that we can properly decode a response from the File Storage metadata API endpoint.
     func test_decode() throws {
         // Arrange
@@ -9,7 +9,7 @@ class FileStorageMetadataResponseJSONTests: XCTestCase {
         decoder.keyDecodingStrategy = .convertFromSnakeCase
 
         // Act
-        let subject = try decoder.decode(FileStorageMetadataResponseJSON.self, from: jsonData)
+        let subject = try decoder.decode(FileStorageServerInfoResponseJSON.self, from: jsonData)
 
         // Assert
         XCTAssertEqual(subject.apiUrl, "https://nostr.build/api/v2/nip96/upload")

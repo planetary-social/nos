@@ -2,7 +2,7 @@ import Dependencies
 import XCTest
 
 class NostrBuildAPIClientTests: XCTestCase {
-    func test_fetchMetadata_success() async throws {
+    func test_fetchServerInfo_success() async throws {
         // Arrange
         let subject = try withDependencies {
             let data = try jsonData(filename: "nostr_build_nip96_response")
@@ -12,13 +12,13 @@ class NostrBuildAPIClientTests: XCTestCase {
         }
 
         // Act
-        let metadataResponse = try await subject.fetchMetadata()
+        let metadataResponse = try await subject.fetchServerInfo()
 
         // Assert
         XCTAssertEqual(metadataResponse.apiUrl, "https://nostr.build/api/v2/nip96/upload")
     }
 
-    func test_fetchMetadata_throws_decoding_error_when_API_returns_unexpected_data() async throws {
+    func test_fetchServerInfo_throws_decoding_error_when_API_returns_unexpected_data() async throws {
         // Arrange
         let subject = withDependencies {
             $0.urlSession = MockURLSession()
@@ -28,7 +28,7 @@ class NostrBuildAPIClientTests: XCTestCase {
 
         // Act & Assert
         do {
-            _ = try await subject.fetchMetadata()
+            _ = try await subject.fetchServerInfo()
         } catch {
             let result = try XCTUnwrap(error as? FileStorageAPIClientError)
             XCTAssertEqual(result, FileStorageAPIClientError.decodingError)
