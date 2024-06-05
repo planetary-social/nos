@@ -2319,6 +2319,23 @@
         }
       }
     },
+    "copied" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Copiado!"
+          }
+        }
+      }
+    },
     "copy" : {
       "extractionState" : "manual",
       "localizations" : {

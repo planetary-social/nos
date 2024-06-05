@@ -44,7 +44,10 @@ struct AppView: View {
                                 // TODO: Move this somewhere better like CurrentUser when it becomes the source of truth
                                 // for who is logged in
                                 if let keyPair = currentUser.keyPair {
-                                    analytics.identify(with: keyPair)
+                                    analytics.identify(
+                                        with: keyPair,
+                                        nip05: currentUser.author?.nip05
+                                    )
                                     crashReporting.identify(with: keyPair)
                                 }
                             }

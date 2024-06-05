@@ -1,0 +1,31 @@
+{
+  "status": "success",
+  "message": "Upload successful.",
+  "data": [
+    {
+      "input_name": "APIv2",
+      "name": "d9a71e94e59ab36ce13dd6998dcdb34527acdd2781cb6b91858ea0a8ca8557b1.jpeg",
+      "sha256": "",
+      "original_sha256": "d9a71e94e59ab36ce13dd6998dcdb34527acdd2781cb6b91858ea0a8ca8557b1",
+      "type": "picture",
+      "mime": "image/jpeg",
+      "size": 526284,
+      "blurhash": "L9C;-XQS.9roDg^,D$-pHSD$%NnM",
+      "dimensions": {
+        "width": 4032,
+        "height": 3024
+      },
+      "dimensionsString": "4032x3024",
+      "url": "https://image.nostr.build/d9a71e94e59ab36ce13dd6998dcdb34527acdd2781cb6b91858ea0a8ca8557b1.jpeg",
+      "thumbnail": "https://image.nostr.build/thumb/d9a71e94e59ab36ce13dd6998dcdb34527acdd2781cb6b91858ea0a8ca8557b1.jpeg",
+      "responsive": {
+        "240p": "https://image.nostr.build/resp/240p/d9a71e94e59ab36ce13dd6998dcdb34527acdd2781cb6b91858ea0a8ca8557b1.jpeg",
+        "360p": "https://image.nostr.build/resp/360p/d9a71e94e59ab36ce13dd6998dcdb34527acdd2781cb6b91858ea0a8ca8557b1.jpeg",
+        "480p": "https://image.nostr.build/resp/480p/d9a71e94e59ab36ce13dd6998dcdb34527acdd2781cb6b91858ea0a8ca8557b1.jpeg",
+        "720p": "https://image.nostr.build/resp/720p/d9a71e94e59ab36ce13dd6998dcdb34527acdd2781cb6b91858ea0a8ca8557b1.jpeg",
+        "1080p": "https://image.nostr.build/resp/1080p/d9a71e94e59ab36ce13dd6998dcdb34527acdd2781cb6b91858ea0a8ca8557b1.jpeg"
+      },
+      "metadata": []
+    }
+  ]
+}
