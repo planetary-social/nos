@@ -3,7 +3,7 @@ import Foundation
 /// Defines the requests that can be sent to the file storage API.
 /// - Note: Implements [NIP-96](https://github.com/nostr-protocol/nips/blob/master/96.md)
 enum FileStorageAPIRequest {
-    /// A request for metadata about the API. The main info we use from this is the API URL.
+    /// A request for server info about the API. The main info we use from this is the API URL.
     case serverInfo
 }
 
