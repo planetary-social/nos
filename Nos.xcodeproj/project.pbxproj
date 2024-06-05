@@ -1508,8 +1508,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C9DEBFF8298941020078B43A /* Build configuration list for PBXNativeTarget "Nos" */;
 			buildPhases = (
-				C9DEBFCA298941000078B43A /* Sources */,
 				C9BAB0992996BEEA0003A84E /* SwiftLint */,
+				C9DEBFCA298941000078B43A /* Sources */,
 				C9DEBFCB298941000078B43A /* Frameworks */,
 				C9DEBFCC298941000078B43A /* Resources */,
 			);

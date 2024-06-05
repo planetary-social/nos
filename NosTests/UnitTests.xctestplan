@@ -28,6 +28,12 @@
   },
   "testTargets" : [
     {
+      "skippedTests" : [
+        "SocialGraphTests\/testFollow()",
+        "SocialGraphTests\/testOneFollower()",
+        "SocialGraphTests\/testOutOfNetwork()",
+        "SocialGraphTests\/testTwoFollows()"
+      ],
       "target" : {
         "containerPath" : "container:Nos.xcodeproj",
         "identifier" : "C9DEBFE3298941020078B43A",

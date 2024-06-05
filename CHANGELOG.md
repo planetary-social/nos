@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed a bug where some profiles wouldn't load old notes.
+- Fixed an issue where NIP-05 could appear as invalid.
 
 ## [0.1.16] - 2024-05-31Z
 
