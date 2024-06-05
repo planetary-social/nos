@@ -73,7 +73,7 @@ class PagedRelaySubscription {
                     }
                           
                     newUntilDates[subscription.relayAddress] = newDate
-                    await subscriptionManager.decrementSubscriptionCount(for: subscriptionID)
+                    relayService.decrementSubscriptionCount(for: subscriptionID)
                     subscriptionsToRemove.insert(subscription.id)
                 }
             }

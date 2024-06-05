@@ -70,6 +70,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             var limitedFilter = relayFilter
             limitedFilter.limit = pageSize
             self.pager = await relayService.subscribeToPagedEvents(matching: limitedFilter)
+            loadMoreIfNeeded(for: IndexPath(row: 0, section: 0))
         }
     }
     
@@ -82,6 +83,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         )
         self.fetchedResultsController.delegate = self
         try? self.fetchedResultsController.performFetch()
+        loadMoreIfNeeded(for: IndexPath(row: 0, section: 0))
     }
     
     // MARK: - UICollectionViewDataSource
@@ -174,13 +176,61 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     /// Instructs the pager to load more data if we are getting close to the end of the object in the list.
     /// - Parameter indexPath: the indexPath last loaded by the collection view.
     func loadMoreIfNeeded(for indexPath: IndexPath) {
+        largestLoadedRowIndex = max(largestLoadedRowIndex, indexPath.row)
         let lastPageStartIndex = (fetchedResultsController.fetchedObjects?.count ?? 0) - pageSize
         if indexPath.row > lastPageStartIndex {
-            // we are at the end of the list, load aggressively
-            pager?.loadMore()
+            // we are on the last page, load aggressively
+            startAggressivePaging()
+            return
         } else if indexPath.row.isMultiple(of: pageSize / 2) {
             pager?.loadMore()
-        }        
+        } 
+    }
+    
+    /// A timer used for aggressive paging when we reach the end of the data. See `startAggressivePaging()`.
+    private var aggressivePagingTimer: Timer?
+    
+    /// The largest row index seen by `loadMoreIfNeeded(for:)`
+    private var largestLoadedRowIndex: Int = 0
+    
+    /// This function puts the data source into "aggressive paging" mode, which basically changes the paging 
+    /// code from executing when the user scrolls (more efficient) to executing on a repeating timer. This timer will 
+    /// automatically call `stopAggressivePaging` when it has loaded enough data.
+    /// 
+    /// We need to use this mode when we have an empty or nearly empty list of notes, or when the user reaches the end 
+    /// of the results before more have loaded. We can't just wait on the existing paging requests to return (like a 
+    /// normal REST paging API) because often we can't request exactly the notes we want from relays. For instance when 
+    /// we are fetching root notes only on the profile screen we can only ask relays for all kind 1 notes. This means 
+    /// we could get a page full of reply notes from the relays, none of which will match our NSFetchRequest and show 
+    /// up in the UICollectionViewDataSource - meaning `cellForRowAtIndexPath` won't be called which means 
+    /// `loadMoreIfNeeded(for:)` won't be called which means we'll never ask for the next page. So we need the timer.
+    private func startAggressivePaging() {
+        if aggressivePagingTimer == nil {
+            aggressivePagingTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] timer in
+                guard let self else { 
+                    timer.invalidate()
+                    return 
+                }
+                
+                let lastPageStartIndex = (self.fetchedResultsController.fetchedObjects?.count ?? 0) - self.pageSize
+
+                if self.largestLoadedRowIndex > lastPageStartIndex {
+                    // we are still on the last page of results, keep loading
+                    self.pager?.loadMore()
+                } else {
+                    // we've loaded enough, go back to normal paging
+                    self.stopAggressivePaging()
+                }
+            }
+        }
+    }
+    
+    /// Takes this data source out of "aggressive paging" mode. See `startAggressivePaging()`.
+    private func stopAggressivePaging() {
+        if let aggressivePagingTimer {
+            aggressivePagingTimer.invalidate()
+            self.aggressivePagingTimer = nil
+        }
     }
     
     // MARK: - NSFetchedResultsControllerDelegate
