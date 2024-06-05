@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added support for opening njump.me content in Nos.
+- Fixed a crash on logout
 - Fixed a bug where some profiles wouldn't load old notes.
 - Fixed an issue where NIP-05 could appear as invalid.
 
