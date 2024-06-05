@@ -10,15 +10,9 @@ struct ProfileTab: View {
     @Binding var path: NavigationPath
 
     var body: some View {
-        NavigationStack(path: $path) {
+        NostrNavigationStack(path: $path) {
             ProfileView(author: author, addDoubleTapToPop: true)
                 .navigationBarItems(leading: SideMenuButton())
-                .navigationDestination(for: Author.self) { profile in
-                    ProfileView(author: profile)
-                }
-                .navigationDestination(for: EditProfileDestination.self) { destination in
-                    ProfileEditView(author: destination.profile)
-                }
         }
     }
 }

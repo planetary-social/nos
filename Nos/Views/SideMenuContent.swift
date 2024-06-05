@@ -58,7 +58,7 @@ struct SideMenuContent: View {
     }
     
     var body: some View {
-        NavigationStack(path: $router.sideMenuPath) {
+        NostrNavigationStack(path: $router.sideMenuPath) {
             VStack(alignment: .leading, spacing: 0) {
                 profileHeader
                 SideMenuRow(
@@ -108,12 +108,6 @@ struct SideMenuContent: View {
                 case .about:
                     AboutView()
                 }
-            }
-            .navigationDestination(for: Author.self) { profile in
-                ProfileView(author: profile)
-            }
-            .navigationDestination(for: EditProfileDestination.self) { destination in
-                ProfileEditView(author: destination.profile)
             }
         }
     }
