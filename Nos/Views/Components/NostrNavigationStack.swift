@@ -1,10 +1,3 @@
-//
-//  NostrNavigationStack.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 6/5/24.
-//
-
 import SwiftUI
 
 /// A NavigationStack that knows how to present views to display Nostr entities like `Events` and `Authors`.
