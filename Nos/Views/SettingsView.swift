@@ -11,6 +11,7 @@ struct SettingsView: View {
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.userDefaults) private var userDefaults
+    @Dependency(\.featureFlags) private var featureFlags
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(AppController.self) var appController
     @Environment(CurrentUser.self) private var currentUser
@@ -225,24 +226,7 @@ struct SettingsView: View {
                 )
 
                 #if DEBUG
-                Text(.localizable.sampleDataInstructions)
-                    .foregroundColor(.primaryTxt)
-                Button(String(localized: .localizable.loadSampleData)) {
-                    Task {
-                        do {
-                            try await persistenceController.loadSampleData(context: viewContext)
-                        } catch {
-                            print(error)
-                        }
-                    }
-                }
-                if let author = currentUser.author {
-                    NavigationLink {
-                        PublishedEventsView(author: author)
-                    } label: {
-                        Text(.localizable.allPublishedEvents)
-                    }
-                }
+                debugControls
                 #endif
             } header: {
                 Text(.localizable.debug)
@@ -287,6 +271,45 @@ struct SettingsView: View {
         appController.configureCurrentState() 
     }
 }
+
+#if DEBUG
+extension SettingsView {
+    private var enableNewMediaDisplay: Binding<Bool> {
+        Binding<Bool>(
+            get: { featureFlags.newMediaDisplayEnabled },
+            set: { featureFlags.setNewMediaDisplayEnabled($0) }
+        )
+    }
+
+    @MainActor var debugControls: some View {
+        Group {
+            Toggle(isOn: enableNewMediaDisplay) {
+                Text(.localizable.enableNewMediaDisplay)
+                    .foregroundColor(.primaryTxt)
+            }
+
+            Text(.localizable.sampleDataInstructions)
+                .foregroundColor(.primaryTxt)
+            Button(String(localized: .localizable.loadSampleData)) {
+                Task {
+                    do {
+                        try await persistenceController.loadSampleData(context: viewContext)
+                    } catch {
+                        print(error)
+                    }
+                }
+            }
+            if let author = currentUser.author {
+                NavigationLink {
+                    PublishedEventsView(author: author)
+                } label: {
+                    Text(.localizable.allPublishedEvents)
+                }
+            }
+        }
+    }
+}
+#endif
 
 #Preview {
     let previewData = PreviewData()
