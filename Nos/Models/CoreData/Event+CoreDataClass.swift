@@ -47,10 +47,10 @@ public enum EventKind: Int64, CaseIterable, Hashable {
     case giftWrap = 1059
     case label = 1985
     case report = 1984
-    case mute = 10_000
-    case longFormContent = 30_023
     case notificationServiceRegistration = 6666
+    case mute = 10_000
     case auth = 27_235
+    case longFormContent = 30_023
 }
 
 // swiftlint:disable type_body_length

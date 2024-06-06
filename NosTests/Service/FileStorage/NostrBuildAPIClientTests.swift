@@ -40,12 +40,19 @@ class NostrBuildAPIClientTests: XCTestCase {
         }
     }
 
-    func test_uploadRequest_properties() throws {
+    func test_uploadRequest_properties() async throws {
         // Arrange
-        let subject = NostrBuildAPIClient()
+        let subject = await withDependencies {
+            await $0.currentUser.setKeyPair(KeyFixture.alice)
+        } operation: {
+            NostrBuildAPIClient()
+        }
+
         let apiURLString = "http://nostr.build/api/v2/nip96/upload"
         subject.serverInfo = FileStorageServerInfoResponseJSON(apiUrl: apiURLString)
-        let fileURL = try XCTUnwrap(Bundle.current.url(forResource: "nostr_build_response", withExtension: "json"))
+        let fileURL = try XCTUnwrap(
+            Bundle.current.url(forResource: "nostr_build_api_v2_response", withExtension: "json")
+        )
 
         // Act
         let (uploadRequest, _) = try subject.uploadRequest(fileAt: fileURL)
@@ -58,9 +65,51 @@ class NostrBuildAPIClientTests: XCTestCase {
     func test_uploadRequest_throws_error_when_no_serverInfo() throws {
         // Arrange
         let subject = NostrBuildAPIClient()
-        let fileURL = try XCTUnwrap(Bundle.current.url(forResource: "nostr_build_response", withExtension: "json"))
+        let fileURL = try XCTUnwrap(
+            Bundle.current.url(forResource: "nostr_build_api_v2_response", withExtension: "json")
+        )
 
         // Act & Assert
         XCTAssertThrowsError(try subject.uploadRequest(fileAt: fileURL))
+    }
+
+    func test_uploadRequest_authorization() async throws {
+        // Arrange
+        let subject = await withDependencies {
+            await $0.currentUser.setKeyPair(KeyFixture.alice)
+        } operation: {
+            NostrBuildAPIClient()
+        }
+
+        let apiURLString = "https://nostr.build/api/v2/nip96/upload"
+        subject.serverInfo = FileStorageServerInfoResponseJSON(apiUrl: apiURLString)
+
+        let fileURL = try XCTUnwrap(
+            Bundle.current.url(forResource: "nostr_build_api_v2_response", withExtension: "json")
+        )
+        let payloadHash = "2f5c3a402d059981cf8aa13e8d4b220ce6617494f8c022f0ff88968f9d767d41"
+
+        let keyPair = KeyFixture.alice
+        var authorizationEvent = JSONEvent(
+            pubKey: keyPair.publicKeyHex,
+            kind: .auth,
+            tags: [
+                ["method", "POST"],
+                ["u", apiURLString],
+                ["payload", payloadHash]
+            ],
+            content: ""
+        )
+        try authorizationEvent.sign(withKey: keyPair)
+        let jsonObject = authorizationEvent.dictionary
+        let requestData = try JSONSerialization.data(withJSONObject: jsonObject)
+
+        let expectedAuthorization = "Nostr \(requestData.base64EncodedString())"
+
+        // Act
+        let (uploadRequest, data) = try subject.uploadRequest(fileAt: fileURL)
+
+        // Assert
+        XCTAssertEqual(uploadRequest.value(forHTTPHeaderField: "Authorization"), expectedAuthorization)
     }
 }

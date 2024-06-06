@@ -11,6 +11,11 @@ protocol FileStorageAPIClient {
     func upload(fileAt fileURL: URL) async throws -> URL
 }
 
+enum HTTPMethod: String {
+    case delete = "DELETE"
+    case post = "POST"
+}
+
 /// Defines a set of errors that may be thrown from a `FileStorageAPIClient`.
 enum FileStorageAPIClientError: Error {
     case invalidResponseURL(String)
@@ -23,6 +28,8 @@ enum FileStorageAPIClientError: Error {
 class NostrBuildAPIClient: FileStorageAPIClient {
     /// The `URLSession` to fetch data from the API.
     @Dependency(\.urlSession) var urlSession
+
+    @Dependency(\.currentUser) var currentUser
 
     /// The URL string used to get server info.
     private static let serverInfoURLString = "https://nostr.build/.well-known/nostr/nip96.json"
@@ -54,8 +61,8 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         let (request, data) = try uploadRequest(fileAt: fileURL)
         let (responseData, _) = try await URLSession.shared.upload(for: request, from: data)
 
-        let response = try decoder.decode(NostrBuildResponseJSON.self, from: responseData)
-        guard let urlString = response.data?.first?.url else {
+        let response = try decoder.decode(FileStorageUploadResponseJSON.self, from: responseData)
+        guard let urlString = response.nip94Event?.urlString else {
             throw FileStorageAPIClientError.uploadFailed(response.message ?? String(describing: response))
         }
         guard let url = URL(string: urlString) else {
@@ -117,6 +124,43 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         data.append(fileData)
         data.append(footerData)
 
+        guard let keyPair = currentUser.keyPair else {
+            throw FileStorageAPIClientError.uploadFailed("missing key pair")
+        }
+
+        let authorizationHeader = try buildAuthorizationHeader(
+            url: uploadURL,
+            method: .post,
+            payload: data,
+            keyPair: keyPair
+        )
+        request.setValue(authorizationHeader, forHTTPHeaderField: "Authorization")
+
         return (request, data)
+    }
+
+    private func buildAuthorizationHeader(
+        url: URL,
+        method: HTTPMethod,
+        payload: Data?,
+        keyPair: KeyPair
+    ) throws -> String {
+        var tags = [
+            ["method", method.rawValue],
+            ["u", url.absoluteString],
+        ]
+        if let payload {
+            tags.append(["payload", payload.sha256().toHexString()])
+        }
+        var jsonEvent = JSONEvent(
+            pubKey: keyPair.publicKeyHex,
+            kind: .auth,
+            tags: tags,
+            content: ""
+        )
+        try jsonEvent.sign(withKey: keyPair)
+        let jsonObject = jsonEvent.dictionary
+        let requestData = try JSONSerialization.data(withJSONObject: jsonObject)
+        return "Nostr \(requestData.base64EncodedString())"
     }
 }

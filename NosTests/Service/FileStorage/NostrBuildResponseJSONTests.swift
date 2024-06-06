@@ -4,7 +4,7 @@ class NostrBuildResponseJSONTests: XCTestCase {
     /// Verifies that we can properly decode a response from the nostr.build API.
     func test_decode() throws {
         // Arrange
-        let jsonData = try jsonData(filename: "nostr_build_response")
+        let jsonData = try jsonData(filename: "nostr_build_api_v2_response")
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
 

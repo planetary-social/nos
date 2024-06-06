@@ -110,10 +110,9 @@ private enum RelayServiceKey: DependencyKey {
 }
 
 fileprivate enum PushNotificationServiceKey: DependencyKey {
-    typealias Value = PushNotificationService
     @MainActor static let liveValue = PushNotificationService()
-    @MainActor static let testValue = MockPushNotificationService()
-    @MainActor static let previewValue = MockPushNotificationService()
+    @MainActor static let testValue: PushNotificationService = MockPushNotificationService()
+    @MainActor static let previewValue: PushNotificationService = MockPushNotificationService()
 }
 
 fileprivate enum PersistenceControllerKey: DependencyKey {
