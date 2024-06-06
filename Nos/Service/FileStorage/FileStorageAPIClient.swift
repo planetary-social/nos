@@ -41,11 +41,11 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         return url
     }
 
-    // MARK: - Private
+    // MARK: - Internal
 
     /// Fetches server info from the file storage API.
     /// - Returns: the decoded JSON containing server info for the file storage API.
-    private func fetchServerInfo() async throws -> FileStorageServerInfoResponseJSON {
+    func fetchServerInfo() async throws -> FileStorageServerInfoResponseJSON {
         guard let urlRequest = FileStorageAPIRequest.serverInfo.urlRequest else {
             throw FileStorageAPIClientError.invalidURLRequest
         }
