@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a crash on logout
 - Fixed a bug where some profiles wouldn't load old notes.
 - Fixed an issue where NIP-05 could appear as invalid.
+- Implemented NIP-96 and NIP-98 for photo and video uploads.
 
 ## [0.1.16] - 2024-05-31Z
 
