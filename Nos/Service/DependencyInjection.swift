@@ -15,6 +15,11 @@ extension DependencyValues {
         set { self[CurrentUserKey.self] = newValue }
     }
 
+    var fileStorageAPIClient: FileStorageAPIClient {
+        get { self[FileStorageAPIClientKey.self] }
+        set { self[FileStorageAPIClientKey.self] = newValue }
+    }
+
     var fileStorageResponseDecoder: JSONDecoder {
         get { self[FileStorageResponseDecoderKey.self] }
         set { self[FileStorageResponseDecoderKey.self] = newValue }
@@ -86,6 +91,10 @@ fileprivate enum CurrentUserKey: DependencyKey {
     @MainActor static let liveValue = CurrentUser()
     @MainActor static let testValue = CurrentUser()
     @MainActor static let previewValue = CurrentUser()
+}
+
+fileprivate enum FileStorageAPIClientKey: DependencyKey {
+    static var liveValue: any FileStorageAPIClient = NostrBuildAPIClient()
 }
 
 fileprivate enum FileStorageResponseDecoderKey: DependencyKey {
