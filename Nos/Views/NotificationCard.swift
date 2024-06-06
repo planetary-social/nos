@@ -21,7 +21,7 @@ struct NotificationCard: View {
         guard let note = Event.find(by: viewModel.noteID, context: viewContext) else {
             return 
         }
-        router.notificationsPath.append(note.referencedNote() ?? note)
+        router.push(note.referencedNote() ?? note)
     }
     
     var body: some View {
@@ -44,6 +44,10 @@ struct NotificationCard: View {
                             .font(.body)
                             .foregroundColor(.primaryTxt)
                             .tint(.accent)
+                            .environment(\.openURL, OpenURLAction { url in
+                                router.open(url: url, with: viewContext)
+                                return .handled
+                            })
                         
                         if viewModel.content == nil {
                             contentText.redacted(reason: .placeholder)

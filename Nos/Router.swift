@@ -16,7 +16,11 @@ import Dependencies
     @Published var isLoading = false
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.relayService) private var relayService
+    @Dependency(\.crashReporting) private var crashReporting
 
+    /// The `NavigationPath` of the tab (or side menu) the user currently has open. 
+    /// This has to be a two-way binding, but really the only things that should be modifying it are the `Router`
+    /// or a `NavigationStack`. Don't mutate it directly outside this class.
     var currentPath: Binding<NavigationPath> {
         if sideMenuOpened {
             return Binding(get: { self.sideMenuPath }, set: { self.sideMenuPath = $0 })
@@ -42,6 +46,48 @@ import Dependencies
     /// Pushes the given destination item onto the current NavigationPath.
     func push<D: Hashable>(_ destination: D) {
         currentPath.wrappedValue.append(destination)
+    }
+    
+    /// Pushes a view displaying the object wrapped in a `NosNavigationDestination`.
+    func push(_ destination: NosNavigationDestination) {
+        currentPath.wrappedValue.append(destination)
+    }
+    
+    /// Pushes a detail view for the given note.
+    func push(_ note: Event) {
+        push(.note(note.identifier))
+    }
+    
+    /// Pushes a detail view for the note with the given ID, creating one if needed.
+    func push(noteWithID id: RawEventID) {
+        do {
+            let note = try Event.findOrCreateStubBy(id: id, context: persistenceController.viewContext)
+            push(note)
+        } catch {
+            Log.optional(error)
+            crashReporting.report(error)
+        }
+    }    
+    
+    /// Pushes a profile view for the given author.
+    func push(_ author: Author) {
+        push(.author(author.hexadecimalPublicKey))
+    }
+    
+    /// Pushes a profile view for the author with the given ID, creating one if needed.
+    func push(authorWithID id: RawAuthorID) {
+        do {
+            let author = try Author.findOrCreate(by: id, context: persistenceController.viewContext)
+            push(author)
+        } catch {
+            Log.optional(error)
+            crashReporting.report(error)
+        }
+    }
+    
+    /// Pushes a web view for the given url.
+    func push(_ url: URL) {
+        push(.url(url))
     }
 
     func pop() {
@@ -105,7 +151,7 @@ extension Router {
                         try await handleNIP05Link(identifier)
                     }
                 } else if link.hasPrefix("%") {
-                    push(try Event.findOrCreateStubBy(id: identifier, context: persistenceController.viewContext))
+                    push(noteWithID: identifier)
                 } else if url.scheme == "http" || url.scheme == "https" {
                     push(url)
                 } else {
@@ -118,12 +164,7 @@ extension Router {
     }
 
     public func handleHexadecimalPublicKey(_ hex: String) throws {
-        push(
-            try Author.findOrCreate(
-                by: hex,
-                context: persistenceController.viewContext
-            )
-        )
+        push(authorWithID: hex)
     }
 
     private func handleNIP05Link(_ link: String) async throws {
@@ -135,12 +176,7 @@ extension Router {
             )
         isLoading = false
         if let npub, let publicKey = PublicKey.build(npubOrHex: npub) {
-            push(
-                try Author.findOrCreate(
-                    by: publicKey.hex,
-                    context: persistenceController.viewContext
-                )
-            )
+            push(authorWithID: publicKey.hex)
         } else if let url = URL(string: "mailto:\(link)") {
             await UIApplication.shared.open(url)
         } else {
