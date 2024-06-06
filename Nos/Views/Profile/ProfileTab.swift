@@ -10,7 +10,7 @@ struct ProfileTab: View {
     @Binding var path: NavigationPath
 
     var body: some View {
-        NostrNavigationStack(path: $path) {
+        NosNavigationStack(path: $path) {
             ProfileView(author: author, addDoubleTapToPop: true)
                 .navigationBarItems(leading: SideMenuButton())
         }

@@ -58,7 +58,7 @@ struct SideMenuContent: View {
     }
     
     var body: some View {
-        NostrNavigationStack(path: $router.sideMenuPath) {
+        NosNavigationStack(path: $router.sideMenuPath) {
             VStack(alignment: .leading, spacing: 0) {
                 profileHeader
                 SideMenuRow(

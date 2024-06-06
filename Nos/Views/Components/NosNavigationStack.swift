@@ -2,7 +2,7 @@ import SwiftUI
 
 /// A NavigationStack that knows how to present views to display Nostr entities like `Events` and `Authors`.
 /// Take care not to nest these.
-struct NostrNavigationStack<Content: View>: View {
+struct NosNavigationStack<Content: View>: View {
     
     @Binding var path: NavigationPath
     
@@ -30,7 +30,7 @@ struct NostrNavigationStack<Content: View>: View {
 #Preview {
     @State var path = NavigationPath()
     
-    return NostrNavigationStack(path: $path) {
+    return NosNavigationStack(path: $path) {
         Text("hello world")
     }
 }

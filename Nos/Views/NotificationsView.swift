@@ -63,7 +63,7 @@ struct NotificationsView: View {
     }
     
     var body: some View {
-        NostrNavigationStack(path: $router.notificationsPath) {
+        NosNavigationStack(path: $router.notificationsPath) {
             ScrollView(.vertical) {
                 LazyVStack {
                     /// The fetch request for events has a `fetchLimit` set but it doesn't work, so we limit the

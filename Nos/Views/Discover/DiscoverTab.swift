@@ -27,7 +27,7 @@ struct DiscoverTab: View {
     // MARK: - View
     
     var body: some View {
-        NostrNavigationStack(path: $router.discoverPath) {
+        NosNavigationStack(path: $router.discoverPath) {
             ZStack {
                 if performingInitialLoad && searchController.query.isEmpty {
                     FullscreenProgressView(

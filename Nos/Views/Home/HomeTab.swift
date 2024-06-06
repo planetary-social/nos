@@ -8,7 +8,7 @@ struct HomeTab: View {
     @EnvironmentObject private var router: Router
     
     var body: some View {
-        NostrNavigationStack(path: $router.homeFeedPath) {
+        NosNavigationStack(path: $router.homeFeedPath) {
             HomeFeedView(user: user)
         }
     }
