@@ -11,7 +11,7 @@ struct NosApp: App {
     @Dependency(\.router) private var router
     @Dependency(\.currentUser) private var currentUser
     @Dependency(\.pushNotificationService) private var pushNotificationService
-    private let fileStorageServerInfoCache = DefaultFileStorageServerInfoCache()
+    @Dependency(\.fileStorageAPIClient) private var fileStorageAPIClient
     private let appController = AppController()
     @Environment(\.scenePhase) private var scenePhase
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -31,7 +31,7 @@ struct NosApp: App {
                 .environmentObject(pushNotificationService)
                 .onOpenURL { DeepLinkService.handle($0, router: router) }
                 .task {
-                    fileStorageServerInfoCache.refreshCache()
+                    fileStorageAPIClient.refreshServerInfo()
                 }
                 .task {
                     persistenceController.cleanupEntities()
