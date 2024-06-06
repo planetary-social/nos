@@ -10,9 +10,6 @@
 		030AE4292BE3D63C004DEE02 /* FeaturedAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */; };
 		0320C0FB2BFE43A600C4C080 /* RelayServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0320C0FA2BFE43A600C4C080 /* RelayServiceTests.swift */; };
 		0320C1152BFE63DC00C4C080 /* MockRelaySubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0320C1142BFE63DC00C4C080 /* MockRelaySubscriptionManager.swift */; };
-		032634502C10BAF800E489B5 /* FileStorageAPIRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326344F2C10BAF800E489B5 /* FileStorageAPIRequestTests.swift */; };
-		032634532C10BBAC00E489B5 /* FileStorageAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032634522C10BBAC00E489B5 /* FileStorageAPIRequest.swift */; };
-		032634542C10BBB100E489B5 /* FileStorageAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032634522C10BBAC00E489B5 /* FileStorageAPIRequest.swift */; };
 		032634682C10C0D600E489B5 /* nostr_build_nip96_response.json in Resources */ = {isa = PBXBuildFile; fileRef = 032634672C10C0D600E489B5 /* nostr_build_nip96_response.json */; };
 		0326346B2C10C1D800E489B5 /* FileStorageServerInfoResponseJSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326346A2C10C1D800E489B5 /* FileStorageServerInfoResponseJSONTests.swift */; };
 		0326346D2C10C2FD00E489B5 /* FileStorageServerInfoResponseJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326346C2C10C2FD00E489B5 /* FileStorageServerInfoResponseJSON.swift */; };
@@ -486,8 +483,6 @@
 		0320C0E42BFBB27E00C4C080 /* PerformanceTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PerformanceTests.xctestplan; sourceTree = "<group>"; };
 		0320C0FA2BFE43A600C4C080 /* RelayServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayServiceTests.swift; sourceTree = "<group>"; };
 		0320C1142BFE63DC00C4C080 /* MockRelaySubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRelaySubscriptionManager.swift; sourceTree = "<group>"; };
-		0326344F2C10BAF800E489B5 /* FileStorageAPIRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageAPIRequestTests.swift; sourceTree = "<group>"; };
-		032634522C10BBAC00E489B5 /* FileStorageAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageAPIRequest.swift; sourceTree = "<group>"; };
 		032634672C10C0D600E489B5 /* nostr_build_nip96_response.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = nostr_build_nip96_response.json; sourceTree = "<group>"; };
 		0326346A2C10C1D800E489B5 /* FileStorageServerInfoResponseJSONTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageServerInfoResponseJSONTests.swift; sourceTree = "<group>"; };
 		0326346C2C10C2FD00E489B5 /* FileStorageServerInfoResponseJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageServerInfoResponseJSON.swift; sourceTree = "<group>"; };
@@ -894,7 +889,6 @@
 			children = (
 				0326347C2C10C88400E489B5 /* FileStorageAPI.swift */,
 				032634792C10C57A00E489B5 /* FileStorageAPIClient.swift */,
-				032634522C10BBAC00E489B5 /* FileStorageAPIRequest.swift */,
 				0326346C2C10C2FD00E489B5 /* FileStorageServerInfoResponseJSON.swift */,
 				0373CE852C090C070027C856 /* NostrBuildResponseJSON.swift */,
 			);
@@ -904,7 +898,6 @@
 		032634662C10C0A000E489B5 /* FileStorage */ = {
 			isa = PBXGroup;
 			children = (
-				0326344F2C10BAF800E489B5 /* FileStorageAPIRequestTests.swift */,
 				0326346A2C10C1D800E489B5 /* FileStorageServerInfoResponseJSONTests.swift */,
 				0326346F2C10C40B00E489B5 /* NostrBuildAPIClientTests.swift */,
 				0373CE8E2C090D4D0027C856 /* NostrBuildResponseJSONTests.swift */,
@@ -1158,7 +1151,6 @@
 				65D066982BD558690011C5CD /* DirectMessageWrapper.swift */,
 				C9BAB09A2996FBA10003A84E /* EventProcessor.swift */,
 				0350F12C2C0A7EF20024CC15 /* FeatureFlags.swift */,
-				DC5F20422A6ED75C00F8D73F /* FileStorageAPI.swift */,
 				C959DB752BD01DF4008F3627 /* GiftWrapper.swift */,
 				A3B943CE299AE00100A15A08 /* KeyChain.swift */,
 				C9F64D8B29ED840700563F2B /* LogHelper.swift */,
@@ -2017,7 +2009,6 @@
 				CD76865029B6503500085358 /* NoteOptionsButton.swift in Sources */,
 				0326346D2C10C2FD00E489B5 /* FileStorageServerInfoResponseJSON.swift in Sources */,
 				5BE281C72AE2CCD800880466 /* ReplyButton.swift in Sources */,
-				032634532C10BBAC00E489B5 /* FileStorageAPIRequest.swift in Sources */,
 				C936B45C2A4C7D6B00DF1EB9 /* UNSWizard.swift in Sources */,
 				C9DFA966299BEB96006929C1 /* NoteCard.swift in Sources */,
 				C98651102B0BD49200597B68 /* PagedNoteListView.swift in Sources */,
@@ -2154,13 +2145,11 @@
 				0350F1212C0A490E0024CC15 /* EventProcessorIntegrationTests.swift in Sources */,
 				0326347B2C10C57A00E489B5 /* FileStorageAPIClient.swift in Sources */,
 				C9B678DC29EEBF3B00303F33 /* DependencyInjection.swift in Sources */,
-				032634502C10BAF800E489B5 /* FileStorageAPIRequestTests.swift in Sources */,
 				C9F0BB6D29A503D9000547FC /* Int+Bool.swift in Sources */,
 				DC08FF812A7969C5009F87D1 /* UIDevice+Simulator.swift in Sources */,
 				5BFBB2962BD9D824002E909F /* URLParser.swift in Sources */,
 				C959DB772BD01DF4008F3627 /* GiftWrapper.swift in Sources */,
 				C9C9444229F6F0E2002F2C7A /* XCTest+Eventually.swift in Sources */,
-				032634542C10BBB100E489B5 /* FileStorageAPIRequest.swift in Sources */,
 				3FFF3BD029A9645F00DD0B72 /* AuthorReference+CoreDataClass.swift in Sources */,
 				035729B82BE416A6005FEE85 /* DirectMessageWrapperTests.swift in Sources */,
 				C9F0BB6C29A503D6000547FC /* PublicKey.swift in Sources */,

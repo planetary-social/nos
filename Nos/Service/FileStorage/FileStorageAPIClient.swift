@@ -4,8 +4,10 @@ import Logger
 
 /// A client for a File Storage API, as defined in [NIP-96](https://github.com/nostr-protocol/nips/blob/master/96.md)
 protocol FileStorageAPIClient {
-    /// Fetches and caches server info for the file storage API, such as the API URL for uploading.
+    /// Fetches and caches server info for the file storage API.
     func refreshServerInfo()
+
+    /// Uploads the file at the given URL.
     func upload(fileAt fileURL: URL) async throws -> URL
 }
 
@@ -18,6 +20,8 @@ enum FileStorageAPIClientError: Error {
 class NostrBuildAPIClient: FileStorageAPIClient {
     @Dependency(\.urlSession) var urlSession
     @Dependency(\.fileStorageResponseDecoder) var decoder
+
+    static let serverInfoURLString = "https://nostr.build/.well-known/nostr/nip96.json"
 
     private var serverInfo: FileStorageServerInfoResponseJSON?
 
@@ -35,7 +39,8 @@ class NostrBuildAPIClient: FileStorageAPIClient {
     }
 
     func upload(fileAt fileURL: URL) async throws -> URL {
-        guard let url = URL(string: "http://google.com") else {
+        guard let serverInfo,
+            let url = URL(string: serverInfo.apiUrl) else {
             throw FileStorageAPIClientError.uploadError
         }
         return url
@@ -46,10 +51,11 @@ class NostrBuildAPIClient: FileStorageAPIClient {
     /// Fetches server info from the file storage API.
     /// - Returns: the decoded JSON containing server info for the file storage API.
     func fetchServerInfo() async throws -> FileStorageServerInfoResponseJSON {
-        guard let urlRequest = FileStorageAPIRequest.serverInfo.urlRequest else {
+        guard let url = URL(string: Self.serverInfoURLString) else {
             throw FileStorageAPIClientError.invalidURLRequest
         }
 
+        let urlRequest = URLRequest(url: url)
         let (responseData, _) = try await urlSession.data(for: urlRequest)
         do {
             return try decoder.decode(FileStorageServerInfoResponseJSON.self, from: responseData)
