@@ -20,11 +20,6 @@ extension DependencyValues {
         set { self[FileStorageAPIClientKey.self] = newValue }
     }
 
-    var fileStorageResponseDecoder: JSONDecoder {
-        get { self[FileStorageResponseDecoderKey.self] }
-        set { self[FileStorageResponseDecoderKey.self] = newValue }
-    }
-
     var router: Router {
         get { self[RouterKey.self] }
         set { self[RouterKey.self] = newValue }
@@ -100,15 +95,6 @@ fileprivate enum CurrentUserKey: DependencyKey {
 
 fileprivate enum FileStorageAPIClientKey: DependencyKey {
     static var liveValue: any FileStorageAPIClient = NostrBuildAPIClient()
-}
-
-fileprivate enum FileStorageResponseDecoderKey: DependencyKey {
-    static var liveValue: JSONDecoder {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return decoder
-    }
-    static let testValue = liveValue
 }
 
 fileprivate enum RouterKey: DependencyKey {

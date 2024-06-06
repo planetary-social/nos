@@ -10,7 +10,11 @@ class NostrBuildFileStorageAPI: FileStorageAPI {
     static let uploadURL = URL(string: "https://nostr.build/api/v2/upload/files")!
     static let paramName = "fileToUpload"
 
-    @Dependency(\.fileStorageResponseDecoder) var decoder
+    private var decoder: JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
+    }
 
     func upload(fileAt fileURL: URL) async throws -> URL {
         let fileName = fileURL.lastPathComponent

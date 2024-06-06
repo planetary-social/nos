@@ -19,11 +19,16 @@ enum FileStorageAPIClientError: Error {
 
 class NostrBuildAPIClient: FileStorageAPIClient {
     @Dependency(\.urlSession) var urlSession
-    @Dependency(\.fileStorageResponseDecoder) var decoder
 
-    static let serverInfoURLString = "https://nostr.build/.well-known/nostr/nip96.json"
+    private static let serverInfoURLString = "https://nostr.build/.well-known/nostr/nip96.json"
 
     private var serverInfo: FileStorageServerInfoResponseJSON?
+
+    private var decoder: JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
+    }
 
     // MARK: - FileStorageAPIClient protocol
 
