@@ -22,7 +22,10 @@ struct CompactNoteView: View {
     /// If true links will be highlighted and open when tapped. If false the text will change to a secondary color
     /// and links will not be tappable.
     private var allowUserInteraction: Bool
-    
+
+    /// The feature flags to use to determine what features are enabled.
+    @Dependency(\.featureFlags) private var featureFlags
+
     /// Whether this view is currently displayed in a truncated state
     @State private var isTextTruncated = true
 
@@ -145,7 +148,11 @@ struct CompactNoteView: View {
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
             if note.kind == EventKind.text.rawValue, showLinkPreviews, !note.contentLinks.isEmpty {
-                LinkPreviewCarousel(links: note.contentLinks)
+                if featureFlags.newMediaDisplayEnabled {
+                    EmptyView()
+                } else {
+                    LinkPreviewCarousel(links: note.contentLinks)
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
