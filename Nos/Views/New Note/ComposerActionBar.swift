@@ -15,10 +15,7 @@ struct ComposerActionBar: View {
     /// The text in the note.
     @Binding var text: EditableNoteText
 
-//    @State var fileStorageAPI: FileStorageAPI = NostrBuildFileStorageAPI()
-
     @Dependency(\.fileStorageAPIClient) private var fileStorageAPIClient
-
 
     enum SubMenu {
         case expirationDate
