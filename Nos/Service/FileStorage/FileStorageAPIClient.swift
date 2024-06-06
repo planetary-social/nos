@@ -11,19 +11,26 @@ protocol FileStorageAPIClient {
     func upload(fileAt fileURL: URL) async throws -> URL
 }
 
+/// Defines a set of errors that may be thrown from a `FileStorageAPIClient`.
 enum FileStorageAPIClientError: Error {
+    case invalidResponseURL(String)
     case decodingError
     case invalidURLRequest
-    case uploadError
+    case uploadFailed(String)
 }
 
+/// A `FileStorageAPIClient` that uses nostr.build for uploading files.
 class NostrBuildAPIClient: FileStorageAPIClient {
+    /// The `URLSession` to fetch data from the API.
     @Dependency(\.urlSession) var urlSession
 
+    /// The URL string used to get server info.
     private static let serverInfoURLString = "https://nostr.build/.well-known/nostr/nip96.json"
 
-    private var serverInfo: FileStorageServerInfoResponseJSON?
+    /// Cached server info which contains the API URL for uploading files.
+    var serverInfo: FileStorageServerInfoResponseJSON?
 
+    /// The `JSONDecoder` to use for decoding responses from the API.
     private var decoder: JSONDecoder {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -44,10 +51,17 @@ class NostrBuildAPIClient: FileStorageAPIClient {
     }
 
     func upload(fileAt fileURL: URL) async throws -> URL {
-        guard let serverInfo,
-            let url = URL(string: serverInfo.apiUrl) else {
-            throw FileStorageAPIClientError.uploadError
+        let (request, data) = try uploadRequest(fileAt: fileURL)
+        let (responseData, _) = try await URLSession.shared.upload(for: request, from: data)
+
+        let response = try decoder.decode(NostrBuildResponseJSON.self, from: responseData)
+        guard let urlString = response.data?.first?.url else {
+            throw FileStorageAPIClientError.uploadFailed(response.message ?? String(describing: response))
         }
+        guard let url = URL(string: urlString) else {
+            throw FileStorageAPIClientError.invalidResponseURL(urlString)
+        }
+        
         return url
     }
 
@@ -67,5 +81,42 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         } catch {
             throw FileStorageAPIClientError.decodingError
         }
+    }
+
+    func uploadRequest(fileAt fileURL: URL) throws -> (URLRequest, Data) {
+        guard let apiUrl = serverInfo?.apiUrl,
+            let uploadURL = URL(string: apiUrl) else {
+            throw FileStorageAPIClientError.uploadFailed("Missing API URL")
+        }
+
+        var request = URLRequest(url: uploadURL)
+        request.httpMethod = "POST"
+
+        let boundary = UUID().uuidString
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+        let filename = fileURL.lastPathComponent
+
+        var header = ""
+        header.append("\r\n--\(boundary)\r\n")
+        header.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(filename)\"\r\n")
+        header.append("Content-Type: image/jpg\r\n\r\n")
+
+        var footer = ""
+        footer.append("\r\n--\(boundary)--\r\n")
+
+        guard let headerData = header.data(using: .utf8), 
+            let footerData = footer.data(using: .utf8) else {
+            throw FileStorageAPIClientError.uploadFailed("Encoding error")
+        }
+
+        let fileData = try Data(contentsOf: fileURL)
+
+        var data = Data()
+        data.append(headerData)
+        data.append(fileData)
+        data.append(footerData)
+
+        return (request, data)
     }
 }

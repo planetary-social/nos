@@ -1,3 +1,4 @@
+import Dependencies
 import Foundation
 import SwiftUI
 import SwiftUINavigation
@@ -14,8 +15,11 @@ struct ComposerActionBar: View {
     /// The text in the note.
     @Binding var text: EditableNoteText
 
-    @State var fileStorageAPI: FileStorageAPI = NostrBuildFileStorageAPI()
-    
+//    @State var fileStorageAPI: FileStorageAPI = NostrBuildFileStorageAPI()
+
+    @Dependency(\.fileStorageAPIClient) private var fileStorageAPIClient
+
+
     enum SubMenu {
         case expirationDate
     }
@@ -45,7 +49,7 @@ struct ComposerActionBar: View {
                     Task {
                         do {
                             startUploadingImage()
-                            let url = try await fileStorageAPI.upload(fileAt: imageURL)
+                            let url = try await fileStorageAPIClient.upload(fileAt: imageURL)
                             text.append(url)
                             endUploadingImage()
                         } catch {

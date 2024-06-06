@@ -29,9 +29,38 @@ class NostrBuildAPIClientTests: XCTestCase {
         // Act & Assert
         do {
             _ = try await subject.fetchServerInfo()
+            XCTFail("Expected an error to be thrown")
         } catch {
-            let result = try XCTUnwrap(error as? FileStorageAPIClientError)
-            XCTAssertEqual(result, FileStorageAPIClientError.decodingError)
+            switch error {
+            case FileStorageAPIClientError.decodingError: 
+                break
+            default:
+                XCTFail("Expected a decodingError but got \(error)")
+            }
         }
+    }
+
+    func test_uploadRequest_properties() throws {
+        // Arrange
+        let subject = NostrBuildAPIClient()
+        let apiURLString = "http://nostr.build/api/v2/nip96/upload"
+        subject.serverInfo = FileStorageServerInfoResponseJSON(apiUrl: apiURLString)
+        let fileURL = try XCTUnwrap(Bundle.current.url(forResource: "nostr_build_response", withExtension: "json"))
+
+        // Act
+        let (uploadRequest, _) = try subject.uploadRequest(fileAt: fileURL)
+
+        // Assert
+        XCTAssertEqual(uploadRequest.httpMethod, "POST")
+        XCTAssertEqual(uploadRequest.url?.absoluteString, apiURLString)
+    }
+
+    func test_uploadRequest_throws_error_when_no_serverInfo() throws {
+        // Arrange
+        let subject = NostrBuildAPIClient()
+        let fileURL = try XCTUnwrap(Bundle.current.url(forResource: "nostr_build_response", withExtension: "json"))
+
+        // Act & Assert
+        XCTAssertThrowsError(try subject.uploadRequest(fileAt: fileURL))
     }
 }
