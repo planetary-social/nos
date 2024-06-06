@@ -64,6 +64,11 @@ extension DependencyValues {
         get { self[NoteParserKey.self] }
         set { self[NoteParserKey.self] = newValue }
     }
+
+    var featureFlags: FeatureFlags {
+        get { self[FeatureFlagsKey.self] }
+        set { self[FeatureFlagsKey.self] = newValue }
+    }
 }
 
 fileprivate enum AnalyticsKey: DependencyKey {
@@ -134,4 +139,10 @@ fileprivate enum NoteParserKey: DependencyKey {
     static let liveValue = NoteParser()
     static let testValue = NoteParser()
     static let previewValue = NoteParser()
+}
+
+fileprivate enum FeatureFlagsKey: DependencyKey {
+    static let liveValue: any FeatureFlags = DefaultFeatureFlags.liveValue
+    static let testValue: any FeatureFlags = MockFeatureFlags()
+    static let previewValue: any FeatureFlags = MockFeatureFlags()
 }

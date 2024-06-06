@@ -3716,6 +3716,18 @@
         }
       }
     },
+    "enableNewMediaDisplay" : {
+      "comment" : "Setting for new media feature flag",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable new media display"
+          }
+        }
+      }
+    },
     "enterCode" : {
       "extractionState" : "manual",
       "localizations" : {
