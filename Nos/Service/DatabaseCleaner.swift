@@ -17,7 +17,7 @@ enum DatabaseCleaner {
     /// - delete any other models that are orphaned by the previous deletions
     /// - fix EventReferences whose referencedEvent was deleted by createing a stubbed Event
     static func cleanupEntities(
-        before date: Date, 
+        before deleteBefore: Date, 
         for authorKey: RawAuthorID, 
         in context: NSManagedObjectContext
     ) async throws {
@@ -29,31 +29,25 @@ enum DatabaseCleaner {
         
         Log.info("Database statistics: \(try await PersistenceController.databaseStatistics(from: context))")
         
-        // Delete all but the most recent n events
-        let eventsToKeep = 1000
-        let fetchFirstEventToDelete = Event.allEventsRequest()
-        fetchFirstEventToDelete.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
-        fetchFirstEventToDelete.fetchLimit = 1
-        fetchFirstEventToDelete.fetchOffset = eventsToKeep
-        fetchFirstEventToDelete.predicate = NSPredicate(format: "receivedAt != nil")
-        var deleteBefore = Date.distantPast
         try await context.perform {
             
             guard let currentAuthor = try? Author.find(by: authorKey, context: context) else {
                 return
             }
             
-            if let firstEventToDelete = try context.fetch(fetchFirstEventToDelete).first,
-                let receivedAt = firstEventToDelete.receivedAt {
-                deleteBefore = receivedAt
-            }
+            let oldEventReferencesRequest = EventReference.all()
+            oldEventReferencesRequest.predicate = NSPredicate(
+                format: "referencedEvent.receivedAt < %@ AND referencingEvent.receivedAt < %@",
+                deleteBefore as CVarArg,
+                deleteBefore as CVarArg
+            )
             
             let oldStoryCutoff = Calendar.current.date(byAdding: .day, value: -2, to: .now) ?? .now
             
             // Delete events older than `deleteBefore`
             let oldEventsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
             oldEventsRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
-            let oldEventClause = "(receivedAt <= %@ OR receivedAt == nil)"
+            let oldEventClause = "(receivedAt < %@ OR receivedAt == nil) AND referencingEvents.@count = 0"
             let notOwnEventClause = "(author.hexadecimalPublicKey != %@)"
             let readStoryClause = "(isRead = 1 AND receivedAt > %@)"
             let userReportClause = "(kind == \(EventKind.report.rawValue) AND " +
@@ -70,6 +64,7 @@ enum DatabaseCleaner {
             )
             
             let deleteRequests: [NSPersistentStoreRequest] = [
+                oldEventReferencesRequest,
                 oldEventsRequest,
                 Event.expiredRequest(),
                 EventReference.orphanedRequest(),
@@ -94,25 +89,7 @@ enum DatabaseCleaner {
                 }
             }
             
-            // Heal EventReferences
-            let brokenEventReferencesRequest = NSFetchRequest<EventReference>(entityName: "EventReference")
-            brokenEventReferencesRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \EventReference.eventId, ascending: false)
-            ]
-            brokenEventReferencesRequest.predicate = NSPredicate(format: "referencedEvent = nil")
-            let brokenEventReferences = try context.fetch(brokenEventReferencesRequest)
-            Log.info("Healing \(brokenEventReferences.count) EventReferences")
-            for eventReference in brokenEventReferences {
-                guard let eventID = eventReference.eventId else {
-                    Log.error("Found an EventReference with no eventID")
-                    continue
-                }
-                let referencedEvent = try Event.findOrCreateStubBy(id: eventID, context: context)
-                eventReference.referencedEvent = referencedEvent
-            }
-            
             try context.saveIfNeeded()
-            context.refreshAllObjects()
         }
         
         let newStatistics = try await PersistenceController.databaseStatistics(from: context)
