@@ -29,7 +29,6 @@
   "testTargets" : [
     {
       "skippedTests" : [
-        "NostrBuildAPIClientTests\/test_uploadRequest_authorization()",
         "SocialGraphTests\/testFollow()",
         "SocialGraphTests\/testOneFollower()",
         "SocialGraphTests\/testOutOfNetwork()",

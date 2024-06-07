@@ -58,7 +58,16 @@ class NostrBuildAPIClient: FileStorageAPIClient {
     }
 
     func upload(fileAt fileURL: URL) async throws -> URL {
-        let (request, data) = try uploadRequest(fileAt: fileURL)
+        if serverInfo?.apiUrl == nil {
+            serverInfo = try await fetchServerInfo()
+        }
+
+        guard let apiURLString = serverInfo?.apiUrl,
+            let apiURL = URL(string: apiURLString) else {
+            throw FileStorageAPIClientError.uploadFailed("Could not get API URL")
+        }
+
+        let (request, data) = try uploadRequest(fileAt: fileURL, apiURL: apiURL)
         let (responseData, _) = try await URLSession.shared.upload(for: request, from: data)
 
         let response = try decoder.decode(FileStorageUploadResponseJSON.self, from: responseData)
@@ -90,13 +99,9 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         }
     }
 
-    func uploadRequest(fileAt fileURL: URL) throws -> (URLRequest, Data) {
-        guard let apiUrl = serverInfo?.apiUrl,
-            let uploadURL = URL(string: apiUrl) else {
-            throw FileStorageAPIClientError.uploadFailed("Missing API URL")
-        }
-
-        var request = URLRequest(url: uploadURL)
+    /// Creates a URLRequest and Data to be uploaded to the file storage API.
+    func uploadRequest(fileAt fileURL: URL, apiURL: URL) throws -> (URLRequest, Data) {
+        var request = URLRequest(url: apiURL)
         request.httpMethod = "POST"
 
         let boundary = UUID().uuidString
@@ -129,7 +134,7 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         }
 
         let authorizationHeader = try buildAuthorizationHeader(
-            url: uploadURL,
+            url: apiURL,
             method: .post,
             payload: data,
             keyPair: keyPair
