@@ -8,6 +8,9 @@ enum DatabaseCleaner {
     // swiftlint:disable function_body_length 
     
     /// Deletes unneeded entities from Core Data.
+    ///
+    /// This should only be called once right at app launch.
+    /// 
     /// The general strategy here is to:
     /// - keep some max number of events, delete the others 
     /// - delete authors outside the user's network 

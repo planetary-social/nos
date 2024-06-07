@@ -189,6 +189,8 @@ class PersistenceController {
     
     /// Cleans up uneeded entities from the database. Our local database is really just a cache, and we need to 
     /// invalidate old items to keep it from growing indefinitely.
+    /// 
+    /// This should only be called once right at app launch.
     func cleanupEntities() async {
         guard let authorKey = await currentUser.author?.hexadecimalPublicKey else {
             return
