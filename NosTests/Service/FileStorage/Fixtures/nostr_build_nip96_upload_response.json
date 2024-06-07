@@ -1,0 +1,42 @@
+{
+    "status": "success",
+    "message": "Upload successful.",
+    "nip94_event": {
+        "tags": [
+            [
+                "url",
+                "https://image.nostr.build/02361b65063679d9d2dda1eedbfa49f1f345d22f12201bc6367b79d7c5443f22.jpeg"
+            ],
+            [
+                "ox",
+                "02361b65063679d9d2dda1eedbfa49f1f345d22f12201bc6367b79d7c5443f22",
+                "https://nostr.build"
+            ],
+            [
+                "x",
+                ""
+            ],
+            [
+                "m",
+                "image/jpeg"
+            ],
+            [
+                "dim",
+                "3000x2002"
+            ],
+            [
+                "bh",
+                "LRCZL.xu4mog^-xuIUjc%Nxun,Rj"
+            ],
+            [
+                "blurhash",
+                "LRCZL.xu4mog^-xuIUjc%Nxun,Rj"
+            ]
+        ],
+        "content": ""
+    },
+    "metadata": {
+        "size": 275777,
+        "thumbnail": "https://image.nostr.build/thumb/02361b65063679d9d2dda1eedbfa49f1f345d22f12201bc6367b79d7c5443f22.jpeg"
+    }
+}

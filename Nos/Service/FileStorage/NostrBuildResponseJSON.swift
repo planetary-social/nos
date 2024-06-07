@@ -8,6 +8,7 @@ struct NostrBuildResponseJSON: Codable {
 }
 
 enum NostrBuildResponseStatus: String, Codable {
+    case error
     case success
     case unknown
 
@@ -15,6 +16,8 @@ enum NostrBuildResponseStatus: String, Codable {
         let container = try decoder.singleValueContainer()
         let statusString = try container.decode(String.self)
         switch statusString {
+        case "error":
+            self = .error
         case "success":
             self = .success
         default:

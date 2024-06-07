@@ -276,6 +276,7 @@ import Combine
 }
 
 class MockPushNotificationService: PushNotificationService {
+    override func listen(for user: CurrentUser) async { }
     override func registerForNotifications(with token: Data, user: CurrentUser) async throws { }
     override func requestNotificationPermissionsFromUser() { }
 }

@@ -14,7 +14,12 @@ extension DependencyValues {
         get { self[CurrentUserKey.self] }
         set { self[CurrentUserKey.self] = newValue }
     }
-    
+
+    var fileStorageAPIClient: FileStorageAPIClient {
+        get { self[FileStorageAPIClientKey.self] }
+        set { self[FileStorageAPIClientKey.self] = newValue }
+    }
+
     var router: Router {
         get { self[RouterKey.self] }
         set { self[RouterKey.self] = newValue }
@@ -60,6 +65,11 @@ extension DependencyValues {
         set { self[URLParserKey.self] = newValue }
     }
 
+    var urlSession: URLSessionProtocol {
+        get { self[URLSessionProtocolKey.self] }
+        set { self[URLSessionProtocolKey.self] = newValue }
+    }
+
     var noteParser: NoteParser {
         get { self[NoteParserKey.self] }
         set { self[NoteParserKey.self] = newValue }
@@ -77,10 +87,14 @@ fileprivate enum AnalyticsKey: DependencyKey {
     static let previewValue = Analytics(mock: true)
 }
 
-private enum CurrentUserKey: DependencyKey {
+fileprivate enum CurrentUserKey: DependencyKey {
     @MainActor static let liveValue = CurrentUser()
     @MainActor static let testValue = CurrentUser()
     @MainActor static let previewValue = CurrentUser()
+}
+
+fileprivate enum FileStorageAPIClientKey: DependencyKey {
+    static var liveValue: any FileStorageAPIClient = NostrBuildAPIClient()
 }
 
 fileprivate enum RouterKey: DependencyKey {
@@ -96,10 +110,9 @@ private enum RelayServiceKey: DependencyKey {
 }
 
 fileprivate enum PushNotificationServiceKey: DependencyKey {
-    typealias Value = PushNotificationService
     @MainActor static let liveValue = PushNotificationService()
-    @MainActor static let testValue = MockPushNotificationService()
-    @MainActor static let previewValue = MockPushNotificationService()
+    @MainActor static let testValue: PushNotificationService = MockPushNotificationService()
+    @MainActor static let previewValue: PushNotificationService = MockPushNotificationService()
 }
 
 fileprivate enum PersistenceControllerKey: DependencyKey {
@@ -133,6 +146,12 @@ fileprivate enum URLParserKey: DependencyKey {
     static let liveValue = URLParser()
     static let testValue = URLParser()
     static let previewValue = URLParser()
+}
+
+fileprivate enum URLSessionProtocolKey: DependencyKey {
+    static let liveValue: any URLSessionProtocol = URLSession.shared
+    static let testValue: any URLSessionProtocol = MockURLSession()
+    static let previewValue: any URLSessionProtocol = MockURLSession()
 }
 
 fileprivate enum NoteParserKey: DependencyKey {
