@@ -9,7 +9,9 @@ final class EventTests: CoreDataTestCase {
     // MARK: - Serialization
     func testSerializedEventForSigning() throws {
         // Arrange
-        let event = try createTestEvent(in: testContext)
+        let tags = [["p", "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"]]
+        let content = "Testing nos #[0]"
+        let event = try EventFixture.build(in: testContext, content: content, tags: tags)
         // swiftlint:disable line_length
         let expectedString = """
         [0,"32730e9dfcab797caf8380d096e548d9ef98f3af3000542f9271a91a9e3b0001",1675264762,1,[["p","d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"]],"Testing nos #[0]"]
@@ -28,7 +30,9 @@ final class EventTests: CoreDataTestCase {
 
     func testIdentifierCalculation() throws {
         // Arrange
-        let event = try createTestEvent(in: testContext)
+        let tags = [["p", "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"]]
+        let content = "Testing nos #[0]"
+        let event = try EventFixture.build(in: testContext, content: content, tags: tags)
         
         // Act
         XCTAssertEqual(
@@ -39,7 +43,21 @@ final class EventTests: CoreDataTestCase {
     
     func testIdentifierCalculationWithNoTags() throws {
         // Arrange
-        let event = try createTestEventWithNoTags(in: testContext)
+        let content = "Testing nos #[0]"
+        let event = try EventFixture.build(in: testContext, content: content)
+        
+        // Act
+        XCTAssertEqual(
+            try event.calculateIdentifier(),
+            "bc45c3ac53de113e1400fca956048a816ad1c2e6ecceba6b1372ca597066fa9a"
+        )
+    }
+
+    func testIdentifierCalculationWithEmptyTags() throws {
+        // Arrange
+        let content = "Testing nos #[0]"
+        let event = try EventFixture.build(in: testContext, content: content, tags: nil)
+        
         // Act
         XCTAssertEqual(
             try event.calculateIdentifier(),
@@ -54,7 +72,7 @@ final class EventTests: CoreDataTestCase {
     /// does is verify that we are internally consistent in our signature logic.
     func testSigningAndVerification() throws {
         // Arrange
-        let event = try createTestEvent(in: testContext)
+        let event = try EventFixture.build(in: testContext)
         
         // Act
         try event.sign(withKey: KeyFixture.keyPair)
@@ -65,7 +83,7 @@ final class EventTests: CoreDataTestCase {
     
     func testVerificationOnBadId() throws {
         // Arrange
-        let event = try createTestEvent(in: testContext)
+        let event = try EventFixture.build(in: testContext)
         
         // Act
         try event.sign(withKey: KeyFixture.keyPair)
@@ -77,7 +95,7 @@ final class EventTests: CoreDataTestCase {
     
     func testVerificationOnBadSignature() throws {
         // Arrange
-        let event = try createTestEvent(in: testContext)
+        let event = try EventFixture.build(in: testContext)
         event.identifier = try event.calculateIdentifier()
         
         // Act
@@ -89,7 +107,7 @@ final class EventTests: CoreDataTestCase {
     }
 
     func testFetchEventByIDPerformance() throws {
-        let testEvent = try createTestEvent(in: testContext)
+        let testEvent = try EventFixture.build(in: testContext)
         testEvent.identifier = try testEvent.calculateIdentifier()
         let eventID = testEvent.identifier!
         try testContext.save()
@@ -103,7 +121,7 @@ final class EventTests: CoreDataTestCase {
     // MARK: - Replies
     
     func testReferencedNoteGivenMentionMarker() throws {
-        let testEvent = try createTestEvent(in: testContext)
+        let testEvent = try EventFixture.build(in: testContext)
         
         let mention = try EventReference(
             jsonTag: ["e", "646daa2f5d2d990dc98fb50a6ce8de65d77419cee689d7153c912175e85ca95d", "", "mention"], 
@@ -115,7 +133,7 @@ final class EventTests: CoreDataTestCase {
     }
     
     func testRepostedNote() throws {
-        let testEvent = try createTestEvent(in: testContext)
+        let testEvent = try EventFixture.build(in: testContext)
         testEvent.kind = 6
         
         let mention = try EventReference(
@@ -131,7 +149,7 @@ final class EventTests: CoreDataTestCase {
     }
     
     func testRepostedNoteGivenNonRepost() throws {
-        let testEvent = try createTestEvent(in: testContext)
+        let testEvent = try EventFixture.build(in: testContext)
         testEvent.kind = 1
         
         let mention = try EventReference(
@@ -187,41 +205,5 @@ final class EventTests: CoreDataTestCase {
         
         // Assert
         XCTAssertEqual(events.count, 0)
-    }
-
-    // MARK: - Helpers
-    
-    private func createTestEvent(
-        in context: NSManagedObjectContext,
-        publicKey: RawAuthorID = KeyFixture.pubKeyHex
-    ) throws -> Event {
-        let event = Event(context: context)
-        event.createdAt = Date(timeIntervalSince1970: TimeInterval(1_675_264_762))
-        event.content = "Testing nos #[0]"
-        event.kind = 1
-        
-        let author = Author(context: context)
-        author.hexadecimalPublicKey = publicKey
-        event.author = author
-        
-        let tags = [["p", "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"]]
-        event.allTags = tags as NSObject
-        return event
-    }
-    
-    private func createTestEventWithNoTags(
-        in context: NSManagedObjectContext,
-        publicKey: RawAuthorID = KeyFixture.pubKeyHex
-    ) throws -> Event {
-        let event = Event(context: context)
-        event.createdAt = Date(timeIntervalSince1970: TimeInterval(1_675_264_762))
-        event.content = "Testing nos #[0]"
-        event.kind = 1
-        
-        let author = Author(context: context)
-        author.hexadecimalPublicKey = publicKey
-        event.author = author
-        
-        return event
     }
 }

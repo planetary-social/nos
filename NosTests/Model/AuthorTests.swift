@@ -216,7 +216,7 @@ final class AuthorTests: CoreDataTestCase {
     func test_allPostsRequest_onlyRootPosts() throws {
         // Arrange
         let publicKey = "test"
-        _ = try createTestEvent(in: testContext, publicKey: publicKey, deletedOn: [Relay(context: testContext)])
+        _ = try EventFixture.build(in: testContext, publicKey: publicKey, deletedOn: [Relay(context: testContext)])
         let author = try XCTUnwrap(Author.find(by: publicKey, context: testContext))
 
         // Act
@@ -225,27 +225,5 @@ final class AuthorTests: CoreDataTestCase {
 
         // Assert
         XCTAssertEqual(events.count, 0)
-    }
-
-    // MARK: - Helpers
-
-    private func createTestEvent(
-        in context: NSManagedObjectContext,
-        publicKey: RawAuthorID = KeyFixture.pubKeyHex,
-        deletedOn: Set<Relay> = []
-    ) throws -> Event {
-        let event = Event(context: context)
-        event.createdAt = Date(timeIntervalSince1970: TimeInterval(1_675_264_762))
-        event.content = "Testing nos #[0]"
-        event.deletedOn = deletedOn
-        event.kind = 1
-
-        let author = Author(context: context)
-        author.hexadecimalPublicKey = publicKey
-        event.author = author
-
-        let tags = [["p", "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"]]
-        event.allTags = tags as NSObject
-        return event
     }
 }
