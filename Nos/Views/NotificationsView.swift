@@ -63,7 +63,7 @@ struct NotificationsView: View {
     }
     
     var body: some View {
-        NavigationStack(path: $router.notificationsPath) {
+        NosNavigationStack(path: $router.notificationsPath) {
             ScrollView(.vertical) {
                 LazyVStack {
                     /// The fetch request for events has a `fetchLimit` set but it doesn't work, so we limit the
@@ -90,19 +90,6 @@ struct NotificationsView: View {
             .padding(.top, 1)
             .nosNavigationBar(title: .localizable.notifications)
             .navigationBarItems(leading: SideMenuButton())
-            .navigationDestination(for: Event.self) { note in
-                RepliesView(note: note)
-            }
-            .navigationDestination(for: URL.self) { url in URLView(url: url) }
-            .navigationDestination(for: ReplyToNavigationDestination.self) { destination in
-                RepliesView(note: destination.note, showKeyboard: true)
-            }
-            .navigationDestination(for: Author.self) { author in
-                ProfileView(author: author)
-            }
-            .navigationDestination(for: EditProfileDestination.self) { destination in
-                ProfileEditView(author: destination.profile)
-            }
             .refreshable {
                 await subscribeToNewEvents()
             }

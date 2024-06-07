@@ -27,7 +27,7 @@ struct DiscoverTab: View {
     // MARK: - View
     
     var body: some View {
-        NavigationStack(path: $router.discoverPath) {
+        NosNavigationStack(path: $router.discoverPath) {
             ZStack {
                 if performingInitialLoad && searchController.query.isEmpty {
                     FullscreenProgressView(
@@ -64,19 +64,6 @@ struct DiscoverTab: View {
                 if isVisible {
                     analytics.showedDiscover()
                 }
-            }
-            .navigationDestination(for: Event.self) { note in
-                RepliesView(note: note)
-            }
-            .navigationDestination(for: URL.self) { url in URLView(url: url) }
-            .navigationDestination(for: ReplyToNavigationDestination.self) { destination in 
-                RepliesView(note: destination.note, showKeyboard: true)
-            }
-            .navigationDestination(for: Author.self) { author in
-                ProfileView(author: author)
-            }
-            .navigationDestination(for: EditProfileDestination.self) { destination in
-                ProfileEditView(author: destination.profile)
             }
             .nosNavigationBar(title: .localizable.discover)
             .toolbarBackground(.visible, for: .navigationBar)

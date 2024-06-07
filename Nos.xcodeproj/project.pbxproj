@@ -262,6 +262,7 @@
 		C97A1C8C29E45B4E009D9E8D /* RawEventController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97A1C8A29E45B4E009D9E8D /* RawEventController.swift */; };
 		C97A1C8E29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97A1C8D29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift */; };
 		C97A1C8F29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97A1C8D29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift */; };
+		C97B288A2C10B07100DC1FC0 /* NosNavigationStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97B28892C10B07100DC1FC0 /* NosNavigationStack.swift */; };
 		C981E2DB2AC6088900FBF4F6 /* UNSVerifyCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C981E2DA2AC6088900FBF4F6 /* UNSVerifyCodeView.swift */; };
 		C981E2DD2AC610D600FBF4F6 /* UNSStepImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C981E2DC2AC610D600FBF4F6 /* UNSStepImage.swift */; };
 		C98298332ADD7F9A0096C5B5 /* DeepLinkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98298322ADD7F9A0096C5B5 /* DeepLinkService.swift */; };
@@ -687,6 +688,7 @@
 		C97A1C8729E45B3C009D9E8D /* RawEventView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawEventView.swift; sourceTree = "<group>"; };
 		C97A1C8A29E45B4E009D9E8D /* RawEventController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawEventController.swift; sourceTree = "<group>"; };
 		C97A1C8D29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Nos.swift"; sourceTree = "<group>"; };
+		C97B28892C10B07100DC1FC0 /* NosNavigationStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosNavigationStack.swift; sourceTree = "<group>"; };
 		C981E2DA2AC6088900FBF4F6 /* UNSVerifyCodeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UNSVerifyCodeView.swift; sourceTree = "<group>"; };
 		C981E2DC2AC610D600FBF4F6 /* UNSStepImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNSStepImage.swift; sourceTree = "<group>"; };
 		C98298312ADD7EDB0096C5B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -1056,6 +1058,7 @@
 				5B79F6522BA11B08002DA9BE /* WizardSheetDescriptionText.swift */,
 				5B79F6542BA123D4002DA9BE /* WizardSheetBadgeText.swift */,
 				5B29B58D2BEC392B008F6008 /* ActivityPubBadgeView.swift */,
+				C97B28892C10B07100DC1FC0 /* NosNavigationStack.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -2049,6 +2052,7 @@
 				CD2CF38E299E67F900332116 /* CardButtonStyle.swift in Sources */,
 				A336DD3C299FD78000A0CBA0 /* Filter.swift in Sources */,
 				DC2E54C82A700F1400C2CAAB /* UIDevice+Simulator.swift in Sources */,
+				C97B288A2C10B07100DC1FC0 /* NosNavigationStack.swift in Sources */,
 				C98CA9072B14FBBF00929141 /* PagedNoteDataSource.swift in Sources */,
 				C9A0DAEA29C6A34200466635 /* ActivityView.swift in Sources */,
 				CD2CF390299E68BE00332116 /* NoteButton.swift in Sources */,
