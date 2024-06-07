@@ -45,7 +45,7 @@ class NostrBuildAPIClientTests: XCTestCase {
         let subject = NostrBuildAPIClient()
         subject.serverInfo = FileStorageServerInfoResponseJSON(apiUrl: "broken")
         let fileURL = try XCTUnwrap(
-            Bundle.current.url(forResource: "nostr_build_api_v2_response", withExtension: "json")
+            Bundle.current.url(forResource: "nostr_build_nip96_response", withExtension: "json")
         )
 
         // Act & Assert
@@ -74,7 +74,7 @@ class NostrBuildAPIClientTests: XCTestCase {
         let apiURL = try XCTUnwrap(URL(string: apiURLString))
 
         let fileURL = try XCTUnwrap(
-            Bundle.current.url(forResource: "nostr_build_api_v2_response", withExtension: "json")
+            Bundle.current.url(forResource: "nostr_build_nip96_response", withExtension: "json")
         )
 
         // Act
@@ -96,7 +96,7 @@ class NostrBuildAPIClientTests: XCTestCase {
         let apiURLString = "http://nostr.build/api/v2/nip96/upload"
         let apiURL = try XCTUnwrap(URL(string: apiURLString))
         let fileURL = try XCTUnwrap(
-            Bundle.current.url(forResource: "nostr_build_api_v2_response", withExtension: "json")
+            Bundle.current.url(forResource: "nostr_build_nip96_response", withExtension: "json")
         )
 
         // Act

@@ -4,9 +4,6 @@ import Logger
 
 /// A client for a File Storage API, as defined in [NIP-96](https://github.com/nostr-protocol/nips/blob/master/96.md)
 protocol FileStorageAPIClient {
-    /// Fetches and caches server info for the file storage API.
-    func refreshServerInfo()
-
     /// Uploads the file at the given URL.
     func upload(fileAt fileURL: URL) async throws -> URL
 }
@@ -18,10 +15,12 @@ enum HTTPMethod: String {
 
 /// Defines a set of errors that may be thrown from a `FileStorageAPIClient`.
 enum FileStorageAPIClientError: Error {
-    case invalidResponseURL(String)
     case decodingError
+    case encodingError
+    case invalidResponseURL(String)
     case invalidURLRequest
-    case uploadFailed(String)
+    case missingKeyPair
+    case uploadFailed(String?)
 }
 
 /// A `FileStorageAPIClient` that uses nostr.build for uploading files.
@@ -46,17 +45,6 @@ class NostrBuildAPIClient: FileStorageAPIClient {
 
     // MARK: - FileStorageAPIClient protocol
 
-    func refreshServerInfo() {
-        Task {
-            do {
-                serverInfo = try await fetchServerInfo()
-                Log.debug("Refreshed file storage server info cache with data: \(String(describing: serverInfo))")
-            } catch {
-                Log.debug("Error refreshing file storage server info cache: \(error)")
-            }
-        }
-    }
-
     func upload(fileAt fileURL: URL) async throws -> URL {
         if serverInfo?.apiUrl == nil {
             serverInfo = try await fetchServerInfo()
@@ -64,7 +52,7 @@ class NostrBuildAPIClient: FileStorageAPIClient {
 
         guard let apiURLString = serverInfo?.apiUrl,
             let apiURL = URL(string: apiURLString) else {
-            throw FileStorageAPIClientError.uploadFailed("Could not get API URL")
+            throw FileStorageAPIClientError.invalidURLRequest
         }
 
         let (request, data) = try uploadRequest(fileAt: fileURL, apiURL: apiURL)
@@ -72,7 +60,7 @@ class NostrBuildAPIClient: FileStorageAPIClient {
 
         let response = try decoder.decode(FileStorageUploadResponseJSON.self, from: responseData)
         guard let urlString = response.nip94Event?.urlString else {
-            throw FileStorageAPIClientError.uploadFailed(response.message ?? String(describing: response))
+            throw FileStorageAPIClientError.uploadFailed(response.message)
         }
         guard let url = URL(string: urlString) else {
             throw FileStorageAPIClientError.invalidResponseURL(urlString)
@@ -119,7 +107,7 @@ class NostrBuildAPIClient: FileStorageAPIClient {
 
         guard let headerData = header.data(using: .utf8), 
             let footerData = footer.data(using: .utf8) else {
-            throw FileStorageAPIClientError.uploadFailed("Encoding error")
+            throw FileStorageAPIClientError.encodingError
         }
 
         let fileData = try Data(contentsOf: fileURL)
@@ -130,7 +118,7 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         data.append(footerData)
 
         guard let keyPair = currentUser.keyPair else {
-            throw FileStorageAPIClientError.uploadFailed("missing key pair")
+            throw FileStorageAPIClientError.missingKeyPair
         }
 
         let authorizationHeader = try buildAuthorizationHeader(
