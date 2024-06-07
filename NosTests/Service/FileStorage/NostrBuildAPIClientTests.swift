@@ -43,7 +43,7 @@ class NostrBuildAPIClientTests: XCTestCase {
     func test_upload_throws_error_when_serverInfo_has_invalid_apiUrl() async throws {
         // Arrange
         let subject = NostrBuildAPIClient()
-        subject.serverInfo = FileStorageServerInfoResponseJSON(apiUrl: "broken")
+        subject.serverInfo = FileStorageServerInfoResponseJSON(apiUrl: "")
         let fileURL = try XCTUnwrap(
             Bundle.current.url(forResource: "nostr_build_nip96_response", withExtension: "json")
         )
@@ -54,10 +54,10 @@ class NostrBuildAPIClientTests: XCTestCase {
             XCTFail("Expected an error to be thrown")
         } catch {
             switch error {
-            case FileStorageAPIClientError.uploadFailed:
+            case FileStorageAPIClientError.invalidURLRequest:
                 break
             default:
-                XCTFail("Expected an uploadFailed error but got \(error)")
+                XCTFail("Expected an invalidURLRequest error but got \(error)")
             }
         }
     }
