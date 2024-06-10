@@ -34,7 +34,7 @@ struct NosApp: App {
                     fileStorageAPIClient.refreshServerInfo()
                 }
                 .task {
-                    persistenceController.cleanupEntities()
+                    await persistenceController.cleanupEntities()
                 }
                 .onChange(of: scenePhase) { _, newPhase in
                     // TODO: save all contexts, not just the view and background.
