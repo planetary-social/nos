@@ -8,8 +8,6 @@ struct GoldenPostView: View {
     @ObservedObject var author: Author
     @ObservedObject var note: Event
 
-    @Environment(\.managedObjectContext) private var viewContext
-
     @EnvironmentObject private var router: Router
 
     @State private var noteContent = LoadingContent<AttributedString>.loading
@@ -38,10 +36,7 @@ struct GoldenPostView: View {
             .foregroundColor(.primaryTxt)
             .tint(.accent)
             .multilineTextAlignment(.leading)
-            .environment(\.openURL, OpenURLAction { url in
-                router.open(url: url, with: viewContext)
-                return .handled
-            })
+            .handleURLsInRouter()
     }
 
     var footer: some View {

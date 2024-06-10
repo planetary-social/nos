@@ -44,10 +44,7 @@ struct NotificationCard: View {
                             .font(.body)
                             .foregroundColor(.primaryTxt)
                             .tint(.accent)
-                            .environment(\.openURL, OpenURLAction { url in
-                                router.open(url: url, with: viewContext)
-                                return .handled
-                            })
+                            .handleURLsInRouter()
                         
                         if viewModel.content == nil {
                             contentText.redacted(reason: .placeholder)

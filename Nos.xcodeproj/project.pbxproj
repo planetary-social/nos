@@ -393,6 +393,7 @@
 		C9CF23172A38A58B00EBEC31 /* ParseQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */; };
 		C9CF23182A38A58B00EBEC31 /* ParseQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */; };
 		C9D573492AB24B7300E06BB4 /* custom-xcassets.stencil in Resources */ = {isa = PBXBuildFile; fileRef = C9D573482AB24B7300E06BB4 /* custom-xcassets.stencil */; };
+		C9DC6CBA2C1739AD00E1CFB3 /* View+HandleURLsInRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DC6CB92C1739AD00E1CFB3 /* View+HandleURLsInRouter.swift */; };
 		C9DEBFD2298941000078B43A /* NosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD1298941000078B43A /* NosApp.swift */; };
 		C9DEBFD4298941000078B43A /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD3298941000078B43A /* PersistenceController.swift */; };
 		C9DEBFD9298941000078B43A /* HomeFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD8298941000078B43A /* HomeFeedView.swift */; };
@@ -776,6 +777,7 @@
 		C9CE5B132A0172CF008E198C /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseQueue.swift; sourceTree = "<group>"; };
 		C9D573482AB24B7300E06BB4 /* custom-xcassets.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; name = "custom-xcassets.stencil"; path = "Nos/Assets/SwiftGen Stencils/custom-xcassets.stencil"; sourceTree = SOURCE_ROOT; };
+		C9DC6CB92C1739AD00E1CFB3 /* View+HandleURLsInRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+HandleURLsInRouter.swift"; sourceTree = "<group>"; };
 		C9DEBFCE298941000078B43A /* Nos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9DEBFD1298941000078B43A /* NosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosApp.swift; sourceTree = "<group>"; };
 		C9DEBFD3298941000078B43A /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
@@ -1250,6 +1252,7 @@
 				C95D68A8299E709800429F86 /* LinearGradient+Planetary.swift */,
 				C9A0DAE629C69FA000466635 /* Text+Gradient.swift */,
 				C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */,
+				C9DC6CB92C1739AD00E1CFB3 /* View+HandleURLsInRouter.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -2070,6 +2073,7 @@
 				C9A0DAEA29C6A34200466635 /* ActivityView.swift in Sources */,
 				CD2CF390299E68BE00332116 /* NoteButton.swift in Sources */,
 				C96877B92B4EDD110051ED2F /* AuthorStoryCarousel.swift in Sources */,
+				C9DC6CBA2C1739AD00E1CFB3 /* View+HandleURLsInRouter.swift in Sources */,
 				C93F48932AC5C9CE00900CEC /* UNSWizardIntroView.swift in Sources */,
 				5B79F6552BA123D4002DA9BE /* WizardSheetBadgeText.swift in Sources */,
 				5BE281C42AE2CCC300880466 /* AuthorStoryView.swift in Sources */,

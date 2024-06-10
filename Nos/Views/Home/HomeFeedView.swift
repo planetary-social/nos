@@ -97,6 +97,7 @@ struct HomeFeedView: View {
                             authors.nsPredicate = user.followedWithNewNotesPredicate(
                                 since: storiesCutoffDate
                             )
+                            Task { await downloadStories() }
                             return Event.homeFeed(for: user, before: lastRefreshDate)
                         }
                     )

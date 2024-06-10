@@ -59,7 +59,7 @@ import Dependencies
     }
     
     /// Pushes a detail view for the note with the given ID, creating one if needed.
-    func push(noteWithID id: RawEventID) {
+    func pushNote(id: RawEventID) {
         do {
             let note = try Event.findOrCreateStubBy(id: id, context: persistenceController.viewContext)
             push(note)
@@ -75,7 +75,7 @@ import Dependencies
     }
     
     /// Pushes a profile view for the author with the given ID, creating one if needed.
-    func push(authorWithID id: RawAuthorID) {
+    func pushAuthor(id: RawAuthorID) {
         do {
             let author = try Author.findOrCreate(by: id, context: persistenceController.viewContext)
             push(author)
@@ -151,7 +151,7 @@ extension Router {
                         try await handleNIP05Link(identifier)
                     }
                 } else if link.hasPrefix("%") {
-                    push(noteWithID: identifier)
+                    pushNote(id: identifier)
                 } else if url.scheme == "http" || url.scheme == "https" {
                     push(url)
                 } else {
@@ -164,7 +164,7 @@ extension Router {
     }
 
     public func handleHexadecimalPublicKey(_ hex: String) throws {
-        push(authorWithID: hex)
+        pushAuthor(id: hex)
     }
 
     private func handleNIP05Link(_ link: String) async throws {
@@ -176,7 +176,7 @@ extension Router {
             )
         isLoading = false
         if let npub, let publicKey = PublicKey.build(npubOrHex: npub) {
-            push(authorWithID: publicKey.hex)
+            pushAuthor(id: publicKey.hex)
         } else if let url = URL(string: "mailto:\(link)") {
             await UIApplication.shared.open(url)
         } else {
