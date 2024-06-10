@@ -5,8 +5,6 @@ import Dependencies
 
 enum DatabaseCleaner {
     
-    // swiftlint:disable function_body_length 
-    
     /// Deletes unneeded entities from Core Data.
     ///
     /// This should only be called once right at app launch.
@@ -31,45 +29,17 @@ enum DatabaseCleaner {
         
         try await context.perform {
             
-            guard let currentAuthor = try? Author.find(by: authorKey, context: context) else {
+            guard let currentUser = try? Author.find(by: authorKey, context: context) else {
                 return
             }
             
-            let oldEventReferencesRequest = EventReference.all()
-            oldEventReferencesRequest.predicate = NSPredicate(
-                format: "referencedEvent.receivedAt < %@ AND referencingEvent.receivedAt < %@",
-                deleteBefore as CVarArg,
-                deleteBefore as CVarArg
-            )
-            
-            let oldStoryCutoff = Calendar.current.date(byAdding: .day, value: -2, to: .now) ?? .now
-            
-            // Delete events older than `deleteBefore`
-            let oldEventsRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
-            oldEventsRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
-            let oldEventClause = "(receivedAt < %@ OR receivedAt == nil) AND referencingEvents.@count = 0"
-            let notOwnEventClause = "(author.hexadecimalPublicKey != %@)"
-            let readStoryClause = "(isRead = 1 AND receivedAt > %@)"
-            let userReportClause = "(kind == \(EventKind.report.rawValue) AND " +
-            "authorReferences.@count > 0 AND eventReferences.@count == 0)"
-            let clauses = "\(oldEventClause) AND" +
-            "\(notOwnEventClause) AND " +
-            "NOT \(readStoryClause) AND " +
-            "NOT \(userReportClause)"
-            oldEventsRequest.predicate = NSPredicate(
-                format: clauses,
-                deleteBefore as CVarArg,
-                authorKey,
-                oldStoryCutoff as CVarArg
-            )
-            
             let deleteRequests: [NSPersistentStoreRequest] = [
-                oldEventReferencesRequest,
-                oldEventsRequest,
+                EventReference.all(before: deleteBefore),
+                Event.cleanupRequest(before: deleteBefore, for: currentUser),
                 Event.expiredRequest(),
                 EventReference.orphanedRequest(),
                 AuthorReference.orphanedRequest(),
-                Author.outOfNetwork(for: currentAuthor),
+                Author.outOfNetwork(for: currentUser),
                 Follow.orphanedRequest(),
                 Relay.orphanedRequest(),
                 NosNotification.oldNotificationsRequest(),
@@ -99,5 +69,4 @@ enum DatabaseCleaner {
         let elapsedTime = Date.now.timeIntervalSince1970 - startTime.timeIntervalSince1970 
         Log.info("Finished Core Data cleanup in \(elapsedTime) seconds.")
     }
-    // swiftlint:enable function_body_length    
 }

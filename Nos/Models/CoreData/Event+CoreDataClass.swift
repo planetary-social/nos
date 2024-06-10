@@ -342,6 +342,37 @@ public class Event: NosManagedObject, VerifiableEvent {
         return fetchRequest
     }
     
+    /// A fetch requests for all the events that should be cleared out of the database by 
+    /// `DatabaseCleaner.cleanupEntities(...)`.
+    ///
+    /// It will save the events for the given `user`, as well as other important events matching various other
+    /// criteria.
+    /// - Parameter before: The date before which events will be considered for cleanup. 
+    /// - Parameter user: The Author record for the currently logged in user. Special treatment is given to their data.
+    @nonobjc public class func cleanupRequest(before date: Date, for user: Author) -> NSFetchRequest<Event> {
+        let oldStoryCutoff = Calendar.current.date(byAdding: .day, value: -2, to: .now) ?? .now
+        
+        let request = NSFetchRequest<Event>(entityName: "Event")
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
+        let oldEventClause = "(receivedAt < %@ OR receivedAt == nil) AND referencingEvents.@count = 0"
+        let notOwnEventClause = "(author != %@)"
+        let readStoryClause = "(isRead = 1 AND receivedAt > %@)"
+        let userReportClause = "(kind == \(EventKind.report.rawValue) AND " +
+        "authorReferences.@count > 0 AND eventReferences.@count == 0)"
+        let clauses = "\(oldEventClause) AND" +
+        "\(notOwnEventClause) AND " +
+        "NOT \(readStoryClause) AND " +
+        "NOT \(userReportClause)"
+        request.predicate = NSPredicate(
+            format: clauses,
+            date as CVarArg,
+            user,
+            oldStoryCutoff as CVarArg
+        )
+        
+        return request
+    }
+    
     @nonobjc public class func expiredRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "expirationDate <= %@", Date.now as CVarArg)

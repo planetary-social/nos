@@ -33,6 +33,18 @@ public class EventReference: NosManagedObject {
         return fetchRequest
     }
     
+    /// A request for all the references whose associated `Events` were received before the given date.
+    static func all(before date: Date) -> NSFetchRequest<EventReference> {
+        let fetchRequest = NSFetchRequest<EventReference>(entityName: "EventReference")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \EventReference.eventId, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "referencedEvent.receivedAt < %@ AND referencingEvent.receivedAt < %@",
+            date as CVarArg,
+            date as CVarArg
+        )
+        return fetchRequest
+    }
+    
     /// Retreives all the EventReferences whose referencing Event has been deleted.
     static func orphanedRequest() -> NSFetchRequest<EventReference> {
         let fetchRequest = NSFetchRequest<EventReference>(entityName: "EventReference")
