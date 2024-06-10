@@ -226,4 +226,27 @@ final class AuthorTests: CoreDataTestCase {
         // Assert
         XCTAssertEqual(events.count, 0)
     }
+    
+    func test_outOfNetwork_givenCircleOfFollows() throws {
+        // Arrange
+        let alice = try Author.findOrCreate(by: "alice", context: testContext)
+        let bob   = try Author.findOrCreate(by: "bob", context: testContext)
+        let carl  = try Author.findOrCreate(by: "carl", context: testContext)
+        let eve   = try Author.findOrCreate(by: "eve", context: testContext)
+        
+        // Act
+        // Create a circle of follows alice -> bob -> carl -> eve -> alice
+        _ = try Follow.findOrCreate(source: alice, destination: bob, context: testContext)
+        _ = try Follow.findOrCreate(source: bob, destination: carl, context: testContext)
+        _ = try Follow.findOrCreate(source: carl, destination: eve, context: testContext)
+        _ = try Follow.findOrCreate(source: eve, destination: alice, context: testContext)
+        
+        try testContext.saveIfNeeded()
+        
+        // Act 
+        let authors = try testContext.fetch(Author.outOfNetwork(for: alice))
+        
+        // Assert
+        XCTAssertEqual(authors, [eve])
+    }
 }
