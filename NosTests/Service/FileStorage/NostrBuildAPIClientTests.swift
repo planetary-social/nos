@@ -107,7 +107,7 @@ class NostrBuildAPIClientTests: XCTestCase {
         let expectedAuthorization = "Nostr \(requestData.base64EncodedString())"
 
         // Act
-        let (uploadRequest, data) = try subject.uploadRequest(fileAt: fileURL)
+        let (uploadRequest, _) = try subject.uploadRequest(fileAt: fileURL)
 
         // Assert
         XCTAssertEqual(uploadRequest.value(forHTTPHeaderField: "Authorization"), expectedAuthorization)
