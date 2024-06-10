@@ -342,7 +342,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         return fetchRequest
     }
     
-    /// A fetch requests for all the events that should be cleared out of the database by 
+    /// A fetch request for all the events that should be cleared out of the database by 
     /// `DatabaseCleaner.cleanupEntities(...)`.
     ///
     /// It will save the events for the given `user`, as well as other important events matching various other
