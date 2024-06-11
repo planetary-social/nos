@@ -30,7 +30,7 @@ struct NosApp: App {
                 .environmentObject(pushNotificationService)
                 .onOpenURL { DeepLinkService.handle($0, router: router) }
                 .task {
-                    persistenceController.cleanupEntities()
+                    await persistenceController.cleanupEntities()
                 }
                 .onChange(of: scenePhase) { _, newPhase in
                     // TODO: save all contexts, not just the view and background.
