@@ -110,11 +110,20 @@ struct ReportMenuModifier: ViewModifier {
             }
             
         case .authorCategorySelected(let category):
-            // For the moment, users skip the private vs public report menu and
-            // directly go to the public report until we implement user reports
-            // for reportinator
-            self.userSelection = .flagPublicly(category)
-            confirmReport = true
+            Task {
+                confirmationDialogState = ConfirmationDialogState(
+                    title: TextState(String(localized: .localizable.reportActionTitle(category.displayName))),
+                    message: TextState(String(localized: .localizable.reportActionTitle(category.displayName))),
+                    buttons: [
+                        ButtonState(action: .send(.sendToNos(category))) {
+                            TextState("Send to Nos")
+                        },
+                        ButtonState(action: .send(.flagPublicly(category))) {
+                            TextState("Flag Publicly")
+                        }
+                    ]
+                )
+            }
             
         case .sendToNos, .flagPublicly:
             confirmReport = true
@@ -142,9 +151,9 @@ struct ReportMenuModifier: ViewModifier {
         var displayName: String {
             switch self {
             case .noteCategorySelected(let category),
-                .authorCategorySelected(let category),
-                .sendToNos(let category),
-                .flagPublicly(let category):
+                    .authorCategorySelected(let category),
+                    .sendToNos(let category),
+                    .flagPublicly(let category):
                 return category.displayName
             }
         }
