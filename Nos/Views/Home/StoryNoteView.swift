@@ -21,7 +21,6 @@ struct StoryNoteView: View {
     @State private var intrinsicSize = CGSize.zero
 
     @EnvironmentObject private var router: Router
-    @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.persistenceController) private var persistenceController
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
@@ -58,10 +57,7 @@ struct StoryNoteView: View {
             .foregroundColor(.primaryTxt)
             .tint(.accent)
             .padding(padding)
-            .environment(\.openURL, OpenURLAction { url in
-                router.open(url: url, with: viewContext)
-                return .handled
-            })
+            .handleURLsInRouter()
     }
 
     var noteText: some View {

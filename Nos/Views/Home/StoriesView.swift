@@ -21,6 +21,10 @@ struct StoriesView: View {
     @Binding private var cutoffDate: Date
 
     @ObservationIgnored @Dependency(\.analytics) private var analytics
+    
+    @Dependency(\.relayService) private var relayService
+    
+    @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
 
     init(
         cutoffDate: Binding<Date>,
@@ -37,13 +41,22 @@ struct StoriesView: View {
         VStack {
             TabView(selection: $selectedAuthor) {
                 ForEach(authors) { author in
-                    AuthorStoryView(
-                        author: author,
-                        cutoffDate: $cutoffDate,
-                        showPreviousAuthor: { self.showPreviousAuthor(from: self.authors) },
-                        showNextAuthor: { self.showNextAuthor(from: self.authors) }
-                    )
-                    .tag(author)
+                    AuthorObservationView(authorID: author.hexadecimalPublicKey) { author in
+                        AuthorStoryView(
+                            author: author,
+                            cutoffDate: $cutoffDate,
+                            showPreviousAuthor: { self.showPreviousAuthor(from: self.authors) },
+                            showNextAuthor: { self.showNextAuthor(from: self.authors) }
+                        )
+                        .tag(author)
+                    }
+                    .task {
+                        subscriptions[author.id] =
+                        await relayService.requestMetadata(
+                            for: author.hexadecimalPublicKey,
+                            since: author.lastUpdatedMetadata
+                        )
+                    }
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))

@@ -348,9 +348,10 @@ public class Event: NosManagedObject, VerifiableEvent {
         return fetchRequest
     }
     
-    @nonobjc public class func event(by identifier: String) -> NSFetchRequest<Event> {
+    @nonobjc public class func event(by identifier: RawEventID) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.identifier, ascending: true)]
         fetchRequest.fetchLimit = 1
         return fetchRequest
     }
