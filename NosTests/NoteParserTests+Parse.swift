@@ -31,6 +31,8 @@ extension NoteParserTests {
             at: editableNoteText.attributedString.endIndex
         )
 
+        // UITextViews use a NSTextStorage instance that can update the actual
+        // NSAttributedString we set.
         let textStorage = NSTextStorage()
         textStorage.setAttributedString(editableNoteText.nsAttributedString)
         let result = textStorage.attributedSubstring(
@@ -70,6 +72,9 @@ extension NoteParserTests {
             at: editableNoteText.attributedString.endIndex
         )
 
+        // UITextViews use a NSTextStorage instance that can update the actual
+        // NSAttributedString we set.
+        // In the case of emojis, it modifies the font.
         let textStorage = NSTextStorage()
         textStorage.setAttributedString(editableNoteText.nsAttributedString)
         let result = textStorage.attributedSubstring(
