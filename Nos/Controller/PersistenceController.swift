@@ -198,9 +198,7 @@ class PersistenceController {
         
         let context = newBackgroundContext()
         do {
-            // We don't want to delete any events downloaded after app boot, so we subtract 60 seconds 
-            let cleanupBeforeDate = Date.now - 60 
-            try await DatabaseCleaner.cleanupEntities(before: cleanupBeforeDate, for: authorKey, in: context)
+            try await DatabaseCleaner.cleanupEntities(for: authorKey, in: context)
         } catch {
             Log.optional(error)
             crashReporting.report("Error in database cleanup: \(error.localizedDescription)")

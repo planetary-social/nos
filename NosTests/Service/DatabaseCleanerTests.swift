@@ -5,7 +5,7 @@ final class DatabaseCleanerTests: CoreDataTestCase {
     
     func test_emptyDatabase() async throws {
         // Act
-        try await DatabaseCleaner.cleanupEntities(before: Date.now, for: KeyFixture.alice.publicKeyHex, in: testContext)
+        try await DatabaseCleaner.cleanupEntities(for: KeyFixture.alice.publicKeyHex, in: testContext)
         
         // Assert that the database is still empty
         let managedObjectModel = try XCTUnwrap(testContext.persistentStoreCoordinator?.managedObjectModel)
@@ -22,7 +22,6 @@ final class DatabaseCleanerTests: CoreDataTestCase {
     
     func test_cleanup_deletesCorrectEventReferences() async throws {
         // Arrange
-        let deleteBeforeDate = Date(timeIntervalSince1970: 10)
         let user = KeyFixture.alice
         _ = try Author.findOrCreate(by: user.publicKeyHex, context: testContext)
         let oldEventOne = try EventFixture.build(in: testContext, receivedAt: Date(timeIntervalSince1970: 9))
@@ -43,9 +42,9 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         
         // Act 
         try await DatabaseCleaner.cleanupEntities(
-            before: deleteBeforeDate, 
             for: KeyFixture.alice.publicKeyHex, 
-            in: testContext
+            in: testContext,
+            keeping: 1
         )
         
         // Assert
@@ -56,7 +55,6 @@ final class DatabaseCleanerTests: CoreDataTestCase {
     }
     
     func test_cleanup_savesReferencedEvents() async throws {
-        let deleteBeforeDate = Date(timeIntervalSince1970: 10)
         let user = KeyFixture.alice
         _ = try Author.findOrCreate(by: user.publicKeyHex, context: testContext)
         
@@ -72,9 +70,9 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         
         // Act 
         try await DatabaseCleaner.cleanupEntities(
-            before: deleteBeforeDate, 
             for: KeyFixture.alice.publicKeyHex, 
-            in: testContext
+            in: testContext,
+            keeping: 1
         )
         
         // Assert
@@ -84,8 +82,36 @@ final class DatabaseCleanerTests: CoreDataTestCase {
     
     // MARK: - Events
     
+    func test_cleanup_keepsNEvents() async throws {
+        let user = KeyFixture.alice
+        _ = try Author.findOrCreate(by: user.publicKeyHex, context: testContext)
+        var events = [Event]()
+        for i in 0..<10 {
+            let date = Date(timeIntervalSince1970: TimeInterval(i))
+            events.append(
+                try EventFixture.build(
+                    in: testContext, 
+                    createdAt: date,
+                    receivedAt: date
+                ) 
+            )
+        }
+        
+        try testContext.save()
+        
+        // Act 
+        try await DatabaseCleaner.cleanupEntities(
+            for: KeyFixture.alice.publicKeyHex, 
+            in: testContext,
+            keeping: 5
+        )
+        
+        // Assert
+        let fetchedEvents = try testContext.fetch(Event.allEventsRequest())
+        XCTAssertEqual(fetchedEvents.map { $0.identifier }, events.suffix(5).map { $0.identifier })
+    }
+    
     func test_cleanup_deletesOldEvents() async throws {
-        let deleteBeforeDate = Date(timeIntervalSince1970: 10)
         let user = KeyFixture.alice
         _ = try Author.findOrCreate(by: user.publicKeyHex, context: testContext)
         _ = try EventFixture.build(in: testContext, receivedAt: Date(timeIntervalSince1970: 9)) // old event
@@ -95,9 +121,9 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         
         // Act 
         try await DatabaseCleaner.cleanupEntities(
-            before: deleteBeforeDate, 
             for: KeyFixture.alice.publicKeyHex, 
-            in: testContext
+            in: testContext,
+            keeping: 1
         )
         
         // Assert
@@ -125,7 +151,6 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         
         // Act 
         try await DatabaseCleaner.cleanupEntities(
-            before: Date.now, 
             for: KeyFixture.alice.publicKeyHex, 
             in: testContext
         )
@@ -156,7 +181,6 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         
         // Act 
         try await DatabaseCleaner.cleanupEntities(
-            before: Date.now, 
             for: KeyFixture.alice.publicKeyHex, 
             in: testContext
         )
