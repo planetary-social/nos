@@ -9944,6 +9944,17 @@
         }
       }
     },
+    "reportAuthorSendToNosConfirmation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos will review this flag and apply it anonymously if the review matches the category."
+          }
+        }
+      }
+    },
     "reportContent" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -10149,7 +10160,7 @@
         }
       }
     },
-    "reportSendToNosConfirmation" : {
+    "reportNoteSendToNosConfirmation" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {

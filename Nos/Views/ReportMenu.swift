@@ -39,7 +39,8 @@ struct ReportMenuModifier: ViewModifier {
                     }
                 },
                 message: {
-                    Text(userSelection?.confirmationAlertMessage ?? String(localized: .localizable.error))
+                    let text = getAlertMessage(for: userSelection, with: reportedObject)
+                    Text(text)
                 }
             )
         // Mute user menu
@@ -151,20 +152,28 @@ struct ReportMenuModifier: ViewModifier {
         var displayName: String {
             switch self {
             case .noteCategorySelected(let category),
-                    .authorCategorySelected(let category),
-                    .sendToNos(let category),
-                    .flagPublicly(let category):
+                .authorCategorySelected(let category),
+                .sendToNos(let category),
+                .flagPublicly(let category):
                 return category.displayName
             }
         }
         
-        var confirmationAlertMessage: String {
+        func confirmationAlertMessage(for reportedObject: ReportTarget) -> String {
             switch self {
             case .sendToNos(let category):
-                return String(localized: .localizable.reportSendToNosConfirmation(category.displayName))
+                switch reportedObject {
+                case .note:
+                    return String(localized: .localizable.reportNoteSendToNosConfirmation(category.displayName))
+                case .author:
+                    return String(localized: .localizable.reportAuthorSendToNosConfirmation)
+                }
+                
             case .flagPublicly(let category):
                 return String(localized: .localizable.reportFlagPubliclyConfirmation(category.displayName))
-            case .noteCategorySelected(let category), .authorCategorySelected(let category):
+                
+            case .noteCategorySelected(let category),
+                .authorCategorySelected(let category):
                 return String(localized: .localizable.reportFlagPubliclyConfirmation(category.displayName))
             }
         }
@@ -219,6 +228,10 @@ struct ReportMenuModifier: ViewModifier {
             category: selectedCategory,
             context: viewContext
         )
+    }
+    
+    func getAlertMessage(for userSelection: UserSelection?, with reportedObject: ReportTarget) -> String {
+        userSelection?.confirmationAlertMessage(for: reportedObject) ?? String(localized: .localizable.error)
     }
 }
 
