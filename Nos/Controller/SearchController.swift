@@ -111,10 +111,9 @@ class SearchController: ObservableObject {
     }
     
     func authors(named name: String) -> [Author] {
-        if let publicKey = PublicKey(npub: name),
-            let author = try? Author.findOrCreate(by: publicKey.hex, context: context) {
+        if let publicKey = PublicKey(npub: name) {
             Task { @MainActor in
-                router.push(author)
+                router.pushAuthor(id: publicKey.hex)
             }
             clear()
             return []
@@ -225,9 +224,7 @@ class SearchController: ObservableObject {
                 if let publicKeyHex =
                     await relayService.retrievePublicKeyFromUsername(trimmedQuery) {
                     Task { @MainActor in
-                        if let author = author(fromPublicKey: publicKeyHex) {
-                            router.push(author)
-                        }
+                        router.pushAuthor(id: publicKeyHex)
                     }
                 }
             }

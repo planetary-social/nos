@@ -16,7 +16,7 @@ struct ProfileSocialStatsView: View {
         HStack(spacing: 0) {
             spacer
             Button {
-                router.currentPath.wrappedValue.append(
+                router.push(
                     FollowsDestination(
                         author: author,
                         follows: followsResult.compactMap { $0.destination }
@@ -27,7 +27,7 @@ struct ProfileSocialStatsView: View {
             }
             spacer
             Button {
-                router.currentPath.wrappedValue.append(
+                router.push(
                     RelaysDestination(
                         author: author,
                         relays: author.relays.map { $0 }
