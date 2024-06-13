@@ -240,7 +240,7 @@ import Combine
                     return
                 }
                 self.router.selectedTab = .notifications
-                self.router.notificationsPath.append(event.referencedNote() ?? event)
+                self.router.push(event.referencedNote() ?? event)
             }
         }
     }

@@ -3,10 +3,6 @@ import SwiftUI
 import SwiftUINavigation
 import Dependencies
 
-struct ReplyToNavigationDestination: Hashable {
-    var note: Event
-}
-
 struct RepliesView: View {
     @Environment(\.managedObjectContext) private var viewContext
     

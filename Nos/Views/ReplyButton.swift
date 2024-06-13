@@ -11,7 +11,7 @@ struct ReplyButton: View {
             if let replyAction {
                 replyAction(note)
             } else {
-                router.push(ReplyToNavigationDestination(note: note))
+                router.push(.replyTo(note.identifier))
             }
         }, label: {
             Image.buttonReply

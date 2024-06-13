@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+ 
+- Added our third cohort of creators and journalists to the Discover tab.
+
+## [0.1.17] - 2024-06-10Z
 
 - Fixed a bug where infinite spinners would be shown on reposted notes.
 - Added support for opening njump.me content in Nos.

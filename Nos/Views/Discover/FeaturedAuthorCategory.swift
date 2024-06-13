@@ -37,7 +37,7 @@ enum FeaturedAuthorCategory: CaseIterable {
         case .all:
             FeaturedAuthor.all.map { $0.npub }
         case .new:
-            FeaturedAuthor.cohort2.map { $0.npub }
+            FeaturedAuthor.cohort3.map { $0.npub }
         default:
             FeaturedAuthor.all.filter { $0.categories.contains(self) }
                 .map { $0.npub }

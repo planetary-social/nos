@@ -147,7 +147,7 @@ struct ProfileHeader: View {
 
                 if let first = knownFollowers[safe: 0]?.source {
                     Button {
-                        router.currentPath.wrappedValue.append(
+                        router.push(
                             FollowersDestination(
                                 author: author,
                                 followers: followersResult.compactMap { $0.source }

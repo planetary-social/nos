@@ -1,4 +1,5 @@
 import SwiftUI
+import Dependencies
 
 /// Shows a scrollable horizontal feed of authors who have unread stories.
 struct AuthorStoryCarousel: View {
@@ -7,6 +8,9 @@ struct AuthorStoryCarousel: View {
     @Binding var selectedStoryAuthor: Author?
     
     @EnvironmentObject private var router: Router
+    @Dependency(\.relayService) private var relayService
+    
+    @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -17,14 +21,23 @@ struct AuthorStoryCarousel: View {
                             selectedStoryAuthor = author
                         }
                     } label: {
-                        StoryAvatarView(author: author)
-                            .contextMenu {
-                                Button {
-                                    router.push(author)
-                                } label: {
-                                    Text(.localizable.seeProfile)
+                        AuthorObservationView(authorID: author.hexadecimalPublicKey) { author in
+                            StoryAvatarView(author: author)
+                                .contextMenu {
+                                    Button {
+                                        router.push(author)
+                                    } label: {
+                                        Text(.localizable.seeProfile)
+                                    }
                                 }
-                            }
+                        }
+                        .task {
+                            subscriptions[author.id] =
+                            await relayService.requestMetadata(
+                                for: author.hexadecimalPublicKey,
+                                since: author.lastUpdatedMetadata
+                            )
+                        }
                     } 
                 }
             }
