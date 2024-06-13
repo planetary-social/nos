@@ -814,7 +814,6 @@ public class Event: NosManagedObject, VerifiableEvent {
         }
         loadingAttributedContent = true
         defer { loadingAttributedContent = false }
-        Log.debug("loading attributed content for \(identifier)")
         
         @Dependency(\.persistenceController) var persistenceController
         let backgroundContext = persistenceController.backgroundViewContext
