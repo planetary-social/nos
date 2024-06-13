@@ -42,8 +42,8 @@ struct EditableNoteText: Equatable {
         foregroundColor: UIColor = .primaryTxt
     ) {
         self.defaultNSAttributes = [
-           .font: font,
-           .foregroundColor: foregroundColor
+            .font: font,
+            .foregroundColor: foregroundColor
         ]
         self.attributedString = AttributedString(nsAttributedString)
     }
