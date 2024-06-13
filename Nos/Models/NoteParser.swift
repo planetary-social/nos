@@ -148,33 +148,46 @@ struct NoteParser {
     }
 
     private func cleanLinks(
-        in attributedString: AttributedString, 
+        in attributedString: AttributedString,
         tags: [[String]] = []
     ) -> (String, [[String]]) {
-        var mutableAttributedString = attributedString
-        for attributedRun in mutableAttributedString.runs {
-            if let link = attributedRun.attributes.link {
-                var mutableAttributes = attributedRun.attributes
-                mutableAttributes.link = nil
-                mutableAttributedString.replaceSubrange(
-                    attributedRun.range,
-                    with: AttributedString("\(link.absoluteString)", attributes: mutableAttributes)
-                )
-                if link.scheme == "nostr" {
-                    let components = URLComponents(url: link, resolvingAgainstBaseURL: false)
-                    if let npub = components?.path, let publicKey = PublicKey(npub: npub) {
-                        return cleanLinks(
-                            in: mutableAttributedString,
-                            tags: tags + [["p", publicKey.hex]]
-                        )
-                    } else {
-                        return cleanLinks(in: mutableAttributedString, tags: tags)
-                    }
-                } else {
-                    return cleanLinks(in: mutableAttributedString, tags: tags)
-                }
-            }
+        var attributedString = attributedString
+        let runs = attributedString.runs
+        let isLink = { (run: AttributedString.Runs.Run) in
+            run.link != nil
         }
-        return (String(attributedString.characters), tags)
+        var links: [AttributedString.Runs.Run] = runs.filter(isLink).reversed()
+        guard let firstRun = links.popLast(), let link = firstRun.link else {
+            return (String(attributedString.characters), tags)
+        }
+        var attributes = firstRun.attributes
+        var range = firstRun.range
+        while let nextRun = links.popLast(),
+              nextRun.range.lowerBound == firstRun.range.upperBound,
+              nextRun.link == firstRun.link {
+            range = range.lowerBound..<nextRun.range.upperBound
+            attributes.merge(nextRun.attributes)
+        }
+        attributes.link = nil
+        attributedString.replaceSubrange(
+            range,
+            with: AttributedString(
+                "\(link.absoluteString)",
+                attributes: attributes
+            )
+        )
+        if link.scheme == "nostr" {
+            let components = URLComponents(url: link, resolvingAgainstBaseURL: false)
+            if let npub = components?.path, let publicKey = PublicKey(npub: npub) {
+                return cleanLinks(
+                    in: attributedString,
+                    tags: tags + [["p", publicKey.hex]]
+                )
+            } else {
+                return cleanLinks(in: attributedString, tags: tags)
+            }
+        } else {
+            return cleanLinks(in: attributedString, tags: tags)
+        }
     }
 }
