@@ -1,14 +1,10 @@
-//
-//  NoteParserTests+Parse.swift
-//  NosTests
-//
-//  Created by Martin Dutra on 11/6/24.
-//
-
 import Foundation
 import UIKit
 import XCTest
 
+/// Collection of tests that exercise NoteParser.parse() function. This fubction
+/// is the one Nos uses for converting editor generated text to note content
+/// when publishing.
 extension NoteParserTests {
 
     func testMention() throws {
@@ -32,7 +28,8 @@ extension NoteParserTests {
         )
 
         // UITextViews use a NSTextStorage instance that can update the actual
-        // NSAttributedString we set.
+        // NSAttributedString we set. So, lets better use it here so we mimic
+        // the same behavior.
         let textStorage = NSTextStorage()
         textStorage.setAttributedString(editableNoteText.nsAttributedString)
         let result = textStorage.attributedSubstring(
@@ -44,7 +41,7 @@ extension NoteParserTests {
 
         // Act
         let expected = "nostr:\(npub) "
-        let (content, tags) = sut.parse(
+        let (content, _) = sut.parse(
             attributedText: AttributedString(result)
         )
 
@@ -73,7 +70,8 @@ extension NoteParserTests {
         )
 
         // UITextViews use a NSTextStorage instance that can update the actual
-        // NSAttributedString we set.
+        // NSAttributedString we set. So, lets better use it here so we mimic
+        // the same behavior.
         // In the case of emojis, it modifies the font.
         let textStorage = NSTextStorage()
         textStorage.setAttributedString(editableNoteText.nsAttributedString)
@@ -86,12 +84,11 @@ extension NoteParserTests {
 
         // Act
         let expected = "nostr:\(npub) "
-        let (content, tags) = sut.parse(
+        let (content, _) = sut.parse(
             attributedText: AttributedString(result)
         )
 
         // Assert
         XCTAssertEqual(content, expected)
     }
-
 }
