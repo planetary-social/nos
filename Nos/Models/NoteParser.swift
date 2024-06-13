@@ -153,8 +153,8 @@ struct NoteParser {
     ) -> (String, [[String]]) {
         var attributedString = attributedString
         let runs = attributedString.runs
-        let isLink = { (run: AttributedString.Runs.Run) in
-            run.link != nil
+        let isLink = { (attributedRun: AttributedString.Runs.Run) in
+            attributedRun.link != nil
         }
         var links: [AttributedString.Runs.Run] = runs.filter(isLink).reversed()
         guard let firstRun = links.popLast(), let link = firstRun.link else {
@@ -163,8 +163,8 @@ struct NoteParser {
         var attributes = firstRun.attributes
         var range = firstRun.range
         while let nextRun = links.popLast(),
-              nextRun.range.lowerBound == firstRun.range.upperBound,
-              nextRun.link == firstRun.link {
+            nextRun.range.lowerBound == firstRun.range.upperBound,
+            nextRun.link == firstRun.link {
             range = range.lowerBound..<nextRun.range.upperBound
             attributes.merge(nextRun.attributes)
         }
