@@ -34,6 +34,17 @@ struct RelayView: View {
     var body: some View {
         List {
             Section {
+                VStack(alignment: .leading) {
+                    Text(.localizable.relaysImportant)
+                        .fontWeight(.semibold)
+                    Text(.localizable.relaysNosWorksBest)
+                        .fontWeight(.semibold)
+                }
+            }
+            .listRowBackground(Color.clear)
+            .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+
+            Section {
                 ForEach(relays) { relay in
                     VStack(alignment: .leading) {
                         if relay.hasMetadata {

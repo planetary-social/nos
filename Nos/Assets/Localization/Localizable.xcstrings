@@ -9933,6 +9933,28 @@
         }
       }
     },
+    "relaysImportant" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IMPORTANT!"
+          }
+        }
+      }
+    },
+    "relaysNosWorksBest" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos works best with 5 or fewer relays."
+          }
+        }
+      }
+    },
     "reportActionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
