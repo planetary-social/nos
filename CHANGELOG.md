@@ -8,7 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Fixed a bug where @npubs were displayed instead of names in note text.
+- Fixed a bug where @npubs could be displayed instead of names in note text.
+- Added "Send To Nos" private reporting for profiles.
+- Added our third cohort of creators and journalists to the Discover tab.
+- Fixed a bug where taking a photo in the app didn’t work.
 
 ## [0.1.17] - 2024-06-10Z
 
