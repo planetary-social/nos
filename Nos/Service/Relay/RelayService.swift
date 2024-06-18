@@ -460,15 +460,16 @@ extension RelayService {
         urlRequest.timeoutInterval = 10
         let socket = WebSocket(request: urlRequest, compressionHandler: .none)
         
-        // Make sure the socket doesn't stay open too long
-        let task = Task(timeout: 10) {
+        let timeoutTask = Task {
+            try? await Task.sleep(nanoseconds: UInt64(10 * 1_000_000_000))
             Log.info("Socket to \(url.absoluteString) timed out, disconnecting")
             socket.disconnect()
         }
+        
         return await withCheckedContinuation({ continuation in
-            
             var written = false
             var continued = false
+            
             socket.onEvent = { (event: WebSocketEvent) in
                 switch event {
                 case WebSocketEvent.connected:
@@ -492,14 +493,13 @@ extension RelayService {
                     Log.optional(error, "failed to send message: \(message) to websocket")
                     socket.disconnect()
                 case WebSocketEvent.disconnected, WebSocketEvent.cancelled:
-                    task.cancel()
+                    timeoutTask.cancel()
                     if !continued {
                         continuation.resume()
                         continued = true
                     }
                     
-                    // For all previous cases, we are done, so we cleanup and resume async.
-                    // For the rest of the messages, we just ignore and wait
+                // For the rest of the messages, we just ignore and wait
                 default:
                     return
                 }
