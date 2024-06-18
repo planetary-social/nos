@@ -36,13 +36,13 @@ struct RelayView: View {
             Section {
                 VStack(alignment: .leading) {
                     Text(.localizable.relaysImportant)
-                        .fontWeight(.semibold)
+                        .font(.clarity(.semibold))
                     Text(.localizable.relaysNosWorksBest)
-                        .fontWeight(.semibold)
+                        .font(.clarity(.semibold))
                 }
             }
             .listRowBackground(Color.clear)
-            .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+            .listRowInsets(EdgeInsets())
 
             Section {
                 ForEach(relays) { relay in
@@ -52,12 +52,10 @@ struct RelayView: View {
                                 RelayDetailView(relay: relay)
                             } label: {
                                 Text(relay.address ?? String(localized: .localizable.error))
-                                    .font(.clarity(.regular))
                                     .foregroundColor(.primaryTxt)
                             }
                         } else {
                             Text(relay.address ?? String(localized: .localizable.error))
-                                .font(.clarity(.regular))
                                 .foregroundColor(.primaryTxt)
                                 .textSelection(.enabled)
                         }
@@ -89,7 +87,10 @@ struct RelayView: View {
                 if editable {
                     Text(.localizable.relays)
                         .foregroundColor(.primaryTxt)
-                        .font(.clarity(.bold))
+                        .font(.clarity(.semibold, textStyle: .headline))
+                        .padding(.bottom, 15)
+                        .textCase(nil)
+                        .listRowInsets(EdgeInsets())
                 }
             }
             .deleteDisabled(!editable)
@@ -119,7 +120,10 @@ struct RelayView: View {
                 } header: {
                     Text(.localizable.recommendedRelays)
                         .foregroundColor(.primaryTxt)
-                        .font(.clarity(.bold))
+                        .font(.clarity(.semibold, textStyle: .headline))
+                        .padding(.vertical, 15)
+                        .textCase(nil)
+                        .listRowInsets(EdgeInsets())
                 }
                 .listRowBackground(LinearGradient(
                     colors: [Color.cardBgTop, Color.cardBgBottom],
@@ -130,24 +134,29 @@ struct RelayView: View {
             
             if editable {
                 Section {
-                    TextField(String(localized: .localizable.relayAddressPlaceholder), text: $newRelayAddress)
-                        .foregroundColor(.primaryTxt)
-                        .autocorrectionDisabled()
-                        #if os(iOS)
-                        .textInputAutocapitalization(.none)
-                        .keyboardType(.URL)
-                        #endif
-                    Button(String(localized: .localizable.save)) {
-                        addRelay()
-                        Task {
-                            await currentUser.subscribe()
-                            await publishChanges()
+                    HStack {
+                        TextField(String(localized: .localizable.relayAddressPlaceholder), text: $newRelayAddress)
+                            .foregroundColor(.primaryTxt)
+                            .autocorrectionDisabled()
+                            #if os(iOS)
+                            .textInputAutocapitalization(.never)
+                            .keyboardType(.URL)
+                            #endif
+                        SecondaryActionButton(title: .localizable.save) {
+                            addRelay()
+                            Task {
+                                await currentUser.subscribe()
+                                await publishChanges()
+                            }
                         }
                     }
                 } header: {
                     Text(.localizable.addRelay)
                         .foregroundColor(.primaryTxt)
-                        .font(.clarity(.bold))
+                        .font(.clarity(.semibold, textStyle: .headline))
+                        .padding(.vertical, 15)
+                        .textCase(nil)
+                        .listRowInsets(EdgeInsets())
                 }
                 .listRowBackground(LinearGradient(
                     colors: [Color.cardBgTop, Color.cardBgBottom],
