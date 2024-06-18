@@ -65,7 +65,7 @@ struct NoteCard: View {
                         if !warningController.showWarning {
                             if let author = note.author {
                                 Button {
-                                    router.currentPath.wrappedValue.append(author)
+                                    router.push(author)
                                 } label: {
                                     NoteCardHeader(note: note, author: author)
                                 }

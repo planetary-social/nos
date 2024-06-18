@@ -109,6 +109,9 @@ struct SideMenuContent: View {
                     AboutView()
                 }
             }
+            .navigationDestination(for: EditProfileDestination.self) { destination in
+                ProfileEditView(author: destination.profile)
+            }
         }
     }
 }

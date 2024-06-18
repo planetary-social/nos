@@ -8,6 +8,11 @@ enum Tagr {
     static var publicKey = PublicKey(npub: "npub12m2t8433p7kmw22t0uzp426xn30lezv3kxcmxvvcrwt2y3hk4ejsvre68j")!
 }
 
+enum ReportError: Error {
+    case encodingFailed(String)
+    case missingPublicKey(String)
+}
+
 class ReportPublisher {
     @Dependency(\.relayService) private var relayService
     @Dependency(\.currentUser) private var currentUser
@@ -33,55 +38,42 @@ class ReportPublisher {
     }
     
     func publishPrivateReport(for target: ReportTarget, category: ReportCategory, context: NSManagedObjectContext) {
-        switch target {
-        case .note(let note):
-            guard let keyPair = currentUser.keyPair else {
-                Log.error("Cannot publish report - No signed in user")
-                return
-            }
-            
-            guard let reportRequestDM = createReportRequestDM(note: note, category: category, keyPair: keyPair) else {
-                Log.error("Failed to create gift wrapped report request")
-                return
-            }
-            
-            Task {
-                do {
-                    Log.info("Sending report request to Nos for note \(note.id)")
-                    try await relayService.publish(
-                        event: reportRequestDM,
-                        to: Relay.nosAddress,
-                        context: context
-                    )
-                    analytics.reported(target)
-                } catch {
-                    Log.error("Failed to publish report: \(error.localizedDescription)")
-                }
-            }
-        case .author:
-            Log.error("Private reports for people are no implemented yet")
+        guard let keyPair = currentUser.keyPair else {
+            Log.error("Cannot publish report - No signed in user")
             return
+        }
+        
+        guard let reportRequestDM = createReportRequestDM(target: target, category: category, keyPair: keyPair) else {
+            Log.error("Failed to create gift wrapped report request")
+            return
+        }
+        
+        Task {
+            do {
+                switch target {
+                case .note(let note):
+                    Log.info("Sending report request to Nos for note \(note.id)")
+                case .author(let author):
+                    guard let npub = author.npubString else {
+                        Log.error("Cannot publish report - Missing public key")
+                        return
+                    }
+                    Log.info("Sending report request to Nos for npub \(npub)")
+                }
+                
+                try await relayService.publish(
+                    event: reportRequestDM,
+                    to: Relay.nosAddress,
+                    context: context
+                )
+                analytics.reported(target)
+            } catch {
+                Log.error("Failed to publish report: \(error.localizedDescription)")
+            }
         }
     }
     
     // MARK: Helpers
-    
-    struct ReportRequest {
-        let reportedEvent: JSONEvent
-        let reporterPubkey: RawAuthorID
-        let reporterText: String
-        
-        func toJSON() throws -> String {
-            let dictionary: [String: Any] = [
-                "reportedEvent": reportedEvent.dictionary,
-                "reporterPubkey": reporterPubkey,
-                "reporterText": reporterText
-            ]
-            
-            let data = try JSONSerialization.data(withJSONObject: dictionary)
-            return String(data: data, encoding: .utf8)!
-        }
-    }
     
     func createPublicReport(
         for target: ReportTarget,
@@ -104,15 +96,14 @@ class ReportPublisher {
         return event
     }
     
-    func createReportRequestDM(note: Event, category: ReportCategory, keyPair: KeyPair) -> JSONEvent? {
-        guard let jsonEvent = note.codable else {
-            Log.error("Could not encode note to JSON")
-            return nil
-        }
-        
+    func createReportRequestDM(
+        target: ReportTarget,
+        category: ReportCategory,
+        keyPair: KeyPair
+    ) -> JSONEvent? {
         do {
             let reportRequestJSON = try ReportRequest(
-                reportedEvent: jsonEvent,
+                reportedTarget: target,
                 reporterPubkey: keyPair.publicKeyHex,
                 reporterText: category.displayName
             ).toJSON()
@@ -127,5 +118,36 @@ class ReportPublisher {
             Log.error("Failed to wrap report request: \(error.localizedDescription)")
             return nil
         }
+    }
+}
+
+struct ReportRequest {
+    let reportedTarget: ReportTarget
+    let reporterPubkey: RawAuthorID
+    let reporterText: String
+    
+    func toJSON() throws -> String {
+        var dictionary: [String: Any] = [
+            "reporterPubkey": reporterPubkey,
+            "reporterText": reporterText
+        ]
+        
+        switch reportedTarget {
+        case .note(let note):
+            guard let jsonEvent = note.codable else {
+                throw ReportError.encodingFailed("Could not encode note to JSON")
+            }
+            
+            dictionary[ "reportedEvent"] = jsonEvent.dictionary
+        case .author(let author):
+            guard let pubKey = author.hexadecimalPublicKey else {
+                throw ReportError.missingPublicKey("Author's public key is missing")
+            }
+            
+            dictionary["reportedPubkey"] = pubKey
+        }
+        
+        let data = try JSONSerialization.data(withJSONObject: dictionary)
+        return String(data: data, encoding: .utf8)!
     }
 }
