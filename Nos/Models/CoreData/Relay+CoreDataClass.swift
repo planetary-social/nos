@@ -13,13 +13,9 @@ public class Relay: NosManagedObject {
     static var recommended: [String] {
         [
         "wss://relay.damus.io",
-        "wss://e.nos.lol",
         "wss://purplepag.es",
-        "wss://relay.current.fyi",
         "wss://relay.nos.social",
-        "wss://relayable.org",
         "wss://relay.snort.social",
-        "wss://relay.causes.com",
         ]
     }
     
