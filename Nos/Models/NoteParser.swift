@@ -147,34 +147,69 @@ struct NoteParser {
         }
     }
 
+    /// Parse links in `attributedString` and replace them with plain text,
+    /// adding tags if they are nostr: links (in other words, mentions to other
+    /// users).
+    ///
+    /// - parameter attributedString: An AttributedString instance with the post
+    /// - parameter tags: The current list of tags
+    /// - returns: The note content and the generated tags
+    ///
+    /// This function is recursive, it just process the first link it finds, and
+    /// then recurses itself until there are no more links to process.
     private func cleanLinks(
-        in attributedString: AttributedString, 
+        in attributedString: AttributedString,
         tags: [[String]] = []
     ) -> (String, [[String]]) {
-        var mutableAttributedString = attributedString
-        for attributedRun in mutableAttributedString.runs {
-            if let link = attributedRun.attributes.link {
-                var mutableAttributes = attributedRun.attributes
-                mutableAttributes.link = nil
-                mutableAttributedString.replaceSubrange(
-                    attributedRun.range,
-                    with: AttributedString("\(link.absoluteString)", attributes: mutableAttributes)
-                )
-                if link.scheme == "nostr" {
-                    let components = URLComponents(url: link, resolvingAgainstBaseURL: false)
-                    if let npub = components?.path, let publicKey = PublicKey(npub: npub) {
-                        return cleanLinks(
-                            in: mutableAttributedString,
-                            tags: tags + [["p", publicKey.hex]]
-                        )
-                    } else {
-                        return cleanLinks(in: mutableAttributedString, tags: tags)
-                    }
-                } else {
-                    return cleanLinks(in: mutableAttributedString, tags: tags)
-                }
-            }
+        var attributedString = attributedString
+        let runs = attributedString.runs
+
+        // Find the first link in the attributed string
+        let isLink = { (attributedRun: AttributedString.Runs.Run) in
+            attributedRun.link != nil
         }
-        return (String(attributedString.characters), tags)
+        var links: [AttributedString.Runs.Run] = runs.filter(isLink).reversed()
+        guard let firstRun = links.popLast(), let link = firstRun.link else {
+            // No links found, just return the result
+            return (String(attributedString.characters), tags)
+        }
+        var attributes = firstRun.attributes
+
+        // Look if there are consecutive links and merge the ranges
+        var range = firstRun.range
+        while let nextRun = links.popLast(),
+            nextRun.range.lowerBound == range.upperBound,
+            nextRun.link == firstRun.link {
+            range = range.lowerBound..<nextRun.range.upperBound
+            attributes.merge(nextRun.attributes)
+        }
+
+        // Replace the link with just plain text so we parse the next link the
+        // next time we do a recursion (until there are no more links to parse.
+        attributes.link = nil
+        attributedString.replaceSubrange(
+            range,
+            with: AttributedString(
+                "\(link.absoluteString)",
+                attributes: attributes
+            )
+        )
+        if link.scheme == "nostr" {
+            // It is a nostr link, continue with the recursion while adding the
+            // corresponding tag
+            let components = URLComponents(url: link, resolvingAgainstBaseURL: false)
+            if let npub = components?.path, let publicKey = PublicKey(npub: npub) {
+                return cleanLinks(
+                    in: attributedString,
+                    tags: tags + [["p", publicKey.hex]]
+                )
+            } else {
+                return cleanLinks(in: attributedString, tags: tags)
+            }
+        } else {
+            // Just a normal link, continue with the recursion without adding a
+            // tag
+            return cleanLinks(in: attributedString, tags: tags)
+        }
     }
 }
