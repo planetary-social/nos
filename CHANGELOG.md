@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a bug when mentioning profiles with emojis in the name.
 - Added "Send To Nos" private reporting for profiles.
 - Added our third cohort of creators and journalists to the Discover tab.
 - Fixed a bug where the Flag User confirmation dialog wasn’t visible on iPad.
