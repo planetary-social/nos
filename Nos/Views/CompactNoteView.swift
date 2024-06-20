@@ -159,6 +159,9 @@ struct CompactNoteView: View {
         .task {
             await note.loadViewData()
         }
+        .task {
+            await note.loadAttributedContent()
+        }
     }
 }
 
