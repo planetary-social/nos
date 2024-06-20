@@ -105,8 +105,8 @@ fileprivate enum RouterKey: DependencyKey {
 
 private enum RelayServiceKey: DependencyKey {
     static let liveValue = RelayService()
-    static let testValue = RelayService()
-    static let previewValue = RelayService()
+    static let testValue: RelayService = MockRelayService()
+    static let previewValue: RelayService = MockRelayService()
 }
 
 fileprivate enum PushNotificationServiceKey: DependencyKey {

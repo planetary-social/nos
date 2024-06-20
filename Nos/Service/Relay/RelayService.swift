@@ -9,7 +9,7 @@ import UIKit
 
 /// A service that maintains connections to Nostr Relay servers and executes requests for data from those relays
 /// in the form of `Filters` and `RelaySubscription`s.
-final class RelayService: ObservableObject {
+class RelayService: ObservableObject {
     
     private var subscriptionManager: RelaySubscriptionManager
     private var processSubscriptionQueueTimer: AsyncTimer?
