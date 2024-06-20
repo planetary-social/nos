@@ -16,17 +16,12 @@ struct EditableNoteText: Equatable {
         nsAttributedString.string
     }
     
-    private static var font = UIFont.preferredFont(forTextStyle: .body)
-    
     lazy var defaultAttributes: AttributeContainer = {
         AttributeContainer(defaultNSAttributes)
     }()
     
-    var defaultNSAttributes: [NSAttributedString.Key: Any] = [
-        .font: font,
-        .foregroundColor: UIColor.primaryTxt
-    ]
-    
+    var defaultNSAttributes: [NSAttributedString.Key: Any]
+
     var isEmpty: Bool {
         nsAttributedString.string.isEmpty
     }
@@ -34,16 +29,22 @@ struct EditableNoteText: Equatable {
     // MARK: - Init
     
     init() {
-        self.attributedString = AttributedString()
+        self.init(nsAttributedString: NSAttributedString(string: ""))
     }
     
     init(string: String) {
-        // We initialize this twice to avoid an error about `defaultAttributes` not being around before `self`.
-        self.attributedString = AttributedString(string)
-        self.attributedString = AttributedString(string, attributes: defaultAttributes)
+        self.init(nsAttributedString: NSAttributedString(string: string))
     }
     
-    init(nsAttributedString: NSAttributedString) {
+    init(
+        nsAttributedString: NSAttributedString,
+        font: UIFont = .preferredFont(forTextStyle: .body),
+        foregroundColor: UIColor = .primaryTxt
+    ) {
+        self.defaultNSAttributes = [
+            .font: font,
+            .foregroundColor: foregroundColor
+        ]
         self.attributedString = AttributedString(nsAttributedString)
     }
     
@@ -83,7 +84,10 @@ struct EditableNoteText: Equatable {
                 AttributeContainer([NSAttributedString.Key.link: url.absoluteString])
             )
         )
-        mention.append(AttributedString(stringLiteral: " "))
+        mention.append(AttributedString(
+            " ",
+            attributes: defaultAttributes
+        ))
 
         attributedString.replaceSubrange((attributedString.index(beforeCharacter: index))..<index, with: mention)
     }

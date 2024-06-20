@@ -108,13 +108,6 @@ struct ProfileView: View {
         }
         .background(Color.appBg)
         .nosNavigationBar(title: title)
-        .navigationDestination(for: Event.self) { note in
-            RepliesView(note: note)
-        }                  
-        .navigationDestination(for: URL.self) { url in URLView(url: url) }
-        .navigationDestination(for: ReplyToNavigationDestination.self) { destination in
-            RepliesView(note: destination.note, showKeyboard: true)
-        }
         .navigationDestination(for: MutesDestination.self) { _ in
             MutesView()
         }
@@ -141,6 +134,7 @@ struct ProfileView: View {
                             Image(systemName: "ellipsis")
                         }
                     )
+                    .reportMenu($showingReportMenu, reportedObject: .author(author))
                     .confirmationDialog(String(localized: .localizable.share), isPresented: $showingOptions) {
                         Button(String(localized: .localizable.copyUserIdentifier)) {
                             UIPasteboard.general.string = author.publicKey?.npub ?? ""
@@ -203,7 +197,6 @@ struct ProfileView: View {
                     }
                 }
         )
-        .reportMenu($showingReportMenu, reportedObject: .author(author))
         .alert(unwrapping: $alert)
         .onAppear {
             Task { 

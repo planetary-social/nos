@@ -48,13 +48,13 @@ enum DeepLinkService {
                     let (humanReadablePart, checksum) = try Bech32.decode(string)
                     
                     if humanReadablePart == Nostr.publicKeyPrefix, let hex = SHA256Key.decode(base5: checksum) {
-                        router.push(try Author.findOrCreate(by: hex, context: persistenceController.viewContext))
+                        router.pushAuthor(id: hex)
                     } else if humanReadablePart == Nostr.notePrefix, let hex = SHA256Key.decode(base5: checksum) {
-                        router.push(try Event.findOrCreateStubBy(id: hex, context: persistenceController.viewContext))
+                        router.pushNote(id: hex)
                     } else if humanReadablePart == Nostr.profilePrefix, let hex = TLV.decode(checksum: checksum) {
-                        router.push(try Author.findOrCreate(by: hex, context: persistenceController.viewContext))
+                        router.pushAuthor(id: hex)
                     } else if humanReadablePart == Nostr.eventPrefix, let hex = TLV.decode(checksum: checksum) {
-                        router.push(try Event.findOrCreateStubBy(id: hex, context: persistenceController.viewContext))
+                        router.pushNote(id: hex)
                     } 
                 }
             } catch {
