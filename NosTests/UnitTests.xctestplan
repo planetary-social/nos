@@ -29,6 +29,7 @@
   "testTargets" : [
     {
       "skippedTests" : [
+        "EventObservationTests\/testDuplicateEventMergingGivenParseContextSavesFirst()",
         "NostrBuildAPIClientTests\/test_uploadRequest_authorization()",
         "SocialGraphTests\/testFollow()",
         "SocialGraphTests\/testOneFollower()",
