@@ -33,15 +33,31 @@ public class EventReference: NosManagedObject {
         return fetchRequest
     }
     
-    /// A request for all the references whose associated `Events` were received before the given date.
-    static func all(before date: Date) -> NSFetchRequest<EventReference> {
+    /// This fetches all the references that can be deleted during the `DatabaseCleaner` routine. It takes care
+    /// to only select references before a given date that are not referenced by events we are keeping, and it also
+    /// accounts for "protected events" from `Event.protectedFromCleanupSubqueryPredicate()` to make sure we keep 
+    /// events published by the current user etc.
+    static func cleanupRequest(before date: Date, user: Author) -> NSFetchRequest<EventReference> {
         let fetchRequest = NSFetchRequest<EventReference>(entityName: "EventReference")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \EventReference.eventId, ascending: false)]
-        fetchRequest.predicate = NSPredicate(
+        let protectedEventsPredicate = Event.protectedFromCleanupSubqueryPredicate(for: user)
+        let referencedEventIsNotProtected = NSPredicate(
+            format: "SUBQUERY(referencedEvent, $event,  \(protectedEventsPredicate.predicateFormat)).@count == 0"
+        )
+        let referencingEventIsNotProtected = NSPredicate(
+            format: "SUBQUERY(referencingEvent, $event, \(protectedEventsPredicate.predicateFormat)).@count == 0"
+        )
+        let eventsAreOld = NSPredicate(
             format: "referencedEvent.receivedAt < %@ AND referencingEvent.receivedAt < %@",
             date as CVarArg,
             date as CVarArg
         )
+        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            referencedEventIsNotProtected,
+            referencingEventIsNotProtected,
+            eventsAreOld
+        ])
+        
         return fetchRequest
     }
     

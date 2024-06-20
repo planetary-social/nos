@@ -3,7 +3,7 @@ import CoreData
 
 final class DatabaseCleanerTests: CoreDataTestCase {
     
-    func test_emptyDatabase() async throws {
+    @MainActor func test_emptyDatabase() async throws {
         // Act
         try await DatabaseCleaner.cleanupEntities(for: KeyFixture.alice.publicKeyHex, in: testContext)
         
@@ -20,10 +20,10 @@ final class DatabaseCleanerTests: CoreDataTestCase {
     
     // MARK: - EventReferences
     
-    func test_cleanup_deletesCorrectEventReferences() async throws {
+    @MainActor func test_cleanup_deletesCorrectEventReferences() async throws {
         // Arrange
-        let user = KeyFixture.alice
-        _ = try Author.findOrCreate(by: user.publicKeyHex, context: testContext)
+        // Create the signed in user or the DatabaseCleaner will exit early. 
+        _ = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
         let oldEventOne = try EventFixture.build(in: testContext, receivedAt: Date(timeIntervalSince1970: 9))
         let oldEventTwo = try EventFixture.build(in: testContext, receivedAt: Date(timeIntervalSince1970: 8))
         let newEvent = try EventFixture.build(in: testContext, receivedAt: Date(timeIntervalSince1970: 11))
@@ -54,10 +54,10 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         XCTAssertEqual(eventReferences.first?.referencedEvent, oldEventTwo)
     }
     
-    func test_cleanup_savesReferencedEvents() async throws {
-        let user = KeyFixture.alice
-        _ = try Author.findOrCreate(by: user.publicKeyHex, context: testContext)
-        
+    @MainActor func test_cleanup_savesReferencedEvents() async throws {
+        // Arrange
+        // Create the signed in user or the DatabaseCleaner will exit early. 
+        _ = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
         // Create an old event that is referenced by a newer event
         let oldEvent = try EventFixture.build(in: testContext, receivedAt: Date(timeIntervalSince1970: 9))
         let newEvent = try EventFixture.build(in: testContext, receivedAt: Date(timeIntervalSince1970: 11))
@@ -80,11 +80,50 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         XCTAssertEqual(events.count, 2)
     }
     
+    @MainActor func test_cleanup_givenEventReferenceChain_thenOldEventsStubbed() async throws {
+        // Arrange
+        // Create the signed in user or the DatabaseCleaner will exit early. 
+        _ = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        // Create a chain of events that reference one another. Two of them are old enough to be deleted.
+        try testContext.save()
+        let newEvent = try EventFixture.build(in: testContext, receivedAt: Date(timeIntervalSince1970: 11))
+        let oldEvent = try EventFixture.build(in: testContext, receivedAt: Date(timeIntervalSince1970: 9))
+        let reallyOldEvent = try EventFixture.build(in: testContext, receivedAt: Date(timeIntervalSince1970: 0))
+        try testContext.save()
+        
+        let eventReferenceToBeKept = EventReference(context: testContext)
+        eventReferenceToBeKept.referencingEvent = newEvent
+        eventReferenceToBeKept.referencedEvent = oldEvent
+        
+        let eventReferenceToBeDeleted = EventReference(context: testContext)
+        eventReferenceToBeDeleted.referencingEvent = oldEvent
+        eventReferenceToBeDeleted.referencedEvent = reallyOldEvent
+        
+        try testContext.save()
+        
+        // Act 
+        try await DatabaseCleaner.cleanupEntities(
+            for: KeyFixture.alice.publicKeyHex, 
+            in: testContext,
+            keeping: 1
+        )
+        
+        // Assert
+        // We expect the really old event to be deleted entirely and the old event should be changed to a stub.
+        let events = try testContext.fetch(Event.allEventsRequest())
+        XCTAssertEqual(events.count, 2)
+        XCTAssertEqual(events.first?.identifier, oldEvent.identifier)
+        XCTAssertEqual(events.first?.isStub, true)
+        XCTAssertEqual(events.last?.identifier, newEvent.identifier)
+        XCTAssertEqual(events.last?.isStub, false)
+    }
+    
     // MARK: - Events
     
-    func test_cleanup_keepsNEvents() async throws {
-        let user = KeyFixture.alice
-        _ = try Author.findOrCreate(by: user.publicKeyHex, context: testContext)
+    @MainActor func test_cleanup_keepsNEvents() async throws {
+        // Create the signed in user or the DatabaseCleaner will exit early. 
+        _ = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        
         var events = [Event]()
         for i in 0..<10 {
             let date = Date(timeIntervalSince1970: TimeInterval(i))
@@ -111,9 +150,11 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         XCTAssertEqual(fetchedEvents.map { $0.identifier }, events.suffix(5).map { $0.identifier })
     }
     
-    func test_cleanup_deletesOldEvents() async throws {
+    @MainActor func test_cleanup_deletesOldEvents() async throws {
+        // Create the signed in user or the DatabaseCleaner will exit early. 
         let user = KeyFixture.alice
         _ = try Author.findOrCreate(by: user.publicKeyHex, context: testContext)
+        
         _ = try EventFixture.build(in: testContext, receivedAt: Date(timeIntervalSince1970: 9)) // old event
         let newEvent = try EventFixture.build(in: testContext, receivedAt: Date(timeIntervalSince1970: 11))
         
@@ -133,7 +174,7 @@ final class DatabaseCleanerTests: CoreDataTestCase {
     
     // MARK: - Authors
     
-    func test_cleanup_keepsInNetworkAuthors() async throws {
+    @MainActor func test_cleanup_keepsInNetworkAuthors() async throws {
         // Arrange
         let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
         let bob   = try Author.findOrCreate(by: "bob", context: testContext)
@@ -163,7 +204,7 @@ final class DatabaseCleanerTests: CoreDataTestCase {
     
     // MARK: - Follows
     
-    func test_cleanup_keepsInNetworkFollows() async throws {
+    @MainActor func test_cleanup_keepsInNetworkFollows() async throws {
         // Arrange
         let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
         let bob   = try Author.findOrCreate(by: "bob", context: testContext)
