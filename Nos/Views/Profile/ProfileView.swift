@@ -134,6 +134,7 @@ struct ProfileView: View {
                             Image(systemName: "ellipsis")
                         }
                     )
+                    .reportMenu($showingReportMenu, reportedObject: .author(author))
                     .confirmationDialog(String(localized: .localizable.share), isPresented: $showingOptions) {
                         Button(String(localized: .localizable.copyUserIdentifier)) {
                             UIPasteboard.general.string = author.publicKey?.npub ?? ""
@@ -196,7 +197,6 @@ struct ProfileView: View {
                     }
                 }
         )
-        .reportMenu($showingReportMenu, reportedObject: .author(author))
         .alert(unwrapping: $alert)
         .onAppear {
             Task { 

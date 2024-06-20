@@ -913,9 +913,17 @@ public class Event: NosManagedObject, VerifiableEvent {
         }
     }
     
+    @MainActor private var loadingAttributedContent = false
+    
     /// Processes the note `content` to populate mentions and extract links. The results are saved in 
-    /// `attributedContent` and `contentLinks`.
+    /// `attributedContent` and `contentLinks`. Idempotent.
     @MainActor func loadAttributedContent() async {
+        guard !loadingAttributedContent else {
+            return
+        }
+        loadingAttributedContent = true
+        defer { loadingAttributedContent = false }
+        
         @Dependency(\.persistenceController) var persistenceController
         let backgroundContext = persistenceController.backgroundViewContext
         if let parsedAttributedContent = await Event.attributedContentAndURLs(

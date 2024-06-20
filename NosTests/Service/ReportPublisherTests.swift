@@ -24,25 +24,48 @@ final class ReportPublisherTests: CoreDataTestCase {
         ])
     }
 
-    func testCreateReportRequestDM() throws {
+    func testCreateNoteReportRequestDM() throws {
         let aliceKeyPair = KeyFixture.alice
         let bobKeyPair = KeyFixture.bob
-
         let note = try createTestEvent(in: testContext, keyPair: bobKeyPair)
+        let reportTarget = ReportTarget.note(note)
+
         let reportRequestDM = ReportPublisher().createReportRequestDM(
-            note: note,
+            target: reportTarget,
             category: ReportCategory.findCategory(from: "CL")!,
             keyPair: aliceKeyPair
         )!
         
         XCTAssertEqual(reportRequestDM.kind, EventKind.giftWrap.rawValue)
         XCTAssertNotEqual(reportRequestDM.pubKey, aliceKeyPair.publicKeyHex)
-        XCTAssertNotEqual(reportRequestDM.pubKey, bobKeyPair.publicKeyHex)
         XCTAssertEqual(reportRequestDM.tags, [
             ["p", Tagr.publicKey.hex]
         ])
     }
     
+    func testCreateAuthorReportRequestDM() throws {
+        let aliceKeyPair = KeyFixture.alice
+        let bobKeyPair = KeyFixture.bob
+        let note = try createTestEvent(in: testContext, keyPair: bobKeyPair)
+        guard let author = note.author else {
+            XCTFail("No author")
+            return
+        }
+        let reportTarget = ReportTarget.author(author)
+
+        let reportRequestDM = ReportPublisher().createReportRequestDM(
+            target: reportTarget,
+            category: ReportCategory.findCategory(from: "CL")!,
+            keyPair: aliceKeyPair
+        )!
+        
+        XCTAssertEqual(reportRequestDM.kind, EventKind.giftWrap.rawValue)
+        XCTAssertNotEqual(reportRequestDM.pubKey, aliceKeyPair.publicKeyHex)
+        XCTAssertEqual(reportRequestDM.tags, [
+            ["p", Tagr.publicKey.hex]
+        ])
+    }
+
     // MARK: Helpers
     
     func createTestEvent(
