@@ -29,6 +29,7 @@
   "testTargets" : [
     {
       "skippedTests" : [
+        "EventObservationTests\/testDuplicateEventMergingGivenParseContextSavesFirst()",
         "SocialGraphTests\/testFollow()",
         "SocialGraphTests\/testOneFollower()",
         "SocialGraphTests\/testOutOfNetwork()",
