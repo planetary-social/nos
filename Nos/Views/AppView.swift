@@ -189,7 +189,8 @@ struct AppView_Previews: PreviewProvider {
     static var relayService = previewData.relayService
     static var router = Router()
     static var currentUser = previewData.currentUser 
-    
+    static var pushNotificationService = DependencyValues().pushNotificationService
+
     static var loggedInAppController: AppController = {
         let appController = AppController()
         appController.completeOnboarding()
@@ -208,17 +209,23 @@ struct AppView_Previews: PreviewProvider {
             .environmentObject(relayService)
             .environmentObject(router)
             .environment(loggedInAppController)
-        
+            .environment(currentUser)
+            .environmentObject(pushNotificationService)
+
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
             .environment(AppController())
-        
+            .environment(currentUser)
+            .environmentObject(pushNotificationService)
+
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(routerWithSideMenuOpened)
             .environment(AppController())
+            .environment(currentUser)
+            .environmentObject(pushNotificationService)
     }
 }
