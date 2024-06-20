@@ -23,6 +23,15 @@ struct RelayView: View {
     
     @FetchRequest var relays: FetchedResults<Relay>
 
+    private var sortedRelays: [Relay] {
+        relays.sorted { lhs, _ in
+            if lhs.address == Relay.nosAddress.absoluteString {
+                return true
+            }
+            return false
+        }
+    }
+
     var editable: Bool
     
     init(author: Author, editable: Bool = true) {
@@ -34,7 +43,7 @@ struct RelayView: View {
     var body: some View {
         List {
             Section {
-                ForEach(relays) { relay in
+                ForEach(sortedRelays) { relay in
                     VStack(alignment: .leading) {
                         if relay.hasMetadata {
                             NavigationLink {
@@ -55,7 +64,7 @@ struct RelayView: View {
                 .onDelete { indexes in
                     Task {
                         for index in indexes {
-                            let relay = relays[index]
+                            let relay = sortedRelays[index]
                             await relayService.closeConnection(to: relay.address)
                             analytics.removed(relay)
                             author.remove(relay: relay)

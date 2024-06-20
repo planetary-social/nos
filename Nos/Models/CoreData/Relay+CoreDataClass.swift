@@ -14,7 +14,7 @@ public class Relay: NosManagedObject {
         [
         "wss://relay.damus.io",
         "wss://purplepag.es",
-        "wss://relay.nos.social",
+        nosAddress.absoluteString,
         "wss://relay.snort.social",
         ]
     }
@@ -36,7 +36,7 @@ public class Relay: NosManagedObject {
         "wss://purplepag.es",
         "wss://soloco.nl",
         "wss://relayable.org",
-        "wss://relay.nos.social",
+        nosAddress.absoluteString,
         "wss://relay.causes.com",
         ]
     }
