@@ -9933,24 +9933,13 @@
         }
       }
     },
-    "relaysImportant" : {
+    "relaysImportantMessage" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "IMPORTANT!"
-          }
-        }
-      }
-    },
-    "relaysNosWorksBest" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nos works best with 5 or fewer relays."
+            "value" : "Important! Nos works best with 5 or fewer relays."
           }
         }
       }

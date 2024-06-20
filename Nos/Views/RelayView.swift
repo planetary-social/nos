@@ -34,12 +34,9 @@ struct RelayView: View {
     var body: some View {
         List {
             Section {
-                VStack(alignment: .leading) {
-                    Text(.localizable.relaysImportant)
-                        .font(.clarity(.semibold))
-                    Text(.localizable.relaysNosWorksBest)
-                        .font(.clarity(.semibold))
-                }
+                Text(.localizable.relaysImportantMessage)
+                    .font(.clarity(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
             }
             .listRowBackground(Color.clear)
             .listRowInsets(EdgeInsets())
