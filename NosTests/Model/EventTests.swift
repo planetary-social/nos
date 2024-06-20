@@ -41,27 +41,20 @@ final class EventTests: CoreDataTestCase {
         )
     }
     
-    func testIdentifierCalculationWithNoTags() throws {
+    func testIdentifierCalculationWithEmptyAndNoTags() throws {
         // Arrange
         let content = "Testing nos #[0]"
-        let event = try EventFixture.build(in: testContext, content: content)
+        let nilTagsEvent = try EventFixture.build(in: testContext, content: content, tags: nil)
+        let emptyTagsEvent = try EventFixture.build(in: testContext, content: content, tags: [])
         
         // Act
         XCTAssertEqual(
-            try event.calculateIdentifier(),
-            "bc45c3ac53de113e1400fca956048a816ad1c2e6ecceba6b1372ca597066fa9a"
-        )
-    }
-
-    func testIdentifierCalculationWithEmptyTags() throws {
-        // Arrange
-        let content = "Testing nos #[0]"
-        let event = try EventFixture.build(in: testContext, content: content, tags: nil)
-        
-        // Act
-        XCTAssertEqual(
-            try event.calculateIdentifier(),
+            try nilTagsEvent.calculateIdentifier(),
             "9b906de1db4ae84bda4b61b94724f8dfddd6fd9e6acddfe7ed79accb50052570"
+        )
+        XCTAssertEqual(
+            try emptyTagsEvent.calculateIdentifier(),
+            "bc45c3ac53de113e1400fca956048a816ad1c2e6ecceba6b1372ca597066fa9a"
         )
     }
     
