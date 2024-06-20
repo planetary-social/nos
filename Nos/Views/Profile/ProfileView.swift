@@ -82,7 +82,6 @@ struct ProfileView: View {
                         ProfileHeader(author: author, selectedTab: $selectedTab)
                             .compositingGroup()
                             .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
-                            .reportMenu($showingReportMenu, reportedObject: .author(author))
                     },
                     emptyPlaceholder: {
                         VStack {
@@ -135,6 +134,7 @@ struct ProfileView: View {
                             Image(systemName: "ellipsis")
                         }
                     )
+                    .reportMenu($showingReportMenu, reportedObject: .author(author))
                     .confirmationDialog(String(localized: .localizable.share), isPresented: $showingOptions) {
                         Button(String(localized: .localizable.copyUserIdentifier)) {
                             UIPasteboard.general.string = author.publicKey?.npub ?? ""
