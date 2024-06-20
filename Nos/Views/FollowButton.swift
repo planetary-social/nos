@@ -49,6 +49,7 @@ struct FollowButton: View {
 
 struct FollowButton_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     
     static var previewContext = {
@@ -95,5 +96,6 @@ struct FollowButton_Previews: PreviewProvider {
             // I can't get this to work, currentUser.context is always nil
             createTestData(in: previewContext)
         }
+        .environment(previewData.currentUser)
     }
 }
