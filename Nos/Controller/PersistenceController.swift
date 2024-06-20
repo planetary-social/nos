@@ -191,8 +191,8 @@ class PersistenceController {
     /// invalidate old items to keep it from growing indefinitely.
     /// 
     /// This should only be called once right at app launch.
-    func cleanupEntities() async {
-        guard let authorKey = await currentUser.author?.hexadecimalPublicKey else {
+    @MainActor func cleanupEntities() async {
+        guard let authorKey = currentUser.author?.hexadecimalPublicKey else {
             return
         }
         
