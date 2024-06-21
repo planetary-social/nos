@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed a bug where @npubs could be displayed instead of names in note text.
 - Fixed a bug when mentioning profiles with emojis in the name.
+- Added a message to the top of the Relays screen explaining that Nos works best with 5 or fewer relays.
 - Added "Send To Nos" private reporting for profiles.
 - Added our third cohort of creators and journalists to the Discover tab.
 - Fixed SwiftUI Previews in Xcode.
