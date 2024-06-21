@@ -7,15 +7,14 @@ import XCTest
 /// when publishing.
 extension NoteParserTests {
 
-    func testMention() throws {
+    @MainActor func testMention() throws {
         // Arrange
         let name = "mattn"
         let npub = "npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
-        let context = try XCTUnwrap(testContext)
-        let author = try Author.findOrCreate(by: hex, context: context)
+        let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
-        try context.save()
+        try testContext.save()
 
         var editableNoteText = EditableNoteText(
             nsAttributedString: NSAttributedString(string: "@"),
@@ -49,15 +48,14 @@ extension NoteParserTests {
         XCTAssertEqual(content, expected)
     }
 
-    func testMentionWithEmoji() throws {
+    @MainActor func testMentionWithEmoji() throws {
         // Arrange
         let name = "mattn 🍐"
         let npub = "npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
-        let context = try XCTUnwrap(testContext)
-        let author = try Author.findOrCreate(by: hex, context: context)
+        let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
-        try context.save()
+        try testContext.save()
 
         var editableNoteText = EditableNoteText(
             nsAttributedString: NSAttributedString(string: "@"),
@@ -92,15 +90,14 @@ extension NoteParserTests {
         XCTAssertEqual(content, expected)
     }
 
-    func testMentionWithEmojiBeforeAndAfter() throws {
+    @MainActor func testMentionWithEmojiBeforeAndAfter() throws {
         // Arrange
         let name = "🍐 mattn 🍐"
         let npub = "npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
-        let context = try XCTUnwrap(testContext)
-        let author = try Author.findOrCreate(by: hex, context: context)
+        let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
-        try context.save()
+        try testContext.save()
 
         var editableNoteText = EditableNoteText(
             nsAttributedString: NSAttributedString(string: "@"),
@@ -135,15 +132,14 @@ extension NoteParserTests {
         XCTAssertEqual(content, expected)
     }
 
-    func testTwoMentionsWithEmojiBeforeAndAfter() throws {
+    @MainActor func testTwoMentionsWithEmojiBeforeAndAfter() throws {
         // Arrange
         let name = "🍐 mattn 🍐"
         let npub = "npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
-        let context = try XCTUnwrap(testContext)
-        let author = try Author.findOrCreate(by: hex, context: context)
+        let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
-        try context.save()
+        try testContext.save()
 
         var editableNoteText = EditableNoteText(
             nsAttributedString: NSAttributedString(string: "@"),

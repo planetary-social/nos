@@ -35,7 +35,7 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
         XCTAssertEqual(sampleEvent.createdAt?.timeIntervalSince1970, 1_674_624_689)
     }
 
-    func testParseSampleRepliesAndFetchReplies() throws {
+    @MainActor func testParseSampleRepliesAndFetchReplies() throws {
         // Arrange
         let sampleData = try jsonData(filename: "sample_replies")
         let sampleEventID = "57b994eb5903d37ee11d507872611eec843098d24eb5d21a1678983dffd92b86"
@@ -119,7 +119,7 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
         XCTAssertEqual(follow.petName, sampleName)
     }
 
-    func testParseContactListIgnoresInvalidKeys() throws {
+    @MainActor func testParseContactListIgnoresInvalidKeys() throws {
         // Arrange
         let jsonData = try jsonData(filename: "bad_contact_list")
         let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
@@ -231,7 +231,7 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
     // MARK: - Stub
 
     /// Verifies that when we see an event we already have in Core Data as a stub it is updated correctly.
-    func testParsingEventStub() throws {
+    @MainActor func testParsingEventStub() throws {
         let referencingJSONEvent = JSONEvent(
             id: "1",
             pubKey: KeyFixture.alice.publicKeyHex,

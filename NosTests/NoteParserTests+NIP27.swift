@@ -2,19 +2,18 @@ import XCTest
 
 extension NoteParserTests {
     /// Example taken from [NIP-27](https://github.com/nostr-protocol/nips/blob/master/27.md)
-    func testContentWithNIP27Mention() throws {
+    @MainActor func testContentWithNIP27Mention() throws {
         let name = "mattn"
         let content = "hello nostr:npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(testContext)
-        let author = try Author.findOrCreate(by: hex, context: context)
+        let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
-        try context.save()
+        try testContext.save()
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
@@ -23,16 +22,15 @@ extension NoteParserTests {
     }
 
     /// Example taken from [NIP-27](https://github.com/nostr-protocol/nips/blob/master/27.md)
-    func testContentWithNIP27MentionToUnknownAuthor() throws {
+    @MainActor func testContentWithNIP27MentionToUnknownAuthor() throws {
         let displayName = "npub1937vv..."
         let content = "hello nostr:npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
@@ -41,19 +39,18 @@ extension NoteParserTests {
     }
 
     /// Example taken from [NIP-27](https://github.com/nostr-protocol/nips/blob/master/27.md)
-    func testContentWithNIP27ProfileMention() throws {
+    @MainActor func testContentWithNIP27ProfileMention() throws {
         let name = "mattn"
         let content = "hello nostr:nprofile1qqszclxx9f5haga8sfjjrulaxncvkfekj097t6f3pu65f86rvg49ehqj6f9dh"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(testContext)
-        let author = try Author.findOrCreate(by: hex, context: context)
+        let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
-        try context.save()
+        try testContext.save()
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
@@ -61,19 +58,18 @@ extension NoteParserTests {
         XCTAssertEqual(links.first?.value, URL(string: "@\(hex)"))
     }
 
-    func testContentWithNIP27ProfileMentionWithADot() throws {
+    @MainActor func testContentWithNIP27ProfileMentionWithADot() throws {
         let name = "mattn"
         let content = "Hello nostr:npub1pu3vqm4vzqpxsnhuc684dp2qaq6z69sf65yte4p39spcucv5lzmqswtfch.\n\nBye"
         let hex = "0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(testContext)
-        let author = try Author.findOrCreate(by: hex, context: context)
+        let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
-        try context.save()
+        try testContext.save()
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
@@ -81,7 +77,7 @@ extension NoteParserTests {
         XCTAssertEqual(links.first?.value, URL(string: "@\(hex)"))
     }
 
-    func testContentWithUntaggedNIP27NoteAndTaggedNIP27Profile() throws {
+    @MainActor func testContentWithUntaggedNIP27NoteAndTaggedNIP27Profile() throws {
         let profileDisplayName = "@npub1pu3vq..."
         let profile = "npub1pu3vqm4vzqpxsnhuc684dp2qaq6z69sf65yte4p39spcucv5lzmqswtfch"
         let note = "note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
@@ -89,11 +85,10 @@ extension NoteParserTests {
         let profileHex = "0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6"
         let noteHex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [["p", profileHex]]
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
         let links = attributedContent.links
         XCTAssertEqual(links.count, 2)
@@ -103,7 +98,7 @@ extension NoteParserTests {
         XCTAssertEqual(links[safe: 1]?.value, URL(string: "@\(profileHex)"))
     }
 
-    func testNIP27MentionPrecededByAt() throws {
+    @MainActor func testNIP27MentionPrecededByAt() throws {
         // Arrange
         let name = "nos"
         let npub = "npub1pu3vqm4vzqpxsnhuc684dp2qaq6z69sf65yte4p39spcucv5lzmqswtfch"
@@ -121,15 +116,14 @@ extension NoteParserTests {
         ]
 
         // Act
-        let context = try XCTUnwrap(testContext)
-        let author = try Author.findOrCreate(by: hex, context: context)
+        let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
-        try context.save()
+        try testContext.save()
 
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
 
         // Assert
@@ -141,7 +135,7 @@ extension NoteParserTests {
         XCTAssertEqual(links.first?.value, URL(string: "@\(hex)"))
     }
 
-    func testNIP27MentionToProfileWithURLInName() throws {
+    @MainActor func testNIP27MentionToProfileWithURLInName() throws {
         // Arrange
         let name = "nos.social" // This should not break the parsing
         let npub = "npub1pu3vqm4vzqpxsnhuc684dp2qaq6z69sf65yte4p39spcucv5lzmqswtfch"
@@ -160,14 +154,13 @@ extension NoteParserTests {
         ]
 
         // Act
-        let context = try XCTUnwrap(testContext)
-        let author = try Author.findOrCreate(by: hex, context: context)
+        let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
-        try context.save()
+        try testContext.save()
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
 
         // Assert

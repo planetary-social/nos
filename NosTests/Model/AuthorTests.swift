@@ -22,7 +22,7 @@ final class AuthorTests: CoreDataTestCase {
         XCTAssertEqual(Set(author.followedKeys), Set(expectedFollowedKeys))
     }
     
-    func testFollowedKeysIgnoresInvalidKeys() throws {
+    @MainActor func testFollowedKeysIgnoresInvalidKeys() throws {
         // inject bad data into the database
         let user = try Author.findOrCreate(by: "user", context: testContext)
         let followee = try Author.findOrCreate(by: "followee", context: testContext)
@@ -148,7 +148,7 @@ final class AuthorTests: CoreDataTestCase {
     
     // MARK: Fetch requests
     
-    func test_knownFollowers_givenMultipleFollowers() throws {
+    @MainActor func test_knownFollowers_givenMultipleFollowers() throws {
         // Arrange
         let alice = try Author.findOrCreate(by: "alice", context: testContext)
         let bob   = try Author.findOrCreate(by: "bob", context: testContext)
@@ -173,7 +173,7 @@ final class AuthorTests: CoreDataTestCase {
         XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: alice)), [])
     }
     
-    func test_knownFollowers_givenFollowCircle() throws {
+    @MainActor func test_knownFollowers_givenFollowCircle() throws {
         // Arrange
         let alice = try Author.findOrCreate(by: "alice", context: testContext)
         let bob   = try Author.findOrCreate(by: "bob", context: testContext)
@@ -196,7 +196,7 @@ final class AuthorTests: CoreDataTestCase {
         XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: alice)), [])
     }
     
-    func test_knownFollowers_givenSelfFollow() throws {
+    @MainActor func test_knownFollowers_givenSelfFollow() throws {
         // Arrange
         let alice = try Author.findOrCreate(by: "alice", context: testContext)
         let eve   = try Author.findOrCreate(by: "eve", context: testContext)
@@ -213,7 +213,7 @@ final class AuthorTests: CoreDataTestCase {
         XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: eve)), [])
     }
 
-    func test_allPostsRequest_onlyRootPosts() throws {
+    @MainActor func test_allPostsRequest_onlyRootPosts() throws {
         // Arrange
         let publicKey = "test"
         _ = try createTestEvent(in: testContext, publicKey: publicKey, deletedOn: [Relay(context: testContext)])

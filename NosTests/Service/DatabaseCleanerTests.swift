@@ -3,7 +3,7 @@ import CoreData
 
 final class DatabaseCleanerTests: CoreDataTestCase {
     
-    func test_emptyDatabase() async throws {
+    @MainActor func test_emptyDatabase() async throws {
         // Act
         try await DatabaseCleaner.cleanupEntities(before: Date.now, for: KeyFixture.alice.publicKeyHex, in: testContext)
         

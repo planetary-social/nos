@@ -2,7 +2,7 @@ import XCTest
 import CoreData
 
 final class ReportPublisherTests: CoreDataTestCase {
-    func testCreatePublicReport() throws {
+    @MainActor func testCreatePublicReport() throws {
         let aliceKeyPair = KeyFixture.alice
         let bobKeyPair = KeyFixture.bob
 
@@ -24,7 +24,7 @@ final class ReportPublisherTests: CoreDataTestCase {
         ])
     }
 
-    func testCreateNoteReportRequestDM() throws {
+    @MainActor func testCreateNoteReportRequestDM() throws {
         let aliceKeyPair = KeyFixture.alice
         let bobKeyPair = KeyFixture.bob
         let note = try createTestEvent(in: testContext, keyPair: bobKeyPair)
@@ -43,7 +43,7 @@ final class ReportPublisherTests: CoreDataTestCase {
         ])
     }
     
-    func testCreateAuthorReportRequestDM() throws {
+    @MainActor func testCreateAuthorReportRequestDM() throws {
         let aliceKeyPair = KeyFixture.alice
         let bobKeyPair = KeyFixture.bob
         let note = try createTestEvent(in: testContext, keyPair: bobKeyPair)

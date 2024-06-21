@@ -6,6 +6,7 @@ final class ContentWarningControllerTests: CoreDataTestCase {
     // swiftlint:disable:next implicitly_unwrapped_optional
     var fixture: PreviewData!
     
+    @MainActor
     override func setUp() async throws {
         try await super.setUp()
         fixture = PreviewData()
