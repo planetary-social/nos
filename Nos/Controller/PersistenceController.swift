@@ -191,14 +191,14 @@ class PersistenceController {
     /// invalidate old items to keep it from growing indefinitely.
     /// 
     /// This should only be called once right at app launch.
-    func cleanupEntities() async {
-        guard let authorKey = await currentUser.author?.hexadecimalPublicKey else {
+    @MainActor func cleanupEntities() async {
+        guard let authorKey = currentUser.author?.hexadecimalPublicKey else {
             return
         }
         
         let context = newBackgroundContext()
         do {
-            try await DatabaseCleaner.cleanupEntities(before: Date.now, for: authorKey, in: context)
+            try await DatabaseCleaner.cleanupEntities(for: authorKey, in: context)
         } catch {
             Log.optional(error)
             crashReporting.report("Error in database cleanup: \(error.localizedDescription)")

@@ -10,13 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed a bug where @npubs could be displayed instead of names in note text.
 - Fixed a bug when mentioning profiles with emojis in the name.
+- Added a message to the top of the Relays screen explaining that Nos works best with 5 or fewer relays.
 - Added "Send To Nos" private reporting for profiles.
 - Added our third cohort of creators and journalists to the Discover tab.
+- Fixed SwiftUI Previews in Xcode.
 - Fixed a bug where the Flag User confirmation dialog wasn’t visible on iPad.
 - Fixed a bug where taking a photo in the app didn’t work.
+- New accounts automatically follow the nos.social and Tagr-bot accounts.
 
 ## [0.1.17] - 2024-06-10Z
 
+- Fixed a bug where infinite spinners would be shown on reposted notes.
 - Added support for opening njump.me content in Nos.
 - Fixed a crash on logout
 - Fixed a bug where some profiles wouldn't load old notes.

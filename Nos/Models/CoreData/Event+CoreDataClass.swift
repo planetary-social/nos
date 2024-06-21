@@ -66,7 +66,10 @@ public class Event: NosManagedObject, VerifiableEvent {
 
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: true)]
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Event.createdAt, ascending: true),
+            NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)
+        ]
         return fetchRequest
     }
     
@@ -340,6 +343,81 @@ public class Event: NosManagedObject, VerifiableEvent {
             noteID
         )
         return fetchRequest
+    }
+    
+    /// A fetch request for all the events that should be cleared out of the database by 
+    /// `DatabaseCleaner.cleanupEntities(...)`.
+    ///
+    /// It will save the events for the given `user`, as well as other important events matching various other
+    /// criteria.
+    /// - Parameter before: The date before which events will be considered for cleanup. 
+    /// - Parameter user: The Author record for the currently logged in user. Special treatment is given to their data.
+    @nonobjc public class func cleanupRequest(before date: Date, for user: Author) -> NSFetchRequest<Event> {
+        let oldStoryCutoff = Calendar.current.date(byAdding: .day, value: -2, to: .now) ?? .now
+        
+        let request = NSFetchRequest<Event>(entityName: "Event")
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
+        let oldUnreferencedEventsClause = "(receivedAt < %@ OR receivedAt == nil) AND referencingEvents.@count = 0" 
+        let notOwnEventClause = "(author != %@)"
+        let readStoryClause = "(isRead = 1 AND receivedAt > %@)"
+        let userReportClause = "(kind == \(EventKind.report.rawValue) AND " +
+        "authorReferences.@count > 0 AND eventReferences.@count == 0)"
+        let clauses = "\(oldUnreferencedEventsClause) AND" +
+        "\(notOwnEventClause) AND " +
+        "NOT \(readStoryClause) AND " +
+        "NOT \(userReportClause)"
+        request.predicate = NSPredicate(
+            format: clauses,
+            date as CVarArg,
+            user,
+            oldStoryCutoff as CVarArg
+        )
+        
+        return request
+    }
+    
+    /// This constructs a predicate for events that should be protected from deletion when we are purging the database.
+    /// - Parameter user: The Author record for the currently logged in user. Special treatment is given to their data.
+    /// - Parameter asSubquery: If true then each attribute in the predicate will prefixed with "$event." so the 
+    ///   predicate can be used in a SUBQUERY. 
+    @nonobjc public class func protectedFromCleanupPredicate(
+        for user: Author, 
+        asSubquery: Bool = false
+    ) -> NSPredicate {
+        guard let userKey = user.hexadecimalPublicKey else {
+            return NSPredicate.false
+        }
+        
+        // The string we use to reference the current event if we are constructing this predicate to be used in a 
+        // subquery
+        let eventReference = asSubquery ? "$event." : ""
+        
+        // protect all events authored by the current user 
+        let userEventsPredicate = NSPredicate(format: "\(eventReference)author.hexadecimalPublicKey = '\(userKey)'")
+        
+        // protect stories that were read recently, so we don't redownload and show them as unread again 
+        let oldStoryCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now) ?? .now
+        let recentlyReadStoriesPredicate = NSPredicate(
+            format: "(\(eventReference)isRead = 1 AND \(eventReference)receivedAt > %@)", 
+            oldStoryCutoffDate as CVarArg
+        )
+        
+        // keep author reports from people we follow
+        let userReportPredicate = NSPredicate(
+            format: "(\(eventReference)kind == \(EventKind.report.rawValue) AND " +
+                "SUBQUERY(\(eventReference)authorReferences, $references, TRUEPREDICATE).@count > 0 AND " +
+                "SUBQUERY(\(eventReference)eventReferences, $references, TRUEPREDICATE).@count == 0 AND " +
+                "ANY \(eventReference)author.followers.source.hexadecimalPublicKey == %@)",
+            userKey
+        )
+        
+        return NSCompoundPredicate(
+            orPredicateWithSubpredicates: [
+                userEventsPredicate, 
+                recentlyReadStoriesPredicate, 
+                userReportPredicate
+            ]
+        )
     }
     
     @nonobjc public class func expiredRequest() -> NSFetchRequest<Event> {
@@ -1174,6 +1252,24 @@ public class Event: NosManagedObject, VerifiableEvent {
             Log.error("Couldn't find a bech32note key when generating web link")
             return "https://njump.me"
         }
+    }
+    
+    /// Converts an event back to a stubbed event by deleting all data except the `identifier`.
+    func stub() {
+        allTags = nil
+        content = nil
+        createdAt = nil
+        isVerified = false
+        receivedAt = nil
+        sendAttempts = 0
+        signature = nil
+        author = nil
+        authorReferences = NSOrderedSet()
+        deletedOn = Set()
+        eventReferences = NSOrderedSet()
+        publishedTo = Set()
+        seenOnRelays = Set()
+        shouldBePublishedTo = Set()
     }
 }
 // swiftlint:enable type_body_length
