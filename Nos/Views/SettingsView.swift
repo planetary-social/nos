@@ -318,4 +318,5 @@ extension SettingsView {
         SettingsView()
     }
     .inject(previewData: previewData)
+    .environment(AppController())
 }
