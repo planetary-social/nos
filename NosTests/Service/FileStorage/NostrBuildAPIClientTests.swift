@@ -92,8 +92,8 @@ class NostrBuildAPIClientTests: XCTestCase {
         } operation: {
             NostrBuildAPIClient()
         }
-
         let apiURLString = "http://nostr.build/api/v2/nip96/upload"
+
         let apiURL = try XCTUnwrap(URL(string: apiURLString))
         let fileURL = try XCTUnwrap(
             Bundle.current.url(forResource: "nostr_build_nip96_response", withExtension: "json")
