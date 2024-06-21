@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug where the Flag User confirmation dialog wasn’t visible on iPad.
 - Fixed a bug where taking a photo in the app didn’t work.
 - Removed the Save button next to the private key in Settings.
+- New accounts automatically follow the nos.social and Tagr-bot accounts.
 
 ## [0.1.17] - 2024-06-10Z
 
