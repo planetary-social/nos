@@ -227,7 +227,7 @@ final class AuthorTests: CoreDataTestCase {
         XCTAssertEqual(events.count, 0)
     }
     
-    func test_outOfNetwork_givenCircleOfFollows() throws {
+    @MainActor func test_outOfNetwork_givenCircleOfFollows() throws {
         // Arrange
         let alice = try Author.findOrCreate(by: "alice", context: testContext)
         let bob   = try Author.findOrCreate(by: "bob", context: testContext)
