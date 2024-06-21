@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.17] - 2024-06-10Z
 
+- Fixed a bug where infinite spinners would be shown on reposted notes.
 - Added support for opening njump.me content in Nos.
 - Fixed a crash on logout
 - Fixed a bug where some profiles wouldn't load old notes.
