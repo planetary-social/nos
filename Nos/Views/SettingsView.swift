@@ -44,7 +44,7 @@ struct SettingsView: View {
         Form {
             Section {
                 HStack {
-                    Text("•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••")
+                    Text(String(repeating: "•", count: 63))
                         .foregroundColor(.primaryTxt)
                         .font(.clarity(.regular, textStyle: .body))
                         .lineLimit(1)
