@@ -357,12 +357,12 @@ public class Event: NosManagedObject, VerifiableEvent {
         
         let request = NSFetchRequest<Event>(entityName: "Event")
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: true)]
-        let oldEventClause = "(receivedAt < %@ OR receivedAt == nil) AND referencingEvents.@count = 0" 
+        let oldUnreferencedEventsClause = "(receivedAt < %@ OR receivedAt == nil) AND referencingEvents.@count = 0" 
         let notOwnEventClause = "(author != %@)"
         let readStoryClause = "(isRead = 1 AND receivedAt > %@)"
         let userReportClause = "(kind == \(EventKind.report.rawValue) AND " +
         "authorReferences.@count > 0 AND eventReferences.@count == 0)"
-        let clauses = "\(oldEventClause) AND" +
+        let clauses = "\(oldUnreferencedEventsClause) AND" +
         "\(notOwnEventClause) AND " +
         "NOT \(readStoryClause) AND " +
         "NOT \(userReportClause)"
