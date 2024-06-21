@@ -24,11 +24,8 @@ struct RelayView: View {
     @FetchRequest var relays: FetchedResults<Relay>
 
     private var sortedRelays: [Relay] {
-        relays.sorted { lhs, _ in
-            if lhs.address == Relay.nosAddress.absoluteString {
-                return true
-            }
-            return false
+        relays.sorted { (lhs, _) in
+            lhs.address == Relay.nosAddress.absoluteString
         }
     }
 
@@ -107,8 +104,10 @@ struct RelayView: View {
             ))
             
             let authorRelayUrls = author.relays.compactMap { $0.address }
-            let recommendedRelays = Relay.recommended.filter { !authorRelayUrls.contains($0) }
-            
+            let recommendedRelays = Relay.recommended
+                .filter { !authorRelayUrls.contains($0) }
+                .sorted { (lhs, _) in lhs == Relay.nosAddress.absoluteString }
+
             if editable, !recommendedRelays.isEmpty {
                 Section {
                     ForEach(recommendedRelays, id: \.self) { address in
