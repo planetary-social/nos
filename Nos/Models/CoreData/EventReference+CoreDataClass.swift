@@ -35,12 +35,12 @@ public class EventReference: NosManagedObject {
     
     /// This fetches all the references that can be deleted during the `DatabaseCleaner` routine. It takes care
     /// to only select references before a given date that are not referenced by events we are keeping, and it also
-    /// accounts for "protected events" from `Event.protectedFromCleanupSubqueryPredicate()` to make sure we keep 
+    /// accounts for "protected events" from `Event.protectedFromCleanupPredicate(...)` to make sure we keep 
     /// events published by the current user etc.
     static func cleanupRequest(before date: Date, user: Author) -> NSFetchRequest<EventReference> {
         let fetchRequest = NSFetchRequest<EventReference>(entityName: "EventReference")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \EventReference.eventId, ascending: false)]
-        let protectedEventsPredicate = Event.protectedFromCleanupSubqueryPredicate(for: user)
+        let protectedEventsPredicate = Event.protectedFromCleanupPredicate(for: user, asSubquery: true)
         let referencedEventIsNotProtected = NSPredicate(
             format: "SUBQUERY(referencedEvent, $event,  \(protectedEventsPredicate.predicateFormat)).@count == 0"
         )

@@ -377,68 +377,37 @@ public class Event: NosManagedObject, VerifiableEvent {
     }
     
     /// This constructs a predicate for events that should be protected from deletion when we are purging the database.
-    /// - Parameter before: The date before which events will be considered for cleanup. 
     /// - Parameter user: The Author record for the currently logged in user. Special treatment is given to their data.
-    @nonobjc public class func protectedFromCleanupPredicate(for user: Author) -> NSPredicate {
-        // NOTE: This code is pretty much the same as that of `protectedFromCleanupSubqueryPredicate` but I can't 
-        // figure out how to share it. If you change any of this you should probably make equivalent changes there.
+    /// - Parameter asSubquery: If true then each attribute in the predicate will prefixed with "$event." so the 
+    ///   predicate can be used in a SUBQUERY. 
+    @nonobjc public class func protectedFromCleanupPredicate(
+        for user: Author, 
+        asSubquery: Bool = false
+    ) -> NSPredicate {
         guard let userKey = user.hexadecimalPublicKey else {
             return NSPredicate.false
         }
         
+        // The string we use to reference the current event if we are constructing this predicate to be used in a 
+        // subquery
+        let eventReference = asSubquery ? "$event." : ""
+        
         // protect all events authored by the current user 
-        let userEventsPredicate = NSPredicate(format: "author.hexadecimalPublicKey = '\(userKey)'")
+        let userEventsPredicate = NSPredicate(format: "\(eventReference)author.hexadecimalPublicKey = '\(userKey)'")
         
         // protect stories that were read recently, so we don't redownload and show them as unread again 
         let oldStoryCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now) ?? .now
         let recentlyReadStoriesPredicate = NSPredicate(
-            format: "(isRead = 1 AND receivedAt > %@)", // TODO: stubbed events? 
+            format: "(\(eventReference)isRead = 1 AND \(eventReference)receivedAt > %@)", 
             oldStoryCutoffDate as CVarArg
         )
         
         // keep author reports from people we follow
         let userReportPredicate = NSPredicate(
-            format: "(kind == \(EventKind.report.rawValue) AND " +
-                "SUBQUERY(authorReferences, $references, TRUEPREDICATE).@count > 0 AND " +
-                "SUBQUERY(eventReferences, $references, TRUEPREDICATE).@count == 0 AND " +
-                "ANY author.followers.source.hexadecimalPublicKey == %@)",
-            userKey
-        )
-        
-        return NSCompoundPredicate(
-            orPredicateWithSubpredicates: [
-                userEventsPredicate, 
-                recentlyReadStoriesPredicate, 
-                userReportPredicate
-            ]
-        )
-    }
-    
-    /// Same as `protectedFromCleanupPredicate(for:)` but constructs a predicate designed to be used in the SUBQUERY
-    /// of another predicate.
-    @nonobjc public class func protectedFromCleanupSubqueryPredicate(for user: Author) -> NSPredicate {
-        // NOTE: This code is pretty much the same as that of `protectedFromCleanupPredicate` but I can't figure out 
-        // how to share it. If you change any of this you should probably make equivalent changes there.
-        guard let userKey = user.hexadecimalPublicKey else {
-            return NSPredicate.false
-        }
-        
-        // protect all events authored by the current user 
-        let userEventsPredicate = NSPredicate(format: "$event.author.hexadecimalPublicKey = '\(userKey)'")
-        
-        // protect stories that were read recently, so we don't redownload and show them as unread again 
-        let oldStoryCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now) ?? .now
-        let recentlyReadStoriesPredicate = NSPredicate(
-            format: "($event.isRead = 1 AND $event.receivedAt > %@)", // TODO: stubbed events? 
-            oldStoryCutoffDate as CVarArg
-        )
-        
-        // keep author reports from people we follow
-        let userReportPredicate = NSPredicate(
-            format: "($event.kind == \(EventKind.report.rawValue) AND " +
-            "SUBQUERY($event.authorReferences, $references, TRUEPREDICATE).@count > 0 AND " +
-            "SUBQUERY($event.eventReferences, $references, TRUEPREDICATE).@count == 0 AND " +
-            "ANY $event.author.followers.source.hexadecimalPublicKey == %@)",
+            format: "(\(eventReference)kind == \(EventKind.report.rawValue) AND " +
+                "SUBQUERY(\(eventReference)authorReferences, $references, TRUEPREDICATE).@count > 0 AND " +
+                "SUBQUERY(\(eventReference)eventReferences, $references, TRUEPREDICATE).@count == 0 AND " +
+                "ANY \(eventReference)author.followers.source.hexadecimalPublicKey == %@)",
             userKey
         )
         
