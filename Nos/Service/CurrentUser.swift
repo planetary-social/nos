@@ -3,23 +3,6 @@ import CoreData
 import Logger
 import Dependencies
 
-enum CurrentUserError: Error {
-    case authorNotFound
-    case encodingError
-    case errorWhilePublishingToRelays
-
-    var description: String? {
-        switch self {
-        case .authorNotFound:
-            return "Current user's author not found"
-        case .encodingError:
-            return "An encoding error happened while saving the user data"
-        case .errorWhilePublishingToRelays:
-            return "An encoding error happened while publishing to relays"
-        }
-    }
-}
-
 // swiftlint:disable type_body_length superfluous_disable_command
 @Observable class CurrentUser: NSObject, NSFetchedResultsControllerDelegate {
     
@@ -151,15 +134,38 @@ enum CurrentUserError: Error {
 
         await setKeyPair(keyPair)
         analytics.generatedKey()
-        
+
         // Recommended Relays for new user
         for address in Relay.recommended {
             let relay = try? Relay.findOrCreate(by: address, context: viewContext)
             relay?.addToAuthors(author)
         }
         try viewContext.save()
-        
-        await publishContactList(tags: [])
+
+        await followRecommendedAccounts()
+    }
+    
+    /// Follows the nos.social and Tagr-bot accounts. Should only be called when creating a new account.
+    @MainActor private func followRecommendedAccounts() async {
+        let recommendedAccounts = [
+            "npub1pu3vqm4vzqpxsnhuc684dp2qaq6z69sf65yte4p39spcucv5lzmqswtfch", // nos.social
+            "npub12m2t8433p7kmw22t0uzp426xn30lezv3kxcmxvvcrwt2y3hk4ejsvre68j" // Tagr-bot
+        ]
+        for recommendedAccount in recommendedAccounts {
+            do {
+                guard let publicKey = PublicKey(npub: recommendedAccount) else {
+                    assertionFailure(
+                        "Could create public key for npub: \(recommendedAccount)\n" +
+                        "Fix this invalid npub in CurrentUser.followRecommendedAccounts()"
+                    )
+                    continue
+                }
+                let author = try Author.findOrCreate(by: publicKey.hex, context: viewContext)
+                try await follow(author: author)
+            } catch {
+                Log.error("Could not find, create, or follow author for npub: \(recommendedAccount)")
+            }
+        }
     }
 
     @MainActor func subscribe() async {

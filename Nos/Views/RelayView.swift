@@ -223,6 +223,7 @@ struct RelayView: View {
 
 struct RelayView_Previews: PreviewProvider {
     
+    static var previewData = PreviewData()
     static var previewContext = PersistenceController.preview.container.viewContext
     
     static var emptyContext = PersistenceController.empty.container.viewContext
@@ -236,10 +237,13 @@ struct RelayView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             RelayView(author: user)
-        }.environment(\.managedObjectContext, previewContext)
-        
+        }
+        .inject(previewData: previewData)
+
         NavigationStack {
             RelayView(author: user)
-        }.environment(\.managedObjectContext, emptyContext)
+        }
+        .environment(\.managedObjectContext, emptyContext)
+        .environment(previewData.currentUser)
     }
 }
