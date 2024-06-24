@@ -1599,6 +1599,7 @@
 			buildConfigurationList = C9DEBFF8298941020078B43A /* Build configuration list for PBXNativeTarget "Nos" */;
 			buildPhases = (
 				C9BAB0992996BEEA0003A84E /* SwiftLint */,
+				037FFE552C29D11C0047D1B3 /* SwiftGen */,
 				C9DEBFCA298941000078B43A /* Sources */,
 				C9DEBFCB298941000078B43A /* Frameworks */,
 				C9DEBFCC298941000078B43A /* Resources */,
@@ -1607,7 +1608,6 @@
 			);
 			dependencies = (
 				3AD3185D2B294E9000026B07 /* PBXTargetDependency */,
-				C9D573402AB24A3700E06BB4 /* PBXTargetDependency */,
 			);
 			name = Nos;
 			packageProductDependencies = (
@@ -1639,7 +1639,6 @@
 			);
 			dependencies = (
 				3AEABEF32B2BF806001BC933 /* PBXTargetDependency */,
-				C9A6C7442AD83F7A001F9500 /* PBXTargetDependency */,
 				C9DEBFE6298941020078B43A /* PBXTargetDependency */,
 			);
 			name = NosTests;
@@ -1709,7 +1708,6 @@
 				C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */,
 				C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				C99DBF7C2A9E81CF00F7068F /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
-				C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */,
 				C91565BF2B2368FA0068EECA /* XCRemoteSwiftPackageReference "ViewInspector" */,
 				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */,
 				C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */,
@@ -1814,6 +1812,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		037FFE552C29D11C0047D1B3 /* SwiftGen */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftGen;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftgen > /dev/null; then\n  swiftgen\nelse\n  echo \"warning: SwiftGen not installed. For installation instructions, see https://github.com/SwiftGen/SwiftGen\"\nfi\n";
+		};
 		C9BAB0992996BEEA0003A84E /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -2253,14 +2269,6 @@
 			isa = PBXTargetDependency;
 			target = C9DEBFCD298941000078B43A /* Nos */;
 			targetProxy = C90862C129E9804B00C35A71 /* PBXContainerItemProxy */;
-		};
-		C9A6C7442AD83F7A001F9500 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = C9A6C7432AD83F7A001F9500 /* SwiftGenPlugin */;
-		};
-		C9D573402AB24A3700E06BB4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = C9D5733F2AB24A3700E06BB4 /* SwiftGenPlugin */;
 		};
 		C9DEBFE6298941020078B43A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3067,22 +3075,6 @@
 				minimumVersion = 8.0.0;
 			};
 		};
-		C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/BookBeat/SwiftGenPlugin";
-			requirement = {
-				branch = "xcodeproject-support";
-				kind = branch;
-			};
-		};
-		C9C8450C2AB249DB00654BC1 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SwiftGen/SwiftGenPlugin";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.6.2;
-			};
-		};
 		C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/daltoniam/Starscream.git";
@@ -3189,11 +3181,6 @@
 			package = C99DBF7C2A9E81CF00F7068F /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
 			productName = SDWebImageSwiftUI;
 		};
-		C9A6C7432AD83F7A001F9500 /* SwiftGenPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */;
-			productName = "plugin:SwiftGenPlugin";
-		};
 		C9B71DBD2A8E9BAD0031ED9F /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
@@ -3208,11 +3195,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = Sentry;
-		};
-		C9D5733F2AB24A3700E06BB4 /* SwiftGenPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9C8450C2AB249DB00654BC1 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */;
-			productName = "plugin:SwiftGenPlugin";
 		};
 		C9DEC067298965270078B43A /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;
