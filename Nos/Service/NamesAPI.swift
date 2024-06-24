@@ -5,6 +5,32 @@ import Foundation
 /// or not.
 class NamesAPI {
 
+    /// A shared URLCache instance to store responses from NIP-05 providers
+    private let urlCache = URLCache(
+        memoryCapacity: 4 * 1024 * 1024, // 4 MB
+        diskCapacity: 20 * 1024 * 1024,  // 20 MB
+        directory: .cachesDirectory.appending(component: "NamesAPI")
+    )
+
+    /// The maximum Data size we allow when caching responses to prevent
+    /// a large response from taking all the space.
+    private lazy var maximumURLCacheItemSize: Int = {
+        // Use the 5% of disk cache size
+        let maximum = Double(urlCache.diskCapacity) * 0.05
+        return Int(
+            exactly: maximum.rounded(.toNearestOrEven)
+        ) ?? 1024
+    }()
+
+    /// A shared URLSession instance to fetch responses from NIP-05 providers
+    private lazy var session: URLSession = {
+        let configuration = URLSessionConfiguration.default
+        configuration.urlCache = urlCache
+        return URLSession(
+            configuration: configuration
+        )
+    }()
+
     private enum Error: LocalizedError {
         case unexpected
         case usernameNotAvailable
@@ -53,6 +79,7 @@ class NamesAPI {
         }
         self.verificationURL = verificationURL
         self.registrationURL = registrationURL
+        self.urlCache.removeAllCachedResponses()
     }
 
     /// Deletes a given username from `nos.social`
@@ -157,7 +184,14 @@ class NamesAPI {
                 queryItems: [URLQueryItem(name: "name", value: username)]
             )
         )
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response): (Data, URLResponse)
+        if let cachedResponse = urlCache.cachedResponse(for: request) {
+            data = cachedResponse.data
+            response = cachedResponse.response
+        } else {
+            (data, response) = try await session.data(for: request)
+        }
+
         if let response = response as? HTTPURLResponse {
             let statusCode = response.statusCode
             if statusCode == 404 {
@@ -165,6 +199,16 @@ class NamesAPI {
             } else if statusCode == 200 {
                 let jsonObject = try JSONSerialization.jsonObject(with: data)
                 if let json = jsonObject as? [String: Any] {
+                    if data.count < maximumURLCacheItemSize {
+                        let cachedResponse = CachedURLResponse(
+                            response: response,
+                            data: data
+                        )
+                        urlCache.storeCachedResponse(
+                            cachedResponse,
+                            for: request
+                        )
+                    }
                     let names = json["names"] as? [String: String]
                     let npub = names?[username]
                     if npub == publicKey.hex {
