@@ -139,7 +139,8 @@ class NamesAPI {
         let result = try await ping(
             username: localPart,
             host: host,
-            publicKey: publicKey
+            publicKey: publicKey,
+            shouldUseCache: false
         )
         return result == .match
     }
@@ -177,7 +178,8 @@ class NamesAPI {
     private func ping(
         username: String,
         host: URL,
-        publicKey: PublicKey
+        publicKey: PublicKey,
+        shouldUseCache: Bool = true
     ) async throws -> PingResult {
         let request = URLRequest(
             url: host.appending(
@@ -185,9 +187,9 @@ class NamesAPI {
             )
         )
         let (data, response): (Data, URLResponse)
-        if let cachedResponse = urlCache.cachedResponse(for: request) {
-            data = cachedResponse.data
-            response = cachedResponse.response
+        if shouldUseCache, let cached = urlCache.cachedResponse(for: request) {
+            data = cached.data
+            response = cached.response
         } else {
             (data, response) = try await session.data(for: request)
         }
@@ -199,7 +201,7 @@ class NamesAPI {
             } else if statusCode == 200 {
                 let jsonObject = try JSONSerialization.jsonObject(with: data)
                 if let json = jsonObject as? [String: Any] {
-                    if data.count < maximumURLCacheItemSize {
+                    if shouldUseCache, data.count < maximumURLCacheItemSize {
                         let cachedResponse = CachedURLResponse(
                             response: response,
                             data: data
