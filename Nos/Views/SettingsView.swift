@@ -31,13 +31,6 @@ struct SettingsView: View {
     @State private var copyButtonState: CopyButtonState = .copy
     @State private var copyButtonWidth: CGFloat = 0
 
-    func importKey(_ keyPair: KeyPair) async {
-        await currentUser.setKeyPair(keyPair)
-        analytics.identify(with: keyPair)
-        crashReporting.identify(with: keyPair)
-        analytics.changedKey()
-    }
-    
     fileprivate enum AlertAction {
         case logout
     }
@@ -51,27 +44,13 @@ struct SettingsView: View {
         Form {
             Section {
                 HStack {
-                    SecureField(String(localized: .localizable.privateKeyPlaceholder), text: $privateKeyString)
+                    Text(String(repeating: "•", count: 63))
                         .foregroundColor(.primaryTxt)
                         .font(.clarity(.regular, textStyle: .body))
+                        .lineLimit(1)
+                        .accessibilityLabel(Text(.localizable.privateKey))
 
-                    SecondaryActionButton(title: .localizable.save) {
-                        if privateKeyString.isEmpty {
-                            await logout()
-                        } else if let keyPair = KeyPair(nsec: privateKeyString) {
-                            await importKey(keyPair)
-                        } else if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
-                            await importKey(keyPair)
-                        } else {
-                            await currentUser.setKeyPair(nil)
-                            alert = AlertState(title: {
-                                TextState(String(localized: .localizable.invalidKey))
-                            }, message: {
-                                TextState(String(localized: .localizable.couldNotReadPrivateKeyMessage))
-                            })
-                        }
-                    }
-                    .padding(.vertical, 5)
+                    Spacer()
 
                     // The ZStack ensures that the copy and copied buttons
                     // have the same width
