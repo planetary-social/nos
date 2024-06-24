@@ -56,8 +56,10 @@
 		03B4E6AC2C125D13006E5F59 /* FileStorageUploadResponseJSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B4E6AB2C125D13006E5F59 /* FileStorageUploadResponseJSONTests.swift */; };
 		03B4E6AE2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B4E6AD2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift */; };
 		03B4E6AF2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B4E6AD2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift */; };
+		03C5AB4F2C29FC8700EDCFB5 /* AssetsGenerated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FCEEB02C29F56300890277 /* AssetsGenerated.swift */; };
 		03F7C4F32C10DF79006FF613 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */; };
 		03F7C4F42C10E05B006FF613 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */; };
+		03FCEEB12C29F56300890277 /* AssetsGenerated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FCEEB02C29F56300890277 /* AssetsGenerated.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
 		3A1C296F2B2A537C0020B753 /* Moderation.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */; };
@@ -535,6 +537,7 @@
 		03B4E6AB2C125D13006E5F59 /* FileStorageUploadResponseJSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileStorageUploadResponseJSONTests.swift; sourceTree = "<group>"; };
 		03B4E6AD2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileStorageUploadResponseJSON.swift; sourceTree = "<group>"; };
 		03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionProtocol.swift; sourceTree = "<group>"; };
+		03FCEEB02C29F56300890277 /* AssetsGenerated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetsGenerated.swift; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
 		3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Moderation.xcstrings; sourceTree = "<group>"; };
@@ -1009,6 +1012,14 @@
 			path = Generated;
 			sourceTree = "<group>";
 		};
+		03FCEEAB2C29F54400890277 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				03FCEEB02C29F56300890277 /* AssetsGenerated.swift */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
 		3AAB61B12B24CC8A00717A07 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1430,16 +1441,17 @@
 		C9DFA974299C30CA006929C1 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				C9D573472AB24B5800E06BB4 /* SwiftGen Stencils */,
-				C9DEBFDA298941020078B43A /* Assets.xcassets */,
-				C9DFA977299C3189006929C1 /* Localization */,
-				C987F81F29BA94D400B44E7A /* Font */,
-				C94D39242ABDDFB60019C4D5 /* EmptySecrets.xcconfig */,
-				C94D39212ABDDDFE0019C4D5 /* Secrets.xcconfig */,
-				5BE4609F2BACAFEE004B83ED /* DevSecrets.xcconfig */,
-				5BE460A02BACAFEE004B83ED /* ProductionSecrets.xcconfig */,
-				5BE4609E2BACAFEE004B83ED /* StagingSecrets.xcconfig */,
 				C9A0DAEC29C6A66C00466635 /* Launch Screen.storyboard */,
+				C9DEBFDA298941020078B43A /* Assets.xcassets */,
+				5BE4609F2BACAFEE004B83ED /* DevSecrets.xcconfig */,
+				C94D39242ABDDFB60019C4D5 /* EmptySecrets.xcconfig */,
+				5BE460A02BACAFEE004B83ED /* ProductionSecrets.xcconfig */,
+				C94D39212ABDDDFE0019C4D5 /* Secrets.xcconfig */,
+				5BE4609E2BACAFEE004B83ED /* StagingSecrets.xcconfig */,
+				C987F81F29BA94D400B44E7A /* Font */,
+				03FCEEAB2C29F54400890277 /* Generated */,
+				C9DFA977299C3189006929C1 /* Localization */,
+				C9D573472AB24B5800E06BB4 /* SwiftGen Stencils */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -1814,6 +1826,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		037FFE552C29D11C0047D1B3 /* SwiftGen */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -1828,7 +1841,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftgen > /dev/null; then\n  swiftgen\nelse\n  echo \"warning: SwiftGen not installed. For installation instructions, see https://github.com/SwiftGen/SwiftGen\"\nfi\n";
+			shellScript = "${PROJECT_DIR}/swiftgen/bin/swiftgen\n";
 		};
 		C9BAB0992996BEEA0003A84E /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1866,6 +1879,7 @@
 			files = (
 				CD09A74429A50F1D0063464F /* SideMenu.swift in Sources */,
 				C9C547512A4F1CC3006B0741 /* SearchController.swift in Sources */,
+				03FCEEB12C29F56300890277 /* AssetsGenerated.swift in Sources */,
 				C992B32A2B3613CC00704A9C /* SubscriptionCancellable.swift in Sources */,
 				C9DEC06E2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,
 				C9F64D8C29ED840700563F2B /* LogHelper.swift in Sources */,
@@ -2118,6 +2132,7 @@
 				0320C1152BFE63DC00C4C080 /* MockRelaySubscriptionManager.swift in Sources */,
 				035729CB2BE41770005FEE85 /* ContentWarningController.swift in Sources */,
 				CD09A76229A5220E0063464F /* AppController.swift in Sources */,
+				03C5AB4F2C29FC8700EDCFB5 /* AssetsGenerated.swift in Sources */,
 				037975BE2C0E265E00ADDF37 /* LinkPreview.swift in Sources */,
 				C9A0DAF929C92F4500466635 /* UNSAPI.swift in Sources */,
 				C97A1C8C29E45B4E009D9E8D /* RawEventController.swift in Sources */,
