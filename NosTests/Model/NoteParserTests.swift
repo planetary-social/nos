@@ -7,12 +7,13 @@ final class NoteParserTests: CoreDataTestCase {
     // swiftlint:disable:next implicitly_unwrapped_optional
     var sut: NoteParser!
 
+    @MainActor
     override func setUp() async throws {
         sut = NoteParser()
         try await super.setUp()
     }
 
-    func testContentWithRawNpubPrecededByAt() throws {
+    @MainActor func testContentWithRawNpubPrecededByAt() throws {
         // Arrange
         let npub = "npub1pu3vqm4vzqpxsnhuc684dp2qaq6z69sf65yte4p39spcucv5lzmqswtfch"
         let hex = "0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6"
@@ -21,11 +22,10 @@ final class NoteParserTests: CoreDataTestCase {
 
         // Act
         let tags: [[String]] = [[]]
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
 
         // Assert
@@ -36,7 +36,7 @@ final class NoteParserTests: CoreDataTestCase {
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "@\(hex)"))
     }
 
-    func testContentWithRawNIP05() throws {
+    @MainActor func testContentWithRawNIP05() throws {
         // Arrange
         let nip05 = "linda@nos.social"
         let webLink = "@linda@nos.social"
@@ -45,11 +45,10 @@ final class NoteParserTests: CoreDataTestCase {
 
         // Act
         let tags: [[String]] = [[]]
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
 
         // Assert
@@ -60,7 +59,7 @@ final class NoteParserTests: CoreDataTestCase {
         XCTAssertEqual(links[safe: 0]?.value, URL(string: webLink))
     }
 
-    func testContentWithRawNIP05AndAtPrepended() throws {
+    @MainActor func testContentWithRawNIP05AndAtPrepended() throws {
         // Arrange
         let nip05 = "linda@nos.social"
         let webLink = "@linda@nos.social"
@@ -69,11 +68,10 @@ final class NoteParserTests: CoreDataTestCase {
 
         // Act
         let tags: [[String]] = [[]]
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
 
         // Assert
@@ -101,18 +99,17 @@ final class NoteParserTests: CoreDataTestCase {
         XCTAssertEqual(tags, expectedTags)
     }
     
-    func testContentWithMixedMentions() throws {
+    @MainActor func testContentWithMixedMentions() throws {
         let content = "hello nostr:npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6 and #[1]"
         let displayName1 = "npub1937vv..."
         let hex1 = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let displayName2 = "npub180cvv..."
         let hex2 = "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d"
         let tags = [["p", hex1], ["p", hex2]]
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
         let links = attributedContent.links
         XCTAssertEqual(links.count, 2)
@@ -122,16 +119,15 @@ final class NoteParserTests: CoreDataTestCase {
         XCTAssertEqual(links[safe: 1]?.value, URL(string: "@\(hex2)"))
     }
 
-    func testContentWithUntaggedNpub() throws {
+    @MainActor func testContentWithUntaggedNpub() throws {
         let content = "hello npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let npub = "npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags: [[String]] = [[]]
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
@@ -139,15 +135,14 @@ final class NoteParserTests: CoreDataTestCase {
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "@\(hex)"))
     }
 
-    func testContentWithUntaggedNote() throws {
+    @MainActor func testContentWithUntaggedNote() throws {
         let content = "Check this note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
         let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [[]]
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
@@ -155,15 +150,14 @@ final class NoteParserTests: CoreDataTestCase {
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
     }
     
-    func testContentWithUntaggedNIP27Note() throws {
+    @MainActor func testContentWithUntaggedNIP27Note() throws {
         let content = "Check this nostr:note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
         let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [[]]
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
@@ -171,7 +165,7 @@ final class NoteParserTests: CoreDataTestCase {
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
     }
     
-    func testContentWithUntaggedProfile() throws {
+    @MainActor func testContentWithUntaggedProfile() throws {
         let profile = "nprofile1qqszclxx9f5haga8sfjjrulaxncvkfekj097t6f3pu65f86rvg49ehqj6f9dh"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
 
@@ -179,11 +173,10 @@ final class NoteParserTests: CoreDataTestCase {
         let tags: [[String]] = [[]]
         
         let expectedContent = content
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
 
         let parsedContent = String(attributedContent.characters)
@@ -195,7 +188,7 @@ final class NoteParserTests: CoreDataTestCase {
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "@\(hex)"))
     }
 
-    func testContentWithUntaggedEvent() throws {
+    @MainActor func testContentWithUntaggedEvent() throws {
         // swiftlint:disable line_length
         let event = "nevent1qqst8cujky046negxgwwm5ynqwn53t8aqjr6afd8g59nfqwxpdhylpcpzamhxue69uhhyetvv9ujuetcv9khqmr99e3k7mg8arnc9"
         // swiftlint:enable line_length
@@ -206,11 +199,10 @@ final class NoteParserTests: CoreDataTestCase {
         let tags: [[String]] = [[]]
 
         let expectedContent = "check this 🔗 Link to note"
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
 
         let parsedContent = String(attributedContent.characters)
@@ -222,7 +214,7 @@ final class NoteParserTests: CoreDataTestCase {
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
     }
 
-    func testContentWithUntaggedEventWithADot() throws {
+    @MainActor func testContentWithUntaggedEventWithADot() throws {
         // swiftlint:disable line_length
         let event = "nevent1qqst8cujky046negxgwwm5ynqwn53t8aqjr6afd8g59nfqwxpdhylpcpzamhxue69uhhyetvv9ujuetcv9khqmr99e3k7mg8arnc9"
         // swiftlint:enable line_length
@@ -233,11 +225,10 @@ final class NoteParserTests: CoreDataTestCase {
         let tags: [[String]] = [[]]
 
         let expectedContent = "check this 🔗 Link to note. Bye!"
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
 
         let parsedContent = String(attributedContent.characters)
@@ -249,7 +240,7 @@ final class NoteParserTests: CoreDataTestCase {
         XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
     }
 
-    func testContentWithMalformedEvent() throws {
+    @MainActor func testContentWithMalformedEvent() throws {
         // swiftlint:disable line_length
         let event = "nevent1qqst8cujky046negxgwwm5ynqwn53t8aqjr6afd8g59nfqwxpdhylpcpzamhxue69uhhyetvv9ujuetcv9khqmr99e3k7mg8arnc9"
         // swiftlint:enable line_length
@@ -258,11 +249,10 @@ final class NoteParserTests: CoreDataTestCase {
         let tags: [[String]] = [[]]
 
         let expectedContent = content
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
 
         let parsedContent = String(attributedContent.characters)

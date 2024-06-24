@@ -1,20 +1,19 @@
 import XCTest
 
 extension NoteParserTests {
-    func testContentWithNIP08Mention() throws {
+    @MainActor func testContentWithNIP08Mention() throws {
         let name = "mattn"
         let content = "hello #[0]"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let expectedContent = "hello @\(name)"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(testContext)
-        let author = try Author.findOrCreate(by: hex, context: context)
+        let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
-        try context.save()
+        try testContext.save()
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
@@ -44,17 +43,16 @@ extension NoteParserTests {
         XCTAssertEqual(links.first?.value, URL(string: "@\(hex)"))
     }
 
-    func testContentWithNIP08MentionAtBeginning() throws {
+    @MainActor func testContentWithNIP08MentionAtBeginning() throws {
         let content = "#[0]"
         let displayName = "npub1937vv..."
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let expectedContent = "@\(displayName)"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
@@ -64,17 +62,16 @@ extension NoteParserTests {
         XCTAssertEqual(links.first?.value, URL(string: "@\(hex)"))
     }
 
-    func testContentWithNIP08MentionAfterNewline() throws {
+    @MainActor func testContentWithNIP08MentionAfterNewline() throws {
         let content = "Hello\n#[0]"
         let displayName = "npub1937vv..."
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let expectedContent = "Hello\n@\(displayName)"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
@@ -84,16 +81,15 @@ extension NoteParserTests {
         XCTAssertEqual(links.first?.value, URL(string: "@\(hex)"))
     }
 
-    func testContentWithNIP08MentionInsideAWord() throws {
+    @MainActor func testContentWithNIP08MentionInsideAWord() throws {
         let content = "hello#[0]"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let expectedContent = "hello#[0]"
         let tags = [["p", hex]]
-        let context = try XCTUnwrap(testContext)
         let (attributedContent, _) = sut.parse(
             content: content,
             tags: tags,
-            context: context
+            context: testContext
         )
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)

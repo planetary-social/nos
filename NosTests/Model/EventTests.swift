@@ -7,7 +7,7 @@ import Dependencies
 /// Tests for the Event model.
 final class EventTests: CoreDataTestCase {
     // MARK: - Serialization
-    func testSerializedEventForSigning() throws {
+    @MainActor func testSerializedEventForSigning() throws {
         // Arrange
         let tags = [["p", "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"]]
         let content = "Testing nos #[0]"
@@ -28,7 +28,7 @@ final class EventTests: CoreDataTestCase {
 
     // MARK: - Identifier calculation
 
-    func testIdentifierCalculation() throws {
+    @MainActor func testIdentifierCalculation() throws {
         // Arrange
         let tags = [["p", "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"]]
         let content = "Testing nos #[0]"
@@ -41,7 +41,7 @@ final class EventTests: CoreDataTestCase {
         )
     }
     
-    func testIdentifierCalculationWithEmptyAndNoTags() throws {
+    @MainActor func testIdentifierCalculationWithEmptyAndNoTags() throws {
         // Arrange
         let content = "Testing nos #[0]"
         let nilTagsEvent = try EventFixture.build(in: testContext, content: content, tags: nil)
@@ -63,7 +63,7 @@ final class EventTests: CoreDataTestCase {
     /// Verifies that we can sign an event and verify it.
     /// Since Schnorr signatures are non-deterministic we can't assert on constants. That's why all this test really
     /// does is verify that we are internally consistent in our signature logic.
-    func testSigningAndVerification() throws {
+    @MainActor func testSigningAndVerification() throws {
         // Arrange
         let event = try EventFixture.build(in: testContext)
         
@@ -74,7 +74,7 @@ final class EventTests: CoreDataTestCase {
         XCTAssert(try event.verifySignature(for: KeyFixture.keyPair.publicKey))
     }
     
-    func testVerificationOnBadId() throws {
+    @MainActor func testVerificationOnBadId() throws {
         // Arrange
         let event = try EventFixture.build(in: testContext)
         
@@ -86,7 +86,7 @@ final class EventTests: CoreDataTestCase {
         XCTAssertFalse(try event.verifySignature(for: KeyFixture.keyPair.publicKey))
     }
     
-    func testVerificationOnBadSignature() throws {
+    @MainActor func testVerificationOnBadSignature() throws {
         // Arrange
         let event = try EventFixture.build(in: testContext)
         event.identifier = try event.calculateIdentifier()
@@ -99,7 +99,7 @@ final class EventTests: CoreDataTestCase {
         XCTAssertFalse(try event.verifySignature(for: KeyFixture.keyPair.publicKey))
     }
 
-    func testFetchEventByIDPerformance() throws {
+    @MainActor func testFetchEventByIDPerformance() throws {
         let testEvent = try EventFixture.build(in: testContext)
         testEvent.identifier = try testEvent.calculateIdentifier()
         let eventID = testEvent.identifier!
@@ -113,7 +113,7 @@ final class EventTests: CoreDataTestCase {
     
     // MARK: - Replies
     
-    func testReferencedNoteGivenMentionMarker() throws {
+    @MainActor func testReferencedNoteGivenMentionMarker() throws {
         let testEvent = try EventFixture.build(in: testContext)
         
         let mention = try EventReference(
@@ -125,7 +125,7 @@ final class EventTests: CoreDataTestCase {
         XCTAssertNil(testEvent.referencedNote())
     }
     
-    func testRepostedNote() throws {
+    @MainActor func testRepostedNote() throws {
         let testEvent = try EventFixture.build(in: testContext)
         testEvent.kind = 6
         
@@ -141,7 +141,7 @@ final class EventTests: CoreDataTestCase {
         )
     }
     
-    func testRepostedNoteGivenNonRepost() throws {
+    @MainActor func testRepostedNoteGivenNonRepost() throws {
         let testEvent = try EventFixture.build(in: testContext)
         testEvent.kind = 1
         
@@ -156,7 +156,7 @@ final class EventTests: CoreDataTestCase {
     
     // MARK: - Fetch requests
     
-    func test_eventByIdentifierSeenOnRelay_givenAlreadySeen() throws {
+    @MainActor func test_eventByIdentifierSeenOnRelay_givenAlreadySeen() throws {
         // Arrange
         let eventID = "foo"
         let event = try Event.findOrCreateStubBy(id: eventID, context: testContext)
@@ -172,7 +172,7 @@ final class EventTests: CoreDataTestCase {
         XCTAssertEqual(events.first, event)
     }
     
-    func test_eventByIdentifierSeenOnRelay_givenNotSeen() throws {
+    @MainActor func test_eventByIdentifierSeenOnRelay_givenNotSeen() throws {
         // Arrange
         let eventID = "foo"
         _ = try Event.findOrCreateStubBy(id: eventID, context: testContext)
@@ -185,7 +185,7 @@ final class EventTests: CoreDataTestCase {
         XCTAssertEqual(events.count, 0)
     }
     
-    func test_eventByIdentifierSeenOnRelay_givenSeenOnAnother() throws {
+    @MainActor func test_eventByIdentifierSeenOnRelay_givenSeenOnAnother() throws {
         // Arrange
         let eventID = "foo"
         let event = try Event.findOrCreateStubBy(id: eventID, context: testContext)

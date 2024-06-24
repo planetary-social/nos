@@ -4,7 +4,7 @@ import Dependencies
 
 final class SocialGraphTests: CoreDataTestCase {
     
-    func testEmpty() async throws {
+    @MainActor func testEmpty() async throws {
         // Arrange
         _ = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
         
@@ -17,7 +17,7 @@ final class SocialGraphTests: CoreDataTestCase {
     }
     
     /// The `XCTExpectFailure` below does _not_ work in CI. That is, when the test fails, CI still fails.
-    func testOneFollower() async throws {
+    @MainActor func testOneFollower() async throws {
         XCTExpectFailure("This test is failing intermittently, see #671", options: .nonStrict())
 
         // Arrange
@@ -42,7 +42,7 @@ final class SocialGraphTests: CoreDataTestCase {
     }
     
     /// The `XCTExpectFailure` below does _not_ work in CI. That is, when the test fails, CI still fails.
-    func testFollow() async throws {
+    @MainActor func testFollow() async throws {
         XCTExpectFailure("This test is failing intermittently, see #671", options: .nonStrict())
 
         // Arrange
@@ -69,7 +69,7 @@ final class SocialGraphTests: CoreDataTestCase {
     }
     
     /// The `XCTExpectFailure` below does _not_ work in CI. That is, when the test fails, CI still fails.
-    func testTwoFollows() async throws {
+    @MainActor func testTwoFollows() async throws {
         XCTExpectFailure("This test is failing intermittently, see #671", options: .nonStrict())
 
         // Arrange
@@ -106,7 +106,7 @@ final class SocialGraphTests: CoreDataTestCase {
         try await eventually { await sut.followedKeys == expectedKeys }
     }
     
-    func testTwoHops() async throws {
+    @MainActor func testTwoHops() async throws {
         // Arrange
         let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
         let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
@@ -143,7 +143,7 @@ final class SocialGraphTests: CoreDataTestCase {
         try await eventually { await sut.isInNetwork(KeyFixture.eve.publicKeyHex) }
     }
     
-    func testOutOfNetwork() async throws {
+    @MainActor func testOutOfNetwork() async throws {
         // Arrange
         _ = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
         _ = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
