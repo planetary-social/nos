@@ -15,7 +15,7 @@ struct FeaturedAuthor {
     
     let rawID: RawAuthorID
     
-    internal init(name: String, npub: String, categories: [FeaturedAuthorCategory]) {
+    init(name: String, npub: String, categories: [FeaturedAuthorCategory]) {
         self.name = name
         self.npub = npub
         self.categories = categories
