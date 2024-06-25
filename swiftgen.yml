@@ -2,4 +2,4 @@ xcassets:
   - inputs: Nos/Assets/Assets.xcassets
     outputs:
       - templatePath: Nos/Assets/SwiftGen Stencils/custom-xcassets.stencil
-        output: Nos/Assets/Generated/AssetsGenerated.swift
+        output: Nos/Assets/Generated/Assets.generated.swift
