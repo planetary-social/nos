@@ -36,23 +36,14 @@ struct NIP05View: View {
             }
             .task(priority: .userInitiated) {
                 if let nip05Identifier = author.nip05, let publicKey = author.publicKey {
-
-                    let isVerified: Bool
+                    let isVerified: Bool?
                     do {
                         isVerified = try await namesAPI.verify(
                             username: nip05Identifier,
                             publicKey: publicKey
                         )
-                    } catch URLError.cancelled {
-                        // URLSession cancels the request when the task is
-                        // cancelled. Cancelled requests are common specially in
-                        // bad networks because it is normal that the user
-                        // scrolls past the author before the requests
-                        // completes. Thus, we need to catch .cancelled so we
-                        // don't display a strike-through in those cases.
-                        return
                     } catch {
-                        isVerified = false
+                        isVerified = nil
                         let message = error.localizedDescription
                         Log.debug("Error while verifying a NIP-05: \(message)")
                     }
