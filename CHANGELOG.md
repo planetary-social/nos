@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed a performance issue after opening the Discover tab.
+
+## [0.1.18] - 2024-06-24Z
+
 - Updated the recommended relays list.
 - Fixed a bug where @npubs could be displayed instead of names in note text.
 - Fixed a bug when mentioning profiles with emojis in the name.
