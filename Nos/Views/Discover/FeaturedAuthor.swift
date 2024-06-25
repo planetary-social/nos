@@ -12,6 +12,21 @@ struct FeaturedAuthor {
     /// The categories in which to show the author on the Discover tab.
     /// No need to include the `.all` category; that's done automatically.
     let categories: [FeaturedAuthorCategory]
+    
+    let rawID: RawAuthorID
+    
+    internal init(name: String, npub: String, categories: [FeaturedAuthorCategory]) {
+        self.name = name
+        self.npub = npub
+        self.categories = categories
+        
+        guard let rawID = PublicKey(npub: npub)?.hex else {
+            assertionFailure("A FeaturedAuthor has a invalid npub: \(npub)")
+            self.rawID = ""
+            return
+        } 
+        self.rawID = rawID
+    }
 }
 
 extension FeaturedAuthor {

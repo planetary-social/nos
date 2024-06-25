@@ -11,28 +11,10 @@ struct FeaturedAuthorsView: View {
 
     @Dependency(\.relayService) private var relayService
 
-    @FetchRequest(fetchRequest: Author.matching(npubs: FeaturedAuthorCategory.all.npubs)) private var authors
-
+    /// The IDs of the authors we will display when we aren't searching.
+    @State private var featuredAuthorIDs = [RawAuthorID]()
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
     @State private var selectedCategory: FeaturedAuthorCategory = .all
-
-    private var sortedAuthors: [Author] {
-        authors.sorted { authorA, authorB in
-            let allFeatured = FeaturedAuthor.all
-            guard let indexA = allFeatured.firstIndex(where: { $0.npub == authorA.npubString }),
-                let indexB = allFeatured.firstIndex(where: { $0.npub == authorB.npubString }) else {
-                return false
-            }
-            return indexA < indexB
-        }
-    }
-
-    private var filteredAuthors: [Author] {
-        sortedAuthors.filter { author in
-            guard let npubString = author.npubString else { return false }
-            return selectedCategory.npubs.contains(npubString)
-        }
-    }
 
     /// Initializes a FeaturedAuthorsView with the selected category and a search controller.
     /// - Parameters:
@@ -54,27 +36,29 @@ struct FeaturedAuthorsView: View {
                             LazyVStack {
                                 categoryPicker
 
-                                ForEach(filteredAuthors) { author in
-                                    AuthorCard(author: author) {
-                                        router.push(author)
-                                    }
-                                    .padding(.horizontal, 13)
-                                    .padding(.top, 5)
-                                    .readabilityPadding()
-                                    .task {
-                                        subscriptions[author.id] =
+                                ForEach(featuredAuthorIDs) { authorID in
+                                    AuthorObservationView(authorID: authorID) { author in
+                                        AuthorCard(author: author) {
+                                            router.push(author)
+                                        }
+                                        .padding(.horizontal, 13)
+                                        .padding(.top, 5)
+                                        .readabilityPadding()
+                                        .task {
+                                            subscriptions[author.id] =
                                             await relayService.requestMetadata(
                                                 for: author.hexadecimalPublicKey,
                                                 since: author.lastUpdatedMetadata
                                             )
+                                        }
                                     }
                                 }
                             }
                             .padding(.bottom, 16)
                         }
                         .doubleTapToPop(tab: .discover) { proxy in
-                            if let firstAuthor = sortedAuthors.first {
-                                proxy.scrollTo(firstAuthor.id)
+                            if let firstAuthorID = featuredAuthorIDs.first {
+                                proxy.scrollTo(firstAuthorID, anchor: .bottom)
                             }
                         }
                     case .empty:
@@ -101,7 +85,7 @@ struct FeaturedAuthorsView: View {
                         }
                         .doubleTapToPop(tab: .discover) { proxy in
                             if let firstAuthor = searchController.authorResults.first {
-                                proxy.scrollTo(firstAuthor.id)
+                                proxy.scrollTo(firstAuthor.id, anchor: .bottom)
                             }
                         }
                     }
@@ -109,8 +93,8 @@ struct FeaturedAuthorsView: View {
                 .preference(key: SizePreferenceKey.self, value: geometry.size)
             }
         }
-        .task {
-            findOrCreateAuthors()
+        .onAppear {
+            updateDisplayedFeaturedAuthors()
         }
     }
 
@@ -151,27 +135,16 @@ struct FeaturedAuthorsView: View {
                         .padding(4)
                         .frame(minWidth: 44, minHeight: 44)
                 })
+                .onChange(of: selectedCategory) { _, _ in
+                    updateDisplayedFeaturedAuthors()
+                }
             }
             Spacer()
         }
         .padding(.leading, 10)
     }
 
-    private func findOrCreateAuthors() {
-        for featuredAuthorNpub in FeaturedAuthorCategory.all.npubs {
-            do {
-                guard let publicKey = PublicKey(npub: featuredAuthorNpub) else {
-                    assertionFailure(
-                        "Could create public key for npub: \(featuredAuthorNpub)\n" +
-                        "Fix this invalid npub in FeaturedAuthorCategory."
-                    )
-                    continue
-                }
-                try Author.findOrCreate(by: publicKey.hex, context: viewContext)
-            } catch {
-                Log.error("Could not find or create author for npub: \(featuredAuthorNpub)")
-            }
-        }
-        try? viewContext.saveIfNeeded()
+    private func updateDisplayedFeaturedAuthors() {
+        self.featuredAuthorIDs = selectedCategory.rawIDs
     }
 }
