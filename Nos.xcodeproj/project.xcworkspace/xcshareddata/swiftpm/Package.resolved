@@ -1,5 +1,4 @@
 {
-  "originHash" : "9d9ab489fcf7e6e1dbd4d6b4de5dbbf23ad428dd42f08feea77a63697491a0f7",
   "pins" : [
     {
       "identity" : "bech32",
@@ -208,5 +207,5 @@
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }
