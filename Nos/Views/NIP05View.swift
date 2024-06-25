@@ -42,6 +42,12 @@ struct NIP05View: View {
                             username: nip05Identifier,
                             publicKey: publicKey
                         )
+                    } catch URLError.cannotFindHost {
+                        isVerified = false
+                        Log.debug("Server cannot be found")
+                    } catch URLError.cannotConnectToHost {
+                        isVerified = false
+                        Log.debug("Server cannot be connected to")
                     } catch {
                         isVerified = nil
                         let message = error.localizedDescription
