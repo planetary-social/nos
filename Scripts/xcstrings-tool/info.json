@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifacts": {
+    "xcstrings-tool": {
+      "version": "0.5.1",
+      "type": "executable",
+      "variants": [
+        {
+          "path": "xcstrings-tool-0.5.1-macos/bin/xcstrings-tool",
+          "supportedTriples": [
+            "x86_64-apple-macosx",
+            "arm64-apple-macosx"
+          ]
+        }
+      ]
+    }
+  }
+}

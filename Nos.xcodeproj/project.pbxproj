@@ -57,6 +57,14 @@
 		03B4E6AE2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B4E6AD2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift */; };
 		03B4E6AF2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B4E6AD2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift */; };
 		03C5AB4F2C29FC8700EDCFB5 /* AssetsGenerated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FCEEB02C29F56300890277 /* AssetsGenerated.swift */; };
+		03CED5EC2C2B18D60061B2A1 /* ImagePicker.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CED5E82C2B18D60061B2A1 /* ImagePicker.generated.swift */; };
+		03CED5ED2C2B18D60061B2A1 /* ImagePicker.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CED5E82C2B18D60061B2A1 /* ImagePicker.generated.swift */; };
+		03CED5EE2C2B18D60061B2A1 /* Moderation.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CED5E92C2B18D60061B2A1 /* Moderation.generated.swift */; };
+		03CED5EF2C2B18D60061B2A1 /* Moderation.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CED5E92C2B18D60061B2A1 /* Moderation.generated.swift */; };
+		03CED5F02C2B18D60061B2A1 /* Reply.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CED5EA2C2B18D60061B2A1 /* Reply.generated.swift */; };
+		03CED5F12C2B18D60061B2A1 /* Reply.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CED5EA2C2B18D60061B2A1 /* Reply.generated.swift */; };
+		03CED5F22C2B18D60061B2A1 /* Localizable.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CED5EB2C2B18D60061B2A1 /* Localizable.generated.swift */; };
+		03CED5F32C2B18D60061B2A1 /* Localizable.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CED5EB2C2B18D60061B2A1 /* Localizable.generated.swift */; };
 		03F7C4F32C10DF79006FF613 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */; };
 		03F7C4F42C10E05B006FF613 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */; };
 		03FCEEB12C29F56300890277 /* AssetsGenerated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FCEEB02C29F56300890277 /* AssetsGenerated.swift */; };
@@ -536,6 +544,10 @@
 		03B4E6A12C125CA1006E5F59 /* nostr_build_nip96_upload_response.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nostr_build_nip96_upload_response.json; sourceTree = "<group>"; };
 		03B4E6AB2C125D13006E5F59 /* FileStorageUploadResponseJSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileStorageUploadResponseJSONTests.swift; sourceTree = "<group>"; };
 		03B4E6AD2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileStorageUploadResponseJSON.swift; sourceTree = "<group>"; };
+		03CED5E82C2B18D60061B2A1 /* ImagePicker.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePicker.generated.swift; sourceTree = "<group>"; };
+		03CED5E92C2B18D60061B2A1 /* Moderation.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Moderation.generated.swift; sourceTree = "<group>"; };
+		03CED5EA2C2B18D60061B2A1 /* Reply.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reply.generated.swift; sourceTree = "<group>"; };
+		03CED5EB2C2B18D60061B2A1 /* Localizable.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localizable.generated.swift; sourceTree = "<group>"; };
 		03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionProtocol.swift; sourceTree = "<group>"; };
 		03FCEEB02C29F56300890277 /* AssetsGenerated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetsGenerated.swift; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
@@ -1016,6 +1028,10 @@
 			isa = PBXGroup;
 			children = (
 				03FCEEB02C29F56300890277 /* AssetsGenerated.swift */,
+				03CED5E82C2B18D60061B2A1 /* ImagePicker.generated.swift */,
+				03CED5EB2C2B18D60061B2A1 /* Localizable.generated.swift */,
+				03CED5E92C2B18D60061B2A1 /* Moderation.generated.swift */,
+				03CED5EA2C2B18D60061B2A1 /* Reply.generated.swift */,
 			);
 			path = Generated;
 			sourceTree = "<group>";
@@ -1612,6 +1628,7 @@
 			buildPhases = (
 				C9BAB0992996BEEA0003A84E /* SwiftLint */,
 				037FFE552C29D11C0047D1B3 /* SwiftGen */,
+				03CED5E42C2B15250061B2A1 /* XCStringsTool */,
 				C9DEBFCA298941000078B43A /* Sources */,
 				C9DEBFCB298941000078B43A /* Frameworks */,
 				C9DEBFCC298941000078B43A /* Resources */,
@@ -1619,7 +1636,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				3AD3185D2B294E9000026B07 /* PBXTargetDependency */,
 			);
 			name = Nos;
 			packageProductDependencies = (
@@ -1650,7 +1666,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				3AEABEF32B2BF806001BC933 /* PBXTargetDependency */,
 				C9DEBFE6298941020078B43A /* PBXTargetDependency */,
 			);
 			name = NosTests;
@@ -1721,7 +1736,6 @@
 				C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				C99DBF7C2A9E81CF00F7068F /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				C91565BF2B2368FA0068EECA /* XCRemoteSwiftPackageReference "ViewInspector" */,
-				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */,
 				C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */,
 				C9FD35112BCED5A6008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */,
 			);
@@ -1841,7 +1855,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${PROJECT_DIR}/swiftgen/bin/swiftgen\n";
+			shellScript = "${PROJECT_DIR}/Scripts/swiftgen/bin/swiftgen\n";
+		};
+		03CED5E42C2B15250061B2A1 /* XCStringsTool */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = XCStringsTool;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PROJECT_DIR}/Scripts/xcstrings-tool/xcstrings-tool-0.5.1-macos/bin/xcstrings-tool Nos/Assets/Localization/Localizable.xcstrings --output Nos/Assets/Generated/Localizable.generated.swift\n\n${PROJECT_DIR}/Scripts/xcstrings-tool/xcstrings-tool-0.5.1-macos/bin/xcstrings-tool ${PROJECT_DIR}/Nos/Assets/Localization/ImagePicker.xcstrings --output Nos/Assets/Generated/ImagePicker.generated.swift\n\n${PROJECT_DIR}/Scripts/xcstrings-tool/xcstrings-tool-0.5.1-macos/bin/xcstrings-tool ${PROJECT_DIR}/Nos/Assets/Localization/Moderation.xcstrings --output Nos/Assets/Generated/Moderation.generated.swift\n\n${PROJECT_DIR}/Scripts/xcstrings-tool/xcstrings-tool-0.5.1-macos/bin/xcstrings-tool ${PROJECT_DIR}/Nos/Assets/Localization/Reply.xcstrings --output Nos/Assets/Generated/Reply.generated.swift\n";
 		};
 		C9BAB0992996BEEA0003A84E /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2005,6 +2038,7 @@
 				C973AB5F2A323167002AED16 /* AuthorReference+CoreDataProperties.swift in Sources */,
 				A3B943CF299AE00100A15A08 /* KeyChain.swift in Sources */,
 				C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */,
+				03CED5F02C2B18D60061B2A1 /* Reply.generated.swift in Sources */,
 				C9646EA129B7A22C007239A4 /* Analytics.swift in Sources */,
 				C9A6C74B2AD866A7001F9500 /* UNSSuccessView.swift in Sources */,
 				C981E2DB2AC6088900FBF4F6 /* UNSVerifyCodeView.swift in Sources */,
@@ -2015,6 +2049,7 @@
 				C93F48902AC5C9C400900CEC /* UNSWizardPhoneView.swift in Sources */,
 				A3B943D5299D514800A15A08 /* Follow+CoreDataClass.swift in Sources */,
 				C92DF80529C25DE900400561 /* URL+Extensions.swift in Sources */,
+				03CED5EE2C2B18D60061B2A1 /* Moderation.generated.swift in Sources */,
 				5BE281C12AE2CCB400880466 /* StoryNoteView.swift in Sources */,
 				3F60F42929B27D3E000D62C4 /* ThreadView.swift in Sources */,
 				C9B678DB29EEBF3B00303F33 /* DependencyInjection.swift in Sources */,
@@ -2032,6 +2067,7 @@
 				5BE281CA2AE2CCEB00880466 /* HomeTab.swift in Sources */,
 				C94D14812A12B3F70014C906 /* SearchBar.swift in Sources */,
 				C9A6C7472AD84263001F9500 /* UNSNamePicker.swift in Sources */,
+				03CED5F22C2B18D60061B2A1 /* Localizable.generated.swift in Sources */,
 				C93EC2F729C351470012EE2A /* Optional+Unwrap.swift in Sources */,
 				A32B6C7829A6C99200653FF5 /* FollowCard.swift in Sources */,
 				C92DF80829C25FA900400561 /* SquareImage.swift in Sources */,
@@ -2060,6 +2096,7 @@
 				C9DEC0632989541F0078B43A /* Bundle+Current.swift in Sources */,
 				C93EC2F429C34C860012EE2A /* NSPredicate+Bool.swift in Sources */,
 				5B79F6132B98B145002DA9BE /* WizardNavigationStack.swift in Sources */,
+				03CED5EC2C2B18D60061B2A1 /* ImagePicker.generated.swift in Sources */,
 				C9F84C1C298DBBF400C6714D /* Data+Sha.swift in Sources */,
 				5BE281BE2AE2CCAE00880466 /* StoriesView.swift in Sources */,
 				C936B4622A4CB01C00DF1EB9 /* PushNotificationService.swift in Sources */,
@@ -2171,6 +2208,7 @@
 				037975BD2C0E25E200ADDF37 /* FeatureFlags.swift in Sources */,
 				C98CA9082B14FD8600929141 /* PagedRelaySubscription.swift in Sources */,
 				5B79F5B82B8E71CC002DA9BE /* NamesAPI.swift in Sources */,
+				03CED5F32C2B18D60061B2A1 /* Localizable.generated.swift in Sources */,
 				C9F204812AE02D8C0029A858 /* AppDestination.swift in Sources */,
 				5B098DC72BDAF77400500A1B /* AttributedString+Links.swift in Sources */,
 				035729B02BE4167E005FEE85 /* NoteParserTests.swift in Sources */,
@@ -2188,8 +2226,11 @@
 				C93EC2F829C351470012EE2A /* Optional+Unwrap.swift in Sources */,
 				035729BD2BE416BD005FEE85 /* EventObservationTests.swift in Sources */,
 				C9C5475C2A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift in Sources */,
+				03CED5EF2C2B18D60061B2A1 /* Moderation.generated.swift in Sources */,
 				C9B678DF29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */,
+				03CED5F12C2B18D60061B2A1 /* Reply.generated.swift in Sources */,
 				A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */,
+				03CED5ED2C2B18D60061B2A1 /* ImagePicker.generated.swift in Sources */,
 				C9ADB13E29929EEF0075E7F8 /* Bech32.swift in Sources */,
 				5B098DC92BDAF7CF00500A1B /* NoteParserTests+NIP27.swift in Sources */,
 				C9C097262C13537900F78EC3 /* DatabaseCleaner.swift in Sources */,
@@ -2272,14 +2313,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3AD3185D2B294E9000026B07 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = 3AD3185C2B294E9000026B07 /* XCStringsToolPlugin */;
-		};
-		3AEABEF32B2BF806001BC933 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = 3AEABEF22B2BF806001BC933 /* XCStringsToolPlugin */;
-		};
 		C90862C229E9804B00C35A71 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C9DEBFCD298941000078B43A /* Nos */;
@@ -3010,14 +3043,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/liamnichols/xcstrings-tool-plugin.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.1;
-			};
-		};
 		C91565BF2B2368FA0068EECA /* XCRemoteSwiftPackageReference "ViewInspector" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nalexn/ViewInspector";
@@ -3117,16 +3142,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3AD3185C2B294E9000026B07 /* XCStringsToolPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
-			productName = "plugin:XCStringsToolPlugin";
-		};
-		3AEABEF22B2BF806001BC933 /* XCStringsToolPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
-			productName = "plugin:XCStringsToolPlugin";
-		};
 		C905B0742A619367009B8A78 /* DequeModule */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C96CB98A2A6040C500498C4E /* XCRemoteSwiftPackageReference "swift-collections" */;
