@@ -1074,9 +1074,14 @@ public class Event: NosManagedObject, VerifiableEvent {
         }
     }
     
-    class func replyMetadata(for noteID: RawEventID?, context: NSManagedObjectContext) async -> (Int, [URL]) {
+    /// Fetches the reply metadata associated to a given note id.
+    ///
+    /// - returns: a Bool value indicating if there is a discussion happening
+    /// and an array of avatars of known people that are participanting in
+    /// that discussion.
+    class func replyMetadata(for noteID: RawEventID?, context: NSManagedObjectContext) async -> (Bool, [URL]) {
         guard let noteID else {
-            return (0, [])
+            return (false, [])
         }
         
         return await context.perform {
@@ -1099,7 +1104,7 @@ public class Event: NosManagedObject, VerifiableEvent {
                     }
                 }
             }
-            return (replyCount, avatarURLs)
+            return (replyCount > 0, avatarURLs)
         }
     }
     

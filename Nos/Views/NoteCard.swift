@@ -12,7 +12,7 @@ struct NoteCard: View {
     
     var style = CardStyle.compact
     
-    @State private var replyCount = 0
+    @State private var isBeingDiscussed: Bool?
     @State private var replyAvatarURLs = [URL]()
     @State private var warningController = NoteWarningController()
     
@@ -25,18 +25,18 @@ struct NoteCard: View {
     private var replyAction: ((Event) -> Void)?
     
     private var attributedReplies: AttributedString? {
-        if replyCount == 0 {
+        guard let isBeingDiscussed, isBeingDiscussed else {
             return nil
         }
-        let string = String(localized: .reply.replies(replyCount))
-        do {
-            var attributed = try AttributedString(markdown: string)
-            if let range = attributed.range(of: "\(replyCount)") {
-                attributed[range].foregroundColor = .primaryTxt
-            }
-            return attributed
-        } catch {
-            return nil
+        if replyAvatarURLs.isEmpty {
+            return AttributedString(
+                "Join the discussion",
+                attributes: AttributeContainer(
+                    [NSAttributedString.Key.foregroundColor: UIColor.primaryTxt]
+                )
+            )
+        } else {
+            return AttributedString("in discussion")
         }
     }
 
@@ -137,14 +137,15 @@ struct NoteCard: View {
         }
         .background(LinearGradient.cardBackground)
         .task {
-            if showReplyCount {
-                let (replyCount, replyAvatarURLs) = await Event.replyMetadata(
-                    for: note.identifier, 
-                    context: persistenceController.backgroundViewContext
-                )
-                self.replyCount = replyCount
-                self.replyAvatarURLs = replyAvatarURLs
+            guard showReplyCount else {
+                return
             }
+            let (isBeingDiscussed, replyAvatarURLs) = await Event.replyMetadata(
+                for: note.identifier,
+                context: persistenceController.backgroundViewContext
+            )
+            self.isBeingDiscussed = isBeingDiscussed
+            self.replyAvatarURLs = replyAvatarURLs
         }
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)

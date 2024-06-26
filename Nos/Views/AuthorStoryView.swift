@@ -192,7 +192,7 @@ fileprivate struct BottomOverlay: View {
 
     @EnvironmentObject private var router: Router
 
-    @State private var replyCount = 0
+    @State private var isBeingDiscussed: Bool?
     @State private var replyAvatarURLs = [URL]()
 
     var body: some View {
@@ -232,28 +232,28 @@ fileprivate struct BottomOverlay: View {
         }
         .task {
             let context = persistenceController.newBackgroundContext()
-            let (replyCount, replyAvatarURLs) = await Event.replyMetadata(
+            let (isBeingDiscussed, replyAvatarURLs) = await Event.replyMetadata(
                 for: note.identifier,
                 context: context
             )
-            self.replyCount = replyCount
+            self.isBeingDiscussed = isBeingDiscussed
             self.replyAvatarURLs = replyAvatarURLs
         }
     }
 
     private var attributedReplies: AttributedString? {
-        if replyCount == 0 {
+        guard let isBeingDiscussed, isBeingDiscussed else {
             return nil
         }
-        let string = String(localized: .reply.replies(replyCount))
-        do {
-            var attributed = try AttributedString(markdown: string)
-            if let range = attributed.range(of: "\(replyCount)") {
-                attributed[range].foregroundColor = .primaryTxt
-            }
-            return attributed
-        } catch {
-            return nil
+        if replyAvatarURLs.isEmpty {
+            return AttributedString(
+                "Join the discussion",
+                attributes: AttributeContainer(
+                    [NSAttributedString.Key.foregroundColor: UIColor.primaryTxt]
+                )
+            )
+        } else {
+            return AttributedString("in discussion")
         }
     }
 }
