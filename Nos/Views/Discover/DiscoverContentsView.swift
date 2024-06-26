@@ -2,7 +2,7 @@ import Logger
 import SwiftUI
 import Dependencies
 
-struct FeaturedAuthorsView: View {
+struct DiscoverContentsView: View {
     @ObservedObject var searchController: SearchController
 
     @EnvironmentObject private var router: Router
@@ -10,13 +10,17 @@ struct FeaturedAuthorsView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @Dependency(\.relayService) private var relayService
+    @Dependency(\.crashReporting) private var crashReporting
 
     /// The IDs of the authors we will display when we aren't searching.
     @State private var featuredAuthorIDs = [RawAuthorID]()
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
     @State private var selectedCategory: FeaturedAuthorCategory = .all
+    
+    @State private var featuredAuthorsPerformingInitialLoad = true
+    let featuredAuthorsInitialLoadTime = 1
 
-    /// Initializes a FeaturedAuthorsView with the selected category and a search controller.
+    /// Initializes a DiscoverContentsView with the selected category and a search controller.
     /// - Parameters:
     ///   - featuredAuthorCategory: The initial category of featured authors to display until
     ///   the user changes the selection. Defaults to `.all` to show all featured authors.
@@ -32,35 +36,7 @@ struct FeaturedAuthorsView: View {
                 Group {
                     switch searchController.state {
                     case .noQuery:
-                        ScrollView {
-                            LazyVStack {
-                                categoryPicker
-
-                                ForEach(featuredAuthorIDs) { authorID in
-                                    AuthorObservationView(authorID: authorID) { author in
-                                        AuthorCard(author: author) {
-                                            router.push(author)
-                                        }
-                                        .padding(.horizontal, 13)
-                                        .padding(.top, 5)
-                                        .readabilityPadding()
-                                        .task {
-                                            subscriptions[author.id] =
-                                            await relayService.requestMetadata(
-                                                for: author.hexadecimalPublicKey,
-                                                since: author.lastUpdatedMetadata
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                            .padding(.bottom, 16)
-                        }
-                        .doubleTapToPop(tab: .discover) { proxy in
-                            if let firstAuthorID = featuredAuthorIDs.first {
-                                proxy.scrollTo(firstAuthorID, anchor: .bottom)
-                            }
-                        }
+                        featuredAuthorsView
                     case .empty:
                         EmptyView()
                     case .loading, .stillLoading:
@@ -93,8 +69,49 @@ struct FeaturedAuthorsView: View {
                 .preference(key: SizePreferenceKey.self, value: geometry.size)
             }
         }
-        .onAppear {
-            updateDisplayedFeaturedAuthors()
+    }
+    
+    var featuredAuthorsView: some View {
+        ZStack {
+            ScrollView {
+                LazyVStack {
+                    categoryPicker
+                    
+                    ForEach(featuredAuthorIDs) { authorID in
+                        AuthorObservationView(authorID: authorID) { author in
+                            AuthorCard(author: author) {
+                                router.push(author)
+                            }
+                            .padding(.horizontal, 13)
+                            .padding(.top, 5)
+                            .readabilityPadding()
+                            .task {
+                                subscriptions[author.id] =
+                                await relayService.requestMetadata(
+                                    for: author.hexadecimalPublicKey,
+                                    since: author.lastUpdatedMetadata
+                                )
+                            }
+                        }
+                    }
+                }
+                .padding(.bottom, 16)
+            }
+            .doubleTapToPop(tab: .discover) { proxy in
+                if let firstAuthorID = featuredAuthorIDs.first {
+                    proxy.scrollTo(firstAuthorID, anchor: .bottom)
+                }
+            }
+            
+            if featuredAuthorsPerformingInitialLoad {
+                FullscreenProgressView(
+                    isPresented: $featuredAuthorsPerformingInitialLoad, 
+                    hideAfter: .now() + .seconds(featuredAuthorsInitialLoadTime)
+                )
+                .onAppear {
+                    updateDisplayedFeaturedAuthors()
+                }
+            }
         }
     }
 
@@ -145,6 +162,14 @@ struct FeaturedAuthorsView: View {
     }
 
     private func updateDisplayedFeaturedAuthors() {
-        self.featuredAuthorIDs = selectedCategory.rawIDs
+        do {
+            try selectedCategory.rawIDs.forEach { authorID in
+                _ = try Author.findOrCreate(by: authorID, context: viewContext)
+            }
+            self.featuredAuthorIDs = selectedCategory.rawIDs
+        } catch {
+            crashReporting.report("Failed to create Discover tab authors \(error.localizedDescription)")
+            Log.optional(error, "Failed to create Discover tab authors")
+        }
     }
 }
