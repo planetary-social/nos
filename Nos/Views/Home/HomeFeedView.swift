@@ -59,70 +59,68 @@ struct HomeFeedView: View {
     }
     
     var body: some View {
-        Group {
+        ZStack {
+            let homeFeedFilter = Filter(
+                authorKeys: user.followedKeys, 
+                kinds: [.text, .delete, .repost, .longFormContent, .report], 
+                limit: 100, 
+                since: nil
+            )
+            PagedNoteListView(
+                databaseFilter: Event.homeFeed(for: user, before: lastRefreshDate), 
+                relayFilter: homeFeedFilter,
+                context: viewContext,
+                tab: .home,
+                header: {
+                    AuthorStoryCarousel(
+                        authors: $stories, 
+                        selectedStoryAuthor: $selectedStoryAuthor
+                    )
+                },
+                emptyPlaceholder: {
+                    VStack {
+                        Text(.localizable.noEvents)
+                            .padding()
+                    }
+                    .frame(minHeight: 300)
+                },
+                onRefresh: {
+                    lastRefreshDate = .now
+                    storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: lastRefreshDate)!
+                    authors.nsPredicate = user.followedWithNewNotesPredicate(
+                        since: storiesCutoffDate
+                    )
+                    Task { await downloadStories() }
+                    return Event.homeFeed(for: user, before: lastRefreshDate)
+                }
+            )
+            .padding(0)
+            
+            StoriesView(
+                cutoffDate: $storiesCutoffDate,
+                authors: stories,
+                selectedAuthor: $selectedStoryAuthor
+            )
+            .scaleEffect(isShowingStories ? 1 : 0.5)
+            .opacity(isShowingStories ? 1 : 0)
+            .animation(.default, value: selectedStoryAuthor)
+            
             if performingInitialLoad {
                 FullscreenProgressView(
                     isPresented: $performingInitialLoad,
                     hideAfter: .now() + .seconds(Self.initialLoadTime)
                 )
+            } 
+        }
+        .doubleTapToPop(tab: .home) { _ in
+            if isShowingStories {
+                selectedStoryAuthor = nil
             } else {
-                ZStack {
-                    let homeFeedFilter = Filter(
-                        authorKeys: user.followedKeys, 
-                        kinds: [.text, .delete, .repost, .longFormContent, .report], 
-                        limit: 100, 
-                        since: nil
-                    )
-                    PagedNoteListView(
-                        databaseFilter: Event.homeFeed(for: user, before: lastRefreshDate), 
-                        relayFilter: homeFeedFilter,
-                        context: viewContext,
-                        tab: .home,
-                        header: {
-                            AuthorStoryCarousel(
-                                authors: $stories, 
-                                selectedStoryAuthor: $selectedStoryAuthor
-                            )
-                        },
-                        emptyPlaceholder: {
-                            VStack {
-                                Text(.localizable.noEvents)
-                                    .padding()
-                            }
-                            .frame(minHeight: 300)
-                        },
-                        onRefresh: {
-                            lastRefreshDate = .now
-                            storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: lastRefreshDate)!
-                            authors.nsPredicate = user.followedWithNewNotesPredicate(
-                                since: storiesCutoffDate
-                            )
-                            Task { await downloadStories() }
-                            return Event.homeFeed(for: user, before: lastRefreshDate)
-                        }
-                    )
-                    .padding(0)
-
-                    StoriesView(
-                        cutoffDate: $storiesCutoffDate,
-                        authors: stories,
-                        selectedAuthor: $selectedStoryAuthor
-                    )
-                    .scaleEffect(isShowingStories ? 1 : 0.5)
-                    .opacity(isShowingStories ? 1 : 0)
-                    .animation(.default, value: selectedStoryAuthor)
-                }
-                .doubleTapToPop(tab: .home) { _ in
-                    if isShowingStories {
-                        selectedStoryAuthor = nil
-                    } else {
-                        NotificationCenter.default.post(
-                            name: .scrollToTop,
-                            object: nil,
-                            userInfo: ["tab": AppDestination.home]
-                        )
-                    }
-                }
+                NotificationCenter.default.post(
+                    name: .scrollToTop,
+                    object: nil,
+                    userInfo: ["tab": AppDestination.home]
+                )
             }
         }
         .background(Color.appBg)
