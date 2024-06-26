@@ -1042,7 +1042,7 @@ public class Event: NosManagedObject, VerifiableEvent {
             
             event.isRead = true
             do {
-                try context.save()
+                try context.saveIfNeeded()
             } catch {
                 Log.error("markNoteAsRead error \(error.localizedDescription)")
             }
