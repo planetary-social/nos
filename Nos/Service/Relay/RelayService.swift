@@ -466,32 +466,32 @@ extension RelayService {
             socket.disconnect()
         }
         
-        return await withCheckedContinuation({ continuation in
+        return await withCheckedContinuation({ [weak socket] continuation in
             var written = false
             var continued = false
             
-            socket.onEvent = { (event: WebSocketEvent) in
+            socket?.onEvent = { [weak socket] (event: WebSocketEvent) in
                 switch event {
                 case WebSocketEvent.connected:
                     if !written {
-                        socket.write(string: message, completion: {
+                        socket?.write(string: message, completion: {
                             written = true
                         })
                     }
                 case WebSocketEvent.text(let text):
                     if written {
                         Log.info("Received \(text) after write, disconnecting")
-                        socket.disconnect()
+                        socket?.disconnect()
                     }
                 case WebSocketEvent.viabilityChanged(let isViable) where isViable:
                     if !written {
-                        socket.write(string: message, completion: {
+                        socket?.write(string: message, completion: {
                             written = true
                         })
                     }
                 case WebSocketEvent.error(let error):
                     Log.optional(error, "failed to send message: \(message) to websocket")
-                    socket.disconnect()
+                    socket?.disconnect()
                 case WebSocketEvent.disconnected, WebSocketEvent.cancelled:
                     timeoutTask.cancel()
                     if !continued {
@@ -505,7 +505,7 @@ extension RelayService {
                 }
             }
             
-            socket.connect()
+            socket?.connect()
         })
     }
     
