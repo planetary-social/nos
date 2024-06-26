@@ -15,12 +15,9 @@ struct DiscoverTab: View {
 
     @State var columns: Int = 0
     
-    @State private var performingInitialLoad = true
-    static let initialLoadTime = 2
     @State private var isVisible = false
 
     @StateObject private var searchController = SearchController()
-    @State private var date = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime))
 
     @State var predicate: NSPredicate = .false
 
@@ -29,17 +26,10 @@ struct DiscoverTab: View {
     var body: some View {
         NosNavigationStack(path: $router.discoverPath) {
             ZStack {
-                if performingInitialLoad && searchController.query.isEmpty {
-                    FullscreenProgressView(
-                        isPresented: $performingInitialLoad, 
-                        hideAfter: .now() + .seconds(Self.initialLoadTime)
-                    )
-                } else {
-                    FeaturedAuthorsView(
-                        featuredAuthorCategory: .all,
-                        searchController: searchController
-                    )
-                }
+                DiscoverContentsView(
+                    featuredAuthorCategory: .all,
+                    searchController: searchController
+                )
             }
             .searchable(
                 text: $searchController.query, 

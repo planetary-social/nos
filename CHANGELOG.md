@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a performance issue after opening the Discover tab.
 - Cache NIP-05 validations to save network usage.
 - Set Xcode version to 15.2, where SwiftUI Previews work reliably.
 
