@@ -2,7 +2,7 @@
 
 Nos is an open-source project, as such, we openly welcome contributions of any sort: code improvement, bug fixes, translations, new features, bug reports, etc.
 
-We encourage you to read this guide first or contact any of us. We have a public [Discord server](https://discord.gg/aNgVthyHac) which is also bridged to this [Matrix room](https://matrix.to/#/#planetary:matrix.org). Feel free to also ask a question by opening a [Github issue](https://github.com/planetary-social/nos/issues).
+We encourage you to read this guide first or contact any of us. We have a public [Discord server](https://discord.gg/aNgVthyHac) which is also bridged to this [Matrix room](https://matrix.to/#/#planetary:matrix.org). Feel free to also ask a question by opening a [GitHub issue](https://github.com/planetary-social/nos/issues).
 
 ## Translations
 
@@ -10,7 +10,7 @@ If you want to contribute by translating the app to another language, you can he
 
 ## Building
 
-Nos iOS is built using Xcode. To build it yourself you can follow the steps below. These steps assume you have installed Xcode, Homebrew, and have some familiarity with the Terminal app. You can see what version of Xcode our team is using in the .xcode-version file in this repository.
+Nos iOS is built using Xcode. To build it yourself you can follow the steps below. These steps assume you have installed Xcode, Homebrew, and have some familiarity with the Terminal app. You can see what version of Xcode our team is using in the [.xcode-version](.xcode-version) file in this repository.
 
 From the Terminal: 
 

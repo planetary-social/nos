@@ -26,8 +26,8 @@ struct DiscoverContentsView: View {
     ///   the user changes the selection. Defaults to `.all` to show all featured authors.
     ///   - searchController: The search controller to use for searching.
     init(featuredAuthorCategory: FeaturedAuthorCategory = .all, searchController: SearchController) {
-        self.selectedCategory = featuredAuthorCategory
         self.searchController = searchController
+        self.selectedCategory = featuredAuthorCategory
     }
     
     var body: some View {
