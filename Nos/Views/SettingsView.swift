@@ -189,21 +189,23 @@ struct SettingsView: View {
                     )
 
                 SecondaryActionButton(title: .localizable.shareDatabase) {
-                    if let url = persistenceController.sqliteURL() {
-                        fileToShare = url
-                    } else {
-                        alert = AlertState(title: {
-                            TextState(String(localized: .localizable.error))
-                        }, message: {
-                            TextState(String(localized: .localizable.failedToShareDatabase))
-                        })
+                    Task {
+                        do {
+                            fileToShare = try await Zipper.zipDatabase(controller: persistenceController)
+                        } catch {
+                            alert = AlertState(title: {
+                                TextState(String(localized: .localizable.error))
+                            }, message: {
+                                TextState(String(localized: .localizable.failedToShareDatabase))
+                            })
+                        }
                     }
                 }
 
                 SecondaryActionButton(title: .localizable.shareLogs) {
                     Task {
                         do {
-                            fileToShare = try await LogHelper.zipLogs()
+                            fileToShare = try await Zipper.zipLogs()
                         } catch {
                             alert = AlertState(title: {
                                 TextState(String(localized: .localizable.error))
