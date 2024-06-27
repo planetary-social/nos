@@ -18,10 +18,10 @@ struct SettingsView: View {
 
     @State private var privateKeyString = ""
     @State private var alert: AlertState<AlertAction>?
-    @State private var logFileURL: URL?
+    @State private var fileToShare: URL?
     private var showActivitySheet: Binding<Bool> {
         Binding<Bool>(
-            get: { logFileURL != nil },
+            get: { fileToShare != nil },
             set: { _ in }
         )
     }
@@ -171,38 +171,48 @@ struct SettingsView: View {
             }
             
             Section {
-                HStack {
-                    Text("\(String(localized: .localizable.appVersion)) \(Bundle.current.versionAndBuild)")
-                        .foregroundColor(.primaryTxt)
-                    Spacer()
-                    SecondaryActionButton(title: .localizable.shareLogs) {
-                        Task {
-                            do {
-                                logFileURL = try await LogHelper.zipLogs()
-                            } catch {
-                                alert = AlertState(title: {
-                                    TextState(String(localized: .localizable.error))
-                                }, message: {
-                                    TextState(String(localized: .localizable.failedToExportLogs))
-                                })
+                Text("\(String(localized: .localizable.appVersion)) \(Bundle.current.versionAndBuild)")
+                    .foregroundColor(.primaryTxt)
+                    .padding(.vertical, 5)
+                    .sheet(
+                        isPresented: showActivitySheet,
+                        onDismiss: {
+                            fileToShare = nil
+                        },
+                        content: {
+                            if let fileToShare {
+                                ActivityViewController(activityItems: [fileToShare])
+                            } else {
+                                EmptyView()
                             }
                         }
-                    }        
+                    )
+
+                SecondaryActionButton(title: .localizable.shareDatabase) {
+                    if let url = persistenceController.sqliteURL() {
+                        fileToShare = url
+                    } else {
+                        alert = AlertState(title: {
+                            TextState(String(localized: .localizable.error))
+                        }, message: {
+                            TextState(String(localized: .localizable.failedToShareDatabase))
+                        })
+                    }
                 }
-                .padding(.vertical, 5)
-                .sheet(
-                    isPresented: showActivitySheet,
-                    onDismiss: {
-                        logFileURL = nil
-                    },
-                    content: {
-                        if let logFileURL {
-                            ActivityViewController(activityItems: [logFileURL])
-                        } else {
-                            EmptyView()
+
+                SecondaryActionButton(title: .localizable.shareLogs) {
+                    Task {
+                        do {
+                            fileToShare = try await LogHelper.zipLogs()
+                        } catch {
+                            alert = AlertState(title: {
+                                TextState(String(localized: .localizable.error))
+                            }, message: {
+                                TextState(String(localized: .localizable.failedToExportLogs))
+                            })
                         }
                     }
-                )
+                }
 
                 #if DEBUG
                 debugControls

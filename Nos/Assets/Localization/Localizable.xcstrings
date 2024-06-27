@@ -4088,6 +4088,18 @@
         }
       }
     },
+    "failedToShareDatabase" : {
+      "comment" : "Error message for when we can't find the Core Data database.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We're sorry, but we couldn't find your database to share."
+          }
+        }
+      }
+    },
     "featuredAuthorCategoryActivists" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -11072,6 +11084,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "分享"
+          }
+        }
+      }
+    },
+    "shareDatabase" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share database"
           }
         }
       }
