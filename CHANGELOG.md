@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Cache NIP-05 validations to save network usage.
 - Set Xcode version to 15.2, where SwiftUI Previews work reliably.
+- Add "Share database" button to Settings to help with debugging.
 
 ## [0.1.18] - 2024-06-24Z
 
