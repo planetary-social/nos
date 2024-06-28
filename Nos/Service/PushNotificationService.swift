@@ -91,7 +91,9 @@ import Combine
             cacheName: nil
         )
         notificationWatcher?.delegate = self
-        try? notificationWatcher?.performFetch()
+        try? await modelContext.perform {
+            try self.notificationWatcher?.performFetch()
+        }
         
         let userMentionsFilter = Filter(
             kinds: [.text, .longFormContent, .like], 

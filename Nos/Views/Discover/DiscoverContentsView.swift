@@ -2,7 +2,7 @@ import Logger
 import SwiftUI
 import Dependencies
 
-struct FeaturedAuthorsView: View {
+struct DiscoverContentsView: View {
     @ObservedObject var searchController: SearchController
 
     @EnvironmentObject private var router: Router
@@ -10,38 +10,24 @@ struct FeaturedAuthorsView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @Dependency(\.relayService) private var relayService
+    @Dependency(\.crashReporting) private var crashReporting
 
-    @FetchRequest(fetchRequest: Author.matching(npubs: FeaturedAuthorCategory.all.npubs)) private var authors
-
+    /// The IDs of the authors we will display when we aren't searching.
+    @State private var featuredAuthorIDs = [RawAuthorID]()
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
     @State private var selectedCategory: FeaturedAuthorCategory = .all
+    
+    @State private var featuredAuthorsPerformingInitialLoad = true
+    let featuredAuthorsInitialLoadTime = 1
 
-    private var sortedAuthors: [Author] {
-        authors.sorted { authorA, authorB in
-            let allFeatured = FeaturedAuthor.all
-            guard let indexA = allFeatured.firstIndex(where: { $0.npub == authorA.npubString }),
-                let indexB = allFeatured.firstIndex(where: { $0.npub == authorB.npubString }) else {
-                return false
-            }
-            return indexA < indexB
-        }
-    }
-
-    private var filteredAuthors: [Author] {
-        sortedAuthors.filter { author in
-            guard let npubString = author.npubString else { return false }
-            return selectedCategory.npubs.contains(npubString)
-        }
-    }
-
-    /// Initializes a FeaturedAuthorsView with the selected category and a search controller.
+    /// Initializes a DiscoverContentsView with the selected category and a search controller.
     /// - Parameters:
     ///   - featuredAuthorCategory: The initial category of featured authors to display until
     ///   the user changes the selection. Defaults to `.all` to show all featured authors.
     ///   - searchController: The search controller to use for searching.
     init(featuredAuthorCategory: FeaturedAuthorCategory = .all, searchController: SearchController) {
-        self.selectedCategory = featuredAuthorCategory
         self.searchController = searchController
+        self.selectedCategory = featuredAuthorCategory
     }
     
     var body: some View {
@@ -50,33 +36,7 @@ struct FeaturedAuthorsView: View {
                 Group {
                     switch searchController.state {
                     case .noQuery:
-                        ScrollView {
-                            LazyVStack {
-                                categoryPicker
-
-                                ForEach(filteredAuthors) { author in
-                                    AuthorCard(author: author) {
-                                        router.push(author)
-                                    }
-                                    .padding(.horizontal, 13)
-                                    .padding(.top, 5)
-                                    .readabilityPadding()
-                                    .task {
-                                        subscriptions[author.id] =
-                                            await relayService.requestMetadata(
-                                                for: author.hexadecimalPublicKey,
-                                                since: author.lastUpdatedMetadata
-                                            )
-                                    }
-                                }
-                            }
-                            .padding(.bottom, 16)
-                        }
-                        .doubleTapToPop(tab: .discover) { proxy in
-                            if let firstAuthor = sortedAuthors.first {
-                                proxy.scrollTo(firstAuthor.id)
-                            }
-                        }
+                        featuredAuthorsView
                     case .empty:
                         EmptyView()
                     case .loading, .stillLoading:
@@ -101,7 +61,7 @@ struct FeaturedAuthorsView: View {
                         }
                         .doubleTapToPop(tab: .discover) { proxy in
                             if let firstAuthor = searchController.authorResults.first {
-                                proxy.scrollTo(firstAuthor.id)
+                                proxy.scrollTo(firstAuthor.id, anchor: .bottom)
                             }
                         }
                     }
@@ -109,8 +69,49 @@ struct FeaturedAuthorsView: View {
                 .preference(key: SizePreferenceKey.self, value: geometry.size)
             }
         }
-        .task {
-            findOrCreateAuthors()
+    }
+    
+    var featuredAuthorsView: some View {
+        ZStack {
+            ScrollView {
+                LazyVStack {
+                    categoryPicker
+                    
+                    ForEach(featuredAuthorIDs) { authorID in
+                        AuthorObservationView(authorID: authorID) { author in
+                            AuthorCard(author: author) {
+                                router.push(author)
+                            }
+                            .padding(.horizontal, 13)
+                            .padding(.top, 5)
+                            .readabilityPadding()
+                            .task {
+                                subscriptions[author.id] =
+                                await relayService.requestMetadata(
+                                    for: author.hexadecimalPublicKey,
+                                    since: author.lastUpdatedMetadata
+                                )
+                            }
+                        }
+                    }
+                }
+                .padding(.bottom, 16)
+            }
+            .doubleTapToPop(tab: .discover) { proxy in
+                if let firstAuthorID = featuredAuthorIDs.first {
+                    proxy.scrollTo(firstAuthorID, anchor: .bottom)
+                }
+            }
+            
+            if featuredAuthorsPerformingInitialLoad {
+                FullscreenProgressView(
+                    isPresented: $featuredAuthorsPerformingInitialLoad, 
+                    hideAfter: .now() + .seconds(featuredAuthorsInitialLoadTime)
+                )
+                .onAppear {
+                    updateDisplayedFeaturedAuthors()
+                }
+            }
         }
     }
 
@@ -151,27 +152,24 @@ struct FeaturedAuthorsView: View {
                         .padding(4)
                         .frame(minWidth: 44, minHeight: 44)
                 })
+                .onChange(of: selectedCategory) { _, _ in
+                    updateDisplayedFeaturedAuthors()
+                }
             }
             Spacer()
         }
         .padding(.leading, 10)
     }
 
-    private func findOrCreateAuthors() {
-        for featuredAuthorNpub in FeaturedAuthorCategory.all.npubs {
-            do {
-                guard let publicKey = PublicKey(npub: featuredAuthorNpub) else {
-                    assertionFailure(
-                        "Could create public key for npub: \(featuredAuthorNpub)\n" +
-                        "Fix this invalid npub in FeaturedAuthorCategory."
-                    )
-                    continue
-                }
-                try Author.findOrCreate(by: publicKey.hex, context: viewContext)
-            } catch {
-                Log.error("Could not find or create author for npub: \(featuredAuthorNpub)")
+    private func updateDisplayedFeaturedAuthors() {
+        do {
+            try selectedCategory.rawIDs.forEach { authorID in
+                _ = try Author.findOrCreate(by: authorID, context: viewContext)
             }
+            self.featuredAuthorIDs = selectedCategory.rawIDs
+        } catch {
+            crashReporting.report("Failed to create Discover tab authors \(error.localizedDescription)")
+            Log.optional(error, "Failed to create Discover tab authors")
         }
-        try? viewContext.saveIfNeeded()
     }
 }

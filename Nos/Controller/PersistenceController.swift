@@ -124,9 +124,12 @@ class PersistenceController {
         })
     }
     
-    func saveAll() throws {
+    @MainActor
+    func saveAll() async throws {
         try viewContext.saveIfNeeded()
-        try backgroundViewContext.saveIfNeeded()
+        try await backgroundViewContext.perform {
+            try self.backgroundViewContext.saveIfNeeded()
+        }
     }
     
     static func clearCoreData(store storeURL: URL, in container: NSPersistentContainer) {

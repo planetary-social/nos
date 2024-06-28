@@ -32,15 +32,22 @@ enum FeaturedAuthorCategory: CaseIterable {
         }
     }
 
-    var npubs: [String] {
+    var featuredAuthors: [FeaturedAuthor] {
         switch self {
         case .all:
-            FeaturedAuthor.all.map { $0.npub }
+            FeaturedAuthor.all
         case .new:
-            FeaturedAuthor.cohort3.map { $0.npub }
+            FeaturedAuthor.cohort3
         default:
             FeaturedAuthor.all.filter { $0.categories.contains(self) }
-                .map { $0.npub }
         }
+    }
+    
+    var npubs: [String] {
+        featuredAuthors.map { $0.npub }
+    }
+    
+    var rawIDs: [RawNostrID] {
+        featuredAuthors.map { $0.rawID }
     }
 }

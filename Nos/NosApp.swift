@@ -33,15 +33,19 @@ struct NosApp: App {
                     await persistenceController.cleanupEntities()
                 }
                 .onChange(of: scenePhase) { _, newPhase in
-                    // TODO: save all contexts, not just the view and background.
-                    if newPhase == .inactive {
+                    switch newPhase {
+                    case .inactive:
                         Log.info("Scene change: inactive")
-                        try? persistenceController.saveAll()
-                    } else if newPhase == .active {
+                    case .active:
                         Log.info("Scene change: active")
-                    } else if newPhase == .background {
+                    case .background:
                         Log.info("Scene change: background")
-                        try? persistenceController.saveAll()
+                        Task {
+                            // TODO: save all contexts, not just the view and background.
+                            try await persistenceController.saveAll()
+                        }
+                    @unknown default:
+                        Log.info("Scene change: unknown type")
                     }
                 }
         }
