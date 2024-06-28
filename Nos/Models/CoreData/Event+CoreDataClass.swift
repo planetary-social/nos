@@ -860,7 +860,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         @Dependency(\.relayService) var relayService
         relaySubscriptions.append(await relayService.requestEvent(with: identifier))
     }
-    
+
     /// Requests any missing metadata for authors referenced by this note from relays.
     @MainActor private func loadAuthorMetadata() async {
         @Dependency(\.relayService) var relayService
@@ -1071,40 +1071,6 @@ public class Event: NosManagedObject, VerifiableEvent {
         
         return await context.perform {
             noteParser.parse(content: content, tags: tags, context: context)
-        }
-    }
-    
-    /// Fetches the reply metadata associated to a given note id.
-    ///
-    /// - returns: a Bool value indicating if there is a discussion happening
-    /// and an array of avatars of known people that are participanting in
-    /// that discussion.
-    class func replyMetadata(for noteID: RawEventID?, context: NSManagedObjectContext) async -> (Bool, [URL]) {
-        guard let noteID else {
-            return (false, [])
-        }
-        
-        return await context.perform {
-            let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-            fetchRequest.predicate = NSPredicate(format: Event.replyNoteReferences, noteID)
-            fetchRequest.includesPendingChanges = false
-            fetchRequest.includesSubentities = false
-            fetchRequest.relationshipKeyPathsForPrefetching = ["author"]
-            let replies = (try? context.fetch(fetchRequest)) ?? []
-            let replyCount = replies.count
-            
-            var avatarURLs = [URL]()
-            for reply in replies {
-                if let avatarURL = reply.author?.profilePhotoURL,
-                    !avatarURLs.contains(avatarURL) {
-                    avatarURLs.append(avatarURL)
-                    if avatarURLs.count >= 2 {
-                        break
-                    }
-                }
-            }
-            return (replyCount > 0, avatarURLs)
         }
     }
     

@@ -11,34 +11,17 @@ struct NoteCard: View {
     var note: Event
     
     var style = CardStyle.compact
-    
-    @State private var isBeingDiscussed: Bool?
-    @State private var replyAvatarURLs = [URL]()
+
     @State private var warningController = NoteWarningController()
-    
+
     @EnvironmentObject private var router: Router
     @Dependency(\.persistenceController) var persistenceController
-    
+    @Dependency(\.currentUser) var currentUser
+
     private var shouldTruncate: Bool
     private let showReplyCount: Bool
     private var hideOutOfNetwork: Bool
     private var replyAction: ((Event) -> Void)?
-    
-    private var attributedReplies: AttributedString? {
-        guard let isBeingDiscussed, isBeingDiscussed else {
-            return nil
-        }
-        if replyAvatarURLs.isEmpty {
-            return AttributedString(
-                "Join the discussion",
-                attributes: AttributeContainer(
-                    [NSAttributedString.Key.foregroundColor: UIColor.primaryTxt]
-                )
-            )
-        } else {
-            return AttributedString("in discussion")
-        }
-    }
 
     init(
         note: Event,
@@ -97,13 +80,10 @@ struct NoteCard: View {
                         BeveledSeparator()
                         HStack(spacing: 0) {
                             if showReplyCount {
-                                StackedAvatarsView(avatarUrls: replyAvatarURLs, size: 20, border: 0)
-                                    .padding(.trailing, 8)
-                                if let replies = attributedReplies {
-                                    Text(replies)
-                                        .font(.clarity(.medium, textStyle: .subheadline))
-                                        .foregroundColor(Color.secondaryTxt)
-                                }
+                                DiscussionButton(
+                                    note: note,
+                                    viewer: currentUser.publicKeyHex
+                                )
                             }
                             Spacer()
                             RepostButton(note: note) 
@@ -136,17 +116,6 @@ struct NoteCard: View {
             Task { await note.loadAttributedContent() }
         }
         .background(LinearGradient.cardBackground)
-        .task {
-            guard showReplyCount else {
-                return
-            }
-            let (isBeingDiscussed, replyAvatarURLs) = await Event.replyMetadata(
-                for: note.identifier,
-                context: persistenceController.backgroundViewContext
-            )
-            self.isBeingDiscussed = isBeingDiscussed
-            self.replyAvatarURLs = replyAvatarURLs
-        }
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
     }
@@ -182,7 +151,6 @@ struct NoteCard_Previews: PreviewProvider {
             }
         }
         .environment(\.managedObjectContext, previewData.previewContext)
-        .environmentObject(previewData.relayService)
         .environmentObject(previewData.router)
         .environment(previewData.currentUser)
         .padding()

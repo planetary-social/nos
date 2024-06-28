@@ -30,7 +30,7 @@ struct RelaySubscription: Identifiable, Hashable {
     
     /// Returns true if this is a "one-time" filter, where we are only looking for a single event
     var isOneTime: Bool {
-        filter.limit == 1
+        !filter.subscribe
     }
     
     internal init(

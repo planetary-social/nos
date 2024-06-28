@@ -14,7 +14,10 @@ struct Filter: Hashable, Identifiable {
     var limit: Int?
     var since: Date?
     var until: Date?
-    
+
+    /// This filter should keep the subscription open.
+    var subscribe: Bool
+
     init(
         authorKeys: [RawAuthorID] = [],
         eventIDs: [RawEventID] = [],
@@ -25,7 +28,8 @@ struct Filter: Hashable, Identifiable {
         inNetwork: Bool = false,
         limit: Int? = nil,
         since: Date? = nil,
-        until: Date? = nil
+        until: Date? = nil,
+        subscribe: Bool = true
     ) {
         self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
         self.eventIDs = eventIDs
@@ -37,6 +41,7 @@ struct Filter: Hashable, Identifiable {
         self.limit = limit
         self.since = since
         self.until = until
+        self.subscribe = subscribe
     }
     
     var dictionary: [String: Any] {

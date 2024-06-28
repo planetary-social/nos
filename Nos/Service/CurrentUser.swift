@@ -232,7 +232,8 @@ import Dependencies
                     authorKeys: [followedKey],
                     kinds: [.metaData],
                     limit: 1,
-                    since: lastUpdatedMetadata
+                    since: lastUpdatedMetadata,
+                    subscribe: false
                 )
                 _ = await self?.relayService.subscribeToEvents(matching: metaFilter)
                 
@@ -240,7 +241,8 @@ import Dependencies
                     authorKeys: [followedKey],
                     kinds: [.contactList],
                     limit: 1,
-                    since: lastUpdatedContactList
+                    since: lastUpdatedContactList,
+                    subscribe: false
                 )
                 _ = await self?.relayService.subscribeToEvents(matching: contactFilter)
                 

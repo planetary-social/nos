@@ -189,26 +189,13 @@ fileprivate struct BottomOverlay: View {
     var note: Event
 
     @Dependency(\.persistenceController) private var persistenceController
+    @Dependency(\.currentUser) var currentUser
 
     @EnvironmentObject private var router: Router
 
-    @State private var isBeingDiscussed: Bool?
-    @State private var replyAvatarURLs = [URL]()
-
     var body: some View {
         HStack(spacing: 0) {
-            StackedAvatarsView(avatarUrls: replyAvatarURLs, size: 20, border: 0)
-                .padding(.trailing, 8)
-
-            if let replies = attributedReplies {
-                Button {
-                    router.push(note)
-                } label: {
-                    Text(replies)
-                        .font(.subheadline)
-                        .foregroundColor(Color.secondaryTxt)
-                }
-            }
+            DiscussionButton(note: note, viewer: currentUser.publicKeyHex)
 
             Spacer()
 
@@ -229,31 +216,6 @@ fileprivate struct BottomOverlay: View {
                 startPoint: .top,
                 endPoint: .bottom
             )
-        }
-        .task {
-            let context = persistenceController.newBackgroundContext()
-            let (isBeingDiscussed, replyAvatarURLs) = await Event.replyMetadata(
-                for: note.identifier,
-                context: context
-            )
-            self.isBeingDiscussed = isBeingDiscussed
-            self.replyAvatarURLs = replyAvatarURLs
-        }
-    }
-
-    private var attributedReplies: AttributedString? {
-        guard let isBeingDiscussed, isBeingDiscussed else {
-            return nil
-        }
-        if replyAvatarURLs.isEmpty {
-            return AttributedString(
-                "Join the discussion",
-                attributes: AttributeContainer(
-                    [NSAttributedString.Key.foregroundColor: UIColor.primaryTxt]
-                )
-            )
-        } else {
-            return AttributedString("in discussion")
         }
     }
 }

@@ -188,6 +188,33 @@ extension RelayService {
         )
     }
     
+    func requestAReplyFromAnyone(for eventID: String?) async -> SubscriptionCancellable {
+        guard let eventID else {
+            return SubscriptionCancellable.empty()
+        }
+        let metaFilter = Filter(
+            kinds: [.text],
+            eTags: [eventID],
+            limit: 1,
+            subscribe: false
+        )
+        return await subscribeToEvents(matching: metaFilter)
+    }
+
+    func requestFourRepliesFromFollows(for eventID: String?) async -> SubscriptionCancellable {
+        guard let eventID else {
+            return SubscriptionCancellable.empty()
+        }
+        let metaFilter = Filter(
+            authorKeys: Array(await currentUser.socialGraph.followedKeys),
+            kinds: [.text],
+            eTags: [eventID],
+            limit: 4,
+            subscribe: false
+        )
+        return await subscribeToEvents(matching: metaFilter)
+    }
+
     func requestMetadata(for authorKey: RawAuthorID?, since: Date?) async -> SubscriptionCancellable {
         guard let authorKey else {
             return SubscriptionCancellable.empty()
@@ -197,7 +224,8 @@ extension RelayService {
             authorKeys: [authorKey],
             kinds: [.metaData],
             limit: 1,
-            since: since
+            since: since,
+            subscribe: false
         )
         return await subscribeToEvents(matching: metaFilter)
     }
@@ -211,7 +239,8 @@ extension RelayService {
             authorKeys: [authorKey],
             kinds: [.contactList],
             limit: 1,
-            since: since
+            since: since,
+            subscribe: false
         )
         return await subscribeToEvents(matching: contactFilter)
     }
@@ -238,7 +267,13 @@ extension RelayService {
             return SubscriptionCancellable.empty()
         }
         
-        return await subscribeToEvents(matching: Filter(eventIDs: [eventID], limit: 1))
+        return await subscribeToEvents(
+            matching: Filter(
+                eventIDs: [eventID],
+                limit: 1,
+                subscribe: false
+            )
+        )
     }
     
     private func processSubscriptionQueue() async {
