@@ -441,8 +441,8 @@
 		C9F204672ADEDBA80029A858 /* String+Extra.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F204662ADEDBA80029A858 /* String+Extra.swift */; };
 		C9F204802AE029D90029A858 /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047F2AE029D90029A858 /* AppDestination.swift */; };
 		C9F204812AE02D8C0029A858 /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F2047F2AE029D90029A858 /* AppDestination.swift */; };
-		C9F64D8C29ED840700563F2B /* LogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8B29ED840700563F2B /* LogHelper.swift */; };
-		C9F64D8D29ED840700563F2B /* LogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8B29ED840700563F2B /* LogHelper.swift */; };
+		C9F64D8C29ED840700563F2B /* Zipper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8B29ED840700563F2B /* Zipper.swift */; };
+		C9F64D8D29ED840700563F2B /* Zipper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F64D8B29ED840700563F2B /* Zipper.swift */; };
 		C9F75AD22A02D41E005BBE45 /* ComposerActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F75AD12A02D41E005BBE45 /* ComposerActionBar.swift */; };
 		C9F75AD62A041FF7005BBE45 /* ExpirationTimePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F75AD52A041FF7005BBE45 /* ExpirationTimePicker.swift */; };
 		C9F84C1A298DBB6300C6714D /* Data+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */; };
@@ -816,7 +816,7 @@
 		C9F0BB6E29A50437000547FC /* NostrConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrConstants.swift; sourceTree = "<group>"; };
 		C9F204662ADEDBA80029A858 /* String+Extra.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extra.swift"; sourceTree = "<group>"; };
 		C9F2047F2AE029D90029A858 /* AppDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDestination.swift; sourceTree = "<group>"; };
-		C9F64D8B29ED840700563F2B /* LogHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogHelper.swift; sourceTree = "<group>"; };
+		C9F64D8B29ED840700563F2B /* Zipper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zipper.swift; sourceTree = "<group>"; };
 		C9F75AD12A02D41E005BBE45 /* ComposerActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerActionBar.swift; sourceTree = "<group>"; };
 		C9F75AD52A041FF7005BBE45 /* ExpirationTimePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationTimePicker.swift; sourceTree = "<group>"; };
 		C9F84C1B298DBBF400C6714D /* Data+Sha.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Sha.swift"; sourceTree = "<group>"; };
@@ -1182,7 +1182,7 @@
 				0350F12C2C0A7EF20024CC15 /* FeatureFlags.swift */,
 				C959DB752BD01DF4008F3627 /* GiftWrapper.swift */,
 				A3B943CE299AE00100A15A08 /* KeyChain.swift */,
-				C9F64D8B29ED840700563F2B /* LogHelper.swift */,
+				C9F64D8B29ED840700563F2B /* Zipper.swift */,
 				C9EF84CE2C24D63000182B6F /* MockRelayService.swift */,
 				0320C1142BFE63DC00C4C080 /* MockRelaySubscriptionManager.swift */,
 				5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */,
@@ -1852,7 +1852,7 @@
 				C9C547512A4F1CC3006B0741 /* SearchController.swift in Sources */,
 				C992B32A2B3613CC00704A9C /* SubscriptionCancellable.swift in Sources */,
 				C9DEC06E2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,
-				C9F64D8C29ED840700563F2B /* LogHelper.swift in Sources */,
+				C9F64D8C29ED840700563F2B /* Zipper.swift in Sources */,
 				C9C2B78529E073E300548B4A /* RelaySubscription.swift in Sources */,
 				0350F12D2C0A7EF20024CC15 /* FeatureFlags.swift in Sources */,
 				3FFB1D9C29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */,
@@ -2125,7 +2125,7 @@
 				C9EE3E642A053910008A7491 /* ExpirationTimeOption.swift in Sources */,
 				65D066AA2BD55E160011C5CD /* DirectMessageWrapper.swift in Sources */,
 				C973AB5E2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */,
-				C9F64D8D29ED840700563F2B /* LogHelper.swift in Sources */,
+				C9F64D8D29ED840700563F2B /* Zipper.swift in Sources */,
 				C98298342ADD7F9A0096C5B5 /* DeepLinkService.swift in Sources */,
 				CD09A75929A521D20063464F /* Color+Hex.swift in Sources */,
 				5B88051D2A2104CC00E21F06 /* SHA256Key.swift in Sources */,
