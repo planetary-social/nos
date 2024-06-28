@@ -19,7 +19,7 @@ enum Zipper {
     /// - Parameter controller: The persistence controller that contains the SQLite database.
     /// - Returns: The file URL of the zipped database.
     static func zipDatabase(controller: PersistenceController) async throws -> URL {
-        guard let sqliteURL = controller.sqliteURL() else {
+        guard let sqliteURL = controller.sqliteURL else {
             throw ZipperError.fileNotFound
         }
         return try await zipFiles([sqliteURL])

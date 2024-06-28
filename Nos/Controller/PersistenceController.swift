@@ -37,7 +37,11 @@ class PersistenceController {
     lazy var backgroundViewContext = {
         self.newBackgroundContext()
     }()
-    
+
+    var sqliteURL: URL? {
+        container.persistentStoreDescriptions.first?.url
+    }
+
     private(set) var container: NSPersistentContainer
     private var model: NSManagedObjectModel
     private var inMemory: Bool
@@ -222,9 +226,5 @@ class PersistenceController {
             
             return statistics.sorted(by: { $0.key < $1.key })
         }
-    }
-
-    func sqliteURL() -> URL? {
-        container.persistentStoreDescriptions.first?.url
     }
 }
