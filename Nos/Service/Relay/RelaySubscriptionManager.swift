@@ -37,6 +37,9 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         all.filter { $0.isActive }
     }
 
+    /// Limit of the number of active subscriptions in a single relay
+    private let queueLimit = 25
+
     // MARK: - Protocol conformance
     
     func active() async -> [RelaySubscription] {
@@ -168,10 +171,13 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     func processSubscriptionQueue() async {
         var waitingLongSubscriptions = [RelaySubscription]()
         var waitingOneTimeSubscriptions = [RelaySubscription]()
+
+        // Counter to track the number of active subscriptions per relay
         var activeSubscriptionsCount = [URL: Int]()
 
         all.forEach { relaySubscription in
             if relaySubscription.isActive {
+                // Update active subscriptions counter
                 let relayAddress = relaySubscription.relayAddress
                 if let currentCount = activeSubscriptionsCount[relayAddress] {
                     activeSubscriptionsCount[relayAddress] = currentCount + 1
@@ -185,15 +191,15 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
             }
         }
 
+        // Start waiting relay subscriptions if they don't exceed the queue
+        // limit
         let waitingSubscriptions = waitingOneTimeSubscriptions + waitingLongSubscriptions
         waitingSubscriptions.forEach { relaySubscription in
             let relayAddress = relaySubscription.relayAddress
             if let subscriptionsCount = activeSubscriptionsCount[relayAddress] {
-                if subscriptionsCount < 25 {
+                if subscriptionsCount < queueLimit {
                     start(subscription: relaySubscription)
                     activeSubscriptionsCount[relayAddress] = subscriptionsCount + 1
-                } else {
-                    print("Count in \(relayAddress): \(subscriptionsCount)")
                 }
             } else {
                 start(subscription: relaySubscription)
@@ -201,9 +207,13 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
             }
         }
         
-        if all.count > active.count {
-            Log.debug("\(all.count - active.count) subscriptions waiting in queue.")
+        #if DEBUG
+        let allCount = all.count
+        let activeCount = active.count
+        if allCount > activeCount {
+            Log.debug("\(allCount - activeCount) subscriptions waiting in queue.")
         }
+        #endif
     }
     
     func queueSubscription(with filter: Filter, to relayAddress: URL) async -> RelaySubscription.ID {
