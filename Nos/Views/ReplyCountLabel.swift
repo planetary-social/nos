@@ -80,13 +80,13 @@ struct ReplyCountLabel: View {
         case .discussion:
             if avatars.isEmpty {
                 return AttributedString(
-                    "Join the discussion",
+                    String(localized: .reply.joinTheDiscussion),
                     attributes: AttributeContainer(
                         [NSAttributedString.Key.foregroundColor: UIColor.primaryTxt]
                     )
                 )
             } else {
-                return AttributedString("in discussion")
+                return AttributedString(String(localized: .reply.inDiscussion))
             }
         case .count:
             let count = replies.count
@@ -118,8 +118,6 @@ struct ReplyCountLabel: View {
                     .foregroundColor(Color.secondaryTxt)
                     .lineLimit(1)
             }
-
-            Spacer()
         }
         .onAppear {
             subscribeToReplies()
