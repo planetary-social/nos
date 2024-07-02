@@ -1,9 +1,34 @@
 import Foundation
 import Logger
 
-enum LogHelper {
+/// An error that may be thrown by `Zipper`.
+enum ZipperError: Error {
+    /// The file to zip was not found.
+    case fileNotFound
+}
+
+/// A utility that knows how to zip.
+enum Zipper {
+    /// Zips the log files.
+    /// - Returns: The file URL of the zip.
     static func zipLogs() async throws -> URL {
-        let appFileUrls = Log.fileUrls
+        try await zipFiles(Log.fileUrls)
+    }
+
+    /// Zips the SQLite database of the given persistence controller.
+    /// - Parameter controller: The persistence controller that contains the SQLite database.
+    /// - Returns: The file URL of the zipped database.
+    static func zipDatabase(controller: PersistenceController) async throws -> URL {
+        guard let sqliteURL = controller.sqliteURL else {
+            throw ZipperError.fileNotFound
+        }
+        return try await zipFiles([sqliteURL])
+    }
+    
+    /// Zips the files at the given URLs.
+    /// - Parameter fileURLs: the URLs of the files to zip.
+    /// - Returns: The file URL of the zip.
+    static func zipFiles(_ fileURLs: [URL]) async throws -> URL {
         let temporaryDirectory = URL(fileURLWithPath: NSTemporaryDirectory())
         let url = temporaryDirectory.appendingPathComponent(UUID().uuidString)
         return try await Task {
@@ -14,8 +39,8 @@ enum LogHelper {
                 try FileManager.default.copyItem(at: appFileURL, to: destFileURL)
             }
             
-            try appFileUrls.forEach { try copy($0) }
-            
+            try fileURLs.forEach { try copy($0) }
+
             let coord = NSFileCoordinator()
             var readError: NSError?
             return try await withCheckedThrowingContinuation { continuation in

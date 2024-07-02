@@ -52,7 +52,7 @@ struct ReportABugMailView: UIViewControllerRepresentable {
         Task {
             do {
                 mailViewController.addAttachmentData(
-                    try Data(contentsOf: try await LogHelper.zipLogs()),
+                    try Data(contentsOf: try await Zipper.zipLogs()),
                     mimeType: "application/zip", 
                     fileName: "diagnostics.zip"
                 )

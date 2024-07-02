@@ -9,10 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Update the reply count shown below each Note in a Feed.
+
+## [0.1.19] - 2024-07-01Z
+
 - Fixed a crash on the notifications tab
 - Fixed a performance issue after opening the Discover tab.
 - Cache NIP-05 validations to save network usage.
 - Set Xcode version to 15.2, where SwiftUI Previews work reliably.
+- Add "Share database" button to Settings to help with debugging.
 
 ## [0.1.18] - 2024-06-24Z
 
