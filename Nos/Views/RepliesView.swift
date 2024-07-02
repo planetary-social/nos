@@ -96,7 +96,6 @@ struct RepliesView: View {
                             note: note,
                             shouldTruncate: false,
                             hideOutOfNetwork: false,
-                            showReplyCount: false,
                             displayRootMessage: true,
                             isTapEnabled: false,
                             replyAction: { _ in self.showReplyComposer = true },

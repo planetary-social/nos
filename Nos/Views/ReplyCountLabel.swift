@@ -1,8 +1,9 @@
 import Dependencies
 import SwiftUI
 
-struct DiscussionButton: View {
-
+struct ReplyCountLabel: View {
+    
+    var replyCount: ReplyCount
     var note: Event
 
     @State private var relaySubscriptions = SubscriptionCancellables()
@@ -11,17 +12,26 @@ struct DiscussionButton: View {
     @EnvironmentObject private var relayService: RelayService
     @State private var avatars = [URL?]()
 
-    init(note: Event, viewer publicKeyHex: String?) {
+    init(replyCount: ReplyCount, for note: Event) {
         self.note = note
+        self.replyCount = replyCount
 
         let noteIdentifier = note.identifier ?? ""
-        let publicKeyHex = publicKeyHex ?? ""
+
+        let format = """
+            SUBQUERY(
+                eventReferences,
+                $e,
+                $e.referencedEvent.identifier = %@ AND
+                    ($e.marker = 'reply' OR $e.marker = 'root')
+            ).@count > 0
+        """
 
         let predicate = NSCompoundPredicate(
             andPredicateWithSubpredicates: [
                 NSPredicate(format: "kind = 1"),
                 NSPredicate(
-                    format: "SUBQUERY(eventReferences, $e, $e.referencedEvent.identifier = %@ AND ($e.marker = 'reply' OR $e.marker = 'root')).@count > 0",
+                    format: format,
                     noteIdentifier,
                     noteIdentifier
                 ),
@@ -33,7 +43,9 @@ struct DiscussionButton: View {
         let fetchRequest = Event.fetchRequest()
         fetchRequest.includesPendingChanges = false
         fetchRequest.includesSubentities = false
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.identifier, ascending: true)]
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Event.identifier, ascending: true)
+        ]
 
         fetchRequest.predicate = predicate
         fetchRequest.relationshipKeyPathsForPrefetching = ["author"]
@@ -64,15 +76,30 @@ struct DiscussionButton: View {
         guard isBeingDiscussed else {
             return nil
         }
-        if avatars.isEmpty {
-            return AttributedString(
-                "Join the discussion",
-                attributes: AttributeContainer(
-                    [NSAttributedString.Key.foregroundColor: UIColor.primaryTxt]
+        switch replyCount {
+        case .discussion:
+            if avatars.isEmpty {
+                return AttributedString(
+                    "Join the discussion",
+                    attributes: AttributeContainer(
+                        [NSAttributedString.Key.foregroundColor: UIColor.primaryTxt]
+                    )
                 )
-            )
-        } else {
-            return AttributedString("in discussion")
+            } else {
+                return AttributedString("in discussion")
+            }
+        case .count:
+            let count = replies.count
+            let string = String(localized: .reply.replies(count))
+            do {
+                var attributed = try AttributedString(markdown: string)
+                if let range = attributed.range(of: "\(count)") {
+                    attributed[range].foregroundColor = .primaryTxt
+                }
+                return attributed
+            } catch {
+                return nil
+            }
         }
     }
 
@@ -89,7 +116,10 @@ struct DiscussionButton: View {
                 Text(replies)
                     .font(.clarity(.medium, textStyle: .subheadline))
                     .foregroundColor(Color.secondaryTxt)
+                    .lineLimit(1)
             }
+
+            Spacer()
         }
         .onAppear {
             subscribeToReplies()

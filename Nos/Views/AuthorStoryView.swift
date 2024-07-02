@@ -189,13 +189,12 @@ fileprivate struct BottomOverlay: View {
     var note: Event
 
     @Dependency(\.persistenceController) private var persistenceController
-    @Dependency(\.currentUser) var currentUser
 
     @EnvironmentObject private var router: Router
 
     var body: some View {
         HStack(spacing: 0) {
-            DiscussionButton(note: note, viewer: currentUser.publicKeyHex)
+            ReplyCountLabel(replyCount: .discussion, for: note)
 
             Spacer()
 

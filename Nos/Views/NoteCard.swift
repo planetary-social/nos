@@ -7,7 +7,7 @@ import Dependencies
 ///
 /// Use this view inside MessageButton to have nice borders.
 struct NoteCard: View {
-    
+
     var note: Event
     
     var style = CardStyle.compact
@@ -16,10 +16,9 @@ struct NoteCard: View {
 
     @EnvironmentObject private var router: Router
     @Dependency(\.persistenceController) var persistenceController
-    @Dependency(\.currentUser) var currentUser
 
     private var shouldTruncate: Bool
-    private let showReplyCount: Bool
+    private let replyCount: ReplyCount?
     private var hideOutOfNetwork: Bool
     private var replyAction: ((Event) -> Void)?
 
@@ -28,14 +27,14 @@ struct NoteCard: View {
         style: CardStyle = .compact,
         shouldTruncate: Bool = true,
         hideOutOfNetwork: Bool = true,
-        showReplyCount: Bool = true,
+        replyCount: ReplyCount? = nil,
         replyAction: ((Event) -> Void)? = nil
     ) {
         self.note = note
         self.style = style
         self.shouldTruncate = shouldTruncate
         self.hideOutOfNetwork = hideOutOfNetwork
-        self.showReplyCount = showReplyCount
+        self.replyCount = replyCount
         self.replyAction = replyAction
     }
     
@@ -79,10 +78,10 @@ struct NoteCard: View {
                         }
                         BeveledSeparator()
                         HStack(spacing: 0) {
-                            if showReplyCount {
-                                DiscussionButton(
-                                    note: note,
-                                    viewer: currentUser.publicKeyHex
+                            if let replyCount {
+                                ReplyCountLabel(
+                                    replyCount: replyCount,
+                                    for: note
                                 )
                             }
                             Spacer()
@@ -152,7 +151,6 @@ struct NoteCard_Previews: PreviewProvider {
         }
         .environment(\.managedObjectContext, previewData.previewContext)
         .environmentObject(previewData.router)
-        .environment(previewData.currentUser)
         .padding()
         .background(Color.appBg)
     }

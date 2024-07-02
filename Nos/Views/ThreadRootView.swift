@@ -17,7 +17,6 @@ struct ThreadRootView<Reply: View>: View {
                 note: root,
                 shouldTruncate: true,
                 hideOutOfNetwork: false,
-                showReplyCount: false,
                 tapAction: tapAction
             )
             .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
