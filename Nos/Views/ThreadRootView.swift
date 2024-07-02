@@ -13,12 +13,18 @@ struct ThreadRootView<Reply: View>: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            NoteButton(note: root, shouldTruncate: true, hideOutOfNetwork: false, tapAction: tapAction)
-                .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
-                .readabilityPadding()
-                .opacity(0.7)
-                .frame(height: 100, alignment: .top)
-                .clipped()
+            NoteButton(
+                note: root,
+                shouldTruncate: true,
+                hideOutOfNetwork: false,
+                showReplyCount: false,
+                tapAction: tapAction
+            )
+            .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+            .readabilityPadding()
+            .opacity(0.7)
+            .frame(height: 100, alignment: .top)
+            .clipped()
 
             reply
                 .offset(y: 100)

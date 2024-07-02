@@ -166,11 +166,40 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     // MARK: - Talking to Relays
     
     func processSubscriptionQueue() async {
-        let waitingLongSubscriptions = all.filter { !$0.isOneTime && !$0.isActive }
-        let waitingOneTimeSubscriptions = all.filter { $0.isOneTime && !$0.isActive }
-        
-        waitingOneTimeSubscriptions.forEach { start(subscription: $0) }
-        waitingLongSubscriptions.forEach { start(subscription: $0) }
+        var waitingLongSubscriptions = [RelaySubscription]()
+        var waitingOneTimeSubscriptions = [RelaySubscription]()
+        var activeSubscriptionsCount = [URL: Int]()
+
+        all.forEach { relaySubscription in
+            if relaySubscription.isActive {
+                let relayAddress = relaySubscription.relayAddress
+                if let currentCount = activeSubscriptionsCount[relayAddress] {
+                    activeSubscriptionsCount[relayAddress] = currentCount + 1
+                } else {
+                    activeSubscriptionsCount[relayAddress] = 1
+                }
+            } else if relaySubscription.isOneTime {
+                waitingOneTimeSubscriptions.append(relaySubscription)
+            } else {
+                waitingLongSubscriptions.append(relaySubscription)
+            }
+        }
+
+        let waitingSubscriptions = waitingOneTimeSubscriptions + waitingLongSubscriptions
+        waitingSubscriptions.forEach { relaySubscription in
+            let relayAddress = relaySubscription.relayAddress
+            if let subscriptionsCount = activeSubscriptionsCount[relayAddress] {
+                if subscriptionsCount < 25 {
+                    start(subscription: relaySubscription)
+                    activeSubscriptionsCount[relayAddress] = subscriptionsCount + 1
+                } else {
+                    print("Count in \(relayAddress): \(subscriptionsCount)")
+                }
+            } else {
+                start(subscription: relaySubscription)
+                activeSubscriptionsCount[relayAddress] = 1
+            }
+        }
         
         if all.count > active.count {
             Log.debug("\(all.count - active.count) subscriptions waiting in queue.")

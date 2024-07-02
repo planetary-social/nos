@@ -1,3 +1,4 @@
+import Dependencies
 import SwiftUI
 
 struct DiscussionButton: View {
@@ -6,8 +7,9 @@ struct DiscussionButton: View {
 
     @State private var relaySubscriptions = SubscriptionCancellables()
     @FetchRequest private var replies: FetchedResults<Event>
-    @FetchRequest private var repliesFromFollows: FetchedResults<Event>
+    @Dependency(\.currentUser) var currentUser
     @EnvironmentObject private var relayService: RelayService
+    @State private var avatars = [URL?]()
 
     init(note: Event, viewer publicKeyHex: String?) {
         self.note = note
@@ -34,28 +36,28 @@ struct DiscussionButton: View {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.identifier, ascending: true)]
 
         fetchRequest.predicate = predicate
-        _replies = FetchRequest(fetchRequest: fetchRequest)
-
         fetchRequest.relationshipKeyPathsForPrefetching = ["author"]
-        fetchRequest.predicate = NSCompoundPredicate(
-            andPredicateWithSubpredicates: [
-                predicate,
-                NSPredicate(
-                    format: "%@ IN author.followers.source.hexadecimalPublicKey",
-                    publicKeyHex
-                )
-            ]
-        )
-        _repliesFromFollows = FetchRequest(fetchRequest: fetchRequest)
+        _replies = FetchRequest(fetchRequest: fetchRequest)
     }
 
     private var isBeingDiscussed: Bool {
         !replies.isEmpty
     }
 
-    private var avatars: [URL?] {
-        let authors = Set(repliesFromFollows.compactMap { $0.author })
-        return authors.map { $0.profilePhotoURL }
+    @MainActor
+    private func computeAvatars() async {
+        guard let socialGraph = currentUser.socialGraph else {
+            return
+        }
+        var followsInDiscussion = Set<Author>()
+        var iterator = replies.makeIterator()
+        while followsInDiscussion.count < 4, let reply = iterator.next() {
+            let author = reply.author
+            if let author, await socialGraph.follows(author.hexadecimalPublicKey) {
+                followsInDiscussion.insert(author)
+            }
+        }
+        avatars = followsInDiscussion.map { $0.profilePhotoURL }
     }
 
     private var attributedReplies: AttributedString? {
@@ -95,10 +97,18 @@ struct DiscussionButton: View {
         .onDisappear {
             relaySubscriptions.removeAll()
         }
+        .task {
+            await computeAvatars()
+        }
+        .onChange(of: replies.count) {
+            Task {
+                await computeAvatars()
+            }
+        }
     }
 
     func subscribeToReplies() {
-        Task(priority: .userInitiated) {
+        Task(priority: .background) {
             // Close out stale requests
             relaySubscriptions.removeAll()
             relaySubscriptions.append(
