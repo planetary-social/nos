@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.19] - 2024-07-01Z
+
 - Fixed a crash on the notifications tab
 - Fixed a performance issue after opening the Discover tab.
 - Cache NIP-05 validations to save network usage.
