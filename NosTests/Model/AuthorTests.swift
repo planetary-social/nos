@@ -146,6 +146,32 @@ final class AuthorTests: CoreDataTestCase {
         XCTAssertEqual(author.formattedNIP05, expected)
     }
     
+    func test_weblink_with_nos_social_NIP05() throws {
+        let context = persistenceController.viewContext
+        let author = try Author.findOrCreate(by: "test", context: context)
+        author.nip05 = "test@nos.social"
+        let expected = "https://test.nos.social"
+        
+        XCTAssertEqual(author.webLink, expected)
+    }
+    
+    func test_weblink_with_non_nos_social_NIP05() throws {
+        let expected = "https://njump.me/user@test.net"
+        let context = persistenceController.viewContext
+        let author = try Author.findOrCreate(by: "test", context: context)
+        author.nip05 = "user@test.net"
+        
+        XCTAssertEqual(author.webLink, expected)
+    }
+    
+    func test_weblink_with_nil_NIP05() throws {
+        let expected = "https://njump.me/\(KeyFixture.alice.npub)"
+        let context = persistenceController.viewContext
+        let author = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: context)
+        author.nip05 = nil
+        XCTAssertEqual(author.webLink, expected)
+    }
+    
     // MARK: Fetch requests
     
     @MainActor func test_knownFollowers_givenMultipleFollowers() throws {

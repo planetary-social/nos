@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Use NIP-05 for shared links to profile.
+
 ## [0.1.19] - 2024-07-01Z
 
 - Fixed a crash on the notifications tab
