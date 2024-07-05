@@ -72,56 +72,72 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         )
         collectionView.refreshControl = refreshControl
 
-        let coordinator = context.coordinator
-        let notificationCenter = NotificationCenter.default
-        coordinator.scrollToTopObserver = notificationCenter.addObserver(
-            forName: .scrollToTop,
-            object: nil,
-            queue: .main
-        ) { [weak collectionView] notification in
-            // if the tab that's selected is the tab in which this `PagedNoteListView` is displayed, scroll to the top
-            guard let selectedTab = notification.userInfo?["tab"] as? AppDestination,
-                selectedTab == tab else {
-                return
-            }
-            // scrolling to CGRect.zero does not work, so this seems to be the best we can do
-            collectionView?.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
-        }
-        coordinator.refreshObserver = notificationCenter.addObserver(
-            forName: .refresh,
-            object: nil,
-            queue: .main
-        ) { [weak collectionView, weak coordinator] notification in
-            // if the tab that's selected is the tab in which this
-            // `PagedNoteListView` is displayed, trigger a refresh.
-            let userInfo = notification.userInfo
-            guard userInfo?["tab"] as? AppDestination == tab else {
-                return
-            }
-            let refreshControl = collectionView?.refreshControl
-            if let refreshControl {
-                collectionView?.scrollRectToVisible(
-                    refreshControl.frame,
-                    animated: true
-                )
-                refreshControl.beginRefreshing()
-                coordinator?.refreshData(refreshControl)
-            } else {
-                coordinator?.refreshData(notification)
-            }
-        }
+        Self.setUpObservers(
+            uiView: collectionView,
+            coordinator: context.coordinator,
+            tab: tab
+        )
 
         return collectionView
     }
     
     func updateUIView(_ collectionView: UICollectionView, context: Context) {}
 
-    static func dismantleUIView(_ uiView: UITextView, coordinator: Coordinator<Header, EmptyPlaceholder>) {
+    static func dismantleUIView(_ uiView: UICollectionView, coordinator: Coordinator<Header, EmptyPlaceholder>) {
+        tearDownObservers(coordinator: coordinator)
+    }
+
+    private static func setUpObservers(
+        uiView: UICollectionView,
+        coordinator: Coordinator<Header, EmptyPlaceholder>,
+        tab: AppDestination
+    ) {
+        let notificationCenter = NotificationCenter.default
+        coordinator.scrollToTopObserver = notificationCenter.addObserver(
+            forName: .scrollToTop,
+            object: nil,
+            queue: .main
+        ) { [weak uiView] notification in
+            // if the tab that's selected is the tab in which this `PagedNoteListView` is displayed, scroll to the top
+            guard let selectedTab = notification.userInfo?["tab"] as? AppDestination,
+                selectedTab == tab else {
+                return
+            }
+            // scrolling to CGRect.zero does not work, so this seems to be the best we can do
+            uiView?.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
+        }
+        coordinator.refreshObserver = notificationCenter.addObserver(
+            forName: .refresh,
+            object: nil,
+            queue: .main
+        ) { [weak uiView, weak coordinator] notification in
+            // if the tab that's selected is the tab in which this
+            // `PagedNoteListView` is displayed, trigger a refresh.
+            let userInfo = notification.userInfo
+            guard userInfo?["tab"] as? AppDestination == tab else {
+                return
+            }
+            let refreshControl = uiView?.refreshControl
+            if let refreshControl {
+                uiView?.scrollRectToVisible(
+                    refreshControl.frame,
+                    animated: true
+                )
+                refreshControl.beginRefreshing()
+            }
+            coordinator?.refreshData(refreshControl ?? notification)
+        }
+    }
+
+    private static func tearDownObservers(
+        coordinator: Coordinator<Header, EmptyPlaceholder>
+    ) {
+        let notificationCenter = NotificationCenter.default
         if let observer = coordinator.scrollToTopObserver {
-            NotificationCenter.default.removeObserver(observer)
+            notificationCenter.removeObserver(observer)
         }
         if let observer = coordinator.refreshObserver {
-            NotificationCenter.default.removeObserver(observer)
+            notificationCenter.removeObserver(observer)
         }
     }
 
