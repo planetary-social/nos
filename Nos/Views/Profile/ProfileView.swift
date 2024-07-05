@@ -88,6 +88,16 @@ struct ProfileView: View {
                             Text(.localizable.noEventsOnProfile)
                                 .padding()
                                 .readabilityPadding()
+                            
+                            SecondaryActionButton(
+                                title: .localizable.tapToRefresh
+                            ) {
+                                NotificationCenter.default.post(
+                                    name: .refresh,
+                                    object: nil,
+                                    userInfo: ["tab": AppDestination.profile]
+                                )
+                            }
                         }
                         .frame(minHeight: 300)
                     },

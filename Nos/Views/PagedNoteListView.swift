@@ -72,7 +72,9 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         )
         collectionView.refreshControl = refreshControl
 
-        context.coordinator.observer = NotificationCenter.default.addObserver(
+        let coordinator = context.coordinator
+        let notificationCenter = NotificationCenter.default
+        coordinator.scrollToTopObserver = notificationCenter.addObserver(
             forName: .scrollToTop,
             object: nil,
             queue: .main
@@ -85,6 +87,29 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             // scrolling to CGRect.zero does not work, so this seems to be the best we can do
             collectionView?.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
         }
+        coordinator.refreshObserver = notificationCenter.addObserver(
+            forName: .refresh,
+            object: nil,
+            queue: .main
+        ) { [weak collectionView, weak coordinator] notification in
+            // if the tab that's selected is the tab in which this
+            // `PagedNoteListView` is displayed, trigger a refresh.
+            let userInfo = notification.userInfo
+            guard userInfo?["tab"] as? AppDestination == tab else {
+                return
+            }
+            let refreshControl = collectionView?.refreshControl
+            if let refreshControl {
+                collectionView?.scrollRectToVisible(
+                    refreshControl.frame,
+                    animated: true
+                )
+                refreshControl.beginRefreshing()
+                coordinator?.refreshData(refreshControl)
+            } else {
+                coordinator?.refreshData(notification)
+            }
+        }
 
         return collectionView
     }
@@ -92,7 +117,10 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     func updateUIView(_ collectionView: UICollectionView, context: Context) {}
 
     static func dismantleUIView(_ uiView: UITextView, coordinator: Coordinator<Header, EmptyPlaceholder>) {
-        if let observer = coordinator.observer {
+        if let observer = coordinator.scrollToTopObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        if let observer = coordinator.refreshObserver {
             NotificationCenter.default.removeObserver(observer)
         }
     }
@@ -138,7 +166,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         
         var dataSource: PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder>?
         var collectionView: UICollectionView?
-        var observer: NSObjectProtocol?
+        var scrollToTopObserver: NSObjectProtocol?
+        var refreshObserver: NSObjectProtocol?
         var onRefresh: (() -> NSFetchRequest<Event>)?
         
         func dataSource(
@@ -185,7 +214,10 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
 }
 
 extension Notification.Name {
+    /// Instructs the receiver to scroll its list to the top
     public static let scrollToTop = Notification.Name("scrollToTop")
+    /// Instructs the receiver to perform a data refresh
+    public static let refresh = Notification.Name("refresh")
 }
 
 #Preview {
