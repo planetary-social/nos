@@ -150,7 +150,9 @@ struct NoteCard_Previews: PreviewProvider {
             }
         }
         .environment(\.managedObjectContext, previewData.previewContext)
+        .environmentObject(previewData.relayService)
         .environmentObject(previewData.router)
+        .environment(previewData.currentUser)
         .padding()
         .background(Color.appBg)
     }
