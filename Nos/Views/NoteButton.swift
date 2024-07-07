@@ -13,7 +13,7 @@ struct NoteButton: View {
     var style = CardStyle.compact
     var shouldTruncate: Bool
     var hideOutOfNetwork: Bool
-    var replyCount: ReplyCount?
+    var repliesDisplayType: RepliesDisplayType
     var displayRootMessage: Bool
     var isTapEnabled: Bool 
     private let replyAction: ((Event) -> Void)?
@@ -26,7 +26,7 @@ struct NoteButton: View {
         style: CardStyle = CardStyle.compact, 
         shouldTruncate: Bool = true, 
         hideOutOfNetwork: Bool = true, 
-        replyCount: ReplyCount? = nil,
+        repliesDisplayType: RepliesDisplayType = .none,
         displayRootMessage: Bool = false,
         isTapEnabled: Bool = true,
         replyAction: ((Event) -> Void)? = nil,
@@ -36,7 +36,7 @@ struct NoteButton: View {
         self.style = style
         self.shouldTruncate = shouldTruncate
         self.hideOutOfNetwork = hideOutOfNetwork
-        self.replyCount = replyCount
+        self.repliesDisplayType = repliesDisplayType
         self.displayRootMessage = displayRootMessage
         self.isTapEnabled = isTapEnabled
         self.replyAction = replyAction
@@ -80,7 +80,7 @@ struct NoteButton: View {
                 style: style,
                 shouldTruncate: shouldTruncate,
                 hideOutOfNetwork: hideOutOfNetwork,
-                replyCount: replyCount,
+                repliesDisplayType: repliesDisplayType,
                 replyAction: replyAction
             )
 

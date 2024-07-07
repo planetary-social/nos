@@ -115,7 +115,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             NoteButton(
                 note: note,
                 hideOutOfNetwork: false,
-                replyCount: .discussion,
+                repliesDisplayType: .discussion,
                 displayRootMessage: true
             )
         }

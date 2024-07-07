@@ -3,7 +3,7 @@ import SwiftUI
 
 struct ReplyCountLabel: View {
     
-    var replyCount: ReplyCount
+    var repliesDisplayType: RepliesDisplayType
     var note: Event
 
     @State private var relaySubscriptions = SubscriptionCancellables()
@@ -12,9 +12,9 @@ struct ReplyCountLabel: View {
     @EnvironmentObject private var relayService: RelayService
     @State private var avatars = [URL?]()
 
-    init(replyCount: ReplyCount, for note: Event) {
+    init(repliesDisplayType: RepliesDisplayType, for note: Event) {
         self.note = note
-        self.replyCount = replyCount
+        self.repliesDisplayType = repliesDisplayType
 
         let noteIdentifier = note.identifier ?? ""
 
@@ -76,7 +76,9 @@ struct ReplyCountLabel: View {
         guard isBeingDiscussed else {
             return nil
         }
-        switch replyCount {
+        switch repliesDisplayType {
+        case .none:
+            return AttributedString()
         case .discussion:
             if avatars.isEmpty {
                 return AttributedString(

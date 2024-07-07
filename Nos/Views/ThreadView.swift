@@ -31,7 +31,7 @@ struct ThreadView: View {
         LazyVStack {
             NoteButton(
                 note: root,
-                replyCount: .count,
+                repliesDisplayType: .count,
                 tapAction: { event in
                     router.push(event)
                 }
@@ -49,7 +49,7 @@ struct ThreadView: View {
                         .fill(Color.secondaryTxt)
                         NoteButton(
                             note: event,
-                            replyCount: .count,
+                            repliesDisplayType: .count,
                             tapAction: { event in
                                 router.push(event)
                             }

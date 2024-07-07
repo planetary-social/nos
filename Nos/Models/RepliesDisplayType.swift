@@ -1,5 +1,8 @@
 /// Kind of counter (used when displaying a Note)
-enum ReplyCount {
+enum RepliesDisplayType {
+    /// Don't show anything
+    case none
+
     /// Just show "in discussion" or "Join the discussion"
     case discussion
 

@@ -94,7 +94,7 @@ struct StoryNoteView: View {
                             note: repostedNote,
                             style: .compact,
                             hideOutOfNetwork: false,
-                            replyCount: .discussion,
+                            repliesDisplayType: .discussion,
                             replyAction: nil
                         )
                     }

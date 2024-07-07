@@ -18,7 +18,7 @@ struct NoteCard: View {
     @Dependency(\.persistenceController) var persistenceController
 
     private var shouldTruncate: Bool
-    private let replyCount: ReplyCount?
+    private let repliesDisplayType: RepliesDisplayType
     private var hideOutOfNetwork: Bool
     private var replyAction: ((Event) -> Void)?
 
@@ -27,14 +27,14 @@ struct NoteCard: View {
         style: CardStyle = .compact,
         shouldTruncate: Bool = true,
         hideOutOfNetwork: Bool = true,
-        replyCount: ReplyCount? = nil,
+        repliesDisplayType: RepliesDisplayType = .none,
         replyAction: ((Event) -> Void)? = nil
     ) {
         self.note = note
         self.style = style
         self.shouldTruncate = shouldTruncate
         self.hideOutOfNetwork = hideOutOfNetwork
-        self.replyCount = replyCount
+        self.repliesDisplayType = repliesDisplayType
         self.replyAction = replyAction
     }
     
@@ -78,9 +78,9 @@ struct NoteCard: View {
                         }
                         BeveledSeparator()
                         HStack(spacing: 0) {
-                            if let replyCount {
+                            if repliesDisplayType != .none {
                                 ReplyCountLabel(
-                                    replyCount: replyCount,
+                                    repliesDisplayType: repliesDisplayType,
                                     for: note
                                 )
                             }
