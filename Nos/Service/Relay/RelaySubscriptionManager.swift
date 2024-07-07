@@ -169,8 +169,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     // MARK: - Talking to Relays
     
     func processSubscriptionQueue() async {
-        var waitingLongSubscriptions = [RelaySubscription]()
-        var waitingOneTimeSubscriptions = [RelaySubscription]()
+        var waitingSubscriptions = [RelaySubscription]()
 
         // Counter to track the number of active subscriptions per relay
         var activeSubscriptionsCount = [URL: Int]()
@@ -184,16 +183,12 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
                 } else {
                     activeSubscriptionsCount[relayAddress] = 1
                 }
-            } else if relaySubscription.isOneTime {
-                waitingOneTimeSubscriptions.append(relaySubscription)
-            } else {
-                waitingLongSubscriptions.append(relaySubscription)
             }
+            waitingSubscriptions.append(relaySubscription)
         }
 
         // Start waiting relay subscriptions if they don't exceed the queue
         // limit
-        let waitingSubscriptions = waitingOneTimeSubscriptions + waitingLongSubscriptions
         waitingSubscriptions.forEach { relaySubscription in
             let relayAddress = relaySubscription.relayAddress
             if let subscriptionsCount = activeSubscriptionsCount[relayAddress] {
