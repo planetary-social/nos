@@ -136,7 +136,7 @@ struct ReplyCountLabel: View {
     }
 
     func subscribeToReplies() {
-        Task(priority: .background) {
+        Task(priority: .userInitiated) {
             // Close out stale requests
             relaySubscriptions.removeAll()
             relaySubscriptions.append(
