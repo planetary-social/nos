@@ -106,10 +106,14 @@ import Logger
     }
     
     var webLink: String {
-        if let publicKey {
+        if hasNosNIP05 {
+            return "https://\(nosNIP05Username).nos.social"
+        } else if let formattedNIP05 {
+            return "https://njump.me/\(formattedNIP05)"
+        } else if let publicKey {
             return "https://njump.me/\(publicKey.npub)"
         } else {
-            Log.error("Coudln't find public key when creating weblink")
+            Log.error("Couldn't find public key when creating weblink")
             return "https://njump.me/"
         }
     }
