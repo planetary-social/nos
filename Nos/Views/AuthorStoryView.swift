@@ -196,7 +196,7 @@ fileprivate struct BottomOverlay: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            ReplyCountLabel(repliesDisplayType: .discussion, for: note)
+            RepliesLabel(repliesDisplayType: .discussion, for: note)
 
             Spacer()
 

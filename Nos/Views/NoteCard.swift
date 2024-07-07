@@ -79,7 +79,7 @@ struct NoteCard: View {
                         BeveledSeparator()
                         HStack(spacing: 0) {
                             if repliesDisplayType != .none {
-                                ReplyCountLabel(
+                                RepliesLabel(
                                     repliesDisplayType: repliesDisplayType,
                                     for: note
                                 )

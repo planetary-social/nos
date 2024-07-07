@@ -1,8 +1,8 @@
 import Dependencies
 import SwiftUI
 
-struct ReplyCountLabel: View {
-    
+struct RepliesLabel: View {
+
     var repliesDisplayType: RepliesDisplayType
     var note: Event
 
