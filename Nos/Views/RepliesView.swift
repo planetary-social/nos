@@ -74,7 +74,7 @@ struct RepliesView: View {
             
             let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
             let filter = Filter(kinds: [.text, .like, .delete, .repost, .report, .label], eTags: eTags)
-            let subIDs = await relayService.subscribeToEvents(matching: filter)
+            let subIDs = await relayService.fetchEvents(matching: filter)
             relaySubscriptions.append(subIDs)
             
             // download reports for this user and the replies' authors
@@ -83,7 +83,9 @@ struct RepliesView: View {
             }
             let pTags = Array(Set([authorKey] + replies.compactMap { $0.author?.hexadecimalPublicKey }))
             let reportFilter = Filter(kinds: [.report], pTags: pTags)
-            relaySubscriptions.append(await relayService.subscribeToEvents(matching: reportFilter))
+            relaySubscriptions.append(
+                await relayService.fetchEvents(matching: reportFilter)
+            )
         }
     }
     

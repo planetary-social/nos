@@ -150,7 +150,7 @@ extension RelayService {
     /// - Parameter specificRelays: an optional list of relays you would like to fetch from. The user's preferred relays
     ///     will be used if this is not set.
     /// - Returns: A handle that allows the caller to cancel the subscription when it is no longer needed.
-    func subscribeToEvents(
+    @discardableResult func fetchEvents(
         matching filter: Filter,
         from specificRelays: [URL]? = nil
     ) async -> SubscriptionCancellable {
@@ -198,7 +198,7 @@ extension RelayService {
             limit: 1,
             subscribe: false
         )
-        return await subscribeToEvents(matching: metaFilter)
+        return await fetchEvents(matching: metaFilter)
     }
 
     func requestFourRepliesFromFollows(for eventID: String?) async -> SubscriptionCancellable {
@@ -212,7 +212,7 @@ extension RelayService {
             limit: 4,
             subscribe: false
         )
-        return await subscribeToEvents(matching: metaFilter)
+        return await fetchEvents(matching: metaFilter)
     }
 
     func requestMetadata(for authorKey: RawAuthorID?, since: Date?) async -> SubscriptionCancellable {
@@ -227,7 +227,7 @@ extension RelayService {
             since: since,
             subscribe: false
         )
-        return await subscribeToEvents(matching: metaFilter)
+        return await fetchEvents(matching: metaFilter)
     }
     
     func requestContactList(for authorKey: RawAuthorID?, since: Date?) async -> SubscriptionCancellable {
@@ -242,7 +242,7 @@ extension RelayService {
             since: since,
             subscribe: false
         )
-        return await subscribeToEvents(matching: contactFilter)
+        return await fetchEvents(matching: contactFilter)
     }
     
     func requestProfileData(
@@ -267,7 +267,7 @@ extension RelayService {
             return SubscriptionCancellable.empty()
         }
         
-        return await subscribeToEvents(
+        return await fetchEvents(
             matching: Filter(
                 eventIDs: [eventID],
                 limit: 1,

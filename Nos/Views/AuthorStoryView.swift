@@ -180,7 +180,9 @@ struct AuthorStoryView: View {
         }
         
         let filter = Filter(kinds: [.text, .like, .delete, .repost], eTags: eTags)
-        relaySubscriptions.append(await relayService.subscribeToEvents(matching: filter))
+        relaySubscriptions.append(
+            await relayService.fetchEvents(matching: filter)
+        )
     }
 }
 

@@ -53,7 +53,7 @@ struct HomeFeedView: View {
                 kinds: [.text, .delete, .repost, .longFormContent, .report], 
                 since: storiesCutoffDate
             )
-            let textSubs = await relayService.subscribeToEvents(matching: textFilter)
+            let textSubs = await relayService.fetchEvents(matching: textFilter)
             relaySubscriptions.append(textSubs)
         }
     }

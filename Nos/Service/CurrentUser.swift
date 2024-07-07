@@ -179,8 +179,10 @@ import Dependencies
         // Subscribe to our own events of all kinds.
         let latestRecievedEvent = try? viewContext.fetch(Event.lastReceived(for: author)).first
         let allEventsFilter = Filter(authorKeys: [key], since: latestRecievedEvent?.receivedAt)
-        subscriptions.append(await relayService.subscribeToEvents(matching: allEventsFilter))
-        
+        subscriptions.append(
+            await relayService.fetchEvents(matching: allEventsFilter)
+        )
+
         // Always make a one time request for the latest contact list
         let contactFilter = Filter(
             authorKeys: [key],
@@ -188,8 +190,10 @@ import Dependencies
             limit: 2, // small hack to make sure this filter doesn't get closed for being stale
             since: author.lastUpdatedContactList
         )
-        subscriptions.append(await relayService.subscribeToEvents(matching: contactFilter))
-        
+        subscriptions.append(
+            await relayService.fetchEvents(matching: contactFilter)
+        )
+
         // Listen for notifications
         await pushNotificationService.listen(for: self)
     }
@@ -235,8 +239,8 @@ import Dependencies
                     since: lastUpdatedMetadata,
                     subscribe: false
                 )
-                _ = await self?.relayService.subscribeToEvents(matching: metaFilter)
-                
+                _ = await self?.relayService.fetchEvents(matching: metaFilter)
+
                 let contactFilter = Filter(
                     authorKeys: [followedKey],
                     kinds: [.contactList],
@@ -244,8 +248,8 @@ import Dependencies
                     since: lastUpdatedContactList,
                     subscribe: false
                 )
-                _ = await self?.relayService.subscribeToEvents(matching: contactFilter)
-                
+                await self?.relayService.fetchEvents(matching: contactFilter)
+
                 // Do this slowly so we don't get rate limited
                 try await Task.sleep(for: .seconds(5))
                 try Task.checkCancellation()

@@ -100,8 +100,10 @@ import Combine
             pTags: [authorKey], 
             limit: 50
         )
-        relaySubscription = await relayService.subscribeToEvents(matching: userMentionsFilter)
-        
+        relaySubscription = await relayService.fetchEvents(
+            matching: userMentionsFilter
+        )
+
         await updateBadgeCount()
     }
     
