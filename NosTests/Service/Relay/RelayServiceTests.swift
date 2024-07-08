@@ -7,8 +7,7 @@ class RelayServiceTests: XCTestCase {
             authorKeys: ["test"],
             kinds: [.contactList],
             limit: 1,
-            since: since,
-            subscribe: false
+            since: since
         )
         let mockSubscriptionManager = MockRelaySubscriptionManager()
         let subject = RelayService(subscriptionManager: mockSubscriptionManager)

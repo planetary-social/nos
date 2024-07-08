@@ -27,7 +27,7 @@ struct NoteCard: View {
         style: CardStyle = .compact,
         shouldTruncate: Bool = true,
         hideOutOfNetwork: Bool = true,
-        repliesDisplayType: RepliesDisplayType = .none,
+        repliesDisplayType: RepliesDisplayType = .nothing,
         replyAction: ((Event) -> Void)? = nil
     ) {
         self.note = note

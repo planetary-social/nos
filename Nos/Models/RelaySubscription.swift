@@ -28,9 +28,11 @@ struct RelaySubscription: Identifiable, Hashable {
         subscriptionStartDate != nil
     }
     
-    /// Returns true if this is a "one-time" filter, where we are only looking for a single event
-    var isOneTime: Bool {
-        !filter.subscribe
+    /// Whether this RelaySubscription should subscribe to all new events
+    /// matching the filter (if true) or close once a relay has returned all
+    /// stored events (if false).
+    var observeNewEvents: Bool {
+        filter.shouldKeepSubscriptionOpen
     }
     
     internal init(

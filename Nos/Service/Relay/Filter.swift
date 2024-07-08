@@ -4,9 +4,16 @@ import Foundation
 /// See [NIP-01](https://github.com/nostr-protocol/nips/blob/master/01.md#communication-between-clients-and-relays).
 struct Filter: Hashable, Identifiable {
     
+    /// List of author identifiers the Filter should be constrained to.
     let authorKeys: [RawAuthorID]
+
+    /// List of event identifiers the Filter should be constrained to.
     let eventIDs: [RawEventID]
+
+    /// List of Note kinds to filter
     let kinds: [EventKind]
+
+    /// List of event identifiers that 
     let eTags: [RawEventID]
     let pTags: [RawAuthorID]
     let search: String?
@@ -14,9 +21,7 @@ struct Filter: Hashable, Identifiable {
     var limit: Int?
     var since: Date?
     var until: Date?
-
-    /// This filter should keep the subscription open.
-    var subscribe: Bool
+    var shouldKeepSubscriptionOpen: Bool
 
     init(
         authorKeys: [RawAuthorID] = [],
@@ -29,7 +34,7 @@ struct Filter: Hashable, Identifiable {
         limit: Int? = nil,
         since: Date? = nil,
         until: Date? = nil,
-        subscribe: Bool = true
+        shouldKeepSubscriptionOpen: Bool = false
     ) {
         self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
         self.eventIDs = eventIDs
@@ -41,7 +46,7 @@ struct Filter: Hashable, Identifiable {
         self.limit = limit
         self.since = since
         self.until = until
-        self.subscribe = subscribe
+        self.shouldKeepSubscriptionOpen = shouldKeepSubscriptionOpen
     }
     
     var dictionary: [String: Any] {

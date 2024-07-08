@@ -178,7 +178,11 @@ import Dependencies
         
         // Subscribe to our own events of all kinds.
         let latestRecievedEvent = try? viewContext.fetch(Event.lastReceived(for: author)).first
-        let allEventsFilter = Filter(authorKeys: [key], since: latestRecievedEvent?.receivedAt)
+        let allEventsFilter = Filter(
+            authorKeys: [key],
+            since: latestRecievedEvent?.receivedAt,
+            shouldKeepSubscriptionOpen: true
+        )
         subscriptions.append(
             await relayService.fetchEvents(matching: allEventsFilter)
         )
@@ -188,7 +192,8 @@ import Dependencies
             authorKeys: [key],
             kinds: [.contactList],
             limit: 2, // small hack to make sure this filter doesn't get closed for being stale
-            since: author.lastUpdatedContactList
+            since: author.lastUpdatedContactList,
+            shouldKeepSubscriptionOpen: true
         )
         subscriptions.append(
             await relayService.fetchEvents(matching: contactFilter)
@@ -236,8 +241,7 @@ import Dependencies
                     authorKeys: [followedKey],
                     kinds: [.metaData],
                     limit: 1,
-                    since: lastUpdatedMetadata,
-                    subscribe: false
+                    since: lastUpdatedMetadata
                 )
                 _ = await self?.relayService.fetchEvents(matching: metaFilter)
 
@@ -245,8 +249,7 @@ import Dependencies
                     authorKeys: [followedKey],
                     kinds: [.contactList],
                     limit: 1,
-                    since: lastUpdatedContactList,
-                    subscribe: false
+                    since: lastUpdatedContactList
                 )
                 await self?.relayService.fetchEvents(matching: contactFilter)
 

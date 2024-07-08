@@ -51,7 +51,8 @@ struct HomeFeedView: View {
             let textFilter = Filter(
                 authorKeys: followedKeys, 
                 kinds: [.text, .delete, .repost, .longFormContent, .report], 
-                since: storiesCutoffDate
+                since: storiesCutoffDate,
+                shouldKeepSubscriptionOpen: true
             )
             let textSubs = await relayService.fetchEvents(matching: textFilter)
             relaySubscriptions.append(textSubs)
@@ -64,7 +65,8 @@ struct HomeFeedView: View {
                 authorKeys: user.followedKeys, 
                 kinds: [.text, .delete, .repost, .longFormContent, .report], 
                 limit: 100, 
-                since: nil
+                since: nil,
+                shouldKeepSubscriptionOpen: true
             )
             PagedNoteListView(
                 databaseFilter: Event.homeFeed(for: user, before: lastRefreshDate), 

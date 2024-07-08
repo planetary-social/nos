@@ -195,8 +195,7 @@ extension RelayService {
         let metaFilter = Filter(
             kinds: [.text],
             eTags: [eventID],
-            limit: 1,
-            subscribe: false
+            limit: 1
         )
         return await fetchEvents(matching: metaFilter)
     }
@@ -209,8 +208,7 @@ extension RelayService {
             authorKeys: Array(await currentUser.socialGraph.followedKeys),
             kinds: [.text],
             eTags: [eventID],
-            limit: 4,
-            subscribe: false
+            limit: 4
         )
         return await fetchEvents(matching: metaFilter)
     }
@@ -224,8 +222,7 @@ extension RelayService {
             authorKeys: [authorKey],
             kinds: [.metaData],
             limit: 1,
-            since: since,
-            subscribe: false
+            since: since
         )
         return await fetchEvents(matching: metaFilter)
     }
@@ -239,8 +236,7 @@ extension RelayService {
             authorKeys: [authorKey],
             kinds: [.contactList],
             limit: 1,
-            since: since,
-            subscribe: false
+            since: since
         )
         return await fetchEvents(matching: contactFilter)
     }
@@ -270,8 +266,7 @@ extension RelayService {
         return await fetchEvents(
             matching: Filter(
                 eventIDs: [eventID],
-                limit: 1,
-                subscribe: false
+                limit: 1
             )
         )
     }
@@ -308,7 +303,7 @@ extension RelayService {
         
         if let subID = responseArray[1] as? String,
             let subscription = await subscriptionManager.subscription(from: subID),
-            subscription.isOneTime {
+            !subscription.observeNewEvents {
             Log.debug("\(socket.host) has finished responding on \(subID). Closing subscription.")
             // This is a one-off request. Close it.
             sendClose(from: socket, subscription: subID)
@@ -347,7 +342,7 @@ extension RelayService {
                     subscription.receivedEventCount += 1
                     await subscriptionManager.updateSubscriptions(with: subscription)
                 }
-                if subscription.isOneTime {
+                if !subscription.observeNewEvents {
                     Log.debug("detected subscription with id \(subscription.id) has been fulfilled. Closing.")
                     await subscriptionManager.forceCloseSubscriptionCount(for: subscription.id)
                     await sendCloseToAll(for: subscription.id)

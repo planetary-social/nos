@@ -73,7 +73,11 @@ struct RepliesView: View {
             relaySubscriptions.removeAll()
             
             let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
-            let filter = Filter(kinds: [.text, .like, .delete, .repost, .report, .label], eTags: eTags)
+            let filter = Filter(
+                kinds: [.text, .like, .delete, .repost, .report, .label],
+                eTags: eTags,
+                shouldKeepSubscriptionOpen: true
+            )
             let subIDs = await relayService.fetchEvents(matching: filter)
             relaySubscriptions.append(subIDs)
             
@@ -82,7 +86,11 @@ struct RepliesView: View {
                 return
             }
             let pTags = Array(Set([authorKey] + replies.compactMap { $0.author?.hexadecimalPublicKey }))
-            let reportFilter = Filter(kinds: [.report], pTags: pTags)
+            let reportFilter = Filter(
+                kinds: [.report],
+                pTags: pTags,
+                shouldKeepSubscriptionOpen: true
+            )
             relaySubscriptions.append(
                 await relayService.fetchEvents(matching: reportFilter)
             )
