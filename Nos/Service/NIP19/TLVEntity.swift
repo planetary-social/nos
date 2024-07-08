@@ -1,9 +1,11 @@
 import Foundation
 
-struct TLVEntity {
-    let type: TLVType
-    let length: Int
-    let value: String
+enum TLVEntity {
+    case special(value: String)
+    case relay(value: String)
+    case author(value: String)
+    case kind(value: UInt32)
+    case unknown
 
     static func decodeEntities(data: Data) -> [TLVEntity] {
         guard let converted = try? data.base8FromBase5() else {
@@ -19,22 +21,24 @@ struct TLVEntity {
             let length = Int(converted[offset + 1])
             let value = converted.subdata(in: offset + 2 ..< offset + 2 + length)
 
+            let entity: TLVEntity
             switch type {
             case .special:
                 let valueString = SHA256Key.decode(base8: value)
-                let entity = TLVEntity(type: .special, length: length, value: valueString)
-                result.append(entity)
+                entity = .special(value: valueString)
             case .relay:
                 let valueString = String(data: value, encoding: .ascii)
-                let entity = TLVEntity(type: .relay, length: length, value: valueString ?? "") // TODO: handle error
-                result.append(entity)
+                entity = .relay(value: valueString ?? "") // TODO: handle error
             case .author:
-                break // TODO: support author
+                let valueString = SHA256Key.decode(base8: value)
+                entity = .author(value: valueString)
             case .kind:
-                break // TODO: support kind
+                let valueInt = UInt32(bigEndian: value.withUnsafeBytes { $0.load(as: UInt32.self) })
+                entity = .kind(value: valueInt)
             case nil:
-                break // TODO: hmmm...we have an issue reading the type for this entity; this is bad
+                entity = .unknown
             }
+            result.append(entity)
 
             offset += length + 2
         }

@@ -52,4 +52,34 @@ final class Bech32Tests: CoreDataTestCase {
             XCTFail("Expected to get a nprofile")
         }
     }
+
+    // swiftlint:disable line_length
+    /// Example taken from [#1231](https://github.com/planetary-social/nos/issues/1231), which points to
+    /// [this note](https://njump.me/nevent1qqsqq0wah49rd6hjpezm275vys8pu6l5lcqddj9mz8cwrwf3m00k56gzyqalp33lewf5vdq847t6te0wvnags0gs0mu72kz8938tn24wlfze6a2cs3x)
+    @MainActor func test_nevent() throws {
+        let prefix = "nevent"
+
+        let nevent = "nevent1qyt8wumn8ghj7un9d3shjtnddaehgu3wwp6kytcpz9mhxue69uhkummnw3ezumrpdejz7qg4waehxw309aex2mrp0yhxgctdw4eju6t09uq3wamnwvaz7tmjv4kxz7fwwpexjmtpdshxuet59uq32amnwvaz7tmwdaehgu3wdau8gu3wv3jhvtcpr4mhxue69uhkummnw3ezucnfw33k76twv4ezuum0vd5kzmp0qyv8wumn8ghj7mn0wd68ytnxd46zuamf0ghxy6t69uq3jamnwvaz7tmjv4kxz7fwwdhx7un59eek7cmfv9kz7qghwaehxw309aex2mrp0yhxummnw3ezucnpdejz7qg3waehxw309ahx7um5wgh8w6twv5hsqg9p8569xea0fgnv0zuqnt3wsk5mu9j6xal7ten6332pg9r5h8g32gl7wn5w"
+
+        let decoded = try Bech32.decode(nevent)
+        XCTAssertEqual(decoded.hrp, prefix)
+
+        let entity = try NIP19Entity.decode(bech32String: nevent)
+        switch entity {
+        case .nevent(let eventID, let relays, let publicKey, let kind):
+            XCTAssertEqual(eventID, "a13d345367af4a26c78b809ae2e85a9be165a377fe5e67a8c54141474b9d1152")
+
+            XCTAssertEqual(relays.count, 10)
+            let firstRelay = try XCTUnwrap(relays.first)
+            XCTAssertEqual(firstRelay, "wss://relay.mostr.pub/")
+            let secondRelay = try XCTUnwrap(relays.last)
+            XCTAssertEqual(secondRelay, "wss://nostr.wine/")
+
+            XCTAssertNil(publicKey)
+            XCTAssertNil(kind)
+        default:
+            XCTFail("Expected to get a nevent")
+        }
+    }
+    // swiftlint:enable line_length
 }
