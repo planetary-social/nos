@@ -26,7 +26,7 @@ struct NoteButton: View {
         style: CardStyle = CardStyle.compact, 
         shouldTruncate: Bool = true, 
         hideOutOfNetwork: Bool = true, 
-        repliesDisplayType: RepliesDisplayType = .nothing,
+        repliesDisplayType: RepliesDisplayType = .displayNothing,
         displayRootMessage: Bool = false,
         isTapEnabled: Bool = true,
         replyAction: ((Event) -> Void)? = nil,

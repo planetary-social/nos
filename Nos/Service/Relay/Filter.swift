@@ -13,14 +13,36 @@ struct Filter: Hashable, Identifiable {
     /// List of Note kinds to filter
     let kinds: [EventKind]
 
-    /// List of event identifiers that 
+    /// Ask the relay to return events mentioned in the `tags` field.
     let eTags: [RawEventID]
+
+    /// Ask the relay to return authors mentioned in the `tags` field.
     let pTags: [RawAuthorID]
+
+    /// Query string to use in the search parameter.
+    ///
+    /// Defaults to `nil`
     let search: String?
-    let inNetwork: Bool
+
+    /// Maximum number of items the relay can return.
+    ///
+    /// Defaults to `nil` (no limit)
     var limit: Int?
+
+    /// Ask the relay to return notes posted after a given date.
+    ///
+    /// Defaults to `nil`
     var since: Date?
+
+    /// Ask relays to return notes posted before a given date.
+    ///
+    /// Defaults to `nil`
     var until: Date?
+
+    /// Whether the subscription should remain open listening for content
+    /// updates or should close after receiving a response from the relay.
+    ///
+    /// Defaults to `false`
     var shouldKeepSubscriptionOpen: Bool
 
     init(
@@ -30,7 +52,6 @@ struct Filter: Hashable, Identifiable {
         eTags: [RawEventID] = [],
         pTags: [RawAuthorID] = [],
         search: String? = nil,
-        inNetwork: Bool = false,
         limit: Int? = nil,
         since: Date? = nil,
         until: Date? = nil,
@@ -42,7 +63,6 @@ struct Filter: Hashable, Identifiable {
         self.eTags = eTags
         self.pTags = pTags
         self.search = search
-        self.inNetwork = inNetwork
         self.limit = limit
         self.since = since
         self.until = until
@@ -105,7 +125,6 @@ struct Filter: Hashable, Identifiable {
         hasher.combine(search)
         hasher.combine(since)
         hasher.combine(until)
-        hasher.combine(inNetwork)
     }
     
     var id: String {
@@ -118,8 +137,7 @@ struct Filter: Hashable, Identifiable {
             pTags.joined(separator: ","),
             search ?? "nil",
             since?.timeIntervalSince1970.description ?? "nil",
-            until?.timeIntervalSince1970.description ?? "nil",
-            inNetwork.description,
+            until?.timeIntervalSince1970.description ?? "nil"
         ]
         
         return intermediate

@@ -77,7 +77,7 @@ struct RepliesLabel: View {
             return nil
         }
         switch repliesDisplayType {
-        case .none:
+        case .displayNothing:
             return AttributedString()
         case .discussion:
             if avatars.isEmpty {

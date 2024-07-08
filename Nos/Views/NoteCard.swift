@@ -27,7 +27,7 @@ struct NoteCard: View {
         style: CardStyle = .compact,
         shouldTruncate: Bool = true,
         hideOutOfNetwork: Bool = true,
-        repliesDisplayType: RepliesDisplayType = .nothing,
+        repliesDisplayType: RepliesDisplayType = .displayNothing,
         replyAction: ((Event) -> Void)? = nil
     ) {
         self.note = note
@@ -78,7 +78,7 @@ struct NoteCard: View {
                         }
                         BeveledSeparator()
                         HStack(spacing: 0) {
-                            if repliesDisplayType != .none {
+                            if repliesDisplayType != .displayNothing {
                                 RepliesLabel(
                                     repliesDisplayType: repliesDisplayType,
                                     for: note
