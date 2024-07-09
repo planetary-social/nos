@@ -1,7 +1,7 @@
 import Foundation
 
 /// A decoding error for [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md) entities.
-enum NIP19EntityError: Error {
+enum NostrEntityError: Error {
     /// The format of the bech32-encoded entity is unknown.
     case unknownFormat
 
@@ -45,7 +45,7 @@ enum NostrEntity {
         case Nostr.addressPrefix:
             return try decodeNostrAddress(data: data)
         default:
-            throw NIP19EntityError.unknownPrefix
+            throw NostrEntityError.unknownPrefix
         }
     }
 
@@ -54,7 +54,7 @@ enum NostrEntity {
     /// - Returns: The `.npub` entity with the public key.
     private static func decodeNostrPublicKey(data: Data) throws -> NostrEntity {
         guard let publicKey = SHA256Key.decode(base5: data) else {
-            throw NIP19EntityError.unknownFormat
+            throw NostrEntityError.unknownFormat
         }
         return .npub(publicKey: publicKey)
     }
@@ -64,7 +64,7 @@ enum NostrEntity {
     /// - Returns: The `.note` entity with the event ID.
     private static func decodeNostrNote(data: Data) throws -> NostrEntity {
         guard let eventID = SHA256Key.decode(base5: data) else {
-            throw NIP19EntityError.unknownFormat
+            throw NostrEntityError.unknownFormat
         }
         return .note(eventID: eventID)
     }
@@ -93,8 +93,7 @@ enum NostrEntity {
 
     /// Decodes nevent data into a `NostrEntity.nevent`.
     /// - Parameter data: The encoded nevent data.
-    /// - Returns: The `.nevent` entity with the id, relays, public key, and kind
-    ///            from the given `data`.
+    /// - Returns: The `.nevent` entity with the id, relays, public key, and kind from the given `data`.
     private static func decodeNostrEvent(data: Data) throws -> NostrEntity {
         let tlvEntities = TLVEntity.decodeEntities(data: data)
 
@@ -122,8 +121,7 @@ enum NostrEntity {
 
     /// Decodes naddr data into a `NostrEntity.naddr`.
     /// - Parameter data: The encoded naddr data.
-    /// - Returns: The `.naddr` entity with the id, relays, public key, and kind
-    ///            from the given `data`.
+    /// - Returns: The `.naddr` entity with the id, relays, public key, and kind from the given `data`.
     private static func decodeNostrAddress(data: Data) throws -> NostrEntity {
         let tlvEntities = TLVEntity.decodeEntities(data: data)
 
