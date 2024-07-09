@@ -94,11 +94,12 @@ struct NoteParser {
             } else if let npubOrNProfile {
                 let string = String(npubOrNProfile)
                 do {
-                    let (humanReadablePart, checksum) = try Bech32.decode(string)
-                    if humanReadablePart == Nostr.publicKeyPrefix, let hex = SHA256Key.decode(base5: checksum) {
-                        return findAndReplaceAuthorReference(hex)
-                    } else if humanReadablePart == Nostr.profilePrefix, let hex = TLV.decode(checksum: checksum) {
-                        return findAndReplaceAuthorReference(hex)
+                    let entity = try NostrEntity.decode(bech32String: string)
+                    switch entity {
+                    case .npub(let rawAuthorID), .nprofile(let rawAuthorID, _):
+                        return findAndReplaceAuthorReference(rawAuthorID)
+                    default:
+                        break
                     }
                 } catch {
                     return String(substring)
@@ -114,7 +115,7 @@ struct NoteParser {
     /// Replaces Nostr entities embedded in the note (without a proper tag) with markdown links
     private func replaceNostrEntities(in content: String) -> String {
         // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
-        let unformattedRegex = /(?:^|\s)@?(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,255}))/
+        let unformattedRegex = /(?:^|\s)@?(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,}))/ // TODO: where'd we get the 58? is that right?
         // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
 
         return content.replacing(unformattedRegex) { match in
@@ -128,17 +129,13 @@ struct NoteParser {
             let string = String(entity)
 
             do {
-                let (humanReadablePart, checksum) = try Bech32.decode(string)
-
-                if humanReadablePart == Nostr.publicKeyPrefix, let hex = SHA256Key.decode(base5: checksum) {
-                    return "\(prefix)[\(string)](@\(hex))"
-                } else if humanReadablePart == Nostr.notePrefix, let hex = SHA256Key.decode(base5: checksum) {
-                    return "\(prefix)[\(String(localized: .localizable.linkToNote))](%\(hex))"
-                } else if humanReadablePart == Nostr.profilePrefix, let hex = TLV.decode(checksum: checksum) {
-                    return "\(prefix)[\(string)](@\(hex))"
-                } else if humanReadablePart == Nostr.eventPrefix, let hex = TLV.decode(checksum: checksum) {
-                    return "\(prefix)[\(String(localized: .localizable.linkToNote))](%\(hex))"
-                } else {
+                let nostrEntity = try NostrEntity.decode(bech32String: string)
+                switch nostrEntity {
+                case .npub(let rawAuthorID), .nprofile(let rawAuthorID, _):
+                    return "\(prefix)[\(string)](@\(rawAuthorID))"
+                case .note(let rawEventID), .nevent(let rawEventID, _, _, _):
+                    return "\(prefix)[\(String(localized: .localizable.linkToNote))](%\(rawEventID))"
+                default:
                     return String(substring)
                 }
             } catch {
