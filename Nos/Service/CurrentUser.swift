@@ -181,7 +181,7 @@ import Dependencies
         let allEventsFilter = Filter(
             authorKeys: [key],
             since: latestRecievedEvent?.receivedAt,
-            shouldKeepSubscriptionOpen: true
+            keepSubscriptionOpen: true
         )
         subscriptions.append(
             await relayService.fetchEvents(matching: allEventsFilter)
@@ -193,7 +193,7 @@ import Dependencies
             kinds: [.contactList],
             limit: 2, // small hack to make sure this filter doesn't get closed for being stale
             since: author.lastUpdatedContactList,
-            shouldKeepSubscriptionOpen: true
+            keepSubscriptionOpen: true
         )
         subscriptions.append(
             await relayService.fetchEvents(matching: contactFilter)

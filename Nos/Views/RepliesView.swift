@@ -76,7 +76,7 @@ struct RepliesView: View {
             let filter = Filter(
                 kinds: [.text, .like, .delete, .repost, .report, .label],
                 eTags: eTags,
-                shouldKeepSubscriptionOpen: true
+                keepSubscriptionOpen: true
             )
             let subIDs = await relayService.fetchEvents(matching: filter)
             relaySubscriptions.append(subIDs)
@@ -89,7 +89,7 @@ struct RepliesView: View {
             let reportFilter = Filter(
                 kinds: [.report],
                 pTags: pTags,
-                shouldKeepSubscriptionOpen: true
+                keepSubscriptionOpen: true
             )
             relaySubscriptions.append(
                 await relayService.fetchEvents(matching: reportFilter)

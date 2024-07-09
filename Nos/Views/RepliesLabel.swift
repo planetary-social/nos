@@ -58,18 +58,32 @@ struct RepliesLabel: View {
 
     @MainActor
     private func computeAvatars() async {
-        guard let socialGraph = currentUser.socialGraph else {
+        let limit = 4
+        var authors = Set<Author>()
+        switch repliesDisplayType {
+        case .displayNothing:
             return
-        }
-        var followsInDiscussion = Set<Author>()
-        var iterator = replies.makeIterator()
-        while followsInDiscussion.count < 4, let reply = iterator.next() {
-            let author = reply.author
-            if let author, await socialGraph.follows(author.hexadecimalPublicKey) {
-                followsInDiscussion.insert(author)
+        case .discussion:
+            guard let socialGraph = currentUser.socialGraph else {
+                return
+            }
+            var iterator = replies.makeIterator()
+            while authors.count < limit, let reply = iterator.next() {
+                let author = reply.author
+                if let author, await socialGraph.follows(author.hexadecimalPublicKey) {
+                    authors.insert(author)
+                }
+            }
+        case .count:
+            var iterator = replies.makeIterator()
+            while authors.count < limit, let reply = iterator.next() {
+                let author = reply.author
+                if let author, !author.muted {
+                    authors.insert(author)
+                }
             }
         }
-        avatars = followsInDiscussion.map { $0.profilePhotoURL }
+        avatars = authors.map { $0.profilePhotoURL }
     }
 
     private var attributedReplies: AttributedString? {

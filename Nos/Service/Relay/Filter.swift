@@ -43,7 +43,7 @@ struct Filter: Hashable, Identifiable {
     /// updates or should close after receiving a response from the relay.
     ///
     /// Defaults to `false`
-    var shouldKeepSubscriptionOpen: Bool
+    var keepSubscriptionOpen: Bool
 
     init(
         authorKeys: [RawAuthorID] = [],
@@ -55,7 +55,7 @@ struct Filter: Hashable, Identifiable {
         limit: Int? = nil,
         since: Date? = nil,
         until: Date? = nil,
-        shouldKeepSubscriptionOpen: Bool = false
+        keepSubscriptionOpen: Bool = false
     ) {
         self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
         self.eventIDs = eventIDs
@@ -66,7 +66,7 @@ struct Filter: Hashable, Identifiable {
         self.limit = limit
         self.since = since
         self.until = until
-        self.shouldKeepSubscriptionOpen = shouldKeepSubscriptionOpen
+        self.keepSubscriptionOpen = keepSubscriptionOpen
     }
     
     var dictionary: [String: Any] {

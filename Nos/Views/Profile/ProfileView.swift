@@ -53,7 +53,7 @@ struct ProfileView: View {
         let reportFilter = Filter(
             kinds: [.report],
             pTags: [authorKey],
-            shouldKeepSubscriptionOpen: true
+            keepSubscriptionOpen: true
         )
         relaySubscriptions.append(
             await relayService.fetchEvents(matching: reportFilter)

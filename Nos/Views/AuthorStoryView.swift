@@ -182,7 +182,7 @@ struct AuthorStoryView: View {
         let filter = Filter(
             kinds: [.text, .like, .delete, .repost],
             eTags: eTags,
-            shouldKeepSubscriptionOpen: true
+            keepSubscriptionOpen: true
         )
         relaySubscriptions.append(
             await relayService.fetchEvents(matching: filter)
@@ -200,7 +200,11 @@ fileprivate struct BottomOverlay: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            RepliesLabel(repliesDisplayType: .discussion, for: note)
+            Button {
+                router.push(note)
+            } label: {
+                RepliesLabel(repliesDisplayType: .discussion, for: note)
+            }
 
             Spacer()
 

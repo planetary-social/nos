@@ -169,7 +169,7 @@ class SearchController: ObservableObject {
                 kinds: [.metaData],
                 search: query,
                 limit: 100,
-                shouldKeepSubscriptionOpen: true
+                keepSubscriptionOpen: true
             )
             let allSearchRelays = await relayService.relayAddresses(for: currentUser) + Relay.searchOnly
             let subscription = await self.relayService.fetchEvents(

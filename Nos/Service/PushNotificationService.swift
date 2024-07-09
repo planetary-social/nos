@@ -99,7 +99,7 @@ import Combine
             kinds: [.text, .longFormContent, .like], 
             pTags: [authorKey], 
             limit: 50,
-            shouldKeepSubscriptionOpen: true
+            keepSubscriptionOpen: true
         )
         relaySubscription = await relayService.fetchEvents(
             matching: userMentionsFilter

@@ -32,7 +32,7 @@ struct RelaySubscription: Identifiable, Hashable {
     /// matching the filter (if true) or close once a relay has returned all
     /// stored events (if false).
     var observeNewEvents: Bool {
-        filter.shouldKeepSubscriptionOpen
+        filter.keepSubscriptionOpen
     }
     
     internal init(
