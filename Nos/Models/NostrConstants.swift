@@ -10,4 +10,5 @@ enum Nostr {
     /// See https://github.com/nostr-protocol/nips/blob/master/19.md
     static let profilePrefix = "nprofile"
     static let eventPrefix = "nevent"
+    static let addressPrefix = "naddr"
 }
