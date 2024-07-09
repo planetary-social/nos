@@ -1,7 +1,7 @@
 import Foundation
 import XCTest
 
-final class Bech32Tests: CoreDataTestCase {
+final class Bech32Tests: XCTestCase {
 
     /// Example taken from [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md)
     func testBareKey() throws {
