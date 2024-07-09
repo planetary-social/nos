@@ -37,7 +37,7 @@ enum FeaturedAuthorCategory: CaseIterable {
         case .all:
             FeaturedAuthor.all
         case .new:
-            FeaturedAuthor.cohort3
+            FeaturedAuthor.cohort4
         default:
             FeaturedAuthor.all.filter { $0.categories.contains(self) }
         }
