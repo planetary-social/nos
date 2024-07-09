@@ -31,11 +31,26 @@ struct FeaturedAuthor {
 
 extension FeaturedAuthor {
     /// All featured authors that should appear on the Discover tab.
-    static let all = cohort4 + cohort3 + cohort2 + cohort1
+    static let all = cohort4 + cohort3 + cohort2 + cohort1 + additionalAuthors
 }
 
 extension FeaturedAuthor {
-    /// The first cohort of authors to display on the Discover tab.
+    /// Additional authors to feature on the Discover tab who aren't part of a cohort.
+    static let additionalAuthors = [
+        FeaturedAuthor(
+            name: "Rabble",
+            npub: "npub1wmr34t36fy03m8hvgl96zl3znndyzyaqhwmwdtshwmtkg03fetaqhjg240",
+            categories: [.activists, .tech]
+        ),
+        FeaturedAuthor(
+            name: "Edward Snowden",
+            npub: "npub1sn0wdenkukak0d9dfczzeacvhkrgz92ak56egt7vdgzn8pv2wfqqhrjdv9",
+            categories: [.activists, .tech]
+        ),
+    ]
+}
+
+extension FeaturedAuthor {
     static let cohort1 = [
         FeaturedAuthor(
             name: "Miguel Almodo",
@@ -205,6 +220,11 @@ extension FeaturedAuthor {
         FeaturedAuthor(
             name: "Lexie Bean",
             npub: "npub1s8c5mk68qn0erxrx5waqz7xxk39x5xx2367879eqcv270tqs4tvsf5ewgf",
+            categories: [.activists]
+        ),
+        FeaturedAuthor(
+            name: "Protest.net",
+            npub: "npub1z3thwmwasmp787zvk2aaq5qdjtjdkl637p52nph4flv668973c8qaz2du7",
             categories: [.activists]
         ),
     ]
