@@ -20,31 +20,43 @@ struct Filter: Hashable, Identifiable {
     let pTags: [RawAuthorID]
 
     /// Query string to use in the search parameter.
-    ///
-    /// Defaults to `nil`
     let search: String?
 
     /// Maximum number of items the relay can return.
-    ///
-    /// Defaults to `nil` (no limit)
     var limit: Int?
 
     /// Ask the relay to return notes posted after a given date.
-    ///
-    /// Defaults to `nil`
     var since: Date?
 
     /// Ask relays to return notes posted before a given date.
-    ///
-    /// Defaults to `nil`
     var until: Date?
 
     /// Whether the subscription should remain open listening for content
     /// updates or should close after receiving a response from the relay.
-    ///
-    /// Defaults to `false`
     var keepSubscriptionOpen: Bool
 
+    /// Initializes a Filter object
+    ///
+    /// - parameter authorKeys: List of author identifiers the Filter should be
+    /// constrained to.
+    /// - parameter eventIDs: List of event identifiers the Filter should be
+    /// constrained to.
+    /// - parameter kinds: List of Note kinds to filter.
+    /// - parameter eTags: Ask the relay to return events mentioned in the
+    /// `tags` field.
+    /// - parameter pTags: Ask the relay to return authors mentioned in the
+    /// `tags` field.
+    /// - parameter search: List of author identifiers the Filter should be
+    /// constrained to. Defaults to `nil`.
+    /// - parameter limit: Maximum number of items the relay can return.
+    /// Defaults to `nil` (no limit).
+    /// - parameter since: Ask the relay to return notes posted after a
+    /// given date. Defaults to `nil`.
+    /// - parameter until: Ask relays to return notes posted before a given
+    /// date. Defaults to `nil`.
+    /// - parameter keepSubscriptionOpen: Whether the subscription should remain
+    /// open listening for content updates or should close after receiving a
+    /// response from the relay.Defaults to `false`.
     init(
         authorKeys: [RawAuthorID] = [],
         eventIDs: [RawEventID] = [],

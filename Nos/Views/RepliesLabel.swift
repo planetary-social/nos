@@ -151,18 +151,21 @@ struct RepliesLabel: View {
         }
     }
 
+    /// Open relays subscriptions asking one reply from anyone and up to four
+    /// replies from follows.
     func subscribeToReplies() {
         Task(priority: .userInitiated) {
             // Close out stale requests
             relaySubscriptions.removeAll()
             relaySubscriptions.append(
-                await relayService.requestAReplyFromAnyone(
+                await relayService.requestReplyFromAnyone(
                     for: note.identifier
                 )
             )
             relaySubscriptions.append(
-                await relayService.requestFourRepliesFromFollows(
-                    for: note.identifier
+                await relayService.requestRepliesFromFollows(
+                    for: note.identifier,
+                    limit: 4
                 )
             )
         }

@@ -28,11 +28,11 @@ struct RelaySubscription: Identifiable, Hashable {
         subscriptionStartDate != nil
     }
     
-    /// Whether this RelaySubscription should subscribe to all new events
-    /// matching the filter (if true) or close once a relay has returned all
+    /// Whether this RelaySubscription should close the subscription to the
+    /// filter after receiving a response.
     /// stored events (if false).
-    var observeNewEvents: Bool {
-        filter.keepSubscriptionOpen
+    var closesAfterResponse: Bool {
+        !filter.keepSubscriptionOpen
     }
     
     internal init(

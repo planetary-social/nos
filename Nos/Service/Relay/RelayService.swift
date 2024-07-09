@@ -188,7 +188,9 @@ extension RelayService {
         )
     }
     
-    func requestAReplyFromAnyone(for eventID: String?) async -> SubscriptionCancellable {
+    func requestReplyFromAnyone(
+        for eventID: String?
+    ) async -> SubscriptionCancellable {
         guard let eventID else {
             return SubscriptionCancellable.empty()
         }
@@ -200,7 +202,16 @@ extension RelayService {
         return await fetchEvents(matching: metaFilter)
     }
 
-    func requestFourRepliesFromFollows(for eventID: String?) async -> SubscriptionCancellable {
+    /// Builds a subscription that fetched replies from follows to the given
+    /// event.
+    ///
+    /// - parameter eventID: A note identifier.
+    /// - parameter limit: Maximum number of replies to ask for. Defaults to
+    /// nil (no limit).
+    func requestRepliesFromFollows(
+        for eventID: String?,
+        limit: Int? = nil
+    ) async -> SubscriptionCancellable {
         guard let eventID else {
             return SubscriptionCancellable.empty()
         }
@@ -208,7 +219,7 @@ extension RelayService {
             authorKeys: Array(await currentUser.socialGraph.followedKeys),
             kinds: [.text],
             eTags: [eventID],
-            limit: 4
+            limit: limit
         )
         return await fetchEvents(matching: metaFilter)
     }
@@ -303,7 +314,7 @@ extension RelayService {
         
         if let subID = responseArray[1] as? String,
             let subscription = await subscriptionManager.subscription(from: subID),
-            !subscription.observeNewEvents {
+            subscription.closesAfterResponse {
             Log.debug("\(socket.host) has finished responding on \(subID). Closing subscription.")
             // This is a one-off request. Close it.
             sendClose(from: socket, subscription: subID)
@@ -342,7 +353,7 @@ extension RelayService {
                     subscription.receivedEventCount += 1
                     await subscriptionManager.updateSubscriptions(with: subscription)
                 }
-                if !subscription.observeNewEvents {
+                if subscription.closesAfterResponse {
                     Log.debug("detected subscription with id \(subscription.id) has been fulfilled. Closing.")
                     await subscriptionManager.forceCloseSubscriptionCount(for: subscription.id)
                     await sendCloseToAll(for: subscription.id)
