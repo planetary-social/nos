@@ -31,11 +31,26 @@ struct FeaturedAuthor {
 
 extension FeaturedAuthor {
     /// All featured authors that should appear on the Discover tab.
-    static let all = cohort3 + cohort2 + cohort1
+    static let all = cohort4 + cohort3 + cohort2 + cohort1 + additionalAuthors
 }
 
 extension FeaturedAuthor {
-    /// The first cohort of authors to display on the Discover tab.
+    /// Additional authors to feature on the Discover tab who aren't part of a cohort.
+    static let additionalAuthors = [
+        FeaturedAuthor(
+            name: "Rabble",
+            npub: "npub1wmr34t36fy03m8hvgl96zl3znndyzyaqhwmwdtshwmtkg03fetaqhjg240",
+            categories: [.activists, .tech]
+        ),
+        FeaturedAuthor(
+            name: "Edward Snowden",
+            npub: "npub1sn0wdenkukak0d9dfczzeacvhkrgz92ak56egt7vdgzn8pv2wfqqhrjdv9",
+            categories: [.activists, .tech]
+        ),
+    ]
+}
+
+extension FeaturedAuthor {
     static let cohort1 = [
         FeaturedAuthor(
             name: "Miguel Almodo",
@@ -166,6 +181,51 @@ extension FeaturedAuthor {
             name: "JSTR",
             npub: "npub1vpdlxsc8dr4m580d43vj4ka0e6wmstzzxhvcermllhh5m9ytnhdq6wnaem",
             categories: [.music]
+        ),
+    ]
+}
+
+extension FeaturedAuthor {
+    static let cohort4 = [
+        FeaturedAuthor(
+            name: "NDP Media",
+            npub: "npub1ks7de0smt2v3aytrdsfh927sgml3666459mj9ghd7tvg3t42x9gqyvwjqf",
+            categories: [.news]
+        ),
+        FeaturedAuthor(
+            name: "Revolution Z",
+            npub: "npub1j4sumq8pyplks5nhchyhzmw72dyemkyv2fv50vwau5fhf2qa7zusq3tlyh",
+            categories: [.news, .activists]
+        ),
+        FeaturedAuthor(
+            name: "Existing Sprinkles",
+            npub: "npub1f5kc2agn63ecv2ua4909z9ahgmr2x9263na36jh6r908ql0926jq3nvk2u",
+            categories: [.art]
+        ),
+        FeaturedAuthor(
+            name: "MuckRock",
+            npub: "npub1u5nfvj4dzzmrcf9n5kptl26w7kfhc4vml0ll8svvhrv5jz2es46sl0vv2r",
+            categories: [.news]
+        ),
+        FeaturedAuthor(
+            name: "ArchJourney",
+            npub: "npub1qhjxfxpjm7udr0agr6nuhuwf9383e4g9907g64r9hf6y4fh6t6uqpcp36k",
+            categories: [.art]
+        ),
+        FeaturedAuthor(
+            name: "Neigsendoig Cocules",
+            npub: "npub1372csjhjv35sxcqm90ca2d0cfxsl6xku7j6hhswynwdy9m7zl98scn950w",
+            categories: [.music]
+        ),
+        FeaturedAuthor(
+            name: "Lexie Bean",
+            npub: "npub1s8c5mk68qn0erxrx5waqz7xxk39x5xx2367879eqcv270tqs4tvsf5ewgf",
+            categories: [.activists]
+        ),
+        FeaturedAuthor(
+            name: "Protest.net",
+            npub: "npub1z3thwmwasmp787zvk2aaq5qdjtjdkl637p52nph4flv668973c8qaz2du7",
+            categories: [.activists]
         ),
     ]
 }
