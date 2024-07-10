@@ -45,16 +45,15 @@ struct NoteParser {
         }
     }
 
-    // swiftlint:disable function_body_length superfluous_disable_command
+    // swiftlint:disable function_body_length
     /// Replaces tagged references like #[0] or nostr:npub1... with markdown links
     private func replaceTaggedNostrEntities(
         in content: String,
         tags: [[String]],
         context: NSManagedObjectContext
     ) -> String {
-        // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma
+        // swiftlint:disable:next opening_brace
         let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)@?(?:nostr:)(?<npubornprofile>[a-zA-Z0-9]{2,256})/
-        // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma
         return content.replacing(regex) { match in
             let substring = match.0
             let index = match.1
@@ -110,13 +109,12 @@ struct NoteParser {
             return String(substring)
         }
     }
-    // swiftlint:enable function_body_length superfluous_disable_command
+    // swiftlint:enable function_body_length
 
     /// Replaces Nostr entities embedded in the note (without a proper tag) with markdown links
     private func replaceNostrEntities(in content: String) -> String {
-        // swiftlint:disable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
+        // swiftlint:disable:next opening_brace
         let unformattedRegex = /(?:^|\s)@?(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,}))/ // TODO: where'd we get the 58? is that right?
-        // swiftlint:enable opening_brace operator_usage_whitespace closure_spacing comma superfluous_disable_command
 
         return content.replacing(unformattedRegex) { match in
             let substring = match.0
