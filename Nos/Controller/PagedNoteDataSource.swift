@@ -116,6 +116,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
                 note: note,
                 hideOutOfNetwork: false,
                 repliesDisplayType: .discussion,
+                fetchReplies: true,
                 displayRootMessage: true
             )
         }

@@ -21,7 +21,7 @@ struct NoteCard: View {
     private let repliesDisplayType: RepliesDisplayType
     private var hideOutOfNetwork: Bool
     private var replyAction: ((Event) -> Void)?
-
+    
     init(
         note: Event,
         style: CardStyle = .compact,

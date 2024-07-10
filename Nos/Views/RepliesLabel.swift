@@ -6,10 +6,8 @@ struct RepliesLabel: View {
     var repliesDisplayType: RepliesDisplayType
     var note: Event
 
-    @State private var relaySubscriptions = SubscriptionCancellables()
     @FetchRequest private var replies: FetchedResults<Event>
     @Dependency(\.currentUser) var currentUser
-    @EnvironmentObject private var relayService: RelayService
     @State private var avatars = [URL?]()
 
     init(repliesDisplayType: RepliesDisplayType, for note: Event) {
@@ -103,12 +101,6 @@ struct RepliesLabel: View {
                     .lineLimit(1)
             }
         }
-        .onAppear {
-            subscribeToReplies()
-        }
-        .onDisappear {
-            relaySubscriptions.removeAll()
-        }
         .task {
             await computeAvatars()
         }
@@ -116,26 +108,6 @@ struct RepliesLabel: View {
             Task {
                 await computeAvatars()
             }
-        }
-    }
-
-    /// Open relays subscriptions asking one reply from anyone and up to four
-    /// replies from follows.
-    func subscribeToReplies() {
-        Task(priority: .userInitiated) {
-            // Close out stale requests
-            relaySubscriptions.removeAll()
-            relaySubscriptions.append(
-                await relayService.requestReplyFromAnyone(
-                    for: note.identifier
-                )
-            )
-            relaySubscriptions.append(
-                await relayService.requestRepliesFromFollows(
-                    for: note.identifier,
-                    limit: 4
-                )
-            )
         }
     }
 }
