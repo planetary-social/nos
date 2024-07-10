@@ -2991,8 +2991,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/liamnichols/xcstrings-tool-plugin.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.1;
+				kind = exactVersion;
+				version = 0.1.2;
 			};
 		};
 		C91565BF2B2368FA0068EECA /* XCRemoteSwiftPackageReference "ViewInspector" */ = {
