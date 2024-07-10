@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed deep linking to profiles and notes.
-- Fixed issue where some nostrr:nprofile references did not appear as links.
+- Fixed issue where some nostr:nprofile references did not appear as links.
 - Decode nprofile, nevent, and naddr NIP-19 entities.
 
 ## [0.1.20] - 2024-07-10Z
