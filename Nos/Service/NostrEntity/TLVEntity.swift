@@ -21,14 +21,17 @@ enum TLVEntity {
             let length = Int(converted[offset + 1])
             let value = converted.subdata(in: offset + 2 ..< offset + 2 + length)
 
-            let entity: TLVEntity
+            let entity: TLVEntity?
             switch type {
             case .special:
                 let valueString = SHA256Key.decode(base8: value)
                 entity = .special(value: valueString)
             case .relay:
-                let valueString = String(data: value, encoding: .ascii)
-                entity = .relay(value: valueString ?? "") // TODO: handle error
+                if let valueString = String(data: value, encoding: .ascii) {
+                    entity = .relay(value: valueString)
+                } else {
+                    entity = nil
+                }
             case .author:
                 let valueString = SHA256Key.decode(base8: value)
                 entity = .author(value: valueString)
@@ -38,8 +41,10 @@ enum TLVEntity {
             case nil:
                 entity = .unknown
             }
-            result.append(entity)
 
+            if let entity {
+                result.append(entity)
+            }
             offset += length + 2
         }
 
