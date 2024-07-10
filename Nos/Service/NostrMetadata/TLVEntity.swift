@@ -1,12 +1,27 @@
 import Foundation
 
+/// A TLV (type-length-value) entity.
+/// - Note: See [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md) for more information.
 enum TLVEntity {
+    /// The special type with its associated value as a String.
     case special(value: String)
+    
+    /// The relay type with its associated value as a String.
     case relay(value: String)
-    case author(value: String)
-    case kind(value: UInt32)
-    case unknown
 
+    /// The author type with its associated value as a String.
+    case author(value: String)
+    
+    /// The kind type with its associated value as a UInt32.
+    case kind(value: UInt32)
+
+    /// An unknown type.
+    case unknown
+    
+    /// Decodes the given binary-encoded list of TLV (type-length-value). The meaning of the decoded value will depend
+    /// on the Bech32 human readable part. Unreadable entities are included in the array as `.unknown`.
+    /// - Parameter data: The TLV data to decode.
+    /// - Returns: An array containing decoded TLV entities, with `.unknown` values for any that could not be decoded.
     static func decodeEntities(data: Data) -> [TLVEntity] {
         guard let converted = try? data.base8FromBase5() else {
             return []
@@ -27,8 +42,11 @@ enum TLVEntity {
                 let valueString = SHA256Key.decode(base8: value)
                 entity = .special(value: valueString)
             case .relay:
-                let valueString = String(data: value, encoding: .ascii)
-                entity = .relay(value: valueString ?? "") // TODO: handle error
+                if let valueString = String(data: value, encoding: .ascii) {
+                    entity = .relay(value: valueString)
+                } else {
+                    entity = .unknown
+                }
             case .author:
                 let valueString = SHA256Key.decode(base8: value)
                 entity = .author(value: valueString)
@@ -47,9 +65,18 @@ enum TLVEntity {
     }
 }
 
+/// The type of the TLV (type-length-value) entity. This type determines how the associated value is encoded.
+/// - Note: See [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md) for more information.
 enum TLVType: UInt8 {
+    /// The special type.
     case special = 0
+
+    /// The relay type.
     case relay = 1
+
+    /// The author type.
     case author = 2
+
+    /// The kind type.
     case kind = 3
 }
