@@ -17,39 +17,7 @@ struct RepliesLabel: View {
         self.repliesDisplayType = repliesDisplayType
 
         let noteIdentifier = note.identifier ?? ""
-
-        let format = """
-            SUBQUERY(
-                eventReferences,
-                $e,
-                $e.referencedEvent.identifier = %@ AND
-                    ($e.marker = 'reply' OR $e.marker = 'root')
-            ).@count > 0
-        """
-
-        let predicate = NSCompoundPredicate(
-            andPredicateWithSubpredicates: [
-                NSPredicate(format: "kind = 1"),
-                NSPredicate(
-                    format: format,
-                    noteIdentifier,
-                    noteIdentifier
-                ),
-                NSPredicate(format: "deletedOn.@count = 0"),
-                NSPredicate(format: "author.muted = false")
-            ]
-        )
-
-        let fetchRequest = Event.fetchRequest()
-        fetchRequest.includesPendingChanges = false
-        fetchRequest.includesSubentities = false
-        fetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \Event.identifier, ascending: true)
-        ]
-
-        fetchRequest.predicate = predicate
-        fetchRequest.relationshipKeyPathsForPrefetching = ["author"]
-        _replies = FetchRequest(fetchRequest: fetchRequest)
+        _replies = Event.replies(to: noteIdentifier)
     }
 
     private var isBeingDiscussed: Bool {

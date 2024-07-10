@@ -37,26 +37,26 @@ struct Filter: Hashable, Identifiable {
 
     /// Initializes a Filter object
     ///
-    /// - parameter authorKeys: List of author identifiers the Filter should be
-    /// constrained to.
-    /// - parameter eventIDs: List of event identifiers the Filter should be
-    /// constrained to.
-    /// - parameter kinds: List of Note kinds to filter.
-    /// - parameter eTags: Ask the relay to return events mentioned in the
-    /// `tags` field.
-    /// - parameter pTags: Ask the relay to return authors mentioned in the
-    /// `tags` field.
-    /// - parameter search: List of author identifiers the Filter should be
+    /// - Parameter authorKeys: List of author identifiers the Filter should be
+    /// constrained to. Defaults to `[]`.
+    /// - Parameter eventIDs: List of event identifiers the Filter should be
+    /// constrained to. Defaults to `[]`.
+    /// - Parameter kinds: List of Note kinds to filter. Defaults to `[]`.
+    /// - Parameter eTags: Ask the relay to return events mentioned in the
+    /// `tags` field. Defaults to `[]`.
+    /// - Parameter pTags: Ask the relay to return authors mentioned in the
+    /// `tags` field. Defaults to `[]`.
+    /// - Parameter search: List of author identifiers the Filter should be
     /// constrained to. Defaults to `nil`.
-    /// - parameter limit: Maximum number of items the relay can return.
+    /// - Parameter limit: Maximum number of items the relay can return.
     /// Defaults to `nil` (no limit).
-    /// - parameter since: Ask the relay to return notes posted after a
+    /// - Parameter since: Ask the relay to return notes posted after a
     /// given date. Defaults to `nil`.
-    /// - parameter until: Ask relays to return notes posted before a given
+    /// - Parameter until: Ask relays to return notes posted before a given
     /// date. Defaults to `nil`.
-    /// - parameter keepSubscriptionOpen: Whether the subscription should remain
+    /// - Parameter keepSubscriptionOpen: Whether the subscription should remain
     /// open listening for content updates or should close after receiving a
-    /// response from the relay.Defaults to `false`.
+    /// response from the relay. Defaults to `false`.
     init(
         authorKeys: [RawAuthorID] = [],
         eventIDs: [RawEventID] = [],
@@ -135,6 +135,7 @@ struct Filter: Hashable, Identifiable {
         hasher.combine(eTags)
         hasher.combine(pTags)
         hasher.combine(search)
+        hasher.combine(keepSubscriptionOpen)
         hasher.combine(since)
         hasher.combine(until)
     }

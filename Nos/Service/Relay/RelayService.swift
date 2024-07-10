@@ -188,9 +188,7 @@ extension RelayService {
         )
     }
     
-    func requestReplyFromAnyone(
-        for eventID: String?
-    ) async -> SubscriptionCancellable {
+    func requestReplyFromAnyone(for eventID: String?) async -> SubscriptionCancellable {
         guard let eventID else {
             return SubscriptionCancellable.empty()
         }
@@ -205,8 +203,8 @@ extension RelayService {
     /// Builds a subscription that fetched replies from follows to the given
     /// event.
     ///
-    /// - parameter eventID: A note identifier.
-    /// - parameter limit: Maximum number of replies to ask for. Defaults to
+    /// - Parameter eventID: A note identifier.
+    /// - Parameter limit: Maximum number of replies to ask for. Defaults to
     /// nil (no limit).
     func requestRepliesFromFollows(
         for eventID: String?,

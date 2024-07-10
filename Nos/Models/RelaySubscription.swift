@@ -30,7 +30,6 @@ struct RelaySubscription: Identifiable, Hashable {
     
     /// Whether this RelaySubscription should close the subscription to the
     /// filter after receiving a response.
-    /// stored events (if false).
     var closesAfterResponse: Bool {
         !filter.keepSubscriptionOpen
     }

@@ -344,7 +344,48 @@ public class Event: NosManagedObject, VerifiableEvent {
         )
         return fetchRequest
     }
-    
+
+    /// A request for all events that responded to a specific note.
+    ///
+    /// - Parameter noteIdentifier: ID of the note to retrieve replies for.
+    ///
+    /// Intented to be used primarily to compute the number of replies and for
+    /// building a set of author avatars.
+    @nonobjc public class func replies(to noteIdentifier: String) -> FetchRequest<Event> {
+        let format = """
+            SUBQUERY(
+                eventReferences,
+                $e,
+                $e.referencedEvent.identifier = %@ AND
+                    ($e.marker = 'reply' OR $e.marker = 'root')
+            ).@count > 0
+        """
+
+        let predicate = NSCompoundPredicate(
+            andPredicateWithSubpredicates: [
+                NSPredicate(format: "kind = 1"),
+                NSPredicate(
+                    format: format,
+                    noteIdentifier,
+                    noteIdentifier
+                ),
+                NSPredicate(format: "deletedOn.@count = 0"),
+                NSPredicate(format: "author.muted = false")
+            ]
+        )
+
+        let fetchRequest = Event.fetchRequest()
+        fetchRequest.includesPendingChanges = false
+        fetchRequest.includesSubentities = false
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Event.identifier, ascending: true)
+        ]
+
+        fetchRequest.predicate = predicate
+        fetchRequest.relationshipKeyPathsForPrefetching = ["author"]
+        return FetchRequest(fetchRequest: fetchRequest)
+    }
+
     /// A fetch request for all the events that should be cleared out of the database by 
     /// `DatabaseCleaner.cleanupEntities(...)`.
     ///
