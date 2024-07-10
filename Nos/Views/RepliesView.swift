@@ -164,12 +164,8 @@ struct RepliesView: View {
 }
 struct RepliesView_Previews: PreviewProvider {
     
-    static var previewData = PreviewData()
-    static var persistenceController = {
-        let persistenceController = PersistenceController.preview
-        KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.alice.privateKeyHex.utf8))
-        return persistenceController
-    }()
+    static var previewData = PreviewData(currentUserKey: KeyFixture.alice)
+    static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext

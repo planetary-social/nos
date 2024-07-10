@@ -2,11 +2,11 @@ import Security
 import UIKit
 
 /// Don't use this outside CurrentUser
-enum KeyChain {
-    static let keychainPrivateKey = "privateKey"
+@MainActor class Keychain {
+    let keychainPrivateKey = "privateKey"
         
     @discardableResult
-    static func save(key: String, data: Data) -> OSStatus {
+    func save(key: String, data: Data) -> OSStatus {
         let query =
 		[
             kSecClass as String: kSecClassGenericPassword as String,
@@ -20,7 +20,7 @@ enum KeyChain {
         return SecItemAdd(query as CFDictionary, nil)
     }
     
-	static func load(key: String) -> Data? {
+	func load(key: String) -> Data? {
         let query =
 		[
             kSecClass as String: kSecClassGenericPassword,
@@ -40,7 +40,7 @@ enum KeyChain {
         }
     }
     
-    static func delete(key: String) -> OSStatus {
+    func delete(key: String) -> OSStatus {
         let query =
         [
             kSecClass as String: kSecClassGenericPassword as String,
@@ -48,5 +48,24 @@ enum KeyChain {
         ] as [String: Any]
         
         return SecItemDelete(query as CFDictionary)
+    }
+}
+
+class MockKeychain: Keychain {
+    
+    var keychain = [String: Data]()
+    
+    override func save(key: String, data: Data) -> OSStatus {
+        keychain[key] = data
+        return 0
+    }
+    
+    override func load(key: String) -> Data? {
+        keychain[key]
+    }
+    
+    override func delete(key: String) -> OSStatus {
+        keychain.removeValue(forKey: key)
+        return 0
     }
 }
