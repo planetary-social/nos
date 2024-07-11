@@ -125,7 +125,7 @@ struct ProfileView: View {
             FollowsView(title: .localizable.follows, authors: destination.follows)
         }
         .navigationDestination(for: FollowersDestination.self) { destination in
-            FollowsView(title: .localizable.followers, authors: destination.followers)
+            FollowsView(title: .localizable.mutualFriends, authors: destination.followers)
         }
         .navigationDestination(for: RelaysDestination.self) { destination in
             RelayView(author: destination.author, editable: false)

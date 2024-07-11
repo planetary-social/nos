@@ -4492,103 +4492,13 @@
         }
       }
     },
-    "followedByOneAndMore" : {
+    "followedByOneAndOthers" : {
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "new",
-                  "value" : "Followed by **%1@** and **%2ld other**"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Gefolgt von **%1@** und **%2ld anderen**"
-                }
-              }
-            }
-          }
-        },
         "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Followed by **%1$@** and **%2$lld other**"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Followed by **%1$@** and **%2$lld others**"
-                }
-              }
-            }
-          }
-        },
-        "fa" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "new",
-                  "value" : "Followed by **%@** and **%lld other**"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "دنبال شده توسط **%@** و **%lld** نفر دیگر"
-                }
-              }
-            }
-          }
-        },
-        "sv" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "new",
-                  "value" : "Followed by **%@** and **%lld other**"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Följs av **%@** och **%lld andra**"
-                }
-              }
-            }
-          }
-        },
-        "zh-Hans" : {
-          "variations" : {
-            "plural" : {
-              "other" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "被**%@**和**%lld个其他用户**关注"
-                }
-              }
-            }
-          }
-        },
-        "zh-Hant" : {
-          "variations" : {
-            "plural" : {
-              "other" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "被**%@**和**%lld個其他用戶**關注"
-                }
-              }
-            }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Followed by **%@** and others"
           }
         }
       }
@@ -4731,6 +4641,17 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "followedByTwoAndOthers" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Followed by **%1$@**, **%2$@** and others"
           }
         }
       }
@@ -6534,6 +6455,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "靜音用戶"
+          }
+        }
+      }
+    },
+    "mutualFriends" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mutual Friends"
           }
         }
       }
