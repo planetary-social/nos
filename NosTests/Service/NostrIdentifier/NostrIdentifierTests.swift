@@ -1,11 +1,12 @@
 import XCTest
 
-class NostrMetadataTests: XCTestCase {
+/// Tests for `NostrIdentifier`.
+class NostrIdentifierTests: XCTestCase {
     /// Example taken from [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md)
     func test_npub() throws {
         let npub = "npub180cvv07tjdrrgpa0j7j7tmnyl2yr6yr7l8j4s3evf6u64th6gkwsyjh6w6"
-        let metadata = try NostrMetadata.decode(bech32String: npub)
-        switch metadata {
+        let identifier = try NostrIdentifier.decode(bech32String: npub)
+        switch identifier {
         case .npub(let publicKey):
             XCTAssertEqual(publicKey, "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d")
         default:
@@ -17,8 +18,8 @@ class NostrMetadataTests: XCTestCase {
     /// note13frsueju0qs6dqgr4y6zf6h729w5tjeve9ws6aqm94qhtkhmvwqqu3c2sh
     func test_note() throws {
         let note = "note13frsueju0qs6dqgr4y6zf6h729w5tjeve9ws6aqm94qhtkhmvwqqu3c2sh"
-        let metadata = try NostrMetadata.decode(bech32String: note)
-        switch metadata {
+        let identifier = try NostrIdentifier.decode(bech32String: note)
+        switch identifier {
         case .note(let eventID):
             XCTAssertEqual(eventID, "8a470e665c7821a68103a93424eafe515d45cb2cc95d0d741b2d4175dafb6380")
         default:
@@ -31,8 +32,8 @@ class NostrMetadataTests: XCTestCase {
         // swiftlint:disable:next line_length
         let nprofile = "nprofile1qqsrhuxx8l9ex335q7he0f09aej04zpazpl0ne2cgukyawd24mayt8gpp4mhxue69uhhytnc9e3k7mgpz4mhxue69uhkg6nzv9ejuumpv34kytnrdaksjlyr9p"
 
-        let metadata = try NostrMetadata.decode(bech32String: nprofile)
-        switch metadata {
+        let identifier = try NostrIdentifier.decode(bech32String: nprofile)
+        switch identifier {
         case .nprofile(let publicKey, let relays):
             XCTAssertEqual(publicKey, "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d")
             XCTAssertEqual(relays.count, 2)
@@ -51,8 +52,8 @@ class NostrMetadataTests: XCTestCase {
         // swiftlint:disable:next line_length
         let nprofile = "nprofile1qyvhwumn8ghj7un9d3shjtnndehhyapwwdhkx6tpdshszrnhwden5te0dehhxtnvdakz7qghwaehxw309aex2mrp0yhxummnw3ezucnpdejz7qg4waehxw309aex2mrp0yhxgctdw4eju6t09uq3xamnwvaz7tm0venxx6rpd9hzuur4vghszxnhwden5te0wfjkccte9eeks6t5vehhycm99ehkuef0qy08wumn8ghj7mn0wd68yttsw43zuam9d3kx7unyv4ezumn9wshszxrhwden5te0wfjkccte9e3h2unjv4h8gtnx095j7qgawaehxw309ahx7um5wghx6at5d9h8jampd3kx2apwvdhk6tcqyqe4dhnpkwty0ycuazepgzet4wphuzqscrh4zka7jt0qyjqypw9a60jrgzx"
 
-        let metadata = try NostrMetadata.decode(bech32String: nprofile)
-        switch metadata {
+        let identifier = try NostrIdentifier.decode(bech32String: nprofile)
+        switch identifier {
         case .nprofile(let publicKey, let relays):
             XCTAssertEqual(publicKey, "3356de61b39647931ce8b2140b2bab837e0810c0ef515bbe92de0248040b8bdd")
             XCTAssertEqual(relays.count, 9)
@@ -69,8 +70,8 @@ class NostrMetadataTests: XCTestCase {
         // swiftlint:disable:next line_length
         let nevent = "nevent1qyt8wumn8ghj7un9d3shjtnddaehgu3wwp6kytcpz9mhxue69uhkummnw3ezumrpdejz7qg4waehxw309aex2mrp0yhxgctdw4eju6t09uq3wamnwvaz7tmjv4kxz7fwwpexjmtpdshxuet59uq32amnwvaz7tmwdaehgu3wdau8gu3wv3jhvtcpr4mhxue69uhkummnw3ezucnfw33k76twv4ezuum0vd5kzmp0qyv8wumn8ghj7mn0wd68ytnxd46zuamf0ghxy6t69uq3jamnwvaz7tmjv4kxz7fwwdhx7un59eek7cmfv9kz7qghwaehxw309aex2mrp0yhxummnw3ezucnpdejz7qg3waehxw309ahx7um5wgh8w6twv5hsqg9p8569xea0fgnv0zuqnt3wsk5mu9j6xal7ten6332pg9r5h8g32gl7wn5w"
 
-        let metadata = try NostrMetadata.decode(bech32String: nevent)
-        switch metadata {
+        let identifier = try NostrIdentifier.decode(bech32String: nevent)
+        switch identifier {
         case .nevent(let eventID, let relays, let publicKey, let kind):
             XCTAssertEqual(eventID, "a13d345367af4a26c78b809ae2e85a9be165a377fe5e67a8c54141474b9d1152")
 
@@ -92,8 +93,8 @@ class NostrMetadataTests: XCTestCase {
         // swiftlint:disable:next line_length
         let nevent = "nevent1qydhwumn8ghj7emvv4shxmmwv96x7u3wv3jhvtmjv4kxz7gprpmhxue69uhkummnv3exjan99eshqup0wfjkccteqyt8wumn8ghj7un9d3shjtnddaehgu3wwp6kytcpzamhxue69uhhyetvv9ujuurjd9kkzmpwdejhgtcpr9mhxue69uhhyetvv9ujuumwdae8gtnnda3kjctv9uq32amnwvaz7tmjv4kxz7fwv3sk6atn9e5k7tcprdmhxue69uhkummnw3e8gctvdvhxummnw3erztnrdakj7qpq38c7tac2uhqvqvxnv5d9mrq4km46pf232v9at473watm6597vucq4rru2q"
 
-        let metadata = try NostrMetadata.decode(bech32String: nevent)
-        switch metadata {
+        let identifier = try NostrIdentifier.decode(bech32String: nevent)
+        switch identifier {
         case .nevent(let eventID, let relays, let publicKey, let kind):
             XCTAssertEqual(eventID, "89f1e5f70ae5c0c030d3651a5d8c15b6eba0a551530bd5d7d17757bd50be6730")
 
@@ -115,8 +116,8 @@ class NostrMetadataTests: XCTestCase {
         // swiftlint:disable:next line_length
         let nevent = "nevent1qy2hwumn8ghj7un9d3shjtnyv9kh2uewd9hj7qgewaehxw309aex2mrp0yh8xmn0wf6zuum0vd5kzmp0qyd8wumn8ghj7urewfsk66ty9enxjct5dfskvtnrdakj7qgwwaehxw309ahx7uewd3hkctcprdmhxue69uhkummnw3e8gctvdvhxummnw3erztnrdakj7qgkwaehxw309ajkgetw9ehx7um5wghxcctwvshszymhwden5te0wp6hyurvv4cxzeewv4ej7qghwaehxw309aex2mrp0yhxummnw3ezucnpdejz7qghwaehxw309aex2mrp0yh8qunfd4skctnwv46z7qgnwaehxw309aex2mrp0yhxvdm69e5k7tcqypr4d8t87evy6gka9xce8asxfr2kztrplttejhxzzamhkptceghxzxkjapf"
 
-        let metadata = try NostrMetadata.decode(bech32String: nevent)
-        switch metadata {
+        let identifier = try NostrIdentifier.decode(bech32String: nevent)
+        switch identifier {
         case .nevent(let eventID, let relays, let publicKey, let kind):
             XCTAssertEqual(eventID, "47569d67f6584d22dd29b193f60648d5612c61fad7995cc217777b0578ca2e61")
 
@@ -136,8 +137,8 @@ class NostrMetadataTests: XCTestCase {
         // swiftlint:disable:next line_length
         let naddr = "naddr1qqjrsdf4xs6nvdrz95unsery956rswrx95unxvee94skvvp5xymkgwfcx9snyqg3waehxw309ahx7um5wgh8w6twv5hsygx0gknt5ymr44ldyyaq0rn3p5jpzkh8y8ymg773a06ytr4wldxz55psgqqqwense4rlem"
 
-        let metadata = try NostrMetadata.decode(bech32String: naddr)
-        switch metadata {
+        let identifier = try NostrIdentifier.decode(bech32String: naddr)
+        switch identifier {
         case .naddr(let eventID, let relays, let eventPublicKey, let kind):
             XCTAssertEqual(eventID, "38353534353634622d393864642d343838662d393333392d616630343137643938316132")
             XCTAssertEqual(relays.count, 1)
@@ -155,8 +156,8 @@ class NostrMetadataTests: XCTestCase {
         // swiftlint:disable:next line_length
         let naddr = "naddr1qvzqqqrujgpzp75cf0tahv5z7plpdeaws7ex52nmnwgtwfr2g3m37r844evqrr6jqyghwumn8ghj7vf5xqhxvdm69e5k7tcpzdmhxue69uhhqatjwpkx2urpvuhx2ue0qythwumn8ghj7un9d3shjtnswf5k6ctv9ehx2ap0qy2hwumn8ghj7un9d3shjtnyv9kh2uewd9hj7qg6waehxw309ac8junpd45kgtnxd9shg6npvchxxmmd9uq3xamnwvaz7tmjv4kxz7fwvcmh5tnfduhsz9thwden5te0wfjkccte9ejhs6t59ec82c30qyf8wumn8ghj7un9d3shjtn5dahkcue0qy88wumn8ghj7mn0wvhxcmmv9uqpqvenx56njvpnxqcrsdf4xqcrwdqufrevn"
 
-        let metadata = try NostrMetadata.decode(bech32String: naddr)
-        switch metadata {
+        let identifier = try NostrIdentifier.decode(bech32String: naddr)
+        switch identifier {
         case .naddr(let eventID, let relays, let eventPublicKey, let kind):
             XCTAssertEqual(eventID, "33333535393033303038353530303734")
             XCTAssertEqual(relays.count, 9)
