@@ -176,8 +176,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
                         collectionView?.reloadData()
                         if let refreshControl {
                             // Dismiss the refresh control
-                            let deadline = DispatchTime.now() + .seconds(1)
-                            DispatchQueue.main.asyncAfter(deadline: deadline) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
                                 refreshControl.endRefreshing()
                             }
                         }
