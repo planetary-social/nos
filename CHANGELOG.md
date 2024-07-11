@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add impersonation flag category and better NIP-56 mapping.
 - Discover tab now features new accounts in News, Music, Activists, and Art.
 - Use NIP-05 for shared links to profile.
 
