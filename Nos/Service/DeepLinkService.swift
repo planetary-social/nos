@@ -48,8 +48,8 @@ enum DeepLinkService {
                     let entity = match.1
                     let string = String(entity)
 
-                    let metadata = try NostrMetadata.decode(bech32String: string)
-                    switch metadata {
+                    let identifier = try NostrIdentifier.decode(bech32String: string)
+                    switch identifier {
                     case .npub(let rawAuthorID), .nprofile(let rawAuthorID, _):
                         router.pushAuthor(id: rawAuthorID)
                     case .note(let rawEventID), .nevent(let rawEventID, _, _, _):

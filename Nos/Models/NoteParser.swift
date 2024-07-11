@@ -93,8 +93,8 @@ struct NoteParser {
             } else if let npubOrNProfile {
                 let string = String(npubOrNProfile)
                 do {
-                    let metadata = try NostrMetadata.decode(bech32String: string)
-                    switch metadata {
+                    let identifier = try NostrIdentifier.decode(bech32String: string)
+                    switch identifier {
                     case .npub(let rawAuthorID), .nprofile(let rawAuthorID, _):
                         return findAndReplaceAuthorReference(rawAuthorID)
                     default:
@@ -127,8 +127,8 @@ struct NoteParser {
             let string = String(entity)
 
             do {
-                let metadata = try NostrMetadata.decode(bech32String: string)
-                switch metadata {
+                let identifier = try NostrIdentifier.decode(bech32String: string)
+                switch identifier {
                 case .npub(let rawAuthorID), .nprofile(let rawAuthorID, _):
                     return "\(prefix)[\(string)](@\(rawAuthorID))"
                 case .note(let rawEventID), .nevent(let rawEventID, _, _, _):
