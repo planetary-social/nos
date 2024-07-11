@@ -1,7 +1,7 @@
 import Foundation
 
-/// A decoding error for [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md) metadata.
-enum NostrMetadataError: Error {
+/// A decoding error for [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md) identifiers.
+enum NostrIdentifierError: Error {
     /// The format of the bech32-encoded entity is unknown.
     case unknownFormat
 
@@ -10,7 +10,7 @@ enum NostrMetadataError: Error {
 }
 
 /// Represents a [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md) bech32-encoded entity.
-enum NostrMetadata {
+enum NostrIdentifier {
     /// A nostr public key
     case npub(publicKey: RawAuthorID)
 
@@ -28,10 +28,10 @@ enum NostrMetadata {
 
     /// A nostr address
 
-    /// Transforms the given bech32-encoded `String` into a `NostrMetadata`.
+    /// Transforms the given bech32-encoded `String` into a `NostrIdentifier`.
     /// - Parameter bech32String: The bech32-encoded `String` to decode.
-    /// - Returns: The `NostrMetadata` that was encoded in the given `String`.
-    static func decode(bech32String: String) throws -> NostrMetadata {
+    /// - Returns: The `NostrIdentifier` that was encoded in the given `String`.
+    static func decode(bech32String: String) throws -> NostrIdentifier {
         let (humanReadablePart, data) = try Bech32.decode(bech32String)
         switch humanReadablePart {
         case Nostr.publicKeyPrefix:
@@ -45,40 +45,40 @@ enum NostrMetadata {
         case Nostr.addressPrefix:
             return try decodeNostrAddress(data: data)
         default:
-            throw NostrMetadataError.unknownPrefix
+            throw NostrIdentifierError.unknownPrefix
         }
     }
 
-    /// Decodes npub data into a `NostrMetadata.npub`.
+    /// Decodes npub data into a `NostrIdentifier.npub`.
     /// - Parameter data: The encoded npub data.
     /// - Returns: The `.npub` with the public key.
-    private static func decodeNostrPublicKey(data: Data) throws -> NostrMetadata {
+    private static func decodeNostrPublicKey(data: Data) throws -> NostrIdentifier {
         guard let publicKey = SHA256Key.decode(base5: data) else {
-            throw NostrMetadataError.unknownFormat
+            throw NostrIdentifierError.unknownFormat
         }
         return .npub(publicKey: publicKey)
     }
 
-    /// Decodes npub data into a `NostrMetadata.note`.
+    /// Decodes npub data into a `NostrIdentifier.note`.
     /// - Parameter data: The encoded npub data.
     /// - Returns: The `.note` with the event ID.
-    private static func decodeNostrNote(data: Data) throws -> NostrMetadata {
+    private static func decodeNostrNote(data: Data) throws -> NostrIdentifier {
         guard let eventID = SHA256Key.decode(base5: data) else {
-            throw NostrMetadataError.unknownFormat
+            throw NostrIdentifierError.unknownFormat
         }
         return .note(eventID: eventID)
     }
 
-    /// Decodes nprofile data into a `NostrMetadata.nprofile`.
+    /// Decodes nprofile data into a `NostrIdentifier.nprofile`.
     /// - Parameter data: The encoded nprofile data.
     /// - Returns: The `.nprofile` with the public key and relays from the given `data`.
-    private static func decodeNostrProfile(data: Data) throws -> NostrMetadata {
-        let tlvEntities = TLVEntity.decodeEntities(data: data)
+    private static func decodeNostrProfile(data: Data) throws -> NostrIdentifier {
+        let tlvElements = TLVElement.decodeElements(data: data)
 
         var publicKey = ""
         var relays: [String] = []
-        for entity in tlvEntities {
-            switch entity {
+        for element in tlvElements {
+            switch element {
             case .special(let value):
                 publicKey = value
             case .relay(let value):
@@ -91,18 +91,18 @@ enum NostrMetadata {
         return .nprofile(publicKey: publicKey, relays: relays)
     }
 
-    /// Decodes nevent data into a `NostrMetadata.nevent`.
+    /// Decodes nevent data into a `NostrIdentifier.nevent`.
     /// - Parameter data: The encoded nevent data.
     /// - Returns: The `.nevent` with the id, relays, public key, and kind from the given `data`.
-    private static func decodeNostrEvent(data: Data) throws -> NostrMetadata {
-        let tlvEntities = TLVEntity.decodeEntities(data: data)
+    private static func decodeNostrEvent(data: Data) throws -> NostrIdentifier {
+        let tlvElements = TLVElement.decodeElements(data: data)
 
         var eventID = ""
         var relays: [String] = []
         var publicKey: String?
         var kind: UInt32?
-        for entity in tlvEntities {
-            switch entity {
+        for element in tlvElements {
+            switch element {
             case .special(let value):
                 eventID = value
             case .relay(let value):
@@ -119,18 +119,18 @@ enum NostrMetadata {
         return .nevent(eventID: eventID, relays: relays, eventPublicKey: publicKey, kind: kind)
     }
 
-    /// Decodes naddr data into a `NostrMetadata.naddr`.
+    /// Decodes naddr data into a `NostrIdentifier.naddr`.
     /// - Parameter data: The encoded naddr data.
     /// - Returns: The `.naddr` with the id, relays, public key, and kind from the given `data`.
-    private static func decodeNostrAddress(data: Data) throws -> NostrMetadata {
-        let tlvEntities = TLVEntity.decodeEntities(data: data)
+    private static func decodeNostrAddress(data: Data) throws -> NostrIdentifier {
+        let tlvElements = TLVElement.decodeElements(data: data)
 
         var eventID = ""
         var relays: [String] = []
         var publicKey: String = ""
         var kind = UInt32.max
-        for entity in tlvEntities {
-            switch entity {
+        for element in tlvElements {
+            switch element {
             case .special(let value):
                 eventID = value
             case .relay(let value):
