@@ -27,20 +27,13 @@ struct ProfileKnownFollowersView: View {
                 if followers.count > 2 {
                     Text(
                         attributedText(
-                            from: .localizable.followedByTwoAndMore(
-                                first.safeName,
-                                second.safeName,
-                                followers.count - 2
-                            )
+                            from: .localizable.followedByTwoAndOthers(first.safeName, second.safeName)
                         )
                     )
                 } else {
                     Text(
                         attributedText(
-                            from: .localizable.followedByTwo(
-                                first.safeName,
-                                second.safeName
-                            )
+                            from: .localizable.followedByTwo(first.safeName, second.safeName)
                         )
                     )
                 }
@@ -49,18 +42,13 @@ struct ProfileKnownFollowersView: View {
                 if followers.count > 1 {
                     Text(
                         attributedText(
-                            from: .localizable.followedByOneAndMore(
-                                first.safeName,
-                                followers.count - 1
-                            )
+                            from: .localizable.followedByOneAndOthers(first.safeName)
                         )
                     )
                 } else {
                     Text(
                         attributedText(
-                            from: .localizable.followedByOne(
-                                first.safeName
-                            )
+                            from: .localizable.followedByOne(first.safeName)
                         )
                     )
                 }

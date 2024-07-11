@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Update the reply count shown below each Note in a Feed.
+- Removed follower count from profile screen.
+- Decode nprofile, nevent, and naddr NIP-19 entities.
 
 ## [0.1.20] - 2024-07-10Z
 
