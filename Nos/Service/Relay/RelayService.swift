@@ -178,13 +178,23 @@ extension RelayService {
     /// Asks the relay to download a page of events matching the given `filter` from relays and save them to Core Data.
     /// You can cause the service to download the next page by calling `loadMore()` on the returned subscription object.
     /// The subscription will be cancelled when the returned subscription object is deallocated.
-    func subscribeToPagedEvents(matching filter: Filter) async -> PagedRelaySubscription {
-        PagedRelaySubscription(
+    func subscribeToPagedEvents(
+        matching filter: Filter, 
+        from specificRelay: URL? = nil
+    ) async -> PagedRelaySubscription {
+        var relays = Set<URL>()
+        if let specificRelay {
+            relays.insert(specificRelay)
+        } else {
+            relays = await self.relayAddresses(for: currentUser)
+        }
+        
+        return PagedRelaySubscription(
             startDate: .now,
             filter: filter,
             relayService: self,
             subscriptionManager: subscriptionManager,
-            relayAddresses: await self.relayAddresses(for: currentUser)
+            relayAddresses: relays
         )
     }
     

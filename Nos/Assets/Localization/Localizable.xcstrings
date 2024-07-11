@@ -433,6 +433,17 @@
         }
       }
     },
+    "accountsIFollow" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accounts I Follow"
+          }
+        }
+      }
+    },
     "activity" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4312,6 +4323,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已索取"
+          }
+        }
+      }
+    },
+    "filter" : {
+      "comment" : "verb for filtering your feed in various ways",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "filter"
           }
         }
       }

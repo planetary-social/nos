@@ -27,6 +27,9 @@ struct HomeFeedView: View {
     @State private var stories: [Author] = []
     @State private var selectedStoryAuthor: Author?
     @State private var storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now)!
+    
+    @State private var showRelayPicker = false
+    @State private var selectedRelay: Relay? 
 
     private var isShowingStories: Bool {
         selectedStoryAuthor != nil
@@ -39,6 +42,30 @@ struct HomeFeedView: View {
                 since: Calendar.current.date(byAdding: .day, value: -2, to: .now)!
             )
         )
+    }
+    
+    var homeFeedFetchRequest: NSFetchRequest<Event> {
+        Event.homeFeed(for: user, before: lastRefreshDate, seenOn: selectedRelay) 
+    }
+    
+    var homeFeedFilter: Filter {
+        var filter = Filter(kinds: [.text, .delete, .repost, .longFormContent])
+        if selectedRelay == nil {
+            filter.authorKeys = user.followedKeys
+        } else {
+            filter.kinds = filter.kinds + [.report]
+        }
+        return filter
+    }
+    
+    var navigationBarTitle: LocalizedStringResource {
+        if let relayName = selectedRelay?.host {
+            LocalizedStringResource(stringLiteral: relayName)
+        } else if isShowingStories {
+            .localizable.stories
+        } else {
+            .localizable.accountsIFollow
+        }
     }
     
     /// Downloads the data we need to show stories. 
@@ -60,22 +87,23 @@ struct HomeFeedView: View {
     
     var body: some View {
         ZStack {
-            let homeFeedFilter = Filter(
-                authorKeys: user.followedKeys, 
-                kinds: [.text, .delete, .repost, .longFormContent, .report], 
-                limit: 100, 
-                since: nil
-            )
             PagedNoteListView(
-                databaseFilter: Event.homeFeed(for: user, before: lastRefreshDate), 
+                databaseFilter: homeFeedFetchRequest,
                 relayFilter: homeFeedFilter,
+                relay: selectedRelay,
                 context: viewContext,
                 tab: .home,
                 header: {
-                    AuthorStoryCarousel(
-                        authors: $stories, 
-                        selectedStoryAuthor: $selectedStoryAuthor
-                    )
+                    Group {
+                        if selectedRelay == nil {
+                            AuthorStoryCarousel(
+                                authors: $stories, 
+                                selectedStoryAuthor: $selectedStoryAuthor
+                            )
+                        } else {
+                            EmptyView()
+                        }
+                    }
                 },
                 emptyPlaceholder: {
                     VStack {
@@ -111,6 +139,20 @@ struct HomeFeedView: View {
                     hideAfter: .now() + .seconds(Self.initialLoadTime)
                 )
             } 
+            
+            if showRelayPicker {
+                RelayPicker(
+                    selectedRelay: $selectedRelay,
+                    defaultSelection: String(localized: .localizable.accountsIFollow),
+                    author: user,
+                    isPresented: $showRelayPicker
+                )
+                .onChange(of: selectedRelay) { _, _ in
+                    withAnimation {
+                        showRelayPicker = false
+                    }
+                }
+            }
         }
         .doubleTapToPop(tab: .home) { _ in
             if isShowingStories {
@@ -128,6 +170,15 @@ struct HomeFeedView: View {
             ToolbarItem(placement: .navigationBarLeading) {
                 SideMenuButton()
             }
+            RelayPickerToolbarButton(
+                selectedRelay: $selectedRelay,
+                isPresenting: $showRelayPicker,
+                defaultSelection: .localizable.allMyRelays
+            ) {
+                withAnimation {
+                    showRelayPicker.toggle()
+                }
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 if isShowingStories {
                     Button {
@@ -137,29 +188,20 @@ struct HomeFeedView: View {
                             .animation(.default, value: selectedStoryAuthor)
                     }
                 } else {
-                    Button {
-                        isShowingRelayList = true
-                    } label: {
-                        HStack(spacing: 3) {
-                            Image("relay-left")
-                                .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
-                            Text("\(relayService.numberOfConnectedRelays)")
-                                .font(.clarity(.bold, textStyle: .title3))
-                                .foregroundColor(.primaryTxt)
-                            Image("relay-right")
-                                .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
+                    Button { 
+                        withAnimation {
+                            showRelayPicker.toggle()
                         }
-                    }
-                    .sheet(isPresented: $isShowingRelayList) {
-                        NavigationView {
-                            RelayView(author: user)
-                        }
+                    } label: { 
+                        Image(systemName: "line.3.horizontal.decrease.circle")
+                            .foregroundStyle(Color.secondaryTxt)
+                            .accessibilityLabel(Text(.localizable.filter))
                     }
                 }
             }
         }
         .padding(.top, 1)
-        .nosNavigationBar(title: isShowingStories ? .localizable.stories : .localizable.homeFeed)
+        .nosNavigationBar(title: navigationBarTitle)
         .task {
             await downloadStories()
         }
@@ -191,11 +233,23 @@ struct HomeFeedView: View {
 #Preview {
     var previewData = PreviewData()
     
+    func createTestData() {
+        let user = previewData.alice
+        let addresses = Relay.allKnown
+        addresses.forEach { address in
+            let relay = try? Relay.findOrCreate(by: address, context: previewData.previewContext)
+            relay?.relayDescription = "A Nostr relay that aims to cultivate a healthy community."
+            relay?.addToAuthors(user)
+        }
+        
+        _ = previewData.shortNote
+    }
+    
     return NavigationStack {
         HomeFeedView(user: previewData.alice)
     }
     .inject(previewData: previewData)
     .onAppear {
-        _ = previewData.shortNote
+        createTestData()
     }
 }

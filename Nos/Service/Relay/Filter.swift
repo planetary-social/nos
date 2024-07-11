@@ -4,9 +4,9 @@ import Foundation
 /// See [NIP-01](https://github.com/nostr-protocol/nips/blob/master/01.md#communication-between-clients-and-relays).
 struct Filter: Hashable, Identifiable {
     
-    let authorKeys: [RawAuthorID]
+    var authorKeys: [RawAuthorID]
     let eventIDs: [RawEventID]
-    let kinds: [EventKind]
+    var kinds: [EventKind]
     let eTags: [RawEventID]
     let pTags: [RawAuthorID]
     let search: String?

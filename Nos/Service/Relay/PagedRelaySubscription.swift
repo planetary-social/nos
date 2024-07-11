@@ -35,6 +35,7 @@ class PagedRelaySubscription {
             pagedEventsFilter.until = startDate
             var newEventsFilter = filter
             newEventsFilter.since = startDate
+            newEventsFilter.limit = nil
             for relayAddress in relayAddresses {
                 newEventsSubscriptionIDs.insert(
                     await subscriptionManager.queueSubscription(with: filter, to: relayAddress)
