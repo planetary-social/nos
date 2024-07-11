@@ -61,8 +61,8 @@
 		03B4E6AF2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B4E6AD2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift */; };
 		03D1B4282C3C1A5D001778CD /* NostrIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D1B4272C3C1A5D001778CD /* NostrIdentifier.swift */; };
 		03D1B4292C3C1AC9001778CD /* NostrIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D1B4272C3C1A5D001778CD /* NostrIdentifier.swift */; };
-		03D1B42C2C3C1B0D001778CD /* TLVEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D1B42B2C3C1B0D001778CD /* TLVEntity.swift */; };
-		03D1B42D2C3C1B0D001778CD /* TLVEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D1B42B2C3C1B0D001778CD /* TLVEntity.swift */; };
+		03D1B42C2C3C1B0D001778CD /* TLVElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D1B42B2C3C1B0D001778CD /* TLVElement.swift */; };
+		03D1B42D2C3C1B0D001778CD /* TLVElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D1B42B2C3C1B0D001778CD /* TLVElement.swift */; };
 		03F7C4F32C10DF79006FF613 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */; };
 		03F7C4F42C10E05B006FF613 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
@@ -544,7 +544,7 @@
 		03B4E6AB2C125D13006E5F59 /* FileStorageUploadResponseJSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileStorageUploadResponseJSONTests.swift; sourceTree = "<group>"; };
 		03B4E6AD2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileStorageUploadResponseJSON.swift; sourceTree = "<group>"; };
 		03D1B4272C3C1A5D001778CD /* NostrIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrIdentifier.swift; sourceTree = "<group>"; };
-		03D1B42B2C3C1B0D001778CD /* TLVEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLVEntity.swift; sourceTree = "<group>"; };
+		03D1B42B2C3C1B0D001778CD /* TLVElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLVElement.swift; sourceTree = "<group>"; };
 		03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionProtocol.swift; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
@@ -1033,7 +1033,7 @@
 			isa = PBXGroup;
 			children = (
 				03D1B4272C3C1A5D001778CD /* NostrIdentifier.swift */,
-				03D1B42B2C3C1B0D001778CD /* TLVEntity.swift */,
+				03D1B42B2C3C1B0D001778CD /* TLVElement.swift */,
 			);
 			path = NostrIdentifier;
 			sourceTree = "<group>";
@@ -2000,7 +2000,7 @@
 				5B0D99032A94090A0039F0C5 /* DoubleTapToPopModifier.swift in Sources */,
 				0357299B2BE415E5005FEE85 /* ContentWarningController.swift in Sources */,
 				5BFF66B42A58853D00AA79DD /* PublishedEventsView.swift in Sources */,
-				03D1B42C2C3C1B0D001778CD /* TLVEntity.swift in Sources */,
+				03D1B42C2C3C1B0D001778CD /* TLVElement.swift in Sources */,
 				C987F85B29BA9ED800B44E7A /* Font.swift in Sources */,
 				C94D6D5C2AC5D14400F0F11E /* WizardTextField.swift in Sources */,
 				3FB5E651299D28A200386527 /* OnboardingView.swift in Sources */,
@@ -2161,7 +2161,7 @@
 				C973AB5E2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */,
 				C9F64D8D29ED840700563F2B /* Zipper.swift in Sources */,
 				C98298342ADD7F9A0096C5B5 /* DeepLinkService.swift in Sources */,
-				03D1B42D2C3C1B0D001778CD /* TLVEntity.swift in Sources */,
+				03D1B42D2C3C1B0D001778CD /* TLVElement.swift in Sources */,
 				CD09A75929A521D20063464F /* Color+Hex.swift in Sources */,
 				5B88051D2A2104CC00E21F06 /* SHA256Key.swift in Sources */,
 				0365CD902C40171100622A1A /* EventKind.swift in Sources */,

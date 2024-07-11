@@ -73,12 +73,12 @@ enum NostrIdentifier {
     /// - Parameter data: The encoded nprofile data.
     /// - Returns: The `.nprofile` with the public key and relays from the given `data`.
     private static func decodeNostrProfile(data: Data) throws -> NostrIdentifier {
-        let tlvEntities = TLVEntity.decodeEntities(data: data)
+        let tlvElements = TLVElement.decodeElements(data: data)
 
         var publicKey = ""
         var relays: [String] = []
-        for entity in tlvEntities {
-            switch entity {
+        for element in tlvElements {
+            switch element {
             case .special(let value):
                 publicKey = value
             case .relay(let value):
@@ -95,14 +95,14 @@ enum NostrIdentifier {
     /// - Parameter data: The encoded nevent data.
     /// - Returns: The `.nevent` with the id, relays, public key, and kind from the given `data`.
     private static func decodeNostrEvent(data: Data) throws -> NostrIdentifier {
-        let tlvEntities = TLVEntity.decodeEntities(data: data)
+        let tlvElements = TLVElement.decodeElements(data: data)
 
         var eventID = ""
         var relays: [String] = []
         var publicKey: String?
         var kind: UInt32?
-        for entity in tlvEntities {
-            switch entity {
+        for element in tlvElements {
+            switch element {
             case .special(let value):
                 eventID = value
             case .relay(let value):
@@ -123,14 +123,14 @@ enum NostrIdentifier {
     /// - Parameter data: The encoded naddr data.
     /// - Returns: The `.naddr` with the id, relays, public key, and kind from the given `data`.
     private static func decodeNostrAddress(data: Data) throws -> NostrIdentifier {
-        let tlvEntities = TLVEntity.decodeEntities(data: data)
+        let tlvElements = TLVElement.decodeElements(data: data)
 
         var eventID = ""
         var relays: [String] = []
         var publicKey: String = ""
         var kind = UInt32.max
-        for entity in tlvEntities {
-            switch entity {
+        for element in tlvElements {
+            switch element {
             case .special(let value):
                 eventID = value
             case .relay(let value):

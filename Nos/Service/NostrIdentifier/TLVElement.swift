@@ -1,8 +1,8 @@
 import Foundation
 
-/// A TLV (type-length-value) entity.
+/// A TLV (type-length-value) element, which represents a single type, length, and value.
 /// - Note: See [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md) for more information.
-enum TLVEntity {
+enum TLVElement {
     /// The special type with its associated value as a String.
     case special(value: String)
     
@@ -22,12 +22,12 @@ enum TLVEntity {
     /// on the Bech32 human readable part. Unreadable entities are included in the array as `.unknown`.
     /// - Parameter data: The TLV data to decode.
     /// - Returns: An array containing decoded TLV entities, with `.unknown` values for any that could not be decoded.
-    static func decodeEntities(data: Data) -> [TLVEntity] {
+    static func decodeElements(data: Data) -> [TLVElement] {
         guard let converted = try? data.base8FromBase5() else {
             return []
         }
 
-        var result: [TLVEntity] = []
+        var result: [TLVElement] = []
 
         var offset = 0
         while offset + 1 < converted.count {
@@ -36,27 +36,27 @@ enum TLVEntity {
             let length = Int(converted[offset + 1])
             let value = converted.subdata(in: offset + 2 ..< offset + 2 + length)
 
-            let entity: TLVEntity
+            let element: TLVElement
             switch type {
             case .special:
                 let valueString = SHA256Key.decode(base8: value)
-                entity = .special(value: valueString)
+                element = .special(value: valueString)
             case .relay:
                 if let valueString = String(data: value, encoding: .ascii) {
-                    entity = .relay(value: valueString)
+                    element = .relay(value: valueString)
                 } else {
-                    entity = .unknown
+                    element = .unknown
                 }
             case .author:
                 let valueString = SHA256Key.decode(base8: value)
-                entity = .author(value: valueString)
+                element = .author(value: valueString)
             case .kind:
                 let valueInt = UInt32(bigEndian: value.withUnsafeBytes { $0.load(as: UInt32.self) })
-                entity = .kind(value: valueInt)
+                element = .kind(value: valueInt)
             case nil:
-                entity = .unknown
+                element = .unknown
             }
-            result.append(entity)
+            result.append(element)
 
             offset += length + 2
         }
@@ -65,7 +65,7 @@ enum TLVEntity {
     }
 }
 
-/// The type of the TLV (type-length-value) entity. This type determines how the associated value is encoded.
+/// The type of the TLV (type-length-value) element. This type determines how the associated value is encoded.
 /// - Note: See [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md) for more information.
 enum TLVType: UInt8 {
     /// The special type.
