@@ -172,7 +172,7 @@ fileprivate enum FeatureFlagsKey: DependencyKey {
 }
 
 fileprivate enum KeychainKey: DependencyKey {
-    @MainActor static let liveValue = Keychain()
-    @MainActor static let testValue: Keychain = MockKeychain()
-    @MainActor static let previewValue: Keychain = MockKeychain()
+    @MainActor static let liveValue: Keychain = SystemKeychain()
+    @MainActor static let testValue: Keychain = InMemoryKeychain()
+    @MainActor static let previewValue: Keychain = InMemoryKeychain()
 }

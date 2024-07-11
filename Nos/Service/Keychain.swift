@@ -1,8 +1,18 @@
 import Security
 import UIKit
 
+@MainActor protocol Keychain {
+    
+    var keychainPrivateKey: String { get }
+    
+    func save(key: String, data: Data) -> OSStatus 
+    func load(key: String) -> Data? 
+    func delete(key: String) -> OSStatus 
+}
+
 /// Don't use this outside CurrentUser
-@MainActor class Keychain {
+class SystemKeychain: Keychain {
+    
     let keychainPrivateKey = "privateKey"
         
     @discardableResult
@@ -51,20 +61,22 @@ import UIKit
     }
 }
 
-class MockKeychain: Keychain {
+class InMemoryKeychain: Keychain {
     
-    var keychain = [String: Data]()
+    let keychainPrivateKey = "privateKey"
     
-    override func save(key: String, data: Data) -> OSStatus {
+    private var keychain = [String: Data]()
+    
+    func save(key: String, data: Data) -> OSStatus {
         keychain[key] = data
         return 0
     }
     
-    override func load(key: String) -> Data? {
+    func load(key: String) -> Data? {
         keychain[key]
     }
     
-    override func delete(key: String) -> OSStatus {
+    func delete(key: String) -> OSStatus {
         keychain.removeValue(forKey: key)
         return 0
     }
