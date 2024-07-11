@@ -34,9 +34,9 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// A view that will be displayed as the collectionView header.
     let header: () -> Header
     
-    /// A view that will be displayed below the header when no notes are being shown.
-    let emptyPlaceholder: () -> EmptyPlaceholder
-    
+    /// A view that will be displayed below the header when no notes are being shown and a handler that 
+    let emptyPlaceholder: (@escaping () -> Void) -> EmptyPlaceholder
+
     /// A closure that will be called when the user pulls-to-refresh. You probably want to update the `databaseFilter`
     /// in this closure.
     let onRefresh: () -> NSFetchRequest<Event> 
@@ -106,27 +106,6 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             // scrolling to CGRect.zero does not work, so this seems to be the best we can do
             uiView?.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
         }
-        coordinator.refreshObserver = notificationCenter.addObserver(
-            forName: .refresh,
-            object: nil,
-            queue: .main
-        ) { [weak uiView, weak coordinator] notification in
-            // if the tab that's selected is the tab in which this
-            // `PagedNoteListView` is displayed, trigger a refresh.
-            let userInfo = notification.userInfo
-            guard userInfo?["tab"] as? AppDestination == tab else {
-                return
-            }
-            let refreshControl = uiView?.refreshControl
-            if let refreshControl {
-                uiView?.scrollRectToVisible(
-                    refreshControl.frame,
-                    animated: true
-                )
-                refreshControl.beginRefreshing()
-            }
-            coordinator?.refreshData(refreshControl ?? notification)
-        }
     }
 
     private static func tearDownObservers(
@@ -134,9 +113,6 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     ) {
         let notificationCenter = NotificationCenter.default
         if let observer = coordinator.scrollToTopObserver {
-            notificationCenter.removeObserver(observer)
-        }
-        if let observer = coordinator.refreshObserver {
             notificationCenter.removeObserver(observer)
         }
     }
@@ -183,7 +159,6 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         var dataSource: PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder>?
         var collectionView: UICollectionView?
         var scrollToTopObserver: NSObjectProtocol?
-        var refreshObserver: NSObjectProtocol?
         var onRefresh: (() -> NSFetchRequest<Event>)?
         
         func dataSource(
@@ -192,7 +167,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             collectionView: UICollectionView,
             context: NSManagedObjectContext,
             @ViewBuilder header: @escaping () -> CoordinatorHeader,
-            @ViewBuilder emptyPlaceholder: @escaping () -> CoordinatorEmptyPlaceholder,
+            @ViewBuilder emptyPlaceholder: @escaping (@escaping () -> Void) -> CoordinatorEmptyPlaceholder,
             onRefresh: @escaping () -> NSFetchRequest<Event>
         ) -> PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder> {
             if let dataSource {
@@ -207,7 +182,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
                 collectionView: collectionView, 
                 context: context,
                 header: header,
-                emptyPlaceholder: emptyPlaceholder
+                emptyPlaceholder: emptyPlaceholder,
+                onRefresh: onRefresh
             )
             self.dataSource = dataSource
             return dataSource
@@ -250,7 +226,7 @@ extension Notification.Name {
                 .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 .id(previewData.alice.id)
         },
-        emptyPlaceholder: {
+        emptyPlaceholder: { _ in
             Text("empty")
         },
         onRefresh: {

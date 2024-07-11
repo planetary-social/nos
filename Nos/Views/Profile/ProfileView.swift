@@ -83,21 +83,16 @@ struct ProfileView: View {
                             .compositingGroup()
                             .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                     },
-                    emptyPlaceholder: {
+                    emptyPlaceholder: { refresh in
                         VStack {
                             Text(.localizable.noEventsOnProfile)
                                 .padding()
                                 .readabilityPadding()
                             
                             SecondaryActionButton(
-                                title: .localizable.tapToRefresh
-                            ) {
-                                NotificationCenter.default.post(
-                                    name: .refresh,
-                                    object: nil,
-                                    userInfo: ["tab": AppDestination.profile]
-                                )
-                            }
+                                title: .localizable.tapToRefresh,
+                                action: refresh
+                            )
                         }
                         .frame(minHeight: 300)
                     },
