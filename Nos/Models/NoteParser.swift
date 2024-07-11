@@ -114,7 +114,7 @@ struct NoteParser {
     /// Replaces Nostr entities embedded in the note (without a proper tag) with markdown links
     private func replaceNostrEntities(in content: String) -> String {
         // swiftlint:disable:next opening_brace
-        let unformattedRegex = /(?:^|\s)@?(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,}))/ // TODO: where'd we get the 58? is that right?
+        let unformattedRegex = /(?:^|\s)@?(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,}))/
 
         return content.replacing(unformattedRegex) { match in
             let substring = match.0
