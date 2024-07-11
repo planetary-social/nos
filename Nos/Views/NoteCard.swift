@@ -79,10 +79,14 @@ struct NoteCard: View {
                         BeveledSeparator()
                         HStack(spacing: 0) {
                             if repliesDisplayType != .displayNothing {
-                                RepliesLabel(
-                                    repliesDisplayType: repliesDisplayType,
-                                    for: note
-                                )
+                                Button {
+                                    router.push(note)
+                                } label: {
+                                    RepliesLabel(
+                                        repliesDisplayType: repliesDisplayType,
+                                        for: note
+                                    )
+                                }
                             }
                             Spacer()
                             RepostButton(note: note) 

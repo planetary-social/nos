@@ -183,8 +183,9 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
                 } else {
                     activeSubscriptionsCount[relayAddress] = 1
                 }
+            } else {
+                waitingSubscriptions.append(relaySubscription)
             }
-            waitingSubscriptions.append(relaySubscription)
         }
 
         // Start waiting relay subscriptions if they don't exceed the queue

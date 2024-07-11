@@ -128,16 +128,7 @@ struct Filter: Hashable, Identifiable {
     }
 
     func hash(into hasher: inout Hasher) {
-        hasher.combine(authorKeys)
-        hasher.combine(eventIDs)
-        hasher.combine(kinds)
-        hasher.combine(limit)
-        hasher.combine(eTags)
-        hasher.combine(pTags)
-        hasher.combine(search)
-        hasher.combine(keepSubscriptionOpen)
-        hasher.combine(since)
-        hasher.combine(until)
+        hasher.combine(id)
     }
     
     var id: String {
@@ -149,6 +140,7 @@ struct Filter: Hashable, Identifiable {
             eTags.joined(separator: ","),
             pTags.joined(separator: ","),
             search ?? "nil",
+            keepSubscriptionOpen.description,
             since?.timeIntervalSince1970.description ?? "nil",
             until?.timeIntervalSince1970.description ?? "nil"
         ]

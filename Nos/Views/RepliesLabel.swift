@@ -1,6 +1,8 @@
 import Dependencies
 import SwiftUI
 
+/// Presents an overview of the reply activity for the specified note, utilizing various
+/// styles listed in `RepliesDisplayType`.
 struct RepliesLabel: View {
 
     var repliesDisplayType: RepliesDisplayType

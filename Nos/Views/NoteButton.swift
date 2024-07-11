@@ -176,12 +176,12 @@ struct NoteButton: View {
             relaySubscriptions.removeAll()
             relaySubscriptions.append(
                 await relayService.requestReplyFromAnyone(
-                    for: note.identifier
+                    for: displayedNote.identifier
                 )
             )
             relaySubscriptions.append(
                 await relayService.requestRepliesFromFollows(
-                    for: note.identifier,
+                    for: displayedNote.identifier,
                     limit: 4
                 )
             )
