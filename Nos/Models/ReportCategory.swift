@@ -157,7 +157,7 @@ extension ReportCategoryType {
     static let authorCategories = [
         ReportCategoryType.spam,
         ReportCategoryType.harassment,
-        ReportCategoryType.nsfw,
+        ReportCategoryType.nudity,
         ReportCategoryType.illegal,
         ReportCategoryType.impersonation,
         ReportCategoryType.other,
