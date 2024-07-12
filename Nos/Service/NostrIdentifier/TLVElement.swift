@@ -3,17 +3,17 @@ import Foundation
 /// A TLV (type-length-value) element, which represents a single type, length, and value.
 /// - Note: See [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md) for more information.
 enum TLVElement {
-    /// The special type with its associated value as a String.
-    case special(value: String)
-    
-    /// The relay type with its associated value as a String.
-    case relay(value: String)
+    /// The special type with its associated value.
+    case special(value: Data)
 
-    /// The author type with its associated value as a String.
-    case author(value: String)
-    
-    /// The kind type with its associated value as a UInt32.
-    case kind(value: UInt32)
+    /// The relay type with its associated value.
+    case relay(value: Data)
+
+    /// The author type with its associated value.
+    case author(value: Data)
+
+    /// The kind type with its associated value.
+    case kind(value: Data)
 
     /// An unknown type.
     case unknown
@@ -39,20 +39,13 @@ enum TLVElement {
             let element: TLVElement
             switch type {
             case .special:
-                let valueString = SHA256Key.decode(base8: value) // AAAAAAAAAAAGHGHGHGHGHH THIS DOESN'T WORK FOR NADDR WHICH IS THE ONLY .special THAT NEEDS String(data: value, encoding: .ascii)
-                element = .special(value: valueString)
+                element = .special(value: value)
             case .relay:
-                if let valueString = String(data: value, encoding: .ascii) {
-                    element = .relay(value: valueString)
-                } else {
-                    element = .unknown
-                }
+                element = .relay(value: value)
             case .author:
-                let valueString = SHA256Key.decode(base8: value)
-                element = .author(value: valueString)
+                element = .author(value: value)
             case .kind:
-                let valueInt = UInt32(bigEndian: value.withUnsafeBytes { $0.load(as: UInt32.self) })
-                element = .kind(value: valueInt)
+                element = .kind(value: value)
             case nil:
                 element = .unknown
             }

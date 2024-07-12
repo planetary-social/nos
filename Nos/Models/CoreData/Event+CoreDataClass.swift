@@ -417,7 +417,7 @@ public class Event: NosManagedObject, VerifiableEvent {
     @nonobjc public class func event(by replaceableID: RawReplaceableID, author: Author) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "replaceableIdentifier = %@ AND author = %@", replaceableID, author)
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.identifier, ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.replaceableIdentifier, ascending: true)]
         fetchRequest.fetchLimit = 1
         return fetchRequest
     }
@@ -614,13 +614,13 @@ public class Event: NosManagedObject, VerifiableEvent {
         authorID: RawAuthorID,
         context: NSManagedObjectContext
     ) throws -> Event {
-        if let author = try Author.find(by: authorID, context: context),
-            let existingEvent = try context.fetch(Event.event(by: replaceableID, author: author)).first {
+        let author = try Author.findOrCreate(by: authorID, context: context)
+        if let existingEvent = try context.fetch(Event.event(by: replaceableID, author: author)).first {
             return existingEvent
         } else {
             let event = Event(context: context)
             event.replaceableIdentifier = replaceableID
-            event.author = try Author.findOrCreate(by: authorID, context: context)
+            event.author = author
             return event
         }
     }
@@ -941,7 +941,7 @@ public class Event: NosManagedObject, VerifiableEvent {
     /// Returns true if this event doesn't have content. Usually this means we saw it referenced by another event
     /// but we haven't actually downloaded it yet.
     var isStub: Bool {
-        author == nil || createdAt == nil 
+        author == nil || createdAt == nil || identifier == nil
     }
     
     func calculateIdentifier() throws -> String {

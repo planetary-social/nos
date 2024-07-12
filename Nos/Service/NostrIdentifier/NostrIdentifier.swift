@@ -80,9 +80,11 @@ enum NostrIdentifier {
         for element in tlvElements {
             switch element {
             case .special(let value):
-                publicKey = value
+                publicKey = SHA256Key.decode(base8: value)
             case .relay(let value):
-                relays.append(value)
+                if let string = String(data: value, encoding: .ascii) {
+                    relays.append(string)
+                }
             default:
                 break
             }
@@ -104,13 +106,15 @@ enum NostrIdentifier {
         for element in tlvElements {
             switch element {
             case .special(let value):
-                eventID = value
+                eventID = SHA256Key.decode(base8: value)
             case .relay(let value):
-                relays.append(value)
+                if let string = String(data: value, encoding: .ascii) {
+                    relays.append(string)
+                }
             case .author(let value):
-                publicKey = value
+                publicKey = SHA256Key.decode(base8: value)
             case .kind(let value):
-                kind = value
+                kind = UInt32(bigEndian: value.withUnsafeBytes { $0.load(as: UInt32.self) })
             case .unknown:
                 break
             }
@@ -132,13 +136,17 @@ enum NostrIdentifier {
         for element in tlvElements {
             switch element {
             case .special(let value):
-                replaceableID = value
+                if let string = String(data: value, encoding: .ascii) {
+                    replaceableID = string
+                }
             case .relay(let value):
-                relays.append(value)
+                if let valueString = String(data: value, encoding: .ascii) {
+                    relays.append(valueString)
+                }
             case .author(let value):
-                authorID = value
+                authorID = SHA256Key.decode(base8: value)
             case .kind(let value):
-                kind = value
+                kind = UInt32(bigEndian: value.withUnsafeBytes { $0.load(as: UInt32.self) })
             case .unknown:
                 break
             }

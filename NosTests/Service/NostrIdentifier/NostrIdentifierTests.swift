@@ -140,7 +140,7 @@ class NostrIdentifierTests: XCTestCase {
         let identifier = try NostrIdentifier.decode(bech32String: naddr)
         switch identifier {
         case .naddr(let replaceableID, let relays, let authorID, let kind):
-            XCTAssertEqual(replaceableID, "38353534353634622d393864642d343838662d393333392d616630343137643938316132")
+            XCTAssertEqual(replaceableID, "8554564b-98dd-488f-9339-af0417d981a2")
             XCTAssertEqual(relays.count, 1)
             let firstRelay = try XCTUnwrap(relays.first)
             XCTAssertEqual(firstRelay, "wss://nostr.wine/")
@@ -159,7 +159,7 @@ class NostrIdentifierTests: XCTestCase {
         let identifier = try NostrIdentifier.decode(bech32String: naddr)
         switch identifier {
         case .naddr(let replaceableID, let relays, let authorID, let kind):
-            XCTAssertEqual(replaceableID, "33333535393033303038353530303734")
+            XCTAssertEqual(replaceableID, "3355903008550074")
             XCTAssertEqual(relays.count, 9)
             let firstRelay = try XCTUnwrap(relays.first)
             XCTAssertEqual(firstRelay, "wss://140.f7z.io/")
@@ -178,7 +178,7 @@ class NostrIdentifierTests: XCTestCase {
         let identifier = try NostrIdentifier.decode(bech32String: naddr)
         switch identifier {
         case .naddr(let replaceableID, let relays, let authorID, let kind):
-            XCTAssertEqual(replaceableID, "3861663065303433")
+            XCTAssertEqual(replaceableID, "8af0e043")
             XCTAssertEqual(relays.count, 1)
             let firstRelay = try XCTUnwrap(relays.first)
             XCTAssertEqual(firstRelay, "wss://fiatjaf.com")
@@ -197,7 +197,7 @@ class NostrIdentifierTests: XCTestCase {
         let identifier = try NostrIdentifier.decode(bech32String: naddr)
         switch identifier {
         case .naddr(let replaceableID, let relays, let authorID, let kind):
-            XCTAssertEqual(replaceableID, "54476e425268392d62316a7271534a2d4279575178")
+            XCTAssertEqual(replaceableID, "TGnBRh9-b1jrqSJ-ByWQx")
             XCTAssertEqual(relays.count, 0)
             XCTAssertEqual(authorID, "0267aa3d92d2a479ad6bccdc6fe7657037deab4b77a8bbcfd3663b0eef196b58")
             XCTAssertEqual(kind, 30_023)
