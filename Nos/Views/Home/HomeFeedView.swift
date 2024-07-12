@@ -14,13 +14,18 @@ struct HomeFeedView: View {
     @FetchRequest private var authors: FetchedResults<Author>
     
     @State private var lastRefreshDate = Date(
-        timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime)
+        timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.staticLoadTime)
     )
     @State private var isVisible = false
     @State private var relaySubscriptions = [SubscriptionCancellable]()
-    @State private var performingInitialLoad = true
     @State private var isShowingRelayList = false
-    static let initialLoadTime = 2
+    
+    /// When set to true this will display a fullscreen progress wheel for a set amount of time to give us a chance
+    /// to get some data from relay. The amount of time is defined in `staticLoadTime`.
+    @State private var showTimedLoadingIndicator = true
+    
+    /// The amount of time the loading indicator will be shown when showTimedLoadingIndicator is set to true.
+    static let staticLoadTime = 2
 
     @ObservedObject var user: Author
 
@@ -53,7 +58,7 @@ struct HomeFeedView: View {
         if selectedRelay == nil {
             filter.authorKeys = user.followedKeys
         } else {
-            filter.kinds = filter.kinds + [.report]
+            filter.kinds += [.report]
         }
         return filter
     }
@@ -133,10 +138,10 @@ struct HomeFeedView: View {
             .opacity(isShowingStories ? 1 : 0)
             .animation(.default, value: selectedStoryAuthor)
             
-            if performingInitialLoad {
+            if showTimedLoadingIndicator {
                 FullscreenProgressView(
-                    isPresented: $performingInitialLoad,
-                    hideAfter: .now() + .seconds(Self.initialLoadTime)
+                    isPresented: $showTimedLoadingIndicator,
+                    hideAfter: .now() + .seconds(Self.staticLoadTime)
                 )
             } 
             
@@ -148,8 +153,11 @@ struct HomeFeedView: View {
                     isPresented: $showRelayPicker
                 )
                 .onChange(of: selectedRelay) { _, _ in
-                    withAnimation {
-                        showRelayPicker = false
+                    showTimedLoadingIndicator = true
+                    Task {
+                        withAnimation {
+                            showRelayPicker = false
+                        }
                     }
                 }
             }
