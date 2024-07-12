@@ -205,6 +205,7 @@ struct HomeFeedView: View {
                             .foregroundStyle(Color.secondaryTxt)
                             .accessibilityLabel(Text(.localizable.filter))
                     }
+                    .frame(minWidth: 40, minHeight: 40)
                 }
             }
         }

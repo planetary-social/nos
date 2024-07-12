@@ -21,6 +21,12 @@ struct RelayPicker: View {
         VStack(spacing: 0) {
             
             let pickerRows = VStack(spacing: 0) {
+                // shadow effect at the top
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundStyle(.clear)
+                    .shadow(radius: 15, y: 10)
+                
                 RelayPickerRow(string: defaultSelection, selection: $selectedRelay)
                 ForEach(relays) { relay in
                     
@@ -40,12 +46,6 @@ struct RelayPicker: View {
             .readabilityPadding()
             
             VStack(spacing: 0) {
-                // shadow effect at the top
-                Rectangle()
-                    .frame(height: 1)
-                    .foregroundStyle(.clear)
-                    .shadow(radius: 15, y: 10)
-                
                 ViewThatFits(in: .vertical) {
                     VStack {
                         pickerRows
