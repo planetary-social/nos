@@ -37,25 +37,26 @@ enum DeepLinkService {
             router.showNewNoteView(contents: noteContents)
         } else {
             /// Check for links like nos:nevent123174
-            let firstPathComponent = components.path
-            // swiftlint:disable:next opening_brace 
-            let unformattedRegex = /(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,255}))/
+            guard let host = components.host else {
+                Log.debug("No host in `nos:` deep link; cannot open. URLComponents: \(components)")
+                return
+            }
+            // swiftlint:disable:next opening_brace
+            let unformattedRegex = /(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,}))/
             do {
-                if let match = try unformattedRegex.firstMatch(in: firstPathComponent) {
+                if let match = try unformattedRegex.firstMatch(in: host) {
                     let entity = match.1
                     let string = String(entity)
-                    
-                    let (humanReadablePart, checksum) = try Bech32.decode(string)
-                    
-                    if humanReadablePart == Nostr.publicKeyPrefix, let hex = SHA256Key.decode(base5: checksum) {
-                        router.pushAuthor(id: hex)
-                    } else if humanReadablePart == Nostr.notePrefix, let hex = SHA256Key.decode(base5: checksum) {
-                        router.pushNote(id: hex)
-                    } else if humanReadablePart == Nostr.profilePrefix, let hex = TLV.decode(checksum: checksum) {
-                        router.pushAuthor(id: hex)
-                    } else if humanReadablePart == Nostr.eventPrefix, let hex = TLV.decode(checksum: checksum) {
-                        router.pushNote(id: hex)
-                    } 
+
+                    let identifier = try NostrIdentifier.decode(bech32String: string)
+                    switch identifier {
+                    case .npub(let rawAuthorID), .nprofile(let rawAuthorID, _):
+                        router.pushAuthor(id: rawAuthorID)
+                    case .note(let rawEventID), .nevent(let rawEventID, _, _, _):
+                        router.pushNote(id: rawEventID)
+                    case .naddr:
+                        break
+                    }
                 }
             } catch {
                 Log.optional(error)

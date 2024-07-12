@@ -12,6 +12,7 @@ import Dependencies
     @ObservationIgnored @Dependency(\.pushNotificationService) private var pushNotificationService
     @ObservationIgnored @Dependency(\.relayService) private var relayService
     @ObservationIgnored @Dependency(\.unsAPI) private var unsAPI
+    @ObservationIgnored @Dependency(\.keychain) private var keychain
     
     // TODO: it's time to cache this
     var keyPair: KeyPair? {
@@ -33,7 +34,7 @@ import Dependencies
     
     @MainActor func setPrivateKeyHex(_ newValue: String?) async {
         guard let privateKeyHex = newValue else {
-            let publicStatus = KeyChain.delete(key: KeyChain.keychainPrivateKey)
+            let publicStatus = keychain.delete(key: keychain.keychainPrivateKey)
             _privateKeyHex = nil
             reset()
             print("Deleted private key from keychain with status: \(publicStatus)")
@@ -46,7 +47,7 @@ import Dependencies
         }
         
         let privateKeyData = Data(privateKeyHex.utf8)
-        let status = KeyChain.save(key: KeyChain.keychainPrivateKey, data: privateKeyData)
+        let status = keychain.save(key: keychain.keychainPrivateKey, data: privateKeyData)
         let hex = keyPair.publicKeyHex
         let npub = keyPair.npub
         Log.info("Saved private key to keychain for user: " + "\(hex) / \(npub). Keychain storage status: \(status)")
@@ -81,7 +82,7 @@ import Dependencies
         self.viewContext = persistenceController.viewContext
         self.backgroundContext = persistenceController.newBackgroundContext()
         self.socialGraph = SocialGraphCache(userKey: nil, context: persistenceController.newBackgroundContext())
-        if let privateKeyData = KeyChain.load(key: KeyChain.keychainPrivateKey) {
+        if let privateKeyData = keychain.load(key: keychain.keychainPrivateKey) {
             Log.info("CurrentUser loaded a private key from keychain")
             let hexString = String(decoding: privateKeyData, as: UTF8.self)
             _privateKeyHex = hexString

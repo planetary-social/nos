@@ -1,12 +1,22 @@
 import Security
 import UIKit
 
+@MainActor protocol Keychain {
+    
+    var keychainPrivateKey: String { get }
+    
+    func save(key: String, data: Data) -> OSStatus 
+    func load(key: String) -> Data? 
+    func delete(key: String) -> OSStatus 
+}
+
 /// Don't use this outside CurrentUser
-enum KeyChain {
-    static let keychainPrivateKey = "privateKey"
+class SystemKeychain: Keychain {
+    
+    let keychainPrivateKey = "privateKey"
         
     @discardableResult
-    static func save(key: String, data: Data) -> OSStatus {
+    func save(key: String, data: Data) -> OSStatus {
         let query =
 		[
             kSecClass as String: kSecClassGenericPassword as String,
@@ -20,7 +30,7 @@ enum KeyChain {
         return SecItemAdd(query as CFDictionary, nil)
     }
     
-	static func load(key: String) -> Data? {
+	func load(key: String) -> Data? {
         let query =
 		[
             kSecClass as String: kSecClassGenericPassword,
@@ -40,7 +50,7 @@ enum KeyChain {
         }
     }
     
-    static func delete(key: String) -> OSStatus {
+    func delete(key: String) -> OSStatus {
         let query =
         [
             kSecClass as String: kSecClassGenericPassword as String,
@@ -48,5 +58,26 @@ enum KeyChain {
         ] as [String: Any]
         
         return SecItemDelete(query as CFDictionary)
+    }
+}
+
+class InMemoryKeychain: Keychain {
+    
+    let keychainPrivateKey = "privateKey"
+    
+    private var keychain = [String: Data]()
+    
+    func save(key: String, data: Data) -> OSStatus {
+        keychain[key] = data
+        return 0
+    }
+    
+    func load(key: String) -> Data? {
+        keychain[key]
+    }
+    
+    func delete(key: String) -> OSStatus {
+        keychain.removeValue(forKey: key)
+        return 0
     }
 }
