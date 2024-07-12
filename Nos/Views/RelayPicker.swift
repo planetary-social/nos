@@ -53,7 +53,9 @@ struct RelayPicker: View {
                             .contentShape(Rectangle())
                             .frame(minHeight: 0)
                             .onTapGesture { 
-                                isPresented = false
+                                withAnimation {
+                                    isPresented = false
+                                }
                             }
                     }
                     ScrollView {
@@ -61,9 +63,8 @@ struct RelayPicker: View {
                     }
                 }
             }
-            .transition(.move(edge: .top))
-            
         }
+        .transition(.move(edge: .top))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .zIndex(99) // Fixes dismissal animation
     }
