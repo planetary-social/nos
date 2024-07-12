@@ -169,4 +169,40 @@ class NostrIdentifierTests: XCTestCase {
             XCTFail("Expected to get a naddr")
         }
     }
+
+    /// Example taken from note1tq4d6t3ekq2r52z2t2hqkusjcecv4qmaqjyddhzrzn3whphp69wqm833es
+    func test_naddr_3() throws {
+        // swiftlint:disable:next line_length
+        let naddr = "naddr1qqyrsctxxpjnqdpnqyghwumn8ghj7enfv96x5ctx9e3k7mgzyqalp33lewf5vdq847t6te0wvnags0gs0mu72kz8938tn24wlfze6qcyqqq823c4p5dms"
+
+        let identifier = try NostrIdentifier.decode(bech32String: naddr)
+        switch identifier {
+        case .naddr(let eventID, let relays, let eventPublicKey, let kind):
+            XCTAssertEqual(eventID, "3861663065303433")
+            XCTAssertEqual(relays.count, 1)
+            let firstRelay = try XCTUnwrap(relays.first)
+            XCTAssertEqual(firstRelay, "wss://fiatjaf.com")
+            XCTAssertEqual(eventPublicKey, "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d")
+            XCTAssertEqual(kind, 30_023)
+        default:
+            XCTFail("Expected to get a naddr")
+        }
+    }
+
+    /// Example taken from note1tyt3a7tqxhgvvve87jzxpsndguw6vq29qfuenau40kartujlrppq5zmncg
+    func test_naddr_4() throws {
+        // swiftlint:disable:next line_length
+        let naddr = "naddr1qvzqqqr4gupzqqn84g7e954y0xkkhnxudlnk2uphm645kaagh08axe3mpmh3j66cqq24g3mwgffxswfdvgck5un32d9z6sne2aghskj3r5v"
+
+        let identifier = try NostrIdentifier.decode(bech32String: naddr)
+        switch identifier {
+        case .naddr(let eventID, let relays, let eventPublicKey, let kind):
+            XCTAssertEqual(eventID, "54476e425268392d62316a7271534a2d4279575178")
+            XCTAssertEqual(relays.count, 0)
+            XCTAssertEqual(eventPublicKey, "0267aa3d92d2a479ad6bccdc6fe7657037deab4b77a8bbcfd3663b0eef196b58")
+            XCTAssertEqual(kind, 30_023)
+        default:
+            XCTFail("Expected to get a naddr")
+        }
+    }
 }
