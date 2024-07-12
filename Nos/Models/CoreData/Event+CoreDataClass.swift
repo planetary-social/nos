@@ -331,7 +331,7 @@ public class Event: NosManagedObject, VerifiableEvent {
     ///
     /// Intented to be used primarily to compute the number of replies and for
     /// building a set of author avatars.
-    @nonobjc public class func replies(to noteIdentifier: String) -> FetchRequest<Event> {
+    @nonobjc public class func replies(to noteID: RawEventID) -> FetchRequest<Event> {
         let format = """
             SUBQUERY(
                 eventReferences,
@@ -346,8 +346,8 @@ public class Event: NosManagedObject, VerifiableEvent {
                 NSPredicate(format: "kind = 1"),
                 NSPredicate(
                     format: format,
-                    noteIdentifier,
-                    noteIdentifier
+                    noteID,
+                    noteID
                 ),
                 NSPredicate(format: "deletedOn.@count = 0"),
                 NSPredicate(format: "author.muted = false")

@@ -31,12 +31,12 @@ struct NoteButton: View {
     /// Initializes a NoteButton object.
     ///
     /// - Parameter note: Note event to display.
-    /// - Parameter style: Card style. Defaults to `comapact`.
+    /// - Parameter style: Card style. Defaults to `.compact`.
     /// - Parameter shouldTruncate: Whether the card should display just some lines or the
     /// full content of the note. Defaults to true.
     /// - Parameter hideOutOfNetwork: Blur the card if the author is not inside the user's
     /// network. Defaults to true.
-    /// - Parameter repliesDisplayType: Replies Label style. Defaults to `displayNothing`.
+    /// - Parameter repliesDisplayType: Replies Label style. Defaults to `.displayNothing`.
     /// - Parameter fetchReplies: Whether replies should be fetched from relays. Defaults
     /// to false.
     /// - Parameter displayRootMessage: Display the root note above if the note is a reply.
