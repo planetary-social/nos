@@ -12,24 +12,25 @@ import CoreData
 /// and inject it into the view using the `inject(previewData:)` view modifier.
 struct PreviewData {
     
+    let currentUserKey: KeyPair 
+    
+    init(currentUserKey: KeyPair = KeyFixture.keyPair) {
+        self.currentUserKey = currentUserKey
+        Task { [currentUser] in
+            await currentUser.setPrivateKeyHex(currentUserKey.privateKeyHex)
+        }
+    }
+    
     // MARK: - Environment
     @Dependency(\.persistenceController) var persistenceController 
     @Dependency(\.router) var router
     @Dependency(\.relayService) var relayService
+    @Dependency(\.currentUser) var currentUser
     
     lazy var previewContext: NSManagedObjectContext = {
         persistenceController.container.viewContext  
     }()
     
-    // MARK: - User
-
-    @MainActor lazy var currentUser: CurrentUser = {
-        let currentUser = CurrentUser()
-        currentUser.viewContext = previewContext
-        Task { await currentUser.setKeyPair(KeyFixture.keyPair) }
-        return currentUser
-    }()
-
     // MARK: - Authors
     
     lazy var previewAuthor: Author = {

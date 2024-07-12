@@ -79,6 +79,11 @@ extension DependencyValues {
         get { self[FeatureFlagsKey.self] }
         set { self[FeatureFlagsKey.self] = newValue }
     }
+        
+    var keychain: Keychain {
+        get { self[KeychainKey.self] }
+        set { self[KeychainKey.self] = newValue }
+    }
 }
 
 fileprivate enum AnalyticsKey: DependencyKey {
@@ -164,4 +169,10 @@ fileprivate enum FeatureFlagsKey: DependencyKey {
     static let liveValue: any FeatureFlags = DefaultFeatureFlags.liveValue
     static let testValue: any FeatureFlags = MockFeatureFlags()
     static let previewValue: any FeatureFlags = MockFeatureFlags()
+}
+
+fileprivate enum KeychainKey: DependencyKey {
+    @MainActor static let liveValue: Keychain = SystemKeychain()
+    @MainActor static let testValue: Keychain = InMemoryKeychain()
+    @MainActor static let previewValue: Keychain = InMemoryKeychain()
 }

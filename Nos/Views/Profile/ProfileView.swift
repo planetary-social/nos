@@ -240,15 +240,8 @@ struct ProfileView: View {
     lazy var previewContext: NSManagedObjectContext = {
         persistenceController.container.viewContext  
     }()
-
-    lazy var currentUser: CurrentUser = {
-        let currentUser = CurrentUser()
-        currentUser.viewContext = previewContext
-        Task { await currentUser.setKeyPair(KeyFixture.eve) }
-        return currentUser
-    }() 
     
-    var previewData = PreviewData(currentUser: currentUser)
+    var previewData = PreviewData(currentUserKey: KeyFixture.eve)
     
     return NavigationStack {
         ProfileView(author: previewData.eve)

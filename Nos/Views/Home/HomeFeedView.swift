@@ -188,57 +188,14 @@ struct HomeFeedView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+#Preview {
+    var previewData = PreviewData()
     
-    static var previewData = PreviewData()
-    static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
-    static var relayService = previewData.relayService
-    
-    static var emptyPersistenceController = PersistenceController.empty
-    static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = previewData.relayService
-    
-    static var router = Router()
-    
-    static var currentUser = previewData.currentUser
-    
-    static var shortNote: Event {
-        let note = Event(context: previewContext)
-        note.identifier = "p1"
-        note.kind = 1
-        note.content = "Hello, world!"
-        note.author = currentUser.author
-        return note
+    return NavigationStack {
+        HomeFeedView(user: previewData.alice)
     }
-    
-    static var longNote: Event {
-        let note = Event(context: previewContext)
-        note.identifier = "p2"
-        note.kind = 1
-        note.content = .loremIpsum(5)
-        note.author = currentUser.author
-        return note
-    }
-    
-    static var user: Author {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
-        return author
-    }
-    
-    static var previews: some View {
-        HomeFeedView(user: user)
-            .inject(previewData: previewData)
-            .onAppear {
-                print(shortNote)
-                print(longNote)
-            }
-        
-        HomeFeedView(user: user)
-            .environment(\.managedObjectContext, emptyPreviewContext)
-            .environmentObject(emptyRelayService)
-            .environmentObject(router)
-            .environment(currentUser)
+    .inject(previewData: previewData)
+    .onAppear {
+        _ = previewData.shortNote
     }
 }
