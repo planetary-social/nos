@@ -7,6 +7,7 @@ struct Filter: Hashable, Identifiable {
     let authorKeys: [RawAuthorID]
     let eventIDs: [RawEventID]
     let kinds: [EventKind]
+    let dTags: [RawReplaceableID]
     let eTags: [RawEventID]
     let pTags: [RawAuthorID]
     let search: String?
@@ -19,6 +20,7 @@ struct Filter: Hashable, Identifiable {
         authorKeys: [RawAuthorID] = [],
         eventIDs: [RawEventID] = [],
         kinds: [EventKind] = [],
+        dTags: [RawReplaceableID] = [],
         eTags: [RawEventID] = [],
         pTags: [RawAuthorID] = [],
         search: String? = nil,
@@ -30,6 +32,7 @@ struct Filter: Hashable, Identifiable {
         self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
         self.eventIDs = eventIDs
         self.kinds = kinds.sorted(by: { $0.rawValue > $1.rawValue })
+        self.dTags = dTags
         self.eTags = eTags
         self.pTags = pTags
         self.search = search
@@ -57,7 +60,11 @@ struct Filter: Hashable, Identifiable {
         if !kinds.isEmpty {
             filterDict["kinds"] = kinds.map({ $0.rawValue })
         }
-        
+
+        if !dTags.isEmpty {
+            filterDict["#d"] = dTags
+        }
+
         if !eTags.isEmpty {
             filterDict["#e"] = eTags
         }
@@ -90,6 +97,7 @@ struct Filter: Hashable, Identifiable {
         hasher.combine(eventIDs)
         hasher.combine(kinds)
         hasher.combine(limit)
+        hasher.combine(dTags)
         hasher.combine(eTags)
         hasher.combine(pTags)
         hasher.combine(search)
@@ -104,6 +112,7 @@ struct Filter: Hashable, Identifiable {
             eventIDs.joined(separator: ","),
             kinds.map { String($0.rawValue) }.joined(separator: ","),
             limit?.description ?? "nil",
+            dTags.joined(separator: ","),
             eTags.joined(separator: ","),
             pTags.joined(separator: ","),
             search ?? "nil",

@@ -69,6 +69,17 @@ import Dependencies
         }
     }    
     
+    /// Pushes a detail view for the event with the given dTag, creating one if needed.
+    func pushNote(dTag: RawReplaceableID, authorID: RawAuthorID) {
+        do {
+            let note = try Event.findOrCreateStubBy(replaceableID: dTag, authorID: authorID, context: persistenceController.viewContext)
+            push(note)
+        } catch {
+            Log.optional(error)
+            crashReporting.report(error)
+        }
+    }    
+    
     /// Pushes a profile view for the given author.
     func push(_ author: Author) {
         push(.author(author.hexadecimalPublicKey))
@@ -152,6 +163,13 @@ extension Router {
                     }
                 } else if link.hasPrefix("%") {
                     pushNote(id: identifier)
+                } else if link.hasPrefix("$") {
+                    let parts = identifier.split(separator: ",").map { String($0) }
+                    guard let dTag = parts.first, let authorID = parts.last else {
+                        Log.debug("Something went wrong in parsing the dTag and author from the naddr link")
+                        return
+                    }
+                    pushNote(dTag: dTag, authorID: authorID)
                 } else if url.scheme == "http" || url.scheme == "https" {
                     push(url)
                 } else {

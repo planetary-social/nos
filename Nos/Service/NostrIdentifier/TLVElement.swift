@@ -39,7 +39,7 @@ enum TLVElement {
             let element: TLVElement
             switch type {
             case .special:
-                let valueString = SHA256Key.decode(base8: value)
+                let valueString = SHA256Key.decode(base8: value) // AAAAAAAAAAAGHGHGHGHGHH THIS DOESN'T WORK FOR NADDR WHICH IS THE ONLY .special THAT NEEDS String(data: value, encoding: .ascii)
                 element = .special(value: valueString)
             case .relay:
                 if let valueString = String(data: value, encoding: .ascii) {

@@ -414,6 +414,14 @@ public class Event: NosManagedObject, VerifiableEvent {
         return fetchRequest
     }
     
+    @nonobjc public class func event(by replaceableID: RawReplaceableID, author: Author) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.predicate = NSPredicate(format: "replaceableIdentifier = %@ AND author = %@", replaceableID, author)
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.identifier, ascending: true)]
+        fetchRequest.fetchLimit = 1
+        return fetchRequest
+    }
+    
     @nonobjc public class func hydratedEvent(by identifier: String) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(
@@ -587,6 +595,32 @@ public class Event: NosManagedObject, VerifiableEvent {
         } else {
             let event = Event(context: context)
             event.identifier = id
+            return event
+        }
+    }
+
+    /// Fetches the event with the given replaceable ID and author ID out of the database, and otherwise
+    /// creates a stubbed Event.
+    /// A stubbed event only has an `replaceableIdentifier` - we know an event with this identifier exists but we don't
+    /// have its content or tags yet.
+    ///  
+    /// - Parameters:
+    ///   - replaceableID: The replaceable ID of the event. In some, most, or all cases, this is the `d` tag.
+    ///   - authorID: The public key of the author associated with the event.
+    ///   - context: The managed object context to use.
+    /// - Returns: The Event model with the given ID.
+    class func findOrCreateStubBy(
+        replaceableID: RawReplaceableID,
+        authorID: RawAuthorID,
+        context: NSManagedObjectContext
+    ) throws -> Event {
+        if let author = try Author.find(by: authorID, context: context),
+            let existingEvent = try context.fetch(Event.event(by: replaceableID, author: author)).first {
+            return existingEvent
+        } else {
+            let event = Event(context: context)
+            event.replaceableIdentifier = replaceableID
+            event.author = try Author.findOrCreate(by: authorID, context: context)
             return event
         }
     }
@@ -838,7 +872,11 @@ public class Event: NosManagedObject, VerifiableEvent {
     /// Tries to download this event from relays.
     @MainActor private func loadContent() async {
         @Dependency(\.relayService) var relayService
-        relaySubscriptions.append(await relayService.requestEvent(with: identifier))
+        if let identifier {
+            relaySubscriptions.append(await relayService.requestEvent(with: identifier))
+        } else if let replaceableIdentifier, let authorKey = author?.hexadecimalPublicKey {
+            relaySubscriptions.append(await relayService.requestEvent(with: replaceableIdentifier, authorKey: authorKey))
+        }
     }
     
     /// Requests any missing metadata for authors referenced by this note from relays.

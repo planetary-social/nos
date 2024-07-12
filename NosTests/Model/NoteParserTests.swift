@@ -261,4 +261,28 @@ final class NoteParserTests: CoreDataTestCase {
         let links = attributedContent.links
         XCTAssertEqual(links.count, 0)
     }
+    
+    @MainActor func testContentWithNAddr() throws {
+        let naddrLink = "$33333535393033303038353530303734,fa984bd7dbb282f07e16e7ae87b26a2a7b9b90b7246a44771f0cf5ae58018f52"
+
+        let content = """
+        People are using Coracle's custom feeds! Here are some interesting ones:\n\nnostr:naddr1qvzqqqrujgpzp75cf0tahv5z7plpdeaws7ex52nmnwgtwfr2g3m37r844evqrr6jqyghwumn8ghj7vf5xqhxvdm69e5k7tcpzdmhxue69uhhqatjwpkx2urpvuhx2ue0qythwumn8ghj7un9d3shjtnswf5k6ctv9ehx2ap0qy2hwumn8ghj7un9d3shjtnyv9kh2uewd9hj7qg6waehxw309ac8junpd45kgtnxd9shg6npvchxxmmd9uq3xamnwvaz7tmjv4kxz7fwvcmh5tnfduhsz9thwden5te0wfjkccte9ejhs6t59ec82c30qyf8wumn8ghj7un9d3shjtn5dahkcue0qy88wumn8ghj7mn0wvhxcmmv9uqpqvenx56njvpnxqcrsdf4xqcrwdqufrevn\nnostr:naddr1qvzqqqrujgpzqlxr9zsgmke2lhuln0nhhml5eq6gnluhjuscyltz3f2z7v4zglqwqyghwumn8ghj7mn0wd68ytnhd9hx2tcpzfmhxue69uhkummnw3eryvfwvdhk6tcpr4mhxue69uhksmm5wf5kw6r5dehhwtnwdaehgu339e3k7mf0qydhwumn8ghj7argv4nx7un9wd6zumn0wd68yvfwvdhk6tcpr4mhxue69uhkummnw3ezumt4w35ku7thv9kxcet59e3k7mf0qyt8wumn8ghj7cn9wehjumn0wd68yvfwvdhk6tcprfmhxue69uhkummnw3ezuargv4ekzmt9vdshgtnfduhszxnhwden5te0wpex7enfd3jhxtnwdaehgu339e3k7mf0qy2hwumn8ghj7un9d3shjtnyv9kh2uewd9hj7qgwwaehxw309ahx7uewd3hkctcqzycrgvpsxy6nwwfhxqer2wpjxycrx895qk5\nnostr:naddr1qvzqqqrujgpzqczwjmsfnym2zpyg89vtqs95weewpuzgex9v0yln0llycusz084jqyghwumn8ghj7mn0wd68ytnhd9hx2tcpz4mhxue69uhhyetvv9ujuerpd46hxtnfduhszymhwden5te0wp6hyurvv4cxzeewv4ej7qghwaehxw309aex2mrp0yhxummnw3ezucnpdejz7qghwaehxw309aex2mrp0yh8qunfd4skctnwv46z7qgawaehxw309ahx7um5wghx6at5d9h8jampd3kx2apwvdhk6tcppemhxue69uhkummn9ekx7mp0qqgrvdps8ymnqvf3xcersdfhxqmryx9hdms\nnostr:naddr1qvzqqqrujgpzq3an3axnwgfep4dkhmmcmt3l8cug3mxm7xzylwenhzrjr5mx6hygqy2hwumn8ghj7un9d3shjtnyv9kh2uewd9hj7qghwaehxw309aex2mrp0yhxummnw3ezucnpdejz7qg3waehxw309ahx7um5wgh8w6twv5hsz9mhwden5te0wfjkccte9cc8scmgv96zucm0d5hszrnhwden5te0dehhxtnvdakz7qqsxgurwdpkxg6nwdf58qer2ve3xvwjjnjg\n\nI encourage you to try it out — create your own and paste its address into a reply to this note to share it.
+        """
+        let tags: [[String]] = [[]]
+        
+        let expectedContent = "People are using Coracle's custom feeds! Here are some interesting ones:\n\n🔗 Link to note\n🔗 Link to note\n🔗 Link to note\n🔗 Link to note\n\nI encourage you to try it out — create your own and paste its address into a reply to this note to share it."
+        let (attributedContent, _) = sut.parse(
+            content: content,
+            tags: tags,
+            context: testContext
+        )
+        
+        let parsedContent = String(attributedContent.characters)
+        XCTAssertEqual(parsedContent, expectedContent)
+        
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 4)
+        XCTAssertEqual(links[safe: 0]?.key, "🔗 Link to note")
+        XCTAssertEqual(links[safe: 0]?.value, URL(string: naddrLink))
+    }
 }

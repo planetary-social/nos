@@ -24,7 +24,7 @@ enum NostrIdentifier {
     case nevent(eventID: RawEventID, relays: [String], eventPublicKey: String?, kind: UInt32?)
 
     /// A nostr replaceable event coordinate
-    case naddr(eventID: RawEventID, relays: [String], eventPublicKey: String, kind: UInt32)
+    case naddr(replaceableID: RawReplaceableID, relays: [String], authorID: RawAuthorID, kind: UInt32)
 
     /// A nostr address
 
@@ -125,18 +125,18 @@ enum NostrIdentifier {
     private static func decodeNostrAddress(data: Data) throws -> NostrIdentifier {
         let tlvElements = TLVElement.decodeElements(data: data)
 
-        var eventID = ""
+        var replaceableID = ""
         var relays: [String] = []
-        var publicKey: String = ""
+        var authorID: String = ""
         var kind = UInt32.max
         for element in tlvElements {
             switch element {
             case .special(let value):
-                eventID = value
+                replaceableID = value
             case .relay(let value):
                 relays.append(value)
             case .author(let value):
-                publicKey = value
+                authorID = value
             case .kind(let value):
                 kind = value
             case .unknown:
@@ -144,6 +144,6 @@ enum NostrIdentifier {
             }
         }
 
-        return .naddr(eventID: eventID, relays: relays, eventPublicKey: publicKey, kind: kind)
+        return .naddr(replaceableID: replaceableID, relays: relays, authorID: authorID, kind: kind)
     }
 }
