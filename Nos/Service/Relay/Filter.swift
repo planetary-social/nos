@@ -128,26 +128,19 @@ struct Filter: Hashable, Identifiable {
     }
 
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(authorKeys)
+        hasher.combine(eventIDs)
+        hasher.combine(kinds)
+        hasher.combine(limit)
+        hasher.combine(eTags)
+        hasher.combine(pTags)
+        hasher.combine(search)
+        hasher.combine(since)
+        hasher.combine(until)
+        hasher.combine(keepSubscriptionOpen)
     }
     
     var id: String {
-        let intermediate: [String] = [
-            authorKeys.joined(separator: ","),
-            eventIDs.joined(separator: ","),
-            kinds.map { String($0.rawValue) }.joined(separator: ","),
-            limit?.description ?? "nil",
-            eTags.joined(separator: ","),
-            pTags.joined(separator: ","),
-            search ?? "nil",
-            keepSubscriptionOpen.description,
-            since?.timeIntervalSince1970.description ?? "nil",
-            until?.timeIntervalSince1970.description ?? "nil"
-        ]
-        
-        return intermediate
-            .joined(separator: "|")
-            .data(using: .utf8)!
-            .sha256
+        hashValue.description
     }
 }
