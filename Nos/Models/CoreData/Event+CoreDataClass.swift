@@ -33,26 +33,6 @@ enum EventError: Error {
 	}
 }
 
-public enum EventKind: Int64, CaseIterable, Hashable {
-	case metaData = 0
-	case text = 1
-	case contactList = 3
-	case directMessage = 4
-	case delete = 5
-    case repost = 6
-	case like = 7
-    case seal = 13
-    case directMessageRumor = 14
-    case channelMessage = 42
-    case giftWrap = 1059
-    case label = 1985
-    case report = 1984
-    case notificationServiceRegistration = 6666
-    case mute = 10_000
-    case auth = 27_235
-    case longFormContent = 30_023
-}
-
 // swiftlint:disable type_body_length
 @objc(Event)
 @Observable
