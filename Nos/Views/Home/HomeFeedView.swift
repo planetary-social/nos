@@ -178,15 +178,6 @@ struct HomeFeedView: View {
             ToolbarItem(placement: .navigationBarLeading) {
                 SideMenuButton()
             }
-            RelayPickerToolbarButton(
-                selectedRelay: $selectedRelay,
-                isPresenting: $showRelayPicker,
-                defaultSelection: .localizable.allMyRelays
-            ) {
-                withAnimation {
-                    showRelayPicker.toggle()
-                }
-            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 if isShowingStories {
                     Button {
