@@ -109,7 +109,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     func staleSubscriptions() async -> [RelaySubscription] {
         var staleSubscriptions = [RelaySubscription]()
         for subscription in active {
-            if !subscription.closesAfterResponse, 
+            if subscription.closesAfterResponse, 
                 let filterStartedAt = subscription.subscriptionStartDate,
                 filterStartedAt.distance(to: .now) > 10 {
                 staleSubscriptions.append(subscription)

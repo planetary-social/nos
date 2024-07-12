@@ -98,8 +98,7 @@ import Combine
         let userMentionsFilter = Filter(
             kinds: [.text, .longFormContent, .like], 
             pTags: [authorKey], 
-            limit: 50,
-            keepSubscriptionOpen: true
+            limit: 50
         )
         relaySubscription = await relayService.fetchEvents(
             matching: userMentionsFilter
