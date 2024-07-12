@@ -115,7 +115,7 @@ struct ProfileView: View {
             FollowsView(title: .localizable.follows, authors: destination.follows)
         }
         .navigationDestination(for: FollowersDestination.self) { destination in
-            FollowsView(title: .localizable.followers, authors: destination.followers)
+            FollowsView(title: .localizable.mutualFriends, authors: destination.followers)
         }
         .navigationDestination(for: RelaysDestination.self) { destination in
             RelayView(author: destination.author, editable: false)
@@ -235,15 +235,8 @@ struct ProfileView: View {
     lazy var previewContext: NSManagedObjectContext = {
         persistenceController.container.viewContext  
     }()
-
-    lazy var currentUser: CurrentUser = {
-        let currentUser = CurrentUser()
-        currentUser.viewContext = previewContext
-        Task { await currentUser.setKeyPair(KeyFixture.eve) }
-        return currentUser
-    }() 
     
-    var previewData = PreviewData(currentUser: currentUser)
+    var previewData = PreviewData(currentUserKey: KeyFixture.eve)
     
     return NavigationStack {
         ProfileView(author: previewData.eve)
