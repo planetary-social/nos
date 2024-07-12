@@ -27,7 +27,7 @@ struct Filter: Hashable, Identifiable {
         since: Date? = nil,
         until: Date? = nil
     ) {
-        self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
+        self.authorKeys = authorKeys.sorted()
         self.eventIDs = eventIDs
         self.kinds = kinds.sorted(by: { $0.rawValue > $1.rawValue })
         self.eTags = eTags

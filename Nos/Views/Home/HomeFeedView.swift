@@ -56,7 +56,7 @@ struct HomeFeedView: View {
     var homeFeedFilter: Filter {
         var filter = Filter(kinds: [.text, .delete, .repost, .longFormContent])
         if selectedRelay == nil {
-            filter.authorKeys = user.followedKeys
+            filter.authorKeys = user.followedKeys.sorted()
         } else {
             filter.kinds += [.report]
         }
