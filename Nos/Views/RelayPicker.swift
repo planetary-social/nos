@@ -31,7 +31,13 @@ struct RelayPicker: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
-            .cornerRadius(15, corners: [.bottomLeft, .bottomRight])
+            .background(
+                Rectangle()
+                    .foregroundStyle(LinearGradient.cardBackground)
+                    .cornerRadius(20, corners: [.bottomLeft, .bottomRight])
+                    .shadow(radius: 15, y: 10)
+            ) 
+            .readabilityPadding()
             
             VStack(spacing: 0) {
                 // shadow effect at the top
@@ -41,25 +47,22 @@ struct RelayPicker: View {
                     .shadow(radius: 15, y: 10)
                 
                 ViewThatFits(in: .vertical) {
-                    pickerRows
+                    VStack {
+                        pickerRows
+                        Color.clear
+                            .contentShape(Rectangle())
+                            .frame(minHeight: 0)
+                            .onTapGesture { 
+                                isPresented = false
+                            }
+                    }
                     ScrollView {
                         pickerRows
                     }
                 }
             }
-            .background(
-                Rectangle()
-                    .foregroundStyle(LinearGradient.cardBackground)
-                    .cornerRadius(20, corners: [.bottomLeft, .bottomRight])
-                    .shadow(radius: 15, y: 10)
-            ) 
-            .readabilityPadding()
             .transition(.move(edge: .top))
             
-            Color.clear
-                .onTapGesture { 
-                    isPresented = false
-                }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .zIndex(99) // Fixes dismissal animation

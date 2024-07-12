@@ -243,7 +243,7 @@ struct HomeFeedView: View {
     
     func createTestData() {
         let user = previewData.alice
-        let addresses = Relay.allKnown
+        let addresses = Relay.recommended
         addresses.forEach { address in
             let relay = try? Relay.findOrCreate(by: address, context: previewData.previewContext)
             relay?.relayDescription = "A Nostr relay that aims to cultivate a healthy community."
