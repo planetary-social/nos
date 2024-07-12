@@ -55,7 +55,13 @@ import Dependencies
     
     /// Pushes a detail view for the given note.
     func push(_ note: Event) {
-        push(.note(note.identifier))
+        if let identifier = note.identifier {
+            push(.note(.identifier(identifier)))
+        } else if let replaceableIdentifier = note.replaceableIdentifier, let author = note.author {
+            push(.note(.replaceableIdentifier(replaceableID: replaceableIdentifier, author: author)))
+        } else {
+            push(.note(.identifier(note.identifier))) // TODO: ??? this isn't going to work since note.identifier is `nil`
+        }
     }
     
     /// Pushes a detail view for the note with the given ID, creating one if needed.
