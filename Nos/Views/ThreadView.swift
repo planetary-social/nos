@@ -29,9 +29,13 @@ struct ThreadView: View {
     
     var body: some View {
         LazyVStack {
-            NoteButton(note: root, tapAction: { event in
-                router.push(event)
-            })
+            NoteButton(
+                note: root,
+                repliesDisplayType: .count,
+                tapAction: { event in
+                    router.push(event)
+                }
+            )
             .padding(.top, 15)
 
             ForEach(thread) { event in
@@ -43,9 +47,13 @@ struct ThreadView: View {
                         }
                         .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
                         .fill(Color.secondaryTxt)
-                        NoteButton(note: event, tapAction: { event in
-                            router.push(event)
-                        })
+                        NoteButton(
+                            note: event,
+                            repliesDisplayType: .count,
+                            tapAction: { event in
+                                router.push(event)
+                            }
+                        )
                         .padding(.top, 15)
                     }
                     .readabilityPadding()

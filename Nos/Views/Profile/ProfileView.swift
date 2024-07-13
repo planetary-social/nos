@@ -50,8 +50,14 @@ struct ProfileView: View {
         )
         
         // reports
-        let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
-        relaySubscriptions.append(await relayService.subscribeToEvents(matching: reportFilter)) 
+        let reportFilter = Filter(
+            kinds: [.report],
+            pTags: [authorKey],
+            keepSubscriptionOpen: true
+        )
+        relaySubscriptions.append(
+            await relayService.fetchEvents(matching: reportFilter)
+        )
     }
 
     private var title: AttributedString {

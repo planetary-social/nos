@@ -13,20 +13,46 @@ struct NoteButton: View {
     var style = CardStyle.compact
     var shouldTruncate: Bool
     var hideOutOfNetwork: Bool
-    var showReplyCount: Bool
-    var displayRootMessage: Bool 
-    var isTapEnabled: Bool 
+    var repliesDisplayType: RepliesDisplayType
+
+    /// Whether replies should be fetched from relays.
+    var fetchReplies: Bool
+
+    var displayRootMessage: Bool
+    var isTapEnabled: Bool
+    
     private let replyAction: ((Event) -> Void)?
     private let tapAction: ((Event) -> Void)?
+    @State private var relaySubscriptions = SubscriptionCancellables()
 
+    @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     
+    /// Initializes a NoteButton object.
+    ///
+    /// - Parameter note: Note event to display.
+    /// - Parameter style: Card style. Defaults to `.compact`.
+    /// - Parameter shouldTruncate: Whether the card should display just some lines or the
+    /// full content of the note. Defaults to true.
+    /// - Parameter hideOutOfNetwork: Blur the card if the author is not inside the user's
+    /// network. Defaults to true.
+    /// - Parameter repliesDisplayType: Replies Label style. Defaults to `.displayNothing`.
+    /// - Parameter fetchReplies: Whether replies should be fetched from relays. Defaults
+    /// to false.
+    /// - Parameter displayRootMessage: Display the root note above if the note is a reply.
+    /// Defaults to false.
+    /// - Parameter isTapEnabled: Enable user interaction in the card. Defaults to true.
+    /// - Parameter replyAction: Handler that gets called when the user taps on the Reply
+    /// button. Defaults to `nil`.
+    /// - Parameter tapAction: Handler that get called when the user taps on the button. If
+    /// `nil`, it navigates to RepliesView. Defaults to `nil`.
     init(
         note: Event, 
         style: CardStyle = CardStyle.compact, 
         shouldTruncate: Bool = true, 
         hideOutOfNetwork: Bool = true, 
-        showReplyCount: Bool = true, 
+        repliesDisplayType: RepliesDisplayType = .displayNothing,
+        fetchReplies: Bool = false,
         displayRootMessage: Bool = false,
         isTapEnabled: Bool = true,
         replyAction: ((Event) -> Void)? = nil,
@@ -36,7 +62,8 @@ struct NoteButton: View {
         self.style = style
         self.shouldTruncate = shouldTruncate
         self.hideOutOfNetwork = hideOutOfNetwork
-        self.showReplyCount = showReplyCount
+        self.repliesDisplayType = repliesDisplayType
+        self.fetchReplies = fetchReplies
         self.displayRootMessage = displayRootMessage
         self.isTapEnabled = isTapEnabled
         self.replyAction = replyAction
@@ -80,7 +107,7 @@ struct NoteButton: View {
                 style: style,
                 shouldTruncate: shouldTruncate,
                 hideOutOfNetwork: hideOutOfNetwork,
-                showReplyCount: showReplyCount,
+                repliesDisplayType: repliesDisplayType,
                 replyAction: replyAction
             )
 
@@ -130,6 +157,34 @@ struct NoteButton: View {
             case .golden:
                 buttonOrLabel
             }
+        }
+        .onAppear {
+            if fetchReplies {
+                subscribeToReplies()
+            }
+        }
+        .onDisappear {
+            relaySubscriptions.removeAll()
+        }
+    }
+
+    /// Open relays subscriptions asking one reply from anyone and up to four
+    /// replies from follows.
+    func subscribeToReplies() {
+        Task(priority: .userInitiated) {
+            // Close out stale requests
+            relaySubscriptions.removeAll()
+            relaySubscriptions.append(
+                await relayService.requestReplyFromAnyone(
+                    for: displayedNote.identifier
+                )
+            )
+            relaySubscriptions.append(
+                await relayService.requestRepliesFromFollows(
+                    for: displayedNote.identifier,
+                    limit: 4
+                )
+            )
         }
     }
 }

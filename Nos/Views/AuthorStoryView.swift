@@ -179,8 +179,14 @@ struct AuthorStoryView: View {
             return
         }
         
-        let filter = Filter(kinds: [.text, .like, .delete, .repost], eTags: eTags)
-        relaySubscriptions.append(await relayService.subscribeToEvents(matching: filter))
+        let filter = Filter(
+            kinds: [.text, .like, .delete, .repost],
+            eTags: eTags,
+            keepSubscriptionOpen: true
+        )
+        relaySubscriptions.append(
+            await relayService.fetchEvents(matching: filter)
+        )
     }
 }
 
@@ -192,22 +198,12 @@ fileprivate struct BottomOverlay: View {
 
     @EnvironmentObject private var router: Router
 
-    @State private var replyCount = 0
-    @State private var replyAvatarURLs = [URL]()
-
     var body: some View {
         HStack(spacing: 0) {
-            StackedAvatarsView(avatarUrls: replyAvatarURLs, size: 20, border: 0)
-                .padding(.trailing, 8)
-
-            if let replies = attributedReplies {
-                Button {
-                    router.push(note)
-                } label: {
-                    Text(replies)
-                        .font(.subheadline)
-                        .foregroundColor(Color.secondaryTxt)
-                }
+            Button {
+                router.push(note)
+            } label: {
+                RepliesLabel(repliesDisplayType: .discussion, for: note)
             }
 
             Spacer()
@@ -229,31 +225,6 @@ fileprivate struct BottomOverlay: View {
                 startPoint: .top,
                 endPoint: .bottom
             )
-        }
-        .task {
-            let context = persistenceController.newBackgroundContext()
-            let (replyCount, replyAvatarURLs) = await Event.replyMetadata(
-                for: note.identifier,
-                context: context
-            )
-            self.replyCount = replyCount
-            self.replyAvatarURLs = replyAvatarURLs
-        }
-    }
-
-    private var attributedReplies: AttributedString? {
-        if replyCount == 0 {
-            return nil
-        }
-        let string = String(localized: .reply.replies(replyCount))
-        do {
-            var attributed = try AttributedString(markdown: string)
-            if let range = attributed.range(of: "\(replyCount)") {
-                attributed[range].foregroundColor = .primaryTxt
-            }
-            return attributed
-        } catch {
-            return nil
         }
     }
 }

@@ -1,6 +1,28 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "inDiscussion" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "in discussion"
+          }
+        }
+      }
+    },
+    "joinTheDiscussion" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Join the discussion"
+          }
+        }
+      }
+    },
     "mentionedYou" : {
       "extractionState" : "manual",
       "localizations" : {
