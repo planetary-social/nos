@@ -150,7 +150,7 @@ extension RelayService {
     /// - Parameter specificRelays: an optional list of relays you would like to fetch from. The user's preferred relays
     ///     will be used if this is not set.
     /// - Returns: A handle that allows the caller to cancel the subscription when it is no longer needed.
-    func subscribeToEvents(
+    @discardableResult func fetchEvents(
         matching filter: Filter,
         from specificRelays: [URL]? = nil
     ) async -> SubscriptionCancellable {
@@ -188,6 +188,40 @@ extension RelayService {
         )
     }
     
+    func requestReplyFromAnyone(for eventID: RawEventID?) async -> SubscriptionCancellable {
+        guard let eventID else {
+            return SubscriptionCancellable.empty()
+        }
+        let metaFilter = Filter(
+            kinds: [.text],
+            eTags: [eventID],
+            limit: 1
+        )
+        return await fetchEvents(matching: metaFilter)
+    }
+
+    /// Builds a subscription that fetched replies from follows to the given
+    /// event.
+    ///
+    /// - Parameter eventID: A note identifier.
+    /// - Parameter limit: Maximum number of replies to ask for. Defaults to
+    /// nil (no limit).
+    func requestRepliesFromFollows(
+        for eventID: RawEventID?,
+        limit: Int? = nil
+    ) async -> SubscriptionCancellable {
+        guard let eventID else {
+            return SubscriptionCancellable.empty()
+        }
+        let metaFilter = Filter(
+            authorKeys: Array(await currentUser.socialGraph.followedKeys),
+            kinds: [.text],
+            eTags: [eventID],
+            limit: limit
+        )
+        return await fetchEvents(matching: metaFilter)
+    }
+
     func requestMetadata(for authorKey: RawAuthorID?, since: Date?) async -> SubscriptionCancellable {
         guard let authorKey else {
             return SubscriptionCancellable.empty()
@@ -199,7 +233,7 @@ extension RelayService {
             limit: 1,
             since: since
         )
-        return await subscribeToEvents(matching: metaFilter)
+        return await fetchEvents(matching: metaFilter)
     }
     
     func requestContactList(for authorKey: RawAuthorID?, since: Date?) async -> SubscriptionCancellable {
@@ -213,7 +247,7 @@ extension RelayService {
             limit: 1,
             since: since
         )
-        return await subscribeToEvents(matching: contactFilter)
+        return await fetchEvents(matching: contactFilter)
     }
     
     func requestProfileData(
@@ -238,7 +272,12 @@ extension RelayService {
             return SubscriptionCancellable.empty()
         }
         
-        return await subscribeToEvents(matching: Filter(eventIDs: [eventID], limit: 1))
+        return await fetchEvents(
+            matching: Filter(
+                eventIDs: [eventID],
+                limit: 1
+            )
+        )
     }
     
     private func processSubscriptionQueue() async {
@@ -273,7 +312,7 @@ extension RelayService {
         
         if let subID = responseArray[1] as? String,
             let subscription = await subscriptionManager.subscription(from: subID),
-            subscription.isOneTime {
+            subscription.closesAfterResponse {
             Log.debug("\(socket.host) has finished responding on \(subID). Closing subscription.")
             // This is a one-off request. Close it.
             sendClose(from: socket, subscription: subID)
@@ -312,7 +351,7 @@ extension RelayService {
                     subscription.receivedEventCount += 1
                     await subscriptionManager.updateSubscriptions(with: subscription)
                 }
-                if subscription.isOneTime {
+                if subscription.closesAfterResponse {
                     Log.debug("detected subscription with id \(subscription.id) has been fulfilled. Closing.")
                     await subscriptionManager.forceCloseSubscriptionCount(for: subscription.id)
                     await sendCloseToAll(for: subscription.id)

@@ -20,7 +20,8 @@ enum ProfileFeedType {
         
         return Filter(
             authorKeys: [author.hexadecimalPublicKey ?? "error"],
-            kinds: kinds
+            kinds: kinds,
+            keepSubscriptionOpen: true
         )
     }
 }

@@ -193,7 +193,7 @@ extension Notification.Name {
     
     return PagedNoteListView(
         databaseFilter: previewData.alice.allPostsRequest(onlyRootPosts: false),
-        relayFilter: Filter(),
+        relayFilter: Filter(keepSubscriptionOpen: true),
         context: previewData.previewContext,
         tab: .home,
         header: {

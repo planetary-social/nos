@@ -112,7 +112,13 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseID, for: indexPath) 
         
         cell.contentConfiguration = UIHostingConfiguration { 
-            NoteButton(note: note, hideOutOfNetwork: false, displayRootMessage: true)
+            NoteButton(
+                note: note,
+                hideOutOfNetwork: false,
+                repliesDisplayType: .discussion,
+                fetchReplies: true,
+                displayRootMessage: true
+            )
         }
         .margins(.horizontal, 0)
 

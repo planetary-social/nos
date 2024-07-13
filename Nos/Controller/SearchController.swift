@@ -165,9 +165,17 @@ class SearchController: ObservableObject {
 
     func searchRelays(for query: String) {
         Task {
-            let searchFilter = Filter(kinds: [.metaData], search: query, limit: 100)
+            let searchFilter = Filter(
+                kinds: [.metaData],
+                search: query,
+                limit: 100,
+                keepSubscriptionOpen: true
+            )
             let allSearchRelays = await relayService.relayAddresses(for: currentUser) + Relay.searchOnly
-            let subscription = await self.relayService.subscribeToEvents(matching: searchFilter, from: allSearchRelays)
+            let subscription = await self.relayService.fetchEvents(
+                matching: searchFilter,
+                from: allSearchRelays
+            )
             self.searchSubscriptions.append(subscription)
         }
     }
