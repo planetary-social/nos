@@ -75,7 +75,7 @@ struct HomeFeedView: View {
                         selectedStoryAuthor: $selectedStoryAuthor
                     )
                 },
-                emptyPlaceholder: {
+                emptyPlaceholder: { _ in
                     VStack {
                         Text(.localizable.noEvents)
                             .padding()

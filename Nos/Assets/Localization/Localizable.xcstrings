@@ -11857,6 +11857,23 @@
         }
       }
     },
+    "tapToRefresh" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap to refresh"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca para actualizar"
+          }
+        }
+      }
+    },
     "termsOfServiceTitle" : {
       "extractionState" : "manual",
       "localizations" : {
