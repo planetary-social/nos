@@ -19,8 +19,12 @@ class PagedRelaySubscription {
     /// A set of subscriptions always listening for new events published after the `startDate`.
     private var newEventsSubscriptionIDs = Set<RelaySubscription.ID>()
     
+    /// The relays we are fetching events from
     private var relayAddresses: Set<URL>
+    
+    /// The oldest event each relay has returned. Used to load the next page.
     private var oldestEventByRelay = [URL: Date]()
+    
     private var cancellables = [AnyCancellable]()
     
     init(
@@ -67,12 +71,14 @@ class PagedRelaySubscription {
     /// `Filter` and updating all its managed subscriptions.
     func loadMore() {
         Task { [self] in
+            // Remove old subscriptions
             for subscriptionID in pagedSubscriptionIDs {
                 relayService.decrementSubscriptionCount(for: subscriptionID)
             }
             pagedSubscriptionIDs.removeAll()
             cancellables.removeAll()
             
+            // Open new subscriptions
             for relayAddress in relayAddresses {
                 let newPageStartDate = oldestEventByRelay[relayAddress] ?? startDate
                 var newPageFilter = self.filter
@@ -84,7 +90,6 @@ class PagedRelaySubscription {
                     to: relayAddress
                 )
                 
-                // TODO: actor isolate
                 pagedEventSubscription.events.sink { [weak self] jsonEvent in
                     self?.track(event: jsonEvent, from: relayAddress)
                 }
@@ -97,7 +102,7 @@ class PagedRelaySubscription {
     
     func track(event: JSONEvent, from relay: URL) {
         if let oldestSeen = oldestEventByRelay[relay],
-           event.createdDate < oldestSeen {
+            event.createdDate < oldestSeen {
             oldestEventByRelay[relay] = event.createdDate
         } else {
             oldestEventByRelay[relay] = event.createdDate

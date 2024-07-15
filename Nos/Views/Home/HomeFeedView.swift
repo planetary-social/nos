@@ -24,8 +24,9 @@ struct HomeFeedView: View {
     /// to get some data from relay. The amount of time is defined in `staticLoadTime`.
     @State private var showTimedLoadingIndicator = true
     
-    /// The amount of time the loading indicator will be shown when showTimedLoadingIndicator is set to true.
-    static let staticLoadTime = 2
+    /// The amount of time (in seconds) the loading indicator will be shown when showTimedLoadingIndicator is set to 
+    /// true.
+    static let staticLoadTime: Int = 2
 
     @ObservedObject var user: Author
 

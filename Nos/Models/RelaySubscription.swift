@@ -22,8 +22,7 @@ class RelaySubscription: Identifiable, Hashable {
     /// when a filter can be closed.
     var referenceCount: Int = 0
     
-    // TODO: actor isolate?
-    /// A closure that will be called for each Event this subscription downloads.
+    /// An observable stream of events that should emit every event downloaded on this subscription 
     let events: PassthroughSubject<JSONEvent, Never> = PassthroughSubject<JSONEvent, Never>()
     
     var isActive: Bool {

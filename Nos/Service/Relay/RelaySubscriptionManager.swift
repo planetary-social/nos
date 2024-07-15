@@ -87,7 +87,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     /// do that in the future.
     @discardableResult
     func decrementSubscriptionCount(for subscriptionID: RelaySubscription.ID) async -> Bool {
-        if var subscription = subscription(from: subscriptionID) {
+        if let subscription = subscription(from: subscriptionID) {
             if subscription.referenceCount == 1 {
                 removeSubscription(with: subscriptionID)
                 return false
@@ -222,7 +222,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     }
     
     private func start(subscription: RelaySubscription) {
-        var subscription = subscription
+        let subscription = subscription
         subscription.subscriptionStartDate = .now
         if let socket = socket(for: subscription.relayAddress) {
             requestEvents(from: socket, subscription: subscription)
