@@ -193,8 +193,7 @@ import Dependencies
             authorKeys: [key],
             kinds: [.contactList],
             limit: 2, // small hack to make sure this filter doesn't get closed for being stale
-            since: author.lastUpdatedContactList,
-            keepSubscriptionOpen: false
+            since: author.lastUpdatedContactList
         )
         subscriptions.append(
             await relayService.fetchEvents(matching: contactFilter)
