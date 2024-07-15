@@ -144,6 +144,9 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         if let index = sockets.firstIndex(where: { $0 === socket }) {
             sockets.remove(at: index)
         }
+        all.removeAll { subscription in
+            subscription.relayAddress == socket.url
+        }
     }
     
     func socket(for address: String) -> WebSocket? {

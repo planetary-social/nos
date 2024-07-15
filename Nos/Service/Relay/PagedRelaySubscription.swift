@@ -44,9 +44,11 @@ class PagedRelaySubscription {
             // progressively older events as we page down.
             var pagedEventsFilter = filter
             pagedEventsFilter.until = startDate
+            pagedEventsFilter.keepSubscriptionOpen = false
             var newEventsFilter = filter
             
             newEventsFilter.since = startDate
+            newEventsFilter.keepSubscriptionOpen = true
             newEventsFilter.limit = nil
             for relayAddress in relayAddresses {
                 newEventsSubscriptionIDs.insert(

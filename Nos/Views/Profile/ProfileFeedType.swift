@@ -18,10 +18,6 @@ enum ProfileFeedType {
             kinds = [.text, .delete]
         }
         
-        return Filter(
-            authorKeys: [author.hexadecimalPublicKey ?? "error"],
-            kinds: kinds,
-            keepSubscriptionOpen: true
-        )
+        return Filter(authorKeys: [author.hexadecimalPublicKey ?? "error"], kinds: kinds)
     }
 }

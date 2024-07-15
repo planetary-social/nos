@@ -84,8 +84,7 @@ struct HomeFeedView: View {
             let textFilter = Filter(
                 authorKeys: followedKeys, 
                 kinds: [.text, .delete, .repost, .longFormContent, .report], 
-                since: storiesCutoffDate,
-                keepSubscriptionOpen: true
+                since: storiesCutoffDate
             )
             let textSubs = await relayService.fetchEvents(matching: textFilter)
             relaySubscriptions.append(textSubs)
