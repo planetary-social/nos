@@ -324,8 +324,6 @@ struct PreviewData {
         note.allTags = [
             [ "p", "6b165e83a3b7d333a6e7db1f200dc627e31eb5170285c29ded271be203c5da37", "other" ],
             [ "e", "ad0cea87d9c81e3bc5b15ddf561b1a2bbbff3d8318d4ea9ccd4644def9e035b8", "other" ],
-            [ "L", "MOD" ],
-            [ "l", "MOD>SP", "MOD", "{\"confidence\":0.9876784682273865}" ]
         ] as NSObject
         note.author = alice
         note.createdAt = .now

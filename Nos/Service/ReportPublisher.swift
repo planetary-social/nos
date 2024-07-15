@@ -83,10 +83,7 @@ class ReportPublisher {
         var event = JSONEvent(
             pubKey: pubKey,
             kind: .report,
-            tags: [
-                ["L", "MOD"],
-                ["l", "MOD>\(category.code)", "MOD"]
-            ],
+            tags: [],
             content: String(localized: .localizable.reportEventContent(category.displayName))
         )
         
