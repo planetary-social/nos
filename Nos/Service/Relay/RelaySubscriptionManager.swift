@@ -37,6 +37,9 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         all.filter { $0.isActive }
     }
 
+    /// Limit of the number of active subscriptions in a single relay
+    private let queueLimit = 25
+
     // MARK: - Protocol conformance
     
     func active() async -> [RelaySubscription] {
@@ -106,7 +109,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     func staleSubscriptions() async -> [RelaySubscription] {
         var staleSubscriptions = [RelaySubscription]()
         for subscription in active {
-            if subscription.isOneTime, 
+            if subscription.closesAfterResponse, 
                 let filterStartedAt = subscription.subscriptionStartDate,
                 filterStartedAt.distance(to: .now) > 10 {
                 staleSubscriptions.append(subscription)
@@ -166,15 +169,47 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     // MARK: - Talking to Relays
     
     func processSubscriptionQueue() async {
-        let waitingLongSubscriptions = all.filter { !$0.isOneTime && !$0.isActive }
-        let waitingOneTimeSubscriptions = all.filter { $0.isOneTime && !$0.isActive }
-        
-        waitingOneTimeSubscriptions.forEach { start(subscription: $0) }
-        waitingLongSubscriptions.forEach { start(subscription: $0) }
-        
-        if all.count > active.count {
-            Log.debug("\(all.count - active.count) subscriptions waiting in queue.")
+        var waitingSubscriptions = [RelaySubscription]()
+
+        // Counter to track the number of active subscriptions per relay
+        var activeSubscriptionsCount = [URL: Int]()
+
+        all.forEach { relaySubscription in
+            if relaySubscription.isActive {
+                // Update active subscriptions counter
+                let relayAddress = relaySubscription.relayAddress
+                if let currentCount = activeSubscriptionsCount[relayAddress] {
+                    activeSubscriptionsCount[relayAddress] = currentCount + 1
+                } else {
+                    activeSubscriptionsCount[relayAddress] = 1
+                }
+            } else {
+                waitingSubscriptions.append(relaySubscription)
+            }
         }
+
+        // Start waiting relay subscriptions if they don't exceed the queue
+        // limit
+        waitingSubscriptions.forEach { relaySubscription in
+            let relayAddress = relaySubscription.relayAddress
+            if let subscriptionsCount = activeSubscriptionsCount[relayAddress] {
+                if subscriptionsCount < queueLimit {
+                    start(subscription: relaySubscription)
+                    activeSubscriptionsCount[relayAddress] = subscriptionsCount + 1
+                }
+            } else {
+                start(subscription: relaySubscription)
+                activeSubscriptionsCount[relayAddress] = 1
+            }
+        }
+        
+        #if DEBUG
+        let allCount = all.count
+        let activeCount = active.count
+        if allCount > activeCount {
+            Log.debug("\(allCount - activeCount) subscriptions waiting in queue.")
+        }
+        #endif
     }
     
     func queueSubscription(with filter: Filter, to relayAddress: URL) async -> RelaySubscription.ID {

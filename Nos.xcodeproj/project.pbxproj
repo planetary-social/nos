@@ -102,6 +102,8 @@
 		5B29B58E2BEC392B008F6008 /* ActivityPubBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B29B58D2BEC392B008F6008 /* ActivityPubBadgeView.swift */; };
 		5B39E64429EDBF8100464830 /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
 		5B503F622A291A1A0098805A /* JSONRelayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */; };
+		5B6136382C2F408E00ADD9C3 /* RepliesLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6136372C2F408E00ADD9C3 /* RepliesLabel.swift */; };
+		5B6136462C348A5100ADD9C3 /* RepliesDisplayType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6136452C348A5100ADD9C3 /* RepliesDisplayType.swift */; };
 		5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
 		5B79F5B82B8E71CC002DA9BE /* NamesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */; };
 		5B79F5EB2B97B5E9002DA9BE /* ConfirmUsernameDeletionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79F5EA2B97B5E9002DA9BE /* ConfirmUsernameDeletionSheet.swift */; };
@@ -574,6 +576,8 @@
 		5B29B58D2BEC392B008F6008 /* ActivityPubBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityPubBadgeView.swift; sourceTree = "<group>"; };
 		5B2F5CC12AE7443700A92B52 /* Nos 13.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 13.xcdatamodel"; sourceTree = "<group>"; };
 		5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONRelayMetadata.swift; sourceTree = "<group>"; };
+		5B6136372C2F408E00ADD9C3 /* RepliesLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepliesLabel.swift; sourceTree = "<group>"; };
+		5B6136452C348A5100ADD9C3 /* RepliesDisplayType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepliesDisplayType.swift; sourceTree = "<group>"; };
 		5B6EB48D29EDBE0E006E750C /* NoteParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParser.swift; sourceTree = "<group>"; };
 		5B79F5EA2B97B5E9002DA9BE /* ConfirmUsernameDeletionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmUsernameDeletionSheet.swift; sourceTree = "<group>"; };
 		5B79F6082B98AC33002DA9BE /* ClaimYourUniqueIdentitySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimYourUniqueIdentitySheet.swift; sourceTree = "<group>"; };
@@ -1455,6 +1459,7 @@
 				659B27232BD9CB4500BEA6CC /* VerifiableEvent.swift */,
 				030742C32B4769F90073839D /* CoreData */,
 				C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */,
+				5B6136452C348A5100ADD9C3 /* RepliesDisplayType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1598,6 +1603,7 @@
 				C9032C2C2BAE31DA001F4EC6 /* Profile */,
 				5B79F5E92B97B5D7002DA9BE /* ProfileEdit */,
 				C905EA362A33620A006F1E99 /* UNS */,
+				5B6136372C2F408E00ADD9C3 /* RepliesLabel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2030,6 +2036,7 @@
 				C97465342A3C95FE0031226F /* RelayPickerToolbarButton.swift in Sources */,
 				3F43C47629A9625700E896A0 /* AuthorReference+CoreDataClass.swift in Sources */,
 				C9A6C7492AD86271001F9500 /* UNSNewNameView.swift in Sources */,
+				5B6136382C2F408E00ADD9C3 /* RepliesLabel.swift in Sources */,
 				C9ADB13D29929B540075E7F8 /* Bech32.swift in Sources */,
 				C95D68A1299E6D3E00429F86 /* BioView.swift in Sources */,
 				5BE281CA2AE2CCEB00880466 /* HomeTab.swift in Sources */,
@@ -2084,6 +2091,7 @@
 				C9DEC04529894BED0078B43A /* Event+CoreDataClass.swift in Sources */,
 				CD76865029B6503500085358 /* NoteOptionsButton.swift in Sources */,
 				0326346D2C10C2FD00E489B5 /* FileStorageServerInfoResponseJSON.swift in Sources */,
+				5B6136462C348A5100ADD9C3 /* RepliesDisplayType.swift in Sources */,
 				5BE281C72AE2CCD800880466 /* ReplyButton.swift in Sources */,
 				C936B45C2A4C7D6B00DF1EB9 /* UNSWizard.swift in Sources */,
 				C9DFA966299BEB96006929C1 /* NoteCard.swift in Sources */,

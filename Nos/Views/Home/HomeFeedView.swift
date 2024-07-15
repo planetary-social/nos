@@ -83,9 +83,10 @@ struct HomeFeedView: View {
             let textFilter = Filter(
                 authorKeys: followedKeys, 
                 kinds: [.text, .delete, .repost, .longFormContent, .report], 
-                since: storiesCutoffDate
+                since: storiesCutoffDate,
+                keepSubscriptionOpen: true
             )
-            let textSubs = await relayService.subscribeToEvents(matching: textFilter)
+            let textSubs = await relayService.fetchEvents(matching: textFilter)
             relaySubscriptions.append(textSubs)
         }
     }
@@ -110,7 +111,7 @@ struct HomeFeedView: View {
                         }
                     }
                 },
-                emptyPlaceholder: {
+                emptyPlaceholder: { _ in
                     VStack {
                         Text(.localizable.noEvents)
                             .padding()

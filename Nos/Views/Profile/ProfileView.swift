@@ -50,8 +50,14 @@ struct ProfileView: View {
         )
         
         // reports
-        let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
-        relaySubscriptions.append(await relayService.subscribeToEvents(matching: reportFilter)) 
+        let reportFilter = Filter(
+            kinds: [.report],
+            pTags: [authorKey],
+            keepSubscriptionOpen: true
+        )
+        relaySubscriptions.append(
+            await relayService.fetchEvents(matching: reportFilter)
+        )
     }
 
     private var title: AttributedString {
@@ -84,11 +90,16 @@ struct ProfileView: View {
                             .compositingGroup()
                             .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                     },
-                    emptyPlaceholder: {
+                    emptyPlaceholder: { refresh in
                         VStack {
                             Text(.localizable.noEventsOnProfile)
                                 .padding()
                                 .readabilityPadding()
+                            
+                            SecondaryActionButton(
+                                title: .localizable.tapToRefresh,
+                                action: refresh
+                            )
                         }
                         .frame(minHeight: 300)
                     },
