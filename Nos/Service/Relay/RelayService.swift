@@ -359,7 +359,7 @@ extension RelayService {
             let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
             await self.parseQueue.push(jsonEvent, from: socket)
             
-            if var subscription = await subscriptionManager.subscription(from: subscriptionID) {
+            if let subscription = await subscriptionManager.subscription(from: subscriptionID) {
                 subscription.receivedEventCount += 1
                 subscription.events.send(jsonEvent)
                 if subscription.closesAfterResponse {
@@ -795,7 +795,7 @@ extension RelayService {
         }
         
         for subscription in await subscriptionManager.active() where subscription.relayAddress == client.url {
-            await subscriptionManager.requestEvents (from: client, subscription: subscription)
+            await subscriptionManager.requestEvents(from: client, subscription: subscription)
         }
     }
 }
@@ -811,7 +811,7 @@ extension RelayService: WebSocketDelegate {
             switch event {
             case .connected, .viabilityChanged(true):
                 await handleConnection(from: client)
-            case .disconnected(let reason, let code):
+            case .disconnected:
                 await subscriptionManager.remove(socket)
             case .peerClosed:
                 await subscriptionManager.remove(socket)
