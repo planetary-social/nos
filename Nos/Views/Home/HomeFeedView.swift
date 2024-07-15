@@ -26,7 +26,7 @@ struct HomeFeedView: View {
     
     /// The amount of time (in seconds) the loading indicator will be shown when showTimedLoadingIndicator is set to 
     /// true.
-    static let staticLoadTime: Int = 2
+    static let staticLoadTime: TimeInterval = 2
 
     @ObservedObject var user: Author
 
@@ -143,7 +143,7 @@ struct HomeFeedView: View {
             if showTimedLoadingIndicator {
                 FullscreenProgressView(
                     isPresented: $showTimedLoadingIndicator,
-                    hideAfter: .now() + .seconds(Self.staticLoadTime)
+                    hideAfter: .now() + .seconds(Int(Self.staticLoadTime))
                 )
             } 
             
