@@ -5,13 +5,13 @@ import Foundation
 struct Filter: Hashable, Identifiable {
     
     /// List of author identifiers the Filter should be constrained to.
-    let authorKeys: [RawAuthorID]
+    var authorKeys: [RawAuthorID]
 
     /// List of event identifiers the Filter should be constrained to.
     let eventIDs: [RawEventID]
 
     /// List of Note kinds to filter
-    let kinds: [EventKind]
+    var kinds: [EventKind]
 
     /// Ask the relay to return events mentioned in the `tags` field.
     let eTags: [RawEventID]
@@ -69,7 +69,7 @@ struct Filter: Hashable, Identifiable {
         until: Date? = nil,
         keepSubscriptionOpen: Bool = false
     ) {
-        self.authorKeys = authorKeys.sorted(by: { $0 > $1 })
+        self.authorKeys = authorKeys.sorted()
         self.eventIDs = eventIDs
         self.kinds = kinds.sorted(by: { $0.rawValue > $1.rawValue })
         self.eTags = eTags
