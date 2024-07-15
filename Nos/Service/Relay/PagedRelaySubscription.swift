@@ -1,9 +1,11 @@
 import Foundation
 import Logger
+import Combine
 
 /// This class manages a Filter and fetches events in reverse-chronological order as `loadMore()` is called. This
 /// can be used to paginate a list of events. The underlying relay subscriptions will be deallocated when this object
-/// goes out of scope. 
+/// goes out of scope.  
+@RelaySubscriptionManagerActor
 class PagedRelaySubscription {
     let startDate: Date
     let filter: Filter
@@ -17,6 +19,14 @@ class PagedRelaySubscription {
     /// A set of subscriptions always listening for new events published after the `startDate`.
     private var newEventsSubscriptionIDs = Set<RelaySubscription.ID>()
     
+    /// The relays we are fetching events from
+    private var relayAddresses: Set<URL>
+    
+    /// The oldest event each relay has returned. Used to load the next page.
+    private var oldestEventByRelay = [URL: Date]()
+    
+    private var cancellables = [AnyCancellable]()
+    
     init(
         startDate: Date, 
         filter: Filter, 
@@ -28,21 +38,22 @@ class PagedRelaySubscription {
         self.filter = filter
         self.relayService = relayService
         self.subscriptionManager = subscriptionManager
+        self.relayAddresses = relayAddresses
         Task {
             // We keep two sets of subscriptions. One is always listening for new events and the other fetches 
             // progressively older events as we page down.
             var pagedEventsFilter = filter
             pagedEventsFilter.until = startDate
             var newEventsFilter = filter
+            
             newEventsFilter.since = startDate
+            newEventsFilter.limit = nil
             for relayAddress in relayAddresses {
                 newEventsSubscriptionIDs.insert(
-                    await subscriptionManager.queueSubscription(with: filter, to: relayAddress)
-                )
-                pagedSubscriptionIDs.insert(
-                    await subscriptionManager.queueSubscription(with: pagedEventsFilter, to: relayAddress)
+                    await subscriptionManager.queueSubscription(with: filter, to: relayAddress).id
                 )
             }
+            loadMore()
         }
     }
     
@@ -60,33 +71,41 @@ class PagedRelaySubscription {
     /// `Filter` and updating all its managed subscriptions.
     func loadMore() {
         Task { [self] in
-            var newUntilDates = [URL: Date]()
-            var subscriptionsToRemove = Set<RelaySubscription.ID>()
-            
+            // Remove old subscriptions
             for subscriptionID in pagedSubscriptionIDs {
-                if let subscription = await subscriptionManager.subscription(from: subscriptionID),
-                    let newDate = subscription.oldestEventCreationDate {
-                    
-                    guard newDate != subscription.filter.until else {
-                        // Optimization. Don't close and reopen an identical filter.
-                        continue
-                    }
-                          
-                    newUntilDates[subscription.relayAddress] = newDate
-                    relayService.decrementSubscriptionCount(for: subscriptionID)
-                    subscriptionsToRemove.insert(subscription.id)
-                }
+                relayService.decrementSubscriptionCount(for: subscriptionID)
             }
+            pagedSubscriptionIDs.removeAll()
+            cancellables.removeAll()
             
-            pagedSubscriptionIDs.subtract(subscriptionsToRemove)            
-            
-            for (relayAddress, until) in newUntilDates {
-                var newEventsFilter = self.filter
-                newEventsFilter.until = until
-                pagedSubscriptionIDs.insert(
-                    await subscriptionManager.queueSubscription(with: newEventsFilter, to: relayAddress)
+            // Open new subscriptions
+            for relayAddress in relayAddresses {
+                let newPageStartDate = oldestEventByRelay[relayAddress] ?? startDate
+                var newPageFilter = self.filter
+                newPageFilter.until = newPageStartDate
+                newPageFilter.keepSubscriptionOpen = false
+                
+                let pagedEventSubscription = await subscriptionManager.queueSubscription(
+                    with: newPageFilter, 
+                    to: relayAddress
                 )
+                
+                pagedEventSubscription.events.sink { [weak self] jsonEvent in
+                    self?.track(event: jsonEvent, from: relayAddress)
+                }
+                .store(in: &cancellables)
+                
+                pagedSubscriptionIDs.insert(pagedEventSubscription.id)
             }
+        }
+    }
+    
+    func track(event: JSONEvent, from relay: URL) {
+        if let oldestSeen = oldestEventByRelay[relay],
+            event.createdDate < oldestSeen {
+            oldestEventByRelay[relay] = event.createdDate
+        } else {
+            oldestEventByRelay[relay] = event.createdDate
         }
     }
 }

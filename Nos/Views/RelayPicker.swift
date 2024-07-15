@@ -18,27 +18,54 @@ struct RelayPicker: View {
     }
     
     var body: some View {
-        VStack {
-            ScrollView {
-                VStack(spacing: 0) {
-                    // TODO: scrolling
-                    RelayPickerRow(string: defaultSelection, selection: $selectedRelay)
-                    ForEach(relays) { relay in
-
-                        BeveledSeparator()
-                            .padding(.horizontal, 20)
-                        
-                        RelayPickerRow(relay: relay, selection: $selectedRelay)
-                            .fixedSize(horizontal: false, vertical: true)
+        VStack(spacing: 0) {
+            
+            let pickerRows = VStack(spacing: 0) {
+                // shadow effect at the top
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundStyle(.clear)
+                    .shadow(radius: 15, y: 10)
+                
+                RelayPickerRow(string: defaultSelection, selection: $selectedRelay)
+                ForEach(relays) { relay in
+                    
+                    BeveledSeparator()
+                        .padding(.horizontal, 20)
+                    
+                    RelayPickerRow(relay: relay, selection: $selectedRelay)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .background(
+                Rectangle()
+                    .foregroundStyle(LinearGradient.cardBackground)
+                    .cornerRadius(20, corners: [.bottomLeft, .bottomRight])
+                    .shadow(radius: 15, y: 10)
+            ) 
+            .readabilityPadding()
+            
+            VStack(spacing: 0) {
+                ViewThatFits(in: .vertical) {
+                    VStack {
+                        pickerRows
+                        Color.clear
+                            .contentShape(Rectangle())
+                            .frame(minHeight: 0)
+                            .onTapGesture { 
+                                withAnimation {
+                                    isPresented = false
+                                }
+                            }
+                    }
+                    ScrollView {
+                        pickerRows
                     }
                 }
-                .cornerRadius(15, corners: [.bottomLeft, .bottomRight])
             }
-            Spacer()
         }
-        .background(LinearGradient.cardBackground) 
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .transition(.move(edge: .top))
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .zIndex(99) // Fixes dismissal animation
     }
 }
@@ -80,12 +107,29 @@ struct RelayPickerRow: View {
             selection = relay
         } label: {
             HStack {
-                Text(title)
-                    .foregroundColor(.primaryTxt)
-                    .font(.clarity(.bold))
-                    .lineLimit(1)
-                    .padding(.horizontal, 19)
-                    .padding(.vertical, 19)
+                VStack(spacing: 6) {
+                    HStack {
+                        Text(title)
+                            .foregroundColor(.primaryTxt)
+                            .font(.clarity(.bold))
+                            .lineLimit(1)
+                            .shadow(radius: 4, y: 4)
+                        Spacer()
+                    }
+                    
+                    if let description = relay?.relayDescription {
+                        HStack {
+                            Text(description)
+                                .font(.clarityRegular(.callout))
+                                .multilineTextAlignment(.leading)
+                                .foregroundColor(.secondaryTxt)
+                                .lineLimit(2)
+                            Spacer()
+                        }
+                    }
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 14)
                 Spacer()
                 if isSelected {
                     Image(systemName: "checkmark")
@@ -100,40 +144,54 @@ struct RelayPickerRow: View {
     }
 }
 
-struct RelayPicker_Previews: PreviewProvider {
+#Preview("Without ScrollView") {
 
-    static var previewData = PreviewData()
-    static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
-    static var relayService = previewData.relayService
+    @State var selectedRelay: Relay?
+    var previewData = PreviewData()
     
-    static var user: Author {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
-        createTestData(in: previewContext, user: author)
-        return author
-    }
-    
-    static func createTestData(in context: NSManagedObjectContext, user: Author) {
+    func createTestData() {
+        let user = previewData.alice
         let addresses = ["wss://nostr.com", "wss://nos.social", "wss://alongdomainnametoseewhathappens.com"]
         addresses.forEach { address in
-            let relay = try? Relay.findOrCreate(by: address, context: previewContext)
+            let relay = try? Relay.findOrCreate(by: address, context: previewData.previewContext)
+            relay?.relayDescription = "A Nostr relay that aims to cultivate a healthy community."
             relay?.addToAuthors(user)
         }
+    }
+    
+    return RelayPicker(
+        selectedRelay: $selectedRelay,
+        defaultSelection: String(localized: .localizable.allMyRelays),
+        author: previewData.alice,
+        isPresented: .constant(true)
+    )
+    .onAppear { createTestData() }
+    .inject(previewData: previewData)
+    .background(Color.appBg)
+}
 
-        try? previewContext.save()
+#Preview("With ScrollView") {
+
+    @State var selectedRelay: Relay?
+    var previewData = PreviewData()
+    
+    func createTestData() {
+        let user = previewData.alice
+        let addresses = Relay.allKnown
+        addresses.forEach { address in
+            let relay = try? Relay.findOrCreate(by: address, context: previewData.previewContext)
+            relay?.relayDescription = "A Nostr relay that aims to cultivate a healthy community."
+            relay?.addToAuthors(user)
+        }
     }
     
-    @State static var selectedRelay: Relay?
-    
-    static var previews: some View {
-        RelayPicker(
-            selectedRelay: $selectedRelay,
-            defaultSelection: String(localized: .localizable.allMyRelays),
-            author: user,
-            isPresented: .constant(true)
-        )
-        .environment(\.managedObjectContext, previewContext)
-        .background(Color.appBg)
-    }
+    return RelayPicker(
+        selectedRelay: $selectedRelay,
+        defaultSelection: String(localized: .localizable.allMyRelays),
+        author: previewData.alice,
+        isPresented: .constant(true)
+    )
+    .onAppear { createTestData() }
+    .inject(previewData: previewData)
+    .background(Color.appBg)
 }
