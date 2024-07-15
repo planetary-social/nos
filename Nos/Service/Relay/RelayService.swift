@@ -166,7 +166,7 @@ extension RelayService {
         }
         var subscriptionIDs = [RelaySubscription.ID]()
         for relay in relayAddresses {
-            subscriptionIDs.append(await subscriptionManager.queueSubscription(with: filter, to: relay))
+            subscriptionIDs.append(await subscriptionManager.queueSubscription(with: filter, to: relay).id)
         }
         
         // Fire off REQs in the background
@@ -189,7 +189,7 @@ extension RelayService {
             relays = await self.relayAddresses(for: currentUser)
         }
         
-        return PagedRelaySubscription(
+        return await PagedRelaySubscription(
             startDate: .now,
             filter: filter,
             relayService: self,
@@ -351,16 +351,8 @@ extension RelayService {
             await self.parseQueue.push(jsonEvent, from: socket)
             
             if var subscription = await subscriptionManager.subscription(from: subscriptionID) {
-                if let oldestSeen = subscription.oldestEventCreationDate,
-                    jsonEvent.createdDate < oldestSeen {
-                    subscription.oldestEventCreationDate = jsonEvent.createdDate
-                    subscription.receivedEventCount += 1
-                    await subscriptionManager.updateSubscriptions(with: subscription)
-                } else {
-                    subscription.oldestEventCreationDate = jsonEvent.createdDate
-                    subscription.receivedEventCount += 1
-                    await subscriptionManager.updateSubscriptions(with: subscription)
-                }
+                subscription.receivedEventCount += 1
+                subscription.events.send(jsonEvent)
                 if subscription.closesAfterResponse {
                     Log.debug("detected subscription with id \(subscription.id) has been fulfilled. Closing.")
                     await subscriptionManager.forceCloseSubscriptionCount(for: subscription.id)

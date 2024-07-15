@@ -224,7 +224,9 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             startAggressivePaging()
             return
         } else if indexPath.row.isMultiple(of: pageSize / 2) {
-            pager?.loadMore()
+            Task {
+                await pager?.loadMore()
+            }
         } 
     }
     
