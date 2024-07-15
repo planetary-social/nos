@@ -84,8 +84,17 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         return collectionView
     }
     
-    func updateUIView(_ collectionView: UICollectionView, context: Context) {}
-
+    func updateUIView(_ collectionView: UICollectionView, context: Context) {
+        if let dataSource = collectionView.dataSource as? PagedNoteDataSource<Header, EmptyPlaceholder> {
+            if relayFilter != dataSource.relayFilter || relay != dataSource.relay {
+                dataSource.subscribeToEvents(matching: relayFilter, from: relay)
+            }
+            if databaseFilter != dataSource.databaseFilter {
+                dataSource.updateFetchRequest(databaseFilter)
+            }
+        }
+    }
+    
     static func dismantleUIView(_ uiView: UICollectionView, coordinator: Coordinator<Header, EmptyPlaceholder>) {
         tearDownObservers(coordinator: coordinator)
     }
@@ -108,19 +117,6 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             }
             // scrolling to CGRect.zero does not work, so this seems to be the best we can do
             uiView?.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
-        }
-
-        return collectionView
-    }
-    
-    func updateUIView(_ collectionView: UICollectionView, context: Context) {
-        if let dataSource = collectionView.dataSource as? PagedNoteDataSource<Header, EmptyPlaceholder> {
-            if relayFilter != dataSource.relayFilter || relay != dataSource.relay {
-                dataSource.subscribeToEvents(matching: relayFilter, from: relay)
-            }
-            if databaseFilter != dataSource.databaseFilter {
-                dataSource.updateFetchRequest(databaseFilter)
-            }
         }
     }
 
