@@ -7,52 +7,34 @@ import Dependencies
 ///
 /// Use this view inside MessageButton to have nice borders.
 struct NoteCard: View {
-    
+
     var note: Event
     
     var style = CardStyle.compact
-    
-    @State private var replyCount = 0
-    @State private var replyAvatarURLs = [URL]()
+
     @State private var warningController = NoteWarningController()
-    
+
     @EnvironmentObject private var router: Router
     @Dependency(\.persistenceController) var persistenceController
-    
+
     private var shouldTruncate: Bool
-    private let showReplyCount: Bool
+    private let repliesDisplayType: RepliesDisplayType
     private var hideOutOfNetwork: Bool
     private var replyAction: ((Event) -> Void)?
     
-    private var attributedReplies: AttributedString? {
-        if replyCount == 0 {
-            return nil
-        }
-        let string = String(localized: .reply.replies(replyCount))
-        do {
-            var attributed = try AttributedString(markdown: string)
-            if let range = attributed.range(of: "\(replyCount)") {
-                attributed[range].foregroundColor = .primaryTxt
-            }
-            return attributed
-        } catch {
-            return nil
-        }
-    }
-
     init(
         note: Event,
         style: CardStyle = .compact,
         shouldTruncate: Bool = true,
         hideOutOfNetwork: Bool = true,
-        showReplyCount: Bool = true,
+        repliesDisplayType: RepliesDisplayType = .displayNothing,
         replyAction: ((Event) -> Void)? = nil
     ) {
         self.note = note
         self.style = style
         self.shouldTruncate = shouldTruncate
         self.hideOutOfNetwork = hideOutOfNetwork
-        self.showReplyCount = showReplyCount
+        self.repliesDisplayType = repliesDisplayType
         self.replyAction = replyAction
     }
     
@@ -96,13 +78,14 @@ struct NoteCard: View {
                         }
                         BeveledSeparator()
                         HStack(spacing: 0) {
-                            if showReplyCount {
-                                StackedAvatarsView(avatarUrls: replyAvatarURLs, size: 20, border: 0)
-                                    .padding(.trailing, 8)
-                                if let replies = attributedReplies {
-                                    Text(replies)
-                                        .font(.clarity(.medium, textStyle: .subheadline))
-                                        .foregroundColor(Color.secondaryTxt)
+                            if repliesDisplayType != .displayNothing {
+                                Button {
+                                    router.push(note)
+                                } label: {
+                                    RepliesLabel(
+                                        repliesDisplayType: repliesDisplayType,
+                                        for: note
+                                    )
                                 }
                             }
                             Spacer()
@@ -136,16 +119,6 @@ struct NoteCard: View {
             Task { await note.loadAttributedContent() }
         }
         .background(LinearGradient.cardBackground)
-        .task {
-            if showReplyCount {
-                let (replyCount, replyAvatarURLs) = await Event.replyMetadata(
-                    for: note.identifier, 
-                    context: persistenceController.backgroundViewContext
-                )
-                self.replyCount = replyCount
-                self.replyAvatarURLs = replyAvatarURLs
-            }
-        }
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
     }

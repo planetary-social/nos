@@ -40,9 +40,10 @@ struct NotificationsView: View {
         let filter = Filter(
             kinds: [.text], 
             pTags: [currentUserKey], 
-            limit: 100
+            limit: 100,
+            keepSubscriptionOpen: true
         )
-        let subscriptions = await relayService.subscribeToEvents(matching: filter)
+        let subscriptions = await relayService.fetchEvents(matching: filter)
         relaySubscriptions.append(subscriptions)
     }
     

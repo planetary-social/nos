@@ -28,9 +28,10 @@ struct RelaySubscription: Identifiable, Hashable {
         subscriptionStartDate != nil
     }
     
-    /// Returns true if this is a "one-time" filter, where we are only looking for a single event
-    var isOneTime: Bool {
-        filter.limit == 1
+    /// Whether this RelaySubscription should close the subscription to the
+    /// filter after receiving a response.
+    var closesAfterResponse: Bool {
+        !filter.keepSubscriptionOpen
     }
     
     internal init(
