@@ -433,6 +433,17 @@
         }
       }
     },
+    "accountsIFollow" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accounts I Follow"
+          }
+        }
+      }
+    },
     "activity" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4316,6 +4327,18 @@
         }
       }
     },
+    "filter" : {
+      "comment" : "verb for filtering your feed in various ways",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "filter"
+          }
+        }
+      }
+    },
     "flagUser" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -7151,73 +7174,73 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "لا يوجد ملاحظات (بعد)! اطلع على علامة التصفح واتبع بعض الأشخاص للبدء."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "(Noch) keine Notizen! Durchsuche das Tab \\\"Entdecken\\\" und folge einigen Leuten, um loszulegen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No notes (yet)! Browse the Discover tab and follow some people to get started."
+            "value" : "No notes (yet), but we'll keep looking!"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "¡No hay notas (aún)! Navega a la pestaña de Descubrir y sigue a algunas personas para empezar."
           }
         },
         "fa" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "(هنوز) هیچ یادداشتی نیست! برای شروع سربرگ یافتن را بگردید و چند نفر را دنبال کنید."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Aucune note (pour l'instant) ! Allez sur l'onglet \\\"Découvrir\\\" et suivez des gens pour commencer."
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "メモはまだありません！ディスカバー / 検索 タブをタップして、何人かのユーザーをフォローして始めましょう。"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Nog geen notes! Blader de Ontdek tab en volg enkele accounts om te beginnen."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Sem notas (ainda)! Navegue na guia \"Descobrir\" e siga algumas pessoas para começar."
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Inga anteckningar (ännu)! Bläddra i fliken Upptäck och följ några personer för att komma igång."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "（还）没有笔记！浏览发现选项卡并关注一些帐户以开始操作。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "（還）沒有筆記！瀏覽發現選項卡並關注一些帳戶以開始操作。"
           }
         }
