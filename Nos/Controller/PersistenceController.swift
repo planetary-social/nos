@@ -46,7 +46,7 @@ class PersistenceController {
     private var model: NSManagedObjectModel
     private var inMemory: Bool
 
-    init(containerName: String = "Nos", inMemory: Bool = false, erase: Bool = true) {
+    init(containerName: String = "Nos", inMemory: Bool = false, erase: Bool = false) {
         self.inMemory = inMemory
         let modelURL = Bundle.current.url(forResource: "Nos", withExtension: "momd")!
         model = NSManagedObjectModel(contentsOf: modelURL)!
