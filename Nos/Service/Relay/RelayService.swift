@@ -795,7 +795,7 @@ extension RelayService {
         }
         
         for subscription in await subscriptionManager.active() where subscription.relayAddress == client.url {
-            await subscriptionManager.requestEvents(from: client, subscription: subscription)
+            await subscriptionManager.requestEvents (from: client, subscription: subscription)
         }
     }
 }
@@ -809,21 +809,21 @@ extension RelayService: WebSocketDelegate {
         
         Task {
             switch event {
-            case .connected:
+            case .connected, .viabilityChanged(true):
                 await handleConnection(from: client)
             case .disconnected(let reason, let code):
                 await subscriptionManager.remove(socket)
-                print("websocket is disconnected: \(reason) with code: \(code)")
+            case .peerClosed:
+                await subscriptionManager.remove(socket)
             case .text(let string):
                 await parseResponse(string, socket)
             case .binary:
                 break
-            case .ping, .pong, .viabilityChanged, .reconnectSuggested, .peerClosed:
+            case .ping, .pong, .viabilityChanged, .reconnectSuggested:
                 break
             case .cancelled:
                 await subscriptionManager.trackError(socket: socket)
                 await subscriptionManager.remove(socket)
-                print("websocket is cancelled")
             case .error(let error):
                 await subscriptionManager.trackError(socket: socket)
                 await subscriptionManager.remove(socket)
