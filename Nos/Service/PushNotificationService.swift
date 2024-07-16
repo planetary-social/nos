@@ -96,7 +96,7 @@ import Combine
         }
         
         let userMentionsFilter = Filter(
-            kinds: [.text, .longFormContent, .like], 
+            kinds: [.text], 
             pTags: [authorKey], 
             limit: 50,
             keepSubscriptionOpen: true

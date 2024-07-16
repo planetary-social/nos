@@ -108,9 +108,10 @@ extension RelayService {
         }
     }
     
-    private func sendClose(from client: WebSocketClient, subscription: String) {
+    private func sendClose(from client: WebSocketClient, subscriptionID: RelaySubscription.ID) async {
         do {
-            let request: [Any] = ["CLOSE", subscription]
+            await subscriptionManager.forceCloseSubscriptionCount(for: subscriptionID)
+            let request: [Any] = ["CLOSE", subscriptionID]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
             client.write(string: requestString)
@@ -120,7 +121,10 @@ extension RelayService {
     }
     
     private func sendCloseToAll(for subscription: RelaySubscription.ID) async {
-        await subscriptionManager.sockets().forEach { self.sendClose(from: $0, subscription: subscription) }
+        let sockets = await subscriptionManager.sockets()
+        for socket in sockets {
+            await self.sendClose(from: socket, subscriptionID: subscription) 
+        }
         Task { await processSubscriptionQueue() }
     }
     
@@ -128,7 +132,7 @@ extension RelayService {
         guard let address = relayAddress else { return }
         if let socket = await subscriptionManager.socket(for: address) {
             for subscription in await subscriptionManager.active() {
-                self.sendClose(from: socket, subscription: subscription.id)
+                await self.sendClose(from: socket, subscriptionID: subscription.id)
             }
             
             await subscriptionManager.close(socket: socket)
@@ -330,7 +334,7 @@ extension RelayService {
             subscription.closesAfterResponse {
             Log.debug("\(socket.host) has finished responding on \(subID). Closing subscription.")
             // This is a one-off request. Close it.
-            sendClose(from: socket, subscription: subID)
+            await sendClose(from: socket, subscriptionID: subID)
         }
     }
     
@@ -355,7 +359,7 @@ extension RelayService {
             let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
             await self.parseQueue.push(jsonEvent, from: socket)
             
-            if var subscription = await subscriptionManager.subscription(from: subscriptionID) {
+            if let subscription = await subscriptionManager.subscription(from: subscriptionID) {
                 subscription.receivedEventCount += 1
                 subscription.events.send(jsonEvent)
                 if subscription.closesAfterResponse {
@@ -805,21 +809,21 @@ extension RelayService: WebSocketDelegate {
         
         Task {
             switch event {
-            case .connected:
+            case .connected, .viabilityChanged(true):
                 await handleConnection(from: client)
-            case .disconnected(let reason, let code):
+            case .disconnected:
                 await subscriptionManager.remove(socket)
-                print("websocket is disconnected: \(reason) with code: \(code)")
+            case .peerClosed:
+                await subscriptionManager.remove(socket)
             case .text(let string):
                 await parseResponse(string, socket)
             case .binary:
                 break
-            case .ping, .pong, .viabilityChanged, .reconnectSuggested, .peerClosed:
+            case .ping, .pong, .viabilityChanged, .reconnectSuggested:
                 break
             case .cancelled:
                 await subscriptionManager.trackError(socket: socket)
                 await subscriptionManager.remove(socket)
-                print("websocket is cancelled")
             case .error(let error):
                 await subscriptionManager.trackError(socket: socket)
                 await subscriptionManager.remove(socket)
