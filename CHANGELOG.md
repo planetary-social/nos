@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add impersonation flag category and better NIP-56 mapping.
 - Added a filter button to the Home tab that lets you browse all notes on a specific relay.
 - Add a Tap to Refresh button in empty profiles.
-- Update the reply count shown below each Note in a Feed.
+- Support nostr:naddr links to text and long-form content notes.
+- Update the reply count shown below each note in a Feed.
 - Removed follower count from profile screen.
 - Fixed deep linking to profiles and notes.
 - Fixed issue where some nostr:nprofile references did not appear as links.
