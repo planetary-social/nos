@@ -135,7 +135,7 @@ struct NoteParser {
                 case .note(let rawEventID), .nevent(let rawEventID, _, _, _):
                     return "\(prefix)[\(String(localized: .localizable.linkToNote))](%\(rawEventID))"
                 case .naddr(let replaceableID, _, let authorID, _):
-                    return "\(prefix)[\(String(localized: .localizable.linkToNote))]($\(replaceableID),\(authorID))"
+                    return "\(prefix)[\(String(localized: .localizable.linkToNote))]($\(replaceableID);\(authorID))"
                 }
             } catch {
                 return String(substring)

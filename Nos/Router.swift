@@ -172,9 +172,9 @@ extension Router {
                 } else if link.hasPrefix("%") {
                     pushNote(id: identifier)
                 } else if link.hasPrefix("$") {
-                    let parts = identifier.split(separator: ",").map { String($0) }
+                    let parts = identifier.split(separator: ";").map { String($0) }
                     guard let replaceableID = parts.first, let authorID = parts.last else {
-                        Log.debug("Something went wrong in parsing the replaceableID and author from the naddr link")
+                        Log.debug("Something went wrong parsing the replaceableID and author from the naddr link")
                         return
                     }
                     pushNote(replaceableID: replaceableID, authorID: authorID)
