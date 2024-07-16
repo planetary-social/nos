@@ -416,7 +416,9 @@ public class Event: NosManagedObject, VerifiableEvent {
     
     @nonobjc public class func event(by replaceableID: RawReplaceableID, author: Author) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.predicate = NSPredicate(format: "replaceableIdentifier = %@ AND author = %@", replaceableID, author)
+        fetchRequest.predicate = NSPredicate(
+            format: "replaceableIdentifier = %@ AND author = %@", replaceableID, author
+        )
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.replaceableIdentifier, ascending: true)]
         fetchRequest.fetchLimit = 1
         return fetchRequest
@@ -567,7 +569,16 @@ public class Event: NosManagedObject, VerifiableEvent {
         guard try context.count(for: Event.hydratedEvent(by: jsonEvent.id)) == 0 else {
             return nil
         }
-        
+
+        if let replaceableID = jsonEvent.replaceableID {
+            let author = try Author.findOrCreate(by: jsonEvent.pubKey, context: context)
+            if let existingEvent = try context.fetch(Event.event(by: replaceableID, author: author)).first,
+                existingEvent.isStub {
+                try existingEvent.hydrate(from: jsonEvent, relay: relay, in: context)
+                return existingEvent
+            }
+        }
+
         if let existingEvent = try context.fetch(Event.event(by: jsonEvent.id)).first {
             if existingEvent.isStub {
                 try existingEvent.hydrate(from: jsonEvent, relay: relay, in: context)
@@ -581,7 +592,7 @@ public class Event: NosManagedObject, VerifiableEvent {
             return event
         }
     }
-    
+
     /// Fetches the event with the given ID out of the database, and otherwise creates a stubbed Event.
     /// A stubbed event only has an `identifier` - we know an event with this identifier exists but we don't
     /// have its content or tags yet.
@@ -653,6 +664,9 @@ public class Event: NosManagedObject, VerifiableEvent {
                 if isExpired {
                     throw EventError.expiredEvent
                 }
+            } else if tag[safe: 0] == "d",
+                let dTag = tag[safe: 1] {
+                replaceableIdentifier = dTag
             }
         }
         
@@ -747,7 +761,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         let newAuthorReferences = NSMutableOrderedSet()
         for jsonTag in jsonEvent.tags {
             if jsonTag.first == "e" {
-                // TODO: validdate that the tag looks like an event ref
+                // TODO: validate that the tag looks like an event ref
                 do {
                     let eTag = try EventReference(jsonTag: jsonTag, context: context)
                     newEventReferences.add(eTag)
@@ -875,7 +889,9 @@ public class Event: NosManagedObject, VerifiableEvent {
         if let identifier {
             relaySubscriptions.append(await relayService.requestEvent(with: identifier))
         } else if let replaceableIdentifier, let authorKey = author?.hexadecimalPublicKey {
-            relaySubscriptions.append(await relayService.requestEvent(with: replaceableIdentifier, authorKey: authorKey))
+            relaySubscriptions.append(
+                await relayService.requestEvent(with: replaceableIdentifier, authorKey: authorKey)
+            )
         }
     }
     

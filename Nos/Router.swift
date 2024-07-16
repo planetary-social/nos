@@ -75,10 +75,12 @@ import Dependencies
         }
     }    
     
-    /// Pushes a detail view for the event with the given dTag, creating one if needed.
-    func pushNote(dTag: RawReplaceableID, authorID: RawAuthorID) {
+    /// Pushes a detail view for the event with the given replaceable ID and author, creating one if needed.
+    func pushNote(replaceableID: RawReplaceableID, authorID: RawAuthorID) {
         do {
-            let note = try Event.findOrCreateStubBy(replaceableID: dTag, authorID: authorID, context: persistenceController.viewContext)
+            let note = try Event.findOrCreateStubBy(
+                replaceableID: replaceableID, authorID: authorID, context: persistenceController.viewContext
+            )
             push(note)
         } catch {
             Log.optional(error)
@@ -171,11 +173,11 @@ extension Router {
                     pushNote(id: identifier)
                 } else if link.hasPrefix("$") {
                     let parts = identifier.split(separator: ",").map { String($0) }
-                    guard let dTag = parts.first, let authorID = parts.last else {
-                        Log.debug("Something went wrong in parsing the dTag and author from the naddr link")
+                    guard let replaceableID = parts.first, let authorID = parts.last else {
+                        Log.debug("Something went wrong in parsing the replaceableID and author from the naddr link")
                         return
                     }
-                    pushNote(dTag: dTag, authorID: authorID)
+                    pushNote(replaceableID: replaceableID, authorID: authorID)
                 } else if url.scheme == "http" || url.scheme == "https" {
                     push(url)
                 } else {
