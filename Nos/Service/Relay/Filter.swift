@@ -39,7 +39,7 @@ struct Filter: Hashable, Identifiable {
     var keepSubscriptionOpen: Bool
 
     /// Initializes a Filter object
-    /// 
+    ///
     /// - Parameter authorKeys: List of author identifiers the Filter should be
     /// constrained to. Defaults to `[]`.
     /// - Parameter eventIDs: List of event identifiers the Filter should be
