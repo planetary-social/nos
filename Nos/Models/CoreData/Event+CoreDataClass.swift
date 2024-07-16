@@ -668,7 +668,7 @@ public class Event: NosManagedObject, VerifiableEvent {
     /// have its content or tags yet.
     ///  
     /// - Parameters:
-    ///   - replaceableID: The replaceable ID of the event. In some, most, or all cases, this is the `d` tag.
+    ///   - replaceableID: The replaceable ID of the event. This is encoded in the `d` tag.
     ///   - authorID: The public key of the author associated with the event.
     ///   - context: The managed object context to use.
     /// - Returns: The Event model with the given ID.
