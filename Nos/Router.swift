@@ -60,7 +60,7 @@ import Dependencies
         } else if let replaceableIdentifier = note.replaceableIdentifier, let author = note.author {
             push(.note(.replaceableIdentifier(replaceableID: replaceableIdentifier, author: author)))
         } else {
-            push(.note(.identifier(note.identifier))) // TODO: ??? this isn't going to work since note.identifier is `nil`
+            fatalError("Tried to push a note with no identifier; that's not going to work.")
         }
     }
     
