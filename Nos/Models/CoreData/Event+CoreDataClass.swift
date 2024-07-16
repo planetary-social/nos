@@ -324,7 +324,48 @@ public class Event: NosManagedObject, VerifiableEvent {
         )
         return fetchRequest
     }
-    
+
+    /// A request for all events that responded to a specific note.
+    ///
+    /// - Parameter noteIdentifier: ID of the note to retrieve replies for.
+    ///
+    /// Intented to be used primarily to compute the number of replies and for
+    /// building a set of author avatars.
+    @nonobjc public class func replies(to noteID: RawEventID) -> FetchRequest<Event> {
+        let format = """
+            SUBQUERY(
+                eventReferences,
+                $e,
+                $e.referencedEvent.identifier = %@ AND
+                    ($e.marker = 'reply' OR $e.marker = 'root')
+            ).@count > 0
+        """
+
+        let predicate = NSCompoundPredicate(
+            andPredicateWithSubpredicates: [
+                NSPredicate(format: "kind = 1"),
+                NSPredicate(
+                    format: format,
+                    noteID,
+                    noteID
+                ),
+                NSPredicate(format: "deletedOn.@count = 0"),
+                NSPredicate(format: "author.muted = false")
+            ]
+        )
+
+        let fetchRequest = Event.fetchRequest()
+        fetchRequest.includesPendingChanges = false
+        fetchRequest.includesSubentities = false
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Event.identifier, ascending: true)
+        ]
+
+        fetchRequest.predicate = predicate
+        fetchRequest.relationshipKeyPathsForPrefetching = ["author"]
+        return FetchRequest(fetchRequest: fetchRequest)
+    }
+
     /// A fetch request for all the events that should be cleared out of the database by 
     /// `DatabaseCleaner.cleanupEntities(...)`.
     ///
@@ -449,21 +490,32 @@ public class Event: NosManagedObject, VerifiableEvent {
         return fetchRequest
     }
     
-    @nonobjc public class func homeFeedPredicate(for user: Author, before: Date) -> NSPredicate {
-        NSPredicate(
-            // swiftlint:disable line_length
-            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND createdAt <= %@ AND deletedOn.@count = 0",
-            // swiftlint:enable line_length
-            user,
-            user,
-            before as CVarArg
-        )
+    @nonobjc public class func homeFeedPredicate(
+        for user: Author, 
+        before: Date,
+        seenOn relay: Relay? = nil
+    ) -> NSPredicate {
+        // swiftlint:disable:next line_length
+        var queryString = "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND author.muted = 0 AND createdAt <= %@ AND deletedOn.@count = 0"
+        var arguments: [CVarArg] = [before as CVarArg]
+        if let relay {
+            queryString.append(" AND ANY seenOnRelays = %@")
+            arguments.append(relay)
+        } else {
+            queryString.append(" AND (ANY author.followers.source = %@ OR author = %@)")
+            arguments += [user, user]
+        }
+        return NSPredicate(format: queryString, argumentArray: arguments)
     }
     
-    @nonobjc public class func homeFeed(for user: Author, before: Date) -> NSFetchRequest<Event> {
+    @nonobjc public class func homeFeed(
+        for user: Author, 
+        before: Date, 
+        seenOn relay: Relay? = nil
+    ) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = homeFeedPredicate(for: user, before: before)
+        fetchRequest.predicate = homeFeedPredicate(for: user, before: before, seenOn: relay)
         return fetchRequest
     }
 
@@ -894,7 +946,7 @@ public class Event: NosManagedObject, VerifiableEvent {
             )
         }
     }
-    
+
     /// Requests any missing metadata for authors referenced by this note from relays.
     @MainActor private func loadAuthorMetadata() async {
         @Dependency(\.relayService) var relayService
@@ -1105,35 +1157,6 @@ public class Event: NosManagedObject, VerifiableEvent {
         
         return await context.perform {
             noteParser.parse(content: content, tags: tags, context: context)
-        }
-    }
-    
-    class func replyMetadata(for noteID: RawEventID?, context: NSManagedObjectContext) async -> (Int, [URL]) {
-        guard let noteID else {
-            return (0, [])
-        }
-        
-        return await context.perform {
-            let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-            fetchRequest.predicate = NSPredicate(format: Event.replyNoteReferences, noteID)
-            fetchRequest.includesPendingChanges = false
-            fetchRequest.includesSubentities = false
-            fetchRequest.relationshipKeyPathsForPrefetching = ["author"]
-            let replies = (try? context.fetch(fetchRequest)) ?? []
-            let replyCount = replies.count
-            
-            var avatarURLs = [URL]()
-            for reply in replies {
-                if let avatarURL = reply.author?.profilePhotoURL,
-                    !avatarURLs.contains(avatarURL) {
-                    avatarURLs.append(avatarURL)
-                    if avatarURLs.count >= 2 {
-                        break
-                    }
-                }
-            }
-            return (replyCount, avatarURLs)
         }
     }
     

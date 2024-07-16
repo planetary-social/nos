@@ -84,7 +84,6 @@ struct FollowButton_Previews: PreviewProvider {
         follow.destination = alice
         user.follows = Set([follow])
         try? previewContext.save()
-        KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.privateKeyHex.utf8))
     }
     
     static var previews: some View {

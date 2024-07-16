@@ -12,24 +12,25 @@ import CoreData
 /// and inject it into the view using the `inject(previewData:)` view modifier.
 struct PreviewData {
     
+    let currentUserKey: KeyPair 
+    
+    init(currentUserKey: KeyPair = KeyFixture.keyPair) {
+        self.currentUserKey = currentUserKey
+        Task { [currentUser] in
+            await currentUser.setPrivateKeyHex(currentUserKey.privateKeyHex)
+        }
+    }
+    
     // MARK: - Environment
     @Dependency(\.persistenceController) var persistenceController 
     @Dependency(\.router) var router
     @Dependency(\.relayService) var relayService
+    @Dependency(\.currentUser) var currentUser
     
     lazy var previewContext: NSManagedObjectContext = {
         persistenceController.container.viewContext  
     }()
     
-    // MARK: - User
-
-    @MainActor lazy var currentUser: CurrentUser = {
-        let currentUser = CurrentUser()
-        currentUser.viewContext = previewContext
-        Task { await currentUser.setKeyPair(KeyFixture.keyPair) }
-        return currentUser
-    }()
-
     // MARK: - Authors
     
     lazy var previewAuthor: Author = {
@@ -321,10 +322,8 @@ struct PreviewData {
         note.kind = EventKind.report.rawValue
         note.content = "this person is spammy"
         note.allTags = [
-            [ "p", "6b165e83a3b7d333a6e7db1f200dc627e31eb5170285c29ded271be203c5da37", "other" ],
-            [ "e", "ad0cea87d9c81e3bc5b15ddf561b1a2bbbff3d8318d4ea9ccd4644def9e035b8", "other" ],
-            [ "L", "MOD" ],
-            [ "l", "MOD>SP", "MOD", "{\"confidence\":0.9876784682273865}" ]
+            [ "p", "6b165e83a3b7d333a6e7db1f200dc627e31eb5170285c29ded271be203c5da37", "spam" ],
+            [ "e", "ad0cea87d9c81e3bc5b15ddf561b1a2bbbff3d8318d4ea9ccd4644def9e035b8", "spam" ],
         ] as NSObject
         note.author = alice
         note.createdAt = .now

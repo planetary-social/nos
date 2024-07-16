@@ -1,8 +1,9 @@
 import Foundation
 import Logger
+import Combine
 
 /// Models a request to a relay for Nostr Events. 
-struct RelaySubscription: Identifiable, Hashable {
+class RelaySubscription: Identifiable, Hashable {
     
     var id: String 
     
@@ -14,9 +15,6 @@ struct RelaySubscription: Identifiable, Hashable {
     /// The date this Filter was opened as a subscription on relays. Used to close stale subscriptions
     var subscriptionStartDate: Date?
     
-    /// The oldest creation date on an event processed by this filter. Used for pagination.
-    var oldestEventCreationDate: Date?
-    
     /// The number of events that have been returned for this subscription
     var receivedEventCount = 0
     
@@ -24,20 +22,23 @@ struct RelaySubscription: Identifiable, Hashable {
     /// when a filter can be closed.
     var referenceCount: Int = 0
     
+    /// An observable stream of events that should emit every event downloaded on this subscription 
+    let events: PassthroughSubject<JSONEvent, Never> = PassthroughSubject<JSONEvent, Never>()
+    
     var isActive: Bool {
         subscriptionStartDate != nil
     }
     
-    /// Returns true if this is a "one-time" filter, where we are only looking for a single event
-    var isOneTime: Bool {
-        filter.limit == 1
+    /// Whether this RelaySubscription should close the subscription to the
+    /// filter after receiving a response.
+    var closesAfterResponse: Bool {
+        !filter.keepSubscriptionOpen
     }
     
     internal init(
         filter: Filter, 
         relayAddress: URL, 
         subscriptionStartDate: Date? = nil, 
-        oldestEventCreationDate: Date? = nil, 
         referenceCount: Int = 0
     ) {
         self.filter = filter
@@ -45,7 +46,24 @@ struct RelaySubscription: Identifiable, Hashable {
         // Compute a unique ID but predictable ID. The sha256 cuts the length down to an acceptable size.
         self.id = (filter.id + "-" + relayAddress.absoluteString).data(using: .utf8)?.sha256 ?? "error"
         self.subscriptionStartDate = subscriptionStartDate
-        self.oldestEventCreationDate = oldestEventCreationDate
         self.referenceCount = referenceCount
+    }
+    
+    static func == (lhs: RelaySubscription, rhs: RelaySubscription) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.filter == rhs.filter &&
+        lhs.relayAddress == rhs.relayAddress &&
+        lhs.subscriptionStartDate == rhs.subscriptionStartDate &&
+        lhs.referenceCount == rhs.referenceCount &&
+        lhs.isActive == rhs.isActive
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(filter)
+        hasher.combine(relayAddress)
+        hasher.combine(subscriptionStartDate)
+        hasher.combine(referenceCount)
+        hasher.combine(isActive)
     }
 }

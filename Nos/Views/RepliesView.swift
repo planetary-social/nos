@@ -73,8 +73,12 @@ struct RepliesView: View {
             relaySubscriptions.removeAll()
             
             let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
-            let filter = Filter(kinds: [.text, .like, .delete, .repost, .report, .label], eTags: eTags)
-            let subIDs = await relayService.subscribeToEvents(matching: filter)
+            let filter = Filter(
+                kinds: [.text, .like, .delete, .repost, .report, .label],
+                eTags: eTags,
+                keepSubscriptionOpen: true
+            )
+            let subIDs = await relayService.fetchEvents(matching: filter)
             relaySubscriptions.append(subIDs)
             
             // download reports for this user and the replies' authors
@@ -82,8 +86,14 @@ struct RepliesView: View {
                 return
             }
             let pTags = Array(Set([authorKey] + replies.compactMap { $0.author?.hexadecimalPublicKey }))
-            let reportFilter = Filter(kinds: [.report], pTags: pTags)
-            relaySubscriptions.append(await relayService.subscribeToEvents(matching: reportFilter))
+            let reportFilter = Filter(
+                kinds: [.report],
+                pTags: pTags,
+                keepSubscriptionOpen: true
+            )
+            relaySubscriptions.append(
+                await relayService.fetchEvents(matching: reportFilter)
+            )
         }
     }
     
@@ -96,7 +106,6 @@ struct RepliesView: View {
                             note: note,
                             shouldTruncate: false,
                             hideOutOfNetwork: false,
-                            showReplyCount: false,
                             displayRootMessage: true,
                             isTapEnabled: false,
                             replyAction: { _ in self.showReplyComposer = true },
@@ -164,12 +173,8 @@ struct RepliesView: View {
 }
 struct RepliesView_Previews: PreviewProvider {
     
-    static var previewData = PreviewData()
-    static var persistenceController = {
-        let persistenceController = PersistenceController.preview
-        KeyChain.save(key: KeyChain.keychainPrivateKey, data: Data(KeyFixture.alice.privateKeyHex.utf8))
-        return persistenceController
-    }()
+    static var previewData = PreviewData(currentUserKey: KeyFixture.alice)
+    static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.container.viewContext

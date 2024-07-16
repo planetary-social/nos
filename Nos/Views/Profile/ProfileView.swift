@@ -50,8 +50,14 @@ struct ProfileView: View {
         )
         
         // reports
-        let reportFilter = Filter(kinds: [.report], pTags: [authorKey])
-        relaySubscriptions.append(await relayService.subscribeToEvents(matching: reportFilter)) 
+        let reportFilter = Filter(
+            kinds: [.report],
+            pTags: [authorKey],
+            keepSubscriptionOpen: true
+        )
+        relaySubscriptions.append(
+            await relayService.fetchEvents(matching: reportFilter)
+        )
     }
 
     private var title: AttributedString {
@@ -75,7 +81,8 @@ struct ProfileView: View {
             VStack {
                 PagedNoteListView(
                     databaseFilter: selectedTab.databaseFilter(author: author),
-                    relayFilter: selectedTab.relayFilter(author: author),
+                    relayFilter: selectedTab.relayFilter(author: author), 
+                    relay: nil,
                     context: viewContext,
                     tab: .profile,
                     header: {
@@ -83,11 +90,16 @@ struct ProfileView: View {
                             .compositingGroup()
                             .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                     },
-                    emptyPlaceholder: {
+                    emptyPlaceholder: { refresh in
                         VStack {
                             Text(.localizable.noEventsOnProfile)
                                 .padding()
                                 .readabilityPadding()
+                            
+                            SecondaryActionButton(
+                                title: .localizable.tapToRefresh,
+                                action: refresh
+                            )
                         }
                         .frame(minHeight: 300)
                     },
@@ -235,15 +247,8 @@ struct ProfileView: View {
     lazy var previewContext: NSManagedObjectContext = {
         persistenceController.container.viewContext  
     }()
-
-    lazy var currentUser: CurrentUser = {
-        let currentUser = CurrentUser()
-        currentUser.viewContext = previewContext
-        Task { await currentUser.setKeyPair(KeyFixture.eve) }
-        return currentUser
-    }() 
     
-    var previewData = PreviewData(currentUser: currentUser)
+    var previewData = PreviewData(currentUserKey: KeyFixture.eve)
     
     return NavigationStack {
         ProfileView(author: previewData.eve)

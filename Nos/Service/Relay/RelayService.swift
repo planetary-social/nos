@@ -108,9 +108,10 @@ extension RelayService {
         }
     }
     
-    private func sendClose(from client: WebSocketClient, subscription: String) {
+    private func sendClose(from client: WebSocketClient, subscriptionID: RelaySubscription.ID) async {
         do {
-            let request: [Any] = ["CLOSE", subscription]
+            await subscriptionManager.forceCloseSubscriptionCount(for: subscriptionID)
+            let request: [Any] = ["CLOSE", subscriptionID]
             let requestData = try JSONSerialization.data(withJSONObject: request)
             let requestString = String(data: requestData, encoding: .utf8)!
             client.write(string: requestString)
@@ -120,7 +121,10 @@ extension RelayService {
     }
     
     private func sendCloseToAll(for subscription: RelaySubscription.ID) async {
-        await subscriptionManager.sockets().forEach { self.sendClose(from: $0, subscription: subscription) }
+        let sockets = await subscriptionManager.sockets()
+        for socket in sockets {
+            await self.sendClose(from: socket, subscriptionID: subscription) 
+        }
         Task { await processSubscriptionQueue() }
     }
     
@@ -128,7 +132,7 @@ extension RelayService {
         guard let address = relayAddress else { return }
         if let socket = await subscriptionManager.socket(for: address) {
             for subscription in await subscriptionManager.active() {
-                self.sendClose(from: socket, subscription: subscription.id)
+                await self.sendClose(from: socket, subscriptionID: subscription.id)
             }
             
             await subscriptionManager.close(socket: socket)
@@ -150,7 +154,7 @@ extension RelayService {
     /// - Parameter specificRelays: an optional list of relays you would like to fetch from. The user's preferred relays
     ///     will be used if this is not set.
     /// - Returns: A handle that allows the caller to cancel the subscription when it is no longer needed.
-    func subscribeToEvents(
+    @discardableResult func fetchEvents(
         matching filter: Filter,
         from specificRelays: [URL]? = nil
     ) async -> SubscriptionCancellable {
@@ -166,7 +170,7 @@ extension RelayService {
         }
         var subscriptionIDs = [RelaySubscription.ID]()
         for relay in relayAddresses {
-            subscriptionIDs.append(await subscriptionManager.queueSubscription(with: filter, to: relay))
+            subscriptionIDs.append(await subscriptionManager.queueSubscription(with: filter, to: relay).id)
         }
         
         // Fire off REQs in the background
@@ -178,16 +182,65 @@ extension RelayService {
     /// Asks the relay to download a page of events matching the given `filter` from relays and save them to Core Data.
     /// You can cause the service to download the next page by calling `loadMore()` on the returned subscription object.
     /// The subscription will be cancelled when the returned subscription object is deallocated.
-    func subscribeToPagedEvents(matching filter: Filter) async -> PagedRelaySubscription {
-        PagedRelaySubscription(
+    /// - Parameters:
+    ///   - filter: an object describing the set of events that should be downloaded.
+    ///   - specificRelay: a specific relay to download events from. If `nil` the user's relay list will be used.
+    /// - Returns: A handle that can be used to load more pages of events. It will close the relay subscriptions
+    ///     when deallocated.
+    func subscribeToPagedEvents(
+        matching filter: Filter, 
+        from specificRelay: URL? = nil
+    ) async -> PagedRelaySubscription {
+        var relays = Set<URL>()
+        if let specificRelay {
+            relays.insert(specificRelay)
+        } else {
+            relays = await self.relayAddresses(for: currentUser)
+        }
+        
+        return await PagedRelaySubscription(
             startDate: .now,
             filter: filter,
             relayService: self,
             subscriptionManager: subscriptionManager,
-            relayAddresses: await self.relayAddresses(for: currentUser)
+            relayAddresses: relays
         )
     }
     
+    func requestReplyFromAnyone(for eventID: RawEventID?) async -> SubscriptionCancellable {
+        guard let eventID else {
+            return SubscriptionCancellable.empty()
+        }
+        let metaFilter = Filter(
+            kinds: [.text],
+            eTags: [eventID],
+            limit: 1
+        )
+        return await fetchEvents(matching: metaFilter)
+    }
+
+    /// Builds a subscription that fetched replies from follows to the given
+    /// event.
+    ///
+    /// - Parameter eventID: A note identifier.
+    /// - Parameter limit: Maximum number of replies to ask for. Defaults to
+    /// nil (no limit).
+    func requestRepliesFromFollows(
+        for eventID: RawEventID?,
+        limit: Int? = nil
+    ) async -> SubscriptionCancellable {
+        guard let eventID else {
+            return SubscriptionCancellable.empty()
+        }
+        let metaFilter = Filter(
+            authorKeys: Array(await currentUser.socialGraph.followedKeys),
+            kinds: [.text],
+            eTags: [eventID],
+            limit: limit
+        )
+        return await fetchEvents(matching: metaFilter)
+    }
+
     func requestMetadata(for authorKey: RawAuthorID?, since: Date?) async -> SubscriptionCancellable {
         guard let authorKey else {
             return SubscriptionCancellable.empty()
@@ -199,7 +252,7 @@ extension RelayService {
             limit: 1,
             since: since
         )
-        return await subscribeToEvents(matching: metaFilter)
+        return await fetchEvents(matching: metaFilter)
     }
     
     func requestContactList(for authorKey: RawAuthorID?, since: Date?) async -> SubscriptionCancellable {
@@ -213,7 +266,7 @@ extension RelayService {
             limit: 1,
             since: since
         )
-        return await subscribeToEvents(matching: contactFilter)
+        return await fetchEvents(matching: contactFilter)
     }
     
     func requestProfileData(
@@ -238,7 +291,12 @@ extension RelayService {
             return SubscriptionCancellable.empty()
         }
         
-        return await subscribeToEvents(matching: Filter(eventIDs: [eventID], limit: 1))
+        return await fetchEvents(
+            matching: Filter(
+                eventIDs: [eventID],
+                limit: 1
+            )
+        )
     }
     
     func requestEvent(with replaceableID: RawReplaceableID?, authorKey: RawAuthorID) async -> SubscriptionCancellable {
@@ -246,7 +304,7 @@ extension RelayService {
             return SubscriptionCancellable.empty()
         }
         
-        return await subscribeToEvents(matching: Filter(authorKeys: [authorKey], dTags: [replaceableID], limit: 1))
+        return await fetchEvents(matching: Filter(authorKeys: [authorKey], dTags: [replaceableID], limit: 1))
     }
     
     private func processSubscriptionQueue() async {
@@ -281,10 +339,10 @@ extension RelayService {
         
         if let subID = responseArray[1] as? String,
             let subscription = await subscriptionManager.subscription(from: subID),
-            subscription.isOneTime {
+            subscription.closesAfterResponse {
             Log.debug("\(socket.host) has finished responding on \(subID). Closing subscription.")
             // This is a one-off request. Close it.
-            sendClose(from: socket, subscription: subID)
+            await sendClose(from: socket, subscriptionID: subID)
         }
     }
     
@@ -309,18 +367,10 @@ extension RelayService {
             let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
             await self.parseQueue.push(jsonEvent, from: socket)
             
-            if var subscription = await subscriptionManager.subscription(from: subscriptionID) {
-                if let oldestSeen = subscription.oldestEventCreationDate,
-                    jsonEvent.createdDate < oldestSeen {
-                    subscription.oldestEventCreationDate = jsonEvent.createdDate
-                    subscription.receivedEventCount += 1
-                    await subscriptionManager.updateSubscriptions(with: subscription)
-                } else {
-                    subscription.oldestEventCreationDate = jsonEvent.createdDate
-                    subscription.receivedEventCount += 1
-                    await subscriptionManager.updateSubscriptions(with: subscription)
-                }
-                if subscription.isOneTime {
+            if let subscription = await subscriptionManager.subscription(from: subscriptionID) {
+                subscription.receivedEventCount += 1
+                subscription.events.send(jsonEvent)
+                if subscription.closesAfterResponse {
                     Log.debug("detected subscription with id \(subscription.id) has been fulfilled. Closing.")
                     await subscriptionManager.forceCloseSubscriptionCount(for: subscription.id)
                     await sendCloseToAll(for: subscription.id)
@@ -767,21 +817,21 @@ extension RelayService: WebSocketDelegate {
         
         Task {
             switch event {
-            case .connected:
+            case .connected, .viabilityChanged(true):
                 await handleConnection(from: client)
-            case .disconnected(let reason, let code):
+            case .disconnected:
                 await subscriptionManager.remove(socket)
-                print("websocket is disconnected: \(reason) with code: \(code)")
+            case .peerClosed:
+                await subscriptionManager.remove(socket)
             case .text(let string):
                 await parseResponse(string, socket)
             case .binary:
                 break
-            case .ping, .pong, .viabilityChanged, .reconnectSuggested, .peerClosed:
+            case .ping, .pong, .viabilityChanged, .reconnectSuggested:
                 break
             case .cancelled:
                 await subscriptionManager.trackError(socket: socket)
                 await subscriptionManager.remove(socket)
-                print("websocket is cancelled")
             case .error(let error):
                 await subscriptionManager.trackError(socket: socket)
                 await subscriptionManager.remove(socket)

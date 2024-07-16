@@ -14,19 +14,28 @@ struct HomeFeedView: View {
     @FetchRequest private var authors: FetchedResults<Author>
     
     @State private var lastRefreshDate = Date(
-        timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.initialLoadTime)
+        timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.staticLoadTime)
     )
     @State private var isVisible = false
     @State private var relaySubscriptions = [SubscriptionCancellable]()
-    @State private var performingInitialLoad = true
     @State private var isShowingRelayList = false
-    static let initialLoadTime = 2
+    
+    /// When set to true this will display a fullscreen progress wheel for a set amount of time to give us a chance
+    /// to get some data from relay. The amount of time is defined in `staticLoadTime`.
+    @State private var showTimedLoadingIndicator = true
+    
+    /// The amount of time (in seconds) the loading indicator will be shown when showTimedLoadingIndicator is set to 
+    /// true.
+    static let staticLoadTime: TimeInterval = 2
 
     @ObservedObject var user: Author
 
     @State private var stories: [Author] = []
     @State private var selectedStoryAuthor: Author?
     @State private var storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: .now)!
+    
+    @State private var showRelayPicker = false
+    @State private var selectedRelay: Relay? 
 
     private var isShowingStories: Bool {
         selectedStoryAuthor != nil
@@ -41,6 +50,30 @@ struct HomeFeedView: View {
         )
     }
     
+    var homeFeedFetchRequest: NSFetchRequest<Event> {
+        Event.homeFeed(for: user, before: lastRefreshDate, seenOn: selectedRelay) 
+    }
+    
+    var homeFeedFilter: Filter {
+        var filter = Filter(kinds: [.text, .delete, .repost, .longFormContent])
+        if selectedRelay == nil {
+            filter.authorKeys = user.followedKeys.sorted()
+        } else {
+            filter.kinds += [.report]
+        }
+        return filter
+    }
+    
+    var navigationBarTitle: LocalizedStringResource {
+        if let relayName = selectedRelay?.host {
+            LocalizedStringResource(stringLiteral: relayName)
+        } else if isShowingStories {
+            .localizable.stories
+        } else {
+            .localizable.accountsIFollow
+        }
+    }
+    
     /// Downloads the data we need to show stories. 
     func downloadStories() async {
         relaySubscriptions.removeAll()
@@ -53,31 +86,32 @@ struct HomeFeedView: View {
                 kinds: [.text, .delete, .repost, .longFormContent, .report], 
                 since: storiesCutoffDate
             )
-            let textSubs = await relayService.subscribeToEvents(matching: textFilter)
+            let textSubs = await relayService.fetchEvents(matching: textFilter)
             relaySubscriptions.append(textSubs)
         }
     }
     
     var body: some View {
         ZStack {
-            let homeFeedFilter = Filter(
-                authorKeys: user.followedKeys, 
-                kinds: [.text, .delete, .repost, .longFormContent, .report], 
-                limit: 100, 
-                since: nil
-            )
             PagedNoteListView(
-                databaseFilter: Event.homeFeed(for: user, before: lastRefreshDate), 
+                databaseFilter: homeFeedFetchRequest,
                 relayFilter: homeFeedFilter,
+                relay: selectedRelay,
                 context: viewContext,
                 tab: .home,
                 header: {
-                    AuthorStoryCarousel(
-                        authors: $stories, 
-                        selectedStoryAuthor: $selectedStoryAuthor
-                    )
+                    Group {
+                        if selectedRelay == nil {
+                            AuthorStoryCarousel(
+                                authors: $stories, 
+                                selectedStoryAuthor: $selectedStoryAuthor
+                            )
+                        } else {
+                            EmptyView()
+                        }
+                    }
                 },
-                emptyPlaceholder: {
+                emptyPlaceholder: { _ in
                     VStack {
                         Text(.localizable.noEvents)
                             .padding()
@@ -105,12 +139,29 @@ struct HomeFeedView: View {
             .opacity(isShowingStories ? 1 : 0)
             .animation(.default, value: selectedStoryAuthor)
             
-            if performingInitialLoad {
+            if showTimedLoadingIndicator {
                 FullscreenProgressView(
-                    isPresented: $performingInitialLoad,
-                    hideAfter: .now() + .seconds(Self.initialLoadTime)
+                    isPresented: $showTimedLoadingIndicator,
+                    hideAfter: .now() + .seconds(Int(Self.staticLoadTime))
                 )
             } 
+            
+            if showRelayPicker {
+                RelayPicker(
+                    selectedRelay: $selectedRelay,
+                    defaultSelection: String(localized: .localizable.accountsIFollow),
+                    author: user,
+                    isPresented: $showRelayPicker
+                )
+                .onChange(of: selectedRelay) { _, _ in
+                    showTimedLoadingIndicator = true
+                    Task {
+                        withAnimation {
+                            showRelayPicker = false
+                        }
+                    }
+                }
+            }
         }
         .doubleTapToPop(tab: .home) { _ in
             if isShowingStories {
@@ -137,29 +188,21 @@ struct HomeFeedView: View {
                             .animation(.default, value: selectedStoryAuthor)
                     }
                 } else {
-                    Button {
-                        isShowingRelayList = true
-                    } label: {
-                        HStack(spacing: 3) {
-                            Image("relay-left")
-                                .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
-                            Text("\(relayService.numberOfConnectedRelays)")
-                                .font(.clarity(.bold, textStyle: .title3))
-                                .foregroundColor(.primaryTxt)
-                            Image("relay-right")
-                                .colorMultiply(relayService.numberOfConnectedRelays > 0 ? .white : .red)
+                    Button { 
+                        withAnimation {
+                            showRelayPicker.toggle()
                         }
+                    } label: { 
+                        Image(systemName: "line.3.horizontal.decrease.circle")
+                            .foregroundStyle(Color.secondaryTxt)
+                            .accessibilityLabel(Text(.localizable.filter))
                     }
-                    .sheet(isPresented: $isShowingRelayList) {
-                        NavigationView {
-                            RelayView(author: user)
-                        }
-                    }
+                    .frame(minWidth: 40, minHeight: 40)
                 }
             }
         }
         .padding(.top, 1)
-        .nosNavigationBar(title: isShowingStories ? .localizable.stories : .localizable.homeFeed)
+        .nosNavigationBar(title: navigationBarTitle)
         .task {
             await downloadStories()
         }
@@ -188,57 +231,26 @@ struct HomeFeedView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+#Preview {
+    var previewData = PreviewData()
     
-    static var previewData = PreviewData()
-    static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
-    static var relayService = previewData.relayService
-    
-    static var emptyPersistenceController = PersistenceController.empty
-    static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = previewData.relayService
-    
-    static var router = Router()
-    
-    static var currentUser = previewData.currentUser
-    
-    static var shortNote: Event {
-        let note = Event(context: previewContext)
-        note.identifier = "p1"
-        note.kind = 1
-        note.content = "Hello, world!"
-        note.author = currentUser.author
-        return note
-    }
-    
-    static var longNote: Event {
-        let note = Event(context: previewContext)
-        note.identifier = "p2"
-        note.kind = 1
-        note.content = .loremIpsum(5)
-        note.author = currentUser.author
-        return note
-    }
-    
-    static var user: Author {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
-        return author
-    }
-    
-    static var previews: some View {
-        HomeFeedView(user: user)
-            .inject(previewData: previewData)
-            .onAppear {
-                print(shortNote)
-                print(longNote)
-            }
+    func createTestData() {
+        let user = previewData.alice
+        let addresses = Relay.recommended
+        addresses.forEach { address in
+            let relay = try? Relay.findOrCreate(by: address, context: previewData.previewContext)
+            relay?.relayDescription = "A Nostr relay that aims to cultivate a healthy community."
+            relay?.addToAuthors(user)
+        }
         
-        HomeFeedView(user: user)
-            .environment(\.managedObjectContext, emptyPreviewContext)
-            .environmentObject(emptyRelayService)
-            .environmentObject(router)
-            .environment(currentUser)
+        _ = previewData.shortNote
+    }
+    
+    return NavigationStack {
+        HomeFeedView(user: previewData.alice)
+    }
+    .inject(previewData: previewData)
+    .onAppear {
+        createTestData()
     }
 }

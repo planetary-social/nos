@@ -96,12 +96,15 @@ import Combine
         }
         
         let userMentionsFilter = Filter(
-            kinds: [.text, .longFormContent, .like], 
+            kinds: [.text], 
             pTags: [authorKey], 
-            limit: 50
+            limit: 50,
+            keepSubscriptionOpen: true
         )
-        relaySubscription = await relayService.subscribeToEvents(matching: userMentionsFilter)
-        
+        relaySubscription = await relayService.fetchEvents(
+            matching: userMentionsFilter
+        )
+
         await updateBadgeCount()
     }
     

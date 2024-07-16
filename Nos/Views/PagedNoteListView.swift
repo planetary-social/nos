@@ -25,6 +25,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// by the `databaseFilter`. 
     let relayFilter: Filter
     
+    let relay: Relay? 
+    
     let context: NSManagedObjectContext
 
     /// The tab in which this PagedNoteListView appears.
@@ -34,9 +36,9 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// A view that will be displayed as the collectionView header.
     let header: () -> Header
     
-    /// A view that will be displayed below the header when no notes are being shown.
-    let emptyPlaceholder: () -> EmptyPlaceholder
-    
+    /// A view that will be displayed below the header when no notes are being shown and a handler that 
+    let emptyPlaceholder: (@escaping () -> Void) -> EmptyPlaceholder
+
     /// A closure that will be called when the user pulls-to-refresh. You probably want to update the `databaseFilter`
     /// in this closure.
     let onRefresh: () -> NSFetchRequest<Event> 
@@ -55,6 +57,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         let dataSource = context.coordinator.dataSource(
             databaseFilter: databaseFilter, 
             relayFilter: relayFilter,
+            relay: relay,
             collectionView: collectionView, 
             context: self.context,
             header: header,
@@ -72,28 +75,57 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         )
         collectionView.refreshControl = refreshControl
 
-        context.coordinator.observer = NotificationCenter.default.addObserver(
+        Self.setUpObservers(
+            uiView: collectionView,
+            coordinator: context.coordinator,
+            tab: tab
+        )
+
+        return collectionView
+    }
+    
+    func updateUIView(_ collectionView: UICollectionView, context: Context) {
+        if let dataSource = collectionView.dataSource as? PagedNoteDataSource<Header, EmptyPlaceholder> {
+            if relayFilter != dataSource.relayFilter || relay != dataSource.relay {
+                dataSource.subscribeToEvents(matching: relayFilter, from: relay)
+            }
+            if databaseFilter != dataSource.databaseFilter {
+                dataSource.updateFetchRequest(databaseFilter)
+            }
+        }
+    }
+    
+    static func dismantleUIView(_ uiView: UICollectionView, coordinator: Coordinator<Header, EmptyPlaceholder>) {
+        tearDownObservers(coordinator: coordinator)
+    }
+
+    private static func setUpObservers(
+        uiView: UICollectionView,
+        coordinator: Coordinator<Header, EmptyPlaceholder>,
+        tab: AppDestination
+    ) {
+        let notificationCenter = NotificationCenter.default
+        coordinator.scrollToTopObserver = notificationCenter.addObserver(
             forName: .scrollToTop,
             object: nil,
             queue: .main
-        ) { [weak collectionView] notification in
+        ) { [weak uiView] notification in
             // if the tab that's selected is the tab in which this `PagedNoteListView` is displayed, scroll to the top
             guard let selectedTab = notification.userInfo?["tab"] as? AppDestination,
                 selectedTab == tab else {
                 return
             }
             // scrolling to CGRect.zero does not work, so this seems to be the best we can do
-            collectionView?.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
+            uiView?.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
         }
-
-        return collectionView
     }
-    
-    func updateUIView(_ collectionView: UICollectionView, context: Context) {}
 
-    static func dismantleUIView(_ uiView: UITextView, coordinator: Coordinator<Header, EmptyPlaceholder>) {
-        if let observer = coordinator.observer {
-            NotificationCenter.default.removeObserver(observer)
+    private static func tearDownObservers(
+        coordinator: Coordinator<Header, EmptyPlaceholder>
+    ) {
+        let notificationCenter = NotificationCenter.default
+        if let observer = coordinator.scrollToTopObserver {
+            notificationCenter.removeObserver(observer)
         }
     }
 
@@ -138,16 +170,17 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         
         var dataSource: PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder>?
         var collectionView: UICollectionView?
-        var observer: NSObjectProtocol?
+        var scrollToTopObserver: NSObjectProtocol?
         var onRefresh: (() -> NSFetchRequest<Event>)?
         
         func dataSource(
             databaseFilter: NSFetchRequest<Event>, 
             relayFilter: Filter,
+            relay: Relay?,
             collectionView: UICollectionView,
             context: NSManagedObjectContext,
             @ViewBuilder header: @escaping () -> CoordinatorHeader,
-            @ViewBuilder emptyPlaceholder: @escaping () -> CoordinatorEmptyPlaceholder,
+            @ViewBuilder emptyPlaceholder: @escaping (@escaping () -> Void) -> CoordinatorEmptyPlaceholder,
             onRefresh: @escaping () -> NSFetchRequest<Event>
         ) -> PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder> {
             if let dataSource {
@@ -159,10 +192,12 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             let dataSource = PagedNoteDataSource(
                 databaseFilter: databaseFilter, 
                 relayFilter: relayFilter,
+                relay: relay,
                 collectionView: collectionView, 
                 context: context,
                 header: header,
-                emptyPlaceholder: emptyPlaceholder
+                emptyPlaceholder: emptyPlaceholder,
+                onRefresh: onRefresh
             )
             self.dataSource = dataSource
             return dataSource
@@ -171,7 +206,6 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         @objc func refreshData(_ sender: Any) {
             if let onRefresh {
                 dataSource?.updateFetchRequest(onRefresh())
-                collectionView?.reloadData()
             }
             
             if let refreshControl = sender as? UIRefreshControl {
@@ -185,7 +219,10 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
 }
 
 extension Notification.Name {
+    /// Instructs the receiver to scroll its list to the top
     public static let scrollToTop = Notification.Name("scrollToTop")
+    /// Instructs the receiver to perform a data refresh
+    public static let refresh = Notification.Name("refresh")
 }
 
 #Preview {
@@ -193,7 +230,8 @@ extension Notification.Name {
     
     return PagedNoteListView(
         databaseFilter: previewData.alice.allPostsRequest(onlyRootPosts: false),
-        relayFilter: Filter(),
+        relayFilter: Filter(), 
+        relay: nil,
         context: previewData.previewContext,
         tab: .home,
         header: {
@@ -202,7 +240,7 @@ extension Notification.Name {
                 .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 .id(previewData.alice.id)
         },
-        emptyPlaceholder: {
+        emptyPlaceholder: { _ in
             Text("empty")
         },
         onRefresh: {
