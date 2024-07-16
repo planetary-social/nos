@@ -624,9 +624,10 @@ public class Event: NosManagedObject, VerifiableEvent {
 
         if let replaceableID = jsonEvent.replaceableID {
             let author = try Author.findOrCreate(by: jsonEvent.pubKey, context: context)
-            if let existingEvent = try context.fetch(Event.event(by: replaceableID, author: author)).first,
-                existingEvent.isStub {
-                try existingEvent.hydrate(from: jsonEvent, relay: relay, in: context)
+            if let existingEvent = try context.fetch(Event.event(by: replaceableID, author: author)).first {
+                if existingEvent.isStub {
+                    try existingEvent.hydrate(from: jsonEvent, relay: relay, in: context)
+                }
                 return existingEvent
             }
         }
@@ -646,7 +647,7 @@ public class Event: NosManagedObject, VerifiableEvent {
     }
 
     /// Fetches the event with the given ID out of the database, and otherwise creates a stubbed Event.
-    /// A stubbed event only has an `identifier` - we know an event with this identifier exists but we don't
+    /// A stubbed event created here only has an `identifier`. We know an event with this identifier exists but we don't
     /// have its content or tags yet.
     ///  
     /// - Parameters:
@@ -664,9 +665,9 @@ public class Event: NosManagedObject, VerifiableEvent {
 
     /// Fetches the event with the given replaceable ID and author ID out of the database, and otherwise
     /// creates a stubbed Event.
-    /// A stubbed event only has an `replaceableIdentifier` - we know an event with this identifier exists but we don't
-    /// have its content or tags yet.
-    ///  
+    /// A stubbed event created here will only have a `replaceableIdentifier` and an author. We know an event with this
+    /// `replaceableIdentifier` and author exists but we don't have its content or tags yet.
+    ///
     /// - Parameters:
     ///   - replaceableID: The replaceable ID of the event. This is encoded in the `d` tag.
     ///   - authorID: The public key of the author associated with the event.
