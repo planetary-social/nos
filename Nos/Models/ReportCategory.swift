@@ -42,7 +42,7 @@ struct ReportCategory: Identifiable, Equatable {
 }
 
 enum NIP56Code: String {
-    case nudity, profanity, illegal, spam, impersonation, other
+    case nudity, malware, profanity, illegal, spam, impersonation, other
 }
 
 enum ReportCategoryType {
@@ -61,7 +61,7 @@ enum ReportCategoryType {
     static let harassment = ReportCategory(
         name: .moderation.harassment,
         code: "IL-har",
-        nip56Code: .other
+        nip56Code: .profanity
     )
 
     static let intoleranceAndHate = ReportCategory(
@@ -89,7 +89,13 @@ enum ReportCategoryType {
     static let nsfw = ReportCategory(
         name: .moderation.nsfw,
         code: "NW",
-        nip56Code: .other
+        nip56Code: .nudity
+    )
+    
+    static let impersonation = ReportCategory(
+        name: .moderation.impersonation,
+        code: "IM",
+        nip56Code: .impersonation
     )
 
     static let nudity = ReportCategory(
@@ -138,6 +144,7 @@ extension ReportCategoryType {
         ReportCategoryType.likelyToCauseHarm,
         ReportCategoryType.harassment,
         ReportCategoryType.intoleranceAndHate,
+        ReportCategoryType.impersonation,
         ReportCategoryType.illegal,
         ReportCategoryType.nsfw,
         ReportCategoryType.nudity,
@@ -150,8 +157,9 @@ extension ReportCategoryType {
     static let authorCategories = [
         ReportCategoryType.spam,
         ReportCategoryType.harassment,
-        ReportCategoryType.nsfw,
+        ReportCategoryType.nudity,
         ReportCategoryType.illegal,
+        ReportCategoryType.impersonation,
         ReportCategoryType.other,
     ]
 
