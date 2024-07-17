@@ -172,8 +172,14 @@ class Analytics {
     
     // MARK: - Relays
     
-    func rateLimited(by socket: WebSocket) {
-        track("Rate Limited", properties: ["relay": socket.request.url?.absoluteString ?? "null"])
+    func rateLimited(by socket: WebSocket, requestCount: Int) {
+        track(
+            "Rate Limited", 
+            properties: [
+                "relay": socket.request.url?.absoluteString ?? "null",
+                "count": requestCount,
+            ]
+        )
     }
     
     func badRequest(from socket: WebSocket, message: String) {

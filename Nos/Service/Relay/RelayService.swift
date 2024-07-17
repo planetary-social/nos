@@ -455,8 +455,15 @@ extension RelayService {
         let response = responseArray.description
         Log.debug("Notice from \(socket.host): \(response)")
         if let notice = responseArray[safe: 1] as? String {
-            if notice == "rate limited" {
-                analytics.rateLimited(by: socket)
+            if notice == "rate limited" || notice == "ERROR: too many concurrent REQs" {
+                Task {
+                    let numberOfRequests = await subscriptionManager.active()
+                        .filter { subscription in
+                            subscription.relayAddress == socket.url
+                        }
+                        .count
+                    analytics.rateLimited(by: socket, requestCount: numberOfRequests)
+                }
             } else if notice.contains("bad req:") {
                 analytics.badRequest(from: socket, message: response)
             }
