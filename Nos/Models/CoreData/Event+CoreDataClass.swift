@@ -7,7 +7,7 @@ import SwiftUI
 import Logger
 import Dependencies
 
-enum EventError: Error {
+enum EventError: Error, LocalizedError {
 	case utf8Encoding
 	case unrecognizedKind
     case missingAuthor
@@ -15,7 +15,7 @@ enum EventError: Error {
     case invalidSignature(Event)
     case expiredEvent
 
-    var description: String? {
+    var errorDescription: String? {
         switch self {
         case .unrecognizedKind:
             return "Unrecognized event kind"
@@ -622,22 +622,22 @@ public class Event: NosManagedObject, VerifiableEvent {
             return nil
         }
 
-        if let replaceableID = jsonEvent.replaceableID {
-            let author = try Author.findOrCreate(by: jsonEvent.pubKey, context: context)
-            if let existingEvent = try context.fetch(Event.event(by: replaceableID, author: author)).first {
-                if existingEvent.isStub {
-                    try existingEvent.hydrate(from: jsonEvent, relay: relay, in: context)
-                }
-                return existingEvent
-            }
-        }
-
         if let existingEvent = try context.fetch(Event.event(by: jsonEvent.id)).first {
             if existingEvent.isStub {
                 try existingEvent.hydrate(from: jsonEvent, relay: relay, in: context)
             }
             return existingEvent
         } else {
+            if let replaceableID = jsonEvent.replaceableID {
+                let author = try Author.findOrCreate(by: jsonEvent.pubKey, context: context)
+                if let existingEvent = try context.fetch(Event.event(by: replaceableID, author: author)).first {
+                    if existingEvent.isStub {
+                        try existingEvent.hydrate(from: jsonEvent, relay: relay, in: context)
+                    }
+                    return existingEvent
+                }
+            }
+
             let event = Event(context: context)
             event.identifier = jsonEvent.id
             event.receivedAt = .now
@@ -694,7 +694,10 @@ public class Event: NosManagedObject, VerifiableEvent {
         guard isStub else {
             fatalError("Tried to hydrate an event that isn't a stub. This is a programming error")
         }
-        
+
+        // if this stub was created with a replaceableIdentifier and author, it won't have an identifier yet
+        identifier = jsonEvent.id
+
         // Meta data
         createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
         if let createdAt, createdAt > .now {
