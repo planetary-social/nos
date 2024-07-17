@@ -43,9 +43,9 @@ class MockRelaySubscriptionManager: RelaySubscriptionManager {
     }
 
     var queueSubscriptionFilter: Filter?
-    func queueSubscription(with filter: Filter, to relayAddress: URL) async -> RelaySubscription {
+    func queueSubscription(with filter: Filter, to relayAddress: URL) async -> RelaySubscription.ID {
         queueSubscriptionFilter = filter
-        return RelaySubscription(filter: filter, relayAddress: relayAddress)
+        return RelaySubscription.ID()
     }
 
     func remove(_ socket: any WebSocketClient) async {
