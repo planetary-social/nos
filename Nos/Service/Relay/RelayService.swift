@@ -317,7 +317,6 @@ extension RelayService {
         if let subID = responseArray[1] as? String,
             let subscription = await subscriptionManager.subscription(from: subID),
             subscription.closesAfterResponse {
-            Log.debug("\(socket.host) has finished responding on \(subID). Closing subscription.")
             // This is a one-off request. Close it.
             await sendClose(from: socket, subscriptionID: subID)
         }
@@ -344,7 +343,7 @@ extension RelayService {
             let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
             await self.parseQueue.push(jsonEvent, from: socket)
             
-            if let subscription = await subscriptionManager.subscription(from: subscriptionID) {
+            if var subscription = await subscriptionManager.subscription(from: subscriptionID) {
                 if let oldestSeen = subscription.oldestEventCreationDate,
                     jsonEvent.createdDate < oldestSeen {
                     subscription.oldestEventCreationDate = jsonEvent.createdDate
