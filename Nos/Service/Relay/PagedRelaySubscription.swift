@@ -92,29 +92,22 @@ class PagedRelaySubscription {
                     to: relayAddress
                 )
                 
-                pagedEventSubscription.events
-                    .sink { [weak self] jsonEvent in
-                        Task {
-                            await self?.track(event: jsonEvent, from: relayAddress)
-                        }
-                    }
-                    .store(in: &cancellables)
+                pagedEventSubscription.events.sink { [weak self] jsonEvent in
+                    self?.track(event: jsonEvent, from: relayAddress)
+                }
+                .store(in: &cancellables)
                 
                 pagedSubscriptionIDs.insert(pagedEventSubscription.id)
             }
         }
     }
     
-    func updateOldestEvent(for relay: URL, to date: Date) {
-        oldestEventByRelay[relay] = date
-    }
-    
-    nonisolated func track(event: JSONEvent, from relay: URL) async {
-        if let oldestSeen = await oldestEventByRelay[relay],
+    func track(event: JSONEvent, from relay: URL) {
+        if let oldestSeen = oldestEventByRelay[relay],
             event.createdDate < oldestSeen {
-            await updateOldestEvent(for: relay, to: event.createdDate)
+            oldestEventByRelay[relay] = event.createdDate
         } else {
-            await updateOldestEvent(for: relay, to: event.createdDate)
+            oldestEventByRelay[relay] = event.createdDate
         }
     }
 }
