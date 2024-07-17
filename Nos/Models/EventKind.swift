@@ -1,4 +1,6 @@
 /// The kind of a nostr event. This can be used to map from the integer representing a kind to its meaning.
+/// - Note: Be careful not to add kinds we don't support yet. When we're parsing event JSON, we reject event kinds
+///         that aren't defined here, and we *want* to reject any kinds we don't actually support.
 /// - Note: See [Event Kinds](https://github.com/nostr-protocol/nips?tab=readme-ov-file#event-kinds) for details.
 public enum EventKind: Int64, CaseIterable, Hashable {
     /// User Metadata
@@ -51,10 +53,4 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 
     /// Long-form Content
     case longFormContent = 30_023
-
-    /// Live Event
-    case liveEvent = 30_311
-
-    /// Custom Feed
-    case feed = 31_890
 }
