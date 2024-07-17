@@ -204,11 +204,9 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         // Print number of waiting subscriptions for each relay
         if all.count > active.count {
             var waitingSubscriptionsByRelay = [URL: Int]()
-            for subscription in all {
-                if subscription.subscriptionStartDate == nil {
-                    let count = waitingSubscriptionsByRelay[subscription.relayAddress] ?? 0
-                    waitingSubscriptionsByRelay[subscription.relayAddress] = count + 1
-                }
+            for subscription in all where subscription.subscriptionStartDate == nil {
+                let count = waitingSubscriptionsByRelay[subscription.relayAddress] ?? 0
+                waitingSubscriptionsByRelay[subscription.relayAddress] = count + 1
             }
             for (relayAddress, count) in waitingSubscriptionsByRelay {
                 Log.debug("\(relayAddress) has \(count) subscriptions waiting in queue.")
