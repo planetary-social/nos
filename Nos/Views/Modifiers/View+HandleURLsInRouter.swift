@@ -16,7 +16,7 @@ struct HandleURLsInRouter: ViewModifier {
     func body(content: Content) -> some View {
         content
             .environment(\.openURL, OpenURLAction { url in
-                router.open(url: url, with: viewContext)
+                router.open(url: url)
                 return .handled
             })
     }

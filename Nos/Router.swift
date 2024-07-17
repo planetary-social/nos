@@ -155,7 +155,7 @@ import Dependencies
 
 extension Router {
 
-    nonisolated func open(url: URL, with context: NSManagedObjectContext) {
+    nonisolated func open(url: URL) {
         let link = url.absoluteString
         let identifier = String(link[link.index(after: link.startIndex)...])
 
@@ -172,11 +172,13 @@ extension Router {
                 } else if link.hasPrefix("%") {
                     pushNote(id: identifier)
                 } else if link.hasPrefix("$") {
-                    let parts = identifier.split(separator: ";").map { String($0) }
-                    guard let replaceableID = parts.first, let authorID = parts.last else {
+                    let separator = ";"
+                    let parts = identifier.split(separator: separator).map { String($0) }
+                    guard let authorID = parts.last else {
                         Log.debug("Something went wrong parsing the replaceableID and author from the naddr link")
                         return
                     }
+                    let replaceableID = parts.dropLast().joined(separator: separator)
                     pushNote(replaceableID: replaceableID, authorID: authorID)
                 } else if url.scheme == "http" || url.scheme == "https" {
                     push(url)
