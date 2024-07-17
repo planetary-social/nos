@@ -78,11 +78,11 @@ enum NostrIdentifier {
         var publicKey = ""
         var relays: [String] = []
         for element in tlvElements {
-            switch element {
-            case .special(let value):
-                publicKey = SHA256Key.decode(base8: value)
-            case .relay(let value):
-                if let string = String(data: value, encoding: .ascii) {
+            switch element.type {
+            case .special:
+                publicKey = SHA256Key.decode(base8: element.value)
+            case .relay:
+                if let string = String(data: element.value, encoding: .ascii) {
                     relays.append(string)
                 }
             default:
@@ -104,19 +104,17 @@ enum NostrIdentifier {
         var publicKey: String?
         var kind: UInt32?
         for element in tlvElements {
-            switch element {
-            case .special(let value):
-                eventID = SHA256Key.decode(base8: value)
-            case .relay(let value):
-                if let string = String(data: value, encoding: .ascii) {
+            switch element.type {
+            case .special:
+                eventID = SHA256Key.decode(base8: element.value)
+            case .relay:
+                if let string = String(data: element.value, encoding: .ascii) {
                     relays.append(string)
                 }
-            case .author(let value):
-                publicKey = SHA256Key.decode(base8: value)
-            case .kind(let value):
-                kind = UInt32(bigEndian: value.withUnsafeBytes { $0.load(as: UInt32.self) })
-            case .unknown:
-                break
+            case .author:
+                publicKey = SHA256Key.decode(base8: element.value)
+            case .kind:
+                kind = UInt32(bigEndian: element.value.withUnsafeBytes { $0.load(as: UInt32.self) })
             }
         }
 
@@ -134,21 +132,19 @@ enum NostrIdentifier {
         var authorID: String = ""
         var kind = UInt32.max
         for element in tlvElements {
-            switch element {
-            case .special(let value):
-                if let string = String(data: value, encoding: .ascii) {
+            switch element.type {
+            case .special:
+                if let string = String(data: element.value, encoding: .ascii) {
                     replaceableID = string
                 }
-            case .relay(let value):
-                if let valueString = String(data: value, encoding: .ascii) {
+            case .relay:
+                if let valueString = String(data: element.value, encoding: .ascii) {
                     relays.append(valueString)
                 }
-            case .author(let value):
-                authorID = SHA256Key.decode(base8: value)
-            case .kind(let value):
-                kind = UInt32(bigEndian: value.withUnsafeBytes { $0.load(as: UInt32.self) })
-            case .unknown:
-                break
+            case .author:
+                authorID = SHA256Key.decode(base8: element.value)
+            case .kind:
+                kind = UInt32(bigEndian: element.value.withUnsafeBytes { $0.load(as: UInt32.self) })
             }
         }
 

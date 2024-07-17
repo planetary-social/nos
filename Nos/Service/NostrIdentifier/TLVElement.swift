@@ -1,23 +1,17 @@
 import Foundation
 
 /// A TLV (type-length-value) element, which represents a single type, length, and value.
+/// We don't need the length at this level, so it's not included here.
 /// - Note: See [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md) for more information.
-enum TLVElement {
-    /// The special type with its associated value.
-    case special(value: Data)
+struct TLVElement {
+    /// The type of the element.
+    let type: TLVType
 
-    /// The relay type with its associated value.
-    case relay(value: Data)
+    /// The value of the element, as `Data`.
+    let value: Data
+}
 
-    /// The author type with its associated value.
-    case author(value: Data)
-
-    /// The kind type with its associated value.
-    case kind(value: Data)
-
-    /// An unknown type.
-    case unknown
-    
+extension TLVElement {
     /// Decodes the given binary-encoded list of TLV (type-length-value). The meaning of the decoded value will depend
     /// on the Bech32 human readable part. Unreadable entities are included in the array as `.unknown`.
     /// - Parameter data: The TLV data to decode.
@@ -32,24 +26,13 @@ enum TLVElement {
         var offset = 0
         while offset + 1 < converted.count {
             let rawType = converted[offset]
-            let type = TLVType(rawValue: rawType)
             let length = Int(converted[offset + 1])
             let value = converted.subdata(in: offset + 2 ..< offset + 2 + length)
 
-            let element: TLVElement
-            switch type {
-            case .special:
-                element = .special(value: value)
-            case .relay:
-                element = .relay(value: value)
-            case .author:
-                element = .author(value: value)
-            case .kind:
-                element = .kind(value: value)
-            case nil:
-                element = .unknown
+            if let type = TLVType(rawValue: rawType) {
+                let element = TLVElement(type: type, value: value)
+                result.append(element)
             }
-            result.append(element)
 
             offset += length + 2
         }
