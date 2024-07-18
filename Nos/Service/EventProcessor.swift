@@ -51,7 +51,9 @@ enum EventProcessor {
         var events = [Event]()
         for jsonEvent in jsonEvents {
             do {
-                if let event = try parse(jsonEvent: jsonEvent, from: relay, in: context) {
+                // don't parse this event if we don't support the kind
+                if EventKind(rawValue: jsonEvent.kind) != nil,
+                    let event = try parse(jsonEvent: jsonEvent, from: relay, in: context) {
                     events.append(event)
                 }
             } catch {

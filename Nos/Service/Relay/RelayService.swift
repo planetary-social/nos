@@ -284,6 +284,14 @@ extension RelayService {
         )
     }
     
+    func requestEvent(with replaceableID: RawReplaceableID?, authorKey: RawAuthorID) async -> SubscriptionCancellable {
+        guard let replaceableID else {
+            return SubscriptionCancellable.empty()
+        }
+        
+        return await fetchEvents(matching: Filter(authorKeys: [authorKey], dTags: [replaceableID], limit: 1))
+    }
+    
     private func processSubscriptionQueue() async {
         await openSockets()
         await clearStaleSubscriptions()

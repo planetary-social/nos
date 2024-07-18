@@ -35,6 +35,91 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
         XCTAssertEqual(sampleEvent.createdAt?.timeIntervalSince1970, 1_674_624_689)
     }
 
+    func testParseLongFormContentWithReplaceableIdentifier() throws {
+        // Arrange
+        let data = try jsonData(filename: "long_form_data")
+
+        // Act
+        let events = try EventProcessor.parse(
+            jsonData: data,
+            from: nil,
+            in: persistenceController
+        )
+
+        // Assert
+        XCTAssertEqual(events.count, 1)
+        let event = try XCTUnwrap(events.first)
+        XCTAssertEqual(event.identifier, "01b86b45fa23be9c4f7bb2615274fcfab6241a8809a09094b4276cc36590255a")
+        XCTAssertEqual(event.replaceableIdentifier, "TGnBRh9-b1jrqSJ-ByWQx")
+        XCTAssertEqual(
+            event.author?.hexadecimalPublicKey, "0267aa3d92d2a479ad6bccdc6fe7657037deab4b77a8bbcfd3663b0eef196b58"
+        )
+        XCTAssertEqual(event.kind, EventKind.longFormContent.rawValue)
+    }
+
+    @MainActor func testParseLongFormContentHydratesStubWithOnlyIdentifier() async throws {
+        // Arrange
+        let data = try jsonData(filename: "long_form_data")
+
+        _ = try Event.findOrCreateStubBy(
+            id: "01b86b45fa23be9c4f7bb2615274fcfab6241a8809a09094b4276cc36590255a",
+            context: testContext
+        )
+        try testContext.save()
+
+        // Act
+        let events = try EventProcessor.parse(jsonData: data, from: nil, in: persistenceController)
+
+        XCTAssertEqual(events.count, 1)
+        let event = try XCTUnwrap(events.first)
+        XCTAssertEqual(event.identifier, "01b86b45fa23be9c4f7bb2615274fcfab6241a8809a09094b4276cc36590255a")
+        XCTAssertEqual(event.replaceableIdentifier, "TGnBRh9-b1jrqSJ-ByWQx")
+        XCTAssertEqual(
+            event.author?.hexadecimalPublicKey, "0267aa3d92d2a479ad6bccdc6fe7657037deab4b77a8bbcfd3663b0eef196b58"
+        )
+        XCTAssertEqual(event.kind, EventKind.longFormContent.rawValue)
+    }
+
+    @MainActor func testParseLongFormContentHydratesStubWithReplaceableIdentifier() async throws {
+        // Arrange
+        let data = try jsonData(filename: "long_form_data")
+
+        _ = try Event.findOrCreateStubBy(
+            replaceableID: "TGnBRh9-b1jrqSJ-ByWQx",
+            authorID: "0267aa3d92d2a479ad6bccdc6fe7657037deab4b77a8bbcfd3663b0eef196b58",
+            kind: 30_023,
+            context: testContext
+        )
+        try testContext.save()
+
+        // Act
+        let events = try EventProcessor.parse(jsonData: data, from: nil, in: persistenceController)
+
+        XCTAssertEqual(events.count, 1)
+        let event = try XCTUnwrap(events.first)
+        XCTAssertEqual(event.identifier, "01b86b45fa23be9c4f7bb2615274fcfab6241a8809a09094b4276cc36590255a")
+        XCTAssertEqual(event.replaceableIdentifier, "TGnBRh9-b1jrqSJ-ByWQx")
+        XCTAssertEqual(
+            event.author?.hexadecimalPublicKey, "0267aa3d92d2a479ad6bccdc6fe7657037deab4b77a8bbcfd3663b0eef196b58"
+        )
+        XCTAssertEqual(event.kind, EventKind.longFormContent.rawValue)
+    }
+
+    func testParseOnlySupportedKinds() throws {
+        // Arrange
+        let sampleData = try jsonData(filename: "unsupported_kinds")
+
+        // Act
+        let events = try EventProcessor.parse(
+            jsonData: sampleData,
+            from: nil,
+            in: persistenceController
+        )
+
+        // Assert
+        XCTAssertEqual(events.count, 0)
+    }
+
     @MainActor func testParseSampleRepliesAndFetchReplies() throws {
         // Arrange
         let sampleData = try jsonData(filename: "sample_replies")

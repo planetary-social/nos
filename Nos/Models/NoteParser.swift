@@ -113,8 +113,9 @@ struct NoteParser {
 
     /// Replaces Nostr entities embedded in the note (without a proper tag) with markdown links
     private func replaceNostrEntities(in content: String) -> String {
-        // swiftlint:disable:next opening_brace
-        let unformattedRegex = /(?:^|\s)@?(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,}))/
+        let unformattedRegex =
+            /(?:^|\s)@?(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1|naddr1)[a-zA-Z0-9]{58,}))/
+        // swiftlint:disable:previous opening_brace
 
         return content.replacing(unformattedRegex) { match in
             let substring = match.0
@@ -133,8 +134,9 @@ struct NoteParser {
                     return "\(prefix)[\(string)](@\(rawAuthorID))"
                 case .note(let rawEventID), .nevent(let rawEventID, _, _, _):
                     return "\(prefix)[\(String(localized: .localizable.linkToNote))](%\(rawEventID))"
-                default:
-                    return String(substring)
+                case .naddr(let replaceableID, _, let authorID, let kind):
+                    return "\(prefix)[\(String(localized: .localizable.linkToNote))]" +
+                        "($\(replaceableID);\(authorID);\(kind))"
                 }
             } catch {
                 return String(substring)

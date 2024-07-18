@@ -24,7 +24,7 @@ enum NostrIdentifier {
     case nevent(eventID: RawEventID, relays: [String], eventPublicKey: String?, kind: UInt32?)
 
     /// A nostr replaceable event coordinate
-    case naddr(eventID: RawEventID, relays: [String], eventPublicKey: String, kind: UInt32)
+    case naddr(replaceableID: RawReplaceableID, relays: [String], authorID: RawAuthorID, kind: UInt32)
 
     /// A nostr address
 
@@ -78,11 +78,13 @@ enum NostrIdentifier {
         var publicKey = ""
         var relays: [String] = []
         for element in tlvElements {
-            switch element {
-            case .special(let value):
-                publicKey = value
-            case .relay(let value):
-                relays.append(value)
+            switch element.type {
+            case .special:
+                publicKey = SHA256Key.decode(base8: element.value)
+            case .relay:
+                if let string = String(data: element.value, encoding: .ascii) {
+                    relays.append(string)
+                }
             default:
                 break
             }
@@ -102,17 +104,17 @@ enum NostrIdentifier {
         var publicKey: String?
         var kind: UInt32?
         for element in tlvElements {
-            switch element {
-            case .special(let value):
-                eventID = value
-            case .relay(let value):
-                relays.append(value)
-            case .author(let value):
-                publicKey = value
-            case .kind(let value):
-                kind = value
-            case .unknown:
-                break
+            switch element.type {
+            case .special:
+                eventID = SHA256Key.decode(base8: element.value)
+            case .relay:
+                if let string = String(data: element.value, encoding: .ascii) {
+                    relays.append(string)
+                }
+            case .author:
+                publicKey = SHA256Key.decode(base8: element.value)
+            case .kind:
+                kind = UInt32(bigEndian: element.value.withUnsafeBytes { $0.load(as: UInt32.self) })
             }
         }
 
@@ -125,25 +127,27 @@ enum NostrIdentifier {
     private static func decodeNostrAddress(data: Data) throws -> NostrIdentifier {
         let tlvElements = TLVElement.decodeElements(data: data)
 
-        var eventID = ""
+        var replaceableID = ""
         var relays: [String] = []
-        var publicKey: String = ""
+        var authorID: String = ""
         var kind = UInt32.max
         for element in tlvElements {
-            switch element {
-            case .special(let value):
-                eventID = value
-            case .relay(let value):
-                relays.append(value)
-            case .author(let value):
-                publicKey = value
-            case .kind(let value):
-                kind = value
-            case .unknown:
-                break
+            switch element.type {
+            case .special:
+                if let string = String(data: element.value, encoding: .ascii) {
+                    replaceableID = string
+                }
+            case .relay:
+                if let valueString = String(data: element.value, encoding: .ascii) {
+                    relays.append(valueString)
+                }
+            case .author:
+                authorID = SHA256Key.decode(base8: element.value)
+            case .kind:
+                kind = UInt32(bigEndian: element.value.withUnsafeBytes { $0.load(as: UInt32.self) })
             }
         }
 
-        return .naddr(eventID: eventID, relays: relays, eventPublicKey: publicKey, kind: kind)
+        return .naddr(replaceableID: replaceableID, relays: relays, authorID: authorID, kind: kind)
     }
 }
