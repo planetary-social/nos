@@ -25,8 +25,6 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// by the `databaseFilter`. 
     let relayFilter: Filter
     
-    let relay: Relay? 
-    
     let context: NSManagedObjectContext
 
     /// The tab in which this PagedNoteListView appears.
@@ -57,7 +55,6 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         let dataSource = context.coordinator.dataSource(
             databaseFilter: databaseFilter, 
             relayFilter: relayFilter,
-            relay: relay,
             collectionView: collectionView, 
             context: self.context,
             header: header,
@@ -84,17 +81,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         return collectionView
     }
     
-    func updateUIView(_ collectionView: UICollectionView, context: Context) {
-        if let dataSource = collectionView.dataSource as? PagedNoteDataSource<Header, EmptyPlaceholder> {
-            if relayFilter != dataSource.relayFilter || relay != dataSource.relay {
-                dataSource.subscribeToEvents(matching: relayFilter, from: relay)
-            }
-            if databaseFilter != dataSource.databaseFilter {
-                dataSource.updateFetchRequest(databaseFilter)
-            }
-        }
-    }
-    
+    func updateUIView(_ collectionView: UICollectionView, context: Context) {}
+
     static func dismantleUIView(_ uiView: UICollectionView, coordinator: Coordinator<Header, EmptyPlaceholder>) {
         tearDownObservers(coordinator: coordinator)
     }
@@ -176,7 +164,6 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         func dataSource(
             databaseFilter: NSFetchRequest<Event>, 
             relayFilter: Filter,
-            relay: Relay?,
             collectionView: UICollectionView,
             context: NSManagedObjectContext,
             @ViewBuilder header: @escaping () -> CoordinatorHeader,
@@ -192,7 +179,6 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             let dataSource = PagedNoteDataSource(
                 databaseFilter: databaseFilter, 
                 relayFilter: relayFilter,
-                relay: relay,
                 collectionView: collectionView, 
                 context: context,
                 header: header,
@@ -206,6 +192,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         @objc func refreshData(_ sender: Any) {
             if let onRefresh {
                 dataSource?.updateFetchRequest(onRefresh())
+                collectionView?.reloadData()
             }
             
             if let refreshControl = sender as? UIRefreshControl {
@@ -230,8 +217,7 @@ extension Notification.Name {
     
     return PagedNoteListView(
         databaseFilter: previewData.alice.allPostsRequest(onlyRootPosts: false),
-        relayFilter: Filter(), 
-        relay: nil,
+        relayFilter: Filter(keepSubscriptionOpen: true),
         context: previewData.previewContext,
         tab: .home,
         header: {

@@ -170,7 +170,7 @@ extension RelayService {
         }
         var subscriptionIDs = [RelaySubscription.ID]()
         for relay in relayAddresses {
-            subscriptionIDs.append(await subscriptionManager.queueSubscription(with: filter, to: relay).id)
+            subscriptionIDs.append(await subscriptionManager.queueSubscription(with: filter, to: relay))
         }
         
         // Fire off REQs in the background
@@ -182,28 +182,13 @@ extension RelayService {
     /// Asks the relay to download a page of events matching the given `filter` from relays and save them to Core Data.
     /// You can cause the service to download the next page by calling `loadMore()` on the returned subscription object.
     /// The subscription will be cancelled when the returned subscription object is deallocated.
-    /// - Parameters:
-    ///   - filter: an object describing the set of events that should be downloaded.
-    ///   - specificRelay: a specific relay to download events from. If `nil` the user's relay list will be used.
-    /// - Returns: A handle that can be used to load more pages of events. It will close the relay subscriptions
-    ///     when deallocated.
-    func subscribeToPagedEvents(
-        matching filter: Filter, 
-        from specificRelay: URL? = nil
-    ) async -> PagedRelaySubscription {
-        var relays = Set<URL>()
-        if let specificRelay {
-            relays.insert(specificRelay)
-        } else {
-            relays = await self.relayAddresses(for: currentUser)
-        }
-        
-        return await PagedRelaySubscription(
+    func subscribeToPagedEvents(matching filter: Filter) async -> PagedRelaySubscription {
+        PagedRelaySubscription(
             startDate: .now,
             filter: filter,
             relayService: self,
             subscriptionManager: subscriptionManager,
-            relayAddresses: relays
+            relayAddresses: await self.relayAddresses(for: currentUser)
         )
     }
     
@@ -332,7 +317,6 @@ extension RelayService {
         if let subID = responseArray[1] as? String,
             let subscription = await subscriptionManager.subscription(from: subID),
             subscription.closesAfterResponse {
-            Log.debug("\(socket.host) has finished responding on \(subID). Closing subscription.")
             // This is a one-off request. Close it.
             await sendClose(from: socket, subscriptionID: subID)
         }
@@ -359,9 +343,17 @@ extension RelayService {
             let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
             await self.parseQueue.push(jsonEvent, from: socket)
             
-            if let subscription = await subscriptionManager.subscription(from: subscriptionID) {
-                subscription.receivedEventCount += 1
-                subscription.events.send(jsonEvent)
+            if var subscription = await subscriptionManager.subscription(from: subscriptionID) {
+                if let oldestSeen = subscription.oldestEventCreationDate,
+                    jsonEvent.createdDate < oldestSeen {
+                    subscription.oldestEventCreationDate = jsonEvent.createdDate
+                    subscription.receivedEventCount += 1
+                    await subscriptionManager.updateSubscriptions(with: subscription)
+                } else {
+                    subscription.oldestEventCreationDate = jsonEvent.createdDate
+                    subscription.receivedEventCount += 1
+                    await subscriptionManager.updateSubscriptions(with: subscription)
+                }
                 if subscription.closesAfterResponse {
                     Log.debug("detected subscription with id \(subscription.id) has been fulfilled. Closing.")
                     await subscriptionManager.forceCloseSubscriptionCount(for: subscription.id)
