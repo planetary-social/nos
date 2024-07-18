@@ -10,5 +10,5 @@ enum NosNavigationDestination: Hashable {
 
 enum NoteIdentifiable: Hashable {
     case identifier(RawEventID?)
-    case replaceableIdentifier(replaceableID: RawReplaceableID, author: Author)
+    case replaceableIdentifier(replaceableID: RawReplaceableID, author: Author, kind: Int64)
 }

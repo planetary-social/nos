@@ -54,8 +54,12 @@ enum DeepLinkService {
                         router.pushAuthor(id: rawAuthorID)
                     case .note(let rawEventID), .nevent(let rawEventID, _, _, _):
                         router.pushNote(id: rawEventID)
-                    case .naddr(let replaceableID, _, let authorID, _):
-                        router.pushNote(replaceableID: replaceableID, authorID: authorID)
+                    case .naddr(let replaceableID, _, let authorID, let kind):
+                        router.pushNote(
+                            replaceableID: replaceableID,
+                            authorID: authorID,
+                            kind: Int64(kind)
+                        )
                     }
                 }
             } catch {

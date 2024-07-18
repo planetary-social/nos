@@ -87,6 +87,7 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
         _ = try Event.findOrCreateStubBy(
             replaceableID: "TGnBRh9-b1jrqSJ-ByWQx",
             authorID: "0267aa3d92d2a479ad6bccdc6fe7657037deab4b77a8bbcfd3663b0eef196b58",
+            kind: 30_023,
             context: testContext
         )
         try testContext.save()

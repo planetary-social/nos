@@ -455,10 +455,17 @@ public class Event: NosManagedObject, VerifiableEvent {
         return fetchRequest
     }
     
-    @nonobjc public class func event(by replaceableID: RawReplaceableID, author: Author) -> NSFetchRequest<Event> {
+    @nonobjc public class func event(
+        by replaceableID: RawReplaceableID, 
+        author: Author,
+        kind: Int64
+    ) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(
-            format: "replaceableIdentifier = %@ AND author = %@", replaceableID, author
+            format: "replaceableIdentifier = %@ AND author = %@ AND kind = %i",
+            replaceableID,
+            author,
+            kind
         )
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.replaceableIdentifier, ascending: true)]
         fetchRequest.fetchLimit = 1
@@ -630,7 +637,8 @@ public class Event: NosManagedObject, VerifiableEvent {
         } else {
             if let replaceableID = jsonEvent.replaceableID {
                 let author = try Author.findOrCreate(by: jsonEvent.pubKey, context: context)
-                if let existingEvent = try context.fetch(Event.event(by: replaceableID, author: author)).first {
+                let request = Event.event(by: replaceableID, author: author, kind: jsonEvent.kind)
+                if let existingEvent = try context.fetch(request).first {
                     if existingEvent.isStub {
                         try existingEvent.hydrate(from: jsonEvent, relay: relay, in: context)
                     }
@@ -671,20 +679,23 @@ public class Event: NosManagedObject, VerifiableEvent {
     /// - Parameters:
     ///   - replaceableID: The replaceable ID of the event. This is encoded in the `d` tag.
     ///   - authorID: The public key of the author associated with the event.
+    ///   - kind: The kind of the event. If this is `nil`, it's ignored. Defaults to `nil`.
     ///   - context: The managed object context to use.
     /// - Returns: The Event model with the given ID.
     class func findOrCreateStubBy(
         replaceableID: RawReplaceableID,
         authorID: RawAuthorID,
+        kind: Int64,
         context: NSManagedObjectContext
     ) throws -> Event {
         let author = try Author.findOrCreate(by: authorID, context: context)
-        if let existingEvent = try context.fetch(Event.event(by: replaceableID, author: author)).first {
+        if let existingEvent = try context.fetch(Event.event(by: replaceableID, author: author, kind: kind)).first {
             return existingEvent
         } else {
             let event = Event(context: context)
             event.replaceableIdentifier = replaceableID
             event.author = author
+            event.kind = kind
             return event
         }
     }

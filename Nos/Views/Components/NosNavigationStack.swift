@@ -18,8 +18,12 @@ struct NosNavigationStack<Content: View>: View {
                             EventObservationView(eventID: eventID) { event in
                                 RepliesView(note: event)
                             }
-                        } else if case let .replaceableIdentifier(replaceableEventID, author) = noteIdentifiable {
-                            EventObservationView(replaceableEventID: replaceableEventID, author: author) { event in
+                        } else if case let .replaceableIdentifier(replaceableEventID, author, kind) = noteIdentifiable {
+                            EventObservationView(
+                                replaceableEventID: replaceableEventID,
+                                author: author,
+                                kind: kind
+                            ) { event in
                                 RepliesView(note: event)
                             }
                         }
