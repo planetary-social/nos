@@ -38,7 +38,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     }
 
     /// Limit of the number of active subscriptions in a single relay
-    private let queueLimit = 25
+    private let queueLimit = 10
 
     // MARK: - Protocol conformance
     
@@ -207,10 +207,16 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         }
         
         #if DEBUG
-        let allCount = all.count
-        let activeCount = active.count
-        if allCount > activeCount {
-            Log.debug("\(allCount - activeCount) subscriptions waiting in queue.")
+        // Print number of waiting subscriptions for each relay
+        if all.count > active.count {
+            var waitingSubscriptionsByRelay = [URL: Int]()
+            for subscription in all where subscription.subscriptionStartDate == nil {
+                let count = waitingSubscriptionsByRelay[subscription.relayAddress] ?? 0
+                waitingSubscriptionsByRelay[subscription.relayAddress] = count + 1
+            }
+            for (relayAddress, count) in waitingSubscriptionsByRelay {
+                Log.debug("\(relayAddress) has \(count) subscriptions waiting in queue.")
+            }
         }
         #endif
     }
