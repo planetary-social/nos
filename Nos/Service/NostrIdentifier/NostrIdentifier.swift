@@ -14,6 +14,9 @@ enum NostrIdentifier {
     /// A nostr public key
     case npub(publicKey: RawAuthorID)
 
+    /// A nostr private key
+    case nsec(privateKey: String)
+
     /// A nostr note
     case note(eventID: RawEventID)
 
@@ -36,6 +39,8 @@ enum NostrIdentifier {
         switch humanReadablePart {
         case Nostr.publicKeyPrefix:
             return try decodeNostrPublicKey(data: data)
+        case Nostr.privateKeyPrefix:
+            return try decodeNostrPrivateKey(data: data)
         case Nostr.notePrefix:
             return try decodeNostrNote(data: data)
         case Nostr.profilePrefix:
@@ -57,6 +62,16 @@ enum NostrIdentifier {
             throw NostrIdentifierError.unknownFormat
         }
         return .npub(publicKey: publicKey)
+    }
+
+    /// Decodes nsec data into a `NostrIdentifier.nsec`.
+    /// - Parameter data: The encoded nsec data.
+    /// - Returns: The `.nsec` with the private key.
+    private static func decodeNostrPrivateKey(data: Data) throws -> NostrIdentifier {
+        guard let privateKey = SHA256Key.decode(base5: data) else {
+            throw NostrIdentifierError.unknownFormat
+        }
+        return .nsec(privateKey: privateKey)
     }
 
     /// Decodes npub data into a `NostrIdentifier.note`.
