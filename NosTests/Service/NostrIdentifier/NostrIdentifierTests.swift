@@ -205,4 +205,11 @@ class NostrIdentifierTests: XCTestCase {
             XCTFail("Expected to get a naddr")
         }
     }
+
+    /// Verify that decoding an invalid naddr throws an error.
+    func test_naddr_with_invalid_format_throws_error() throws {
+        let naddr = "naddr1abc"
+
+        XCTAssertThrowsError(try NostrIdentifier.decode(bech32String: naddr))
+    }
 }
