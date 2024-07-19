@@ -35,7 +35,7 @@
 		035729B02BE4167E005FEE85 /* NoteParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035729A62BE4167E005FEE85 /* NoteParserTests.swift */; };
 		035729B12BE4167E005FEE85 /* ReportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035729A72BE4167E005FEE85 /* ReportTests.swift */; };
 		035729B22BE4167E005FEE85 /* SHA256KeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035729A82BE4167E005FEE85 /* SHA256KeyTests.swift */; };
-		035729B32BE4167E005FEE85 /* TLVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035729A92BE4167E005FEE85 /* TLVTests.swift */; };
+		035729B32BE4167E005FEE85 /* TLVElementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035729A92BE4167E005FEE85 /* TLVElementTests.swift */; };
 		035729B82BE416A6005FEE85 /* DirectMessageWrapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035729B42BE416A6005FEE85 /* DirectMessageWrapperTests.swift */; };
 		035729B92BE416A6005FEE85 /* GiftWrapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035729B52BE416A6005FEE85 /* GiftWrapperTests.swift */; };
 		035729BA2BE416A6005FEE85 /* ReportPublisherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035729B62BE416A6005FEE85 /* ReportPublisherTests.swift */; };
@@ -95,7 +95,6 @@
 		3FFB1D9729A6BBEC002A755D /* Collection+SafeSubscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D9529A6BBEC002A755D /* Collection+SafeSubscript.swift */; };
 		3FFB1D9C29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */; };
 		3FFF3BD029A9645F00DD0B72 /* AuthorReference+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */; };
-		5B08A1E12A1FDFF700EB8F2E /* TLV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8B77182A1FDA3C004FC675 /* TLV.swift */; };
 		5B098DBC2BDAF6CB00500A1B /* NoteParserTests+NIP08.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B098DBB2BDAF6CB00500A1B /* NoteParserTests+NIP08.swift */; };
 		5B098DC62BDAF73500500A1B /* AttributedString+Links.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B098DC52BDAF73500500A1B /* AttributedString+Links.swift */; };
 		5B098DC72BDAF77400500A1B /* AttributedString+Links.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B098DC52BDAF73500500A1B /* AttributedString+Links.swift */; };
@@ -124,7 +123,6 @@
 		5B834F692A83FC7F000C1432 /* ProfileSocialStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B834F682A83FC7F000C1432 /* ProfileSocialStatsView.swift */; };
 		5B88051A2A21027C00E21F06 /* SHA256Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8805192A21027C00E21F06 /* SHA256Key.swift */; };
 		5B88051D2A2104CC00E21F06 /* SHA256Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8805192A21027C00E21F06 /* SHA256Key.swift */; };
-		5B8B77192A1FDA3C004FC675 /* TLV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8B77182A1FDA3C004FC675 /* TLV.swift */; };
 		5B8C96AC29D52AD200B73AEC /* AuthorListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */; };
 		5B8C96B029DB2E1100B73AEC /* SearchTextFieldObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */; };
 		5B8C96B229DB313300B73AEC /* AuthorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B129DB313300B73AEC /* AuthorCard.swift */; };
@@ -533,7 +531,7 @@
 		035729A62BE4167E005FEE85 /* NoteParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteParserTests.swift; sourceTree = "<group>"; };
 		035729A72BE4167E005FEE85 /* ReportTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportTests.swift; sourceTree = "<group>"; };
 		035729A82BE4167E005FEE85 /* SHA256KeyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SHA256KeyTests.swift; sourceTree = "<group>"; };
-		035729A92BE4167E005FEE85 /* TLVTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TLVTests.swift; sourceTree = "<group>"; };
+		035729A92BE4167E005FEE85 /* TLVElementTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TLVElementTests.swift; sourceTree = "<group>"; };
 		035729B42BE416A6005FEE85 /* DirectMessageWrapperTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectMessageWrapperTests.swift; sourceTree = "<group>"; };
 		035729B52BE416A6005FEE85 /* GiftWrapperTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiftWrapperTests.swift; sourceTree = "<group>"; };
 		035729B62BE416A6005FEE85 /* ReportPublisherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportPublisherTests.swift; sourceTree = "<group>"; };
@@ -601,7 +599,6 @@
 		5B834F662A83FB5C000C1432 /* ProfileKnownFollowersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileKnownFollowersView.swift; sourceTree = "<group>"; };
 		5B834F682A83FC7F000C1432 /* ProfileSocialStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSocialStatsView.swift; sourceTree = "<group>"; };
 		5B8805192A21027C00E21F06 /* SHA256Key.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SHA256Key.swift; sourceTree = "<group>"; };
-		5B8B77182A1FDA3C004FC675 /* TLV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLV.swift; sourceTree = "<group>"; };
 		5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorListView.swift; sourceTree = "<group>"; };
 		5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextFieldObserver.swift; sourceTree = "<group>"; };
 		5B8C96B129DB313300B73AEC /* AuthorCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorCard.swift; sourceTree = "<group>"; };
@@ -988,7 +985,6 @@
 				035729A62BE4167E005FEE85 /* NoteParserTests.swift */,
 				035729A72BE4167E005FEE85 /* ReportTests.swift */,
 				035729A82BE4167E005FEE85 /* SHA256KeyTests.swift */,
-				035729A92BE4167E005FEE85 /* TLVTests.swift */,
 				03ED93462C46C48400C8D443 /* JSONEventTests.swift */,
 			);
 			path = Models;
@@ -1023,6 +1019,7 @@
 			isa = PBXGroup;
 			children = (
 				0376DF612C3DBAED00C80786 /* NostrIdentifierTests.swift */,
+				035729A92BE4167E005FEE85 /* TLVElementTests.swift */,
 			);
 			path = NostrIdentifier;
 			sourceTree = "<group>";
@@ -1230,7 +1227,6 @@
 				C9A8015D2BD0177D006E29B2 /* ReportPublisher.swift */,
 				5B8805192A21027C00E21F06 /* SHA256Key.swift */,
 				C9B678E029EEC41000303F33 /* SocialGraphCache.swift */,
-				5B8B77182A1FDA3C004FC675 /* TLV.swift */,
 				C9A0DAF729C92F4500466635 /* UNSAPI.swift */,
 				C9F64D8B29ED840700563F2B /* Zipper.swift */,
 				032634512C10BB8F00E489B5 /* FileStorage */,
@@ -2126,7 +2122,6 @@
 				5B503F622A291A1A0098805A /* JSONRelayMetadata.swift in Sources */,
 				C98298332ADD7F9A0096C5B5 /* DeepLinkService.swift in Sources */,
 				03F7C4F42C10E05B006FF613 /* URLSessionProtocol.swift in Sources */,
-				5B8B77192A1FDA3C004FC675 /* TLV.swift in Sources */,
 				CD09A74829A51EFC0063464F /* Router.swift in Sources */,
 				2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */,
 				CD2CF38E299E67F900332116 /* CardButtonStyle.swift in Sources */,
@@ -2163,7 +2158,6 @@
 				C9EF84D02C24D63000182B6F /* MockRelayService.swift in Sources */,
 				CD09A76029A521FD0063464F /* Filter.swift in Sources */,
 				C9B71DC32A9003670031ED9F /* CrashReporting.swift in Sources */,
-				5B08A1E12A1FDFF700EB8F2E /* TLV.swift in Sources */,
 				C9C2B78329E0735400548B4A /* RelaySubscriptionManager.swift in Sources */,
 				C9C2B78029E0731600548B4A /* AsyncTimer.swift in Sources */,
 				C96D39282B61B6D200D3D0A1 /* RawNostrID.swift in Sources */,
@@ -2173,7 +2167,7 @@
 				C936B45F2A4CAF2B00DF1EB9 /* AppDelegate.swift in Sources */,
 				C96D391B2B61AFD500D3D0A1 /* RawNostrIDTests.swift in Sources */,
 				035729AD2BE4167E005FEE85 /* EventTests.swift in Sources */,
-				035729B32BE4167E005FEE85 /* TLVTests.swift in Sources */,
+				035729B32BE4167E005FEE85 /* TLVElementTests.swift in Sources */,
 				C9C2B77D29E072E400548B4A /* WebSocket+Nos.swift in Sources */,
 				C973AB642A323167002AED16 /* Relay+CoreDataProperties.swift in Sources */,
 				C9EE3E642A053910008A7491 /* ExpirationTimeOption.swift in Sources */,

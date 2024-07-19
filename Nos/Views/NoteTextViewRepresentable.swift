@@ -167,10 +167,10 @@ struct NoteTextViewRepresentable: UIViewRepresentable {
                 do {
                     let identifier = try NostrIdentifier.decode(bech32String: text)
                     switch identifier {
-                    case .npub(let publicKey):
+                    case .npub:
                         self.text.wrappedValue.insertMention(npub: text, at: range)
                         return false
-                    case .note(let eventID):
+                    case .note:
                         self.text.wrappedValue.insertMention(note: text, at: range)
                         return false
                     default:
