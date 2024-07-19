@@ -11,7 +11,6 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     var collectionView: UICollectionView
     
     @Dependency(\.relayService) private var relayService: RelayService
-    private var relayFilter: Filter
     private var pager: PagedRelaySubscription?
     private var context: NSManagedObjectContext
     private var header: () -> Header
@@ -41,7 +40,6 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         )
         self.collectionView = collectionView
         self.context = context
-        self.relayFilter = relayFilter
         self.header = header
         self.emptyPlaceholder = emptyPlaceholder
         self.onRefresh = onRefresh

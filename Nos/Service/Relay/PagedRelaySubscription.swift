@@ -5,7 +5,6 @@ import Logger
 /// can be used to paginate a list of events. The underlying relay subscriptions will be deallocated when this object
 /// goes out of scope. 
 class PagedRelaySubscription {
-    let startDate: Date
     let filter: Filter
     
     private var relayService: RelayService
@@ -24,7 +23,6 @@ class PagedRelaySubscription {
         subscriptionManager: RelaySubscriptionManager, 
         relayAddresses: Set<URL>
     ) {
-        self.startDate = startDate
         self.filter = filter
         self.relayService = relayService
         self.subscriptionManager = subscriptionManager

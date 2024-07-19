@@ -173,10 +173,7 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
         outOfNetworkKeys = outOfNetworkKeys.subtracting(newFollowedKeys)
     }
     
-    private func process(
-        followedAuthor: RawAuthorID,
-        followed newFollowedKeys: Set<RawAuthorID>
-    ) async {
+    private func process(followed newFollowedKeys: Set<RawAuthorID>) async {
         outOfNetworkKeys.subtract(newFollowedKeys)
         twoHopKeys.formUnion(newFollowedKeys)
     }
@@ -199,7 +196,7 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
         
         Task {
             if await controller === self.oneHopWatcher {
-                await process(followedAuthor: changedAuthorKey, followed: newFollowedKeys)
+                await process(followed: newFollowedKeys)
             } else if await controller === self.userWatcher {
                 await process(user: userKey, followed: newFollowedKeys)
             }

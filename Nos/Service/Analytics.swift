@@ -30,7 +30,7 @@ class Analytics {
         track("Published Note", properties: ["length": note.content.count])
     }
 
-    func published(reply: JSONEvent) {
+    func published(reply: JSONEvent) { // TODO: delete? it's unused
         track("Published Reply", properties: ["length": reply.content.count])
     }
 
@@ -116,7 +116,7 @@ class Analytics {
         track("Imported Private Key")
     }
     
-    func changedKey() {
+    func changedKey() { // TODO: delete? it's unused
         track("Changed Private Key")
     }
     
