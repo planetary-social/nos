@@ -189,7 +189,7 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
     ) {
         guard let userKey, 
             let changedAuthor = anObject as? Author, 
-            let changedAuthorKey = changedAuthor.hexadecimalPublicKey else {
+            let _ = changedAuthor.hexadecimalPublicKey else {
             return
         }
         let newFollowedKeys = Set(changedAuthor.followedKeys)

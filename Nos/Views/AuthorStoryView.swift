@@ -193,9 +193,6 @@ struct AuthorStoryView: View {
 fileprivate struct BottomOverlay: View {
     
     var note: Event
-
-    @Dependency(\.persistenceController) private var persistenceController
-
     @EnvironmentObject private var router: Router
 
     var body: some View {
