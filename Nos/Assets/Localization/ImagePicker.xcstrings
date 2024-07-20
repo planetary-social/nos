@@ -176,6 +176,39 @@
         }
       }
     },
+    "GetAccount" : {
+        "extractionState" : "manual",
+        "localizations" : {
+          "en" : {
+            "stringUnit" : {
+              "state" : "translated",
+              "value" : "Get Account"
+            }
+          }
+        }
+      },
+      "errorUploadingFileExceedsSizeLimit" : {
+            "extractionState" : "manual",
+            "localizations" : {
+              "en" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Get a Nostr.Build account to upload larger files"
+                }
+              }
+            }
+      },
+      "errorUploadingFileExceedsLimit" : {
+          "extractionState" : "manual",
+          "localizations" : {
+            "en" : {
+              "stringUnit" : {
+                "state" : "translated",
+                "value" : "The max file size for free media uploads is of %@. To upload large files, upgrade to a Nostr.Build Professional account."
+              }
+            }
+          }
+    },
     "openSettingsMessage" : {
       "extractionState" : "manual",
       "localizations" : {
