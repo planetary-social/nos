@@ -87,6 +87,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         self.fetchedResultsController.delegate = self
         try? self.fetchedResultsController.performFetch()
         loadMoreIfNeeded(for: IndexPath(row: 0, section: 0))
+        collectionView.reloadData()
     }
     
     // MARK: - UICollectionViewDataSource
