@@ -101,6 +101,8 @@ class PagedRelaySubscription {
                     .store(in: &cancellables)
                 
                 pagedSubscriptionIDs.insert(pagedEventSubscription.id)
+                
+                await subscriptionManager.processSubscriptionQueue()
             }
         }
     }
@@ -110,9 +112,10 @@ class PagedRelaySubscription {
     }
     
     nonisolated func track(event: JSONEvent, from relay: URL) async {
-        if let oldestSeen = await oldestEventByRelay[relay],
-            event.createdDate < oldestSeen {
-            await updateOldestEvent(for: relay, to: event.createdDate)
+        if let oldestSeen = await oldestEventByRelay[relay] {
+            if event.createdDate < oldestSeen {
+                await updateOldestEvent(for: relay, to: event.createdDate)
+            }
         } else {
             await updateOldestEvent(for: relay, to: event.createdDate)
         }
