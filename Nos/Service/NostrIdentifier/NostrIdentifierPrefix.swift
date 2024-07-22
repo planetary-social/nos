@@ -2,22 +2,22 @@ import Foundation
 
 /// A collection of constants used in Nostr.
 /// Note: See [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md) for details.
-enum Nostr {
+enum NostrIdentifierPrefix {
     /// The Bech32 prefix for a private key.
-    static let privateKeyPrefix = "nsec"
+    static let privateKey = "nsec"
 
     /// The Bech32 prefix for a public key.
-    static let publicKeyPrefix = "npub"
+    static let publicKey = "npub"
     
     /// The Bech32 prefix for note ID.
-    static let notePrefix = "note"
+    static let note = "note"
 
     /// The Bech32 prefix for a nostr profile.
-    static let profilePrefix = "nprofile"
+    static let profile = "nprofile"
     
     /// The Bech32 prefix for a nostr event.
-    static let eventPrefix = "nevent"
+    static let event = "nevent"
     
     /// The Bech32 prefix for a nostr replaceable event coordinate, or address.
-    static let addressPrefix = "naddr"
+    static let address = "naddr"
 }
