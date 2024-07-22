@@ -20,6 +20,7 @@ class RelayService: ObservableObject {
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .userInitiated)
     private var parseQueue = ParseQueue()
     
+    @Dependency(\.persistenceController) var persistenceController
     @Dependency(\.analytics) private var analytics
     @MainActor @Dependency(\.currentUser) private var currentUser
     @Published var numberOfConnectedRelays: Int = 0
@@ -400,6 +401,7 @@ extension RelayService {
                 )
                 #endif
                 try self.parseContext.saveIfNeeded()
+                try self.persistenceController.viewContext.saveIfNeeded()
             }
             return true
         }
