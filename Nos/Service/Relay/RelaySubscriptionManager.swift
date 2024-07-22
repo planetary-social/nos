@@ -131,7 +131,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         all.forEach { relayAddresses.insert($0.relayAddress) }
 
         for relayAddress in relayAddresses {
-            var connection: WebSocketConnection
+            let connection: WebSocketConnection
             if let existingConnection = socketConnections[relayAddress] {
                 connection = existingConnection
             } else {
