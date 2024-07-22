@@ -196,7 +196,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     
     // MARK: - Talking to Relays
     
-    /// This function looks at the current state of sockets and subscriptions and opens new ones. It includes logic to 
+    /// Looks at the current state of sockets and subscriptions and opens new ones. It includes logic to 
     /// open websockets to service queued subscriptions and to limit the number of concurrent subscriptions for a given
     /// relay.
     ///
