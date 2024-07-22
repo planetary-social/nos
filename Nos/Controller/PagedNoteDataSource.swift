@@ -210,7 +210,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             startAggressivePaging()
             return
         } else if indexPath.row.isMultiple(of: pageSize / 2) {
-            pager?.loadMore()
+            Task { await pager?.loadMore() }
         } 
     }
     
@@ -243,7 +243,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
 
                 if self.largestLoadedRowIndex > lastPageStartIndex {
                     // we are still on the last page of results, keep loading
-                    self.pager?.loadMore()
+                    Task { await self.pager?.loadMore() }
                 } else {
                     // we've loaded enough, go back to normal paging
                     self.stopAggressivePaging()
