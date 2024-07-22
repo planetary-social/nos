@@ -20,7 +20,7 @@ class PagedRelaySubscription {
     private var newEventsSubscriptionIDs = Set<RelaySubscription.ID>()
     
     /// The relays we are fetching events from
-    private var relayAddresses: Set<URL>
+    private let relayAddresses: Set<URL>
     
     /// The oldest event each relay has returned. Used to load the next page.
     private var oldestEventByRelay = [URL: Date]()
