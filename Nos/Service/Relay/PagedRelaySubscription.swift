@@ -7,6 +7,7 @@ import Combine
 /// goes out of scope.  
 @RelaySubscriptionManagerActor
 class PagedRelaySubscription {
+    let startDate: Date
     let filter: Filter
     
     private var relayService: RelayService
@@ -33,6 +34,7 @@ class PagedRelaySubscription {
         subscriptionManager: RelaySubscriptionManager, 
         relayAddresses: Set<URL>
     ) {
+        self.startDate = startDate
         self.filter = filter
         self.relayService = relayService
         self.subscriptionManager = subscriptionManager
