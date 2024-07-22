@@ -252,7 +252,11 @@ struct NewNoteView: View {
             } else {
                 try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
             }
-            analytics.published(note: jsonEvent)
+            if let replyToNote {
+                analytics.published(reply: jsonEvent)
+            } else {
+                analytics.published(note: jsonEvent)
+            }
             text = EditableNoteText()
         } catch {
             Log.error("Error when posting: \(error.localizedDescription)")
