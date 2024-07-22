@@ -418,7 +418,12 @@ extension RelayService {
             let eventID = responseArray[1] as? String,
             let socketURL = socket.request.url?.absoluteString {
             
-            if await subscriptionManager.checkAuthentication(success: success, from: socket, eventID: eventID, message: responseArray[3] as? String) {
+            if await subscriptionManager.checkAuthentication(
+                success: success, 
+                from: socket, 
+                eventID: eventID, 
+                message: responseArray[3] as? String
+            ) {
                 return
             }
             
@@ -558,7 +563,6 @@ extension RelayService {
     
     /// Opens a websocket and writes a single message to it. On failure this function will just log the error to the
     /// console.
-    // TODO: we probabaly shouldn't do this now that we support auth. At least not from the NewNoteView
     private func openSocket(to url: URL, andSend message: String) async {
         var urlRequest = URLRequest(url: url)
         urlRequest.timeoutInterval = 10
