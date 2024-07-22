@@ -2,6 +2,7 @@ import Foundation
 import Starscream
 
 class MockRelaySubscriptionManager: RelaySubscriptionManager {
+    
     var all = [RelaySubscription]()
 
     var sockets = [WebSocket]()
@@ -16,6 +17,9 @@ class MockRelaySubscriptionManager: RelaySubscriptionManager {
 
     func all() async -> [RelaySubscription] {
         all
+    }
+    
+    func set(socketQueue: DispatchQueue?, delegate: Starscream.WebSocketDelegate?) async {
     }
 
     func sockets() async -> [WebSocket] {
@@ -36,7 +40,7 @@ class MockRelaySubscriptionManager: RelaySubscriptionManager {
     func forceCloseSubscriptionCount(for subscriptionID: RelaySubscription.ID) async {
     }
 
-    func markHealthy(socket: WebSocket) async {
+    func trackConnected(socket: WebSocket) async {
     }
 
     func processSubscriptionQueue() async {
@@ -53,7 +57,10 @@ class MockRelaySubscriptionManager: RelaySubscriptionManager {
 
     func requestEvents(from socket: any WebSocketClient, subscription: RelaySubscription) async {
     }
-
+    
+    func openSockets(queue: DispatchQueue, delegate: Starscream.WebSocketDelegate) async {
+    }
+    
     func socket(for address: String) async -> WebSocket? {
         nil
     }
