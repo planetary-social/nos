@@ -32,6 +32,18 @@ class MockRelaySubscriptionManager: RelaySubscriptionManager {
 
     func close(socket: WebSocket) async {
     }
+    
+    func trackAuthenticationRequest(from socket: WebSocket, responseID: RawNostrID) async {
+    }
+    
+    func checkAuthentication(
+        success: Bool, 
+        from socket: WebSocket, 
+        eventID: RawNostrID, 
+        message: String?
+    ) async -> Bool {
+        false
+    }
 
     func decrementSubscriptionCount(for subscriptionID: RelaySubscription.ID) async -> Bool {
         false

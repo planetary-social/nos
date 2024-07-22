@@ -147,7 +147,7 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         }
         var jsonEvent = JSONEvent(
             pubKey: keyPair.publicKeyHex,
-            kind: .auth,
+            kind: .httpAuth,
             tags: tags,
             content: ""
         )
