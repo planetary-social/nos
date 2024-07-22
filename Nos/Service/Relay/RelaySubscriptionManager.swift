@@ -5,18 +5,19 @@ import Logger
 protocol RelaySubscriptionManager {
     func active() async -> [RelaySubscription]
     func all() async -> [RelaySubscription]
-    func sockets() async -> [WebSocket]
+    
+    func set(socketQueue: DispatchQueue?, delegate: WebSocketDelegate?) async
 
-    func addSocket(for relayAddress: URL) async -> WebSocket?
-    func close(socket: WebSocket) async
     @discardableResult
     func decrementSubscriptionCount(for subscriptionID: RelaySubscription.ID) async -> Bool
     func forceCloseSubscriptionCount(for subscriptionID: RelaySubscription.ID) async
-    func markHealthy(socket: WebSocket) async
+    func trackConnected(socket: WebSocket) async
     func processSubscriptionQueue() async
     func queueSubscription(with filter: Filter, to relayAddress: URL) async -> RelaySubscription
-    func remove(_ socket: WebSocketClient) async
     func requestEvents(from socket: WebSocketClient, subscription: RelaySubscription) async
+    
+    func close(socket: WebSocket) async
+    func sockets() async -> [WebSocket] 
     func socket(for address: String) async -> WebSocket?
     func socket(for url: URL) async -> WebSocket?
     func staleSubscriptions() async -> [RelaySubscription]
@@ -34,12 +35,13 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     
     var all = [RelaySubscription]()
     
-    var sockets = [WebSocket]()
+    /// All websocket connections under management, mapped by their relay URL.
+    var socketConnections = [URL: WebSocketConnection]()
     
     var active: [RelaySubscription] {
         all.filter { $0.isActive }
     }
-
+    
     /// Limit of the number of active subscriptions in a single relay
     private let queueLimit = 10
 
@@ -52,9 +54,15 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     func all() async -> [RelaySubscription] {
         all
     }
-
-    func sockets() async -> [WebSocket] {
-        sockets
+    
+    // MARK: - Init
+    
+    private var socketQueue: DispatchQueue?
+    private var delegate: WebSocketDelegate?
+    
+    func set(socketQueue: DispatchQueue?, delegate: WebSocketDelegate?) {
+        self.socketQueue = socketQueue
+        self.delegate = delegate
     }
 
     // MARK: - Mutating the list of subscriptions
@@ -114,58 +122,90 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         }
         return staleSubscriptions
     }
+    
+    // MARK: - Socket Management
+    
+    /// Opens sockets to any relays that we have an open subscription for that don't already have a socket.
+    func openSockets() {
+        var relayAddresses = Set<URL>()
+        all.forEach { relayAddresses.insert($0.relayAddress) }
 
-    func addSocket(for relayAddress: URL) -> WebSocket? {
-        guard !sockets.contains(where: { $0.request.url == relayAddress }) else {
-            return nil
+        for relayAddress in relayAddresses {
+            var connection: WebSocketConnection
+            if let existingConnection = socketConnections[relayAddress] {
+                connection = existingConnection
+            } else {
+                connection = createSocket(for: relayAddress)
+            }
+            
+            switch connection.state {
+            case .errored(let error):
+                if error.nextRetry > Date.now {
+                    return
+                } else {
+                    fallthrough
+                }
+            case .disconnected:
+                connection.socket.connect()
+                connection.state = .connecting
+            case .connected, .connecting:
+                return
+            }
         }
-        
-        if let priorError = errored[relayAddress],
-            priorError.nextRetry > Date.now {
-            // This socket has errored recently and it isn't yet time to retry again.
-            return nil
-        }
-        
+    }
+    
+    /// Creates a WebSocketConnection for a relay. This is not idempotent - make sure it's called only once for 
+    /// each relay.
+    private func createSocket(for relayAddress: URL) -> WebSocketConnection {
         var request = URLRequest(url: relayAddress)
         request.timeoutInterval = 10
         let socket = WebSocket(request: request)
-        sockets.append(socket)
-        return socket
+        if let socketQueue {
+            socket.callbackQueue = socketQueue
+        } else {
+            Log.error("Created socket with no callbackQueue.")
+        }
+        socket.delegate = delegate
+        let connection = WebSocketConnection(socket: socket)
+        socketConnections[relayAddress] = connection
+        return connection
     }
     
+    /// Closes a socket, closes & removes all subscriptions from that socket and stops tracking it. 
     func close(socket: WebSocket) {
         socket.disconnect()
-        if let index = sockets.firstIndex(where: { $0 === socket }) {
-            sockets.remove(at: index)
+        if let relayAddress = socket.url {
+            for subscription in all where subscription.relayAddress == relayAddress {
+                forceCloseSubscriptionCount(for: subscription.id)
+            }
+            socketConnections.removeValue(forKey: relayAddress)
         }
     }
     
-    func remove(_ socket: WebSocketClient) {
-        if let index = sockets.firstIndex(where: { $0 === socket }) {
-            sockets.remove(at: index)
-        }
-        all.removeAll { subscription in
-            subscription.relayAddress == socket.url
-        }
+    func sockets() -> [WebSocket] {
+        socketConnections.values.map { $0.socket }
     }
     
     func socket(for address: String) -> WebSocket? {
-        if let index = sockets.firstIndex(where: { $0.request.url!.absoluteString == address }) {
-            return sockets[index]
+        if let url = URL(string: address) {
+            return socket(for: url)
         }
         return nil
     }
     
     func socket(for url: URL) -> WebSocket? {
-        if let index = sockets.firstIndex(where: { $0.request.url == url }) {
-            return sockets[index]
-        }
-        return nil
+        socketConnections[url]?.socket
     }
     
     // MARK: - Talking to Relays
     
-    func processSubscriptionQueue() async {
+    /// This function looks at the current state of sockets and subscriptions and opens new ones. It includes logic to 
+    /// open websockets to service queued subscriptions and to limit the number of concurrent subscriptions for a given
+    /// relay.
+    ///
+    /// It's called at appropriate times interally but can also be called externally in a loop. Idempotent.
+    func processSubscriptionQueue() {
+        openSockets()
         var waitingSubscriptions = [RelaySubscription]()
 
         // Counter to track the number of active subscriptions per relay
@@ -189,6 +229,10 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         // limit
         waitingSubscriptions.forEach { relaySubscription in
             let relayAddress = relaySubscription.relayAddress
+            guard let socket = socketConnections[relayAddress], case .connected = socket.state else {
+                return
+            }
+            
             if let subscriptionsCount = activeSubscriptionsCount[relayAddress] {
                 if subscriptionsCount < queueLimit {
                     start(subscription: relaySubscription)
@@ -199,20 +243,6 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
                 activeSubscriptionsCount[relayAddress] = 1
             }
         }
-        
-        #if DEBUG
-        // Print number of waiting subscriptions for each relay
-        if all.count > active.count {
-            var waitingSubscriptionsByRelay = [URL: Int]()
-            for subscription in all where subscription.subscriptionStartDate == nil {
-                let count = waitingSubscriptionsByRelay[subscription.relayAddress] ?? 0
-                waitingSubscriptionsByRelay[subscription.relayAddress] = count + 1
-            }
-            for (relayAddress, count) in waitingSubscriptionsByRelay {
-                Log.debug("\(relayAddress) has \(count) subscriptions waiting in queue.")
-            }
-        }
-        #endif
     }
     
     func queueSubscription(with filter: Filter, to relayAddress: URL) async -> RelaySubscription {
@@ -226,6 +256,10 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         }
         
         subscription.referenceCount += 1
+        
+        if socketConnections[relayAddress] == nil {
+            socketConnections[relayAddress] = createSocket(for: relayAddress)
+        }
         
         return subscription
     }
@@ -252,10 +286,6 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     }
     
     // MARK: - Error Tracking 
-    
-    /// A map that keeps track of errors we have received from websockets. 
-    private var errored: [URL: WebsocketErrorEvent] = [:]
-    
     /// This constant is used to calculate the maximum amount of time we will wait before retrying an errored socket.
     /// We backoff exponentially for 2^x seconds, increasing x by 1 on each consecutive error 
     /// until x == `maxBackoffPower`.
@@ -270,28 +300,49 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
             return 
         }
         
-        if var priorError = errored[relayAddress] {
-            priorError.trackRetry()
-            errored[relayAddress] = priorError
-        } else {
-            errored[relayAddress] = WebsocketErrorEvent()
+        guard let connection = socketConnections[relayAddress] else {
+            return
         }
+        
+        if case WebSocketState.errored(var priorError) = connection.state {
+            priorError.trackRetry()
+            connection.state = .errored(priorError)
+            Log.debug("Tracking error on websocket connection to \(relayAddress)")
+        } else {
+            connection.state = .errored(WebSocketErrorEvent())
+        }
+        
     }
     
     /// This should be called when a socket is successfully opened. It will reset the error count for the socket
     /// if it was above zero.
-    func markHealthy(socket: WebSocket) {
+    func trackConnected(socket: WebSocket) {
         guard let url = socket.request.url else { 
             return 
         }
         
-        errored.removeValue(forKey: url)
+        guard let connection = socketConnections[url] else {
+            return
+        }
+       
+        let oldState = connection.state
+        guard oldState != .connected else {
+            return
+        }
+        
+        connection.state = .connected
+        Log.debug("\(url) has connected")
+        
+        for subscription in active where subscription.relayAddress == url {
+            requestEvents(from: connection.socket, subscription: subscription)
+        }
+        processSubscriptionQueue()
     }
 }
 
 /// A container that tracks how many times we have tried unsuccessfully to open a websocket and the next time we should
 /// try again.
-fileprivate struct WebsocketErrorEvent {
+struct WebSocketErrorEvent: Equatable {
     var retryCounter: Int = 1
     var nextRetry: Date = .now
     
@@ -302,4 +353,22 @@ fileprivate struct WebsocketErrorEvent {
         )
         self.nextRetry = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + delaySeconds.doubleValue)
     }
+}
+
+/// Represents a connection to a websocket with state tracking. Utilizes a Starscream WebSocket under the hood.
+class WebSocketConnection {
+    let socket: WebSocket
+    var state: WebSocketState 
+    
+    init(socket: WebSocket, state: WebSocketState = .disconnected) {
+        self.socket = socket
+        self.state = state
+    }
+}
+
+/// The states a WebSocketConnection can be in. These states are used by `RelaySubscriptionManager` to move each 
+/// socket to the `connected` state where we can start executing requests, taking into account time to connect, errors
+/// and authentication.
+enum WebSocketState: Equatable {
+    case disconnected, connecting, connected, errored(WebSocketErrorEvent)
 }
