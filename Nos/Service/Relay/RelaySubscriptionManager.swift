@@ -57,8 +57,6 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         all
     }
     
-    // MARK: - Init
-    
     private var socketQueue: DispatchQueue?
     private var delegate: WebSocketDelegate?
     
@@ -133,12 +131,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         all.forEach { relayAddresses.insert($0.relayAddress) }
 
         for relayAddress in relayAddresses {
-            var connection: WebSocketConnection
-            if let existingConnection = socketConnections[relayAddress] {
-                connection = existingConnection
-            } else {
-                connection = createSocket(for: relayAddress)
-            }
+            let connection = findOrCreateSocket(for: relayAddress)
             
             switch connection.state {
             case .errored(let error):
@@ -158,7 +151,11 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     
     /// Creates a WebSocketConnection for a relay. This is not idempotent - make sure it's called only once for 
     /// each relay.
-    private func createSocket(for relayAddress: URL) -> WebSocketConnection {
+    private func findOrCreateSocket(for relayAddress: URL) -> WebSocketConnection {
+        if let existingConnection = socketConnections[relayAddress] {
+            return existingConnection
+        } 
+        
         var request = URLRequest(url: relayAddress)
         request.timeoutInterval = 10
         let socket = WebSocket(request: request)
@@ -228,7 +225,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     
     // MARK: - Talking to Relays
     
-    /// This function looks at the current state of sockets and subscriptions and opens new ones. It includes logic to 
+    /// Looks at the current state of sockets and subscriptions and opens new ones. It includes logic to 
     /// open websockets to service queued subscriptions and to limit the number of concurrent subscriptions for a given
     /// relay.
     ///
@@ -287,7 +284,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         subscription.referenceCount += 1
         
         if socketConnections[relayAddress] == nil {
-            socketConnections[relayAddress] = createSocket(for: relayAddress)
+            socketConnections[relayAddress] = findOrCreateSocket(for: relayAddress)
         }
         
         return subscription
@@ -366,37 +363,4 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         }
         processSubscriptionQueue()
     }
-}
-
-/// A container that tracks how many times we have tried unsuccessfully to open a websocket and the next time we should
-/// try again.
-struct WebSocketErrorEvent: Equatable {
-    var retryCounter: Int = 1
-    var nextRetry: Date = .now
-    
-    mutating func trackRetry() {
-        self.retryCounter += 1
-        let delaySeconds = NSDecimalNumber(
-            decimal: pow(2, min(retryCounter, RelaySubscriptionManagerActor.maxBackoffPower))
-        )
-        self.nextRetry = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + delaySeconds.doubleValue)
-    }
-}
-
-/// Represents a connection to a websocket with state tracking. Utilizes a Starscream WebSocket under the hood.
-class WebSocketConnection {
-    let socket: WebSocket
-    var state: WebSocketState 
-    
-    init(socket: WebSocket, state: WebSocketState = .disconnected) {
-        self.socket = socket
-        self.state = state
-    }
-}
-
-/// The states a WebSocketConnection can be in. These states are used by `RelaySubscriptionManager` to move each 
-/// socket to the `connected` state where we can start executing requests, taking into account time to connect, errors
-/// and authentication.
-enum WebSocketState: Equatable {
-    case disconnected, connecting, connected, authenticating(RawEventID), errored(WebSocketErrorEvent)
 }
