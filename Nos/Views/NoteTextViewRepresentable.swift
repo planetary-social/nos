@@ -165,15 +165,17 @@ struct NoteTextViewRepresentable: UIViewRepresentable {
         ) -> Bool {
             if text.count > 1, let range = Range(nsRange, in: self.text.wrappedValue.attributedString) {
                 do {
-                    let (humanReadablePart, _) = try Bech32.decode(text)
-                    if humanReadablePart == Nostr.publicKeyPrefix {
+                    let identifier = try NostrIdentifier.decode(bech32String: text)
+                    switch identifier {
+                    case .npub:
                         self.text.wrappedValue.insertMention(npub: text, at: range)
                         return false
-                    } else if humanReadablePart == Nostr.notePrefix {
+                    case .note:
                         self.text.wrappedValue.insertMention(note: text, at: range)
                         return false
+                    default:
+                        return true
                     }
-                    return true
                 } catch {
                     return true
                 }
