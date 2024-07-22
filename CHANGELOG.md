@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fix a bug where multiple connections could be opened with the same relay.
 - Add impersonation flag category and better NIP-56 mapping.
 - Add a Tap to Refresh button in empty profiles.
 - Support nostr:naddr links to text and long-form content notes.
