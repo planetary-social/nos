@@ -37,11 +37,11 @@ struct PublicKey {
     }
     
     init?(npub: String) {
-        self.init(bech32Encoded: npub, prefix: Nostr.publicKeyPrefix)
+        self.init(bech32Encoded: npub, prefix: NostrIdentifierPrefix.publicKey)
     }
 
     init?(note: String) {
-        self.init(bech32Encoded: note, prefix: Nostr.notePrefix)
+        self.init(bech32Encoded: note, prefix: NostrIdentifierPrefix.note)
     }
 
     private init?(bech32Encoded: String, prefix: String) {
@@ -62,7 +62,7 @@ struct PublicKey {
     init(underlyingKey: secp256k1.Signing.XonlyKey) {
         self.underlyingKey = underlyingKey
         self.hex = Data(underlyingKey.bytes).hexString
-        self.npub = Bech32.encode(Nostr.publicKeyPrefix, baseEightData: Data(underlyingKey.bytes))
+        self.npub = Bech32.encode(NostrIdentifierPrefix.publicKey, baseEightData: Data(underlyingKey.bytes))
         self.bytes = underlyingKey.bytes
     }
 }

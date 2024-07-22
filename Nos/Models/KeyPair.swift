@@ -15,7 +15,7 @@ struct KeyPair {
     }
     
     var nsec: String {
-        Bech32.encode(Nostr.privateKeyPrefix, baseEightData: underlyingKey.dataRepresentation)
+        Bech32.encode(NostrIdentifierPrefix.privateKey, baseEightData: underlyingKey.dataRepresentation)
     }
     
     var npub: String {

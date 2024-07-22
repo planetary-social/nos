@@ -37,17 +37,17 @@ enum NostrIdentifier {
     static func decode(bech32String: String) throws -> NostrIdentifier {
         let (humanReadablePart, data) = try Bech32.decode(bech32String)
         switch humanReadablePart {
-        case Nostr.publicKeyPrefix:
+        case NostrIdentifierPrefix.publicKey:
             return try decodeNostrPublicKey(data: data)
-        case Nostr.privateKeyPrefix:
+        case NostrIdentifierPrefix.privateKey:
             return try decodeNostrPrivateKey(data: data)
-        case Nostr.notePrefix:
+        case NostrIdentifierPrefix.note:
             return try decodeNostrNote(data: data)
-        case Nostr.profilePrefix:
+        case NostrIdentifierPrefix.profile:
             return try decodeNostrProfile(data: data)
-        case Nostr.eventPrefix:
+        case NostrIdentifierPrefix.event:
             return try decodeNostrEvent(data: data)
-        case Nostr.addressPrefix:
+        case NostrIdentifierPrefix.address:
             return try decodeNostrAddress(data: data)
         default:
             throw NostrIdentifierError.unknownPrefix
