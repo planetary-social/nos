@@ -255,7 +255,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         subscription.referenceCount += 1
         
         if socketConnections[relayAddress] == nil {
-            socketConnections[relayAddress] = createSocket(for: relayAddress)
+            socketConnections[relayAddress] = findOrCreateSocket(for: relayAddress)
         }
         
         return subscription
