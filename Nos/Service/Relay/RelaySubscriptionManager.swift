@@ -184,6 +184,13 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     /// Tracks that a relay sent us an AUTH message, so we can change the socket state to .authenticating
     func trackAuthenticationRequest(from socket: WebSocket, responseID: RawNostrID) {
         if let relayAddress = socket.url, let connection = socketConnections[relayAddress] {
+            // Close open subscriptions if any.
+            active.forEach { subscription in
+                if subscription.relayAddress == relayAddress {
+                    subscription.subscriptionStartDate = nil
+                    socket.write(string: "[\"CLOSE\", \"\(subscription.id)\"]")
+                }
+            }
             connection.state = .authenticating(responseID)
         }
     }
