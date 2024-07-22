@@ -311,7 +311,6 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         } else {
             connection.state = .errored(WebSocketErrorEvent())
         }
-        
     }
     
     /// This should be called when a socket is successfully opened. It will reset the error count for the socket
