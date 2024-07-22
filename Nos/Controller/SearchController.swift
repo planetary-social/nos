@@ -60,38 +60,44 @@ class SearchController: ObservableObject {
     init() {
         $query
             .removeDuplicates()
-            .map { query in
+            .map { [weak self] query in
                 if query.isEmpty {
-                    self.clear()
-                } else if query.count < 3 {
-                    self.state = .empty
+                    self?.clear()
                 }
                 return query
             }
-            .filter { $0.count >= 3 || self.state == .loading }
-            .debounce(for: 0.2, scheduler: RunLoop.main)
-            .map { query in
-                self.submitSearch(query: query)
-                return query
-            }
-            .combineLatest(
-                // listen for new objects, as this is how we get search results from relays
-                NotificationCenter.default.publisher(
-                    for: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
-                    object: context
-                )
-            )
-            .map { $0.0 }
-            .filter { _ in self.state != .noQuery && self.state != .empty }
-            .map { self.authors(named: $0) }
-            .map { $0.sorted(by: { $0.followers.count > $1.followers.count }) }
-            .sink(receiveValue: { results in
-                if !results.isEmpty {
+            .filter { !$0.isEmpty }
+            .compactMap { [weak self] query in
+                guard let self else { return nil }
+                self.authorResults = self.authors(named: query)
+                if !self.authorResults.isEmpty {
                     self.state = .results
                 }
-                self.authorResults = results
-            })
+                return query
+            }
+            .filter { [weak self] in $0.count >= 3 || self?.state == .loading }
+            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .sink { [weak self] query in
+                self?.submitSearch(query: query)
+            }
             .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(
+            for: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
+            object: context
+        )
+        .filter { [weak self] _ in self?.state != .noQuery && self?.state != .empty } // TODO: consider other states
+        .compactMap { [weak self] _ in self?.query }
+        .compactMap { [weak self] in self?.authors(named: $0) }
+        .map { $0.sorted(by: { $0.followers.count > $1.followers.count }) }
+        .sink(receiveValue: { [weak self] results in
+            guard let self else { return }
+            if !results.isEmpty {
+                self.state = .results
+            }
+            self.authorResults = results
+        })
+        .store(in: &cancellables)
     }
     
     // MARK: - Internal
@@ -154,7 +160,7 @@ class SearchController: ObservableObject {
     /// These functions search other systems for the given query and add relevant authors to the database.
     /// The database then generates a notification which is listened to above and results are reloaded.
     func search(for query: String) {
-        state = .loading
+//        state = .loading
         startSearchTimer()
         Task {
             self.searchSubscriptions.removeAll()
