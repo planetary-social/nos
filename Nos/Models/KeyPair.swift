@@ -15,7 +15,7 @@ struct KeyPair {
     }
     
     var nsec: String {
-        Bech32.encode(Nostr.privateKeyPrefix, baseEightData: underlyingKey.dataRepresentation)
+        Bech32.encode(NostrIdentifierPrefix.privateKey, baseEightData: underlyingKey.dataRepresentation)
     }
     
     var npub: String {
@@ -53,20 +53,15 @@ struct KeyPair {
     
     init?(nsec: String) {
         do {
-            let (humanReadablePart, checksum) = try Bech32.decode(nsec)
-            guard humanReadablePart == Nostr.privateKeyPrefix else {
-                print("error creating KeyPair from nsec: invalid human readable part")
+            let identifier = try NostrIdentifier.decode(bech32String: nsec)
+            guard case let .nsec(privateKeyHex) = identifier else {
+                print("Error decoding nsec")
                 return nil
             }
-            
-            guard let converted = try? checksum.base8FromBase5() else {
-                return nil
-            }
-            
-            self.underlyingKey = try .init(dataRepresentation: converted)
+            self.underlyingKey = try .init(dataRepresentation: privateKeyHex.bytes)
             publicKey = PublicKey(underlyingKey: underlyingKey.publicKey.xonly)
         } catch {
-            print("error creating KeyPair \(error.localizedDescription)")
+            print("Error creating KeyPair: \(error.localizedDescription)")
             return nil
         }
     }

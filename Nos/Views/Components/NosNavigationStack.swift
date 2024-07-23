@@ -13,9 +13,19 @@ struct NosNavigationStack<Content: View>: View {
             content()
                 .navigationDestination(for: NosNavigationDestination.self, destination: { destination in
                     switch destination {
-                    case .note(let eventID):
-                        EventObservationView(eventID: eventID) { event in
-                            RepliesView(note: event)
+                    case .note(let noteIdentifiable):
+                        if case let .identifier(eventID) = noteIdentifiable {
+                            EventObservationView(eventID: eventID) { event in
+                                RepliesView(note: event)
+                            }
+                        } else if case let .replaceableIdentifier(replaceableEventID, author, kind) = noteIdentifiable {
+                            EventObservationView(
+                                replaceableEventID: replaceableEventID,
+                                author: author,
+                                kind: kind
+                            ) { event in
+                                RepliesView(note: event)
+                            }
                         }
                     case .author(let authorID):
                         AuthorObservationView(authorID: authorID) { author in

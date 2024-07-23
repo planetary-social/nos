@@ -7,7 +7,7 @@ import SwiftUI
 import Logger
 import Dependencies
 
-enum EventError: Error {
+enum EventError: Error, LocalizedError {
 	case utf8Encoding
 	case unrecognizedKind
     case missingAuthor
@@ -15,7 +15,7 @@ enum EventError: Error {
     case invalidSignature(Event)
     case expiredEvent
 
-    var description: String? {
+    var errorDescription: String? {
         switch self {
         case .unrecognizedKind:
             return "Unrecognized event kind"
@@ -455,6 +455,23 @@ public class Event: NosManagedObject, VerifiableEvent {
         return fetchRequest
     }
     
+    @nonobjc public class func event(
+        by replaceableID: RawReplaceableID, 
+        author: Author,
+        kind: Int64
+    ) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.predicate = NSPredicate(
+            format: "replaceableIdentifier = %@ AND author = %@ AND kind = %i",
+            replaceableID,
+            author,
+            kind
+        )
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.replaceableIdentifier, ascending: true)]
+        fetchRequest.fetchLimit = 1
+        return fetchRequest
+    }
+    
     @nonobjc public class func hydratedEvent(by identifier: String) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(
@@ -480,32 +497,21 @@ public class Event: NosManagedObject, VerifiableEvent {
         return fetchRequest
     }
     
-    @nonobjc public class func homeFeedPredicate(
-        for user: Author, 
-        before: Date,
-        seenOn relay: Relay? = nil
-    ) -> NSPredicate {
-        // swiftlint:disable:next line_length
-        var queryString = "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND author.muted = 0 AND createdAt <= %@ AND deletedOn.@count = 0"
-        var arguments: [CVarArg] = [before as CVarArg]
-        if let relay {
-            queryString.append(" AND ANY seenOnRelays = %@")
-            arguments.append(relay)
-        } else {
-            queryString.append(" AND (ANY author.followers.source = %@ OR author = %@)")
-            arguments += [user, user]
-        }
-        return NSPredicate(format: queryString, argumentArray: arguments)
+    @nonobjc public class func homeFeedPredicate(for user: Author, before: Date) -> NSPredicate {
+        NSPredicate(
+            // swiftlint:disable line_length
+            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND createdAt <= %@ AND deletedOn.@count = 0",
+            // swiftlint:enable line_length
+            user,
+            user,
+            before as CVarArg
+        )
     }
     
-    @nonobjc public class func homeFeed(
-        for user: Author, 
-        before: Date, 
-        seenOn relay: Relay? = nil
-    ) -> NSFetchRequest<Event> {
+    @nonobjc public class func homeFeed(for user: Author, before: Date) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = homeFeedPredicate(for: user, before: before, seenOn: relay)
+        fetchRequest.predicate = homeFeedPredicate(for: user, before: before)
         return fetchRequest
     }
 
@@ -611,13 +617,24 @@ public class Event: NosManagedObject, VerifiableEvent {
         guard try context.count(for: Event.hydratedEvent(by: jsonEvent.id)) == 0 else {
             return nil
         }
-        
+
         if let existingEvent = try context.fetch(Event.event(by: jsonEvent.id)).first {
             if existingEvent.isStub {
                 try existingEvent.hydrate(from: jsonEvent, relay: relay, in: context)
             }
             return existingEvent
         } else {
+            if let replaceableID = jsonEvent.replaceableID {
+                let author = try Author.findOrCreate(by: jsonEvent.pubKey, context: context)
+                let request = Event.event(by: replaceableID, author: author, kind: jsonEvent.kind)
+                if let existingEvent = try context.fetch(request).first {
+                    if existingEvent.isStub {
+                        try existingEvent.hydrate(from: jsonEvent, relay: relay, in: context)
+                    }
+                    return existingEvent
+                }
+            }
+
             let event = Event(context: context)
             event.identifier = jsonEvent.id
             event.receivedAt = .now
@@ -625,9 +642,9 @@ public class Event: NosManagedObject, VerifiableEvent {
             return event
         }
     }
-    
+
     /// Fetches the event with the given ID out of the database, and otherwise creates a stubbed Event.
-    /// A stubbed event only has an `identifier` - we know an event with this identifier exists but we don't
+    /// A stubbed event created here only has an `identifier`. We know an event with this identifier exists but we don't
     /// have its content or tags yet.
     ///  
     /// - Parameters:
@@ -642,13 +659,45 @@ public class Event: NosManagedObject, VerifiableEvent {
             return event
         }
     }
+
+    /// Fetches the event with the given replaceable ID and author ID out of the database, and otherwise
+    /// creates a stubbed Event.
+    /// A stubbed event created here will only have a `replaceableIdentifier` and an author. We know an event with this
+    /// `replaceableIdentifier` and author exists but we don't have its content or tags yet.
+    ///
+    /// - Parameters:
+    ///   - replaceableID: The replaceable ID of the event. This is encoded in the `d` tag.
+    ///   - authorID: The public key of the author associated with the event.
+    ///   - kind: The kind of the event. If this is `nil`, it's ignored. Defaults to `nil`.
+    ///   - context: The managed object context to use.
+    /// - Returns: The Event model with the given ID.
+    class func findOrCreateStubBy(
+        replaceableID: RawReplaceableID,
+        authorID: RawAuthorID,
+        kind: Int64,
+        context: NSManagedObjectContext
+    ) throws -> Event {
+        let author = try Author.findOrCreate(by: authorID, context: context)
+        if let existingEvent = try context.fetch(Event.event(by: replaceableID, author: author, kind: kind)).first {
+            return existingEvent
+        } else {
+            let event = Event(context: context)
+            event.replaceableIdentifier = replaceableID
+            event.author = author
+            event.kind = kind
+            return event
+        }
+    }
     
     /// Populates an event stub (with only its ID set) using the data in the given JSON.
     func hydrate(from jsonEvent: JSONEvent, relay: Relay?, in context: NSManagedObjectContext) throws {
         guard isStub else {
             fatalError("Tried to hydrate an event that isn't a stub. This is a programming error")
         }
-        
+
+        // if this stub was created with a replaceableIdentifier and author, it won't have an identifier yet
+        identifier = jsonEvent.id
+
         // Meta data
         createdAt = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
         if let createdAt, createdAt > .now {
@@ -671,6 +720,9 @@ public class Event: NosManagedObject, VerifiableEvent {
                 if isExpired {
                     throw EventError.expiredEvent
                 }
+            } else if tag[safe: 0] == "d",
+                let dTag = tag[safe: 1] {
+                replaceableIdentifier = dTag
             }
         }
         
@@ -765,7 +817,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         let newAuthorReferences = NSMutableOrderedSet()
         for jsonTag in jsonEvent.tags {
             if jsonTag.first == "e" {
-                // TODO: validdate that the tag looks like an event ref
+                // TODO: validate that the tag looks like an event ref
                 do {
                     let eTag = try EventReference(jsonTag: jsonTag, context: context)
                     newEventReferences.add(eTag)
@@ -890,7 +942,13 @@ public class Event: NosManagedObject, VerifiableEvent {
     /// Tries to download this event from relays.
     @MainActor private func loadContent() async {
         @Dependency(\.relayService) var relayService
-        relaySubscriptions.append(await relayService.requestEvent(with: identifier))
+        if let identifier {
+            relaySubscriptions.append(await relayService.requestEvent(with: identifier))
+        } else if let replaceableIdentifier, let authorKey = author?.hexadecimalPublicKey {
+            relaySubscriptions.append(
+                await relayService.requestEvent(with: replaceableIdentifier, authorKey: authorKey)
+            )
+        }
     }
 
     /// Requests any missing metadata for authors referenced by this note from relays.
@@ -955,7 +1013,7 @@ public class Event: NosManagedObject, VerifiableEvent {
     /// Returns true if this event doesn't have content. Usually this means we saw it referenced by another event
     /// but we haven't actually downloaded it yet.
     var isStub: Bool {
-        author == nil || createdAt == nil 
+        author == nil || createdAt == nil || identifier == nil
     }
     
     func calculateIdentifier() throws -> String {
@@ -1027,7 +1085,7 @@ public class Event: NosManagedObject, VerifiableEvent {
             let identifierBytes = try? identifier.bytes else {
             return nil
         }
-        return Bech32.encode(Nostr.notePrefix, baseEightData: Data(identifierBytes))
+        return Bech32.encode(NostrIdentifierPrefix.note, baseEightData: Data(identifierBytes))
     }
     
     var seenOnRelayURLs: [String] {

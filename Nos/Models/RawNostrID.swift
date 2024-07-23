@@ -32,3 +32,6 @@ extension RawNostrID {
         return isValidHexadecimal
     }
 }
+
+/// A replaceable ID, such as the one found in a `d` tag. Used for `naddr` events, and maybe others!
+public typealias RawReplaceableID = String

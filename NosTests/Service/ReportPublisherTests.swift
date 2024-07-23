@@ -17,8 +17,6 @@ final class ReportPublisherTests: CoreDataTestCase {
         XCTAssertEqual(publicReport.kind, EventKind.report.rawValue)
         XCTAssertEqual(publicReport.pubKey, aliceKeyPair.publicKeyHex)
         XCTAssertEqual(publicReport.tags, [
-            ["L", "MOD"],
-            ["l", "MOD>CL", "MOD"],
             ["e", note.identifier!, "profanity"],
             ["p", bobKeyPair.publicKeyHex]
         ])

@@ -12,6 +12,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>$(SCHEME_PREFIX)</string>
+				<string>nostr</string>
 			</array>
 		</dict>
 	</array>

@@ -55,7 +55,17 @@ import Dependencies
     
     /// Pushes a detail view for the given note.
     func push(_ note: Event) {
-        push(.note(note.identifier))
+        if let identifier = note.identifier {
+            push(.note(.identifier(identifier)))
+        } else if let replaceableIdentifier = note.replaceableIdentifier, let author = note.author {
+            push(
+                .note(
+                    .replaceableIdentifier(replaceableID: replaceableIdentifier, author: author, kind: note.kind)
+                )
+            )
+        } else {
+            fatalError("Tried to push a note with no identifier; that's not going to work.")
+        }
     }
     
     /// Pushes a detail view for the note with the given ID, creating one if needed.
@@ -68,6 +78,22 @@ import Dependencies
             crashReporting.report(error)
         }
     }    
+    
+    /// Pushes a detail view for the event with the given replaceable ID and author, creating one if needed.
+    func pushNote(replaceableID: RawReplaceableID, authorID: RawAuthorID, kind: Int64) {
+        do {
+            let note = try Event.findOrCreateStubBy(
+                replaceableID: replaceableID, 
+                authorID: authorID,
+                kind: kind,
+                context: persistenceController.viewContext
+            )
+            push(note)
+        } catch {
+            Log.optional(error)
+            crashReporting.report(error)
+        }
+    }
     
     /// Pushes a profile view for the given author.
     func push(_ author: Author) {
@@ -136,7 +162,7 @@ import Dependencies
 
 extension Router {
 
-    nonisolated func open(url: URL, with context: NSManagedObjectContext) {
+    nonisolated func open(url: URL) {
         let link = url.absoluteString
         let identifier = String(link[link.index(after: link.startIndex)...])
 
@@ -152,6 +178,21 @@ extension Router {
                     }
                 } else if link.hasPrefix("%") {
                     pushNote(id: identifier)
+                } else if link.hasPrefix("$") {
+                    let separator = ";"
+                    let parts = identifier.split(separator: separator).map { String($0) }
+                    guard parts.count >= 3,
+                        let kindString = parts.last,
+                        let kind = Int64(kindString),
+                        let authorID = parts.dropLast().last else {
+                        Log.debug("Something went wrong parsing the replaceableID and author from the naddr link")
+                        return
+                    }
+                    let replaceableID = parts.dropLast(2).joined(separator: separator)
+                    pushNote(replaceableID: replaceableID, authorID: authorID, kind: kind)
+                } else if let scheme = url.scheme,
+                    DeepLinkService.supportedURLSchemes.contains(scheme) {
+                    DeepLinkService.handle(url, router: self)
                 } else if url.scheme == "http" || url.scheme == "https" {
                     push(url)
                 } else {

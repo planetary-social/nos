@@ -71,7 +71,7 @@ struct CompactNoteView: View {
                 guard allowUserInteraction else {
                     return .handled
                 }
-                router.open(url: url, with: viewContext)
+                router.open(url: url)
                 return .handled
             })
     }

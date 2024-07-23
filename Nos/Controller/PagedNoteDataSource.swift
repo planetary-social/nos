@@ -11,9 +11,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     var collectionView: UICollectionView
     
     @Dependency(\.relayService) private var relayService: RelayService
-    private(set) var databaseFilter: NSFetchRequest<Event>
-    private(set) var relayFilter: Filter
-    private(set) var relay: Relay?
+    private var relayFilter: Filter
     private var pager: PagedRelaySubscription?
     private var context: NSManagedObjectContext
     private var header: () -> Header
@@ -29,14 +27,12 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     init(
         databaseFilter: NSFetchRequest<Event>, 
         relayFilter: Filter, 
-        relay: Relay?, 
         collectionView: UICollectionView, 
         context: NSManagedObjectContext,
         @ViewBuilder header: @escaping () -> Header,
         @ViewBuilder emptyPlaceholder: @escaping (@escaping () -> Void) -> EmptyPlaceholder,
         onRefresh: @escaping () -> NSFetchRequest<Event>
     ) {
-        self.databaseFilter = databaseFilter
         self.fetchedResultsController = NSFetchedResultsController<Event>(
             fetchRequest: databaseFilter,
             managedObjectContext: context,
@@ -46,7 +42,6 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         self.collectionView = collectionView
         self.context = context
         self.relayFilter = relayFilter
-        self.relay = relay
         self.header = header
         self.emptyPlaceholder = emptyPlaceholder
         self.onRefresh = onRefresh
@@ -74,23 +69,15 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             Log.error(error)
         }
         
-        subscribeToEvents(matching: relayFilter, from: relay)
-    }
-    
-    func subscribeToEvents(matching filter: Filter, from relay: Relay?) {
-        self.relayFilter = filter
-        self.relay = relay
-        
-        Task { 
-            var limitedFilter = filter
+        Task {
+            var limitedFilter = relayFilter
             limitedFilter.limit = pageSize
-            self.pager = await relayService.subscribeToPagedEvents(matching: limitedFilter, from: relay?.addressURL)
+            self.pager = await relayService.subscribeToPagedEvents(matching: limitedFilter)
             loadMoreIfNeeded(for: IndexPath(row: 0, section: 0))
         }
     }
     
     func updateFetchRequest(_ fetchRequest: NSFetchRequest<Event>) {
-        self.databaseFilter = fetchRequest
         self.fetchedResultsController = NSFetchedResultsController<Event>(
             fetchRequest: fetchRequest,
             managedObjectContext: context,
@@ -101,7 +88,6 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         try? self.fetchedResultsController.performFetch()
         loadMoreIfNeeded(for: IndexPath(row: 0, section: 0))
         collectionView.reloadData()
-        collectionView.setContentOffset(.zero, animated: false)
     }
     
     // MARK: - UICollectionViewDataSource
@@ -224,9 +210,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             startAggressivePaging()
             return
         } else if indexPath.row.isMultiple(of: pageSize / 2) {
-            Task {
-                await pager?.loadMore()
-            }
+            Task { await pager?.loadMore() }
         } 
     }
     
@@ -259,9 +243,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
 
                 if self.largestLoadedRowIndex > lastPageStartIndex {
                     // we are still on the last page of results, keep loading
-                    Task {
-                        await self.pager?.loadMore()
-                    }
+                    Task { await self.pager?.loadMore() }
                 } else {
                     // we've loaded enough, go back to normal paging
                     self.stopAggressivePaging()

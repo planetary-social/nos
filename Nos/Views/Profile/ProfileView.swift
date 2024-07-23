@@ -81,8 +81,7 @@ struct ProfileView: View {
             VStack {
                 PagedNoteListView(
                     databaseFilter: selectedTab.databaseFilter(author: author),
-                    relayFilter: selectedTab.relayFilter(author: author), 
-                    relay: nil,
+                    relayFilter: selectedTab.relayFilter(author: author),
                     context: viewContext,
                     tab: .profile,
                     header: {

@@ -107,21 +107,27 @@ import Dependencies
     
     @MainActor func setUp() {
         if let keyPair {
-            author = try? Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
-            authorWatcher = NSFetchedResultsController(
-                fetchRequest: Author.request(by: keyPair.publicKeyHex),
-                managedObjectContext: viewContext,
-                sectionNameKeyPath: nil,
-                cacheName: nil
-            )
-            authorWatcher?.delegate = self
-            try? authorWatcher?.performFetch()
-            
-            socialGraph = SocialGraphCache(userKey: keyPair.publicKeyHex, context: backgroundContext)
-            
-            Task {
-                await subscribe()
-                refreshFriendMetadata()
+            do {
+                author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
+                try viewContext.saveIfNeeded()
+                authorWatcher = NSFetchedResultsController(
+                    fetchRequest: Author.request(by: keyPair.publicKeyHex),
+                    managedObjectContext: viewContext,
+                    sectionNameKeyPath: nil,
+                    cacheName: nil
+                )
+                authorWatcher?.delegate = self
+                try authorWatcher?.performFetch()
+                
+                socialGraph = SocialGraphCache(userKey: keyPair.publicKeyHex, context: backgroundContext)
+                
+                Task {
+                    await subscribe()
+                    refreshFriendMetadata()
+                }
+            } catch {
+                crashReporting.report("Serious error in CurrentUser.setUp(): \(error.localizedDescription)")
+                Log.optional(error)
             }
         } else {
             author = nil

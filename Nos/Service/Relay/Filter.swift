@@ -5,13 +5,16 @@ import Foundation
 struct Filter: Hashable, Identifiable {
     
     /// List of author identifiers the Filter should be constrained to.
-    var authorKeys: [RawAuthorID]
+    let authorKeys: [RawAuthorID]
 
     /// List of event identifiers the Filter should be constrained to.
     let eventIDs: [RawEventID]
 
     /// List of Note kinds to filter
-    var kinds: [EventKind]
+    let kinds: [EventKind]
+
+    /// An array of replaceable identifiers, or `"d"` tags, to match.
+    let dTags: [RawReplaceableID]
 
     /// Ask the relay to return events mentioned in the `tags` field.
     let eTags: [RawEventID]
@@ -42,6 +45,7 @@ struct Filter: Hashable, Identifiable {
     /// - Parameter eventIDs: List of event identifiers the Filter should be
     /// constrained to. Defaults to `[]`.
     /// - Parameter kinds: List of Note kinds to filter. Defaults to `[]`.
+    /// - Parameter dTags: An array of replaceable identifiers, or `"d"` tags, to match. Defaults to `[]`.
     /// - Parameter eTags: Ask the relay to return events mentioned in the
     /// `tags` field. Defaults to `[]`.
     /// - Parameter pTags: Ask the relay to return authors mentioned in the
@@ -61,6 +65,7 @@ struct Filter: Hashable, Identifiable {
         authorKeys: [RawAuthorID] = [],
         eventIDs: [RawEventID] = [],
         kinds: [EventKind] = [],
+        dTags: [RawReplaceableID] = [],
         eTags: [RawEventID] = [],
         pTags: [RawAuthorID] = [],
         search: String? = nil,
@@ -72,6 +77,7 @@ struct Filter: Hashable, Identifiable {
         self.authorKeys = authorKeys.sorted()
         self.eventIDs = eventIDs
         self.kinds = kinds.sorted(by: { $0.rawValue > $1.rawValue })
+        self.dTags = dTags
         self.eTags = eTags
         self.pTags = pTags
         self.search = search
@@ -99,7 +105,11 @@ struct Filter: Hashable, Identifiable {
         if !kinds.isEmpty {
             filterDict["kinds"] = kinds.map({ $0.rawValue })
         }
-        
+
+        if !dTags.isEmpty {
+            filterDict["#d"] = dTags
+        }
+
         if !eTags.isEmpty {
             filterDict["#e"] = eTags
         }
@@ -132,6 +142,7 @@ struct Filter: Hashable, Identifiable {
         hasher.combine(eventIDs)
         hasher.combine(kinds)
         hasher.combine(limit)
+        hasher.combine(dTags)
         hasher.combine(eTags)
         hasher.combine(pTags)
         hasher.combine(search)

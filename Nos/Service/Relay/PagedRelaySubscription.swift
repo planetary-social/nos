@@ -20,7 +20,7 @@ class PagedRelaySubscription {
     private var newEventsSubscriptionIDs = Set<RelaySubscription.ID>()
     
     /// The relays we are fetching events from
-    private var relayAddresses: Set<URL>
+    private let relayAddresses: Set<URL>
     
     /// The oldest event each relay has returned. Used to load the next page.
     private var oldestEventByRelay = [URL: Date]()
@@ -92,22 +92,32 @@ class PagedRelaySubscription {
                     to: relayAddress
                 )
                 
-                pagedEventSubscription.events.sink { [weak self] jsonEvent in
-                    self?.track(event: jsonEvent, from: relayAddress)
-                }
-                .store(in: &cancellables)
+                pagedEventSubscription.events
+                    .sink { [weak self] jsonEvent in
+                        Task {
+                            await self?.track(event: jsonEvent, from: relayAddress)
+                        }
+                    }
+                    .store(in: &cancellables)
                 
                 pagedSubscriptionIDs.insert(pagedEventSubscription.id)
+                
+                await subscriptionManager.processSubscriptionQueue()
             }
         }
     }
     
-    func track(event: JSONEvent, from relay: URL) {
-        if let oldestSeen = oldestEventByRelay[relay],
-            event.createdDate < oldestSeen {
-            oldestEventByRelay[relay] = event.createdDate
+    func updateOldestEvent(for relay: URL, to date: Date) {
+        oldestEventByRelay[relay] = date
+    }
+    
+    nonisolated func track(event: JSONEvent, from relay: URL) async {
+        if let oldestSeen = await oldestEventByRelay[relay] {
+            if event.createdDate < oldestSeen {
+                await updateOldestEvent(for: relay, to: event.createdDate)
+            }
         } else {
-            oldestEventByRelay[relay] = event.createdDate
+            await updateOldestEvent(for: relay, to: event.createdDate)
         }
     }
 }

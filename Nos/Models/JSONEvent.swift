@@ -112,7 +112,15 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
     var createdDate: Date {
         Date(timeIntervalSince1970: TimeInterval(createdAt))
     }
-    
+
+    /// The replaceable identifier, or `"d"` tag, of the event.
+    var replaceableID: String? {
+        for tag in tags where tag[safe: 0] == "d" {
+            return tag[safe: 1]
+        }
+        return nil
+    }
+
     /// Formats this event as a string that can be sent to a relay over a websocket to publish this event.
     func buildPublishRequest() throws -> String {
         let request: [Any] = ["EVENT", dictionary]

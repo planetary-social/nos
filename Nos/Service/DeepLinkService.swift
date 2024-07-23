@@ -4,17 +4,17 @@ import Dependencies
 
 enum DeepLinkService {
     
-    /// Returns the URL scheme for Nos, which varies by build (dev, staging, production). 
-    static var nosURLScheme: String? = { 
+    /// Returns the URL schemes that Nos supports. Dev, Staging, and Production builds each have their own scheme,
+    /// and all of them also support the `nostr:` scheme.
+    static var supportedURLSchemes: [String] = {
         if let urlTypes = Bundle.main.infoDictionary?["CFBundleURLTypes"] as? [[String: Any]] {
             for urlTypeDictionary in urlTypes {
                 guard let urlSchemes = urlTypeDictionary["CFBundleURLSchemes"] as? [String] else { continue }
-                guard let externalURLScheme = urlSchemes.first else { continue }
-                return externalURLScheme
+                return urlSchemes
             }
         }
         
-        return nil
+        return []
     }()
     
     @MainActor static func handle(_ url: URL, router: Router) {
@@ -24,7 +24,9 @@ enum DeepLinkService {
         
         let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
         
-        guard let components, let nosURLScheme, components.scheme == nosURLScheme else {
+        guard let components,
+            let scheme = components.scheme,
+            supportedURLSchemes.contains(scheme) else {
             return
         }
         
@@ -36,15 +38,13 @@ enum DeepLinkService {
             
             router.showNewNoteView(contents: noteContents)
         } else {
-            /// Check for links like nos:nevent123174
-            guard let host = components.host else {
-                Log.debug("No host in `nos:` deep link; cannot open. URLComponents: \(components)")
-                return
-            }
+            // The destination (npub, note, nprofile, nevent, or naddr) may be in the host or the path.
+            // If the URL looks like nos://npub1..., we want the host. If it's nostr:npub1..., the path is what we want.
+            let destination = components.host ?? components.path
             // swiftlint:disable:next opening_brace
-            let unformattedRegex = /(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1)[a-zA-Z0-9]{58,}))/
+            let unformattedRegex = /(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1|naddr1)[a-zA-Z0-9]{58,}))/
             do {
-                if let match = try unformattedRegex.firstMatch(in: host) {
+                if let match = try unformattedRegex.firstMatch(in: destination) {
                     let entity = match.1
                     let string = String(entity)
 
@@ -54,7 +54,13 @@ enum DeepLinkService {
                         router.pushAuthor(id: rawAuthorID)
                     case .note(let rawEventID), .nevent(let rawEventID, _, _, _):
                         router.pushNote(id: rawEventID)
-                    case .naddr:
+                    case .naddr(let replaceableID, _, let authorID, let kind):
+                        router.pushNote(
+                            replaceableID: replaceableID,
+                            authorID: authorID,
+                            kind: Int64(kind)
+                        )
+                    case .nsec:
                         break
                     }
                 }

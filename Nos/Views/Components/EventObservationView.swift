@@ -18,7 +18,17 @@ struct EventObservationView<Content: View>: View {
         }
         self.contentBuilder = contentBuilder
     }
-    
+
+    init(
+        replaceableEventID: RawReplaceableID,
+        author: Author,
+        kind: Int64,
+        contentBuilder: @escaping (Event) -> Content
+    ) {
+        _events = FetchRequest(fetchRequest: Event.event(by: replaceableEventID, author: author, kind: kind))
+        self.contentBuilder = contentBuilder
+    }
+
     var body: some View {
         if let event = events.first {
             contentBuilder(event)

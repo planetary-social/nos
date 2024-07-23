@@ -15,6 +15,7 @@ extension Event {
     @NSManaged public var isVerified: Bool
     @NSManaged public var kind: Int64
     @NSManaged public var receivedAt: Date?
+    @NSManaged public var replaceableIdentifier: String?
     @NSManaged public var sendAttempts: Int16
     @NSManaged public var signature: String?
     @NSManaged public var author: Author?
