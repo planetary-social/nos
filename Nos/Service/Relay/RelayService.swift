@@ -644,7 +644,7 @@ extension RelayService {
         signingKey: KeyPair,
         context: NSManagedObjectContext
     ) async throws {
-        let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
+        let signedEvent = try await signAndSave(event: event, signingKey: signingKey, relayURLs: relayURLs, in: context)
         for relayURL in relayURLs {
             if let socket = await socket(from: relayURL) {
                 try await publish(from: socket, jsonEvent: signedEvent)
@@ -673,7 +673,7 @@ extension RelayService {
             signedEvent = event
             
         case .some(let keyPair):
-            signedEvent = try await signAndSave(event: event, signingKey: keyPair, in: context)
+            signedEvent = try await signAndSave(event: event, signingKey: keyPair, relayURLs: [relayURL], in: context)
         }
         
         await openSocket(to: relayURL, andSend: try signedEvent.buildPublishRequest())
@@ -682,6 +682,7 @@ extension RelayService {
     private func signAndSave(
         event: JSONEvent,
         signingKey: KeyPair,
+        relayURLs: [URL]? = nil,
         in context: NSManagedObjectContext
     ) async throws -> JSONEvent {
         var jsonEvent = event
@@ -696,7 +697,12 @@ extension RelayService {
                 Log.error("Could not parse new event \(jsonEvent)")
                 throw RelayError.parseError
             }
-            let relays = try context.fetch(Relay.relays(for: event.author!))
+            let relays: [Relay]
+            if let relayURLs {
+                relays = try relayURLs.map { try Relay.findOrCreate(by: $0.absoluteString, context: context) }
+            } else {
+                relays = try context.fetch(Relay.relays(for: event.author!))
+            }
             event.shouldBePublishedTo = Set(relays)
             try context.save()
         }
