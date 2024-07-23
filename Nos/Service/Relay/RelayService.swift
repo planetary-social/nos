@@ -418,12 +418,13 @@ extension RelayService {
             let eventID = responseArray[1] as? String,
             let socketURL = socket.request.url?.absoluteString {
             
-            if await subscriptionManager.checkAuthentication(
+            let isAuthMessage = await subscriptionManager.checkAuthentication(
                 success: success, 
                 from: socket, 
                 eventID: eventID, 
                 message: responseArray[3] as? String
-            ) {
+            )
+            if isAuthMessage {
                 return
             }
             
@@ -484,11 +485,7 @@ extension RelayService {
     }
     
     private func handleClosed(from socket: WebSocket, responseArray: [Any]) async {
-        guard responseArray.count > 1 else {
-            return
-        }
-        
-        if let subID = responseArray[1] as? RelaySubscription.ID {
+        if let subID = responseArray[safe: 1] as? RelaySubscription.ID {
             await subscriptionManager.receivedClose(for: subID, from: socket)
         }
     }

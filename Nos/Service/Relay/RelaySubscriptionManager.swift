@@ -200,19 +200,21 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     /// If it does we mark the relay as .connected. If it doesn't then we do nothing, so this function is safe to be 
     /// called on every "OK" message. 
     func checkAuthentication(success: Bool, from socket: WebSocket, eventID: RawNostrID, message: String?) -> Bool {
-        if let relayAddress = socket.url, let connection = socketConnections[relayAddress] {
-            if case .authenticating(let responseID) = connection.state, responseID == eventID {
-                if success {
-                    Log.info("Successfully authenticated with \(relayAddress)")
-                    connection.state = .connected
-                    processSubscriptionQueue()
-                    return true
-                } else {
-                    Log.error("Failed to authenticate with \(relayAddress). Message: \(String(describing: message))")
-                    trackError(socket: socket)
-                }
-            } 
+        guard let relayAddress = socket.url, let connection = socketConnections[relayAddress] else {
+            return false
         }
+        
+        if case .authenticating(let responseID) = connection.state, responseID == eventID {
+            if success {
+                Log.info("Successfully authenticated with \(relayAddress)")
+                connection.state = .connected
+                processSubscriptionQueue()
+            } else {
+                Log.error("Failed to authenticate with \(relayAddress). Message: \(String(describing: message))")
+                trackError(socket: socket)
+            }
+            return true
+        } 
         return false
     }
     
