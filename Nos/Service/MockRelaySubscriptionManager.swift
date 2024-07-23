@@ -32,6 +32,18 @@ class MockRelaySubscriptionManager: RelaySubscriptionManager {
 
     func close(socket: WebSocket) async {
     }
+    
+    func trackAuthenticationRequest(from socket: WebSocket, responseID: RawNostrID) async {
+    }
+    
+    func checkAuthentication(
+        success: Bool, 
+        from socket: WebSocket, 
+        eventID: RawNostrID, 
+        message: String?
+    ) async -> Bool {
+        false
+    }
 
     func decrementSubscriptionCount(for subscriptionID: RelaySubscription.ID) async -> Bool {
         false
@@ -56,6 +68,9 @@ class MockRelaySubscriptionManager: RelaySubscriptionManager {
     }
 
     func requestEvents(from socket: any WebSocketClient, subscription: RelaySubscription) async {
+    }
+    
+    func receivedClose(for subscriptionID: RelaySubscription.ID, from socket: WebSocket) async {
     }
     
     func openSockets(queue: DispatchQueue, delegate: Starscream.WebSocketDelegate) async {
