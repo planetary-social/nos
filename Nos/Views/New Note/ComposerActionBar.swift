@@ -72,7 +72,7 @@ struct ComposerActionBar: View {
                             }(),
                            buttons: [
                                .cancel(TextState(String(localized: "localizable.cancel"))),
-                               .default(TextState(String(localized: "imagePicker.getAccount")), action: .send(getAccount()))
+                               .default(TextState(String(localized: "imagePicker.getAccount")), action: .send(.getAccount))
                            ])
                         }
                     }
