@@ -20,12 +20,13 @@ struct ComposerActionBar: View {
     enum SubMenu {
         case expirationDate
     }
-   
     
     @State private var subMenu: SubMenu?
     @State private var alert: AlertState<AlertAction>?
     
     fileprivate enum AlertAction {
+        case cancel
+        case getAccount
     }
     
     var backArrow: some View {
@@ -54,26 +55,26 @@ struct ComposerActionBar: View {
                             endUploadingImage()
                             print("error uploading: \(error)")
                             
-                            alert = AlertState<ComposerActionBar.AlertAction>(title:
-                            {
-                                if case FileStorageAPIClientError.uploadFailed = error {
-                                    TextState(String(localized: .imagePicker.errorUploadingFileExceedsSizeLimit))
-                                } else {
-                                    TextState(String(localized: .imagePicker.errorUploadingFile))
-                                }
-                            }(),
-                            message: {
-                                if case let FileStorageAPIClientError.uploadFailed(message) = error,
-                                let message {
-                                    TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
-                                } else {
-                                    TextState(String(localized: .imagePicker.errorUploadingFileMessage))
-                                }
-                            }(),
-                           buttons: [
-                               .cancel(TextState(String(localized: "localizable.cancel"))),
-                               .default(TextState(String(localized: "imagePicker.getAccount")), action: .send(.getAccount))
-                           ])
+                            alert = AlertState<ComposerActionBar.AlertAction>(
+                                title: {
+                                    if case FileStorageAPIClientError.uploadFailed = error {
+                                        return TextState(String(localized: .imagePicker.errorUploadingFileExceedsSizeLimit))
+                                    } else {
+                                            return TextState(String(localized: .imagePicker.errorUploadingFile))
+                                    }
+                                }(),
+                                message: {
+                                    if case let FileStorageAPIClientError.uploadFailed(message) = error, let message = message {
+                                        return TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
+                                    } else {
+                                        return TextState(String(localized: .imagePicker.errorUploadingFileMessage))
+                                    }
+                                }(),
+                                buttons: [
+                                    .cancel(TextState(String(localized: .localizable.cancel)), action: .send(.cancel)),
+                                        .default(TextState(String(localized: .imagePicker.getAccount)), action: .send(.getAccount))
+                                ]
+                            )
                         }
                     }
                 } label: {
@@ -129,7 +130,18 @@ struct ComposerActionBar: View {
         .onChange(of: expirationTime) { _, _ in
             subMenu = .none
         }
-        .alert(unwrapping: $alert) { (_: AlertAction?) in
+        .alert(unwrapping: $alert) { action in
+            switch action {
+            case .cancel:
+                // Handle cancel action if needed
+                break
+            case .getAccount:
+                if let url = URL(string: "https://nostr.build") {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            default:
+                break
+            }
         }
         .background(
             LinearGradient(
@@ -145,7 +157,6 @@ struct ComposerActionBar: View {
             alignment: .top
         )
     }
-
     
     private func startUploadingImage() {
         self.isUploadingImage = true
@@ -155,13 +166,6 @@ struct ComposerActionBar: View {
         self.isUploadingImage = false
         self.subMenu = .none
     }
-
-    func getAccount() {
-        if let url = URL(string: "https://nostr.build") {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        }
-    }
-
 }
 
 struct ComposerActionBar_Previews: PreviewProvider {
