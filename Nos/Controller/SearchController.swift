@@ -9,7 +9,7 @@ enum SearchState {
     /// There is no text in the search field.
     case noQuery
 
-    /// No search is in progress, and there are no results to display.
+    /// A (local) search is in progress and there are no results to display.
     case empty
 
     /// There are search results to display.
@@ -70,7 +70,12 @@ class SearchController: ObservableObject {
             .compactMap { [weak self] query in
                 guard let self else { return nil }
                 self.authorResults = self.authors(named: query)
-                if !self.authorResults.isEmpty {
+                if self.authorResults.isEmpty {
+                    // if we had `results` before and don't now, we're `empty`
+                    if self.state == .results {
+                        self.state = .empty
+                    }
+                } else {
                     self.state = .results
                 }
                 return query
@@ -86,7 +91,7 @@ class SearchController: ObservableObject {
             for: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
             object: context
         )
-        .filter { [weak self] _ in self?.state != .noQuery && self?.state != .empty } // TODO: consider other states
+        .filter { [weak self] _ in self?.state != .noQuery }
         .compactMap { [weak self] _ in self?.query }
         .compactMap { [weak self] in self?.authors(named: $0) }
         .map { $0.sorted(by: { $0.followers.count > $1.followers.count }) }
@@ -160,7 +165,11 @@ class SearchController: ObservableObject {
     /// These functions search other systems for the given query and add relevant authors to the database.
     /// The database then generates a notification which is listened to above and results are reloaded.
     func search(for query: String) {
-//        state = .loading
+        // if there are no results, go into the `loading` state (which will show the spinner)
+        // otherwise, keep showing the results
+        if state != .results {
+            state = .loading
+        }
         startSearchTimer()
         Task {
             self.searchSubscriptions.removeAll()
