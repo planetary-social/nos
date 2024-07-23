@@ -582,7 +582,7 @@ extension RelayService {
         signingKey: KeyPair,
         context: NSManagedObjectContext
     ) async throws {
-        let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
+        let signedEvent = try await signAndSave(event: event, signingKey: signingKey, relayURLs: relayURLs, in: context)
         for relayURL in relayURLs {
             if let socket = await socket(from: relayURL) {
                 try await publish(from: socket, jsonEvent: signedEvent)
