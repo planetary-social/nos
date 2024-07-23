@@ -190,6 +190,9 @@ extension Router {
                     }
                     let replaceableID = parts.dropLast(2).joined(separator: separator)
                     pushNote(replaceableID: replaceableID, authorID: authorID, kind: kind)
+                } else if let scheme = url.scheme,
+                    DeepLinkService.supportedURLSchemes.contains(scheme) {
+                    DeepLinkService.handle(url, router: self)
                 } else if url.scheme == "http" || url.scheme == "https" {
                     push(url)
                 } else {

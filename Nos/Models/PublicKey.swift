@@ -37,25 +37,21 @@ struct PublicKey {
     }
     
     init?(npub: String) {
-        self.init(bech32Encoded: npub, prefix: Nostr.publicKeyPrefix)
+        self.init(bech32Encoded: npub, prefix: NostrIdentifierPrefix.publicKey)
     }
 
     init?(note: String) {
-        self.init(bech32Encoded: note, prefix: Nostr.notePrefix)
+        self.init(bech32Encoded: note, prefix: NostrIdentifierPrefix.note)
     }
 
     private init?(bech32Encoded: String, prefix: String) {
         do {
-            let (humanReadablePart, checksum) = try Bech32.decode(bech32Encoded)
-            guard humanReadablePart == prefix else {
-                print("error creating PublicKey: invalid human readable part")
+            let identifier = try NostrIdentifier.decode(bech32String: bech32Encoded)
+            guard case let .npub(publicKeyHex) = identifier else {
+                print("Error decoding npub")
                 return nil
             }
-            guard let converted = try? checksum.base8FromBase5() else {
-                return nil
-            }
-
-            let underlyingKey = secp256k1.Signing.XonlyKey(dataRepresentation: converted, keyParity: 0)
+            let underlyingKey = try secp256k1.Signing.XonlyKey(dataRepresentation: publicKeyHex.bytes, keyParity: 0)
             self.init(underlyingKey: underlyingKey)
         } catch {
             print("error creating PublicKey \(error.localizedDescription)")
@@ -66,7 +62,7 @@ struct PublicKey {
     init(underlyingKey: secp256k1.Signing.XonlyKey) {
         self.underlyingKey = underlyingKey
         self.hex = Data(underlyingKey.bytes).hexString
-        self.npub = Bech32.encode(Nostr.publicKeyPrefix, baseEightData: Data(underlyingKey.bytes))
+        self.npub = Bech32.encode(NostrIdentifierPrefix.publicKey, baseEightData: Data(underlyingKey.bytes))
         self.bytes = underlyingKey.bytes
     }
 }
