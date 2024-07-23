@@ -37,32 +37,13 @@ struct PublicKey {
     }
     
     init?(npub: String) {
-        self.init(bech32Encoded: npub, prefix: NostrIdentifierPrefix.publicKey)
-    }
-
-    init?(note: String) {
-        self.init(bech32Encoded: note, prefix: NostrIdentifierPrefix.note)
-    }
-
-    private init?(bech32Encoded: String, prefix: String) {
         do {
-            let identifier = try NostrIdentifier.decode(bech32String: bech32Encoded)
-            switch identifier {
-            case .npub(let publicKeyHex):
-                guard prefix == NostrIdentifierPrefix.publicKey else {
-                    return nil
-                }
-                let underlyingKey = try secp256k1.Signing.XonlyKey(dataRepresentation: publicKeyHex.bytes, keyParity: 0)
-                self.init(underlyingKey: underlyingKey)
-            case .note(let eventIDHex):
-                guard prefix == NostrIdentifierPrefix.note else {
-                    return nil
-                }
-                let underlyingKey = try secp256k1.Signing.XonlyKey(dataRepresentation: eventIDHex.bytes, keyParity: 0)
-                self.init(underlyingKey: underlyingKey)
-            default:
+            let identifier = try NostrIdentifier.decode(bech32String: npub)
+            guard case let .npub(publicKeyHex) = identifier else {
                 return nil
             }
+            let underlyingKey = try secp256k1.Signing.XonlyKey(dataRepresentation: publicKeyHex.bytes, keyParity: 0)
+            self.init(underlyingKey: underlyingKey)
         } catch {
             print("error creating PublicKey \(error.localizedDescription)")
             return nil
