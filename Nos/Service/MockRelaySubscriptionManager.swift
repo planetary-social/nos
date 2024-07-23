@@ -70,6 +70,9 @@ class MockRelaySubscriptionManager: RelaySubscriptionManager {
     func requestEvents(from socket: any WebSocketClient, subscription: RelaySubscription) async {
     }
     
+    func receivedClose(for subscriptionID: RelaySubscription.ID, from socket: WebSocket) async {
+    }
+    
     func openSockets(queue: DispatchQueue, delegate: Starscream.WebSocketDelegate) async {
     }
     

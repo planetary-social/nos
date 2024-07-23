@@ -483,6 +483,16 @@ extension RelayService {
         }
     }
     
+    private func handleClosed(from socket: WebSocket, responseArray: [Any]) async {
+        guard responseArray.count > 1 else {
+            return
+        }
+        
+        if let subID = responseArray[1] as? RelaySubscription.ID {
+            await subscriptionManager.receivedClose(for: subID, from: socket)
+        }
+    }
+    
     /// Handles "AUTH" messages from the relay, responding with the appropriate challenge.
     private func handleAuthentication(from socket: WebSocket, responseArray: [Any]) async {
         guard responseArray.count >= 2,
@@ -528,7 +538,9 @@ extension RelayService {
             let jsonResponse = try JSONSerialization.jsonObject(with: responseData)
             guard let responseArray = jsonResponse as? [Any],
                 let responseType = responseArray.first as? String else {
-                print("Error: got unparseable response: \(response)")
+                Log.info(
+                    "got unparseable response from \(String(describing: socket.url?.absoluteString)): \(jsonResponse)"
+                )
                 return
             }
             
@@ -543,11 +555,16 @@ extension RelayService {
                 await parseOK(responseArray, socket)
             case "AUTH":
                 await handleAuthentication(from: socket, responseArray: responseArray)
+            case "CLOSED":
+                await handleClosed(from: socket, responseArray: responseArray)
             default:
-                print("got unknown response type: \(response)")
+                Log.info("got unhandled response from \(String(describing: socket.url?.absoluteString)): \(response)")
             }
         } catch {
-            print("error parsing response: \(response)\nerror: \(error.localizedDescription)")
+            Log.info(
+                "error parsing response from \(String(describing: socket.url?.absoluteString)): " + 
+                "\(error.localizedDescription)"
+            )
         }
     }
 }

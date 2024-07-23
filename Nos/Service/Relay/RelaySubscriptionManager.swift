@@ -15,6 +15,7 @@ protocol RelaySubscriptionManager {
     func processSubscriptionQueue() async
     func queueSubscription(with filter: Filter, to relayAddress: URL) async -> RelaySubscription
     func requestEvents(from socket: WebSocketClient, subscription: RelaySubscription) async
+    func receivedClose(for subscriptionID: RelaySubscription.ID, from socket: WebSocket) async
     
     func close(socket: WebSocket) async
     func trackAuthenticationRequest(from socket: WebSocket, responseID: RawNostrID) async
@@ -315,6 +316,15 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
             socket.write(string: requestString)
         } catch {
             Log.error("Error: Could not send request \(error.localizedDescription)")
+        }
+    }
+    
+    func receivedClose(for subscriptionID: RelaySubscription.ID, from socket: WebSocket) {
+        if let subscription = subscription(from: subscriptionID) {
+            // Move this subscription to the end of the queue where it will be retried
+            removeSubscription(with: subscriptionID)
+            subscription.subscriptionStartDate = nil
+            all.append(subscription)
         }
     }
     
