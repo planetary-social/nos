@@ -635,7 +635,7 @@ extension RelayService {
                 Log.error("Could not parse new event \(jsonEvent)")
                 throw RelayError.parseError
             }
-            var relays: [Relay]
+            let relays: [Relay]
             if let relayURLs {
                 relays = try relayURLs.map { try Relay.findOrCreate(by: $0.absoluteString, context: context) }
             } else {
