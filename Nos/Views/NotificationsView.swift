@@ -52,10 +52,10 @@ struct NotificationsView: View {
     }
     
     func markAllNotificationsRead() async {
-        if let user {
+        if user != nil {
             do {
                 let backgroundContext = persistenceController.backgroundViewContext
-                try await NosNotification.markAllAsRead(for: user, in: backgroundContext)
+                try await NosNotification.markAllAsRead(in: backgroundContext)
                 await pushNotificationService.updateBadgeCount()
             } catch {
                 Log.optional(error, "Error marking notifications as read")

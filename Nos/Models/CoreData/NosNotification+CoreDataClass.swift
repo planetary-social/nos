@@ -44,15 +44,14 @@ public class NosNotification: NSManagedObject {
         return fetchRequest
     }
     
-    // TODO: user is unused; is this a bug?
-    static func unreadCount(for user: Author, in context: NSManagedObjectContext) throws -> Int {
+    static func unreadCount(in context: NSManagedObjectContext) throws -> Int {
         let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
         fetchRequest.predicate = NSPredicate(format: "isRead != 1")
         return try context.count(for: fetchRequest)
     }
     
     // TODO: user is unused; is this a bug?
-    static func markAllAsRead(for user: Author, in context: NSManagedObjectContext) async throws {
+    static func markAllAsRead(in context: NSManagedObjectContext) async throws {
         try await context.perform {
             let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
             fetchRequest.predicate = NSPredicate(format: "isRead != 1")
