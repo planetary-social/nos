@@ -137,8 +137,6 @@ struct NoteParser {
                 case .naddr(let replaceableID, _, let authorID, let kind):
                     return "\(prefix)[\(String(localized: .localizable.linkToNote))]" +
                         "($\(replaceableID);\(authorID);\(kind))"
-                case .nsec:
-                    return String(substring)
                 }
             } catch {
                 return String(substring)

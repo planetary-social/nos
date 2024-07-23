@@ -237,7 +237,7 @@ class NamesAPI {
         ]
         var jsonEvent = JSONEvent(
             pubKey: keyPair.publicKeyHex,
-            kind: .auth,
+            kind: .httpAuth,
             tags: tags,
             content: content
         )

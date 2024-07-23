@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added support for paid/authenticated relays (NIP-42).
+- Fixed a bug where publishing a note to one relay would publish to all relays.
+- Fix a bug where multiple connections could be opened with the same relay.
 - Fixed an issue where Profile views would sometimes not display any notes.
 - Add impersonation flag category and better NIP-56 mapping.
 - Add a Tap to Refresh button in empty profiles.

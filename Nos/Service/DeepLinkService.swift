@@ -59,8 +59,6 @@ enum DeepLinkService {
                             authorID: authorID,
                             kind: Int64(kind)
                         )
-                    case .nsec:
-                        break
                     }
                 }
             } catch {

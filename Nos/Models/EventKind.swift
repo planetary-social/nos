@@ -48,8 +48,11 @@ public enum EventKind: Int64, CaseIterable, Hashable {
     /// Mute List
     case mute = 10_000
 
-    /// HTTP Auth
-    case auth = 27_235
+    /// NIP-98 HTTP Authentication
+    case httpAuth = 27_235
+    
+    // NIP-42 Relay Authentication
+    case relayAuth = 22_242
 
     /// Long-form Content
     case longFormContent = 30_023

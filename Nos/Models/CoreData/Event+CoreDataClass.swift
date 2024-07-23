@@ -913,7 +913,7 @@ public class Event: NosManagedObject, VerifiableEvent {
             let identifierBytes = try? identifier.bytes else {
             return nil
         }
-        return Bech32.encode(NostrIdentifierPrefix.note, baseEightData: Data(identifierBytes))
+        return Bech32.encode(Nostr.notePrefix, baseEightData: Data(identifierBytes))
     }
     
     var seenOnRelayURLs: [String] {

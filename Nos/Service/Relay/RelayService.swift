@@ -31,6 +31,8 @@ class RelayService: ObservableObject {
         self.backgroundContext = persistenceController.newBackgroundContext()
         self.parseContext = persistenceController.parseContext
         
+        Task { await self.subscriptionManager.set(socketQueue: processingQueue, delegate: self) }
+        
         self.eventProcessingLoop = Task(priority: .userInitiated) { [weak self] in
             try Task.checkCancellation()
             while true {
@@ -61,7 +63,6 @@ class RelayService: ObservableObject {
         
         Task { @MainActor in
             currentUser.viewContext = persistenceController.container.viewContext
-            await openSockets()
         }
         
         NotificationCenter.default.addObserver(
@@ -79,7 +80,7 @@ class RelayService: ObservableObject {
     }
     
     @objc func appWillEnterForeground() {
-        Task { await openSockets() }
+        Task { await subscriptionManager.processSubscriptionQueue() }
     }
     
     private func handleError(_ error: Error?, from socket: WebSocketClient) {
@@ -91,7 +92,7 @@ class RelayService: ObservableObject {
     }
 }
 
-// MARK: Close subscriptions
+// MARK: Closing subscriptions
 extension RelayService {
     
     func decrementSubscriptionCount(for subscriptionIDs: [String]) {
@@ -141,7 +142,7 @@ extension RelayService {
     }
 }
 
-// MARK: Events
+// MARK: Fetching Events
 extension RelayService {
     
     /// Asks the service to start downloading events matching the given `filter` from relays and save them to Core
@@ -309,7 +310,6 @@ extension RelayService {
     }
     
     private func processSubscriptionQueue() async {
-        await openSockets()
         await clearStaleSubscriptions()
         
         await subscriptionManager.processSubscriptionQueue()
@@ -325,13 +325,13 @@ extension RelayService {
     private func clearStaleSubscriptions() async {
         let staleSubscriptions = await subscriptionManager.staleSubscriptions()
         for staleSubscription in staleSubscriptions {
-            Log.debug("Subscription \(staleSubscription.id) is stale. Closing.")
             await sendCloseToAll(for: staleSubscription.id)
         }
     }
 }
 
-// MARK: Parsing
+// MARK: Parsing Events
+
 extension RelayService {
     private func parseEOSE(from socket: WebSocketClient, responseArray: [Any]) async {
         guard responseArray.count > 1 else {
@@ -341,7 +341,6 @@ extension RelayService {
         if let subID = responseArray[1] as? String,
             let subscription = await subscriptionManager.subscription(from: subID),
             subscription.closesAfterResponse {
-            Log.debug("\(socket.host) has finished responding on \(subID). Closing subscription.")
             // This is a one-off request. Close it.
             await sendClose(from: socket, subscriptionID: subID)
         }
@@ -359,10 +358,6 @@ extension RelayService {
             return
         }
         
-    #if DEBUG
-    // Log.debug("from \(socket.host): EVENT type: \(eventJSON["kind"] ?? "nil") subID: \(subscriptionID)")
-    #endif
-        
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: eventJSON)
             let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
@@ -371,11 +366,6 @@ extension RelayService {
             if let subscription = await subscriptionManager.subscription(from: subscriptionID) {
                 subscription.receivedEventCount += 1
                 subscription.events.send(jsonEvent)
-                if subscription.closesAfterResponse {
-                    Log.debug("detected subscription with id \(subscription.id) has been fulfilled. Closing.")
-                    await subscriptionManager.forceCloseSubscriptionCount(for: subscription.id)
-                    await sendCloseToAll(for: subscription.id)
-                }
             }
         } catch {
             print("Error: parsing event from relay (\(socket.request.url?.absoluteString ?? "")): " +
@@ -414,6 +404,10 @@ extension RelayService {
             return true
         }
     }
+}
+
+// MARK: Relay Communciation
+extension RelayService {
     
     private func parseOK(_ responseArray: [Any], _ socket: WebSocket) async {
         guard responseArray.count > 2 else {
@@ -421,16 +415,26 @@ extension RelayService {
         }
         
         if let success = responseArray[2] as? Bool,
-            let eventId = responseArray[1] as? String,
-            let socketUrl = socket.request.url?.absoluteString {
+            let eventID = responseArray[1] as? String,
+            let socketURL = socket.request.url?.absoluteString {
+            
+            let isAuthMessage = await subscriptionManager.checkAuthentication(
+                success: success, 
+                from: socket, 
+                eventID: eventID, 
+                message: responseArray[3] as? String
+            )
+            if isAuthMessage {
+                return
+            }
             
             await backgroundContext.perform {
                 
-                if let event = Event.find(by: eventId, context: self.backgroundContext),
+                if let event = Event.find(by: eventID, context: self.backgroundContext),
                     let relay = self.relay(from: socket, in: self.backgroundContext) {
                     
                     if success {
-                        print("\(eventId) has published successfully to \(socketUrl)")
+                        Log.info("\(eventID) has published successfully to \(socketURL)")
                         event.publishedTo.insert(relay)
                         
                         // Receiving a confirmation of my own deletion event
@@ -446,16 +450,16 @@ extension RelayService {
                             if message.contains("replaced:") || message.contains("duplicate:") {
                                 event.publishedTo.insert(relay)
                             } else {
-                                print("\(eventId) has been rejected. Given reason: \(message)")
+                                Log.info("Event \(eventID) has been rejected by \(socketURL). Given reason: \(message)")
                             }
                         } else {
-                            print("\(eventId) has been rejected. No given reason.")
+                            Log.info("Event \(eventID) has been rejected by \(socketURL). No given reason.")
                         }
                     }
                     
                     try? self.backgroundContext.saveIfNeeded()
                 } else {
-                    print("Error: got OK for missing Event: \(eventId)")
+                    Log.error("Error: got OK for missing Event: \(eventID)")
                 }
             }
         }
@@ -480,6 +484,48 @@ extension RelayService {
         }
     }
     
+    private func handleClosed(from socket: WebSocket, responseArray: [Any]) async {
+        if let subID = responseArray[safe: 1] as? RelaySubscription.ID {
+            await subscriptionManager.receivedClose(for: subID, from: socket)
+        }
+    }
+    
+    /// Handles "AUTH" messages from the relay, responding with the appropriate challenge.
+    private func handleAuthentication(from socket: WebSocket, responseArray: [Any]) async {
+        guard responseArray.count >= 2,
+            let challenge = responseArray[safe: 1] as? String,
+            let userKeyPair = await currentUser.keyPair,
+            let relayAddress = socket.url else {
+            return
+        }
+        
+        var jsonEvent = JSONEvent(
+            pubKey: userKeyPair.publicKeyHex, 
+            kind: .relayAuth, 
+            tags: [
+                ["relay", socket.url?.absoluteString ?? ""],
+                ["challenge", challenge]
+            ], 
+            content: ""
+        )
+        
+        do {
+            let identifier = try jsonEvent.calculateIdentifier()
+            await subscriptionManager.trackAuthenticationRequest(from: socket, responseID: identifier) 
+            try jsonEvent.sign(withKey: userKeyPair)
+            
+            let request: [Any] = ["AUTH", jsonEvent.dictionary]
+            let requestData = try JSONSerialization.data(withJSONObject: request)
+            guard let string = String(data: requestData, encoding: .utf8) else {
+                Log.error("Couldn't create a utf8 string for a publish request")
+                return 
+            }
+            socket.write(string: string)
+        } catch {
+            Log.error("Error authenticating with \(relayAddress)", error.localizedDescription)
+        }
+    }
+    
     private func parseResponse(_ response: String, _ socket: WebSocket) async {
         
         do {
@@ -489,7 +535,9 @@ extension RelayService {
             let jsonResponse = try JSONSerialization.jsonObject(with: responseData)
             guard let responseArray = jsonResponse as? [Any],
                 let responseType = responseArray.first as? String else {
-                print("Error: got unparseable response: \(response)")
+                Log.info(
+                    "got unparseable response from \(String(describing: socket.url?.absoluteString)): \(jsonResponse)"
+                )
                 return
             }
             
@@ -502,11 +550,18 @@ extension RelayService {
                 await parseEOSE(from: socket, responseArray: responseArray)
             case "OK":
                 await parseOK(responseArray, socket)
+            case "AUTH":
+                await handleAuthentication(from: socket, responseArray: responseArray)
+            case "CLOSED":
+                await handleClosed(from: socket, responseArray: responseArray)
             default:
-                print("got unknown response type: \(response)")
+                Log.info("got unhandled response from \(String(describing: socket.url?.absoluteString)): \(response)")
             }
         } catch {
-            print("error parsing response: \(response)\nerror: \(error.localizedDescription)")
+            Log.info(
+                "error parsing response from \(String(describing: socket.url?.absoluteString)): " + 
+                "\(error.localizedDescription)"
+            )
         }
     }
 }
@@ -577,7 +632,6 @@ extension RelayService {
     }
     
     func publishToAll(event: JSONEvent, signingKey: KeyPair, context: NSManagedObjectContext) async throws {
-        await self.openSockets()
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
         for socket in await subscriptionManager.sockets() {
             try await publish(from: socket, jsonEvent: signedEvent)
@@ -590,8 +644,7 @@ extension RelayService {
         signingKey: KeyPair,
         context: NSManagedObjectContext
     ) async throws {
-        await openSockets()
-        let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
+        let signedEvent = try await signAndSave(event: event, signingKey: signingKey, relayURLs: relayURLs, in: context)
         for relayURL in relayURLs {
             if let socket = await socket(from: relayURL) {
                 try await publish(from: socket, jsonEvent: signedEvent)
@@ -620,7 +673,7 @@ extension RelayService {
             signedEvent = event
             
         case .some(let keyPair):
-            signedEvent = try await signAndSave(event: event, signingKey: keyPair, in: context)
+            signedEvent = try await signAndSave(event: event, signingKey: keyPair, relayURLs: [relayURL], in: context)
         }
         
         await openSocket(to: relayURL, andSend: try signedEvent.buildPublishRequest())
@@ -629,6 +682,7 @@ extension RelayService {
     private func signAndSave(
         event: JSONEvent,
         signingKey: KeyPair,
+        relayURLs: [URL]? = nil,
         in context: NSManagedObjectContext
     ) async throws -> JSONEvent {
         var jsonEvent = event
@@ -643,7 +697,12 @@ extension RelayService {
                 Log.error("Could not parse new event \(jsonEvent)")
                 throw RelayError.parseError
             }
-            let relays = try context.fetch(Relay.relays(for: event.author!))
+            let relays: [Relay]
+            if let relayURLs {
+                relays = try relayURLs.map { try Relay.findOrCreate(by: $0.absoluteString, context: context) }
+            } else {
+                relays = try context.fetch(Relay.relays(for: event.author!))
+            }
             event.shouldBePublishedTo = Set(relays)
             try context.save()
         }
@@ -720,26 +779,6 @@ extension RelayService {
 
 // MARK: Sockets
 extension RelayService {
-    /// Opens sockets to all the relays that we have an open subscription for.
-    @MainActor private func openSockets() async {
-        let relayAddresses = Set(await subscriptionManager.all().map { $0.relayAddress })
-        
-        for relayAddress in relayAddresses {
-            guard let socket = await subscriptionManager.addSocket(for: relayAddress) else {
-                continue
-            }
-            socket.callbackQueue = processingQueue
-            socket.delegate = self
-            socket.connect()
-            Task.detached(priority: .background) {
-                do {
-                    try await self.queryRelayMetadataIfNeeded(relayAddress)
-                } catch {
-                    Log.optional(error)
-                }
-            }
-        }
-    }
 
     func relayAddresses(for user: CurrentUser) async -> Set<URL> {
         await backgroundContext.perform { () -> Set<URL> in
@@ -805,14 +844,18 @@ extension RelayService {
     
     private func handleConnection(from client: WebSocketClient) async {
         if let socket = client as? WebSocket {
-            await subscriptionManager.markHealthy(socket: socket)
-            Log.debug("websocket is connected: \(String(describing: socket.request.url?.host))")
+            await subscriptionManager.trackConnected(socket: socket)
+            Task.detached(priority: .background) {
+                do {
+                    if let url = client.url {
+                        try await self.queryRelayMetadataIfNeeded(url)
+                    }
+                } catch {
+                    Log.optional(error)
+                }
+            }
         } else {
             Log.error("websocket connected with unknown host")
-        }
-        
-        for subscription in await subscriptionManager.active() where subscription.relayAddress == client.url {
-            await subscriptionManager.requestEvents(from: client, subscription: subscription)
         }
     }
 }
@@ -829,9 +872,9 @@ extension RelayService: WebSocketDelegate {
             case .connected, .viabilityChanged(true):
                 await handleConnection(from: client)
             case .disconnected:
-                await subscriptionManager.remove(socket)
+                await subscriptionManager.trackError(socket: socket)
             case .peerClosed:
-                await subscriptionManager.remove(socket)
+                await subscriptionManager.trackError(socket: socket)
             case .text(let string):
                 await parseResponse(string, socket)
             case .binary:
@@ -840,10 +883,8 @@ extension RelayService: WebSocketDelegate {
                 break
             case .cancelled:
                 await subscriptionManager.trackError(socket: socket)
-                await subscriptionManager.remove(socket)
             case .error(let error):
                 await subscriptionManager.trackError(socket: socket)
-                await subscriptionManager.remove(socket)
                 handleError(error, from: socket)
             }
         }
