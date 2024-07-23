@@ -20,6 +20,7 @@ struct ComposerActionBar: View {
     enum SubMenu {
         case expirationDate
     }
+   
     
     @State private var subMenu: SubMenu?
     @State private var alert: AlertState<AlertAction>?
@@ -52,33 +53,27 @@ struct ComposerActionBar: View {
                         } catch {
                             endUploadingImage()
                             print("error uploading: \(error)")
-
-                            alert = AlertState(
-                            title: {
+                            
+                            alert = AlertState<ComposerActionBar.AlertAction>(title:
+                            {
                                 if case FileStorageAPIClientError.uploadFailed = error {
-                                    return TextState(localized: .imagePicker.errorUploadingFileExceedsSizeLimit)
+                                    TextState(String(localized: .imagePicker.errorUploadingFileExceedsSizeLimit))
                                 } else {
-                                    return TextState(localized: .imagePicker.errorUploadingFile)
+                                    TextState(String(localized: .imagePicker.errorUploadingFile))
                                 }
-                            },
-                               message: { 
-                                   if case let FileStorageAPIClientError.uploadFailed(message) = error, message {
-                                      return TextState(localized: .imagePicker.errorUploadingFileWithMessage(message))
-                                   } else {
-                                       return TextState(localized: .imagePicker.errorUploadingFileMessage)
-                                   }
-                            },
-                               primaryButton: .default(TextState(localized: .cancel)) {
-                                   // Action for Cancel button, close the alert
-                                   alert = nil
-                               },
-                               secondaryButton: .default(TextState(localized: .imagePicker.GetAccount)) {
-                                   // Action for Open nostr.build button
-                                   if let url = URL(string: "https://nostr.build") {
-                                       UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                                   }
-                               }
-                           )
+                            }(),
+                            message: {
+                                if case let FileStorageAPIClientError.uploadFailed(message) = error,
+                                let message {
+                                    TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
+                                } else {
+                                    TextState(String(localized: .imagePicker.errorUploadingFileMessage))
+                                }
+                            }(),
+                           buttons: [
+                               .cancel(TextState(String(localized: "localizable.cancel"))),
+                               .default(TextState(String(localized: "imagePicker.getAccount")), action: .send(getAccount()))
+                           ])
                         }
                     }
                 } label: {
@@ -160,8 +155,12 @@ struct ComposerActionBar: View {
         self.isUploadingImage = false
         self.subMenu = .none
     }
-    
 
+    func getAccount() {
+        if let url = URL(string: "https://nostr.build") {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+    }
 
 }
 
