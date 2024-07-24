@@ -28,6 +28,7 @@ NIPs, or Nostr Implementation Possibilities, are specifications that Nostr apps 
 - [NIP-27: Text Note References](https://github.com/nostr-protocol/nips/blob/master/27.md)
 - [NIP-32: Labeling](https://github.com/nostr-protocol/nips/blob/master/32.md)
 - [NIP-40: Expiration Timestamp](https://github.com/nostr-protocol/nips/blob/master/40.md)
+- [NIP-42: Authentication of Clients to Relays](https://github.com/nostr-protocol/nips/blob/master/42.md)
 - [NIP-50: Search Capability](https://github.com/nostr-protocol/nips/blob/master/50.md) - we only support searching for profiles at the moment, not text.
 - [NIP-51: Lists](https://github.com/nostr-protocol/nips/blob/master/51.md) - only supporting the mute list right now.
 - [NIP-56: Reporting](https://github.com/nostr-protocol/nips/blob/master/56.md)

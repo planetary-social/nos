@@ -14,18 +14,6 @@ class NostrIdentifierTests: XCTestCase {
         }
     }
 
-    /// Example taken from [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md)
-    func test_nsec() throws {
-        let nsec = "nsec1vl029mgpspedva04g90vltkh6fvh240zqtv9k0t9af8935ke9laqsnlfe5"
-        let identifier = try NostrIdentifier.decode(bech32String: nsec)
-        switch identifier {
-        case .nsec(let privateKey):
-            XCTAssertEqual(privateKey, "67dea2ed018072d675f5415ecfaed7d2597555e202d85b3d65ea4e58d2d92ffa")
-        default:
-            XCTFail("Expected to get a nsec")
-        }
-    }
-
     /// Example taken from note1r3r97suudrm3ac5frglug4rywtewa87del40un5y4jv8nncpym6qrlgckt which links to
     /// note13frsueju0qs6dqgr4y6zf6h729w5tjeve9ws6aqm94qhtkhmvwqqu3c2sh
     func test_note() throws {
