@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix a bug where multiple connections could be opened with the same relay.
 - Fixed an issue where Profile views would sometimes not display any notes.
 - Add impersonation flag category and better NIP-56 mapping.
+- Added a filter button to the Home tab that lets you browse all notes on a specific relay.
 - Add a Tap to Refresh button in empty profiles.
 - Support nostr:naddr links to text and long-form content notes.
 - Update the reply count shown below each note in a Feed.

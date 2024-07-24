@@ -341,6 +341,7 @@ extension RelayService {
         if let subID = responseArray[1] as? String,
             let subscription = await subscriptionManager.subscription(from: subID),
             subscription.closesAfterResponse {
+            Log.debug("\(socket.host) has finished responding on \(subID). Closing subscription.")
             // This is a one-off request. Close it.
             await sendClose(from: socket, subscriptionID: subID)
         }

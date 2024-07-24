@@ -325,21 +325,32 @@ public class Event: NosManagedObject, VerifiableEvent {
         return fetchRequest
     }
     
-    @nonobjc public class func homeFeedPredicate(for user: Author, before: Date) -> NSPredicate {
-        NSPredicate(
-            // swiftlint:disable line_length
-            format: "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND (ANY author.followers.source = %@ OR author = %@) AND author.muted = 0 AND createdAt <= %@ AND deletedOn.@count = 0",
-            // swiftlint:enable line_length
-            user,
-            user,
-            before as CVarArg
-        )
+    @nonobjc public class func homeFeedPredicate(
+        for user: Author, 
+        before: Date,
+        seenOn relay: Relay? = nil
+    ) -> NSPredicate {
+        // swiftlint:disable:next line_length
+        var queryString = "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND author.muted = 0 AND createdAt <= %@ AND deletedOn.@count = 0"
+        var arguments: [CVarArg] = [before as CVarArg]
+        if let relay {
+            queryString.append(" AND ANY seenOnRelays = %@")
+            arguments.append(relay)
+        } else {
+            queryString.append(" AND (ANY author.followers.source = %@ OR author = %@)")
+            arguments += [user, user]
+        }
+        return NSPredicate(format: queryString, argumentArray: arguments)
     }
     
-    @nonobjc public class func homeFeed(for user: Author, before: Date) -> NSFetchRequest<Event> {
+    @nonobjc public class func homeFeed(
+        for user: Author, 
+        before: Date, 
+        seenOn relay: Relay? = nil
+    ) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = homeFeedPredicate(for: user, before: before)
+        fetchRequest.predicate = homeFeedPredicate(for: user, before: before, seenOn: relay)
         return fetchRequest
     }
 
