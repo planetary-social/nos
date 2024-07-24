@@ -5,7 +5,6 @@ import Dependencies
 class PersistenceController {
     
     @Dependency(\.currentUser) var currentUser
-    @Dependency(\.analytics) var analytics
     @Dependency(\.crashReporting) var crashReporting
     
     /// Increment this to delete core data on update

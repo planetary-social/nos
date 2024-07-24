@@ -42,11 +42,7 @@ enum FeaturedAuthorCategory: CaseIterable {
             FeaturedAuthor.all.filter { $0.categories.contains(self) }
         }
     }
-    
-    var npubs: [String] {
-        featuredAuthors.map { $0.npub }
-    }
-    
+
     var rawIDs: [RawNostrID] {
         featuredAuthors.map { $0.rawID }
     }

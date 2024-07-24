@@ -19,7 +19,6 @@ enum DeepLinkService {
     
     @MainActor static func handle(_ url: URL, router: Router) {
         @Dependency(\.persistenceController) var persistenceController
-        @Dependency(\.router) var router
         Log.info("handling link \(url.absoluteString)")
         
         let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
