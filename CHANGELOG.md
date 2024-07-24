@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue with naddr links.
+
 ## [0.1.21] - 2024-07-24Z
 
 - Added support for paid/authenticated relays (NIP-42).
