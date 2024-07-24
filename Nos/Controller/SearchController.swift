@@ -122,17 +122,9 @@ class SearchController: ObservableObject {
     }
     
     func authors(named name: String) -> [Author] {
-        if let publicKey = PublicKey(npub: name) {
-            Task { @MainActor in
-                router.pushAuthor(id: publicKey.hex)
-            }
-            clear()
-            return []
-        }
         guard let authors = try? Author.find(named: name, context: context) else {
             return []
         }
-
         return authors
     }
     
