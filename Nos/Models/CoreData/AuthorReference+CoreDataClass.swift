@@ -4,10 +4,6 @@ import CoreData
 @objc(AuthorReference)
 public class AuthorReference: NosManagedObject {
     
-    var jsonRepresentation: [String] {
-        ["p", pubkey ?? ""]
-    }
-    
     /// Retreives all the AuthorReferences whose referencing Event has been deleted.
     static func orphanedRequest() -> NSFetchRequest<AuthorReference> {
         let fetchRequest = NSFetchRequest<AuthorReference>(entityName: "AuthorReference")

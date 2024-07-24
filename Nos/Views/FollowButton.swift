@@ -70,14 +70,6 @@ struct FollowButton_Previews: PreviewProvider {
         return author
     }()
     
-    static var bob: Author = {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = KeyFixture.bob.publicKeyHex
-        author.name = "Bob"
-        
-        return author
-    }()
-    
     static func createTestData(in context: NSManagedObjectContext) {
         let follow = Follow(context: previewContext)
         follow.source = user

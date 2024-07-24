@@ -140,14 +140,18 @@ class SearchController: ObservableObject {
         let strippedString = publicKeyString.trimmingCharacters(
             in: NSCharacterSet.whitespacesAndNewlines
         )
-        guard let publicKey = PublicKey(note: strippedString) else {
+        do {
+            guard case let .note(eventID) = try NostrIdentifier.decode(bech32String: strippedString) else {
+                return nil
+            }
+            guard let note = try? Event.findOrCreateStubBy(id: eventID, context: context) else {
+                return nil
+            }
+            try? context.saveIfNeeded()
+            return note
+        } catch {
             return nil
         }
-        guard let note = try? Event.findOrCreateStubBy(id: publicKey.hex, context: context) else {
-            return nil
-        }
-        try? context.saveIfNeeded()
-        return note
     }
     
     /// Searches the relays and UNS for the given query.

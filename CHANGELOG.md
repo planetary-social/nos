@@ -8,8 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
 - Improved the search experience with fast local searches.
 - Fixed the issue where tapping the Search button caused search results to disappear.
+- Fixed an issue with naddr links.
 
 ## [0.1.21] - 2024-07-24Z
 
@@ -25,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed deep linking to profiles and notes.
 - Fixed issue where some nostr:nprofile references did not appear as links.
 - Decode nprofile, nevent, and naddr NIP-19 entities.
+- Refactor away direct usages of Bech32 and TLV and replace with NostrIdentifier (which still uses both).
+- Deleted unused code.
 
 ## [0.1.20] - 2024-07-10Z
 
