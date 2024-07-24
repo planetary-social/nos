@@ -224,8 +224,9 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             startAggressivePaging()
             return
         } else if indexPath.row.isMultiple(of: pageSize / 2) {
+            let displayedDate = displayedDate(for: indexPath.row)
             Task {
-                await pager?.loadMore()
+                await pager?.loadMore(displayingContentAt: displayedDate)
             }
         } 
     }
@@ -249,7 +250,11 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     /// `loadMoreIfNeeded(for:)` won't be called which means we'll never ask for the next page. So we need the timer.
     private func startAggressivePaging() {
         if aggressivePagingTimer == nil {
-            aggressivePagingTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] timer in
+            // Fire manually once because the timer doesn't fire immediately
+            let displayedDate = self.displayedDate(for: largestLoadedRowIndex) 
+            Task { await self.pager?.loadMore(displayingContentAt: displayedDate) }
+            
+            aggressivePagingTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] timer in
                 guard let self else { 
                     timer.invalidate()
                     return 
@@ -259,8 +264,9 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
 
                 if self.largestLoadedRowIndex > lastPageStartIndex {
                     // we are still on the last page of results, keep loading
+                    let displayedDate = self.displayedDate(for: largestLoadedRowIndex)
                     Task {
-                        await self.pager?.loadMore()
+                        await self.pager?.loadMore(displayingContentAt: displayedDate)
                     }
                 } else {
                     // we've loaded enough, go back to normal paging
@@ -276,6 +282,11 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             aggressivePagingTimer.invalidate()
             self.aggressivePagingTimer = nil
         }
+    }
+    
+    /// Returns the `created_at` date of the event at the given index, if one exists.
+    private func displayedDate(for index: Int) -> Date? {
+        fetchedResultsController.fetchedObjects?[safe: index]?.createdAt
     }
     
     // MARK: - NSFetchedResultsControllerDelegate
