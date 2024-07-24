@@ -76,11 +76,16 @@ platform :ios do
       sh("rm", options[:appsecretspath])
     end
     changelog = read_changelog
+
+    testflight_groups = options[:distribution_groups] || []
     upload_to_testflight(
       changelog: changelog,
       app_identifier: options[:app_identifier],
-      skip_waiting_for_build_processing: is_ci
+      skip_waiting_for_build_processing: is_ci,
+      distribute_external: !testflight_groups.empty?,
+      groups: testflight_groups
     )
+    
     add_git_tag(tag: "v#{options[:tagprefix]}#{version_number}-#{build_number}")
     push_git_tags
     sentry_upload_dif(
@@ -127,7 +132,8 @@ platform :ios do
       appidentifier: "com.verse.Nos",
       tagprefix: "",
       appsecretspath: app_production_secrets_path,
-      appstoreconnect: "https://appstoreconnect.apple.com/apps/6479583869/testflight/ios"
+      appstoreconnect: "https://appstoreconnect.apple.com/apps/6479583869/testflight/ios",
+      distribution_groups: ["Keep this empty"]
     )
   end
 
