@@ -57,22 +57,36 @@ struct ComposerActionBar: View {
                             
                             alert = AlertState<ComposerActionBar.AlertAction>(
                                 title: {
-                                    if case FileStorageAPIClientError.uploadFailed = error {
-                                        return TextState(String(localized: .imagePicker.errorUploadingFileExceedsSizeLimit))
+                                    if case FileStorageAPIClientError.fileTooBig = error {
+                                        return TextState(
+                                            String(localized: .imagePicker.errorUploadingFileExceedsSizeLimit)
+                                        )
                                     } else {
-                                            return TextState(String(localized: .imagePicker.errorUploadingFile))
+                                        return TextState(String(localized: .imagePicker.errorUploadingFile))
                                     }
                                 }(),
                                 message: {
-                                    if case let FileStorageAPIClientError.uploadFailed(message) = error, let message = message {
-                                        return TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
+                                    if case let FileStorageAPIClientError.fileTooBig(message) = error, let message = message {
+                                        return TextState(
+                                            String(localized: .imagePicker.errorUploadingFileExceedsLimit(message))
+                                        )
+                                    } else if case let FileStorageAPIClientError.uploadFailed(message) = error, let message = message {
+                                        return TextState(
+                                            String(localized: .imagePicker.errorUploadingFileWithMessage(message))
+                                        )
                                     } else {
                                         return TextState(String(localized: .imagePicker.errorUploadingFileMessage))
                                     }
                                 }(),
                                 buttons: [
-                                    .cancel(TextState(String(localized: .localizable.cancel)), action: .send(.cancel)),
-                                        .default(TextState(String(localized: .imagePicker.getAccount)), action: .send(.getAccount))
+                                    .cancel(
+                                        TextState(
+                                            String(localized: .localizable.cancel)), action: .send(.cancel)
+                                    ),
+                                    .default(
+                                        TextState(
+                                            String(localized: .imagePicker.getAccount)), action: .send(.getAccount)
+                                    )
                                 ]
                             )
                         }

@@ -20,6 +20,7 @@ enum FileStorageAPIClientError: Error {
     case invalidResponseURL(String)
     case invalidURLRequest
     case missingKeyPair
+    case fileTooBig(String?)
     case uploadFailed(String?)
 }
 
@@ -59,9 +60,26 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         let (responseData, _) = try await URLSession.shared.upload(for: request, from: data)
 
         let response = try decoder.decode(FileStorageUploadResponseJSON.self, from: responseData)
+        
         guard let urlString = response.nip94Event?.urlString else {
-            throw FileStorageAPIClientError.uploadFailed(response.message)
+            // Ensure there's a message in the response, use an empty string if not
+            let message = response.message ?? ""
+
+            // Check to see if the error message mentions the file size
+            if let regex = try? NSRegularExpression(
+                pattern: "File size exceeds the limit of (\\d*\\.\\d* [MKGT]B)",
+                options: []
+            ),
+               let match = regex.firstMatch(in: message, options: [], range: NSRange(location: 0, length: message.utf16.count)),
+               let range = Range(match.range(at: 1), in: message) {
+                let fileSizeLimit = String(message[range])
+                throw FileStorageAPIClientError.fileTooBig(fileSizeLimit)
+            } else {
+                // The error is something else.
+                throw FileStorageAPIClientError.uploadFailed(message)
+            }
         }
+
         guard let url = URL(string: urlString) else {
             throw FileStorageAPIClientError.invalidResponseURL(urlString)
         }
