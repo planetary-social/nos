@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.21] - 2024-07-24Z
+
 - Added support for paid/authenticated relays (NIP-42).
 - Fixed a bug where publishing a note to one relay would publish to all relays.
 - Fix a bug where multiple connections could be opened with the same relay.
@@ -21,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed issue where some nostr:nprofile references did not appear as links.
 - Decode nprofile, nevent, and naddr NIP-19 entities.
 - Refactor away direct usages of Bech32 and TLV and replace with NostrIdentifier (which still uses both).
+- Deleted unused code.
 
 ## [0.1.20] - 2024-07-10Z
 

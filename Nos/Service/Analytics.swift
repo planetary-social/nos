@@ -116,10 +116,6 @@ class Analytics {
         track("Imported Private Key")
     }
     
-    func changedKey() {
-        track("Changed Private Key")
-    }
-    
     func added(_ relay: Relay) {
         track("Added Relay", properties: ["relay_address": relay.address ?? ""])
     }

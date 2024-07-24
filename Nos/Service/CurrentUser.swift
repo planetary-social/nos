@@ -3,7 +3,7 @@ import CoreData
 import Logger
 import Dependencies
 
-// swiftlint:disable type_body_length superfluous_disable_command
+// swiftlint:disable type_body_length
 @Observable class CurrentUser: NSObject, NSFetchedResultsControllerDelegate {
     
     @ObservationIgnored @Dependency(\.analytics) private var analytics
@@ -11,7 +11,6 @@ import Dependencies
     @ObservationIgnored @Dependency(\.persistenceController) private var persistenceController
     @ObservationIgnored @Dependency(\.pushNotificationService) private var pushNotificationService
     @ObservationIgnored @Dependency(\.relayService) private var relayService
-    @ObservationIgnored @Dependency(\.unsAPI) private var unsAPI
     @ObservationIgnored @Dependency(\.keychain) private var keychain
     
     // TODO: it's time to cache this
@@ -496,4 +495,4 @@ import Dependencies
         author = controller.fetchedObjects?.first as? Author
     }
 }
-// swiftlint:enable type_body_length superfluous_disable_command
+// swiftlint:enable type_body_length

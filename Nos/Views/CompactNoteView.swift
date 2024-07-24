@@ -35,7 +35,6 @@ struct CompactNoteView: View {
     /// The size of the note text truncated to `truncationLineLimit` lines.
     @State private var truncatedSize = CGSize.zero
     
-    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
     
     internal init(

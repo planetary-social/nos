@@ -23,7 +23,7 @@ enum UNSError: Error {
     case badResponse
 }
 
-// swiftlint:disable file_length type_body_length
+// swiftlint:disable type_body_length
 
 class UNSAPI {
     private var authConnectionURL: URL
@@ -216,39 +216,12 @@ class UNSAPI {
             return nameID
         } else if isNeedPaymentError(response.0) {
             throw UNSError.requiresPayment(URL(string: "https://www.universalname.space/name/\(name)")!)
-            // Waiting for API to support mobile
-            // return .right(try await requestPaymentURL(for: name))
         } else if isNameTakenError(response.0) {
             throw UNSError.nameTaken
         } else {
             logError(response: response)
             throw UNSError.badResponse
         }
-    }
-    
-    @available(*, deprecated, message: "This doesn't work yet because the API doesn't support non-http redirect URLs")
-    func requestPaymentURL(for name: UNSName) async throws -> URL {
-        let accessToken = try await checkAccessToken()
-        var request = URLRequest(url: connectionURL.appending(path: "/v1/names/\(name)/payments"))
-        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
-        request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let body = [
-            "persona_id": personaID ?? "null",
-            "cancel_url": "nos://uns/payment/canceled",
-            "success_url": "nos://uns/payment/success",
-        ] as JSONObject
-        let jsonBody = try JSONSerialization.data(withJSONObject: body)
-        request.httpBody = jsonBody
-        request.httpMethod = "POST"
-        
-        let response = try await URLSession.shared.data(for: request)
-        let responseData = response.0
-        _ = String(data: responseData, encoding: .utf8)
-        
-        // This is just a stub response for now.
-        return URL(string: "https://www.universalname.space/name/\(name)")!
     }
     
     func requestNostrVerification(npub: String, nameID: String) async throws -> String? {
@@ -421,39 +394,6 @@ class UNSAPI {
         return nostrPubKeys
     }
     
-    func usbcBalance(for name: UNSName) async throws -> Double? {
-        guard let nameRecord = try await nameRecord(for: name) else {
-            return nil
-        }
-        return try await usbcBalance(for: nameRecord)
-    }
-    
-    func usbcBalance(for nameRecord: UNSNameRecord) async throws -> Double? {
-        let accessToken = try await checkAccessToken()
-        var url = connectionURL.appending(path: "/v1/universal_ledger/balance")
-        url = url.appending(queryItems: [
-            URLQueryItem(name: "name_id", value: nameRecord.id),
-        ])
-        var request = URLRequest(url: url)
-        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
-        request.setValue(orgCode, forHTTPHeaderField: "x-org-code")
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpMethod = "GET"
-        
-        let response = try await URLSession.shared.data(for: request)
-        let responseJSON = try jsonDictionary(from: response.0)
-        
-        guard let dataDict = responseJSON["data"] as? JSONObject,
-            let accountDict = dataDict["account_balance"] as? JSONObject,
-            let balance = accountDict["balance"] as? Double else {
-            logError(response: response)
-            throw UNSError.badResponse
-        }
-        
-        return balance / 1e+18
-    }
-    
     func logout() {
         refreshToken = nil
         accessToken = nil
@@ -524,4 +464,4 @@ class UNSAPI {
     }
 }
 
-// swiftlint:enable type_body_length file_length
+// swiftlint:enable type_body_length

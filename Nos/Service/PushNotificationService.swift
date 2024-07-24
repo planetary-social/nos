@@ -151,12 +151,9 @@ import Combine
     /// `badgeCount` and updates the application badge icon. 
     func updateBadgeCount() async {
         var badgeCount = 0
-        if let currentAuthor {
+        if currentAuthor != nil {
             badgeCount = await self.modelContext.perform {
-                (try? NosNotification.unreadCount(
-                    for: currentAuthor, 
-                    in: self.modelContext
-                )) ?? 0
+                (try? NosNotification.unreadCount(in: self.modelContext)) ?? 0
             }
         }
         

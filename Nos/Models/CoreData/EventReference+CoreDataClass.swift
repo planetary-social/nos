@@ -18,10 +18,6 @@ enum EventReferenceMarker: String {
 @objc(EventReference)
 public class EventReference: NosManagedObject {
     
-    var jsonRepresentation: [String] {
-        ["e", referencedEvent?.identifier ?? "", recommendedRelayUrl ?? "", marker ?? ""]
-    }
-    
     var type: EventReferenceMarker? {
         marker.unwrap { EventReferenceMarker(rawValue: $0) }
     }
