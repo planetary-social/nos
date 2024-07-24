@@ -153,6 +153,7 @@ struct HomeFeedView: View {
                 )
                 .onChange(of: selectedRelay) { _, _ in
                     showTimedLoadingIndicator = true
+                    lastRefreshDate = .now + Self.staticLoadTime
                     Task {
                         withAnimation {
                             showRelayPicker = false
