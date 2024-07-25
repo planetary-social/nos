@@ -69,7 +69,7 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
     func toJSON() throws -> String? {
         let encoder = JSONEncoder()
         let data = try encoder.encode(self)
-        return String(data: data, encoding: .utf8)
+        return String(decoding: data, as: UTF8.self)
     }
     
     mutating func sign(withKey privateKey: KeyPair) throws {
@@ -125,12 +125,7 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
     func buildPublishRequest() throws -> String {
         let request: [Any] = ["EVENT", dictionary]
         let requestData = try JSONSerialization.data(withJSONObject: request)
-        if let string = String(data: requestData, encoding: .utf8) {
-            return string
-        } else {
-            Log.error("Couldn't create a utf8 string for a publish request")
-            return ""
-        }
+        return String(decoding: requestData, as: UTF8.self) 
     }
 }
 

@@ -48,7 +48,7 @@ enum Zipper {
                     readingItemAt: url, 
                     options: .forUploading, 
                     error: &readError
-                ) { (zippedURL: URL) -> Void in
+                ) { (zippedURL: URL) in
                     do {
                         try FileManager.default.copyItem(at: zippedURL, to: zipFileURL)
                         continuation.resume(with: .success(zipFileURL))

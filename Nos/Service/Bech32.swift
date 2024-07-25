@@ -80,7 +80,7 @@ enum Bech32 {
         for i in combined {
             ret.append(encCharset[Int(i)])
         }
-        return String(data: ret, encoding: .utf8) ?? ""
+        return String(decoding: ret, as: UTF8.self) 
     }
     
     static func encode(_ hrp: String, baseEightData: Data) -> String {
