@@ -331,6 +331,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     }
     
     // MARK: - Error Tracking 
+
     /// This constant is used to calculate the maximum amount of time we will wait before retrying an errored socket.
     /// We backoff exponentially for 2^x seconds, increasing x by 1 on each consecutive error 
     /// until x == `maxBackoffPower`.

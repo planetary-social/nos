@@ -5,8 +5,8 @@ enum ProfileFeedType {
     case activity
     case notes
     
-    func databaseFilter(author: Author) -> NSFetchRequest<Event> {
-        author.allPostsRequest(onlyRootPosts: self == .notes)
+    func databaseFilter(author: Author, before date: Date) -> NSFetchRequest<Event> {
+        author.allPostsRequest(before: date, onlyRootPosts: self == .notes)
     }
     
     func relayFilter(author: Author) -> Filter {
