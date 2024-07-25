@@ -113,7 +113,6 @@ class PagedRelaySubscription {
                     nextPageFilter.until = displayedDate
                 }
                 
-                
                 let nextPageSubscription = await subscriptionManager.queueSubscription(
                     with: nextPageFilter, 
                     to: relayAddress

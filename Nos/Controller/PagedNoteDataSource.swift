@@ -250,9 +250,6 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     /// `loadMoreIfNeeded(for:)` won't be called which means we'll never ask for the next page. So we need the timer.
     private func startAggressivePaging() {
         if aggressivePagingTimer == nil {
-            // Fire manually once because the timer doesn't fire immediately
-            let displayedDate = self.displayedDate(for: largestLoadedRowIndex) 
-            Task { await self.pager?.loadMore(displayingContentAt: displayedDate) }
             
             aggressivePagingTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] timer in
                 guard let self else { 
@@ -273,6 +270,9 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
                     self.stopAggressivePaging()
                 }
             }
+            
+            // Fire manually once because the timer doesn't fire immediately
+            aggressivePagingTimer?.fire()
         }
     }
     

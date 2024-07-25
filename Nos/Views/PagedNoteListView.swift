@@ -25,6 +25,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// by the `databaseFilter`. 
     let relayFilter: Filter
     
+    /// The relay to load data from. If `nil` then all the relays in the user's list will be used.
     let relay: Relay? 
     
     let context: NSManagedObjectContext
