@@ -154,7 +154,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El maximo tamaño para publicacion de achivos gratis es $@. Para subir archives mas grande puedes pagar para subscribir a una cuenta Nostr.build pro."
+            "value" : "El maximo tamaño para publicacion de achivos gratis es %@. Para subir archives mas grande puedes pagar para subscribir a una cuenta Nostr.build pro."
           }
         }
       }
