@@ -10,7 +10,7 @@ import Combine
 /// after index 100". Instead we have to use dates and ask for "the next 20 events older than X". Moreover because we
 /// are fetching from a lot of relays the date X is different for every relay. `PagedRelaySubscription` abstracts away
 /// these details, so the caller basically only needs to know what kinds of events they want from what relays, and then
-/// call `loadMore()` whenever they user scrolls a page.  
+/// call `loadMore()` whenever the user scrolls a page.
 @RelaySubscriptionManagerActor
 class PagedRelaySubscription {
     let startDate: Date
