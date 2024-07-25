@@ -29,7 +29,7 @@ class PagedRelaySubscription {
     private let relayAddresses: Set<URL>
     
     /// The oldest event each relay has returned. Used to load the next page.
-    var oldestEventByRelay = [URL: Date]()
+    private var oldestEventByRelay = [URL: Date]()
     
     private var cancellables = [AnyCancellable]()
     
