@@ -148,7 +148,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The max file size for free media uploads is of %@. To upload large files, upgrade to a Nostr.build Professional account."
+            "value" : "The max file size for free media uploads is %@. To upload large files, upgrade to a Nostr.build Professional account."
           }
         },
         "es" : {
