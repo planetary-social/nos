@@ -9,7 +9,7 @@ enum SearchState {
     /// There is no text in the search field.
     case noQuery
 
-    /// No search is in progress, and there are no results to display.
+    /// A (local) search is in progress and there are no results to display.
     case empty
 
     /// There are search results to display.
@@ -60,38 +60,49 @@ class SearchController: ObservableObject {
     init() {
         $query
             .removeDuplicates()
-            .map { query in
+            .map { [weak self] query in
                 if query.isEmpty {
-                    self.clear()
-                } else if query.count < 3 {
-                    self.state = .empty
+                    self?.clear()
                 }
                 return query
             }
-            .filter { $0.count >= 3 || self.state == .loading }
-            .debounce(for: 0.2, scheduler: RunLoop.main)
-            .map { query in
-                self.submitSearch(query: query)
-                return query
-            }
-            .combineLatest(
-                // listen for new objects, as this is how we get search results from relays
-                NotificationCenter.default.publisher(
-                    for: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
-                    object: context
-                )
-            )
-            .map { $0.0 }
-            .filter { _ in self.state != .noQuery && self.state != .empty }
-            .map { self.authors(named: $0) }
-            .map { $0.sorted(by: { $0.followers.count > $1.followers.count }) }
-            .sink(receiveValue: { results in
-                if !results.isEmpty {
+            .filter { !$0.isEmpty }
+            .compactMap { [weak self] query in
+                guard let self else { return nil }
+                self.authorResults = self.authors(named: query)
+                if self.authorResults.isEmpty {
+                    // if we had `results` before and don't now, we're `empty`
+                    if self.state == .results {
+                        self.state = .empty
+                    }
+                } else {
                     self.state = .results
                 }
-                self.authorResults = results
-            })
+                return query
+            }
+            .filter { [weak self] in $0.count >= 3 || self?.state == .loading }
+            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .sink { [weak self] query in
+                self?.submitSearch(query: query)
+            }
             .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(
+            for: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
+            object: context
+        )
+        .filter { [weak self] _ in self?.state != .noQuery }
+        .compactMap { [weak self] _ in self?.query }
+        .compactMap { [weak self] in self?.authors(named: $0) }
+        .map { $0.sorted(by: { $0.followers.count > $1.followers.count }) }
+        .sink(receiveValue: { [weak self] results in
+            guard let self else { return }
+            if !results.isEmpty {
+                self.state = .results
+            }
+            self.authorResults = results
+        })
+        .store(in: &cancellables)
     }
     
     // MARK: - Internal
@@ -111,17 +122,9 @@ class SearchController: ObservableObject {
     }
     
     func authors(named name: String) -> [Author] {
-        if let publicKey = PublicKey(npub: name) {
-            Task { @MainActor in
-                router.pushAuthor(id: publicKey.hex)
-            }
-            clear()
-            return []
-        }
         guard let authors = try? Author.find(named: name, context: context) else {
             return []
         }
-
         return authors
     }
     
@@ -137,14 +140,18 @@ class SearchController: ObservableObject {
         let strippedString = publicKeyString.trimmingCharacters(
             in: NSCharacterSet.whitespacesAndNewlines
         )
-        guard let publicKey = PublicKey(note: strippedString) else {
+        do {
+            guard case let .note(eventID) = try NostrIdentifier.decode(bech32String: strippedString) else {
+                return nil
+            }
+            guard let note = try? Event.findOrCreateStubBy(id: eventID, context: context) else {
+                return nil
+            }
+            try? context.saveIfNeeded()
+            return note
+        } catch {
             return nil
         }
-        guard let note = try? Event.findOrCreateStubBy(id: publicKey.hex, context: context) else {
-            return nil
-        }
-        try? context.saveIfNeeded()
-        return note
     }
     
     /// Searches the relays and UNS for the given query.
@@ -154,7 +161,11 @@ class SearchController: ObservableObject {
     /// These functions search other systems for the given query and add relevant authors to the database.
     /// The database then generates a notification which is listened to above and results are reloaded.
     func search(for query: String) {
-        state = .loading
+        // if there are no results, go into the `loading` state (which will show the spinner)
+        // otherwise, keep showing the results
+        if state != .results {
+            state = .loading
+        }
         startSearchTimer()
         Task {
             self.searchSubscriptions.removeAll()
