@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.22] - 2024-07-26Z
+
 - Added a filter button to the Home tab that lets you browse all notes on a specific relay.
 - Improved the search experience with fast local searches.
 - Fixed the issue where tapping the Search button caused search results to disappear.
