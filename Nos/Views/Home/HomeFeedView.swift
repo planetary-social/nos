@@ -91,59 +91,59 @@ struct HomeFeedView: View {
     
     var body: some View {
         ZStack {
-            PagedNoteListView(
-                databaseFilter: homeFeedFetchRequest,
-                relayFilter: homeFeedFilter,
-                relay: selectedRelay,
-                context: viewContext,
-                tab: .home,
-                header: {
-                    Group {
-                        if selectedRelay == nil {
-                            AuthorStoryCarousel(
-                                authors: $stories, 
-                                selectedStoryAuthor: $selectedStoryAuthor
-                            )
-                        } else {
-                            EmptyView()
-                        }
-                    }
-                },
-                emptyPlaceholder: { _ in
-                    VStack {
-                        Text(.localizable.noEvents)
-                            .padding()
-                    }
-                    .frame(minHeight: 300)
-                },
-                onRefresh: {
-                    lastRefreshDate = .now
-                    storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: lastRefreshDate)!
-                    authors.nsPredicate = user.followedWithNewNotesPredicate(
-                        since: storiesCutoffDate
-                    )
-                    Task { await downloadStories() }
-                    return Event.homeFeed(for: user, before: lastRefreshDate)
-                }
-            )
-            .padding(0)
-            
-            StoriesView(
-                cutoffDate: $storiesCutoffDate,
-                authors: stories,
-                selectedAuthor: $selectedStoryAuthor
-            )
-            .scaleEffect(isShowingStories ? 1 : 0.5)
-            .opacity(isShowingStories ? 1 : 0)
-            .animation(.default, value: selectedStoryAuthor)
-            
             if showTimedLoadingIndicator {
                 FullscreenProgressView(
                     isPresented: $showTimedLoadingIndicator,
                     hideAfter: .now() + .seconds(Int(Self.staticLoadTime))
                 )
-            } 
-            
+            } else {
+                PagedNoteListView(
+                    databaseFilter: homeFeedFetchRequest,
+                    relayFilter: homeFeedFilter,
+                    relay: selectedRelay,
+                    context: viewContext,
+                    tab: .home,
+                    header: {
+                        Group {
+                            if selectedRelay == nil {
+                                AuthorStoryCarousel(
+                                    authors: $stories,
+                                    selectedStoryAuthor: $selectedStoryAuthor
+                                )
+                            } else {
+                                EmptyView()
+                            }
+                        }
+                    },
+                    emptyPlaceholder: { _ in
+                        VStack {
+                            Text(.localizable.noEvents)
+                                .padding()
+                        }
+                        .frame(minHeight: 300)
+                    },
+                    onRefresh: {
+                        lastRefreshDate = .now
+                        storiesCutoffDate = Calendar.current.date(byAdding: .day, value: -2, to: lastRefreshDate)!
+                        authors.nsPredicate = user.followedWithNewNotesPredicate(
+                            since: storiesCutoffDate
+                        )
+                        Task { await downloadStories() }
+                        return Event.homeFeed(for: user, before: lastRefreshDate)
+                    }
+                )
+                .padding(0)
+
+                StoriesView(
+                    cutoffDate: $storiesCutoffDate,
+                    authors: stories,
+                    selectedAuthor: $selectedStoryAuthor
+                )
+                .scaleEffect(isShowingStories ? 1 : 0.5)
+                .opacity(isShowingStories ? 1 : 0)
+                .animation(.default, value: selectedStoryAuthor)
+            }
+
             if showRelayPicker {
                 RelayPicker(
                     selectedRelay: $selectedRelay,
