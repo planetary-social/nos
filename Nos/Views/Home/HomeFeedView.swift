@@ -28,7 +28,7 @@ struct HomeFeedView: View {
     /// true.
     static let staticLoadTime: TimeInterval = 2
 
-    @ObservedObject var user: Author
+    let user: Author
 
     @State private var stories: [Author] = []
     @State private var selectedStoryAuthor: Author?
