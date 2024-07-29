@@ -297,30 +297,6 @@ import Logger
         return fetchRequest
     }
 
-    @nonobjc func storiesRequest(since: Date) -> NSFetchRequest<Event> {
-        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        let onlyStoriesFromTheAuthorClause = "author = %@"
-
-        let onlyRootPostsClause = "(kind = 1 AND SUBQUERY(" +
-            "eventReferences, " +
-            "$reference, " +
-            "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
-        ").@count = 0)"
-        let onlyPostsRepostsAndLongFormsClause = "(\(onlyRootPostsClause) OR kind = 6 OR kind = 30023)"
-
-        let onlyRecentStoriesClause = "createdAt > %@"
-        fetchRequest.predicate = NSPredicate(
-            format: "\(onlyStoriesFromTheAuthorClause) " +
-                "AND \(onlyRecentStoriesClause) " +
-                "AND \(onlyPostsRepostsAndLongFormsClause)",
-            self,
-            since as CVarArg
-        )
-        fetchRequest.fetchLimit = 10
-        return fetchRequest
-    }
-
     @nonobjc func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]

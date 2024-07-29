@@ -133,9 +133,6 @@
 		5BC0D9CC2B867B9D005D6980 /* NamesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */; };
 		5BD08BB22A38E96F00BB926C /* JSONRelayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */; };
 		5BD25E592C192BBC005CF884 /* NoteParserTests+Parse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD25E582C192BBC005CF884 /* NoteParserTests+Parse.swift */; };
-		5BE281BE2AE2CCAE00880466 /* StoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE281BD2AE2CCAE00880466 /* StoriesView.swift */; };
-		5BE281C12AE2CCB400880466 /* StoryNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE281C02AE2CCB400880466 /* StoryNoteView.swift */; };
-		5BE281C42AE2CCC300880466 /* AuthorStoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE281C32AE2CCC300880466 /* AuthorStoryView.swift */; };
 		5BE281C72AE2CCD800880466 /* ReplyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE281C62AE2CCD800880466 /* ReplyButton.swift */; };
 		5BE281CA2AE2CCEB00880466 /* HomeTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE281C92AE2CCEB00880466 /* HomeTab.swift */; };
 		5BE281CD2AE2CD4700880466 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D88299FF37C002A755D /* AvatarView.swift */; };
@@ -251,8 +248,6 @@
 		C9646EAC29B7A520007239A4 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = C9646EAB29B7A520007239A4 /* Dependencies */; };
 		C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */; };
 		C9680AD42ACDF57D006C8C93 /* UNSWizardNeedsPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9680AD32ACDF57D006C8C93 /* UNSWizardNeedsPaymentView.swift */; };
-		C96877B92B4EDD110051ED2F /* AuthorStoryCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96877B82B4EDD110051ED2F /* AuthorStoryCarousel.swift */; };
-		C96877BB2B4EDE510051ED2F /* StoryAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96877BA2B4EDE510051ED2F /* StoryAvatarView.swift */; };
 		C96CB98C2A6040C500498C4E /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = C96CB98B2A6040C500498C4E /* DequeModule */; };
 		C96D391B2B61AFD500D3D0A1 /* RawNostrIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96D391A2B61AFD500D3D0A1 /* RawNostrIDTests.swift */; };
 		C96D39272B61B6D200D3D0A1 /* RawNostrID.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96D39262B61B6D200D3D0A1 /* RawNostrID.swift */; };
@@ -615,9 +610,6 @@
 		5BBA5E9B2BAE052F00D57D76 /* NiceWorkSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NiceWorkSheet.swift; sourceTree = "<group>"; };
 		5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesAPI.swift; sourceTree = "<group>"; };
 		5BD25E582C192BBC005CF884 /* NoteParserTests+Parse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoteParserTests+Parse.swift"; sourceTree = "<group>"; };
-		5BE281BD2AE2CCAE00880466 /* StoriesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoriesView.swift; sourceTree = "<group>"; };
-		5BE281C02AE2CCB400880466 /* StoryNoteView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryNoteView.swift; sourceTree = "<group>"; };
-		5BE281C32AE2CCC300880466 /* AuthorStoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorStoryView.swift; sourceTree = "<group>"; };
 		5BE281C62AE2CCD800880466 /* ReplyButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplyButton.swift; sourceTree = "<group>"; };
 		5BE281C92AE2CCEB00880466 /* HomeTab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTab.swift; sourceTree = "<group>"; };
 		5BE460702BAB2BE1004B83ED /* NosStaging.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NosStaging.entitlements; sourceTree = "<group>"; };
@@ -708,8 +700,6 @@
 		C9646EA029B7A22C007239A4 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		C9671D72298DB94C00EE7E12 /* Data+Encoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Encoding.swift"; sourceTree = "<group>"; };
 		C9680AD32ACDF57D006C8C93 /* UNSWizardNeedsPaymentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UNSWizardNeedsPaymentView.swift; sourceTree = "<group>"; };
-		C96877B82B4EDD110051ED2F /* AuthorStoryCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorStoryCarousel.swift; sourceTree = "<group>"; };
-		C96877BA2B4EDE510051ED2F /* StoryAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryAvatarView.swift; sourceTree = "<group>"; };
 		C96D391A2B61AFD500D3D0A1 /* RawNostrIDTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawNostrIDTests.swift; sourceTree = "<group>"; };
 		C96D39262B61B6D200D3D0A1 /* RawNostrID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawNostrID.swift; sourceTree = "<group>"; };
 		C973364E2A7968220012D8B8 /* SetUpUNSBanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetUpUNSBanner.swift; sourceTree = "<group>"; };
@@ -1216,10 +1206,6 @@
 			children = (
 				C9DEBFD8298941000078B43A /* HomeFeedView.swift */,
 				5BE281C92AE2CCEB00880466 /* HomeTab.swift */,
-				5BE281BD2AE2CCAE00880466 /* StoriesView.swift */,
-				5BE281C02AE2CCB400880466 /* StoryNoteView.swift */,
-				C96877B82B4EDD110051ED2F /* AuthorStoryCarousel.swift */,
-				C96877BA2B4EDE510051ED2F /* StoryAvatarView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1556,7 +1542,6 @@
 				5B8C96B129DB313300B73AEC /* AuthorCard.swift */,
 				C97465302A3B89140031226F /* AuthorLabel.swift */,
 				5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */,
-				5BE281C32AE2CCC300880466 /* AuthorStoryView.swift */,
 				3FFB1D88299FF37C002A755D /* AvatarView.swift */,
 				C92F01542AC4D6CF00972489 /* BeveledSeparator.swift */,
 				C987F81629BA4C6900B44E7A /* BigActionButton.swift */,
@@ -2015,7 +2000,6 @@
 				C913DA0C2AEB2EBF003BDD6D /* FetchRequestPublisher.swift in Sources */,
 				C973AB5D2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */,
 				5B79F64C2BA119AE002DA9BE /* WizardSheetTitleText.swift in Sources */,
-				C96877BB2B4EDE510051ED2F /* StoryAvatarView.swift in Sources */,
 				C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */,
 				5B8C96B629DDD3B200B73AEC /* NoteTextViewRepresentable.swift in Sources */,
 				C93EC2F129C337EB0012EE2A /* RelayPicker.swift in Sources */,
@@ -2052,7 +2036,6 @@
 				C93F48902AC5C9C400900CEC /* UNSWizardPhoneView.swift in Sources */,
 				A3B943D5299D514800A15A08 /* Follow+CoreDataClass.swift in Sources */,
 				C92DF80529C25DE900400561 /* URL+Extensions.swift in Sources */,
-				5BE281C12AE2CCB400880466 /* StoryNoteView.swift in Sources */,
 				3F60F42929B27D3E000D62C4 /* ThreadView.swift in Sources */,
 				C9B678DB29EEBF3B00303F33 /* DependencyInjection.swift in Sources */,
 				5B098DC62BDAF73500500A1B /* AttributedString+Links.swift in Sources */,
@@ -2101,7 +2084,6 @@
 				C93EC2F429C34C860012EE2A /* NSPredicate+Bool.swift in Sources */,
 				5B79F6132B98B145002DA9BE /* WizardNavigationStack.swift in Sources */,
 				C9F84C1C298DBBF400C6714D /* Data+Sha.swift in Sources */,
-				5BE281BE2AE2CCAE00880466 /* StoriesView.swift in Sources */,
 				C936B4622A4CB01C00DF1EB9 /* PushNotificationService.swift in Sources */,
 				C95D68A6299E6F9E00429F86 /* ProfileHeader.swift in Sources */,
 				0365CD872C4016A200622A1A /* EventKind.swift in Sources */,
@@ -2153,11 +2135,9 @@
 				C98CA9072B14FBBF00929141 /* PagedNoteDataSource.swift in Sources */,
 				C9A0DAEA29C6A34200466635 /* ActivityView.swift in Sources */,
 				CD2CF390299E68BE00332116 /* NoteButton.swift in Sources */,
-				C96877B92B4EDD110051ED2F /* AuthorStoryCarousel.swift in Sources */,
 				C9DC6CBA2C1739AD00E1CFB3 /* View+HandleURLsInRouter.swift in Sources */,
 				C93F48932AC5C9CE00900CEC /* UNSWizardIntroView.swift in Sources */,
 				5B79F6552BA123D4002DA9BE /* WizardSheetBadgeText.swift in Sources */,
-				5BE281C42AE2CCC300880466 /* AuthorStoryView.swift in Sources */,
 				C9DEC04D29894BED0078B43A /* Author+CoreDataClass.swift in Sources */,
 				C905B0772A619E99009B8A78 /* LinkPreview.swift in Sources */,
 				C95D68A7299E6FF000429F86 /* KeyFixture.swift in Sources */,
