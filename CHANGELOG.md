@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Remove stories UI to improve performance.
+
 ## [0.1.22] - 2024-07-26Z
 
 - Added a filter button to the Home tab that lets you browse all notes on a specific relay.
