@@ -190,7 +190,6 @@
 		C930055F2A6AF8320098CA9E /* LoadingContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C930055E2A6AF8320098CA9E /* LoadingContent.swift */; };
 		C93005602A6AF8320098CA9E /* LoadingContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C930055E2A6AF8320098CA9E /* LoadingContent.swift */; };
 		C930E0572BA49DAD002B5776 /* GridPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = C930E0562BA49DAD002B5776 /* GridPattern.swift */; };
-		C931517D29B915AF00934506 /* StaggeredGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = C931517C29B915AF00934506 /* StaggeredGrid.swift */; };
 		C936B4592A4C7B7C00DF1EB9 /* Nos.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */; };
 		C936B45A2A4C7B7C00DF1EB9 /* Nos.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */; };
 		C936B45C2A4C7D6B00DF1EB9 /* UNSWizard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C936B45B2A4C7D6B00DF1EB9 /* UNSWizard.swift */; };
@@ -661,7 +660,6 @@
 		C92F015D2AC4D99400972489 /* NosForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosForm.swift; sourceTree = "<group>"; };
 		C930055E2A6AF8320098CA9E /* LoadingContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingContent.swift; sourceTree = "<group>"; };
 		C930E0562BA49DAD002B5776 /* GridPattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridPattern.swift; sourceTree = "<group>"; };
-		C931517C29B915AF00934506 /* StaggeredGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaggeredGrid.swift; sourceTree = "<group>"; };
 		C936B45B2A4C7D6B00DF1EB9 /* UNSWizard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UNSWizard.swift; sourceTree = "<group>"; };
 		C936B4612A4CB01C00DF1EB9 /* PushNotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationService.swift; sourceTree = "<group>"; };
 		C93CA0C229AE3A1E00921183 /* JSONEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONEvent.swift; sourceTree = "<group>"; };
@@ -1596,7 +1594,6 @@
 				CD09A74529A50F750063464F /* SideMenuContent.swift */,
 				C92DF80729C25FA900400561 /* SquareImage.swift */,
 				3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */,
-				C931517C29B915AF00934506 /* StaggeredGrid.swift */,
 				2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */,
 				3F60F42829B27D3E000D62C4 /* ThreadView.swift */,
 				C9E8C1122B081E9C002D46B0 /* UNSNameView.swift */,
@@ -2061,7 +2058,6 @@
 				C9DEBFD9298941000078B43A /* HomeFeedView.swift in Sources */,
 				3F30020729C237AB003D4F8B /* OnboardingAgeVerificationView.swift in Sources */,
 				65BD8DC22BDAF2C300802039 /* DiscoverTab.swift in Sources */,
-				C931517D29B915AF00934506 /* StaggeredGrid.swift in Sources */,
 				65BD8DC32BDAF2C300802039 /* FeaturedAuthorCategory.swift in Sources */,
 				C93F045E2B9B7A7000AD5872 /* ReplyPreview.swift in Sources */,
 				C97465312A3B89140031226F /* AuthorLabel.swift in Sources */,
