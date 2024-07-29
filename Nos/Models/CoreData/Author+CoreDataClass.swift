@@ -269,33 +269,6 @@ import Logger
         )
         return fetchRequest
     }
-    
-    @nonobjc func followedWithNewNotesPredicate(since: Date) -> NSPredicate {
-        let onlyFollowedAuthorsClause = "ANY followers.source = %@"
-        let onlyUnreadStoriesClause = "$event.isRead != 1"
-        let onlyRecentStoriesClause = "$event.createdAt > %@"
-        let onlyRootPostsClause = "($event.kind = 1 AND SUBQUERY(" +
-            "$event.eventReferences, " +
-            "$reference, " +
-            "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
-        ").@count = 0)"
-        let onlyPostsRepostsAndLongFormsClause = "(\(onlyRootPostsClause) OR $event.kind = 6 OR $event.kind = 30023)"
-        let onlyAuthorsWithStoriesClause = "SUBQUERY(events, $event, \(onlyPostsRepostsAndLongFormsClause) " +
-            "AND \(onlyRecentStoriesClause) AND \(onlyUnreadStoriesClause)).@count > 0"
-
-        return NSPredicate(
-            format: "\(onlyFollowedAuthorsClause) AND \(onlyAuthorsWithStoriesClause)",
-            self,
-            since as CVarArg
-        )
-    }
-
-    @nonobjc func followedWithNewNotes(since: Date) -> NSFetchRequest<Author> {
-        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
-        fetchRequest.predicate = followedWithNewNotesPredicate(since: since)
-        return fetchRequest
-    }
 
     @nonobjc func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
