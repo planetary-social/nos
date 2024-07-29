@@ -245,8 +245,8 @@ class UNSAPI {
         
         let response = try await URLSession.shared.data(for: request)
         let responseData = response.0
-        let responseString = String(data: responseData, encoding: .utf8)
-        if responseString?.ranges(of: "DUPLICATED_SOCIAL_CONNECTION").isEmpty == false {
+        let responseString = String(decoding: responseData, as: UTF8.self)
+        if responseString.ranges(of: "DUPLICATED_SOCIAL_CONNECTION").isEmpty == false {
             return nil
         }
             
@@ -438,7 +438,7 @@ class UNSAPI {
     }
     
     func logError(from functionName: String = #function, response: (Data, URLResponse)) {
-        Log.error("\(functionName) failed with \(String(data: response.0, encoding: .utf8) ?? "null")")
+        Log.error("\(functionName) failed with \(String(decoding: response.0, as: UTF8.self))")
     }
     
     class func getEnvironmentVariable(named name: String) -> String? {

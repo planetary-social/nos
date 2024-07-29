@@ -345,9 +345,7 @@ import Dependencies
         
         let jsonObject = buildMetadataJSONObject(author: author)
         let data = try JSONSerialization.data(withJSONObject: jsonObject)
-        guard let content = String(data: data, encoding: .utf8) else {
-            throw CurrentUserError.encodingError
-        }
+        let content = String(decoding: data, as: UTF8.self) 
 
         let jsonEvent = JSONEvent(
             pubKey: pubKey,

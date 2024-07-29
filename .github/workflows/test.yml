@@ -38,6 +38,6 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: SwiftLint
-        uses: docker://norionomura/swiftlint:0.53.0
+        uses: docker://norionomura/swiftlint:0.55.1
         with:
           args: swiftlint --strict --reporter github-actions-logging

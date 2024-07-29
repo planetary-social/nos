@@ -40,7 +40,6 @@ enum DeepLinkService {
             // The destination (npub, note, nprofile, nevent, or naddr) may be in the host or the path.
             // If the URL looks like nos://npub1..., we want the host. If it's nostr:npub1..., the path is what we want.
             let destination = components.host ?? components.path
-            // swiftlint:disable:next opening_brace
             let unformattedRegex = /(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1|naddr1)[a-zA-Z0-9]{58,}))/
             do {
                 if let match = try unformattedRegex.firstMatch(in: destination) {
