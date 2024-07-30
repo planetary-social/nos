@@ -252,7 +252,7 @@ struct NewNoteView: View {
             } else {
                 try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
             }
-            if let replyToNote {
+            if replyToNote != nil {
                 analytics.published(reply: jsonEvent)
             } else {
                 analytics.published(note: jsonEvent)
