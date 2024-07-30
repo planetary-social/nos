@@ -22,6 +22,7 @@ class RelayService: ObservableObject {
     
     @Dependency(\.persistenceController) var persistenceController
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.crashReporting) private var crashReporting
     @MainActor @Dependency(\.currentUser) private var currentUser
     @Published var numberOfConnectedRelays: Int = 0
     
@@ -399,6 +400,9 @@ extension RelayService {
                     "\(remainingEventCount) events left in parse queue."
                 )
                 #endif
+                if remainingEventCount >= 1000 && remainingEventCount < 1030 {
+                    self.crashReporting.report("Parse queue is large: currently 1000+ events")
+                }
                 try self.parseContext.saveIfNeeded()
                 try self.persistenceController.viewContext.saveIfNeeded()
             }
