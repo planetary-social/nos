@@ -401,7 +401,7 @@ extension RelayService {
                 )
                 #endif
                 if remainingEventCount >= 1000 && remainingEventCount < 1030 {
-                    self.crashReporting.report("Parse queue is large: currently \(remainingEventCount) events")
+                    self.crashReporting.report("Parse queue is large: currently 1000+ events")
                 }
                 try self.parseContext.saveIfNeeded()
                 try self.persistenceController.viewContext.saveIfNeeded()
