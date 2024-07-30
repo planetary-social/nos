@@ -1,3 +1,4 @@
+import Dependencies
 import Foundation
 import SwiftUI
 
@@ -18,19 +19,36 @@ struct FollowsView: View {
 
     /// Sorted list of authors to display in the list
     var authors: [Author]
-    
+
+    /// Subscriptions for metadata requests from the relay service, keyed by author ID.
+    @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
+
+    @Dependency(\.relayService) private var relayService
+    @EnvironmentObject private var router: Router
+
     var body: some View {
-        ScrollView(.vertical) {
-            LazyVStack(spacing: 15) {
+        ScrollView {
+            LazyVStack {
                 ForEach(authors) { author in
-                    FollowCard(author: author)
-                        .padding(.horizontal)
+                    AuthorObservationView(authorID: author.hexadecimalPublicKey) { author in
+                        AuthorCard(author: author) {
+                            router.push(author)
+                        }
+                        .padding(.horizontal, 13)
+                        .padding(.top, 5)
                         .readabilityPadding()
+                        .task {
+                            subscriptions[author.id] =
+                            await relayService.requestMetadata(
+                                for: author.hexadecimalPublicKey,
+                                since: author.lastUpdatedMetadata
+                            )
+                        }
+                    }
                 }
             }
-            .padding(.top)
+            .padding(.vertical, 12)
         }
-        .background(Color.appBg)
         .nosNavigationBar(title: title)
     }
 }
