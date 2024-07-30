@@ -46,12 +46,12 @@ class CrashReporting {
     }
 
     func report(_ error: Error) {
-        Log.info("Reporting error to Crash Reporting service: \(error.localizedDescription)")
+        Log.error("Reporting error to Crash Reporting service: \(error.localizedDescription)")
         sentry.capture(error: error)
     }
     
     func report(_ errorMessage: String) {
-        Log.info("Reporting error to Crash Reporting service: \(errorMessage)")
+        Log.error("Reporting error to Crash Reporting service: \(errorMessage)")
         sentry.capture(message: errorMessage)
     }
     
