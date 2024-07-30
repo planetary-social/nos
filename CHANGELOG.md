@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Remove stories UI to improve performance.
+- Report error to Sentry when parse queue contains over 1000 events.
 
 ## [0.1.22] - 2024-07-26Z
 
