@@ -70,7 +70,7 @@ struct ComposerActionBar: View {
                                         return TextState(
                                             String(localized: .imagePicker.errorUploadingFileExceedsLimit(message))
                                         )
-                                    } else if case let FileStorageAPIClientError.uploadFailed(message) = error, let message = message {
+                                    } else if case let FileStorageAPIClientError.uploadFailed(message) = error, let message {
                                         return TextState(
                                             String(localized: .imagePicker.errorUploadingFileWithMessage(message))
                                         )
