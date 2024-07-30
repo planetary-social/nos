@@ -66,7 +66,7 @@ struct ComposerActionBar: View {
                                     }
                                 }(),
                                 message: {
-                                    if case let FileStorageAPIClientError.fileTooBig(message) = error, let message = message {
+                                    if case let FileStorageAPIClientError.fileTooBig(message) = error, let message {
                                         return TextState(
                                             String(localized: .imagePicker.errorUploadingFileExceedsLimit(message))
                                         )
