@@ -52,7 +52,6 @@ struct NoteParser {
         tags: [[String]],
         context: NSManagedObjectContext
     ) -> String {
-        // swiftlint:disable:next opening_brace
         let regex = /(?:^|\s)#\[(?<index>\d+)\]|(?:^|\s)@?(?:nostr:)(?<npubornprofile>[a-zA-Z0-9]{2,256})/
         return content.replacing(regex) { match in
             let substring = match.0
@@ -115,7 +114,6 @@ struct NoteParser {
     private func replaceNostrEntities(in content: String) -> String {
         let unformattedRegex =
             /(?:^|\s)@?(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1|naddr1)[a-zA-Z0-9]{58,}))/
-        // swiftlint:disable:previous opening_brace
 
         return content.replacing(unformattedRegex) { match in
             let substring = match.0

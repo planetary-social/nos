@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed a bug where the home feed would be empty on first launch.
+- Remove stories UI to improve performance.
 
 ## [0.1.22] - 2024-07-26Z
 

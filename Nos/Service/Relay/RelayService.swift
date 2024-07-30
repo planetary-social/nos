@@ -115,7 +115,7 @@ extension RelayService {
             await subscriptionManager.forceCloseSubscriptionCount(for: subscriptionID)
             let request: [Any] = ["CLOSE", subscriptionID]
             let requestData = try JSONSerialization.data(withJSONObject: request)
-            let requestString = String(data: requestData, encoding: .utf8)!
+            let requestString = String(decoding: requestData, as: UTF8.self)
             client.write(string: requestString)
         } catch {
             Log.error("Error: Could not send close \(error.localizedDescription)")
@@ -517,10 +517,7 @@ extension RelayService {
             
             let request: [Any] = ["AUTH", jsonEvent.dictionary]
             let requestData = try JSONSerialization.data(withJSONObject: request)
-            guard let string = String(data: requestData, encoding: .utf8) else {
-                Log.error("Couldn't create a utf8 string for a publish request")
-                return 
-            }
+            let string = String(decoding: requestData, as: UTF8.self)
             socket.write(string: string)
         } catch {
             Log.error("Error authenticating with \(relayAddress)", error.localizedDescription)
