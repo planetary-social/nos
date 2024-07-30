@@ -115,6 +115,7 @@ struct RepliesView: View {
                         .sheet(isPresented: $showReplyComposer, content: {
                             NewNoteView(replyTo: note, isPresented: $showReplyComposer)
                                 .environment(currentUser)
+                                .interactiveDismissDisabled()
                         })
                         
                         ForEach(directReplies.reversed()) { event in
