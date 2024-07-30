@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed alert when uploading big files suggesting users pay for nostr.build
 - Fix a bug where multiple connections could be opened with the same relay.
 - Fixed an issue where Profile views would sometimes not display any notes.
 - Add impersonation flag category and better NIP-56 mapping.
