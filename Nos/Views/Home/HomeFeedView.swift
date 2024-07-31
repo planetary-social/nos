@@ -28,6 +28,7 @@ struct HomeFeedView: View {
 
     let user: Author
 
+    @State private var newNotesAvailable = true
     @State private var showRelayPicker = false
     @State private var selectedRelay: Relay? 
 
@@ -79,7 +80,18 @@ struct HomeFeedView: View {
                 }
             )
             .padding(0)
-            
+
+            if newNotesAvailable {
+                VStack {
+                    SecondaryActionButton(
+                        title: "New notes available",
+                        font: .clarity(.semibold, textStyle: .footnote)
+                    )
+                    Spacer()
+                }
+                .padding(8)
+            }
+
             if showTimedLoadingIndicator {
                 FullscreenProgressView(
                     isPresented: $showTimedLoadingIndicator,
