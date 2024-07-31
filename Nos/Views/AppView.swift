@@ -136,6 +136,7 @@ struct AppView: View {
                 .sheet(isPresented: $showNewPost, content: {
                     NewNoteView(initialContents: newPostContents, isPresented: $showNewPost)
                         .environment(currentUser)
+                        .interactiveDismissDisabled()
                 })
                 
                 SideMenu(
