@@ -25,6 +25,8 @@ struct ComposerActionBar: View {
     @State private var alert: AlertState<AlertAction>?
     
     fileprivate enum AlertAction {
+        case cancel
+        case getAccount
     }
     
     var backArrow: some View {
@@ -53,16 +55,40 @@ struct ComposerActionBar: View {
                             endUploadingImage()
                             print("error uploading: \(error)")
                             
-                            alert = AlertState(title: {
-                                TextState(String(localized: .imagePicker.errorUploadingFile))
-                            }, message: {
-                                if case let FileStorageAPIClientError.uploadFailed(message) = error,
-                                    let message {
-                                    TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
-                                } else {
-                                    TextState(String(localized: .imagePicker.errorUploadingFileMessage))
-                                }
-                            })
+                            alert = AlertState<ComposerActionBar.AlertAction>(
+                                title: {
+                                    if case FileStorageAPIClientError.fileTooBig = error {
+                                        return TextState(
+                                            String(localized: .imagePicker.errorUploadingFileExceedsSizeLimit)
+                                        )
+                                    } else {
+                                        return TextState(String(localized: .imagePicker.errorUploadingFile))
+                                    }
+                                }(),
+                                message: {
+                                    if case let FileStorageAPIClientError.fileTooBig(message) = error, let message {
+                                        return TextState(
+                                            String(localized: .imagePicker.errorUploadingFileExceedsLimit(message))
+                                        )
+                                    } else if case let FileStorageAPIClientError.uploadFailed(message) = error, 
+                                        let message {
+                                        return TextState(
+                                            String(localized: .imagePicker.errorUploadingFileWithMessage(message))
+                                        )
+                                    } else {
+                                        return TextState(String(localized: .imagePicker.errorUploadingFileMessage))
+                                    }
+                                }(),
+                                buttons: [
+                                    .cancel(
+                                        TextState(String(localized: .localizable.cancel)), action: .send(.cancel)
+                                    ),
+                                    .default(
+                                        TextState(String(localized: .imagePicker.getAccount)), 
+                                        action: .send(.getAccount)
+                                    )
+                                ]
+                            )
                         }
                     }
                 } label: {
@@ -118,7 +144,18 @@ struct ComposerActionBar: View {
         .onChange(of: expirationTime) { _, _ in
             subMenu = .none
         }
-        .alert(unwrapping: $alert) { (_: AlertAction?) in
+        .alert(unwrapping: $alert) { action in
+            switch action {
+            case .cancel:
+                // Handle cancel action if needed
+                break
+            case .getAccount:
+                if let url = URL(string: "https://nostr.build") {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            default:
+                break
+            }
         }
         .background(
             LinearGradient(
