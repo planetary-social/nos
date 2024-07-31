@@ -193,7 +193,7 @@ import Dependencies
         let latestRecievedEvent = try? viewContext.fetch(Event.lastReceived(for: author)).first
         let importantEventsFilter = Filter(
             authorKeys: [key],
-            kinds: [.mute, .delete, .report],
+            kinds: [.mute, .delete, .report, .contactList],
             since: latestRecievedEvent?.receivedAt,
             keepSubscriptionOpen: true
         )
