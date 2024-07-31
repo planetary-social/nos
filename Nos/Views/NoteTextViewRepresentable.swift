@@ -2,6 +2,176 @@ import Foundation
 import SwiftUI
 import UIKit
 
+@Observable class NoteEditorController: NSObject, UITextViewDelegate {
+    var showMentionsSearch = false
+    
+    var textView: UITextView?
+    
+    var text: String? {
+        textView?.text
+    }
+    
+    var defaultAttributes: AttributeContainer {
+        AttributeContainer(defaultNSAttributes)
+    }
+    
+    var defaultNSAttributes: [NSAttributedString.Key: Any]
+    
+    // MARK: - Init
+    
+    init(font: UIFont = .preferredFont(forTextStyle: .body), foregroundColor: UIColor = .primaryTxt) {
+        self.defaultNSAttributes = [
+            .font: font,
+            .foregroundColor: foregroundColor
+        ]
+    }
+    
+    func append(text newText: String) {
+        guard let textView, let currentAttributedText = textView.attributedText else {
+            return
+        }
+        
+        // Create a mutable copy of the current attributed text
+        let mutableAttributedText = NSMutableAttributedString(attributedString: currentAttributedText)
+        
+        // Create a new attributed string with the new text and the typing attributes
+        let newAttributedText = NSAttributedString(string: newText, attributes: textView.typingAttributes)
+        
+        // Append the new attributed string to the mutable attributed string
+        mutableAttributedText.append(newAttributedText)
+        
+        // Set the updated attributed string back to the UITextView
+        textView.attributedText = mutableAttributedText
+    }
+    
+    func insertMention(of author: Author) {
+        guard let textView else { return }
+        self.insertMention(of: author, selectedRange: textView.selectedRange) 
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        // Update the selected range to the end of the newly added text
+        let newSelectedRange = NSRange(
+            location: textView.selectedRange.location + textView.selectedRange.length, 
+            length: 0
+        )
+        textView.selectedRange = newSelectedRange
+    }
+        
+    func textView(
+        _ textView: UITextView, 
+        primaryActionFor textItem: UITextItem, 
+        defaultAction: UIAction
+    ) -> UIAction? {
+        nil
+    }
+    
+    func textView(
+        _ textView: UITextView,
+        shouldChangeTextIn nsRange: NSRange,
+        replacementText text: String
+    ) -> Bool {
+        if text == "@" {
+            let selectedRange = textView.selectedRange
+            showMentionsSearch = true
+            return true
+            // TODO: handle inserting mention even when text is selected
+        } else if text.count > 1, let range = Range(nsRange, in: textView.text) {
+            do {
+                let identifier = try NostrIdentifier.decode(bech32String: text)
+                switch identifier {
+                case .npub(let authorID):
+                    insertMention(npub: text, selectedRange: textView.selectedRange)
+                    DispatchQueue.main.async { textView.selectedRange.location += text.count }
+                    return false
+                case .note:
+                    insertMention(note: text, selectedRange: textView.selectedRange)
+                    DispatchQueue.main.async { textView.selectedRange.location += text.count }
+                    return false
+                default:
+                    return true
+                }
+            } catch {
+                return true
+            }
+        } else {
+            return true
+        }
+    }
+    
+    func insertMention(npub: String, selectedRange: NSRange) {
+        guard let textView else {
+            return
+        }
+        
+        let attributedString = textView.attributedText.mutableCopy() as! NSMutableAttributedString
+        
+        // TODO: highlight @
+        
+        // TODO: merge attributes
+//        let attributes = defaultNSAttributes.merging([NSAttributedString.Key.link: url.absoluteString], uniquingKeysWith: { $0 || $1 }) 
+        let mention = NSAttributedString(string: npub.prefix(10).appending("..."), attributes: [NSAttributedString.Key.link: "nostr:\(npub)"])
+        
+        attributedString.replaceCharacters(in: selectedRange, with: mention)
+        textView.attributedText = attributedString
+        textView.typingAttributes = defaultNSAttributes
+    }
+    
+    func insertMention(of author: Author, selectedRange: NSRange) {
+        guard let textView, let url = author.uri else {
+            return
+        }
+        
+        let attributedString = textView.attributedText.mutableCopy() as! NSMutableAttributedString
+        
+        // TODO: highlight @
+        
+        // TODO: merge attributes
+//        let attributes = defaultNSAttributes.merging([NSAttributedString.Key.link: url.absoluteString], uniquingKeysWith: { $0 || $1 }) 
+        let mention = NSAttributedString(string: author.safeName, attributes: [NSAttributedString.Key.link: url.absoluteString])
+        
+        attributedString.replaceCharacters(in: selectedRange, with: mention)
+        textView.attributedText = attributedString
+        textView.typingAttributes = defaultNSAttributes
+    }
+    
+    /// Inserts the mention of a note as a link at the given index of the string. The `index` should be the index
+    /// after a `@` character, which this function will replace.
+    func insertMention(note: String, selectedRange: NSRange) {
+        guard let textView else {
+            return
+        }
+        
+        let attributedString = textView.attributedText.mutableCopy() as! NSMutableAttributedString
+        
+        // TODO: highlight @
+        
+        // TODO: merge attributes
+        //        let attributes = defaultNSAttributes.merging([NSAttributedString.Key.link: url.absoluteString], uniquingKeysWith: { $0 || $1 }) 
+        let mention = NSAttributedString(string: note.prefix(10).appending("..."), attributes: [NSAttributedString.Key.link: "nostr:\(note)"])
+        
+        attributedString.replaceCharacters(in: selectedRange, with: mention)
+        textView.attributedText = attributedString
+        textView.typingAttributes = defaultNSAttributes
+    }
+    
+    //    /// Appends the given URL and adds the default styling attributes. Will append a space before the link if needed.
+    //    mutating func append(_ url: URL) {
+    //        if let lastCharacter = string.last, !lastCharacter.isWhitespace {
+    //            append(" ")
+    //        }
+    //        
+    //        attributedString.append(
+    //            AttributedString(
+    //                url.absoluteString,
+    //                attributes: defaultAttributes.merging(
+    //                    AttributeContainer([NSAttributedString.Key.link: url.absoluteString])
+    //                )
+    //            )
+    //        ) 
+    //    }
+}
+
 /// A UIViewRepresentable that wraps a UITextView meant to be used in place of TextEditor when rich text formatting is
 /// desirable.
 ///
@@ -11,8 +181,6 @@ struct NoteTextViewRepresentable: UIViewRepresentable {
 
     typealias UIViewType = UITextView
 
-    @Binding var text: EditableNoteText
-    
     /// The height that fits all entered text. This value will be updated by NoteTextViewRepresentable automatically, 
     /// and should be used to set the frame of NoteTextViewRepresentable from SwiftUI. This is done to work around some
     /// incompatibilities between UIKit and SwiftUI where the UITextView won't expand properly.
@@ -23,26 +191,23 @@ struct NoteTextViewRepresentable: UIViewRepresentable {
     /// it isn't working on macOS.
     private var showKeyboard: Bool
 
-    /// An ID for this view. Only .mentionAddedNotifications matching this ID will be processed.
-    private var guid: UUID
     private var font = UIFont.preferredFont(forTextStyle: .body)
 
+    private var controller: NoteEditorController
+    
     init(
-        _ text: Binding<EditableNoteText>, 
-        guid: UUID, 
+        controller: NoteEditorController,
         intrinsicHeight: Binding<CGFloat>, 
         showKeyboard: Bool = false
     ) {
-        self.guid = guid
+        self.controller = controller
         self.showKeyboard = showKeyboard
         _width = .init(initialValue: 0)
-        _text = text
         _intrinsicHeight = intrinsicHeight
     }
 
     func makeUIView(context: Context) -> UITextView {
         let view = UITextView(usingTextLayoutManager: false)
-        view.attributedText = text.nsAttributedString
         view.isUserInteractionEnabled = true
         view.isScrollEnabled = false
         view.isEditable = true
@@ -51,30 +216,14 @@ struct NoteTextViewRepresentable: UIViewRepresentable {
         view.textColor = .secondaryTxt
         view.font = font
         view.backgroundColor = .clear
-        view.delegate = context.coordinator
+        view.delegate = controller
         view.textContainer.maximumNumberOfLines = 0
         view.textContainer.lineBreakMode = .byWordWrapping
         view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        view.autocorrectionType = .no // temporary fix to work around mac bug
-        
-        context.coordinator.observer = NotificationCenter.default.addObserver(
-            forName: .mentionAddedNotification,
-            object: nil,
-            queue: .main
-        ) { [weak view] notification in
-            guard let author = notification.userInfo?["author"] as? Author else {
-                return
-            }
-            guard let recGUID = notification.userInfo?["guid"] as? UUID, recGUID == guid else {
-                return
-            }
-            guard let selectedNSRange = view?.selectedRange,
-                let range = Range(selectedNSRange, in: text.attributedString) else {
-                return
-            }
-            text.insertMention(of: author, at: range.lowerBound)
-            view?.selectedRange.location += (view?.attributedText.length ?? 1) - 1
-        }
+        view.typingAttributes = [
+            .font: font,
+            .foregroundColor: UIColor.primaryTxt
+        ]
         
         if showKeyboard {
             Task {
@@ -82,19 +231,13 @@ struct NoteTextViewRepresentable: UIViewRepresentable {
                 view.becomeFirstResponder()
             }
         }
+        
+        controller.textView = view
 
         return view
     }
 
-    static func dismantleUIView(_ uiView: UITextView, coordinator: Coordinator) {
-        if let observer = coordinator.observer {
-            NotificationCenter.default.removeObserver(observer)
-        }
-    }
-
     func updateUIView(_ uiView: UITextView, context: Context) {
-        uiView.attributedText = text.nsAttributedString
-        uiView.typingAttributes = text.defaultNSAttributes
         updateIntrinsicHeight(view: uiView)
     }
 
@@ -128,61 +271,7 @@ struct NoteTextViewRepresentable: UIViewRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(text: $text)
-    }
-
-    class Coordinator: NSObject, UITextViewDelegate {
-        var observer: NSObjectProtocol?
-        var text: Binding<EditableNoteText>
-
-        init(text: Binding<EditableNoteText>) {
-            self.text = text
-        }
-
-        func textViewDidChange(_ textView: UITextView) {
-            text.wrappedValue = EditableNoteText(nsAttributedString: textView.attributedText)
-            
-            // Update the selected range to the end of the newly added text
-            let newSelectedRange = NSRange(
-                location: textView.selectedRange.location + textView.selectedRange.length, 
-                length: 0
-            )
-            textView.selectedRange = newSelectedRange
-        }
-        
-        func textView(
-            _ textView: UITextView, 
-            primaryActionFor textItem: UITextItem, 
-            defaultAction: UIAction
-        ) -> UIAction? {
-            nil
-        }
-
-        func textView(
-            _ textView: UITextView,
-            shouldChangeTextIn nsRange: NSRange,
-            replacementText text: String
-        ) -> Bool {
-            if text.count > 1, let range = Range(nsRange, in: self.text.wrappedValue.attributedString) {
-                do {
-                    let identifier = try NostrIdentifier.decode(bech32String: text)
-                    switch identifier {
-                    case .npub:
-                        self.text.wrappedValue.insertMention(npub: text, at: range)
-                        return false
-                    case .note:
-                        self.text.wrappedValue.insertMention(note: text, at: range)
-                        return false
-                    default:
-                        return true
-                    }
-                } catch {
-                    return true
-                }
-            } else {
-                return true
-            }
-        }
+        controller
     }
 }
 
@@ -194,23 +283,14 @@ struct NoteTextViewRepresentable_Previews: PreviewProvider {
 
     @State static var attributedString = EditableNoteText(string: "Hello")
     @State static var intrinsicHeight: CGFloat = 0
+    @State static var controller = NoteEditorController()
 
     static var previews: some View {
-        NoteTextViewRepresentable($attributedString, guid: UUID(), intrinsicHeight: $intrinsicHeight)
-            .onChange(of: attributedString) { oldText, newText in
-                let difference = newText.difference(from: oldText)
-                guard difference.count == 1, let change = difference.first else {
-                    return
-                }
-                switch change {
-                case .insert(let offset, let element, _):
-                    if element == "a" {
-                        print("mention inserted at \(offset)")
-                    }
-                default:
-                    break
-                }
-            }
-            .previewLayout(.sizeThatFits)
+        NoteTextViewRepresentable(
+            controller: controller,
+            intrinsicHeight: $intrinsicHeight, 
+            showKeyboard: false
+        )
+        .previewLayout(.sizeThatFits)
     }
 }

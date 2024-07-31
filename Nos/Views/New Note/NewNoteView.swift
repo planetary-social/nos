@@ -15,6 +15,8 @@ struct NewNoteView: View {
 
     /// State holding the text the user is typing
     @State private var text = EditableNoteText()
+    
+    @State private var controller = NoteEditorController()
 
     /// The height of the NoteTextEditor that fits all entered text.
     /// This value will be updated by NoteTextEditor automatically, and should be used to set its frame from SwiftUI. 
@@ -65,7 +67,8 @@ struct NewNoteView: View {
                                         ReplyPreview(note: replyToNote)
                                     }
                                     NoteTextEditor(
-                                        text: $text, 
+                                        controller: $controller,
+                                        initialContents: initialContents, 
                                         minHeight: minimumEditorHeight,
                                         placeholder: .localizable.newNotePlaceholder
                                     )
@@ -210,7 +213,7 @@ struct NewNoteView: View {
         }
         
         do {
-            var (content, tags) = noteParser.parse(attributedText: text.attributedString)
+            var (content, tags) = noteParser.parse(attributedText: AttributedString(text))
             
             if let expirationTime {
                 tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
