@@ -49,6 +49,7 @@ struct FollowsView: View {
             }
             .padding(.vertical, 12)
         }
+        .background(Color.appBg)
         .nosNavigationBar(title: title)
     }
 }
