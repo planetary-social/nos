@@ -128,6 +128,7 @@
 		5B8C96B029DB2E1100B73AEC /* SearchTextFieldObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */; };
 		5B8C96B229DB313300B73AEC /* AuthorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B129DB313300B73AEC /* AuthorCard.swift */; };
 		5B8C96B629DDD3B200B73AEC /* NoteTextViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B529DDD3B200B73AEC /* NoteTextViewRepresentable.swift */; };
+		5BB4A0D72C59B2A0003F0AD0 /* NosTextClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 5BB4A0D62C59B2A0003F0AD0 /* NosTextClassifier.mlmodel */; };
 		5BBA5E912BADF98E00D57D76 /* AlreadyHaveANIP05View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBA5E902BADF98E00D57D76 /* AlreadyHaveANIP05View.swift */; };
 		5BBA5E9C2BAE052F00D57D76 /* NiceWorkSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBA5E9B2BAE052F00D57D76 /* NiceWorkSheet.swift */; };
 		5BC0D9CC2B867B9D005D6980 /* NamesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */; };
@@ -605,6 +606,7 @@
 		5B8C96B129DB313300B73AEC /* AuthorCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorCard.swift; sourceTree = "<group>"; };
 		5B8C96B529DDD3B200B73AEC /* NoteTextViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTextViewRepresentable.swift; sourceTree = "<group>"; };
 		5B960D2C2B34B1B900C52C45 /* Nos 14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 14.xcdatamodel"; sourceTree = "<group>"; };
+		5BB4A0D62C59B2A0003F0AD0 /* NosTextClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = NosTextClassifier.mlmodel; sourceTree = "<group>"; };
 		5BBA5E902BADF98E00D57D76 /* AlreadyHaveANIP05View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlreadyHaveANIP05View.swift; sourceTree = "<group>"; };
 		5BBA5E9B2BAE052F00D57D76 /* NiceWorkSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NiceWorkSheet.swift; sourceTree = "<group>"; };
 		5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesAPI.swift; sourceTree = "<group>"; };
@@ -1476,6 +1478,7 @@
 		C9DFA974299C30CA006929C1 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				5BB4A0D62C59B2A0003F0AD0 /* NosTextClassifier.mlmodel */,
 				C9D573472AB24B5800E06BB4 /* SwiftGen Stencils */,
 				C9DEBFDA298941020078B43A /* Assets.xcassets */,
 				C9DFA977299C3189006929C1 /* Localization */,
@@ -2126,6 +2129,7 @@
 				2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */,
 				CD2CF38E299E67F900332116 /* CardButtonStyle.swift in Sources */,
 				A336DD3C299FD78000A0CBA0 /* Filter.swift in Sources */,
+				5BB4A0D72C59B2A0003F0AD0 /* NosTextClassifier.mlmodel in Sources */,
 				DC2E54C82A700F1400C2CAAB /* UIDevice+Simulator.swift in Sources */,
 				C97B288A2C10B07100DC1FC0 /* NosNavigationStack.swift in Sources */,
 				C98CA9072B14FBBF00929141 /* PagedNoteDataSource.swift in Sources */,

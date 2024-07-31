@@ -58,7 +58,22 @@ struct CompactNoteView: View {
     var showReadMoreButton: Bool {
         noteNeedsTruncation && isTextTruncated
     }
-    
+
+    var category: String {
+        switch note.attributedContent {
+        case .loading:
+            return "Loading"
+        case .loaded(let attributedString):
+            do {
+                let model = try NosTextClassifier()
+                let prediction = try model.prediction(text: String(attributedString.characters))
+                                return prediction.label
+            } catch {
+                return "Error"
+            }
+        }
+    }
+
     var formattedText: some View {
         noteText
             .font(.body)
@@ -146,6 +161,13 @@ struct CompactNoteView: View {
                 .frame(maxWidth: .infinity)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
+            Text(category)
+                .foregroundColor(.secondaryTxt)
+                .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
+                .background(Color.hashtagBg)
+                .cornerRadius(4)
+                .padding()
+
             if note.kind == EventKind.text.rawValue, showLinkPreviews, !note.contentLinks.isEmpty {
                 if featureFlags.newMediaDisplayEnabled {
                     EmptyView()
