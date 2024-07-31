@@ -26,7 +26,7 @@ struct HomeFeedView: View {
     /// true.
     static let staticLoadTime: TimeInterval = 2
 
-    @ObservedObject var user: Author
+    let user: Author
 
     @State private var showRelayPicker = false
     @State private var selectedRelay: Relay? 

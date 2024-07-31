@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed alert when uploading big files suggesting users pay for nostr.build
+- Fixed a bug where the home feed would be empty on first launch.
 - Fixed the issue where tapping outside the New Post view caused it to disappear and all its text to be lost.
 - Remove stories UI to improve performance.
 - Report error to Sentry when parse queue contains over 1000 events.
