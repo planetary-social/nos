@@ -16,6 +16,7 @@ public class Relay: NosManagedObject {
         "wss://purplepag.es",
         nosAddress.absoluteString,
         "wss://relay.snort.social",
+        "wss://olympics2024.nos.social",
         ]
     }
     

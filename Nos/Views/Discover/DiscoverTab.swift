@@ -6,7 +6,6 @@ import Dependencies
 struct DiscoverTab: View {    
     // MARK: - Properties
     
-    @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
@@ -76,11 +75,7 @@ struct DiscoverTab_Previews: PreviewProvider {
     static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = previewData.relayService
-    
-    static var emptyPersistenceController = PersistenceController.empty
-    static var emptyPreviewContext = emptyPersistenceController.container.viewContext
-    static var emptyRelayService = previewData.relayService
+
     static var currentUser = previewData.currentUser
     static var router = Router()
     
@@ -103,30 +98,16 @@ struct DiscoverTab_Previews: PreviewProvider {
 
         try? previewContext.save()
     }
-    
-    static func createRelayData(in context: NSManagedObjectContext, user: Author) {
-        let addresses = ["wss://nostr.band", "wss://nos.social", "wss://a.long.domain.name.to.see.what.happens"]
-        addresses.forEach {
-            let relay = try? Relay.findOrCreate(by: $0, context: previewContext)
-            relay?.addToAuthors(user)
-        }
 
-        try? previewContext.save()
-    }
-    
-    @State static var relayFilter: Relay?
-    
     static var previews: some View {
         DiscoverTab()
             .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
             .environmentObject(router)
             .environment(currentUser)
             .onAppear { createTestData(in: previewContext) }
         
         DiscoverTab()
             .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
             .environmentObject(router)
             .environment(currentUser)
             .onAppear { createTestData(in: previewContext) }

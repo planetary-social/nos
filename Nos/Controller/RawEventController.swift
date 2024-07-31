@@ -63,7 +63,7 @@ import Logger
                     withJSONObject: note.jsonRepresentation ?? [:],
                     options: [.prettyPrinted]
                 )
-                rawMessage = String(data: data, encoding: .utf8) ?? errorMessage
+                rawMessage = String(decoding: data, as: UTF8.self) 
             } catch {
                 rawMessage = errorMessage
             }

@@ -23,7 +23,7 @@ class RelaySubscription: Identifiable, Hashable {
     var referenceCount: Int = 0
     
     /// An observable stream of events that should emit every event downloaded on this subscription 
-    let events: PassthroughSubject<JSONEvent, Never> = PassthroughSubject<JSONEvent, Never>()
+    let events = PassthroughSubject<JSONEvent, Never>()
     
     var isActive: Bool {
         subscriptionStartDate != nil

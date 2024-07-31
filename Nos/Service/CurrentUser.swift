@@ -3,7 +3,7 @@ import CoreData
 import Logger
 import Dependencies
 
-// swiftlint:disable type_body_length superfluous_disable_command
+// swiftlint:disable type_body_length
 @Observable class CurrentUser: NSObject, NSFetchedResultsControllerDelegate {
     
     @ObservationIgnored @Dependency(\.analytics) private var analytics
@@ -11,7 +11,6 @@ import Dependencies
     @ObservationIgnored @Dependency(\.persistenceController) private var persistenceController
     @ObservationIgnored @Dependency(\.pushNotificationService) private var pushNotificationService
     @ObservationIgnored @Dependency(\.relayService) private var relayService
-    @ObservationIgnored @Dependency(\.unsAPI) private var unsAPI
     @ObservationIgnored @Dependency(\.keychain) private var keychain
     
     // TODO: it's time to cache this
@@ -346,9 +345,7 @@ import Dependencies
         
         let jsonObject = buildMetadataJSONObject(author: author)
         let data = try JSONSerialization.data(withJSONObject: jsonObject)
-        guard let content = String(data: data, encoding: .utf8) else {
-            throw CurrentUserError.encodingError
-        }
+        let content = String(decoding: data, as: UTF8.self) 
 
         let jsonEvent = JSONEvent(
             pubKey: pubKey,
@@ -496,4 +493,4 @@ import Dependencies
         author = controller.fetchedObjects?.first as? Author
     }
 }
-// swiftlint:enable type_body_length superfluous_disable_command
+// swiftlint:enable type_body_length

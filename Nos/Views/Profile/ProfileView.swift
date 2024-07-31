@@ -19,6 +19,7 @@ struct ProfileView: View {
     @State private var showingOptions = false
     @State private var showingReportMenu = false
     @State private var relaySubscriptions = SubscriptionCancellables()
+    @State private var lastRefreshDate = Date.now
 
     @State private var selectedTab: ProfileFeedType = .notes
 
@@ -80,8 +81,9 @@ struct ProfileView: View {
         VStack(spacing: 0) {
             VStack {
                 PagedNoteListView(
-                    databaseFilter: selectedTab.databaseFilter(author: author),
-                    relayFilter: selectedTab.relayFilter(author: author),
+                    databaseFilter: selectedTab.databaseFilter(author: author, before: lastRefreshDate),
+                    relayFilter: selectedTab.relayFilter(author: author), 
+                    relay: nil,
                     context: viewContext,
                     tab: .profile,
                     header: {
@@ -103,7 +105,8 @@ struct ProfileView: View {
                         .frame(minHeight: 300)
                     },
                     onRefresh: {
-                        selectedTab.databaseFilter(author: author)
+                        lastRefreshDate = .now
+                        return selectedTab.databaseFilter(author: author, before: lastRefreshDate)
                     }
                 )
                 .padding(0)

@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed alert when uploading big files suggesting users pay for nostr.build
+- Fixed the issue where tapping outside the New Post view caused it to disappear and all its text to be lost.
+- Remove stories UI to improve performance.
+- Report error to Sentry when parse queue contains over 1000 events.
+
+## [0.1.22] - 2024-07-26Z
+
+- Added a filter button to the Home tab that lets you browse all notes on a specific relay.
+- Improved the search experience with fast local searches.
+- Fixed the issue where tapping the Search button caused search results to disappear.
+- Fixed an issue with naddr links.
+
+## [0.1.21] - 2024-07-24Z
+
+- Added support for paid/authenticated relays (NIP-42).
+- Fixed a bug where publishing a note to one relay would publish to all relays.
 - Fix a bug where multiple connections could be opened with the same relay.
 - Fixed an issue where Profile views would sometimes not display any notes.
 - Add impersonation flag category and better NIP-56 mapping.
@@ -20,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed issue where some nostr:nprofile references did not appear as links.
 - Decode nprofile, nevent, and naddr NIP-19 entities.
 - Refactor away direct usages of Bech32 and TLV and replace with NostrIdentifier (which still uses both).
+- Deleted unused code.
 
 ## [0.1.20] - 2024-07-10Z
 

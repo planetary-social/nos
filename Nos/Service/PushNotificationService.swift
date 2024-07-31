@@ -151,12 +151,9 @@ import Combine
     /// `badgeCount` and updates the application badge icon. 
     func updateBadgeCount() async {
         var badgeCount = 0
-        if let currentAuthor {
+        if currentAuthor != nil {
             badgeCount = await self.modelContext.perform {
-                (try? NosNotification.unreadCount(
-                    for: currentAuthor, 
-                    in: self.modelContext
-                )) ?? 0
+                (try? NosNotification.unreadCount(in: self.modelContext)) ?? 0
             }
         }
         
@@ -179,10 +176,7 @@ import Combine
             publicKey: publicKeyHex,
             relays: relays
         )
-        guard let string = String(data: try JSONEncoder().encode(content), encoding: .utf8) else {
-            throw PushNotificationError.unexpected
-        }
-        return string
+        return String(decoding: try JSONEncoder().encode(content), as: UTF8.self) 
     }
     
     /// Tells the system to display a notification for the given event if it's appropriate. This will create a 

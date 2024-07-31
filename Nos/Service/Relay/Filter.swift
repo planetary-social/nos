@@ -5,7 +5,7 @@ import Foundation
 struct Filter: Hashable, Identifiable {
     
     /// List of author identifiers the Filter should be constrained to.
-    let authorKeys: [RawAuthorID]
+    var authorKeys: [RawAuthorID]
 
     /// List of event identifiers the Filter should be constrained to.
     let eventIDs: [RawEventID]

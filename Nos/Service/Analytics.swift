@@ -84,28 +84,6 @@ class Analytics {
         track("Contact Support Tapped")
     }
 
-    // MARK: - Stories
-
-    func enteredStories() {
-        track("Stories Entered")
-    }
-
-    func closedStories() {
-        track("Stories Closed")
-    }
-
-    func storiesSwitchedToNextUser() {
-        track("Stories Switched To Next User")
-    }
-
-    func openedNoteFromStories() {
-        track("Opened Note From Stories")
-    }
-
-    func openedProfileFromStories() {
-        track("Opened Profile From Stories")
-    }
-
     // MARK: - Actions
     
     func generatedKey() {
@@ -114,10 +92,6 @@ class Analytics {
     
     func importedKey() {
         track("Imported Private Key")
-    }
-    
-    func changedKey() {
-        track("Changed Private Key")
     }
     
     func added(_ relay: Relay) {

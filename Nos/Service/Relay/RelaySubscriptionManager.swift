@@ -15,8 +15,11 @@ protocol RelaySubscriptionManager {
     func processSubscriptionQueue() async
     func queueSubscription(with filter: Filter, to relayAddress: URL) async -> RelaySubscription
     func requestEvents(from socket: WebSocketClient, subscription: RelaySubscription) async
+    func receivedClose(for subscriptionID: RelaySubscription.ID, from socket: WebSocket) async
     
     func close(socket: WebSocket) async
+    func trackAuthenticationRequest(from socket: WebSocket, responseID: RawNostrID) async
+    func checkAuthentication(success: Bool, from socket: WebSocket, eventID: RawNostrID, message: String?) async -> Bool
     func sockets() async -> [WebSocket] 
     func socket(for address: String) async -> WebSocket?
     func socket(for url: URL) async -> WebSocket?
@@ -141,7 +144,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
             case .disconnected:
                 connection.socket.connect()
                 connection.state = .connecting
-            case .connected, .connecting:
+            case .connected, .connecting, .authenticating:
                 return
             }
         }
@@ -177,6 +180,42 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
             }
             socketConnections.removeValue(forKey: relayAddress)
         }
+    }
+    
+    /// Tracks that a relay sent us an AUTH message, so we can change the socket state to .authenticating
+    func trackAuthenticationRequest(from socket: WebSocket, responseID: RawNostrID) {
+        if let relayAddress = socket.url, let connection = socketConnections[relayAddress] {
+            // Close open subscriptions if any.
+            active.forEach { subscription in
+                if subscription.relayAddress == relayAddress {
+                    subscription.subscriptionStartDate = nil
+                    socket.write(string: "[\"CLOSE\", \"\(subscription.id)\"]")
+                }
+            }
+            connection.state = .authenticating(responseID)
+        }
+    }
+    
+    /// Checks the ID of an "OK" message from a relay to see if it matches any authentication events we have sent.
+    /// If it does we mark the relay as .connected. If it doesn't then we do nothing, so this function is safe to be 
+    /// called on every "OK" message. 
+    func checkAuthentication(success: Bool, from socket: WebSocket, eventID: RawNostrID, message: String?) -> Bool {
+        guard let relayAddress = socket.url, let connection = socketConnections[relayAddress] else {
+            return false
+        }
+        
+        if case .authenticating(let responseID) = connection.state, responseID == eventID {
+            if success {
+                Log.info("Successfully authenticated with \(relayAddress)")
+                connection.state = .connected
+                processSubscriptionQueue()
+            } else {
+                Log.error("Failed to authenticate with \(relayAddress). Message: \(String(describing: message))")
+                trackError(socket: socket)
+            }
+            return true
+        } 
+        return false
     }
     
     func sockets() -> [WebSocket] {
@@ -275,14 +314,24 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
             // Track this so we can close requests if needed
             let request: [Any] = ["REQ", subscription.id, subscription.filter.dictionary]
             let requestData = try JSONSerialization.data(withJSONObject: request)
-            let requestString = String(data: requestData, encoding: .utf8)!
+            let requestString = String(decoding: requestData, as: UTF8.self)
             socket.write(string: requestString)
         } catch {
             Log.error("Error: Could not send request \(error.localizedDescription)")
         }
     }
     
+    func receivedClose(for subscriptionID: RelaySubscription.ID, from socket: WebSocket) {
+        if let subscription = subscription(from: subscriptionID) {
+            // Move this subscription to the end of the queue where it will be retried
+            removeSubscription(with: subscriptionID)
+            subscription.subscriptionStartDate = nil
+            all.append(subscription)
+        }
+    }
+    
     // MARK: - Error Tracking 
+
     /// This constant is used to calculate the maximum amount of time we will wait before retrying an errored socket.
     /// We backoff exponentially for 2^x seconds, increasing x by 1 on each consecutive error 
     /// until x == `maxBackoffPower`.
@@ -304,7 +353,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         if case WebSocketState.errored(var priorError) = connection.state {
             priorError.trackRetry()
             connection.state = .errored(priorError)
-            Log.debug("Tracking error on websocket connection to \(relayAddress)")
+            Log.info("Tracking error on websocket connection to \(relayAddress)")
         } else {
             connection.state = .errored(WebSocketErrorEvent())
         }
@@ -327,7 +376,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         }
         
         connection.state = .connected
-        Log.debug("\(url) has connected")
+        Log.info("\(url) has connected")
         
         for subscription in active where subscription.relayAddress == url {
             requestEvents(from: connection.socket, subscription: subscription)

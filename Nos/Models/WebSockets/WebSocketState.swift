@@ -8,6 +8,9 @@ enum WebSocketState: Equatable {
     /// The socket is in the process of connecting.
     case connecting
     
+    /// The socket has requested authentication from us.
+    case authenticating(RawEventID) 
+    
     /// The socket is connected and ready to receive requests.
     case connected 
     

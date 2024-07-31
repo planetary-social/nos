@@ -37,18 +37,9 @@ struct PublicKey {
     }
     
     init?(npub: String) {
-        self.init(bech32Encoded: npub, prefix: NostrIdentifierPrefix.publicKey)
-    }
-
-    init?(note: String) {
-        self.init(bech32Encoded: note, prefix: NostrIdentifierPrefix.note)
-    }
-
-    private init?(bech32Encoded: String, prefix: String) {
         do {
-            let identifier = try NostrIdentifier.decode(bech32String: bech32Encoded)
+            let identifier = try NostrIdentifier.decode(bech32String: npub)
             guard case let .npub(publicKeyHex) = identifier else {
-                print("Error decoding npub")
                 return nil
             }
             let underlyingKey = try secp256k1.Signing.XonlyKey(dataRepresentation: publicKeyHex.bytes, keyParity: 0)
