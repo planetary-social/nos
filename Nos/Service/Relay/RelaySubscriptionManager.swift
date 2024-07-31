@@ -159,7 +159,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         
         var request = URLRequest(url: relayAddress)
         request.timeoutInterval = 10
-        let socket = WebSocket(request: request)
+        let socket = WebSocket(request: request, useCustomEngine: false)
         if let socketQueue {
             socket.callbackQueue = socketQueue
         } else {
