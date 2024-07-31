@@ -194,6 +194,7 @@ import Dependencies
         let importantEventsFilter = Filter(
             authorKeys: [key],
             kinds: [.mute, .delete, .report, .contactList],
+            limit: 100,
             since: latestRecievedEvent?.receivedAt,
             keepSubscriptionOpen: true
         )
