@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.23] - 2024-07-31Z
+
 - Fixed a bug where the home feed would be empty on first launch.
 - Fixed the issue where tapping outside the New Post view caused it to disappear and all its text to be lost.
 - Remove stories UI to improve performance.
