@@ -189,7 +189,7 @@ import Dependencies
             await relayService.requestContactList(for: key, since: author.lastUpdatedContactList)
         )
         
-        // Subscribe to important events we may not get incidentally while browsing the feed:
+        // Subscribe to important events we may not get incidentally while browsing the feed
         let latestRecievedEvent = try? viewContext.fetch(Event.lastReceived(for: author)).first
         let importantEventsFilter = Filter(
             authorKeys: [key],
