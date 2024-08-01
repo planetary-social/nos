@@ -1,11 +1,10 @@
 import SwiftUI
 
-/// This view displays the information we have for an message suitable for being used in a list or grid.
-///
-/// Use this view inside MessageButton to have nice borders.
-struct MuteCard: View {
+/// Displays the name and photo of an author in a compact view.
+struct CompactAuthorCard: View {
 
-    @ObservedObject var author: Author
+    /// The author to display.
+    let author: Author
 
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
