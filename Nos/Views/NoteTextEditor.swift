@@ -37,11 +37,10 @@ struct NoteTextEditor: View {
     var body: some View {
         NoteTextViewRepresentable(
             controller: controller,
-            intrinsicHeight: $intrinsicHeight, 
             showKeyboard: true
         )
         .frame(maxWidth: .infinity)
-        .frame(height: max(minHeight, intrinsicHeight, 0))
+        .frame(height: max(minHeight, controller.intrinsicHeight, 0))
         .padding(.leading, 6)
         .background { Color.appBg }
         .sheet(isPresented: $controller.showMentionsSearch) {

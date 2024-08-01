@@ -146,11 +146,11 @@ struct NewNoteView: View {
                 },
                 trailing: ActionButton(title: .localizable.post, action: postAction)
                     .frame(height: 22)
-                    .disabled(editingController.text.isEmpty)
+                    .disabled(editingController.isEmpty)
                     .padding(.bottom, 3)
             )
             .onAppear {
-                if let initialContents, editingController.text.isEmpty {
+                if let initialContents, editingController.isEmpty {
                     editingController.append(text: initialContents)
                 }
                 analytics.showedNewNote()
@@ -209,8 +209,13 @@ struct NewNoteView: View {
             return
         }
         
+        guard let text = editingController.text else {
+            Log.error("Tried to publish a post with empty text")
+            return
+        }
+        
         do {
-            var (content, tags) = noteParser.parse(attributedText: AttributedString(editingController.text))
+            var (content, tags) = noteParser.parse(attributedText: text)
             
             if let expirationTime {
                 tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])

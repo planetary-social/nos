@@ -329,6 +329,8 @@
 		C98DC9BB2A795CAD004E5F0F /* ActionBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */; };
 		C992B32A2B3613CC00704A9C /* SubscriptionCancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C992B3292B3613CC00704A9C /* SubscriptionCancellable.swift */; };
 		C992B32B2B3613CC00704A9C /* SubscriptionCancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C992B3292B3613CC00704A9C /* SubscriptionCancellable.swift */; };
+		C993148D2C5BD8FC00224BA6 /* NoteEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C993148C2C5BD8FC00224BA6 /* NoteEditorController.swift */; };
+		C993148E2C5BD8FC00224BA6 /* NoteEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C993148C2C5BD8FC00224BA6 /* NoteEditorController.swift */; };
 		C996933E2C11FF0F00A2C70D /* EventObservationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C996933D2C11FF0F00A2C70D /* EventObservationView.swift */; };
 		C99693402C120CC900A2C70D /* AuthorObservationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C996933F2C120CC900A2C70D /* AuthorObservationView.swift */; };
 		C99721CB2AEBED26004EBEAB /* String+Empty.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99721CA2AEBED26004EBEAB /* String+Empty.swift */; };
@@ -750,6 +752,7 @@
 		C98CA9062B14FBBF00929141 /* PagedNoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagedNoteDataSource.swift; sourceTree = "<group>"; };
 		C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionBanner.swift; sourceTree = "<group>"; };
 		C992B3292B3613CC00704A9C /* SubscriptionCancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionCancellable.swift; sourceTree = "<group>"; };
+		C993148C2C5BD8FC00224BA6 /* NoteEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorController.swift; sourceTree = "<group>"; };
 		C99507332AB9EE40005B1096 /* Nos 12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 12.xcdatamodel"; sourceTree = "<group>"; };
 		C996933D2C11FF0F00A2C70D /* EventObservationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventObservationView.swift; sourceTree = "<group>"; };
 		C996933F2C120CC900A2C70D /* AuthorObservationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorObservationView.swift; sourceTree = "<group>"; };
@@ -1511,6 +1514,7 @@
 				C97A1C8A29E45B4E009D9E8D /* RawEventController.swift */,
 				C9C547502A4F1CC3006B0741 /* SearchController.swift */,
 				C9A6C7402AD837AD001F9500 /* UNSWizardController.swift */,
+				C993148C2C5BD8FC00224BA6 /* NoteEditorController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1901,6 +1905,7 @@
 				C9DEC06E2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,
 				C9F64D8C29ED840700563F2B /* Zipper.swift in Sources */,
 				C9C2B78529E073E300548B4A /* RelaySubscription.swift in Sources */,
+				C993148D2C5BD8FC00224BA6 /* NoteEditorController.swift in Sources */,
 				0350F12D2C0A7EF20024CC15 /* FeatureFlags.swift in Sources */,
 				3FFB1D9C29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */,
 				C97A1C8E29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift in Sources */,
@@ -2147,6 +2152,7 @@
 			files = (
 				03F7C4F32C10DF79006FF613 /* URLSessionProtocol.swift in Sources */,
 				0320C1152BFE63DC00C4C080 /* MockRelaySubscriptionManager.swift in Sources */,
+				C993148E2C5BD8FC00224BA6 /* NoteEditorController.swift in Sources */,
 				035729CB2BE41770005FEE85 /* ContentWarningController.swift in Sources */,
 				CD09A76229A5220E0063464F /* AppController.swift in Sources */,
 				037975BE2C0E265E00ADDF37 /* LinkPreview.swift in Sources */,
