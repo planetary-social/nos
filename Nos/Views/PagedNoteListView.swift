@@ -34,6 +34,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// Used to determine whether to scroll this view to the top when the tab is tapped.
     let tab: AppDestination
 
+    @Binding var startRefreshing: Bool
+
     /// A view that will be displayed as the collectionView header.
     let header: () -> Header
     
@@ -92,6 +94,15 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             }
             if databaseFilter != dataSource.databaseFilter {
                 dataSource.updateFetchRequest(databaseFilter)
+            }
+            if startRefreshing == true {
+                startRefreshing = false
+                guard let refreshControl = collectionView.refreshControl else { return }
+                refreshControl.beginRefreshing()
+                context.coordinator.refreshData(refreshControl)
+                collectionView.scrollRectToVisible(refreshControl.frame, animated: true)
+            } else {
+                collectionView.refreshControl?.endRefreshing()
             }
         }
     }
@@ -228,13 +239,15 @@ extension Notification.Name {
 
 #Preview {
     var previewData = PreviewData()
-    
+    @State var startRefreshing = false
+
     return PagedNoteListView(
         databaseFilter: previewData.alice.allPostsRequest(onlyRootPosts: false),
         relayFilter: Filter(), 
         relay: nil,
         context: previewData.previewContext,
         tab: .home,
+        startRefreshing: $startRefreshing,
         header: {
             ProfileHeader(author: previewData.alice, selectedTab: .constant(.activity))
                 .compositingGroup()

@@ -28,7 +28,7 @@ struct HomeFeedView: View {
 
     let user: Author
 
-    @State private var newNotesAvailable = true
+    @State private var startRefreshing = false
     @State private var showRelayPicker = false
     @State private var selectedRelay: Relay? 
 
@@ -64,6 +64,7 @@ struct HomeFeedView: View {
                 relay: selectedRelay,
                 context: viewContext,
                 tab: .home,
+                startRefreshing: $startRefreshing,
                 header: {
                     EmptyView()
                 },
@@ -75,13 +76,18 @@ struct HomeFeedView: View {
                     .frame(minHeight: 300)
                 },
                 onRefresh: {
-                    lastRefreshDate = .now
-                    return Event.homeFeed(for: user, before: lastRefreshDate)
+                    Task { @MainActor in
+                        startRefreshing = false
+                        lastRefreshDate = .now
+                    }
+                    return Event.homeFeed(for: user, before: .now)
                 }
             )
             .padding(0)
 
-            NewNotesButton(user: user, lastRefreshDate: lastRefreshDate, seenOn: selectedRelay)
+            NewNotesButton(user: user, lastRefreshDate: lastRefreshDate, seenOn: selectedRelay) {
+                startRefreshing = true
+            }
 
             if showTimedLoadingIndicator {
                 FullscreenProgressView(
@@ -151,10 +157,12 @@ struct HomeFeedView: View {
 
 struct NewNotesButton: View {
     @FetchRequest var newNotes: FetchedResults<Event>
+    var action: (() async -> Void)?
 
-    init(user: Author, lastRefreshDate: Date, seenOn: Relay?) {
+    init(user: Author, lastRefreshDate: Date, seenOn: Relay?, action: @escaping () async -> Void) {
         let request = Event.homeFeed(for: user, after: lastRefreshDate, seenOn: seenOn)
         _newNotes = FetchRequest(fetchRequest: request)
+        self.action = action
     }
 
     var body: some View {
@@ -164,7 +172,8 @@ struct NewNotesButton: View {
             VStack {
                 SecondaryActionButton(
                     title: "New notes available",
-                    font: .clarity(.semibold, textStyle: .footnote)
+                    font: .clarity(.semibold, textStyle: .footnote),
+                    action: action
                 )
                 Spacer()
             }

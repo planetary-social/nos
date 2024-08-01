@@ -85,7 +85,8 @@ struct ProfileView: View {
                     relayFilter: selectedTab.relayFilter(author: author), 
                     relay: nil,
                     context: viewContext,
-                    tab: .profile,
+                    tab: .profile, 
+                    startRefreshing: Binding(get: { false }, set: { _ in }),
                     header: {
                         ProfileHeader(author: author, selectedTab: $selectedTab)
                             .compositingGroup()
