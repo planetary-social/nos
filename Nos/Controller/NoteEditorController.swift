@@ -49,7 +49,7 @@ import UIKit
             return
         }
         
-        let range = NSRange(location: text.count, length: 0)
+        let range = NSRange(location: textView.text.count, length: 0)
         let appendedAttributedString = NSAttributedString(
             string: text,
             attributes: defaultNSAttributes
