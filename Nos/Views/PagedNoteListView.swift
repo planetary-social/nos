@@ -96,7 +96,6 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
                 dataSource.updateFetchRequest(databaseFilter)
             }
             if startRefreshing == true {
-                startRefreshing = false
                 guard let refreshControl = collectionView.refreshControl else { return }
                 refreshControl.beginRefreshing()
                 context.coordinator.refreshData(refreshControl)
