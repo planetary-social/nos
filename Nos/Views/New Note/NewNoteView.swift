@@ -13,10 +13,7 @@ struct NewNoteView: View {
     @Dependency(\.analytics) private var analytics
     @Dependency(\.noteParser) private var noteParser
 
-    /// State holding the text the user is typing
-    @State private var text = EditableNoteText()
-    
-    @State private var controller = NoteEditorController()
+    @State private var editingController = NoteEditorController()
 
     /// The height of the NoteTextEditor that fits all entered text.
     /// This value will be updated by NoteTextEditor automatically, and should be used to set its frame from SwiftUI. 
@@ -67,7 +64,7 @@ struct NewNoteView: View {
                                         ReplyPreview(note: replyToNote)
                                     }
                                     NoteTextEditor(
-                                        controller: $controller,
+                                        controller: $editingController,
                                         initialContents: initialContents, 
                                         minHeight: minimumEditorHeight,
                                         placeholder: .localizable.newNotePlaceholder
@@ -97,9 +94,9 @@ struct NewNoteView: View {
                     }
                     
                     ComposerActionBar(
+                        editingController: $editingController,
                         expirationTime: $expirationTime,
-                        isUploadingImage: $isUploadingImage,
-                        text: $text
+                        isUploadingImage: $isUploadingImage
                     )
                 }
                 
@@ -149,12 +146,12 @@ struct NewNoteView: View {
                 },
                 trailing: ActionButton(title: .localizable.post, action: postAction)
                     .frame(height: 22)
-                    .disabled(text.string.isEmpty)
+                    .disabled(editingController.text.isEmpty)
                     .padding(.bottom, 3)
             )
             .onAppear {
-                if let initialContents, text.isEmpty {
-                    text = EditableNoteText(string: initialContents)
+                if let initialContents, editingController.text.isEmpty {
+                    editingController.append(text: initialContents)
                 }
                 analytics.showedNewNote()
             }
@@ -213,7 +210,7 @@ struct NewNoteView: View {
         }
         
         do {
-            var (content, tags) = noteParser.parse(attributedText: AttributedString(text))
+            var (content, tags) = noteParser.parse(attributedText: AttributedString(editingController.text))
             
             if let expirationTime {
                 tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
@@ -260,7 +257,6 @@ struct NewNoteView: View {
             } else {
                 analytics.published(note: jsonEvent)
             }
-            text = EditableNoteText()
         } catch {
             Log.error("Error when posting: \(error.localizedDescription)")
         }

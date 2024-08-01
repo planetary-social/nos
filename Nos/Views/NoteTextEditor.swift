@@ -35,71 +35,46 @@ struct NoteTextEditor: View {
     }
     
     var body: some View {
-        // TODO: set initialContents
         NoteTextViewRepresentable(
             controller: controller,
             intrinsicHeight: $intrinsicHeight, 
             showKeyboard: true
         )
-            .frame(maxWidth: .infinity)
-            .frame(height: max(minHeight, intrinsicHeight, 0))
-        // TODO: add placeholder
-//            .placeholder(when: text.isEmpty, placeholder: {
-//                VStack {
-//                    Text(placeholder)
-//                        .foregroundColor(.secondaryTxt)
-//                        .padding(.top, 10)
-//                        .padding(.leading, 6)
-//                    Spacer()
-//                }
-//            })
-            .padding(.leading, 6)
-            .background { Color.appBg }
-//            .onChange(of: text) { oldText, newText in
-//                let difference = newText.difference(from: oldText)
-//                guard difference.count == 1, let change = difference.first else {
-//                    return
-//                }
-//                switch change {
-//                case .insert(let offset, let element, _):
-//                    if element == "@" {
-//                        let precedingCharacter = newText.character(before: offset) ?? Character("\n")
-//                        if precedingCharacter.isNewline || precedingCharacter.isWhitespace {
-//                            mentionOffset = offset
-//                        }
-//                    }
-//                default:
-//                    break
-//                }
-//            }
-            .sheet(isPresented: $controller.showMentionsSearch) {
-                NavigationStack {
-                    AuthorListView(isPresented: $controller.showMentionsSearch) { [weak controller] author in
-                        /// Guard against double presses
-                        guard let controller, controller.showMentionsSearch else { return }
-                        
-                        controller.insertMention(of: author)
-                        controller.showMentionsSearch = false
-                    }
+        .frame(maxWidth: .infinity)
+        .frame(height: max(minHeight, intrinsicHeight, 0))
+        .padding(.leading, 6)
+        .background { Color.appBg }
+        .sheet(isPresented: $controller.showMentionsSearch) {
+            NavigationStack {
+                AuthorListView(isPresented: $controller.showMentionsSearch) { [weak controller] author in
+                    /// Guard against double presses
+                    guard let controller, controller.showMentionsSearch else { return }
+                    
+                    controller.insertMention(of: author)
+                    controller.showMentionsSearch = false
                 }
             }
+        }
     }
 }
 
-struct NoteTextEditor_Previews: PreviewProvider {
+#Preview {
     
-    @State static var controller = NoteEditorController()
-    static var placeholder: LocalizedStringResource = .localizable.newNotePlaceholder
-
-    static var previews: some View {
-        NavigationStack {
-            NoteTextEditor(
-                controller: $controller,
-                initialContents: "", 
-                minHeight: 100,
-                placeholder: placeholder
-            )
-            Spacer()
-        }
+    var previewData = PreviewData()
+    @State var controller = NoteEditorController()
+    let placeholder: LocalizedStringResource = .localizable.newNotePlaceholder
+    
+    return NavigationStack {
+        NoteTextEditor(
+            controller: $controller,
+            initialContents: "", 
+            minHeight: 500,
+            placeholder: placeholder
+        )
+        Spacer()
+    }
+    .inject(previewData: previewData)
+    .onAppear { 
+        _ = previewData.alice
     }
 }

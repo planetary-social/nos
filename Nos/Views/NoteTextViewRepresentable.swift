@@ -7,8 +7,8 @@ import UIKit
     
     var textView: UITextView?
     
-    var text: String? {
-        textView?.text
+    var text: NSAttributedString {
+        textView?.attributedText ?? NSAttributedString(string: "")
     }
     
     var defaultAttributes: AttributeContainer {
@@ -20,42 +20,48 @@ import UIKit
     // MARK: - Init
     
     init(font: UIFont = .preferredFont(forTextStyle: .body), foregroundColor: UIColor = .primaryTxt) {
-        self.defaultNSAttributes = [
+        let defaultAttributes: [NSAttributedString.Key: Any] = [
             .font: font,
             .foregroundColor: foregroundColor
         ]
-    }
-    
-    func append(text newText: String) {
-        guard let textView, let currentAttributedText = textView.attributedText else {
-            return
-        }
-        
-        // Create a mutable copy of the current attributed text
-        let mutableAttributedText = NSMutableAttributedString(attributedString: currentAttributedText)
-        
-        // Create a new attributed string with the new text and the typing attributes
-        let newAttributedText = NSAttributedString(string: newText, attributes: textView.typingAttributes)
-        
-        // Append the new attributed string to the mutable attributed string
-        mutableAttributedText.append(newAttributedText)
-        
-        // Set the updated attributed string back to the UITextView
-        textView.attributedText = mutableAttributedText
+        self.defaultNSAttributes = defaultAttributes
     }
     
     func insertMention(of author: Author) {
         guard let textView else { return }
-        self.insertMention(of: author, selectedRange: textView.selectedRange) 
+        self.insertMention(of: author, at: textView.selectedRange) 
     }
     
-    func textViewDidChange(_ textView: UITextView) {
-        // Update the selected range to the end of the newly added text
-        let newSelectedRange = NSRange(
-            location: textView.selectedRange.location + textView.selectedRange.length, 
-            length: 0
+    func append(text: String) {
+        guard let textView else {
+            return
+        }
+        
+        let range = NSRange(location: text.count, length: 0)
+        let appendedAttributedString = NSAttributedString(
+            string: text,
+            attributes: defaultNSAttributes
         )
-        textView.selectedRange = newSelectedRange
+        
+        let attributedString = textView.attributedText.mutableCopy() as! NSMutableAttributedString
+        attributedString.replaceCharacters(in: range, with: appendedAttributedString)
+        textView.attributedText = attributedString
+    }
+    
+    /// Appends the given URL and adds the default styling attributes. Will append a space before the link if needed.
+    func append(_ url: URL) {
+        if let lastCharacter = text.string.last, !lastCharacter.isWhitespace {
+            append(text: " ")
+        }
+        
+        let range = NSRange(location: text.length, length: 0)
+        insert(text: url.absoluteString, link: url.absoluteString, at: range)
+    }
+    
+    // MARK: - UITextViewDelegate
+    
+    func textViewDidChange(_ textView: UITextView) {
+//        updateIntrinsicHeight(view: uiView)
     }
         
     func textView(
@@ -71,23 +77,24 @@ import UIKit
         shouldChangeTextIn nsRange: NSRange,
         replacementText text: String
     ) -> Bool {
+        textView.typingAttributes = defaultNSAttributes
         if text == "@" {
-            let selectedRange = textView.selectedRange
             showMentionsSearch = true
             return true
             // TODO: handle inserting mention even when text is selected
-        } else if text.count > 1, let range = Range(nsRange, in: textView.text) {
+        } else if text.count > 1 {
             do {
                 let identifier = try NostrIdentifier.decode(bech32String: text)
                 switch identifier {
-                case .npub(let authorID):
-                    insertMention(npub: text, selectedRange: textView.selectedRange)
+                case .npub:
+                    insertMention(npub: text, range: textView.selectedRange)
                     DispatchQueue.main.async { textView.selectedRange.location += text.count }
                     return false
                 case .note:
-                    insertMention(note: text, selectedRange: textView.selectedRange)
+                    insertMention(note: text, range: textView.selectedRange)
                     DispatchQueue.main.async { textView.selectedRange.location += text.count }
                     return false
+                // TODO: handle other cases
                 default:
                     return true
                 }
@@ -99,77 +106,48 @@ import UIKit
         }
     }
     
-    func insertMention(npub: String, selectedRange: NSRange) {
-        guard let textView else {
-            return
-        }
-        
-        let attributedString = textView.attributedText.mutableCopy() as! NSMutableAttributedString
-        
-        // TODO: highlight @
-        
-        // TODO: merge attributes
-//        let attributes = defaultNSAttributes.merging([NSAttributedString.Key.link: url.absoluteString], uniquingKeysWith: { $0 || $1 }) 
-        let mention = NSAttributedString(string: npub.prefix(10).appending("..."), attributes: [NSAttributedString.Key.link: "nostr:\(npub)"])
-        
-        attributedString.replaceCharacters(in: selectedRange, with: mention)
-        textView.attributedText = attributedString
-        textView.typingAttributes = defaultNSAttributes
-    }
+    // MARK: - Helpers 
     
-    func insertMention(of author: Author, selectedRange: NSRange) {
+    private func insertMention(of author: Author, at range: NSRange) {
         guard let textView, let url = author.uri else {
             return
         }
         
-        let attributedString = textView.attributedText.mutableCopy() as! NSMutableAttributedString
+        let rangeIncludingAmpersand = NSRange(
+            location: max(range.location - 1, 0), 
+            length: min(range.length + 1, textView.text.count)
+        )
         
-        // TODO: highlight @
-        
-        // TODO: merge attributes
-//        let attributes = defaultNSAttributes.merging([NSAttributedString.Key.link: url.absoluteString], uniquingKeysWith: { $0 || $1 }) 
-        let mention = NSAttributedString(string: author.safeName, attributes: [NSAttributedString.Key.link: url.absoluteString])
-        
-        attributedString.replaceCharacters(in: selectedRange, with: mention)
-        textView.attributedText = attributedString
-        textView.typingAttributes = defaultNSAttributes
+        insert(text: "@\(author.safeName)", link: url.absoluteString, at: rangeIncludingAmpersand)
     }
     
-    /// Inserts the mention of a note as a link at the given index of the string. The `index` should be the index
-    /// after a `@` character, which this function will replace.
-    func insertMention(note: String, selectedRange: NSRange) {
+    private func insertMention(npub: String, range: NSRange) {
+        insert(text: npub.prefix(10).appending("..."), link: "nostr:\(npub)", at: range)
+    }
+    
+    /// Inserts the mention of a note as a link at the given index of the string.
+    private func insertMention(note: String, range: NSRange) {
+        insert(text: note.prefix(10).appending("..."), link: "nostr:\(note)", at: range)
+    }
+    
+    private func insert(text: String, link: String, at range: NSRange) {
         guard let textView else {
             return
         }
         
+        let linkAttributes = defaultNSAttributes.merging(
+            [NSAttributedString.Key.link: link], 
+            uniquingKeysWith: { _, key in key }
+        )
+        let link = NSAttributedString(
+            string: text,
+            attributes: linkAttributes
+        )
+        
         let attributedString = textView.attributedText.mutableCopy() as! NSMutableAttributedString
-        
-        // TODO: highlight @
-        
-        // TODO: merge attributes
-        //        let attributes = defaultNSAttributes.merging([NSAttributedString.Key.link: url.absoluteString], uniquingKeysWith: { $0 || $1 }) 
-        let mention = NSAttributedString(string: note.prefix(10).appending("..."), attributes: [NSAttributedString.Key.link: "nostr:\(note)"])
-        
-        attributedString.replaceCharacters(in: selectedRange, with: mention)
+        attributedString.replaceCharacters(in: range, with: link)
         textView.attributedText = attributedString
-        textView.typingAttributes = defaultNSAttributes
     }
-    
-    //    /// Appends the given URL and adds the default styling attributes. Will append a space before the link if needed.
-    //    mutating func append(_ url: URL) {
-    //        if let lastCharacter = string.last, !lastCharacter.isWhitespace {
-    //            append(" ")
-    //        }
-    //        
-    //        attributedString.append(
-    //            AttributedString(
-    //                url.absoluteString,
-    //                attributes: defaultAttributes.merging(
-    //                    AttributeContainer([NSAttributedString.Key.link: url.absoluteString])
-    //                )
-    //            )
-    //        ) 
-    //    }
 }
 
 /// A UIViewRepresentable that wraps a UITextView meant to be used in place of TextEditor when rich text formatting is
