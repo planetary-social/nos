@@ -81,16 +81,7 @@ struct HomeFeedView: View {
             )
             .padding(0)
 
-            if newNotesAvailable {
-                VStack {
-                    SecondaryActionButton(
-                        title: "New notes available",
-                        font: .clarity(.semibold, textStyle: .footnote)
-                    )
-                    Spacer()
-                }
-                .padding(8)
-            }
+            NewNotesButton(user: user, lastRefreshDate: lastRefreshDate, seenOn: selectedRelay)
 
             if showTimedLoadingIndicator {
                 FullscreenProgressView(
@@ -154,6 +145,30 @@ struct HomeFeedView: View {
             if isVisible {
                 analytics.showedHome()
             }
+        }
+    }
+}
+
+struct NewNotesButton: View {
+    @FetchRequest var newNotes: FetchedResults<Event>
+
+    init(user: Author, lastRefreshDate: Date, seenOn: Relay?) {
+        let request = Event.homeFeed(for: user, after: lastRefreshDate, seenOn: seenOn)
+        _newNotes = FetchRequest(fetchRequest: request)
+    }
+
+    var body: some View {
+        if newNotes.isEmpty {
+            EmptyView()
+        } else {
+            VStack {
+                SecondaryActionButton(
+                    title: "New notes available",
+                    font: .clarity(.semibold, textStyle: .footnote)
+                )
+                Spacer()
+            }
+            .padding(8)
         }
     }
 }
