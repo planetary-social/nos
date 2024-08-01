@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed a bug where the home feed would be empty on first launch.
 - Fixed the issue where tapping outside the New Post view caused it to disappear and all its text to be lost.
+- Updated the design of the cards in the Following list.
 - Remove stories UI to improve performance.
 - Report error to Sentry when parse queue contains over 1000 events.
 

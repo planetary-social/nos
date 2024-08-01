@@ -1,16 +1,12 @@
 import SwiftUI
 
-/// This view displays the information we have for an message suitable for being used in a list or grid.
-///
-/// Use this view inside MessageButton to have nice borders.
-struct FollowCard: View {
+/// Displays the name and photo of an author in a compact view.
+struct CompactAuthorCard: View {
 
-    @ObservedObject var author: Author
-    
-    var style = CardStyle.compact
+    /// The author to display.
+    let author: Author
 
     @EnvironmentObject private var router: Router
-    @Environment(CurrentUser.self) private var currentUser
     @EnvironmentObject private var relayService: RelayService
     
     @State private var relaySubscriptions = SubscriptionCancellables()
@@ -21,7 +17,7 @@ struct FollowCard: View {
                 Button {
                     router.push(author)
                 } label: {
-                    HStack(alignment: .center) {
+                    HStack {
                         AvatarView(imageUrl: author.profilePhotoURL, size: 24)
                         Text(author.safeName)
                             .lineLimit(1)
@@ -29,19 +25,8 @@ struct FollowCard: View {
                             .foregroundColor(Color.primaryTxt)
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        if author.muted {
-                            Text(.localizable.muted)
-                                .font(.subheadline)
-                                .foregroundColor(Color.secondaryTxt)
-                        }
-                        Spacer()
-                        if let currentUser = currentUser.author {
-                            FollowButton(currentUserAuthor: currentUser, author: author)
-                                .padding(10)
-                        }
                     }
                 }
-                // TODO: Put MessageOptionsButton back here eventually
             }
             .padding(10)
             BeveledSeparator()
@@ -54,7 +39,7 @@ struct FollowCard: View {
             )
         )
         .listRowInsets(EdgeInsets())
-        .cornerRadius(cornerRadius)
+        .cornerRadius(15)
         .onAppear {
             Task(priority: .userInitiated) { 
                 let subscription = await relayService.requestMetadata(
@@ -66,15 +51,6 @@ struct FollowCard: View {
         }
         .onDisappear {
             relaySubscriptions.removeAll()
-        }
-    }
-
-    var cornerRadius: CGFloat {
-        switch style {
-        case .golden:
-            return 15
-        case .compact:
-            return 15
         }
     }
 }
