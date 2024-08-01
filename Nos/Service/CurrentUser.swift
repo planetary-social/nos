@@ -201,7 +201,6 @@ import Dependencies
         subscriptions.append(
             await relayService.fetchEvents(matching: importantEventsFilter)
         )
-        
         // Listen for notifications
         await pushNotificationService.listen(for: self)
     }
