@@ -14,7 +14,7 @@ struct MutesView: View {
         ScrollView(.vertical) {
             LazyVStack {
                 ForEach(authors) { author in
-                    FollowCard(author: author)
+                    CompactAuthorCard(author: author)
                         .padding(.horizontal)
                         .readabilityPadding()
                 }
