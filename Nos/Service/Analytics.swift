@@ -143,7 +143,12 @@ class Analytics {
         }
         postHog?.capture(eventName, properties: properties)
     }
-    
+
+    /// Tracks when the user performs a search on the Discover screen.
+    func searchedDiscover() {
+        track("Searched Discover")
+    }
+
     // MARK: - Relays
     
     func rateLimited(by socket: WebSocket, requestCount: Int) {
