@@ -49,7 +49,7 @@ import UIKit
             return
         }
         
-        let range = NSRange(location: textView.text.count, length: 0)
+        let range = NSRange(location: textView.attributedText.length, length: 0)
         let appendedAttributedString = NSAttributedString(
             string: text,
             attributes: defaultNSAttributes
@@ -58,6 +58,7 @@ import UIKit
         let attributedString = textView.attributedText.mutableCopy() as! NSMutableAttributedString
         attributedString.replaceCharacters(in: range, with: appendedAttributedString)
         textView.attributedText = attributedString
+        textView.selectedRange.location += appendedAttributedString.length
     }
     
     /// Appends the given URL and adds the default styling attributes. Will append a space before the link if needed.
@@ -111,11 +112,11 @@ import UIKit
                 switch identifier {
                 case .npub:
                     insertMention(npub: text, range: textView.selectedRange)
-                    DispatchQueue.main.async { textView.selectedRange.location += text.count }
+                    DispatchQueue.main.async { textView.selectedRange.location += (text as NSString).length }
                     return false
                 case .note:
                     insertMention(note: text, range: textView.selectedRange)
-                    DispatchQueue.main.async { textView.selectedRange.location += text.count }
+                    DispatchQueue.main.async { textView.selectedRange.location += (text as NSString).length }
                     return false
                 // TODO: handle other cases
                 default:
@@ -148,7 +149,7 @@ import UIKit
         
         let rangeIncludingAmpersand = NSRange(
             location: max(range.location - 1, 0), 
-            length: min(range.length + 1, textView.text.count)
+            length: min(range.length + 1, textView.attributedText.length)
         )
         
         insert(text: "@\(author.safeName)", link: url.absoluteString, at: rangeIncludingAmpersand)
@@ -180,5 +181,6 @@ import UIKit
         let attributedString = textView.attributedText.mutableCopy() as! NSMutableAttributedString
         attributedString.replaceCharacters(in: range, with: link)
         textView.attributedText = attributedString
+        textView.selectedRange.location += link.length
     }
 }

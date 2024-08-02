@@ -135,8 +135,6 @@ final class NoteEditorControllerTests: CoreDataTestCase {
     }
 
     @MainActor func testTwoMentionsWithEmojiBeforeAndAfter() throws {
-        XCTExpectFailure("this works in the app but not in the test, not sure why.")
-        
         // Arrange
         let name = "🍐 mattn 🍐"
         let npub = "npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
@@ -148,7 +146,7 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         
         // Act
         subject.insertMention(of: author)
-        subject.append(text: " ")
+        subject.append(text: " @")
         subject.insertMention(of: author)
         
         // Assert
