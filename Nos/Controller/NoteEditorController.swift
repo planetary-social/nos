@@ -93,10 +93,18 @@ import UIKit
         replacementText text: String
     ) -> Bool {
         textView.typingAttributes = defaultNSAttributes
+        
         if text == "@" {
-            showMentionsSearch = true
-            return true
-            // TODO: handle inserting mention even when text is selected
+            if textView.text.count == 0 {
+                showMentionsSearch = true
+                return true
+            } else if textView.text.count > 0 {
+                let lastCharacter = (textView.text as NSString).character(at: nsRange.location - 1)
+                if let scalar = UnicodeScalar(lastCharacter), CharacterSet.whitespacesAndNewlines.contains(scalar) {
+                    showMentionsSearch = true
+                    return true
+                }
+            }
         } else if text.count > 1 {
             do {
                 let identifier = try NostrIdentifier.decode(bech32String: text)
@@ -116,9 +124,9 @@ import UIKit
             } catch {
                 return true
             }
-        } else {
-            return true
-        }
+        } 
+        
+        return true
     }
     
     // MARK: - Helpers 
