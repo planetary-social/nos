@@ -8,7 +8,6 @@ struct NewNotesButton: View {
     /// The action to perform when the user taps this button.
     var action: (() async -> Void)?
 
-    
     /// Initializes a new notes button with the given values.
     /// - Parameters:
     ///   - user: The user whose home feed we're displaying.
