@@ -84,6 +84,11 @@ extension DependencyValues {
         get { self[KeychainKey.self] }
         set { self[KeychainKey.self] = newValue }
     }
+
+    var refreshController: RefreshController {
+        get { self[RefreshControllerKey.self] }
+        set { self[RefreshControllerKey.self] = newValue }
+    }
 }
 
 fileprivate enum AnalyticsKey: DependencyKey {
@@ -175,4 +180,9 @@ fileprivate enum KeychainKey: DependencyKey {
     @MainActor static let liveValue: Keychain = SystemKeychain()
     @MainActor static let testValue: Keychain = InMemoryKeychain()
     @MainActor static let previewValue: Keychain = InMemoryKeychain()
+}
+
+fileprivate enum RefreshControllerKey: DependencyKey {
+    @MainActor static let liveValue: any RefreshController = DefaultRefreshController()
+    @MainActor static let testValue: any RefreshController = MockRefreshController()
 }

@@ -9,6 +9,7 @@ struct HomeFeedView: View {
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) var currentUser
+    @Dependency(\.refreshController) private var refreshController
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
     @State private var lastRefreshDate = Date(
@@ -64,7 +65,7 @@ struct HomeFeedView: View {
                 relay: selectedRelay,
                 context: viewContext,
                 tab: .home,
-                startRefreshing: $startRefreshing,
+                refreshController: refreshController,
                 header: {
                     EmptyView()
                 },
@@ -76,17 +77,14 @@ struct HomeFeedView: View {
                     .frame(minHeight: 300)
                 },
                 onRefresh: {
-                    Task { @MainActor in
-                        startRefreshing = false
-                        lastRefreshDate = .now
-                    }
-                    return Event.homeFeed(for: user, before: .now)
+                    refreshController.updateLastRefreshDate()
+                    return Event.homeFeed(for: user, before: refreshController.lastRefreshDate ?? .now)
                 }
             )
             .padding(0)
 
-            NewNotesButton(user: user, lastRefreshDate: lastRefreshDate, seenOn: selectedRelay) {
-                startRefreshing = true
+            NewNotesButton(user: user, lastRefreshDate: refreshController.lastRefreshDate ?? .now, seenOn: selectedRelay) {
+                refreshController.beginRefreshing()
             }
 
             if showTimedLoadingIndicator {

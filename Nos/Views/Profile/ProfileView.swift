@@ -15,7 +15,8 @@ struct ProfileView: View {
     @Dependency(\.relayService) private var relayService: RelayService
     @Dependency(\.analytics) private var analytics
     @Dependency(\.unsAPI) private var unsAPI
-    
+    @Dependency(\.refreshController) private var refreshController
+
     @State private var showingOptions = false
     @State private var showingReportMenu = false
     @State private var relaySubscriptions = SubscriptionCancellables()
@@ -86,7 +87,7 @@ struct ProfileView: View {
                     relay: nil,
                     context: viewContext,
                     tab: .profile, 
-                    startRefreshing: Binding(get: { false }, set: { _ in }),
+                    refreshController: refreshController,
                     header: {
                         ProfileHeader(author: author, selectedTab: $selectedTab)
                             .compositingGroup()

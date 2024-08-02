@@ -34,7 +34,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// Used to determine whether to scroll this view to the top when the tab is tapped.
     let tab: AppDestination
 
-    @Binding var startRefreshing: Bool
+    /// Allows us to refresh the PagedNoteListView from outside this view itself, such as with a separate button.
+    let refreshController: RefreshController
 
     /// A view that will be displayed as the collectionView header.
     let header: () -> Header
@@ -95,7 +96,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             if databaseFilter != dataSource.databaseFilter {
                 dataSource.updateFetchRequest(databaseFilter)
             }
-            if startRefreshing == true {
+            if refreshController.isRefreshing {
+                refreshController.endRefreshing()
                 guard let refreshControl = collectionView.refreshControl else { return }
                 refreshControl.beginRefreshing()
                 context.coordinator.refreshData(refreshControl)
@@ -238,7 +240,7 @@ extension Notification.Name {
 
 #Preview {
     var previewData = PreviewData()
-    @State var startRefreshing = false
+    @Dependency(\.refreshController) var refreshController
 
     return PagedNoteListView(
         databaseFilter: previewData.alice.allPostsRequest(onlyRootPosts: false),
@@ -246,7 +248,7 @@ extension Notification.Name {
         relay: nil,
         context: previewData.previewContext,
         tab: .home,
-        startRefreshing: $startRefreshing,
+        refreshController: refreshController,
         header: {
             ProfileHeader(author: previewData.alice, selectedTab: .constant(.activity))
                 .compositingGroup()
