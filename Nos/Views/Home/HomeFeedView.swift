@@ -38,7 +38,12 @@ struct HomeFeedView: View {
     }
     
     var homeFeedFetchRequest: NSFetchRequest<Event> {
-        Event.homeFeed(for: user, before: lastRefreshDate, seenOn: selectedRelay) 
+        Event.homeFeed(
+            for: user,
+            before: refreshController.lastRefreshDate ??
+                Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.staticLoadTime)),
+            seenOn: selectedRelay
+        )
     }
     
     var homeFeedFilter: Filter {
@@ -78,7 +83,7 @@ struct HomeFeedView: View {
                 },
                 onRefresh: {
                     refreshController.updateLastRefreshDate()
-                    return Event.homeFeed(for: user, before: refreshController.lastRefreshDate ?? .now)
+                    return Event.homeFeed(for: user, before: refreshController.lastRefreshDate ?? .now, seenOn: selectedRelay)
                 }
             )
             .padding(0)

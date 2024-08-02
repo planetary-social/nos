@@ -99,6 +99,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         )
         self.fetchedResultsController.delegate = self
         try? self.fetchedResultsController.performFetch()
+        Log.debug("🆙 updateFetchRequest: printing first result: \(fetchedResultsController.fetchedObjects?.first?.content)")
         loadMoreIfNeeded(for: IndexPath(row: 0, section: 0))
         collectionView.reloadData()
         collectionView.setContentOffset(.zero, animated: false)
@@ -121,8 +122,12 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     ) -> UICollectionViewCell {
         loadMoreIfNeeded(for: indexPath)
         
-        let note = fetchedResultsController.object(at: indexPath) 
-        
+        let note = fetchedResultsController.object(at: indexPath)
+
+        if indexPath.row == 0 {
+            Log.debug("🧫 cellForItemAt: note content at 0: \(note.content)")
+        }
+
         // We intentionally generate unique IDs for cell reuse to get around 
         // [this issue](https://github.com/planetary-social/nos/issues/873)
         let cellReuseID = note.identifier ?? "error"

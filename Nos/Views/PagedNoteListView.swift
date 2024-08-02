@@ -94,12 +94,14 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
                 dataSource.subscribeToEvents(matching: relayFilter, from: relay)
             }
             if databaseFilter != dataSource.databaseFilter {
+                Log.debug("databaseFilter changed; calling dataSource.updateFetchRequest(_:) with filter predicate: \(databaseFilter.predicate?.description)")
                 dataSource.updateFetchRequest(databaseFilter)
             }
             if refreshController.isRefreshing {
                 refreshController.endRefreshing()
                 guard let refreshControl = collectionView.refreshControl else { return }
                 refreshControl.beginRefreshing()
+                Log.debug("calling refreshData, which will call dataSource.updateFetchRequest(_:)")
                 context.coordinator.refreshData(refreshControl)
                 collectionView.scrollRectToVisible(refreshControl.frame, animated: true)
             } else {
@@ -218,6 +220,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     
         @objc func refreshData(_ sender: Any) {
             if let onRefresh {
+                Log.debug("refreshData: calling dataSource.updateFetchRequest(_:) with filter predicate: \(onRefresh().predicate?.description)")
                 dataSource?.updateFetchRequest(onRefresh())
             }
 
