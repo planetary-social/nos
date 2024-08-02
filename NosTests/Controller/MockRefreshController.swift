@@ -11,6 +11,6 @@ class MockRefreshController: RefreshController {
     func endRefreshing() {
     }
 
-    func updateLastRefreshDate() {
+    func setLastRefreshDate(_ lastRefreshDate: Date) {
     }
 }

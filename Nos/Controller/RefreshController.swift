@@ -14,12 +14,12 @@ import Foundation
     /// End refreshing.
     func endRefreshing()
 
-    /// Updates the last refresh date to now.
-    func updateLastRefreshDate()
+    /// Updates the last refresh date to the given value.
+    func setLastRefreshDate(_: Date)
 }
 
 /// The default implementation of `RefreshController`.
-@Observable class DefaultRefreshController: RefreshController {
+@Observable @MainActor class DefaultRefreshController: RefreshController {
     var isRefreshing: Bool
 
     var lastRefreshDate: Date?
@@ -36,7 +36,7 @@ import Foundation
         isRefreshing = false
     }
 
-    func updateLastRefreshDate() {
-        lastRefreshDate = .now
+    func setLastRefreshDate(_ lastRefreshDate: Date) {
+        self.lastRefreshDate = lastRefreshDate
     }
 }

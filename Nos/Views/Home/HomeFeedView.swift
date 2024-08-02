@@ -12,9 +12,6 @@ struct HomeFeedView: View {
     @Dependency(\.refreshController) private var refreshController
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
-    @State private var lastRefreshDate = Date(
-        timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.staticLoadTime)
-    )
     @State private var isVisible = false
     @State private var relaySubscriptions = [SubscriptionCancellable]()
     @State private var isShowingRelayList = false
@@ -82,8 +79,7 @@ struct HomeFeedView: View {
                     .frame(minHeight: 300)
                 },
                 onRefresh: {
-                    refreshController.updateLastRefreshDate()
-                    return Event.homeFeed(for: user, before: refreshController.lastRefreshDate ?? .now, seenOn: selectedRelay)
+                    refreshController.setLastRefreshDate(.now)
                 }
             )
             .padding(0)
@@ -112,7 +108,7 @@ struct HomeFeedView: View {
                 )
                 .onChange(of: selectedRelay) { _, _ in
                     showTimedLoadingIndicator = true
-                    lastRefreshDate = .now + Self.staticLoadTime
+                    refreshController.setLastRefreshDate(.now + Self.staticLoadTime)
                     Task {
                         withAnimation {
                             showRelayPicker = false

@@ -18,7 +18,8 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     private var context: NSManagedObjectContext
     private var header: () -> Header
     private var emptyPlaceholder: (@escaping () -> Void) -> EmptyPlaceholder
-    private var onRefresh: () -> NSFetchRequest<Event>
+    /// An action to perform when the data source is refreshed.
+    private var onRefresh: () -> Void
     let pageSize = 20
     
     // We intentionally generate unique IDs for cell reuse to get around 
@@ -34,7 +35,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         context: NSManagedObjectContext,
         @ViewBuilder header: @escaping () -> Header,
         @ViewBuilder emptyPlaceholder: @escaping (@escaping () -> Void) -> EmptyPlaceholder,
-        onRefresh: @escaping () -> NSFetchRequest<Event>
+        onRefresh: @escaping () -> Void
     ) {
         self.databaseFilter = databaseFilter
         self.fetchedResultsController = NSFetchedResultsController<Event>(
@@ -99,7 +100,6 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         )
         self.fetchedResultsController.delegate = self
         try? self.fetchedResultsController.performFetch()
-        Log.debug("🆙 updateFetchRequest: printing first result: \(fetchedResultsController.fetchedObjects?.first?.content)")
         loadMoreIfNeeded(for: IndexPath(row: 0, section: 0))
         collectionView.reloadData()
         collectionView.setContentOffset(.zero, animated: false)
@@ -123,10 +123,6 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         loadMoreIfNeeded(for: indexPath)
         
         let note = fetchedResultsController.object(at: indexPath)
-
-        if indexPath.row == 0 {
-            Log.debug("🧫 cellForItemAt: note content at 0: \(note.content)")
-        }
 
         // We intentionally generate unique IDs for cell reuse to get around 
         // [this issue](https://github.com/planetary-social/nos/issues/873)
@@ -198,8 +194,9 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
                             )
                             refreshControl.beginRefreshing()
                         }
-                        self.updateFetchRequest(self.onRefresh())
-                        collectionView?.reloadData()
+
+                        self.onRefresh()
+
                         if let refreshControl {
                             // Dismiss the refresh control
                             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {

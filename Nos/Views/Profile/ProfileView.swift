@@ -34,7 +34,11 @@ struct ProfileView: View {
         self.author = author
         self.addDoubleTapToPop = addDoubleTapToPop
     }
-    
+
+    var databaseFilter: NSFetchRequest<Event> {
+        selectedTab.databaseFilter(author: author, before: lastRefreshDate)
+    }
+
     func downloadAuthorData() async {
         relaySubscriptions.removeAll()
         
@@ -82,8 +86,8 @@ struct ProfileView: View {
         VStack(spacing: 0) {
             VStack {
                 PagedNoteListView(
-                    databaseFilter: selectedTab.databaseFilter(author: author, before: lastRefreshDate),
-                    relayFilter: selectedTab.relayFilter(author: author), 
+                    databaseFilter: databaseFilter,
+                    relayFilter: selectedTab.relayFilter(author: author),
                     relay: nil,
                     context: viewContext,
                     tab: .profile, 
@@ -108,7 +112,6 @@ struct ProfileView: View {
                     },
                     onRefresh: {
                         lastRefreshDate = .now
-                        return selectedTab.databaseFilter(author: author, before: lastRefreshDate)
                     }
                 )
                 .padding(0)
