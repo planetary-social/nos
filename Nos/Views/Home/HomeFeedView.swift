@@ -65,13 +65,13 @@ struct HomeFeedView: View {
                 databaseFilter: homeFeedFetchRequest,
                 relayFilter: homeFeedFilter,
                 relay: selectedRelay,
-                context: viewContext,
+                managedObjectContext: viewContext,
                 tab: .home,
                 refreshController: refreshController,
                 header: {
                     EmptyView()
                 },
-                emptyPlaceholder: { _ in
+                emptyPlaceholder: {
                     VStack {
                         Text(.localizable.noEvents)
                             .padding()
@@ -89,7 +89,7 @@ struct HomeFeedView: View {
                 lastRefreshDate: refreshController.lastRefreshDate ?? .now,
                 seenOn: selectedRelay
             ) {
-                refreshController.beginRefreshing()
+                refreshController.setShouldRefresh(true)
             }
 
             if showTimedLoadingIndicator {

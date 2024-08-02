@@ -28,7 +28,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// The relay to load data from. If `nil` then all the relays in the user's list will be used.
     let relay: Relay? 
     
-    let context: NSManagedObjectContext
+    /// The managed object context used to fetch events from Core Data.
+    let managedObjectContext: NSManagedObjectContext
 
     /// The tab in which this PagedNoteListView appears.
     /// Used to determine whether to scroll this view to the top when the tab is tapped.
@@ -41,7 +42,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     let header: () -> Header
     
     /// A view that will be displayed below the header when no notes are being shown and a handler that 
-    let emptyPlaceholder: (@escaping () -> Void) -> EmptyPlaceholder
+    let emptyPlaceholder: () -> EmptyPlaceholder
 
     /// A closure that will be called when the user pulls to refresh or taps a refresh button. You probably want to
     /// update the `databaseFilter` to display new data in this closure.
@@ -63,7 +64,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             relayFilter: relayFilter,
             relay: relay,
             collectionView: collectionView, 
-            context: self.context,
+            managedObjectContext: self.managedObjectContext,
             header: header,
             emptyPlaceholder: emptyPlaceholder,
             onRefresh: onRefresh
@@ -96,8 +97,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             if databaseFilter != dataSource.databaseFilter {
                 dataSource.updateFetchRequest(databaseFilter)
             }
-            if refreshController.isRefreshing {
-                refreshController.endRefreshing()
+            if refreshController.shouldRefresh {
+                refreshController.setShouldRefresh(false)
 
                 guard let refreshControl = collectionView.refreshControl else { return }
                 collectionView.scrollRectToVisible(refreshControl.frame, animated: true)
@@ -190,9 +191,9 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             relayFilter: Filter,
             relay: Relay?,
             collectionView: UICollectionView,
-            context: NSManagedObjectContext,
+            managedObjectContext: NSManagedObjectContext,
             @ViewBuilder header: @escaping () -> CoordinatorHeader,
-            @ViewBuilder emptyPlaceholder: @escaping (@escaping () -> Void) -> CoordinatorEmptyPlaceholder,
+            @ViewBuilder emptyPlaceholder: @escaping () -> CoordinatorEmptyPlaceholder,
             onRefresh: @escaping () -> Void
         ) -> PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder> {
             if let dataSource {
@@ -206,7 +207,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
                 relayFilter: relayFilter,
                 relay: relay,
                 collectionView: collectionView, 
-                context: context,
+                managedObjectContext: managedObjectContext,
                 header: header,
                 emptyPlaceholder: emptyPlaceholder,
                 onRefresh: onRefresh
@@ -243,7 +244,7 @@ extension Notification.Name {
         databaseFilter: previewData.alice.allPostsRequest(onlyRootPosts: false),
         relayFilter: Filter(), 
         relay: nil,
-        context: previewData.previewContext,
+        managedObjectContext: previewData.previewContext,
         tab: .home,
         refreshController: refreshController,
         header: {
@@ -252,7 +253,7 @@ extension Notification.Name {
                 .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 .id(previewData.alice.id)
         },
-        emptyPlaceholder: { _ in
+        emptyPlaceholder: {
             Text("empty")
         },
         onRefresh: {}

@@ -15,9 +15,9 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     private(set) var relayFilter: Filter
     private(set) var relay: Relay?
     private var pager: PagedRelaySubscription?
-    private var context: NSManagedObjectContext
+    private var managedObjectContext: NSManagedObjectContext
     private var header: () -> Header
-    private var emptyPlaceholder: (@escaping () -> Void) -> EmptyPlaceholder
+    private var emptyPlaceholder: () -> EmptyPlaceholder
     /// An action to perform when the data source is refreshed.
     private var onRefresh: () -> Void
     let pageSize = 20
@@ -32,20 +32,20 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         relayFilter: Filter, 
         relay: Relay?, 
         collectionView: UICollectionView, 
-        context: NSManagedObjectContext,
+        managedObjectContext: NSManagedObjectContext,
         @ViewBuilder header: @escaping () -> Header,
-        @ViewBuilder emptyPlaceholder: @escaping (@escaping () -> Void) -> EmptyPlaceholder,
+        @ViewBuilder emptyPlaceholder: @escaping () -> EmptyPlaceholder,
         onRefresh: @escaping () -> Void
     ) {
         self.databaseFilter = databaseFilter
         self.fetchedResultsController = NSFetchedResultsController<Event>(
             fetchRequest: databaseFilter,
-            managedObjectContext: context,
+            managedObjectContext: managedObjectContext,
             sectionNameKeyPath: nil,
             cacheName: nil
         )
         self.collectionView = collectionView
-        self.context = context
+        self.managedObjectContext = managedObjectContext
         self.relayFilter = relayFilter
         self.relay = relay
         self.header = header
@@ -94,7 +94,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         self.databaseFilter = fetchRequest
         self.fetchedResultsController = NSFetchedResultsController<Event>(
             fetchRequest: fetchRequest,
-            managedObjectContext: context,
+            managedObjectContext: managedObjectContext,
             sectionNameKeyPath: nil,
             cacheName: nil
         )
@@ -185,25 +185,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             
             footer.contentConfiguration = UIHostingConfiguration { 
                 if self.fetchedResultsController.fetchedObjects?.isEmpty == true {
-                    self.emptyPlaceholder { [weak collectionView] in
-                        let refreshControl = collectionView?.refreshControl
-                        if let refreshControl {
-                            collectionView?.scrollRectToVisible(
-                                refreshControl.frame,
-                                animated: true
-                            )
-                            refreshControl.beginRefreshing()
-                        }
-
-                        self.onRefresh()
-
-                        if let refreshControl {
-                            // Dismiss the refresh control
-                            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-                                refreshControl.endRefreshing()
-                            }
-                        }
-                    }
+                    self.emptyPlaceholder()
                 }
             }
             .margins(.horizontal, 0)

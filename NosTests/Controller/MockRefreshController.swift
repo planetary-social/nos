@@ -2,15 +2,12 @@ import Foundation
 
 /// A refresh controller used for testing.
 class MockRefreshController: RefreshController {
-    var isRefreshing = false
+    var shouldRefresh = false
     var lastRefreshDate: Date?
 
-    func beginRefreshing() {
+    func setShouldRefresh(_ shouldRefresh: Bool) {
     }
     
-    func endRefreshing() {
-    }
-
     func setLastRefreshDate(_ lastRefreshDate: Date) {
     }
 }

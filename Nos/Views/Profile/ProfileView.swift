@@ -20,7 +20,6 @@ struct ProfileView: View {
     @State private var showingOptions = false
     @State private var showingReportMenu = false
     @State private var relaySubscriptions = SubscriptionCancellables()
-    @State private var lastRefreshDate = Date.now
 
     @State private var selectedTab: ProfileFeedType = .notes
 
@@ -36,7 +35,7 @@ struct ProfileView: View {
     }
 
     var databaseFilter: NSFetchRequest<Event> {
-        selectedTab.databaseFilter(author: author, before: lastRefreshDate)
+        selectedTab.databaseFilter(author: author, before: refreshController.lastRefreshDate ?? .now)
     }
 
     func downloadAuthorData() async {
@@ -89,7 +88,7 @@ struct ProfileView: View {
                     databaseFilter: databaseFilter,
                     relayFilter: selectedTab.relayFilter(author: author),
                     relay: nil,
-                    context: viewContext,
+                    managedObjectContext: viewContext,
                     tab: .profile, 
                     refreshController: refreshController,
                     header: {
@@ -97,21 +96,20 @@ struct ProfileView: View {
                             .compositingGroup()
                             .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                     },
-                    emptyPlaceholder: { refresh in
+                    emptyPlaceholder: {
                         VStack {
                             Text(.localizable.noEventsOnProfile)
                                 .padding()
                                 .readabilityPadding()
                             
-                            SecondaryActionButton(
-                                title: .localizable.tapToRefresh,
-                                action: refresh
-                            )
+                            SecondaryActionButton(title: .localizable.tapToRefresh) {
+                                refreshController.setShouldRefresh(true)
+                            }
                         }
                         .frame(minHeight: 300)
                     },
                     onRefresh: {
-                        lastRefreshDate = .now
+                        refreshController.setLastRefreshDate(.now)
                     }
                 )
                 .padding(0)
