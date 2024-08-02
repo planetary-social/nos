@@ -97,6 +97,23 @@ import UIKit
         shouldChangeTextIn nsRange: NSRange,
         replacementText text: String
     ) -> Bool {
+        let attributedText = textView.attributedText!
+        let selectedRange = textView.selectedRange
+        if attributedText.length > 0, (selectedRange.location < attributedText.length || text.isEmpty) {
+            var rangeOfLink = NSRange()
+            var location = text.isEmpty ? max(selectedRange.location - 1, 0) : selectedRange.location
+            let link = attributedText.attribute(.link, at: location, longestEffectiveRange: &rangeOfLink, in: NSRange(location: 0, length: attributedText.length))
+            
+            if let link {
+                let newAttributesString = (attributedText.mutableCopy() as! NSMutableAttributedString)
+                newAttributesString.removeAttribute(.link, range: rangeOfLink)
+                newAttributesString.replaceCharacters(in: nsRange, with: text)
+                textView.attributedText = newAttributesString
+                textView.selectedRange = NSRange(location: selectedRange.location + (text as NSString).length, length: 0)
+                return false
+            }
+        }
+        
         textView.typingAttributes = defaultNSAttributes
         
         if text == "@" {
@@ -104,7 +121,7 @@ import UIKit
                 showMentionsSearch = true
                 return true
             } else if textView.text.count > 0 {
-                let lastCharacter = (textView.text as NSString).character(at: nsRange.location - 1)
+                let lastCharacter = (textView.text as NSString).character(at: max(nsRange.location - 1, 0))
                 if let scalar = UnicodeScalar(lastCharacter), CharacterSet.whitespacesAndNewlines.contains(scalar) {
                     showMentionsSearch = true
                     return true
@@ -155,7 +172,7 @@ import UIKit
             location: max(range.location - 1, 0), 
             length: min(range.length + 1, textView.attributedText.length)
         )
-        
+        sjdfl;kasjdf      
         insert(text: "@\(author.safeName)", link: url.absoluteString, at: rangeIncludingAmpersand)
     }
     
@@ -185,6 +202,6 @@ import UIKit
         let attributedString = textView.attributedText.mutableCopy() as! NSMutableAttributedString
         attributedString.replaceCharacters(in: range, with: link)
         textView.attributedText = attributedString
-        textView.selectedRange.location += link.length
+        textView.selectedRange.location = range.location + link.length
     }
 }
