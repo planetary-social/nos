@@ -203,6 +203,7 @@ struct NewNoteView: View {
         isPresented = false
     }
 
+    // swiftlint:disable:next function_body_length
     private func publishPost() async {
         guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
             Log.error("Cannot post without a keypair")

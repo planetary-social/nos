@@ -11,8 +11,6 @@ struct RepliesView: View {
     @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
 
-    @State private var reply = EditableNoteText()
-    
     @State private var alert: AlertState<Never>?
     @State private var showReplyComposer = false
     

@@ -2,7 +2,6 @@ import Foundation
 import SwiftUI
 import UIKit
 
-
 /// A UIViewRepresentable that wraps a UITextView meant to be used in place of TextEditor when rich text formatting is
 /// desirable.
 ///
@@ -40,7 +39,6 @@ struct NoteTextViewRepresentable: UIViewRepresentable {
         view.textColor = .secondaryTxt
         view.font = font
         view.backgroundColor = .clear
-        view.delegate = controller
         view.textContainer.maximumNumberOfLines = 0
         view.textContainer.lineBreakMode = .byWordWrapping
         view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
@@ -84,7 +82,6 @@ struct NoteTextViewRepresentable: UIViewRepresentable {
         return nil
     }
 
-
     func makeCoordinator() -> Coordinator {
     }
 }
@@ -95,7 +92,6 @@ extension Notification.Name {
 
 struct NoteTextViewRepresentable_Previews: PreviewProvider {
 
-    @State static var attributedString = EditableNoteText(string: "Hello")
     @State static var controller = NoteEditorController()
 
     static var previews: some View {

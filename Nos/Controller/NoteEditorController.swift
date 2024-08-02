@@ -11,7 +11,11 @@ import UIKit
     
     var showMentionsSearch = false
     
-    var textView: UITextView?
+    var textView: UITextView? {
+        didSet {
+            textView?.delegate = self
+        }
+    }
     
     var isEmpty: Bool = true
     
@@ -29,8 +33,6 @@ import UIKit
     
     var defaultNSAttributes: [NSAttributedString.Key: Any]
     
-    // MARK: - Init
-    
     init(font: UIFont = .preferredFont(forTextStyle: .body), foregroundColor: UIColor = .primaryTxt) {
         let defaultAttributes: [NSAttributedString.Key: Any] = [
             .font: font,
@@ -38,6 +40,8 @@ import UIKit
         ]
         self.defaultNSAttributes = defaultAttributes
     }
+    
+    // MARK: - Public Interface
     
     func insertMention(of author: Author) {
         guard let textView else { return }
@@ -77,7 +81,7 @@ import UIKit
     
     func textViewDidChange(_ textView: UITextView) {
         updateIntrinsicHeight(view: textView)
-        isEmpty = textView.attributedText.isEmpty
+        isEmpty = textView.attributedText.length == 0
     }
         
     func textView(
