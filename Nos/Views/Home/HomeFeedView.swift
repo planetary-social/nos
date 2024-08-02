@@ -26,7 +26,6 @@ struct HomeFeedView: View {
 
     let user: Author
 
-    @State private var startRefreshing = false
     @State private var showRelayPicker = false
     @State private var selectedRelay: Relay? 
 
