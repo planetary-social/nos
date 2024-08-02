@@ -149,6 +149,14 @@ class Analytics {
         track("Searched Discover")
     }
 
+    /// Tracks when the user taps on a search result on the Discover screen.
+    func displayedAuthorFromDiscoverSearch(resultsCount: Int) {
+        track(
+            "Displayed Author from Discover Search",
+            properties: ["Number of results": resultsCount]
+        )
+    }
+
     // MARK: - Relays
     
     func rateLimited(by socket: WebSocket, requestCount: Int) {
