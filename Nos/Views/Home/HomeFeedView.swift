@@ -83,7 +83,11 @@ struct HomeFeedView: View {
             )
             .padding(0)
 
-            NewNotesButton(user: user, lastRefreshDate: refreshController.lastRefreshDate ?? .now, seenOn: selectedRelay) {
+            NewNotesButton(
+                user: user,
+                lastRefreshDate: refreshController.lastRefreshDate ?? .now,
+                seenOn: selectedRelay
+            ) {
                 refreshController.beginRefreshing()
             }
 

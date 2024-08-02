@@ -220,7 +220,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             if let onRefresh {
                 dataSource?.updateFetchRequest(onRefresh())
             }
-            
+
             if let refreshControl = sender as? UIRefreshControl {
                 // Dismiss the refresh control
                 DispatchQueue.main.async {
