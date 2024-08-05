@@ -12,7 +12,7 @@ struct NoteUITextViewRepresentable: UIViewRepresentable {
     typealias UIViewType = UITextView
     @State var width: CGFloat
     
-    /// Whether we should present the keyboard when this view is shown. Unfortunately we can rely on FocusState as 
+    /// Whether we should present the keyboard when this view is shown. Unfortunately we can't rely on FocusState as 
     /// it isn't working on macOS.
     private var showKeyboard: Bool
 
