@@ -6,6 +6,7 @@ import SwiftUINavigation
 /// A horizontal bar that gives the user options to customize their message in the message composer.
 struct ComposerActionBar: View {
     
+    /// A controller for the text entered in the note composer. 
     @Binding var editingController: NoteEditorController
     
     /// The expiration time for the note, if any.

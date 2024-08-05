@@ -77,7 +77,7 @@ struct AppView: View {
                                 Text(.localizable.post)
                             }
                         }
-                    .tag(AppDestination.newNote(nil))
+                    .tag(AppDestination.noteComposer(nil))
                     
                     NotificationsView(user: currentUser.author)
                         .tabItem {
@@ -117,7 +117,7 @@ struct AppView: View {
                     }
                 }
                 .onChange(of: router.selectedTab) { _, newTab in
-                    if case let AppDestination.newNote(contents) = newTab {
+                    if case let AppDestination.noteComposer(contents) = newTab {
                         newPostContents = contents
                         showNewPost = true
                         router.selectedTab = lastSelectedTab
@@ -134,7 +134,7 @@ struct AppView: View {
                     }
                 }
                 .sheet(isPresented: $showNewPost, content: {
-                    NewNoteView(initialContents: newPostContents, isPresented: $showNewPost)
+                    NoteComposer(initialContents: newPostContents, isPresented: $showNewPost)
                         .environment(currentUser)
                         .interactiveDismissDisabled()
                 })

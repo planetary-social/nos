@@ -2,12 +2,12 @@ import Foundation
 import SwiftUI
 import UIKit
 
-/// A UIViewRepresentable that wraps a UITextView meant to be used in place of TextEditor when rich text formatting is
-/// desirable.
-///
-/// This view also listens for the .mentionAddedNotification and inserts markdown links 
-/// to nostr objects when it is received.
-struct NoteTextViewRepresentable: UIViewRepresentable {
+/// A UIViewRepresentable that wraps a UITextView and configures it for composing a Nostr note. The UITextView works
+/// with the provided `NoteEditorController` to interface with other SwiftUI views, supporting autocomplete of 
+/// mentions, dynamic sizing, appending uploaded file URLs, etc.
+/// 
+/// This view is tightly coupled to the `NoteTextEditor` and isn't designed to be used outside of it.  
+struct NoteUITextViewRepresentable: UIViewRepresentable {
 
     typealias UIViewType = UITextView
     @State var width: CGFloat
@@ -86,16 +86,12 @@ struct NoteTextViewRepresentable: UIViewRepresentable {
     }
 }
 
-extension Notification.Name {
-    public static let mentionAddedNotification = Notification.Name("mentionAddedNotification")
-}
-
 struct NoteTextViewRepresentable_Previews: PreviewProvider {
 
     @State static var controller = NoteEditorController()
 
     static var previews: some View {
-        NoteTextViewRepresentable(
+        NoteUITextViewRepresentable(
             controller: controller,
             showKeyboard: false
         )

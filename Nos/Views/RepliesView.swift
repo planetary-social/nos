@@ -111,7 +111,7 @@ struct RepliesView: View {
                         )
                         .padding(.top, 15)
                         .sheet(isPresented: $showReplyComposer, content: {
-                            NewNoteView(replyTo: note, isPresented: $showReplyComposer)
+                            NoteComposer(replyTo: note, isPresented: $showReplyComposer)
                                 .environment(currentUser)
                                 .interactiveDismissDisabled()
                         })

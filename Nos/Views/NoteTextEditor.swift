@@ -1,41 +1,25 @@
 import SwiftUI
 import Logger
 
-/// A text editor for composing Nostr notes. Supports autocomplete of mentions.
+/// A view similar to `TextEditor` for composing Nostr notes. Supports autocomplete of mentions.
 struct NoteTextEditor: View {
     
-    var initialContents: String?
-    
+    /// A controller for the entered text.
     @Binding private var controller: NoteEditorController
-    
-    /// The height of the EditableNoteText that fits all entered text.
-    @State private var intrinsicHeight: CGFloat = 0
     
     /// The smallest size of EditableNoteText
     var minHeight: CGFloat
     
     var placeholder: LocalizedStringResource
     
-    /// State containing the offset (index) of text when the user is mentioning someone
-    ///
-    /// When we detect the user typed a '@', we save the position of that character here and open a screen
-    /// that lets the user select someone to mention, then we can replace this character with the full mention.
-    @State private var mentionOffset: Int?
-    
-    init(
-        controller: Binding<NoteEditorController>,
-        initialContents: String? = nil, 
-        minHeight: CGFloat, 
-        placeholder: LocalizedStringResource
-    ) {
+    init(controller: Binding<NoteEditorController>, minHeight: CGFloat, placeholder: LocalizedStringResource) {
         self._controller = controller
-        self.initialContents = initialContents
         self.minHeight = minHeight
         self.placeholder = placeholder
     }
     
     var body: some View {
-        NoteTextViewRepresentable(
+        NoteUITextViewRepresentable(
             controller: controller,
             showKeyboard: true
         )
@@ -43,14 +27,14 @@ struct NoteTextEditor: View {
         .frame(height: max(minHeight, controller.intrinsicHeight, 0))
         .padding(.leading, 6)
         .background { Color.appBg }
-        .sheet(isPresented: $controller.showMentionsSearch) {
+        .sheet(isPresented: $controller.showMentionsAutocomplete) {
             NavigationStack {
-                AuthorListView(isPresented: $controller.showMentionsSearch) { [weak controller] author in
+                AuthorListView(isPresented: $controller.showMentionsAutocomplete) { [weak controller] author in
                     /// Guard against double presses
-                    guard let controller, controller.showMentionsSearch else { return }
+                    guard let controller, controller.showMentionsAutocomplete else { return }
                     
                     controller.insertMention(of: author)
-                    controller.showMentionsSearch = false
+                    controller.showMentionsAutocomplete = false
                 }
             }
         }
@@ -66,7 +50,6 @@ struct NoteTextEditor: View {
     return NavigationStack {
         NoteTextEditor(
             controller: $controller,
-            initialContents: "", 
             minHeight: 500,
             placeholder: placeholder
         )

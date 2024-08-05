@@ -4,7 +4,7 @@ import Logger
 import SwiftUI
 import SwiftUINavigation
 
-struct NewNoteView: View {
+struct NoteComposer: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
@@ -13,6 +13,7 @@ struct NewNoteView: View {
     @Dependency(\.analytics) private var analytics
     @Dependency(\.noteParser) private var noteParser
 
+    /// A controller that manages the entered text.
     @State private var editingController = NoteEditorController()
 
     /// The height of the NoteTextEditor that fits all entered text.
@@ -65,7 +66,6 @@ struct NewNoteView: View {
                                     }
                                     NoteTextEditor(
                                         controller: $editingController,
-                                        initialContents: initialContents, 
                                         minHeight: minimumEditorHeight,
                                         placeholder: .localizable.newNotePlaceholder
                                     )
@@ -153,7 +153,7 @@ struct NewNoteView: View {
                 if let initialContents, editingController.isEmpty {
                     editingController.append(text: initialContents)
                 }
-                analytics.showedNewNote()
+                analytics.showedNoteComposer()
             }
         }
         .alert(unwrapping: $alert)
@@ -272,13 +272,13 @@ struct NewNoteView: View {
 #Preview {
     let previewData = PreviewData()
     
-    return NewNoteView(isPresented: .constant(true))
+    return NoteComposer(isPresented: .constant(true))
         .inject(previewData: previewData)
 }
 
 #Preview {
     var previewData = PreviewData()
     
-    return NewNoteView(replyTo: previewData.longNote, isPresented: .constant(true))
+    return NoteComposer(replyTo: previewData.longNote, isPresented: .constant(true))
         .inject(previewData: previewData)
 }

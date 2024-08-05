@@ -24,7 +24,7 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         let shouldChange = subject.textView(textView, shouldChangeTextIn: textView.selectedRange, replacementText: "@")
         
         // Assert
-        XCTAssertEqual(subject.showMentionsSearch, true)
+        XCTAssertEqual(subject.showMentionsAutocomplete, true)
         XCTAssertEqual(shouldChange, true)
     }
 
@@ -37,7 +37,7 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         let shouldChange = subject.textView(textView, shouldChangeTextIn: textView.selectedRange, replacementText: "@")
         
         // Assert
-        XCTAssertEqual(subject.showMentionsSearch, false)
+        XCTAssertEqual(subject.showMentionsAutocomplete, false)
         XCTAssertEqual(shouldChange, true)
     }
     
@@ -49,7 +49,7 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         let shouldChange = subject.textView(textView, shouldChangeTextIn: textView.selectedRange, replacementText: "@")
         
         // Assert
-        XCTAssertEqual(subject.showMentionsSearch, true)
+        XCTAssertEqual(subject.showMentionsAutocomplete, true)
         XCTAssertEqual(shouldChange, true)
     }
     
@@ -62,7 +62,7 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         let shouldChange = subject.textView(textView, shouldChangeTextIn: textView.selectedRange, replacementText: "@")
         
         // Assert
-        XCTAssertEqual(subject.showMentionsSearch, true)
+        XCTAssertEqual(subject.showMentionsAutocomplete, true)
         XCTAssertEqual(shouldChange, true)
     }
     
@@ -163,6 +163,55 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         ]))
         expectedText.append(mention)
         XCTAssertEqual(subject.text, AttributedString(expectedText))
+    }
+    
+    @MainActor func testRemoveLinkAttributesUnderCursor_whenDeletingLastCharacterOfMention() throws {
+        // Arrange
+        let name = "abc"
+        let npub = "npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
+        let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
+        let author = try Author.findOrCreate(by: hex, context: testContext)
+        author.displayName = name
+        try testContext.save()
+        subject.append(text: "@")
+        
+        // Act
+        subject.insertMention(of: author)
+        // simulate a backspace
+        _ = subject.textView(textView, shouldChangeTextIn: NSRange(location: 3, length: 1), replacementText: "")
+        
+        // Assert
+        let expectedText = NSAttributedString(string: "@ab", attributes: [
+            .font: UIFont.preferredFont(forTextStyle: .body),
+            .foregroundColor: UIColor.primaryTxt,
+        ])
+        
+        XCTAssertEqual(subject.text, AttributedString(expectedText))
+    }
+    
+    @MainActor func testRemoveLinkAttributesUnderCursor_whenDeletingACharacterAfterAMention() throws {
+        // Arrange
+        let name = "abc"
+        let npub = "npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
+        let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
+        let author = try Author.findOrCreate(by: hex, context: testContext)
+        author.displayName = name
+        try testContext.save()
+        subject.append(text: "@")
+        
+        // Act
+        subject.insertMention(of: author)
+        subject.append(text: ".")
+        // simulate a backspace
+        let shouldChange = subject.textView(
+            textView, 
+            shouldChangeTextIn: NSRange(location: 4, length: 1), 
+            replacementText: ""
+        )
+        
+        // Assert
+        // The backspace should be handled by the UITextView, not our code.
+        XCTAssertEqual(shouldChange, true)
     }
 }
 
