@@ -135,7 +135,7 @@ import UIKit
 
     // MARK: - Helpers 
     
-    /// Calculates the height that fits all entered text, and updates $intrinsicHeight with this property. This is 
+    /// Calculates the height that fits all entered text, and updates `intrinsicHeight` with this property. This is 
     /// done to work around some incompatibilities between UIKit and SwiftUI where the UITextView won't expand properly.
     func updateIntrinsicHeight(view: UIView) {
         let newSize = view.sizeThatFits(CGSize(width: view.frame.width, height: .greatestFiniteMagnitude))
