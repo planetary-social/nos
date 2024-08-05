@@ -174,6 +174,8 @@ import Dependencies
         }
     }
 
+    /// Subscribes to relays for important events concerning the current user like their latest contact list, 
+    /// notifications, reports, mutes, etc.
     @MainActor func subscribe() async {
         guard let key = publicKeyHex, let author else {
             return
@@ -182,28 +184,23 @@ import Dependencies
         // Close out stale requests
         subscriptions.removeAll()
         
-        // Subscribe to our own events of all kinds.
+        // Always make a request for the latest contact list
+        subscriptions.append(
+            await relayService.requestContactList(for: key, since: author.lastUpdatedContactList)
+        )
+        
+        // Subscribe to important events we may not get incidentally while browsing the feed
         let latestRecievedEvent = try? viewContext.fetch(Event.lastReceived(for: author)).first
-        let allEventsFilter = Filter(
+        let importantEventsFilter = Filter(
             authorKeys: [key],
+            kinds: [.mute, .delete, .report, .contactList],
+            limit: 100,
             since: latestRecievedEvent?.receivedAt,
             keepSubscriptionOpen: true
         )
         subscriptions.append(
-            await relayService.fetchEvents(matching: allEventsFilter)
+            await relayService.fetchEvents(matching: importantEventsFilter)
         )
-
-        // Always make a one time request for the latest contact list
-        let contactFilter = Filter(
-            authorKeys: [key],
-            kinds: [.contactList],
-            limit: 2, // small hack to make sure this filter doesn't get closed for being stale
-            since: author.lastUpdatedContactList
-        )
-        subscriptions.append(
-            await relayService.fetchEvents(matching: contactFilter)
-        )
-
         // Listen for notifications
         await pushNotificationService.listen(for: self)
     }
