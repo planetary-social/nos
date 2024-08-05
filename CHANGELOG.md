@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a bug where the cursor could jump around when composing a note.
+- Fixed a bug where mentions could be duplicated when typing in the middle of one.
+- Re-enabled autocomplete when composing a note.
 - Fixed a bug where the home feed would be empty on first launch.
 - Fixed the issue where tapping outside the New Post view caused it to disappear and all its text to be lost.
 - Remove stories UI to improve performance.
