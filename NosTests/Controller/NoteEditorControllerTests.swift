@@ -15,7 +15,7 @@ final class NoteEditorControllerTests: CoreDataTestCase {
     
     // MARK: - Show Mentions Search
     
-    func testShowMentionsSearch_whenTypingAfterSpace_thenMentionsSearchIsShown() throws {
+    func testShowMentionsAutocomplete_whenTypingAfterSpace_thenMentionsSearchIsShown() throws {
         // Arrange
         subject.append(text: " ")
         textView.selectedRange = NSRange(location: 1, length: 0)
