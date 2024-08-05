@@ -28,7 +28,7 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         XCTAssertEqual(shouldChange, true)
     }
 
-    func testShowMentionsSearch_whenTypingInMiddleOfWord_thenMentionsSearchIsNotShown() throws {
+    func testShowMentionsAutocomplete_whenTypingInMiddleOfWord_thenMentionsSearchIsNotShown() throws {
         // Arrange
         subject.append(text: "blah")
         textView.selectedRange = NSRange(location: 4, length: 0)
@@ -41,7 +41,7 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         XCTAssertEqual(shouldChange, true)
     }
     
-    func testShowMentionsSearch_whenTypingInEmptyField_thenMentionsSearchIsShown() throws {
+    func testShowMentionsAutocomplete_whenTypingInEmptyField_thenMentionsSearchIsShown() throws {
         // Arrange
         textView.selectedRange = NSRange(location: 0, length: 0)
         
@@ -53,7 +53,7 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         XCTAssertEqual(shouldChange, true)
     }
     
-    func testShowMentionsSearch_whenTypingAtStartOfLine_thenMentionsSearchIsShown() throws {
+    func testShowMentionsAutocomplete_whenTypingAtStartOfLine_thenMentionsSearchIsShown() throws {
         // Arrange
         subject.append(text: "\n")
         textView.selectedRange = NSRange(location: 1, length: 0)

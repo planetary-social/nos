@@ -44,7 +44,7 @@ class SystemKeychain: Keychain {
         let status: OSStatus = SecItemCopyMatching(query as CFDictionary, &dataTypeRef)
         
         if status == noErr {
-            return dataTypeRef as! Data?
+            return dataTypeRef as? Data
         } else {
             return nil
         }

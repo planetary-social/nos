@@ -37,20 +37,14 @@ import UIKit
         }
     }
     
-    /// The attributed string attributes that should be used for normal text.
-    private var defaultAttributes: AttributeContainer {
-        AttributeContainer(defaultNSAttributes)
-    }
-    
-    /// The attributed string attributes that should be used for normal text.
-    var defaultNSAttributes: [NSAttributedString.Key: Any]
+    /// The attributed string attributes that should be applied to normal text the user types in the text field. 
+    private var defaultStringAttributes: [NSAttributedString.Key: Any]
     
     init(font: UIFont = .preferredFont(forTextStyle: .body), foregroundColor: UIColor = .primaryTxt) {
-        let defaultAttributes: [NSAttributedString.Key: Any] = [
+        self.defaultStringAttributes = [
             .font: font,
             .foregroundColor: foregroundColor
         ]
-        self.defaultNSAttributes = defaultAttributes
     }
     
     // MARK: - Mutating Text
@@ -70,10 +64,10 @@ import UIKit
         let range = NSRange(location: textView.attributedText.length, length: 0)
         let appendedAttributedString = NSAttributedString(
             string: text,
-            attributes: defaultNSAttributes
+            attributes: defaultStringAttributes
         )
         
-        let attributedString = textView.attributedText.mutableCopy() as! NSMutableAttributedString
+        let attributedString = NSMutableAttributedString(attributedString: textView.attributedText)
         attributedString.replaceCharacters(in: range, with: appendedAttributedString)
         textView.attributedText = attributedString
         textView.selectedRange.location += appendedAttributedString.length
@@ -116,7 +110,7 @@ import UIKit
         if handledChange {
             return false
         }
-        textView.typingAttributes = defaultNSAttributes
+        textView.typingAttributes = defaultStringAttributes
         
         if text == "@" {
             let showedAutocomplete = checkForMentionsAutocomplete(in: textView, at: nsRange)
@@ -175,7 +169,7 @@ import UIKit
             return
         }
         
-        let linkAttributes = defaultNSAttributes.merging(
+        let linkAttributes = defaultStringAttributes.merging(
             [NSAttributedString.Key.link: link], 
             uniquingKeysWith: { _, key in key }
         )
@@ -184,10 +178,11 @@ import UIKit
             attributes: linkAttributes
         )
         
-        let attributedString = textView.attributedText.mutableCopy() as! NSMutableAttributedString
+        let attributedString = NSMutableAttributedString(attributedString: textView.attributedText)
         attributedString.replaceCharacters(in: range, with: link)
         textView.attributedText = attributedString
         textView.selectedRange.location = range.location + link.length
+        isEmpty = false
     }
     
     /// Takes the same arguments as `textView(_:shouldChangeTextIn:replacementText:)` and detects the case where the 
@@ -210,7 +205,7 @@ import UIKit
             )
             
             if link != nil {
-                let newAttributesString = (attributedText.mutableCopy() as! NSMutableAttributedString)
+                let newAttributesString = NSMutableAttributedString(attributedString: attributedText)
                 newAttributesString.removeAttribute(.link, range: rangeOfLink)
                 newAttributesString.replaceCharacters(in: selectedRange, with: newText)
                 textView.attributedText = newAttributesString
@@ -226,7 +221,7 @@ import UIKit
     }
         
     /// Call this when the user has typed a '@' and it will trigger the mentions autocomplete to open if appropriate.
-    /// This function will return `true` if it opened the mentions autocomplete.
+    /// - Returns: `true` if it opened the mentions autocomplete.
     func checkForMentionsAutocomplete(in textView: UITextView, at range: NSRange) -> Bool {
         if textView.text.count == 0 {
             showMentionsAutocomplete = true
@@ -242,7 +237,8 @@ import UIKit
     }
     
     /// Checks to see if `text` is a valid `NostrIdentifier` and inserts it into the given `textView` as a link if 
-    /// it is. This function will return `true` if it inserted a link.
+    /// it is. 
+    /// - Returns: `true` if it inserted a link.
     func handleNostrIdentifiers(in text: String, textView: UITextView) -> Bool {
         do {
             _ = try NostrIdentifier.decode(bech32String: text)
