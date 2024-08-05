@@ -46,18 +46,18 @@ We use SwiftLint to enforce many of our style conventions. When it comes to nami
 
 For now `main` is the main branch and code improvements are made in topic branches that get merged into it.
 
-1. Fork the repo and create a branch named `initials-topic` or ticket tag like `esw-190`.
-2. Make your proposed changes. Make sure to test them thoroughly and consider adding unit or integration tests.
+1. Fork the repo and create a branch. Use a concise, descriptive name, like `new-notes-available` for a feature, or `fix-home-feed-on-first-launch` for a bug fix.
+2. Make your proposed changes and test them thoroughly. We’d _love_ for you to add unit or integration tests as well.
 3. Open a PR with a short description of what the PR accomplishes, and a link to the corresponding issue.
-4. If possible add screenshots (use shift-command-4-space-click to capture the iOS simulator window).
+4. If your PR contains visual changes, add screenshots or a video. In the iOS Simulator, you can use File > Save Screen (⌘S) to take a screenshot or File > Record Screen (⌘R) to take a video.
 
 A maintainer will review your code and merge it when it has the required number of approvals.
 
-### Dependency Management
+## Dependency Management
 
 We prefer to install dependencies using the Swift Package Manager. 
 
-### Releasing
+## Releasing
 
 We build and release using [Fastlane](https://docs.fastlane.tools). You can set up fastlane like this:
 
