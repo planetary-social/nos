@@ -5,10 +5,16 @@ enum ProfileFeedType {
     case activity
     case notes
     
-    func databaseFilter(author: Author, before date: Date) -> NSFetchRequest<Event> {
-        author.allPostsRequest(before: date, onlyRootPosts: self == .notes)
+    /// A filter for the database. Also known as a fetch request.
+    /// - Parameters:
+    ///   - author: Only fetch events created by this author.
+    ///   - before: Only fetch events that were created before this date.
+    ///   - after: Only fetch events that were created after this date.
+    /// - Returns: A fetch request that will return events matching the given parameters.
+    func databaseFilter(author: Author, before: Date? = nil, after: Date? = nil) -> NSFetchRequest<Event> {
+        author.allPostsRequest(before: before, after: after, onlyRootPosts: self == .notes)
     }
-    
+
     func relayFilter(author: Author) -> Filter {
         var kinds: [EventKind]
         switch self {

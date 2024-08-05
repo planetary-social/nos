@@ -38,6 +38,10 @@ struct ProfileView: View {
         selectedTab.databaseFilter(author: author, before: refreshController.lastRefreshDate ?? .now)
     }
 
+    var newNotesRequest: NSFetchRequest<Event> {
+        selectedTab.databaseFilter(author: author, after: refreshController.lastRefreshDate ?? .now)
+    }
+
     func downloadAuthorData() async {
         relaySubscriptions.removeAll()
         
@@ -82,46 +86,48 @@ struct ProfileView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            VStack {
-                PagedNoteListView(
-                    databaseFilter: databaseFilter,
-                    relayFilter: selectedTab.relayFilter(author: author),
-                    relay: nil,
-                    managedObjectContext: viewContext,
-                    tab: .profile, 
-                    refreshController: refreshController,
-                    header: {
-                        ProfileHeader(author: author, selectedTab: $selectedTab)
-                            .compositingGroup()
-                            .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
-                    },
-                    emptyPlaceholder: {
-                        VStack {
-                            Text(.localizable.noEventsOnProfile)
-                                .padding()
-                                .readabilityPadding()
-                            
-                            SecondaryActionButton(title: .localizable.tapToRefresh) {
-                                refreshController.setShouldRefresh(true)
-                            }
+        ZStack {
+            PagedNoteListView(
+                databaseFilter: databaseFilter,
+                relayFilter: selectedTab.relayFilter(author: author),
+                relay: nil,
+                managedObjectContext: viewContext,
+                tab: .profile,
+                refreshController: refreshController,
+                header: {
+                    ProfileHeader(author: author, selectedTab: $selectedTab)
+                        .compositingGroup()
+                        .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
+                },
+                emptyPlaceholder: {
+                    VStack {
+                        Text(.localizable.noEventsOnProfile)
+                            .padding()
+                            .readabilityPadding()
+
+                        SecondaryActionButton(title: .localizable.tapToRefresh) {
+                            refreshController.setShouldRefresh(true)
                         }
-                        .frame(minHeight: 300)
-                    },
-                    onRefresh: {
-                        refreshController.setLastRefreshDate(.now)
                     }
-                )
-                .padding(0)
-                .id(selectedTab)
+                    .frame(minHeight: 300)
+                },
+                onRefresh: {
+                    refreshController.setLastRefreshDate(.now)
+                }
+            )
+            .padding(0)
+            .id(selectedTab)
+
+            NewNotesButton(fetchRequest: FetchRequest(fetchRequest: newNotesRequest)) {
+                refreshController.setShouldRefresh(true)
             }
-            .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { _ in
-                NotificationCenter.default.post(
-                    name: .scrollToTop,
-                    object: nil,
-                    userInfo: ["tab": AppDestination.profile]
-                )
-            }
+        }
+        .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { _ in
+            NotificationCenter.default.post(
+                name: .scrollToTop,
+                object: nil,
+                userInfo: ["tab": AppDestination.profile]
+            )
         }
         .background(Color.appBg)
         .nosNavigationBar(title: title)

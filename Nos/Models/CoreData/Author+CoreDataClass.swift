@@ -221,40 +221,93 @@ import Logger
     ///
     ///
     /// It doesn't return events if the profile is muted
-    @nonobjc func activityPredicate(before: Date) -> NSPredicate {
-        NSPredicate(
-            format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@ AND author.muted = 0 AND " +
-                "deletedOn.@count = 0 AND createdAt <= %@",
+    @nonobjc func activityPredicate(before: Date? = nil, after: Date? = nil) -> NSPredicate {
+        var arguments: [CVarArg] = [
             EventKind.text.rawValue,
             EventKind.repost.rawValue,
             EventKind.longFormContent.rawValue,
             self,
-            before as CVarArg
-        )
+        ]
+
+        let beforeClause: String
+        if let before {
+            beforeClause = " AND createdAt <= %@"
+            arguments.append(before as CVarArg)
+        } else {
+            beforeClause = ""
+        }
+
+        let afterClause: String
+        if let after {
+            afterClause = " AND createdAt >= %@"
+            arguments.append(after as CVarArg)
+        } else {
+            afterClause = ""
+        }
+
+        let predicateFormat =
+            "(kind = %i OR kind = %i OR kind = %i) AND author = %@ AND author.muted = 0 AND " +
+            "deletedOn.@count = 0" +
+            beforeClause +
+            afterClause
+
+        return NSPredicate(format: predicateFormat, argumentArray: arguments)
     }
 
-    @nonobjc func postsPredicate(before: Date) -> NSPredicate {
+    @nonobjc func postsPredicate(before: Date? = nil, after: Date? = nil) -> NSPredicate {
         let onlyRootPostsClause = "(kind = 1 AND SUBQUERY(" +
             "eventReferences, " +
             "$reference, " +
             "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
         ").@count = 0)"
-        return NSPredicate(
-            format: "(\(onlyRootPostsClause) OR kind = %i) " +
-                "AND author = %@ AND deletedOn.@count = 0 AND createdAt <= %@",
+        
+        var arguments: [CVarArg] = [
             EventKind.longFormContent.rawValue,
-            self,
-            before as CVarArg
-        )
+            self
+        ]
+
+        let beforeClause: String
+        if let before {
+            beforeClause = " AND createdAt <= %@"
+            arguments.append(before as CVarArg)
+        } else {
+            beforeClause = ""
+        }
+
+        let afterClause: String
+        if let after {
+            afterClause = " AND createdAt >= %@"
+            arguments.append(after as CVarArg)
+        } else {
+            afterClause = ""
+        }
+
+        let predicateFormat =
+            "(\(onlyRootPostsClause) OR kind = %i) " +
+            "AND author = %@ AND deletedOn.@count = 0" +
+            beforeClause +
+            afterClause
+
+        return NSPredicate(format: predicateFormat, argumentArray: arguments)
     }
 
-    @nonobjc func allPostsRequest(before: Date = .now, onlyRootPosts: Bool) -> NSFetchRequest<Event> {
+    /// A fetch requests for all posts matching the given parameters.
+    /// - Parameters:
+    ///   - before: Only fetch events that were created before this date.
+    ///   - after: Only fetch events that were created after this date.
+    ///   - onlyRootPosts: Whether to fetch only root events.
+    /// - Returns: A fetch request for this author matching the given parameters.
+    @nonobjc func allPostsRequest(
+        before: Date? = nil,
+        after: Date? = nil,
+        onlyRootPosts: Bool
+    ) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         if onlyRootPosts {
-            fetchRequest.predicate = postsPredicate(before: before)
+            fetchRequest.predicate = postsPredicate(before: before, after: after)
         } else {
-            fetchRequest.predicate = activityPredicate(before: before)
+            fetchRequest.predicate = activityPredicate(before: before, after: after)
         }
         return fetchRequest
     }
