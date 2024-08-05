@@ -5,7 +5,7 @@ import UIKit
 /// A controller for Nostr note text that is being edited. This controllers pairs with a `NoteUITextViewRepresentable`
 /// to help our SwiftUI views interact with a UITextView cleanly.
 /// 
-/// To use: instantiate and pass into a `NoteTextEditor` view. You can retrieve the typed text via the `text` attribute
+/// To use: instantiate and pass into a `NoteTextEditor` view. You can retrieve the typed text via the `text` property
 /// when the user indicates they are ready to post it.  
 @Observable class NoteEditorController: NSObject, UITextViewDelegate {
 
