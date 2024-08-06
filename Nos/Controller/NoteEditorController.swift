@@ -173,10 +173,12 @@ import UIKit
             [NSAttributedString.Key.link: link], 
             uniquingKeysWith: { _, key in key }
         )
-        let link = NSAttributedString(
+        let link = NSMutableAttributedString(
             string: text,
             attributes: linkAttributes
         )
+        let space = NSAttributedString(string: " ", attributes: defaultStringAttributes)
+        link.append(space)
         
         let attributedString = NSMutableAttributedString(attributedString: textView.attributedText)
         attributedString.replaceCharacters(in: range, with: link)
@@ -222,11 +224,11 @@ import UIKit
         
     /// Call this when the user has typed a '@' and it will trigger the mentions autocomplete to open if appropriate.
     /// - Returns: `true` if it opened the mentions autocomplete.
-    func checkForMentionsAutocomplete(in textView: UITextView, at range: NSRange) -> Bool {
+    private func checkForMentionsAutocomplete(in textView: UITextView, at range: NSRange) -> Bool {
         if textView.text.count == 0 {
             showMentionsAutocomplete = true
             return true
-        } else if textView.text.count > 0 {
+        } else {
             let lastCharacter = (textView.text as NSString).character(at: max(range.location - 1, 0))
             if let scalar = UnicodeScalar(lastCharacter), CharacterSet.whitespacesAndNewlines.contains(scalar) {
                 showMentionsAutocomplete = true
@@ -239,7 +241,7 @@ import UIKit
     /// Checks to see if `text` is a valid `NostrIdentifier` and inserts it into the given `textView` as a link if 
     /// it is. 
     /// - Returns: `true` if it inserted a link.
-    func handleNostrIdentifiers(in text: String, textView: UITextView) -> Bool {
+    private func handleNostrIdentifiers(in text: String, textView: UITextView) -> Bool {
         do {
             _ = try NostrIdentifier.decode(bech32String: text)
             insert(text: text.prefix(10).appending("..."), link: "nostr:\(text)", at: textView.selectedRange)

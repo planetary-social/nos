@@ -6,6 +6,17 @@ final class NoteEditorControllerTests: CoreDataTestCase {
     
     var subject: NoteEditorController!
     var textView: UITextView!
+    
+    lazy var defaultAttributes: [NSAttributedString.Key: Any] = {
+        [
+            .font: UIFont.preferredFont(forTextStyle: .body),
+            .foregroundColor: UIColor.primaryTxt
+        ]
+    }()
+    
+    lazy var attributedSpace: NSMutableAttributedString = {
+        NSMutableAttributedString(string: " ", attributes: defaultAttributes)
+    }()
 
     override func setUpWithError() throws {
         subject = NoteEditorController()
@@ -82,11 +93,17 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         subject.insertMention(of: author)
         
         // Assert
-        let expectedText = AttributedString(NSAttributedString(string: "@mattn", attributes: [
-            .font: UIFont.preferredFont(forTextStyle: .body),
-            .foregroundColor: UIColor.primaryTxt,
-            .link: "nostr:\(npub)"
-        ]))
+        
+        let mention = NSMutableAttributedString(
+            string: "@mattn", 
+            attributes: [
+                .font: UIFont.preferredFont(forTextStyle: .body),
+                .foregroundColor: UIColor.primaryTxt,
+                .link: "nostr:\(npub)"
+            ]
+        )
+        mention.append(attributedSpace)
+        let expectedText = AttributedString(mention)
         XCTAssertEqual(subject.text, expectedText)
     }
 
@@ -104,11 +121,16 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         subject.insertMention(of: author)
         
         // Assert
-        let expectedText = AttributedString(NSAttributedString(string: "@mattn 🍐", attributes: [
-            .font: UIFont.preferredFont(forTextStyle: .body),
-            .foregroundColor: UIColor.primaryTxt,
-            .link: "nostr:\(npub)"
-        ]))
+        let mention = NSMutableAttributedString(
+            string: "@mattn 🍐", 
+            attributes: [
+                .font: UIFont.preferredFont(forTextStyle: .body),
+                .foregroundColor: UIColor.primaryTxt,
+                .link: "nostr:\(npub)"
+            ]
+        )
+        mention.append(attributedSpace)
+        let expectedText = AttributedString(mention)
         XCTAssertEqual(subject.text, expectedText)
     }
 
@@ -126,11 +148,16 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         subject.insertMention(of: author)
         
         // Assert
-        let expectedText = AttributedString(NSAttributedString(string: "@🍐 mattn 🍐", attributes: [
-            .font: UIFont.preferredFont(forTextStyle: .body),
-            .foregroundColor: UIColor.primaryTxt,
-            .link: "nostr:\(npub)"
-        ]))
+        let mention = NSMutableAttributedString(
+            string: "@🍐 mattn 🍐", 
+            attributes: [
+                .font: UIFont.preferredFont(forTextStyle: .body),
+                .foregroundColor: UIColor.primaryTxt,
+                .link: "nostr:\(npub)"
+            ]
+        )
+        mention.append(attributedSpace)
+        let expectedText = AttributedString(mention)
         XCTAssertEqual(subject.text, expectedText)
     }
 
@@ -146,7 +173,7 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         
         // Act
         subject.insertMention(of: author)
-        subject.append(text: " @")
+        subject.append(text: "@")
         subject.insertMention(of: author)
         
         // Assert
@@ -157,18 +184,15 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         ])
         
         let expectedText = NSMutableAttributedString(attributedString: mention)
-        expectedText.append(NSAttributedString(string: " ", attributes: [
-            .font: UIFont.preferredFont(forTextStyle: .body),
-            .foregroundColor: UIColor.primaryTxt
-        ]))
+        expectedText.append(attributedSpace)
         expectedText.append(mention)
+        expectedText.append(attributedSpace)
         XCTAssertEqual(subject.text, AttributedString(expectedText))
     }
     
     @MainActor func testRemoveLinkAttributesUnderCursor_whenDeletingLastCharacterOfMention() throws {
         // Arrange
         let name = "abc"
-        let npub = "npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
@@ -181,18 +205,21 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         _ = subject.textView(textView, shouldChangeTextIn: NSRange(location: 3, length: 1), replacementText: "")
         
         // Assert
-        let expectedText = NSAttributedString(string: "@ab", attributes: [
-            .font: UIFont.preferredFont(forTextStyle: .body),
-            .foregroundColor: UIColor.primaryTxt,
-        ])
+        let mention = NSMutableAttributedString(
+            string: "@ab ", 
+            attributes: [
+                .font: UIFont.preferredFont(forTextStyle: .body),
+                .foregroundColor: UIColor.primaryTxt,
+            ]
+        )
+        let expectedText = AttributedString(mention)
         
-        XCTAssertEqual(subject.text, AttributedString(expectedText))
+        XCTAssertEqual(subject.text, expectedText)
     }
     
     @MainActor func testRemoveLinkAttributesUnderCursor_whenDeletingACharacterAfterAMention() throws {
         // Arrange
         let name = "abc"
-        let npub = "npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
@@ -201,7 +228,6 @@ final class NoteEditorControllerTests: CoreDataTestCase {
         
         // Act
         subject.insertMention(of: author)
-        subject.append(text: ".")
         // simulate a backspace
         let shouldChange = subject.textView(
             textView, 
