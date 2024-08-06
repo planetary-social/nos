@@ -146,7 +146,7 @@ struct NewNoteView: View {
                 },
                 trailing: ActionButton(title: .localizable.post, action: postAction)
                     .frame(height: 22)
-                    .disabled(text.string.isEmpty)
+                    .disabled(text.string.isEmpty || isUploadingImage)
                     .padding(.bottom, 3)
             )
             .onAppear {

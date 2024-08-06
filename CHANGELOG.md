@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Show “New notes available” notification on Feed when there are new notes to display.
+- Disable the Post button while images are still uploading. Thanks @vien-eaker!
 - Improved app performance on first login by requesting fewer events from relays.
 
 ## [0.1.23] - 2024-07-31Z
