@@ -238,7 +238,7 @@ extension Notification.Name {
 
 #Preview {
     var previewData = PreviewData()
-    @Dependency(\.refreshController) var refreshController
+    let refreshController = DefaultRefreshController()
 
     return PagedNoteListView(
         databaseFilter: previewData.alice.allPostsRequest(onlyRootPosts: false),

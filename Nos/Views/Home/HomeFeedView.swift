@@ -9,9 +9,9 @@ struct HomeFeedView: View {
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) var currentUser
-    @Dependency(\.refreshController) private var refreshController
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
+    @State private var refreshController: RefreshController = DefaultRefreshController()
     @State private var isVisible = false
     @State private var relaySubscriptions = [SubscriptionCancellable]()
     @State private var isShowingRelayList = false
