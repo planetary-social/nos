@@ -20,7 +20,7 @@ extension NoteParserTests {
         noteEditor.insertMention(of: author)
 
         // Act
-        let expected = "nostr:\(npub)"
+        let expected = "nostr:\(npub) "
         let (content, _) = sut.parse(
             attributedText: noteEditor.text!
         )
@@ -42,7 +42,7 @@ extension NoteParserTests {
         noteEditor.insertMention(of: author)
 
         // Act
-        let expected = "nostr:\(npub)"
+        let expected = "nostr:\(npub) "
         let (content, _) = sut.parse(attributedText: noteEditor.text!)
 
         // Assert
@@ -62,7 +62,7 @@ extension NoteParserTests {
         noteEditor.insertMention(of: author)
 
         // Act
-        let expected = "nostr:\(npub)"
+        let expected = "nostr:\(npub) "
         let (content, _) = sut.parse(attributedText: noteEditor.text!)
 
         // Assert
@@ -80,12 +80,12 @@ extension NoteParserTests {
 
         noteEditor.append(text: "@")
         noteEditor.insertMention(of: author)
-        noteEditor.append(text: " two mentions @")
+        noteEditor.append(text: "two mentions @")
         noteEditor.insertMention(of: author)
         textView.selectedRange = NSRange(location: textView.text.count, length: 0)
         
         // Act
-        let expected = "nostr:\(npub) two mentions nostr:\(npub)"
+        let expected = "nostr:\(npub) two mentions nostr:\(npub) "
         let (content, _) = sut.parse(attributedText: noteEditor.text!)
 
         // Assert
