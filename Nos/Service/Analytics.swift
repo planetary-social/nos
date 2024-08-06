@@ -16,7 +16,7 @@ class Analytics {
             let configuration = PostHogConfig(apiKey: apiKey, host: "https://posthog.planetary.tools")
 
             configuration.captureApplicationLifecycleEvents = true
-            configuration.captureScreenViews = true
+            configuration.captureScreenViews = false
             // TODO: write screen views to log
 
             PostHogSDK.shared.setup(configuration)
