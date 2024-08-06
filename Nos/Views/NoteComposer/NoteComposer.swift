@@ -146,7 +146,7 @@ struct NoteComposer: View {
                 },
                 trailing: ActionButton(title: .localizable.post, action: postAction)
                     .frame(height: 22)
-                    .disabled(editingController.isEmpty)
+                    .disabled(editingController.isEmpty || isUploadingImage)
                     .padding(.bottom, 3)
             )
             .onAppear {

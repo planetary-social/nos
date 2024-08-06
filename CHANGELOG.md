@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Disable the Post button while images are still uploading. Thanks @vien-eaker!
 - Improved app performance on first login by requesting fewer events from relays.
 - Fixed a bug where the cursor could jump around when composing a note.
 - Fixed a bug where mentions could be duplicated when typing in the middle of one.
