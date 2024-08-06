@@ -37,7 +37,6 @@ struct DiscoverTab: View {
             )
             .autocorrectionDisabled()
             .onSubmit(of: .search) {
-                analytics.searchedDiscover()
                 searchController.submitSearch(query: searchController.query)
             }
             .background(Color.appBg)

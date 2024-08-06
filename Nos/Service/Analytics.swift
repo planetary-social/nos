@@ -144,7 +144,7 @@ class Analytics {
         postHog?.capture(eventName, properties: properties)
     }
 
-    /// Tracks when the user performs a search on the Discover screen.
+    /// Tracks when the user submits a search on the Discover screen.
     func searchedDiscover() {
         track("Searched Discover")
     }
