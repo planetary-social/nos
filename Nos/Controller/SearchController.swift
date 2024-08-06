@@ -246,20 +246,20 @@ class SearchController: ObservableObject {
         if trimmedQuery.contains("@") {
             Task(priority: .userInitiated) {
                 if let publicKeyHex = await relayService.retrievePublicKeyFromUsername(trimmedQuery) {
-                    analytics.displayedAuthorFromDiscoverSearch(resultsCount: 1)
                     Task { @MainActor in
+                        analytics.displayedAuthorFromDiscoverSearch(resultsCount: 1)
                         router.pushAuthor(id: publicKeyHex)
                     }
                 }
             }
         } else if let author = author(fromPublicKey: trimmedQuery) {
-            analytics.displayedAuthorFromDiscoverSearch(resultsCount: 1)
             Task { @MainActor in
+                analytics.displayedAuthorFromDiscoverSearch(resultsCount: 1)
                 router.push(author)
             }
         } else if let note = note(fromPublicKey: trimmedQuery) {
-            analytics.displayedNoteFromDiscoverSearch()
             Task { @MainActor in
+                analytics.displayedNoteFromDiscoverSearch()
                 router.push(note)
             }
         } else {
