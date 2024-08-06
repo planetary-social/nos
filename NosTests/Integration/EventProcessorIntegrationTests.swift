@@ -338,8 +338,8 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
         var allEvents = try testContext.fetch(Event.allEventsRequest())
         XCTAssertEqual(allEvents.count, 2)
         XCTAssertEqual(referencingEvent.eventReferences.count, 1)
-        var eventReference = referencingEvent.eventReferences.firstObject as! EventReference
-        XCTAssertEqual(eventReference.referencedEvent?.isStub, true)
+        var eventReference = referencingEvent.eventReferences.firstObject as? EventReference
+        XCTAssertEqual(eventReference?.referencedEvent?.isStub, true)
 
         let referencedJSONEvent = JSONEvent(
             id: "2",
@@ -362,6 +362,6 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
         XCTAssertEqual(allEvents.count, 2)
         XCTAssertEqual(referencedEvent.referencingEvents.count, 1)
         eventReference = referencedEvent.referencingEvents.first!
-        XCTAssertEqual(eventReference.referencingEvent, referencingEvent)
+        XCTAssertEqual(eventReference?.referencingEvent, referencingEvent)
     }
 }
