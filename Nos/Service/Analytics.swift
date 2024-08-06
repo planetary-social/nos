@@ -157,6 +157,13 @@ class Analytics {
         )
     }
 
+    /// Tracks when the user navigates to a note from the Discover search screen.
+    func displayedNoteFromDiscoverSearch() {
+        track(
+            "Displayed Note from Discover Search"
+        )
+    }
+
     // MARK: - Relays
     
     func rateLimited(by socket: WebSocket, requestCount: Int) {
