@@ -48,17 +48,13 @@ class PagedRelaySubscription {
         Task {
             // We keep two sets of subscriptions. One is always listening for new events and the other fetches 
             // progressively older events as we page down.
-            var pagedEventsFilter = filter
-            pagedEventsFilter.until = startDate
-            pagedEventsFilter.keepSubscriptionOpen = false
             var newEventsFilter = filter
-            
             newEventsFilter.since = startDate
             newEventsFilter.keepSubscriptionOpen = true
             newEventsFilter.limit = nil
             for relayAddress in relayAddresses {
                 newEventsSubscriptionIDs.insert(
-                    await subscriptionManager.queueSubscription(with: filter, to: relayAddress).id
+                    await subscriptionManager.queueSubscription(with: newEventsFilter, to: relayAddress).id
                 )
             }
             loadMore()

@@ -28,22 +28,26 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// The relay to load data from. If `nil` then all the relays in the user's list will be used.
     let relay: Relay? 
     
-    let context: NSManagedObjectContext
+    /// The managed object context used to fetch events from Core Data.
+    let managedObjectContext: NSManagedObjectContext
 
     /// The tab in which this PagedNoteListView appears.
     /// Used to determine whether to scroll this view to the top when the tab is tapped.
     let tab: AppDestination
 
+    /// Allows us to refresh the PagedNoteListView from outside this view itself, such as with a separate button.
+    let refreshController: RefreshController
+
     /// A view that will be displayed as the collectionView header.
     let header: () -> Header
     
     /// A view that will be displayed below the header when no notes are being shown and a handler that 
-    let emptyPlaceholder: (@escaping () -> Void) -> EmptyPlaceholder
+    let emptyPlaceholder: () -> EmptyPlaceholder
 
-    /// A closure that will be called when the user pulls-to-refresh. You probably want to update the `databaseFilter`
-    /// in this closure.
-    let onRefresh: () -> NSFetchRequest<Event> 
-    
+    /// A closure that will be called when the user pulls to refresh or taps a refresh button. You probably want to
+    /// update the `databaseFilter` to display new data in this closure.
+    let onRefresh: () -> Void
+
     func makeCoordinator() -> Coordinator<Header, EmptyPlaceholder> {
         Coordinator()
     }
@@ -60,7 +64,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             relayFilter: relayFilter,
             relay: relay,
             collectionView: collectionView, 
-            context: self.context,
+            managedObjectContext: self.managedObjectContext,
             header: header,
             emptyPlaceholder: emptyPlaceholder,
             onRefresh: onRefresh
@@ -92,6 +96,14 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             }
             if databaseFilter != dataSource.databaseFilter {
                 dataSource.updateFetchRequest(databaseFilter)
+            }
+            if refreshController.shouldRefresh {
+                refreshController.setShouldRefresh(false)
+
+                guard let refreshControl = collectionView.refreshControl else { return }
+                collectionView.scrollRectToVisible(refreshControl.frame, animated: true)
+                refreshControl.beginRefreshing()
+                context.coordinator.refreshData(refreshControl)
             }
         }
     }
@@ -172,17 +184,17 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         var dataSource: PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder>?
         var collectionView: UICollectionView?
         var scrollToTopObserver: NSObjectProtocol?
-        var onRefresh: (() -> NSFetchRequest<Event>)?
+        var onRefresh: (() -> Void)?
         
         func dataSource(
             databaseFilter: NSFetchRequest<Event>, 
             relayFilter: Filter,
             relay: Relay?,
             collectionView: UICollectionView,
-            context: NSManagedObjectContext,
+            managedObjectContext: NSManagedObjectContext,
             @ViewBuilder header: @escaping () -> CoordinatorHeader,
-            @ViewBuilder emptyPlaceholder: @escaping (@escaping () -> Void) -> CoordinatorEmptyPlaceholder,
-            onRefresh: @escaping () -> NSFetchRequest<Event>
+            @ViewBuilder emptyPlaceholder: @escaping () -> CoordinatorEmptyPlaceholder,
+            onRefresh: @escaping () -> Void
         ) -> PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder> {
             if let dataSource {
                 return dataSource 
@@ -195,7 +207,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
                 relayFilter: relayFilter,
                 relay: relay,
                 collectionView: collectionView, 
-                context: context,
+                managedObjectContext: managedObjectContext,
                 header: header,
                 emptyPlaceholder: emptyPlaceholder,
                 onRefresh: onRefresh
@@ -205,13 +217,11 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         }
     
         @objc func refreshData(_ sender: Any) {
-            if let onRefresh {
-                dataSource?.updateFetchRequest(onRefresh())
-            }
-            
+            onRefresh?()
+
             if let refreshControl = sender as? UIRefreshControl {
                 // Dismiss the refresh control
-                DispatchQueue.main.async {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
                     refreshControl.endRefreshing()
                 }
             }
@@ -228,25 +238,25 @@ extension Notification.Name {
 
 #Preview {
     var previewData = PreviewData()
-    
+    let refreshController = DefaultRefreshController()
+
     return PagedNoteListView(
         databaseFilter: previewData.alice.allPostsRequest(onlyRootPosts: false),
         relayFilter: Filter(), 
         relay: nil,
-        context: previewData.previewContext,
+        managedObjectContext: previewData.previewContext,
         tab: .home,
+        refreshController: refreshController,
         header: {
             ProfileHeader(author: previewData.alice, selectedTab: .constant(.activity))
                 .compositingGroup()
                 .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                 .id(previewData.alice.id)
         },
-        emptyPlaceholder: { _ in
+        emptyPlaceholder: {
             Text("empty")
         },
-        onRefresh: {
-            previewData.alice.allPostsRequest(onlyRootPosts: false)
-        }
+        onRefresh: {}
     )
     .background(Color.appBg)
     .inject(previewData: previewData)

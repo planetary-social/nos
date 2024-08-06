@@ -15,11 +15,11 @@ struct ProfileView: View {
     @Dependency(\.relayService) private var relayService: RelayService
     @Dependency(\.analytics) private var analytics
     @Dependency(\.unsAPI) private var unsAPI
-    
+
+    @State private var refreshController: RefreshController = DefaultRefreshController()
     @State private var showingOptions = false
     @State private var showingReportMenu = false
     @State private var relaySubscriptions = SubscriptionCancellables()
-    @State private var lastRefreshDate = Date.now
 
     @State private var selectedTab: ProfileFeedType = .notes
 
@@ -33,7 +33,11 @@ struct ProfileView: View {
         self.author = author
         self.addDoubleTapToPop = addDoubleTapToPop
     }
-    
+
+    var databaseFilter: NSFetchRequest<Event> {
+        selectedTab.databaseFilter(author: author, before: refreshController.lastRefreshDate ?? .now)
+    }
+
     func downloadAuthorData() async {
         relaySubscriptions.removeAll()
         
@@ -81,32 +85,31 @@ struct ProfileView: View {
         VStack(spacing: 0) {
             VStack {
                 PagedNoteListView(
-                    databaseFilter: selectedTab.databaseFilter(author: author, before: lastRefreshDate),
-                    relayFilter: selectedTab.relayFilter(author: author), 
+                    databaseFilter: databaseFilter,
+                    relayFilter: selectedTab.relayFilter(author: author),
                     relay: nil,
-                    context: viewContext,
-                    tab: .profile,
+                    managedObjectContext: viewContext,
+                    tab: .profile, 
+                    refreshController: refreshController,
                     header: {
                         ProfileHeader(author: author, selectedTab: $selectedTab)
                             .compositingGroup()
                             .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                     },
-                    emptyPlaceholder: { refresh in
+                    emptyPlaceholder: {
                         VStack {
                             Text(.localizable.noEventsOnProfile)
                                 .padding()
                                 .readabilityPadding()
                             
-                            SecondaryActionButton(
-                                title: .localizable.tapToRefresh,
-                                action: refresh
-                            )
+                            SecondaryActionButton(title: .localizable.tapToRefresh) {
+                                refreshController.setShouldRefresh(true)
+                            }
                         }
                         .frame(minHeight: 300)
                     },
                     onRefresh: {
-                        lastRefreshDate = .now
-                        return selectedTab.databaseFilter(author: author, before: lastRefreshDate)
+                        refreshController.setLastRefreshDate(.now)
                     }
                 )
                 .padding(0)
