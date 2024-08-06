@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// This is a component of `NewNoteView` that displays a preview of the note being replied to. 
+/// This is a component of `NoteComposer` that displays a preview of the note being replied to. 
 struct ReplyPreview: View {
     
     var note: Event

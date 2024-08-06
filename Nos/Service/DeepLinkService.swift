@@ -35,7 +35,7 @@ enum DeepLinkService {
                 .first(where: { $0.name == "contents" })?
                 .value
             
-            router.showNewNoteView(contents: noteContents)
+            router.showNoteComposer(contents: noteContents)
         } else {
             // The destination (npub, note, nprofile, nevent, or naddr) may be in the host or the path.
             // If the URL looks like nos://npub1..., we want the host. If it's nostr:npub1..., the path is what we want.

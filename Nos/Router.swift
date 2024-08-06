@@ -126,8 +126,8 @@ import Dependencies
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
-    func showNewNoteView(contents: String?) {
-        selectedTab = .newNote(contents)
+    func showNoteComposer(contents: String?) {
+        selectedTab = .noteComposer(contents)
     }
 
     func consecutiveTaps(on tab: AppDestination) -> AnyPublisher<Void, Never> {
@@ -150,7 +150,7 @@ import Dependencies
             return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
         case .discover:
             return Binding(get: { self.discoverPath }, set: { self.discoverPath = $0 })
-        case .newNote:
+        case .noteComposer:
             return Binding(get: { self.homeFeedPath }, set: { self.homeFeedPath = $0 })
         case .notifications:
             return Binding(get: { self.notificationsPath }, set: { self.notificationsPath = $0 })

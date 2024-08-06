@@ -6,14 +6,14 @@ import SwiftUINavigation
 /// A horizontal bar that gives the user options to customize their message in the message composer.
 struct ComposerActionBar: View {
     
+    /// A controller for the text entered in the note composer. 
+    @Binding var editingController: NoteEditorController
+    
     /// The expiration time for the note, if any.
     @Binding var expirationTime: TimeInterval?
 
     /// Whether we're currently uploading an image or not.
     @Binding var isUploadingImage: Bool
-
-    /// The text in the note.
-    @Binding var text: EditableNoteText
 
     @Dependency(\.fileStorageAPIClient) private var fileStorageAPIClient
 
@@ -47,7 +47,7 @@ struct ComposerActionBar: View {
                         do {
                             startUploadingImage()
                             let url = try await fileStorageAPIClient.upload(fileAt: imageURL)
-                            text.append(url)
+                            editingController.append(url)
                             endUploadingImage()
                         } catch {
                             endUploadingImage()
@@ -147,16 +147,24 @@ struct ComposerActionBar: View {
 
 struct ComposerActionBar_Previews: PreviewProvider {
     
+    @State static var controller = NoteEditorController()
     @State static var emptyExpirationTime: TimeInterval?
     @State static var setExpirationTime: TimeInterval? = 60 * 60
-    @State static var postText = EditableNoteText()
     
     static var previews: some View {
         VStack {
             Spacer()
-            ComposerActionBar(expirationTime: $emptyExpirationTime, isUploadingImage: .constant(false), text: $postText)
+            ComposerActionBar(
+                editingController: $controller, 
+                expirationTime: $emptyExpirationTime, 
+                isUploadingImage: .constant(false)
+            )
             Spacer()
-            ComposerActionBar(expirationTime: $setExpirationTime, isUploadingImage: .constant(false), text: $postText)
+            ComposerActionBar(
+                editingController: $controller, 
+                expirationTime: $setExpirationTime, 
+                isUploadingImage: .constant(false)
+            )
             Spacer()
         }
         .frame(maxWidth: .infinity)
