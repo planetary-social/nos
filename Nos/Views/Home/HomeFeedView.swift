@@ -41,7 +41,15 @@ struct HomeFeedView: View {
             seenOn: selectedRelay
         )
     }
-    
+
+    var newNotesRequest: NSFetchRequest<Event> {
+        Event.homeFeed(
+            for: user,
+            after: refreshController.lastRefreshDate ?? .now,
+            seenOn: selectedRelay
+        )
+    }
+
     var homeFeedFilter: Filter {
         var filter = Filter(kinds: [.text, .delete, .repost, .longFormContent, .report])
         if selectedRelay == nil {
@@ -83,11 +91,7 @@ struct HomeFeedView: View {
             )
             .padding(0)
 
-            NewNotesButton(
-                user: user,
-                lastRefreshDate: refreshController.lastRefreshDate ?? .now,
-                seenOn: selectedRelay
-            ) {
+            NewNotesButton(fetchRequest: FetchRequest(fetchRequest: newNotesRequest)) {
                 refreshController.setShouldRefresh(true)
             }
 
