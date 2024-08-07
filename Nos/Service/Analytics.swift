@@ -52,7 +52,7 @@ class Analytics {
         track("Discover Tab Tapped")
     }
     
-    func showedNewNote() {
+    func showedNoteComposer() {
         track("New Note Tapped")
     }
     

@@ -76,6 +76,8 @@ struct ActionButton: View {
 
 struct SecondaryActionButton: View {
     var title: LocalizedStringResource
+    var font: Font = .clarity(.bold)
+
     var image: Image?
     var imageAlignment: ActionButton.ImageAlignment = .left
     /// A flag used to fill the available horizontal space (centering the
@@ -87,17 +89,11 @@ struct SecondaryActionButton: View {
     var body: some View {
         ActionButton(
             title: title,
+            font: font,
             image: image,
             imageAlignment: imageAlignment,
-            depthEffectColor: Color(hex: "#514964"),
-            backgroundGradient: LinearGradient(
-                colors: [
-                    Color(hex: "#736595"),
-                    Color(hex: "#736595")
-                ],
-                startPoint: .bottomLeading,
-                endPoint: .topTrailing
-            ),
+            depthEffectColor: .actionSecondaryDepthEffect,
+            backgroundGradient: .verticalAccentSecondary,
             shouldFillHorizontalSpace: shouldFillHorizontalSpace,
             action: action
         )
