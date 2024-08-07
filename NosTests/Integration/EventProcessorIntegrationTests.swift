@@ -257,6 +257,25 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
         XCTAssertEqual(event?.author?.follows.count, 2)
     }
 
+    // MARK: - Zap Receipt/Request parsing
+    
+    /// When a zap receipt event is parsed, expect that its embedded zap request is also parsed.
+    func testParseZapReceiptAndEmbeddedZapRequest() throws {
+        // Arrange
+        let zapReceiptData = try jsonData(filename: "zap_receipt")
+        let zapReceiptEvent = try JSONDecoder().decode(JSONEvent.self, from: zapReceiptData)
+
+        let context = persistenceController.viewContext
+        
+        // Act
+        _ = try EventProcessor.parse(jsonEvent: zapReceiptEvent, from: nil, in: context)!
+        
+        // Assert
+        let zapRequestEventID = "6715260809f6f62ea82f8b213ca4cc0abd0426dc860f1c963c0f0207f9fadddb"
+        let zapRequestEvent = Event.find(by: zapRequestEventID, context: context)
+        XCTAssertNotNil(zapRequestEvent)
+    }
+    
     // MARK: - Expiration
 
     func testParseExpirationDate() throws {

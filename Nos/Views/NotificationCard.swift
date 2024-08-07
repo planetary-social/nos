@@ -35,23 +35,25 @@ struct NotificationCard: View {
                 VStack {
                     HStack {
                         Text(viewModel.actionText)
-                            .lineLimit(1)
+                            .lineLimit(2)
                         Spacer()
                     }
-                    HStack {
-                        let contentText = Text("\"" + (content ?? "") + "\"")
-                            .lineLimit(2)
-                            .font(.body)
-                            .foregroundColor(.primaryTxt)
-                            .tint(.accent)
-                            .handleURLsInRouter()
-                        
-                        if viewModel.content == nil {
-                            contentText.redacted(reason: .placeholder)
-                        } else {
-                            contentText
+                    if let contentText = content, !contentText.characters.isEmpty {
+                        HStack {
+                            let contentText = Text("\"" + (content ?? "") + "\"")
+                                .lineLimit(2)
+                                .font(.body)
+                                .foregroundColor(.primaryTxt)
+                                .tint(.accent)
+                                .handleURLsInRouter()
+                            
+                            if viewModel.content == nil {
+                                contentText.redacted(reason: .placeholder)
+                            } else {
+                                contentText
+                            }
+                            Spacer()
                         }
-                        Spacer()
                     }
                 }
                 .frame(maxWidth: .infinity)
