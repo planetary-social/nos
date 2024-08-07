@@ -36,7 +36,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     let tab: AppDestination
 
     /// Allows us to refresh the PagedNoteListView from outside this view itself, such as with a separate button.
-    let refreshController: RefreshController
+    let refreshController: DefaultRefreshController
 
     /// A view that will be displayed as the collectionView header.
     let header: () -> Header
