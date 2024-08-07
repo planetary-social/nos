@@ -146,13 +146,13 @@ class Analytics {
 
     /// Tracks when the user submits a search on the Discover screen.
     func searchedDiscover() {
-        track("Searched Discover")
+        track("Discover Search Started")
     }
 
     /// Tracks when the user taps on a search result on the Discover screen.
     func displayedAuthorFromDiscoverSearch(resultsCount: Int) {
         track(
-            "Displayed Author from Discover Search",
+            "Discover Search Displayed Author",
             properties: ["Number of results": resultsCount]
         )
     }
@@ -160,7 +160,7 @@ class Analytics {
     /// Tracks when the user navigates to a note from the Discover search screen.
     func displayedNoteFromDiscoverSearch() {
         track(
-            "Displayed Note from Discover Search"
+            "Discover Search Displayed Note"
         )
     }
 
