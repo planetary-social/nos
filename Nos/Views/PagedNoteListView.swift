@@ -38,18 +38,14 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// Used to determine whether to scroll this view to the top when the tab is tapped.
     let tab: AppDestination
 
-    /// A view that will be displayed as the collectionView header.
+    /// A view that will be displayed as the collection view header.
     let header: () -> Header
     
-    /// A view that will be displayed below the header when no notes are being shown and a handler that 
+    /// A view that will be displayed below the header when no notes are being shown.
     let emptyPlaceholder: () -> EmptyPlaceholder
 
-    /// A closure that will be called when the user pulls to refresh or taps a refresh button. You probably want to
-    /// update the `databaseFilter` to display new data in this closure.
-    let onRefresh: () -> Void
-
     func makeCoordinator() -> Coordinator<Header, EmptyPlaceholder> {
-        Coordinator()
+        Coordinator(refreshController: refreshController)
     }
 
     func makeUIView(context: Context) -> UICollectionView {
@@ -66,8 +62,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             collectionView: collectionView, 
             managedObjectContext: self.managedObjectContext,
             header: header,
-            emptyPlaceholder: emptyPlaceholder,
-            onRefresh: onRefresh
+            emptyPlaceholder: emptyPlaceholder
         )
         collectionView.dataSource = dataSource
         collectionView.prefetchDataSource = dataSource
@@ -181,27 +176,34 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     class Coordinator<CoordinatorHeader: View, CoordinatorEmptyPlaceholder: View> {
         // swiftlint:enable generic_type_name
         
+        /// Controls refresh actions. Used for setting the `lastRefreshDate` whenever the data is refreshed.
+        let refreshController: RefreshController
+
         var dataSource: PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder>?
         var collectionView: UICollectionView?
         var scrollToTopObserver: NSObjectProtocol?
-        var onRefresh: (() -> Void)?
-        
+
+        /// Initializes a coordinator with the given refresh controller.
+        /// - Parameter refreshController: Controls refresh actions. Used for setting the `lastRefreshDate`
+        ///                                whenever the data is refreshed.
+        init(refreshController: RefreshController) {
+            self.refreshController = refreshController
+        }
+
         func dataSource(
-            databaseFilter: NSFetchRequest<Event>, 
+            databaseFilter: NSFetchRequest<Event>,
             relayFilter: Filter,
             relay: Relay?,
             collectionView: UICollectionView,
             managedObjectContext: NSManagedObjectContext,
             @ViewBuilder header: @escaping () -> CoordinatorHeader,
-            @ViewBuilder emptyPlaceholder: @escaping () -> CoordinatorEmptyPlaceholder,
-            onRefresh: @escaping () -> Void
+            @ViewBuilder emptyPlaceholder: @escaping () -> CoordinatorEmptyPlaceholder
         ) -> PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder> {
             if let dataSource {
                 return dataSource 
-            } 
+            }
             self.collectionView = collectionView
-            self.onRefresh = onRefresh
-            
+
             let dataSource = PagedNoteDataSource(
                 databaseFilter: databaseFilter, 
                 relayFilter: relayFilter,
@@ -209,15 +211,16 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
                 collectionView: collectionView, 
                 managedObjectContext: managedObjectContext,
                 header: header,
-                emptyPlaceholder: emptyPlaceholder,
-                onRefresh: onRefresh
+                emptyPlaceholder: emptyPlaceholder
             )
             self.dataSource = dataSource
             return dataSource
         }
     
         @objc func refreshData(_ sender: Any) {
-            onRefresh?()
+            DispatchQueue.main.async { [weak refreshController] in
+                refreshController?.lastRefreshDate = .now
+            }
 
             if let refreshControl = sender as? UIRefreshControl {
                 // Dismiss the refresh control
@@ -255,8 +258,7 @@ extension Notification.Name {
         },
         emptyPlaceholder: {
             Text("empty")
-        },
-        onRefresh: {}
+        }
     )
     .background(Color.appBg)
     .inject(previewData: previewData)

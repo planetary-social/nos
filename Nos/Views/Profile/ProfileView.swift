@@ -107,9 +107,6 @@ struct ProfileView: View {
                             }
                         }
                         .frame(minHeight: 300)
-                    },
-                    onRefresh: {
-                        refreshController.lastRefreshDate = .now
                     }
                 )
                 .padding(0)

@@ -11,9 +11,7 @@ struct HomeFeedView: View {
     @Environment(CurrentUser.self) var currentUser
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
-    @State private var refreshController = RefreshController(
-        lastRefreshDate: Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.staticLoadTime))
-    )
+    @State private var refreshController = RefreshController(lastRefreshDate: Date.now + Self.staticLoadTime)
     @State private var isVisible = false
     @State private var relaySubscriptions = [SubscriptionCancellable]()
     @State private var isShowingRelayList = false
@@ -85,9 +83,6 @@ struct HomeFeedView: View {
                             .padding()
                     }
                     .frame(minHeight: 300)
-                },
-                onRefresh: {
-                    refreshController.lastRefreshDate = .now
                 }
             )
             .padding(0)
