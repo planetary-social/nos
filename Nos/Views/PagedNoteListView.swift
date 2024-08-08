@@ -16,6 +16,9 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// Set the UIViewType to make the compiler happy as we implement `dismantleUIView`.
     typealias UIViewType = UICollectionView
 
+    /// Allows us to refresh the PagedNoteListView from outside this view itself, such as with a separate button.
+    @Binding var refreshController: RefreshController
+
     /// A fetch request that specifies the events that should be shown. The events should be sorted in 
     /// reverse-chronological order and should match the events returned by `relayFilter`.
     let databaseFilter: NSFetchRequest<Event>
@@ -34,9 +37,6 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// The tab in which this PagedNoteListView appears.
     /// Used to determine whether to scroll this view to the top when the tab is tapped.
     let tab: AppDestination
-
-    /// Allows us to refresh the PagedNoteListView from outside this view itself, such as with a separate button.
-    let refreshController: RefreshController
 
     /// A view that will be displayed as the collectionView header.
     let header: () -> Header
@@ -98,7 +98,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
                 dataSource.updateFetchRequest(databaseFilter)
             }
             if refreshController.shouldRefresh {
-                refreshController.setShouldRefresh(false)
+                refreshController.shouldRefresh = false
 
                 guard let refreshControl = collectionView.refreshControl else { return }
                 collectionView.scrollRectToVisible(refreshControl.frame, animated: true)
@@ -238,15 +238,15 @@ extension Notification.Name {
 
 #Preview {
     var previewData = PreviewData()
-    let refreshController = DefaultRefreshController()
+    @State var refreshController: RefreshController = DefaultRefreshController()
 
     return PagedNoteListView(
+        refreshController: $refreshController,
         databaseFilter: previewData.alice.allPostsRequest(onlyRootPosts: false),
         relayFilter: Filter(), 
         relay: nil,
         managedObjectContext: previewData.previewContext,
         tab: .home,
-        refreshController: refreshController,
         header: {
             ProfileHeader(author: previewData.alice, selectedTab: .constant(.activity))
                 .compositingGroup()

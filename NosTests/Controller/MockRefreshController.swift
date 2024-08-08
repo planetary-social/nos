@@ -4,10 +4,4 @@ import Foundation
 class MockRefreshController: RefreshController {
     var shouldRefresh = false
     var lastRefreshDate: Date = .now
-
-    func setShouldRefresh(_ shouldRefresh: Bool) {
-    }
-    
-    func setLastRefreshDate(_ lastRefreshDate: Date) {
-    }
 }

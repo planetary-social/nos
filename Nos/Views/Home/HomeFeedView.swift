@@ -70,12 +70,12 @@ struct HomeFeedView: View {
     var body: some View {
         ZStack {
             PagedNoteListView(
+                refreshController: $refreshController,
                 databaseFilter: homeFeedFetchRequest,
                 relayFilter: homeFeedFilter,
                 relay: selectedRelay,
                 managedObjectContext: viewContext,
                 tab: .home,
-                refreshController: refreshController,
                 header: {
                     EmptyView()
                 },
@@ -87,13 +87,13 @@ struct HomeFeedView: View {
                     .frame(minHeight: 300)
                 },
                 onRefresh: {
-                    refreshController.setLastRefreshDate(.now)
+                    refreshController.lastRefreshDate = .now
                 }
             )
             .padding(0)
 
             NewNotesButton(fetchRequest: FetchRequest(fetchRequest: newNotesRequest)) {
-                refreshController.setShouldRefresh(true)
+                refreshController.shouldRefresh = true
             }
 
             if showTimedLoadingIndicator {
@@ -112,7 +112,7 @@ struct HomeFeedView: View {
                 )
                 .onChange(of: selectedRelay) { _, _ in
                     showTimedLoadingIndicator = true
-                    refreshController.setLastRefreshDate(.now + Self.staticLoadTime)
+                    refreshController.lastRefreshDate = .now + Self.staticLoadTime
                     Task {
                         withAnimation {
                             showRelayPicker = false

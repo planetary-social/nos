@@ -85,12 +85,12 @@ struct ProfileView: View {
         VStack(spacing: 0) {
             VStack {
                 PagedNoteListView(
+                    refreshController: $refreshController,
                     databaseFilter: databaseFilter,
                     relayFilter: selectedTab.relayFilter(author: author),
                     relay: nil,
                     managedObjectContext: viewContext,
                     tab: .profile, 
-                    refreshController: refreshController,
                     header: {
                         ProfileHeader(author: author, selectedTab: $selectedTab)
                             .compositingGroup()
@@ -103,13 +103,13 @@ struct ProfileView: View {
                                 .readabilityPadding()
                             
                             SecondaryActionButton(title: .localizable.tapToRefresh) {
-                                refreshController.setShouldRefresh(true)
+                                refreshController.shouldRefresh = true
                             }
                         }
                         .frame(minHeight: 300)
                     },
                     onRefresh: {
-                        refreshController.setLastRefreshDate(.now)
+                        refreshController.lastRefreshDate = .now
                     }
                 )
                 .padding(0)
