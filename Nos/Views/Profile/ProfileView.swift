@@ -16,7 +16,7 @@ struct ProfileView: View {
     @Dependency(\.analytics) private var analytics
     @Dependency(\.unsAPI) private var unsAPI
 
-    @State private var refreshController: RefreshController = DefaultRefreshController()
+    @State private var refreshController = RefreshController()
     @State private var showingOptions = false
     @State private var showingReportMenu = false
     @State private var relaySubscriptions = SubscriptionCancellables()
@@ -85,12 +85,12 @@ struct ProfileView: View {
         VStack(spacing: 0) {
             VStack {
                 PagedNoteListView(
+                    refreshController: $refreshController,
                     databaseFilter: databaseFilter,
                     relayFilter: selectedTab.relayFilter(author: author),
                     relay: nil,
                     managedObjectContext: viewContext,
                     tab: .profile, 
-                    refreshController: refreshController,
                     header: {
                         ProfileHeader(author: author, selectedTab: $selectedTab)
                             .compositingGroup()
@@ -103,13 +103,10 @@ struct ProfileView: View {
                                 .readabilityPadding()
                             
                             SecondaryActionButton(title: .localizable.tapToRefresh) {
-                                refreshController.setShouldRefresh(true)
+                                refreshController.startRefresh = true
                             }
                         }
                         .frame(minHeight: 300)
-                    },
-                    onRefresh: {
-                        refreshController.setLastRefreshDate(.now)
                     }
                 )
                 .padding(0)

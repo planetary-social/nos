@@ -8,9 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		030036852C5D39DD002C71F5 /* RefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030036842C5D39DD002C71F5 /* RefreshController.swift */; };
-		0300368F2C5D3AB4002C71F5 /* MockRefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0300368E2C5D3AB4002C71F5 /* MockRefreshController.swift */; };
 		030036942C5D3AD3002C71F5 /* RefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030036842C5D39DD002C71F5 /* RefreshController.swift */; };
-		030036952C5D3AD9002C71F5 /* MockRefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0300368E2C5D3AB4002C71F5 /* MockRefreshController.swift */; };
 		030036AB2C5D872B002C71F5 /* NewNotesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030036AA2C5D872B002C71F5 /* NewNotesButton.swift */; };
 		030AE4292BE3D63C004DEE02 /* FeaturedAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */; };
 		0320C0FB2BFE43A600C4C080 /* RelayServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0320C0FA2BFE43A600C4C080 /* RelayServiceTests.swift */; };
@@ -519,7 +517,6 @@
 
 /* Begin PBXFileReference section */
 		030036842C5D39DD002C71F5 /* RefreshController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshController.swift; sourceTree = "<group>"; };
-		0300368E2C5D3AB4002C71F5 /* MockRefreshController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRefreshController.swift; sourceTree = "<group>"; };
 		030036AA2C5D872B002C71F5 /* NewNotesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNotesButton.swift; sourceTree = "<group>"; };
 		030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedAuthor.swift; sourceTree = "<group>"; };
 		0320C0E42BFBB27E00C4C080 /* PerformanceTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PerformanceTests.xctestplan; sourceTree = "<group>"; };
@@ -992,7 +989,6 @@
 				0357299C2BE41653005FEE85 /* ContentWarningControllerTests.swift */,
 				0357299D2BE41653005FEE85 /* SocialGraphTests.swift */,
 				C99314932C5BE13600224BA6 /* NoteEditorControllerTests.swift */,
-				0300368E2C5D3AB4002C71F5 /* MockRefreshController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1962,7 +1958,6 @@
 				5BC0D9CC2B867B9D005D6980 /* NamesAPI.swift in Sources */,
 				C987F81D29BA6D9A00B44E7A /* ProfileTab.swift in Sources */,
 				C9ADB14129951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */,
-				030036952C5D3AD9002C71F5 /* MockRefreshController.swift in Sources */,
 				C9F84C21298DC36800C6714D /* AppView.swift in Sources */,
 				C9CE5B142A0172CF008E198C /* WebView.swift in Sources */,
 				CD4908D429B92941007443DB /* ReportABugMailView.swift in Sources */,
@@ -2321,7 +2316,6 @@
 				C9ADB14229951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */,
 				035729AB2BE4167E005FEE85 /* AuthorTests.swift in Sources */,
 				03B4E6AC2C125D13006E5F59 /* FileStorageUploadResponseJSONTests.swift in Sources */,
-				0300368F2C5D3AB4002C71F5 /* MockRefreshController.swift in Sources */,
 				C92DF80629C25DE900400561 /* URL+Extensions.swift in Sources */,
 				C9BAB09C2996FBA10003A84E /* EventProcessor.swift in Sources */,
 				C992B32B2B3613CC00704A9C /* SubscriptionCancellable.swift in Sources */,

@@ -18,8 +18,6 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     private var managedObjectContext: NSManagedObjectContext
     private var header: () -> Header
     private var emptyPlaceholder: () -> EmptyPlaceholder
-    /// An action to perform when the data source is refreshed.
-    private var onRefresh: () -> Void
     let pageSize = 20
     
     // We intentionally generate unique IDs for cell reuse to get around 
@@ -34,8 +32,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         collectionView: UICollectionView, 
         managedObjectContext: NSManagedObjectContext,
         @ViewBuilder header: @escaping () -> Header,
-        @ViewBuilder emptyPlaceholder: @escaping () -> EmptyPlaceholder,
-        onRefresh: @escaping () -> Void
+        @ViewBuilder emptyPlaceholder: @escaping () -> EmptyPlaceholder
     ) {
         self.databaseFilter = databaseFilter
         self.fetchedResultsController = NSFetchedResultsController<Event>(
@@ -50,7 +47,6 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         self.relay = relay
         self.header = header
         self.emptyPlaceholder = emptyPlaceholder
-        self.onRefresh = onRefresh
 
         super.init()
         

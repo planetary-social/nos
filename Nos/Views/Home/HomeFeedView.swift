@@ -11,9 +11,7 @@ struct HomeFeedView: View {
     @Environment(CurrentUser.self) var currentUser
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
-    @State private var refreshController: RefreshController = DefaultRefreshController(
-        lastRefreshDate: .now + Self.staticLoadTime
-    )
+    @State private var refreshController = RefreshController(lastRefreshDate: Date.now + Self.staticLoadTime)
     @State private var isVisible = false
     @State private var relaySubscriptions = [SubscriptionCancellable]()
     @State private var isShowingRelayList = false
@@ -70,12 +68,12 @@ struct HomeFeedView: View {
     var body: some View {
         ZStack {
             PagedNoteListView(
+                refreshController: $refreshController,
                 databaseFilter: homeFeedFetchRequest,
                 relayFilter: homeFeedFilter,
                 relay: selectedRelay,
                 managedObjectContext: viewContext,
                 tab: .home,
-                refreshController: refreshController,
                 header: {
                     EmptyView()
                 },
@@ -85,15 +83,12 @@ struct HomeFeedView: View {
                             .padding()
                     }
                     .frame(minHeight: 300)
-                },
-                onRefresh: {
-                    refreshController.setLastRefreshDate(.now)
                 }
             )
             .padding(0)
 
             NewNotesButton(fetchRequest: FetchRequest(fetchRequest: newNotesRequest)) {
-                refreshController.setShouldRefresh(true)
+                refreshController.startRefresh = true
             }
 
             if showTimedLoadingIndicator {
@@ -112,7 +107,7 @@ struct HomeFeedView: View {
                 )
                 .onChange(of: selectedRelay) { _, _ in
                     showTimedLoadingIndicator = true
-                    refreshController.setLastRefreshDate(.now + Self.staticLoadTime)
+                    refreshController.lastRefreshDate = .now + Self.staticLoadTime
                     Task {
                         withAnimation {
                             showRelayPicker = false
