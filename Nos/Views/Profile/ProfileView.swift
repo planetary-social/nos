@@ -16,7 +16,7 @@ struct ProfileView: View {
     @Dependency(\.analytics) private var analytics
     @Dependency(\.unsAPI) private var unsAPI
 
-    @State private var refreshController = DefaultRefreshController()
+    @State private var refreshController: RefreshController = DefaultRefreshController()
     @State private var showingOptions = false
     @State private var showingReportMenu = false
     @State private var relaySubscriptions = SubscriptionCancellables()

@@ -6,7 +6,7 @@ import Foundation
     var shouldRefresh: Bool { get }
 
     /// The last time the view was refreshed.
-    var lastRefreshDate: Date? { get }
+    var lastRefreshDate: Date { get }
 
     /// Update the state of `shouldRefresh` to the given value.
     func setShouldRefresh(_: Bool)
@@ -19,9 +19,9 @@ import Foundation
 @Observable @MainActor class DefaultRefreshController: RefreshController {
     var shouldRefresh: Bool
 
-    var lastRefreshDate: Date?
+    var lastRefreshDate: Date
 
-    init(shouldRefresh: Bool = false, lastRefreshDate: Date? = nil) {
+    init(shouldRefresh: Bool = false, lastRefreshDate: Date = .now) {
         self.shouldRefresh = shouldRefresh
         self.lastRefreshDate = lastRefreshDate
     }
