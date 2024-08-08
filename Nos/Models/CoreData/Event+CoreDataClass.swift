@@ -338,29 +338,47 @@ public class Event: NosManagedObject, VerifiableEvent {
         after: Date? = nil,
         seenOn relay: Relay? = nil
     ) -> NSPredicate {
-        // swiftlint:disable:next line_length
-        var queryString = "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND author.muted = 0 AND deletedOn.@count = 0"
-        var arguments = [CVarArg]()
-        
+        let kind1Predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "kind = 1"),
+            NSPredicate(
+                format: "SUBQUERY(" +
+                "eventReferences, $reference, $reference.marker = 'root'" +
+                " OR $reference.marker = 'reply'" +
+                " OR $reference.marker = nil" +
+                ").@count = 0"
+            )
+        ])
+        let kind6Predicate = NSPredicate(format: "kind = 6")
+        let kind30023Predicate = NSPredicate(format: "kind = 30023")
+
+        let kindsPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
+            kind1Predicate,
+            kind6Predicate,
+            kind30023Predicate
+        ])
+
+        let notMutedPredicate = NSPredicate(format: "author.muted = 0")
+        let notDeletedPredicate = NSPredicate(format: "deletedOn.@count = 0")
+
+        var andPredicates = [kindsPredicate, notMutedPredicate, notDeletedPredicate]
+
         if let before {
-            queryString.append(" AND createdAt <= %@")
-            arguments.append(before as CVarArg)
+            andPredicates.append(NSPredicate(format: "createdAt <= %@", before as CVarArg))
         }
 
         if let after {
-            queryString.append(" AND createdAt > %@")
-            arguments.append(after as CVarArg)
+            andPredicates.append(NSPredicate(format: "createdAt > %@", after as CVarArg))
         }
 
         if let relay {
-            queryString.append(" AND ANY seenOnRelays = %@")
-            arguments.append(relay)
+            andPredicates.append(NSPredicate(format: "ANY seenOnRelays = %@", relay as CVarArg))
         } else {
-            queryString.append(" AND (ANY author.followers.source = %@ OR author = %@)")
-            arguments += [user, user]
+            andPredicates.append(
+                NSPredicate(format: "(ANY author.followers.source = %@ OR author = %@)", user, user)
+            )
         }
 
-        return NSPredicate(format: queryString, argumentArray: arguments)
+        return NSCompoundPredicate(andPredicateWithSubpredicates: andPredicates)
     }
 
     @nonobjc public class func homeFeed(
