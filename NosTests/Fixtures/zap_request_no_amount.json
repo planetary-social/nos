@@ -1,0 +1,14 @@
+{
+    "kind": 9734,
+    "content": "Zap!",
+    "tags": [
+        [
+            "p",
+            "alice"
+        ]
+    ],
+    "created_at": 1675264762,
+    "pubkey": "64c4fda06180d01cc83104797e58505359e1856a0fd0d21f1f0c66afd6c23ce0",
+    "id": "931b425e55559541451ddb99bd228bd1e0190af6ed21603b6b98544b42ee3317",
+    "sig": "79862bd81b316411c23467632239750c97f3aa974593c01bd61d2ca85eedbcfd9a18886b0dad1c17b2e8ceb231db37add136fc23120b45aa5403d6fd2d693e9b"
+}

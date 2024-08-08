@@ -93,6 +93,18 @@ public class Event: NosManagedObject, VerifiableEvent {
         )
     }
     
+    @nonobjc public class func allZapsPredicate(for user: Author) -> NSPredicate {
+        guard let publicKey = user.hexadecimalPublicKey, !publicKey.isEmpty else {
+            return NSPredicate.false
+        }
+        
+        return NSPredicate(
+            format: "kind = %i AND ANY authorReferences.pubkey = %@ AND deletedOn.@count = 0",
+            EventKind.zapRequest.rawValue,
+            publicKey
+        )
+    }
+    
     /// A request for all events that the given user should receive a notification for.
     /// - Parameters:
     ///   - user: the author you want to view notifications for.
@@ -112,10 +124,11 @@ public class Event: NosManagedObject, VerifiableEvent {
         
         let mentionsPredicate = allMentionsPredicate(for: user)
         let repliesPredicate = allRepliesPredicate(for: user)
+        let zapsPredicate = allZapsPredicate(for: user)
         let notSelfPredicate = NSPredicate(format: "author != %@", user)
         let notMuted = NSPredicate(format: "author.muted == 0", user)
         let allNotificationsPredicate = NSCompoundPredicate(
-            orPredicateWithSubpredicates: [mentionsPredicate, repliesPredicate]
+            orPredicateWithSubpredicates: [mentionsPredicate, repliesPredicate, zapsPredicate]
         )
         var andPredicates = [allNotificationsPredicate, notSelfPredicate, notMuted]
         if let since {
@@ -1055,6 +1068,11 @@ public class Event: NosManagedObject, VerifiableEvent {
             let rootEvent = (element as? EventReference)?.referencedEvent
             return rootEvent?.author?.hexadecimalPublicKey == author.hexadecimalPublicKey
         })
+    }
+    
+    /// Returns true if this event is a zap request targeting the given author.
+    func isProfileZap(to author: Author) -> Bool {
+        kind == EventKind.zapRequest.rawValue && references(author: author)
     }
     
     var isReply: Bool {
