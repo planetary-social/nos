@@ -88,7 +88,7 @@ struct HomeFeedView: View {
             .padding(0)
 
             NewNotesButton(fetchRequest: FetchRequest(fetchRequest: newNotesRequest)) {
-                refreshController.shouldRefresh = true
+                refreshController.startRefresh = true
             }
 
             if showTimedLoadingIndicator {

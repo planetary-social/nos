@@ -92,8 +92,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             if databaseFilter != dataSource.databaseFilter {
                 dataSource.updateFetchRequest(databaseFilter)
             }
-            if refreshController.shouldRefresh {
-                refreshController.shouldRefresh = false
+            if refreshController.startRefresh {
+                refreshController.startRefresh = false
 
                 guard let refreshControl = collectionView.refreshControl else { return }
                 collectionView.scrollRectToVisible(refreshControl.frame, animated: true)

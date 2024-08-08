@@ -103,7 +103,7 @@ struct ProfileView: View {
                                 .readabilityPadding()
                             
                             SecondaryActionButton(title: .localizable.tapToRefresh) {
-                                refreshController.shouldRefresh = true
+                                refreshController.startRefresh = true
                             }
                         }
                         .frame(minHeight: 300)
