@@ -35,7 +35,7 @@ struct ProfileView: View {
     }
 
     var databaseFilter: NSFetchRequest<Event> {
-        selectedTab.databaseFilter(author: author, before: refreshController.lastRefreshDate ?? .now)
+        selectedTab.databaseFilter(author: author, before: refreshController.lastRefreshDate)
     }
 
     func downloadAuthorData() async {
