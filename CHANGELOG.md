@@ -8,13 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Disabled automatically generated analytics events that were sent each time the user navigated to a new screen.
 - Show “New notes available” notification on Feed when there are new notes to display.
 - Disable the Post button while images are still uploading. Thanks @vien-eaker!
 - Improved app performance on first login by requesting fewer events from relays.
 - Fixed a bug where the cursor could jump around when composing a note.
 - Fixed a bug where mentions could be duplicated when typing in the middle of one.
 - Re-enabled autocomplete when composing a note.
-- Create Colors.xcassets and move all colors into it. Thanks @lingoslinger!
+- Added push notifications for zaps.
+- Added zaps to the Notifications view.
+- Created Colors.xcassets and move all colors into it. Thanks @lingoslinger!
 
 ## [0.1.23] - 2024-07-31Z
 

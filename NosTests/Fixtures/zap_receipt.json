@@ -1,0 +1,22 @@
+{
+  "id" : "9e722b2b62772f9f48c786e084038ffc039f5600bace1f068bcc2307a5de1553",
+  "pubkey" : "8b7cd4981e30ed2dd6b5ef1f816763453b282b3e44f41ef2a3da77ff5ef8d141",
+  "tags" : [
+    [
+      "p",
+      "07ecf9838136fe430fac43fa0860dbc62a0aac0729c5a33df1192ce75e330c9f"
+    ],
+    [
+      "bolt11",
+      "lnbc200u1pn2aqcnpp527qdqg56k3fyccal2r0tw0uvup8c3yuaecdf6htphnn30aj07gcshp5susgwzf6jp49j4cxanz0sn3tty9gpacdu2pzffujsfh8aw7r22qqcqzzsxqrrs0sp56yqzrw23rjfwq5ltpcmphadkhez3n5rec48se9uzvjk6dcqwhwps9qyyssqs9auayqe55pt7y3l9akn78gha9zv9h2qmrnxtqhfmgzm3asyd4x4d9zwxsz0g9nmvyt44x7mca7zfxnzszhxm25zels3c3cf0jx0uwspk2txgx"
+    ],
+    [
+      "description",
+      "{\"tags\":[[\"p\",\"07ecf9838136fe430fac43fa0860dbc62a0aac0729c5a33df1192ce75e330c9f\"],[\"relays\",\"wss:\/\/welcome.nostr.wine\",\"wss:\/\/filter.nostr.wine\/npub1yaul8k059377u9lsu67de7y637w4jtgeuwcmh5n7788l6xnlnrgs3tvjmf?broadcast=true\",\"wss:\/\/relay.snort.social\",\"wss:\/\/nos.lol\",\"wss:\/\/purplepag.es\",\"wss:\/\/eden.nostr.land\",\"wss:\/\/relay.damus.io\",\"wss:\/\/relay.mostr.pub\",\"wss:\/\/relay.primal.net\",\"ws:\/\/100.120.59.45:4848\"],[\"anon\",\"pzap1xw4mzqgq0htadj7ghfkrhj2am4vulun5mddmsf9rts0ftphgd3ntakqwduwx5av70ny4dl0y2zzl49am5mme72cahsrf6cuacjj5ftzxexf7er06aeycxmve0m9whmup244cgecy48nhykx69qmd2q2dx9fmkxflxjjh8t9lqdxhudpv8mjwm090atl78tma52mhprq0rukep9p88g47k32ahpv06j3u4j89mmy4t0k8hl0y3sr5fqywg575nad9eu9hvff3gv7776zwe3juy6c92s8dryljuggay403tdvrda56wg6dgp8uaz66u05k3u67wcszt9j9hhpsu45djzp5xq08qk8na5ptk2m7nj5ga7qmvmx95ar8ns9phgv0lvhk9xxr242m7st7d6k73yefrkhqcc4j3cvx85frk3f2c8qf0fjcqgfrsddflu4csclnnrvy623l5d4nhku8sagmzaqqlt2d998rdmjvugccgsz9zjky38aqmehzx8kclzrd8g6xukvhhj04ng54kf8gtlvjxm3a45ukuem9592y3czd03xeyx05j9v9p8nsdfuekv2pgm2tyurv2h6sxt3p3zn4ppyxg0kr4cc3dt095edf9dajqjqazhfk9x7w0q42x26mceuyyywp6fnqglm79vpwzlvr22zlf6y2ehntgppf0xvswugjra2e05vmd5fmwu0hfmk2pnej4wxk867kz769p74m5hrxh6wefjwmfcnnv9v6e3flm3pzhxdu982kfe_iv1fczu7qaygvs0l8dvpkne3rkuusw0s2mk\"]],\"pubkey\":\"2656d1495cccf384035a59cce13451c6f280a329f0d1b3bb6758b4830f67909c\",\"kind\":9734,\"sig\":\"8b8758ac005558d8045010644167cae91e4b659321050e5225ee1d81c4c9cc94c375d27d72f2d3de0faf9eec5c9cf4b414226eff73a9f683751305ebef3c3cde\",\"id\":\"6715260809f6f62ea82f8b213ca4cc0abd0426dc860f1c963c0f0207f9fadddb\",\"created_at\":1722712850,\"content\":\"\"}"
+    ]
+  ],
+  "content" : "",
+  "sig" : "6c298a330561d94eb8ac5055bdebcd5b8657eac4b2fea6852e1fb42ad4c0ed8552069ed9dcad5b7d072f419f13a92c2f8e5858cc9fb6872a8b3d5755a069675a",
+  "created_at" : 1722712858,
+  "kind" : 9735
+}
