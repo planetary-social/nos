@@ -11,7 +11,9 @@ struct HomeFeedView: View {
     @Environment(CurrentUser.self) var currentUser
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
-    @State private var refreshController: RefreshController = DefaultRefreshController()
+    @State private var refreshController: RefreshController = DefaultRefreshController(
+        lastRefreshDate: .now + Self.staticLoadTime
+    )
     @State private var isVisible = false
     @State private var relaySubscriptions = [SubscriptionCancellable]()
     @State private var isShowingRelayList = false
@@ -36,8 +38,7 @@ struct HomeFeedView: View {
     var homeFeedFetchRequest: NSFetchRequest<Event> {
         Event.homeFeed(
             for: user,
-            before: refreshController.lastRefreshDate ??
-                Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.staticLoadTime)),
+            before: refreshController.lastRefreshDate,
             seenOn: selectedRelay
         )
     }
@@ -45,7 +46,7 @@ struct HomeFeedView: View {
     var newNotesRequest: NSFetchRequest<Event> {
         Event.homeFeed(
             for: user,
-            after: refreshController.lastRefreshDate ?? .now,
+            after: refreshController.lastRefreshDate,
             seenOn: selectedRelay
         )
     }
