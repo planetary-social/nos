@@ -12,7 +12,7 @@ struct HomeFeedView: View {
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
     @State private var refreshController: RefreshController = DefaultRefreshController(
-        lastRefreshDate: Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.staticLoadTime))
+        lastRefreshDate: .now + Self.staticLoadTime
     )
     @State private var isVisible = false
     @State private var relaySubscriptions = [SubscriptionCancellable]()
