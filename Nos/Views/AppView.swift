@@ -160,11 +160,20 @@ struct AppView: View {
     }
 
     private func presentNIP05SheetIfNeeded() async {
-        // Sleep for half a second
-        try? await Task.sleep(nanoseconds: 500_000_000)
         guard let author = currentUser.author, let npub = author.npubString else {
+            // We don't anything about the current user
             return
         }
+
+        // Sleep for half a second to allow the app to initialize
+        try? await Task.sleep(nanoseconds: 500_000_000)
+
+        guard currentUser.author?.needsMetadata == false else {
+            // We don't have metadata for this author, the app is still probably fetching .metaData events from the
+            // relays. Let's wait for next time.
+            return
+        }
+
         // We store the npub for the user we last presented the sheet for so that
         // the behavior resets if the user creates a new account
         let key = "didPresentNIP05SheetForNpub"
