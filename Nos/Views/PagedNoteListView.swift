@@ -238,7 +238,7 @@ extension Notification.Name {
 
 #Preview {
     var previewData = PreviewData()
-    @State var refreshController: RefreshController = DefaultRefreshController()
+    @State var refreshController = RefreshController()
 
     return PagedNoteListView(
         refreshController: $refreshController,

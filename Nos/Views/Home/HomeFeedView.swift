@@ -11,7 +11,7 @@ struct HomeFeedView: View {
     @Environment(CurrentUser.self) var currentUser
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
-    @State private var refreshController: RefreshController = DefaultRefreshController(
+    @State private var refreshController = RefreshController(
         lastRefreshDate: Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.staticLoadTime))
     )
     @State private var isVisible = false
