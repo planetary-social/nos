@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Re-enabled autocomplete when composing a note.
 - Added push notifications for zaps.
 - Added zaps to the Notifications view.
+- Created Colors.xcassets and move all colors into it. Thanks @lingoslinger!
 
 ## [0.1.23] - 2024-07-31Z
 
