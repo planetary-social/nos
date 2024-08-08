@@ -11,7 +11,7 @@ final class NotificationTests: CoreDataTestCase {
         let viewModel = NotificationViewModel(note: zapRequest, user: recipient)
         
         let notification = viewModel.notificationCenterRequest
-        XCTAssertEqual(notification.content.title, "npub1vnz0m... ⚡️ your profile 3,500 sats!")
+        XCTAssertEqual(notification.content.title, "npub1vnz0m... ⚡️ zapped you 3,500 sats!")
         XCTAssertEqual(notification.content.body, "Zapped you!")
     }
     
@@ -22,7 +22,7 @@ final class NotificationTests: CoreDataTestCase {
         let viewModel = NotificationViewModel(note: zapRequest, user: recipient)
         
         let notification = viewModel.notificationCenterRequest
-        XCTAssertEqual(notification.content.title, "npub1vnz0m... ⚡️ your profile!")
+        XCTAssertEqual(notification.content.title, "npub1vnz0m... ⚡️ zapped you!")
         XCTAssertEqual(notification.content.body, "Zap!")
     }
     
@@ -33,7 +33,7 @@ final class NotificationTests: CoreDataTestCase {
         let viewModel = NotificationViewModel(note: zapRequest, user: recipient)
         
         let notification = viewModel.notificationCenterRequest
-        XCTAssertEqual(notification.content.title, "npub1vnz0m... ⚡️ your profile 1 sat!")
+        XCTAssertEqual(notification.content.title, "npub1vnz0m... ⚡️ zapped you 1 sat!")
         XCTAssertEqual(notification.content.body, "Only one sat")
     }
     

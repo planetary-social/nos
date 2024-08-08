@@ -38,9 +38,9 @@ struct NotificationCard: View {
                             .lineLimit(2)
                         Spacer()
                     }
-                    if let contentText = content, !contentText.characters.isEmpty {
+                    if let content, !content.characters.isEmpty {
                         HStack {
-                            let contentText = Text("\"" + (content ?? "") + "\"")
+                            let contentText = Text("\"" + content + "\"")
                                 .lineLimit(2)
                                 .font(.body)
                                 .foregroundColor(.primaryTxt)

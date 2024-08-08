@@ -263,17 +263,34 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
     func testParseZapReceiptAndEmbeddedZapRequest() throws {
         // Arrange
         let zapReceiptData = try jsonData(filename: "zap_receipt")
-        let zapReceiptEvent = try JSONDecoder().decode(JSONEvent.self, from: zapReceiptData)
+        let zapReceiptJSONEvent = try JSONDecoder().decode(JSONEvent.self, from: zapReceiptData)
 
         let context = persistenceController.viewContext
         
         // Act
-        _ = try EventProcessor.parse(jsonEvent: zapReceiptEvent, from: nil, in: context)!
+        try EventProcessor.parse(jsonEvent: zapReceiptJSONEvent, from: nil, in: context)
         
         // Assert
+        
+        // zap receipt
+        let zapReceiptEventID = "9e722b2b62772f9f48c786e084038ffc039f5600bace1f068bcc2307a5de1553"
+        let zapReceiptEvent = try XCTUnwrap(Event.find(by: zapReceiptEventID, context: context))
+        
+        XCTAssertEqual(zapReceiptEvent.kind, EventKind.zapReceipt.rawValue)
+        
+        let walletPubKey = "8b7cd4981e30ed2dd6b5ef1f816763453b282b3e44f41ef2a3da77ff5ef8d141"
+        XCTAssertEqual(zapReceiptEvent.author?.hexadecimalPublicKey, walletPubKey)
+        XCTAssertEqual(zapReceiptEvent.createdAt?.timeIntervalSince1970, 1_722_712_858)
+        
+        // embedded zap request
         let zapRequestEventID = "6715260809f6f62ea82f8b213ca4cc0abd0426dc860f1c963c0f0207f9fadddb"
-        let zapRequestEvent = Event.find(by: zapRequestEventID, context: context)
-        XCTAssertNotNil(zapRequestEvent)
+        let zapRequestEvent = try XCTUnwrap(Event.find(by: zapRequestEventID, context: context))
+        
+        XCTAssertEqual(zapRequestEvent.kind, EventKind.zapRequest.rawValue)
+        
+        let zapSenderPubKey = "2656d1495cccf384035a59cce13451c6f280a329f0d1b3bb6758b4830f67909c"
+        XCTAssertEqual(zapRequestEvent.author?.hexadecimalPublicKey, zapSenderPubKey)
+        XCTAssertEqual(zapRequestEvent.createdAt?.timeIntervalSince1970, 1_722_712_850)
     }
     
     // MARK: - Expiration

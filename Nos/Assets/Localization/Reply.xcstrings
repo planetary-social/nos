@@ -563,18 +563,18 @@
         }
       }
     },
-    "zappedYourProfile" : {
+    "zappedYou" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "⚡️ your profile!"
+            "value" : "⚡️ zapped you!"
           }
         }
       }
     },
-    "zappedYourProfileSats" : {
+    "zappedYouSats" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -583,13 +583,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "⚡️ your profile %ld sat!"
+                  "value" : "⚡️ zapped you %ld sat!"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "⚡️ your profile %ld sats!"
+                  "value" : "⚡️ zapped you %ld sats!"
                 }
               }
             }

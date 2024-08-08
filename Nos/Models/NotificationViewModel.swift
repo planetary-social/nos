@@ -62,9 +62,10 @@ class NotificationViewModel: ObservableObject, Identifiable {
                 let amountTag = tags.first(where: { $0.first == "amount" }),
                 let amountInMillisatsAsString = amountTag[safe: 1],
                 let amountInMillisats = Int(amountInMillisatsAsString) {
-                actionText = authorName + AttributedString(String(localized: .reply.zappedYourProfileSats(amountInMillisats / 1000)))
+                let zapText = String(localized: .reply.zappedYouSats(amountInMillisats / 1000))
+                actionText = authorName + AttributedString(zapText)
             } else {
-                actionText = authorName + AttributedString(String(localized: .reply.zappedYourProfile))
+                actionText = authorName + AttributedString(String(localized: .reply.zappedYou))
             }
         } else if note.isReply(to: user) {
             actionText = authorName + AttributedString(String(localized: .reply.repliedToYourNote))
