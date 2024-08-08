@@ -155,6 +155,7 @@
 		65BD8DC42BDAF2C300802039 /* DiscoverContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BD8DC02BDAF2C300802039 /* DiscoverContentsView.swift */; };
 		65D066992BD558690011C5CD /* DirectMessageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D066982BD558690011C5CD /* DirectMessageWrapper.swift */; };
 		65D066AA2BD55E160011C5CD /* DirectMessageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D066982BD558690011C5CD /* DirectMessageWrapper.swift */; };
+		9DB106002C650DDE00F98A30 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DF077732C63BEA200F6B14E /* Colors.xcassets */; };
 		9DF077742C63BEA200F6B14E /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DF077732C63BEA200F6B14E /* Colors.xcassets */; };
 		A303AF8329A9153A005DC8FC /* FollowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A303AF8229A9153A005DC8FC /* FollowButton.swift */; };
 		A32B6C7129A672BC00653FF5 /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34E439829A522F20057AFCB /* CurrentUser.swift */; };
@@ -1849,6 +1850,7 @@
 				C987F83329BA951E00B44E7A /* ClarityCity-ExtraLight.otf in Resources */,
 				C987F83D29BA951E00B44E7A /* ClarityCity-Bold.otf in Resources */,
 				C987F84529BA951E00B44E7A /* ClarityCity-ExtraBoldItalic.otf in Resources */,
+				9DB106002C650DDE00F98A30 /* Colors.xcassets in Resources */,
 				C987F84329BA951E00B44E7A /* ClarityCity-Black.otf in Resources */,
 				C9BD91892B61BBEF00FDA083 /* bad_contact_list.json in Resources */,
 				039C96292C48321E00A8EB39 /* long_form_data.json in Resources */,
