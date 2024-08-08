@@ -325,14 +325,33 @@ public class Event: NosManagedObject, VerifiableEvent {
         return fetchRequest
     }
     
-    @nonobjc public class func homeFeedPredicate(
-        for user: Author, 
-        before: Date,
+    /// Returns a predicate that can be used to fetch the given user's home feed.
+    /// - Parameters:
+    ///   - user: The user whose home feed should appear.
+    ///   - before: Only fetch events that were created before this date. Defaults to `nil`.
+    ///   - after: Only fetch events that were created after this date. Defaults to `nil`.
+    ///   - relay: Only fetch events on this relay. Defaults to `nil`, which uses all the user's relays.
+    /// - Returns: A predicate matching the given parameters that can be used to fetch the user's home feed.
+    @nonobjc private class func homeFeedPredicate(
+        for user: Author,
+        before: Date? = nil,
+        after: Date? = nil,
         seenOn relay: Relay? = nil
     ) -> NSPredicate {
         // swiftlint:disable:next line_length
-        var queryString = "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND author.muted = 0 AND createdAt <= %@ AND deletedOn.@count = 0"
-        var arguments: [CVarArg] = [before as CVarArg]
+        var queryString = "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND author.muted = 0 AND deletedOn.@count = 0"
+        var arguments = [CVarArg]()
+        
+        if let before {
+            queryString.append(" AND createdAt <= %@")
+            arguments.append(before as CVarArg)
+        }
+
+        if let after {
+            queryString.append(" AND createdAt > %@")
+            arguments.append(after as CVarArg)
+        }
+
         if let relay {
             queryString.append(" AND ANY seenOnRelays = %@")
             arguments.append(relay)
@@ -340,27 +359,10 @@ public class Event: NosManagedObject, VerifiableEvent {
             queryString.append(" AND (ANY author.followers.source = %@ OR author = %@)")
             arguments += [user, user]
         }
+
         return NSPredicate(format: queryString, argumentArray: arguments)
     }
-    
-    @nonobjc public class func homeFeedPredicate(
-        for user: Author, 
-        after: Date,
-        seenOn relay: Relay? = nil
-    ) -> NSPredicate {
-        // swiftlint:disable:next line_length
-        var queryString = "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND author.muted = 0 AND createdAt > %@ AND deletedOn.@count = 0"
-        var arguments: [CVarArg] = [after as CVarArg]
-        if let relay {
-            queryString.append(" AND ANY seenOnRelays = %@")
-            arguments.append(relay)
-        } else {
-            queryString.append(" AND (ANY author.followers.source = %@ OR author = %@)")
-            arguments += [user, user]
-        }
-        return NSPredicate(format: queryString, argumentArray: arguments)
-    }
-    
+
     @nonobjc public class func homeFeed(
         for user: Author, 
         before: Date, 
