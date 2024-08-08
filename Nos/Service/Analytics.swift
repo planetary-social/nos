@@ -143,7 +143,27 @@ class Analytics {
         }
         postHog?.capture(eventName, properties: properties)
     }
-    
+
+    /// Tracks when the user submits a search on the Discover screen.
+    func searchedDiscover() {
+        track("Discover Search Started")
+    }
+
+    /// Tracks when the user taps on a search result on the Discover screen.
+    func displayedAuthorFromDiscoverSearch(resultsCount: Int) {
+        track(
+            "Discover Search Displayed Author",
+            properties: ["Number of results": resultsCount]
+        )
+    }
+
+    /// Tracks when the user navigates to a note from the Discover search screen.
+    func displayedNoteFromDiscoverSearch() {
+        track(
+            "Discover Search Displayed Note"
+        )
+    }
+
     // MARK: - Relays
     
     func rateLimited(by socket: WebSocket, requestCount: Int) {

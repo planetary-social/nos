@@ -41,7 +41,8 @@ class SearchController: ObservableObject {
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.unsAPI) var unsAPI
     @Dependency(\.currentUser) var currentUser
-    
+    @Dependency(\.analytics) private var analytics
+
     private var cancellables = [AnyCancellable]()
     private var searchSubscriptions = SubscriptionCancellables()
 
@@ -69,6 +70,10 @@ class SearchController: ObservableObject {
             .filter { !$0.isEmpty }
             .compactMap { [weak self] query in
                 guard let self else { return nil }
+                if self.state == .noQuery {
+                    // User is starting a new search
+                    analytics.searchedDiscover()
+                }
                 self.authorResults = self.authors(named: query)
                 if self.authorResults.isEmpty {
                     // if we had `results` before and don't now, we're `empty`
@@ -240,19 +245,21 @@ class SearchController: ObservableObject {
         let trimmedQuery = query.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmedQuery.contains("@") {
             Task(priority: .userInitiated) {
-                if let publicKeyHex =
-                    await relayService.retrievePublicKeyFromUsername(trimmedQuery) {
+                if let publicKeyHex = await relayService.retrievePublicKeyFromUsername(trimmedQuery) {
                     Task { @MainActor in
+                        analytics.displayedAuthorFromDiscoverSearch(resultsCount: 1)
                         router.pushAuthor(id: publicKeyHex)
                     }
                 }
             }
         } else if let author = author(fromPublicKey: trimmedQuery) {
             Task { @MainActor in
+                analytics.displayedAuthorFromDiscoverSearch(resultsCount: 1)
                 router.push(author)
             }
         } else if let note = note(fromPublicKey: trimmedQuery) {
             Task { @MainActor in
+                analytics.displayedNoteFromDiscoverSearch()
                 router.push(note)
             }
         } else {
