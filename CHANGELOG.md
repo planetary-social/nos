@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.24] - 2024-08-09Z
+
 - Disabled automatically generated analytics events that were sent each time the user navigated to a new screen.
 - Show “New notes available” notification on Feed when there are new notes to display.
 - Disable the Post button while images are still uploading. Thanks @vien-eaker!
