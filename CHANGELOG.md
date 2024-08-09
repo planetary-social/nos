@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed an issue where the sheet asking users to set up a NIP-05 username would appear after reinstalling Nos, even if the profile already had a NIP-05 username.
+
+## [0.1.24] - 2024-08-09Z
+
 - Disabled automatically generated analytics events that were sent each time the user navigated to a new screen.
 - Show “New notes available” notification on Feed when there are new notes to display.
 - Disable the Post button while images are still uploading. Thanks @vien-eaker!
@@ -18,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Re-enabled autocomplete when composing a note.
 - Added push notifications for zaps.
 - Added zaps to the Notifications view.
+- Created Colors.xcassets and move all colors into it. Thanks @lingoslinger!
 
 ## [0.1.23] - 2024-07-31Z
 

@@ -338,42 +338,62 @@ public class Event: NosManagedObject, VerifiableEvent {
         return fetchRequest
     }
     
-    @nonobjc public class func homeFeedPredicate(
-        for user: Author, 
-        before: Date,
+    /// Returns a predicate that can be used to fetch the given user's home feed.
+    /// - Parameters:
+    ///   - user: The user whose home feed should appear.
+    ///   - before: Only fetch events that were created before this date. Defaults to `nil`.
+    ///   - after: Only fetch events that were created after this date. Defaults to `nil`.
+    ///   - relay: Only fetch events on this relay. Defaults to `nil`, which uses all the user's relays.
+    /// - Returns: A predicate matching the given parameters that can be used to fetch the user's home feed.
+    @nonobjc private class func homeFeedPredicate(
+        for user: Author,
+        before: Date? = nil,
+        after: Date? = nil,
         seenOn relay: Relay? = nil
     ) -> NSPredicate {
-        // swiftlint:disable:next line_length
-        var queryString = "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND author.muted = 0 AND createdAt <= %@ AND deletedOn.@count = 0"
-        var arguments: [CVarArg] = [before as CVarArg]
-        if let relay {
-            queryString.append(" AND ANY seenOnRelays = %@")
-            arguments.append(relay)
-        } else {
-            queryString.append(" AND (ANY author.followers.source = %@ OR author = %@)")
-            arguments += [user, user]
+        let kind1Predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "kind = 1"),
+            NSPredicate(
+                format: "SUBQUERY(" +
+                "eventReferences, $reference, $reference.marker = 'root'" +
+                " OR $reference.marker = 'reply'" +
+                " OR $reference.marker = nil" +
+                ").@count = 0"
+            )
+        ])
+        let kind6Predicate = NSPredicate(format: "kind = 6")
+        let kind30023Predicate = NSPredicate(format: "kind = 30023")
+
+        let kindsPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
+            kind1Predicate,
+            kind6Predicate,
+            kind30023Predicate
+        ])
+
+        let notMutedPredicate = NSPredicate(format: "author.muted = 0")
+        let notDeletedPredicate = NSPredicate(format: "deletedOn.@count = 0")
+
+        var andPredicates = [kindsPredicate, notMutedPredicate, notDeletedPredicate]
+
+        if let before {
+            andPredicates.append(NSPredicate(format: "createdAt <= %@", before as CVarArg))
         }
-        return NSPredicate(format: queryString, argumentArray: arguments)
-    }
-    
-    @nonobjc public class func homeFeedPredicate(
-        for user: Author, 
-        after: Date,
-        seenOn relay: Relay? = nil
-    ) -> NSPredicate {
-        // swiftlint:disable:next line_length
-        var queryString = "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND author.muted = 0 AND createdAt > %@ AND deletedOn.@count = 0"
-        var arguments: [CVarArg] = [after as CVarArg]
-        if let relay {
-            queryString.append(" AND ANY seenOnRelays = %@")
-            arguments.append(relay)
-        } else {
-            queryString.append(" AND (ANY author.followers.source = %@ OR author = %@)")
-            arguments += [user, user]
+
+        if let after {
+            andPredicates.append(NSPredicate(format: "createdAt > %@", after as CVarArg))
         }
-        return NSPredicate(format: queryString, argumentArray: arguments)
+
+        if let relay {
+            andPredicates.append(NSPredicate(format: "ANY seenOnRelays = %@", relay as CVarArg))
+        } else {
+            andPredicates.append(
+                NSPredicate(format: "(ANY author.followers.source = %@ OR author = %@)", user, user)
+            )
+        }
+
+        return NSCompoundPredicate(andPredicateWithSubpredicates: andPredicates)
     }
-    
+
     @nonobjc public class func homeFeed(
         for user: Author, 
         before: Date, 
