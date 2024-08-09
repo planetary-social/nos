@@ -17,6 +17,10 @@ struct NosApp: App {
     
     init() {
         _ = crashReporting // force crash reporting init as early as possible
+        
+        // hack to fix confirmationDialog color issue
+        // https://github.com/planetary-social/nos/issues/1064
+        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .systemBlue
     }
     
     var body: some Scene {
