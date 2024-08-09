@@ -211,7 +211,7 @@ struct ProfileView: View {
                     }
                 }
         )
-        .alert(unwrapping: $alert)
+        .alert($alert)
         .onAppear {
             Task { 
                 await downloadAuthorData()

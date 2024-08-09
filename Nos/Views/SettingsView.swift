@@ -236,7 +236,7 @@ struct SettingsView: View {
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
         .nosNavigationBar(title: .localizable.settings)
-        .alert(unwrapping: $alert) { (action: AlertAction?) in
+        .alert($alert) { (action: AlertAction?) in
             if let action {
                 await alertButtonTapped(action)
             }

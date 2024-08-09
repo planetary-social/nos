@@ -118,7 +118,7 @@ struct ComposerActionBar: View {
         .onChange(of: expirationTime) { _, _ in
             subMenu = .none
         }
-        .alert(unwrapping: $alert) { (_: AlertAction?) in
+        .alert($alert) { (_: AlertAction?) in
         }
         .background(
             LinearGradient(

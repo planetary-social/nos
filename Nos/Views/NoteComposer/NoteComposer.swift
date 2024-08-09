@@ -156,7 +156,7 @@ struct NoteComposer: View {
                 analytics.showedNoteComposer()
             }
         }
-        .alert(unwrapping: $alert)
+        .alert($alert)
     }
 
     private func postAction() async {

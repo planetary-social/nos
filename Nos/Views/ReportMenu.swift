@@ -22,7 +22,7 @@ struct ReportMenuModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
         // ReportCategory menu
-            .confirmationDialog(unwrapping: $confirmationDialogState, action: processUserSelection)
+            .confirmationDialog($confirmationDialogState, action: processUserSelection)
             .alert(
                 String(localized: .localizable.confirmFlag),
                 isPresented: $confirmReport,
