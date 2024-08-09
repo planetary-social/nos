@@ -161,7 +161,6 @@ struct AppView: View {
 
     private func presentNIP05SheetIfNeeded() async {
         guard let author = currentUser.author, let npub = author.npubString else {
-            // We don't anything about the current user
             return
         }
 
