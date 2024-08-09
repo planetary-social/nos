@@ -54,7 +54,7 @@ struct URLParser {
         // https://en.wikipedia.org/wiki/Domain_Name_System#Domain_name_syntax,_internationalization
 
         // swiftlint:disable:next line_length
-        let regexPattern = "(\\s*)(?<url>((https?://){1}|(?<![\\w@.]))([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&/=]*)"
+        let regexPattern = "(\\s*)(?<url>((https?://){1}|(?<![\\w@.]))([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&/=]*(?<![.,!?\\)\\]]))"
 
         var urls: [URL] = []
         do {
