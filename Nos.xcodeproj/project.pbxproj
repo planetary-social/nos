@@ -58,6 +58,7 @@
 		037975C72C0E26FC00ADDF37 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F85729BA981800B44E7A /* Font.swift */; };
 		037975D12C0E341500ADDF37 /* MockFeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037975D02C0E341500ADDF37 /* MockFeatureFlags.swift */; };
 		037975EA2C0E695A00ADDF37 /* MockFeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037975D02C0E341500ADDF37 /* MockFeatureFlags.swift */; };
+		0393A57E2C66AB0D002DAFCF /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 0393A57D2C66AB0D002DAFCF /* SwiftUINavigation */; };
 		039C961F2C480F4100A8EB39 /* unsupported_kinds.json in Resources */ = {isa = PBXBuildFile; fileRef = 039C961E2C480F4100A8EB39 /* unsupported_kinds.json */; };
 		039C96292C48321E00A8EB39 /* long_form_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 039C96282C48321E00A8EB39 /* long_form_data.json */; };
 		03A3AA3B2C5028FF008FE153 /* PublicKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A3AA3A2C5028FF008FE153 /* PublicKeyTests.swift */; };
@@ -229,7 +230,6 @@
 		C94D14812A12B3F70014C906 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D14802A12B3F70014C906 /* SearchBar.swift */; };
 		C94D6D5C2AC5D14400F0F11E /* WizardTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D6D5B2AC5D14400F0F11E /* WizardTextField.swift */; };
 		C94D855C2991479900749478 /* NoteComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D855B2991479900749478 /* NoteComposer.swift */; };
-		C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = C94D855E29914D2300749478 /* SwiftUINavigation */; };
 		C94FE9F729DB259300019CD3 /* Text+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE629C69FA000466635 /* Text+Gradient.swift */; };
 		C959DB762BD01DF4008F3627 /* GiftWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C959DB752BD01DF4008F3627 /* GiftWrapper.swift */; };
 		C959DB772BD01DF4008F3627 /* GiftWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C959DB752BD01DF4008F3627 /* GiftWrapper.swift */; };
@@ -491,7 +491,6 @@
 		CD4908D429B92941007443DB /* ReportABugMailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4908D329B92941007443DB /* ReportABugMailView.swift */; };
 		CD76865029B6503500085358 /* NoteOptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76864F29B6503500085358 /* NoteOptionsButton.swift */; };
 		CDDA1F7B29A527650047ACD8 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = CDDA1F7A29A527650047ACD8 /* Starscream */; };
-		CDDA1F7D29A527650047ACD8 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = CDDA1F7C29A527650047ACD8 /* SwiftUINavigation */; };
 		DC08FF812A7969C5009F87D1 /* UIDevice+Simulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */; };
 		DC2E54C82A700F1400C2CAAB /* UIDevice+Simulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */; };
 		DC4AB2F62A4475B800D1478A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AB2F52A4475B800D1478A /* AppDelegate.swift */; };
@@ -889,6 +888,7 @@
 			files = (
 				C9DEC068298965270078B43A /* Starscream in Frameworks */,
 				C9FD35132BCED5A6008F8D95 /* NostrSDK in Frameworks */,
+				0393A57E2C66AB0D002DAFCF /* SwiftUINavigation in Frameworks */,
 				C9B71DC02A8E9BAD0031ED9F /* SentrySwiftUI in Frameworks */,
 				C9B71DBE2A8E9BAD0031ED9F /* Sentry in Frameworks */,
 				C9646E9A29B79E04007239A4 /* Logger in Frameworks */,
@@ -897,7 +897,6 @@
 				C96CB98C2A6040C500498C4E /* DequeModule in Frameworks */,
 				C99DBF7E2A9E81CF00F7068F /* SDWebImageSwiftUI in Frameworks */,
 				C9646EA429B7A24A007239A4 /* PostHog in Frameworks */,
-				C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -915,7 +914,6 @@
 				C905B0752A619367009B8A78 /* DequeModule in Frameworks */,
 				C91565C12B2368FA0068EECA /* ViewInspector in Frameworks */,
 				C9646E9C29B79E4D007239A4 /* Logger in Frameworks */,
-				CDDA1F7D29A527650047ACD8 /* SwiftUINavigation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1687,7 +1685,6 @@
 			name = Nos;
 			packageProductDependencies = (
 				C9DEC067298965270078B43A /* Starscream */,
-				C94D855E29914D2300749478 /* SwiftUINavigation */,
 				C9646E9929B79E04007239A4 /* Logger */,
 				C9646EA329B7A24A007239A4 /* PostHog */,
 				C9646EA629B7A3DD007239A4 /* Dependencies */,
@@ -1697,6 +1694,7 @@
 				C99DBF7D2A9E81CF00F7068F /* SDWebImageSwiftUI */,
 				C9FD34F52BCEC89C008F8D95 /* secp256k1 */,
 				C9FD35122BCED5A6008F8D95 /* NostrSDK */,
+				0393A57D2C66AB0D002DAFCF /* SwiftUINavigation */,
 			);
 			productName = Nos;
 			productReference = C9DEBFCE298941000078B43A /* Nos.app */;
@@ -1720,7 +1718,6 @@
 			name = NosTests;
 			packageProductDependencies = (
 				CDDA1F7A29A527650047ACD8 /* Starscream */,
-				CDDA1F7C29A527650047ACD8 /* SwiftUINavigation */,
 				C9646E9B29B79E4D007239A4 /* Logger */,
 				C9646EA829B7A4F2007239A4 /* PostHog */,
 				C9646EAB29B7A520007239A4 /* Dependencies */,
@@ -1776,7 +1773,6 @@
 			mainGroup = C9DEBFC5298941000078B43A;
 			packageReferences = (
 				C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */,
-				C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */,
 				C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32" */,
 				C9646E9829B79E04007239A4 /* XCRemoteSwiftPackageReference "logger-ios" */,
 				C9646EA229B7A24A007239A4 /* XCRemoteSwiftPackageReference "posthog-ios" */,
@@ -1789,6 +1785,7 @@
 				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */,
 				C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */,
 				C9FD35112BCED5A6008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */,
+				0393A57C2C66AB0D002DAFCF /* XCRemoteSwiftPackageReference "swift-navigation" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -3092,6 +3089,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0393A57C2C66AB0D002DAFCF /* XCRemoteSwiftPackageReference "swift-navigation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-navigation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.2;
+			};
+		};
 		3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/liamnichols/xcstrings-tool-plugin.git";
@@ -3106,14 +3111,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.9.9;
-			};
-		};
-		C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/swiftui-navigation";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.5.4;
 			};
 		};
 		C9646E9829B79E04007239A4 /* XCRemoteSwiftPackageReference "logger-ios" */ = {
@@ -3215,6 +3212,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0393A57D2C66AB0D002DAFCF /* SwiftUINavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0393A57C2C66AB0D002DAFCF /* XCRemoteSwiftPackageReference "swift-navigation" */;
+			productName = SwiftUINavigation;
+		};
 		3AD3185C2B294E9000026B07 /* XCStringsToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
@@ -3234,11 +3236,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C91565BF2B2368FA0068EECA /* XCRemoteSwiftPackageReference "ViewInspector" */;
 			productName = ViewInspector;
-		};
-		C94D855E29914D2300749478 /* SwiftUINavigation */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */;
-			productName = SwiftUINavigation;
 		};
 		C959DB802BD02460008F3627 /* NostrSDK */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -3343,11 +3340,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C9DEC066298965270078B43A /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
-		};
-		CDDA1F7C29A527650047ACD8 /* SwiftUINavigation */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */;
-			productName = SwiftUINavigation;
 		};
 /* End XCSwiftPackageProductDependency section */
 

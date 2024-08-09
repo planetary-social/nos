@@ -71,10 +71,14 @@ struct ReportMenuModifier: ViewModifier {
                     } else {
                         message = .localizable.flagUserMessage
                     }
-                    confirmationDialogState = ConfirmationDialogState(
-                        title: TextState(String(localized: .localizable.reportContent)),
-                        message: TextState(String(localized: message)),
-                        buttons: topLevelButtons()
+                    confirmationDialogState = ConfirmationDialogState<UserSelection>(
+                        title: { TextState(String(localized: .localizable.reportContent)) },
+                        actions: {
+                            for button in topLevelButtons() {
+                                button
+                            }
+                        },
+                        message: { TextState(String(localized: message)) }
                     )
                 }
             }
@@ -96,33 +100,33 @@ struct ReportMenuModifier: ViewModifier {
         switch userSelection {
         case .noteCategorySelected(let category):
             Task {
-                confirmationDialogState = ConfirmationDialogState(
-                    title: TextState(String(localized: .localizable.reportActionTitle(category.displayName))),
-                    message: TextState(String(localized: .localizable.reportActionTitle(category.displayName))),
-                    buttons: [
+                confirmationDialogState = ConfirmationDialogState<UserSelection>(
+                    title: { TextState(String(localized: .localizable.reportActionTitle(category.displayName))) },
+                    actions: {
                         ButtonState(action: .send(.sendToNos(category))) {
                             TextState("Send to Nos")
-                        },
+                        }
                         ButtonState(action: .send(.flagPublicly(category))) {
                             TextState("Flag Publicly")
                         }
-                    ]
+                    },
+                    message: { TextState(String(localized: .localizable.reportActionTitle(category.displayName))) }
                 )
             }
             
         case .authorCategorySelected(let category):
             Task {
-                confirmationDialogState = ConfirmationDialogState(
-                    title: TextState(String(localized: .localizable.reportActionTitle(category.displayName))),
-                    message: TextState(String(localized: .localizable.reportActionTitle(category.displayName))),
-                    buttons: [
+                confirmationDialogState = ConfirmationDialogState<UserSelection>(
+                    title: { TextState(String(localized: .localizable.reportActionTitle(category.displayName))) },
+                    actions: {
                         ButtonState(action: .send(.sendToNos(category))) {
                             TextState("Send to Nos")
-                        },
+                        }
                         ButtonState(action: .send(.flagPublicly(category))) {
                             TextState("Flag Publicly")
                         }
-                    ]
+                    },
+                    message: { TextState(String(localized: .localizable.reportActionTitle(category.displayName))) }
                 )
             }
             
@@ -180,21 +184,21 @@ struct ReportMenuModifier: ViewModifier {
     }
     
     /// List of the top-level report categories we care about.
-    func topLevelButtons() -> [ButtonState<UserSelection>] {
+    @ButtonStateBuilder<UserSelection> func topLevelButtons() -> [ButtonState<UserSelection>] {
         switch reportedObject {
         case .note:
-            ReportCategoryType.noteCategories.map { category in
+            for category in ReportCategoryType.noteCategories {
                 let userSelection = UserSelection.noteCategorySelected(category)
                 
-                return ButtonState(action: .send(userSelection)) {
+                ButtonState(action: .send(userSelection)) {
                     TextState(verbatim: category.displayName)
                 }
             }
         case .author:
-            ReportCategoryType.authorCategories.map { category in
+            for category in ReportCategoryType.authorCategories {
                 let userSelection = UserSelection.authorCategorySelected(category)
                 
-                return ButtonState(action: .send(userSelection)) {
+                ButtonState(action: .send(userSelection)) {
                     TextState(verbatim: category.displayName)
                 }
             }
