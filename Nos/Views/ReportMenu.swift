@@ -184,21 +184,21 @@ struct ReportMenuModifier: ViewModifier {
     }
     
     /// List of the top-level report categories we care about.
-    @ButtonStateBuilder<UserSelection> func topLevelButtons() -> [ButtonState<UserSelection>] {
+    func topLevelButtons() -> [ButtonState<UserSelection>] {
         switch reportedObject {
         case .note:
-            for category in ReportCategoryType.noteCategories {
+            ReportCategoryType.noteCategories.map { category in
                 let userSelection = UserSelection.noteCategorySelected(category)
                 
-                ButtonState(action: .send(userSelection)) {
+                return ButtonState(action: .send(userSelection)) {
                     TextState(verbatim: category.displayName)
                 }
             }
         case .author:
-            for category in ReportCategoryType.authorCategories {
+            ReportCategoryType.authorCategories.map { category in
                 let userSelection = UserSelection.authorCategorySelected(category)
                 
-                ButtonState(action: .send(userSelection)) {
+                return ButtonState(action: .send(userSelection)) {
                     TextState(verbatim: category.displayName)
                 }
             }
