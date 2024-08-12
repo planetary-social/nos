@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixed an issue where the sheet asking users to set up a NIP-05 username would appear after reinstalling Nos, even if the profile already had a NIP-05 username.
+- Fixed a bug where urls with periods after them would include the period.
 
 ## [0.1.24] - 2024-08-09Z
 
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added push notifications for zaps.
 - Added zaps to the Notifications view.
 - Created Colors.xcassets and move all colors into it. Thanks @lingoslinger!
+- Fixed a bug where confirmation dialog buttons turn red while swiping across them.
 
 ## [0.1.23] - 2024-07-31Z
 
