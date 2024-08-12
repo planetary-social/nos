@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added push notifications for zaps.
 - Added zaps to the Notifications view.
 - Created Colors.xcassets and move all colors into it. Thanks @lingoslinger!
+- Fixed a bug where confirmation dialog buttons turn red while swiping across them.
 
 ## [0.1.23] - 2024-07-31Z
 
