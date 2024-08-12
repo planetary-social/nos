@@ -13,7 +13,7 @@ struct ActionButton: View {
     var image: Image?
     var imageAlignment: ImageAlignment = .left
     var textColor = Color.white
-    var depthEffectColor = Color(hex: "#A04651")
+    var depthEffectColor = Color.actionPrimaryDepthEffect
     var backgroundGradient = LinearGradient(
         colors: [
             Color.actionPrimaryGradientTop,
@@ -128,7 +128,7 @@ struct ActionButtonStyle: ButtonStyle {
                 .padding(.vertical, 8)
                 .padding(.horizontal, 13)
                 .shadow(
-                    color: textShadow ? Color(white: 0, opacity: 0.15) : .clear,
+                    color: textShadow ? Color.actionButtonStyleTextShadow : .clear,
                     radius: 2,
                     x: 0,
                     y: 2
@@ -138,8 +138,8 @@ struct ActionButtonStyle: ButtonStyle {
                     ZStack {
                         LinearGradient(
                             colors: [
-                                Color(red: 1, green: 1, blue: 1, opacity: 0.2),
-                                Color(red: 1, green: 1, blue: 1, opacity: 1.0),
+                                Color.actionButtonStyleGradientLeading,
+                                Color.actionButtonStyleGradientTrailing
                             ],
                             startPoint: .top,
                             endPoint: .bottom
@@ -168,10 +168,13 @@ struct ActionButton_Previews: PreviewProvider {
                 title: .localizable.edit,
                 font: .clarity(.medium),
                 image: Image.editProfile, 
-                textColor: Color(hex: "#f26141"),
-                depthEffectColor: Color(hex: "#f8d4b6"),
+                textColor: Color.actionBannerButtonTxt,
+                depthEffectColor: Color.actionBannerButtonEffect,
                 backgroundGradient: LinearGradient(
-                    colors: [Color(hex: "#FFF8F7"), Color(hex: "#FDF6F5")],
+                    colors: [
+                        Color.actionBannerButtonGradientLeading,
+                        Color.actionBannerButtonGradientTrailing
+                    ],
                     startPoint: .leading,
                     endPoint: .trailing
                 ),
