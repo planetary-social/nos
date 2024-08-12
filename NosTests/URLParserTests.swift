@@ -106,6 +106,22 @@ class URLParserTests: XCTestCase {
         XCTAssertEqual(actualString, expectedString)
         XCTAssertEqual(actualURLs, expectedURLs)
     }
+    
+    func testExtractURLsDoesNotIncludePeriodsInURLs() throws {
+        // Arrange
+        let string = "Welcome to nos.social. It's a place for humans"
+        let expectedString = "Welcome to [nos.social](https://nos.social). It's a place for humans"
+        let expectedURLs = [
+            URL(string: "https://nos.social")!
+        ]
+
+        // Act
+        let (actualString, actualURLs) = sut.replaceUnformattedURLs(in: string)
+
+        // Assert
+        XCTAssertEqual(actualString, expectedString)
+        XCTAssertEqual(actualURLs, expectedURLs)
+    }
 
     func testExtractURLsWithImage() throws {
         let string = "Hello, world!https://cdn.ymaws.com/footprints.jpg"
