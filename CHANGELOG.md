@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue where the sheet asking users to set up a NIP-05 username would appear after reinstalling Nos, even if the profile already had a NIP-05 username.
 - Fixed a bug where urls with periods after them would include the period.
+- Modified the following files to use only semantically named colors in Colors.xcassets rather than "hard coded" Color values:
+-- ActionButton.swift
 
 ## [0.1.24] - 2024-08-09Z
 
