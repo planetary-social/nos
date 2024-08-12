@@ -12,7 +12,7 @@ struct ReportMenuModifier: ViewModifier {
     var reportedObject: ReportTarget
     
     @State private var userSelection: UserSelection?
-    @State private var confirmReport = false
+//    @State private var confirmReport = false
     @State private var showMuteDialog = false
     @State private var confirmationDialogState: ConfirmationDialogState<UserSelection>?
     
@@ -23,26 +23,26 @@ struct ReportMenuModifier: ViewModifier {
         content
         // ReportCategory menu
             .confirmationDialog($confirmationDialogState, action: processUserSelection)
-            .alert(
-                String(localized: .localizable.confirmFlag),
-                isPresented: $confirmReport,
-                actions: {
-                    Button(String(localized: .localizable.confirm)) {
-                        publishReport(userSelection)
-                        
-                        if let author = reportedObject.author, !author.muted {
-                            showMuteDialog = true
-                        }
-                    }
-                    Button(String(localized: .localizable.cancel), role: .cancel) {
-                        userSelection = nil
-                    }
-                },
-                message: {
-                    let text = getAlertMessage(for: userSelection, with: reportedObject)
-                    Text(text)
-                }
-            )
+//            .alert(
+//                String(localized: .localizable.confirmFlag),
+//                isPresented: $confirmReport,
+//                actions: {
+//                    Button(String(localized: .localizable.confirm)) {
+//                        publishReport(userSelection)
+//                        
+//                        if let author = reportedObject.author, !author.muted {
+//                            showMuteDialog = true
+//                        }
+//                    }
+//                    Button(String(localized: .localizable.cancel), role: .cancel) {
+//                        userSelection = nil
+//                    }
+//                },
+//                message: {
+//                    let text = getAlertMessage(for: userSelection, with: reportedObject)
+//                    Text(text)
+//                }
+//            )
         // Mute user menu
             .alert(
                 String(localized: .localizable.muteUser),
@@ -84,6 +84,7 @@ struct ReportMenuModifier: ViewModifier {
             }
             .onChange(of: confirmationDialogState) { _, newValue in
                 if newValue == nil {
+                    Log.debug("newValue of confirmationDialogState is nil; setting isPresented = false")
                     isPresented = false
                 }
             }
@@ -131,7 +132,28 @@ struct ReportMenuModifier: ViewModifier {
             }
             
         case .sendToNos, .flagPublicly:
-            confirmReport = true
+            Task {
+                confirmationDialogState = ConfirmationDialogState<UserSelection>(
+                    title: {
+                        TextState(String(localized: .localizable.confirmFlag))
+                    },
+                    actions: {
+                        ButtonState(action: .send(.publishReport)) {
+                            TextState(String(localized: .localizable.confirm))
+                        }
+                        ButtonState(role: .cancel) {
+                            TextState(String(localized: .localizable.cancel))
+                        }
+                    },
+                    message: {
+                        TextState(getAlertMessage(for: userSelection, with: reportedObject))
+                    }
+                )
+            }
+        case .publishReport:
+            // Task { ???
+            publishReport(userSelection)
+            // } ???
         }
     }
     
@@ -152,7 +174,8 @@ struct ReportMenuModifier: ViewModifier {
         case authorCategorySelected(ReportCategory)
         case sendToNos(ReportCategory)
         case flagPublicly(ReportCategory)
-        
+        case publishReport
+
         var displayName: String {
             switch self {
             case .noteCategorySelected(let category),
@@ -160,6 +183,8 @@ struct ReportMenuModifier: ViewModifier {
                 .sendToNos(let category),
                 .flagPublicly(let category):
                 return category.displayName
+            case .publishReport:
+                return "Publish!"
             }
         }
         
@@ -179,6 +204,10 @@ struct ReportMenuModifier: ViewModifier {
             case .noteCategorySelected(let category),
                 .authorCategorySelected(let category):
                 return String(localized: .localizable.reportFlagPubliclyConfirmation(category.displayName))
+
+            case .publishReport:
+//                return userSelection?.confirmationAlertMessage(for: reportedObject) ?? String(localized: .localizable.error)
+                return "oops, not sure what to display here"
             }
         }
     }
@@ -215,6 +244,8 @@ struct ReportMenuModifier: ViewModifier {
         case .noteCategorySelected, .authorCategorySelected, .none:
             // This would be a dev error
             Log.error("Invalid user selection")
+        case .publishReport:
+            Log.error("Better fill this in")
         }
     }
     
