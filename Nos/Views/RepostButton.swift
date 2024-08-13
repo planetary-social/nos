@@ -23,7 +23,7 @@ struct RepostButton: View {
     ///
     /// - Parameter note: Note event to display reposts to.
     /// - Parameter showsCount: Whether the number of reposts is displayed. Defaults to `true`.
-    internal init(note: Event, showsCount: Bool = true) {
+    init(note: Event, showsCount: Bool = true) {
         self.note = note
         self.showsCount = showsCount
         _reposts = FetchRequest(fetchRequest: Event.reposts(noteID: note.identifier ?? ""))
