@@ -132,9 +132,6 @@ struct ImagePickerButton<Label>: View where Label: View {
 }
 
 struct ImagePickerCoordinator_Previews: PreviewProvider {
-    @State
-    static var isPresented = true
-
     static var previews: some View {
         ImagePickerButton { pickedImage in
             print(pickedImage)

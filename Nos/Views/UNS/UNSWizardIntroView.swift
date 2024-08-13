@@ -52,7 +52,6 @@ struct UNSWizardIntroView: View {
 
 struct UNSWizardIntro_Previews: PreviewProvider {
     
-    static var previewData = PreviewData()
     @State static var controller = UNSWizardController(
         state: .intro 
     )

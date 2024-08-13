@@ -70,10 +70,6 @@ struct ExpirationTimeButton: View {
 
 struct ExpirationTimeButton_Previews: PreviewProvider {
     
-    @State static var emptyExpirationTime: TimeInterval? 
-    
-    @State static var oneHourExpirationTime: TimeInterval? = 60 * 60
-    
     static var previews: some View {
         VStack {
             HStack {

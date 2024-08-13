@@ -9,7 +9,6 @@ struct NoteComposer: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) var currentUser
-    @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
     @Dependency(\.noteParser) private var noteParser
 
