@@ -5,6 +5,10 @@ import SwiftUI
 struct LikeButton: View {
     
     var note: Event
+
+    /// Indicates whether the number of likes is displayed.
+    var showsCount: Bool
+
     @FetchRequest private var likes: FetchedResults<Event>
 
     /// Provides instant feedback when the button is tapped, even though the action it performs is async.
@@ -18,8 +22,13 @@ struct LikeButton: View {
     @Environment(\.managedObjectContext) private var viewContext
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
-    internal init(note: Event) {
+    /// Initializes a LikeButton object.
+    ///
+    /// - Parameter note: The event associated with this Like button.
+    /// - Parameter showsCount: Whether the number of likes is displayed. Defaults to `true`.
+    init(note: Event, showsCount: Bool = true) {
         self.note = note
+        self.showsCount = showsCount
         if let noteID = note.identifier {
             _likes = FetchRequest(fetchRequest: Event.likes(noteID: noteID))
         } else {
@@ -51,7 +60,7 @@ struct LikeButton: View {
             } else {
                 Image.buttonLikeDefault
             }
-            if likeCount > 0 {
+            if showsCount, likeCount > 0 {
                 Text(likeCount.description)
                     .font(.clarity(.medium, textStyle: .subheadline))
                     .foregroundColor(.secondaryTxt)

@@ -5,7 +5,10 @@ import Logger
 struct RepostButton: View {
     
     var note: Event
-    
+
+    /// Indicates whether the number of reposts is displayed.
+    var showsCount: Bool
+
     @FetchRequest private var reposts: FetchedResults<Event>
     @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) private var currentUser
@@ -16,8 +19,13 @@ struct RepostButton: View {
     @State private var shouldConfirmRepost = false
     @State private var shouldConfirmDelete = false
     
-    internal init(note: Event) {
+    /// Initializes a RepostButton object.
+    ///
+    /// - Parameter note: Note event to display reposts to.
+    /// - Parameter showsCount: Whether the number of reposts is displayed. Defaults to `true`.
+    init(note: Event, showsCount: Bool = true) {
         self.note = note
+        self.showsCount = showsCount
         _reposts = FetchRequest(fetchRequest: Event.reposts(noteID: note.identifier ?? ""))
     }
     
@@ -40,7 +48,7 @@ struct RepostButton: View {
                     Image.repostButton
                 }
                 
-                if reposts.count > 0 {
+                if showsCount, reposts.count > 0 {
                     Text(reposts.count.description)
                         .font(.clarity(.medium, textStyle: .subheadline))
                         .foregroundColor(.secondaryTxt)

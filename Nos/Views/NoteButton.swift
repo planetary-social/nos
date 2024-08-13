@@ -15,6 +15,12 @@ struct NoteButton: View {
     var hideOutOfNetwork: Bool
     var repliesDisplayType: RepliesDisplayType
 
+    /// Indicates whether the number of likes is displayed.
+    var showsLikeCount: Bool
+
+    /// Indicates whether the number of reposts is displayed.
+    var showsRepostCount: Bool
+
     /// Whether replies should be fetched from relays.
     var fetchReplies: Bool
 
@@ -37,6 +43,8 @@ struct NoteButton: View {
     /// - Parameter hideOutOfNetwork: Blur the card if the author is not inside the user's
     /// network. Defaults to true.
     /// - Parameter repliesDisplayType: Replies Label style. Defaults to `.displayNothing`.
+    /// - Parameter showsLikeCount: Whether the number of likes is displayed. Defaults to `true`.
+    /// - Parameter showsRepostCount: Whether the number of reposts is displayed. Defaults to `true`.
     /// - Parameter fetchReplies: Whether replies should be fetched from relays. Defaults
     /// to false.
     /// - Parameter displayRootMessage: Display the root note above if the note is a reply.
@@ -52,6 +60,8 @@ struct NoteButton: View {
         shouldTruncate: Bool = true, 
         hideOutOfNetwork: Bool = true, 
         repliesDisplayType: RepliesDisplayType = .displayNothing,
+        showsLikeCount: Bool = true,
+        showsRepostCount: Bool = true,
         fetchReplies: Bool = false,
         displayRootMessage: Bool = false,
         isTapEnabled: Bool = true,
@@ -63,6 +73,8 @@ struct NoteButton: View {
         self.shouldTruncate = shouldTruncate
         self.hideOutOfNetwork = hideOutOfNetwork
         self.repliesDisplayType = repliesDisplayType
+        self.showsLikeCount = showsLikeCount
+        self.showsRepostCount = showsRepostCount
         self.fetchReplies = fetchReplies
         self.displayRootMessage = displayRootMessage
         self.isTapEnabled = isTapEnabled
@@ -108,6 +120,8 @@ struct NoteButton: View {
                 shouldTruncate: shouldTruncate,
                 hideOutOfNetwork: hideOutOfNetwork,
                 repliesDisplayType: repliesDisplayType,
+                showsLikeCount: showsLikeCount,
+                showsRepostCount: showsRepostCount,
                 replyAction: replyAction
             )
 
