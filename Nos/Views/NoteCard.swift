@@ -19,15 +19,37 @@ struct NoteCard: View {
 
     private var shouldTruncate: Bool
     private let repliesDisplayType: RepliesDisplayType
+    
+    /// Indicates whether the number of likes is displayed.
+    private let showsLikeCount: Bool
+
+    /// Indicates whether the number of reposts is displayed.
+    private let showsRepostCount: Bool
+
     private var hideOutOfNetwork: Bool
     private var replyAction: ((Event) -> Void)?
     
+    /// Initializes a NoteCard object.
+    ///
+    /// - Parameter note: Note event to display.
+    /// - Parameter style: Card style. Defaults to `.compact`.
+    /// - Parameter shouldTruncate: Whether the card should display just some lines or the
+    /// full content of the note. Defaults to `true`.
+    /// - Parameter hideOutOfNetwork: Blur the card if the author is not inside the user's
+    /// network. Defaults to `true`.
+    /// - Parameter repliesDisplayType: Replies Label style. Defaults to `.displayNothing`.
+    /// - Parameter showsLikeCount: Whether the number of likes is displayed. Defaults to `true`.
+    /// - Parameter showsRepostCount: Whether the number of reposts is displayed. Defaults to `true`.
+    /// - Parameter replyAction: Handler that gets called when the user taps on the Reply
+    /// button. Defaults to `nil`.
     init(
         note: Event,
         style: CardStyle = .compact,
         shouldTruncate: Bool = true,
         hideOutOfNetwork: Bool = true,
         repliesDisplayType: RepliesDisplayType = .displayNothing,
+        showsLikeCount: Bool = true,
+        showsRepostCount: Bool = true,
         replyAction: ((Event) -> Void)? = nil
     ) {
         self.note = note
@@ -35,6 +57,8 @@ struct NoteCard: View {
         self.shouldTruncate = shouldTruncate
         self.hideOutOfNetwork = hideOutOfNetwork
         self.repliesDisplayType = repliesDisplayType
+        self.showsLikeCount = showsLikeCount
+        self.showsRepostCount = showsRepostCount
         self.replyAction = replyAction
     }
     
@@ -89,8 +113,8 @@ struct NoteCard: View {
                                 }
                             }
                             Spacer()
-                            RepostButton(note: note) 
-                            LikeButton(note: note)
+                            RepostButton(note: note, showsCount: showsRepostCount)
+                            LikeButton(note: note, showsCount: showsLikeCount)
                             ReplyButton(note: note, replyAction: replyAction)
                         }
                         .padding(.leading, 13)
