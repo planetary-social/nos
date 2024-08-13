@@ -128,7 +128,7 @@ struct ActionButtonStyle: ButtonStyle {
                 .padding(.vertical, 8)
                 .padding(.horizontal, 13)
                 .shadow(
-                    color: textShadow ? Color.actionButtonStyleTextShadow : .clear,
+                    color: textShadow ? Color.actionButtonTextShadow : .clear,
                     radius: 2,
                     x: 0,
                     y: 2
@@ -138,8 +138,8 @@ struct ActionButtonStyle: ButtonStyle {
                     ZStack {
                         LinearGradient(
                             colors: [
-                                Color.actionButtonStyleGradientLeading,
-                                Color.actionButtonStyleGradientTrailing
+                                Color.actionButtonBackgroundGradientTop,
+                                Color.actionButtonBackgroundGradientBottom
                             ],
                             startPoint: .top,
                             endPoint: .bottom
