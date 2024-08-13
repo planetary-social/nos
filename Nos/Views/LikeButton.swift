@@ -24,7 +24,7 @@ struct LikeButton: View {
 
     /// Initializes a LikeButton object.
     ///
-    /// - Parameter note: Note event to display likes to.
+    /// - Parameter note: The event associated with this Like button.
     /// - Parameter showsCount: Whether the number of likes is displayed. Defaults to `true`.
     internal init(note: Event, showsCount: Bool = true) {
         self.note = note

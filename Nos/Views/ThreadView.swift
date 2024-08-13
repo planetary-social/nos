@@ -32,8 +32,8 @@ struct ThreadView: View {
             NoteButton(
                 note: root,
                 repliesDisplayType: .count,
-                showLikeCount: false,
-                showRepostCount: false,
+                showsLikeCount: true,
+                showsRepostCount: true,
                 tapAction: { event in
                     router.push(event)
                 }
