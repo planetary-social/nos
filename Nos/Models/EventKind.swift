@@ -45,6 +45,12 @@ public enum EventKind: Int64, CaseIterable, Hashable {
     /// Notification Service Registration
     case notificationServiceRegistration = 6666
 
+    /// Zap Request
+    case zapRequest = 9734
+    
+    /// Zap Receipt
+    case zapReceipt = 9735
+    
     /// Mute List
     case mute = 10_000
 

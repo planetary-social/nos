@@ -4,7 +4,7 @@ import Logger
 import SwiftUI
 import SwiftUINavigation
 
-struct NewNoteView: View {
+struct NoteComposer: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
@@ -13,8 +13,8 @@ struct NewNoteView: View {
     @Dependency(\.analytics) private var analytics
     @Dependency(\.noteParser) private var noteParser
 
-    /// State holding the text the user is typing
-    @State private var text = EditableNoteText()
+    /// A controller that manages the entered text.
+    @State private var editingController = NoteEditorController()
 
     /// The height of the NoteTextEditor that fits all entered text.
     /// This value will be updated by NoteTextEditor automatically, and should be used to set its frame from SwiftUI. 
@@ -65,7 +65,7 @@ struct NewNoteView: View {
                                         ReplyPreview(note: replyToNote)
                                     }
                                     NoteTextEditor(
-                                        text: $text, 
+                                        controller: $editingController,
                                         minHeight: minimumEditorHeight,
                                         placeholder: .localizable.newNotePlaceholder
                                     )
@@ -94,9 +94,9 @@ struct NewNoteView: View {
                     }
                     
                     ComposerActionBar(
+                        editingController: $editingController,
                         expirationTime: $expirationTime,
-                        isUploadingImage: $isUploadingImage,
-                        text: $text
+                        isUploadingImage: $isUploadingImage
                     )
                 }
                 
@@ -146,14 +146,14 @@ struct NewNoteView: View {
                 },
                 trailing: ActionButton(title: .localizable.post, action: postAction)
                     .frame(height: 22)
-                    .disabled(text.string.isEmpty)
+                    .disabled(editingController.isEmpty || isUploadingImage)
                     .padding(.bottom, 3)
             )
             .onAppear {
-                if let initialContents, text.isEmpty {
-                    text = EditableNoteText(string: initialContents)
+                if let initialContents, editingController.isEmpty {
+                    editingController.append(text: initialContents)
                 }
-                analytics.showedNewNote()
+                analytics.showedNoteComposer()
             }
         }
         .alert(unwrapping: $alert)
@@ -203,14 +203,20 @@ struct NewNoteView: View {
         isPresented = false
     }
 
+    // swiftlint:disable:next function_body_length
     private func publishPost() async {
         guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
             Log.error("Cannot post without a keypair")
             return
         }
         
+        guard let text = editingController.text else {
+            Log.error("Tried to publish a post with empty text")
+            return
+        }
+        
         do {
-            var (content, tags) = noteParser.parse(attributedText: text.attributedString)
+            var (content, tags) = noteParser.parse(attributedText: text)
             
             if let expirationTime {
                 tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
@@ -257,7 +263,6 @@ struct NewNoteView: View {
             } else {
                 analytics.published(note: jsonEvent)
             }
-            text = EditableNoteText()
         } catch {
             Log.error("Error when posting: \(error.localizedDescription)")
         }
@@ -267,13 +272,13 @@ struct NewNoteView: View {
 #Preview {
     let previewData = PreviewData()
     
-    return NewNoteView(isPresented: .constant(true))
+    return NoteComposer(isPresented: .constant(true))
         .inject(previewData: previewData)
 }
 
 #Preview {
     var previewData = PreviewData()
     
-    return NewNoteView(replyTo: previewData.longNote, isPresented: .constant(true))
+    return NoteComposer(replyTo: previewData.longNote, isPresented: .constant(true))
         .inject(previewData: previewData)
 }

@@ -562,6 +562,40 @@
           }
         }
       }
+    },
+    "zappedYou" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡️ zapped you!"
+          }
+        }
+      }
+    },
+    "zappedYouSats" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "⚡️ zapped you %ld sat!"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "⚡️ zapped you %ld sats!"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

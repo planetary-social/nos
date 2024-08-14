@@ -16,7 +16,7 @@ class Analytics {
             let configuration = PostHogConfig(apiKey: apiKey, host: "https://posthog.planetary.tools")
 
             configuration.captureApplicationLifecycleEvents = true
-            configuration.captureScreenViews = true
+            configuration.captureScreenViews = false
             // TODO: write screen views to log
 
             PostHogSDK.shared.setup(configuration)
@@ -52,7 +52,7 @@ class Analytics {
         track("Discover Tab Tapped")
     }
     
-    func showedNewNote() {
+    func showedNoteComposer() {
         track("New Note Tapped")
     }
     
@@ -143,7 +143,27 @@ class Analytics {
         }
         postHog?.capture(eventName, properties: properties)
     }
-    
+
+    /// Tracks when the user submits a search on the Discover screen.
+    func searchedDiscover() {
+        track("Discover Search Started")
+    }
+
+    /// Tracks when the user taps on a search result on the Discover screen.
+    func displayedAuthorFromDiscoverSearch(resultsCount: Int) {
+        track(
+            "Discover Search Displayed Author",
+            properties: ["Number of results": resultsCount]
+        )
+    }
+
+    /// Tracks when the user navigates to a note from the Discover search screen.
+    func displayedNoteFromDiscoverSearch() {
+        track(
+            "Discover Search Displayed Note"
+        )
+    }
+
     // MARK: - Relays
     
     func rateLimited(by socket: WebSocket, requestCount: Int) {

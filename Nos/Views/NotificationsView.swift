@@ -38,8 +38,8 @@ struct NotificationsView: View {
         }
         
         let filter = Filter(
-            kinds: [.text], 
-            pTags: [currentUserKey], 
+            kinds: [.text, .zapReceipt],
+            pTags: [currentUserKey],
             limit: 100,
             keepSubscriptionOpen: false
         )
