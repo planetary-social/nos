@@ -65,6 +65,7 @@
 		03B4E6AC2C125D13006E5F59 /* FileStorageUploadResponseJSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B4E6AB2C125D13006E5F59 /* FileStorageUploadResponseJSONTests.swift */; };
 		03B4E6AE2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B4E6AD2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift */; };
 		03B4E6AF2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B4E6AD2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift */; };
+		03C8B4962C6D065900A07CCD /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C8B4952C6D065900A07CCD /* ImageViewer.swift */; };
 		03D1B4282C3C1A5D001778CD /* NostrIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D1B4272C3C1A5D001778CD /* NostrIdentifier.swift */; };
 		03D1B4292C3C1AC9001778CD /* NostrIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D1B4272C3C1A5D001778CD /* NostrIdentifier.swift */; };
 		03D1B42C2C3C1B0D001778CD /* TLVElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D1B42B2C3C1B0D001778CD /* TLVElement.swift */; };
@@ -564,6 +565,7 @@
 		03B4E6A12C125CA1006E5F59 /* nostr_build_nip96_upload_response.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nostr_build_nip96_upload_response.json; sourceTree = "<group>"; };
 		03B4E6AB2C125D13006E5F59 /* FileStorageUploadResponseJSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileStorageUploadResponseJSONTests.swift; sourceTree = "<group>"; };
 		03B4E6AD2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileStorageUploadResponseJSON.swift; sourceTree = "<group>"; };
+		03C8B4952C6D065900A07CCD /* ImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
 		03D1B4272C3C1A5D001778CD /* NostrIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrIdentifier.swift; sourceTree = "<group>"; };
 		03D1B42B2C3C1B0D001778CD /* TLVElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLVElement.swift; sourceTree = "<group>"; };
 		03ED93462C46C48400C8D443 /* JSONEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONEventTests.swift; sourceTree = "<group>"; };
@@ -1059,6 +1061,15 @@
 			path = Generated;
 			sourceTree = "<group>";
 		};
+		03C8B4902C6D061900A07CCD /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				03C8B4952C6D065900A07CCD /* ImageViewer.swift */,
+				C92DF80729C25FA900400561 /* SquareImage.swift */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		03D1B42A2C3C1AE7001778CD /* NostrIdentifier */ = {
 			isa = PBXGroup;
 			children = (
@@ -1124,6 +1135,7 @@
 		5B79F6402BA11618002DA9BE /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				03C8B4902C6D061900A07CCD /* Images */,
 				5B79F6122B98B145002DA9BE /* WizardNavigationStack.swift */,
 				5B79F6452BA11725002DA9BE /* WizardSheetVStack.swift */,
 				5B79F64B2BA119AE002DA9BE /* WizardSheetTitleText.swift */,
@@ -1623,7 +1635,6 @@
 				CD09A74329A50F1D0063464F /* SideMenu.swift */,
 				C9A0DAD929C685E500466635 /* SideMenuButton.swift */,
 				CD09A74529A50F750063464F /* SideMenuContent.swift */,
-				C92DF80729C25FA900400561 /* SquareImage.swift */,
 				3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */,
 				2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */,
 				3F60F42829B27D3E000D62C4 /* ThreadView.swift */,
@@ -1989,6 +2000,7 @@
 				5B79F6532BA11B08002DA9BE /* WizardSheetDescriptionText.swift in Sources */,
 				5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */,
 				C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */,
+				03C8B4962C6D065900A07CCD /* ImageViewer.swift in Sources */,
 				5B79F6092B98AC33002DA9BE /* ClaimYourUniqueIdentitySheet.swift in Sources */,
 				C973AB652A323167002AED16 /* EventReference+CoreDataProperties.swift in Sources */,
 				C973AB632A323167002AED16 /* Relay+CoreDataProperties.swift in Sources */,

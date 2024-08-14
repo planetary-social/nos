@@ -1,3 +1,4 @@
+import Dependencies
 import SwiftUI
 import LinkPresentation
 import SDWebImageSwiftUI
@@ -28,20 +29,27 @@ struct ImageLinkButton: View {
 }
 
 struct HeroImageButton: View {
-    
     let url: URL
-    
+
+    @State private var isPresented: Bool = false
+
     var body: some View {
-        
-        Button(action: {
-            UIApplication.shared.open(url)
-        }, label: {
-            WebImage(url: url)
-                .resizable()
-                .indicator(.activity)
-                .aspectRatio(contentMode: .fit)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-        })
+        Button(
+            action: {
+                isPresented = true
+            },
+            label: {
+                WebImage(url: url)
+                    .resizable()
+                    .indicator(.activity)
+                    .aspectRatio(contentMode: .fill)
+                    .clipped()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        )
+        .fullScreenCover(isPresented: $isPresented) {
+            ImageViewer(url: url)
+        }
     }
 }
 
