@@ -86,6 +86,7 @@ struct CompactNoteView: View {
                 Text(attributedString)
             }
         }
+        .multilineTextAlignment(.leading)
     }
 
     var body: some View {
@@ -157,9 +158,6 @@ struct CompactNoteView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .task {
             await note.loadViewData()
-        }
-        .task {
-            await note.loadAttributedContent()
         }
     }
 }

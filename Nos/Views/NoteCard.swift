@@ -8,15 +8,16 @@ import Dependencies
 /// Use this view inside MessageButton to have nice borders.
 struct NoteCard: View {
 
-    var note: Event
+    @ObservedObject var note: Event
+    @State private var quotedNote: Event?
     
-    var style = CardStyle.compact
+    let style: CardStyle
 
     @State private var warningController = NoteWarningController()
 
     @EnvironmentObject private var router: Router
 
-    private var shouldTruncate: Bool
+    private let shouldTruncate: Bool
     private let repliesDisplayType: RepliesDisplayType
     
     /// Indicates whether the number of likes is displayed.
@@ -24,9 +25,11 @@ struct NoteCard: View {
 
     /// Indicates whether the number of reposts is displayed.
     private let showsRepostCount: Bool
-
-    private var hideOutOfNetwork: Bool
-    private var replyAction: ((Event) -> Void)?
+    
+    private let hideOutOfNetwork: Bool
+    private let rendersQuotedNotes: Bool
+    private let showsActions: Bool
+    private let replyAction: ((Event) -> Void)?
     
     /// Initializes a NoteCard object.
     ///
@@ -46,6 +49,8 @@ struct NoteCard: View {
         style: CardStyle = .compact,
         shouldTruncate: Bool = true,
         hideOutOfNetwork: Bool = true,
+        rendersQuotedNotes: Bool = true,
+        showsActions: Bool = true,
         repliesDisplayType: RepliesDisplayType = .displayNothing,
         showsLikeCount: Bool = true,
         showsRepostCount: Bool = true,
@@ -55,6 +60,8 @@ struct NoteCard: View {
         self.style = style
         self.shouldTruncate = shouldTruncate
         self.hideOutOfNetwork = hideOutOfNetwork
+        self.rendersQuotedNotes = rendersQuotedNotes
+        self.showsActions = showsActions
         self.repliesDisplayType = repliesDisplayType
         self.showsLikeCount = showsLikeCount
         self.showsRepostCount = showsRepostCount
@@ -98,6 +105,17 @@ struct NoteCard: View {
                             )
                             .blur(radius: warningController.showWarning ? 6 : 0)
                             .frame(maxWidth: .infinity)
+                            
+                            if rendersQuotedNotes, let quotedNote {
+                                Button {
+                                    router.push(quotedNote)
+                                } label: {
+                                    NoteCard(note: quotedNote, rendersQuotedNotes: false, showsActions: false)
+                                        .withStyledBorder()
+                                        .padding(.horizontal, 16)
+                                        .padding(.bottom, 16)
+                                }
+                            }
                         }
                         BeveledSeparator()
                         HStack(spacing: 0) {
@@ -112,9 +130,11 @@ struct NoteCard: View {
                                 }
                             }
                             Spacer()
-                            RepostButton(note: note, showsCount: showsRepostCount)
-                            LikeButton(note: note, showsCount: showsLikeCount)
-                            ReplyButton(note: note, replyAction: replyAction)
+                            if showsActions {
+                                RepostButton(note: note, showsCount: showsRepostCount)
+                                LikeButton(note: note, showsCount: showsLikeCount)
+                                ReplyButton(note: note, replyAction: replyAction)
+                            }
                         }
                         .padding(.leading, 13)
                     }
@@ -137,13 +157,29 @@ struct NoteCard: View {
         }
         .task {
             await note.loadViewData()
+            loadQuotedNote()
         }
         .onChange(of: note.content) { _, _ in
             Task { await note.loadAttributedContent() }
         }
+        .onChange(of: note.quotedNoteID) {
+            loadQuotedNote()
+        }
         .background(LinearGradient.cardBackground)
         .listRowInsets(EdgeInsets())
         .cornerRadius(cornerRadius)
+    }
+    
+    private func loadQuotedNote() {
+        guard rendersQuotedNotes, let quotedNoteID = note.quotedNoteID else {
+            return
+        }
+        
+        @Dependency(\.persistenceController) var persistenceController
+        quotedNote = try? Event.findOrCreateStubBy(
+            id: quotedNoteID,
+            context: persistenceController.viewContext
+        )
     }
 
     var cornerRadius: CGFloat {

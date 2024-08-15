@@ -43,4 +43,8 @@ extension URL {
             return "[\(host)...](\(url.absoluteString))"
         }
     }
+    
+    var isValidNoteLink: Bool {
+        absoluteString.hasPrefix("%") && String(absoluteString.dropFirst()).isValidHexadecimal
+    }
 }

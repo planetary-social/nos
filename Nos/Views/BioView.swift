@@ -34,7 +34,7 @@ struct BioView: View {
         guard let bio else {
             return AttributedString()
         }
-        let (content, _) = noteParser.parse(
+        let content: AttributedString = noteParser.parse(
             content: bio,
             tags: [[]],
             context: viewContext
