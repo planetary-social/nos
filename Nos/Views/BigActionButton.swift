@@ -57,7 +57,7 @@ struct BigActionButtonStyle: ButtonStyle {
             .cornerRadius(80)
             .offset(y: 4.5)
             .shadow(
-                color: Color.bigActionButtonShadow, //Color(white: 0, opacity: 0.2),
+                color: Color.bigActionButtonShadow,
                 radius: 2,
                 x: 0, 
                 y: configuration.isPressed ? 0 : 1
