@@ -9,11 +9,9 @@ struct ImageViewer: View {
     @Environment(\.dismiss) var dismiss
 
     @State private var scale: CGFloat = 1.0
-    @State private var lastScale: CGFloat = 1.0
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
     @State private var imageSize: CGSize = .zero
-    @State private var anchor: UnitPoint = .center
 
     private let maxScale: CGFloat = 10.0
     private let minScale: CGFloat = 1.0
@@ -21,6 +19,7 @@ struct ImageViewer: View {
     var body: some View {
         ZStack {
             Color.imageBackground
+                .ignoresSafeArea()
 
             GeometryReader { geometry in
                 WebImage(url: url)
@@ -29,16 +28,15 @@ struct ImageViewer: View {
                     }
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .scaleEffect(scale, anchor: anchor)
+                    .scaleEffect(scale)
                     .offset(x: offset.width, y: offset.height)
                     .gesture(
                         DragGesture()
                             .onChanged { value in
                                 withAnimation {
-                                    anchor = .center
                                     offset = CGSize(
-                                        width: lastOffset.width + value.translation.width,
-                                        height: lastOffset.height + value.translation.height
+                                        width: lastOffset.width + value.translation.width * 1.5,
+                                        height: lastOffset.height + value.translation.height * 1.5
                                     )
                                 }
                             }
@@ -56,53 +54,23 @@ struct ImageViewer: View {
                                 }
                             }
                             .simultaneously(
-                                with: MagnifyGesture()
-                                    .onChanged { value in
+                                with: TapGesture(count: 2)
+                                    .onEnded {
                                         withAnimation {
-                                            scale = lastScale * value.magnification
-                                            anchor = value.startAnchor
-                                        }
-                                    }
-                                    .onEnded { value in
-                                        withAnimation {
-                                            let newScale = lastScale * value.magnification
-                                            if newScale > maxScale {
-                                                scale = maxScale
-                                            } else if newScale < minScale {
-                                                scale = minScale
-                                            }
-
-                                            lastScale = scale
-                                            keepImageOnScreen(geometry: geometry)
-                                            lastOffset = offset
-                                        }
-                                    }
-                            )
-                            .simultaneously(
-                                with: SpatialTapGesture(count: 2)
-                                    .onEnded { value in
-                                        withAnimation {
-                                            let newAnchor = UnitPoint(
-                                                x: value.location.x / geometry.size.width,
-                                                y: value.location.y / geometry.size.height
-                                            )
-
                                             if scale == minScale {
-                                                scale = 4.0
-                                                anchor = newAnchor
+                                                scale = 3.0
                                             } else {
                                                 scale = minScale
-                                                anchor = .center
                                                 offset = .zero
                                                 lastOffset = .zero
                                             }
-                                            lastScale = scale
                                         }
                                     }
                             )
                     )
                     .frame(width: geometry.size.width, height: geometry.size.height)
                     .clipped()
+                    .ignoresSafeArea()
             }
 
             ZStack(alignment: .topLeading) {
@@ -123,6 +91,8 @@ struct ImageViewer: View {
                 .padding()
             }
         }
+        .ignoresSafeArea()
+        .statusBarHidden()
     }
 
     func keepImageOnScreen(geometry: GeometryProxy) {
