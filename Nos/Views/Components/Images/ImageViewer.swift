@@ -9,11 +9,6 @@ struct ImageViewer: View {
     @Environment(\.dismiss) var dismiss
 
     @State private var zoomScale: CGFloat = 1.0
-    @State private var previousZoomScale: CGFloat = 1
-    @State private var offset: CGSize = .zero
-    @State private var lastOffset: CGSize = .zero
-    @State private var imageSize: CGSize = .zero
-    @State private var anchor: UnitPoint = .center
 
     private let maxZoomScale: CGFloat = 10.0
     private let minZoomScale: CGFloat = 1.0
@@ -28,20 +23,13 @@ struct ImageViewer: View {
                     showsIndicators: false
                 ) {
                     WebImage(url: url)
-                        .onSuccess { image, _, _ in
-                            imageSize = image.size
-                        }
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .gesture(
-                            zoomGesture
-                                .simultaneously(with: doubleTapGesture)
-                        )
-                        .scaleEffect(CGSize(width: 1.0, height: 1.0), anchor: anchor)
-                        .frame(width: proxy.size.width * max(minZoomScale, zoomScale))
-                        .frame(maxHeight: .infinity)
+                        .gesture(doubleTapGesture)
+                        .frame(maxWidth: proxy.size.width * max(minZoomScale, zoomScale))
+                        .frame(maxHeight: proxy.size.height * max(minZoomScale, zoomScale))
                 }
-                .defaultScrollAnchor(anchor)
+                .defaultScrollAnchor(.center)
             }
 
             ZStack(alignment: .topLeading) {
@@ -67,7 +55,6 @@ struct ImageViewer: View {
     func resetImageState() {
         withAnimation(.interactiveSpring()) {
             zoomScale = 1
-            anchor = .center
         }
     }
 
@@ -79,34 +66,6 @@ struct ImageViewer: View {
         } else {
             resetImageState()
         }
-    }
-
-    func onZoomGestureStarted(value: MagnifyGesture.Value) {
-        withAnimation(.easeIn(duration: 0.1)) {
-            let delta = value.magnification / previousZoomScale
-            previousZoomScale = value.magnification
-            let zoomDelta = zoomScale * delta
-            var minMaxScale = max(minZoomScale, zoomDelta)
-            minMaxScale = min(maxZoomScale, minMaxScale)
-            zoomScale = minMaxScale
-            anchor = value.startAnchor
-        }
-    }
-
-    func onZoomGestureEnded(value: MagnifyGesture.Value) {
-        previousZoomScale = 1
-        anchor = value.startAnchor
-        if zoomScale <= 1 {
-            resetImageState()
-        } else if zoomScale > 5 {
-            zoomScale = 5
-        }
-    }
-
-    var zoomGesture: some Gesture {
-        MagnifyGesture()
-            .onChanged(onZoomGestureStarted)
-            .onEnded(onZoomGestureEnded)
     }
 
     var doubleTapGesture: some Gesture {
