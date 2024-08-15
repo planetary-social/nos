@@ -45,7 +45,7 @@ extension LinearGradient {
     )
 
     public static let gold = LinearGradient(
-        colors: [Color(hex: "#FFC46B"), Color(hex: "#DE7C21")],
+        colors: [Color.goldBgGradientTop, Color.goldBgGradientBottom],
         startPoint: .top,
         endPoint: .bottom
     )
