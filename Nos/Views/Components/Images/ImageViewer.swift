@@ -48,57 +48,7 @@ struct ImageViewer: View {
                                     )
                                     offset = predictedEndOffset
 
-                                    // scaledImageWidth is only the geometry width * scale if the image ratio of
-                                    // width to height is greater than the device ratio of width to height
-                                    let imageRatio = imageSize.width / imageSize.height
-                                    let geometryRatio = geometry.size.width / geometry.size.height
-                                    if imageRatio > geometryRatio {
-                                        let scaledImageWidth = geometry.size.width * scale
-                                        let horizontalPanningRange = scaledImageWidth - geometry.size.width
-                                        let maxWidthOffset = horizontalPanningRange / 2
-                                        let minWidthOffset = -maxWidthOffset
-
-                                        if offset.width < minWidthOffset {
-                                            offset.width = minWidthOffset
-                                        } else if offset.width > maxWidthOffset {
-                                            offset.width = maxWidthOffset
-                                        }
-
-                                        let scaledImageHeight =
-                                            (geometry.size.width / imageSize.width) * imageSize.height * scale
-                                        let verticalPanningRange = max(scaledImageHeight - geometry.size.height, 0)
-                                        let maxHeightOffset = verticalPanningRange / 2
-                                        let minHeightOffset = -maxHeightOffset
-
-                                        if offset.height < minHeightOffset {
-                                            offset.height = minHeightOffset
-                                        } else if offset.height > maxHeightOffset {
-                                            offset.height = maxHeightOffset
-                                        }
-                                    } else {
-                                        let scaledImageHeight = geometry.size.height * scale
-                                        let verticalPanningRange = scaledImageHeight - geometry.size.height
-                                        let maxHeightOffset = verticalPanningRange / 2
-                                        let minHeightOffset = -maxHeightOffset
-
-                                        if offset.height < minHeightOffset {
-                                            offset.height = minHeightOffset
-                                        } else if offset.height > maxHeightOffset {
-                                            offset.height = maxHeightOffset
-                                        }
-
-                                        let scaledImageWidth =
-                                            (geometry.size.height / imageSize.height) * imageSize.width * scale
-                                        let horizontalPanningRange = scaledImageWidth - geometry.size.width
-                                        let maxWidthOffset = horizontalPanningRange / 2
-                                        let minWidthOffset = -maxWidthOffset
-
-                                        if offset.width < minWidthOffset {
-                                            offset.width = minWidthOffset
-                                        } else if offset.width > maxWidthOffset {
-                                            offset.width = maxWidthOffset
-                                        }
-                                    }
+                                    keepImageOnScreen(geometry: geometry)
 
                                     lastOffset = offset
                                 }
@@ -120,6 +70,8 @@ struct ImageViewer: View {
                                             }
 
                                             lastScale = scale
+                                            keepImageOnScreen(geometry: geometry)
+                                            lastOffset = offset
                                         }
                                     }
                             )
@@ -157,6 +109,58 @@ struct ImageViewer: View {
                     }
                 )
                 .padding()
+            }
+        }
+    }
+
+    func keepImageOnScreen(geometry: GeometryProxy) {
+        let imageRatio = imageSize.width / imageSize.height
+        let geometryRatio = geometry.size.width / geometry.size.height
+        if imageRatio > geometryRatio { // the image width is constrained by the screen width
+            let scaledImageWidth = geometry.size.width * scale
+            let horizontalPanningRange = scaledImageWidth - geometry.size.width
+            let maxWidthOffset = horizontalPanningRange / 2
+            let minWidthOffset = -maxWidthOffset
+
+            if offset.width < minWidthOffset {
+                offset.width = minWidthOffset
+            } else if offset.width > maxWidthOffset {
+                offset.width = maxWidthOffset
+            }
+
+            let scaledImageHeight =
+                (geometry.size.width / imageSize.width) * imageSize.height * scale
+            let verticalPanningRange = max(scaledImageHeight - geometry.size.height, 0)
+            let maxHeightOffset = verticalPanningRange / 2
+            let minHeightOffset = -maxHeightOffset
+
+            if offset.height < minHeightOffset {
+                offset.height = minHeightOffset
+            } else if offset.height > maxHeightOffset {
+                offset.height = maxHeightOffset
+            }
+        } else { // the image height is constrained by the screen height
+            let scaledImageHeight = geometry.size.height * scale
+            let verticalPanningRange = scaledImageHeight - geometry.size.height
+            let maxHeightOffset = verticalPanningRange / 2
+            let minHeightOffset = -maxHeightOffset
+
+            if offset.height < minHeightOffset {
+                offset.height = minHeightOffset
+            } else if offset.height > maxHeightOffset {
+                offset.height = maxHeightOffset
+            }
+
+            let scaledImageWidth =
+                (geometry.size.height / imageSize.height) * imageSize.width * scale
+            let horizontalPanningRange = max(scaledImageWidth - geometry.size.width, 0)
+            let maxWidthOffset = horizontalPanningRange / 2
+            let minWidthOffset = -maxWidthOffset
+
+            if offset.width < minWidthOffset {
+                offset.width = minWidthOffset
+            } else if offset.width > maxWidthOffset {
+                offset.width = maxWidthOffset
             }
         }
     }
