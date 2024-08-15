@@ -653,6 +653,7 @@ public class Event: NosManagedObject, VerifiableEvent {
                 let prediction = try Event.model.prediction(text: jsonEvent.content)
                 category = prediction.label
             }
+            hydrateDefault(from: jsonEvent, context: context)
         case .contactList:
             hydrateContactList(from: jsonEvent, author: newAuthor, context: context)
             
