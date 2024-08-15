@@ -116,6 +116,7 @@
 		5B6136382C2F408E00ADD9C3 /* RepliesLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6136372C2F408E00ADD9C3 /* RepliesLabel.swift */; };
 		5B6136462C348A5100ADD9C3 /* RepliesDisplayType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6136452C348A5100ADD9C3 /* RepliesDisplayType.swift */; };
 		5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6EB48D29EDBE0E006E750C /* NoteParser.swift */; };
+		5B73308B2C6E694C00925225 /* BalancedReddit.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 5B73308A2C6E694C00925225 /* BalancedReddit.mlmodel */; };
 		5B79F5B82B8E71CC002DA9BE /* NamesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */; };
 		5B79F5EB2B97B5E9002DA9BE /* ConfirmUsernameDeletionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79F5EA2B97B5E9002DA9BE /* ConfirmUsernameDeletionSheet.swift */; };
 		5B79F6092B98AC33002DA9BE /* ClaimYourUniqueIdentitySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79F6082B98AC33002DA9BE /* ClaimYourUniqueIdentitySheet.swift */; };
@@ -136,7 +137,6 @@
 		5B8C96B029DB2E1100B73AEC /* SearchTextFieldObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */; };
 		5B8C96B229DB313300B73AEC /* AuthorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B129DB313300B73AEC /* AuthorCard.swift */; };
 		5B8C96B629DDD3B200B73AEC /* NoteUITextViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B529DDD3B200B73AEC /* NoteUITextViewRepresentable.swift */; };
-		5BB454612C6DAC04009D25EA /* BalancedReddit.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 5BB454602C6DAC04009D25EA /* BalancedReddit.mlmodel */; };
 		5BBA5E912BADF98E00D57D76 /* AlreadyHaveANIP05View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBA5E902BADF98E00D57D76 /* AlreadyHaveANIP05View.swift */; };
 		5BBA5E9C2BAE052F00D57D76 /* NiceWorkSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBA5E9B2BAE052F00D57D76 /* NiceWorkSheet.swift */; };
 		5BC0D9CC2B867B9D005D6980 /* NamesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */; };
@@ -606,6 +606,7 @@
 		5B6136372C2F408E00ADD9C3 /* RepliesLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepliesLabel.swift; sourceTree = "<group>"; };
 		5B6136452C348A5100ADD9C3 /* RepliesDisplayType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepliesDisplayType.swift; sourceTree = "<group>"; };
 		5B6EB48D29EDBE0E006E750C /* NoteParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteParser.swift; sourceTree = "<group>"; };
+		5B73308A2C6E694C00925225 /* BalancedReddit.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = BalancedReddit.mlmodel; sourceTree = "<group>"; };
 		5B79F5EA2B97B5E9002DA9BE /* ConfirmUsernameDeletionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmUsernameDeletionSheet.swift; sourceTree = "<group>"; };
 		5B79F6082B98AC33002DA9BE /* ClaimYourUniqueIdentitySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimYourUniqueIdentitySheet.swift; sourceTree = "<group>"; };
 		5B79F60A2B98ACA0002DA9BE /* PickYourUsernameSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickYourUsernameSheet.swift; sourceTree = "<group>"; };
@@ -626,7 +627,6 @@
 		5B8C96B129DB313300B73AEC /* AuthorCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorCard.swift; sourceTree = "<group>"; };
 		5B8C96B529DDD3B200B73AEC /* NoteUITextViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteUITextViewRepresentable.swift; sourceTree = "<group>"; };
 		5B960D2C2B34B1B900C52C45 /* Nos 14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 14.xcdatamodel"; sourceTree = "<group>"; };
-		5BB454602C6DAC04009D25EA /* BalancedReddit.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = BalancedReddit.mlmodel; sourceTree = "<group>"; };
 		5BBA5E902BADF98E00D57D76 /* AlreadyHaveANIP05View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlreadyHaveANIP05View.swift; sourceTree = "<group>"; };
 		5BBA5E9B2BAE052F00D57D76 /* NiceWorkSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NiceWorkSheet.swift; sourceTree = "<group>"; };
 		5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesAPI.swift; sourceTree = "<group>"; };
@@ -1505,9 +1505,9 @@
 		C9DFA974299C30CA006929C1 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				5BB454602C6DAC04009D25EA /* BalancedReddit.mlmodel */,
 				C9D573472AB24B5800E06BB4 /* SwiftGen Stencils */,
 				C9DEBFDA298941020078B43A /* Assets.xcassets */,
+				5B73308A2C6E694C00925225 /* BalancedReddit.mlmodel */,
 				9DF077732C63BEA200F6B14E /* Colors.xcassets */,
 				C9DFA977299C3189006929C1 /* Localization */,
 				C987F81F29BA94D400B44E7A /* Font */,
@@ -2089,6 +2089,7 @@
 				5B6136382C2F408E00ADD9C3 /* RepliesLabel.swift in Sources */,
 				C9ADB13D29929B540075E7F8 /* Bech32.swift in Sources */,
 				C95D68A1299E6D3E00429F86 /* BioView.swift in Sources */,
+				5B73308B2C6E694C00925225 /* BalancedReddit.mlmodel in Sources */,
 				5BE281CA2AE2CCEB00880466 /* HomeTab.swift in Sources */,
 				C94D14812A12B3F70014C906 /* SearchBar.swift in Sources */,
 				C9A6C7472AD84263001F9500 /* UNSNamePicker.swift in Sources */,
@@ -2120,7 +2121,6 @@
 				C97A1C8B29E45B4E009D9E8D /* RawEventController.swift in Sources */,
 				C9DEC0632989541F0078B43A /* Bundle+Current.swift in Sources */,
 				C93EC2F429C34C860012EE2A /* NSPredicate+Bool.swift in Sources */,
-				5BB454612C6DAC04009D25EA /* BalancedReddit.mlmodel in Sources */,
 				5B79F6132B98B145002DA9BE /* WizardNavigationStack.swift in Sources */,
 				C9F84C1C298DBBF400C6714D /* Data+Sha.swift in Sources */,
 				C936B4622A4CB01C00DF1EB9 /* PushNotificationService.swift in Sources */,
