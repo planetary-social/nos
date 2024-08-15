@@ -13,6 +13,7 @@ struct ImageViewer: View {
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
     @State private var imageSize: CGSize = .zero
+    @State private var anchor: UnitPoint = .center
 
     private let maxScale: CGFloat = 10.0
     private let minScale: CGFloat = 1.0
@@ -28,12 +29,13 @@ struct ImageViewer: View {
                     }
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .scaleEffect(scale)
+                    .scaleEffect(scale, anchor: anchor)
                     .offset(x: offset.width, y: offset.height)
                     .gesture(
                         DragGesture()
                             .onChanged { value in
                                 withAnimation {
+                                    anchor = .center
                                     offset = CGSize(
                                         width: lastOffset.width + value.translation.width,
                                         height: lastOffset.height + value.translation.height
@@ -54,15 +56,16 @@ struct ImageViewer: View {
                                 }
                             }
                             .simultaneously(
-                                with: MagnificationGesture()
+                                with: MagnifyGesture()
                                     .onChanged { value in
                                         withAnimation {
-                                            scale = lastScale * value
+                                            scale = lastScale * value.magnification
+                                            anchor = value.startAnchor
                                         }
                                     }
                                     .onEnded { value in
                                         withAnimation {
-                                            let newScale = lastScale * value
+                                            let newScale = lastScale * value.magnification
                                             if newScale > maxScale {
                                                 scale = maxScale
                                             } else if newScale < minScale {
@@ -75,22 +78,31 @@ struct ImageViewer: View {
                                         }
                                     }
                             )
+                            .simultaneously(
+                                with: SpatialTapGesture(count: 2)
+                                    .onEnded { value in
+                                        withAnimation {
+                                            let newAnchor = UnitPoint(
+                                                x: value.location.x / geometry.size.width,
+                                                y: value.location.y / geometry.size.height
+                                            )
+
+                                            if scale == minScale {
+                                                scale = 4.0
+                                                anchor = newAnchor
+                                            } else {
+                                                scale = minScale
+                                                anchor = .center
+                                                offset = .zero
+                                                lastOffset = .zero
+                                            }
+                                            lastScale = scale
+                                        }
+                                    }
+                            )
                     )
                     .frame(width: geometry.size.width, height: geometry.size.height)
                     .clipped()
-                    .onTapGesture(count: 2) {
-                        withAnimation {
-                            if scale == minScale {
-                                scale = 4.0
-                            } else {
-                                scale = minScale
-                                offset.width = 0
-                                offset.height = 0
-                                lastOffset = offset
-                            }
-                            lastScale = scale
-                        }
-                    }
             }
 
             ZStack(alignment: .topLeading) {
