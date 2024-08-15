@@ -135,8 +135,8 @@
 		5B8C96AC29D52AD200B73AEC /* AuthorListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AB29D52AD200B73AEC /* AuthorListView.swift */; };
 		5B8C96B029DB2E1100B73AEC /* SearchTextFieldObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96AF29DB2E1100B73AEC /* SearchTextFieldObserver.swift */; };
 		5B8C96B229DB313300B73AEC /* AuthorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B129DB313300B73AEC /* AuthorCard.swift */; };
-		5BB4A0D72C59B2A0003F0AD0 /* NosTextClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 5BB4A0D62C59B2A0003F0AD0 /* NosTextClassifier.mlmodel */; };
 		5B8C96B629DDD3B200B73AEC /* NoteUITextViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8C96B529DDD3B200B73AEC /* NoteUITextViewRepresentable.swift */; };
+		5BB454612C6DAC04009D25EA /* BalancedReddit.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 5BB454602C6DAC04009D25EA /* BalancedReddit.mlmodel */; };
 		5BBA5E912BADF98E00D57D76 /* AlreadyHaveANIP05View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBA5E902BADF98E00D57D76 /* AlreadyHaveANIP05View.swift */; };
 		5BBA5E9C2BAE052F00D57D76 /* NiceWorkSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBA5E9B2BAE052F00D57D76 /* NiceWorkSheet.swift */; };
 		5BC0D9CC2B867B9D005D6980 /* NamesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */; };
@@ -600,6 +600,7 @@
 		5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleTapToPopModifier.swift; sourceTree = "<group>"; };
 		5B29B5832BEAA0D7008F6008 /* BioSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BioSheet.swift; sourceTree = "<group>"; };
 		5B29B58D2BEC392B008F6008 /* ActivityPubBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityPubBadgeView.swift; sourceTree = "<group>"; };
+		5B2D4B1B2C6D42AD006F0896 /* Nos 17.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 17.xcdatamodel"; sourceTree = "<group>"; };
 		5B2F5CC12AE7443700A92B52 /* Nos 13.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 13.xcdatamodel"; sourceTree = "<group>"; };
 		5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONRelayMetadata.swift; sourceTree = "<group>"; };
 		5B6136372C2F408E00ADD9C3 /* RepliesLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepliesLabel.swift; sourceTree = "<group>"; };
@@ -625,7 +626,7 @@
 		5B8C96B129DB313300B73AEC /* AuthorCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorCard.swift; sourceTree = "<group>"; };
 		5B8C96B529DDD3B200B73AEC /* NoteUITextViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteUITextViewRepresentable.swift; sourceTree = "<group>"; };
 		5B960D2C2B34B1B900C52C45 /* Nos 14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 14.xcdatamodel"; sourceTree = "<group>"; };
-		5BB4A0D62C59B2A0003F0AD0 /* NosTextClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = NosTextClassifier.mlmodel; sourceTree = "<group>"; };
+		5BB454602C6DAC04009D25EA /* BalancedReddit.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = BalancedReddit.mlmodel; sourceTree = "<group>"; };
 		5BBA5E902BADF98E00D57D76 /* AlreadyHaveANIP05View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlreadyHaveANIP05View.swift; sourceTree = "<group>"; };
 		5BBA5E9B2BAE052F00D57D76 /* NiceWorkSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NiceWorkSheet.swift; sourceTree = "<group>"; };
 		5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesAPI.swift; sourceTree = "<group>"; };
@@ -1504,7 +1505,7 @@
 		C9DFA974299C30CA006929C1 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				5BB4A0D62C59B2A0003F0AD0 /* NosTextClassifier.mlmodel */,
+				5BB454602C6DAC04009D25EA /* BalancedReddit.mlmodel */,
 				C9D573472AB24B5800E06BB4 /* SwiftGen Stencils */,
 				C9DEBFDA298941020078B43A /* Assets.xcassets */,
 				9DF077732C63BEA200F6B14E /* Colors.xcassets */,
@@ -2119,6 +2120,7 @@
 				C97A1C8B29E45B4E009D9E8D /* RawEventController.swift in Sources */,
 				C9DEC0632989541F0078B43A /* Bundle+Current.swift in Sources */,
 				C93EC2F429C34C860012EE2A /* NSPredicate+Bool.swift in Sources */,
+				5BB454612C6DAC04009D25EA /* BalancedReddit.mlmodel in Sources */,
 				5B79F6132B98B145002DA9BE /* WizardNavigationStack.swift in Sources */,
 				C9F84C1C298DBBF400C6714D /* Data+Sha.swift in Sources */,
 				C936B4622A4CB01C00DF1EB9 /* PushNotificationService.swift in Sources */,
@@ -2168,7 +2170,6 @@
 				2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */,
 				CD2CF38E299E67F900332116 /* CardButtonStyle.swift in Sources */,
 				A336DD3C299FD78000A0CBA0 /* Filter.swift in Sources */,
-				5BB4A0D72C59B2A0003F0AD0 /* NosTextClassifier.mlmodel in Sources */,
 				DC2E54C82A700F1400C2CAAB /* UIDevice+Simulator.swift in Sources */,
 				C97B288A2C10B07100DC1FC0 /* NosNavigationStack.swift in Sources */,
 				C98CA9072B14FBBF00929141 /* PagedNoteDataSource.swift in Sources */,
@@ -3359,6 +3360,7 @@
 		C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				5B2D4B1B2C6D42AD006F0896 /* Nos 17.xcdatamodel */,
 				033B288D2C419E7600E325E8 /* Nos 16.xcdatamodel */,
 				5B810DD62B55BA44008FE8A9 /* Nos 15.xcdatamodel */,
 				5B960D2C2B34B1B900C52C45 /* Nos 14.xcdatamodel */,
@@ -3368,7 +3370,7 @@
 				C9C547562A4F1D1A006B0741 /* Nos 9.xcdatamodel */,
 				5BFF66AF2A4B55FC00AA79DD /* Nos 10.xcdatamodel */,
 			);
-			currentVersion = 033B288D2C419E7600E325E8 /* Nos 16.xcdatamodel */;
+			currentVersion = 5B2D4B1B2C6D42AD006F0896 /* Nos 17.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

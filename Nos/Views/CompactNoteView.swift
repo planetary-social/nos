@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreML
 import Logger
 import Dependencies
 
@@ -25,6 +26,9 @@ struct CompactNoteView: View {
 
     /// The feature flags to use to determine what features are enabled.
     @Dependency(\.featureFlags) private var featureFlags
+
+    /// Inferred Note category
+    @State private var category: String?
 
     /// Whether this view is currently displayed in a truncated state
     @State private var isTextTruncated = true
@@ -57,21 +61,6 @@ struct CompactNoteView: View {
     /// Calculates whether the Read More button should be shown. 
     var showReadMoreButton: Bool {
         noteNeedsTruncation && isTextTruncated
-    }
-
-    var category: String {
-        switch note.attributedContent {
-        case .loading:
-            return "Loading"
-        case .loaded(let attributedString):
-            do {
-                let model = try NosTextClassifier()
-                let prediction = try model.prediction(text: String(attributedString.characters))
-                                return prediction.label
-            } catch {
-                return "Error"
-            }
-        }
     }
 
     var formattedText: some View {
@@ -161,12 +150,15 @@ struct CompactNoteView: View {
                 .frame(maxWidth: .infinity)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
             }
-            Text(category)
-                .foregroundColor(.secondaryTxt)
-                .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
-                .background(Color.hashtagBg)
-                .cornerRadius(4)
-                .padding()
+            if let category = note.category {
+                Text(category)
+                    .font(.body)
+                    .foregroundColor(.accent)
+                    .padding(6)
+                    .background(Color.hashtagBg)
+                    .cornerRadius(4)
+                    .padding()
+            }
 
             if note.kind == EventKind.text.rawValue, showLinkPreviews, !note.contentLinks.isEmpty {
                 if featureFlags.newMediaDisplayEnabled {

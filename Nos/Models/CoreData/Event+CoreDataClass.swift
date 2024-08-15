@@ -6,6 +6,7 @@ import RegexBuilder
 import SwiftUI
 import Logger
 import Dependencies
+import CoreML
 
 enum EventError: Error, LocalizedError {
 	case utf8Encoding
@@ -42,6 +43,8 @@ public class Event: NosManagedObject, VerifiableEvent {
     var pubKey: String { author?.hexadecimalPublicKey ?? "" }
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"
+
+    static var model = try! BalancedReddit(configuration: MLModelConfiguration())
 
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -642,6 +645,14 @@ public class Event: NosManagedObject, VerifiableEvent {
         }
         
         switch eventKind {
+        case .text, .longFormContent:
+            let words = jsonEvent.content.split {
+                !$0.isLetter
+            }
+            if words.count > 20 {
+                let prediction = try Event.model.prediction(text: jsonEvent.content)
+                category = prediction.label
+            }
         case .contactList:
             hydrateContactList(from: jsonEvent, author: newAuthor, context: context)
             
