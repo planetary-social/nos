@@ -15,19 +15,11 @@ class MockRelaySubscriptionManager: RelaySubscriptionManager {
         active
     }
 
-    func all() async -> [RelaySubscription] {
-        all
-    }
-    
     func set(socketQueue: DispatchQueue?, delegate: Starscream.WebSocketDelegate?) async {
     }
 
     func sockets() async -> [WebSocket] {
         sockets
-    }
-
-    func addSocket(for relayAddress: URL) async -> WebSocket? {
-        nil
     }
 
     func close(socket: WebSocket) async {
@@ -63,17 +55,8 @@ class MockRelaySubscriptionManager: RelaySubscriptionManager {
         queueSubscriptionFilter = filter
         return RelaySubscription(filter: filter, relayAddress: relayAddress)
     }
-
-    func remove(_ socket: any WebSocketClient) async {
-    }
-
-    func requestEvents(from socket: any WebSocketClient, subscription: RelaySubscription) async {
-    }
     
     func receivedClose(for subscriptionID: RelaySubscription.ID, from socket: WebSocket) async {
-    }
-    
-    func openSockets(queue: DispatchQueue, delegate: Starscream.WebSocketDelegate) async {
     }
     
     func socket(for address: String) async -> WebSocket? {
@@ -93,8 +76,5 @@ class MockRelaySubscriptionManager: RelaySubscriptionManager {
     }
 
     func trackError(socket: WebSocket) async {
-    }
-
-    func updateSubscriptions(with newValue: RelaySubscription) async {
     }
 }

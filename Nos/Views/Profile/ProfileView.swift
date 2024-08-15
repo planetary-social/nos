@@ -14,7 +14,6 @@ struct ProfileView: View {
     @EnvironmentObject private var router: Router
     @Dependency(\.relayService) private var relayService: RelayService
     @Dependency(\.analytics) private var analytics
-    @Dependency(\.unsAPI) private var unsAPI
 
     @State private var refreshController = RefreshController()
     @State private var showingOptions = false

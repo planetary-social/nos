@@ -87,9 +87,8 @@ struct UNSVerifyCodeView: View {
 
 struct UNSVerifyCodeView_Previews: PreviewProvider {
     
-    static var previewData = PreviewData()
     @State static var controller = UNSWizardController(
-        state: .verificationCode, 
+        state: .verificationCode,
         phoneNumber: "+1768555451"
     )
     

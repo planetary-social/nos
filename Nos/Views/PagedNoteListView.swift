@@ -235,8 +235,6 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
 extension Notification.Name {
     /// Instructs the receiver to scroll its list to the top
     public static let scrollToTop = Notification.Name("scrollToTop")
-    /// Instructs the receiver to perform a data refresh
-    public static let refresh = Notification.Name("refresh")
 }
 
 #Preview {
