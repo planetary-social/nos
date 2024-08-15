@@ -40,8 +40,14 @@ struct ImageViewer: View {
                                     )
                                 }
                             }
-                            .onEnded { _ in
+                            .onEnded { value in
                                 withAnimation {
+                                    let predictedEndOffset = CGSize(
+                                        width: lastOffset.width + value.predictedEndTranslation.width,
+                                        height: lastOffset.height + value.predictedEndTranslation.height
+                                    )
+                                    offset = predictedEndOffset
+
                                     // scaledImageWidth is only the geometry width * scale if the image ratio of
                                     // width to height is greater than the device ratio of width to height
                                     let imageRatio = imageSize.width / imageSize.height
