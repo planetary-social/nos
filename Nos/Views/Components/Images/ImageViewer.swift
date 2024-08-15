@@ -31,36 +31,78 @@ struct ImageViewer: View {
                     .scaleEffect(scale)
                     .offset(x: offset.width, y: offset.height)
                     .gesture(
-                        MagnificationGesture()
+                        DragGesture()
                             .onChanged { value in
                                 withAnimation {
-                                    scale = lastScale * value
+                                    offset = CGSize(
+                                        width: lastOffset.width + value.translation.width,
+                                        height: lastOffset.height + value.translation.height
+                                    )
                                 }
                             }
                             .onEnded { value in
                                 withAnimation {
-                                    let newScale = lastScale * value
-                                    if newScale > maxScale {
-                                        scale = maxScale
-                                    } else if newScale < minScale {
-                                        scale = minScale
+                                    // scaledImageWidth is only the geometry width * scale if the image ratio of
+                                    // width to height is greater than the device ratio of width to height
+                                    let imageRatio = imageSize.width / imageSize.height
+                                    let geometryRatio = geometry.size.width / geometry.size.height
+                                    if imageRatio > geometryRatio {
+                                        let scaledImageWidth = geometry.size.width * scale
+                                        let horizontalPanningRange = scaledImageWidth - geometry.size.width
+                                        let maxWidthOffset = horizontalPanningRange / 2
+                                        let minWidthOffset = -maxWidthOffset
+
+                                        if offset.width < minWidthOffset {
+                                            offset.width = minWidthOffset
+                                        } else if offset.width > maxWidthOffset {
+                                            offset.width = maxWidthOffset
+                                        }
+
+                                        // TODO: figure out the min and max height offset when zoomed
+                                        if scale == 1 {
+                                            offset.height = 0
+                                        }
+                                    } else {
+                                        let scaledImageHeight = geometry.size.height * scale
+                                        let verticalPanningRange = scaledImageHeight - geometry.size.height
+                                        let maxHeightOffset = verticalPanningRange / 2
+                                        let minHeightOffset = -maxHeightOffset
+
+                                        if offset.height < minHeightOffset {
+                                            offset.height = minHeightOffset
+                                        } else if offset.height > maxHeightOffset {
+                                            offset.height = maxHeightOffset
+                                        }
+
+                                        // TODO: figure out the min and max width offset when zoomed
+                                        if scale == 1 {
+                                            offset.width = 0
+                                        }
                                     }
 
-                                    lastScale = scale
+                                    lastOffset = offset
                                 }
                             }
-                    )
-                    .gesture(
-                        DragGesture()
-                            .onChanged { value in
-                                offset = CGSize(
-                                    width: lastOffset.width + value.translation.width,
-                                    height: lastOffset.height + value.translation.height
-                                )
-                            }
-                            .onEnded { _ in
-                                lastOffset = offset
-                            }
+                            .simultaneously(
+                                with: MagnificationGesture()
+                                    .onChanged { value in
+                                        withAnimation {
+                                            scale = lastScale * value
+                                        }
+                                    }
+                                    .onEnded { value in
+                                        withAnimation {
+                                            let newScale = lastScale * value
+                                            if newScale > maxScale {
+                                                scale = maxScale
+                                            } else if newScale < minScale {
+                                                scale = minScale
+                                            }
+
+                                            lastScale = scale
+                                        }
+                                    }
+                            )
                     )
                     .frame(width: geometry.size.width, height: geometry.size.height)
                     .clipped()
@@ -70,12 +112,14 @@ struct ImageViewer: View {
                                 scale = 4.0
                             } else {
                                 scale = minScale
+                                offset.width = 0
+                                offset.height = 0
+                                lastOffset = offset
                             }
                             lastScale = scale
                         }
                     }
             }
-            .ignoresSafeArea()
 
             ZStack(alignment: .topLeading) {
                 Color.clear
@@ -95,8 +139,31 @@ struct ImageViewer: View {
                 .padding()
             }
         }
-        .ignoresSafeArea()
     }
+}
+
+#Preview {
+    ImageViewer(
+        url: URL(
+            string: "https://image.nostr.build/92d0ed5e3c53fa33e379f0982d52058f0dde98f0c287669fd1e7c5b4b86b5dbb.jpg"
+        )!
+    )
+}
+
+#Preview {
+    ImageViewer(
+        url: URL(
+            string: "https://images.unsplash.com/photo-1715686529501-e097bd9caea7"
+        )!
+    )
+}
+
+#Preview {
+    ImageViewer(
+        url: URL(
+            string: "https://images.unsplash.com/photo-1723160004469-1b34c81272f3"
+        )!
+    )
 }
 
 #Preview {
