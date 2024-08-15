@@ -15,7 +15,6 @@ struct NoteCard: View {
     @State private var warningController = NoteWarningController()
 
     @EnvironmentObject private var router: Router
-    @Dependency(\.persistenceController) var persistenceController
 
     private var shouldTruncate: Bool
     private let repliesDisplayType: RepliesDisplayType

@@ -1017,29 +1017,6 @@ public class Event: NosManagedObject, VerifiableEvent {
         }
     }
    
-    class func markNoteAsRead(
-        noteID: String?,
-        context: NSManagedObjectContext
-    ) async {
-        guard let noteID else {
-            Log.unexpected(.missingValue, "markNoteAsRead called without noteID")
-            return
-        }
-        await context.perform {
-            guard let event = Event.find(by: noteID, context: context) else {
-                Log.unexpected(.incorrectValue, "markNoteAsRead couldn't find event \(noteID)")
-                return
-            }
-            
-            event.isRead = true
-            do {
-                try context.saveIfNeeded()
-            } catch {
-                Log.error("markNoteAsRead error \(error.localizedDescription)")
-            }
-        }
-    }
-
     /// This function formats an Event's content for display in the UI. It does things like replacing raw npub links
     /// with the author's name, and extracting any URLs so that previews can be displayed for them.
     ///

@@ -6,7 +6,6 @@ import SwiftUI
 struct KnownFollowersView: View {
     
     @ObservedObject var author: Author
-    @Environment(CurrentUser.self) private var currentUser
     
     /// The authors that the `source` author follows who also follow the `author`
     @FetchRequest private var knownFollowers: FetchedResults<Author>

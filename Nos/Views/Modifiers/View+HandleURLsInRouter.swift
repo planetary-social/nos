@@ -10,7 +10,6 @@ extension View {
 
 struct HandleURLsInRouter: ViewModifier {
     
-    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
     
     func body(content: Content) -> some View {

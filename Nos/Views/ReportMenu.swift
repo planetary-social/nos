@@ -149,16 +149,6 @@ struct ReportMenuModifier: ViewModifier {
         case sendToNos(ReportCategory)
         case flagPublicly(ReportCategory)
         
-        var displayName: String {
-            switch self {
-            case .noteCategorySelected(let category),
-                .authorCategorySelected(let category),
-                .sendToNos(let category),
-                .flagPublicly(let category):
-                return category.displayName
-            }
-        }
-        
         func confirmationAlertMessage(for reportedObject: ReportTarget) -> String {
             switch self {
             case .sendToNos(let category):

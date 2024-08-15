@@ -4,14 +4,11 @@ import SwiftUINavigation
 import Dependencies
 
 struct RepliesView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
 
-    @State private var alert: AlertState<Never>?
     @State private var showReplyComposer = false
     
     @State private var relaySubscriptions = SubscriptionCancellables()
@@ -175,10 +172,7 @@ struct RepliesView_Previews: PreviewProvider {
     static var previewData = PreviewData(currentUserKey: KeyFixture.alice)
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var emptyPersistenceController = PersistenceController.empty
-    static var emptyPreviewContext = emptyPersistenceController.container.viewContext
     static var emptyRelayService = previewData.relayService
-    static var relayService = previewData.relayService
     static var router = Router()
     static var currentUser = previewData.currentUser
     
