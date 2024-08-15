@@ -40,7 +40,7 @@ struct ImageViewer: View {
                                     )
                                 }
                             }
-                            .onEnded { value in
+                            .onEnded { _ in
                                 withAnimation {
                                     // scaledImageWidth is only the geometry width * scale if the image ratio of
                                     // width to height is greater than the device ratio of width to height
@@ -58,9 +58,16 @@ struct ImageViewer: View {
                                             offset.width = maxWidthOffset
                                         }
 
-                                        // TODO: figure out the min and max height offset when zoomed
-                                        if scale == 1 {
-                                            offset.height = 0
+                                        let scaledImageHeight =
+                                            (geometry.size.width / imageSize.width) * imageSize.height * scale
+                                        let verticalPanningRange = max(scaledImageHeight - geometry.size.height, 0)
+                                        let maxHeightOffset = verticalPanningRange / 2
+                                        let minHeightOffset = -maxHeightOffset
+
+                                        if offset.height < minHeightOffset {
+                                            offset.height = minHeightOffset
+                                        } else if offset.height > maxHeightOffset {
+                                            offset.height = maxHeightOffset
                                         }
                                     } else {
                                         let scaledImageHeight = geometry.size.height * scale
@@ -74,9 +81,16 @@ struct ImageViewer: View {
                                             offset.height = maxHeightOffset
                                         }
 
-                                        // TODO: figure out the min and max width offset when zoomed
-                                        if scale == 1 {
-                                            offset.width = 0
+                                        let scaledImageWidth =
+                                            (geometry.size.height / imageSize.height) * imageSize.width * scale
+                                        let horizontalPanningRange = scaledImageWidth - geometry.size.width
+                                        let maxWidthOffset = horizontalPanningRange / 2
+                                        let minWidthOffset = -maxWidthOffset
+
+                                        if offset.width < minWidthOffset {
+                                            offset.width = minWidthOffset
+                                        } else if offset.width > maxWidthOffset {
+                                            offset.width = maxWidthOffset
                                         }
                                     }
 
