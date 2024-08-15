@@ -32,8 +32,8 @@ extension LinearGradient {
     static var bigAction: LinearGradient {
         LinearGradient(
             colors: [
-                Color(hex: "#F06337"),
-                Color(hex: "#F24E55")
+                Color.bigActionButtonGradientTop,
+                Color.bigActionButtonGradientBottom
             ],
             startPoint: .top,
             endPoint: .bottom
@@ -52,7 +52,7 @@ struct BigActionButtonStyle: ButtonStyle {
         ZStack {
             // Button shadow/background
             ZStack {
-                Color(hex: "#C13036")
+                Color.bigActionButtonBackground
             }
             .cornerRadius(80)
             .offset(y: 4.5)
