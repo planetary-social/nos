@@ -131,6 +131,8 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
                 note: note,
                 hideOutOfNetwork: false,
                 repliesDisplayType: .discussion,
+                showsLikeCount: false,
+                showsRepostCount: false,
                 fetchReplies: true,
                 displayRootMessage: true
             )
