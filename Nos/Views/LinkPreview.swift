@@ -1,4 +1,3 @@
-import Dependencies
 import SwiftUI
 import LinkPresentation
 import SDWebImageSwiftUI
@@ -6,30 +5,27 @@ import SDWebImageSwiftUI
 struct ImageLinkButton: View {
     let url: URL
     
-    @State private var isViewerPresented: Bool = false
+    @State private var isViewerPresented = false
 
     var body: some View {
-        Button(
-            action: {
-                isViewerPresented = true
-            },
-            label: {
-                let image = WebImage(url: url)
-                    .resizable()
-                    .indicator(.activity)
+        Button {
+            isViewerPresented = true
+        } label: {
+            let image = WebImage(url: url)
+                .resizable()
+                .indicator(.activity)
 
-                ZStack {
-                    image
-                        .blur(radius: 10)
-                        .clipped()
+            ZStack {
+                image
+                    .blur(radius: 10)
+                    .clipped()
 
-                    image
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-                .cornerRadius(8)
+                image
+                    .aspectRatio(contentMode: .fit)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-        )
+            .cornerRadius(8)
+        }
         .sheet(isPresented: $isViewerPresented) {
             ImageViewer(url: url)
         }
@@ -39,22 +35,19 @@ struct ImageLinkButton: View {
 struct HeroImageButton: View {
     let url: URL
 
-    @State private var isViewerPresented: Bool = false
+    @State private var isViewerPresented = false
 
     var body: some View {
-        Button(
-            action: {
-                isViewerPresented = true
-            },
-            label: {
-                WebImage(url: url)
-                    .resizable()
-                    .indicator(.activity)
-                    .aspectRatio(contentMode: .fill)
-                    .clipped()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-        )
+        Button {
+            isViewerPresented = true
+        } label: {
+            WebImage(url: url)
+                .resizable()
+                .indicator(.activity)
+                .aspectRatio(contentMode: .fill)
+                .clipped()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
         .sheet(isPresented: $isViewerPresented) {
             ImageViewer(url: url)
         }

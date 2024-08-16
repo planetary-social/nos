@@ -6,14 +6,25 @@ struct ImageViewer: View {
     /// The URL of the image to display.
     let url: URL
 
-    @Environment(\.dismiss) var dismiss
-
+    @Environment(\.dismiss) private var dismiss
+    
+    /// The current zoom scale of the image.
     @State private var scale: CGFloat = 1.0
-    @State private var offset: CGSize = .zero
-    @State private var lastOffset: CGSize = .zero
-    @State private var imageSize: CGSize = .zero
 
+    /// The offset of the image. This is updated when the user has zoomed and is panning up, down, left, and right.
+    @State private var offset: CGSize = .zero
+
+    /// The previous offset of the image.
+    /// - SeeAlso: `offset`
+    @State private var lastOffset: CGSize = .zero
+
+    /// The size of the image. Will be set to a non-zero value when the image has loaded.
+    @State private var imageSize: CGSize = .zero
+    
+    /// The maximum zoom scale for the image.
     private let maxScale: CGFloat = 10.0
+    
+    /// The minimum zoom scale for the image.
     private let minScale: CGFloat = 1.0
 
     var body: some View {
@@ -84,18 +95,15 @@ struct ImageViewer: View {
             ZStack(alignment: .topLeading) {
                 Color.clear
 
-                Button(
-                    action: {
-                        dismiss()
-                    },
-                    label: {
-                        Image(systemName: "xmark")
-                            .symbolVariant(.fill.circle)
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(Color.buttonCloseForeground, Color.buttonCloseBackground)
-                            .font(.title)
-                    }
-                )
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark")
+                        .symbolVariant(.fill.circle)
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(Color.buttonCloseForeground, Color.buttonCloseBackground)
+                        .font(.title)
+                }
                 .padding()
             }
         }
@@ -103,7 +111,7 @@ struct ImageViewer: View {
     }
     
     /// Moves the edges of the image to the edges of the view if they were moved to the middle.
-    /// - Parameter geometry: The `GeometryProxy` for the view.
+    /// - Parameter geometry: Used to keep the edges of the image at the edges of the view.
     func keepImageOnScreen(geometry: GeometryProxy) {
         let imageRatio = imageSize.width / imageSize.height
         let geometryRatio = geometry.size.width / geometry.size.height
