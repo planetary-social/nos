@@ -10,7 +10,7 @@ struct ImageViewer: View {
 
     var body: some View {
         ZStack {
-            Color.imageBackground
+            Color.imageViewerBackground
 
             ZoomableContainer {
                 WebImage(url: url)
