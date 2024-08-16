@@ -27,7 +27,7 @@ struct ImageViewer: View {
                         .aspectRatio(contentMode: .fit)
                         .gesture(doubleTapGesture)
                         .frame(width: proxy.size.width * zoomScale)
-                        .frame(maxHeight: .infinity)
+                        .frame(height: proxy.size.height * zoomScale)
                 }
                 .defaultScrollAnchor(.center)
             }
