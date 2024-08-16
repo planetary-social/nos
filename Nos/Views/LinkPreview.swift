@@ -47,7 +47,7 @@ struct HeroImageButton: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         )
-        .fullScreenCover(isPresented: $isPresented) {
+        .sheet(isPresented: $isPresented) {
             ImageViewer(url: url)
         }
     }

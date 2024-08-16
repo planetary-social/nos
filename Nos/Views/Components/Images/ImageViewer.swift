@@ -42,15 +42,20 @@ struct ImageViewer: View {
                             }
                             .onEnded { value in
                                 withAnimation {
-                                    let predictedEndOffset = CGSize(
-                                        width: lastOffset.width + value.predictedEndTranslation.width,
-                                        height: lastOffset.height + value.predictedEndTranslation.height
-                                    )
-                                    offset = predictedEndOffset
+                                    let isLargeSwipeDown = value.translation.height > 200
+                                    if isLargeSwipeDown {
+                                        dismiss()
+                                    } else {
+                                        let predictedEndOffset = CGSize(
+                                            width: lastOffset.width + value.predictedEndTranslation.width,
+                                            height: lastOffset.height + value.predictedEndTranslation.height
+                                        )
+                                        offset = predictedEndOffset
 
-                                    keepImageOnScreen(geometry: geometry)
+                                        keepImageOnScreen(geometry: geometry)
 
-                                    lastOffset = offset
+                                        lastOffset = offset
+                                    }
                                 }
                             }
                             .simultaneously(
@@ -92,7 +97,6 @@ struct ImageViewer: View {
             }
         }
         .ignoresSafeArea()
-        .statusBarHidden()
     }
 
     func keepImageOnScreen(geometry: GeometryProxy) {
