@@ -6,37 +6,46 @@ import SDWebImageSwiftUI
 struct ImageLinkButton: View {
     let url: URL
     
+    @State private var isViewerPresented: Bool = false
+
     var body: some View {
-        Button(action: {
-            UIApplication.shared.open(url)
-        }, label: {
-            let image = WebImage(url: url)
-                .resizable()
-                .indicator(.activity)
-            
-            ZStack {
-                image
-                    .blur(radius: 10)
-                    .clipped()
-                
-                image
-                    .aspectRatio(contentMode: .fit)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+        Button(
+            action: {
+                isViewerPresented = true
+            },
+            label: {
+                let image = WebImage(url: url)
+                    .resizable()
+                    .indicator(.activity)
+
+                ZStack {
+                    image
+                        .blur(radius: 10)
+                        .clipped()
+
+                    image
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .cornerRadius(8)
             }
-            .cornerRadius(8)
-        })
+            
+        )
+        .sheet(isPresented: $isViewerPresented) {
+            ImageViewer(url: url)
+        }
     }
 }
 
 struct HeroImageButton: View {
     let url: URL
 
-    @State private var isPresented: Bool = false
+    @State private var isViewerPresented: Bool = false
 
     var body: some View {
         Button(
             action: {
-                isPresented = true
+                isViewerPresented = true
             },
             label: {
                 WebImage(url: url)
@@ -47,7 +56,7 @@ struct HeroImageButton: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         )
-        .fullScreenCover(isPresented: $isPresented) {
+        .sheet(isPresented: $isViewerPresented) {
             ImageViewer(url: url)
         }
     }
