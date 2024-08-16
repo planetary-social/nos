@@ -70,6 +70,7 @@
 		03D1B4292C3C1AC9001778CD /* NostrIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D1B4272C3C1A5D001778CD /* NostrIdentifier.swift */; };
 		03D1B42C2C3C1B0D001778CD /* TLVElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D1B42B2C3C1B0D001778CD /* TLVElement.swift */; };
 		03D1B42D2C3C1B0D001778CD /* TLVElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D1B42B2C3C1B0D001778CD /* TLVElement.swift */; };
+		03E9C6792C6FBBE400C9B843 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C8B4952C6D065900A07CCD /* ImageViewer.swift */; };
 		03ED93472C46C48400C8D443 /* JSONEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03ED93462C46C48400C8D443 /* JSONEventTests.swift */; };
 		03F7C4F32C10DF79006FF613 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */; };
 		03F7C4F42C10E05B006FF613 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */; };
@@ -2275,6 +2276,7 @@
 				C92E7F6B2C4EFF7200B80638 /* WebSocketConnection.swift in Sources */,
 				035729A02BE41653005FEE85 /* SocialGraphTests.swift in Sources */,
 				037975BC2C0E258E00ADDF37 /* CompactNoteView.swift in Sources */,
+				03E9C6792C6FBBE400C9B843 /* ImageViewer.swift in Sources */,
 				03D1B4292C3C1AC9001778CD /* NostrIdentifier.swift in Sources */,
 				A32B6C7129A672BC00653FF5 /* CurrentUser.swift in Sources */,
 				C98A32282A05795E00E3FA13 /* Task+Timeout.swift in Sources */,
