@@ -7,25 +7,6 @@ struct ImageViewer: View {
     let url: URL
 
     @Environment(\.dismiss) private var dismiss
-    
-    /// The current zoom scale of the image.
-    @State private var scale: CGFloat = 1.0
-
-    /// The offset of the image. This is updated when the user has zoomed and is panning up, down, left, and right.
-    @State private var offset: CGSize = .zero
-
-    /// The previous offset of the image.
-    /// - SeeAlso: `offset`
-    @State private var zoomScale: CGFloat = 1.0
-
-    /// The size of the image. Will be set to a non-zero value when the image has loaded.
-    @State private var imageSize: CGSize = .zero
-    
-    /// The maximum zoom scale for the image.
-    private let maxZoomScale: CGFloat = 10.0
-    
-    /// The minimum zoom scale for the image.
-    private let minZoomScale: CGFloat = 1.0
 
     var body: some View {
         ZStack {
@@ -53,27 +34,6 @@ struct ImageViewer: View {
             }
         }
         .ignoresSafeArea()
-    }
-
-    func resetImageState() {
-        withAnimation(.interactiveSpring()) {
-            zoomScale = minZoomScale
-        }
-    }
-
-    func onImageDoubleTapped(value: TapGesture.Value) {
-        if zoomScale == minZoomScale {
-            withAnimation(.spring()) {
-                zoomScale = 4
-            }
-        } else {
-            resetImageState()
-        }
-    }
-
-    var doubleTapGesture: some Gesture {
-        TapGesture(count: 2)
-            .onEnded(onImageDoubleTapped)
     }
 }
 
