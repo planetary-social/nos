@@ -42,7 +42,12 @@ struct ImageViewer: View {
                             }
                             .onEnded { value in
                                 withAnimation {
-                                    let isLargeSwipeDown = value.translation.height > 200
+                                    let isLargeSwipeDown: Bool
+                                    if scale == minScale {
+                                        isLargeSwipeDown = value.translation.height > 50
+                                    } else {
+                                        isLargeSwipeDown = value.translation.height > 200
+                                    }
                                     if isLargeSwipeDown {
                                         dismiss()
                                     } else {
@@ -51,9 +56,7 @@ struct ImageViewer: View {
                                             height: lastOffset.height + value.predictedEndTranslation.height
                                         )
                                         offset = predictedEndOffset
-
                                         keepImageOnScreen(geometry: geometry)
-
                                         lastOffset = offset
                                     }
                                 }
@@ -98,7 +101,9 @@ struct ImageViewer: View {
         }
         .ignoresSafeArea()
     }
-
+    
+    /// Moves the edges of the image to the edges of the view if they were moved to the middle.
+    /// - Parameter geometry: The `GeometryProxy` for the view.
     func keepImageOnScreen(geometry: GeometryProxy) {
         let imageRatio = imageSize.width / imageSize.height
         let geometryRatio = geometry.size.width / geometry.size.height
