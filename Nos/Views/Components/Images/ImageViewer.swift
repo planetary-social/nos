@@ -26,8 +26,8 @@ struct ImageViewer: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .gesture(doubleTapGesture)
-                        .frame(maxWidth: proxy.size.width * max(minZoomScale, zoomScale))
-                        .frame(maxHeight: proxy.size.height * max(minZoomScale, zoomScale))
+                        .frame(width: proxy.size.width * zoomScale)
+                        .frame(maxHeight: .infinity)
                 }
                 .defaultScrollAnchor(.center)
             }
@@ -50,16 +50,17 @@ struct ImageViewer: View {
                 .padding()
             }
         }
+        .ignoresSafeArea()
     }
 
     func resetImageState() {
         withAnimation(.interactiveSpring()) {
-            zoomScale = 1
+            zoomScale = minZoomScale
         }
     }
 
     func onImageDoubleTapped(value: TapGesture.Value) {
-        if zoomScale == 1 {
+        if zoomScale == minZoomScale {
             withAnimation(.spring()) {
                 zoomScale = 4
             }
