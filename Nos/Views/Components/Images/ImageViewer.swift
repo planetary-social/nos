@@ -28,7 +28,7 @@ struct ImageViewer: View {
                         .symbolVariant(.fill.circle)
                         .symbolRenderingMode(.palette)
                         .foregroundStyle(Color.buttonCloseForeground, Color.buttonCloseBackground)
-                        .font(.title)
+                        .font(.largeTitle)
                 }
                 .padding()
             }
