@@ -29,7 +29,6 @@ struct SettingsView: View {
     @State private var showReportWarnings = true
     @State private var showOutOfNetworkWarning = true
     @State private var copyButtonState: CopyButtonState = .copy
-    @State private var copyButtonWidth: CGFloat = 0
 
     fileprivate enum AlertAction {
         case logout

@@ -6,15 +6,11 @@ import Dependencies
 struct HomeFeedView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
-    @Environment(CurrentUser.self) var currentUser
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
     @State private var refreshController = RefreshController(lastRefreshDate: Date.now + Self.staticLoadTime)
     @State private var isVisible = false
-    @State private var relaySubscriptions = [SubscriptionCancellable]()
-    @State private var isShowingRelayList = false
     
     /// When set to true this will display a fullscreen progress wheel for a set amount of time to give us a chance
     /// to get some data from relay. The amount of time is defined in `staticLoadTime`.

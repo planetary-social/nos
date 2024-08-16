@@ -69,7 +69,6 @@ struct ThreadView_Previews: PreviewProvider {
     static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = previewData.relayService
     static var router = Router()
     
     static var emptyPersistenceController = PersistenceController.empty
@@ -147,12 +146,6 @@ struct ThreadView_Previews: PreviewProvider {
             print(error)
         }
         return replyNote
-    }
-    
-    static var user: Author {
-        let author = Author(context: previewContext)
-        author.hexadecimalPublicKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
-        return author
     }
     
     static var previews: some View {
