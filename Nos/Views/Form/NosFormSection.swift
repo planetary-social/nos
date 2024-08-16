@@ -32,7 +32,7 @@ struct NosFormSection<Content: View>: View {
                 .cornerRadius(21)
                 .offset(y: 4.5)
                 .shadow(
-                    color: Color.nosFormSectionShadow, 
+                    color: Color.lightShadow, 
                     radius: 2, 
                     x: 0, 
                     y: 0
