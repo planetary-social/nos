@@ -54,11 +54,11 @@ struct RelayView: View {
                             NavigationLink {
                                 RelayDetailView(relay: relay)
                             } label: {
-                                Text(relay.address ?? String(localized: .localizable.error))
+                                Text(relay.displayAddress)
                                     .foregroundColor(.primaryTxt)
                             }
                         } else {
-                            Text(relay.address ?? String(localized: .localizable.error))
+                            Text(relay.displayAddress)
                                 .foregroundColor(.primaryTxt)
                                 .textSelection(.enabled)
                         }
@@ -119,7 +119,7 @@ struct RelayView: View {
                                 await publishChanges()
                             }
                         } label: {
-                            Label(address, systemImage: "plus.circle")
+                            Label(address.replacingOccurrences(of: "wss://", with: ""), systemImage: "plus.circle")
                         }
                     }
                 } header: {
@@ -198,7 +198,10 @@ struct RelayView: View {
             guard !newRelayAddress.isEmpty else { return }
             
             do {
-                let address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+                var address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+                if !(address.contains("wss://")) {
+                    address = "wss://" + address
+                }
                 let relay = try Relay.findOrCreate(by: address, context: viewContext)
                 currentUser.author?.add(relay: relay)
                 try viewContext.save()
