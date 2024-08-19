@@ -234,7 +234,10 @@ fileprivate struct NosNIP05Field: View {
                         Image(systemName: "minus.circle.fill")
                             .foregroundStyle(
                                 LinearGradient(
-                                    colors: [Color(hex: "#E55121"), Color(hex: "#A42509")],
+                                    colors: [
+                                        Color.nip05FieldFgGradientTop,
+                                        Color.nip05FieldFgGradientBottom
+                                    ],
                                     startPoint: .top,
                                     endPoint: .bottom
                                 )
@@ -248,7 +251,7 @@ fileprivate struct NosNIP05Field: View {
                 .padding(.vertical, 15)
                 (
                     Text(Image(systemName: "exclamationmark.triangle"))
-                        .foregroundStyle(Color(hex: "#F0A108")) +
+                        .foregroundStyle(Color.nip05FieldTextForeground) +
                     Text(" ") +
                     Text(.localizable.usernameWarningMessage)
                         .foregroundStyle(Color.secondaryTxt)
@@ -282,7 +285,10 @@ fileprivate struct NIP05Field: View {
                         Image(systemName: "minus.circle.fill")
                             .foregroundStyle(
                                 LinearGradient(
-                                    colors: [Color(hex: "#E55121"), Color(hex: "#A42509")],
+                                    colors: [
+                                        Color.nip05FieldFgGradientTop,
+                                        Color.nip05FieldFgGradientBottom
+                                    ],
                                     startPoint: .top,
                                     endPoint: .bottom
                                 )
@@ -296,7 +302,7 @@ fileprivate struct NIP05Field: View {
                 .padding(.vertical, 15)
                 (
                     Text(Image(systemName: "exclamationmark.triangle"))
-                        .foregroundStyle(Color(hex: "#F0A108")) +
+                        .foregroundStyle(Color.nip05FieldTextForeground) +
                     Text(" ") +
                     Text(.localizable.usernameWarningMessage)
                         .foregroundStyle(Color.secondaryTxt)
