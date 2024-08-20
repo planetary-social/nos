@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an issue where the sheet asking users to set up a NIP-05 username would appear after reinstalling Nos, even if the profile already had a NIP-05 username.
 - Fixed a bug where urls with periods after them would include the period.
 - Replaced hard-coded hex color values.
+- Removed wss:// from relay adresses in lists and removed the need to prepend relay addresses with wss://.
 
 ## [0.1.24] - 2024-08-09Z
 
