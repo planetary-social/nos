@@ -558,9 +558,6 @@ public class Event: NosManagedObject, VerifiableEvent {
         } else {
             let event = Event(context: context)
             event.identifier = id
-            context.perform {
-                try? context.save()
-            }
             return event
         }
     }
@@ -820,13 +817,7 @@ public class Event: NosManagedObject, VerifiableEvent {
     @MainActor var loadingViewData = false
     @MainActor var attributedContent = LoadingContent<AttributedString>.loading
     @MainActor var contentLinks = [URL]()
-    @MainActor private(set) var quotedNoteID: RawEventID? {
-        didSet {
-            if quotedNoteID != nil {
-                Task { await loadFirstQuotedNote() }
-            }
-        }
-    }
+    @MainActor private(set) var quotedNoteID: RawEventID?
     @MainActor var relaySubscriptions = SubscriptionCancellables()
     
     /// Instructs this event to load supplementary data like author name and photo, reference events, and produce
@@ -911,6 +902,7 @@ public class Event: NosManagedObject, VerifiableEvent {
             self.attributedContent = .loaded(components.attributedContent)
             self.contentLinks = components.contentLinks
             self.quotedNoteID = components.quotedNoteID
+            Task { await loadFirstQuotedNote() }
         } else {
             self.attributedContent = .loaded(AttributedString(content ?? ""))
         }
@@ -923,11 +915,16 @@ public class Event: NosManagedObject, VerifiableEvent {
         }
         
         @Dependency(\.persistenceController) var persistenceController
+        let context = persistenceController.backgroundViewContext
         
         let quotedNote = try? Event.findOrCreateStubBy(
             id: quotedNoteID,
-            context: persistenceController.backgroundViewContext
+            context: context
         )
+        
+        await context.perform {
+            try? context.save()
+        }
         
         @Dependency(\.relayService) var relayService
         relaySubscriptions.append(await relayService.requestEvent(with: quotedNoteID))
