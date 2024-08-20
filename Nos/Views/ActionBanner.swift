@@ -74,8 +74,8 @@ struct ActionBanner: View {
                     ZStack {
                         LinearGradient(
                             colors: [
-                                Color(red: 1, green: 1, blue: 1, opacity: 0.2),
-                                Color(red: 1, green: 1, blue: 1, opacity: 1.0),
+                                Color.actionBannerBackgroundGradientTop,
+                                Color.actionBannerBackgroundGradientBottom,
                             ],
                             startPoint: .top,
                             endPoint: .bottom
