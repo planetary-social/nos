@@ -14,6 +14,8 @@ struct ComposerActionBar: View {
 
     /// The text in the note.
     @Binding var text: EditableNoteText
+    
+    @Binding var showPreview: Bool 
 
     @Dependency(\.fileStorageAPIClient) private var fileStorageAPIClient
 
@@ -41,60 +43,7 @@ struct ComposerActionBar: View {
         HStack(spacing: 0) {
             switch subMenu {
             case .none:
-                // Attach Media
-                ImagePickerButton { imageURL in
-                    Task {
-                        do {
-                            startUploadingImage()
-                            let url = try await fileStorageAPIClient.upload(fileAt: imageURL)
-                            text.append(url)
-                            endUploadingImage()
-                        } catch {
-                            endUploadingImage()
-                            print("error uploading: \(error)")
-                            
-                            alert = AlertState(title: {
-                                TextState(String(localized: .imagePicker.errorUploadingFile))
-                            }, message: {
-                                if case let FileStorageAPIClientError.uploadFailed(message) = error,
-                                    let message {
-                                    TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
-                                } else {
-                                    TextState(String(localized: .imagePicker.errorUploadingFileMessage))
-                                }
-                            })
-                        }
-                    }
-                } label: {
-                    Image.attachMediaButton
-                        .foregroundColor(.secondaryTxt)
-                        .frame(minWidth: 44, minHeight: 44)
-                }
-                .padding(.leading, 8)
-                .accessibilityLabel(Text(.localizable.attachMedia))
-                
-                // Expiration Time
-                if let expirationTime, let option = ExpirationTimeOption(rawValue: expirationTime) {
-                    ExpirationTimeButton(
-                        model: option,
-                        showClearButton: true,
-                        isSelected: Binding(get: {
-                            self.expirationTime == option.timeInterval
-                        }, set: {
-                            self.expirationTime = $0 ? option.timeInterval : nil
-                        })
-                    )
-                    .accessibilityLabel(Text(.localizable.expirationDate))
-                    .padding(12)
-                } else {
-                    Button {
-                        subMenu = .expirationDate
-                    } label: {
-                        Image.disappearingMessages
-                            .foregroundColor(.secondaryTxt)
-                            .frame(minWidth: 44, minHeight: 44)
-                    }
-                }
+                defaultMenu
             case .expirationDate:
                 backArrow
                 ScrollView(.horizontal) {
@@ -135,6 +84,71 @@ struct ComposerActionBar: View {
         )
     }
     
+    var defaultMenu: some View {
+        HStack(spacing: 0) {
+            // Attach Media
+            ImagePickerButton { imageURL in
+                Task {
+                    do {
+                        startUploadingImage()
+                        let url = try await fileStorageAPIClient.upload(fileAt: imageURL)
+                        text.append(url)
+                        endUploadingImage()
+                    } catch {
+                        endUploadingImage()
+                        print("error uploading: \(error)")
+                        
+                        alert = AlertState(title: {
+                            TextState(String(localized: .imagePicker.errorUploadingFile))
+                        }, message: {
+                            if case let FileStorageAPIClientError.uploadFailed(message) = error,
+                               let message {
+                                TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
+                            } else {
+                                TextState(String(localized: .imagePicker.errorUploadingFileMessage))
+                            }
+                        })
+                    }
+                }
+            } label: {
+                Image.attachMediaButton
+                    .foregroundColor(.secondaryTxt)
+                    .frame(minWidth: 44, minHeight: 44)
+            }
+            .padding(.leading, 8)
+            .accessibilityLabel(Text(.localizable.attachMedia))
+            
+            // Expiration Time
+            if let expirationTime, let option = ExpirationTimeOption(rawValue: expirationTime) {
+                ExpirationTimeButton(
+                    model: option,
+                    showClearButton: true,
+                    isSelected: Binding(get: {
+                        self.expirationTime == option.timeInterval
+                    }, set: {
+                        self.expirationTime = $0 ? option.timeInterval : nil
+                    })
+                )
+                .accessibilityLabel(Text(.localizable.expirationDate))
+                .padding(12)
+            } else {
+                Button {
+                    subMenu = .expirationDate
+                } label: {
+                    Image.disappearingMessages
+                        .foregroundColor(.secondaryTxt)
+                        .frame(minWidth: 44, minHeight: 44)
+                }
+            }
+            
+            Spacer() 
+            
+            Toggle(isOn: $showPreview) { 
+                Text(.localizable.preview)
+            }
+        }
+    }
+    
     private func startUploadingImage() {
         self.isUploadingImage = true
     }
@@ -150,13 +164,14 @@ struct ComposerActionBar_Previews: PreviewProvider {
     @State static var emptyExpirationTime: TimeInterval?
     @State static var setExpirationTime: TimeInterval? = 60 * 60
     @State static var postText = EditableNoteText()
+    @State static var showPreview = false
     
     static var previews: some View {
         VStack {
             Spacer()
-            ComposerActionBar(expirationTime: $emptyExpirationTime, isUploadingImage: .constant(false), text: $postText)
+            ComposerActionBar(expirationTime: $emptyExpirationTime, isUploadingImage: .constant(false), text: $postText, showPreview: $showPreview)
             Spacer()
-            ComposerActionBar(expirationTime: $setExpirationTime, isUploadingImage: .constant(false), text: $postText)
+            ComposerActionBar(expirationTime: $setExpirationTime, isUploadingImage: .constant(false), text: $postText, showPreview: $showPreview)
             Spacer()
         }
         .frame(maxWidth: .infinity)

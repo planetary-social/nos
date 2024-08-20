@@ -28,6 +28,9 @@ struct NewNoteView: View {
     
     @State private var showRelayPicker = false
     @State private var selectedRelay: Relay?
+    
+    @State private var showNotePreview = false
+    @State private var previewEvent: Event?
 
     /// Whether we're currently uploading an image or not.
     @State private var isUploadingImage = false
@@ -57,6 +60,19 @@ struct NewNoteView: View {
         NavigationStack {
             ZStack {
                 VStack(spacing: 0) {
+                    if showNotePreview {
+                        if let previewEvent {
+                            NoteButton(note: previewEvent, shouldTruncate: false, hideOutOfNetwork: false, repliesDisplayType: .displayNothing, fetchReplies: false, displayRootMessage: false, isTapEnabled: false, replyAction: nil, tapAction: nil)
+                                .onDisappear {
+                                    deletePreviewEvent()
+                                }
+                        } else {
+                            ProgressView()
+                                .onAppear {
+                                    createPreviewEvent()
+                                }
+                        }
+                    }
                     GeometryReader { geometry in
                         ScrollView {
                             ScrollViewReader { proxy in
@@ -96,7 +112,8 @@ struct NewNoteView: View {
                     ComposerActionBar(
                         expirationTime: $expirationTime,
                         isUploadingImage: $isUploadingImage,
-                        text: $text
+                        text: $text,
+                        showPreview: $showNotePreview
                     )
                 }
                 
@@ -202,6 +219,39 @@ struct NewNoteView: View {
         }
         isPresented = false
     }
+    
+    private func createNoteJSON() throws -> JSONEvent {
+        guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
+            Log.error("Cannot post without a keypair")
+            throw NostrIdentifierError.unknownFormat // TODO
+        }
+        
+        print(text)
+        
+        var (content, tags) = noteParser.parse(attributedText: text.attributedString)
+        
+        if let expirationTime {
+            tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
+        }
+        
+        // Attach the new note to the one it is replying to, if any.
+        if let replyToNote = replyToNote, let replyToNoteID = replyToNote.identifier {
+            // TODO: Append ptags for all authors involved in the thread
+            if let replyToAuthor = replyToNote.author?.publicKey?.hex {
+                tags.append(["p", replyToAuthor])
+            }
+            
+            // If `note` is a reply to another root, tag that root
+            if let rootNoteIdentifier = replyToNote.rootNote()?.identifier, rootNoteIdentifier != replyToNoteID {
+                tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
+                tags.append(["e", replyToNoteID, "", EventReferenceMarker.reply.rawValue])
+            } else {
+                tags.append(["e", replyToNoteID, "", EventReferenceMarker.root.rawValue])
+            }
+        }
+        
+        return JSONEvent(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
+    }
 
     private func publishPost() async {
         guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
@@ -210,29 +260,7 @@ struct NewNoteView: View {
         }
         
         do {
-            var (content, tags) = noteParser.parse(attributedText: text.attributedString)
-            
-            if let expirationTime {
-                tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
-            }
-            
-            // Attach the new note to the one it is replying to, if any.
-            if let replyToNote = replyToNote, let replyToNoteID = replyToNote.identifier {
-                // TODO: Append ptags for all authors involved in the thread
-                if let replyToAuthor = replyToNote.author?.publicKey?.hex {
-                    tags.append(["p", replyToAuthor])
-                }
-                
-                // If `note` is a reply to another root, tag that root
-                if let rootNoteIdentifier = replyToNote.rootNote()?.identifier, rootNoteIdentifier != replyToNoteID {
-                    tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
-                    tags.append(["e", replyToNoteID, "", EventReferenceMarker.reply.rawValue])
-                } else {
-                    tags.append(["e", replyToNoteID, "", EventReferenceMarker.root.rawValue])
-                }
-            }
-
-            let jsonEvent = JSONEvent(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
+            let jsonEvent = try createNoteJSON()
             
             if let relayURL = selectedRelay?.addressURL {
                 try await relayService.publish(
@@ -260,6 +288,23 @@ struct NewNoteView: View {
             text = EditableNoteText()
         } catch {
             Log.error("Error when posting: \(error.localizedDescription)")
+        }
+    }
+    
+    private func createPreviewEvent() {
+        do {
+            var jsonEvent = try createNoteJSON()
+            jsonEvent.id = "preview"
+            previewEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext, skipVerification: true)
+        } catch {
+            // TODO
+        }
+    }
+    
+    private func deletePreviewEvent() {
+        if let previewEvent {
+            viewContext.delete(previewEvent)
+            try! viewContext.saveIfNeeded()
         }
     }
 }

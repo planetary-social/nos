@@ -8843,6 +8843,18 @@
         }
       }
     },
+    "preview" : {
+      "comment" : "verb for showing a preview of the typed note text",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preview"
+          }
+        }
+      }
+    },
     "privateKey" : {
       "extractionState" : "manual",
       "localizations" : {
