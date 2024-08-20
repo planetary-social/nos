@@ -115,12 +115,11 @@ class Analytics {
     }
     
     func identify(with keyPair: KeyPair, nip05: String? = nil) {
-        Log.info("Analytics: Identified \(keyPair.npub)")
-        let userProperties: [String: Any]?
+        let npub = keyPair.npub
+        Log.info("Analytics: Identified \(npub)")
+        var userProperties: [String: Any] = ["npub": npub]
         if let nip05 {
-            userProperties = ["NIP-05": nip05]
-        } else {
-            userProperties = nil
+            userProperties["NIP-05"] = nip05
         }
         postHog?.identify(keyPair.npub, userProperties: userProperties)
     }
