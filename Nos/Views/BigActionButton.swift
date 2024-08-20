@@ -69,8 +69,8 @@ struct BigActionButtonStyle: ButtonStyle {
                 ZStack {
                     LinearGradient(
                         stops: [
-                            Gradient.Stop(color: Color(red: 0.94, green: 0.39, blue: 0.22), location: 0.00),
-                            Gradient.Stop(color: Color(red: 0.95, green: 0.3, blue: 0.33), location: 1.00),
+                            Gradient.Stop(color: Color.bigActionButtonLinearGradientStop1, location: 0.00),
+                            Gradient.Stop(color: Color.bigActionButtonLinearGradientStop2, location: 1.00),
                         ],
                         startPoint: UnitPoint(x: 0.5, y: 0),
                         endPoint: UnitPoint(x: 0.5, y: 0.99)
