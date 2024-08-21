@@ -1067,7 +1067,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         let tags = note.allTags as? [[String]] ?? []
         
         return await context.perform {
-            noteParser.components(in: content, tags: tags, context: context)
+            noteParser.components(from: content, tags: tags, context: context)
         }
     }
     

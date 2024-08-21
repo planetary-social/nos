@@ -35,7 +35,7 @@ struct NoteParser {
     
     /// Parses the content and tags stored in a note and returns components that can be used
     /// to display the note in the UI.
-    func components(in content: String, tags: [[String]], context: NSManagedObjectContext) -> NoteDisplayComponents {
+    func components(from content: String, tags: [[String]], context: NSManagedObjectContext) -> NoteDisplayComponents {
         let (cleanedString, urls) = URLParser().replaceUnformattedURLs(
             in: content
         )

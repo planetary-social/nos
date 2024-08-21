@@ -32,7 +32,7 @@ final class NoteParserTests: CoreDataTestCase {
         // Act
         let tags: [[String]] = [[]]
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )
@@ -56,7 +56,7 @@ final class NoteParserTests: CoreDataTestCase {
         // Act
         let tags: [[String]] = [[]]
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )
@@ -80,7 +80,7 @@ final class NoteParserTests: CoreDataTestCase {
         // Act
         let tags: [[String]] = [[]]
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )
@@ -119,7 +119,7 @@ final class NoteParserTests: CoreDataTestCase {
         let hex2 = "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d"
         let tags = [["p", hex1], ["p", hex2]]
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )
@@ -138,7 +138,7 @@ final class NoteParserTests: CoreDataTestCase {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags: [[String]] = [[]]
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )
@@ -154,7 +154,7 @@ final class NoteParserTests: CoreDataTestCase {
         let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [[]]
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )
@@ -168,7 +168,7 @@ final class NoteParserTests: CoreDataTestCase {
         let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [[]]
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )
@@ -186,7 +186,7 @@ final class NoteParserTests: CoreDataTestCase {
         
         let expectedContent = content
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )
@@ -213,7 +213,7 @@ final class NoteParserTests: CoreDataTestCase {
 
         let expectedContent = "check this"
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )
@@ -238,7 +238,7 @@ final class NoteParserTests: CoreDataTestCase {
 
         let expectedContent = "check this . Bye!"
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )
@@ -260,7 +260,7 @@ final class NoteParserTests: CoreDataTestCase {
 
         let expectedContent = content
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )
@@ -285,7 +285,7 @@ final class NoteParserTests: CoreDataTestCase {
         // swiftlint:enable line_length
         
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )

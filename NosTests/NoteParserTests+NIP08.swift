@@ -11,7 +11,7 @@ extension NoteParserTests {
         author.displayName = name
         try testContext.save()
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )
@@ -32,7 +32,7 @@ extension NoteParserTests {
         let tags = [["p", hex]]
         let context = persistenceController.viewContext
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: context
         )
@@ -52,7 +52,7 @@ extension NoteParserTests {
         let expectedContent = "@\(displayName)"
         let tags = [["p", hex]]
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )
@@ -72,7 +72,7 @@ extension NoteParserTests {
         let expectedContent = "Hello\n@\(displayName)"
         let tags = [["p", hex]]
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )
@@ -91,7 +91,7 @@ extension NoteParserTests {
         let expectedContent = "hello#[0]"
         let tags = [["p", hex]]
         let components = sut.components(
-            in: content,
+            from: content,
             tags: tags,
             context: testContext
         )
