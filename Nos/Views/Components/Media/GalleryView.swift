@@ -4,7 +4,7 @@ import SwiftUI
 /// If only one URL is provided, displays an `ImageButton` or `LinkPreview` depending on the URL.
 struct GalleryView: View {
     /// The URLs of the content to display.
-    var urls: [URL]
+    let urls: [URL]
     
     /// The currently-selected tab in the tab view.
     @State private var selectedTab = 0
