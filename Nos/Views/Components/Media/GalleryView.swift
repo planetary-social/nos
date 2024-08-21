@@ -15,9 +15,6 @@ struct GalleryView: View {
                 ImageButton(url: url)
             } else {
                 LinkView(url: url)
-//                    .padding(.horizontal, 15)
-//                    .padding(.vertical, 0)
-//                    .padding(.bottom, 15)
             }
         } else {
             VStack {
@@ -48,50 +45,62 @@ fileprivate struct GalleryIndexView: View {
 
     /// The currently-selected tab in the tab view.
     let currentIndex: Int
+    
+    /// The size of the circle representing the currently-selected tab.
+    private let circleSize: CGFloat = 8.0
 
-    private let circleSize: CGFloat = 10.0
-    private let circleSpacing: CGFloat = 8.0
+    /// The space between circles.
+    private let circleSpacing: CGFloat = 6.0
+    
+    /// The fill style of the circle indicating which tab is selected.
+    private let primaryFill = LinearGradient.horizontalAccent
 
-    private let primaryColor = Color.orange
-    private let secondaryColor = Color.gray.opacity(0.6)
+    /// The fill style of the circles indicating tabs that are not selected.
+    private let secondaryFill = Color.galleryIndexDotSecondary
 
-    private let smallScale: CGFloat = 0.8
-
-    private let padding = 8.0
-    private let cornerRadius = 16.0
+    /// The scale of the circles representing tabs that aren't selected, relative to `circleSize`.
+    private let smallScale: CGFloat = 0.75
 
     var body: some View {
         HStack(spacing: circleSpacing) {
-            ForEach(0..<numberOfPages, id: \.self) { index in // 1
+            ForEach(0..<numberOfPages, id: \.self) { index in
                 Circle()
-                    .fill(currentIndex == index ? primaryColor : secondaryColor) // 2
+                    .fill(currentIndex == index ? AnyShapeStyle(primaryFill) : AnyShapeStyle(secondaryFill))
                     .scaleEffect(currentIndex == index ? 1 : smallScale)
-
                     .frame(width: circleSize, height: circleSize)
-
-                    .transition(AnyTransition.opacity.combined(with: .scale)) // 3
-
-                    .id(index) // 4
+                    .transition(AnyTransition.opacity.combined(with: .scale))
+                    .id(index)
             }
         }
-        .padding(padding)
+        .padding(8.0)
         .background(
-            Color.black.cornerRadius(cornerRadius)
+            Color.galleryIndexViewBackground.cornerRadius(16.0)
         )
     }
 }
 
 #Preview("Multiple URLs") {
-    GalleryView(urls: [
+    let urls = [
         URL(string: "https://image.nostr.build/77713e6c2ef5186d516a6f16fb197fca53a20677c6756a9de1afc2d5e6d96548.jpg")!,
         URL(string: "https://youtu.be/5qvdbyRH9wA?si=y_KTgLR22nH0-cs8")!,
         URL(string: "https://image.nostr.build/d5e38e7d864a344872d922d7f78daf67b0d304932fcb7fe22d35263c2fcf11c2.jpg")!,
         URL(string: "https://images.unsplash.com/photo-1715686529501-e097bd9caea7")!,
-    ])
+    ]
+    return VStack {
+        Spacer()
+        GalleryView(urls: urls)
+        Spacer()
+    }
+    .background(LinearGradient.cardBackground)
 }
 
 #Preview("One image URL") {
-    GalleryView(urls: [
-        URL(string: "https://image.nostr.build/d5e38e7d864a344872d922d7f78daf67b0d304932fcb7fe22d35263c2fcf11c2.jpg")!
-    ])
+    VStack {
+        GalleryView(urls: [
+            URL(
+                string: "https://image.nostr.build/d5e38e7d864a344872d922d7f78daf67b0d304932fcb7fe22d35263c2fcf11c2.jpg"
+            )!
+        ])
+    }
+    .background(LinearGradient.cardBackground)
 }
