@@ -674,7 +674,7 @@
 		A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Follow+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C9032C2D2BAE31ED001F4EC6 /* ProfileFeedType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileFeedType.swift; sourceTree = "<group>"; };
 		C90352B92C1235CD000A5993 /* NosNavigationDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosNavigationDestination.swift; sourceTree = "<group>"; };
-		C905B0762A619E99009B8A78 /* LinkPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LinkPreview.swift; path = ../../LinkPreview.swift; sourceTree = "<group>"; };
+		C905B0762A619E99009B8A78 /* LinkPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPreview.swift; sourceTree = "<group>"; };
 		C90862BB29E9804B00C35A71 /* NosPerformanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NosPerformanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C90862BD29E9804B00C35A71 /* NosPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosPerformanceTests.swift; sourceTree = "<group>"; };
 		C90B16B72AFED96300CB4B85 /* URLExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLExtensionTests.swift; sourceTree = "<group>"; };
