@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.25] - 2024-08-21Z
+
 - Fixed an issue where the sheet asking users to set up a NIP-05 username would appear after reinstalling Nos, even if the profile already had a NIP-05 username.
 - Fixed a bug where urls with periods after them would include the period.
 - Fixed a bug where confirmation dialog buttons turn red while swiping across them.
