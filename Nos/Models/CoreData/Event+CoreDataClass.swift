@@ -917,10 +917,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         @Dependency(\.persistenceController) var persistenceController
         let context = persistenceController.backgroundViewContext
         
-        let quotedNote = try? Event.findOrCreateStubBy(
-            id: quotedNoteID,
-            context: context
-        )
+        _ = try? Event.findOrCreateStubBy(id: quotedNoteID, context: context)
         
         await context.perform {
             try? context.save()
@@ -1070,7 +1067,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         let tags = note.allTags as? [[String]] ?? []
         
         return await context.perform {
-            noteParser.parse(content: content, tags: tags, context: context)
+            noteParser.components(in: content, tags: tags, context: context)
         }
     }
     

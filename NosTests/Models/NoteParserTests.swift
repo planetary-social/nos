@@ -31,8 +31,8 @@ final class NoteParserTests: CoreDataTestCase {
 
         // Act
         let tags: [[String]] = [[]]
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )
@@ -55,8 +55,8 @@ final class NoteParserTests: CoreDataTestCase {
 
         // Act
         let tags: [[String]] = [[]]
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )
@@ -79,8 +79,8 @@ final class NoteParserTests: CoreDataTestCase {
 
         // Act
         let tags: [[String]] = [[]]
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )
@@ -118,8 +118,8 @@ final class NoteParserTests: CoreDataTestCase {
         let displayName2 = "npub180cvv..."
         let hex2 = "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d"
         let tags = [["p", hex1], ["p", hex2]]
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )
@@ -137,8 +137,8 @@ final class NoteParserTests: CoreDataTestCase {
         let npub = "npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags: [[String]] = [[]]
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )
@@ -153,28 +153,28 @@ final class NoteParserTests: CoreDataTestCase {
         let content = "Check this note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
         let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [[]]
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )
         let attributedContent = components.attributedContent
         XCTAssertTrue(attributedContent.links.isEmpty)
-        XCTAssertEqual(components.quotedNoteID, "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5")
+        XCTAssertEqual(components.quotedNoteID, hex)
     }
     
     @MainActor func testContentWithUntaggedNIP27Note() throws {
         let content = "Check this nostr:note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
         let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [[]]
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )
         let attributedContent = components.attributedContent
         XCTAssertTrue(attributedContent.links.isEmpty)
-        XCTAssertEqual(components.quotedNoteID, "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5")
+        XCTAssertEqual(components.quotedNoteID, hex)
     }
     
     @MainActor func testContentWithUntaggedProfile() throws {
@@ -185,8 +185,8 @@ final class NoteParserTests: CoreDataTestCase {
         let tags: [[String]] = [[]]
         
         let expectedContent = content
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )
@@ -212,8 +212,8 @@ final class NoteParserTests: CoreDataTestCase {
         let tags: [[String]] = [[]]
 
         let expectedContent = "check this"
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )
@@ -223,7 +223,7 @@ final class NoteParserTests: CoreDataTestCase {
         XCTAssertEqual(parsedContent, expectedContent)
         
         XCTAssertTrue(attributedContent.links.isEmpty)
-        XCTAssertEqual(components.quotedNoteID, "b3e392b11f5d4f28321cedd09303a748acfd0487aea5a7450b3481c60b6e4f87")
+        XCTAssertEqual(components.quotedNoteID, hex)
     }
 
     @MainActor func testContentWithUntaggedEventWithADot() throws {
@@ -237,8 +237,8 @@ final class NoteParserTests: CoreDataTestCase {
         let tags: [[String]] = [[]]
 
         let expectedContent = "check this . Bye!"
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )
@@ -247,7 +247,7 @@ final class NoteParserTests: CoreDataTestCase {
         XCTAssertEqual(parsedContent, expectedContent)
         
         XCTAssertTrue(attributedContent.links.isEmpty)
-        XCTAssertEqual(components.quotedNoteID, "b3e392b11f5d4f28321cedd09303a748acfd0487aea5a7450b3481c60b6e4f87")
+        XCTAssertEqual(components.quotedNoteID, hex)
     }
 
     @MainActor func testContentWithMalformedEvent() throws {
@@ -259,8 +259,8 @@ final class NoteParserTests: CoreDataTestCase {
         let tags: [[String]] = [[]]
 
         let expectedContent = content
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )
@@ -284,8 +284,8 @@ final class NoteParserTests: CoreDataTestCase {
         let expectedContent = "People are using Coracle's custom feeds! Here are some interesting ones:\n\n🔗 Link to note\n🔗 Link to note\n🔗 Link to note\n🔗 Link to note\n\nI encourage you to try it out — create your own and paste its address into a reply to this note to share it."
         // swiftlint:enable line_length
         
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )

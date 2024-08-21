@@ -6,9 +6,13 @@ import RegexBuilder
 /// This struct encapsulates the algorithms that parse notes and the mentions inside the note.
 struct NoteParser {
 
+    /// This struct encapsulates parsed components of a note that can be used to display the note in the UI.
     struct NoteDisplayComponents {
+        /// The note content as attributed text with tagged entities replaced with readable names.
         let attributedContent: AttributedString
+        /// Content links parsed from the note.
         let contentLinks: [URL]
+        /// The id of the first quoted note in the content, if one exists.
         let quotedNoteID: RawEventID?
     }
     
@@ -31,7 +35,7 @@ struct NoteParser {
     
     /// Parses the content and tags stored in a note and returns components that can be used
     /// to display the note in the UI.
-    func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> NoteDisplayComponents {
+    func components(in content: String, tags: [[String]], context: NSManagedObjectContext) -> NoteDisplayComponents {
         let (cleanedString, urls) = URLParser().replaceUnformattedURLs(
             in: content
         )
@@ -114,7 +118,13 @@ struct NoteParser {
     }
     // swiftlint:enable function_body_length
 
-    /// Replaces Nostr entities embedded in the note (without a proper tag) with markdown links
+    /// Replaces Nostr entities embedded in the note (without a proper tag) with markdown links and
+    /// optionally extracts the first quoted note id.
+    ///
+    /// - Parameters:
+    ///   - content: The note content in which to replace entities.
+    ///   - capturesFirstNote: If true, this function will extract the first quoted note id, if it exists.
+    /// - Returns: A tuple of the edited content and the first quoted note id, if it was requested and it exists.
     private func replaceNostrEntities(in content: String, capturesFirstNote: Bool = false) -> (String, RawEventID?) {
         let unformattedRegex =
             /@?(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1|naddr1)[a-zA-Z0-9]{58,}))/

@@ -12,7 +12,7 @@ struct BioSheet: View {
         guard let about = author.about, !about.isEmpty else {
             return nil
         }
-        let bio: AttributedString = noteParser.parse(
+        let bio = noteParser.parse(
             content: about,
             tags: [[]],
             context: viewContext

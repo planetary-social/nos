@@ -10,8 +10,8 @@ extension NoteParserTests {
         let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
         try testContext.save()
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )
@@ -31,8 +31,8 @@ extension NoteParserTests {
         let expectedContent = "hello @\(displayName)"
         let tags = [["p", hex]]
         let context = persistenceController.viewContext
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: context
         )
@@ -51,8 +51,8 @@ extension NoteParserTests {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let expectedContent = "@\(displayName)"
         let tags = [["p", hex]]
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )
@@ -71,8 +71,8 @@ extension NoteParserTests {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let expectedContent = "Hello\n@\(displayName)"
         let tags = [["p", hex]]
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )
@@ -90,8 +90,8 @@ extension NoteParserTests {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let expectedContent = "hello#[0]"
         let tags = [["p", hex]]
-        let components: NoteParser.NoteDisplayComponents = sut.parse(
-            content: content,
+        let components = sut.components(
+            in: content,
             tags: tags,
             context: testContext
         )
