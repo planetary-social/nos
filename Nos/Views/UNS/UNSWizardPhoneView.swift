@@ -80,7 +80,6 @@ struct UNSWizardPhoneView: View {
 
 struct UNSWizardPhone_Previews: PreviewProvider {
     
-    static var previewData = PreviewData()
     @State static var controller = UNSWizardController(
         state: .intro 
     )

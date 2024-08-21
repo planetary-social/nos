@@ -16,6 +16,9 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// Set the UIViewType to make the compiler happy as we implement `dismantleUIView`.
     typealias UIViewType = UICollectionView
 
+    /// Allows us to refresh the PagedNoteListView from outside this view itself, such as with a separate button.
+    @Binding var refreshController: RefreshController
+
     /// A fetch request that specifies the events that should be shown. The events should be sorted in 
     /// reverse-chronological order and should match the events returned by `relayFilter`.
     let databaseFilter: NSFetchRequest<Event>
@@ -35,21 +38,14 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// Used to determine whether to scroll this view to the top when the tab is tapped.
     let tab: AppDestination
 
-    /// Allows us to refresh the PagedNoteListView from outside this view itself, such as with a separate button.
-    let refreshController: RefreshController
-
-    /// A view that will be displayed as the collectionView header.
+    /// A view that will be displayed as the collection view header.
     let header: () -> Header
     
-    /// A view that will be displayed below the header when no notes are being shown and a handler that 
+    /// A view that will be displayed below the header when no notes are being shown.
     let emptyPlaceholder: () -> EmptyPlaceholder
 
-    /// A closure that will be called when the user pulls to refresh or taps a refresh button. You probably want to
-    /// update the `databaseFilter` to display new data in this closure.
-    let onRefresh: () -> Void
-
     func makeCoordinator() -> Coordinator<Header, EmptyPlaceholder> {
-        Coordinator()
+        Coordinator(refreshController: refreshController)
     }
 
     func makeUIView(context: Context) -> UICollectionView {
@@ -66,8 +62,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             collectionView: collectionView, 
             managedObjectContext: self.managedObjectContext,
             header: header,
-            emptyPlaceholder: emptyPlaceholder,
-            onRefresh: onRefresh
+            emptyPlaceholder: emptyPlaceholder
         )
         collectionView.dataSource = dataSource
         collectionView.prefetchDataSource = dataSource
@@ -97,8 +92,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             if databaseFilter != dataSource.databaseFilter {
                 dataSource.updateFetchRequest(databaseFilter)
             }
-            if refreshController.shouldRefresh {
-                refreshController.setShouldRefresh(false)
+            if refreshController.startRefresh {
+                refreshController.startRefresh = false
 
                 guard let refreshControl = collectionView.refreshControl else { return }
                 collectionView.scrollRectToVisible(refreshControl.frame, animated: true)
@@ -181,27 +176,34 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     class Coordinator<CoordinatorHeader: View, CoordinatorEmptyPlaceholder: View> {
         // swiftlint:enable generic_type_name
         
+        /// Controls refresh actions. Used for setting the `lastRefreshDate` whenever the data is refreshed.
+        let refreshController: RefreshController
+
         var dataSource: PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder>?
         var collectionView: UICollectionView?
         var scrollToTopObserver: NSObjectProtocol?
-        var onRefresh: (() -> Void)?
-        
+
+        /// Initializes a coordinator with the given refresh controller.
+        /// - Parameter refreshController: Controls refresh actions. Used for setting the `lastRefreshDate`
+        ///                                whenever the data is refreshed.
+        init(refreshController: RefreshController) {
+            self.refreshController = refreshController
+        }
+
         func dataSource(
-            databaseFilter: NSFetchRequest<Event>, 
+            databaseFilter: NSFetchRequest<Event>,
             relayFilter: Filter,
             relay: Relay?,
             collectionView: UICollectionView,
             managedObjectContext: NSManagedObjectContext,
             @ViewBuilder header: @escaping () -> CoordinatorHeader,
-            @ViewBuilder emptyPlaceholder: @escaping () -> CoordinatorEmptyPlaceholder,
-            onRefresh: @escaping () -> Void
+            @ViewBuilder emptyPlaceholder: @escaping () -> CoordinatorEmptyPlaceholder
         ) -> PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder> {
             if let dataSource {
                 return dataSource 
-            } 
+            }
             self.collectionView = collectionView
-            self.onRefresh = onRefresh
-            
+
             let dataSource = PagedNoteDataSource(
                 databaseFilter: databaseFilter, 
                 relayFilter: relayFilter,
@@ -209,15 +211,16 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
                 collectionView: collectionView, 
                 managedObjectContext: managedObjectContext,
                 header: header,
-                emptyPlaceholder: emptyPlaceholder,
-                onRefresh: onRefresh
+                emptyPlaceholder: emptyPlaceholder
             )
             self.dataSource = dataSource
             return dataSource
         }
     
         @objc func refreshData(_ sender: Any) {
-            onRefresh?()
+            DispatchQueue.main.async { [weak refreshController] in
+                refreshController?.lastRefreshDate = .now
+            }
 
             if let refreshControl = sender as? UIRefreshControl {
                 // Dismiss the refresh control
@@ -232,21 +235,19 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
 extension Notification.Name {
     /// Instructs the receiver to scroll its list to the top
     public static let scrollToTop = Notification.Name("scrollToTop")
-    /// Instructs the receiver to perform a data refresh
-    public static let refresh = Notification.Name("refresh")
 }
 
 #Preview {
     var previewData = PreviewData()
-    @Dependency(\.refreshController) var refreshController
+    @State var refreshController = RefreshController()
 
     return PagedNoteListView(
+        refreshController: $refreshController,
         databaseFilter: previewData.alice.allPostsRequest(onlyRootPosts: false),
         relayFilter: Filter(), 
         relay: nil,
         managedObjectContext: previewData.previewContext,
         tab: .home,
-        refreshController: refreshController,
         header: {
             ProfileHeader(author: previewData.alice, selectedTab: .constant(.activity))
                 .compositingGroup()
@@ -255,8 +256,7 @@ extension Notification.Name {
         },
         emptyPlaceholder: {
             Text("empty")
-        },
-        onRefresh: {}
+        }
     )
     .background(Color.appBg)
     .inject(previewData: previewData)

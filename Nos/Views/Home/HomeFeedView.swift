@@ -6,15 +6,11 @@ import Dependencies
 struct HomeFeedView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
-    @Environment(CurrentUser.self) var currentUser
-    @Dependency(\.refreshController) private var refreshController
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
+    @State private var refreshController = RefreshController(lastRefreshDate: Date.now + Self.staticLoadTime)
     @State private var isVisible = false
-    @State private var relaySubscriptions = [SubscriptionCancellable]()
-    @State private var isShowingRelayList = false
     
     /// When set to true this will display a fullscreen progress wheel for a set amount of time to give us a chance
     /// to get some data from relay. The amount of time is defined in `staticLoadTime`.
@@ -36,8 +32,7 @@ struct HomeFeedView: View {
     var homeFeedFetchRequest: NSFetchRequest<Event> {
         Event.homeFeed(
             for: user,
-            before: refreshController.lastRefreshDate ??
-                Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + Double(Self.staticLoadTime)),
+            before: refreshController.lastRefreshDate,
             seenOn: selectedRelay
         )
     }
@@ -45,7 +40,7 @@ struct HomeFeedView: View {
     var newNotesRequest: NSFetchRequest<Event> {
         Event.homeFeed(
             for: user,
-            after: refreshController.lastRefreshDate ?? .now,
+            after: refreshController.lastRefreshDate,
             seenOn: selectedRelay
         )
     }
@@ -69,12 +64,12 @@ struct HomeFeedView: View {
     var body: some View {
         ZStack {
             PagedNoteListView(
+                refreshController: $refreshController,
                 databaseFilter: homeFeedFetchRequest,
                 relayFilter: homeFeedFilter,
                 relay: selectedRelay,
                 managedObjectContext: viewContext,
                 tab: .home,
-                refreshController: refreshController,
                 header: {
                     EmptyView()
                 },
@@ -84,15 +79,12 @@ struct HomeFeedView: View {
                             .padding()
                     }
                     .frame(minHeight: 300)
-                },
-                onRefresh: {
-                    refreshController.setLastRefreshDate(.now)
                 }
             )
             .padding(0)
 
             NewNotesButton(fetchRequest: FetchRequest(fetchRequest: newNotesRequest)) {
-                refreshController.setShouldRefresh(true)
+                refreshController.startRefresh = true
             }
 
             if showTimedLoadingIndicator {
@@ -111,7 +103,7 @@ struct HomeFeedView: View {
                 )
                 .onChange(of: selectedRelay) { _, _ in
                     showTimedLoadingIndicator = true
-                    refreshController.setLastRefreshDate(.now + Self.staticLoadTime)
+                    refreshController.lastRefreshDate = .now + Self.staticLoadTime
                     Task {
                         withAnimation {
                             showRelayPicker = false

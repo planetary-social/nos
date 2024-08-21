@@ -57,7 +57,17 @@ class NotificationViewModel: ObservableObject, Identifiable {
         var range = Range(uncheckedBounds: (authorName.startIndex, authorName.endIndex))
         authorName[range].font = .boldSystemFont(ofSize: 17)
         
-        if note.isReply(to: user) {
+        if note.isProfileZap(to: user) {
+            if let tags = note.allTags as? [[String]],
+                let amountTag = tags.first(where: { $0.first == "amount" }),
+                let amountInMillisatsAsString = amountTag[safe: 1],
+                let amountInMillisats = Int(amountInMillisatsAsString) {
+                let zapText = String(localized: .reply.zappedYouSats(amountInMillisats / 1000))
+                actionText = authorName + AttributedString(zapText)
+            } else {
+                actionText = authorName + AttributedString(String(localized: .reply.zappedYou))
+            }
+        } else if note.isReply(to: user) {
             actionText = authorName + AttributedString(String(localized: .reply.repliedToYourNote))
         } else if note.references(author: user) {
             actionText = authorName + AttributedString(String(localized: .reply.mentionedYou))

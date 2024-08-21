@@ -11,6 +11,7 @@ struct DiscoverContentsView: View {
 
     @Dependency(\.relayService) private var relayService
     @Dependency(\.crashReporting) private var crashReporting
+    @Dependency(\.analytics) private var analytics
 
     /// The IDs of the authors we will display when we aren't searching.
     @State private var featuredAuthorIDs = [RawAuthorID]()
@@ -50,6 +51,10 @@ struct DiscoverContentsView: View {
                             LazyVStack {
                                 ForEach(searchController.authorResults) { author in
                                     AuthorCard(author: author) {
+                                        let resultsCount = searchController.authorResults.count
+                                        analytics.displayedAuthorFromDiscoverSearch(
+                                            resultsCount: resultsCount
+                                        )
                                         router.push(author)
                                     }
                                     .padding(.horizontal, 15)

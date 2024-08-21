@@ -8,8 +8,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added a new image viewer that appears when you tap an image.
+- Included the npub in the properties list sent to analytics.
+- Removed the like and repost counts from the Main and Profile feeds.
+- Replaced hard-coded color values.
+
+## [0.1.25] - 2024-08-21Z
+
+- Fixed an issue where the sheet asking users to set up a NIP-05 username would appear after reinstalling Nos, even if the profile already had a NIP-05 username.
+- Fixed a bug where urls with periods after them would include the period.
+- Fixed a bug where confirmation dialog buttons turn red while swiping across them.
+
+## [0.1.24] - 2024-08-09Z
+
+- Disabled automatically generated analytics events that were sent each time the user navigated to a new screen.
 - Show “New notes available” notification on Feed when there are new notes to display.
+- Disable the Post button while images are still uploading. Thanks @vien-eaker!
 - Improved app performance on first login by requesting fewer events from relays.
+- Fixed a bug where the cursor could jump around when composing a note.
+- Fixed a bug where mentions could be duplicated when typing in the middle of one.
+- Re-enabled autocomplete when composing a note.
+- Added push notifications for zaps.
+- Added zaps to the Notifications view.
+- Created Colors.xcassets and move all colors into it. Thanks @lingoslinger!
+- Fixed a bug where confirmation dialog buttons turn red while swiping across them.
 
 ## [0.1.23] - 2024-07-31Z
 

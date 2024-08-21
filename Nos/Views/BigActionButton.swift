@@ -32,8 +32,8 @@ extension LinearGradient {
     static var bigAction: LinearGradient {
         LinearGradient(
             colors: [
-                Color(hex: "#F06337"),
-                Color(hex: "#F24E55")
+                Color.bigActionButtonGradientTop,
+                Color.bigActionButtonGradientBottom
             ],
             startPoint: .top,
             endPoint: .bottom
@@ -52,13 +52,13 @@ struct BigActionButtonStyle: ButtonStyle {
         ZStack {
             // Button shadow/background
             ZStack {
-                Color(hex: "#C13036")
+                Color.bigActionButtonBackground
             }
             .cornerRadius(80)
             .offset(y: 4.5)
             .shadow(
-                color: Color(white: 0, opacity: 0.2), 
-                radius: 2, 
+                color: Color.lightShadow,
+                radius: 2,
                 x: 0, 
                 y: configuration.isPressed ? 0 : 1
             )
@@ -69,8 +69,8 @@ struct BigActionButtonStyle: ButtonStyle {
                 ZStack {
                     LinearGradient(
                         stops: [
-                            Gradient.Stop(color: Color(red: 0.94, green: 0.39, blue: 0.22), location: 0.00),
-                            Gradient.Stop(color: Color(red: 0.95, green: 0.3, blue: 0.33), location: 1.00),
+                            Gradient.Stop(color: Color.bigActionButtonLinearGradientStop1, location: 0.00),
+                            Gradient.Stop(color: Color.bigActionButtonLinearGradientStop2, location: 1.00),
                         ],
                         startPoint: UnitPoint(x: 0.5, y: 0),
                         endPoint: UnitPoint(x: 0.5, y: 0.99)
@@ -86,7 +86,7 @@ struct BigActionButtonStyle: ButtonStyle {
                     .font(.clarity(.bold, textStyle: .title3))
                     .padding(15)
                     .shadow(
-                        color: Color(white: 0, opacity: 0.15),
+                        color: Color.bigActionButtonLabelShadow,
                         radius: 2,
                         x: 0,
                         y: 2

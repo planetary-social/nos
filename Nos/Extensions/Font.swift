@@ -33,10 +33,3 @@ extension Font {
         .custom("ClarityCity-Bold", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
     }
 }
-
-extension UIFont {
-    static var clarity = UIFont(
-        name: "ClarityCity-Regular",
-        size: UIFont.preferredFont(forTextStyle: .body).pointSize
-    )!
-}

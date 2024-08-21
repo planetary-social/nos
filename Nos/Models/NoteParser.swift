@@ -113,7 +113,7 @@ struct NoteParser {
     /// Replaces Nostr entities embedded in the note (without a proper tag) with markdown links
     private func replaceNostrEntities(in content: String) -> String {
         let unformattedRegex =
-            /(?:^|\s)@?(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1|naddr1)[a-zA-Z0-9]{58,}))/
+            /@?(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1|naddr1)[a-zA-Z0-9]{58,}))/
 
         return content.replacing(unformattedRegex) { match in
             let substring = match.0

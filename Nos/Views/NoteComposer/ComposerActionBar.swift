@@ -6,14 +6,14 @@ import SwiftUINavigation
 /// A horizontal bar that gives the user options to customize their message in the message composer.
 struct ComposerActionBar: View {
     
+    /// A controller for the text entered in the note composer. 
+    @Binding var editingController: NoteEditorController
+    
     /// The expiration time for the note, if any.
     @Binding var expirationTime: TimeInterval?
 
     /// Whether we're currently uploading an image or not.
     @Binding var isUploadingImage: Bool
-
-    /// The text in the note.
-    @Binding var text: EditableNoteText
     
     @Binding var showPreview: Bool 
 
@@ -92,7 +92,7 @@ struct ComposerActionBar: View {
                     do {
                         startUploadingImage()
                         let url = try await fileStorageAPIClient.upload(fileAt: imageURL)
-                        text.append(url)
+                        await editingController.append(url)
                         endUploadingImage()
                     } catch {
                         endUploadingImage()
@@ -102,7 +102,7 @@ struct ComposerActionBar: View {
                             TextState(String(localized: .imagePicker.errorUploadingFile))
                         }, message: {
                             if case let FileStorageAPIClientError.uploadFailed(message) = error,
-                               let message {
+                                let message {
                                 TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
                             } else {
                                 TextState(String(localized: .imagePicker.errorUploadingFileMessage))
@@ -161,17 +161,27 @@ struct ComposerActionBar: View {
 
 struct ComposerActionBar_Previews: PreviewProvider {
     
+    @State static var controller = NoteEditorController()
     @State static var emptyExpirationTime: TimeInterval?
     @State static var setExpirationTime: TimeInterval? = 60 * 60
-    @State static var postText = EditableNoteText()
     @State static var showPreview = false
     
     static var previews: some View {
         VStack {
             Spacer()
-            ComposerActionBar(expirationTime: $emptyExpirationTime, isUploadingImage: .constant(false), text: $postText, showPreview: $showPreview)
+            ComposerActionBar(
+                editingController: $controller, 
+                expirationTime: $emptyExpirationTime, 
+                isUploadingImage: .constant(false),
+                showPreview: $showPreview
+            )
             Spacer()
-            ComposerActionBar(expirationTime: $setExpirationTime, isUploadingImage: .constant(false), text: $postText, showPreview: $showPreview)
+            ComposerActionBar(
+                editingController: $controller, 
+                expirationTime: $setExpirationTime, 
+                isUploadingImage: .constant(false),
+                showPreview: $showPreview
+            )
             Spacer()
         }
         .frame(maxWidth: .infinity)

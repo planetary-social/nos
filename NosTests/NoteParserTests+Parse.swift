@@ -16,32 +16,13 @@ extension NoteParserTests {
         author.displayName = name
         try testContext.save()
 
-        var editableNoteText = EditableNoteText(
-            nsAttributedString: NSAttributedString(string: "@"),
-            font: .systemFont(ofSize: 17),
-            foregroundColor: .black
-        )
-        editableNoteText.insertMention(
-            of: author,
-            at: editableNoteText.attributedString.endIndex
-        )
-
-        // UITextViews use a NSTextStorage instance that can update the actual
-        // NSAttributedString we set. So, lets better use it here so we mimic
-        // the same behavior.
-        let textStorage = NSTextStorage()
-        textStorage.setAttributedString(editableNoteText.nsAttributedString)
-        let result = textStorage.attributedSubstring(
-            from: NSRange(
-                location: 0,
-                length: editableNoteText.nsAttributedString.length
-            )
-        )
+        noteEditor.append(text: "@")
+        noteEditor.insertMention(of: author)
 
         // Act
         let expected = "nostr:\(npub) "
         let (content, _) = sut.parse(
-            attributedText: AttributedString(result)
+            attributedText: noteEditor.text!
         )
 
         // Assert
@@ -57,34 +38,12 @@ extension NoteParserTests {
         author.displayName = name
         try testContext.save()
 
-        var editableNoteText = EditableNoteText(
-            nsAttributedString: NSAttributedString(string: "@"),
-            font: .systemFont(ofSize: 17),
-            foregroundColor: .black
-        )
-        editableNoteText.insertMention(
-            of: author,
-            at: editableNoteText.attributedString.endIndex
-        )
-
-        // UITextViews use a NSTextStorage instance that can update the actual
-        // NSAttributedString we set. So, lets better use it here so we mimic
-        // the same behavior.
-        // In the case of emojis, it modifies the font.
-        let textStorage = NSTextStorage()
-        textStorage.setAttributedString(editableNoteText.nsAttributedString)
-        let result = textStorage.attributedSubstring(
-            from: NSRange(
-                location: 0,
-                length: editableNoteText.nsAttributedString.length
-            )
-        )
+        noteEditor.append(text: "@")
+        noteEditor.insertMention(of: author)
 
         // Act
         let expected = "nostr:\(npub) "
-        let (content, _) = sut.parse(
-            attributedText: AttributedString(result)
-        )
+        let (content, _) = sut.parse(attributedText: noteEditor.text!)
 
         // Assert
         XCTAssertEqual(content, expected)
@@ -99,34 +58,12 @@ extension NoteParserTests {
         author.displayName = name
         try testContext.save()
 
-        var editableNoteText = EditableNoteText(
-            nsAttributedString: NSAttributedString(string: "@"),
-            font: .systemFont(ofSize: 17),
-            foregroundColor: .black
-        )
-        editableNoteText.insertMention(
-            of: author,
-            at: editableNoteText.attributedString.endIndex
-        )
-
-        // UITextViews use a NSTextStorage instance that can update the actual
-        // NSAttributedString we set. So, lets better use it here so we mimic
-        // the same behavior.
-        // In the case of emojis, it modifies the font.
-        let textStorage = NSTextStorage()
-        textStorage.setAttributedString(editableNoteText.nsAttributedString)
-        let result = textStorage.attributedSubstring(
-            from: NSRange(
-                location: 0,
-                length: editableNoteText.nsAttributedString.length
-            )
-        )
+        noteEditor.append(text: "@")
+        noteEditor.insertMention(of: author)
 
         // Act
         let expected = "nostr:\(npub) "
-        let (content, _) = sut.parse(
-            attributedText: AttributedString(result)
-        )
+        let (content, _) = sut.parse(attributedText: noteEditor.text!)
 
         // Assert
         XCTAssertEqual(content, expected)
@@ -141,39 +78,15 @@ extension NoteParserTests {
         author.displayName = name
         try testContext.save()
 
-        var editableNoteText = EditableNoteText(
-            nsAttributedString: NSAttributedString(string: "@"),
-            font: .systemFont(ofSize: 17),
-            foregroundColor: .black
-        )
-        editableNoteText.insertMention(
-            of: author,
-            at: editableNoteText.attributedString.endIndex
-        )
-        editableNoteText.append("two mentions @")
-        editableNoteText.insertMention(
-            of: author,
-            at: editableNoteText.attributedString.endIndex
-        )
-
-        // UITextViews use a NSTextStorage instance that can update the actual
-        // NSAttributedString we set. So, lets better use it here so we mimic
-        // the same behavior.
-        // In the case of emojis, it modifies the font.
-        let textStorage = NSTextStorage()
-        textStorage.setAttributedString(editableNoteText.nsAttributedString)
-        let result = textStorage.attributedSubstring(
-            from: NSRange(
-                location: 0,
-                length: editableNoteText.nsAttributedString.length
-            )
-        )
-
+        noteEditor.append(text: "@")
+        noteEditor.insertMention(of: author)
+        noteEditor.append(text: "two mentions @")
+        noteEditor.insertMention(of: author)
+        textView.selectedRange = NSRange(location: textView.text.count, length: 0)
+        
         // Act
         let expected = "nostr:\(npub) two mentions nostr:\(npub) "
-        let (content, _) = sut.parse(
-            attributedText: AttributedString(result)
-        )
+        let (content, _) = sut.parse(attributedText: noteEditor.text!)
 
         // Assert
         XCTAssertEqual(content, expected)

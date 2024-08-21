@@ -77,7 +77,7 @@ struct AppView: View {
                                 Text(.localizable.post)
                             }
                         }
-                    .tag(AppDestination.newNote(nil))
+                    .tag(AppDestination.noteComposer(nil))
                     
                     NotificationsView(user: currentUser.author)
                         .tabItem {
@@ -117,7 +117,7 @@ struct AppView: View {
                     }
                 }
                 .onChange(of: router.selectedTab) { _, newTab in
-                    if case let AppDestination.newNote(contents) = newTab {
+                    if case let AppDestination.noteComposer(contents) = newTab {
                         newPostContents = contents
                         showNewPost = true
                         router.selectedTab = lastSelectedTab
@@ -134,7 +134,7 @@ struct AppView: View {
                     }
                 }
                 .sheet(isPresented: $showNewPost, content: {
-                    NewNoteView(initialContents: newPostContents, isPresented: $showNewPost)
+                    NoteComposer(initialContents: newPostContents, isPresented: $showNewPost)
                         .environment(currentUser)
                         .interactiveDismissDisabled()
                 })
@@ -160,11 +160,19 @@ struct AppView: View {
     }
 
     private func presentNIP05SheetIfNeeded() async {
-        // Sleep for half a second
-        try? await Task.sleep(nanoseconds: 500_000_000)
         guard let author = currentUser.author, let npub = author.npubString else {
             return
         }
+
+        // Sleep for half a second to allow the app to initialize
+        try? await Task.sleep(nanoseconds: 500_000_000)
+
+        guard currentUser.author?.needsMetadata == false else {
+            // We don't have metadata for this author, the app is still probably fetching .metaData events from the
+            // relays. Let's wait for next time.
+            return
+        }
+
         // We store the npub for the user we last presented the sheet for so that
         // the behavior resets if the user creates a new account
         let key = "didPresentNIP05SheetForNpub"

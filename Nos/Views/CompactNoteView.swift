@@ -183,6 +183,7 @@ struct CompactNoteView_Previews: PreviewProvider {
             CompactNoteView(note: previewData.linkNote, allowUserInteraction: false)
             CompactNoteView(note: previewData.shortNote)
             CompactNoteView(note: previewData.longNote)
+            CompactNoteView(note: previewData.imageNote)
             CompactNoteView(note: previewData.doubleImageNote)
             CompactNoteView(note: previewData.doubleImageNote, showLinkPreviews: false)
         }

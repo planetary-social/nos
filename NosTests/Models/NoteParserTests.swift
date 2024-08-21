@@ -6,10 +6,19 @@ final class NoteParserTests: CoreDataTestCase {
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     var sut: NoteParser!
+    
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    var noteEditor: NoteEditorController!
+    
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    var textView: UITextView!
 
     @MainActor
     override func setUp() async throws {
         sut = NoteParser()
+        noteEditor = NoteEditorController()
+        textView = UITextView()
+        noteEditor.textView = textView
         try await super.setUp()
     }
 

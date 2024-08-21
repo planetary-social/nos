@@ -4,6 +4,7 @@ import Logger
 
 /// The event processor consumes raw event data from the relays and writes it to Core Data.
 enum EventProcessor {
+    @discardableResult
     static func parse(
         jsonEvent: JSONEvent,
         from relay: Relay?,
@@ -30,6 +31,15 @@ enum EventProcessor {
                     throw EventError.invalidSignature(event)
                 }
                 event.isVerified = true
+            }
+            
+            // if this is a zap receipt, pull the zap request out of the description tag and parse it as well
+            if event.kind == EventKind.zapReceipt.rawValue,
+                let tags = event.allTags as? [[String]],
+                let descriptionTag = tags.first(where: { $0.first == "description" }),
+                let zapRequestJSONData = descriptionTag.last?.data(using: .utf8) {
+                let zapRequest = try JSONDecoder().decode(JSONEvent.self, from: zapRequestJSONData)
+                try parse(jsonEvent: zapRequest, from: relay, in: parseContext, skipVerification: skipVerification)
             }
             
             return event

@@ -102,7 +102,7 @@ import Logger
     
     var needsMetadata: Bool {
         // TODO: consider checking lastUpdated time as an optimization.
-        about == nil && name == nil && displayName == nil && profilePhotoURL == nil
+        about == nil && name == nil && displayName == nil && profilePhotoURL == nil && nip05 == nil
     }
     
     var webLink: String {

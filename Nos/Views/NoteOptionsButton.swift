@@ -117,7 +117,6 @@ struct NoteOptionsView_Previews: PreviewProvider {
     static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
-    static var relayService = previewData.relayService
     static var currentUser = previewData.currentUser
     
     static var shortNote: Event {

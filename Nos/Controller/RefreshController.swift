@@ -1,36 +1,19 @@
 import Foundation
 
 /// Defines a common interface for refreshing.
-@MainActor protocol RefreshController: Observable {
-    /// Whether a refresh should begin or not.
-    var shouldRefresh: Bool { get }
+@Observable @MainActor class RefreshController {
+    /// Whether a refresh should start or not. When this is `true`, the view and data source will begin refreshing.
+    var startRefresh: Bool
 
     /// The last time the view was refreshed.
-    var lastRefreshDate: Date? { get }
-
-    /// Update the state of `shouldRefresh` to the given value.
-    func setShouldRefresh(_: Bool)
-
-    /// Updates the last refresh date to the given value.
-    func setLastRefreshDate(_: Date)
-}
-
-/// The default implementation of `RefreshController`.
-@Observable @MainActor class DefaultRefreshController: RefreshController {
-    var shouldRefresh: Bool
-
-    var lastRefreshDate: Date?
-
-    init(shouldRefresh: Bool = false, lastRefreshDate: Date? = nil) {
-        self.shouldRefresh = shouldRefresh
-        self.lastRefreshDate = lastRefreshDate
-    }
-
-    func setShouldRefresh(_ shouldRefresh: Bool) {
-        self.shouldRefresh = shouldRefresh
-    }
-
-    func setLastRefreshDate(_ lastRefreshDate: Date) {
+    var lastRefreshDate: Date
+    
+    /// Initializes a refresh controller with the given parameters.
+    /// - Parameters:
+    ///   - startRefresh: Whether a refresh should start or not. Defaults to `false`.
+    ///   - lastRefreshDate: The last time the view was refreshed. Defaults to `.now`.
+    init(startRefresh: Bool = false, lastRefreshDate: Date = .now) {
+        self.startRefresh = startRefresh
         self.lastRefreshDate = lastRefreshDate
     }
 }

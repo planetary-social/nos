@@ -4,17 +4,16 @@ import Logger
 import SwiftUI
 import SwiftUINavigation
 
-struct NewNoteView: View {
+struct NoteComposer: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) var currentUser
-    @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
     @Dependency(\.noteParser) private var noteParser
 
-    /// State holding the text the user is typing
-    @State private var text = EditableNoteText()
+    /// A controller that manages the entered text.
+    @State private var editingController = NoteEditorController()
 
     /// The height of the NoteTextEditor that fits all entered text.
     /// This value will be updated by NoteTextEditor automatically, and should be used to set its frame from SwiftUI. 
@@ -62,10 +61,20 @@ struct NewNoteView: View {
                 VStack(spacing: 0) {
                     if showNotePreview {
                         if let previewEvent {
-                            NoteButton(note: previewEvent, shouldTruncate: false, hideOutOfNetwork: false, repliesDisplayType: .displayNothing, fetchReplies: false, displayRootMessage: false, isTapEnabled: false, replyAction: nil, tapAction: nil)
-                                .onDisappear {
-                                    deletePreviewEvent()
-                                }
+                            NoteButton(
+                                note: previewEvent,
+                                shouldTruncate: false,
+                                hideOutOfNetwork: false,
+                                repliesDisplayType: .displayNothing,
+                                fetchReplies: false,
+                                displayRootMessage: false,
+                                isTapEnabled: false,
+                                replyAction: nil,
+                                tapAction: nil
+                            )
+                            .onDisappear {
+                                deletePreviewEvent()
+                            }
                         } else {
                             ProgressView()
                                 .onAppear {
@@ -81,7 +90,7 @@ struct NewNoteView: View {
                                         ReplyPreview(note: replyToNote)
                                     }
                                     NoteTextEditor(
-                                        text: $text, 
+                                        controller: $editingController,
                                         minHeight: minimumEditorHeight,
                                         placeholder: .localizable.newNotePlaceholder
                                     )
@@ -110,9 +119,9 @@ struct NewNoteView: View {
                     }
                     
                     ComposerActionBar(
+                        editingController: $editingController,
                         expirationTime: $expirationTime,
                         isUploadingImage: $isUploadingImage,
-                        text: $text,
                         showPreview: $showNotePreview
                     )
                 }
@@ -163,14 +172,14 @@ struct NewNoteView: View {
                 },
                 trailing: ActionButton(title: .localizable.post, action: postAction)
                     .frame(height: 22)
-                    .disabled(text.string.isEmpty)
+                    .disabled(editingController.isEmpty || isUploadingImage)
                     .padding(.bottom, 3)
             )
             .onAppear {
-                if let initialContents, text.isEmpty {
-                    text = EditableNoteText(string: initialContents)
+                if let initialContents, editingController.isEmpty {
+                    editingController.append(text: initialContents)
                 }
-                analytics.showedNewNote()
+                analytics.showedNoteComposer()
             }
         }
         .alert(unwrapping: $alert)
@@ -219,49 +228,44 @@ struct NewNoteView: View {
         }
         isPresented = false
     }
-    
-    private func createNoteJSON() throws -> JSONEvent {
-        guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
-            Log.error("Cannot post without a keypair")
-            throw NostrIdentifierError.unknownFormat // TODO
-        }
-        
-        print(text)
-        
-        var (content, tags) = noteParser.parse(attributedText: text.attributedString)
-        
-        if let expirationTime {
-            tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
-        }
-        
-        // Attach the new note to the one it is replying to, if any.
-        if let replyToNote = replyToNote, let replyToNoteID = replyToNote.identifier {
-            // TODO: Append ptags for all authors involved in the thread
-            if let replyToAuthor = replyToNote.author?.publicKey?.hex {
-                tags.append(["p", replyToAuthor])
-            }
-            
-            // If `note` is a reply to another root, tag that root
-            if let rootNoteIdentifier = replyToNote.rootNote()?.identifier, rootNoteIdentifier != replyToNoteID {
-                tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
-                tags.append(["e", replyToNoteID, "", EventReferenceMarker.reply.rawValue])
-            } else {
-                tags.append(["e", replyToNoteID, "", EventReferenceMarker.root.rawValue])
-            }
-        }
-        
-        return JSONEvent(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
-    }
 
+    // swiftlint:disable:next function_body_length
     private func publishPost() async {
         guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
             Log.error("Cannot post without a keypair")
             return
         }
-        
+
+        guard let text = editingController.text else {
+            Log.error("Tried to publish a post with empty text")
+            return
+        }
+
         do {
-            let jsonEvent = try createNoteJSON()
-            
+            var (content, tags) = noteParser.parse(attributedText: text)
+
+            if let expirationTime {
+                tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
+            }
+
+            // Attach the new note to the one it is replying to, if any.
+            if let replyToNote = replyToNote, let replyToNoteID = replyToNote.identifier {
+                // TODO: Append ptags for all authors involved in the thread
+                if let replyToAuthor = replyToNote.author?.publicKey?.hex {
+                    tags.append(["p", replyToAuthor])
+                }
+
+                // If `note` is a reply to another root, tag that root
+                if let rootNoteIdentifier = replyToNote.rootNote()?.identifier, rootNoteIdentifier != replyToNoteID {
+                    tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
+                    tags.append(["e", replyToNoteID, "", EventReferenceMarker.reply.rawValue])
+                } else {
+                    tags.append(["e", replyToNoteID, "", EventReferenceMarker.root.rawValue])
+                }
+            }
+
+            let jsonEvent = JSONEvent(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
+
             if let relayURL = selectedRelay?.addressURL {
                 try await relayService.publish(
                     event: jsonEvent,
@@ -272,9 +276,9 @@ struct NewNoteView: View {
             } else if expirationTime != nil {
                 let relays = try await Relay.find(supporting: 40, for: author, context: viewContext)
                 try await relayService.publish(
-                    event: jsonEvent, 
-                    to: relays.compactMap { $0.addressURL }, 
-                    signingKey: keyPair, 
+                    event: jsonEvent,
+                    to: relays.compactMap { $0.addressURL },
+                    signingKey: keyPair,
                     context: viewContext
                 )
             } else {
@@ -285,12 +289,11 @@ struct NewNoteView: View {
             } else {
                 analytics.published(note: jsonEvent)
             }
-            text = EditableNoteText()
         } catch {
             Log.error("Error when posting: \(error.localizedDescription)")
         }
     }
-    
+
     private func createPreviewEvent() {
         do {
             var jsonEvent = try createNoteJSON()
@@ -300,25 +303,67 @@ struct NewNoteView: View {
             // TODO
         }
     }
-    
+
+    private func createNoteJSON() throws -> JSONEvent {
+        guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
+            Log.error("Cannot post without a keypair")
+            throw NostrIdentifierError.unknownFormat // TODO
+        }
+
+        guard let attributedText = editingController.text else {
+            return JSONEvent(
+                pubKey: keyPair.publicKeyHex,
+                kind: .text,
+                tags: [[]],
+                content: ""
+            )
+        }
+        print(attributedText)
+
+        var (content, tags) = noteParser.parse(attributedText: attributedText)
+
+        if let expirationTime {
+            tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
+        }
+
+        // Attach the new note to the one it is replying to, if any.
+        if let replyToNote = replyToNote, let replyToNoteID = replyToNote.identifier {
+            // TODO: Append ptags for all authors involved in the thread
+            if let replyToAuthor = replyToNote.author?.publicKey?.hex {
+                tags.append(["p", replyToAuthor])
+            }
+
+            // If `note` is a reply to another root, tag that root
+            if let rootNoteIdentifier = replyToNote.rootNote()?.identifier, rootNoteIdentifier != replyToNoteID {
+                tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
+                tags.append(["e", replyToNoteID, "", EventReferenceMarker.reply.rawValue])
+            } else {
+                tags.append(["e", replyToNoteID, "", EventReferenceMarker.root.rawValue])
+            }
+        }
+
+        return JSONEvent(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
+    }
+
     private func deletePreviewEvent() {
         if let previewEvent {
             viewContext.delete(previewEvent)
             try! viewContext.saveIfNeeded()
+            self.previewEvent = nil
         }
     }
 }
 
 #Preview {
     let previewData = PreviewData()
-    
-    return NewNoteView(isPresented: .constant(true))
+
+    return NoteComposer(isPresented: .constant(true))
         .inject(previewData: previewData)
 }
 
 #Preview {
     var previewData = PreviewData()
-    
-    return NewNoteView(replyTo: previewData.longNote, isPresented: .constant(true))
+
+    return NoteComposer(replyTo: previewData.longNote, isPresented: .constant(true))
         .inject(previewData: previewData)
 }
