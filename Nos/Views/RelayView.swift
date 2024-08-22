@@ -200,7 +200,7 @@ struct RelayView: View {
             
             do {
                 var address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-                if !(address.starts(with: "wss://")) {
+                if !address.starts(with: "wss://") {
                     address = "wss://" + address
                 }
                 let relay = try Relay.findOrCreate(by: address, context: viewContext)
