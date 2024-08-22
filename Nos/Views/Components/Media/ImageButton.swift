@@ -9,8 +9,6 @@ struct ImageButton: View {
     /// Whether the image viewer is presented or not.
     @State private var isViewerPresented = false
 
-    @State private var image: PlatformImage?
-
     var body: some View {
         Button {
             isViewerPresented = true
