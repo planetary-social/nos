@@ -6,7 +6,7 @@ import RegexBuilder
 /// This struct encapsulates the algorithms that parse notes and the mentions inside the note.
 struct NoteParser {
 
-    /// This struct encapsulates parsed components of a note that can be used to display the note in the UI.
+    /// Components of a note that can be used to display the note in the UI.
     struct NoteDisplayComponents {
         /// The note content as attributed text with tagged entities replaced with readable names.
         let attributedContent: AttributedString
@@ -123,7 +123,7 @@ struct NoteParser {
     ///
     /// - Parameters:
     ///   - content: The note content in which to replace entities.
-    ///   - capturesFirstNote: If true, this function will extract the first quoted note id, if it exists.
+    ///   - capturesFirstNote: If true, this function will extract the first quoted note id, if it exists. Defaults to `false`.
     /// - Returns: A tuple of the edited content and the first quoted note id, if it was requested and it exists.
     private func replaceNostrEntities(in content: String, capturesFirstNote: Bool = false) -> (String, RawEventID?) {
         let unformattedRegex =

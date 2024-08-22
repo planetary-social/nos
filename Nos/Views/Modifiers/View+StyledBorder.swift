@@ -2,11 +2,13 @@ import Foundation
 import SwiftUI
 
 extension View {
+    /// Applies a rounded border with a subtle styled gradient to this view.
     func withStyledBorder() -> some View {
         modifier(StyledBorder())
     }
 }
 
+/// A rounded border with a subtle styled gradient.
 struct StyledBorder: ViewModifier {
     func body(content: Content) -> some View {
         content
@@ -15,8 +17,8 @@ struct StyledBorder: ViewModifier {
                     .strokeBorder(
                         LinearGradient(
                             gradient: Gradient(colors: [
-                                Color("styled-border-gradient-top"),
-                                Color("styled-border-gradient-bottom")
+                                .styledBorderGradientTop,
+                                .styledBorderGradientBottom
                             ]),
                             startPoint: .top,
                             endPoint: .bottom
@@ -25,7 +27,7 @@ struct StyledBorder: ViewModifier {
                     )
             )
             .shadow(
-                color: Color(white: 0, opacity: 0.15),
+                color: .styledBorderShadow,
                 radius: 2,
                 x: 0,
                 y: 2
