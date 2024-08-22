@@ -37,6 +37,14 @@ struct ImageButton: View {
 #Preview {
     ImageButton(
         url: URL(
+            string: "https://images.unsplash.com/photo-1723451119471-dff8dd414e80"
+        )!
+    )
+}
+
+#Preview {
+    ImageButton(
+        url: URL(
             string: "https://images.unsplash.com/photo-1723160004469-1b34c81272f3"
         )!
     )

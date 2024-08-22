@@ -7,7 +7,7 @@ struct LinkView: View {
 
     var body: some View {
         if url.isImage {
-            HeroImageButton(url: url)
+            ImageButton(url: url)
         } else {
             LPLinkViewRepresentable(url: url)
         }
