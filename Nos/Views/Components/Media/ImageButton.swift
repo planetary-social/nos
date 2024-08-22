@@ -9,11 +9,17 @@ struct ImageButton: View {
     /// Whether the image viewer is presented or not.
     @State private var isViewerPresented = false
 
+    /// The size of the image that was loaded.
+    @State private var imageSize: CGSize?
+
     var body: some View {
         Button {
             isViewerPresented = true
         } label: {
             WebImage(url: url)
+                .onSuccess { image, _, _ in
+                    imageSize = image.size
+                }
                 .resizable()
                 .indicator(.activity)
                 .aspectRatio(contentMode: .fill)
@@ -23,11 +29,20 @@ struct ImageButton: View {
                     minHeight: 0,
                     maxHeight: .infinity
                 )
-                .aspectRatio(4 / 3, contentMode: .fit)
+                .aspectRatio(aspectRatio, contentMode: .fit)
                 .clipShape(.rect)
         }
         .sheet(isPresented: $isViewerPresented) {
             ImageViewer(url: url)
+        }
+    }
+    
+    /// The aspect ratio of the view. If the image is loaded and is taller than wide, this returns 3/4. Otherwise, 4/3.
+    var aspectRatio: CGFloat {
+        if let imageSize, imageSize.height > imageSize.width {
+            return 3 / 4
+        } else {
+            return 4 / 3
         }
     }
 }
