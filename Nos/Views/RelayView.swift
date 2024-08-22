@@ -54,11 +54,11 @@ struct RelayView: View {
                             NavigationLink {
                                 RelayDetailView(relay: relay)
                             } label: {
-                                Text(relay.displayAddress ?? String(localized: .localizable.error))
+                                Text(relay.host ?? String(localized: .localizable.error))
                                     .foregroundColor(.primaryTxt)
                             }
                         } else {
-                            Text(relay.displayAddress ?? String(localized: .localizable.error))
+                            Text(relay.host ?? String(localized: .localizable.error))
                                 .foregroundColor(.primaryTxt)
                                 .textSelection(.enabled)
                         }
@@ -200,7 +200,7 @@ struct RelayView: View {
             
             do {
                 var address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-                if !(address.contains("wss://")) {
+                if !(address.starts(with: "wss://")) {
                     address = "wss://" + address
                 }
                 let relay = try Relay.findOrCreate(by: address, context: viewContext)

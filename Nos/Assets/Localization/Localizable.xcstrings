@@ -9707,10 +9707,16 @@
     "relayAddressPlaceholder" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yourrelay.com"
+          }
+        },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "wss://yourrelay.com"
+            "state" : "translated",
+            "value" : "yourrelay.com"
           }
         },
         "en" : {
@@ -9721,56 +9727,56 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "wss://yourrelay.com"
+            "state" : "translated",
+            "value" : "yourrelay.com"
           }
         },
         "fa" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "wss://yourrelay.com"
+            "state" : "translated",
+            "value" : "yourrelay.com"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "wss://votrerelay.com"
+            "state" : "translated",
+            "value" : "/votrerelay.com"
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "wss://yourrelay.com"
+            "state" : "translated",
+            "value" : "yourrelay.com"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "wss://jouwrelay.com"
+            "state" : "translated",
+            "value" : "jouwrelay.com"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "wss://seurelay.com"
+            "state" : "translated",
+            "value" : "seurelay.com"
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "wss://yourrelay.com"
+            "state" : "translated",
+            "value" : "yourrelay.com"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "wss://yourrelay.com"
+            "state" : "translated",
+            "value" : "yourrelay.com"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "wss://yourrelay.com"
+            "state" : "translated",
+            "value" : "yourrelay.com"
           }
         }
       }

@@ -143,11 +143,4 @@ public class Relay: NosManagedObject {
     var hasMetadata: Bool {
         metadataFetchedAt != nil
     }
-    
-    var displayAddress: String? {
-        if let address {
-            return address.replacingOccurrences(of: "wss://", with: "")
-        }
-        return nil
-    }
 }

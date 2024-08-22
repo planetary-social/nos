@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new image viewer that appears when you tap an image.
 - Included the npub in the properties list sent to analytics.
 - Removed the like and repost counts from the Main and Profile feeds.
-- Replaced hard-coded color values.
+- Removed wss:// from relay adresses in lists and removed the need to prepend relay addresses with wss://.
 
 ## [0.1.25] - 2024-08-21Z
 
@@ -19,7 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug where urls with periods after them would include the period.
 - Replaced hard-coded hex color values.
 - Fixed a bug where confirmation dialog buttons turn red while swiping across them.
-- Removed wss:// from relay adresses in lists and removed the need to prepend relay addresses with wss://.
 
 ## [0.1.24] - 2024-08-09Z
 
