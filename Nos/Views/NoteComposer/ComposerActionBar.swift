@@ -86,65 +86,68 @@ struct ComposerActionBar: View {
     
     var defaultMenu: some View {
         HStack(spacing: 0) {
-            // Attach Media
-            ImagePickerButton { imageURL in
-                Task {
-                    do {
-                        startUploadingImage()
-                        let url = try await fileStorageAPIClient.upload(fileAt: imageURL)
-                        await editingController.append(url)
-                        endUploadingImage()
-                    } catch {
-                        endUploadingImage()
-                        print("error uploading: \(error)")
-                        
-                        alert = AlertState(title: {
-                            TextState(String(localized: .imagePicker.errorUploadingFile))
-                        }, message: {
-                            if case let FileStorageAPIClientError.uploadFailed(message) = error,
-                                let message {
-                                TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
-                            } else {
-                                TextState(String(localized: .imagePicker.errorUploadingFileMessage))
-                            }
-                        })
+            if !showPreview {
+                // Attach Media
+                ImagePickerButton { imageURL in
+                    Task {
+                        do {
+                            startUploadingImage()
+                            let url = try await fileStorageAPIClient.upload(fileAt: imageURL)
+                            await editingController.append(url)
+                            endUploadingImage()
+                        } catch {
+                            endUploadingImage()
+                            print("error uploading: \(error)")
+                            
+                            alert = AlertState(title: {
+                                TextState(String(localized: .imagePicker.errorUploadingFile))
+                            }, message: {
+                                if case let FileStorageAPIClientError.uploadFailed(message) = error,
+                                   let message {
+                                    TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
+                                } else {
+                                    TextState(String(localized: .imagePicker.errorUploadingFileMessage))
+                                }
+                            })
+                        }
                     }
-                }
-            } label: {
-                Image.attachMediaButton
-                    .foregroundColor(.secondaryTxt)
-                    .frame(minWidth: 44, minHeight: 44)
-            }
-            .padding(.leading, 8)
-            .accessibilityLabel(Text(.localizable.attachMedia))
-            
-            // Expiration Time
-            if let expirationTime, let option = ExpirationTimeOption(rawValue: expirationTime) {
-                ExpirationTimeButton(
-                    model: option,
-                    showClearButton: true,
-                    isSelected: Binding(get: {
-                        self.expirationTime == option.timeInterval
-                    }, set: {
-                        self.expirationTime = $0 ? option.timeInterval : nil
-                    })
-                )
-                .accessibilityLabel(Text(.localizable.expirationDate))
-                .padding(12)
-            } else {
-                Button {
-                    subMenu = .expirationDate
                 } label: {
-                    Image.disappearingMessages
+                    Image.attachMediaButton
                         .foregroundColor(.secondaryTxt)
                         .frame(minWidth: 44, minHeight: 44)
                 }
+                .padding(.leading, 8)
+                .accessibilityLabel(Text(.localizable.attachMedia))
+                
+                // Expiration Time
+                if let expirationTime, let option = ExpirationTimeOption(rawValue: expirationTime) {
+                    ExpirationTimeButton(
+                        model: option,
+                        showClearButton: true,
+                        isSelected: Binding(get: {
+                            self.expirationTime == option.timeInterval
+                        }, set: {
+                            self.expirationTime = $0 ? option.timeInterval : nil
+                        })
+                    )
+                    .accessibilityLabel(Text(.localizable.expirationDate))
+                    .padding(12)
+                } else {
+                    Button {
+                        subMenu = .expirationDate
+                    } label: {
+                        Image.disappearingMessages
+                            .foregroundColor(.secondaryTxt)
+                            .frame(minWidth: 44, minHeight: 44)
+                    }
+                }
             }
-            
+
             Spacer() 
-            
-            Toggle(isOn: $showPreview) { 
+
+            Toggle(isOn: $showPreview) {
                 Text(.localizable.preview)
+                    .frame(alignment: .trailing)
             }
         }
     }

@@ -59,29 +59,6 @@ struct NoteComposer: View {
         NavigationStack {
             ZStack {
                 VStack(spacing: 0) {
-                    if showNotePreview {
-                        if let previewEvent {
-                            NoteButton(
-                                note: previewEvent,
-                                shouldTruncate: false,
-                                hideOutOfNetwork: false,
-                                repliesDisplayType: .displayNothing,
-                                fetchReplies: false,
-                                displayRootMessage: false,
-                                isTapEnabled: false,
-                                replyAction: nil,
-                                tapAction: nil
-                            )
-                            .onDisappear {
-                                deletePreviewEvent()
-                            }
-                        } else {
-                            ProgressView()
-                                .onAppear {
-                                    createPreviewEvent()
-                                }
-                        }
-                    }
                     GeometryReader { geometry in
                         ScrollView {
                             ScrollViewReader { proxy in
@@ -89,18 +66,43 @@ struct NoteComposer: View {
                                     if let replyToNote {
                                         ReplyPreview(note: replyToNote)
                                     }
-                                    NoteTextEditor(
-                                        controller: $editingController,
-                                        minHeight: minimumEditorHeight,
-                                        placeholder: .localizable.newNotePlaceholder
-                                    )
-                                    .padding(10)
-                                    .background {
-                                        // This is a placeholder view that lets us scroll the editor just into view.
-                                        Color.clear
-                                            .frame(height: 1)
-                                            .offset(y: 100)
-                                            .id(0)
+                                    if showNotePreview {
+                                        if let previewEvent {
+                                            NoteButton(
+                                                note: previewEvent,
+                                                shouldTruncate: false,
+                                                hideOutOfNetwork: false,
+                                                repliesDisplayType: .displayNothing,
+                                                fetchReplies: false,
+                                                displayRootMessage: false,
+                                                isTapEnabled: false,
+                                                replyAction: nil,
+                                                tapAction: nil
+                                            )
+                                            .padding(10)
+                                            .onDisappear {
+                                                deletePreviewEvent()
+                                            }
+                                        } else {
+                                            ProgressView()
+                                                .onAppear {
+                                                    createPreviewEvent()
+                                                }
+                                        }
+                                    } else {
+                                        NoteTextEditor(
+                                            controller: $editingController,
+                                            minHeight: minimumEditorHeight,
+                                            placeholder: .localizable.newNotePlaceholder
+                                        )
+                                        .padding(10)
+                                        .background {
+                                            // This is a placeholder view that lets us scroll the editor just into view.
+                                            Color.clear
+                                                .frame(height: 1)
+                                                .offset(y: 100)
+                                                .id(0)
+                                        }
                                     }
                                 }
                                 .onAppear {
