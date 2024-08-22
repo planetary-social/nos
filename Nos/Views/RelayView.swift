@@ -54,11 +54,11 @@ struct RelayView: View {
                             NavigationLink {
                                 RelayDetailView(relay: relay)
                             } label: {
-                                Text(relay.displayAddress)
+                                Text(relay.displayAddress ?? String(localized: .localizable.error))
                                     .foregroundColor(.primaryTxt)
                             }
                         } else {
-                            Text(relay.displayAddress)
+                            Text(relay.displayAddress ?? String(localized: .localizable.error))
                                 .foregroundColor(.primaryTxt)
                                 .textSelection(.enabled)
                         }
@@ -106,6 +106,7 @@ struct RelayView: View {
             let authorRelayUrls = author.relays.compactMap { $0.address }
             let recommendedRelays = Relay.recommended
                 .filter { !authorRelayUrls.contains($0) }
+                .map { $0.replacingOccurrences(of: "wss://", with: "") }
                 .sorted { (lhs, _) in lhs == Relay.nosAddress.absoluteString }
 
             if editable, !recommendedRelays.isEmpty {
@@ -119,7 +120,7 @@ struct RelayView: View {
                                 await publishChanges()
                             }
                         } label: {
-                            Label(address.replacingOccurrences(of: "wss://", with: ""), systemImage: "plus.circle")
+                            Label(address, systemImage: "plus.circle")
                         }
                     }
                 } header: {
