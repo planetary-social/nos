@@ -3,7 +3,7 @@ import Logger
 import CoreData
 import Dependencies
 
-/// This view displays the information we have for an message suitable for being used in a list or grid.
+/// This view displays the information we have for a message suitable for being used in a list or grid.
 ///
 /// Use this view inside MessageButton to have nice borders.
 struct NoteCard: View {

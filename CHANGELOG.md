@@ -8,11 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added a new image viewer that appears when you tap an image.
+- Added a new gallery view that’s currently behind a feature flag.
+- Included the npub in the properties list sent to analytics.
 - Removed the like and repost counts from the Main and Profile feeds.
-- Fixed an issue where the sheet asking users to set up a NIP-05 username would appear after reinstalling Nos, even if the profile already had a NIP-05 username.
-- Fixed a bug where urls with periods after them would include the period.
 - Replaced hard-coded color values.
 - Show quoted notes in note cards.
+
+## [0.1.25] - 2024-08-21Z
+
+- Fixed an issue where the sheet asking users to set up a NIP-05 username would appear after reinstalling Nos, even if the profile already had a NIP-05 username.
+- Fixed a bug where urls with periods after them would include the period.
+- Fixed a bug where confirmation dialog buttons turn red while swiping across them.
 
 ## [0.1.24] - 2024-08-09Z
 
