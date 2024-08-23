@@ -2,15 +2,15 @@ import Foundation
 import SwiftUI
 import UIKit
 
-/// A controller for Nostr note text that is being edited. This controller pairs with a ``NoteUITextViewRepresentable``
+/// A controller for Nostr note text that is being edited. This controller pairs with a `NoteUITextViewRepresentable`
 /// to help our SwiftUI views interact with a UITextView cleanly.
 /// 
-/// To use: instantiate and pass into a ``NoteTextEditor`` view. You can retrieve the typed text via the `text` property
-/// when the user indicates they are ready to post it.
+/// To use: instantiate and pass into a `NoteTextEditor` view. You can retrieve the typed text via the `text` property
+/// when the user indicates they are ready to post it.  
 @Observable class NoteEditorController: NSObject, UITextViewDelegate {
 
-    /// The height that fits all entered text. This value will be updated by ``NoteUITextViewRepresentable``
-    /// automatically, and should be used to set the frame of ``NoteUITextViewRepresentable`` from SwiftUI. This is done
+    /// The height that fits all entered text. This value will be updated by `NoteUITextViewRepresentable` 
+    /// automatically, and should be used to set the frame of `NoteUITextViewRepresentable` from SwiftUI. This is done 
     /// to work around some incompatibilities between UIKit and SwiftUI where the UITextView won't expand properly.
     var intrinsicHeight: CGFloat = 0
     
