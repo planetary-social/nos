@@ -123,7 +123,8 @@ struct NoteParser {
     ///
     /// - Parameters:
     ///   - content: The note content in which to replace entities.
-    ///   - capturesFirstNote: If true, this function will extract the first quoted note id, if it exists. Defaults to `false`.
+    ///   - capturesFirstNote: If true, this function will extract the first quoted note id, if it exists.
+    ///                        Defaults to `false`.
     /// - Returns: A tuple of the edited content and the first quoted note id, if it was requested and it exists.
     private func replaceNostrEntities(in content: String, capturesFirstNote: Bool = false) -> (String, RawEventID?) {
         let unformattedRegex =
