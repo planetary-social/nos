@@ -4,10 +4,10 @@ import Logger
 
 struct RepostButton: View {
     
-    var note: Event
+    let note: Event
 
     /// Indicates whether the number of reposts is displayed.
-    var showsCount: Bool
+    let showsCount: Bool
 
     @FetchRequest private var reposts: FetchedResults<Event>
     @EnvironmentObject private var relayService: RelayService
