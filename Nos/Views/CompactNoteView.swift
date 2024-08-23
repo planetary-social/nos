@@ -148,7 +148,7 @@ struct CompactNoteView: View {
             }
             if note.kind == EventKind.text.rawValue, showLinkPreviews, !note.contentLinks.isEmpty {
                 if featureFlags.newMediaDisplayEnabled {
-                    EmptyView()
+                    GalleryView(urls: note.contentLinks)
                 } else {
                     LinkPreviewCarousel(links: note.contentLinks)
                 }

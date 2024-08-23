@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Added a new image viewer that appears when you tap an image.
+- Added a new gallery view that’s currently behind a feature flag.
 - Included the npub in the properties list sent to analytics.
 - Removed the like and repost counts from the Main and Profile feeds.
 - Replaced hard-coded color values.
