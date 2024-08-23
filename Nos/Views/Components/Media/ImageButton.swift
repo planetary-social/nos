@@ -13,28 +13,26 @@ struct ImageButton: View {
     @State private var imageSize: CGSize?
 
     var body: some View {
-        Button {
-            isViewerPresented = true
-        } label: {
-            WebImage(url: url)
-                .onSuccess { image, _, _ in
-                    imageSize = image.size
+        Color.clear
+            .aspectRatio(aspectRatio, contentMode: .fit)
+            .overlay(
+                Button {
+                    isViewerPresented = true
+                } label: {
+                    WebImage(url: url)
+                        .onSuccess { image, _, _ in
+                            imageSize = image.size
+                        }
+                        .resizable()
+                        .indicator(.activity)
+                        .scaledToFill()
                 }
-                .resizable()
-                .indicator(.activity)
-                .aspectRatio(contentMode: .fill)
-                .frame(
-                    minWidth: 0,
-                    maxWidth: .infinity,
-                    minHeight: 0,
-                    maxHeight: .infinity
-                )
-                .aspectRatio(aspectRatio, contentMode: .fit)
-                .clipShape(.rect)
-        }
-        .sheet(isPresented: $isViewerPresented) {
-            ImageViewer(url: url)
-        }
+            )
+            .clipShape(.rect)
+            .contentShape(.rect)
+            .sheet(isPresented: $isViewerPresented) {
+                ImageViewer(url: url)
+            }
     }
     
     /// The aspect ratio of the view. If the image is loaded and is taller than wide, this returns 3/4. Otherwise, 4/3.
