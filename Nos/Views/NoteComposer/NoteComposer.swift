@@ -36,20 +36,32 @@ struct NoteComposer: View {
     
     /// The note that the user is replying to, if any.
     private var replyToNote: Event?
+    
+    /// The id of a note the user is quoting, if any.
+    private let quotedNoteID: RawEventID?
+    
+    /// The quoted note, if any.
+    @State private var quotedNote: Event?
 
-    init(initialContents: String? = nil, replyTo: Event? = nil, isPresented: Binding<Bool>) {
+    init(
+        initialContents: String? = nil,
+        replyTo: Event? = nil,
+        quotedNoteID: RawEventID? = nil,
+        isPresented: Binding<Bool>
+    ) {
         _isPresented = isPresented
         self.initialContents = initialContents
         self.replyToNote = replyTo
+        self.quotedNoteID = quotedNoteID
     }
     
     /// The minimum height of the NoteTextEditor.
     /// 
     /// We do this because editor won't expand to fill available space when it's in a ScrollView.
-    /// and we need it to because people try to tap below the text field bounds to paste if it doesn't
-    /// fill the screen.
+    /// And we need it to because people try to tap below the text field bounds to paste if it doesn't
+    /// fill the screen. We remove this minimum in the case that a user is quote-reposting another note.
     var minimumEditorHeight: CGFloat {
-        max(scrollViewHeight - 12, 0)
+        quotedNote == nil ? max(scrollViewHeight - 12, 0) : 0
     }
     
     var body: some View {
@@ -75,6 +87,12 @@ struct NoteComposer: View {
                                             .frame(height: 1)
                                             .offset(y: 100)
                                             .id(0)
+                                    }
+                                    if let quotedNote {
+                                        NoteCard(note: quotedNote, rendersQuotedNotes: false, showsActions: false)
+                                            .withStyledBorder()
+                                            .padding(.horizontal, 16)
+                                            .padding(.bottom, 16)
                                     }
                                 }
                                 .onAppear {
@@ -145,7 +163,7 @@ struct NoteComposer: View {
                 },
                 trailing: ActionButton(title: .localizable.post, action: postAction)
                     .frame(height: 22)
-                    .disabled(editingController.isEmpty || isUploadingImage)
+                    .disabled((editingController.isEmpty && quotedNoteID == nil) || isUploadingImage)
                     .padding(.bottom, 3)
             )
             .onAppear {
@@ -153,6 +171,9 @@ struct NoteComposer: View {
                     editingController.append(text: initialContents)
                 }
                 analytics.showedNoteComposer()
+            }
+            .task {
+                loadQuotedNote()
             }
         }
         .alert(unwrapping: $alert)
@@ -201,7 +222,30 @@ struct NoteComposer: View {
         }
         isPresented = false
     }
+    
+    private func loadQuotedNote() {
+        guard let quotedNoteID else {
+            return
+        }
+        
+        @Dependency(\.persistenceController) var persistenceController
+        quotedNote = try? Event.findOrCreateStubBy(
+            id: quotedNoteID,
+            context: persistenceController.viewContext
+        )
+    }
 
+    private var postText: AttributedString {
+        var text = editingController.text ?? ""
+        if let noteLink = quotedNote?.bech32NoteID {
+            if !text.characters.isEmpty {
+                text += AttributedString("\n\n")
+            }
+            text += AttributedString("nostr:\(noteLink)")
+        }
+        return text
+    }
+    
     // swiftlint:disable:next function_body_length
     private func publishPost() async {
         guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
@@ -209,7 +253,9 @@ struct NoteComposer: View {
             return
         }
         
-        guard let text = editingController.text else {
+        let text = postText
+        
+        guard !text.characters.isEmpty else {
             Log.error("Tried to publish a post with empty text")
             return
         }
