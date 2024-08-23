@@ -10,11 +10,12 @@ extension NoteParserTests {
         let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
         try testContext.save()
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
         XCTAssertEqual(links.first?.key, "@\(name)")
@@ -27,11 +28,12 @@ extension NoteParserTests {
         let content = "hello nostr:npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags = [["p", hex]]
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
         XCTAssertEqual(links.first?.key, "@\(displayName)")
@@ -47,11 +49,12 @@ extension NoteParserTests {
         let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
         try testContext.save()
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
         XCTAssertEqual(links.first?.key, "@\(name)")
@@ -66,11 +69,12 @@ extension NoteParserTests {
         let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
         try testContext.save()
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
         XCTAssertEqual(links.first?.key, "@\(name)")
@@ -85,17 +89,17 @@ extension NoteParserTests {
         let profileHex = "0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6"
         let noteHex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [["p", profileHex]]
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
         let links = attributedContent.links
-        XCTAssertEqual(links.count, 2)
-        XCTAssertEqual(links[safe: 0]?.key, "🔗 Link to note")
-        XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(noteHex)"))
-        XCTAssertEqual(links[safe: 1]?.key, "\(profileDisplayName)")
-        XCTAssertEqual(links[safe: 1]?.value, URL(string: "@\(profileHex)"))
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links[safe: 0]?.key, "\(profileDisplayName)")
+        XCTAssertEqual(links[safe: 0]?.value, URL(string: "@\(profileHex)"))
+        XCTAssertEqual(components.quotedNoteID, noteHex)
     }
 
     @MainActor func testNIP27MentionPrecededByAt() throws {
@@ -120,11 +124,12 @@ extension NoteParserTests {
         author.displayName = name
         try testContext.save()
 
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
 
         // Assert
         let parsedContent = String(attributedContent.characters)
@@ -157,11 +162,12 @@ extension NoteParserTests {
         let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
         try testContext.save()
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
 
         // Assert
         let parsedContent = String(attributedContent.characters)

@@ -83,9 +83,13 @@ struct CompactNoteView: View {
                     .font(.clarity(.regular))
                     .redacted(reason: .placeholder)
             case .loaded(let attributedString):
-                Text(attributedString)
+                // prevents blank space above quoted note if there is no other content
+                if !attributedString.characters.isEmpty {
+                    Text(attributedString)
+                }
             }
         }
+        .multilineTextAlignment(.leading)
     }
 
     var body: some View {
@@ -157,9 +161,6 @@ struct CompactNoteView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .task {
             await note.loadViewData()
-        }
-        .task {
-            await note.loadAttributedContent()
         }
     }
 }
