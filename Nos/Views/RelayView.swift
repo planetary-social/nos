@@ -54,11 +54,11 @@ struct RelayView: View {
                             NavigationLink {
                                 RelayDetailView(relay: relay)
                             } label: {
-                                Text(relay.address ?? String(localized: .localizable.error))
+                                Text(relay.host ?? String(localized: .localizable.error))
                                     .foregroundColor(.primaryTxt)
                             }
                         } else {
-                            Text(relay.address ?? String(localized: .localizable.error))
+                            Text(relay.host ?? String(localized: .localizable.error))
                                 .foregroundColor(.primaryTxt)
                                 .textSelection(.enabled)
                         }
@@ -106,6 +106,7 @@ struct RelayView: View {
             let authorRelayUrls = author.relays.compactMap { $0.address }
             let recommendedRelays = Relay.recommended
                 .filter { !authorRelayUrls.contains($0) }
+                .map { $0.replacingOccurrences(of: "wss://", with: "") }
                 .sorted { (lhs, _) in lhs == Relay.nosAddress.absoluteString }
 
             if editable, !recommendedRelays.isEmpty {
@@ -198,7 +199,10 @@ struct RelayView: View {
             guard !newRelayAddress.isEmpty else { return }
             
             do {
-                let address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+                var address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+                if !address.starts(with: "wss://") {
+                    address = "wss://" + address
+                }
                 let relay = try Relay.findOrCreate(by: address, context: viewContext)
                 currentUser.author?.add(relay: relay)
                 try viewContext.save()
