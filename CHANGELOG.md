@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Included the npub in the properties list sent to analytics.
 - Removed the like and repost counts from the Main and Profile feeds.
 - Replaced hard-coded color values.
-- Fixed typos.
+- Fixed typos in release notes. [skip-release-notes]
 
 ## [0.1.25] - 2024-08-21Z
 
