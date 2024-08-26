@@ -8,14 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Show quoted notes in note cards.
 - Added a new image viewer that appears when you tap an image.
 - Added a new gallery view that’s currently behind a feature flag.
-- Included the npub in the properties list sent to analytics.
 - Removed the like and repost counts from the Main and Profile feeds.
-- Replaced hard-coded color values.
-- Show quoted notes in note cards.
 - Removed wss:// from relay addresses in lists and removed the need to prepend relay addresses with wss://.
-- Added a toggle for “Enable new media display” to Staging builds.
+- Included the npub in the properties list sent to analytics. [skip-release-notes]
+- Replaced hard-coded color values. [skip-release-notes]
+- Added a toggle for “Enable new media display” to Staging builds. [skip-release-notes]
+- Fixed typos in release notes. [skip-release-notes]
 
 ## [0.1.25] - 2024-08-21Z
 
@@ -222,8 +223,8 @@ that other users can find you more easily.
 
 ## [0.1.2 (153)] - 2024-01-11Z
 
-- Fixed a crash that sometimes occured when opening the profile view.
-- Fixed a crash that sometimes occured when viewing a note.
+- Fixed a crash that sometimes occurred when opening the profile view.
+- Fixed a crash that sometimes occurred when viewing a note.
 - Migrate to Apple-native string catalog and codegen LocalizedStringResources with xcstrings-tool-plugin.
 - Discover screen can now search notes by id.
 - Added pagination to Profile screens.
