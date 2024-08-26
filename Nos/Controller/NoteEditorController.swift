@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 import UIKit
 
-/// A controller for Nostr note text that is being edited. This controllers pairs with a `NoteUITextViewRepresentable`
+/// A controller for Nostr note text that is being edited. This controller pairs with a `NoteUITextViewRepresentable`
 /// to help our SwiftUI views interact with a UITextView cleanly.
 /// 
 /// To use: instantiate and pass into a `NoteTextEditor` view. You can retrieve the typed text via the `text` property
@@ -18,7 +18,7 @@ import UIKit
     /// by typing an '@' symbol and allows the user to search for another user to mention in their note.
     var showMentionsAutocomplete = false
     
-    /// The view the user will use for editing. Should only be set by `NoteUITextViewRepresentable`.
+    /// The view the user will use for editing. Should only be set by ``NoteUITextViewRepresentable``.
     var textView: UITextView? {
         didSet {
             textView?.delegate = self

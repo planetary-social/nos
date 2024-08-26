@@ -3,8 +3,8 @@ import CoreData
 import Dependencies
 import Logger
 
-/// Works with PagesNoteListView to paginate a reverse-chronological events from CoreData and relays simultaneously.
-class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICollectionViewDataSource, 
+/// Works with ``PagedNoteListView`` to paginate reverse-chronological events from CoreData and relays simultaneously.
+class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICollectionViewDataSource,
     NSFetchedResultsControllerDelegate, UICollectionViewDataSourcePrefetching {
     
     var fetchedResultsController: NSFetchedResultsController<Event>
