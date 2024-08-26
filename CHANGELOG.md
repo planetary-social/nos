@@ -222,8 +222,8 @@ that other users can find you more easily.
 
 ## [0.1.2 (153)] - 2024-01-11Z
 
-- Fixed a crash that sometimes occured when opening the profile view.
-- Fixed a crash that sometimes occured when viewing a note.
+- Fixed a crash that sometimes occurred when opening the profile view.
+- Fixed a crash that sometimes occurred when viewing a note.
 - Migrate to Apple-native string catalog and codegen LocalizedStringResources with xcstrings-tool-plugin.
 - Discover screen can now search notes by id.
 - Added pagination to Profile screens.
