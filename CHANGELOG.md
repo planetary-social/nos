@@ -8,13 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Show quoted notes in note cards.
 - Added a new image viewer that appears when you tap an image.
 - Added a new gallery view that’s currently behind a feature flag.
-- Included the npub in the properties list sent to analytics.
 - Removed the like and repost counts from the Main and Profile feeds.
-- Replaced hard-coded color values.
-- Show quoted notes in note cards.
 - Removed wss:// from relay addresses in lists and removed the need to prepend relay addresses with wss://.
+- Included the npub in the properties list sent to analytics. [skip-release-notes]
+- Replaced hard-coded color values. [skip-release-notes]
+- Added a toggle for “Enable new media display” to Staging builds. [skip-release-notes]
 - Fixed typos in release notes. [skip-release-notes]
 
 ## [0.1.25] - 2024-08-21Z
