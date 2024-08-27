@@ -89,10 +89,15 @@ struct NoteComposer: View {
                                             .id(0)
                                     }
                                     if let quotedNote {
-                                        NoteCard(note: quotedNote, rendersQuotedNotes: false, showsActions: false)
-                                            .withStyledBorder()
-                                            .padding(.horizontal, 16)
-                                            .padding(.bottom, 16)
+                                        NoteCard(
+                                            note: quotedNote,
+                                            hideOutOfNetwork: false,
+                                            rendersQuotedNotes: false,
+                                            showsActions: false
+                                        )
+                                        .withStyledBorder()
+                                        .padding(.horizontal, 16)
+                                        .padding(.bottom, 16)
                                     }
                                 }
                                 .onAppear {
