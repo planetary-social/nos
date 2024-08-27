@@ -1,8 +1,8 @@
-import SDWebImageSwiftUI
+import Dependencies
 import SwiftUI
 
 /// Displays an array of URLs in a tab view with custom paging indicators.
-/// If only one URL is provided, displays an `ImageButton` or `LinkPreview` depending on the URL.
+/// If only one URL is provided, displays a ``LinkView`` with the URL.
 struct GalleryView: View {
     /// The URLs of the content to display.
     let urls: [URL]
@@ -18,55 +18,78 @@ struct GalleryView: View {
     /// rest shall be.
     /// Oh, but also: it's not always an image, so this won't work if it's a video or web link. Oopsie.
     @State private var firstImage: Image?
+    
+    /// The media service that loads content from URLs and determines the orientation for this gallery.
+    @Dependency(\.mediaService) private var mediaService
 
     var body: some View {
         if let orientation {
             if urls.count == 1, let url = urls.first {
-                AspectRatioContainer(orientation: orientation) {
-                    LinkView(url: url)
-                }
+                linkView(url: url, orientation: orientation)
             } else {
-                VStack {
-                    TabView(selection: $selectedTab) {
-                        ForEach(urls.indices, id: \.self) { index in
-                            AspectRatioContainer(orientation: orientation) {
-                                LinkView(url: urls[index])
-                                    .tag(index)
-                            }
-                        }
-                    }
-                    .tabViewStyle(.page(indexDisplayMode: .never))
-                    .frame(
-                        minWidth: 0,
-                        maxWidth: .infinity,
-                        minHeight: 0,
-                        maxHeight: .infinity
-                    )
-                    .aspectRatio(orientation == .portrait ? 3 / 4 : 4 / 3, contentMode: .fit)
-                    .padding(.bottom, 10)
-                    .clipShape(.rect)
-
-                    GalleryIndexView(numberOfPages: urls.count, currentIndex: selectedTab)
-                }
-                .padding(.bottom, 10)
+                galleryView(orientation: orientation)
             }
         } else {
-            AspectRatioContainer(orientation: .landscape) {
-                ActivityIndicator(.constant(true))
-            }
-            .task {
-                if let url = urls.first, url.isImage {
-                    SDWebImageDownloader().downloadImage(with: urls.first) { image, _, _, _ in
-                        if let image, image.size.height > image.size.width {
-                            orientation = .portrait
-                        } else {
-                            orientation = .landscape
-                        }
+            loadingView()
+        }
+    }
+    
+    /// Produces a tab view with custom paging indicators in the given orientation.
+    /// - Parameter orientation: The orientation to use for the gallery.
+    /// - Returns: A gallery view in the given orientation.
+    private func galleryView(orientation: MediaOrientation) -> some View {
+        VStack {
+            TabView(selection: $selectedTab) {
+                ForEach(urls.indices, id: \.self) { index in
+                    AspectRatioContainer(orientation: orientation) {
+                        LinkView(url: urls[index])
+                            .tag(index)
                     }
-                } else { // it must be a video or a web link of some sort... TODO: figure out its orientation
-                    orientation = .landscape
                 }
             }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .frame(
+                minWidth: 0,
+                maxWidth: .infinity,
+                minHeight: 0,
+                maxHeight: .infinity
+            )
+            .aspectRatio(orientation == .portrait ? 3 / 4 : 4 / 3, contentMode: .fit)
+            .padding(.bottom, 10)
+            .clipShape(.rect)
+
+            GalleryIndexView(numberOfPages: urls.count, currentIndex: selectedTab)
+        }
+        .padding(.bottom, 10)
+    }
+    
+    /// Produces a ``LinkView`` with the given URL in the given orientation.
+    /// - Parameters:
+    ///   - url: The URL to display in the ``LinkView``.
+    ///   - orientation: The orientation to use for the ``LinkView``.
+    /// - Returns: A ``LinkView`` with the given URL in the given orientation.
+    private func linkView(url: URL, orientation: MediaOrientation) -> some View {
+        AspectRatioContainer(orientation: orientation) {
+            LinkView(url: url)
+        }
+    }
+    
+    /// A loading view that fills the space for the given `loadingOrientation` and loads the first URL to determine the
+    /// orientation for the gallery.
+    /// - Parameter loadingOrientation: The ``MediaOrientation`` to use to display the loading view.
+    ///             Defaults to `.landscape`.
+    /// - Returns: A loading view in the given `loadingOrientation`.
+    private func loadingView(_ loadingOrientation: MediaOrientation = .landscape) -> some View {
+        AspectRatioContainer(orientation: loadingOrientation) {
+            ProgressView()
+        }
+        .task {
+            guard let url = urls.first else {
+                orientation = .landscape
+                return
+            }
+
+            orientation = await mediaService.orientation(for: url)
         }
     }
 }
@@ -114,11 +137,37 @@ fileprivate struct GalleryIndexView: View {
     }
 }
 
-#Preview("Multiple URLs") {
+#Preview("Multiple URLs, landscape image first") {
     let urls = [
         URL(string: "https://image.nostr.build/77713e6c2ef5186d516a6f16fb197fca53a20677c6756a9de1afc2d5e6d96548.jpg")!,
-        URL(string: "https://youtu.be/5qvdbyRH9wA?si=y_KTgLR22nH0-cs8")!,
-        URL(string: "https://image.nostr.build/d5e38e7d864a344872d922d7f78daf67b0d304932fcb7fe22d35263c2fcf11c2.jpg")!,
+        URL(string: "https://image.nostr.build/486821596f66bcc6bae55544ddf8f00be0e4c2470556d3fee8e2a4ddadd01266.jpg")!,
+        URL(string: "https://images.unsplash.com/photo-1715686529501-e097bd9caea7")!,
+        URL(string: "https://www.youtube.com/watch?v=sB6HY8r983c")!,
+    ]
+    return VStack {
+        Spacer()
+        GalleryView(urls: urls)
+        Spacer()
+    }
+    .background(LinearGradient.cardBackground)
+}
+
+#Preview("Multiple URLs, portrait image first") {
+    let urls = [
+        URL(string: "https://image.nostr.build/486821596f66bcc6bae55544ddf8f00be0e4c2470556d3fee8e2a4ddadd01266.jpg")!,
+        URL(string: "https://image.nostr.build/77713e6c2ef5186d516a6f16fb197fca53a20677c6756a9de1afc2d5e6d96548.jpg")!,
+    ]
+    return VStack {
+        Spacer()
+        GalleryView(urls: urls)
+        Spacer()
+    }
+    .background(LinearGradient.cardBackground)
+}
+
+#Preview("Multiple URLs, mp4 video first") {
+    let urls = [
+        URL(string: "https://video.nostr.build/2d8a5e74dd940201490a020d5a8f1b0dcca78126a5305f57b001656e8df35605.mp4")!,
         URL(string: "https://images.unsplash.com/photo-1715686529501-e097bd9caea7")!,
     ]
     return VStack {
@@ -129,11 +178,35 @@ fileprivate struct GalleryIndexView: View {
     .background(LinearGradient.cardBackground)
 }
 
-#Preview("One image URL") {
+#Preview("Multiple URLs, YouTube video first") {
+    let urls = [
+        URL(string: "https://www.youtube.com/watch?v=sB6HY8r983c")!,
+        URL(string: "https://images.unsplash.com/photo-1715686529501-e097bd9caea7")!,
+    ]
+    return VStack {
+        Spacer()
+        GalleryView(urls: urls)
+        Spacer()
+    }
+    .background(LinearGradient.cardBackground)
+}
+
+#Preview("One landscape image") {
     VStack {
         GalleryView(urls: [
             URL(
-                string: "https://image.nostr.build/d5e38e7d864a344872d922d7f78daf67b0d304932fcb7fe22d35263c2fcf11c2.jpg"
+                string: "https://image.nostr.build/0fa09a19ff2791e9af4c0d7dda6b3fa8a3abc0f152fc55cf17d69b7c59f12d0f.jpg"
+            )!
+        ])
+    }
+    .background(LinearGradient.cardBackground)
+}
+
+#Preview("One portrait image") {
+    VStack {
+        GalleryView(urls: [
+            URL(
+                string: "https://image.nostr.build/b0fe2ee39c5c007b7a9a53190abb6cf9e94d6106555539f8562a29f0a9dbb755.jpg"
             )!
         ])
     }
