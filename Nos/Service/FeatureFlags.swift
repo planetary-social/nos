@@ -9,7 +9,7 @@ protocol FeatureFlags {
 
     // MARK: - Additional requirements for debug mode
 
-    #if DEBUG
+    #if DEBUG || STAGING
     /// Sets the value of `newMediaDisplayEnabled`.
     func setNewMediaDisplayEnabled(_ enabled: Bool)
     #endif
@@ -25,7 +25,7 @@ class DefaultFeatureFlags: FeatureFlags, DependencyKey {
     private(set) var newMediaDisplayEnabled = false
 }
 
-#if DEBUG
+#if DEBUG || STAGING
 extension DefaultFeatureFlags {
     func setNewMediaDisplayEnabled(_ enabled: Bool) {
         newMediaDisplayEnabled = enabled
