@@ -74,8 +74,8 @@ enum NostrIdentifier {
         return .nsec(privateKey: privateKey)
     }
 
-    /// Decodes npub data into a `NostrIdentifier.note`.
-    /// - Parameter data: The encoded npub data.
+    /// Decodes note data into a `NostrIdentifier.note`.
+    /// - Parameter data: The encoded note data.
     /// - Returns: The `.note` with the event ID.
     private static func decodeNostrNote(data: Data) throws -> NostrIdentifier {
         guard let eventID = SHA256Key.decode(base5: data) else {

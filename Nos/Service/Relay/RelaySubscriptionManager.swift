@@ -233,7 +233,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     /// open websockets to service queued subscriptions and to limit the number of concurrent subscriptions for a given
     /// relay.
     ///
-    /// It's called at appropriate times interally but can also be called externally in a loop. Idempotent.
+    /// It's called at appropriate times internally but can also be called externally in a loop. Idempotent.
     func processSubscriptionQueue() {
         openSockets()
         var waitingSubscriptions = [RelaySubscription]()
