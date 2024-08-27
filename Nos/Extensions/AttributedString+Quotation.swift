@@ -9,12 +9,10 @@ extension AttributedString {
         var content = self
         
         let beginDelimiter = locale.quotationBeginDelimiter ?? "“"
-        let attributesAtBeginning = runs.first?.attributes ?? AttributeContainer()
-        content.insert(AttributedString(beginDelimiter, attributes: attributesAtBeginning), at: content.startIndex)
+        content.insert(AttributedString(beginDelimiter), at: content.startIndex)
         
         let endDelimiter = locale.quotationEndDelimiter ?? "”"
-        let attributesAtEnd = runs.last?.attributes ?? AttributeContainer()
-        content.append(AttributedString(endDelimiter, attributes: attributesAtEnd))
+        content.append(AttributedString(endDelimiter))
         
         return content
     }
