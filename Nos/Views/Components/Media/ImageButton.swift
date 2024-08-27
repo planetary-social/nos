@@ -18,7 +18,8 @@ struct ImageButton: View {
         } label: {
             if url.pathExtension == "gif" {
                 ZStack {
-                    WebImage(url: url, isAnimating: $isAnimating)
+                    // RIDICULOUS! When the value of $isAnimating is `false`, you can never start animating the image.
+                    WebImage(url: url, context: [.animatedImageClass: SDAnimatedImage.self], isAnimating: $isAnimating)
                         .resizable()
                         .scaledToFill()
 
