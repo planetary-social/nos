@@ -8,13 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Show quoted notes in note cards.
 - Added a new image viewer that appears when you tap an image.
 - Added a new gallery view that’s currently behind a feature flag.
-- Included the npub in the properties list sent to analytics.
 - Removed the like and repost counts from the Main and Profile feeds.
+- Removed wss:// from relay addresses in lists and removed the need to prepend relay addresses with wss://.
+- Included the npub in the properties list sent to analytics. [skip-release-notes]
+- Replaced hard-coded color values. [skip-release-notes]
+- Added a toggle for “Enable new media display” to Staging builds. [skip-release-notes]
+- Fixed typos in release notes. [skip-release-notes]
+- Localized the quotation marks on the Notifications view.
+
+## [0.1.25] - 2024-08-21Z
+
 - Fixed an issue where the sheet asking users to set up a NIP-05 username would appear after reinstalling Nos, even if the profile already had a NIP-05 username.
 - Fixed a bug where urls with periods after them would include the period.
-- Replaced hard-coded color values.
+- Fixed a bug where confirmation dialog buttons turn red while swiping across them.
 
 ## [0.1.24] - 2024-08-09Z
 
@@ -215,8 +224,8 @@ that other users can find you more easily.
 
 ## [0.1.2 (153)] - 2024-01-11Z
 
-- Fixed a crash that sometimes occured when opening the profile view.
-- Fixed a crash that sometimes occured when viewing a note.
+- Fixed a crash that sometimes occurred when opening the profile view.
+- Fixed a crash that sometimes occurred when viewing a note.
 - Migrate to Apple-native string catalog and codegen LocalizedStringResources with xcstrings-tool-plugin.
 - Discover screen can now search notes by id.
 - Added pagination to Profile screens.

@@ -40,7 +40,7 @@ struct NotificationCard: View {
                     }
                     if let content, !content.characters.isEmpty {
                         HStack {
-                            let contentText = Text("\"" + content + "\"")
+                            let contentText = Text(content.wrappingWithQuotationMarks())
                                 .lineLimit(2)
                                 .font(.body)
                                 .foregroundColor(.primaryTxt)
