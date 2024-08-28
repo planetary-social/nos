@@ -108,6 +108,7 @@ struct NoteComposer: View {
                     )
                 }
 
+                /// Show a View above displaying a preview of the note the user is composing.
                 if showNotePreview {
                     notePreview
                 }
