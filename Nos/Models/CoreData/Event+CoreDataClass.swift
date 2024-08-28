@@ -40,6 +40,7 @@ public class Event: NosManagedObject, VerifiableEvent {
     @Dependency(\.currentUser) @ObservationIgnored private var currentUser
 
     var pubKey: String { author?.hexadecimalPublicKey ?? "" }
+    
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"
 
@@ -603,10 +604,8 @@ public class Event: NosManagedObject, VerifiableEvent {
     
     /// Populates an event stub (with only its ID set) using the data in the given JSON.
     func hydrate(from jsonEvent: JSONEvent, relay: Relay?, in context: NSManagedObjectContext) throws {
-        guard isStub else {
-            fatalError("Tried to hydrate an event that isn't a stub. This is a programming error")
-        }
-
+        assert(isStub, "Tried to hydrate an event that isn't a stub. This is a programming error")
+        
         // if this stub was created with a replaceableIdentifier and author, it won't have an identifier yet
         identifier = jsonEvent.id
 
@@ -737,7 +736,7 @@ public class Event: NosManagedObject, VerifiableEvent {
                     print("error parsing e tag: \(error.localizedDescription)")
                 }
             } else if jsonTag.first == "p" {
-                // TODO: validdate that the tag looks like a pubkey
+                // TODO: validate that the tag looks like a pubkey
                 let authorReference = AuthorReference(context: context)
                 authorReference.pubkey = jsonTag[safe: 1]
                 authorReference.recommendedRelayUrl = jsonTag[safe: 2]
@@ -829,6 +828,7 @@ public class Event: NosManagedObject, VerifiableEvent {
     @MainActor var loadingViewData = false
     @MainActor var attributedContent = LoadingContent<AttributedString>.loading
     @MainActor var contentLinks = [URL]()
+    @MainActor private(set) var quotedNoteID: RawEventID?
     @MainActor var relaySubscriptions = SubscriptionCancellables()
     
     /// Instructs this event to load supplementary data like author name and photo, reference events, and produce
@@ -837,18 +837,31 @@ public class Event: NosManagedObject, VerifiableEvent {
         guard !loadingViewData else {
             return
         }
-        loadingViewData = true 
+        
+        loadingViewData = true
         Log.debug("\(identifier ?? "null") loading view data")
         
-        if isStub {
-            await loadContent()
-            loadingViewData = false
-            // TODO: how do we load details for the event again after we hydrate the stub?
-        } else {
-            Task { await loadReferencedNote() }
-            Task { await loadAuthorMetadata() }
-            Task { await loadAttributedContent() }
+        await withTaskGroup(of: Void.self) { group in
+            if isStub {
+                group.addTask {
+                    await self.loadContent()
+                }
+                // TODO: how do we load details for the event again after we hydrate the stub?
+            } else {
+                group.addTask {
+                    await self.loadReferencedNote()
+                }
+                group.addTask {
+                    await self.loadAuthorMetadata()
+                }
+                group.addTask {
+                    await self.loadAttributedContent()
+                }
+            }
+            
+            await group.waitForAll()
         }
+        loadingViewData = false
     }
     
     /// Tries to download this event from relays.
@@ -877,11 +890,8 @@ public class Event: NosManagedObject, VerifiableEvent {
     
     /// Tries to load the note this note is reposting or replying to from relays.
     @MainActor private func loadReferencedNote() async {
-        if let referencedNote = referencedNote() {
-            await referencedNote.loadViewData()
-        } else {
-            await rootNote()?.loadViewData()
-        }
+        let referencedNote = referencedNote() ?? rootNote()
+        await referencedNote?.loadViewData()
     }
     
     @MainActor private var loadingAttributedContent = false
@@ -893,20 +903,39 @@ public class Event: NosManagedObject, VerifiableEvent {
             return
         }
         loadingAttributedContent = true
-        defer { loadingAttributedContent = false }
         
         @Dependency(\.persistenceController) var persistenceController
         let backgroundContext = persistenceController.backgroundViewContext
-        if let parsedAttributedContent = await Event.attributedContentAndURLs(
+        if let components = await Event.parsedComponents(
             note: self,
             context: backgroundContext
         ) {
-            let (attributedString, contentLinks) = parsedAttributedContent
-            self.attributedContent = .loaded(attributedString)
-            self.contentLinks = contentLinks
+            self.attributedContent = .loaded(components.attributedContent)
+            self.contentLinks = components.contentLinks
+            self.quotedNoteID = components.quotedNoteID
+            Task { await loadFirstQuotedNote() }
         } else {
-            self.attributedContent = .loaded(AttributedString(content ?? "")) 
+            self.attributedContent = .loaded(AttributedString(content ?? ""))
         }
+        loadingAttributedContent = false
+    }
+    
+    @MainActor func loadFirstQuotedNote() async {
+        guard let quotedNoteID else {
+            return
+        }
+        
+        @Dependency(\.persistenceController) var persistenceController
+        let context = persistenceController.backgroundViewContext
+        
+        _ = try? Event.findOrCreateStubBy(id: quotedNoteID, context: context)
+        
+        await context.perform {
+            try? context.save()
+        }
+        
+        @Dependency(\.relayService) var relayService
+        relaySubscriptions.append(await relayService.requestEvent(with: quotedNoteID))
     }
     
     // MARK: - Helpers
@@ -1038,18 +1067,18 @@ public class Event: NosManagedObject, VerifiableEvent {
     ///     `note` is in.
     /// - Returns: A tuple where the first object is the note content formatted for display, and the second is a list
     ///     of HTTP links found in the note's context.  
-    @MainActor class func attributedContentAndURLs(
+    @MainActor class func parsedComponents(
         note: Event,
         noteParser: NoteParser = NoteParser(),
         context: NSManagedObjectContext
-    ) async -> (AttributedString, [URL])? {
+    ) async -> NoteParser.NoteDisplayComponents? {
         guard let content = note.content else {
             return nil
         }
         let tags = note.allTags as? [[String]] ?? []
         
         return await context.perform {
-            noteParser.parse(content: content, tags: tags, context: context)
+            noteParser.components(from: content, tags: tags, context: context)
         }
     }
     

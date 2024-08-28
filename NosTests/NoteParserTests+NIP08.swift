@@ -10,11 +10,12 @@ extension NoteParserTests {
         let author = try Author.findOrCreate(by: hex, context: testContext)
         author.displayName = name
         try testContext.save()
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
         let links = attributedContent.links
@@ -30,11 +31,12 @@ extension NoteParserTests {
         let expectedContent = "hello @\(displayName)"
         let tags = [["p", hex]]
         let context = persistenceController.viewContext
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: context
         )
+        let attributedContent = components.attributedContent
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
         let links = attributedContent.links
@@ -49,11 +51,12 @@ extension NoteParserTests {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let expectedContent = "@\(displayName)"
         let tags = [["p", hex]]
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
         let links = attributedContent.links
@@ -68,11 +71,12 @@ extension NoteParserTests {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let expectedContent = "Hello\n@\(displayName)"
         let tags = [["p", hex]]
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
         let links = attributedContent.links
@@ -86,11 +90,12 @@ extension NoteParserTests {
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let expectedContent = "hello#[0]"
         let tags = [["p", hex]]
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
         let links = attributedContent.links

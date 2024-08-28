@@ -18,7 +18,7 @@ final class ContentWarningControllerTests: CoreDataTestCase {
         let sut = ContentWarningController(reports: [], type: .note)
         
         // Assert
-        XCTAssertEqual(String(localized: sut.localizedContentWarning), "An error occured.")
+        XCTAssertEqual(String(localized: sut.localizedContentWarning), "An error occurred.")
     }
     
     func testReason_givenLabel() { 
