@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added the option to preview the note before posting it.
 - Added a new image viewer that appears when you tap an image.
 - Included the npub in the properties list sent to analytics.
 - Removed the like and repost counts from the Main and Profile feeds.
