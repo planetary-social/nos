@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Show quoted notes in note cards.
 - Added a new image viewer that appears when you tap an image.
 - Added a new gallery view that’s currently behind a feature flag.
 - Removed the like and repost counts from the Main and Profile feeds.
@@ -17,7 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a toggle for “Enable new media display” to Staging builds. [skip-release-notes]
 - Fixed typos in release notes. [skip-release-notes]
 - Localized the quotation marks on the Notifications view.
-- Show quoted notes in note cards.
 - Added quote-reposting.
 
 ## [0.1.25] - 2024-08-21Z
