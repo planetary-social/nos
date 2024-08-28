@@ -288,6 +288,8 @@ public class Event: NosManagedObject, VerifiableEvent {
         return fetchRequest
     }
 
+    /// Builds a query that returns an Event with "preview" as its `identifier` if it exists.
+    /// - Returns: A Fetch Request with the necessary query inside.
     @nonobjc public class func previewRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(

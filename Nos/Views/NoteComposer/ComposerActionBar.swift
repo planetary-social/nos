@@ -15,7 +15,8 @@ struct ComposerActionBar: View {
     /// Whether we're currently uploading an image or not.
     @Binding var isUploadingImage: Bool
     
-    @Binding var showPreview: Bool 
+    /// Turns on and off a Preview switch.
+    @Binding var showPreview: Bool
 
     @Dependency(\.fileStorageAPIClient) private var fileStorageAPIClient
 

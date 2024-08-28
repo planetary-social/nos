@@ -1,6 +1,12 @@
 enum CurrentUserError: Error {
+    /// Auther associated to the logged in user wasn't found.
+    /// It might indicate the user is not logged in.
     case authorNotFound
+
+    /// KeyPair of the logged in user wasn't found. It might indicate the user is not logged in.
     case keyPairNotFound
+
+    /// Error while publishing to relays.
     case errorWhilePublishingToRelays
 
     var description: String? {

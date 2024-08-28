@@ -28,7 +28,10 @@ struct NoteComposer: View {
     @State private var showRelayPicker = false
     @State private var selectedRelay: Relay?
     
+    /// Shows a note preview above the composer.
     @State private var showNotePreview = false
+
+    /// Event holding the preview note.
     @State private var previewEvent: Event?
 
     /// Whether we're currently uploading an image or not.
