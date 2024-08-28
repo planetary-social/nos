@@ -1,9 +1,9 @@
 import SDWebImageSwiftUI
 import SwiftUI
 
-/// A button that's filled entirely with an image and presents an `ImageViewer` when tapped.
+/// A button that's filled entirely with an image and presents an ``ImageViewer`` when tapped.
 struct ImageButton: View {
-    /// The URL of the image to display as the button label.
+    /// The image to display in the button.
     let url: URL
 
     /// Whether the image viewer is presented or not.
@@ -15,16 +15,7 @@ struct ImageButton: View {
         } label: {
             WebImage(url: url)
                 .resizable()
-                .indicator(.activity)
-                .aspectRatio(contentMode: .fill)
-                .frame(
-                    minWidth: 0,
-                    maxWidth: .infinity,
-                    minHeight: 0,
-                    maxHeight: .infinity
-                )
-                .aspectRatio(4 / 3, contentMode: .fit)
-                .clipShape(.rect)
+                .scaledToFill()
         }
         .sheet(isPresented: $isViewerPresented) {
             ImageViewer(url: url)
