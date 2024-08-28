@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced hard-coded color values. [skip-release-notes]
 - Added a toggle for “Enable new media display” to Staging builds. [skip-release-notes]
 - Fixed typos in release notes. [skip-release-notes]
+- Localized the quotation marks on the Notifications view.
 - Show quoted notes in note cards.
 - Added quote-reposting.
 
