@@ -91,26 +91,7 @@ struct ComposerActionBar: View {
                 // Attach Media
                 ImagePickerButton { imageURL in
                     Task {
-                        do {
-                            startUploadingImage()
-                            let url = try await fileStorageAPIClient.upload(fileAt: imageURL)
-                            await editingController.append(url)
-                            endUploadingImage()
-                        } catch {
-                            endUploadingImage()
-                            print("error uploading: \(error)")
-                            
-                            alert = AlertState(title: {
-                                TextState(String(localized: .imagePicker.errorUploadingFile))
-                            }, message: {
-                                if case let FileStorageAPIClientError.uploadFailed(message) = error,
-                                   let message {
-                                    TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
-                                } else {
-                                    TextState(String(localized: .imagePicker.errorUploadingFileMessage))
-                                }
-                            })
-                        }
+                        await uploadImage(at: imageURL)
                     }
                 } label: {
                     Image.attachMediaButton
@@ -155,7 +136,33 @@ struct ComposerActionBar: View {
             .labelsHidden()
         }
     }
-    
+
+    /// Uploads an image at the given URL to a file storage service.
+    /// - Parameter imageURL: File URL of the image the user wants to upload.
+    private func uploadImage(at imageURL: URL) async {
+        do {
+            startUploadingImage()
+            let url = try await fileStorageAPIClient.upload(fileAt: imageURL)
+            await editingController.append(url)
+            endUploadingImage()
+        } catch {
+            endUploadingImage()
+            print("error uploading: \(error)")
+
+            alert = AlertState {
+                TextState(String(localized: .imagePicker.errorUploadingFile))
+            } message: {
+                if case let FileStorageAPIClientError.uploadFailed(message) = error, let message {
+                    TextState(
+                        String(localized: .imagePicker.errorUploadingFileWithMessage(message))
+                    )
+                } else {
+                    TextState(String(localized: .imagePicker.errorUploadingFileMessage))
+                }
+            }
+        }
+    }
+
     private func startUploadingImage() {
         self.isUploadingImage = true
     }
