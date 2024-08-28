@@ -3232,8 +3232,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.0;
+				branch = bugfix/webimage_isAnimating_binding;
+				kind = branch;
 			};
 		};
 		C9ADB139299299570075E7F8 /* XCRemoteSwiftPackageReference "bech32" */ = {

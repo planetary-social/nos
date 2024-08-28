@@ -18,10 +18,7 @@ struct ImageButton: View {
         } label: {
             if url.pathExtension == "gif" {
                 ZStack {
-                    // RIDICULOUS! When the value of $isAnimating is `false`, you can never start animating the image.
-                    // Adding the `context` here fixes the problem.
-                    // See [my bug report](https://github.com/SDWebImage/SDWebImageSwiftUI/issues/332) for updates.
-                    WebImage(url: url, context: [.animatedImageClass: SDAnimatedImage.self], isAnimating: $isAnimating)
+                    WebImage(url: url, isAnimating: $isAnimating)
                         .resizable()
                         .scaledToFill()
 
