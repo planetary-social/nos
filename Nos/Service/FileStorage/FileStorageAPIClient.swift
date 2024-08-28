@@ -46,6 +46,17 @@ class NostrBuildAPIClient: FileStorageAPIClient {
     // MARK: - FileStorageAPIClient protocol
 
     func upload(fileAt fileURL: URL) async throws -> URL {
+        assert(fileURL.isFileURL, "The URL must point to a file.")
+        let apiURL = try await apiURL()
+        let (request, data) = try uploadRequest(fileAt: fileURL, apiURL: apiURL)
+        let (responseData, _) = try await URLSession.shared.upload(for: request, from: data)
+        return try assetURL(from: responseData)
+    }
+
+    // MARK: - Internal
+    
+    /// The URL of the API to upload data to.
+    private func apiURL() async throws -> URL {
         if serverInfo?.apiUrl == nil {
             serverInfo = try await fetchServerInfo()
         }
@@ -54,10 +65,12 @@ class NostrBuildAPIClient: FileStorageAPIClient {
             let apiURL = URL(string: apiURLString) else {
             throw FileStorageAPIClientError.invalidURLRequest
         }
-
-        let (request, data) = try uploadRequest(fileAt: fileURL, apiURL: apiURL)
-        let (responseData, _) = try await URLSession.shared.upload(for: request, from: data)
-
+        
+        return apiURL
+    }
+    
+    /// The URL of the uploaded asset parsed from the API's response.
+    private func assetURL(from responseData: Data) throws -> URL {
         let response = try decoder.decode(FileStorageUploadResponseJSON.self, from: responseData)
         guard let urlString = response.nip94Event?.urlString else {
             throw FileStorageAPIClientError.uploadFailed(response.message)
@@ -65,7 +78,6 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         guard let url = URL(string: urlString) else {
             throw FileStorageAPIClientError.invalidResponseURL(urlString)
         }
-        
         return url
     }
 
@@ -87,15 +99,23 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         }
     }
 
-    /// Creates a URLRequest and Data to be uploaded to the file storage API.
+    /// Creates a URLRequest and Data from a file URL to be uploaded to the file storage API.
     func uploadRequest(fileAt fileURL: URL, apiURL: URL) throws -> (URLRequest, Data) {
+        assert(fileURL.isFileURL, "The URL must point to a file.")
+        return try uploadRequest(
+            data: try Data(contentsOf: fileURL),
+            filename: fileURL.lastPathComponent,
+            apiURL: apiURL
+        )
+    }
+    
+    /// Creates a URLRequest and Data to be uploaded to the file storage API.
+    private func uploadRequest(data: Data, filename: String, apiURL: URL) throws -> (URLRequest, Data) {
         var request = URLRequest(url: apiURL)
         request.httpMethod = "POST"
 
         let boundary = UUID().uuidString
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-
-        let filename = fileURL.lastPathComponent
 
         var header = ""
         header.append("\r\n--\(boundary)\r\n")
@@ -105,31 +125,26 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         var footer = ""
         footer.append("\r\n--\(boundary)--\r\n")
 
-        guard let headerData = header.data(using: .utf8), 
+        guard let headerData = header.data(using: .utf8),
             let footerData = footer.data(using: .utf8) else {
             throw FileStorageAPIClientError.encodingError
         }
-
-        let fileData = try Data(contentsOf: fileURL)
-
-        var data = Data()
-        data.append(headerData)
-        data.append(fileData)
-        data.append(footerData)
 
         guard let keyPair = currentUser.keyPair else {
             throw FileStorageAPIClientError.missingKeyPair
         }
 
+        let wrappedData = headerData + data + footerData
+
         let authorizationHeader = try buildAuthorizationHeader(
             url: apiURL,
             method: .post,
-            payload: data,
+            payload: wrappedData,
             keyPair: keyPair
         )
         request.setValue(authorizationHeader, forHTTPHeaderField: "Authorization")
 
-        return (request, data)
+        return (request, wrappedData)
     }
 
     private func buildAuthorizationHeader(

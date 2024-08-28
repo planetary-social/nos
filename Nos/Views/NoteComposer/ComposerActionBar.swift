@@ -42,7 +42,7 @@ struct ComposerActionBar: View {
             switch subMenu {
             case .none:
                 // Attach Media
-                ImagePickerButton { imageURL in
+                ImagePickerButton(cameraDevice: .rear) { imageURL in
                     Task {
                         do {
                             startUploadingImage()

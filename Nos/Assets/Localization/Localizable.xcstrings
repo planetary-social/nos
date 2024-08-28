@@ -12774,47 +12774,6 @@
         }
       }
     },
-    "uploadProfilePicInstructions" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gehe auf nostr.build um dein Foto hochzuladen, kopiere die URL und füge sie hier ein."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Go to nostr.build to upload your photo, copy the URL provided and paste it here."
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "به nostr.build بروید تا تصاویر خود را بارگذاری کنید، URL ارائه شده را کپی کرده و اینجا بچسبانید."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gå till nostr.build för att ladda upp ditt foto, kopiera den angivna URL:en och klistra in den här."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "前往 nostr.build 上传你的照片，复制提供的 URL 并粘贴到这里。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "前往 nostr.build 上傳你的照片、複製所提供的鏈接並在此貼上。"
-          }
-        }
-      }
-    },
     "url" : {
       "extractionState" : "manual",
       "localizations" : {

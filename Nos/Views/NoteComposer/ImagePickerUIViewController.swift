@@ -15,6 +15,7 @@ struct ImagePickerUIViewController: UIViewControllerRepresentable {
         imagePicker.sourceType = sourceType
         imagePicker.mediaTypes = [UTType.image.identifier, UTType.movie.identifier]
         imagePicker.delegate = context.coordinator
+        imagePicker.allowsEditing = true
         if sourceType == .camera {
             imagePicker.cameraDevice = cameraDevice
         }

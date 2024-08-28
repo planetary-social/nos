@@ -4,9 +4,10 @@ import Dependencies
 
 struct ImagePickerButton<Label>: View where Label: View {
 
-    var onCompletion: ((URL) -> Void)
-
-    var label: () -> Label
+    /// The device to be used initially when the user chooses to use the camera.
+    let cameraDevice: UIImagePickerController.CameraDevice
+    let onCompletion: ((URL) -> Void)
+    let label: () -> Label
 
     /// State used to present or hide a confirmation dialog that lets the user select the ImagePicker source.
     @State
@@ -111,7 +112,7 @@ struct ImagePickerButton<Label>: View where Label: View {
         .sheet(isPresented: showImagePicker) {
             ImagePickerUIViewController(
                 sourceType: imagePickerSource ?? .photoLibrary, 
-                cameraDevice: .rear,
+                cameraDevice: cameraDevice,
                 onCompletion: userPicked
             ) 
             .edgesIgnoringSafeArea(.bottom)
@@ -133,7 +134,7 @@ struct ImagePickerButton<Label>: View where Label: View {
 
 struct ImagePickerCoordinator_Previews: PreviewProvider {
     static var previews: some View {
-        ImagePickerButton { pickedImage in
+        ImagePickerButton(cameraDevice: .rear) { pickedImage in
             print(pickedImage)
         } label: {
             Text("Hit me")

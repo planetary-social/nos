@@ -1,6 +1,8 @@
 import Dependencies
 import Logger
+import PhotosUI
 import SwiftUI
+import SwiftUINavigation
 
 struct EditProfileDestination: Hashable {
     let profile: Author
@@ -26,10 +28,15 @@ struct ProfileEditView: View {
     @State private var unsController = UNSWizardController()
     @State private var showConfirmationDialog = false
     @State private var saveError: SaveError?
-
-    init(author: Author) {
-        self.author = author
-    }
+    
+    @State private var isShowingPhotoPicker = false
+    @State private var selectedPickerItems: [PhotosPickerItem] = []
+    @State private var isUploadingPhoto = false
+    @State private var selectedPhoto: Image?
+    @Dependency(\.fileStorageAPIClient) private var fileStorageAPIClient
+    @State private var alert: AlertState<AlertAction>?
+    
+    fileprivate enum AlertAction {}
 
     private var showAlert: Binding<Bool> {
         Binding {
@@ -40,10 +47,45 @@ struct ProfileEditView: View {
     }
 
     var body: some View {
+        let avatarSize: CGFloat = 99
+        
         NosForm {
-            AvatarView(imageUrl: URL(string: avatarText), size: 99)
+            ImagePickerButton(cameraDevice: .front) { imageURL in
+                Task { await uploadItem(at: imageURL) }
+            } label: {
+                ZStack {
+                    if let selectedPhoto {
+                        ZStack {
+                            selectedPhoto
+                                .resizable()
+                                .renderingMode(.original)
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+                            
+                            if isUploadingPhoto {
+                                ProgressView()
+                                    .scaleEffect(1.5)
+                            }
+                        }
+                        .disabled(isUploadingPhoto)
+                    } else {
+                        AvatarView(imageUrl: URL(string: avatarText), size: avatarSize)
+                    }
+                    
+                    HStack {
+                        Spacer()
+                        
+                        VStack {
+                            Spacer()
+                            
+                            Image.editButton
+                        }
+                    }
+                }
+                .frame(width: avatarSize, height: avatarSize)
                 .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
                 .padding(.top, 16)
+            }
             
             NosFormSection(label: .localizable.profilePicture) {
                 NosTextField(label: .localizable.url, text: $avatarText)
@@ -51,19 +93,6 @@ struct ProfileEditView: View {
                     .keyboardType(.URL)
                     #endif
             }
-            
-            HStack {
-                HighlightedText(
-                    text: .localizable.uploadProfilePicInstructions,
-                    highlightedWord: "nostr.build",
-                    highlight: .diagonalAccent,
-                    textColor: .secondaryTxt,
-                    font: .footnote,
-                    link: URL(string: "https://nostr.build")!
-                )
-                Spacer()
-            }
-            .padding(13)
             
             NosFormSection(label: .localizable.basicInfo) {
                 NosTextField(label: .localizable.name, text: $nameText)
@@ -145,6 +174,7 @@ struct ProfileEditView: View {
                 ActionButton(title: .localizable.done) {
                     await save()
                 }
+                .disabled(isUploadingPhoto)
                 .offset(y: -3)
         )
         .alert(isPresented: showAlert, error: saveError) {
@@ -162,19 +192,53 @@ struct ProfileEditView: View {
                 Text(.localizable.cancel)
             }
         }
+        .alert(unwrapping: $alert) { _ in }
         .id(author)
         .task {
             populateTextFields()
         }
     }
 
-    func populateTextFields() {
+    private func populateTextFields() {
         viewContext.refresh(author, mergeChanges: true)
         nameText = author.name ?? author.displayName ?? ""
         bioText = author.about ?? ""
         avatarText = author.profilePhotoURL?.absoluteString ?? ""
         website = author.website ?? ""
         unsText = author.uns ?? ""
+    }
+    
+    /// Uploads the photo the user selected and, on success, fills the avatar url field.
+    /// - Parameter fileURL: A URL that points to a file to upload.
+    private func uploadItem(at fileURL: URL) async {
+        assert(fileURL.isFileURL, "The URL must point to a file.")
+        
+        isUploadingPhoto = true
+        defer {
+            isUploadingPhoto = false
+        }
+        
+        // show the image to the user while uploading
+        if let data = try? Data(contentsOf: fileURL),
+            let image = UIImage(data: data) {
+            selectedPhoto = Image(uiImage: image)
+        }
+        
+        do {
+            let url = try await fileStorageAPIClient.upload(fileAt: fileURL)
+            avatarText = url.absoluteString
+        } catch {
+            alert = AlertState(title: {
+                TextState(String(localized: .imagePicker.errorUploadingFile))
+            }, message: {
+                if case let FileStorageAPIClientError.uploadFailed(message) = error,
+                    let message {
+                    TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
+                } else {
+                    TextState(String(localized: .imagePicker.errorUploadingFileMessage))
+                }
+            })
+        }
     }
     
     private func save() async {
