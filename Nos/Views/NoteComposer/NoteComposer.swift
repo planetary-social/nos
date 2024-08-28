@@ -169,7 +169,7 @@ struct NoteComposer: View {
                 },
                 trailing: ActionButton(title: .localizable.post, action: postAction)
                     .frame(height: 22)
-                    .disabled(!canPost)
+                    .disabled(!isPostEnabled)
                     .padding(.bottom, 3)
             )
             .onAppear {
@@ -240,7 +240,7 @@ struct NoteComposer: View {
         )
     }
 
-    private var canPost: Bool {
+    private var isPostEnabled: Bool {
         !isUploadingImage && (!editingController.isEmpty || quotedNote?.bech32NoteID.isEmptyOrNil == false)
     }
     
@@ -262,7 +262,7 @@ struct NoteComposer: View {
             return
         }
         
-        guard canPost else {
+        guard isPostEnabled else {
             Log.error("Tried to publish a post with empty text")
             return
         }
