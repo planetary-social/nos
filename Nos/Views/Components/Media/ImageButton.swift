@@ -16,7 +16,7 @@ struct ImageButton: View {
         Button {
             isViewerPresented = true
         } label: {
-            if url.pathExtension == "gif" {
+            if url.isGIF {
                 ZStack {
                     WebImage(url: url, isAnimating: $isAnimating)
                         .resizable()
@@ -28,7 +28,7 @@ struct ImageButton: View {
                         } label: {
                             ZStack {
                                 Color.clear
-                                
+
                                 Text(.localizable.gifButton)
                                     .font(.title)
                                     .foregroundStyle(Color.primaryTxt)
