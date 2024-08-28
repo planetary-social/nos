@@ -66,43 +66,18 @@ struct NoteComposer: View {
                                     if let replyToNote {
                                         ReplyPreview(note: replyToNote)
                                     }
-                                    if showNotePreview {
-                                        if let previewEvent {
-                                            NoteButton(
-                                                note: previewEvent,
-                                                shouldTruncate: false,
-                                                hideOutOfNetwork: false,
-                                                repliesDisplayType: .displayNothing,
-                                                fetchReplies: false,
-                                                displayRootMessage: false,
-                                                isTapEnabled: false,
-                                                replyAction: nil,
-                                                tapAction: nil
-                                            )
-                                            .padding(10)
-                                            .onDisappear {
-                                                deletePreviewEvent()
-                                            }
-                                        } else {
-                                            ProgressView()
-                                                .onAppear {
-                                                    createPreviewEvent()
-                                                }
-                                        }
-                                    } else {
-                                        NoteTextEditor(
-                                            controller: $editingController,
-                                            minHeight: minimumEditorHeight,
-                                            placeholder: .localizable.newNotePlaceholder
-                                        )
-                                        .padding(10)
-                                        .background {
-                                            // This is a placeholder view that lets us scroll the editor just into view.
-                                            Color.clear
-                                                .frame(height: 1)
-                                                .offset(y: 100)
-                                                .id(0)
-                                        }
+                                    NoteTextEditor(
+                                        controller: $editingController,
+                                        minHeight: minimumEditorHeight,
+                                        placeholder: .localizable.newNotePlaceholder
+                                    )
+                                    .padding(10)
+                                    .background {
+                                        // This is a placeholder view that lets us scroll the editor just into view.
+                                        Color.clear
+                                            .frame(height: 1)
+                                            .offset(y: 100)
+                                            .id(0)
                                     }
                                 }
                                 .onAppear {
@@ -120,12 +95,7 @@ struct NoteComposer: View {
                         }
                     }
                     
-                    ComposerActionBar(
-                        editingController: $editingController,
-                        expirationTime: $expirationTime,
-                        isUploadingImage: $isUploadingImage,
-                        showPreview: $showNotePreview
-                    )
+                    composerActionBar
                 }
                 
                 if isUploadingImage {
@@ -133,6 +103,10 @@ struct NoteComposer: View {
                         isPresented: .constant(true),
                         text: String(localized: .imagePicker.uploading)
                     )
+                }
+
+                if showNotePreview {
+                    notePreview
                 }
 
                 if showRelayPicker, let author = currentUser.author {
@@ -187,6 +161,61 @@ struct NoteComposer: View {
         .alert(unwrapping: $alert)
     }
 
+    /// Action Bar displayed below the editing controller.
+    private var composerActionBar: some View {
+        ComposerActionBar(
+            editingController: $editingController,
+            expirationTime: $expirationTime,
+            isUploadingImage: $isUploadingImage,
+            showPreview: $showNotePreview
+        )
+    }
+
+    /// Note Preview displayed above the editing controller when the Preview switch is turned on.
+    private var notePreview: some View {
+        VStack(spacing: 0) {
+            Group {
+                if let previewEvent {
+                    ScrollView {
+                        NoteButton(
+                            note: previewEvent,
+                            shouldTruncate: false,
+                            hideOutOfNetwork: false,
+                            repliesDisplayType: .displayNothing,
+                            fetchReplies: false,
+                            displayRootMessage: true,
+                            isTapEnabled: false,
+                            replyAction: nil,
+                            tapAction: nil
+                        )
+                        .readabilityPadding()
+                        .padding(.vertical, 24)
+                        .allowsHitTesting(false)
+                        .onDisappear {
+                            do {
+                                try deletePreviewEvent()
+                            } catch {
+                                Log.error(error.localizedDescription)
+                            }
+                        }
+                    }
+                } else {
+                    ProgressView()
+                        .onAppear {
+                            do {
+                                try createPreviewEvent()
+                            } catch {
+                                Log.error(error.localizedDescription)
+                            }
+                        }
+                }
+            }
+            composerActionBar
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background { Color.appBg }
+    }
+
     private func postAction() async {
         guard currentUser.keyPair != nil, let author = currentUser.author else {
             alert = AlertState(title: {
@@ -231,7 +260,6 @@ struct NoteComposer: View {
         isPresented = false
     }
 
-    // swiftlint:disable:next function_body_length
     private func publishPost() async {
         guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
             Log.error("Cannot post without a keypair")
@@ -244,29 +272,7 @@ struct NoteComposer: View {
         }
 
         do {
-            var (content, tags) = noteParser.parse(attributedText: text)
-
-            if let expirationTime {
-                tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
-            }
-
-            // Attach the new note to the one it is replying to, if any.
-            if let replyToNote = replyToNote, let replyToNoteID = replyToNote.identifier {
-                // TODO: Append ptags for all authors involved in the thread
-                if let replyToAuthor = replyToNote.author?.publicKey?.hex {
-                    tags.append(["p", replyToAuthor])
-                }
-
-                // If `note` is a reply to another root, tag that root
-                if let rootNoteIdentifier = replyToNote.rootNote()?.identifier, rootNoteIdentifier != replyToNoteID {
-                    tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
-                    tags.append(["e", replyToNoteID, "", EventReferenceMarker.reply.rawValue])
-                } else {
-                    tags.append(["e", replyToNoteID, "", EventReferenceMarker.root.rawValue])
-                }
-            }
-
-            let jsonEvent = JSONEvent(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
+            let jsonEvent = buildJSONEvent(attributedText: text, keyPair: keyPair)
 
             if let relayURL = selectedRelay?.addressURL {
                 try await relayService.publish(
@@ -296,32 +302,12 @@ struct NoteComposer: View {
         }
     }
 
-    private func createPreviewEvent() {
-        do {
-            var jsonEvent = try createNoteJSON()
-            jsonEvent.id = "preview"
-            previewEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: viewContext, skipVerification: true)
-        } catch {
-            // TODO
-        }
-    }
-
-    private func createNoteJSON() throws -> JSONEvent {
-        guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
-            Log.error("Cannot post without a keypair")
-            throw NostrIdentifierError.unknownFormat // TODO
-        }
-
-        guard let attributedText = editingController.text else {
-            return JSONEvent(
-                pubKey: keyPair.publicKeyHex,
-                kind: .text,
-                tags: [[]],
-                content: ""
-            )
-        }
-        print(attributedText)
-
+    /// Builds a JSONEvent object for a given text and key pair.
+    /// - Parameters:
+    ///   - attributedText: The text the user wrote.
+    ///   - keyPair: Key pair of the logged in user.
+    /// - Returns: A JSONEvent object suitable to be published to Nostr.
+    private func buildJSONEvent(attributedText: AttributedString, keyPair: KeyPair) -> JSONEvent {
         var (content, tags) = noteParser.parse(attributedText: attributedText)
 
         if let expirationTime {
@@ -347,12 +333,33 @@ struct NoteComposer: View {
         return JSONEvent(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
     }
 
-    private func deletePreviewEvent() {
-        if let previewEvent {
-            viewContext.delete(previewEvent)
-            try! viewContext.saveIfNeeded()
-            self.previewEvent = nil
+    /// Creates a preview event object from what the user wrote in the editing controller.
+    private func createPreviewEvent() throws {
+        guard let keyPair = currentUser.keyPair else {
+            Log.error("Cannot create a preview event without a keypair")
+            throw CurrentUserError.keyPairNotFound
         }
+        var jsonEvent = buildJSONEvent(
+            attributedText: editingController.text ?? AttributedString(""),
+            keyPair: keyPair
+        )
+        jsonEvent.id = "preview"
+        previewEvent = try EventProcessor.parse(
+            jsonEvent: jsonEvent,
+            from: nil,
+            in: viewContext,
+            skipVerification: true
+        )
+    }
+
+    /// Deletes the preview event object from the database.
+    private func deletePreviewEvent() throws {
+        guard let previewEvent else {
+            return
+        }
+        viewContext.delete(previewEvent)
+        try viewContext.saveIfNeeded()
+        self.previewEvent = nil
     }
 }
 

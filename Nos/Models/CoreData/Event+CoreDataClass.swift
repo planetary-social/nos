@@ -287,7 +287,16 @@ public class Event: NosManagedObject, VerifiableEvent {
         fetchRequest.predicate = NSPredicate(format: "expirationDate <= %@", Date.now as CVarArg)
         return fetchRequest
     }
-    
+
+    @nonobjc public class func previewRequest() -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.predicate = NSPredicate(
+            format: "identifier = %@",
+            "preview" as CVarArg
+        )
+        return fetchRequest
+    }
+
     @nonobjc public class func event(by identifier: RawEventID) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "identifier = %@", identifier)

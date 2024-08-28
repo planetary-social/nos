@@ -145,10 +145,13 @@ struct ComposerActionBar: View {
 
             Spacer() 
 
+            Text(.localizable.preview)
+                .padding(.horizontal, 10)
+                .foregroundColor(Color.secondaryTxt)
             Toggle(isOn: $showPreview) {
-                Text(.localizable.preview)
-                    .frame(alignment: .trailing)
+                EmptyView()
             }
+            .labelsHidden()
         }
     }
     
