@@ -26,14 +26,18 @@ struct ImageButton: View {
                         Button {
                             isAnimating = true
                         } label: {
-                            Text(.localizable.gifButton)
-                                .font(.title)
-                                .foregroundStyle(Color.primaryTxt)
-                                .padding()
-                                .background(
-                                    Circle()
-                                        .fill(Color.gifButtonBackground)
-                                )
+                            ZStack {
+                                Color.clear
+                                
+                                Text(.localizable.gifButton)
+                                    .font(.title)
+                                    .foregroundStyle(Color.primaryTxt)
+                                    .padding()
+                                    .background(
+                                        Circle()
+                                            .fill(Color.gifButtonBackground)
+                                    )
+                            }
                         }
                     }
                 }
