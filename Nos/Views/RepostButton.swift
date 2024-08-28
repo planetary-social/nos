@@ -64,7 +64,7 @@ struct RepostButton: View {
                 Task { await repostNote() }
             }
             Button(String(localized: .localizable.quote)) {
-                quoteNote()
+                showQuotedNoteComposer = true
             }
             Button(String(localized: .localizable.cancel), role: .cancel) {
                 tapped = false
@@ -75,14 +75,14 @@ struct RepostButton: View {
                 Task { await deleteReposts() }
             }
         }
-        .sheet(isPresented: $showQuotedNoteComposer, content: {
+        .sheet(isPresented: $showQuotedNoteComposer) {
             NoteComposer(quotedNoteID: note.identifier, isPresented: $showQuotedNoteComposer)
                 .environment(currentUser)
                 .interactiveDismissDisabled()
                 .onDisappear {
                     tapped = false
                 }
-        })
+        }
     }
     
     func buttonPressed() async {
@@ -122,10 +122,6 @@ struct RepostButton: View {
         } catch {
             Log.error(error, "Error creating event for repost")
         }
-    }
-    
-    private func quoteNote() {
-        showQuotedNoteComposer = true
     }
     
     func deleteReposts() async {

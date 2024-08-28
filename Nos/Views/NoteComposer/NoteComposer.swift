@@ -11,6 +11,7 @@ struct NoteComposer: View {
     @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
     @Dependency(\.noteParser) private var noteParser
+    @Dependency(\.persistenceController) private var persistenceController
 
     /// A controller that manages the entered text.
     @State private var editingController = NoteEditorController()
@@ -168,7 +169,7 @@ struct NoteComposer: View {
                 },
                 trailing: ActionButton(title: .localizable.post, action: postAction)
                     .frame(height: 22)
-                    .disabled((editingController.isEmpty && quotedNoteID == nil) || isUploadingImage)
+                    .disabled(!canPost)
                     .padding(.bottom, 3)
             )
             .onAppear {
@@ -233,13 +234,16 @@ struct NoteComposer: View {
             return
         }
         
-        @Dependency(\.persistenceController) var persistenceController
         quotedNote = try? Event.findOrCreateStubBy(
             id: quotedNoteID,
             context: persistenceController.viewContext
         )
     }
 
+    private var canPost: Bool {
+        !isUploadingImage && (!editingController.isEmpty || quotedNote?.bech32NoteID.isEmptyOrNil == false)
+    }
+    
     private var postText: AttributedString {
         var text = editingController.text ?? ""
         if let noteLink = quotedNote?.bech32NoteID {
@@ -258,12 +262,12 @@ struct NoteComposer: View {
             return
         }
         
-        let text = postText
-        
-        guard !text.characters.isEmpty else {
+        guard canPost else {
             Log.error("Tried to publish a post with empty text")
             return
         }
+        
+        let text = postText
         
         do {
             var (content, tags) = noteParser.parse(attributedText: text)
