@@ -16,39 +16,37 @@ struct ImageButton: View {
         Button {
             isViewerPresented = true
         } label: {
-            if url.isGIF {
-                ZStack {
-                    WebImage(url: url, isAnimating: $isAnimating)
-                        .resizable()
-                        .scaledToFill()
-
-                    if !isAnimating {
-                        Button {
-                            isAnimating = true
-                        } label: {
-                            ZStack {
-                                Color.clear
-
-                                Text(.localizable.gifButton)
-                                    .font(.title)
-                                    .foregroundStyle(Color.primaryTxt)
-                                    .padding()
-                                    .background(
-                                        Circle()
-                                            .fill(Color.gifButtonBackground)
-                                    )
-                            }
-                        }
-                    }
-                }
-            } else {
-                WebImage(url: url)
+            ZStack {
+                WebImage(url: url, isAnimating: $isAnimating)
                     .resizable()
                     .scaledToFill()
+
+                if url.isGIF && !isAnimating {
+                    gifOverlay
+                }
             }
         }
         .sheet(isPresented: $isViewerPresented) {
             ImageViewer(url: url)
+        }
+    }
+
+    var gifOverlay: some View {
+        Button {
+            isAnimating = true
+        } label: {
+            ZStack {
+                Color.clear
+
+                Text(.localizable.gifButton)
+                    .font(.title)
+                    .foregroundStyle(Color.primaryTxt)
+                    .padding()
+                    .background(
+                        Circle()
+                            .fill(Color.gifButtonBackground)
+                    )
+            }
         }
     }
 }
