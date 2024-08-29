@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Release Notes
 - Show quoted notes in note cards.
+- Added quote-reposting.
 - Added a new image viewer that appears when you tap an image.
 - Added a new gallery view that’s currently behind a feature flag.
 - Removed the like and repost counts from the Main and Profile feeds.
@@ -21,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced hard-coded color values.
 - Added a feature flag toggle for “Enable new media display” to Staging builds. 
 - Added a new gallery view to display multiple links in a post. Currently behind the “Enable new media display” feature flag.
+- Added an overlay to GIFs that plays the animation when tapped. Currently behind the “Enable new media display” feature flag.
 - Show single images and gallery view in the proper orientation. Currently behind the “Enable new media display” feature flag.
 - Fixed typos in release notes.
 

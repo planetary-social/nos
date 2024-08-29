@@ -4914,6 +4914,17 @@
         }
       }
     },
+    "gifButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GIF"
+          }
+        }
+      }
+    },
     "goBack" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -9217,6 +9228,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "公鑰"
+          }
+        }
+      }
+    },
+    "quote" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quote"
           }
         }
       }
