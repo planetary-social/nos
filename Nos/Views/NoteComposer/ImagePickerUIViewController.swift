@@ -4,19 +4,34 @@ import UniformTypeIdentifiers
 
 struct ImagePickerUIViewController: UIViewControllerRepresentable {
     
-    var sourceType: UIImagePickerController.SourceType = .photoLibrary
-    var cameraDevice: UIImagePickerController.CameraDevice = .front
-    var onCompletion: ((URL?) -> Void)
-
+    let sourceType: UIImagePickerController.SourceType
+    let mediaTypes: [UTType]
+    let cameraDevice: UIImagePickerController.CameraDevice
+    let onCompletion: ((URL?) -> Void)
+    
+    init(
+        sourceType: UIImagePickerController.SourceType = .photoLibrary,
+        mediaTypes: [UTType] = [.image, .movie],
+        cameraDevice: UIImagePickerController.CameraDevice = .front,
+        onCompletion: @escaping (URL?) -> Void
+    ) {
+        assert(!mediaTypes.isEmpty, "Must provide at least one media type")
+        self.sourceType = sourceType
+        self.mediaTypes = mediaTypes
+        self.cameraDevice = cameraDevice
+        self.onCompletion = onCompletion
+    }
+    
     func makeUIViewController(
         context: UIViewControllerRepresentableContext<ImagePickerUIViewController>
     ) -> UIImagePickerController {
         let imagePicker = UIImagePickerController()
-        imagePicker.sourceType = sourceType
-        imagePicker.mediaTypes = [UTType.image.identifier, UTType.movie.identifier]
+        if UIImagePickerController.isSourceTypeAvailable(sourceType) {
+            imagePicker.sourceType = sourceType
+        }
+        imagePicker.mediaTypes = mediaTypes.map { $0.identifier }
         imagePicker.delegate = context.coordinator
-        imagePicker.allowsEditing = true
-        if sourceType == .camera {
+        if sourceType == .camera && UIImagePickerController.isCameraDeviceAvailable(cameraDevice) {
             imagePicker.cameraDevice = cameraDevice
         }
         return imagePicker
@@ -48,12 +63,12 @@ struct ImagePickerUIViewController: UIViewControllerRepresentable {
         ) {
             if let videoURL = info[.mediaURL] as? URL {
                 onCompletion(videoURL)
-            } else if let imageURL = info[.imageURL] as? URL {
-                onCompletion(imageURL)
-            } else if let image = info[.originalImage] as? UIImage,
+            } else if let image = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage,
                 let imageData = image.jpegData(compressionQuality: 1.0) {
                 let url = saveImage(imageData)
                 onCompletion(url)
+            } else if let imageURL = info[.imageURL] as? URL {
+                onCompletion(imageURL)
             } else {
                 onCompletion(nil)
             }

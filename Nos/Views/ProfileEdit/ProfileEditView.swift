@@ -50,7 +50,7 @@ struct ProfileEditView: View {
         let avatarSize: CGFloat = 99
         
         NosForm {
-            ImagePickerButton(cameraDevice: .front) { imageURL in
+            ImagePickerButton(cameraDevice: .front, mediaTypes: [.image]) { imageURL in
                 Task { await uploadItem(at: imageURL) }
             } label: {
                 ZStack {
@@ -79,6 +79,7 @@ struct ProfileEditView: View {
                             Spacer()
                             
                             Image.editButton
+                                .offset(x: 4, y: 6)
                         }
                     }
                 }
@@ -225,7 +226,7 @@ struct ProfileEditView: View {
         }
         
         do {
-            let url = try await fileStorageAPIClient.upload(fileAt: fileURL)
+            let url = try await fileStorageAPIClient.upload(fileAt: fileURL, isProfilePhoto: true)
             avatarText = url.absoluteString
         } catch {
             alert = AlertState(title: {

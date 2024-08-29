@@ -42,11 +42,11 @@ struct ComposerActionBar: View {
             switch subMenu {
             case .none:
                 // Attach Media
-                ImagePickerButton(cameraDevice: .rear) { imageURL in
+                ImagePickerButton(cameraDevice: .rear, mediaTypes: [.image, .movie]) { imageURL in
                     Task {
                         do {
                             startUploadingImage()
-                            let url = try await fileStorageAPIClient.upload(fileAt: imageURL)
+                            let url = try await fileStorageAPIClient.upload(fileAt: imageURL, isProfilePhoto: false)
                             editingController.append(url)
                             endUploadingImage()
                         } catch {

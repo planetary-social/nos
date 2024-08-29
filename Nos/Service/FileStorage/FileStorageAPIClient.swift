@@ -5,7 +5,11 @@ import Logger
 /// A client for a File Storage API, as defined in [NIP-96](https://github.com/nostr-protocol/nips/blob/master/96.md)
 protocol FileStorageAPIClient {
     /// Uploads the file at the given URL.
-    func upload(fileAt fileURL: URL) async throws -> URL
+    /// - Parameters:
+    ///   - fileURL: The file URL to upload.
+    ///   - isProfilePhoto: Indicates that the file is a profile photo.
+    /// - Returns: The remote URL of the uploaded file.
+    func upload(fileAt fileURL: URL, isProfilePhoto: Bool) async throws -> URL
 }
 
 enum HTTPMethod: String {
@@ -45,10 +49,10 @@ class NostrBuildAPIClient: FileStorageAPIClient {
 
     // MARK: - FileStorageAPIClient protocol
 
-    func upload(fileAt fileURL: URL) async throws -> URL {
+    func upload(fileAt fileURL: URL, isProfilePhoto: Bool = false) async throws -> URL {
         assert(fileURL.isFileURL, "The URL must point to a file.")
         let apiURL = try await apiURL()
-        let (request, data) = try uploadRequest(fileAt: fileURL, apiURL: apiURL)
+        let (request, data) = try uploadRequest(fileAt: fileURL, isProfilePhoto: isProfilePhoto, apiURL: apiURL)
         let (responseData, _) = try await URLSession.shared.upload(for: request, from: data)
         return try assetURL(from: responseData)
     }
@@ -100,24 +104,37 @@ class NostrBuildAPIClient: FileStorageAPIClient {
     }
 
     /// Creates a URLRequest and Data from a file URL to be uploaded to the file storage API.
-    func uploadRequest(fileAt fileURL: URL, apiURL: URL) throws -> (URLRequest, Data) {
+    func uploadRequest(fileAt fileURL: URL, isProfilePhoto: Bool, apiURL: URL) throws -> (URLRequest, Data) {
         assert(fileURL.isFileURL, "The URL must point to a file.")
         return try uploadRequest(
             data: try Data(contentsOf: fileURL),
+            isProfilePhoto: isProfilePhoto,
             filename: fileURL.lastPathComponent,
             apiURL: apiURL
         )
     }
     
     /// Creates a URLRequest and Data to be uploaded to the file storage API.
-    private func uploadRequest(data: Data, filename: String, apiURL: URL) throws -> (URLRequest, Data) {
+    private func uploadRequest(
+        data: Data,
+        isProfilePhoto: Bool,
+        filename: String,
+        apiURL: URL
+    ) throws -> (URLRequest, Data) {
         var request = URLRequest(url: apiURL)
-        request.httpMethod = "POST"
+        request.httpMethod = HTTPMethod.post.rawValue
 
         let boundary = UUID().uuidString
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
 
         var header = ""
+        
+        if isProfilePhoto {
+            header.append("\r\n--\(boundary)\r\n")
+            header.append("Content-Disposition: form-data; name=\"media_type\"\r\n")
+            header.append("\"avatar\"\r\n\r\n")
+        }
+        
         header.append("\r\n--\(boundary)\r\n")
         header.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(filename)\"\r\n")
         header.append("Content-Type: image/jpg\r\n\r\n")

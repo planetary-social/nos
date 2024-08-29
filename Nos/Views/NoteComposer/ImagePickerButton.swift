@@ -6,6 +6,8 @@ struct ImagePickerButton<Label>: View where Label: View {
 
     /// The device to be used initially when the user chooses to use the camera.
     let cameraDevice: UIImagePickerController.CameraDevice
+    /// The types of content the user can choose.
+    let mediaTypes: [UTType]
     let onCompletion: ((URL) -> Void)
     let label: () -> Label
 
@@ -52,7 +54,7 @@ struct ImagePickerButton<Label>: View where Label: View {
             isPresented: $showConfirmationDialog,
             titleVisibility: .hidden
         ) {
-            Button(String(localized: .imagePicker.takePhoto)) {
+            Button(cameraButtonTitle) {
                 analytics.selectedUploadFromCamera()
                 // Check permissions
 
@@ -112,11 +114,16 @@ struct ImagePickerButton<Label>: View where Label: View {
         .sheet(isPresented: showImagePicker) {
             ImagePickerUIViewController(
                 sourceType: imagePickerSource ?? .photoLibrary, 
+                mediaTypes: mediaTypes,
                 cameraDevice: cameraDevice,
                 onCompletion: userPicked
             ) 
             .edgesIgnoringSafeArea(.bottom)
         }
+    }
+    
+    private var cameraButtonTitle: String {
+        String(localized: mediaTypes.contains(.movie) ? .imagePicker.takePhotoOrVideo : .imagePicker.takePhoto)
     }
     
     /// Called when a user chooses an image or video.
@@ -134,7 +141,7 @@ struct ImagePickerButton<Label>: View where Label: View {
 
 struct ImagePickerCoordinator_Previews: PreviewProvider {
     static var previews: some View {
-        ImagePickerButton(cameraDevice: .rear) { pickedImage in
+        ImagePickerButton(cameraDevice: .rear, mediaTypes: [.image, .movie]) { pickedImage in
             print(pickedImage)
         } label: {
             Text("Hit me")
