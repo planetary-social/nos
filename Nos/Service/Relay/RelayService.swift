@@ -711,7 +711,7 @@ extension RelayService {
         return jsonEvent
     }
     
-    /// This function is mean to be run periodically to try to publish events that failed to publish in the past. It 
+    /// This function is meant to be run periodically to try to publish events that failed to publish in the past. It
     /// uses the `shouldBePublishedTo` and `publishedTo` relationships on `Event` to determine what failed to publish.
     /// These events could have failed to publish becuase the relay was offline, or because the user was offline. Often 
     /// the user has relay in their list that they don't have write access to so eventually this function will stop

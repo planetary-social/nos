@@ -1022,7 +1022,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "An error occured."
+            "value" : "An error occurred."
           }
         },
         "es" : {
@@ -9217,6 +9217,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "公鑰"
+          }
+        }
+      }
+    },
+    "quote" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quote"
           }
         }
       }

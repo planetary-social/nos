@@ -84,6 +84,11 @@ extension DependencyValues {
         get { self[KeychainKey.self] }
         set { self[KeychainKey.self] = newValue }
     }
+
+    var mediaService: MediaService {
+        get { self[MediaServiceKey.self] }
+        set { self[MediaServiceKey.self] = newValue }
+    }
 }
 
 fileprivate enum AnalyticsKey: DependencyKey {
@@ -175,4 +180,10 @@ fileprivate enum KeychainKey: DependencyKey {
     @MainActor static let liveValue: Keychain = SystemKeychain()
     @MainActor static let testValue: Keychain = InMemoryKeychain()
     @MainActor static let previewValue: Keychain = InMemoryKeychain()
+}
+
+fileprivate enum MediaServiceKey: DependencyKey {
+    static let liveValue: any MediaService = DefaultMediaService()
+    static let testValue: any MediaService = MockMediaService()
+    static let previewValue: any MediaService = DefaultMediaService() // enables us to manually test with previews
 }

@@ -18,6 +18,7 @@ struct RepostButton: View {
     @State private var tapped = false
     @State private var shouldConfirmRepost = false
     @State private var shouldConfirmDelete = false
+    @State private var showQuotedNoteComposer = false
     
     /// Initializes a RepostButton object.
     ///
@@ -62,6 +63,9 @@ struct RepostButton: View {
             Button(String(localized: .localizable.repost)) {
                 Task { await repostNote() }
             }
+            Button(String(localized: .localizable.quote)) {
+                showQuotedNoteComposer = true
+            }
             Button(String(localized: .localizable.cancel), role: .cancel) {
                 tapped = false
             }
@@ -70,6 +74,14 @@ struct RepostButton: View {
             Button(String(localized: .localizable.deleteRepost), role: .destructive) {
                 Task { await deleteReposts() }
             }
+        }
+        .sheet(isPresented: $showQuotedNoteComposer) {
+            NoteComposer(quotedNoteID: note.identifier, isPresented: $showQuotedNoteComposer)
+                .environment(currentUser)
+                .interactiveDismissDisabled()
+                .onDisappear {
+                    tapped = false
+                }
         }
     }
     

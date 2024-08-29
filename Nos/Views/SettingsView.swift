@@ -215,6 +215,10 @@ struct SettingsView: View {
                     }
                 }
 
+                #if STAGING
+                stagingControls
+                #endif
+
                 #if DEBUG
                 debugControls
                 #endif
@@ -262,21 +266,42 @@ struct SettingsView: View {
     }
 }
 
-#if DEBUG
+// DEBUG builds will have everything that's in STAGING builds and more.
+#if STAGING || DEBUG
 extension SettingsView {
-    private var enableNewMediaDisplay: Binding<Bool> {
+    /// Whether the new media display is enabled.
+    private var isNewMediaDisplayEnabled: Binding<Bool> {
         Binding<Bool>(
             get: { featureFlags.newMediaDisplayEnabled },
             set: { featureFlags.setNewMediaDisplayEnabled($0) }
         )
     }
+    
+    /// A toggle for the new media display that allows the user to turn the feature on or off.
+    private var newMediaFeatureToggle: some View {
+        Toggle(isOn: isNewMediaDisplayEnabled) {
+            Text(.localizable.enableNewMediaDisplay)
+                .foregroundColor(.primaryTxt)
+        }
+    }
+}
+#endif
 
-    @MainActor var debugControls: some View {
+#if STAGING
+extension SettingsView {
+    /// Controls that will appear when the app is built for STAGING.
+    @MainActor private var stagingControls: some View {
+        newMediaFeatureToggle
+    }
+}
+#endif
+
+#if DEBUG
+extension SettingsView {
+    /// Controls that will appear when the app is built for DEBUG.
+    @MainActor private var debugControls: some View {
         Group {
-            Toggle(isOn: enableNewMediaDisplay) {
-                Text(.localizable.enableNewMediaDisplay)
-                    .foregroundColor(.primaryTxt)
-            }
+            newMediaFeatureToggle
 
             Text(.localizable.sampleDataInstructions)
                 .foregroundColor(.primaryTxt)
