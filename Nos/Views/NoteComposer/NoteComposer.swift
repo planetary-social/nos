@@ -74,6 +74,7 @@ struct NoteComposer: View {
                                         minHeight: minimumEditorHeight,
                                         placeholder: .localizable.newNotePlaceholder
                                     )
+                                    .disabled(showNotePreview)
                                     .padding(10)
                                     .background {
                                         // This is a placeholder view that lets us scroll the editor just into view.
@@ -197,9 +198,9 @@ struct NoteComposer: View {
                         .allowsHitTesting(false)
                         .onDisappear {
                             do {
-                                try deletePreviewEvent()
+                                try deletePreviewEvent(previewEvent)
                             } catch {
-                                Log.error(error.localizedDescription)
+                                Log.error("Couldn't delete preview event: \(error.localizedDescription)")
                             }
                         }
                     }
@@ -347,7 +348,10 @@ struct NoteComposer: View {
             attributedText: editingController.text ?? AttributedString(""),
             keyPair: keyPair
         )
-        jsonEvent.id = "preview"
+        jsonEvent.id = Event.previewIdentifier
+        if let oldPreviewEvent = Event.find(by: Event.previewIdentifier, context: viewContext) {
+            try deletePreviewEvent(oldPreviewEvent)
+        }
         previewEvent = try EventProcessor.parse(
             jsonEvent: jsonEvent,
             from: nil,
@@ -357,13 +361,11 @@ struct NoteComposer: View {
     }
 
     /// Deletes the preview event object from the database.
-    private func deletePreviewEvent() throws {
-        guard let previewEvent else {
-            return
-        }
-        viewContext.delete(previewEvent)
+    /// - Parameter event: Event to delete from the database.
+    private func deletePreviewEvent(_ event: Event) throws {
+        viewContext.delete(event)
         try viewContext.saveIfNeeded()
-        self.previewEvent = nil
+        previewEvent = nil
     }
 }
 

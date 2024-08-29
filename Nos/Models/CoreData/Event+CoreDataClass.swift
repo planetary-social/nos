@@ -40,7 +40,10 @@ public class Event: NosManagedObject, VerifiableEvent {
     @Dependency(\.currentUser) @ObservationIgnored private var currentUser
 
     var pubKey: String { author?.hexadecimalPublicKey ?? "" }
-    
+
+    /// Event identifier for the note created by ``NoteComposer`` when displaying previews.
+    static let previewIdentifier = "preview"
+
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"
 
@@ -295,7 +298,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(
             format: "identifier = %@",
-            "preview" as CVarArg
+            Event.previewIdentifier as CVarArg
         )
         return fetchRequest
     }
