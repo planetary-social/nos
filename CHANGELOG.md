@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a feature flag toggle for “Enable new media display” to Staging builds. [skip-release-notes]
 - Added a new gallery view to display multiple links in a post. Currently behind the “Enable new media display” feature flag. [skip-release-notes]
 - Show single images and gallery view in the proper orientation. Currently behind the “Enable new media display” feature flag. [skip-release-notes]
+- Added an overlay to GIFs that plays the animation when tapped. Currently behind the “Enable new media display” feature flag. [skip-release-notes]
 - Fixed typos in release notes. [skip-release-notes]
 
 ## [0.1.25] - 2024-08-21Z
