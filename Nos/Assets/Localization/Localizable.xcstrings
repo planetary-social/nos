@@ -9232,6 +9232,17 @@
         }
       }
     },
+    "quote" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quote"
+          }
+        }
+      }
+    },
     "readMore" : {
       "extractionState" : "manual",
       "localizations" : {
