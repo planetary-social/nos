@@ -75,6 +75,7 @@ struct NoteComposer: View {
                                         placeholder: .localizable.newNotePlaceholder
                                     )
                                     .padding(10)
+                                    .disabled(showNotePreview)
                                     .background {
                                         // This is a placeholder view that lets us scroll the editor just into view.
                                         Color.clear
@@ -91,6 +92,7 @@ struct NoteComposer: View {
                                         }
                                     }
                                 }
+                                .id(editingController)
                             }
                         }
                         .onChange(of: geometry.size.height) { _, newValue in
