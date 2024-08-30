@@ -2,7 +2,7 @@ import XCTest
 import CoreData
 import Dependencies
 
-final class SocialGraphTests: CoreDataTestCase {
+final class SocialGraphCacheTests: CoreDataTestCase {
     
     @MainActor func testEmpty() async throws {
         // Arrange
