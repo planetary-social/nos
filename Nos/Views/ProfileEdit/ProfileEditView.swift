@@ -29,11 +29,7 @@ struct ProfileEditView: View {
     @State private var showConfirmationDialog = false
     @State private var saveError: SaveError?
     
-    @State private var isShowingPhotoPicker = false
-    @State private var selectedPickerItems: [PhotosPickerItem] = []
     @State private var isUploadingPhoto = false
-    @State private var selectedPhoto: Image?
-    @Dependency(\.fileStorageAPIClient) private var fileStorageAPIClient
     @State private var alert: AlertState<AlertAction>?
     
     fileprivate enum AlertAction {}
@@ -50,43 +46,12 @@ struct ProfileEditView: View {
         let avatarSize: CGFloat = 99
         
         NosForm {
-            ImagePickerButton(cameraDevice: .front, mediaTypes: [.image]) { imageURL in
-                Task { await uploadItem(at: imageURL) }
-            } label: {
-                ZStack {
-                    if let selectedPhoto {
-                        ZStack {
-                            selectedPhoto
-                                .resizable()
-                                .renderingMode(.original)
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
-                            
-                            if isUploadingPhoto {
-                                ProgressView()
-                                    .scaleEffect(1.5)
-                            }
-                        }
-                        .disabled(isUploadingPhoto)
-                    } else {
-                        AvatarView(imageUrl: URL(string: avatarText), size: avatarSize)
-                    }
-                    
-                    HStack {
-                        Spacer()
-                        
-                        VStack {
-                            Spacer()
-                            
-                            Image.editButton
-                                .offset(x: 4, y: 6)
-                        }
-                    }
-                }
-                .frame(width: avatarSize, height: avatarSize)
-                .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
-                .padding(.top, 16)
-            }
+            EditableAvatarView(
+                size: avatarSize,
+                urlString: $avatarText,
+                isUploadingPhoto: $isUploadingPhoto
+            )
+            .padding(.top, 16)
             
             NosFormSection(label: .localizable.profilePicture) {
                 NosTextField(label: .localizable.url, text: $avatarText)
@@ -193,7 +158,6 @@ struct ProfileEditView: View {
                 Text(.localizable.cancel)
             }
         }
-        .alert(unwrapping: $alert) { _ in }
         .id(author)
         .task {
             populateTextFields()
@@ -207,39 +171,6 @@ struct ProfileEditView: View {
         avatarText = author.profilePhotoURL?.absoluteString ?? ""
         website = author.website ?? ""
         unsText = author.uns ?? ""
-    }
-    
-    /// Uploads the photo the user selected and, on success, fills the avatar url field.
-    /// - Parameter fileURL: A URL that points to a file to upload.
-    private func uploadItem(at fileURL: URL) async {
-        assert(fileURL.isFileURL, "The URL must point to a file.")
-        
-        isUploadingPhoto = true
-        defer {
-            isUploadingPhoto = false
-        }
-        
-        // show the image to the user while uploading
-        if let data = try? Data(contentsOf: fileURL),
-            let image = UIImage(data: data) {
-            selectedPhoto = Image(uiImage: image)
-        }
-        
-        do {
-            let url = try await fileStorageAPIClient.upload(fileAt: fileURL, isProfilePhoto: true)
-            avatarText = url.absoluteString
-        } catch {
-            alert = AlertState(title: {
-                TextState(String(localized: .imagePicker.errorUploadingFile))
-            }, message: {
-                if case let FileStorageAPIClientError.uploadFailed(message) = error,
-                    let message {
-                    TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
-                } else {
-                    TextState(String(localized: .imagePicker.errorUploadingFileMessage))
-                }
-            })
-        }
     }
     
     private func save() async {

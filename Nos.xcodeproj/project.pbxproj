@@ -116,6 +116,7 @@
 		3FFB1D9729A6BBEC002A755D /* Collection+SafeSubscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D9529A6BBEC002A755D /* Collection+SafeSubscript.swift */; };
 		3FFB1D9C29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */; };
 		3FFF3BD029A9645F00DD0B72 /* AuthorReference+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */; };
+		5045540D2C81E10C0044ECAE /* EditableAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5045540C2C81E10C0044ECAE /* EditableAvatarView.swift */; };
 		508133CB2C79F78500DFBF75 /* AttributedString+Quotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508133CA2C79F78500DFBF75 /* AttributedString+Quotation.swift */; };
 		508133DB2C7A003600DFBF75 /* AttributedString+QuotationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508133DA2C7A003600DFBF75 /* AttributedString+QuotationsTests.swift */; };
 		508133DC2C7A007700DFBF75 /* AttributedString+Quotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508133CA2C79F78500DFBF75 /* AttributedString+Quotation.swift */; };
@@ -617,6 +618,7 @@
 		3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "EventReference+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3FFB1D9529A6BBEC002A755D /* Collection+SafeSubscript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Collection+SafeSubscript.swift"; sourceTree = "<group>"; };
 		3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackedAvatarsView.swift; sourceTree = "<group>"; };
+		5045540C2C81E10C0044ECAE /* EditableAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableAvatarView.swift; sourceTree = "<group>"; };
 		508133CA2C79F78500DFBF75 /* AttributedString+Quotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttributedString+Quotation.swift"; sourceTree = "<group>"; };
 		508133DA2C7A003600DFBF75 /* AttributedString+QuotationsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttributedString+QuotationsTests.swift"; sourceTree = "<group>"; };
 		509532DE2C62360500E0BACA /* NotificationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTests.swift; sourceTree = "<group>"; };
@@ -1152,6 +1154,7 @@
 			children = (
 				5B79F61A2B98B774002DA9BE /* CreateUsernameWizard */,
 				5B79F61F2B98B786002DA9BE /* DeleteUsernameWizard */,
+				5045540C2C81E10C0044ECAE /* EditableAvatarView.swift */,
 				A351E1A129BA92240009B7F6 /* ProfileEditView.swift */,
 			);
 			path = ProfileEdit;
@@ -2126,6 +2129,7 @@
 				C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */,
 				C9646EA129B7A22C007239A4 /* Analytics.swift in Sources */,
 				C9A6C74B2AD866A7001F9500 /* UNSSuccessView.swift in Sources */,
+				5045540D2C81E10C0044ECAE /* EditableAvatarView.swift in Sources */,
 				C981E2DB2AC6088900FBF4F6 /* UNSVerifyCodeView.swift in Sources */,
 				DC4AB2F62A4475B800D1478A /* AppDelegate.swift in Sources */,
 				5B8C96B229DB313300B73AEC /* AuthorCard.swift in Sources */,
