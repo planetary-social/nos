@@ -610,10 +610,10 @@ public class Event: NosManagedObject, VerifiableEvent {
 
         let dimensions: CGSize?
         if let components = widthXHeight?.components(separatedBy: "x"),
-           let width = components.first,
-           let height = components.last,
-           let widthValue = Double(width),
-           let heightValue = Double(height) {
+            let width = components.first,
+            let height = components.last,
+            let widthValue = Double(width),
+            let heightValue = Double(height) {
             dimensions = CGSize(width: widthValue, height: heightValue)
         } else {
             dimensions = nil
