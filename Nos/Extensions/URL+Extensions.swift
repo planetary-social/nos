@@ -12,12 +12,22 @@ extension URL {
 
         return URL(string: "https://\(absoluteString)") ?? self
     }
-
+    
+    /// Returns `true` if the URL is an image, as determined by the path extension.
+    /// Currently supports `png`, `jpg`, `jpeg`, and `gif`. For all other path extensions, returns `false`.
     var isImage: Bool {
         let imageExtensions = ["png", "jpg", "jpeg", "gif"]
-        return imageExtensions.contains(pathExtension)
+        return imageExtensions.contains(pathExtension.lowercased())
     }
     
+    /// Returns `true` if the URL is a GIF, as determined by the path extension.
+    var isGIF: Bool {
+        pathExtension.lowercased() == "gif"
+    }
+    
+    /// Returns `absoluteString` but without a trailing slash if one exists. If no trailing slash exists, returns
+    /// `absoluteString` as-is.
+    /// - Returns: The absolute string of the URL without a trailing slash.
     func strippingTrailingSlash() -> String {
         var string = absoluteString
         if string.last == "/" {
@@ -26,6 +36,10 @@ extension URL {
         return string
     }
     
+    /// Returns a Markdown-formatted link that can be used for display. The display portion of the Markdown string will
+    /// not contain the URL scheme, path, or path extension. In place of the path and path extension, an ellipsis will
+    /// appear. For example, with a URL like `https://www.nos.social/about`, this will return
+    /// `"[nos.social...](https://www.nos.social/about)"`.
     var truncatedMarkdownLink: String {
         let url = self.addingSchemeIfNeeded()
 
