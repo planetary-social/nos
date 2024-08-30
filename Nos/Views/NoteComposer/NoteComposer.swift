@@ -74,7 +74,6 @@ struct NoteComposer: View {
                                         minHeight: minimumEditorHeight,
                                         placeholder: .localizable.newNotePlaceholder
                                     )
-                                    .disabled(showNotePreview)
                                     .padding(10)
                                     .background {
                                         // This is a placeholder view that lets us scroll the editor just into view.
@@ -109,7 +108,6 @@ struct NoteComposer: View {
                     )
                 }
 
-                /// Show a View above displaying a preview of the note the user is composing.
                 if showNotePreview {
                     notePreview
                 }
@@ -207,10 +205,11 @@ struct NoteComposer: View {
                 } else {
                     ProgressView()
                         .onAppear {
+                            let text = editingController.text ?? AttributedString()
                             do {
-                                try createPreviewEvent()
+                                try createPreviewEvent(from: text)
                             } catch {
-                                Log.error(error.localizedDescription)
+                                Log.error("Error creating preview: \(error.localizedDescription)")
                             }
                         }
                 }
@@ -339,19 +338,20 @@ struct NoteComposer: View {
     }
 
     /// Creates a preview event object from what the user wrote in the editing controller.
-    private func createPreviewEvent() throws {
+    /// - Parameter attributedText: Text being previewed.
+    private func createPreviewEvent(from attributedText: AttributedString) throws {
         guard let keyPair = currentUser.keyPair else {
             Log.error("Cannot create a preview event without a keypair")
             throw CurrentUserError.keyPairNotFound
         }
-        var jsonEvent = buildJSONEvent(
-            attributedText: editingController.text ?? AttributedString(""),
-            keyPair: keyPair
-        )
-        jsonEvent.id = Event.previewIdentifier
         if let oldPreviewEvent = Event.find(by: Event.previewIdentifier, context: viewContext) {
             try deletePreviewEvent(oldPreviewEvent)
         }
+        var jsonEvent = buildJSONEvent(
+            attributedText: attributedText,
+            keyPair: keyPair
+        )
+        jsonEvent.id = Event.previewIdentifier
         previewEvent = try EventProcessor.parse(
             jsonEvent: jsonEvent,
             from: nil,

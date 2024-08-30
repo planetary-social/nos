@@ -374,6 +374,10 @@ public class Event: NosManagedObject, VerifiableEvent {
                 " OR $reference.marker = 'reply'" +
                 " OR $reference.marker = nil" +
                 ").@count = 0"
+            ),
+            NSPredicate(
+                format: "identifier <> %@",
+                Event.previewIdentifier as CVarArg
             )
         ])
         let kind6Predicate = NSPredicate(format: "kind = 6")
