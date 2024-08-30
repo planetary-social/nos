@@ -7,17 +7,24 @@ struct AvatarView: View {
     var size: CGFloat
     
     var body: some View {
-        WebImage(url: imageUrl)
-            .resizable()
-            .placeholder { 
+        WebImage(
+            url: imageUrl,
+            content: { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: size, height: size)
+                    .clipShape(Circle())
+            },
+            placeholder: {
                 Image.emptyAvatar
                     .resizable()
                     .renderingMode(.original)
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: size, height: size)
+                    .clipShape(Circle())
             }
-            .indicator(.activity)
-            .aspectRatio(contentMode: .fill)
-            .frame(width: size, height: size)
-            .clipShape(Circle())
+        )
     }
 }
 

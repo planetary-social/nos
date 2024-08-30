@@ -1,35 +1,62 @@
 import SDWebImageSwiftUI
 import SwiftUI
 
-/// A button that's filled entirely with an image and presents an `ImageViewer` when tapped.
+/// A button that's filled entirely with an image and presents an ``ImageViewer`` when tapped.
 struct ImageButton: View {
-    /// The URL of the image to display as the button label.
+    /// The image to display in the button.
     let url: URL
 
     /// Whether the image viewer is presented or not.
     @State private var isViewerPresented = false
 
+    /// Whether the image is animating or not.
+    @State private var isAnimating = false
+
     var body: some View {
         Button {
             isViewerPresented = true
         } label: {
-            WebImage(url: url)
-                .resizable()
-                .indicator(.activity)
-                .aspectRatio(contentMode: .fill)
-                .frame(
-                    minWidth: 0,
-                    maxWidth: .infinity,
-                    minHeight: 0,
-                    maxHeight: .infinity
-                )
-                .aspectRatio(4 / 3, contentMode: .fit)
-                .clipShape(.rect)
+            ZStack {
+                WebImage(url: url, isAnimating: $isAnimating)
+                    .resizable()
+                    .scaledToFill()
+
+                if url.isGIF && !isAnimating {
+                    gifOverlay
+                }
+            }
         }
         .sheet(isPresented: $isViewerPresented) {
             ImageViewer(url: url)
         }
     }
+
+    var gifOverlay: some View {
+        Button {
+            isAnimating = true
+        } label: {
+            ZStack {
+                Color.clear
+
+                Text(.localizable.gifButton)
+                    .font(.title)
+                    .foregroundStyle(Color.primaryTxt)
+                    .padding()
+                    .background(
+                        Circle()
+                            .fill(Color.gifButtonBackground)
+                    )
+            }
+        }
+    }
+}
+
+#Preview("GIF") {
+    ImageButton(
+        url: URL(
+            string: "https://image.nostr.build/c57c2e89841cf992626995271aa40571cdcf925b84af473d148595e577471d79.gif"
+        )!
+    )
 }
 
 #Preview {

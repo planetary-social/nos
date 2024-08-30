@@ -8,17 +8,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Release Notes
 - Added the option to preview the note before posting it.
 - Show quoted notes in note cards.
+- Added quote-reposting.
 - Added a new image viewer that appears when you tap an image.
 - Added a new gallery view that’s currently behind a feature flag.
 - Removed the like and repost counts from the Main and Profile feeds.
 - Removed wss:// from relay addresses in lists and removed the need to prepend relay addresses with wss://.
-- Included the npub in the properties list sent to analytics. [skip-release-notes]
-- Replaced hard-coded color values. [skip-release-notes]
-- Added a toggle for “Enable new media display” to Staging builds. [skip-release-notes]
-- Fixed typos in release notes. [skip-release-notes]
 - Localized the quotation marks on the Notifications view.
+
+### Internal Changes
+- Included the npub in the properties list sent to analytics.
+- Replaced hard-coded color values.
+- Added a feature flag toggle for “Enable new media display” to Staging builds. 
+- Added a new gallery view to display multiple links in a post. Currently behind the “Enable new media display” feature flag.
+- Added an overlay to GIFs that plays the animation when tapped. Currently behind the “Enable new media display” feature flag.
+- Show single images and gallery view in the proper orientation. Currently behind the “Enable new media display” feature flag.
+- Fixed typos in release notes.
 
 ## [0.1.25] - 2024-08-21Z
 
