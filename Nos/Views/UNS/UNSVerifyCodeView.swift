@@ -42,7 +42,7 @@ struct UNSVerifyCodeView: View {
                     .padding(.vertical, 17)
                     .padding(.horizontal, 20)
                     
-                    WizardTextField(text: $verificationCode, placeholder: "123456")
+                    UNSWizardTextField(text: $verificationCode, placeholder: "123456")
                         .focused($focusedField, equals: .textEditor)
                         .keyboardType(.numberPad)
                         .autocorrectionDisabled()

@@ -113,7 +113,7 @@ struct NoteOptionsButton: View {
     }
 }
 
-struct NoteOptionsView_Previews: PreviewProvider {
+struct NoteOptionsButton_Previews: PreviewProvider {
     static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.container.viewContext
