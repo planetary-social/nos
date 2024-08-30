@@ -332,28 +332,6 @@ struct NoteComposer: View {
         let text = postText
         
         do {
-            var (content, tags) = noteParser.parse(attributedText: text)
-            
-            if let expirationTime {
-                tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
-            }
-            
-            // Attach the new note to the one it is replying to, if any.
-            if let replyToNote = replyToNote, let replyToNoteID = replyToNote.identifier {
-                // TODO: Append ptags for all authors involved in the thread
-                if let replyToAuthor = replyToNote.author?.publicKey?.hex {
-                    tags.append(["p", replyToAuthor])
-                }
-                
-                // If `note` is a reply to another root, tag that root
-                if let rootNoteIdentifier = replyToNote.rootNote()?.identifier, rootNoteIdentifier != replyToNoteID {
-                    tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
-                    tags.append(["e", replyToNoteID, "", EventReferenceMarker.reply.rawValue])
-                } else {
-                    tags.append(["e", replyToNoteID, "", EventReferenceMarker.root.rawValue])
-                }
-            }
-
             let jsonEvent = buildJSONEvent(attributedText: text, keyPair: keyPair)
 
             if let relayURL = selectedRelay?.addressURL {
