@@ -590,7 +590,38 @@ public class Event: NosManagedObject, VerifiableEvent {
             return event
         }
     }
-    
+
+    struct InlineMetadata {
+        let url: String
+        let dimensions: CGSize?
+    }
+
+    var inlineMetadata: InlineMetadata? {
+        guard
+            let tags = allTags as? [[String]],
+            let imetaTag = tags.first(where: { $0.first == "imeta" }),
+            let urlPair = imetaTag.first(where: { $0.starts(with: "url") }),
+            let url = urlPair.components(separatedBy: " ").last else {
+            return nil
+        }
+
+        let dimPair = imetaTag.first(where: { $0.starts(with: "dim") })
+        let widthXHeight = dimPair?.components(separatedBy: " ").last
+
+        let dimensions: CGSize?
+        if let components = widthXHeight?.components(separatedBy: "x"),
+           let width = components.first,
+           let height = components.last,
+           let widthValue = Double(width),
+           let heightValue = Double(height) {
+            dimensions = CGSize(width: widthValue, height: heightValue)
+        } else {
+            dimensions = nil
+        }
+
+        return InlineMetadata(url: url, dimensions: dimensions)
+    }
+
     /// Populates an event stub (with only its ID set) using the data in the given JSON.
     func hydrate(from jsonEvent: JSONEvent, relay: Relay?, in context: NSManagedObjectContext) throws {
         assert(isStub, "Tried to hydrate an event that isn't a stub. This is a programming error")
