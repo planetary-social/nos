@@ -116,7 +116,6 @@ struct NoteComposer: View {
                                         }
                                     }
                                 }
-                                .id(editingController)
                             }
                         }
                         .onChange(of: geometry.size.height) { _, newValue in
@@ -220,6 +219,7 @@ struct NoteComposer: View {
                             replyAction: nil,
                             tapAction: nil
                         )
+                        .id(previewEvent)
                         .readabilityPadding()
                         .padding(.vertical, 24)
                         .allowsHitTesting(false)
