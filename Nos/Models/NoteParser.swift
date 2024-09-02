@@ -127,25 +127,36 @@ struct NoteParser {
     ///                        Defaults to `false`.
     /// - Returns: A tuple of the edited content and the first quoted note id, if it was requested and it exists.
     private func replaceNostrEntities(in content: String, capturesFirstNote: Bool = false) -> (String, RawEventID?) {
-        let unformattedRegex =
-            /@?(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1|naddr1)[a-zA-Z0-9]{58,}))/
+        // Note: This pattern contains a lookbehind, which is not currently supported by the newer Swift regex syntax.
+        let pattern = "(?<=^|\\s|[^:\\/])@?(?:nostr:)?((npub1|note1|nprofile1|nevent1|naddr1)[a-zA-Z0-9]{58,})"
+        let regex = try! NSRegularExpression(pattern: pattern, options: []) // swiftlint:disable:this force_try
         
         var firstNoteID: RawEventID?
-        let result = content.replacing(unformattedRegex) { match in
-            let substring = match.0
-            let entity = match.1
+        
+        let result = regex.stringByReplacingMatches(
+            in: content,
+            options: [],
+            range: NSRange(location: 0, length: content.utf16.count)
+        ) { match in
+            let nsRange = match.range(at: 0)
+            guard let range = Range(nsRange, in: content) else { return "" }
+            let substring = String(content[range])
+            
+            let entityRange = match.range(at: 1)
+            guard let entityRange = Range(entityRange, in: content) else { return substring }
+            let entity = String(content[entityRange])
+            
             var prefix = ""
-            let firstCharacter = String(String(substring).prefix(1))
+            let firstCharacter = String(substring.prefix(1))
             if firstCharacter.range(of: #"\s|\r\n|\r|\n"#, options: .regularExpression) != nil {
                 prefix = firstCharacter
             }
-            let string = String(entity)
-
+            
             do {
-                let identifier = try NostrIdentifier.decode(bech32String: string)
+                let identifier = try NostrIdentifier.decode(bech32String: entity)
                 switch identifier {
                 case .npub(let rawAuthorID), .nprofile(let rawAuthorID, _):
-                    return "\(prefix)[\(string)](@\(rawAuthorID))"
+                    return "\(prefix)[\(entity)](@\(rawAuthorID))"
                 case .note(let rawEventID), .nevent(let rawEventID, _, _, _):
                     if capturesFirstNote && firstNoteID == nil {
                         firstNoteID = rawEventID
@@ -155,14 +166,15 @@ struct NoteParser {
                     }
                 case .naddr(let replaceableID, _, let authorID, let kind):
                     return "\(prefix)[\(String(localized: .localizable.linkToNote))]" +
-                        "($\(replaceableID);\(authorID);\(kind))"
+                    "($\(replaceableID);\(authorID);\(kind))"
                 case .nsec:
-                    return String(substring)
+                    return substring
                 }
             } catch {
-                return String(substring)
+                return substring
             }
         }
+        
         return (result, firstNoteID)
     }
 
