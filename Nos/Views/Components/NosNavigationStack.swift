@@ -16,7 +16,7 @@ struct NosNavigationStack<Content: View>: View {
                     case .note(let noteIdentifiable):
                         if case let .identifier(eventID) = noteIdentifiable {
                             EventObservationView(eventID: eventID) { event in
-                                RepliesView(note: event)
+                                NoteView(note: event)
                             }
                         } else if case let .replaceableIdentifier(replaceableEventID, author, kind) = noteIdentifiable {
                             EventObservationView(
@@ -24,7 +24,7 @@ struct NosNavigationStack<Content: View>: View {
                                 author: author,
                                 kind: kind
                             ) { event in
-                                RepliesView(note: event)
+                                NoteView(note: event)
                             }
                         }
                     case .author(let authorID):
@@ -35,7 +35,7 @@ struct NosNavigationStack<Content: View>: View {
                         URLView(url: url) 
                     case .replyTo(let eventID):
                         EventObservationView(eventID: eventID) { event in
-                            RepliesView(note: event, showKeyboard: true)
+                            NoteView(note: event, showKeyboard: true)
                         }
                     }
                 })

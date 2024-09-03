@@ -3,7 +3,7 @@ import SwiftUI
 import SwiftUINavigation
 import Dependencies
 
-struct RepliesView: View {
+struct NoteView: View {
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
@@ -203,10 +203,10 @@ struct RepliesView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             VStack {
-                RepliesView(note: shortNote)
+                NoteView(note: shortNote)
             }
             VStack {
-                RepliesView(note: longNote)
+                NoteView(note: longNote)
             }
         }
         .environment(\.managedObjectContext, previewContext)
