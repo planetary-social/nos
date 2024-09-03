@@ -299,4 +299,30 @@ final class NoteParserTests: CoreDataTestCase {
         XCTAssertEqual(links[safe: 0]?.key, "🔗 Link to note")
         XCTAssertEqual(links[safe: 0]?.value, URL(string: naddrLink))
     }
+    
+    @MainActor func testContentWithYakihonneNeventLink() {
+        // swiftlint:disable line_length
+        let content = """
+        "https://yakihonne.com/notes/nevent1qgszpxr0hql8whvk6xyv5hya7yxwd4snur4hu4mg5rctz2ehekkzrvcqyrej80hs0k7ydd60p4zpdddqlx4zr66fwns5frwn2zf2gg3u8vr3w725fc0"
+        """
+        
+        let expectedContent = "\"yakihonne.com...\""
+        // swiftlint:enable line_length
+        
+        let components = sut.components(
+            from: content,
+            tags: [[]],
+            context: testContext
+        )
+        let attributedContent = components.attributedContent
+        
+        let parsedContent = String(attributedContent.characters)
+        XCTAssertEqual(parsedContent, expectedContent)
+        
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links[safe: 0]?.key, "yakihonne.com...")
+        
+        XCTAssertNil(components.quotedNoteID)
+    }
 }
