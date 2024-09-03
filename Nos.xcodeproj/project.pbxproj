@@ -1074,8 +1074,8 @@
 		035729BC2BE416BD005FEE85 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				03618C872C826A5100BCBC55 /* Components */,
 				035729BB2BE416BD005FEE85 /* EventObservationTests.swift */,
+				03618C8C2C826A6E00BCBC55 /* Note */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1217,14 +1217,6 @@
 				C97A1C8729E45B3C009D9E8D /* RawEventView.swift */,
 			);
 			path = Event;
-			sourceTree = "<group>";
-		};
-		03618C872C826A5100BCBC55 /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				03618C8C2C826A6E00BCBC55 /* Note */,
-			);
-			path = Components;
 			sourceTree = "<group>";
 		};
 		03618C8C2C826A6E00BCBC55 /* Note */ = {
@@ -1380,7 +1372,6 @@
 				03618C7E2C82685500BCBC55 /* Event */,
 				C92F01502AC4D67B00972489 /* Form */,
 				03C8B4902C6D061900A07CCD /* Media */,
-				03618C6D2C8267E600BCBC55 /* Note */,
 				03618B1E2C825F0900BCBC55 /* Wizard */,
 			);
 			path = Components;
@@ -1792,6 +1783,7 @@
 				03618B112C825D8700BCBC55 /* Fixtures */,
 				C96877B32B4EDCCF0051ED2F /* Home */,
 				C9CFF6D02AB241EB00D4B368 /* Modifiers */,
+				03618C6D2C8267E600BCBC55 /* Note */,
 				C9EE3E652A053CF1008A7491 /* NoteComposer */,
 				03618C1A2C82666000BCBC55 /* Notifications */,
 				3FB5E64F299D288E00386527 /* Onboarding */,
