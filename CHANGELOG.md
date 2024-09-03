@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Release Notes
+
 - Added the option to preview the note before posting it.
+- Added nos.lol to the default relay list for new accounts and removed relay.snort.social.
 - Show quoted notes in note cards.
 - Added quote-reposting.
 - Added a new image viewer that appears when you tap an image.
@@ -17,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the like and repost counts from the Main and Profile feeds.
 - Removed wss:// from relay addresses in lists and removed the need to prepend relay addresses with wss://.
 - Localized the quotation marks on the Notifications view.
+- Fixed a bug where nostr entities in URLs were treated like quoted note links.
 
 ### Internal Changes
 - Included the npub in the properties list sent to analytics.
