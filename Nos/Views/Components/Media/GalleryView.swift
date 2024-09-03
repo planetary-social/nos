@@ -6,18 +6,17 @@ import SwiftUI
 struct GalleryView: View {
     /// The URLs of the content to display.
     let urls: [URL]
-    
+
+    /// Inline metadata describing the data in ``urls``. This array is not necessarily in the same order as ``urls``;
+    /// match the URL from ``urls`` with the `url` of the ``Event/InlineMetadata``.
+    let metadata: [Event.InlineMetadata]
+
     /// The currently-selected tab in the tab view.
     @State private var selectedTab = 0
     
     /// The orientation of all media in this gallery view. Initially set to `.landscape` until we load the first URL and
     /// determine its orientation, then updated to match the first item's orientation.
     @State private var orientation: MediaOrientation?
-    
-    /// This essential first image determines the orientation of the gallery view. Whatever orientation this is, so the
-    /// rest shall be.
-    /// Oh, but also: it's not always an image, so this won't work if it's a video or web link. Oopsie.
-    @State private var firstImage: Image?
     
     /// The media service that loads content from URLs and determines the orientation for this gallery.
     @Dependency(\.mediaService) private var mediaService
@@ -146,7 +145,7 @@ fileprivate struct GalleryIndexView: View {
     ]
     return VStack {
         Spacer()
-        GalleryView(urls: urls)
+        GalleryView(urls: urls, metadata: [])
         Spacer()
     }
     .background(LinearGradient.cardBackground)
@@ -159,7 +158,7 @@ fileprivate struct GalleryIndexView: View {
     ]
     return VStack {
         Spacer()
-        GalleryView(urls: urls)
+        GalleryView(urls: urls, metadata: [])
         Spacer()
     }
     .background(LinearGradient.cardBackground)
@@ -172,7 +171,7 @@ fileprivate struct GalleryIndexView: View {
     ]
     return VStack {
         Spacer()
-        GalleryView(urls: urls)
+        GalleryView(urls: urls, metadata: [])
         Spacer()
     }
     .background(LinearGradient.cardBackground)
@@ -185,30 +184,29 @@ fileprivate struct GalleryIndexView: View {
     ]
     return VStack {
         Spacer()
-        GalleryView(urls: urls)
+        GalleryView(urls: urls, metadata: [])
         Spacer()
     }
     .background(LinearGradient.cardBackground)
 }
 
 #Preview("One landscape image") {
-    VStack {
-        GalleryView(urls: [
-            URL(
-                string: "https://image.nostr.build/0fa09a19ff2791e9af4c0d7dda6b3fa8a3abc0f152fc55cf17d69b7c59f12d0f.jpg"
-            )!
-        ])
+    let urls = [
+        URL(string: "https://image.nostr.build/0fa09a19ff2791e9af4c0d7dda6b3fa8a3abc0f152fc55cf17d69b7c59f12d0f.jpg")!
+    ]
+    return VStack {
+        GalleryView(urls: urls, metadata: [])
     }
     .background(LinearGradient.cardBackground)
 }
 
 #Preview("One portrait image") {
-    VStack {
-        GalleryView(urls: [
-            URL(
-                string: "https://image.nostr.build/b0fe2ee39c5c007b7a9a53190abb6cf9e94d6106555539f8562a29f0a9dbb755.jpg"
-            )!
-        ])
+    let urls = [
+        URL(string: "https://image.nostr.build/b0fe2ee39c5c007b7a9a53190abb6cf9e94d6106555539f8562a29f0a9dbb755.jpg")!
+    ]
+    return VStack {
+        GalleryView(
+            urls: urls, metadata: [])
     }
     .background(LinearGradient.cardBackground)
 }
