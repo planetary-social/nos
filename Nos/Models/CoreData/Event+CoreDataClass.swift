@@ -1122,7 +1122,14 @@ public class Event: NosManagedObject, VerifiableEvent {
     var isReply: Bool {
         rootNote() != nil || referencedNote() != nil
     }
-    
+
+    /// Returns `true` if this event is meant to be used to preview a note.
+    ///
+    /// Used by ``NoteComposer``.
+    var isPreview: Bool {
+        identifier == Event.previewIdentifier
+    }
+
     var isExpired: Bool {
         if let expirationDate {
             return expirationDate <= .now
