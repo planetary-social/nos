@@ -125,7 +125,29 @@ struct NoteComposer: View {
                     
                     composerActionBar
                 }
-                
+                .onChange(of: showNotePreview) { _, newValue in
+                    if newValue {
+                        let text = editingController.text ?? AttributedString()
+                        do {
+                            if let event = try createPreviewEvent(from: text) {
+                                withAnimation {
+                                    self.previewEvent = event
+                                }
+                            } else {
+                                Log.error("Couldn't create preview event")
+                                showNotePreview = false
+                            }
+                        } catch {
+                            Log.error("Error creating preview: \(error.localizedDescription)")
+                            showNotePreview = false
+                        }
+                    } else {
+                        withAnimation {
+                            self.previewEvent = nil
+                        }
+                    }
+                }
+
                 if isUploadingImage {
                     FullscreenProgressView(
                         isPresented: .constant(true),
@@ -133,8 +155,15 @@ struct NoteComposer: View {
                     )
                 }
 
-                if showNotePreview {
-                    notePreview
+                if let previewEvent {
+                    buildNotePreview(for: previewEvent)
+                        .onDisappear {
+                            do {
+                                try deletePreviewEvent(previewEvent)
+                            } catch {
+                                Log.error("Couldn't delete preview event: \(error.localizedDescription)")
+                            }
+                        }
                 }
 
                 if showRelayPicker, let author = currentUser.author {
@@ -203,50 +232,30 @@ struct NoteComposer: View {
     }
 
     /// Note Preview displayed above the editing controller when the Preview switch is turned on.
-    private var notePreview: some View {
+    private func buildNotePreview(for note: Event) -> some View {
         VStack(spacing: 0) {
-            Group {
-                if let previewEvent {
-                    ScrollView {
-                        NoteButton(
-                            note: previewEvent,
-                            shouldTruncate: false,
-                            hideOutOfNetwork: false,
-                            repliesDisplayType: .displayNothing,
-                            fetchReplies: false,
-                            displayRootMessage: true,
-                            isTapEnabled: false,
-                            replyAction: nil,
-                            tapAction: nil
-                        )
-                        .id(previewEvent)
-                        .readabilityPadding()
-                        .padding(.vertical, 24)
-                        .allowsHitTesting(false)
-                        .onDisappear {
-                            do {
-                                try deletePreviewEvent(previewEvent)
-                            } catch {
-                                Log.error("Couldn't delete preview event: \(error.localizedDescription)")
-                            }
-                        }
-                    }
-                } else {
-                    ProgressView()
-                        .onAppear {
-                            let text = editingController.text ?? AttributedString()
-                            do {
-                                try createPreviewEvent(from: text)
-                            } catch {
-                                Log.error("Error creating preview: \(error.localizedDescription)")
-                            }
-                        }
-                }
+            ScrollView {
+                NoteButton(
+                    note: note,
+                    shouldTruncate: false,
+                    hideOutOfNetwork: false,
+                    repliesDisplayType: .displayNothing,
+                    fetchReplies: false,
+                    displayRootMessage: true,
+                    isTapEnabled: false,
+                    replyAction: nil,
+                    tapAction: nil
+                )
+                .id(previewEvent)
+                .readabilityPadding()
+                .padding(.vertical, 24)
             }
             composerActionBar
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background { Color.appBg }
+        .transition(.opacity)
+        .zIndex(1)
     }
 
     private func postAction() async {
@@ -395,7 +404,7 @@ struct NoteComposer: View {
 
     /// Creates a preview event object from what the user wrote in the editing controller.
     /// - Parameter attributedText: Text being previewed.
-    private func createPreviewEvent(from attributedText: AttributedString) throws {
+    private func createPreviewEvent(from attributedText: AttributedString) throws -> Event? {
         guard let keyPair = currentUser.keyPair else {
             Log.error("Cannot create a preview event without a keypair")
             throw CurrentUserError.keyPairNotFound
@@ -408,7 +417,7 @@ struct NoteComposer: View {
             keyPair: keyPair
         )
         jsonEvent.id = Event.previewIdentifier
-        previewEvent = try EventProcessor.parse(
+        return try EventProcessor.parse(
             jsonEvent: jsonEvent,
             from: nil,
             in: viewContext,
@@ -421,7 +430,6 @@ struct NoteComposer: View {
     private func deletePreviewEvent(_ event: Event) throws {
         viewContext.delete(event)
         try viewContext.saveIfNeeded()
-        previewEvent = nil
     }
 }
 
