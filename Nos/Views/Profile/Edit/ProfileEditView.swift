@@ -1,6 +1,8 @@
 import Dependencies
 import Logger
+import PhotosUI
 import SwiftUI
+import SwiftUINavigation
 
 struct EditProfileDestination: Hashable {
     let profile: Author
@@ -26,10 +28,11 @@ struct ProfileEditView: View {
     @State private var unsController = UNSWizardController()
     @State private var showConfirmationDialog = false
     @State private var saveError: SaveError?
-
-    init(author: Author) {
-        self.author = author
-    }
+    
+    @State private var isUploadingPhoto = false
+    @State private var alert: AlertState<AlertAction>?
+    
+    fileprivate enum AlertAction {}
 
     private var showAlert: Binding<Bool> {
         Binding {
@@ -40,10 +43,15 @@ struct ProfileEditView: View {
     }
 
     var body: some View {
+        let avatarSize: CGFloat = 99
+        
         NosForm {
-            AvatarView(imageUrl: URL(string: avatarText), size: 99)
-                .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
-                .padding(.top, 16)
+            EditableAvatarView(
+                size: avatarSize,
+                urlString: $avatarText,
+                isUploadingPhoto: $isUploadingPhoto
+            )
+            .padding(.top, 16)
             
             NosFormSection(label: .localizable.profilePicture) {
                 NosTextField(label: .localizable.url, text: $avatarText)
@@ -51,19 +59,6 @@ struct ProfileEditView: View {
                     .keyboardType(.URL)
                     #endif
             }
-            
-            HStack {
-                HighlightedText(
-                    text: .localizable.uploadProfilePicInstructions,
-                    highlightedWord: "nostr.build",
-                    highlight: .diagonalAccent,
-                    textColor: .secondaryTxt,
-                    font: .footnote,
-                    link: URL(string: "https://nostr.build")!
-                )
-                Spacer()
-            }
-            .padding(13)
             
             NosFormSection(label: .localizable.basicInfo) {
                 NosTextField(label: .localizable.name, text: $nameText)
@@ -145,6 +140,7 @@ struct ProfileEditView: View {
                 ActionButton(title: .localizable.done) {
                     await save()
                 }
+                .disabled(isUploadingPhoto)
                 .offset(y: -3)
         )
         .alert(isPresented: showAlert, error: saveError) {
@@ -168,7 +164,7 @@ struct ProfileEditView: View {
         }
     }
 
-    func populateTextFields() {
+    private func populateTextFields() {
         viewContext.refresh(author, mergeChanges: true)
         nameText = author.name ?? author.displayName ?? ""
         bioText = author.about ?? ""
