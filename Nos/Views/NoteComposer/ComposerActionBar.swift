@@ -5,16 +5,16 @@ import SwiftUINavigation
 
 /// A horizontal bar that gives the user options to customize their message in the message composer.
 struct ComposerActionBar: View {
-    
-    /// A controller for the text entered in the note composer. 
+
+    /// A controller for the text entered in the note composer.
     @Binding var editingController: NoteEditorController
-    
+
     /// The expiration time for the note, if any.
     @Binding var expirationTime: TimeInterval?
 
     /// Whether we're currently uploading an image or not.
     @Binding var isUploadingImage: Bool
-    
+
     /// Turns on and off a Preview switch.
     @Binding var showPreview: Bool
 
@@ -23,13 +23,13 @@ struct ComposerActionBar: View {
     enum SubMenu {
         case expirationDate
     }
-    
+
     @State private var subMenu: SubMenu?
     @State private var alert: AlertState<AlertAction>?
-    
+
     fileprivate enum AlertAction {
     }
-    
+
     var backArrow: some View {
         Button {
             subMenu = .none
@@ -39,7 +39,7 @@ struct ComposerActionBar: View {
         }
         .transition(.opacity)
     }
-    
+
     var body: some View {
         HStack(spacing: 0) {
             switch subMenu {
@@ -54,7 +54,7 @@ struct ComposerActionBar: View {
                             .foregroundColor(.secondaryTxt)
                             .transition(.move(edge: .trailing))
                             .padding(10)
-                        
+
                         ExpirationTimePicker(expirationTime: $expirationTime)
                             .padding(.vertical, 12)
                     }
@@ -84,49 +84,65 @@ struct ComposerActionBar: View {
             alignment: .top
         )
     }
-    
+
     var defaultMenu: some View {
         HStack(spacing: 0) {
             if !showPreview {
-                // Attach Media
-                ImagePickerButton { imageURL in
-                    Task {
-                        await uploadImage(at: imageURL)
-                    }
+                attachMediaView
+                expirationTimeView
+            }
+            Spacer()
+            previewToggleView
+        }
+    }
+
+    /// Attach Media View
+    ///
+    /// Used by ``ComposerActionBar/defaultMenu``.
+    private var attachMediaView: some View {
+        ImagePickerButton { imageURL in
+            Task {
+                await uploadImage(at: imageURL)
+            }
+        } label: {
+            Image.attachMediaButton
+                .foregroundColor(.secondaryTxt)
+                .frame(minWidth: 44, minHeight: 44)
+        }
+        .padding(.leading, 8)
+        .accessibilityLabel(Text(.localizable.attachMedia))
+    }
+
+    /// Expiration Time
+    private var expirationTimeView: some View {
+        Group {
+            if let expirationTime, let option = ExpirationTimeOption(rawValue: expirationTime) {
+                ExpirationTimeButton(
+                    model: option,
+                    showClearButton: true,
+                    isSelected: Binding(get: {
+                        self.expirationTime == option.timeInterval
+                    }, set: {
+                        self.expirationTime = $0 ? option.timeInterval : nil
+                    })
+                )
+                .accessibilityLabel(Text(.localizable.expirationDate))
+                .padding(12)
+            } else {
+                Button {
+                    subMenu = .expirationDate
                 } label: {
-                    Image.attachMediaButton
+                    Image.disappearingMessages
                         .foregroundColor(.secondaryTxt)
                         .frame(minWidth: 44, minHeight: 44)
                 }
-                .padding(.leading, 8)
-                .accessibilityLabel(Text(.localizable.attachMedia))
-                
-                // Expiration Time
-                if let expirationTime, let option = ExpirationTimeOption(rawValue: expirationTime) {
-                    ExpirationTimeButton(
-                        model: option,
-                        showClearButton: true,
-                        isSelected: Binding(get: {
-                            self.expirationTime == option.timeInterval
-                        }, set: {
-                            self.expirationTime = $0 ? option.timeInterval : nil
-                        })
-                    )
-                    .accessibilityLabel(Text(.localizable.expirationDate))
-                    .padding(12)
-                } else {
-                    Button {
-                        subMenu = .expirationDate
-                    } label: {
-                        Image.disappearingMessages
-                            .foregroundColor(.secondaryTxt)
-                            .frame(minWidth: 44, minHeight: 44)
-                    }
-                }
             }
+        }
+    }
 
-            Spacer() 
-
+    /// Preview Toggle
+    private var previewToggleView: some View {
+        Group {
             Text(.localizable.preview)
                 .padding(.horizontal, 10)
                 .foregroundColor(Color.secondaryTxt)
