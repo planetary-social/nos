@@ -162,12 +162,8 @@ struct NoteButton: View {
                     
                     ThreadRootView(
                         root: root, 
-                        tapAction: { root in
-                            guard !displayedNote.isPreview else {
-                                return
-                            }
-                            router.push(root)
-                        },
+                        allowsHitTestingOnRoot: !note.isPreview,
+                        tapAction: { root in router.push(root) },
                         reply: { compactButtonOrLabel }
                     )
                 } else {
