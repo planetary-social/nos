@@ -2,34 +2,37 @@ import SwiftUI
 
 // https://stackoverflow.com/a/74416073
 extension Font {
-    static func clarity(_ fontWeight: UIFont.Weight, textStyle: UIFont.TextStyle = .body) -> Font {
-        switch fontWeight {
-        case .regular:
-            clarityRegular(textStyle)
-        case .medium:
-            clarityMedium(textStyle)
-        case .semibold:
-            claritySemibold(textStyle)
-        case .bold:
-            clarityBold(textStyle)
-        default:
-            clarityRegular(textStyle)
-        }
+    
+    static func clarity(_ fontWeight: Font.Weight, textStyle: UIFont.TextStyle = .body) -> Font {
+        .custom(
+            fontWeight.clarityFontName,
+            size: UIFont.preferredFont(forTextStyle: textStyle).pointSize
+        )
     }
 
     static func clarityRegular(_ textStyle: UIFont.TextStyle) -> Font {
-        .custom("ClarityCity-Regular", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+        .custom(
+            Font.Weight.regular.clarityFontName,
+            size: UIFont.preferredFont(forTextStyle: textStyle).pointSize
+        )
     }
-
-    static func clarityMedium(_ textStyle: UIFont.TextStyle) -> Font {
-        .custom("ClarityCity-Medium", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+    
+    static func clarityBold(baseSize size: CGFloat, relativeTo textStyle: Font.TextStyle) -> Font {
+        .custom(
+            Font.Weight.bold.clarityFontName,
+            size: size,
+            relativeTo: textStyle
+        )
     }
+}
 
-    static func claritySemibold(_ textStyle: UIFont.TextStyle) -> Font {
-        .custom("ClarityCity-SemiBold", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
-    }
-
-    static func clarityBold(_ textStyle: UIFont.TextStyle) -> Font {
-        .custom("ClarityCity-Bold", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+extension Font.Weight {
+    var clarityFontName: String {
+        switch self {
+        case .medium:   "ClarityCity-Medium"
+        case .semibold: "ClarityCity-SemiBold"
+        case .bold:     "ClarityCity-Bold"
+        default:        "ClarityCity-Regular"
+        }
     }
 }

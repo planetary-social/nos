@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed wss:// from relay addresses in lists and removed the need to prepend relay addresses with wss://.
 - Localized the quotation marks on the Notifications view.
 - Fixed a bug where nostr entities in URLs were treated like quoted note links.
+- Fixed side menu accessibility issues.
 
 ### Internal Changes
 - Included the npub in the properties list sent to analytics.

@@ -47,7 +47,8 @@ struct SideMenuContent: View {
                         if let name = currentUser.author?.safeName {
                             Text(name)
                                 .foregroundColor(.primaryTxt)
-                                .font(.clarity(.bold, textStyle: .title2))
+                                .dynamicTypeSize(...DynamicTypeSize.accessibility2)
+                                .font(.clarityBold(baseSize: 24, relativeTo: .title2))
                                 .padding(.top, 15)
                         }
                     }
@@ -59,42 +60,44 @@ struct SideMenuContent: View {
     
     var body: some View {
         NosNavigationStack(path: $router.sideMenuPath) {
-            VStack(alignment: .leading, spacing: 0) {
-                profileHeader
-                SideMenuRow(
-                    title: .localizable.yourProfile,
-                    image: Image(systemName: "person.crop.circle"),
-                    destination: .profile
-                )
-                SideMenuRow(title: .localizable.settings, image: Image(systemName: "gear"), destination: .settings)
-                SideMenuRow(
-                    title: .localizable.relays,
-                    image: Image(systemName: "antenna.radiowaves.left.and.right"),
-                    destination: .relays
-                )
-                SideMenuRow(
-                    title: .localizable.about,
-                    image: Image(systemName: "questionmark.circle"),
-                    destination: .about
-                )
-                SideMenuRow(title: .localizable.contactUs, image: Image(systemName: "envelope.circle")) {
-                    isShowingReportABugMailView = true
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    profileHeader
+                    SideMenuRow(
+                        title: .localizable.yourProfile,
+                        image: Image(systemName: "person.crop.circle"),
+                        destination: .profile
+                    )
+                    SideMenuRow(title: .localizable.settings, image: Image(systemName: "gear"), destination: .settings)
+                    SideMenuRow(
+                        title: .localizable.relays,
+                        image: Image(systemName: "antenna.radiowaves.left.and.right"),
+                        destination: .relays
+                    )
+                    SideMenuRow(
+                        title: .localizable.about,
+                        image: Image(systemName: "questionmark.circle"),
+                        destination: .about
+                    )
+                    SideMenuRow(title: .localizable.contactUs, image: Image(systemName: "envelope.circle")) {
+                        isShowingReportABugMailView = true
+                    }
+                    .disabled(!MFMailComposeViewController.canSendMail())
+                    .sheet(isPresented: $isShowingReportABugMailView) {
+                        ReportABugMailView(result: self.$result)
+                            .onAppear {
+                                analytics.showedSupport()
+                            }
+                    }
+                    SideMenuRow(title: .localizable.shareNos, image: Image(systemName: "person.2.circle")) {
+                        shareNosPressed = true
+                    }
+                    .sheet(isPresented: $shareNosPressed) {
+                        let url = URL(string: "https://nos.social")!
+                        ActivityViewController(activityItems: [url])
+                    }
+                    Spacer()
                 }
-                .disabled(!MFMailComposeViewController.canSendMail())
-                .sheet(isPresented: $isShowingReportABugMailView) {
-                    ReportABugMailView(result: self.$result)
-                        .onAppear {
-                            analytics.showedSupport()
-                        }
-                }
-                SideMenuRow(title: .localizable.shareNos, image: Image(systemName: "person.2.circle")) {
-                    shareNosPressed = true
-                }
-                .sheet(isPresented: $shareNosPressed) {
-                    let url = URL(string: "https://nos.social")!
-                    ActivityViewController(activityItems: [url])
-                }
-                Spacer()
             }
             .background(Color.appBg)
             .navigationDestination(for: SideMenu.Destination.self) { destination in
@@ -136,12 +139,12 @@ struct SideMenuRow: View {
         } label: {
             HStack(alignment: .center) {
                 image
-                    .font(.clarity(.bold, textStyle: .title3))
                 Text(title)
-                    .font(.clarity(.bold, textStyle: .title3))
                     .foregroundColor(.primaryTxt)
                 Spacer()
             }
+            .dynamicTypeSize(...DynamicTypeSize.accessibility2)
+            .font(.clarityBold(baseSize: 20, relativeTo: .title3))
         }
         .padding()
     }
