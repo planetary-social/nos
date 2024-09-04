@@ -150,6 +150,7 @@ struct ComposerActionBar: View {
                 EmptyView()
             }
             .labelsHidden()
+            .disabled(editingController.isEmpty)
         }
     }
 
