@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new gallery view to display multiple links in a post. Currently behind the “Enable new media display” feature flag.
 - Added an overlay to GIFs that plays the animation when tapped. Currently behind the “Enable new media display” feature flag.
 - Show single images and gallery view in the proper orientation. Currently behind the “Enable new media display” feature flag.
+- Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag.
 - Fixed typos in release notes.
 - Renamed and reorganized files.
 
