@@ -376,7 +376,7 @@ public class Event: NosManagedObject, VerifiableEvent {
                 ").@count = 0"
             ),
             NSPredicate(
-                format: "identifier <> %@",
+                format: "identifier != %@",
                 Event.previewIdentifier as CVarArg
             )
         ])
