@@ -61,7 +61,7 @@ struct ProfileEditView: View {
             }
             
             NosFormSection(label: .localizable.basicInfo) {
-                NosTextField(label: .localizable.displayName, text: $nameText)
+                NosTextField(label: .localizable.name, text: $nameText)
                 FormSeparator()
                 if author.hasNosNIP05 {
                     NosNIP05Field(
