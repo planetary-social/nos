@@ -7,9 +7,8 @@ struct GalleryView: View {
     /// The URLs of the content to display.
     let urls: [URL]
 
-    /// Inline metadata describing the data in ``urls``. This array is not necessarily in the same order as ``urls``;
-    /// match the URL from ``urls`` with the `url` of the ``Event/InlineMetadata``.
-    let metadata: [Event.InlineMetadata]
+    /// Inline metadata describing the data in ``urls``.
+    let metadata: InlineMetadataCollection?
 
     /// The currently-selected tab in the tab view.
     @State private var selectedTab = 0
@@ -53,7 +52,7 @@ struct GalleryView: View {
                 minHeight: 0,
                 maxHeight: .infinity
             )
-            .aspectRatio(orientation == .portrait ? 3 / 4 : 4 / 3, contentMode: .fit)
+            .aspectRatio(orientation.aspectRatio, contentMode: .fit)
             .padding(.bottom, 10)
             .clipShape(.rect)
 
@@ -79,12 +78,31 @@ struct GalleryView: View {
     ///             Defaults to `.landscape`.
     /// - Returns: A loading view in the given `loadingOrientation`.
     private func loadingView(_ loadingOrientation: MediaOrientation = .landscape) -> some View {
-        AspectRatioContainer(orientation: loadingOrientation) {
+        let loadingOrientation: MediaOrientation
+        if let url = urls.first,
+            let orientation = metadata?[url.absoluteString]?.orientation {
+            loadingOrientation = orientation
+        } else {
+            loadingOrientation = .landscape
+        }
+
+        return AspectRatioContainer(orientation: loadingOrientation) {
             ProgressView()
         }
         .task {
             guard let url = urls.first else {
                 orientation = .landscape
+                return
+            }
+
+            if let metadata,
+                let tag = metadata[url.absoluteString],
+                let dimensions = tag.dimensions {
+                if dimensions.height > dimensions.width {
+                    orientation = .portrait
+                } else {
+                    orientation = .landscape
+                }
                 return
             }
 
@@ -145,7 +163,7 @@ fileprivate struct GalleryIndexView: View {
     ]
     return VStack {
         Spacer()
-        GalleryView(urls: urls, metadata: [])
+        GalleryView(urls: urls, metadata: nil)
         Spacer()
     }
     .background(LinearGradient.cardBackground)
@@ -158,7 +176,7 @@ fileprivate struct GalleryIndexView: View {
     ]
     return VStack {
         Spacer()
-        GalleryView(urls: urls, metadata: [])
+        GalleryView(urls: urls, metadata: nil)
         Spacer()
     }
     .background(LinearGradient.cardBackground)
@@ -171,7 +189,7 @@ fileprivate struct GalleryIndexView: View {
     ]
     return VStack {
         Spacer()
-        GalleryView(urls: urls, metadata: [])
+        GalleryView(urls: urls, metadata: nil)
         Spacer()
     }
     .background(LinearGradient.cardBackground)
@@ -184,29 +202,43 @@ fileprivate struct GalleryIndexView: View {
     ]
     return VStack {
         Spacer()
-        GalleryView(urls: urls, metadata: [])
+        GalleryView(urls: urls, metadata: nil)
         Spacer()
     }
     .background(LinearGradient.cardBackground)
 }
 
-#Preview("One landscape image") {
-    let urls = [
-        URL(string: "https://image.nostr.build/0fa09a19ff2791e9af4c0d7dda6b3fa8a3abc0f152fc55cf17d69b7c59f12d0f.jpg")!
-    ]
+#Preview("Landscape image with metadata") {
+    let url = "https://image.nostr.build/0fa09a19ff2791e9af4c0d7dda6b3fa8a3abc0f152fc55cf17d69b7c59f12d0f.jpg"
+    let urls = [URL(string: url)!]
+    let metadataTag = InlineMetadataTag(url: url, dimensions: CGSize(width: 1252, height: 835))
+    let collection = InlineMetadataCollection(tags: [metadataTag])
     return VStack {
-        GalleryView(urls: urls, metadata: [])
+        GalleryView(urls: urls, metadata: collection)
     }
     .background(LinearGradient.cardBackground)
 }
 
-#Preview("One portrait image") {
+#Preview("Portrait image with metadata") {
+    let url = "https://image.nostr.build/b0fe2ee39c5c007b7a9a53190abb6cf9e94d6106555539f8562a29f0a9dbb755.jpg"
     let urls = [
-        URL(string: "https://image.nostr.build/b0fe2ee39c5c007b7a9a53190abb6cf9e94d6106555539f8562a29f0a9dbb755.jpg")!
+        URL(string: url)!
+    ]
+    let metadataTag = InlineMetadataTag(url: url, dimensions: CGSize(width: 1, height: 2))
+    let collection = InlineMetadataCollection(tags: [metadataTag])
+    return VStack {
+        GalleryView(urls: urls, metadata: collection)
+    }
+    .background(LinearGradient.cardBackground)
+}
+
+#Preview("Portrait image") {
+    let url = "https://image.nostr.build/486821596f66bcc6bae55544ddf8f00be0e4c2470556d3fee8e2a4ddadd01266.jpg"
+    let urls = [
+        URL(string: url)!
     ]
     return VStack {
-        GalleryView(
-            urls: urls, metadata: [])
+        GalleryView(urls: urls, metadata: nil)
     }
     .background(LinearGradient.cardBackground)
 }
