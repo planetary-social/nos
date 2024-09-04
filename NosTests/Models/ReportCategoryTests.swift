@@ -1,6 +1,6 @@
 import XCTest
 
-final class ReportTests: XCTestCase {
+final class ReportCategoryTests: XCTestCase {
 
     func testFindCategory() throws {
         XCTAssertEqual(
