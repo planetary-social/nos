@@ -50,7 +50,7 @@ class NostrBuildAPIClientTests: XCTestCase {
 
         // Act & Assert
         do {
-            _ = try await subject.upload(fileAt: fileURL)
+            _ = try await subject.upload(fileAt: fileURL, isProfilePhoto: false)
             XCTFail("Expected an error to be thrown")
         } catch {
             switch error {
@@ -78,7 +78,7 @@ class NostrBuildAPIClientTests: XCTestCase {
         )
 
         // Act
-        let (uploadRequest, _) = try subject.uploadRequest(fileAt: fileURL, apiURL: apiURL)
+        let (uploadRequest, _) = try subject.uploadRequest(fileAt: fileURL, isProfilePhoto: false, apiURL: apiURL)
 
         // Assert
         let authHeader = try XCTUnwrap(uploadRequest.value(forHTTPHeaderField: "Authorization"))
@@ -100,7 +100,7 @@ class NostrBuildAPIClientTests: XCTestCase {
         )
 
         // Act
-        let (uploadRequest, _) = try subject.uploadRequest(fileAt: fileURL, apiURL: apiURL)
+        let (uploadRequest, _) = try subject.uploadRequest(fileAt: fileURL, isProfilePhoto: false, apiURL: apiURL)
 
         // Assert
         XCTAssertEqual(uploadRequest.httpMethod, "POST")

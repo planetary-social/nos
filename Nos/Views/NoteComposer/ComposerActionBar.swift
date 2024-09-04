@@ -100,7 +100,7 @@ struct ComposerActionBar: View {
     ///
     /// Used by ``ComposerActionBar/defaultMenu``.
     private var attachMediaView: some View {
-        ImagePickerButton { imageURL in
+        ImagePickerButton(cameraDevice: .rear, mediaTypes: [.image, .movie]) { imageURL in
             Task {
                 await uploadImage(at: imageURL)
             }
@@ -159,7 +159,7 @@ struct ComposerActionBar: View {
     private func uploadImage(at imageURL: URL) async {
         do {
             startUploadingImage()
-            let url = try await fileStorageAPIClient.upload(fileAt: imageURL)
+            let url = try await fileStorageAPIClient.upload(fileAt: imageURL, isProfilePhoto: false)
             await editingController.append(url)
             endUploadingImage()
         } catch {
