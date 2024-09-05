@@ -8,31 +8,10 @@ extension Event {
             return nil
         }
 
-        let imetaTags = tags.filter({ $0.first == "imeta" })
+        let metadataTags = tags.filter({ $0.first == "imeta" })
+            .compactMap { InlineMetadataTag(imetaTag: $0) }
+        let collection = InlineMetadataCollection(tags: metadataTags)
 
-        var collection = InlineMetadataCollection()
-        for imetaTag in imetaTags {
-            guard let urlPair = imetaTag.first(where: { $0.starts(with: "url") }),
-                let url = urlPair.components(separatedBy: " ").last else {
-                continue
-            }
-
-            let dimPair = imetaTag.first(where: { $0.starts(with: "dim") })
-            let widthXHeight = dimPair?.components(separatedBy: " ").last
-
-            let dimensions: CGSize?
-            if let components = widthXHeight?.components(separatedBy: "x"),
-                let width = components.first,
-                let height = components.last,
-                let widthValue = Double(width),
-                let heightValue = Double(height) {
-                dimensions = CGSize(width: widthValue, height: heightValue)
-            } else {
-                dimensions = nil
-            }
-
-            collection.insert(InlineMetadataTag(url: url, dimensions: dimensions))
-        }
         return collection
     }
 }
@@ -53,6 +32,38 @@ struct InlineMetadataTag {
             return .portrait
         } else {
             return .landscape
+        }
+    }
+    
+    /// Initializes an ``InlineMetadataTag`` with the given URL and dimensions.
+    /// - Parameters:
+    ///   - url: The URL of the media described by this metadata.
+    ///   - dimensions: The dimensions of the media described by this metadata.
+    init(url: String, dimensions: CGSize?) {
+        self.url = url
+        self.dimensions = dimensions
+    }
+
+    /// Initializes an ``InlineMetadataTag`` with the given `imeta` tag from the JSON.
+    /// - Parameter imetaTag: The `imeta` tag from the JSON.
+    init?(imetaTag: [String]) {
+        guard let urlPair = imetaTag.first(where: { $0.starts(with: "url") }),
+            let url = urlPair.components(separatedBy: " ").last else {
+            return nil
+        }
+        self.url = url
+
+        let dimPair = imetaTag.first(where: { $0.starts(with: "dim") })
+        let widthXHeight = dimPair?.components(separatedBy: " ").last
+
+        if let components = widthXHeight?.components(separatedBy: "x"),
+            let width = components.first,
+            let height = components.last,
+            let widthValue = Double(width),
+            let heightValue = Double(height) {
+            self.dimensions = CGSize(width: widthValue, height: heightValue)
+        } else {
+            self.dimensions = nil
         }
     }
 }
