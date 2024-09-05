@@ -174,7 +174,7 @@ struct ProfileEditView: View {
     }
     
     private func save() async {
-        author.name = nameText
+        author.displayName = displayNameText
         author.about = bioText
         author.profilePhotoURL = URL(string: avatarText)
         author.website = website
