@@ -76,13 +76,11 @@ struct GalleryView: View {
         }
     }
     
-    /// A loading view that fills the space for the given `loadingOrientation` and loads the first URL to determine the
-    /// orientation for the gallery.
-    /// - Parameter loadingOrientation: The ``MediaOrientation`` to use to display the loading view.
-    ///             Defaults to `.landscape`.
-    /// - Returns: A loading view in the given `loadingOrientation`.
-    private func loadingView(_ loadingOrientation: MediaOrientation = .landscape) -> some View {
-        AspectRatioContainer(orientation: .landscape) {
+    /// A loading view that determines the orientation for the gallery. When possible, the aspect ratio of the
+    /// loading view matches the aspect ratio of the gallery. Otherwise, `landscape`.
+    /// - Returns: A loading view in the aspect ratio that matches the gallery media when possible.
+    private func loadingView() -> some View {
+        AspectRatioContainer(orientation: metadataOrientation ?? .landscape) {
             ProgressView()
         }
         .task {
