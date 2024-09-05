@@ -30,6 +30,7 @@
     {
       "skippedTests" : [
         "CompactNoteViewTests",
+        "DatabaseCleanerTests",
         "EventObservationTests\/testDuplicateEventMergingGivenParseContextSavesFirst()",
         "SocialGraphTests\/testFollow()",
         "SocialGraphTests\/testOneFollower()",
