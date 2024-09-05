@@ -10,19 +10,6 @@ struct GalleryView: View {
     /// Inline metadata describing the data in ``urls``.
     let metadata: InlineMetadataCollection?
 
-    /// Initializes a GalleryView with the given URLs and metadata.
-    /// - Parameters:
-    ///   - urls: The URLs of the content to display.
-    ///   - metadata: An ``InlineMetadataCollection`` that contains metadata about some or all of the `urls` to
-    ///               determine the orientation of this gallery.
-    init(urls: [URL], metadata: InlineMetadataCollection?) {
-        self.urls = urls
-        self.metadata = metadata
-        if let firstURLOrientation = metadata?[urls.first?.absoluteString]?.orientation {
-            _orientation = .init(initialValue: firstURLOrientation)
-        }
-    }
-
     /// The currently-selected tab in the tab view.
     @State private var selectedTab = 0
     
@@ -31,6 +18,11 @@ struct GalleryView: View {
     
     /// The media service that loads content from URLs and determines the orientation for this gallery.
     @Dependency(\.mediaService) private var mediaService
+    
+    /// The orientation determined by the `metadata`, if any.
+    private var metadataOrientation: MediaOrientation? {
+        metadata?[urls.first?.absoluteString]?.orientation
+    }
 
     var body: some View {
         if let orientation {
@@ -94,15 +86,18 @@ struct GalleryView: View {
             ProgressView()
         }
         .task {
-            // if we already have an orientation, no need to load one
-            guard orientation == nil else { return }
-
-            guard let url = urls.first else {
+            guard let firstURL = urls.first else {
                 orientation = .landscape
                 return
             }
 
-            orientation = await mediaService.orientation(for: url)
+            // if we can determine the orientation from the metadata we have, great!
+            // if not, download the data from the first URL to determine the orientation
+            if let metadataOrientation {
+                orientation = metadataOrientation
+            } else {
+                orientation = await mediaService.orientation(for: firstURL)
+            }
         }
     }
 }
