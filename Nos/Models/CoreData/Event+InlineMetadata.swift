@@ -69,11 +69,8 @@ struct InlineMetadataCollection {
         metadata[inlineMetadataTag.url] = inlineMetadataTag
     }
 
-    func tag(forURL url: String) -> InlineMetadataTag? {
-        metadata[url]
-    }
-
-    subscript(url: String) -> InlineMetadataTag? {
-        metadata[url]
+    subscript(url: String?) -> InlineMetadataTag? {
+        guard let url else { return nil }
+        return metadata[url]
     }
 }

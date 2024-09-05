@@ -10,11 +10,23 @@ struct GalleryView: View {
     /// Inline metadata describing the data in ``urls``.
     let metadata: InlineMetadataCollection?
 
+    /// Initializes a GalleryView with the given URLs and metadata.
+    /// - Parameters:
+    ///   - urls: The URLs of the content to display.
+    ///   - metadata: An ``InlineMetadataCollection`` that contains metadata about some or all of the `urls` to
+    ///               determine the orientation of this gallery.
+    init(urls: [URL], metadata: InlineMetadataCollection?) {
+        self.urls = urls
+        self.metadata = metadata
+        if let firstURLOrientation = metadata?[urls.first?.absoluteString]?.orientation {
+            _orientation = .init(initialValue: firstURLOrientation)
+        }
+    }
+
     /// The currently-selected tab in the tab view.
     @State private var selectedTab = 0
     
-    /// The orientation of all media in this gallery view. Initially set to `.landscape` until we load the first URL and
-    /// determine its orientation, then updated to match the first item's orientation.
+    /// The orientation for this gallery view.
     @State private var orientation: MediaOrientation?
     
     /// The media service that loads content from URLs and determines the orientation for this gallery.
@@ -78,31 +90,12 @@ struct GalleryView: View {
     ///             Defaults to `.landscape`.
     /// - Returns: A loading view in the given `loadingOrientation`.
     private func loadingView(_ loadingOrientation: MediaOrientation = .landscape) -> some View {
-        let loadingOrientation: MediaOrientation
-        if let url = urls.first,
-            let orientation = metadata?[url.absoluteString]?.orientation {
-            loadingOrientation = orientation
-        } else {
-            loadingOrientation = .landscape
-        }
-
-        return AspectRatioContainer(orientation: loadingOrientation) {
+        AspectRatioContainer(orientation: .landscape) {
             ProgressView()
         }
         .task {
             guard let url = urls.first else {
                 orientation = .landscape
-                return
-            }
-
-            if let metadata,
-                let tag = metadata[url.absoluteString],
-                let dimensions = tag.dimensions {
-                if dimensions.height > dimensions.width {
-                    orientation = .portrait
-                } else {
-                    orientation = .landscape
-                }
                 return
             }
 

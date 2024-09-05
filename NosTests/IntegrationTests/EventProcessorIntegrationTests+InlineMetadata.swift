@@ -32,12 +32,14 @@ extension EventProcessorIntegrationTests {
 
         let squareImageURL =
             "https://image.nostr.build/70f1f360919cbc044cfca6cc0d0ba1a420632c4828f7d22082d3463f33f06d7b.jpg"
-        let squareImageMetadata = try XCTUnwrap(inlineMetadata.tag(forURL: squareImageURL))
+        let squareImageMetadata = try XCTUnwrap(inlineMetadata[squareImageURL])
         XCTAssertEqual(squareImageMetadata.dimensions, CGSize(width: 854, height: 854))
+        XCTAssertEqual(squareImageMetadata.orientation, .landscape)
 
-        let portraitImageMetadata = try XCTUnwrap(inlineMetadata.tag(
-            forURL: "https://image.nostr.build/2787ad495941dfb068fbff77f087513095a3f981f9697fcb9e51c052c6198090.jpg"
-        ))
+        let portraitImageURL = 
+            "https://image.nostr.build/2787ad495941dfb068fbff77f087513095a3f981f9697fcb9e51c052c6198090.jpg"
+        let portraitImageMetadata = try XCTUnwrap(inlineMetadata[portraitImageURL])
         XCTAssertEqual(portraitImageMetadata.dimensions, CGSize(width: 1263, height: 3985))
+        XCTAssertEqual(portraitImageMetadata.orientation, .portrait)
     }
 }
