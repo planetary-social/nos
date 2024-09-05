@@ -166,7 +166,7 @@ struct ProfileEditView: View {
 
     private func populateTextFields() {
         viewContext.refresh(author, mergeChanges: true)
-        displayNameText = author.displayName ?? author.name ?? ""
+        displayNameText = (author.displayName?.isEmpty == true ? author.name : author.displayName) ?? ""
         bioText = author.about ?? ""
         avatarText = author.profilePhotoURL?.absoluteString ?? ""
         website = author.website ?? ""
