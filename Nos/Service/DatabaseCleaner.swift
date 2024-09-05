@@ -41,25 +41,23 @@ enum DatabaseCleaner {
             // The generic strategy is to pick a date and delete stuff received before then. However there are complex 
             // exceptions to i.e. keep events the current user has published. Most of these are defined in
             // `Event.protectedFromCleanupPredicate(for: user)` which is used in several fetch requests.
-            let deleteBefore = try computeDeleteBeforeDate(keeping: eventsToKeep, context: context)
+//            let deleteBefore = try computeDeleteBeforeDate(keeping: eventsToKeep, context: context)
             
             // Get rid of all event references where 1) neither event is protected and 2) both events are old
-            try batchDelete(
-                objectsMatching: [EventReference.cleanupRequest(before: deleteBefore, user: currentUser)],
-                in: context
-            )
+//            try batchDelete(
+//                objectsMatching: [EventReference.cleanupRequest(before: deleteBefore, user: currentUser)],
+//                in: context
+//            )
             
             // stub all events that aren't in a protected class before deleteBefore but are still referenced by events
             // we are keeping
-            try stubReferencedOldEvents(before: deleteBefore, user: currentUser, in: context)
+//            try stubReferencedOldEvents(before: deleteBefore, user: currentUser, in: context)
             
             try batchDelete(
                 objectsMatching: [
-                    // delete all events before deleteBefore that aren't protected or referenced
-                    Event.cleanupRequest(before: deleteBefore, for: currentUser),
-                    Event.expiredRequest(),
-                    EventReference.orphanedRequest(),
-                    AuthorReference.orphanedRequest(),
+                    Event.allEventsRequest(),
+                    EventReference.all(),
+                    AuthorReference.all(),
                     Author.outOfNetwork(for: currentUser),
                     Follow.orphanedRequest(),
                     Relay.orphanedRequest(),
