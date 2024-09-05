@@ -341,7 +341,13 @@ struct NoteComposer: View {
         let text = postText
         
         do {
-            let jsonEvent = buildJSONEvent(attributedText: text, keyPair: keyPair)
+            let jsonEvent = JSONEvent(
+                attributedText: text,
+                noteParser: noteParser,
+                expirationTime: expirationTime,
+                replyToNote: replyToNote,
+                keyPair: keyPair
+            )
 
             if let relayURL = selectedRelay?.addressURL {
                 try await relayService.publish(
@@ -371,37 +377,6 @@ struct NoteComposer: View {
         }
     }
 
-    /// Builds a JSONEvent object for a given text and key pair.
-    /// - Parameters:
-    ///   - attributedText: The text the user wrote.
-    ///   - keyPair: Key pair of the logged in user.
-    /// - Returns: A JSONEvent object suitable to be published to Nostr.
-    private func buildJSONEvent(attributedText: AttributedString, keyPair: KeyPair) -> JSONEvent {
-        var (content, tags) = noteParser.parse(attributedText: attributedText)
-
-        if let expirationTime {
-            tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
-        }
-
-        // Attach the new note to the one it is replying to, if any.
-        if let replyToNote = replyToNote, let replyToNoteID = replyToNote.identifier {
-            // TODO: Append ptags for all authors involved in the thread
-            if let replyToAuthor = replyToNote.author?.publicKey?.hex {
-                tags.append(["p", replyToAuthor])
-            }
-
-            // If `note` is a reply to another root, tag that root
-            if let rootNoteIdentifier = replyToNote.rootNote()?.identifier, rootNoteIdentifier != replyToNoteID {
-                tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
-                tags.append(["e", replyToNoteID, "", EventReferenceMarker.reply.rawValue])
-            } else {
-                tags.append(["e", replyToNoteID, "", EventReferenceMarker.root.rawValue])
-            }
-        }
-
-        return JSONEvent(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
-    }
-
     /// Creates a preview event object from what the user wrote in the editing controller.
     /// - Parameter attributedText: Text being previewed.
     private func createPreviewEvent(from attributedText: AttributedString) throws -> Event? {
@@ -412,8 +387,11 @@ struct NoteComposer: View {
         if let oldPreviewEvent = Event.find(by: Event.previewIdentifier, context: viewContext) {
             try deletePreviewEvent(oldPreviewEvent)
         }
-        var jsonEvent = buildJSONEvent(
+        var jsonEvent = JSONEvent(
             attributedText: attributedText,
+            noteParser: noteParser,
+            expirationTime: expirationTime,
+            replyToNote: replyToNote,
             keyPair: keyPair
         )
         jsonEvent.id = Event.previewIdentifier
