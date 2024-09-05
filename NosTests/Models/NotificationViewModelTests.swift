@@ -2,7 +2,7 @@ import CoreData
 import Foundation
 import XCTest
 
-final class NotificationTests: CoreDataTestCase {
+final class NotificationViewModelTests: CoreDataTestCase {
     
     @MainActor
     func testZapProfileNotification() throws {
