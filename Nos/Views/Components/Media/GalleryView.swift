@@ -94,6 +94,8 @@ struct GalleryView: View {
             ProgressView()
         }
         .task {
+            assert(orientation == nil, "Tried to load the orientation when we already have one.")
+
             guard let url = urls.first else {
                 orientation = .landscape
                 return
