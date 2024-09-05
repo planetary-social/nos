@@ -12,6 +12,7 @@ struct NoteComposer: View {
     @Dependency(\.analytics) private var analytics
     @Dependency(\.noteParser) private var noteParser
     @Dependency(\.persistenceController) private var persistenceController
+    @Dependency(\.previewEventRepository) private var previewEventRepository
 
     /// A controller that manages the entered text.
     @State private var editingController = NoteEditorController()
@@ -127,9 +128,9 @@ struct NoteComposer: View {
                 }
                 .onChange(of: showNotePreview) { _, newValue in
                     if newValue {
-                        let text = editingController.text ?? AttributedString()
                         do {
-                            if let event = try createPreviewEvent(from: text) {
+                            let jsonEvent = try jsonEvent(attributedString: postText)
+                            if let event = try previewEventRepository.createPreviewEvent(from: jsonEvent, in: viewContext) {
                                 withAnimation {
                                     self.previewEvent = event
                                 }
@@ -159,7 +160,7 @@ struct NoteComposer: View {
                     notePreview(for: previewEvent)
                         .onDisappear {
                             do {
-                                try deletePreviewEvent(previewEvent)
+                                try previewEventRepository.deletePreviewEvent(previewEvent, in: viewContext)
                             } catch {
                                 Log.error("Couldn't delete preview event: \(error.localizedDescription)")
                             }
@@ -328,6 +329,19 @@ struct NoteComposer: View {
         return text
     }
 
+    private func jsonEvent(attributedString: AttributedString) throws -> JSONEvent {
+        guard let keyPair = currentUser.keyPair else {
+            throw CurrentUserError.keyPairNotFound
+        }
+        return JSONEvent(
+            attributedText: attributedString,
+            noteParser: noteParser,
+            expirationTime: expirationTime,
+            replyToNote: replyToNote,
+            keyPair: keyPair
+        )
+    }
+
     private func publishPost() async {
         guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
             Log.error("Cannot post without a keypair")
@@ -337,17 +351,9 @@ struct NoteComposer: View {
             Log.error("Tried to publish a post with empty text")
             return
         }
-        
-        let text = postText
-        
+
         do {
-            let jsonEvent = JSONEvent(
-                attributedText: text,
-                noteParser: noteParser,
-                expirationTime: expirationTime,
-                replyToNote: replyToNote,
-                keyPair: keyPair
-            )
+            let jsonEvent = try jsonEvent(attributedString: postText)
 
             if let relayURL = selectedRelay?.addressURL {
                 try await relayService.publish(
@@ -375,39 +381,6 @@ struct NoteComposer: View {
         } catch {
             Log.error("Error when posting: \(error.localizedDescription)")
         }
-    }
-
-    /// Creates a preview event object from what the user wrote in the editing controller.
-    /// - Parameter attributedText: Text being previewed.
-    private func createPreviewEvent(from attributedText: AttributedString) throws -> Event? {
-        guard let keyPair = currentUser.keyPair else {
-            Log.error("Cannot create a preview event without a keypair")
-            throw CurrentUserError.keyPairNotFound
-        }
-        if let oldPreviewEvent = Event.find(by: Event.previewIdentifier, context: viewContext) {
-            try deletePreviewEvent(oldPreviewEvent)
-        }
-        var jsonEvent = JSONEvent(
-            attributedText: attributedText,
-            noteParser: noteParser,
-            expirationTime: expirationTime,
-            replyToNote: replyToNote,
-            keyPair: keyPair
-        )
-        jsonEvent.id = Event.previewIdentifier
-        return try EventProcessor.parse(
-            jsonEvent: jsonEvent,
-            from: nil,
-            in: viewContext,
-            skipVerification: true
-        )
-    }
-
-    /// Deletes the preview event object from the database.
-    /// - Parameter event: Event to delete from the database.
-    private func deletePreviewEvent(_ event: Event) throws {
-        viewContext.delete(event)
-        try viewContext.saveIfNeeded()
     }
 }
 
