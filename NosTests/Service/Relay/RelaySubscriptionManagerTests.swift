@@ -7,6 +7,7 @@ final class RelaySubscriptionManagerTests: XCTestCase {
     let relayTwoURL = URL(string: "wss://relay.two")!
     let relayThreeURL = URL(string: "wss://relay.three")!
     
+    // swiftlint:disable:next implicitly_unwrapped_optional
     var subject: RelaySubscriptionManagerActor!
     
     override func setUp() async throws {
@@ -47,9 +48,7 @@ final class RelaySubscriptionManagerTests: XCTestCase {
         // Assert
         var connections = await subject.socketConnections
         XCTAssertEqual(connections.count, 3)
-        connections.values.forEach { 
-            XCTAssertEqual($0.state, .connecting)
-        }
+        connections.values.forEach { XCTAssertEqual($0.state, .connecting) }
     }
     
     func test_openSockets_givenOneDisconnectedSocket_startsConnectingAll() async throws {
@@ -68,8 +67,6 @@ final class RelaySubscriptionManagerTests: XCTestCase {
         
         // Assert
         XCTAssertEqual(connections.count, 3)
-        connections.values.forEach { 
-            XCTAssertEqual($0.state, .connecting)
-        }
+        connections.values.forEach { XCTAssertEqual($0.state, .connecting) }
     }
 }

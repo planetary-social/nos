@@ -131,7 +131,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
             switch connection.state {
             case .errored(let error):
                 if error.nextRetry > Date.now {
-                    return
+                    continue
                 } else {
                     fallthrough
                 }
@@ -139,7 +139,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
                 connection.socket.connect()
                 connection.state = .connecting
             case .connected, .connecting, .authenticating:
-                return
+                continue
             }
         }
     }
