@@ -7,7 +7,7 @@ struct ThreadRootView<Reply: View>: View {
     var root: Event
 
     /// Whether the root note is interactive.
-    var allowsHitTestingOnRoot: Bool
+    var isRootNoteInteractive: Bool
 
     /// Handler to be executed when the user taps on the root note.
     var tapAction: ((Event) -> Void)?
@@ -18,17 +18,17 @@ struct ThreadRootView<Reply: View>: View {
     /// Initializes a Thread Root View.
     /// - Parameters:
     ///   - root: The root note.
-    ///   - allowsHitTestingOnRoot: Whether the root note is interactive. Defaults to `true`.
+    ///   - isRootNoteInteractive: Whether the root note is interactive. Defaults to `true`.
     ///   - tapAction: Handler to be executed when the user taps on the root note.
     ///   - reply: Handler to be executed when building a View for displaying the reply note.
     init(
         root: Event,
-        allowsHitTestingOnRoot: Bool = true,
-        tapAction: ((Event) -> Void)?, 
+        isRootNoteInteractive: Bool = true,
+        tapAction: ((Event) -> Void)?,
         @ViewBuilder reply: () -> Reply
     ) {
         self.root = root
-        self.allowsHitTestingOnRoot = allowsHitTestingOnRoot
+        self.isRootNoteInteractive = isRootNoteInteractive
         self.tapAction = tapAction
         self.reply = reply()
     }
@@ -43,7 +43,7 @@ struct ThreadRootView<Reply: View>: View {
             )
             .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
             .readabilityPadding()
-            .allowsHitTesting(allowsHitTestingOnRoot)
+            .allowsHitTesting(isRootNoteInteractive)
             .opacity(0.7)
             .frame(height: 100, alignment: .top)
             .clipped()

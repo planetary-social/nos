@@ -92,13 +92,11 @@ struct ComposerActionBar: View {
                 expirationTimeView
             }
             Spacer()
-            previewToggleView
+            previewToggle
         }
     }
 
     /// Attach Media View
-    ///
-    /// Used by ``ComposerActionBar/defaultMenu``.
     private var attachMediaView: some View {
         ImagePickerButton(cameraDevice: .rear, mediaTypes: [.image, .movie]) { imageURL in
             Task {
@@ -141,7 +139,7 @@ struct ComposerActionBar: View {
     }
 
     /// Preview Toggle
-    private var previewToggleView: some View {
+    private var previewToggle: some View {
         Group {
             Text(.localizable.preview)
                 .padding(.horizontal, 10)
@@ -164,7 +162,6 @@ struct ComposerActionBar: View {
             endUploadingImage()
         } catch {
             endUploadingImage()
-            print("error uploading: \(error)")
 
             alert = AlertState {
                 TextState(String(localized: .imagePicker.errorUploadingFile))

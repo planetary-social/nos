@@ -69,11 +69,15 @@ extension Date {
             return formattedDate
         }
 
-        if let minute = components.minute, minute >= 1, let formattedDate =
-            dateComponentsFormatter.string(from: DateComponents(calendar: calendar, minute: max(1, minute))) {
-            return formattedDate
-        } else if let minute = components.minute, minute < 1 {
-            return String(localized: .localizable.now)
+        if let minute = components.minute {
+            if minute >= 1 {
+                let dateComponents = DateComponents(calendar: calendar, minute: max(1, minute))
+                if let formattedDate = dateComponentsFormatter.string(from: dateComponents) {
+                    return formattedDate
+                }
+            } else {
+                return String(localized: .localizable.now)
+            }
         }
 
         return formatLongDate(calendar)

@@ -156,7 +156,7 @@ struct NoteComposer: View {
                 }
 
                 if let previewEvent {
-                    buildNotePreview(for: previewEvent)
+                    notePreview(for: previewEvent)
                         .onDisappear {
                             do {
                                 try deletePreviewEvent(previewEvent)
@@ -232,7 +232,7 @@ struct NoteComposer: View {
     }
 
     /// Note Preview displayed above the editing controller when the Preview switch is turned on.
-    private func buildNotePreview(for note: Event) -> some View {
+    private func notePreview(for note: Event) -> some View {
         VStack(spacing: 0) {
             ScrollView {
                 NoteButton(
