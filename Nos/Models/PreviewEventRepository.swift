@@ -1,5 +1,7 @@
 import CoreData
 
+/// Provides a mechanism to store and retrieve an `Event` meant to be used to
+/// preview a note the user is composing.
 protocol PreviewEventRepository {
     /// Creates a preview event object in the database.
     /// - Parameters
@@ -14,6 +16,8 @@ protocol PreviewEventRepository {
     func deletePreviewEvent(_ event: Event, in context: NSManagedObjectContext) throws
 }
 
+/// Uses `CoreData` to store and retrieve an `Event` meant to be used to
+/// preview a note the user is composing.
 struct DefaultPreviewEventRepository: PreviewEventRepository {
     /// Creates a preview event object in the database.
     /// - Parameters
