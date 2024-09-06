@@ -36,7 +36,7 @@ struct UNSWizardPhoneView: View {
                         .padding(.horizontal, 20)
                         .shadow(radius: 1, y: 1)
                     
-                    WizardTextField(text: $phoneNumber, placeholder: "+1-234-567-8910")
+                    UNSWizardTextField(text: $phoneNumber, placeholder: "+1-234-567-8910")
                         .focused($focusedField, equals: .textEditor)
                         .keyboardType(.phonePad)
                         .autocorrectionDisabled()

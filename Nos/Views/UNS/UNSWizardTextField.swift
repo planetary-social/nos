@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftUINavigation
 
-struct WizardTextField: View {
+struct UNSWizardTextField: View {
     
     var text: Binding<String>
     var placeholder: String = ""
@@ -40,7 +40,7 @@ struct WizardTextField_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             WithState(initialValue: "") { text in
-                WizardTextField(text: text, placeholder: "12345578")
+                UNSWizardTextField(text: text, placeholder: "12345578")
                     .padding()
             }
         }

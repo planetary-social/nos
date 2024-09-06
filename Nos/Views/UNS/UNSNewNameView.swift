@@ -33,7 +33,7 @@ struct UNSNewNameView: View {
                         .shadow(radius: 1, y: 1)
                     
                     Spacer()
-                    WizardTextField(text: $name)
+                    UNSWizardTextField(text: $name)
                     Spacer()
                     
                     BigActionButton(title: .localizable.next) {
