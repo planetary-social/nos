@@ -18,7 +18,7 @@ struct ProfileEditView: View {
 
     @ObservedObject var author: Author
     
-    @State private var nameText: String = ""
+    @State private var displayNameText: String = ""
     @State private var bioText: String = ""
     @State private var avatarText: String = ""
     @State private var unsText: String = ""
@@ -61,7 +61,7 @@ struct ProfileEditView: View {
             }
             
             NosFormSection(label: .localizable.basicInfo) {
-                NosTextField(label: .localizable.name, text: $nameText)
+                NosTextField(label: .localizable.displayName, text: $displayNameText)
                 FormSeparator()
                 if author.hasNosNIP05 {
                     NosNIP05Field(
@@ -166,7 +166,7 @@ struct ProfileEditView: View {
 
     private func populateTextFields() {
         viewContext.refresh(author, mergeChanges: true)
-        nameText = author.name ?? author.displayName ?? ""
+        displayNameText = (author.displayName?.isEmpty == true ? author.name : author.displayName) ?? ""
         bioText = author.about ?? ""
         avatarText = author.profilePhotoURL?.absoluteString ?? ""
         website = author.website ?? ""
@@ -174,7 +174,7 @@ struct ProfileEditView: View {
     }
     
     private func save() async {
-        author.name = nameText
+        author.displayName = displayNameText
         author.about = bioText
         author.profilePhotoURL = URL(string: avatarText)
         author.website = website
