@@ -166,6 +166,7 @@
 		5BCA95D22C8A5F0D00A52D1A /* PreviewEventRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCA95D12C8A5F0D00A52D1A /* PreviewEventRepository.swift */; };
 		5BD08BB22A38E96F00BB926C /* JSONRelayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */; };
 		5BD25E592C192BBC005CF884 /* NoteParserTests+Parse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD25E582C192BBC005CF884 /* NoteParserTests+Parse.swift */; };
+		5BD813A32C8BA7CC00E65F4D /* PreviewEventRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCA95D12C8A5F0D00A52D1A /* PreviewEventRepository.swift */; };
 		5BE281C72AE2CCD800880466 /* ReplyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE281C62AE2CCD800880466 /* ReplyButton.swift */; };
 		5BE281CA2AE2CCEB00880466 /* HomeTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE281C92AE2CCEB00880466 /* HomeTab.swift */; };
 		5BFBB28B2BD9D79F002E909F /* URLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBB28A2BD9D79F002E909F /* URLParser.swift */; };
@@ -2385,6 +2386,7 @@
 				035729B32BE4167E005FEE85 /* TLVElementTests.swift in Sources */,
 				C9C2B77D29E072E400548B4A /* WebSocket+Nos.swift in Sources */,
 				C973AB642A323167002AED16 /* Relay+CoreDataProperties.swift in Sources */,
+				5BD813A32C8BA7CC00E65F4D /* PreviewEventRepository.swift in Sources */,
 				C9EE3E642A053910008A7491 /* ExpirationTimeOption.swift in Sources */,
 				65D066AA2BD55E160011C5CD /* DirectMessageWrapper.swift in Sources */,
 				C973AB5E2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */,
