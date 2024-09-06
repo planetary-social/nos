@@ -1,7 +1,7 @@
 import Foundation
 
 /// Errors for an ``Event``.
-enum EventError: Error, LocalizedError {
+enum EventError: LocalizedError {
     case utf8Encoding
     case unrecognizedKind
     case missingAuthor

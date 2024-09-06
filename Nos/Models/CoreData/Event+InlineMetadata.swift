@@ -10,9 +10,7 @@ extension Event {
 
         let metadataTags = tags.filter({ $0.first == "imeta" })
             .compactMap { InlineMetadataTag(imetaTag: $0) }
-        let collection = InlineMetadataCollection(tags: metadataTags)
-
-        return collection
+        return InlineMetadataCollection(tags: metadataTags)
     }
 }
 
@@ -73,7 +71,11 @@ struct InlineMetadataCollection {
     private var metadata: [String: InlineMetadataTag]
 
     init(tags: [InlineMetadataTag] = []) {
-        metadata = Dictionary(uniqueKeysWithValues: tags.map { ($0.url, $0) })
+        metadata = .init()
+        for tag in tags {
+            guard metadata[tag.url] == nil else { continue }
+            metadata[tag.url] = tag
+        }
     }
 
     mutating func insert(_ inlineMetadataTag: InlineMetadataTag) {
