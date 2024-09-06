@@ -130,7 +130,11 @@ struct NoteComposer: View {
                     if newValue {
                         do {
                             let jsonEvent = try jsonEvent(attributedString: postText)
-                            if let event = try previewEventRepository.createPreviewEvent(from: jsonEvent, in: viewContext) {
+                            let event = try previewEventRepository.createPreviewEvent(
+                                from: jsonEvent,
+                                in: viewContext
+                            )
+                            if let event {
                                 withAnimation {
                                     self.previewEvent = event
                                 }
@@ -247,7 +251,6 @@ struct NoteComposer: View {
                     replyAction: nil,
                     tapAction: nil
                 )
-                .id(previewEvent)
                 .readabilityPadding()
                 .padding(.vertical, 24)
             }

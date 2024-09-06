@@ -25,12 +25,14 @@ struct DefaultPreviewEventRepository: PreviewEventRepository {
         }
         var updatedJSONEvent = jsonEvent
         updatedJSONEvent.id = Event.previewIdentifier
-        return try EventProcessor.parse(
+        let newPreviewEvent = try EventProcessor.parse(
             jsonEvent: updatedJSONEvent,
             from: nil,
             in: context,
             skipVerification: true
         )
+        try context.saveIfNeeded()
+        return newPreviewEvent
     }
 
     /// Deletes the preview event object from the database.
