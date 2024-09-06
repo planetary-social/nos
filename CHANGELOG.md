@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Release Notes
 
 - Added the option to preview a note before posting it.
+- Fixed a crash that could occur while Nos was in the background.
+- Fixed a bug where Nos sometimes wouldn't reconnect to relays.
 - Added nos.lol to the default relay list for new accounts and removed relay.snort.social.
 - Show quoted notes in note cards.
 - Added quote-reposting.
@@ -21,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Localized the quotation marks on the Notifications view.
 - Fixed a bug where nostr entities in URLs were treated like quoted note links.
 - Added in-app profile photo editing.
+- Changed "Name" to "Display Name" on the Edit Profile View.
 
 ### Internal Changes
 - Included the npub in the properties list sent to analytics.
