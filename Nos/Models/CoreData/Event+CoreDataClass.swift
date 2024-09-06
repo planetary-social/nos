@@ -1,39 +1,9 @@
 // swiftlint:disable file_length
 import secp256k1
-import Foundation
 import CoreData
-import RegexBuilder
-import SwiftUI
 import Logger
 import Dependencies
 
-enum EventError: Error, LocalizedError {
-	case utf8Encoding
-	case unrecognizedKind
-    case missingAuthor
-    case invalidETag([String])
-    case invalidSignature(Event)
-    case expiredEvent
-
-    var errorDescription: String? {
-        switch self {
-        case .unrecognizedKind:
-            return "Unrecognized event kind"
-        case .missingAuthor:
-            return "Could not parse author on event"
-        case .invalidETag(let strings):
-            return "Invalid e tag \(strings.joined(separator: ","))"
-        case .invalidSignature(let event):
-            return "Invalid signature on event: \(String(describing: event.identifier))"
-        case .expiredEvent:
-            return "This event has expired"
-        default:
-            return "An unkown error occurred."
-        }
-	}
-}
-
-// swiftlint:disable type_body_length
 @objc(Event)
 @Observable
 public class Event: NosManagedObject, VerifiableEvent {
@@ -173,7 +143,7 @@ public class Event: NosManagedObject, VerifiableEvent {
     ///
     /// Intented to be used primarily to compute the number of replies and for
     /// building a set of author avatars.
-    @nonobjc public class func replies(to noteID: RawEventID) -> FetchRequest<Event> {
+    @nonobjc public class func replies(to noteID: RawEventID) -> NSFetchRequest<Event> {
         let format = """
             SUBQUERY(
                 eventReferences,
@@ -205,7 +175,7 @@ public class Event: NosManagedObject, VerifiableEvent {
 
         fetchRequest.predicate = predicate
         fetchRequest.relationshipKeyPathsForPrefetching = ["author"]
-        return FetchRequest(fetchRequest: fetchRequest)
+        return fetchRequest
     }
 
     /// A fetch request for all the events that should be cleared out of the database by 
@@ -590,7 +560,7 @@ public class Event: NosManagedObject, VerifiableEvent {
             return event
         }
     }
-    
+
     /// Populates an event stub (with only its ID set) using the data in the given JSON.
     func hydrate(from jsonEvent: JSONEvent, relay: Relay?, in context: NSManagedObjectContext) throws {
         assert(isStub, "Tried to hydrate an event that isn't a stub. This is a programming error")
@@ -1245,5 +1215,4 @@ public class Event: NosManagedObject, VerifiableEvent {
         shouldBePublishedTo = Set()
     }
 }
-// swiftlint:enable type_body_length
 // swiftlint:enable file_length
