@@ -47,8 +47,8 @@ struct SideMenuContent: View {
                         if let name = currentUser.author?.safeName {
                             Text(name)
                                 .foregroundColor(.primaryTxt)
-                                .dynamicTypeSize(...DynamicTypeSize.accessibility2)
-                                .font(.clarityBold(baseSize: 24, relativeTo: .title2))
+                                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+                                .font(.clarityBold(.title2))
                                 .padding(.top, 15)
                         }
                     }
@@ -143,8 +143,8 @@ struct SideMenuRow: View {
                     .foregroundColor(.primaryTxt)
                 Spacer()
             }
-            .dynamicTypeSize(...DynamicTypeSize.accessibility2)
-            .font(.clarityBold(baseSize: 20, relativeTo: .title3))
+            .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+            .font(.clarityBold(.title3))
         }
         .padding()
     }

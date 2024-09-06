@@ -100,7 +100,7 @@ struct ComposerActionBar: View {
                 ScrollView(.horizontal) {
                     HStack {
                         Text(.localizable.noteDisappearsIn)
-                            .font(.clarity(.regular, textStyle: .caption1))
+                            .font(.clarityRegular(.caption))
                             .foregroundColor(.secondaryTxt)
                             .transition(.move(edge: .trailing))
                             .padding(10)
