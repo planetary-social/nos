@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Release Notes
+- Fixed a crash that could occur while Nos was in the background.
 - Added nos.lol to the default relay list for new accounts and removed relay.snort.social.
 - Show quoted notes in note cards.
 - Added quote-reposting.
