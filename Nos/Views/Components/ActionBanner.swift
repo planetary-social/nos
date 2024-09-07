@@ -46,7 +46,8 @@ struct ActionBanner: View {
                             startPoint: .leading,
                             endPoint: .trailing
                         ),
-                        textShadow: false
+                        textShadow: false,
+                        shouldFillHorizontalSpace: true
                     ) {
                         action?()
                     }
