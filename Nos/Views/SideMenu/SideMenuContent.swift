@@ -27,6 +27,7 @@ struct SideMenuContent: View {
                         router.push(EditProfileDestination(profile: author))
                     }
                 }
+                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 30)
             } else {
