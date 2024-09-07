@@ -17,7 +17,7 @@ struct RepliesLabel: View {
         self.repliesDisplayType = repliesDisplayType
 
         let noteIdentifier = note.identifier ?? ""
-        _replies = Event.replies(to: noteIdentifier)
+        _replies = FetchRequest(fetchRequest: Event.replies(to: noteIdentifier))
     }
 
     private var isBeingDiscussed: Bool {

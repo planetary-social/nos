@@ -51,6 +51,7 @@ import Combine
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.router) private var router
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.userDefaults) private var userDefaults
     @Dependency(\.currentUser) private var currentUser
     
@@ -91,8 +92,13 @@ import Combine
             cacheName: nil
         )
         notificationWatcher?.delegate = self
-        try? await modelContext.perform {
-            try self.notificationWatcher?.performFetch()
+        await modelContext.perform { [weak self] in
+            do { 
+                try self?.notificationWatcher?.performFetch()
+            } catch {
+                Log.error("Error watching notifications:")
+                self?.crashReporting.report(error)
+            }
         }
         
         let userMentionsFilter = Filter(

@@ -1,0 +1,24 @@
+{
+    "id": "eddc09047482e2febd7c6d1dcf18eef9caab0c6c8a8095f4e3f13ff8feaa2205",
+    "pubkey": "47259076c85f9240e852420d7213c95e95102f1de929fb60f33a2c32570c98c4",
+    "created_at": 1725029036,
+    "kind": 1,
+    "tags": [
+        [
+            "imeta",
+            "url https://image.nostr.build/6ffcd8dadcdf7a54a7f3d7bafb958d4d21040820b479db1047135d0cbfd24a95.png",
+            "m image/png",
+            "x a9a5251eabdb51febfc1f0321ef5dcaf50ef41aa554d973841182b978f10325b",
+            "ox 6ffcd8dadcdf7a54a7f3d7bafb958d4d21040820b479db1047135d0cbfd24a95",
+            "size 21049",
+            "dim 746x443",
+            "blurhash L9SY~#g4NH_3?wR+oJt6_4%Maxof"
+        ],
+        [
+            "t",
+            "ditto"
+        ]
+    ],
+    "content": "Zap notifications in #Ditto coming soon!\n\n\nhttps://image.nostr.build/6ffcd8dadcdf7a54a7f3d7bafb958d4d21040820b479db1047135d0cbfd24a95.png",
+    "sig": "38942f9b3f8e3c4532fbffe57ea77f723e397c42e8da15e21f29e36396001e0010a011887ea55b8764d2dcc00421315a224100f48220723f3d4caf271a6c10f6"
+}
