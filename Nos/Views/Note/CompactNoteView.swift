@@ -99,6 +99,7 @@ struct CompactNoteView: View {
                     .fixedSize(horizontal: false, vertical: true)
             } else {
                 formattedText
+                    .fixedSize(horizontal: false, vertical: true)
                     .lineLimit(truncationLineLimit)
                     .background {
                         GeometryReader { geometryProxy in
