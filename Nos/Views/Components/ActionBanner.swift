@@ -7,6 +7,7 @@ struct ActionBanner: View {
     var messageImage: Image?
     var buttonText: LocalizedStringResource
     var buttonImage: Image?
+    var shouldButtonFillHorizontalSpace: Bool
     var action: (() -> Void)?
 
     private var backgroundGradient: LinearGradient {
@@ -47,12 +48,14 @@ struct ActionBanner: View {
                             endPoint: .trailing
                         ),
                         textShadow: false,
-                        shouldFillHorizontalSpace: true
+                        shouldFillHorizontalSpace: shouldButtonFillHorizontalSpace
                     ) {
                         action?()
                     }
                     .frame(minHeight: 40)
-                    Spacer()
+                    if !shouldButtonFillHorizontalSpace {
+                        Spacer()
+                    }
                 }
             }
             .padding(.vertical, 24)
@@ -100,7 +103,8 @@ struct ActionBanner_Previews: PreviewProvider {
             ActionBanner(
                 messageText: .localizable.completeProfileMessage,
                 messageImage: Image.atSymbol,
-                buttonText: .localizable.completeProfileButton
+                buttonText: .localizable.completeProfileButton,
+                shouldButtonFillHorizontalSpace: true
             )
             .padding(20)
         }

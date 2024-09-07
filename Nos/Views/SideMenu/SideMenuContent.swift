@@ -21,7 +21,8 @@ struct SideMenuContent: View {
                 ActionBanner(
                     messageText: .localizable.completeProfileMessage,
                     buttonText: .localizable.completeProfileButton,
-                    buttonImage: .editProfile
+                    buttonImage: .editProfile,
+                    shouldButtonFillHorizontalSpace: true
                 ) {
                     if let author = currentUser.author {
                         router.push(EditProfileDestination(profile: author))
