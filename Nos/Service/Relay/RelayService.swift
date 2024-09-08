@@ -801,6 +801,7 @@ extension RelayService {
     }
     
     private func queryRelayMetadataIfNeeded(_ relayAddress: URL) async throws {
+        let metadataMaxAge: TimeInterval = 86_400 * 3 // 3 days
         let address = relayAddress.absoluteString
         let shouldQueryRelayMetadata = try await backgroundContext.perform { [backgroundContext] in
             guard let relay = try backgroundContext.fetch(Relay.relay(by: address)).first else {
@@ -809,7 +810,7 @@ extension RelayService {
             guard let timestamp = relay.metadataFetchedAt else {
                 return true
             }
-            return timestamp.timeIntervalSinceNow > 86_400 * 3 // 3 days
+            return Date.now.timeIntervalSince(timestamp) > metadataMaxAge
         }
         guard shouldQueryRelayMetadata else {
             return
