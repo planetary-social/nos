@@ -246,7 +246,7 @@ struct ProfileView: View {
     @Dependency(\.persistenceController) var persistenceController 
     
     lazy var previewContext: NSManagedObjectContext = {
-        persistenceController.container.viewContext  
+        persistenceController.viewContext  
     }()
     
     var previewData = PreviewData(currentUserKey: KeyFixture.eve)

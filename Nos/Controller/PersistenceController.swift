@@ -2,24 +2,24 @@ import CoreData
 import Logger
 import Dependencies
 
-class PersistenceController {
+final class PersistenceController {
     
     @Dependency(\.currentUser) var currentUser
     @Dependency(\.crashReporting) var crashReporting
     
     /// Increment this to delete core data on update
-    static let version = 3
-    static let versionKey = "NosPersistenceControllerVersion"
+    private static let version = 3
+    private static let versionKey = "NosPersistenceControllerVersion"
 
     static var preview: PersistenceController = {
         let controller = PersistenceController(inMemory: true)
-        let viewContext = controller.container.viewContext
+        let viewContext = controller.viewContext
         return controller
     }()
     
     static var empty: PersistenceController = {
         let result = PersistenceController(inMemory: true)
-        let viewContext = result.container.viewContext
+        let viewContext = result.viewContext
         return result
     }()
     
@@ -28,22 +28,18 @@ class PersistenceController {
     }
     
     /// A context for parsing Nostr events from relays.
-    lazy var parseContext = {
-        newBackgroundContext()
-    }()
+    private(set) lazy var parseContext = newBackgroundContext()
     
     /// A context for Views to do expensive queries that we want to keep off the viewContext.
-    lazy var backgroundViewContext = {
-        self.newBackgroundContext()
-    }()
+    private(set) lazy var backgroundViewContext = newBackgroundContext()
 
     var sqliteURL: URL? {
         container.persistentStoreDescriptions.first?.url
     }
 
     private(set) var container: NSPersistentContainer
-    private var model: NSManagedObjectModel
-    private var inMemory: Bool
+    private let model: NSManagedObjectModel
+    private let inMemory: Bool
 
     init(containerName: String = "Nos", inMemory: Bool = false, erase: Bool = false) {
         self.inMemory = inMemory
@@ -53,57 +49,19 @@ class PersistenceController {
         setUp(erasingPrevious: erase)
     }
     
-    func tearDown() throws {
-        for store in container.persistentStoreCoordinator.persistentStores {
-            try container.persistentStoreCoordinator.remove(store)
-        }
-        
-        try container.persistentStoreDescriptions.forEach { storeDescription in
-            try container.persistentStoreCoordinator.destroyPersistentStore(
-                at: storeDescription.url!, 
-                ofType: NSSQLiteStoreType, 
-                options: nil
-            )
-        }
-        
-        viewContext.reset()
-        backgroundViewContext.reset()
-        parseContext.reset() 
-    }
-    
-    func setUp(erasingPrevious: Bool) {
+    private func setUp(erasingPrevious: Bool) {
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         } 
         
         loadPersistentStores(from: container, erasingPrevious: erasingPrevious)
         
-        container.viewContext.automaticallyMergesChangesFromParent = true
-        let mergeType = NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType
-        container.viewContext.mergePolicy = NSMergePolicy(merge: mergeType)
+        viewContext.automaticallyMergesChangesFromParent = true
+        viewContext.mergePolicy = NSMergePolicy.mergeByPropertyStoreTrump
     }
-    
-    #if DEBUG
-    func resetForTesting() {
-        container = NSPersistentContainer(name: "Nos", managedObjectModel: model)
-        if !inMemory {
-            container.loadPersistentStores(completionHandler: { (storeDescription, _) in
-                guard let storeURL = storeDescription.url else {
-                    Log.error("Could not get store URL")
-                    return
-                }
-                Self.clearCoreData(store: storeURL, in: self.container)
-            })
-        }
-        setUp(erasingPrevious: true)
-        viewContext.reset()
-        backgroundViewContext.reset()
-        parseContext.reset() 
-    }
-    #endif
     
     private func loadPersistentStores(from container: NSPersistentContainer, erasingPrevious: Bool) {
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+        container.loadPersistentStores { storeDescription, error in
             
             // Drop database if necessary
             if Self.loadVersionFromDisk() < Self.version || erasingPrevious {
@@ -124,7 +82,7 @@ class PersistenceController {
                 }
                 fatalError("Could not initialize database \(error), \(error.userInfo)")
             }
-        })
+        }
     }
     
     @MainActor
@@ -135,7 +93,7 @@ class PersistenceController {
         }
     }
     
-    static func clearCoreData(store storeURL: URL, in container: NSPersistentContainer) {
+    private static func clearCoreData(store storeURL: URL, in container: NSPersistentContainer) {
         Log.info("Dropping Core Data...")
         do {
             try container.persistentStoreCoordinator.destroyPersistentStore(at: storeURL, type: .sqlite)
@@ -144,6 +102,7 @@ class PersistenceController {
         }
     }
     
+#if DEBUG
     func loadSampleData(context: NSManagedObjectContext) async throws {
         guard let sampleFile = Bundle.current.url(forResource: "sample_data", withExtension: "json") else {
             Log.error("Error: bad sample file location")
@@ -178,6 +137,24 @@ class PersistenceController {
         }
     }
     
+    func resetForTesting() {
+        container = NSPersistentContainer(name: "Nos", managedObjectModel: model)
+        if !inMemory {
+            container.loadPersistentStores(completionHandler: { (storeDescription, _) in
+                guard let storeURL = storeDescription.url else {
+                    Log.error("Could not get store URL")
+                    return
+                }
+                Self.clearCoreData(store: storeURL, in: self.container)
+            })
+        }
+        setUp(erasingPrevious: true)
+        viewContext.reset()
+        backgroundViewContext.reset()
+        parseContext.reset()
+    }
+#endif
+    
     func newBackgroundContext() -> NSManagedObjectContext {
         let context = container.newBackgroundContext()
         context.automaticallyMergesChangesFromParent = true
@@ -185,15 +162,15 @@ class PersistenceController {
         return context
     }
     
-    static func loadVersionFromDisk() -> Int {
+    private static func loadVersionFromDisk() -> Int {
         UserDefaults.standard.integer(forKey: Self.versionKey)
     }
     
-    static func saveVersionToDisk(_ newVersion: Int) {
+    private static func saveVersionToDisk(_ newVersion: Int) {
         UserDefaults.standard.set(newVersion, forKey: Self.versionKey)
     }
     
-    /// Cleans up uneeded entities from the database. Our local database is really just a cache, and we need to 
+    /// Cleans up unneeded entities from the database. Our local database is really just a cache, and we need to
     /// invalidate old items to keep it from growing indefinitely.
     /// 
     /// This should only be called once right at app launch.
