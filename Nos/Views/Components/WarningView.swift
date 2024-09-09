@@ -1,4 +1,5 @@
 import SwiftUI
+import Logger
 
 /// A view that puts a note behind a content warning if appropriate.
 struct WarningView: View {
@@ -155,6 +156,10 @@ struct ContentWarningMessage: View {
                 // I don't like this pattern
                 controller.reports = reports
                 controller.type = type
+                Log.info("Displaying content warning based on reports:")
+                for report in reports {
+                    Log.info("Report with ID: \(String(describing: report.identifier))")
+                }
             }
     }
 }
