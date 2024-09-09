@@ -5,7 +5,7 @@ struct ActivityViewController: UIViewControllerRepresentable {
 
     var activityItems: [Any]
     var applicationActivities: [UIActivity]?
-    var completion: (() -> Void)? // Completion handler for dismissing the sheet
+    var completion: (() -> Void)? // Completion handler called after the share activity is finished
 
     func makeUIViewController(
         context: UIViewControllerRepresentableContext<ActivityViewController>
