@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added in-app profile photo editing.
 - Changed "Name" to "Display Name" on the Edit Profile View.
 - Fixed side menu accessibility issues.
+- Fixed a bug where content of a quoted note expanded out beyond width of viewport. 
 
 ### Internal Changes
 - Included the npub in the properties list sent to analytics.
