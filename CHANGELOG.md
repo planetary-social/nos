@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Internal Changes
 - Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag.
 - Added more instructions to the changelog file
+- Added some logging when a content warnings is displayed
 
 ## [0.1.26] - 2024-09-09Z
 
