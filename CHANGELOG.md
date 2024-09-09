@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Release Notes
-- Fixed a crash that could occur while Nos was in the background.
+- Fixed a crash that could occur while Nos was in the background. #1299
 - Fixed a bug where Nos sometimes wouldn't reconnect to relays.
 - Added nos.lol to the default relay list for new accounts and removed relay.snort.social.
 - Show quoted notes in note cards.
