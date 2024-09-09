@@ -34,6 +34,7 @@ struct NoteOptionsButton: View {
                     copyMessageIdentifier()
                 }
                 Button(String(localized: .localizable.shareNote)) {
+                    showingShare = true
                     analytics.sharedNoteLink()
                 }
                 if !note.isStub {
@@ -82,6 +83,8 @@ struct NoteOptionsButton: View {
                 }
             }
             .sheet(isPresented: $showingShare) {
+                let url = note.webLink
+                ActivityViewController(activityItems: [url])
             }
         }
     }
