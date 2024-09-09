@@ -10,7 +10,10 @@ public class Event: NosManagedObject, VerifiableEvent {
     @Dependency(\.currentUser) @ObservationIgnored private var currentUser
 
     var pubKey: String { author?.hexadecimalPublicKey ?? "" }
-    
+
+    /// Event identifier for the note created by ``NoteComposer`` when displaying previews.
+    static let previewIdentifier = "preview"
+
     static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
         "AND author.muted = false"
 
@@ -258,7 +261,18 @@ public class Event: NosManagedObject, VerifiableEvent {
         fetchRequest.predicate = NSPredicate(format: "expirationDate <= %@", Date.now as CVarArg)
         return fetchRequest
     }
-    
+
+    /// Builds a query that returns an Event with "preview" as its `identifier` if it exists.
+    /// - Returns: A Fetch Request with the necessary query inside.
+    @nonobjc public class func previewRequest() -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.predicate = NSPredicate(
+            format: "identifier = %@",
+            Event.previewIdentifier as CVarArg
+        )
+        return fetchRequest
+    }
+
     @nonobjc public class func event(by identifier: RawEventID) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
@@ -330,6 +344,10 @@ public class Event: NosManagedObject, VerifiableEvent {
                 " OR $reference.marker = 'reply'" +
                 " OR $reference.marker = nil" +
                 ").@count = 0"
+            ),
+            NSPredicate(
+                format: "identifier != %@",
+                Event.previewIdentifier as CVarArg
             )
         ])
         let kind6Predicate = NSPredicate(format: "kind = 6")
@@ -1074,7 +1092,14 @@ public class Event: NosManagedObject, VerifiableEvent {
     var isReply: Bool {
         rootNote() != nil || referencedNote() != nil
     }
-    
+
+    /// Returns `true` if this event is meant to be used to preview a note.
+    ///
+    /// Used by ``NoteComposer``.
+    var isPreview: Bool {
+        identifier == Event.previewIdentifier
+    }
+
     var isExpired: Bool {
         if let expirationDate {
             return expirationDate <= .now

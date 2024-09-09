@@ -15,10 +15,10 @@ final class Date_ElapsedTests: XCTestCase {
                 .date
         )
 
-        XCTAssertEqual(date.distanceString(date, calendar: calendar), "1m")
-        XCTAssertEqual(date.addingTimeInterval(-2).distanceString(date, calendar: calendar), "1m")
-        XCTAssertEqual(date.addingTimeInterval(-3).distanceString(date, calendar: calendar), "1m")
-        XCTAssertEqual(date.addingTimeInterval(-59).distanceString(date, calendar: calendar), "1m")
+        XCTAssertEqual(date.distanceString(date, calendar: calendar), "now")
+        XCTAssertEqual(date.addingTimeInterval(-2).distanceString(date, calendar: calendar), "now")
+        XCTAssertEqual(date.addingTimeInterval(-3).distanceString(date, calendar: calendar), "now")
+        XCTAssertEqual(date.addingTimeInterval(-59).distanceString(date, calendar: calendar), "now")
         XCTAssertEqual(date.addingTimeInterval(-60).distanceString(date, calendar: calendar), "1m")
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .hour, value: -1, to: date))
@@ -88,10 +88,10 @@ final class Date_ElapsedTests: XCTestCase {
                 .date
         )
 
-        XCTAssertEqual(date.distanceString(date, calendar: calendar), "1min")
-        XCTAssertEqual(date.addingTimeInterval(-2).distanceString(date, calendar: calendar), "1min")
-        XCTAssertEqual(date.addingTimeInterval(-3).distanceString(date, calendar: calendar), "1min")
-        XCTAssertEqual(date.addingTimeInterval(-59).distanceString(date, calendar: calendar), "1min")
+        XCTAssertEqual(date.distanceString(date, calendar: calendar), "now")
+        XCTAssertEqual(date.addingTimeInterval(-2).distanceString(date, calendar: calendar), "now")
+        XCTAssertEqual(date.addingTimeInterval(-3).distanceString(date, calendar: calendar), "now")
+        XCTAssertEqual(date.addingTimeInterval(-59).distanceString(date, calendar: calendar), "now")
         XCTAssertEqual(date.addingTimeInterval(-60).distanceString(date, calendar: calendar), "1min")
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .hour, value: -1, to: date))

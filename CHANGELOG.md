@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Release Notes
+
+- Added the option to preview a note before posting it.
 - Fixed side menu accessibility issues.
 - Fixed a bug where content of a quoted note expanded out beyond width of viewport. 
 
