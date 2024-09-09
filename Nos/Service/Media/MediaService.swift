@@ -5,7 +5,8 @@ import SDWebImage
 
 /// Determines the preferred ``MediaOrientation`` for a given `URL`.
 protocol MediaService {
-    /// Returns the preferred orientation for the media at the given URL.
+    /// Returns the preferred orientation for the media at the given URL by downloading the data at the URL and using
+    /// its dimensions, if it has any.
     /// - Parameter url: The URL of the media.
     /// - Returns: The preferred orientation for the media at the given URL.
     /// - Note: For images, the orientation will match the image when possible. For square images, `landscape` is

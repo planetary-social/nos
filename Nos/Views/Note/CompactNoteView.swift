@@ -100,6 +100,7 @@ struct CompactNoteView: View {
                     .allowsHitTesting(!note.isPreview)
             } else {
                 formattedText
+                    .fixedSize(horizontal: false, vertical: true)
                     .lineLimit(truncationLineLimit)
                     .allowsHitTesting(!note.isPreview)
                     .background {
@@ -155,7 +156,7 @@ struct CompactNoteView: View {
             }
             if note.kind == EventKind.text.rawValue, showLinkPreviews, !note.contentLinks.isEmpty {
                 if featureFlags.newMediaDisplayEnabled {
-                    GalleryView(urls: note.contentLinks)
+                    GalleryView(urls: note.contentLinks, metadata: note.inlineMetadata)
                 } else {
                     LinkPreviewCarousel(links: note.contentLinks)
                 }

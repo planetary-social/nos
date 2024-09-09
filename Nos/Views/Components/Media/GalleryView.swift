@@ -6,21 +6,23 @@ import SwiftUI
 struct GalleryView: View {
     /// The URLs of the content to display.
     let urls: [URL]
-    
+
+    /// Inline metadata describing the data in ``urls``.
+    let metadata: InlineMetadataCollection?
+
     /// The currently-selected tab in the tab view.
     @State private var selectedTab = 0
     
-    /// The orientation of all media in this gallery view. Initially set to `.landscape` until we load the first URL and
-    /// determine its orientation, then updated to match the first item's orientation.
+    /// The orientation for this gallery view.
     @State private var orientation: MediaOrientation?
-    
-    /// This essential first image determines the orientation of the gallery view. Whatever orientation this is, so the
-    /// rest shall be.
-    /// Oh, but also: it's not always an image, so this won't work if it's a video or web link. Oopsie.
-    @State private var firstImage: Image?
     
     /// The media service that loads content from URLs and determines the orientation for this gallery.
     @Dependency(\.mediaService) private var mediaService
+    
+    /// The orientation determined by the `metadata`, if any.
+    private var metadataOrientation: MediaOrientation? {
+        metadata?[urls.first?.absoluteString]?.orientation
+    }
 
     var body: some View {
         if let orientation {
@@ -54,7 +56,7 @@ struct GalleryView: View {
                 minHeight: 0,
                 maxHeight: .infinity
             )
-            .aspectRatio(orientation == .portrait ? 3 / 4 : 4 / 3, contentMode: .fit)
+            .aspectRatio(orientation.aspectRatio, contentMode: .fit)
             .padding(.bottom, 10)
             .clipShape(.rect)
 
@@ -74,22 +76,26 @@ struct GalleryView: View {
         }
     }
     
-    /// A loading view that fills the space for the given `loadingOrientation` and loads the first URL to determine the
-    /// orientation for the gallery.
-    /// - Parameter loadingOrientation: The ``MediaOrientation`` to use to display the loading view.
-    ///             Defaults to `.landscape`.
-    /// - Returns: A loading view in the given `loadingOrientation`.
-    private func loadingView(_ loadingOrientation: MediaOrientation = .landscape) -> some View {
-        AspectRatioContainer(orientation: loadingOrientation) {
+    /// A loading view that determines the orientation for the gallery. When possible, the aspect ratio of the
+    /// loading view matches the aspect ratio of the gallery. Otherwise, `landscape`.
+    /// - Returns: A loading view in the aspect ratio that matches the gallery media when possible.
+    private func loadingView() -> some View {
+        AspectRatioContainer(orientation: metadataOrientation ?? .landscape) {
             ProgressView()
         }
         .task {
-            guard let url = urls.first else {
+            guard let firstURL = urls.first else {
                 orientation = .landscape
                 return
             }
 
-            orientation = await mediaService.orientation(for: url)
+            // if we can determine the orientation from the metadata we have, great!
+            // if not, download the data from the first URL to determine the orientation
+            if let metadataOrientation {
+                orientation = metadataOrientation
+            } else {
+                orientation = await mediaService.orientation(for: firstURL)
+            }
         }
     }
 }
@@ -146,7 +152,7 @@ fileprivate struct GalleryIndexView: View {
     ]
     return VStack {
         Spacer()
-        GalleryView(urls: urls)
+        GalleryView(urls: urls, metadata: nil)
         Spacer()
     }
     .background(LinearGradient.cardBackground)
@@ -159,7 +165,7 @@ fileprivate struct GalleryIndexView: View {
     ]
     return VStack {
         Spacer()
-        GalleryView(urls: urls)
+        GalleryView(urls: urls, metadata: nil)
         Spacer()
     }
     .background(LinearGradient.cardBackground)
@@ -172,7 +178,7 @@ fileprivate struct GalleryIndexView: View {
     ]
     return VStack {
         Spacer()
-        GalleryView(urls: urls)
+        GalleryView(urls: urls, metadata: nil)
         Spacer()
     }
     .background(LinearGradient.cardBackground)
@@ -185,30 +191,43 @@ fileprivate struct GalleryIndexView: View {
     ]
     return VStack {
         Spacer()
-        GalleryView(urls: urls)
+        GalleryView(urls: urls, metadata: nil)
         Spacer()
     }
     .background(LinearGradient.cardBackground)
 }
 
-#Preview("One landscape image") {
-    VStack {
-        GalleryView(urls: [
-            URL(
-                string: "https://image.nostr.build/0fa09a19ff2791e9af4c0d7dda6b3fa8a3abc0f152fc55cf17d69b7c59f12d0f.jpg"
-            )!
-        ])
+#Preview("Landscape image with metadata") {
+    let url = "https://image.nostr.build/0fa09a19ff2791e9af4c0d7dda6b3fa8a3abc0f152fc55cf17d69b7c59f12d0f.jpg"
+    let urls = [URL(string: url)!]
+    let metadataTag = InlineMetadataTag(url: url, dimensions: CGSize(width: 1252, height: 835))
+    let collection = InlineMetadataCollection(tags: [metadataTag])
+    return VStack {
+        GalleryView(urls: urls, metadata: collection)
     }
     .background(LinearGradient.cardBackground)
 }
 
-#Preview("One portrait image") {
-    VStack {
-        GalleryView(urls: [
-            URL(
-                string: "https://image.nostr.build/b0fe2ee39c5c007b7a9a53190abb6cf9e94d6106555539f8562a29f0a9dbb755.jpg"
-            )!
-        ])
+#Preview("Portrait image with metadata") {
+    let url = "https://image.nostr.build/b0fe2ee39c5c007b7a9a53190abb6cf9e94d6106555539f8562a29f0a9dbb755.jpg"
+    let urls = [
+        URL(string: url)!
+    ]
+    let metadataTag = InlineMetadataTag(url: url, dimensions: CGSize(width: 1, height: 2))
+    let collection = InlineMetadataCollection(tags: [metadataTag])
+    return VStack {
+        GalleryView(urls: urls, metadata: collection)
+    }
+    .background(LinearGradient.cardBackground)
+}
+
+#Preview("Portrait image") {
+    let url = "https://image.nostr.build/486821596f66bcc6bae55544ddf8f00be0e4c2470556d3fee8e2a4ddadd01266.jpg"
+    let urls = [
+        URL(string: url)!
+    ]
+    return VStack {
+        GalleryView(urls: urls, metadata: nil)
     }
     .background(LinearGradient.cardBackground)
 }

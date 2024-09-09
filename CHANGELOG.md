@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 We define "Noteworthy changes" as 1) user-facing features or bugfixes 2) significant technical or architectural changes that contributors will notice. If your Pull Request does not contain any changes of this nature i.e. minor string/translation changes, patch releases of dependencies, refactoring, etc. then add the `Skip-Changelog` label. 
 
+The **Release Notes** section is for changes that the are relevant to users, and they should know about. The **Internal Changes** section is for other changes that are not visible to users since the changes may not be relevant to them, e.g technical improvements, but the developers should still be aware of.
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
@@ -11,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Release Notes
 
 - Added the option to preview a note before posting it.
+- Fixed side menu accessibility issues.
+- Fixed a bug where content of a quoted note expanded out beyond width of viewport. 
+
+### Internal Changes
+- Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag.
+- Added more instructions to the changelog file
+
+## [0.1.26] - 2024-09-09Z
+
+### Release Notes
 - Fixed a crash that could occur while Nos was in the background.
 - Fixed a bug where Nos sometimes wouldn't reconnect to relays.
 - Added nos.lol to the default relay list for new accounts and removed relay.snort.social.
