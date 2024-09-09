@@ -321,7 +321,8 @@ fileprivate struct NosNIP05Banner: View {
             ActionBanner(
                 messageText: .localizable.claimYourUsernameText,
                 messageImage: .atSymbol,
-                buttonText: .localizable.claimYourUsernameButton
+                buttonText: .localizable.claimYourUsernameButton,
+                shouldButtonFillHorizontalSpace: false
             ) {
                 showNIP05Wizard = true
             }

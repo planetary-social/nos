@@ -15,7 +15,7 @@ struct UNSNameTakenView: View {
                         .padding(.top, 50)
                     
                     Text(.localizable.oops)
-                        .font(.clarity(.bold, textStyle: .title1))
+                        .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
@@ -23,7 +23,7 @@ struct UNSNameTakenView: View {
                         .padding(.bottom, 3)
                     
                     Text(.localizable.thatNameIsTaken)
-                        .font(.clarity(.bold, textStyle: .title1))
+                        .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
