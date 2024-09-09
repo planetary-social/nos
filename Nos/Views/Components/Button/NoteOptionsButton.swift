@@ -84,7 +84,9 @@ struct NoteOptionsButton: View {
             }
             .sheet(isPresented: $showingShare) {
                 let url = note.webLink
-                ActivityViewController(activityItems: [url])
+                ActivityViewController(activityItems: [url]) {
+                    showingShare = false
+                }
             }
         }
     }
