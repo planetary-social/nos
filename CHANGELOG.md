@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed typos in release notes.
 - Renamed and reorganized files.
 - Added more instructions to the changelog file
+- Fixed a date calculation bug affecting log during relay update
 
 ## [0.1.25] - 2024-08-21Z
 

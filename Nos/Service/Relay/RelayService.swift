@@ -809,7 +809,7 @@ extension RelayService {
             guard let timestamp = relay.metadataFetchedAt else {
                 return true
             }
-            return timestamp.timeIntervalSinceNow > 86_400 * 3 // 3 days
+            return -timestamp.timeIntervalSinceNow > 86_400 * 3 // 3 days
         }
         guard shouldQueryRelayMetadata else {
             return
