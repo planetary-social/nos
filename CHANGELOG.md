@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.26] - 2024-09-09Z
+
 ### Release Notes
 - Fixed a crash that could occur while Nos was in the background.
 - Fixed a bug where Nos sometimes wouldn't reconnect to relays.
