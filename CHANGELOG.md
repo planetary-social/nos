@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug where nostr entities in URLs were treated like quoted note links.
 - Added in-app profile photo editing.
 - Changed "Name" to "Display Name" on the Edit Profile View.
+- Fixed issue where relay metadata is never updated.
 
 ### Internal Changes
 - Included the npub in the properties list sent to analytics.
