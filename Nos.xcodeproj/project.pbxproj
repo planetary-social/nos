@@ -171,8 +171,10 @@
 		5BBA5E912BADF98E00D57D76 /* AlreadyHaveANIP05View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBA5E902BADF98E00D57D76 /* AlreadyHaveANIP05View.swift */; };
 		5BBA5E9C2BAE052F00D57D76 /* NiceWorkSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBA5E9B2BAE052F00D57D76 /* NiceWorkSheet.swift */; };
 		5BC0D9CC2B867B9D005D6980 /* NamesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */; };
+		5BCA95D22C8A5F0D00A52D1A /* PreviewEventRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCA95D12C8A5F0D00A52D1A /* PreviewEventRepository.swift */; };
 		5BD08BB22A38E96F00BB926C /* JSONRelayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B503F612A291A1A0098805A /* JSONRelayMetadata.swift */; };
 		5BD25E592C192BBC005CF884 /* NoteParserTests+Parse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD25E582C192BBC005CF884 /* NoteParserTests+Parse.swift */; };
+		5BD813A32C8BA7CC00E65F4D /* PreviewEventRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCA95D12C8A5F0D00A52D1A /* PreviewEventRepository.swift */; };
 		5BE281C72AE2CCD800880466 /* ReplyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE281C62AE2CCD800880466 /* ReplyButton.swift */; };
 		5BE281CA2AE2CCEB00880466 /* HomeTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE281C92AE2CCEB00880466 /* HomeTab.swift */; };
 		5BFBB28B2BD9D79F002E909F /* URLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBB28A2BD9D79F002E909F /* URLParser.swift */; };
@@ -677,6 +679,7 @@
 		5BBA5E902BADF98E00D57D76 /* AlreadyHaveANIP05View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlreadyHaveANIP05View.swift; sourceTree = "<group>"; };
 		5BBA5E9B2BAE052F00D57D76 /* NiceWorkSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NiceWorkSheet.swift; sourceTree = "<group>"; };
 		5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesAPI.swift; sourceTree = "<group>"; };
+		5BCA95D12C8A5F0D00A52D1A /* PreviewEventRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewEventRepository.swift; sourceTree = "<group>"; };
 		5BD25E582C192BBC005CF884 /* NoteParserTests+Parse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoteParserTests+Parse.swift"; sourceTree = "<group>"; };
 		5BE281C62AE2CCD800880466 /* ReplyButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplyButton.swift; sourceTree = "<group>"; };
 		5BE281C92AE2CCEB00880466 /* HomeTab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTab.swift; sourceTree = "<group>"; };
@@ -1739,6 +1742,7 @@
 				659B27232BD9CB4500BEA6CC /* VerifiableEvent.swift */,
 				030742C32B4769F90073839D /* CoreData */,
 				C92E7F652C4EFF2600B80638 /* WebSockets */,
+				5BCA95D12C8A5F0D00A52D1A /* PreviewEventRepository.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2312,6 +2316,7 @@
 				5B79F6132B98B145002DA9BE /* WizardNavigationStack.swift in Sources */,
 				C9F84C1C298DBBF400C6714D /* Data+Sha.swift in Sources */,
 				C936B4622A4CB01C00DF1EB9 /* PushNotificationService.swift in Sources */,
+				5BCA95D22C8A5F0D00A52D1A /* PreviewEventRepository.swift in Sources */,
 				C95D68A6299E6F9E00429F86 /* ProfileHeader.swift in Sources */,
 				0365CD872C4016A200622A1A /* EventKind.swift in Sources */,
 				C9BAB09B2996FBA10003A84E /* EventProcessor.swift in Sources */,
@@ -2407,6 +2412,7 @@
 				035729B32BE4167E005FEE85 /* TLVElementTests.swift in Sources */,
 				C9C2B77D29E072E400548B4A /* WebSocket+Nos.swift in Sources */,
 				C973AB642A323167002AED16 /* Relay+CoreDataProperties.swift in Sources */,
+				5BD813A32C8BA7CC00E65F4D /* PreviewEventRepository.swift in Sources */,
 				C9EE3E642A053910008A7491 /* ExpirationTimeOption.swift in Sources */,
 				65D066AA2BD55E160011C5CD /* DirectMessageWrapper.swift in Sources */,
 				C973AB5E2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */,
@@ -2677,7 +2683,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.26;
+				MARKETING_VERSION = 0.1.27;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.verse.Nos-staging";
 				PRODUCT_MODULE_NAME = Nos;
 				PRODUCT_NAME = "$(TARGET_NAME) Staging";
@@ -2850,7 +2856,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.26;
+				MARKETING_VERSION = 0.1.27;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.verse.Nos-dev";
 				PRODUCT_MODULE_NAME = Nos;
 				PRODUCT_NAME = "$(TARGET_NAME) Dev";
@@ -3120,7 +3126,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.26;
+				MARKETING_VERSION = 0.1.27;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.Nos;
 				PRODUCT_MODULE_NAME = Nos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3175,7 +3181,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 0.1.26;
+				MARKETING_VERSION = 0.1.27;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.Nos;
 				PRODUCT_MODULE_NAME = Nos;
 				PRODUCT_NAME = "$(TARGET_NAME)";

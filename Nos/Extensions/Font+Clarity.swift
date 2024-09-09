@@ -2,34 +2,62 @@ import SwiftUI
 
 // https://stackoverflow.com/a/74416073
 extension Font {
-    static func clarity(_ fontWeight: UIFont.Weight, textStyle: UIFont.TextStyle = .body) -> Font {
-        switch fontWeight {
-        case .regular:
-            clarityRegular(textStyle)
-        case .medium:
-            clarityMedium(textStyle)
-        case .semibold:
-            claritySemibold(textStyle)
-        case .bold:
-            clarityBold(textStyle)
-        default:
-            clarityRegular(textStyle)
+    
+    static func clarity(
+        _ fontWeight: Font.Weight,
+        textStyle: Font.TextStyle = .body
+    ) -> Font {
+        .custom(
+            fontWeight.clarityFontName,
+            size: textStyle.defaultSize,
+            relativeTo: textStyle
+        )
+    }
+
+    static func clarityRegular(_ textStyle: Font.TextStyle) -> Font {
+        clarity(.regular, textStyle: textStyle)
+    }
+    
+    static func clarityBold(_ textStyle: Font.TextStyle) -> Font {
+        clarity(.bold, textStyle: textStyle)
+    }
+}
+
+extension Font.Weight {
+    var clarityFontName: String {
+        switch self {
+        case .medium:   "ClarityCity-Medium"
+        case .semibold: "ClarityCity-SemiBold"
+        case .bold:     "ClarityCity-Bold"
+        default:        "ClarityCity-Regular"
         }
     }
+}
 
-    static func clarityRegular(_ textStyle: UIFont.TextStyle) -> Font {
-        .custom("ClarityCity-Regular", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+fileprivate extension Font.TextStyle {
+    var uiFontTextStyle: UIFont.TextStyle {
+        switch self {
+        case .largeTitle:       .largeTitle
+        case .title:            .title1
+        case .title2:           .title2
+        case .title3:           .title3
+        case .headline:         .headline
+        case .subheadline:      .subheadline
+        case .body:             .body
+        case .callout:          .callout
+        case .footnote:         .footnote
+        case .caption:          .caption1
+        case .caption2:         .caption2
+        case .extraLargeTitle:  .extraLargeTitle
+        case .extraLargeTitle2: .extraLargeTitle2
+        @unknown default:       UIFont.TextStyle.body
+        }
     }
-
-    static func clarityMedium(_ textStyle: UIFont.TextStyle) -> Font {
-        .custom("ClarityCity-Medium", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
-    }
-
-    static func claritySemibold(_ textStyle: UIFont.TextStyle) -> Font {
-        .custom("ClarityCity-SemiBold", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
-    }
-
-    static func clarityBold(_ textStyle: UIFont.TextStyle) -> Font {
-        .custom("ClarityCity-Bold", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+    
+    var defaultSize: CGFloat {
+        UIFont.preferredFont(
+            forTextStyle: uiFontTextStyle,
+            compatibleWith: UITraitCollection(preferredContentSizeCategory: .large)
+        ).pointSize
     }
 }
