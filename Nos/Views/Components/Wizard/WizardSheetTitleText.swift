@@ -14,7 +14,7 @@ struct WizardSheetTitleText: View {
 
     var body: some View {
         Text(localizedStringResource)
-            .font(.clarity(.bold, textStyle: .title1))
+            .font(.clarityBold(.title))
             .foregroundStyle(Color.primaryTxt)
     }
 }
