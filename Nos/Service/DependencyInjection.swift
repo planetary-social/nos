@@ -195,6 +195,4 @@ fileprivate enum MediaServiceKey: DependencyKey {
 
 fileprivate enum PreviewEventRepositoryKey: DependencyKey {
     static let liveValue: any PreviewEventRepository = DefaultPreviewEventRepository()
-    static let testValue: any PreviewEventRepository = DefaultPreviewEventRepository()
-    static let previewValue: any PreviewEventRepository = DefaultPreviewEventRepository()
 }
