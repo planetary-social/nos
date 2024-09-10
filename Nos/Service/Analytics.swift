@@ -265,8 +265,8 @@ class Analytics {
         track("Copied Note Identifier")
     }
     
-    func copiedNoteLink() {
-        track("Copied Note Link")
+    func sharedNoteLink() {
+        track("Shared Note Link")
     }
     
     func copiedNoteText() {

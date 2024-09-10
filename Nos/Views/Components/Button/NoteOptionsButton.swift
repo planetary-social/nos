@@ -33,9 +33,8 @@ struct NoteOptionsButton: View {
                     analytics.copiedNoteIdentifier()
                     copyMessageIdentifier()
                 }
-                Button(String(localized: .localizable.copyLink)) {
-                    analytics.copiedNoteLink()
-                    copyLink()
+                Button(String(localized: .localizable.shareNote)) {
+                    analytics.sharedNoteLink()
                 }
                 if !note.isStub {
                     Button(String(localized: .localizable.copyNoteText)) {
@@ -89,10 +88,6 @@ struct NoteOptionsButton: View {
     
     func copyMessageIdentifier() {
         UIPasteboard.general.string = note.bech32NoteID
-    }
-    
-    func copyLink() {
-        UIPasteboard.general.string = note.webLink
     }
     
     func copyMessage() {
