@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.26] - 2024-09-09Z
 
 ### Release Notes
-- Fixed a crash that could occur while Nos was in the background. [#1299](https://github.com/planetary-social/nos/issues/1299)
+- Fixed a crash that could occur while Nos was in the background.
 - Fixed a bug where Nos sometimes wouldn't reconnect to relays.
 - Added nos.lol to the default relay list for new accounts and removed relay.snort.social.
 - Show quoted notes in note cards.
