@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug where content of a quoted note expanded out beyond width of viewport. Thanks, @tedbrosby! [#1463](https://github.com/planetary-social/nos/issues/1463)
 - Fixed issue where relay metadata is never updated. [#1472](https://github.com/planetary-social/nos/issues/1472)
 - Updated the copy on the 3 dots note menu. [#1028](https://github.com/planetary-social/nos/issues/1028)
-- Added functionality to share notes link through the 3 dots note menu.
+- Added functionality to share notes link through the 3 dots note menu. [#1272](https://github.com/planetary-social/nos/issues/1272)
 
 ### Internal Changes
 - Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag. [#1172](https://github.com/planetary-social/nos/issues/1172)
