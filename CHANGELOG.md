@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug where content of a quoted note expanded out beyond width of viewport. 
 - Fixed issue where relay metadata is never updated.
 - Updated the copy on the 3 dots note menu.
+- Added functionality to share notes link through the 3 dots note menu.
 
 ### Internal Changes
 - Included the npub in the properties list sent to analytics.
