@@ -117,10 +117,7 @@ struct SettingsView: View {
             
             Section {
                 VStack {
-                    Toggle(isOn: $showReportWarnings) { 
-                        Text(.localizable.useReportsFromFollows)
-                            .foregroundColor(.primaryTxt)
-                    }
+                    NosToggle(isOn: $showReportWarnings, labelText: .localizable.useReportsFromFollows)
                     .onChange(of: showReportWarnings) { _, newValue in
                         userDefaults.set(newValue, forKey: showReportWarningsKey)
                     }
@@ -135,10 +132,7 @@ struct SettingsView: View {
                 .padding(.bottom, 8)
 
                 VStack {
-                    Toggle(isOn: $showOutOfNetworkWarning) { 
-                        Text(.localizable.showOutOfNetworkWarnings)
-                            .foregroundColor(.primaryTxt)
-                    }
+                    NosToggle(isOn: $showOutOfNetworkWarning, labelText: .localizable.showOutOfNetworkWarnings)
                     .onChange(of: showOutOfNetworkWarning) { _, newValue in
                         userDefaults.set(newValue, forKey: showOutOfNetworkWarningKey)
                     }
@@ -279,10 +273,7 @@ extension SettingsView {
     
     /// A toggle for the new media display that allows the user to turn the feature on or off.
     private var newMediaFeatureToggle: some View {
-        Toggle(isOn: isNewMediaDisplayEnabled) {
-            Text(.localizable.enableNewMediaDisplay)
-                .foregroundColor(.primaryTxt)
-        }
+        NosToggle(isOn: isNewMediaDisplayEnabled, labelText: .localizable.enableNewMediaDisplay)
     }
 }
 #endif
