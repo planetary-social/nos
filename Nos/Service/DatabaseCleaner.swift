@@ -58,6 +58,7 @@ enum DatabaseCleaner {
                     // delete all events before deleteBefore that aren't protected or referenced
                     Event.cleanupRequest(before: deleteBefore, for: currentUser),
                     Event.expiredRequest(),
+                    Event.previewRequest(),
                     EventReference.orphanedRequest(),
                     AuthorReference.orphanedRequest(),
                     Author.outOfNetwork(for: currentUser),

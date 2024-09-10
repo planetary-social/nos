@@ -230,4 +230,31 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         let follows = try testContext.fetch(Follow.allFollowsRequest())
         XCTAssertEqual(follows, [followThree, followTwo, followOne])
     }
+
+    // MARK: - Note Composer Preview
+
+    @MainActor func test_cleanup_deletesNoteComposerPreview() async throws {
+        // Arrange
+        // Create the signed in user or the DatabaseCleaner will exit early.
+        _ = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+
+        // Create the preview event (we expect it to be deleted by the cleanup code)
+        _ = try EventFixture.build(
+            in: testContext,
+            identifier: Event.previewIdentifier
+        )
+
+        try testContext.save()
+
+        // Act
+        try await DatabaseCleaner.cleanupEntities(
+            for: KeyFixture.alice.publicKeyHex,
+            in: testContext,
+            keeping: 1
+        )
+
+        // Assert
+        let events = try testContext.fetch(Event.allEventsRequest())
+        XCTAssertEqual(events.count, 0)
+    }
 }

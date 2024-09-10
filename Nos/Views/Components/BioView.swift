@@ -90,7 +90,7 @@ struct BioView: View {
             if shouldShowReadMore {
                 ZStack(alignment: .center) {
                     Text(String(localized: .localizable.readMore).uppercased())
-                        .font(.clarity(.regular, textStyle: .caption1))
+                        .font(.clarityRegular(.caption))
                         .foregroundColor(.secondaryTxt)
                         .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
                         .background(Color.hashtagBg)
