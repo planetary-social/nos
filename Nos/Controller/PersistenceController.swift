@@ -102,59 +102,6 @@ final class PersistenceController {
         }
     }
     
-#if DEBUG
-    func loadSampleData(context: NSManagedObjectContext) async throws {
-        guard let sampleFile = Bundle.current.url(forResource: "sample_data", withExtension: "json") else {
-            Log.error("Error: bad sample file location")
-            return
-        }
-    
-        guard let sampleData = try? Data(contentsOf: sampleFile) else {
-            print("Error: Debug data not found")
-            return
-        }
-
-        Event.deleteAll(context: context)
-        context.reset()
-        
-        guard let events = try? EventProcessor.parse(jsonData: sampleData, from: nil, in: context) else {
-            print("Error: Could not parse events")
-            return
-        }
-        
-        print("Successfully preloaded \(events.count) events")
-        
-        let verifiedEvents = Event.all(context: context)
-        print("Successfully fetched \(verifiedEvents.count) events")
-        
-        // Force follow sample data users; This will be wiped if you sync with a relay.
-        let authors = Author.all(context: context)
-        let follows = try context.fetch(Follow.followsRequest(sources: authors))
-        
-        if let publicKey = currentUser.publicKeyHex {
-            let currentAuthor = try Author.findOrCreate(by: publicKey, context: context)
-            currentAuthor.follows = Set(follows)
-        }
-    }
-    
-    func resetForTesting() {
-        container = NSPersistentContainer(name: "Nos", managedObjectModel: model)
-        if !inMemory {
-            container.loadPersistentStores(completionHandler: { (storeDescription, _) in
-                guard let storeURL = storeDescription.url else {
-                    Log.error("Could not get store URL")
-                    return
-                }
-                Self.clearCoreData(store: storeURL, in: self.container)
-            })
-        }
-        setUp(erasingPrevious: true)
-        viewContext.reset()
-        backgroundViewContext.reset()
-        parseContext.reset()
-    }
-#endif
-    
     func newBackgroundContext() -> NSManagedObjectContext {
         let context = container.newBackgroundContext()
         context.automaticallyMergesChangesFromParent = true
@@ -207,3 +154,58 @@ final class PersistenceController {
         }
     }
 }
+
+#if DEBUG
+extension PersistenceController {
+    func loadSampleData(context: NSManagedObjectContext) async throws {
+        guard let sampleFile = Bundle.current.url(forResource: "sample_data", withExtension: "json") else {
+            Log.error("Error: bad sample file location")
+            return
+        }
+    
+        guard let sampleData = try? Data(contentsOf: sampleFile) else {
+            print("Error: Debug data not found")
+            return
+        }
+
+        Event.deleteAll(context: context)
+        context.reset()
+        
+        guard let events = try? EventProcessor.parse(jsonData: sampleData, from: nil, in: context) else {
+            print("Error: Could not parse events")
+            return
+        }
+        
+        print("Successfully preloaded \(events.count) events")
+        
+        let verifiedEvents = Event.all(context: context)
+        print("Successfully fetched \(verifiedEvents.count) events")
+        
+        // Force follow sample data users; This will be wiped if you sync with a relay.
+        let authors = Author.all(context: context)
+        let follows = try context.fetch(Follow.followsRequest(sources: authors))
+        
+        if let publicKey = currentUser.publicKeyHex {
+            let currentAuthor = try Author.findOrCreate(by: publicKey, context: context)
+            currentAuthor.follows = Set(follows)
+        }
+    }
+    
+    func resetForTesting() {
+        container = NSPersistentContainer(name: "Nos", managedObjectModel: model)
+        if !inMemory {
+            container.loadPersistentStores(completionHandler: { (storeDescription, _) in
+                guard let storeURL = storeDescription.url else {
+                    Log.error("Could not get store URL")
+                    return
+                }
+                Self.clearCoreData(store: storeURL, in: self.container)
+            })
+        }
+        setUp(erasingPrevious: true)
+        viewContext.reset()
+        backgroundViewContext.reset()
+        parseContext.reset()
+    }
+}
+#endif
