@@ -5,7 +5,8 @@ struct ActivityViewController: UIViewControllerRepresentable {
 
     var activityItems: [Any]
     var applicationActivities: [UIActivity]?
-    var completion: (() -> Void)? // Completion handler called after the share activity is finished
+    /// The completion handler to execute after the activity view controller is dismissed.
+    var completion: (() -> Void)?
 
     func makeUIViewController(
         context: UIViewControllerRepresentableContext<ActivityViewController>
