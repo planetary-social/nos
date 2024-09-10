@@ -89,6 +89,11 @@ extension DependencyValues {
         get { self[MediaServiceKey.self] }
         set { self[MediaServiceKey.self] = newValue }
     }
+
+    var previewEventRepository: PreviewEventRepository {
+        get { self[PreviewEventRepositoryKey.self] }
+        set { self[PreviewEventRepositoryKey.self] = newValue }
+    }
 }
 
 fileprivate enum AnalyticsKey: DependencyKey {
@@ -186,4 +191,8 @@ fileprivate enum MediaServiceKey: DependencyKey {
     static let liveValue: any MediaService = DefaultMediaService()
     static let testValue: any MediaService = MockMediaService()
     static let previewValue: any MediaService = DefaultMediaService() // enables us to manually test with previews
+}
+
+fileprivate enum PreviewEventRepositoryKey: DependencyKey {
+    static let liveValue: any PreviewEventRepository = DefaultPreviewEventRepository()
 }

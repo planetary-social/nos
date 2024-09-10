@@ -88,6 +88,7 @@ struct NoteCard: View {
                             Spacer()
                         }
                     }
+                    .allowsHitTesting(!note.isPreview)
                     Divider().overlay(Color.cardDividerTop).shadow(color: .cardDividerTopShadow, radius: 0, x: 0, y: 1)
                     Group {
                         if note.isStub {
@@ -120,6 +121,7 @@ struct NoteCard: View {
                                     .padding(.horizontal, 16)
                                     .padding(.bottom, 16)
                                 }
+                                .allowsHitTesting(!note.isPreview)
                             }
                         }
                         BeveledSeparator()
@@ -142,6 +144,7 @@ struct NoteCard: View {
                             }
                         }
                         .padding(.leading, 13)
+                        .allowsHitTesting(!note.isPreview)
                     }
                 }
                 .blur(radius: warningController.showWarning ? 6 : 0)

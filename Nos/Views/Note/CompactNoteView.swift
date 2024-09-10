@@ -97,10 +97,12 @@ struct CompactNoteView: View {
             if !isTextTruncated || !shouldTruncate {
                 formattedText
                     .fixedSize(horizontal: false, vertical: true)
+                    .allowsHitTesting(!note.isPreview)
             } else {
                 formattedText
                     .fixedSize(horizontal: false, vertical: true)
                     .lineLimit(truncationLineLimit)
+                    .allowsHitTesting(!note.isPreview)
                     .background {
                         GeometryReader { geometryProxy in
                             Color.clear.preference(key: TruncatedSizePreferenceKey.self, value: geometryProxy.size)
@@ -150,6 +152,7 @@ struct CompactNoteView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
+                .allowsHitTesting(!note.isPreview)
             }
             if note.kind == EventKind.text.rawValue, showLinkPreviews, !note.contentLinks.isEmpty {
                 if featureFlags.newMediaDisplayEnabled {
