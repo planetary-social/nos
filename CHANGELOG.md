@@ -14,7 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the option to preview a note before posting it.
 - Fixed side menu accessibility issues.
-- Fixed a bug where content of a quoted note expanded out beyond width of viewport. 
+- Fixed a bug where content of a quoted note expanded out beyond width of viewport.
+- Fixed a bug where toggles in the settings page were white instead of green, when togled on. [#1251](https://github.com/planetary-social/nos/issues/1251)
 
 ### Internal Changes
 - Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag.
