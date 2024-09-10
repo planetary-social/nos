@@ -2,7 +2,7 @@ import SwiftUI
 /// A toggle with the tint color set to green.
 struct NosToggle: View {
     @Binding var isOn: Bool
-    /// Optional, in case we need to use a toggle without a string
+    /// A string that shows up beside the toggle. Optional.
     var labelText: LocalizedStringResource?
 
     var body: some View {
