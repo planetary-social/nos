@@ -3739,6 +3739,17 @@
         }
       }
     },
+    "enableNewModerationFlow" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable new moderation flow"
+          }
+        }
+      }
+    },
     "enterCode" : {
       "extractionState" : "manual",
       "localizations" : {
