@@ -270,10 +270,23 @@ extension SettingsView {
             set: { featureFlags.setEnabled(.newMediaDisplay, enabled: $0) }
         )
     }
-    
+
     /// A toggle for the new media display that allows the user to turn the feature on or off.
     private var newMediaFeatureToggle: some View {
         NosToggle(isOn: isNewMediaDisplayEnabled, labelText: .localizable.enableNewMediaDisplay)
+    }
+
+    /// Whether the new moderation flow is enabled.
+    private var isNewModerationFlowEnabled: Binding<Bool> {
+        Binding<Bool>(
+            get: { featureFlags.isEnabled(.newModerationFlow) },
+            set: { featureFlags.setEnabled(.newModerationFlow, enabled: $0) }
+        )
+    }
+
+    /// A toggle for the new moderation flow that allows the user to turn the feature on or off.
+    private var newModerationFlowToggle: some View {
+        NosToggle(isOn: isNewModerationFlowEnabled, labelText: .localizable.enableNewModerationFlow)
     }
 }
 #endif
@@ -283,6 +296,7 @@ extension SettingsView {
     /// Controls that will appear when the app is built for STAGING.
     @MainActor private var stagingControls: some View {
         newMediaFeatureToggle
+        newModerationFlowToggle
     }
 }
 #endif
@@ -293,6 +307,7 @@ extension SettingsView {
     @MainActor private var debugControls: some View {
         Group {
             newMediaFeatureToggle
+            newModerationFlowToggle
 
             Text(.localizable.sampleDataInstructions)
                 .foregroundColor(.primaryTxt)
