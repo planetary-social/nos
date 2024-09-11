@@ -266,8 +266,8 @@ extension SettingsView {
     /// Whether the new media display is enabled.
     private var isNewMediaDisplayEnabled: Binding<Bool> {
         Binding<Bool>(
-            get: { featureFlags.newMediaDisplayEnabled },
-            set: { featureFlags.setNewMediaDisplayEnabled($0) }
+            get: { featureFlags.isEnabled(.newMediaDisplay) },
+            set: { featureFlags.setEnabled(.newMediaDisplay, enabled: $0) }
         )
     }
     
