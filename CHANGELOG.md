@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag. [#1172](https://github.com/planetary-social/nos/issues/1172)
 - Added more instructions to the changelog file.
 - Added some logging when a content warning is displayed. [cleanstr#53](https://github.com/planetary-social/cleanstr/issues/53)
+- Minor refactor of Event+CoreDataClass. [#1443](https://github.com/planetary-social/nos/issues/1443)
 
 ## [0.1.26] - 2024-09-09Z
 
