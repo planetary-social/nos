@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the copy on the 3 dots note menu. [#1028](https://github.com/planetary-social/nos/issues/1028)
 - Added functionality to share notes link through the 3 dots note menu. [#1272](https://github.com/planetary-social/nos/issues/1272)
 - Fixes and improvements related to Core Data usage. [#1443](https://github.com/planetary-social/nos/issues/1443)
+- Localized follows notifications. [#1446](https://github.com/planetary-social/nos/issues/1446)
 
 ### Internal Changes
 - Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag. [#1172](https://github.com/planetary-social/nos/issues/1172)

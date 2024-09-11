@@ -13465,21 +13465,9 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "You have %i new follower!"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "You have %i new followers!"
-                }
-              }
-            }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have %@ new followers!"
           }
         }
       }
