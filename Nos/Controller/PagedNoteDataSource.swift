@@ -3,8 +3,8 @@ import CoreData
 import Dependencies
 import Logger
 
-/// Works with PagesNoteListView to paginate a reverse-chronological events from CoreData and relays simultaneously.
-class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICollectionViewDataSource, 
+/// Works with ``PagedNoteListView`` to paginate reverse-chronological events from CoreData and relays simultaneously.
+class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICollectionViewDataSource,
     NSFetchedResultsControllerDelegate, UICollectionViewDataSourcePrefetching {
     
     var fetchedResultsController: NSFetchedResultsController<Event>
@@ -15,10 +15,9 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     private(set) var relayFilter: Filter
     private(set) var relay: Relay?
     private var pager: PagedRelaySubscription?
-    private var context: NSManagedObjectContext
+    private var managedObjectContext: NSManagedObjectContext
     private var header: () -> Header
-    private var emptyPlaceholder: (@escaping () -> Void) -> EmptyPlaceholder
-    private var onRefresh: () -> NSFetchRequest<Event>
+    private var emptyPlaceholder: () -> EmptyPlaceholder
     let pageSize = 20
     
     // We intentionally generate unique IDs for cell reuse to get around 
@@ -31,25 +30,23 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         relayFilter: Filter, 
         relay: Relay?, 
         collectionView: UICollectionView, 
-        context: NSManagedObjectContext,
+        managedObjectContext: NSManagedObjectContext,
         @ViewBuilder header: @escaping () -> Header,
-        @ViewBuilder emptyPlaceholder: @escaping (@escaping () -> Void) -> EmptyPlaceholder,
-        onRefresh: @escaping () -> NSFetchRequest<Event>
+        @ViewBuilder emptyPlaceholder: @escaping () -> EmptyPlaceholder
     ) {
         self.databaseFilter = databaseFilter
         self.fetchedResultsController = NSFetchedResultsController<Event>(
             fetchRequest: databaseFilter,
-            managedObjectContext: context,
+            managedObjectContext: managedObjectContext,
             sectionNameKeyPath: nil,
             cacheName: nil
         )
         self.collectionView = collectionView
-        self.context = context
+        self.managedObjectContext = managedObjectContext
         self.relayFilter = relayFilter
         self.relay = relay
         self.header = header
         self.emptyPlaceholder = emptyPlaceholder
-        self.onRefresh = onRefresh
 
         super.init()
         
@@ -93,7 +90,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
         self.databaseFilter = fetchRequest
         self.fetchedResultsController = NSFetchedResultsController<Event>(
             fetchRequest: fetchRequest,
-            managedObjectContext: context,
+            managedObjectContext: managedObjectContext,
             sectionNameKeyPath: nil,
             cacheName: nil
         )
@@ -121,8 +118,8 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     ) -> UICollectionViewCell {
         loadMoreIfNeeded(for: indexPath)
         
-        let note = fetchedResultsController.object(at: indexPath) 
-        
+        let note = fetchedResultsController.object(at: indexPath)
+
         // We intentionally generate unique IDs for cell reuse to get around 
         // [this issue](https://github.com/planetary-social/nos/issues/873)
         let cellReuseID = note.identifier ?? "error"
@@ -134,6 +131,8 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
                 note: note,
                 hideOutOfNetwork: false,
                 repliesDisplayType: .discussion,
+                showsLikeCount: false,
+                showsRepostCount: false,
                 fetchReplies: true,
                 displayRootMessage: true
             )
@@ -184,24 +183,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
             
             footer.contentConfiguration = UIHostingConfiguration { 
                 if self.fetchedResultsController.fetchedObjects?.isEmpty == true {
-                    self.emptyPlaceholder { [weak collectionView] in
-                        let refreshControl = collectionView?.refreshControl
-                        if let refreshControl {
-                            collectionView?.scrollRectToVisible(
-                                refreshControl.frame,
-                                animated: true
-                            )
-                            refreshControl.beginRefreshing()
-                        }
-                        self.updateFetchRequest(self.onRefresh())
-                        collectionView?.reloadData()
-                        if let refreshControl {
-                            // Dismiss the refresh control
-                            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-                                refreshControl.endRefreshing()
-                            }
-                        }
-                    }
+                    self.emptyPlaceholder()
                 }
             }
             .margins(.horizontal, 0)

@@ -6,10 +6,19 @@ final class NoteParserTests: CoreDataTestCase {
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     var sut: NoteParser!
+    
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    var noteEditor: NoteEditorController!
+    
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    var textView: UITextView!
 
     @MainActor
     override func setUp() async throws {
         sut = NoteParser()
+        noteEditor = NoteEditorController()
+        textView = UITextView()
+        noteEditor.textView = textView
         try await super.setUp()
     }
 
@@ -22,11 +31,12 @@ final class NoteParserTests: CoreDataTestCase {
 
         // Act
         let tags: [[String]] = [[]]
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
 
         // Assert
         XCTAssertEqual(String(attributedContent.characters), expected)
@@ -45,11 +55,12 @@ final class NoteParserTests: CoreDataTestCase {
 
         // Act
         let tags: [[String]] = [[]]
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
 
         // Assert
         XCTAssertEqual(String(attributedContent.characters), expected)
@@ -68,11 +79,12 @@ final class NoteParserTests: CoreDataTestCase {
 
         // Act
         let tags: [[String]] = [[]]
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
 
         // Assert
         XCTAssertEqual(String(attributedContent.characters), expected)
@@ -106,11 +118,12 @@ final class NoteParserTests: CoreDataTestCase {
         let displayName2 = "npub180cvv..."
         let hex2 = "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d"
         let tags = [["p", hex1], ["p", hex2]]
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
         let links = attributedContent.links
         XCTAssertEqual(links.count, 2)
         XCTAssertEqual(links[safe: 0]?.key, "@\(displayName1)")
@@ -124,11 +137,12 @@ final class NoteParserTests: CoreDataTestCase {
         let npub = "npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
         let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
         let tags: [[String]] = [[]]
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
         let links = attributedContent.links
         XCTAssertEqual(links.count, 1)
         XCTAssertEqual(links[safe: 0]?.key, npub)
@@ -139,30 +153,28 @@ final class NoteParserTests: CoreDataTestCase {
         let content = "Check this note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
         let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [[]]
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
-        let links = attributedContent.links
-        XCTAssertEqual(links.count, 1)
-        XCTAssertEqual(links[safe: 0]?.key, "🔗 Link to note")
-        XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
+        let attributedContent = components.attributedContent
+        XCTAssertTrue(attributedContent.links.isEmpty)
+        XCTAssertEqual(components.quotedNoteID, hex)
     }
     
     @MainActor func testContentWithUntaggedNIP27Note() throws {
         let content = "Check this nostr:note1h2mmqfjqle48j8ytmdar22v42g5y9n942aumyxatgtxpqj29pjjsjecraw"
         let hex = "bab7b02640fe6a791c8bdb7a352995522842ccb55779b21bab42cc1049450ca5"
         let tags: [[String]] = [[]]
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
-        let links = attributedContent.links
-        XCTAssertEqual(links.count, 1)
-        XCTAssertEqual(links[safe: 0]?.key, "🔗 Link to note")
-        XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
+        let attributedContent = components.attributedContent
+        XCTAssertTrue(attributedContent.links.isEmpty)
+        XCTAssertEqual(components.quotedNoteID, hex)
     }
     
     @MainActor func testContentWithUntaggedProfile() throws {
@@ -173,11 +185,12 @@ final class NoteParserTests: CoreDataTestCase {
         let tags: [[String]] = [[]]
         
         let expectedContent = content
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
 
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
@@ -198,20 +211,19 @@ final class NoteParserTests: CoreDataTestCase {
         let content = "check this \(event)"
         let tags: [[String]] = [[]]
 
-        let expectedContent = "check this 🔗 Link to note"
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let expectedContent = "check this"
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
 
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
-
-        let links = attributedContent.links
-        XCTAssertEqual(links.count, 1)
-        XCTAssertEqual(links[safe: 0]?.key, "🔗 Link to note")
-        XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
+        
+        XCTAssertTrue(attributedContent.links.isEmpty)
+        XCTAssertEqual(components.quotedNoteID, hex)
     }
 
     @MainActor func testContentWithUntaggedEventWithADot() throws {
@@ -224,20 +236,18 @@ final class NoteParserTests: CoreDataTestCase {
         let content = "check this \(event). Bye!"
         let tags: [[String]] = [[]]
 
-        let expectedContent = "check this 🔗 Link to note. Bye!"
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let expectedContent = "check this . Bye!"
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
-
+        let attributedContent = components.attributedContent
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
-
-        let links = attributedContent.links
-        XCTAssertEqual(links.count, 1)
-        XCTAssertEqual(links[safe: 0]?.key, "🔗 Link to note")
-        XCTAssertEqual(links[safe: 0]?.value, URL(string: "%\(hex)"))
+        
+        XCTAssertTrue(attributedContent.links.isEmpty)
+        XCTAssertEqual(components.quotedNoteID, hex)
     }
 
     @MainActor func testContentWithMalformedEvent() throws {
@@ -249,17 +259,17 @@ final class NoteParserTests: CoreDataTestCase {
         let tags: [[String]] = [[]]
 
         let expectedContent = content
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
 
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
-
-        let links = attributedContent.links
-        XCTAssertEqual(links.count, 0)
+        
+        XCTAssertTrue(attributedContent.links.isEmpty)
     }
     
     @MainActor func testContentWithNAddr() throws {
@@ -274,11 +284,12 @@ final class NoteParserTests: CoreDataTestCase {
         let expectedContent = "People are using Coracle's custom feeds! Here are some interesting ones:\n\n🔗 Link to note\n🔗 Link to note\n🔗 Link to note\n🔗 Link to note\n\nI encourage you to try it out — create your own and paste its address into a reply to this note to share it."
         // swiftlint:enable line_length
         
-        let (attributedContent, _) = sut.parse(
-            content: content,
+        let components = sut.components(
+            from: content,
             tags: tags,
             context: testContext
         )
+        let attributedContent = components.attributedContent
         
         let parsedContent = String(attributedContent.characters)
         XCTAssertEqual(parsedContent, expectedContent)
@@ -287,5 +298,31 @@ final class NoteParserTests: CoreDataTestCase {
         XCTAssertEqual(links.count, 4)
         XCTAssertEqual(links[safe: 0]?.key, "🔗 Link to note")
         XCTAssertEqual(links[safe: 0]?.value, URL(string: naddrLink))
+    }
+    
+    @MainActor func testContentWithYakihonneNeventLink() {
+        // swiftlint:disable line_length
+        let content = """
+        "https://yakihonne.com/notes/nevent1qgszpxr0hql8whvk6xyv5hya7yxwd4snur4hu4mg5rctz2ehekkzrvcqyrej80hs0k7ydd60p4zpdddqlx4zr66fwns5frwn2zf2gg3u8vr3w725fc0"
+        """
+        
+        let expectedContent = "\"yakihonne.com...\""
+        // swiftlint:enable line_length
+        
+        let components = sut.components(
+            from: content,
+            tags: [[]],
+            context: testContext
+        )
+        let attributedContent = components.attributedContent
+        
+        let parsedContent = String(attributedContent.characters)
+        XCTAssertEqual(parsedContent, expectedContent)
+        
+        let links = attributedContent.links
+        XCTAssertEqual(links.count, 1)
+        XCTAssertEqual(links[safe: 0]?.key, "yakihonne.com...")
+        
+        XCTAssertNil(components.quotedNoteID)
     }
 }

@@ -12,7 +12,7 @@ struct BioSheet: View {
         guard let about = author.about, !about.isEmpty else {
             return nil
         }
-        let (bio, _) = noteParser.parse(
+        let bio = noteParser.parse(
             content: about,
             tags: [[]],
             context: viewContext
@@ -50,7 +50,7 @@ struct BioSheet: View {
                         .foregroundStyle(Color.secondaryTxt)
                         .lineSpacing(10)
                         .shadow(
-                            color: Color(white: 0, opacity: 0.25),
+                            color: Color.bioSheetShadow,
                             radius: 4,
                             x: 0,
                             y: 4

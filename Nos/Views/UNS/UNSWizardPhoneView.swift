@@ -23,7 +23,7 @@ struct UNSWizardPhoneView: View {
                         .padding(.top, 50)
                     
                     Text(.localizable.registration)
-                        .font(.clarity(.bold, textStyle: .title1))
+                        .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
@@ -36,7 +36,7 @@ struct UNSWizardPhoneView: View {
                         .padding(.horizontal, 20)
                         .shadow(radius: 1, y: 1)
                     
-                    WizardTextField(text: $phoneNumber, placeholder: "+1-234-567-8910")
+                    UNSWizardTextField(text: $phoneNumber, placeholder: "+1-234-567-8910")
                         .focused($focusedField, equals: .textEditor)
                         .keyboardType(.phonePad)
                         .autocorrectionDisabled()
@@ -80,7 +80,6 @@ struct UNSWizardPhoneView: View {
 
 struct UNSWizardPhone_Previews: PreviewProvider {
     
-    static var previewData = PreviewData()
     @State static var controller = UNSWizardController(
         state: .intro 
     )

@@ -8,7 +8,6 @@ disabled_rules: # rule identifiers turned on by default to exclude from running
   - function_parameter_count
   - attributes
   - force_unwrapping
-  - force_cast
   - todo
   - legacy_objc_type
   - type_body_length

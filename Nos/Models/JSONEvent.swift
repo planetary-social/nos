@@ -56,7 +56,46 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
         self.content = content
         self.signature = ""
     }
-    
+
+    /// Initializes a JSONEvent object for a given text and key pair.
+    /// - Parameters:
+    ///   - attributedText: The text the user wrote.
+    ///   - noteParser: The algorithm that parses the text.
+    ///   - expirationTime: The expiration time for the note, if any. Defaults to `nil`.
+    ///   - replyToNote: The note that the user is replying to, if any. Defaults to `nil`.
+    ///   - keyPair: Key pair of the logged in user.
+    init(
+        attributedText: AttributedString,
+        noteParser: NoteParser,
+        expirationTime: TimeInterval? = nil,
+        replyToNote: Event? = nil,
+        keyPair: KeyPair
+    ) {
+        var (content, tags) = noteParser.parse(attributedText: attributedText)
+
+        if let expirationTime {
+            tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
+        }
+
+        // Attach the new note to the one it is replying to, if any.
+        if let replyToNote = replyToNote, let replyToNoteID = replyToNote.identifier {
+            // TODO: Append ptags for all authors involved in the thread
+            if let replyToAuthor = replyToNote.author?.publicKey?.hex {
+                tags.append(["p", replyToAuthor])
+            }
+
+            // If `note` is a reply to another root, tag that root
+            if let rootNoteIdentifier = replyToNote.rootNote()?.identifier, rootNoteIdentifier != replyToNoteID {
+                tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
+                tags.append(["e", replyToNoteID, "", EventReferenceMarker.reply.rawValue])
+            } else {
+                tags.append(["e", replyToNoteID, "", EventReferenceMarker.root.rawValue])
+            }
+        }
+
+        self.init(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
+    }
+
     static func from(json: String) -> JSONEvent? {
         guard let jsonData = json.data(using: .utf8) else {
             return nil

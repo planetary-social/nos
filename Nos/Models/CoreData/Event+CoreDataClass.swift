@@ -1,47 +1,18 @@
 // swiftlint:disable file_length
 import secp256k1
-import Foundation
 import CoreData
-import RegexBuilder
-import SwiftUI
 import Logger
 import Dependencies
 
-enum EventError: Error, LocalizedError {
-	case utf8Encoding
-	case unrecognizedKind
-    case missingAuthor
-    case invalidETag([String])
-    case invalidSignature(Event)
-    case expiredEvent
-
-    var errorDescription: String? {
-        switch self {
-        case .unrecognizedKind:
-            return "Unrecognized event kind"
-        case .missingAuthor:
-            return "Could not parse author on event"
-        case .invalidETag(let strings):
-            return "Invalid e tag \(strings.joined(separator: ","))"
-        case .invalidSignature(let event):
-            return "Invalid signature on event: \(String(describing: event.identifier))"
-        case .expiredEvent:
-            return "This event has expired"
-        default:
-            return "An unkown error occurred."
-        }
-	}
-}
-
-// swiftlint:disable type_body_length
 @objc(Event)
 @Observable
 public class Event: NosManagedObject, VerifiableEvent {
     @Dependency(\.currentUser) @ObservationIgnored private var currentUser
 
     var pubKey: String { author?.hexadecimalPublicKey ?? "" }
-    static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
-        "AND author.muted = false"
+
+    /// Event identifier for the note created by ``NoteComposer`` when displaying previews.
+    static let previewIdentifier = "preview"
 
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
@@ -93,6 +64,18 @@ public class Event: NosManagedObject, VerifiableEvent {
         )
     }
     
+    @nonobjc public class func allZapsPredicate(for user: Author) -> NSPredicate {
+        guard let publicKey = user.hexadecimalPublicKey, !publicKey.isEmpty else {
+            return NSPredicate.false
+        }
+        
+        return NSPredicate(
+            format: "kind = %i AND ANY authorReferences.pubkey = %@ AND deletedOn.@count = 0",
+            EventKind.zapRequest.rawValue,
+            publicKey
+        )
+    }
+    
     /// A request for all events that the given user should receive a notification for.
     /// - Parameters:
     ///   - user: the author you want to view notifications for.
@@ -112,10 +95,11 @@ public class Event: NosManagedObject, VerifiableEvent {
         
         let mentionsPredicate = allMentionsPredicate(for: user)
         let repliesPredicate = allRepliesPredicate(for: user)
+        let zapsPredicate = allZapsPredicate(for: user)
         let notSelfPredicate = NSPredicate(format: "author != %@", user)
         let notMuted = NSPredicate(format: "author.muted == 0", user)
         let allNotificationsPredicate = NSCompoundPredicate(
-            orPredicateWithSubpredicates: [mentionsPredicate, repliesPredicate]
+            orPredicateWithSubpredicates: [mentionsPredicate, repliesPredicate, zapsPredicate]
         )
         var andPredicates = [allNotificationsPredicate, notSelfPredicate, notMuted]
         if let since {
@@ -129,7 +113,6 @@ public class Event: NosManagedObject, VerifiableEvent {
     
     @nonobjc public class func lastReceived(for user: Author) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(format: "author != %@", user)
         fetchRequest.fetchLimit = 1
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
@@ -144,6 +127,11 @@ public class Event: NosManagedObject, VerifiableEvent {
         guard let noteID else {
             return emptyRequest()
         }
+        
+        let replyNoteReferences = "kind = 1 " +
+            "AND ANY eventReferences.referencedEvent.identifier == %@ " +
+            "AND author.muted = false"
+        
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
@@ -159,7 +147,7 @@ public class Event: NosManagedObject, VerifiableEvent {
     ///
     /// Intented to be used primarily to compute the number of replies and for
     /// building a set of author avatars.
-    @nonobjc public class func replies(to noteID: RawEventID) -> FetchRequest<Event> {
+    @nonobjc public class func replies(to noteID: RawEventID) -> NSFetchRequest<Event> {
         let format = """
             SUBQUERY(
                 eventReferences,
@@ -191,7 +179,7 @@ public class Event: NosManagedObject, VerifiableEvent {
 
         fetchRequest.predicate = predicate
         fetchRequest.relationshipKeyPathsForPrefetching = ["author"]
-        return FetchRequest(fetchRequest: fetchRequest)
+        return fetchRequest
     }
 
     /// A fetch request for all the events that should be cleared out of the database by 
@@ -274,7 +262,18 @@ public class Event: NosManagedObject, VerifiableEvent {
         fetchRequest.predicate = NSPredicate(format: "expirationDate <= %@", Date.now as CVarArg)
         return fetchRequest
     }
-    
+
+    /// Builds a query that returns an Event with "preview" as its `identifier` if it exists.
+    /// - Returns: A Fetch Request with the necessary query inside.
+    @nonobjc public class func previewRequest() -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.predicate = NSPredicate(
+            format: "identifier = %@",
+            Event.previewIdentifier as CVarArg
+        )
+        return fetchRequest
+    }
+
     @nonobjc public class func event(by identifier: RawEventID) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
@@ -325,24 +324,66 @@ public class Event: NosManagedObject, VerifiableEvent {
         return fetchRequest
     }
     
-    @nonobjc public class func homeFeedPredicate(
-        for user: Author, 
-        before: Date,
+    /// Returns a predicate that can be used to fetch the given user's home feed.
+    /// - Parameters:
+    ///   - user: The user whose home feed should appear.
+    ///   - before: Only fetch events that were created before this date. Defaults to `nil`.
+    ///   - after: Only fetch events that were created after this date. Defaults to `nil`.
+    ///   - relay: Only fetch events on this relay. Defaults to `nil`, which uses all the user's relays.
+    /// - Returns: A predicate matching the given parameters that can be used to fetch the user's home feed.
+    @nonobjc private class func homeFeedPredicate(
+        for user: Author,
+        before: Date? = nil,
+        after: Date? = nil,
         seenOn relay: Relay? = nil
     ) -> NSPredicate {
-        // swiftlint:disable:next line_length
-        var queryString = "((kind = 1 AND SUBQUERY(eventReferences, $reference, $reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil).@count = 0) OR kind = 6 OR kind = 30023) AND author.muted = 0 AND createdAt <= %@ AND deletedOn.@count = 0"
-        var arguments: [CVarArg] = [before as CVarArg]
-        if let relay {
-            queryString.append(" AND ANY seenOnRelays = %@")
-            arguments.append(relay)
-        } else {
-            queryString.append(" AND (ANY author.followers.source = %@ OR author = %@)")
-            arguments += [user, user]
+        let kind1Predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "kind = 1"),
+            NSPredicate(
+                format: "SUBQUERY(" +
+                "eventReferences, $reference, $reference.marker = 'root'" +
+                " OR $reference.marker = 'reply'" +
+                " OR $reference.marker = nil" +
+                ").@count = 0"
+            ),
+            NSPredicate(
+                format: "identifier != %@",
+                Event.previewIdentifier as CVarArg
+            )
+        ])
+        let kind6Predicate = NSPredicate(format: "kind = 6")
+        let kind30023Predicate = NSPredicate(format: "kind = 30023")
+
+        let kindsPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
+            kind1Predicate,
+            kind6Predicate,
+            kind30023Predicate
+        ])
+
+        let notMutedPredicate = NSPredicate(format: "author.muted = 0")
+        let notDeletedPredicate = NSPredicate(format: "deletedOn.@count = 0")
+
+        var andPredicates = [kindsPredicate, notMutedPredicate, notDeletedPredicate]
+
+        if let before {
+            andPredicates.append(NSPredicate(format: "createdAt <= %@", before as CVarArg))
         }
-        return NSPredicate(format: queryString, argumentArray: arguments)
+
+        if let after {
+            andPredicates.append(NSPredicate(format: "createdAt > %@", after as CVarArg))
+        }
+
+        if let relay {
+            andPredicates.append(NSPredicate(format: "ANY seenOnRelays = %@", relay as CVarArg))
+        } else {
+            andPredicates.append(
+                NSPredicate(format: "(ANY author.followers.source = %@ OR author = %@)", user, user)
+            )
+        }
+
+        return NSCompoundPredicate(andPredicateWithSubpredicates: andPredicates)
     }
-    
+
     @nonobjc public class func homeFeed(
         for user: Author, 
         before: Date, 
@@ -351,6 +392,17 @@ public class Event: NosManagedObject, VerifiableEvent {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = homeFeedPredicate(for: user, before: before, seenOn: relay)
+        return fetchRequest
+    }
+
+    @nonobjc public class func homeFeed(
+        for user: Author, 
+        after: Date,
+        seenOn relay: Relay? = nil
+    ) -> NSFetchRequest<Event> {
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.predicate = homeFeedPredicate(for: user, after: after, seenOn: relay)
         return fetchRequest
     }
 
@@ -447,8 +499,8 @@ public class Event: NosManagedObject, VerifiableEvent {
     
     // MARK: - Creating
 
-    func createIfNecessary(
-        jsonEvent: JSONEvent, 
+    static func createIfNecessary(
+        jsonEvent: JSONEvent,
         relay: Relay?, 
         context: NSManagedObjectContext
     ) throws -> Event? {
@@ -527,13 +579,11 @@ public class Event: NosManagedObject, VerifiableEvent {
             return event
         }
     }
-    
-    /// Populates an event stub (with only its ID set) using the data in the given JSON.
-    func hydrate(from jsonEvent: JSONEvent, relay: Relay?, in context: NSManagedObjectContext) throws {
-        guard isStub else {
-            fatalError("Tried to hydrate an event that isn't a stub. This is a programming error")
-        }
 
+    /// Populates an event stub (with only its ID set) using the data in the given JSON.
+    private func hydrate(from jsonEvent: JSONEvent, relay: Relay?, in context: NSManagedObjectContext) throws {
+        assert(isStub, "Tried to hydrate an event that isn't a stub. This is a programming error")
+        
         // if this stub was created with a replaceableIdentifier and author, it won't have an identifier yet
         identifier = jsonEvent.id
 
@@ -598,7 +648,11 @@ public class Event: NosManagedObject, VerifiableEvent {
         }
     }
     
-    func hydrateContactList(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
+    private func hydrateContactList(
+        from jsonEvent: JSONEvent,
+        author newAuthor: Author,
+        context: NSManagedObjectContext
+    ) {
         guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
             return
         }
@@ -651,7 +705,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         }
     }
     
-    func hydrateDefault(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
+    private func hydrateDefault(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
         let newEventReferences = NSMutableOrderedSet()
         let newAuthorReferences = NSMutableOrderedSet()
         for jsonTag in jsonEvent.tags {
@@ -664,7 +718,7 @@ public class Event: NosManagedObject, VerifiableEvent {
                     print("error parsing e tag: \(error.localizedDescription)")
                 }
             } else if jsonTag.first == "p" {
-                // TODO: validdate that the tag looks like a pubkey
+                // TODO: validate that the tag looks like a pubkey
                 let authorReference = AuthorReference(context: context)
                 authorReference.pubkey = jsonTag[safe: 1]
                 authorReference.recommendedRelayUrl = jsonTag[safe: 2]
@@ -675,7 +729,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         authorReferences = newAuthorReferences
     }
     
-    func hydrateMetaData(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
+    private func hydrateMetaData(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
         guard createdAt! > newAuthor.lastUpdatedMetadata ?? Date.distantPast else {
             // This is old data
             return
@@ -707,7 +761,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         seenOnRelays.insert(relay) 
     }
     
-    func hydrateMuteList(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
+    private func hydrateMuteList(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
         let mutedKeys = jsonEvent.tags.map { $0[1] }
         
         let request = Author.allAuthorsRequest(muted: true)
@@ -735,19 +789,15 @@ public class Event: NosManagedObject, VerifiableEvent {
     }
 
     /// Tries to parse a new event out of the given jsonEvent's `content` field.
-    @discardableResult
-    func parseContent(from jsonEvent: JSONEvent, context: NSManagedObjectContext) -> Event? {
+    private func parseContent(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
         do {
             if let contentData = jsonEvent.content.data(using: .utf8) {
                 let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: contentData)
-                return try Event().createIfNecessary(jsonEvent: jsonEvent, relay: nil, context: context)
+                _ = try Event.createIfNecessary(jsonEvent: jsonEvent, relay: nil, context: context)
             }
         } catch {
             Log.error("Could not parse content for jsonEvent: \(jsonEvent)")
-            return nil
         }
-        
-        return nil
     }
     
     // MARK: - Preloading and Caching
@@ -756,6 +806,7 @@ public class Event: NosManagedObject, VerifiableEvent {
     @MainActor var loadingViewData = false
     @MainActor var attributedContent = LoadingContent<AttributedString>.loading
     @MainActor var contentLinks = [URL]()
+    @MainActor private(set) var quotedNoteID: RawEventID?
     @MainActor var relaySubscriptions = SubscriptionCancellables()
     
     /// Instructs this event to load supplementary data like author name and photo, reference events, and produce
@@ -764,18 +815,31 @@ public class Event: NosManagedObject, VerifiableEvent {
         guard !loadingViewData else {
             return
         }
-        loadingViewData = true 
+        
+        loadingViewData = true
         Log.debug("\(identifier ?? "null") loading view data")
         
-        if isStub {
-            await loadContent()
-            loadingViewData = false
-            // TODO: how do we load details for the event again after we hydrate the stub?
-        } else {
-            Task { await loadReferencedNote() }
-            Task { await loadAuthorMetadata() }
-            Task { await loadAttributedContent() }
+        await withTaskGroup(of: Void.self) { group in
+            if isStub {
+                group.addTask {
+                    await self.loadContent()
+                }
+                // TODO: how do we load details for the event again after we hydrate the stub?
+            } else {
+                group.addTask {
+                    await self.loadReferencedNote()
+                }
+                group.addTask {
+                    await self.loadAuthorMetadata()
+                }
+                group.addTask {
+                    await self.loadAttributedContent()
+                }
+            }
+            
+            await group.waitForAll()
         }
+        loadingViewData = false
     }
     
     /// Tries to download this event from relays.
@@ -804,11 +868,8 @@ public class Event: NosManagedObject, VerifiableEvent {
     
     /// Tries to load the note this note is reposting or replying to from relays.
     @MainActor private func loadReferencedNote() async {
-        if let referencedNote = referencedNote() {
-            await referencedNote.loadViewData()
-        } else {
-            await rootNote()?.loadViewData()
-        }
+        let referencedNote = referencedNote() ?? rootNote()
+        await referencedNote?.loadViewData()
     }
     
     @MainActor private var loadingAttributedContent = false
@@ -820,20 +881,38 @@ public class Event: NosManagedObject, VerifiableEvent {
             return
         }
         loadingAttributedContent = true
-        defer { loadingAttributedContent = false }
         
         @Dependency(\.persistenceController) var persistenceController
         let backgroundContext = persistenceController.backgroundViewContext
-        if let parsedAttributedContent = await Event.attributedContentAndURLs(
+        if let components = await Event.parsedComponents(
             note: self,
             context: backgroundContext
         ) {
-            let (attributedString, contentLinks) = parsedAttributedContent
-            self.attributedContent = .loaded(attributedString)
-            self.contentLinks = contentLinks
+            self.attributedContent = .loaded(components.attributedContent)
+            self.contentLinks = components.contentLinks
+            self.quotedNoteID = components.quotedNoteID
+            Task { await loadFirstQuotedNote() }
         } else {
-            self.attributedContent = .loaded(AttributedString(content ?? "")) 
+            self.attributedContent = .loaded(AttributedString(content ?? ""))
         }
+        loadingAttributedContent = false
+    }
+    
+    @MainActor func loadFirstQuotedNote() async {
+        guard let quotedNoteID else {
+            return
+        }
+        
+        @Dependency(\.persistenceController) var persistenceController
+        let context = persistenceController.backgroundViewContext
+        
+        await context.perform {
+            _ = try? Event.findOrCreateStubBy(id: quotedNoteID, context: context)
+            try? context.save()
+        }
+        
+        @Dependency(\.relayService) var relayService
+        relaySubscriptions.append(await relayService.requestEvent(with: quotedNoteID))
     }
     
     // MARK: - Helpers
@@ -955,29 +1034,6 @@ public class Event: NosManagedObject, VerifiableEvent {
         }
     }
    
-    class func markNoteAsRead(
-        noteID: String?,
-        context: NSManagedObjectContext
-    ) async {
-        guard let noteID else {
-            Log.unexpected(.missingValue, "markNoteAsRead called without noteID")
-            return
-        }
-        await context.perform {
-            guard let event = Event.find(by: noteID, context: context) else {
-                Log.unexpected(.incorrectValue, "markNoteAsRead couldn't find event \(noteID)")
-                return
-            }
-            
-            event.isRead = true
-            do {
-                try context.saveIfNeeded()
-            } catch {
-                Log.error("markNoteAsRead error \(error.localizedDescription)")
-            }
-        }
-    }
-
     /// This function formats an Event's content for display in the UI. It does things like replacing raw npub links
     /// with the author's name, and extracting any URLs so that previews can be displayed for them.
     ///
@@ -988,18 +1044,18 @@ public class Event: NosManagedObject, VerifiableEvent {
     ///     `note` is in.
     /// - Returns: A tuple where the first object is the note content formatted for display, and the second is a list
     ///     of HTTP links found in the note's context.  
-    @MainActor class func attributedContentAndURLs(
+    @MainActor class func parsedComponents(
         note: Event,
         noteParser: NoteParser = NoteParser(),
         context: NSManagedObjectContext
-    ) async -> (AttributedString, [URL])? {
+    ) async -> NoteParser.NoteDisplayComponents? {
         guard let content = note.content else {
             return nil
         }
         let tags = note.allTags as? [[String]] ?? []
         
         return await context.perform {
-            noteParser.parse(content: content, tags: tags, context: context)
+            noteParser.components(from: content, tags: tags, context: context)
         }
     }
     
@@ -1028,10 +1084,22 @@ public class Event: NosManagedObject, VerifiableEvent {
         })
     }
     
+    /// Returns true if this event is a zap request targeting the given author.
+    func isProfileZap(to author: Author) -> Bool {
+        kind == EventKind.zapRequest.rawValue && references(author: author)
+    }
+    
     var isReply: Bool {
         rootNote() != nil || referencedNote() != nil
     }
-    
+
+    /// Returns `true` if this event is meant to be used to preview a note.
+    ///
+    /// Used by ``NoteComposer``.
+    var isPreview: Bool {
+        identifier == Event.previewIdentifier
+    }
+
     var isExpired: Bool {
         if let expirationDate {
             return expirationDate <= .now
@@ -1172,5 +1240,4 @@ public class Event: NosManagedObject, VerifiableEvent {
         shouldBePublishedTo = Set()
     }
 }
-// swiftlint:enable type_body_length
 // swiftlint:enable file_length

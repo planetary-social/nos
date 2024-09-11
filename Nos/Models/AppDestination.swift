@@ -6,7 +6,7 @@ enum AppDestination: Hashable, Equatable {
     case home
     case discover
     case notifications
-    case newNote(String?)
+    case noteComposer(String?)
     case profile
     
     var destinationString: String {
@@ -17,7 +17,7 @@ enum AppDestination: Hashable, Equatable {
             return String(localized: .localizable.discover)
         case .notifications:
             return String(localized: .localizable.notifications)
-        case .newNote:
+        case .noteComposer:
             return String(localized: .localizable.newNote)
         case .profile:
             return String(localized: .localizable.profileTitle)

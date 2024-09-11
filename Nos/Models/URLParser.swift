@@ -3,7 +3,7 @@ import Logger
 
 /// Parses unformatted urls in a string and replace them with markdown links
 struct URLParser {
-    /// Returns an array with all unformated urls
+    /// Returns an array with all unformatted urls
     func findUnformattedURLs(in content: String) throws -> [URL] {
         // swiftlint:disable line_length
         let regex = "((http|https)?:\\/\\/.)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)"
@@ -54,7 +54,7 @@ struct URLParser {
         // https://en.wikipedia.org/wiki/Domain_Name_System#Domain_name_syntax,_internationalization
 
         // swiftlint:disable:next line_length
-        let regexPattern = "(\\s*)(?<url>((https?://){1}|(?<![\\w@.]))([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&/=]*)"
+        let regexPattern = "(\\s*)(?<url>((https?://){1}|(?<![\\w@.]))([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&/=]*(?<![.,!?\\)\\]]))"
 
         var urls: [URL] = []
         do {

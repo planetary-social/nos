@@ -4,8 +4,7 @@ import Logger
 
 protocol RelaySubscriptionManager {
     func active() async -> [RelaySubscription]
-    func all() async -> [RelaySubscription]
-    
+
     func set(socketQueue: DispatchQueue?, delegate: WebSocketDelegate?) async
 
     @discardableResult
@@ -14,7 +13,6 @@ protocol RelaySubscriptionManager {
     func trackConnected(socket: WebSocket) async
     func processSubscriptionQueue() async
     func queueSubscription(with filter: Filter, to relayAddress: URL) async -> RelaySubscription
-    func requestEvents(from socket: WebSocketClient, subscription: RelaySubscription) async
     func receivedClose(for subscriptionID: RelaySubscription.ID, from socket: WebSocket) async
     
     func close(socket: WebSocket) async
@@ -54,10 +52,6 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         active
     }
 
-    func all() async -> [RelaySubscription] {
-        all
-    }
-    
     private var socketQueue: DispatchQueue?
     private var delegate: WebSocketDelegate?
     
@@ -137,7 +131,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
             switch connection.state {
             case .errored(let error):
                 if error.nextRetry > Date.now {
-                    return
+                    continue
                 } else {
                     fallthrough
                 }
@@ -145,7 +139,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
                 connection.socket.connect()
                 connection.state = .connecting
             case .connected, .connecting, .authenticating:
-                return
+                continue
             }
         }
     }
@@ -239,7 +233,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     /// open websockets to service queued subscriptions and to limit the number of concurrent subscriptions for a given
     /// relay.
     ///
-    /// It's called at appropriate times interally but can also be called externally in a loop. Idempotent.
+    /// It's called at appropriate times internally but can also be called externally in a loop. Idempotent.
     func processSubscriptionQueue() {
         openSockets()
         var waitingSubscriptions = [RelaySubscription]()

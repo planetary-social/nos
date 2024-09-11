@@ -6,6 +6,16 @@ import RegexBuilder
 /// This struct encapsulates the algorithms that parse notes and the mentions inside the note.
 struct NoteParser {
 
+    /// Components of a note that can be used to display the note in the UI.
+    struct NoteDisplayComponents {
+        /// The note content as attributed text with tagged entities replaced with readable names.
+        let attributedContent: AttributedString
+        /// Content links parsed from the note.
+        let contentLinks: [URL]
+        /// The id of the first quoted note in the content, if one exists.
+        let quotedNoteID: RawEventID?
+    }
+    
     /// Parses attributed text generated when composing a note and returns
     /// the content and tags.
     func parse(attributedText: AttributedString) -> (String, [[String]]) {
@@ -15,34 +25,32 @@ struct NoteParser {
     /// Parses the content and tags stored in a note and returns an attributed text with tagged entities replaced
     /// with readable names.
     func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> AttributedString {
-        var result = replaceTaggedNostrEntities(in: content, tags: tags, context: context)
-        result = replaceNostrEntities(in: result)
-        do {
-            return try AttributedString(
-                markdown: result,
-                options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-            )
-        } catch {
-            return AttributedString(stringLiteral: content)
-        }
+        let replaced = replaceTaggedNostrEntities(in: content, tags: tags, context: context)
+        let (result, _) = replaceNostrEntities(in: replaced)
+        return (try? AttributedString(
+            markdown: result,
+            options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
+        )) ?? AttributedString(content)
     }
-
-    /// Parses the content and tags stored in a note and returns an attributed string and list of URLs that can be used 
+    
+    /// Parses the content and tags stored in a note and returns components that can be used
     /// to display the note in the UI.
-    func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> (AttributedString, [URL]) {
+    func components(from content: String, tags: [[String]], context: NSManagedObjectContext) -> NoteDisplayComponents {
         let (cleanedString, urls) = URLParser().replaceUnformattedURLs(
             in: content
         )
-        var result = replaceTaggedNostrEntities(in: cleanedString, tags: tags, context: context)
-        result = replaceNostrEntities(in: result)
-        do {
-            return (try AttributedString(
-                markdown: result,
-                options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-            ), urls)
-        } catch {
-            return (AttributedString(stringLiteral: content), urls)
-        }
+        let replaced = replaceTaggedNostrEntities(in: cleanedString, tags: tags, context: context)
+        let (result, quotedNoteID) = replaceNostrEntities(in: replaced, capturesFirstNote: true)
+        
+        let attributedContent = (try? AttributedString(
+            markdown: result.trimmingCharacters(in: .whitespacesAndNewlines),
+            options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
+        )) ?? AttributedString(content)
+        return NoteDisplayComponents(
+            attributedContent: attributedContent,
+            contentLinks: urls,
+            quotedNoteID: quotedNoteID
+        )
     }
 
     // swiftlint:disable function_body_length
@@ -110,38 +118,64 @@ struct NoteParser {
     }
     // swiftlint:enable function_body_length
 
-    /// Replaces Nostr entities embedded in the note (without a proper tag) with markdown links
-    private func replaceNostrEntities(in content: String) -> String {
-        let unformattedRegex =
-            /(?:^|\s)@?(?:nostr:)?(?<entity>((npub1|note1|nprofile1|nevent1|naddr1)[a-zA-Z0-9]{58,}))/
-
-        return content.replacing(unformattedRegex) { match in
-            let substring = match.0
-            let entity = match.1
+    /// Replaces Nostr entities embedded in the note (without a proper tag) with markdown links and
+    /// optionally extracts the first quoted note id.
+    ///
+    /// - Parameters:
+    ///   - content: The note content in which to replace entities.
+    ///   - capturesFirstNote: If true, this function will extract the first quoted note id, if it exists.
+    ///                        Defaults to `false`.
+    /// - Returns: A tuple of the edited content and the first quoted note id, if it was requested and it exists.
+    private func replaceNostrEntities(in content: String, capturesFirstNote: Bool = false) -> (String, RawEventID?) {
+        // Note: This pattern contains a lookbehind, which is not currently supported by the newer Swift regex syntax.
+        let pattern = "(?<=^|\\s|[^:\\/])@?(?:nostr:)?((npub1|note1|nprofile1|nevent1|naddr1)[a-zA-Z0-9]{58,})"
+        let regex = try! NSRegularExpression(pattern: pattern, options: []) // swiftlint:disable:this force_try
+        
+        var firstNoteID: RawEventID?
+        
+        let result = regex.stringByReplacingMatches(
+            in: content,
+            options: [],
+            range: NSRange(location: 0, length: content.utf16.count)
+        ) { match in
+            let nsRange = match.range(at: 0)
+            guard let range = Range(nsRange, in: content) else { return "" }
+            let substring = String(content[range])
+            
+            let entityRange = match.range(at: 1)
+            guard let entityRange = Range(entityRange, in: content) else { return substring }
+            let entity = String(content[entityRange])
+            
             var prefix = ""
-            let firstCharacter = String(String(substring).prefix(1))
+            let firstCharacter = String(substring.prefix(1))
             if firstCharacter.range(of: #"\s|\r\n|\r|\n"#, options: .regularExpression) != nil {
                 prefix = firstCharacter
             }
-            let string = String(entity)
-
+            
             do {
-                let identifier = try NostrIdentifier.decode(bech32String: string)
+                let identifier = try NostrIdentifier.decode(bech32String: entity)
                 switch identifier {
                 case .npub(let rawAuthorID), .nprofile(let rawAuthorID, _):
-                    return "\(prefix)[\(string)](@\(rawAuthorID))"
+                    return "\(prefix)[\(entity)](@\(rawAuthorID))"
                 case .note(let rawEventID), .nevent(let rawEventID, _, _, _):
-                    return "\(prefix)[\(String(localized: .localizable.linkToNote))](%\(rawEventID))"
+                    if capturesFirstNote && firstNoteID == nil {
+                        firstNoteID = rawEventID
+                        return ""
+                    } else {
+                        return "\(prefix)[\(String(localized: .localizable.linkToNote))](%\(rawEventID))"
+                    }
                 case .naddr(let replaceableID, _, let authorID, let kind):
                     return "\(prefix)[\(String(localized: .localizable.linkToNote))]" +
-                        "($\(replaceableID);\(authorID);\(kind))"
+                    "($\(replaceableID);\(authorID);\(kind))"
                 case .nsec:
-                    return String(substring)
+                    return substring
                 }
             } catch {
-                return String(substring)
+                return substring
             }
         }
+        
+        return (result, firstNoteID)
     }
 
     /// Parse links in `attributedString` and replace them with plain text,

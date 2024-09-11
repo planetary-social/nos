@@ -19,7 +19,7 @@ struct UNSSuccessView: View {
                         VStack(spacing: 0) {
                             Image.unsCheck
                             Text(controller.nameRecord?.name ?? "")
-                                .font(.clarity(.bold, textStyle: .title1))
+                                .font(.clarityBold(.title))
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.primaryTxt)
                                 .shadow(radius: 1, y: 1)
@@ -30,7 +30,7 @@ struct UNSSuccessView: View {
                     .padding(.top, 50)
                     
                     Text(.localizable.success)
-                        .font(.clarity(.bold, textStyle: .title1))
+                        .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)

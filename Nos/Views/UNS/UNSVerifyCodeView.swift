@@ -23,7 +23,7 @@ struct UNSVerifyCodeView: View {
                         .padding(.top, 50)
                     
                     Text(.localizable.verification)
-                        .font(.clarity(.bold, textStyle: .title1))
+                        .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
@@ -42,7 +42,7 @@ struct UNSVerifyCodeView: View {
                     .padding(.vertical, 17)
                     .padding(.horizontal, 20)
                     
-                    WizardTextField(text: $verificationCode, placeholder: "123456")
+                    UNSWizardTextField(text: $verificationCode, placeholder: "123456")
                         .focused($focusedField, equals: .textEditor)
                         .keyboardType(.numberPad)
                         .autocorrectionDisabled()
@@ -87,9 +87,8 @@ struct UNSVerifyCodeView: View {
 
 struct UNSVerifyCodeView_Previews: PreviewProvider {
     
-    static var previewData = PreviewData()
     @State static var controller = UNSWizardController(
-        state: .verificationCode, 
+        state: .verificationCode,
         phoneNumber: "+1768555451"
     )
     

@@ -14,12 +14,11 @@ struct ProfileView: View {
     @EnvironmentObject private var router: Router
     @Dependency(\.relayService) private var relayService: RelayService
     @Dependency(\.analytics) private var analytics
-    @Dependency(\.unsAPI) private var unsAPI
-    
+
+    @State private var refreshController = RefreshController()
     @State private var showingOptions = false
     @State private var showingReportMenu = false
     @State private var relaySubscriptions = SubscriptionCancellables()
-    @State private var lastRefreshDate = Date.now
 
     @State private var selectedTab: ProfileFeedType = .notes
 
@@ -33,7 +32,11 @@ struct ProfileView: View {
         self.author = author
         self.addDoubleTapToPop = addDoubleTapToPop
     }
-    
+
+    var databaseFilter: NSFetchRequest<Event> {
+        selectedTab.databaseFilter(author: author, before: refreshController.lastRefreshDate)
+    }
+
     func downloadAuthorData() async {
         relaySubscriptions.removeAll()
         
@@ -81,32 +84,28 @@ struct ProfileView: View {
         VStack(spacing: 0) {
             VStack {
                 PagedNoteListView(
-                    databaseFilter: selectedTab.databaseFilter(author: author, before: lastRefreshDate),
-                    relayFilter: selectedTab.relayFilter(author: author), 
+                    refreshController: $refreshController,
+                    databaseFilter: databaseFilter,
+                    relayFilter: selectedTab.relayFilter(author: author),
                     relay: nil,
-                    context: viewContext,
-                    tab: .profile,
+                    managedObjectContext: viewContext,
+                    tab: .profile, 
                     header: {
                         ProfileHeader(author: author, selectedTab: $selectedTab)
                             .compositingGroup()
                             .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
                     },
-                    emptyPlaceholder: { refresh in
+                    emptyPlaceholder: {
                         VStack {
                             Text(.localizable.noEventsOnProfile)
                                 .padding()
                                 .readabilityPadding()
                             
-                            SecondaryActionButton(
-                                title: .localizable.tapToRefresh,
-                                action: refresh
-                            )
+                            SecondaryActionButton(title: .localizable.tapToRefresh) {
+                                refreshController.startRefresh = true
+                            }
                         }
                         .frame(minHeight: 300)
-                    },
-                    onRefresh: {
-                        lastRefreshDate = .now
-                        return selectedTab.databaseFilter(author: author, before: lastRefreshDate)
                     }
                 )
                 .padding(0)
@@ -247,7 +246,7 @@ struct ProfileView: View {
     @Dependency(\.persistenceController) var persistenceController 
     
     lazy var previewContext: NSManagedObjectContext = {
-        persistenceController.container.viewContext  
+        persistenceController.viewContext  
     }()
     
     var previewData = PreviewData(currentUserKey: KeyFixture.eve)

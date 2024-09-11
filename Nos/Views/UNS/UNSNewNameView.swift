@@ -18,7 +18,7 @@ struct UNSNewNameView: View {
                         .padding(.top, 50)
                     
                     Text(.localizable.chooseYourName)
-                        .font(.clarity(.bold, textStyle: .title1))
+                        .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
@@ -33,7 +33,7 @@ struct UNSNewNameView: View {
                         .shadow(radius: 1, y: 1)
                     
                     Spacer()
-                    WizardTextField(text: $name)
+                    UNSWizardTextField(text: $name)
                     Spacer()
                     
                     BigActionButton(title: .localizable.next) {
