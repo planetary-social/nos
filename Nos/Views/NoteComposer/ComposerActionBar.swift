@@ -167,7 +167,9 @@ struct ComposerActionBar: View {
 
     /// Uploads an image at the given URL to a file storage service.
     /// - Parameter imageURL: File URL of the image the user wants to upload.
-    private func uploadImage(at imageURL: URL) async {
+    private func uploadImage(
+        at imageURL: URL
+    ) async {
         do {
             startUploadingImage()
             let url = try await fileStorageAPIClient.upload(fileAt: imageURL, isProfilePhoto: false)
