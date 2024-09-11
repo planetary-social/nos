@@ -87,12 +87,12 @@ class NostrBuildAPIClient: FileStorageAPIClient {
                 pattern: "File size exceeds the limit of (\\d*\\.\\d* [MKGT]B)",
                 options: []
             ),
-               let match = regex.firstMatch(
+            let match = regex.firstMatch(
                 in: message,
                 options: [],
                 range: NSRange(location: 0, length: message.utf16.count)
-               ),
-               let range = Range(match.range(at: 1), in: message) {
+            ),
+            let range = Range(match.range(at: 1), in: message) {
                 let fileSizeLimit = String(message[range])
                 throw FileStorageAPIClientError.fileTooBig(fileSizeLimit)
             } else {
