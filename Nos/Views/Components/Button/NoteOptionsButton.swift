@@ -33,9 +33,9 @@ struct NoteOptionsButton: View {
                     analytics.copiedNoteIdentifier()
                     copyMessageIdentifier()
                 }
-                Button(String(localized: .localizable.copyLink)) {
-                    analytics.copiedNoteLink()
-                    copyLink()
+                Button(String(localized: .localizable.shareNote)) {
+                    showingShare = true
+                    analytics.sharedNoteLink()
                 }
                 if !note.isStub {
                     Button(String(localized: .localizable.copyNoteText)) {
@@ -83,16 +83,16 @@ struct NoteOptionsButton: View {
                 }
             }
             .sheet(isPresented: $showingShare) {
+                let url = note.webLink
+                ActivityViewController(activityItems: [url]) {
+                    showingShare = false
+                }
             }
         }
     }
     
     func copyMessageIdentifier() {
         UIPasteboard.general.string = note.bech32NoteID
-    }
-    
-    func copyLink() {
-        UIPasteboard.general.string = note.webLink
     }
     
     func copyMessage() {
@@ -116,7 +116,7 @@ struct NoteOptionsButton: View {
 struct NoteOptionsButton_Previews: PreviewProvider {
     static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
+    static var previewContext = persistenceController.viewContext
     static var currentUser = previewData.currentUser
     
     static var shortNote: Event {

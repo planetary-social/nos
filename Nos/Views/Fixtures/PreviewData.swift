@@ -28,7 +28,7 @@ struct PreviewData {
     @Dependency(\.currentUser) var currentUser
     
     lazy var previewContext: NSManagedObjectContext = {
-        persistenceController.container.viewContext  
+        persistenceController.viewContext  
     }()
     
     // MARK: - Authors

@@ -11,15 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Release Notes
-
-- Added the option to preview a note before posting it.
-- Fixed side menu accessibility issues.
-- Fixed a bug where content of a quoted note expanded out beyond width of viewport. 
+- Added the option to preview a note before posting it. [#1399](https://github.com/planetary-social/nos/issues/1399)
+- Fixed side menu accessibility issues. [#1444](https://github.com/planetary-social/nos/issues/1444)
+- Fixed a bug where content of a quoted note expanded out beyond width of viewport. Thanks, @tedbrosby! [#1463](https://github.com/planetary-social/nos/issues/1463)
+- Fixed issue where relay metadata is never updated. [#1472](https://github.com/planetary-social/nos/issues/1472)
+- Updated the copy on the 3 dots note menu. [#1028](https://github.com/planetary-social/nos/issues/1028)
+- Added functionality to share notes link through the 3 dots note menu. [#1272](https://github.com/planetary-social/nos/issues/1272)
+- Fixes and improvements related to Core Data usage. [#1443](https://github.com/planetary-social/nos/issues/1443)
 
 ### Internal Changes
-- Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag.
-- Added more instructions to the changelog file
-- Added some logging when a content warnings is displayed
+- Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag. [#1172](https://github.com/planetary-social/nos/issues/1172)
+- Added more instructions to the changelog file. 
+- Added some logging when a content warning is displayed. [cleanstr#53](https://github.com/planetary-social/cleanstr/issues/53)
 
 ## [0.1.26] - 2024-09-09Z
 
@@ -30,14 +33,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show quoted notes in note cards.
 - Added quote-reposting.
 - Added a new image viewer that appears when you tap an image.
-- Added a new gallery view that’s currently behind a feature flag.
 - Removed the like and repost counts from the Main and Profile feeds.
 - Removed wss:// from relay addresses in lists and removed the need to prepend relay addresses with wss://.
 - Localized the quotation marks on the Notifications view.
 - Fixed a bug where nostr entities in URLs were treated like quoted note links.
 - Added in-app profile photo editing.
 - Changed "Name" to "Display Name" on the Edit Profile View.
-- Fixed issue where relay metadata is never updated.
 
 ### Internal Changes
 - Included the npub in the properties list sent to analytics.

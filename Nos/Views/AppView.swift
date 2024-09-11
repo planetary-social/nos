@@ -194,7 +194,7 @@ struct AppView_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
+    static var previewContext = persistenceController.viewContext
     static var relayService = previewData.relayService
     static var router = Router()
     static var currentUser = previewData.currentUser 

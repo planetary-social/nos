@@ -123,7 +123,7 @@ struct GoldenPostView: View {
 struct GoldenPostView_Previews: PreviewProvider {
     
     static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
+    static var previewContext = persistenceController.viewContext
     
     static var shortNote: Event {
         let note = Event(context: previewContext)

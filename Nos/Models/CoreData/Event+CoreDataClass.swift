@@ -14,9 +14,6 @@ public class Event: NosManagedObject, VerifiableEvent {
     /// Event identifier for the note created by ``NoteComposer`` when displaying previews.
     static let previewIdentifier = "preview"
 
-    static var replyNoteReferences = "kind = 1 AND ANY eventReferences.referencedEvent.identifier == %@ " +
-        "AND author.muted = false"
-
     @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [
@@ -116,7 +113,6 @@ public class Event: NosManagedObject, VerifiableEvent {
     
     @nonobjc public class func lastReceived(for user: Author) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(format: "author != %@", user)
         fetchRequest.fetchLimit = 1
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
@@ -131,6 +127,11 @@ public class Event: NosManagedObject, VerifiableEvent {
         guard let noteID else {
             return emptyRequest()
         }
+        
+        let replyNoteReferences = "kind = 1 " +
+            "AND ANY eventReferences.referencedEvent.identifier == %@ " +
+            "AND author.muted = false"
+        
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.receivedAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
@@ -498,8 +499,8 @@ public class Event: NosManagedObject, VerifiableEvent {
     
     // MARK: - Creating
 
-    func createIfNecessary(
-        jsonEvent: JSONEvent, 
+    static func createIfNecessary(
+        jsonEvent: JSONEvent,
         relay: Relay?, 
         context: NSManagedObjectContext
     ) throws -> Event? {
@@ -580,7 +581,7 @@ public class Event: NosManagedObject, VerifiableEvent {
     }
 
     /// Populates an event stub (with only its ID set) using the data in the given JSON.
-    func hydrate(from jsonEvent: JSONEvent, relay: Relay?, in context: NSManagedObjectContext) throws {
+    private func hydrate(from jsonEvent: JSONEvent, relay: Relay?, in context: NSManagedObjectContext) throws {
         assert(isStub, "Tried to hydrate an event that isn't a stub. This is a programming error")
         
         // if this stub was created with a replaceableIdentifier and author, it won't have an identifier yet
@@ -647,7 +648,11 @@ public class Event: NosManagedObject, VerifiableEvent {
         }
     }
     
-    func hydrateContactList(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
+    private func hydrateContactList(
+        from jsonEvent: JSONEvent,
+        author newAuthor: Author,
+        context: NSManagedObjectContext
+    ) {
         guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
             return
         }
@@ -700,7 +705,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         }
     }
     
-    func hydrateDefault(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
+    private func hydrateDefault(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
         let newEventReferences = NSMutableOrderedSet()
         let newAuthorReferences = NSMutableOrderedSet()
         for jsonTag in jsonEvent.tags {
@@ -724,7 +729,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         authorReferences = newAuthorReferences
     }
     
-    func hydrateMetaData(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
+    private func hydrateMetaData(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
         guard createdAt! > newAuthor.lastUpdatedMetadata ?? Date.distantPast else {
             // This is old data
             return
@@ -756,7 +761,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         seenOnRelays.insert(relay) 
     }
     
-    func hydrateMuteList(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
+    private func hydrateMuteList(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
         let mutedKeys = jsonEvent.tags.map { $0[1] }
         
         let request = Author.allAuthorsRequest(muted: true)
@@ -784,19 +789,15 @@ public class Event: NosManagedObject, VerifiableEvent {
     }
 
     /// Tries to parse a new event out of the given jsonEvent's `content` field.
-    @discardableResult
-    func parseContent(from jsonEvent: JSONEvent, context: NSManagedObjectContext) -> Event? {
+    private func parseContent(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
         do {
             if let contentData = jsonEvent.content.data(using: .utf8) {
                 let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: contentData)
-                return try Event().createIfNecessary(jsonEvent: jsonEvent, relay: nil, context: context)
+                _ = try Event.createIfNecessary(jsonEvent: jsonEvent, relay: nil, context: context)
             }
         } catch {
             Log.error("Could not parse content for jsonEvent: \(jsonEvent)")
-            return nil
         }
-        
-        return nil
     }
     
     // MARK: - Preloading and Caching
@@ -905,9 +906,8 @@ public class Event: NosManagedObject, VerifiableEvent {
         @Dependency(\.persistenceController) var persistenceController
         let context = persistenceController.backgroundViewContext
         
-        _ = try? Event.findOrCreateStubBy(id: quotedNoteID, context: context)
-        
         await context.perform {
+            _ = try? Event.findOrCreateStubBy(id: quotedNoteID, context: context)
             try? context.save()
         }
         
