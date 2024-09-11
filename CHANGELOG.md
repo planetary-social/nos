@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed issue where relay metadata is never updated. [#1472](https://github.com/planetary-social/nos/issues/1472)
 - Updated the copy on the 3 dots note menu. [#1028](https://github.com/planetary-social/nos/issues/1028)
 - Added functionality to share notes link through the 3 dots note menu. [#1272](https://github.com/planetary-social/nos/issues/1272)
+- Fixes and improvements related to Core Data usage. [#1443](https://github.com/planetary-social/nos/issues/1443)
 - Fixed a bug where toggles in the settings screen were white instead of green when toggled on. [#1251](https://github.com/planetary-social/nos/issues/1251)
 
 ### Internal Changes
