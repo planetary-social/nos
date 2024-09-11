@@ -68,11 +68,11 @@ struct ThreadView: View {
 struct ThreadView_Previews: PreviewProvider {
     static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
+    static var previewContext = persistenceController.viewContext
     static var router = Router()
     
     static var emptyPersistenceController = PersistenceController.empty
-    static var emptyPreviewContext = emptyPersistenceController.container.viewContext
+    static var emptyPreviewContext = emptyPersistenceController.viewContext
     static var emptyRelayService = previewData.relayService
     static var currentUser = previewData.currentUser
     

@@ -56,7 +56,7 @@ final class EventObservationTests: CoreDataTestCase {
         fullEvent.content = eventContent
         
         let view = EventObservationTestView()
-        ViewHosting.host(view: view.environment(\.managedObjectContext, persistenceController.container.viewContext))
+        ViewHosting.host(view: view.environment(\.managedObjectContext, persistenceController.viewContext))
         // sanity check
         let expectNullContent = view.inspection.inspect { view in
             let eventContentInView = try view.find(ViewType.Text.self).string()

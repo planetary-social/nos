@@ -16,7 +16,6 @@ class RelayService: ObservableObject {
     private var backgroundProcessTimer: AsyncTimer?
     private var eventProcessingLoop: Task<Void, Error>?
     private var backgroundContext: NSManagedObjectContext
-    private var parseContext: NSManagedObjectContext
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .userInitiated)
     private var parseQueue = ParseQueue()
     
@@ -30,7 +29,6 @@ class RelayService: ObservableObject {
         self.subscriptionManager = subscriptionManager
         @Dependency(\.persistenceController) var persistenceController
         self.backgroundContext = persistenceController.newBackgroundContext()
-        self.parseContext = persistenceController.parseContext
         
         Task { await self.subscriptionManager.set(socketQueue: processingQueue, delegate: self) }
         
@@ -63,7 +61,7 @@ class RelayService: ObservableObject {
         })
         
         Task { @MainActor in
-            currentUser.viewContext = persistenceController.container.viewContext
+            currentUser.viewContext = persistenceController.viewContext
         }
         
         NotificationCenter.default.addObserver(
@@ -381,12 +379,13 @@ extension RelayService {
             return false
         } else {
             let remainingEventCount = await parseQueue.count
-            try await self.parseContext.perform {
+            try await persistenceController.parseContext.perform {
                 var savedEvents = 0
                 for (event, socket) in eventData {
-                    let relay = self.relay(from: socket, in: self.parseContext)
+                    let relay = self.relay(from: socket, in: self.persistenceController.parseContext)
                     do {
-                        if try EventProcessor.parse(jsonEvent: event, from: relay, in: self.parseContext) != nil {
+                        let context = self.persistenceController.parseContext
+                        if try EventProcessor.parse(jsonEvent: event, from: relay, in: context) != nil {
                             savedEvents += 1
                         }
                     } catch {
@@ -402,7 +401,7 @@ extension RelayService {
                 if remainingEventCount >= 1000 && remainingEventCount < 1030 {
                     self.crashReporting.report("Parse queue is large: currently 1000+ events")
                 }
-                try self.parseContext.saveIfNeeded()
+                try self.persistenceController.parseContext.saveIfNeeded()
                 try self.persistenceController.viewContext.saveIfNeeded()
             }
             return true
@@ -410,7 +409,7 @@ extension RelayService {
     }
 }
 
-// MARK: Relay Communciation
+// MARK: Relay Communication
 extension RelayService {
     
     private func parseOK(_ responseArray: [Any], _ socket: WebSocket) async {
@@ -716,12 +715,12 @@ extension RelayService {
     /// These events could have failed to publish becuase the relay was offline, or because the user was offline. Often 
     /// the user has relay in their list that they don't have write access to so eventually this function will stop
     /// trying to republish the same event.
-    @MainActor func retryFailedPublishes() async {
+    @MainActor private func retryFailedPublishes() async {
         guard let userKey = currentUser.author?.hexadecimalPublicKey else {
             return
         }
         
-        await self.backgroundContext.perform {
+        await backgroundContext.perform {
             
             guard let user = try? Author.find(by: userKey, context: self.backgroundContext) else {
                 return
@@ -731,10 +730,12 @@ extension RelayService {
             
             // Try to publish each of these again to each relay that failed.
             for event in eventsToRetry {
-                let missedRelays = event.shouldBePublishedTo.subtracting(event.publishedTo)
+                guard let jsonEvent = event.codable else { continue }
                 
-                for missedRelay in missedRelays {
-                    guard let missedAddress = missedRelay.address, let jsonEvent = event.codable else { continue }
+                let missedRelays = event.shouldBePublishedTo.subtracting(event.publishedTo)
+                let missedAddresses = missedRelays.compactMap { $0.address }
+                
+                for missedAddress in missedAddresses {
                     Task {
                         if let socket = await self.subscriptionManager.socket(for: missedAddress) {
                             // Publish again to this socket

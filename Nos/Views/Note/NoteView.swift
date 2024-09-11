@@ -171,7 +171,7 @@ struct RepliesView_Previews: PreviewProvider {
     
     static var previewData = PreviewData(currentUserKey: KeyFixture.alice)
     static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
+    static var previewContext = persistenceController.viewContext
     static var emptyRelayService = previewData.relayService
     static var router = Router()
     static var currentUser = previewData.currentUser

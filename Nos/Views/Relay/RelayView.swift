@@ -228,9 +228,9 @@ struct RelayView: View {
 struct RelayView_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
-    static var previewContext = PersistenceController.preview.container.viewContext
+    static var previewContext = PersistenceController.preview.viewContext
     
-    static var emptyContext = PersistenceController.empty.container.viewContext
+    static var emptyContext = PersistenceController.empty.viewContext
 
     static var user: Author {
         let author = Author(context: previewContext)

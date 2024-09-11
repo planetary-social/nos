@@ -79,7 +79,7 @@ struct RelayDetailView: View {
 }
 
 struct RelayDetailView_Previews: PreviewProvider {
-    static var previewContext = PersistenceController.preview.container.viewContext
+    static var previewContext = PersistenceController.preview.viewContext
     static var relay: Relay {
         do {
             return try Relay.findOrCreate(by: "wss://example.com", context: previewContext) 

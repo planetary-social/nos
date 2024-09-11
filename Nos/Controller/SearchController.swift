@@ -49,9 +49,7 @@ class SearchController: ObservableObject {
     /// The timer for showing the "not finding results" view. Resets any time the query is changed.
     private var timer: Timer?
 
-    private lazy var context: NSManagedObjectContext = {
-        persistenceController.viewContext
-    }()
+    private lazy var context = persistenceController.viewContext
 
     /// The amount of time, in seconds, to remain in the `.loading` state until switching to `.stillLoading`.
     private let stillLoadingTime: TimeInterval = 10
@@ -141,7 +139,7 @@ class SearchController: ObservableObject {
         authorResults = []
     }
     
-    func note(fromPublicKey publicKeyString: String) -> Event? {
+    private func note(fromPublicKey publicKeyString: String) -> Event? {
         let strippedString = publicKeyString.trimmingCharacters(
             in: NSCharacterSet.whitespacesAndNewlines
         )

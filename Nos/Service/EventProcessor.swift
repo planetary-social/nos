@@ -11,7 +11,7 @@ enum EventProcessor {
         in parseContext: NSManagedObjectContext,
         skipVerification: Bool = false
     ) throws -> Event? {
-        if let event = try Event().createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
+        if let event = try Event.createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
             relay.unwrap {
                 do {
                     try event.trackDelete(on: $0, context: parseContext)
@@ -79,7 +79,7 @@ enum EventProcessor {
         from relay: Relay?,
         in persistenceController: PersistenceController
     ) throws -> [Event] {
-        let parseContext = persistenceController.container.viewContext
+        let parseContext = persistenceController.viewContext
         return try parse(jsonData: jsonData, from: relay, in: parseContext)
     }
 }
