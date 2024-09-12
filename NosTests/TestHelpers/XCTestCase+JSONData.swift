@@ -5,4 +5,9 @@ extension XCTestCase {
         let url = try XCTUnwrap(Bundle.current.url(forResource: filename, withExtension: "json"))
         return try Data(contentsOf: url)
     }
+
+    func htmlString(filename: String) throws -> String {
+        let url = try XCTUnwrap(Bundle.current.url(forResource: filename, withExtension: "html"))
+        return try String(contentsOf: url)
+    }
 }
