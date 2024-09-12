@@ -32,6 +32,7 @@ class OpenGraphParserTests: XCTestCase {
 
         // Assert
         XCTAssertEqual(videoMetadata.width, 2560)
+        XCTAssertEqual(videoMetadata.height, 1440)
     }
 
     func test_parse_youTube() throws {
@@ -44,5 +45,6 @@ class OpenGraphParserTests: XCTestCase {
 
         // Assert
         XCTAssertEqual(videoMetadata.width, 1280)
+        XCTAssertEqual(videoMetadata.width, 720)
     }
 }
