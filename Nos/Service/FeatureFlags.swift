@@ -1,8 +1,8 @@
 import Foundation
 import Dependencies
 
-/// Enum to represent each feature flag. Add new feature flags here easily.
-enum FeatureFlag: String {
+///  Feature flags for enabling experimental or beta features.
+enum FeatureFlag {
     /// Whether the new media display should be enabled or not.
     /// - Note: See [#1177](https://github.com/planetary-social/nos/issues/1177) for details on the new media display.
     case newMediaDisplay
@@ -19,7 +19,7 @@ protocol FeatureFlags {
     // MARK: - Additional requirements for debug mode
     #if DEBUG || STAGING
     /// Sets the value of the specified feature flag.
-    func setEnabled(_ feature: FeatureFlag, enabled: Bool)
+    func setFeature(_ feature: FeatureFlag, enabled: Bool)
     #endif
 }
 
@@ -30,18 +30,19 @@ class DefaultFeatureFlags: FeatureFlags, DependencyKey {
 
     private init() {}
 
-    /// A dictionary to store the values of feature flags.
+    /// Feature flags and their values.
     private var featureFlags: [FeatureFlag: Bool] = [
         .newMediaDisplay: false,
         .newModerationFlow: false
     ]
 
+    /// Returns true if the feature is enabled.
     func isEnabled(_ feature: FeatureFlag) -> Bool {
         featureFlags[feature] ?? false
     }
 
     #if DEBUG || STAGING
-    func setEnabled(_ feature: FeatureFlag, enabled: Bool) {
+    func setFeature(_ feature: FeatureFlag, enabled: Bool) {
         featureFlags[feature] = enabled
     }
     #endif

@@ -267,7 +267,7 @@ extension SettingsView {
     private var isNewMediaDisplayEnabled: Binding<Bool> {
         Binding<Bool>(
             get: { featureFlags.isEnabled(.newMediaDisplay) },
-            set: { featureFlags.setEnabled(.newMediaDisplay, enabled: $0) }
+            set: { featureFlags.setFeature(.newMediaDisplay, enabled: $0) }
         )
     }
 
@@ -280,7 +280,7 @@ extension SettingsView {
     private var isNewModerationFlowEnabled: Binding<Bool> {
         Binding<Bool>(
             get: { featureFlags.isEnabled(.newModerationFlow) },
-            set: { featureFlags.setEnabled(.newModerationFlow, enabled: $0) }
+            set: { featureFlags.setFeature(.newModerationFlow, enabled: $0) }
         )
     }
 
@@ -308,7 +308,6 @@ extension SettingsView {
         Group {
             newMediaFeatureToggle
             newModerationFlowToggle
-
             Text(.localizable.sampleDataInstructions)
                 .foregroundColor(.primaryTxt)
             Button(String(localized: .localizable.loadSampleData)) {

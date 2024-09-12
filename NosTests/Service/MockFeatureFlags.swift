@@ -1,6 +1,6 @@
 /// A set of feature flag values used for testing that can be customized.
 class MockFeatureFlags: FeatureFlags {
-    /// A dictionary to store the mock values for feature flags.
+    /// Mock feature flags and their values.
     private var featureFlags: [FeatureFlag: Bool] = [
         .newMediaDisplay: false,
         .newModerationFlow: false
@@ -10,7 +10,7 @@ class MockFeatureFlags: FeatureFlags {
         featureFlags[feature] ?? false
     }
     
-    func setEnabled(_ feature: FeatureFlag, enabled: Bool) {
+    func setFeature(_ feature: FeatureFlag, enabled: Bool) {
         featureFlags[feature] = enabled
     }
 }
