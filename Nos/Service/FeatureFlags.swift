@@ -1,7 +1,7 @@
 import Foundation
 import Dependencies
 
-///  Feature flags for enabling experimental or beta features.
+/// Feature flags for enabling experimental or beta features.
 enum FeatureFlag {
     /// Whether the new media display should be enabled or not.
     /// - Note: See [#1177](https://github.com/planetary-social/nos/issues/1177) for details on the new media display.
