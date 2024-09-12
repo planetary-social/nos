@@ -54,8 +54,9 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         assert(fileURL.isFileURL, "The URL must point to a file.")
         let apiURL = try await apiURL()
         let (request, data) = try uploadRequest(fileAt: fileURL, isProfilePhoto: isProfilePhoto, apiURL: apiURL)
-        let (responseData, _) = try await URLSession.shared.upload(for: request, from: data)
-        return try assetURL(from: responseData)
+        let (responseData, response) = try await URLSession.shared.upload(for: request, from: data)
+        /// Attempt to retrieve the asset URL from the response data and HTTP response.
+        return try assetURL(from: responseData, response: response as? HTTPURLResponse)
     }
 
     // MARK: - Internal
@@ -75,30 +76,32 @@ class NostrBuildAPIClient: FileStorageAPIClient {
     }
     
     /// The URL of the uploaded asset parsed from the API's response.
-    private func assetURL(from responseData: Data) throws -> URL {
-        let response = try decoder.decode(FileStorageUploadResponseJSON.self, from: responseData)
-        
-        guard let urlString = response.nip94Event?.urlString else {
-            // Ensure there's a message in the response, use an empty string if not
-            let message = response.message ?? ""
+    private func assetURL(from responseData: Data, response: HTTPURLResponse?) throws -> URL {
+        let decodedResponse = try decoder.decode(FileStorageUploadResponseJSON.self, from: responseData)
 
-            // Check to see if the error message mentions the file size
-            if let regex = try? NSRegularExpression(
-                pattern: "File size exceeds the limit of (\\d*\\.\\d* [MKGT]B)",
-                options: []
-            ),
-            let match = regex.firstMatch(
-                in: message,
-                options: [],
-                range: NSRange(location: 0, length: message.utf16.count)
-            ),
-            let range = Range(match.range(at: 1), in: message) {
-                let fileSizeLimit = String(message[range])
-                throw FileStorageAPIClientError.fileTooBig(fileSizeLimit)
-            } else {
-                // The error is something else.
-                throw FileStorageAPIClientError.uploadFailed(message)
+        guard let urlString = decodedResponse.nip94Event?.urlString else {
+            /// Assign an empty string if the response message is nil.
+            let message = decodedResponse.message ?? ""
+
+            /// Checks if the response contains a status code of `413 Payload Too Large`.
+            if let errorCode = response?.statusCode, errorCode == 413 {
+                /// Verify if the error message indicates the file size exceeds the limit.
+                if let regex = try? NSRegularExpression(
+                    pattern: "File size exceeds the limit of (\\d*\\.\\d* [MKGT]B)",
+                    options: []
+                ),
+                let match = regex.firstMatch(
+                    in: message,
+                    options: [],
+                    range: NSRange(location: 0, length: message.utf16.count)
+                ),
+                let range = Range(match.range(at: 1), in: message) {
+                    let fileSizeLimit = String(message[range])
+                    throw FileStorageAPIClientError.fileTooBig(fileSizeLimit)
+                }
             }
+            /// Throw an error indicating the upload failed with the provided message.
+            throw FileStorageAPIClientError.uploadFailed(message)
         }
 
         guard let url = URL(string: urlString) else {
