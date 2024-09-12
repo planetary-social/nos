@@ -19,8 +19,8 @@ struct OpenGraphMetadata: Equatable {
 }
 
 struct OpenGraphMedia: Equatable {
-    let url: String
-    let type: OpenGraphMediaType
+    let url: String?
+    let type: OpenGraphMediaType?
     let width: Double?
     let height: Double?
 }

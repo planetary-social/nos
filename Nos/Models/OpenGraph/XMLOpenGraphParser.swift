@@ -1,9 +1,14 @@
 import Foundation
-import XCTest
 
-class OpenGraphParser: NSObject, XMLParserDelegate {
+class XMLOpenGraphParser: NSObject, OpenGraphParser, XMLParserDelegate {
     private var currentElement = ""
     private var videoWidth: String?
+
+    func videoMetadata(html: String) -> OpenGraphMedia? {
+        guard let data = html.data(using: .utf8) else { return nil }
+        let width = videoWidth(data: data)
+        return OpenGraphMedia(url: nil, type: .video, width: width, height: nil)
+    }
 
     func videoWidth(data: Data) -> Double? {
         let parser = XMLParser(data: data)
@@ -32,45 +37,5 @@ class OpenGraphParser: NSObject, XMLParserDelegate {
 
     func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
         print("Parse error: \(parseError.localizedDescription)")
-    }
-}
-
-class XMLParserTests: XCTestCase {
-    func test_parse() throws {
-        // Arrange
-        let htmlString = """
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta property="og:video:width" content="2560">
-            <meta property="og:video:height" content="1440">
-        </head>
-        <body>
-            <h1>Sample HTML</h1>
-        </body>
-        </html>
-        """
-
-        let data = try XCTUnwrap(htmlString.data(using: .utf8))
-        let parser = OpenGraphParser()
-
-        // Act
-        let videoWidth = try XCTUnwrap(parser.videoWidth(data: data))
-
-        // Assert
-        XCTAssertEqual(videoWidth, 2560)
-    }
-
-    func test_parse_youtube() throws {
-        // Arrange
-        let htmlString = try htmlString(filename: "youtube_video_toxic")
-        let data = try XCTUnwrap(htmlString.data(using: .utf8))
-        let parser = OpenGraphParser()
-
-        // Act
-        let videoWidth = try XCTUnwrap(parser.videoWidth(data: data))
-
-        // Assert
-        XCTAssertEqual(videoWidth, 1280)
     }
 }
