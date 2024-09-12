@@ -24,7 +24,7 @@ class OpenGraphParserTests: XCTestCase {
 
     func test_parse() throws {
         // Arrange
-        let parser = UnimplementedOpenGraphParser()
+        let parser = XMLOpenGraphParser()
         let data = try XCTUnwrap(sampleHTML.data(using: .utf8))
 
         // Act
@@ -37,7 +37,7 @@ class OpenGraphParserTests: XCTestCase {
 
     func test_parse_youTube() throws {
         // Arrange
-        let parser = UnimplementedOpenGraphParser()
+        let parser = XMLOpenGraphParser()
         let data = try XCTUnwrap(youTubeHTML.data(using: .utf8))
 
         // Act
