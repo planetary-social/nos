@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-We define "Noteworthy changes" as 1) user-facing features or bugfixes 2) significant technical or architectural changes that contributors will notice. If your Pull Request does not contain any changes of this nature i.e. minor string/translation changes, patch releases of dependencies, refactoring, etc. then add the `Skip-Changelog` label. 
+We define "Noteworthy changes" as 1) user-facing features or bugfixes 2) significant technical or architectural changes that contributors will notice. If your Pull Request does not contain any changes of this nature i.e. minor string/translation changes, patch releases of dependencies, refactoring, etc. then add the `Skip-Changelog` label.
 
 The **Release Notes** section is for changes that the are relevant to users, and they should know about. The **Internal Changes** section is for other changes that are not visible to users since the changes may not be relevant to them, e.g technical improvements, but the developers should still be aware of.
 
@@ -18,12 +18,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the copy on the 3 dots note menu. [#1028](https://github.com/planetary-social/nos/issues/1028)
 - Added functionality to share notes link through the 3 dots note menu. [#1272](https://github.com/planetary-social/nos/issues/1272)
 - Fixes and improvements related to Core Data usage. [#1443](https://github.com/planetary-social/nos/issues/1443)
+- Fixed a bug where toggles in the settings screen were white instead of green when toggled on. [#1251](https://github.com/planetary-social/nos/issues/1251)
+- Added routing to profile when tapping on follow notification. [#1447](https://github.com/planetary-social/nos/issues/1447)
 - Localized follows notifications. [#1446](https://github.com/planetary-social/nos/issues/1446)
 
 ### Internal Changes
 - Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag. [#1172](https://github.com/planetary-social/nos/issues/1172)
-- Added more instructions to the changelog file. 
+- Added more instructions to the changelog file.
 - Added some logging when a content warning is displayed. [cleanstr#53](https://github.com/planetary-social/cleanstr/issues/53)
+- Minor refactor of Event+CoreDataClass. [#1443](https://github.com/planetary-social/nos/issues/1443)
 
 ## [0.1.26] - 2024-09-09Z
 
@@ -44,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Internal Changes
 - Included the npub in the properties list sent to analytics.
 - Replaced hard-coded color values.
-- Added a feature flag toggle for “Enable new media display” to Staging builds. 
+- Added a feature flag toggle for “Enable new media display” to Staging builds.
 - Added a new gallery view to display multiple links in a post. Currently behind the “Enable new media display” feature flag.
 - Added an overlay to GIFs that plays the animation when tapped. Currently behind the “Enable new media display” feature flag.
 - Show single images and gallery view in the proper orientation. Currently behind the “Enable new media display” feature flag.
@@ -156,13 +159,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.14] - 2024-05-22Z
 
-- Added the author's name to profile cards on the Discover tab and search results. 
+- Added the author's name to profile cards on the Discover tab and search results.
 - Added a delay when trying to reopen a websocket that had previously closed with an error.
 - Updated the icon that appears when following a user.
 
 ## [0.1.13] - 2024-05-15Z
 
-- On the Profile screen, open a sheet to display the full bio. 
+- On the Profile screen, open a sheet to display the full bio.
 - Fixed an issue where "Share logs" wasn't working.
 - Discover tab: Center the category buttons.
 - Discover tab: Remove placeholder categories and people.
@@ -225,7 +228,7 @@ that other users can find you more easily.
 - Display NIP-05 identifier in the Profile screen title bar.
 - Added option to register nos.social usernames.
 - Fixed issue where search results sometimes don’t appear.
-- Disabled link to nip-05 server / url on author cards. 
+- Disabled link to nip-05 server / url on author cards.
 - Fixed issue where paste menu did not appear when tapping in the Post Note view.
 - Fixed intermittent crash when tapping Done after editing your profile.
 - Fixed URL detection of raw domain names, such as “nos.social” (without the “http” prefix).
@@ -245,7 +248,7 @@ that other users can find you more easily.
 - Fixed a bug where the margins of root notes appeared incorrectly on Mac and iPad.
 - Fixed a date localization issue.
 - Optimized loading of the Notifications tab
-- Updated suggested users for discovery tab. 
+- Updated suggested users for discovery tab.
 - Show the profile view when a search matches a valid User ID (npub).
 - Added tabs to Profiles to filter posts.
 - Fixed a bug that could cause the out of network warning to be shown on reposts in the stories view.
@@ -272,7 +275,7 @@ that other users can find you more easily.
 ## [0.1 (101)] - 2023-12-15Z
 
 - Fixed a bug where reposts wouldn't be displayed in the stories.
-- Fixed a bug where the reports for authors of replies weren't being considered. 
+- Fixed a bug where the reports for authors of replies weren't being considered.
 - Localized relative times on note cards. (thanks @tyiu!)
 - Added a context menu for the stories in the Home Feed to open the Profile.
 - Add repost button to stories (thanks @maddiefuzz!)
@@ -338,7 +341,7 @@ that other users can find you more easily.
 
 - Fix a bug where linking a Universal Name would overwrite your existing NIP-05.
 - Fixed incorrect ellipsis applied to long notes.
-- Changed note rendering to retain more newlines. 
+- Changed note rendering to retain more newlines.
 - Show reposts in stories.
 - Fixed a bug where notes, reposts, and author profiles could fail to load.
 - Show truncated URLs in notes instead of hiding them completely.
@@ -360,8 +363,8 @@ that other users can find you more easily.
 
 ## [0.1 (86)] - 2023-10-25Z
 
-- Updated link previews in feed to use the stories ui with fixed height and carousel gallery. 
-- Updated UI around displaying nested threads and displaying more context of conversations. 
+- Updated link previews in feed to use the stories ui with fixed height and carousel gallery.
+- Updated UI around displaying nested threads and displaying more context of conversations.
 - Changed inline images so we don't display the domain / size / file type for images
 - Changed copied links to notes and authors to open in njump.me.
 - Added the ability to initiate USBC transactions and check your balance if you have linked a Universal Name to your profile with an attached USBC wallet.
@@ -376,7 +379,7 @@ that other users can find you more easily.
 - Add Stories view to the Home Feed
 - Fixed an issue where the app could become slow after searching for a user.
 - Updated search results to show mutual followers and sort by the most followers in common.
-- Change links to notes so that they don't display the long note id and instead it's a pretty link. 
+- Change links to notes so that they don't display the long note id and instead it's a pretty link.
 - Redesigned the Universal Names registration flow
 - Added more relays to the recommended list
 - Added an icon to indicate expiring notes, and the timestamp they display is the time until they expire.
@@ -406,7 +409,7 @@ that other users can find you more easily.
 
 ## [0.1 (79)] - 2023-09-22Z
 
-- Added the ability to search for Mastodon usernames on the Discover tab. 
+- Added the ability to search for Mastodon usernames on the Discover tab.
 - Long form content is now displayed in the discover tab.
 - Fixed a hang on the thread view.
 
@@ -462,15 +465,15 @@ that other users can find you more easily.
 - Add a loading placeholder for note contents.
 - Fixed the launch screen layout on iPad
 - Multiple consecutive newlines will be replaced by a single new line in note content.
-- Removed the screen to fill out profile information from onboarding and replaced it with a call to action in the sidebar. 
+- Removed the screen to fill out profile information from onboarding and replaced it with a call to action in the sidebar.
 - Leading and trailing whitespace will no longer be rendered in note content.
-- Removed the screen to fill out profile information from onboarding and replaced it with a call to action in the sidebar. 
+- Removed the screen to fill out profile information from onboarding and replaced it with a call to action in the sidebar.
 
 ## [0.1 (59)] - 2023-07-21Z
 
 - Add a loading placeholder for note contents.
 - Fixed several crashes.
-- Added Dutch, Japanese, and Persian translations. Thanks matata, yutaro, and eru-desu! 
+- Added Dutch, Japanese, and Persian translations. Thanks matata, yutaro, and eru-desu!
 - Added some visual artists to the list of featured users.
 
 ## [0.1 (58)] - 2023-07-17Z
@@ -578,7 +581,7 @@ that other users can find you more easily.
 
 ## [0.1 (38)] - 2023-04-28Z
 
-- Made the routine to delete old events more efficient and prevent it from deleting our own events. 
+- Made the routine to delete old events more efficient and prevent it from deleting our own events.
 - Fixed a bug where you could post the same reply multiple times.
 
 ## [0.1 (37)] - 2023-04-27Z
@@ -621,13 +624,13 @@ that other users can find you more easily.
 - More performance improvements on the Home tab.
 
 Note:
-- In this build you have to pull-to-refresh if you want to see new notes after the initial load of the Home or Discover tabs. 
+- In this build you have to pull-to-refresh if you want to see new notes after the initial load of the Home or Discover tabs.
 
 ## [0.1 (31)] - 2023-04-13Z
 
 - Added a button to view raw event JSON in the options menu on notes.
 - Fixed notes saying "so-and-so posted" at the top when it should say "so-and-so replied".
-- Added code to load the note being replied to if we don't have it. 
+- Added code to load the note being replied to if we don't have it.
 - Improved performance on the home feed
 
 ## [0.1 (30)] - 2023-04-10Z
@@ -655,7 +658,7 @@ Note:
 
 ## [0.1 (24)] - 2023-03-31Z
 
-- Added Crowdin integration for translation services. If you would like to help us translate Nos drop us a line at 
+- Added Crowdin integration for translation services. If you would like to help us translate Nos drop us a line at
 support@nos.social.
 - Fixed several crashes.
 - Fixed issue where the like button didn't turn orange when pressed.
@@ -671,7 +674,7 @@ support@nos.social.
 
 ## [0.1 (21)] - 2023-03-23Z
 - Fixed a bug where the user's profile name was not set after onboarding.
-- Added a demo of the Universal Namespace when setting up your profile. 
+- Added a demo of the Universal Namespace when setting up your profile.
 
 ## [0.1 (20)] - 2023-03-22Z
 - Fixed some bugs in Universal Name login flow (onboarding flow fixes forthcoming)
@@ -693,7 +696,7 @@ support@nos.social.
 - Added a launch screen
 - Various styling updates
 - Added an About screen to the side menu
-- Added a Share Nos button to the side menu 
+- Added a Share Nos button to the side menu
 
 ## [0.1 (15)] - 2023-03-18Z
 - Added the ability to browse all notes from a single relay on the Discover tab.
@@ -731,12 +734,12 @@ Known Issues:
 - fixed showing empty displayNames when name is set
 
 ## [0.1 (10)] - 2023-03-14Z
-- Display a user's NIP-05 identifier on the profile page after making a web request to verify that it is correct 
+- Display a user's NIP-05 identifier on the profile page after making a web request to verify that it is correct
 - Fix blank home feed during first launch
 
 ## [0.1 (9)] - 2023-03-14Z
 - Fixed a crash on launch when relay model was outdated.
-- Fix your own posts showing as outside your network on a fresh install. 
+- Fix your own posts showing as outside your network on a fresh install.
 - Add self-hosted PostHog analytics
 - Render mentions on notifications tab
 - Copy note text
@@ -757,7 +760,7 @@ Known issues:
 - Use only relays added in RelayView for sending and receiving events
 - Add PostHog analytics
 - Render note mentions in NoteCard
-- Open an email compose view controller for support@nos.social 
+- Open an email compose view controller for support@nos.social
 - Fix duplicate note on a new post
 - Add mute functionality
 - Publish relay changes

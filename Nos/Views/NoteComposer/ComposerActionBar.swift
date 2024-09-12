@@ -144,11 +144,9 @@ struct ComposerActionBar: View {
             Text(.localizable.preview)
                 .padding(.horizontal, 10)
                 .foregroundColor(Color.secondaryTxt)
-            Toggle(isOn: $showPreview) {
-                EmptyView()
-            }
-            .labelsHidden()
-            .disabled(editingController.isEmpty)
+            NosToggle(isOn: $showPreview)
+                .labelsHidden()
+                .disabled(editingController.isEmpty)
         }
     }
 
