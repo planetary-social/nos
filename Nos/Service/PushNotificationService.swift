@@ -236,16 +236,29 @@ import Combine
     // MARK: - UNUserNotificationCenterDelegate
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
-        analytics.tappedNotification()
-        let userInfo = response.notification.request.content.userInfo
-        if let eventID = userInfo["eventID"] as? String, 
-            !eventID.isEmpty {
-            Task { @MainActor in
-                guard let event = Event.find(by: eventID, context: self.persistenceController.viewContext) else {
-                    return
+        if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
+            analytics.tappedNotification()
+            
+            let userInfo = response.notification.request.content.userInfo
+            if let eventID = userInfo["eventID"] as? String,
+                !eventID.isEmpty {
+                
+                Task { @MainActor in
+                    guard let event = Event.find(by: eventID, context: self.persistenceController.viewContext) else {
+                        return
+                    }
+                    self.router.selectedTab = .notifications
+                    self.router.push(event.referencedNote() ?? event)
                 }
-                self.router.selectedTab = .notifications
-                self.router.push(event.referencedNote() ?? event)
+            } else if let data = userInfo["data"] as? [AnyHashable: Any] {
+                if let followPubkeys = data["follows"] as? [String],
+                    let firstPubkey = followPubkeys.first,
+                    let publicKey = PublicKey.build(npubOrHex: firstPubkey) {
+                    Task { @MainActor in
+                        self.router.selectedTab = .notifications
+                        self.router.pushAuthor(id: publicKey.hex)
+                    }
+                }
             }
         }
     }

@@ -104,7 +104,7 @@ enum DatabaseCleaner {
         let events = try context.fetch(request)
         Log.info("Stubbing \(events.count) old Events that are still referenced by newer events")
         for event in events {
-            event.stub()
+            event.resetToStub()
         }
     }
     
