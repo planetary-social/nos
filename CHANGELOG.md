@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixes and improvements related to Core Data usage. [#1443](https://github.com/planetary-social/nos/issues/1443)
 - Fixed a bug where toggles in the settings screen were white instead of green when toggled on. [#1251](https://github.com/planetary-social/nos/issues/1251)
 - Added routing to profile when tapping on follow notification. [#1447](https://github.com/planetary-social/nos/issues/1447)
+- Localized follows notifications. [#1446](https://github.com/planetary-social/nos/issues/1446)
 
 ### Internal Changes
 - Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag. [#1172](https://github.com/planetary-social/nos/issues/1172)
