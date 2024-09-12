@@ -57,6 +57,10 @@
 		03618C982C826F2100BCBC55 /* text_note_with_media_metadata.json in Resources */ = {isa = PBXBuildFile; fileRef = 03618C972C826F2100BCBC55 /* text_note_with_media_metadata.json */; };
 		0365CD872C4016A200622A1A /* EventKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0365CD862C4016A200622A1A /* EventKind.swift */; };
 		0365CD902C40171100622A1A /* EventKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0365CD862C4016A200622A1A /* EventKind.swift */; };
+		037071272C90C5FA00BEAEC4 /* OpenGraphService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037071262C90C5FA00BEAEC4 /* OpenGraphService.swift */; };
+		037071282C90C5FA00BEAEC4 /* OpenGraphService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037071262C90C5FA00BEAEC4 /* OpenGraphService.swift */; };
+		0370712B2C90C76900BEAEC4 /* OpenGraphServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370712A2C90C76900BEAEC4 /* OpenGraphServiceTests.swift */; };
+		037071362C90D3F200BEAEC4 /* youtube_video_toxic.html in Resources */ = {isa = PBXBuildFile; fileRef = 037071352C90D3F200BEAEC4 /* youtube_video_toxic.html */; };
 		0373CE802C08DBC40027C856 /* old_contact_list.json in Resources */ = {isa = PBXBuildFile; fileRef = 0373CE7F2C08DBC40027C856 /* old_contact_list.json */; };
 		0373CE992C0910250027C856 /* XCTestCase+JSONData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0373CE982C0910250027C856 /* XCTestCase+JSONData.swift */; };
 		0376DF622C3DBAED00C80786 /* NostrIdentifierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0376DF612C3DBAED00C80786 /* NostrIdentifierTests.swift */; };
@@ -88,6 +92,9 @@
 		03E1812F2C753C9B00886CC6 /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E1812E2C753C9B00886CC6 /* ImageButton.swift */; };
 		03E181392C75467C00886CC6 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E181382C75467C00886CC6 /* GalleryView.swift */; };
 		03E181472C754BA300886CC6 /* LinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E181462C754BA300886CC6 /* LinkView.swift */; };
+		03E711672C935114000B6F96 /* OpenGraphParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E711662C935114000B6F96 /* OpenGraphParserTests.swift */; };
+		03E711812C936DD1000B6F96 /* OpenGraphParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E711802C936DD1000B6F96 /* OpenGraphParser.swift */; };
+		03E711822C936DD1000B6F96 /* OpenGraphParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E711802C936DD1000B6F96 /* OpenGraphParser.swift */; };
 		03E9C6792C6FBBE400C9B843 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C8B4952C6D065900A07CCD /* ImageViewer.swift */; };
 		03ED93472C46C48400C8D443 /* JSONEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03ED93462C46C48400C8D443 /* JSONEventTests.swift */; };
 		03F7C4F32C10DF79006FF613 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */; };
@@ -595,6 +602,9 @@
 		03585DB12C8B951C00AD65AF /* text_note_with_duplicate_metadata_urls.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = text_note_with_duplicate_metadata_urls.json; sourceTree = "<group>"; };
 		03618C972C826F2100BCBC55 /* text_note_with_media_metadata.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = text_note_with_media_metadata.json; sourceTree = "<group>"; };
 		0365CD862C4016A200622A1A /* EventKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventKind.swift; sourceTree = "<group>"; };
+		037071262C90C5FA00BEAEC4 /* OpenGraphService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGraphService.swift; sourceTree = "<group>"; };
+		0370712A2C90C76900BEAEC4 /* OpenGraphServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGraphServiceTests.swift; sourceTree = "<group>"; };
+		037071352C90D3F200BEAEC4 /* youtube_video_toxic.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = youtube_video_toxic.html; sourceTree = "<group>"; };
 		0373CE7F2C08DBC40027C856 /* old_contact_list.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = old_contact_list.json; sourceTree = "<group>"; };
 		0373CE982C0910250027C856 /* XCTestCase+JSONData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+JSONData.swift"; sourceTree = "<group>"; };
 		0376DF612C3DBAED00C80786 /* NostrIdentifierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrIdentifierTests.swift; sourceTree = "<group>"; };
@@ -615,6 +625,8 @@
 		03E1812E2C753C9B00886CC6 /* ImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
 		03E181382C75467C00886CC6 /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
 		03E181462C754BA300886CC6 /* LinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkView.swift; sourceTree = "<group>"; };
+		03E711662C935114000B6F96 /* OpenGraphParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGraphParserTests.swift; sourceTree = "<group>"; };
+		03E711802C936DD1000B6F96 /* OpenGraphParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGraphParser.swift; sourceTree = "<group>"; };
 		03ED93462C46C48400C8D443 /* JSONEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONEventTests.swift; sourceTree = "<group>"; };
 		03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionProtocol.swift; sourceTree = "<group>"; };
 		03FE3F782C87A9D900D25810 /* EventError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventError.swift; sourceTree = "<group>"; };
@@ -1007,6 +1019,7 @@
 			children = (
 				0314D5AB2C7D31060002E7F4 /* MediaService.swift */,
 				0315B5EE2C7E451C0020E707 /* MockMediaService.swift */,
+				037071262C90C5FA00BEAEC4 /* OpenGraphService.swift */,
 			);
 			path = Media;
 			sourceTree = "<group>";
@@ -1102,6 +1115,7 @@
 				035729A82BE4167E005FEE85 /* SHA256KeyTests.swift */,
 				0357299D2BE41653005FEE85 /* SocialGraphCacheTests.swift */,
 				032634662C10C0A000E489B5 /* FileStorage */,
+				037071292C90C74D00BEAEC4 /* Media */,
 				0376DF602C3DBAD500C80786 /* NostrIdentifier */,
 				0320C0F92BFE439000C4C080 /* Relay */,
 			);
@@ -1277,6 +1291,24 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
+		037071292C90C74D00BEAEC4 /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				0370712A2C90C76900BEAEC4 /* OpenGraphServiceTests.swift */,
+				03E711662C935114000B6F96 /* OpenGraphParserTests.swift */,
+				037071342C90D3DF00BEAEC4 /* Fixtures */,
+			);
+			path = Media;
+			sourceTree = "<group>";
+		};
+		037071342C90D3DF00BEAEC4 /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				037071352C90D3F200BEAEC4 /* youtube_video_toxic.html */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
 		0376DF602C3DBAD500C80786 /* NostrIdentifier */ = {
 			isa = PBXGroup;
 			children = (
@@ -1323,6 +1355,14 @@
 				03D1B42B2C3C1B0D001778CD /* TLVElement.swift */,
 			);
 			path = NostrIdentifier;
+			sourceTree = "<group>";
+		};
+		03E7118B2C936DE5000B6F96 /* OpenGraph */ = {
+			isa = PBXGroup;
+			children = (
+				03E711802C936DD1000B6F96 /* OpenGraphParser.swift */,
+			);
+			path = OpenGraph;
 			sourceTree = "<group>";
 		};
 		3AAB61B12B24CC8A00717A07 /* Extensions */ = {
@@ -1742,6 +1782,7 @@
 				5B6EB48D29EDBE0E006E750C /* NoteParser.swift */,
 				C9AC31AC2A55E0BD00A94E5A /* NotificationViewModel.swift */,
 				C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */,
+				5BCA95D12C8A5F0D00A52D1A /* PreviewEventRepository.swift */,
 				C9F0BB6A29A503D6000547FC /* PublicKey.swift */,
 				C96D39262B61B6D200D3D0A1 /* RawNostrID.swift */,
 				C9C2B78429E073E300548B4A /* RelaySubscription.swift */,
@@ -1752,8 +1793,8 @@
 				5BFBB28A2BD9D79F002E909F /* URLParser.swift */,
 				659B27232BD9CB4500BEA6CC /* VerifiableEvent.swift */,
 				030742C32B4769F90073839D /* CoreData */,
+				03E7118B2C936DE5000B6F96 /* OpenGraph */,
 				C92E7F652C4EFF2600B80638 /* WebSockets */,
-				5BCA95D12C8A5F0D00A52D1A /* PreviewEventRepository.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2083,6 +2124,7 @@
 				0350F10C2C0A46760024CC15 /* new_contact_list.json in Resources */,
 				3AEABEFF2B2BF858001BC933 /* Moderation.xcstrings in Resources */,
 				C9DEC006298947900078B43A /* sample_data.json in Resources */,
+				037071362C90D3F200BEAEC4 /* youtube_video_toxic.html in Resources */,
 				C94B2D182B17F5EC002104B6 /* sample_repost.json in Resources */,
 				C987F84929BA951E00B44E7A /* ClarityCity-BlackItalic.otf in Resources */,
 				509533002C62535400E0BACA /* zap_request.json in Resources */,
@@ -2192,6 +2234,7 @@
 				5B79F6532BA11B08002DA9BE /* WizardSheetDescriptionText.swift in Sources */,
 				5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */,
 				C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */,
+				03E711812C936DD1000B6F96 /* OpenGraphParser.swift in Sources */,
 				03C8B4962C6D065900A07CCD /* ImageViewer.swift in Sources */,
 				5B79F6092B98AC33002DA9BE /* ClaimYourUniqueIdentitySheet.swift in Sources */,
 				C973AB652A323167002AED16 /* EventReference+CoreDataProperties.swift in Sources */,
@@ -2358,6 +2401,7 @@
 				5B834F692A83FC7F000C1432 /* ProfileSocialStatsView.swift in Sources */,
 				CD09A74629A50F750063464F /* SideMenuContent.swift in Sources */,
 				C9DFA971299BF8CD006929C1 /* NoteView.swift in Sources */,
+				037071272C90C5FA00BEAEC4 /* OpenGraphService.swift in Sources */,
 				C974652E2A3B86600031226F /* NoteCardHeader.swift in Sources */,
 				C9CF23172A38A58B00EBEC31 /* ParseQueue.swift in Sources */,
 				C98A32272A05795E00E3FA13 /* Task+Timeout.swift in Sources */,
@@ -2434,6 +2478,7 @@
 				C9F64D8D29ED840700563F2B /* Zipper.swift in Sources */,
 				C98298342ADD7F9A0096C5B5 /* DeepLinkService.swift in Sources */,
 				03D1B42D2C3C1B0D001778CD /* TLVElement.swift in Sources */,
+				03E711822C936DD1000B6F96 /* OpenGraphParser.swift in Sources */,
 				CD09A75929A521D20063464F /* Color+Hex.swift in Sources */,
 				5B88051D2A2104CC00E21F06 /* SHA256Key.swift in Sources */,
 				0365CD902C40171100622A1A /* EventKind.swift in Sources */,
@@ -2468,6 +2513,7 @@
 				C90B16B82AFED96300CB4B85 /* URLExtensionTests.swift in Sources */,
 				C93EC2F829C351470012EE2A /* Optional+Unwrap.swift in Sources */,
 				035729BD2BE416BD005FEE85 /* EventObservationTests.swift in Sources */,
+				03E711672C935114000B6F96 /* OpenGraphParserTests.swift in Sources */,
 				C9C5475C2A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift in Sources */,
 				C9B678DF29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */,
 				A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */,
@@ -2478,6 +2524,7 @@
 				C9C2B78629E073E300548B4A /* RelaySubscription.swift in Sources */,
 				C973AB662A323167002AED16 /* EventReference+CoreDataProperties.swift in Sources */,
 				5B098DBC2BDAF6CB00500A1B /* NoteParserTests+NIP08.swift in Sources */,
+				0370712B2C90C76900BEAEC4 /* OpenGraphServiceTests.swift in Sources */,
 				C942566A29B66A2800C4202C /* Date+Elapsed.swift in Sources */,
 				C99721CC2AEBED26004EBEAB /* String+Empty.swift in Sources */,
 				C93CA0C429AE3A1E00921183 /* JSONEvent.swift in Sources */,
@@ -2519,6 +2566,7 @@
 				030036942C5D3AD3002C71F5 /* RefreshController.swift in Sources */,
 				0383CD712C76793E007DB0E4 /* GalleryView.swift in Sources */,
 				035729B82BE416A6005FEE85 /* DirectMessageWrapperTests.swift in Sources */,
+				037071282C90C5FA00BEAEC4 /* OpenGraphService.swift in Sources */,
 				C9F0BB6C29A503D6000547FC /* PublicKey.swift in Sources */,
 				C9DEC06F2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,
 				C9ADB13F29929F1F0075E7F8 /* String+Hex.swift in Sources */,
