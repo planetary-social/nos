@@ -6657,6 +6657,17 @@
         }
       }
     },
+    "namedNewFollower" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ is a new follower!"
+          }
+        }
+      }
+    },
     "nameLower" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -6759,6 +6770,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新建"
+          }
+        }
+      }
+    },
+    "newFollower" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have a new follower!"
           }
         }
       }
@@ -13446,6 +13468,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "網站"
+          }
+        }
+      }
+    },
+    "xNewFollowers" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have %@ new followers!"
           }
         }
       }
