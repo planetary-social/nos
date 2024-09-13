@@ -72,9 +72,6 @@ struct ComposerActionBar: View {
         }
         .alert(unwrapping: $alert) { action in
             switch action {
-            case .cancel:
-                // Handle cancel action if needed
-                break
             case .getAccount:
                 if let url = URL(string: "https://nostr.build/plans") {
                     UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -193,51 +190,37 @@ struct ComposerActionBar: View {
     private func createAlert(
         for error: Error
     ) -> AlertState<ComposerActionBar.AlertAction> {
-        AlertState(
-            title: {
-                if case FileStorageAPIClientError.fileTooBig = error {
-                    return TextState(
-                        String(localized: .imagePicker.errorUploadingFileExceedsSizeLimit)
-                    )
-                } else {
-                    return TextState(
-                        String(localized: .imagePicker.errorUploadingFile)
-                    )
-                }
-            }(),
-            message: {
-                if case let FileStorageAPIClientError.fileTooBig(message) = error, let message {
-                    return TextState(
-                        String(localized: .imagePicker.errorUploadingFileExceedsLimit(message))
-                    )
-                } else if case let FileStorageAPIClientError.uploadFailed(message) = error, let message {
-                    return TextState(
-                        String(localized: .imagePicker.errorUploadingFileWithMessage(message))
-                    )
-                } else {
-                    return TextState(String(localized: .imagePicker.errorUploadingFileMessage))
-                }
-            }(),
-            buttons: {
-                if case FileStorageAPIClientError.fileTooBig = error {
-                    return  [
-                        .cancel(
-                            TextState(String(localized: .localizable.cancel)), action: .send(.cancel)
-                        ),
-                        .default(
-                            TextState(String(localized: .imagePicker.getAccount)),
-                            action: .send(.getAccount)
-                        )
-                    ]
-                } else {
-                    return [
-                        .default(
-                            TextState(String(localized: .localizable.ok)),
-                            action: .send(.cancel)
-                        )
-                    ]
-                }
-            }()
+        var title = String(localized: .imagePicker.errorUploadingFile)
+        var message: String
+        var buttons: [ButtonState<ComposerActionBar.AlertAction>] = [
+            .default(
+                TextState(String(localized: .localizable.ok)),
+                action: .send(.cancel)
+            )
+        ]
+
+        if case let FileStorageAPIClientError.fileTooBig(errorMessage) = error, let errorMessage {
+            title = String(localized: .imagePicker.errorUploadingFileExceedsSizeLimit)
+            message = String(localized: .imagePicker.errorUploadingFileExceedsLimit(errorMessage))
+            buttons = [
+                .cancel(
+                    TextState(String(localized: .localizable.cancel)), action: .send(.cancel)
+                ),
+                .default(
+                    TextState(String(localized: .imagePicker.getAccount)),
+                    action: .send(.getAccount)
+                )
+            ]
+        } else if case let FileStorageAPIClientError.uploadFailed(errorMessage) = error, let errorMessage {
+            message = String(localized: .imagePicker.errorUploadingFileWithMessage(errorMessage))
+        } else {
+            message = String(localized: .imagePicker.errorUploadingFileMessage)
+        }
+
+        return AlertState(
+            title: TextState(title),
+            message: TextState(message),
+            buttons: buttons
         )
     }
 }
