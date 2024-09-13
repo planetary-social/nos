@@ -80,27 +80,16 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         let decodedResponse = try decoder.decode(FileStorageUploadResponseJSON.self, from: responseData)
 
         guard let urlString = decodedResponse.nip94Event?.urlString else {
-            /// Assign an empty string if the response message is nil.
+            // Assign an empty string if the response message is nil.
             let message = decodedResponse.message ?? ""
 
-            /// Checks if the response contains a status code of `413 Payload Too Large`.
+            // Checks if the response contains a status code of `413 Payload Too Large`.
             if let errorCode = response?.statusCode, errorCode == 413 {
-                /// Verify if the error message indicates the file size exceeds the limit.
-                if let regex = try? NSRegularExpression(
-                    pattern: "File size exceeds the limit of (\\d*\\.\\d* [MKGT]B)",
-                    options: []
-                ),
-                let match = regex.firstMatch(
-                    in: message,
-                    options: [],
-                    range: NSRange(location: 0, length: message.utf16.count)
-                ),
-                let range = Range(match.range(at: 1), in: message) {
-                    let fileSizeLimit = String(message[range])
-                    throw FileStorageAPIClientError.fileTooBig(fileSizeLimit)
-                }
+                // Verify if the error message indicates the file size exceeds the limit.
+                let fileSizeLimit = fileSizeLimit(from: message)
+                throw FileStorageAPIClientError.fileTooBig(fileSizeLimit)
             }
-            /// Throw an error indicating the upload failed with the provided message.
+            // Throw an error indicating the upload failed with the provided message.
             throw FileStorageAPIClientError.uploadFailed(message)
         }
 
@@ -109,8 +98,6 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         }
         return url
     }
-
-    // MARK: - Internal
 
     /// Fetches server info from the file storage API.
     /// - Returns: the decoded JSON containing server info for the file storage API.
@@ -126,6 +113,19 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         } catch {
             throw FileStorageAPIClientError.decodingError
         }
+    }
+    
+    /// Gets the file size limit from the error message.
+    /// - Parameter message: The error message from nostr.build.
+    /// - Returns: The file size limit from the error message.
+    func fileSizeLimit(from message: String) -> String? {
+        let pattern = /File size exceeds the limit of (\d*\.\d* [MKGT]B)/
+
+        guard let match = message.firstMatch(of: pattern) else {
+            return nil
+        }
+        
+        return String(match.1)
     }
 
     /// Creates a URLRequest and Data from a file URL to be uploaded to the file storage API.
