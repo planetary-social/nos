@@ -98,13 +98,13 @@ import Dependencies
     
     // TODO: this is fragile
     // Reset CurrentUser state
-    @MainActor func reset() {
+    @MainActor private func reset() {
         onboardingRelays = []
         subscriptions = []
         setUp()
     }
     
-    @MainActor func setUp() {
+    @MainActor private func setUp() {
         if let keyPair {
             do {
                 author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
@@ -122,6 +122,8 @@ import Dependencies
                 
                 Task {
                     await subscribe()
+                    // Listen for notifications
+                    await pushNotificationService.listen(for: self)
                     refreshFriendMetadata()
                 }
             } catch {
@@ -201,8 +203,6 @@ import Dependencies
         subscriptions.append(
             await relayService.fetchEvents(matching: importantEventsFilter)
         )
-        // Listen for notifications
-        await pushNotificationService.listen(for: self)
     }
     
     private var friendMetadataTask: Task<Void, any Error>?

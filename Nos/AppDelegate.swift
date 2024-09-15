@@ -24,7 +24,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     ) {
         Task {
             do {
-                try await pushNotificationService.registerForNotifications(with: deviceToken, user: currentUser)
+                try await pushNotificationService.registerForNotifications(currentUser, with: deviceToken)
             } catch {
                 Log.optional(error, "failed to register for push notifications")
             }
