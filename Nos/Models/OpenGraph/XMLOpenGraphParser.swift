@@ -7,7 +7,7 @@ class XMLOpenGraphParser: NSObject, OpenGraphParser, XMLParserDelegate {
 
     func videoMetadata(html: Data) -> OpenGraphMedia? {
         parse(data: html)
-        return OpenGraphMedia(url: nil, type: .video, width: videoWidth, height: videoHeight)
+        return OpenGraphMedia(type: .video, width: videoWidth, height: videoHeight)
     }
 
     private func parse(data: Data) {
