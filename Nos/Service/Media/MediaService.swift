@@ -47,7 +47,7 @@ struct DefaultMediaService: MediaService {
         }
     }
 
-    /// Loads the content at the given URL and returns its orientation.
+    /// Fetches metadata for the given URL and returns its orientation.
     /// - Parameter url: The URL of the data to download.
     /// - Returns: The orientation of the content.
     /// - Note: For web pages, `landscape` is returned. For videos, we're returning `portrait` until we implement

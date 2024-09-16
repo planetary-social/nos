@@ -45,6 +45,6 @@ class OpenGraphParserTests: XCTestCase {
 
         // Assert
         XCTAssertEqual(videoMetadata.width, 1280)
-        XCTAssertEqual(videoMetadata.width, 720)
+        XCTAssertEqual(videoMetadata.height, 720)
     }
 }
