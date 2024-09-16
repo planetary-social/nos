@@ -73,7 +73,7 @@ struct ComposerActionBar: View {
         .alert(unwrapping: $alert) { action in
             switch action {
             case .getAccount:
-                if let url = URL(string: "https://nostr.build/plans") {
+                if let url = URL(string: "https://nostr.build/plans/") {
                     UIApplication.shared.open(url, options: [:], completionHandler: nil)
                 }
             default:
