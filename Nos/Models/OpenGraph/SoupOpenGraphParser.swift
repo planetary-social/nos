@@ -5,21 +5,27 @@ struct SoupOpenGraphParser: OpenGraphParser {
     func videoMetadata(html: Data) -> OpenGraphMedia? {
         let htmlString = String(decoding: html, as: UTF8.self)
         guard let document = try? SwiftSoup.parse(htmlString) else { return nil }
-        guard let metaTags = try? document.select("meta") else { return nil }
 
-        var videoWidth: Double?
-        var videoHeight: Double?
-
-        for metaTag in metaTags {
-            if let property = try? metaTag.attr("property") {
-                if property == "og:video:width", let width: String = try? metaTag.attr("content") {
-                    videoWidth = Double(width)
-                } else if property == "og:video:height", let height: String = try? metaTag.attr("content") {
-                    videoHeight = Double(height)
-                }
-            }
+        guard let widthString = openGraphProperty(.videoWidth, from: document),
+            let width = Double(widthString) else {
+            return nil
+        }
+        guard let heightString = openGraphProperty(.videoHeight, from: document),
+            let height = Double(heightString) else {
+            return nil
         }
 
-        return OpenGraphMedia(url: nil, type: .video, width: videoWidth, height: videoHeight)
+        return OpenGraphMedia(url: nil, type: .video, width: width, height: height)
     }
+}
+
+extension SoupOpenGraphParser {
+    private func openGraphProperty(_ property: OpenGraphProperty, from document: Document) -> String? {
+        try? document.select("meta[property=\(property.rawValue)]").attr("content")
+    }
+}
+
+enum OpenGraphProperty: String {
+    case videoWidth = "og:video:width"
+    case videoHeight = "og:video:height"
 }
