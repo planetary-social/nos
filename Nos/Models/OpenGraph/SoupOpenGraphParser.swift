@@ -1,6 +1,7 @@
 import Foundation
 import SwiftSoup
 
+/// Parses the Open Graph metadata from an HTML document using SwiftSoup.
 struct SoupOpenGraphParser: OpenGraphParser {
     func videoMetadata(html: Data) -> OpenGraphMedia? {
         let htmlString = String(decoding: html, as: UTF8.self)
@@ -20,12 +21,18 @@ struct SoupOpenGraphParser: OpenGraphParser {
 }
 
 extension SoupOpenGraphParser {
+    /// Gets the Open Graph property value from the given HTML document.
+    /// - Parameters:
+    ///   - property: The Open Graph property to fetch from the HTML document.
+    ///   - document: The HTML document.
+    /// - Returns: The value of the Open Graph property, or `nil` if none is found.
     private func openGraphProperty(_ property: OpenGraphProperty, from document: Document) -> String? {
         try? document.select("meta[property=\(property.rawValue)]").attr("content")
     }
 }
 
+/// An Open Graph property in the HTML.
 enum OpenGraphProperty: String {
-    case videoWidth = "og:video:width"
     case videoHeight = "og:video:height"
+    case videoWidth = "og:video:width"
 }
