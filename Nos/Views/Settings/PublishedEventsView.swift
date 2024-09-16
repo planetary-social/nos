@@ -26,11 +26,7 @@ struct PublishedEventsView: View {
                         }
                     }
                 }
-                .listRowBackground(LinearGradient(
-                    colors: [Color.cardBgTop, Color.cardBgBottom],
-                    startPoint: .top,
-                    endPoint: .bottom
-                ))
+                .listRowGradientBackground()
             }
         }
         .scrollContentBackground(.hidden)
