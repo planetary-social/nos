@@ -16,7 +16,7 @@ struct SoupOpenGraphParser: OpenGraphParser {
             return nil
         }
 
-        return OpenGraphMedia(url: nil, type: .video, width: width, height: height)
+        return OpenGraphMedia(type: .video, width: width, height: height)
     }
 }
 
