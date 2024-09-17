@@ -74,7 +74,7 @@ struct ReportMenuModifier: ViewModifier {
         )
     }
 
-    // swiftlint:enable function_body_length
+    // swiftlint:disable function_body_length
     @ViewBuilder
     func oldModerationFlow(content: Content) -> some View {
         content
@@ -142,7 +142,7 @@ struct ReportMenuModifier: ViewModifier {
             }
     }
     // swiftlint:enable function_body_length
-    
+
     func processUserSelection(_ userSelection: UserSelection?) {
         self.userSelection = userSelection
         
