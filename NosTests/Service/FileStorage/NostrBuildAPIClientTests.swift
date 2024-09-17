@@ -40,6 +40,42 @@ class NostrBuildAPIClientTests: XCTestCase {
         }
     }
 
+    func test_fileSizeLimit_returns_limit() {
+        // Arrange
+        let subject = NostrBuildAPIClient()
+        let nostrBuildErrorMessage = "File size exceeds the limit of 25.00 MB"
+
+        // Act
+        let result = subject.fileSizeLimit(from: nostrBuildErrorMessage)
+
+        // Assert
+        XCTAssertEqual(result, "25.00 MB")
+    }
+
+    func test_fileSizeLimit_returns_limit_15() {
+        // Arrange
+        let subject = NostrBuildAPIClient()
+        let nostrBuildErrorMessage = "File size exceeds the limit of 15.00 MB"
+
+        // Act
+        let result = subject.fileSizeLimit(from: nostrBuildErrorMessage)
+
+        // Assert
+        XCTAssertEqual(result, "15.00 MB")
+    }
+
+    func test_fileSizeLimit_returns_nil_when_message_does_not_match() {
+        // Arrange
+        let subject = NostrBuildAPIClient()
+        let nostrBuildErrorMessage = "File size limit is 25.00 MB"
+
+        // Act
+        let result = subject.fileSizeLimit(from: nostrBuildErrorMessage)
+
+        // Assert
+        XCTAssertNil(result)
+    }
+
     func test_upload_throws_error_when_serverInfo_has_invalid_apiUrl() async throws {
         // Arrange
         let subject = NostrBuildAPIClient()
