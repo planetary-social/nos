@@ -13,24 +13,24 @@ struct FlagOption: Identifiable {
     /// `FlagOption` instances representing different categories of content that can be flagged.
     static let flagContentCategories: [FlagOption] = [
         FlagOption(
-            title: String(localized: .localizable.spam),
+            title: String(localized: .localizable.flagContentSpamTitle),
             description: nil
         ),
         FlagOption(
-            title: String(localized: .localizable.harassmentFlagContentTitle),
-            description: String(localized: .localizable.harassmentFlagContentDescription)
+            title: String(localized: .localizable.flagContentHarassmentTitle),
+            description: String(localized: .localizable.flagContentHarassmentDescription)
         ),
         FlagOption(
             title: "NSFW",
-            description: String(localized: .localizable.nudityFlagContentDescription)
+            description: String(localized: .localizable.flagContentNudityDescription)
         ),
         FlagOption(
-            title: String(localized: .localizable.illegalFlagContentTitle),
-            description: String(localized: .localizable.illegalFlagContentDescription)
+            title: String(localized: .localizable.flagContentIllegalTitle),
+            description: String(localized: .localizable.flagContentIllegalDescription)
         ),
         FlagOption(
-            title: String(localized: .localizable.others),
-            description: String(localized: .localizable.otherFlagContentDescription)
+            title: String(localized: .localizable.flagContentOtherTitle),
+            description: String(localized: .localizable.flagContentOtherDescription)
         )
     ]
 }
