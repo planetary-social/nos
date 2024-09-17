@@ -25,7 +25,7 @@ final class RelaySubscriptionManagerTests: XCTestCase {
         await subject.openSockets()
         
         // Assert
-        var connections = await subject.socketConnections
+        let connections = await subject.socketConnections
         XCTAssertEqual(connections.count, 3)
         connections.values.forEach { XCTAssertEqual($0.state, .connecting) }
     }
@@ -46,7 +46,7 @@ final class RelaySubscriptionManagerTests: XCTestCase {
         await subject.openSockets()
         
         // Assert
-        var connections = await subject.socketConnections
+        let connections = await subject.socketConnections
         XCTAssertEqual(connections.count, 3)
         connections.values.forEach { XCTAssertEqual($0.state, .connecting) }
     }
@@ -58,7 +58,7 @@ final class RelaySubscriptionManagerTests: XCTestCase {
         _ = await subject.queueSubscription(with: Filter(), to: relayThreeURL)
         await subject.openSockets()
         
-        var connections = await subject.socketConnections
+        let connections = await subject.socketConnections
         let connection = connections[relayThreeURL]
         connection?.state = .disconnected
         
