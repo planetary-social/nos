@@ -6,8 +6,8 @@ extension XCTestCase {
         return try Data(contentsOf: url)
     }
 
-    func htmlString(filename: String) throws -> String {
+    func htmlData(filename: String) throws -> Data {
         let url = try XCTUnwrap(Bundle.current.url(forResource: filename, withExtension: "html"))
-        return try String(contentsOf: url)
+        return try Data(contentsOf: url)
     }
 }

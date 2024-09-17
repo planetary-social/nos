@@ -30,9 +30,3 @@ extension SoupOpenGraphParser {
         try? document.select("meta[property=\(property.rawValue)]").attr("content")
     }
 }
-
-/// An Open Graph property in the HTML.
-enum OpenGraphProperty: String {
-    case videoHeight = "og:video:height"
-    case videoWidth = "og:video:width"
-}

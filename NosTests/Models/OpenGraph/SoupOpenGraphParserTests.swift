@@ -1,7 +1,7 @@
 import Foundation
 import XCTest
 
-class OpenGraphParserTests: XCTestCase {
+class SoupOpenGraphParserTests: XCTestCase {
     let sampleHTML = """
     <!DOCTYPE html>
     <html>
@@ -16,10 +16,10 @@ class OpenGraphParserTests: XCTestCase {
     """
 
     // swiftlint:disable:next implicitly_unwrapped_optional
-    var youTubeHTML: String!
+    var youTubeHTML: Data!
 
     override func setUpWithError() throws {
-        youTubeHTML = try htmlString(filename: "youtube_video_toxic")
+        youTubeHTML = try htmlData(filename: "youtube_video_toxic")
     }
 
     func test_parse() throws {
@@ -38,7 +38,7 @@ class OpenGraphParserTests: XCTestCase {
     func test_parse_youTube() throws {
         // Arrange
         let parser = SoupOpenGraphParser()
-        let data = try XCTUnwrap(youTubeHTML.data(using: .utf8))
+        let data = try XCTUnwrap(youTubeHTML)
 
         // Act
         let videoMetadata = try XCTUnwrap(parser.videoMetadata(html: data))
