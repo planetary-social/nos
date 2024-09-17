@@ -52,9 +52,8 @@ struct ReportMenuModifier: ViewModifier {
         var subTitle = String(localized: .localizable.reportContentMessage)
 
         guard let userSelection = userSelection else {
-            return FlagOptionPickerView(
-                selectedFlag: $selectedFlagOption,
-                options: FlagOption.flagContentCategories,
+            return ContentFlagView(
+                selectedFlagOptionCategory: $selectedFlagOption,
                 title: title,
                 subTitle: subTitle
             )
@@ -66,9 +65,8 @@ struct ReportMenuModifier: ViewModifier {
             subTitle = String(localized: .localizable.reportContentMessage)
         }
 
-        return FlagOptionPickerView(
-            selectedFlag: $selectedFlagOption,
-            options: FlagOption.flagContentCategories,
+        return ContentFlagView(
+            selectedFlagOptionCategory: $selectedFlagOption,
             title: title,
             subTitle: subTitle
         )

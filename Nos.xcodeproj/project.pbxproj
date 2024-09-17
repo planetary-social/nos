@@ -100,6 +100,7 @@
 		042406F32C907A15008F2A21 /* NosToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042406F22C907A15008F2A21 /* NosToggle.swift */; };
 		04368D2B2C99A2C400DEAA2E /* FlagOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04368D2A2C99A2C400DEAA2E /* FlagOption.swift */; };
 		04368D312C99A78800DEAA2E /* NosRadioButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04368D302C99A78800DEAA2E /* NosRadioButtonView.swift */; };
+		04368D4B2C99CFC700DEAA2E /* ContentFlagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04368D4A2C99CFC700DEAA2E /* ContentFlagView.swift */; };
 		0496D6312C975E6900D29375 /* FlagOptionPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0496D6302C975E6900D29375 /* FlagOptionPickerView.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
@@ -626,6 +627,7 @@
 		042406F22C907A15008F2A21 /* NosToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosToggle.swift; sourceTree = "<group>"; };
 		04368D2A2C99A2C400DEAA2E /* FlagOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagOption.swift; sourceTree = "<group>"; };
 		04368D302C99A78800DEAA2E /* NosRadioButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosRadioButtonView.swift; sourceTree = "<group>"; };
+		04368D4A2C99CFC700DEAA2E /* ContentFlagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentFlagView.swift; sourceTree = "<group>"; };
 		0496D6302C975E6900D29375 /* FlagOptionPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagOptionPickerView.swift; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
@@ -1331,6 +1333,14 @@
 			path = NostrIdentifier;
 			sourceTree = "<group>";
 		};
+		04368D542C99D32B00DEAA2E /* Moderation */ = {
+			isa = PBXGroup;
+			children = (
+				04368D4A2C99CFC700DEAA2E /* ContentFlagView.swift */,
+			);
+			path = Moderation;
+			sourceTree = "<group>";
+		};
 		3AAB61B12B24CC8A00717A07 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1390,12 +1400,12 @@
 		5B79F6402BA11618002DA9BE /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				0496D6302C975E6900D29375 /* FlagOptionPickerView.swift */,
 				C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */,
 				C9A0DAE929C6A34200466635 /* ActivityView.swift */,
 				3FFB1D88299FF37C002A755D /* AvatarView.swift */,
 				C95D68A0299E6D3E00429F86 /* BioView.swift */,
 				C9DFA968299BEC33006929C1 /* CardStyle.swift */,
+				0496D6302C975E6900D29375 /* FlagOptionPickerView.swift */,
 				C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */,
 				C9CDBBA329A8FA2900C555C7 /* GoldenPostView.swift */,
 				C930E0562BA49DAD002B5776 /* GridPattern.swift */,
@@ -1836,6 +1846,7 @@
 				65BD8DC12BDAF2C300802039 /* Discover */,
 				03618B112C825D8700BCBC55 /* Fixtures */,
 				C96877B32B4EDCCF0051ED2F /* Home */,
+				04368D542C99D32B00DEAA2E /* Moderation */,
 				C9CFF6D02AB241EB00D4B368 /* Modifiers */,
 				03618C6D2C8267E600BCBC55 /* Note */,
 				C9EE3E652A053CF1008A7491 /* NoteComposer */,
@@ -2248,6 +2259,7 @@
 				5BFBB28B2BD9D79F002E909F /* URLParser.swift in Sources */,
 				C930055F2A6AF8320098CA9E /* LoadingContent.swift in Sources */,
 				5B79F6462BA11725002DA9BE /* WizardSheetVStack.swift in Sources */,
+				04368D4B2C99CFC700DEAA2E /* ContentFlagView.swift in Sources */,
 				C930E0572BA49DAD002B5776 /* GridPattern.swift in Sources */,
 				C9A6C74D2AD98E2A001F9500 /* UNSNameTakenView.swift in Sources */,
 				C92F015B2AC4D74E00972489 /* NosTextEditor.swift in Sources */,
