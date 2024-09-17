@@ -15,11 +15,68 @@ struct ReportMenuModifier: ViewModifier {
     @State private var confirmReport = false
     @State private var showMuteDialog = false
     @State private var confirmationDialogState: ConfirmationDialogState<UserSelection>?
-    
+    @State private var selectedFlagOption: FlagOption?
+
     @Environment(\.managedObjectContext) private var viewContext
-    
-    // swiftlint:disable function_body_length
+    @Dependency(\.featureFlags) private var featureFlags
+
     func body(content: Content) -> some View {
+        Group {
+            if featureFlags.isEnabled(.newModerationFlow) {
+                newModerationFlow(content: content)
+            } else {
+                oldModerationFlow(content: content)
+            }
+        }
+    }
+
+    /// Displays the moderation flow based on the reported object type. The old flow is still displayed for the author.
+    @ViewBuilder
+    private func newModerationFlow(content: Content) -> some View {
+        switch reportedObject {
+        case .note:
+            content
+                .sheet(isPresented: $isPresented) {
+                    flagOptionPickerForSelection(userSelection)
+                }
+        case .author:
+            oldModerationFlow(content: content)
+        }
+    }
+    
+    /// Provides the flag option picker based on the user's selection.
+    /// - Parameter userSelection: The optional user selection that determines the flagging options.
+    /// - Returns: A view containing the flag option picker for the current selection.
+    private func flagOptionPickerForSelection(_ userSelection: UserSelection?) -> some View {
+        var title = String(localized: .localizable.reportContent)
+        var subTitle = String(localized: .localizable.reportContentMessage)
+
+        guard let userSelection = userSelection else {
+            return FlagOptionPickerView(
+                selectedFlag: $selectedFlagOption,
+                options: FlagOption.flagContentCategories,
+                title: title,
+                subTitle: subTitle
+            )
+        }
+
+        switch userSelection {
+        default:
+            title = String(localized: .localizable.reportContent)
+            subTitle = String(localized: .localizable.reportContentMessage)
+        }
+
+        return FlagOptionPickerView(
+            selectedFlag: $selectedFlagOption,
+            options: FlagOption.flagContentCategories,
+            title: title,
+            subTitle: subTitle
+        )
+    }
+
+    // swiftlint:enable function_body_length
+    @ViewBuilder
+    func oldModerationFlow(content: Content) -> some View {
         content
         // ReportCategory menu
             .confirmationDialog(unwrapping: $confirmationDialogState, action: processUserSelection)
