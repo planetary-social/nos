@@ -28,6 +28,8 @@ struct ComposerActionBar: View {
     @State private var alert: AlertState<AlertAction>?
 
     fileprivate enum AlertAction {
+        case cancel
+        case getAccount
     }
 
     var backArrow: some View {
@@ -68,7 +70,15 @@ struct ComposerActionBar: View {
         .onChange(of: expirationTime) { _, _ in
             subMenu = .none
         }
-        .alert(unwrapping: $alert) { (_: AlertAction?) in
+        .alert(unwrapping: $alert) { action in
+            switch action {
+            case .getAccount:
+                if let url = URL(string: "https://nostr.build/plans/") {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            default:
+                break
+            }
         }
         .background(
             LinearGradient(
@@ -152,7 +162,9 @@ struct ComposerActionBar: View {
 
     /// Uploads an image at the given URL to a file storage service.
     /// - Parameter imageURL: File URL of the image the user wants to upload.
-    private func uploadImage(at imageURL: URL) async {
+    private func uploadImage(
+        at imageURL: URL
+    ) async {
         do {
             startUploadingImage()
             let url = try await fileStorageAPIClient.upload(fileAt: imageURL, isProfilePhoto: false)
@@ -161,17 +173,7 @@ struct ComposerActionBar: View {
         } catch {
             endUploadingImage()
 
-            alert = AlertState {
-                TextState(String(localized: .imagePicker.errorUploadingFile))
-            } message: {
-                if case let FileStorageAPIClientError.uploadFailed(message) = error, let message {
-                    TextState(
-                        String(localized: .imagePicker.errorUploadingFileWithMessage(message))
-                    )
-                } else {
-                    TextState(String(localized: .imagePicker.errorUploadingFileMessage))
-                }
-            }
+            alert = createAlert(for: error)
         }
     }
 
@@ -182,6 +184,44 @@ struct ComposerActionBar: View {
     private func endUploadingImage() {
         self.isUploadingImage = false
         self.subMenu = .none
+    }
+
+    /// Creates an alert based on the error
+    private func createAlert(
+        for error: Error
+    ) -> AlertState<ComposerActionBar.AlertAction> {
+        var title = String(localized: .imagePicker.errorUploadingFile)
+        var message: String
+        var buttons: [ButtonState<ComposerActionBar.AlertAction>] = [
+            .default(
+                TextState(String(localized: .localizable.ok)),
+                action: .send(.cancel)
+            )
+        ]
+
+        if case let FileStorageAPIClientError.fileTooBig(errorMessage) = error, let errorMessage {
+            title = String(localized: .imagePicker.errorUploadingFileExceedsSizeLimit)
+            message = String(localized: .imagePicker.errorUploadingFileExceedsLimit(errorMessage))
+            buttons = [
+                .cancel(
+                    TextState(String(localized: .localizable.cancel)), action: .send(.cancel)
+                ),
+                .default(
+                    TextState(String(localized: .imagePicker.getAccount)),
+                    action: .send(.getAccount)
+                )
+            ]
+        } else if case let FileStorageAPIClientError.uploadFailed(errorMessage) = error, let errorMessage {
+            message = String(localized: .imagePicker.errorUploadingFileWithMessage(errorMessage))
+        } else {
+            message = String(localized: .imagePicker.errorUploadingFileMessage)
+        }
+
+        return AlertState(
+            title: TextState(title),
+            message: TextState(message),
+            buttons: buttons
+        )
     }
 }
 
