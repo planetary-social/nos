@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// Displays pickers for selecting content flag option category, with additional stages shown based on previous selections.
+/// Displays pickers for selecting content flag option category, with additional stages shown 
+/// based on previous selections.
 struct ContentFlagView: View {
     @Binding var selectedFlagOptionCategory: FlagOption?
     var title: String
