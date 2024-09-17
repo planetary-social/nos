@@ -62,7 +62,7 @@ final class PushNotificationRegistrar {
                     pubKey: userKey,
                     kind: .notificationServiceRegistration,
                     tags: [],
-                    content: try await createRegistrationContent(deviceToken: token, user: user)
+                    content: try await registrationContent(deviceToken: token, user: user)
                 )
                 try await relayService.publish(
                     event: jsonEvent,
@@ -80,8 +80,8 @@ final class PushNotificationRegistrar {
         try await registrationTask?.value
     }
     
-    /// Builds the string needed for the `content` field in the special
-    private func createRegistrationContent(deviceToken: Data, user: CurrentUser) async throws -> String {
+    /// Builds the string needed for the `content` field.
+    private func registrationContent(deviceToken: Data, user: CurrentUser) async throws -> String {
         guard let publicKeyHex = currentUser.publicKeyHex else {
             throw PushNotificationError.unexpected
         }
