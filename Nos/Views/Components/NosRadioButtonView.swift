@@ -1,5 +1,5 @@
 import SwiftUI
-/// A view that represents a radio button.
+/// A  custom radio button.
 struct NosRadioButtonView: View {
     var isSelected: Bool
     var body: some View {
@@ -12,6 +12,7 @@ struct NosRadioButtonView: View {
     }
 }
 
+/// A custom background for a radio button.
 struct RadioButtonBackgroundView: View {
     var body: some View {
         ZStack {
@@ -46,6 +47,7 @@ struct RadioButtonBackgroundView: View {
     }
 }
 
+/// A colorful selector (inner circle) of a radio button with a gradient fill.
 struct RadioButtonSelectorView: View {
     var body: some View {
         Circle()
@@ -60,12 +62,10 @@ struct RadioButtonSelectorView: View {
     }
 }
 
-#Preview {
+#Preview("Selected") {
     NosRadioButtonView(isSelected: true)
-        .previewDisplayName("Selected")
 }
 
-#Preview {
+#Preview("Not Selected") {
     NosRadioButtonView(isSelected: false)
-        .previewDisplayName("Not Selected")
 }
