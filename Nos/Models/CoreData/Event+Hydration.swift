@@ -92,6 +92,10 @@ extension Event {
         
         var newFollows = Set<Follow>()
         for jsonTag in jsonEvent.tags {
+            guard jsonTag[safe: 0] == "p" else {
+                continue
+            }
+            
             if let followedKey = jsonTag[safe: 1],
                 let existingFollow = originalFollows[followedKey] {
                 // We already have a Core Data Follow model for this user
@@ -100,7 +104,7 @@ extension Event {
                 do {
                     newFollows.insert(try Follow.upsert(by: newAuthor, jsonTag: jsonTag, context: context))
                 } catch {
-                    Log.error("Error: could not parse Follow from: \(jsonEvent)")
+                    Log.error("Error: could not parse Follow from: \(jsonTag)")
                 }
             }
         }
