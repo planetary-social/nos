@@ -1390,6 +1390,7 @@
 		5B79F6402BA11618002DA9BE /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				0496D6302C975E6900D29375 /* FlagOptionPickerView.swift */,
 				C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */,
 				C9A0DAE929C6A34200466635 /* ActivityView.swift */,
 				3FFB1D88299FF37C002A755D /* AvatarView.swift */,
@@ -1845,7 +1846,6 @@
 				03618BDF2C8265CF00BCBC55 /* Settings */,
 				03618BF42C82661400BCBC55 /* SideMenu */,
 				C905EA362A33620A006F1E99 /* UNS */,
-				0496D6302C975E6900D29375 /* FlagOptionPickerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
