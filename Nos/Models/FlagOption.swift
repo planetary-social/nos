@@ -10,7 +10,7 @@ struct FlagOption: Identifiable {
     let description: String?
     var id: String { title }
 
-    // `FlagOption` instances representing different categories of content that can be flagged.
+    /// `FlagOption` instances representing different categories of content that can be flagged.
     static let flagContentCategories: [FlagOption] = [
         FlagOption(
             title: String(localized: .localizable.spam),
