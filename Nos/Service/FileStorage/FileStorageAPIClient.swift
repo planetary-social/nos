@@ -24,6 +24,7 @@ enum FileStorageAPIClientError: Error {
     case invalidResponseURL(String)
     case invalidURLRequest
     case missingKeyPair
+    case fileTooBig(String?)
     case uploadFailed(String?)
 }
 
@@ -53,8 +54,9 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         assert(fileURL.isFileURL, "The URL must point to a file.")
         let apiURL = try await apiURL()
         let (request, data) = try uploadRequest(fileAt: fileURL, isProfilePhoto: isProfilePhoto, apiURL: apiURL)
-        let (responseData, _) = try await URLSession.shared.upload(for: request, from: data)
-        return try assetURL(from: responseData)
+        let (responseData, response) = try await URLSession.shared.upload(for: request, from: data)
+        /// Attempt to retrieve the asset URL from the response data and HTTP response.
+        return try assetURL(from: responseData, response: response as? HTTPURLResponse)
     }
 
     // MARK: - Internal
@@ -74,18 +76,28 @@ class NostrBuildAPIClient: FileStorageAPIClient {
     }
     
     /// The URL of the uploaded asset parsed from the API's response.
-    private func assetURL(from responseData: Data) throws -> URL {
-        let response = try decoder.decode(FileStorageUploadResponseJSON.self, from: responseData)
-        guard let urlString = response.nip94Event?.urlString else {
-            throw FileStorageAPIClientError.uploadFailed(response.message)
+    private func assetURL(from responseData: Data, response: HTTPURLResponse?) throws -> URL {
+        let decodedResponse = try decoder.decode(FileStorageUploadResponseJSON.self, from: responseData)
+
+        guard let urlString = decodedResponse.nip94Event?.urlString else {
+            // Assign an empty string if the response message is nil.
+            let message = decodedResponse.message ?? ""
+
+            // Checks if the response contains a status code of `413 Payload Too Large`.
+            if let errorCode = response?.statusCode, errorCode == 413 {
+                // Verify if the error message indicates the file size exceeds the limit.
+                let fileSizeLimit = fileSizeLimit(from: message)
+                throw FileStorageAPIClientError.fileTooBig(fileSizeLimit)
+            }
+            // Throw an error indicating the upload failed with the provided message.
+            throw FileStorageAPIClientError.uploadFailed(message)
         }
+
         guard let url = URL(string: urlString) else {
             throw FileStorageAPIClientError.invalidResponseURL(urlString)
         }
         return url
     }
-
-    // MARK: - Internal
 
     /// Fetches server info from the file storage API.
     /// - Returns: the decoded JSON containing server info for the file storage API.
@@ -101,6 +113,19 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         } catch {
             throw FileStorageAPIClientError.decodingError
         }
+    }
+    
+    /// Gets the file size limit from the error message.
+    /// - Parameter message: The error message from nostr.build.
+    /// - Returns: The file size limit from the error message.
+    func fileSizeLimit(from message: String) -> String? {
+        let pattern = /File size exceeds the limit of (\d*\.\d* [MKGT]B)/
+
+        guard let match = message.firstMatch(of: pattern) else {
+            return nil
+        }
+        
+        return String(match.1)
     }
 
     /// Creates a URLRequest and Data from a file URL to be uploaded to the file storage API.

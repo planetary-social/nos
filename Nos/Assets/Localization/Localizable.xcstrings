@@ -4350,6 +4350,94 @@
         }
       }
     },
+    "flagContentHarassmentDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harmful and unwanted replies or mentions"
+          }
+        }
+      }
+    },
+    "flagContentHarassmentTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harassment & Profanity"
+          }
+        }
+      }
+    },
+    "flagContentIllegalDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Content that violates the law in your country or CSAM"
+          }
+        }
+      }
+    },
+    "flagContentIllegalTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Illegal"
+          }
+        }
+      }
+    },
+    "flagContentNudityDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nudity, porn, or violent content not appropriate for work"
+          }
+        }
+      }
+    },
+    "flagContentOtherDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Items not included above"
+          }
+        }
+      }
+    },
+    "flagContentOtherTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other"
+          }
+        }
+      }
+    },
+    "flagContentSpamTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spam"
+          }
+        }
+      }
+    },
     "flagUser" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5054,28 +5142,6 @@
         }
       }
     },
-    "harassmentFlagContentDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Harmful and unwanted replies or mentions"
-          }
-        }
-      }
-    },
-    "harassmentFlagContentTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Harassment & Profanity"
-          }
-        }
-      }
-    },
     "homeFeed" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5284,28 +5350,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "身份驗證"
-          }
-        }
-      }
-    },
-    "illegalFlagContentDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Content that violates the law in your country or CSAM"
-          }
-        }
-      }
-    },
-    "illegalFlagContentTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Illegal"
           }
         }
       }
@@ -8339,17 +8383,6 @@
         }
       }
     },
-    "nudityFlagContentDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nudity, porn, or violent content not appropriate for work"
-          }
-        }
-      }
-    },
     "ok" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -8571,28 +8604,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "阿哦！"
-          }
-        }
-      }
-    },
-    "otherFlagContentDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Items not included above"
-          }
-        }
-      }
-    },
-    "others" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Others"
           }
         }
       }
