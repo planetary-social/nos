@@ -1,19 +1,19 @@
 import SwiftUI
 /// A  custom radio button.
-struct NosRadioButtonView: View {
+struct NosRadioButton: View {
     var isSelected: Bool
     var body: some View {
         ZStack {
-            RadioButtonBackgroundView()
+            RadioButtonBackground()
             if isSelected {
-                RadioButtonSelectorView()
+                RadioButtonSelectedIndicator()
             }
         }
     }
 }
 
 /// A custom background for a radio button.
-struct RadioButtonBackgroundView: View {
+private struct RadioButtonBackground: View {
     var body: some View {
         ZStack {
             Circle()
@@ -48,24 +48,18 @@ struct RadioButtonBackgroundView: View {
 }
 
 /// A colorful selector (inner circle) of a radio button with a gradient fill.
-struct RadioButtonSelectorView: View {
+private struct RadioButtonSelectedIndicator: View {
     var body: some View {
         Circle()
-            .fill(
-                LinearGradient(
-                    colors: [Color.radioButtonSelectorTop, Color.radioButtonSelectorBottom],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            )
+            .fill(LinearGradient.verticalAccentPrimary)
             .frame(width: 17, height: 17)
     }
 }
 
 #Preview("Selected") {
-    NosRadioButtonView(isSelected: true)
+    NosRadioButton(isSelected: true)
 }
 
 #Preview("Not Selected") {
-    NosRadioButtonView(isSelected: false)
+    NosRadioButton(isSelected: false)
 }
