@@ -1,47 +1,38 @@
 import SwiftUI
 /// Displays a list of selectable flag options
-struct FlagOptionPickerView: View {
-    @Binding private var selectedFlag: FlagOption?
+struct FlagOptionPicker: View {
+    @Binding private var selectedOption: FlagOption?
     var options: [FlagOption]
     var title: String
     var subTitle: String?
 
-    init(selectedFlag: Binding<FlagOption?>, options: [FlagOption], title: String, subTitle: String?) {
-        self._selectedFlag = selectedFlag
+    init(selectedOption: Binding<FlagOption?>, options: [FlagOption], title: String, subTitle: String?) {
+        self._selectedOption = selectedOption
         self.options = options
         self.title = title
         self.subTitle = subTitle
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-                HeaderView(text: title)
-
-                if let subTitle = subTitle {
-                    HeaderView(text: subTitle)
-                }
-                flagOptionsListView
+        VStack(alignment: .leading) {
+            HeaderView(text: title)
+            
+            if let subTitle = subTitle {
+                HeaderView(text: subTitle)
             }
-            .padding()
+            flagOptionsListView
         }
-        .background(Color.appBg)
+        .padding()
     }
 
     private var flagOptionsListView: some View {
         VStack(alignment: .leading) {
             ForEach(options) { flag in
-                FlagPickerRow(flag: flag, selection: $selectedFlag)
+                FlagPickerRow(flag: flag, selection: $selectedOption)
                 BeveledSeparator()
             }
         }
-        .background(
-            LinearGradient(
-                colors: [Color.cardBgTop, Color.cardBgBottom],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        )
+        .background(LinearGradient.cardBackground)
         .clipShape(RoundedRectangle(cornerRadius: 15))
     }
 }
@@ -75,7 +66,7 @@ struct FlagPickerRow: View {
             Button {
                 selection = flag
             } label: {
-                NosRadioButtonView(isSelected: isSelected)
+                NosRadioButton(isSelected: isSelected)
             }
         }
         .padding(12)
@@ -93,13 +84,13 @@ private struct HeaderView: View {
     }
 }
 
-struct FlagOptionPickerView_Previews: PreviewProvider {
+struct FlagOptionPicker_Previews: PreviewProvider {
     struct PreviewWrapper: View {
         @State private var selectedFlag: FlagOption?
 
         var body: some View {
-            FlagOptionPickerView(
-                selectedFlag: $selectedFlag,
+            FlagOptionPicker(
+                selectedOption: $selectedFlag,
                 options: FlagOption.flagContentCategories,
                 title: "Create a tag for this content that other people in your network can see.",
                 subTitle: "Select a tag for the content"
