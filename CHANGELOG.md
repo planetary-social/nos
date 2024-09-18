@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored feature flag and added a feature flag toggle for “Enable new moderation flow” to Staging builds. [#1496](https://github.com/planetary-social/nos/issues/1496)
 - Refactored list row gradient background.
 - Added SwiftSoup to parse Open Graph metadata. [#1165](https://github.com/planetary-social/nos/issues/1165)
+- Tweaked search results to prioritize common follows [#1485](https://github.com/planetary-social/nos/issues/1485)
 
 ## [0.1.26] - 2024-09-09Z
 
