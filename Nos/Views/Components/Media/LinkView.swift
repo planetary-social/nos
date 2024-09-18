@@ -15,7 +15,7 @@ struct LinkView: View {
 }
 
 #Preview("Video") {
-    LinkView(url: URL(string: "https://youtu.be/5qvdbyRH9wA?si=y_KTgLR22nH0-cs8")!)
+    LinkView(url: URL(string: "https://www.youtube.com/watch?v=sB6HY8r983c")!)
 }
 
 #Preview("Image") {

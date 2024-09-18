@@ -41,11 +41,7 @@ struct OnboardingLoginView: View {
                         .foregroundColor(.primaryTxt)
                         .fontWeight(.heavy)
                 }
-                .listRowBackground(LinearGradient(
-                    colors: [Color.cardBgTop, Color.cardBgBottom],
-                    startPoint: .top,
-                    endPoint: .bottom
-                ))
+                .listRowGradientBackground()
             }
             if !privateKeyString.isEmpty {
                 BigActionButton(title: .localizable.login) {
