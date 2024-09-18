@@ -84,7 +84,7 @@ private struct HeaderView: View {
     }
 }
 
-struct FlagOptionPicker_Previews: PreviewProvider {
+#Preview {
     struct PreviewWrapper: View {
         @State private var selectedFlag: FlagOption?
 
@@ -101,8 +101,5 @@ struct FlagOptionPicker_Previews: PreviewProvider {
             .background(Color.appBg)
         }
     }
-
-    static var previews: some View {
-        PreviewWrapper()
-    }
+    return PreviewWrapper()
 }
